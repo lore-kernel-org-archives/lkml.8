@@ -2,130 +2,165 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C62EC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B0CC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA1020754
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C12B2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:17:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cXXJnQ2P"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AeRQ9I0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgCTWN1 (ORCPT
+        id S1727239AbgCTWRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:13:27 -0400
-Received: from gateway23.websitewelcome.com ([192.185.48.71]:16505 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726666AbgCTWN1 (ORCPT
+        Fri, 20 Mar 2020 18:17:19 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:29711 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726840AbgCTWRT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:13:27 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 7E1883AB4
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 17:13:25 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id FPtNjs72qVQh0FPtNj6v4U; Fri, 20 Mar 2020 17:13:25 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=k89j+eS15/9MTQAcINBI98rRT8Bb4ipIVNR2vNEQpOM=; b=cXXJnQ2PI758f5wjGJLPiBUVTp
-        JSfcLwH6ttE6l9UGGwgl7KUppJvuQnrkvC4WcDlChXPC7L6DHvLfby6nTpG5zVA7CX06yB4EfmW8W
-        RNFTzKCAV1uFDG5FSLAF2SACb/o50bFDIK/GsKgH4+Es75erCprOaez6Hr+ulNRFUMBtYIyDoXFWN
-        HjjSZwpSHpVLagLVL46yVcKEgv69bAt0xh0jxxC8hd1HZ24c9SS2U1adOIbUgqp1koAuQiM4s15Jn
-        /mlGsHFHgxYOhtiT12UK3gARx2nzA3OezRPjY1NBlEnenMAPSrO+Ro8U1PM6OuMakaMFNf3WriCvO
-        kDcEV8aw==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:52852 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jFPtM-000pw6-4S; Fri, 20 Mar 2020 17:13:24 -0500
-Date:   Fri, 20 Mar 2020 17:13:23 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] pcmcia: soc_common.h: Replace zero-length array with
- flexible-array member
-Message-ID: <20200320221323.GA12585@embeddedor.com>
+        Fri, 20 Mar 2020 18:17:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584742637;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=u8GNq+OP92R4iBcY079mAsYo3DdHqGBvboHuDfaqdes=;
+        b=AeRQ9I0pBrN4bk4/JHK+zkA6Ug6Vfk5+x5iLnFEYeYyZMkusmbPbhOU/lxv36nlNjFXC5D
+        WHpgBcH5qFrIfGW35qnQlThkLMTkFlWujo+UmQHqg1UIDY/Ne3oIoTLv21aThl8cRb3+dd
+        UdErPwoeE2itdgKpVe5bYmvJVTrHD1A=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-339-KhiDIiNaNhqwDq6ubkrVKQ-1; Fri, 20 Mar 2020 18:17:16 -0400
+X-MC-Unique: KhiDIiNaNhqwDq6ubkrVKQ-1
+Received: by mail-wr1-f72.google.com with SMTP id q18so3306354wrw.5
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 15:17:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=u8GNq+OP92R4iBcY079mAsYo3DdHqGBvboHuDfaqdes=;
+        b=TLKOFI64ttxGCmbnaP05CKLBoR5gSse/aFbiH/dx3F2GdAWi/BKdOIPeXOi+ElEAiP
+         mtSYhlsOyk+Ar88+usxpWSPiTclr50gIjKlxijrM8ktq2cKP3xJt43gQYjVymbYW5dk3
+         7TrDavJn5sabKBBfojlJzIfMEa6CSNqSerlaWcftjyrYOwmoGwMmj5fSNdxtNiGdhm+G
+         RC5oFOoietudH98oSzBXy1sc4+PEG4rYZjIvCCY3znT0iGiKcZAIF+LnZ/HMk/v8f3md
+         NZiGCoUymD4T6XYqUw8tmF+6hmnelXZKJz93rlxUiTY0yLg1jv28Nqklz3UBCtfz8nFr
+         pokg==
+X-Gm-Message-State: ANhLgQ2xWFJHrBobGvaN3yj4kuFYfDU8E4OBR7ZDlEsTYjFgwpq2LT+S
+        aHMwQ1MSbl/5uiYooTEWs4YdYwsyC1A5wyJmZQ/2zWe3up2/47JDADPLX5mOZ7WJ1wecNxq/62S
+        IL4VuI2GeOE3SOW/NIJY07NmH
+X-Received: by 2002:a5d:5290:: with SMTP id c16mr13036218wrv.235.1584742635060;
+        Fri, 20 Mar 2020 15:17:15 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vsHAj/sDvf+2yJCWb0vwNzdthKf09Zc1TXGWHrd55TefkcTAIKJq+rWF7JAa4y+Rzn60P8yYQ==
+X-Received: by 2002:a5d:5290:: with SMTP id c16mr13036200wrv.235.1584742634748;
+        Fri, 20 Mar 2020 15:17:14 -0700 (PDT)
+Received: from xz-x1 (CPEf81d0fb19163-CMf81d0fb19160.cpe.net.fido.ca. [72.137.123.47])
+        by smtp.gmail.com with ESMTPSA id z188sm7454248wme.46.2020.03.20.15.17.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 15:17:14 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 18:17:08 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH 1/7] KVM: Fix out of range accesses to memslots
+Message-ID: <20200320221708.GF127076@xz-x1>
+References: <20200320205546.2396-1-sean.j.christopherson@intel.com>
+ <20200320205546.2396-2-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.218.116.241
-X-Source-L: No
-X-Exim-ID: 1jFPtM-000pw6-4S
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:52852
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20200320205546.2396-2-sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Fri, Mar 20, 2020 at 01:55:40PM -0700, Sean Christopherson wrote:
+> Reset the LRU slot if it becomes invalid when deleting a memslot to fix
+> an out-of-bounds/use-after-free access when searching through memslots.
+> 
+> Explicitly check for there being no used slots in search_memslots(), and
+> in the caller of s390's approximation variant.
+> 
+> Fixes: 36947254e5f9 ("KVM: Dynamically size memslot array based on number of used slots")
+> Reported-by: Qian Cai <cai@lca.pw>
+> Cc: Peter Xu <peterx@redhat.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/s390/kvm/kvm-s390.c | 3 +++
+>  include/linux/kvm_host.h | 3 +++
+>  virt/kvm/kvm_main.c      | 3 +++
+>  3 files changed, 9 insertions(+)
+> 
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 807ed6d722dd..cb15fdda1fee 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -2002,6 +2002,9 @@ static int kvm_s390_get_cmma(struct kvm *kvm, struct kvm_s390_cmma_log *args,
+>  	struct kvm_memslots *slots = kvm_memslots(kvm);
+>  	struct kvm_memory_slot *ms;
+>  
+> +	if (unlikely(!slots->used_slots))
+> +		return 0;
+> +
+>  	cur_gfn = kvm_s390_next_dirty_cmma(slots, args->start_gfn);
+>  	ms = gfn_to_memslot(kvm, cur_gfn);
+>  	args->count = 0;
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 35bc52e187a2..b19dee4ed7d9 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -1032,6 +1032,9 @@ search_memslots(struct kvm_memslots *slots, gfn_t gfn)
+>  	int slot = atomic_read(&slots->lru_slot);
+>  	struct kvm_memory_slot *memslots = slots->memslots;
+>  
+> +	if (unlikely(!slots->used_slots))
+> +		return NULL;
+> +
+>  	if (gfn >= memslots[slot].base_gfn &&
+>  	    gfn < memslots[slot].base_gfn + memslots[slot].npages)
+>  		return &memslots[slot];
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 28eae681859f..f744bc603c53 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -882,6 +882,9 @@ static inline void kvm_memslot_delete(struct kvm_memslots *slots,
+>  
+>  	slots->used_slots--;
+>  
+> +	if (atomic_read(&slots->lru_slot) >= slots->used_slots)
+> +		atomic_set(&slots->lru_slot, 0);
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Nit: could we drop the atomic ops?  The "slots" is still only used in
+the current thread before the rcu assignment, so iirc it's fine (and
+RCU assignment should have a mem barrier when needed anyway).
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+I thought resetting lru_slot to zero would be good enough when
+duplicating the slots... however if we want to do finer grained reset,
+maybe even better to reset also those invalidated ones (since we know
+this information)?
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+   	if (slots->lru_slot >= slots->id_to_index[memslot->id])
+   		slots->lru_slot = 0;
+  
+Thanks,
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+> +
+>  	for (i = slots->id_to_index[memslot->id]; i < slots->used_slots; i++) {
+>  		mslots[i] = mslots[i + 1];
+>  		slots->id_to_index[mslots[i].id] = i;
+> -- 
+> 2.24.1
+> 
 
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/pcmcia/soc_common.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pcmcia/soc_common.h b/drivers/pcmcia/soc_common.h
-index b7f993f1bbd0..222e81c79365 100644
---- a/drivers/pcmcia/soc_common.h
-+++ b/drivers/pcmcia/soc_common.h
-@@ -88,7 +88,7 @@ struct soc_pcmcia_socket {
- 
- struct skt_dev_info {
- 	int nskt;
--	struct soc_pcmcia_socket skt[0];
-+	struct soc_pcmcia_socket skt[];
- };
- 
- struct pcmcia_state {
 -- 
-2.23.0
+Peter Xu
 
