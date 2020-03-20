@@ -2,231 +2,130 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDAAC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C5CC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00B7E20753
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E20D20782
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:20:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FmcaAOO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbgCTQUb (ORCPT
+        id S1727768AbgCTQUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:20:31 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:59097 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727691AbgCTQUb (ORCPT
+        Fri, 20 Mar 2020 12:20:36 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:34766 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727758AbgCTQUd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:20:31 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MnagF-1jeiz33fwD-00jY8G for <linux-kernel@vger.kernel.org>; Fri, 20 Mar
- 2020 17:20:28 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id A694265035C
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 16:20:28 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id orksCkLEyR1f for <linux-kernel@vger.kernel.org>;
-        Fri, 20 Mar 2020 17:20:28 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 4342764EC9A
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 17:20:28 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.8.5.41) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 20 Mar 2020 17:20:28 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id 44952804FE; Fri, 20 Mar 2020 17:11:43 +0100 (CET)
-Date:   Fri, 20 Mar 2020 17:11:43 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH v3 02/11] media: adv748x: include everything adv748x.h needs
- into the file
-Message-ID: <e37abb9c66571ad02a7d0c7903d1889d7d52ed46.1584720678.git.alexander.riesen@cetitec.com>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1584720678.git.alexander.riesen@cetitec.com>
+        Fri, 20 Mar 2020 12:20:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584721232;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uVnj2zVQ0+2VuWR3igejOkLMg22DCP8tH7gBaRkHgfE=;
+        b=FmcaAOO4gl1I9Tt2eVan0S/Kwp7yeYQi/bNg3ZqxJo05nzixlcqDhJvYLMH1OOgzjTmszm
+        Yc4vG5+X3WJCtAuIUpCrgUyODr+28CyMVC4eC+rGq4KDrzbYjXy2307DrFlvjDMmfjjZ/i
+        W5QWsoeD5hizON7KAQbaO7vTf28pJ4A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-15-Q7liX-c3MfWpXOwb_TrONQ-1; Fri, 20 Mar 2020 12:20:29 -0400
+X-MC-Unique: Q7liX-c3MfWpXOwb_TrONQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84D9C106BBDD;
+        Fri, 20 Mar 2020 16:20:27 +0000 (UTC)
+Received: from laptop.redhat.com (ovpn-113-142.ams2.redhat.com [10.36.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 70A2560BFB;
+        Fri, 20 Mar 2020 16:20:17 +0000 (UTC)
+From:   Eric Auger <eric.auger@redhat.com>
+To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
+        will.deacon@arm.com, robin.murphy@arm.com
+Cc:     marc.zyngier@arm.com, peter.maydell@linaro.org,
+        zhangfei.gao@gmail.com
+Subject: [PATCH v10 07/11] vfio: Use capability chains to handle device specific irq
+Date:   Fri, 20 Mar 2020 17:19:07 +0100
+Message-Id: <20200320161911.27494-8-eric.auger@redhat.com>
+In-Reply-To: <20200320161911.27494-1-eric.auger@redhat.com>
+References: <20200320161911.27494-1-eric.auger@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1584720678.git.alexander.riesen@cetitec.com>
-X-Originating-IP: [10.8.5.41]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A6D7662
-X-Provags-ID: V03:K1:cYzILQjBvfILvH+Z2TO2Seb3553PdmSnHizx1K8Gt8dscw9A0JV
- YAsT9GjfZF/1F4nzaAyBHZ3sI4ZGugOKF9QwKZxSJRkAtfFma5f7a23ug60RDrERklDk/Ua
- D8qP1aNvJBLcEogWN7U5j2EmPAROo0qhCbS4Ek45rBAZufJfZThJ37tUplqC8sioJek2oJd
- h5f5wJsbyhilefyMAsIeQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Z4D4l3UYzss=:T+x0HSuxiQLACe9+l9XTw4
- Zm9FWxDhUO0TMEkuEn6QlL4DTejazOjMJy/Xx0ChwSBBwkbIAvOc80073bls0J5nJoJUYCVOb
- QzoZXHo5CWciJpGihiVKqRuMuUaF9N/PR0MZog56GV/ODGbVJVrO5mv9c72KYa7+uJNI0VYJE
- 8t/OEnubZ+6IxTtz+w5qDMFVevE5EKVG8ilcfjthj0jPdDw/k4ctXfpT8hczdyoOIiZU88GQz
- JQSzxL9qD3BaAmq0ywy+PZx46jgtg9oOnOlwO7/iqG/IjNliPCqnKoH3Y2pbE1wXQoaBlXol3
- baHPCiVrqkUW35yckmUnltEAlv5cm0MlMzv9uLQ/gXVnKPIdIuxs58tWEj7Sfhry3uEsr1+jr
- YbwXtVTOuz3ygfGoNIGzeMKAlcX/V5/A2pGUw1vY0Bl6FP6oqhklrqr5WqwnaKHn36Ahav+FO
- 8GJHOImDIvtYcuAnKg64i3a08vkMOUIr0px7M2pUaD9nvRTP5UN4INcmZfYfYdS2MUGuzBaoQ
- 68/G7JzRmGbvs5g6Gms9k6RUJE6fcvJSaMnK54IWMuWUbM6Fj5ti474g0QUjV1n24ogo39Atg
- fGuGCiJe6lGdIP6uoVhdURGkL4HjrHjLRsV9HxJcPBA8l1kbpfiCTSAaElZFNIRYaOzqQzZXK
- fczCFMg1GMTfC55MYQSEmwq9rPxClV+ZNZqBa5jjpl9VgaJ7yFZc+YAwHWejtvwRKvJAHaU8v
- GbHbXK3690nUMW/CB+2nxQoXExauLkDpxjMo8TnWDy8+ZasaSOx1mvq1rh00BLZoVbH3bDjfT
- gjOwekQ8w26SOVbZCdqvtXln8sFzG7Zr+b79lyrpTtDDg6qvOTpErphFWDTvKJnxK0iBwHY
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To follow the established practice of not depending on others to
-pull everything in. While at it, make sure it stays like this.
+From: Tina Zhang <tina.zhang@intel.com>
 
-Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Caps the number of irqs with fixed indexes and uses capability chains
+to chain device specific irqs.
+
+Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+[Eric: Put cap_offset at the end of the vfio_irq_info struct,
+remove GFX IRQ at the moment and remove any reference to this latter
+in the commit message]
+
 ---
- drivers/media/i2c/adv748x/adv748x-afe.c  | 6 ++----
- drivers/media/i2c/adv748x/adv748x-core.c | 6 ++----
- drivers/media/i2c/adv748x/adv748x-csi2.c | 6 ++----
- drivers/media/i2c/adv748x/adv748x-hdmi.c | 6 ++----
- drivers/media/i2c/adv748x/adv748x.h      | 2 ++
- 5 files changed, 10 insertions(+), 16 deletions(-)
+---
+ include/uapi/linux/vfio.h | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/adv748x/adv748x-afe.c b/drivers/media/i2c/adv748x/adv748x-afe.c
-index dbbb1e4d6363..5a25d1fbe25f 100644
---- a/drivers/media/i2c/adv748x/adv748x-afe.c
-+++ b/drivers/media/i2c/adv748x/adv748x-afe.c
-@@ -6,18 +6,16 @@
-  * Copyright (C) 2017 Renesas Electronics Corp.
-  */
- 
-+#include "adv748x.h"
+diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+index 40d770f80e3d..f0fd26d058c9 100644
+--- a/include/uapi/linux/vfio.h
++++ b/include/uapi/linux/vfio.h
+@@ -459,11 +459,27 @@ struct vfio_irq_info {
+ #define VFIO_IRQ_INFO_MASKABLE		(1 << 1)
+ #define VFIO_IRQ_INFO_AUTOMASKED	(1 << 2)
+ #define VFIO_IRQ_INFO_NORESIZE		(1 << 3)
++#define VFIO_IRQ_INFO_FLAG_CAPS		(1 << 4) /* Info supports caps */
+ 	__u32	index;		/* IRQ index */
+ 	__u32	count;		/* Number of IRQs within this index */
++	__u32	cap_offset;	/* Offset within info struct of first cap */
+ };
+ #define VFIO_DEVICE_GET_IRQ_INFO	_IO(VFIO_TYPE, VFIO_BASE + 9)
+=20
++/*
++ * The irq type capability allows IRQs unique to a specific device or
++ * class of devices to be exposed.
++ *
++ * The structures below define version 1 of this capability.
++ */
++#define VFIO_IRQ_INFO_CAP_TYPE      3
 +
- #include <linux/delay.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/v4l2-dv-timings.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-dv-timings.h>
- #include <media/v4l2-ioctl.h>
- 
--#include "adv748x.h"
--
- /* -----------------------------------------------------------------------------
-  * SDP
-  */
-diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-index c3fb113cef62..5c59aad319d1 100644
---- a/drivers/media/i2c/adv748x/adv748x-core.c
-+++ b/drivers/media/i2c/adv748x/adv748x-core.c
-@@ -10,6 +10,8 @@
-  *	Kieran Bingham <kieran.bingham@ideasonboard.com>
-  */
- 
-+#include "adv748x.h"
++struct vfio_irq_info_cap_type {
++	struct vfio_info_cap_header header;
++	__u32 type;     /* global per bus driver */
++	__u32 subtype;  /* type specific */
++};
 +
- #include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/i2c.h>
-@@ -20,14 +22,10 @@
- #include <linux/slab.h>
- #include <linux/v4l2-dv-timings.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-dv-timings.h>
- #include <media/v4l2-fwnode.h>
- #include <media/v4l2-ioctl.h>
- 
--#include "adv748x.h"
--
- /* -----------------------------------------------------------------------------
-  * Register manipulation
-  */
-diff --git a/drivers/media/i2c/adv748x/adv748x-csi2.c b/drivers/media/i2c/adv748x/adv748x-csi2.c
-index c43ce5d78723..c00d4f347d95 100644
---- a/drivers/media/i2c/adv748x/adv748x-csi2.c
-+++ b/drivers/media/i2c/adv748x/adv748x-csi2.c
-@@ -5,15 +5,13 @@
-  * Copyright (C) 2017 Renesas Electronics Corp.
-  */
- 
-+#include "adv748x.h"
-+
- #include <linux/module.h>
- #include <linux/mutex.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-ioctl.h>
- 
--#include "adv748x.h"
--
- static int adv748x_csi2_set_virtual_channel(struct adv748x_csi2 *tx,
- 					    unsigned int vc)
- {
-diff --git a/drivers/media/i2c/adv748x/adv748x-hdmi.c b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-index c557f8fdf11a..f598acec3b5c 100644
---- a/drivers/media/i2c/adv748x/adv748x-hdmi.c
-+++ b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-@@ -5,18 +5,16 @@
-  * Copyright (C) 2017 Renesas Electronics Corp.
-  */
- 
-+#include "adv748x.h"
-+
- #include <linux/module.h>
- #include <linux/mutex.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-dv-timings.h>
- #include <media/v4l2-ioctl.h>
- 
- #include <uapi/linux/v4l2-dv-timings.h>
- 
--#include "adv748x.h"
--
- /* -----------------------------------------------------------------------------
-  * HDMI and CP
-  */
-diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
-index fccb388ce179..09aab4138c3f 100644
---- a/drivers/media/i2c/adv748x/adv748x.h
-+++ b/drivers/media/i2c/adv748x/adv748x.h
-@@ -19,6 +19,8 @@
-  */
- 
- #include <linux/i2c.h>
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-device.h>
- 
- #ifndef _ADV748X_H_
- #define _ADV748X_H_
--- 
-2.25.1.25.g9ecbe7eb18
-
+ /**
+  * VFIO_DEVICE_SET_IRQS - _IOW(VFIO_TYPE, VFIO_BASE + 10, struct vfio_ir=
+q_set)
+  *
+@@ -565,7 +581,8 @@ enum {
+ 	VFIO_PCI_MSIX_IRQ_INDEX,
+ 	VFIO_PCI_ERR_IRQ_INDEX,
+ 	VFIO_PCI_REQ_IRQ_INDEX,
+-	VFIO_PCI_NUM_IRQS
++	VFIO_PCI_NUM_IRQS =3D 5	/* Fixed user ABI, IRQ indexes >=3D5 use   */
++				/* device specific cap to define content */
+ };
+=20
+ /*
+--=20
+2.20.1
 
