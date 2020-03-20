@@ -2,133 +2,172 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C9FC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 394A3C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF0320658
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0737120709
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:02:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584738167;
+	bh=fLFR8YUhXJwNZZYH7ngeOnxwmZhi+69xDiLb5E3X218=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=St/QyHTK3mkKnOnsh+DHTxQTNw60UI6MOdXoX3M9s30Nxo87O5mixYKAv2GGMEzds
+	 NAR9O1MCzVF52IfMd9NQAMGRvfskEuwLBobVAubeFOHlvHsQmm2i2ge7E8y/xwz0R+
+	 C+iS6TDeC8AzqetHsKeu2ib6Tlp7snFT6rU0s61w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbgCTVCQ (ORCPT
+        id S1727258AbgCTVCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:02:16 -0400
-Received: from mga04.intel.com ([192.55.52.120]:57314 "EHLO mga04.intel.com"
+        Fri, 20 Mar 2020 17:02:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgCTVCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:02:16 -0400
-IronPort-SDR: iUK8NiCv3loTp/wr8ZYxFgfWPjSVJD3C0sPehK0RT9t5gkCvtWcDOgVIbDbI3ajlKpYCsbsOs/
- irATOZkwFA2Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:02:15 -0700
-IronPort-SDR: HboxVKvwZZOgIV6yB3TxFGy0JAOwS7iAeF7LpBdEIi7eqh2wKjhoIIwTOwu1SLQWSmMlA2rOa1
- Dpx0Kp/ZA3PA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,285,1580803200"; 
-   d="scan'208";a="248999174"
-Received: from jralexan-mobl.amr.corp.intel.com (HELO [10.254.187.105]) ([10.254.187.105])
-  by orsmga006.jf.intel.com with ESMTP; 20 Mar 2020 14:02:14 -0700
-Subject: Re: [PATCH 21/70] x86/boot/compressed/64: Add function to map a page
- unencrypted
-To:     David Rientjes <rientjes@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+        id S1726738AbgCTVCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 17:02:45 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FA3C20658;
+        Fri, 20 Mar 2020 21:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584738164;
+        bh=fLFR8YUhXJwNZZYH7ngeOnxwmZhi+69xDiLb5E3X218=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=BCeAXqXFUuj1hHiVzGhhcgSUUir3NHhdbxKZUoNYcV8LStVDQjfG/eRwyCQXKq8Be
+         IuQ1313Lnf1b5icOH+wFddq7Mb39GH99NqIqxPbuPU2PIooSvheiWkrBcjjmp3yjFc
+         b7TA5EIztlrs4AAazjq0Dl03OXMXgVcpSpgAAgtk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id C94F935226B5; Fri, 20 Mar 2020 14:02:43 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 14:02:43 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-References: <20200319091407.1481-1-joro@8bytes.org>
- <20200319091407.1481-22-joro@8bytes.org>
- <alpine.DEB.2.21.2003201350300.205664@chino.kir.corp.google.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <8a50c19f-aaf8-90bd-a415-0e3b71e5a010@intel.com>
-Date:   Fri, 20 Mar 2020 14:02:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting
+ documentation
+Message-ID: <20200320210243.GT3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200320160145.GN3199@paulmck-ThinkPad-P72>
+ <87mu8apzxr.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2003201350300.205664@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87mu8apzxr.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/20/20 1:53 PM, David Rientjes wrote:
->> +
->> +	/* Clear encryption flag and write new pte */
->> +	pte = pte_clear_flags(*ptep, _PAGE_ENC);
->> +	set_pte(ptep, pte);
->> +
->> +	/* Flush TLB to map the page unencrypted */
->> +	write_cr3(top_level_pgt);
->> +
-> Is there a guarantee that this flushes the tlb if cr3 == top_level_pgt 
-> alrady without an invlpg?
+On Fri, Mar 20, 2020 at 08:51:44PM +0100, Thomas Gleixner wrote:
+> "Paul E. McKenney" <paulmck@kernel.org> writes:
+> >
+> >  - The soft interrupt related suffix (_bh()) still disables softirq
+> >    handlers.  However, unlike non-PREEMPT_RT kernels (which disable
+> >    preemption to get this effect), PREEMPT_RT kernels use a per-CPU
+> >    lock to exclude softirq handlers.
+> 
+> I've made that:
+> 
+>   - The soft interrupt related suffix (_bh()) still disables softirq
+>     handlers.
+> 
+>     Non-PREEMPT_RT kernels disable preemption to get this effect.
+> 
+>     PREEMPT_RT kernels use a per-CPU lock for serialization. The lock
+>     disables softirq handlers and prevents reentrancy by a preempting
+>     task.
 
-Ahh, good catch.
+That works!  At the end, I would instead say "prevents reentrancy
+due to task preemption", but what you have works.
 
-It *never* flushes global pages.  For a generic function like this, that
-seems pretty dangerous because the PTEs it goes after could quite easily
-be Global.  It's also not _obviously_ correct if PCIDs are in play
-(which I don't think they are on AMD).
+> On non-RT this is implicit through preemption disable, but it's non
+> obvious for RT as preemption stays enabled.
+> 
+> > PREEMPT_RT kernels preserve all other spinlock_t semantics:
+> >
+> >  - Tasks holding a spinlock_t do not migrate.  Non-PREEMPT_RT kernels
+> >    avoid migration by disabling preemption.  PREEMPT_RT kernels instead
+> >    disable migration, which ensures that pointers to per-CPU variables
+> >    remain valid even if the task is preempted.
+> >
+> >  - Task state is preserved across spinlock acquisition, ensuring that the
+> >    task-state rules apply to all kernel configurations.  In non-PREEMPT_RT
+> >    kernels leave task state untouched.  However, PREEMPT_RT must change
+> >    task state if the task blocks during acquisition.  Therefore, the
+> >    corresponding lock wakeup restores the task state.  Note that regular
+> >    (not lock related) wakeups do not restore task state.
+> 
+>    - Task state is preserved across spinlock acquisition, ensuring that the
+>      task-state rules apply to all kernel configurations.  Non-PREEMPT_RT
+>      kernels leave task state untouched.  However, PREEMPT_RT must change
+>      task state if the task blocks during acquisition.  Therefore, it
+>      saves the current task state before blocking and the corresponding
+>      lock wakeup restores it. A regular not lock related wakeup sets the
+>      task state to RUNNING. If this happens while the task is blocked on
+>      a spinlock then the saved task state is changed so that correct
+>      state is restored on lock wakeup.
+> 
+> Hmm?
 
-A flush_tlb_global() is probably more appropriate.  Better yet, is there
-a reason not to use flush_tlb_kernel_range()?  I don't think it's
-necessary to whack the entire TLB for one PTE set.
+I of course cannot resist editing the last two sentences:
+
+   ... Other types of wakeups unconditionally set task state to RUNNING.
+   If this happens while a task is blocked while acquiring a spinlock,
+   then the task state is restored to its pre-acquisition value at
+   lock-wakeup time.
+
+> > But this code failes on PREEMPT_RT kernels because the memory allocator
+> > is fully preemptible and therefore cannot be invoked from truly atomic
+> > contexts.  However, it is perfectly fine to invoke the memory allocator
+> > while holding a normal non-raw spinlocks because they do not disable
+> > preemption::
+> >
+> >> +  spin_lock(&lock);
+> >> +  p = kmalloc(sizeof(*p), GFP_ATOMIC);
+> >> +
+> >> +Most places which use GFP_ATOMIC allocations are safe on PREEMPT_RT as the
+> >> +execution is forced into thread context and the lock substitution is
+> >> +ensuring preemptibility.
+> >
+> > Interestingly enough, most uses of GFP_ATOMIC allocations are
+> > actually safe on PREEMPT_RT because the the lock substitution ensures
+> > preemptibility.  Only those GFP_ATOMIC allocations that are invoke
+> > while holding a raw spinlock or with preemption otherwise disabled need
+> > adjustment to work correctly on PREEMPT_RT.
+> >
+> > [ I am not as confident of the above as I would like to be... ]
+> 
+> I'd leave that whole paragraph out. This documents the rules and from
+> the above code examples it's pretty clear what works and what not :)
+
+Works for me!  ;-)
+
+> > And meeting time, will continue later!
+> 
+> Enjoy!
+
+Not bad, actually, as meetings go.
+
+							Thanx, Paul
