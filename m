@@ -2,112 +2,131 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F169CC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74621C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA31B20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:07:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="GtADa9cp"
+	by mail.kernel.org (Postfix) with ESMTP id 4CB3020773
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584691888;
+	bh=prDI9bGo4LY3zoAZD0tiC/UjvwdIPGeju68RqI+dVvk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MOszJilvPv7wT/vFVCVTa7fFtO9DmI3Xh/dt9JA/zElvwI878zR2S9SQ+82+nT94Q
+	 XaiSqVGcCEUHGdIpIwtNzisuGoosuNV0g5TniyKCdvpZpz9XPNYzPZOo3kXGVzuUOD
+	 G1NyeTpnKRUeAVZ+0pxDN3x7/PcKyIAi5Yiz1swU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgCTIHk (ORCPT
+        id S1726801AbgCTIL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 04:07:40 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:48405 "EHLO hermes.aosc.io"
+        Fri, 20 Mar 2020 04:11:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726631AbgCTIHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 04:07:40 -0400
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id 4DFA54CC97;
-        Fri, 20 Mar 2020 08:07:37 +0000 (UTC)
-Date:   Fri, 20 Mar 2020 15:58:09 +0800
-In-Reply-To: <CACRpkdaVrfd1p+WyACy-gq-3BPsXJ_CZwi2OZe+=csseBcvcaA@mail.gmail.com>
-References: <20200316133503.144650-1-icenowy@aosc.io> <20200316133503.144650-3-icenowy@aosc.io> <CACRpkdaVrfd1p+WyACy-gq-3BPsXJ_CZwi2OZe+=csseBcvcaA@mail.gmail.com>
+        id S1726631AbgCTIL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 04:11:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5079120739;
+        Fri, 20 Mar 2020 08:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584691884;
+        bh=prDI9bGo4LY3zoAZD0tiC/UjvwdIPGeju68RqI+dVvk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Yy+aRtlAwhGkDm6wixmjsXXBtDHZft4nx/u7K/3veiuFQGEsovpep6Ll/sRMiZPqf
+         10zdcScjbRVesZt+NrAiQU0g5sSL49+25LQulxl2EGmnahS+BFJEbNZNOOd96KhSbh
+         RFj1q1vO1upCItLSFsfuOt3OKGRimgapvEXknH9w=
+Date:   Fri, 20 Mar 2020 09:11:22 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: [PATCH 4.19 00/48] 4.19.112-rc1 review
+Message-ID: <20200320081122.GA349027@kroah.com>
+References: <20200319123902.941451241@linuxfoundation.org>
+ <CA+G9fYsDw6JEznSHm2X=Wvq1dysGbGa4-VpXJyzKWZQxLMdagw@mail.gmail.com>
+ <7a8c6a752793f0907662c3e9c197c284fc461550.camel@codethink.co.uk>
+ <20200320080317.GA312074@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 2/5] dt-bindings: panel: add binding for Xingbangda XBD599 panel
-To:     linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     Ondrej Jirman <megous@megous.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-From:   Icenowy Zheng <icenowy@aosc.io>
-Message-ID: <491ADD02-5511-404B-88A8-5725EF061EAC@aosc.io>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=dkim;
-        t=1584691659;
-        h=from:subject:date:message-id:to:cc:mime-version:content-type:content-transfer-encoding:in-reply-to:references;
-        bh=stsS4dj9oBV/7b45QdrFyqP0smVpfXDmrt3Ueus/OeQ=;
-        b=GtADa9cpqzkGuQKMBAZQjihl/+F10s/Hpdjay+d0XsQ1X1T0QH1GPjjqXzeH7LKeP1+eaE
-        PFopxiao42wyUcVgcZaQTj5Za9JwlH36zazAmYYv3wkGqvuSHY1oT67WPNFq1YHUyqENjh
-        8P3ylWO5/C4wiSlzq9FMcI7DoyWHAKM=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200320080317.GA312074@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 20, 2020 at 09:03:17AM +0100, Greg Kroah-Hartman wrote:
+> On Thu, Mar 19, 2020 at 08:00:32PM +0000, Ben Hutchings wrote:
+> > On Fri, 2020-03-20 at 01:12 +0530, Naresh Kamboju wrote:
+> > > On Thu, 19 Mar 2020 at 18:50, Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > > This is the start of the stable review cycle for the 4.19.112 release.
+> > > > There are 48 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > > > 
+> > > > Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
+> > > > Anything received after that time might be too late.
+> > > > 
+> > > > The whole patch series can be found in one patch at:
+> > > >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.112-rc1.gz
+> > > > or in the git tree and branch at:
+> > > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> > > > and the diffstat can be found below.
+> > > > 
+> > > > thanks,
+> > > > 
+> > > > greg k-h
+> > > > 
+> > > > Faiz Abbas <faiz_abbas@ti.com>
+> > > >     mmc: sdhci-omap: Fix Tuning procedure for temperatures < -20C
+> > > > 
+> > > > Faiz Abbas <faiz_abbas@ti.com>
+> > > >     mmc: sdhci-omap: Don't finish_mrq() on a command error during tuning
+> > > 
+> > > Results from Linaro’s test farm.
+> > > No regressions on arm64, arm, x86_64, and i386.
+> > > 
+> > > NOTE:
+> > > The arm beagleboard x15 device running stable rc 4.19.112-rc1, 5.4.27-rc1
+> > > and 5.5.11-rc2 kernel pops up the following messages on console log,
+> > > Is this a problem ?
+> > >
+> > > [   15.737765] mmc1: unspecified timeout for CMD6 - use generic
+> > > [   16.754248] mmc1: unspecified timeout for CMD6 - use generic
+> > > [   16.842071] mmc1: unspecified timeout for CMD6 - use generic
+> > > ...
+> > > [  977.126652] mmc1: unspecified timeout for CMD6 - use generic
+> > > [  985.449798] mmc1: unspecified timeout for CMD6 - use generic
+> > [...]
+> > 
+> > This warning was introduced by commit 533a6cfe08f9 "mmc: core: Default
+> > to generic_cmd6_time as timeout in __mmc_switch()".  That should not be
+> > applied to stable branches; it is not valid without (at least) these
+> > preparatory changes:
+> > 
+> > 0c204979c691 mmc: core: Cleanup BKOPS support
+> > 24ed3bd01d6a mmc: core: Specify timeouts for BKOPS and CACHE_FLUSH for eMMC
+> > ad91619aa9d7 mmc: block: Use generic_cmd6_time when modifying INAND_CMD38_ARG_EXT_CSD
+> 
+> Ok, I've now dropped that patch, which also required me to drop
+> 1292e3efb149 ("mmc: core: Allow host controllers to require R1B for
+> CMD6").  I've done so for 5.5.y, 5.4.y, and 4.19.y.
 
+Ugh, I forgot, that broke other things.  I'm going to go rip out a bunch
+of mmc patches now...
 
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8819=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
-0:14:27, Linus Walleij <linus=2Ewalleij@linaro=2Eorg> =E5=86=99=E5=88=B0:
->Hi Icenowy,
->
->On Mon, Mar 16, 2020 at 2:37 PM Icenowy Zheng <icenowy@aosc=2Eio> wrote:
->
->> Xingbangda XBD599 is a 5=2E99" 720x1440 MIPI-DSI LCD panel=2E
->>
->> Add its device tree binding=2E
->>
->> Signed-off-by: Icenowy Zheng <icenowy@aosc=2Eio>
->(=2E=2E=2E)
->
->> +properties:
->> +  compatible:
->> +    const: xingbangda,xbd599
->
->As noticed in the review of the driver, this display is very close to
->himax,hx8363=2E
->
->I think the best is to determin what actual display controller it is,
->I think it is some kind of Ilitek controller since Ilitek ili9342 is
->clearly very similar=2E
-
-It's Sitronix ST7703, same as the Librem 5 panel=2E
-
->
->The best would be something like name the bindings
->ilitek-ili9342=2Eyaml and then:
->
->properties:
->  compatible:
->    items:
->      - const: xingbangda,xbd599
->      - const: ilitek,ili9342
->
->Possibly use oneOf and add support for the himax,hx8363
->already while you're at it=2E
->
->Yours,
->Linus Walleij
->
->_______________________________________________
->linux-arm-kernel mailing list
->linux-arm-kernel@lists=2Einfradead=2Eorg
->http://lists=2Einfradead=2Eorg/mailman/listinfo/linux-arm-kernel
-
---=20
-=E4=BD=BF=E7=94=A8 K-9 Mail =E5=8F=91=E9=80=81=E8=87=AA=E6=88=91=E7=9A=84A=
-ndroid=E8=AE=BE=E5=A4=87=E3=80=82
