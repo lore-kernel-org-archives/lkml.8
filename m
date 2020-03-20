@@ -2,85 +2,194 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBA7C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2CEC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0F6E20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584727670;
-	bh=U8oXIP5oXGvZd/1FPI5kRuFkzQslAnVxi3jbhT86N8g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZypCAOGqmel9ROwBIUqwvWg38MyYfmrZepcJbZZHylStjJ06sfar7H5HqNZBbmJ2u
-	 FiRJ05VMhpKW8tt1QeexduZEV2OEesxCwR4kmv9xpuxZMGPFAvQrEWyzzmgW7vumAX
-	 ywsAGwGI3gROXa6pdPOmWDyt9QosZAi17+HfRAwo=
+	by mail.kernel.org (Postfix) with ESMTP id 77B4E20773
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:07:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XTvrkA0z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbgCTSHu (ORCPT
+        id S1727226AbgCTSHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:07:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgCTSHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:07:49 -0400
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9FED20739;
-        Fri, 20 Mar 2020 18:07:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584727668;
-        bh=U8oXIP5oXGvZd/1FPI5kRuFkzQslAnVxi3jbhT86N8g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Zl8vTyVaCE7XSqVRaFQHGYQ1hpT6gdLgT/OoUVQkp8avDWWFAKgBIZ23zn4RsyXhZ
-         VguFbxdJpa/PGLXWCV9PaVDpQjjZHtZSseureYdhCvaemCgfMmOM3Bv3sFN2Lsmaew
-         mrsprz7Pwc35y2W87l/SHVNcMFgNDyeyT4nWo3Uk=
-Received: by mail-qk1-f173.google.com with SMTP id l25so2944357qki.7;
-        Fri, 20 Mar 2020 11:07:48 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1SQ2xxjsfeClJc2ACehrcRA1ASOgmw5nO7QbHIEsOlEAMNugo8
-        uOobKars663p97UVtEYV1LjJB9aoYG6Hvtbqvw==
-X-Google-Smtp-Source: ADFU+vuxhlkoXyT1YY53b7HKSyPc40/5axtT/yKvtUn1tYpPSEZWkUnm5O/F/s11tGwXXgPTo5JaJMBZdIsGq9/lTho=
-X-Received: by 2002:a37:634d:: with SMTP id x74mr9645562qkb.254.1584727667842;
- Fri, 20 Mar 2020 11:07:47 -0700 (PDT)
+        Fri, 20 Mar 2020 14:07:55 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37600 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCTSHz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 14:07:55 -0400
+Received: by mail-pf1-f193.google.com with SMTP id h72so1473221pfe.4
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 11:07:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8cYhw1x3X+9G66J6lbMzSNWTH95dWs9QxQXagZJVDkI=;
+        b=XTvrkA0zw4NZeTUg3pRGwWcO8eTNUIZoU3c7RT3nbOK3rzpwhXH2jOWtx3VkQk4vM6
+         qrktKN0nK6LU3+GPlJXia6wej6tGH4LdwFvuB1Pt45TYNBarEBdYZxg1nzICLzEfQaWQ
+         Jt9Stn23XkWmmmR6qXe4ndaSxOjwduarnduZ8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8cYhw1x3X+9G66J6lbMzSNWTH95dWs9QxQXagZJVDkI=;
+        b=p0VlDKyrh0uNSAEtad72AMWMRchXQTDYDoXFN+qFG85Wpmev6NGqTYZw7pVkrPbBAC
+         2XL+SL7xFQAZIpkFzaS+ti6IGRcuF5iYTz8mhaXKFco28sF29m7abZVYfri3cdWfBSHd
+         U8+9kSYUq25OdBmCBR0+0usQQlfvdHVxxWVaiSwpDF0qmrk9MKiNIxPSGqI8jO1OrAc4
+         1ePCAZVDS+Cy8Ii9LV+ezOfFkC/35siYoz3DD1B0FZI4qFzY9hMjSMkwMfaTpkkEYmet
+         pEDOsTlDktsqpCcjB6EJsVE4TQSOAR+JjULCWgKCaOXzg8yOxpM2m/SwLiQde2yogAkf
+         pV4A==
+X-Gm-Message-State: ANhLgQ1w3dFyLKhTDIWzwBVhbuiZPlN5N/LQT3/BRfGNMVTLhqy08/o+
+        xP01V1yaiI0wtSDPLx5Z0UTuxg==
+X-Google-Smtp-Source: ADFU+vvJvJ6tsDQQpCc7np3SIbiYcaF2vndzvesHmJ1ZrWxXTMLR0GpWgue0+UlmtTQBsT3dbzL3hw==
+X-Received: by 2002:aa7:8f36:: with SMTP id y22mr10894952pfr.162.1584727672286;
+        Fri, 20 Mar 2020 11:07:52 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id c190sm5872717pga.35.2020.03.20.11.07.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 11:07:51 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        Salman Qazi <sqazi@google.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] bdev: Reduce time holding bd_mutex in sync in blkdev_close()
+Date:   Fri, 20 Mar 2020 11:07:16 -0700
+Message-Id: <20200320110321.1.I9df0264e151a740be292ad3ee3825f31b5997776@changeid>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
 MIME-Version: 1.0
-References: <1584095350-841-1-git-send-email-akashast@codeaurora.org> <1584095350-841-4-git-send-email-akashast@codeaurora.org>
-In-Reply-To: <1584095350-841-4-git-send-email-akashast@codeaurora.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 20 Mar 2020 12:07:36 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKLoiPUhiJDuYX+bSQwoCLTXOvtNyEB8ti__xMfEDyxNQ@mail.gmail.com>
-Message-ID: <CAL_JsqKLoiPUhiJDuYX+bSQwoCLTXOvtNyEB8ti__xMfEDyxNQ@mail.gmail.com>
-Subject: Re: [PATCH V5 3/3] dt-bindings: geni-se: Add binding for UART pin swap
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Manu Gautam <mgautam@codeaurora.org>, rojay@codeaurora.org,
-        c_skakit@codeaurora.org, Matthias Kaehlcke <mka@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 4:29 AM Akash Asthana <akashast@codeaurora.org> wrote:
->
-> Add documentation to support RX/TX/CTS/RTS pin swap in HW.
->
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> ---
-> Changes in V5:
->  -  As per Matthias's comment, remove rx-tx-cts-rts-swap property from UART
->     child node.
->
->  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+While trying to "dd" to the block device for a USB stick, I
+encountered a hung task warning (blocked for > 120 seconds).  I
+managed to come up with an easy way to reproduce this on my system
+(where /dev/sdb is the block device for my USB stick) with:
 
-STM32 folks need something similar. Can you move this to a common
-location. That's serial.txt, but that is being converted to DT schema.
+  while true; do dd if=/dev/zero of=/dev/sdb bs=4M; done
 
-Rob
+With my reproduction here are the relevant bits from the hung task
+detector:
+
+ INFO: task udevd:294 blocked for more than 122 seconds.
+ ...
+ udevd           D    0   294      1 0x00400008
+ Call trace:
+  ...
+  mutex_lock_nested+0x40/0x50
+  __blkdev_get+0x7c/0x3d4
+  blkdev_get+0x118/0x138
+  blkdev_open+0x94/0xa8
+  do_dentry_open+0x268/0x3a0
+  vfs_open+0x34/0x40
+  path_openat+0x39c/0xdf4
+  do_filp_open+0x90/0x10c
+  do_sys_open+0x150/0x3c8
+  ...
+
+ ...
+ Showing all locks held in the system:
+ ...
+ 1 lock held by dd/2798:
+  #0: ffffff814ac1a3b8 (&bdev->bd_mutex){+.+.}, at: __blkdev_put+0x50/0x204
+ ...
+ dd              D    0  2798   2764 0x00400208
+ Call trace:
+  ...
+  schedule+0x8c/0xbc
+  io_schedule+0x1c/0x40
+  wait_on_page_bit_common+0x238/0x338
+  __lock_page+0x5c/0x68
+  write_cache_pages+0x194/0x500
+  generic_writepages+0x64/0xa4
+  blkdev_writepages+0x24/0x30
+  do_writepages+0x48/0xa8
+  __filemap_fdatawrite_range+0xac/0xd8
+  filemap_write_and_wait+0x30/0x84
+  __blkdev_put+0x88/0x204
+  blkdev_put+0xc4/0xe4
+  blkdev_close+0x28/0x38
+  __fput+0xe0/0x238
+  ____fput+0x1c/0x28
+  task_work_run+0xb0/0xe4
+  do_notify_resume+0xfc0/0x14bc
+  work_pending+0x8/0x14
+
+The problem appears related to the fact that my USB disk is terribly
+slow and that I have a lot of RAM in my system to cache things.
+Specifically my writes seem to be happening at ~15 MB/s and I've got
+~4 GB of RAM in my system that can be used for buffering.  To write 4
+GB of buffer to disk thus takes ~4000 MB / ~15 MB/s = ~267 seconds.
+
+The 267 second number is a problem because in __blkdev_put() we call
+sync_blockdev() while holding the bd_mutex.  Any other callers who
+want the bd_mutex will be blocked for the whole time.
+
+The problem is made worse because I believe blkdev_put() specifically
+tells other tasks (namely udev) to go try to access the device at right
+around the same time we're going to hold the mutex for a long time.
+
+Putting some traces around this (after disabling the hung task detector),
+I could confirm:
+ dd:    437.608600: __blkdev_put() right before sync_blockdev() for sdb
+ udevd: 437.623901: blkdev_open() right before blkdev_get() for sdb
+ dd:    661.468451: __blkdev_put() right after sync_blockdev() for sdb
+ udevd: 663.820426: blkdev_open() right after blkdev_get() for sdb
+
+A simple fix for this is to realize that sync_blockdev() works fine if
+you're not holding the mutex.  Also, it's not the end of the world if
+you sync a little early (though it can have performance impacts).
+Thus we can make a guess that we're going to need to do the sync and
+then do it without holding the mutex.  We still do one last sync with
+the mutex but it should be much, much faster.
+
+With this, my hung task warnings for my test case are gone.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+I didn't put a "Fixes" annotation here because, as far as I can tell,
+this issue has been here "forever" unless someone knows of something
+else that changed that made this possible to hit.  This could probably
+get picked back to any stable tree that anyone is still maintaining.
+
+ fs/block_dev.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 69bf2fb6f7cd..e92c667c4031 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1881,6 +1881,20 @@ static void __blkdev_put(struct block_device *bdev, fmode_t mode, int for_part)
+ 	struct block_device *victim = NULL;
+ 
+ 	mutex_lock_nested(&bdev->bd_mutex, for_part);
++	if (bdev->bd_openers == 1) {
++		/*
++		 * Sync early if it looks like we're the last one.  If someone
++		 * else opens the block device between now and the decrement
++		 * of bd_openers then we did a sync that we didn't need to,
++		 * but that's not the end of the world and we want to avoid
++		 * long (could be several minute) syncs while holding the
++		 * mutex.
++		 */
++		mutex_unlock(&bdev->bd_mutex);
++		sync_blockdev(bdev);
++		mutex_lock_nested(&bdev->bd_mutex, for_part);
++	}
++
+ 	if (for_part)
+ 		bdev->bd_part_count--;
+ 
+-- 
+2.25.1.696.g5e7596f4ac-goog
+
