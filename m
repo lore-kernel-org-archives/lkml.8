@@ -2,125 +2,114 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AC9C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DDFC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 389022072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:11:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DrM6Uvrr"
+	by mail.kernel.org (Postfix) with ESMTP id 4D6162072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584717079;
+	bh=wudnCbbJkjczxJlVMnm2x1ea/nxbRMb1+tCH6Lys7I0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ycwo0/zYe6pzrcCUb46Pf7VTpeqiKbJuG8MsaXeUqtjfMQvrvOQ40J4cpxRamRWrm
+	 5t1sNGZziNZ0L0VpgKir+vcJ/TtDcPaV2Tmii1CizYaYikVj7Vvtv+GDHyX/3kTJtq
+	 07F38xk5b4Qkq8xRM59WB9BmERKYVm1TokC+Yljg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbgCTPLQ (ORCPT
+        id S1727457AbgCTPLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:11:16 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40310 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727406AbgCTPLO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 11:11:14 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f3so7902733wrw.7;
-        Fri, 20 Mar 2020 08:11:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GEeQsGMUIbDWdrJ0PurnRyyG/X4DzrMw+Jy+G5v05Lk=;
-        b=DrM6Uvrr4yG2ojFhmZP+K3Hwb7ld2ajUhZKogPVBaIxr1nPKp2IkynDKICIqDbG2T4
-         aquRC+io0h+6Qi4+nGjRn+LiuGletmcyG47b9eAX+xDvUbh6ZnUQqTV6wmuZh1l9BCdJ
-         FjF/vp9FZw0TZga72t9K4ZEEOeRfStbAPfo7ZpodlFw/6+aGcqP0juK1Aot6WOLDPx1w
-         YxJ47xgPEbgxuYNs19KM6zRNqjN5Ju3Olp/n/t8dVAtmEQyHZkg0+so5m20ak0ZERAVO
-         RwI45sduuSx6NsxCweMhSjIE2yBH3ztPAPxvkebvVYWKAHbee4hEqLfmuEBOWHVcBRWh
-         7+Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GEeQsGMUIbDWdrJ0PurnRyyG/X4DzrMw+Jy+G5v05Lk=;
-        b=ob6mOioIRY2b44pIN/rOR57eQ8Z5G4JUIcMShrwurVb40TZICghLBrWLT8IaWha/qi
-         RuzgZKDOO2idGgdBn0xxe7HwnusOGnzLvcHsAVkBTyz39hsYkupVyhB68kro8e1z+zCg
-         ngBvJidWsDTofTSdkuV1ST0MKXpdPvtobKWh0dQm2/YIHPCzNso0ymeN6SEUDfQIJrQC
-         TYV8fVV5cSua2IOuB3tSWLma43U613Pvot9eGM+OqK7f+UT0SgRn4V0Pzs8sTReDHzdQ
-         ozA+uGhqpJ6P46WCQeYpzaRCSdPE43tEuMmW8AoAplO05SYKQf77nM/qqW3zC7SjOa3T
-         VV9A==
-X-Gm-Message-State: ANhLgQ3eP6GanqZFWRvEY7QmLLksLuJ06AbVU2Myr15aXk666gtZVTFp
-        J35NCGi6dZK3eKXKrT3sR7I=
-X-Google-Smtp-Source: ADFU+vtmZap7B9ypiCw/Z1DhSQsc7/xrxoSlR9TI7USdDaDETP9o8L73Kco0hBRg4cLgZ82X+AUZPg==
-X-Received: by 2002:adf:d0c2:: with SMTP id z2mr11428476wrh.223.1584717072042;
-        Fri, 20 Mar 2020 08:11:12 -0700 (PDT)
-Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id b67sm8131576wmh.29.2020.03.20.08.11.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 08:11:11 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 16:11:10 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     ldewangan@nvidia.com, jonathanh@nvidia.com,
-        dan.j.williams@intel.com, vkoul@kernel.org, swarren@wwwdotorg.org,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, digetx@gmail.com
-Subject: Re: [PATCH -next] dmaengine: tegra-apb: mark PM functions as
- __maybe_unused
-Message-ID: <20200320151110.GC3706404@ulmo>
-References: <20200320071337.59756-1-yuehaibing@huawei.com>
+        Fri, 20 Mar 2020 11:11:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726913AbgCTPLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 11:11:07 -0400
+Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A31032072C;
+        Fri, 20 Mar 2020 15:11:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584717066;
+        bh=wudnCbbJkjczxJlVMnm2x1ea/nxbRMb1+tCH6Lys7I0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Nd3IfO1Jz3ojOLpMXR8IcWgatHz1bSFvGmD3lf26kmG0hyvaeI27BhRWgoKQvJ02n
+         aKePetfzIEYKee/x3WlS4K37C6KIsgCULzuH+UIzjPRFjTNuv0S0bX4BWb/zeaNa6U
+         LNcpnFxFqBQtDet+MgrYxPVjzTP8r8afTfGpnf+w=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jFJIe-000ukj-Kb; Fri, 20 Mar 2020 16:11:04 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 2/2] docs: conf.py: avoid thousands of duplicate label warning on Sphinx
+Date:   Fri, 20 Mar 2020 16:11:03 +0100
+Message-Id: <74f4d8d91c648d7101c45b4b99cc93532f4dadc6.1584716446.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.1584716446.git.mchehab+huawei@kernel.org>
+References: <cover.1584716446.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="c3bfwLpm8qysLVxt"
-Content-Disposition: inline
-In-Reply-To: <20200320071337.59756-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The autosectionlabel extension is nice, as it allows to refer to
+a section by its name without requiring any extra tag to create
+a reference name.
 
---c3bfwLpm8qysLVxt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+However, on its default, it has two serious problems:
 
-On Fri, Mar 20, 2020 at 03:13:37PM +0800, YueHaibing wrote:
-> When CONFIG_PM is disabled, gcc warning this:
->=20
-> drivers/dma/tegra20-apb-dma.c:1587:12: warning: 'tegra_dma_runtime_resume=
-' defined but not used [-Wunused-function]
-> drivers/dma/tegra20-apb-dma.c:1578:12: warning: 'tegra_dma_runtime_suspen=
-d' defined but not used [-Wunused-function]
->=20
-> Make it as __maybe_unused to fix the warnings,
-> also remove unneeded function declarations.
->=20
-> Fixes: ec8a1586780c ("dma: tegra: add dmaengine based dma driver")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/dma/tegra20-apb-dma.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+1) the namespace is global. So, two files with different
+   "introduction" section would create a label with the
+   same name. This is easily solvable by forcing the extension
+   to prepend the file name with:
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+	autosectionlabel_prefix_document = True
 
---c3bfwLpm8qysLVxt
-Content-Type: application/pgp-signature; name="signature.asc"
+2) It doesn't work hierarchically. So, if there are two level 1
+   sessions (let's say, one labeled "open" and another one "ioctl")
+   and both have a level 2 "synopsis" label, both section 2 will
+   have the same identical name.
 
------BEGIN PGP SIGNATURE-----
+   Currently, there's no way to tell Sphinx to create an
+   hierarchical reference like:
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl503Q4ACgkQ3SOs138+
-s6G5HA//VBGymZPSAr4/KCkQAWaeqfla9+xr0XFMeT78df0ogJwPDwCa9r+AHPDj
-ZplxW9b0SuqpA1+KyQRFqR5MAq3epvDgPKx6gRPxMHbWENnoPg2NrrR79gwHlPUM
-D9glmHmhV+JtQ3TWyRqpEGaJwoWe9kCHze7IkIPR4EIV2zIKcYf4Cj3z+brGcu4E
-wIEQkLRpvbvsIJ9wv2w2M6/lX0E0qVjCJEhox2kkwucw+DWeC5vzCtBWCp1cF+dc
-0t+i5ZxmcNHSw48UItWlaT3jrF6JYyhgvy91XPTwyb+svKbSBR89c5hUObIJ6T3m
-tiau23ebzYHgrBodc26Xt/R+APpQQbMriN2AGk9IR4q8UAuC4CntzjQ7ZZa60uA9
-IGhNEgTXp99BmXjsKQLoYH9q50xZfmRYQwh42SjFnPpRUGC6o/5/1Uq0KuqC3qBC
-6ezFx9qU5WluQqyy3JG1tfyPKBTU2185+eIrvMXFXo/SAUMfWzq8get22A7TY7PT
-ZepRAFZ0m2K4zS3Ke4/Aiw3c4OwrSACEMneHl3pctRjN3BnOFTla2EbjlbBxsvs8
-WELgeyQhlnwnxb08t3df90L2tlODllK+D+OTEZXwq6A75nYgKsAL2uLZECgO1k+L
-GiqR3BstSazfR7ViZi41+GVMBhtqRPYnnu2H1iEizVa69o7WruU=
-=Dnsf
------END PGP SIGNATURE-----
+		open / synopsis
+		ioctl / synopsis
 
---c3bfwLpm8qysLVxt--
+  This causes around 800 warnings. So, the fix should be to
+  not let autosectionlabel to produce references for anything
+  that it is not at a chapter level within any doc, with:
+
+	autosectionlabel_maxdepth = 2
+
+Fixes: 58ad30cf91f0 ("docs: fix reference to core-api/namespaces.rst")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/conf.py | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/conf.py b/Documentation/conf.py
+index fa2bfcd6df1d..9ae8e9abf846 100644
+--- a/Documentation/conf.py
++++ b/Documentation/conf.py
+@@ -40,6 +40,10 @@ extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain',
+               'kfigure', 'sphinx.ext.ifconfig', 'automarkup',
+               'maintainers_include', 'sphinx.ext.autosectionlabel' ]
+ 
++# Ensure that autosectionlabel will produce unique names
++autosectionlabel_prefix_document = True
++autosectionlabel_maxdepth = 2
++
+ # The name of the math extension changed on Sphinx 1.4
+ if (major == 1 and minor > 3) or (major > 1):
+     extensions.append("sphinx.ext.imgmath")
+-- 
+2.24.1
+
