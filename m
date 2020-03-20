@@ -2,196 +2,369 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BECC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD3EC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A002A20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:06:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="i9qirCZD"
+	by mail.kernel.org (Postfix) with ESMTP id 3F47D20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbgCTRGB (ORCPT
+        id S1727358AbgCTRIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:06:01 -0400
-Received: from mail-db8eur05on2099.outbound.protection.outlook.com ([40.107.20.99]:35808
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727471AbgCTRGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:06:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l2BBN/Z1fAaQb4J5fuBeN69Qp0fvJ5AZQDiGAfFXnaNzCqO87z8xSOmO9gddHBzwvAjsU8mFRgmAH3jM4cmi/2FDsjzrKHDIMP8pn6hI8w+mh7TYrqBvXy6+FSoGUVsd9JOJUfhiv0miVWpaBl/7NMXEy+Krp4Sqk0gI/LsN9YdwNqLlcZDW6CC+urIc9QX27Dqldef824HIR6CPD1ZfGeyo2KJTy5W8TnVTZD/uZuyKtlH9J+oEwTk8FMWsRgKFjFalweg7lAozBJ0r1VDjKGbtqJqOA5KI+Rc7USb0iG2lHRb7CPWFUHVBeyDM5UlG0mhqMCHiJl5PiBkSGze9fA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x+W39hN8Deiz1JC4Xe8tYUNA8xkl+TkZ4Y3YVLQs0q4=;
- b=flR2LivA8ZcMQ+ChGUhHLgpFftMLG6zG3kmJLv1dz1WaqgYxUgmdhR5fl47KiBOJQUT2ciT2r3OpenZf6abqciI28+fylP4pojk1SY8BmIiCgXDsWjHgg39M028x4kjwtaXsld+He12+rU1p5qdCe9L2udu66kjYE+feGokI3/zCyYIIP1CroxCAZU/13skYq0/zEPQlYSx05ZVros1Uwb5SiZZT+3iwubL2Q7EES8EF9zYHWgbuIhF4LYJ1jhQo+SeO7uB5STmkLpCM+rGSiDX1Kf0etoGjYoTOODmBScADmIHSTWyIYPSufsbNRwXlmxXtAsHpYlm/YVceVSzOeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x+W39hN8Deiz1JC4Xe8tYUNA8xkl+TkZ4Y3YVLQs0q4=;
- b=i9qirCZDeLGTLCs4o7gESej/c7hJluJXuFEFqBhR6WFl6DuX4Csrqx2xLowjVolfNKH/K/A8F2GzvUqWL5en/r+Zbqkd2l/AMD1P7paM6oqU4L4SkqSoEAUDya6dp6uGKWo/DMqFp8RlrcVevaAuHjCpbdTZfB9H7Qnr4fX3Arw=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
- VI1PR05MB3472.eurprd05.prod.outlook.com (10.170.237.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.16; Fri, 20 Mar 2020 17:05:58 +0000
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2]) by VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2%7]) with mapi id 15.20.2835.017; Fri, 20 Mar 2020
- 17:05:58 +0000
-X-Gm-Message-State: ANhLgQ1i68E1I2RhXov+kvq7utk7nqvHu2foPSZSKIGjE9iw2Q9z+lVJ
-        gPAD1NTI1jusRAQNbl9RTUhQbYLihTq7f5deXcw=
-X-Google-Smtp-Source: ADFU+vu5eQ0XQ2gaTaJU+0kPrD4Z2okP/4JxmWwAsKxZeiK7wqSpvMQ/y+cvk0uPde5rBNpjU4WSYadgttbhdf9vC6M=
-X-Received: by 2002:ac8:1633:: with SMTP id p48mr9494130qtj.305.1584723952240;
- Fri, 20 Mar 2020 10:05:52 -0700 (PDT)
-References: <20191212071847.45561-1-alison.wang@nxp.com> <CAGgjyvHHzPWjRTqxYmGCmk3qa6=kOezHywVDFomgD6UNj-zwpQ@mail.gmail.com>
- <VI1PR04MB40627CDD5F0C17D8DCDCFFE2F4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
- <VI1PR04MB4062C67906888DA8142C17E1F4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
- <CAGgjyvGAjx1SV=K66AM24DxMTA_sAF2uhhDw5gXCFTGNZi8E7Q@mail.gmail.com>
- <VI1PR04MB40620DD55D5ED0FDC3E94C2BF4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
- <20191212122318.GB4310@sirena.org.uk> <CAJ+vNU0xZOb0R2VNkq6k3efdkgQUtO_-cEdNgZ643nt_G=vevQ@mail.gmail.com>
- <af99c9abd9c2aec6a074fb05310c56b780725ebd.camel@toradex.com> <CAJ+vNU16ax9JTx2kSMUF8SiVD-+4KGoFO-U07xM5eE=T6Fwjhw@mail.gmail.com>
-In-Reply-To: <CAJ+vNU16ax9JTx2kSMUF8SiVD-+4KGoFO-U07xM5eE=T6Fwjhw@mail.gmail.com>
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Date:   Fri, 20 Mar 2020 19:05:40 +0200
-X-Gmail-Original-Message-ID: <CAGgjyvFNCbFw7x6QL063oi-fV2UuVQVfL1cv_pQ74HWoJS4Etg@mail.gmail.com>
-Message-ID: <CAGgjyvFNCbFw7x6QL063oi-fV2UuVQVfL1cv_pQ74HWoJS4Etg@mail.gmail.com>
-Subject: Re: [alsa-devel] [EXT] Re: [PATCH] ASoC: sgtl5000: Revert "ASoC:
- sgtl5000: Fix of unmute outputs on probe"
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alison.wang@nxp.com" <alison.wang@nxp.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Igor Opanyuk <igor.opanyuk@toradex.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
-X-ClientProxiedBy: BL0PR1501CA0027.namprd15.prod.outlook.com
- (2603:10b6:207:17::40) To VI1PR05MB3279.eurprd05.prod.outlook.com
- (2603:10a6:802:1c::24)
+        Fri, 20 Mar 2020 13:08:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:54462 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727134AbgCTRIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 13:08:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C3041FB;
+        Fri, 20 Mar 2020 10:08:51 -0700 (PDT)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E69003F305;
+        Fri, 20 Mar 2020 10:08:46 -0700 (PDT)
+Subject: Re: [PATCH V2 1/2] mm/sparsemem: Enable vmem_altmap support in
+ vmemmap_populate_basepages()
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Michal Hocko <mhocko@suse.com>, linux-ia64@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-riscv@lists.infradead.org, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <1583331030-7335-1-git-send-email-anshuman.khandual@arm.com>
+ <1583331030-7335-2-git-send-email-anshuman.khandual@arm.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <5e1bad9b-11d7-344c-766f-162f7a779941@arm.com>
+Date:   Fri, 20 Mar 2020 17:08:31 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mail-qt1-f170.google.com (209.85.160.170) by BL0PR1501CA0027.namprd15.prod.outlook.com (2603:10b6:207:17::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20 via Frontend Transport; Fri, 20 Mar 2020 17:05:56 +0000
-Received: by mail-qt1-f170.google.com with SMTP id z8so5485642qto.12        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 10:05:56 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1i68E1I2RhXov+kvq7utk7nqvHu2foPSZSKIGjE9iw2Q9z+lVJ
-        gPAD1NTI1jusRAQNbl9RTUhQbYLihTq7f5deXcw=
-X-Google-Smtp-Source: ADFU+vu5eQ0XQ2gaTaJU+0kPrD4Z2okP/4JxmWwAsKxZeiK7wqSpvMQ/y+cvk0uPde5rBNpjU4WSYadgttbhdf9vC6M=
-X-Received: by 2002:ac8:1633:: with SMTP id p48mr9494130qtj.305.1584723952240;
- Fri, 20 Mar 2020 10:05:52 -0700 (PDT)
-X-Gmail-Original-Message-ID: <CAGgjyvFNCbFw7x6QL063oi-fV2UuVQVfL1cv_pQ74HWoJS4Etg@mail.gmail.com>
-X-Originating-IP: [209.85.160.170]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 278d9382-64a1-4222-a2cc-08d7ccf0f48d
-X-MS-TrafficTypeDiagnostic: VI1PR05MB3472:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB3472F61607F7D6B43AC3D12CF9F50@VI1PR05MB3472.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 03484C0ABF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(39850400004)(136003)(346002)(376002)(199004)(44832011)(52116002)(86362001)(6666004)(81156014)(8676002)(81166006)(478600001)(6862004)(316002)(8936002)(5660300002)(42186006)(55446002)(66476007)(9686003)(26005)(2906002)(4326008)(66556008)(54906003)(53546011)(107886003)(66946007)(55236004)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB3472;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: s1lEOtfAg0xyGTpKIfHj0m61Q/6dtj1b2qkN1O4IuC/mHeuSAiVQoeAUllxQXRHaRWgyaIJZ4DU22CC9v4FOrScXPE6j/AekmaOYt+/Gg6tTVU+FhfmsE/CoRZ5lLVqJl2nKkB3aDIpBzsx4+xaoMoZKFkpdH0ZwnRdk5HYw4UCaw7mZw8NJfxGU4YS4/Usav+jjqjCtUpVSa/avA9Vu4GNSWyRmiQflKnVM2r0aAuI8sIUso+O57VuxZSpMbtDJInanGwz9Q/LVuFLjdtB+lEmzK3+EZxQjhfoJI2Gb7XknlvcLaq49ZDEaPBiGwWZVoyOZZJlJW1WGOvh/W8v9ySg7STljgBjIjVDWdYHkE56WA2Qr9JWU7+etfzkajkpTUmZeLt+vw9+tJ1LAeFy9FVFg5UrukeXQ8Wxv/iF7Zq/Ai9J3kSyxKspAjqK3L14w
-X-MS-Exchange-AntiSpam-MessageData: URsz3IY+TSHym8l/j30kncPakL9pAJF/mz9mGdLbMpSb4l557ePsxEqv3NSWSJdy8oor6yBLBtNYf30vT4tgyjFWv+SOBA1VIUGqdbodO9ARWuMLiw0SSC+sGDzRUnp4eM/jy+fXTBj0MuXcrICdOg==
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 278d9382-64a1-4222-a2cc-08d7ccf0f48d
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2020 17:05:56.5983
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ahB78RQ356NzzQ96iEtquk68Jw3mjlf6P8ZeyY+Q8L12F0RzBrFllY3lfmo6aDR0IQOw+9vzkOOy5FjVdpBIWSlSI2KNz2JWqd33nEGABWY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3472
+In-Reply-To: <1583331030-7335-2-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 5:51 PM Tim Harvey <tharvey@gateworks.com> wrote:
->
-> On Fri, Mar 20, 2020 at 12:26 AM Marcel Ziswiler
-> <marcel.ziswiler@toradex.com> wrote:
-> >
-> > Hi Tim
-> >
-> > On Thu, 2020-03-19 at 13:49 -0700, Tim Harvey wrote:
-> > > On Thu, Dec 12, 2019 at 4:24 AM Mark Brown <broonie@kernel.org>
-> > > wrote:
-> > > > On Thu, Dec 12, 2019 at 10:46:31AM +0000, Alison Wang wrote:
-> > > >
-> > > > > We tested this standard solution using gstreamer and standard
-> > > > > ALSA
-> > > > > tools like aplay, arecord and all these tools unmute needed
-> > > > > blocks
-> > > > > successfully.
-> > > > > [Alison Wang] I am using aplay. Do you mean I need to add some
-> > > > > parameters for aplay or others to unmute the outputs?
-> > > >
-> > > > Use amixer.
-> > >
-> > > Marc / Oleksandr,
-> > >
-> > > I can't seem to find the original patch in my mailbox for 631bc8f:
-> > > ('ASoC: sgtl5000: Fix of unmute outputs on probe')
-> >
-> > I forwarded you that one again. OK?
-> >
-> > > however I find it
-> > > breaks sgtl5000 audio output on the Gateworks boards which is still
-> > > broken on 5.6-rc6.
-> >
-> > What exactly do you mean by "breaks"? Isn't it that you just need to
-> > unmute stuff e.g. using amixer or using a proper updated asound.state
-> > file with default states for your controls?
->
-> the audio device is in /proc/asound/cards but when I send audio to it
-> I 'hear' nothing out the normal line-out output.
->
-> >
-> > > Was there some follow-up patches that haven't made
-> > > it into mainline yet regarding this?
-> >
-> > I don't think so. It all works perfectly, not?
-> >
-> > > The response above indicates maybe there was an additional ALSA
-> > > control perhaps added as a resolution but I don't see any differences
-> > > there.
-> >
-> > Not that I am aware of, no.
-> >
->
-> The output of 'amixer' shows nothing different than before this patch
-> where audio out worked (same controls, same settings on them). I'm
-> testing this with a buildroot rootfs with no asound.conf (or at least
-> none that I know of... i'm honestly not clear where all they can be).
+On 2020-03-04 2:10 pm, Anshuman Khandual wrote:
+> vmemmap_populate_basepages() is used across platforms to allocate backing
+> memory for vmemmap mapping. This is used as a standard default choice or
+> as a fallback when intended huge pages allocation fails. This just creates
+> entire vmemmap mapping with base pages (PAGE_SIZE).
+> 
+> On arm64 platforms, vmemmap_populate_basepages() is called instead of the
+> platform specific vmemmap_populate() when ARM64_SWAPPER_USES_SECTION_MAPS
+> is not enabled as in case for ARM64_16K_PAGES and ARM64_64K_PAGES configs.
+> 
+> At present vmemmap_populate_basepages() does not support allocating from
+> driver defined struct vmem_altmap while trying to create vmemmap mapping
+> for a device memory range. It prevents ARM64_16K_PAGES and ARM64_64K_PAGES
+> configs on arm64 from supporting device memory with vmemap_altmap request.
+> 
+> This enables vmem_altmap support in vmemmap_populate_basepages() unlocking
+> device memory allocation for vmemap mapping on arm64 platforms with 16K or
+> 64K base page configs.
+> 
+> Each architecture should evaluate and decide on subscribing device memory
+> based base page allocation through vmemmap_populate_basepages(). Hence lets
+> keep it disabled on all archs in order to preserve the existing semantics.
+> A subsequent patch enables it on arm64.
 
-Tim, did you try to unmute the output with amixer?
+I guess buy-in for this change largely depends on whether any other 
+architectures are likely to want to share it. The existing altmap users 
+don't look like they would, so that's probably more a question for the 
+likes of S390 and RISC-V.
 
-Could you provide the output of your amixer with and without this patch?
+Failing that, simply decoupling arm64 from vmemmap_populate_basepages() 
+seems viable - I tried hacking up a quick proof-of-concept (attached at 
+the end) and it doesn't come out looking *too* disgusting.
 
-Before this patch, the driver unmuted HP, LO, and ADC unconditionally
-on load (while it just had to set up ZCD bits).
-Now HP, LO, ADC remain muted until one unmutes them using standard
-ALSA tools/interfaces.
-ALSA mute/unmute controls for these outputs have been presenting in
-the kernel for a long time. Please, just use them.
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Fenghua Yu <fenghua.yu@intel.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-ia64@vger.kernel.org
+> Cc: linux-riscv@lists.infradead.org
+> Cc: x86@kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Acked-by: Will Deacon <will@kernel.org>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>   arch/arm64/mm/mmu.c      |  2 +-
+>   arch/ia64/mm/discontig.c |  2 +-
+>   arch/riscv/mm/init.c     |  2 +-
+>   arch/x86/mm/init_64.c    |  6 +++---
+>   include/linux/mm.h       |  5 +++--
+>   mm/sparse-vmemmap.c      | 16 +++++++++++-----
+>   6 files changed, 20 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 9b08f7c7e6f0..27cb95c471eb 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -1036,7 +1036,7 @@ static void free_empty_tables(unsigned long addr, unsigned long end,
+>   int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>   		struct vmem_altmap *altmap)
+>   {
+> -	return vmemmap_populate_basepages(start, end, node);
+> +	return vmemmap_populate_basepages(start, end, node, NULL);
+>   }
+>   #else	/* !ARM64_SWAPPER_USES_SECTION_MAPS */
+>   int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+> diff --git a/arch/ia64/mm/discontig.c b/arch/ia64/mm/discontig.c
+> index 4f33f6e7e206..20409f3afea8 100644
+> --- a/arch/ia64/mm/discontig.c
+> +++ b/arch/ia64/mm/discontig.c
+> @@ -656,7 +656,7 @@ void arch_refresh_nodedata(int update_node, pg_data_t *update_pgdat)
+>   int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>   		struct vmem_altmap *altmap)
+>   {
+> -	return vmemmap_populate_basepages(start, end, node);
+> +	return vmemmap_populate_basepages(start, end, node, NULL);
+>   }
+>   
+>   void vmemmap_free(unsigned long start, unsigned long end,
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 965a8cf4829c..1d7451c91982 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -501,6 +501,6 @@ void __init paging_init(void)
+>   int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>   			       struct vmem_altmap *altmap)
+>   {
+> -	return vmemmap_populate_basepages(start, end, node);
+> +	return vmemmap_populate_basepages(start, end, node, NULL);
+>   }
+>   #endif
+> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+> index abbdecb75fad..3272fe0d844a 100644
+> --- a/arch/x86/mm/init_64.c
+> +++ b/arch/x86/mm/init_64.c
+> @@ -1471,7 +1471,7 @@ static int __meminit vmemmap_populate_hugepages(unsigned long start,
+>   			vmemmap_verify((pte_t *)pmd, node, addr, next);
+>   			continue;
+>   		}
+> -		if (vmemmap_populate_basepages(addr, next, node))
+> +		if (vmemmap_populate_basepages(addr, next, node, NULL))
+>   			return -ENOMEM;
+>   	}
+>   	return 0;
+> @@ -1483,7 +1483,7 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>   	int err;
+>   
+>   	if (end - start < PAGES_PER_SECTION * sizeof(struct page))
+> -		err = vmemmap_populate_basepages(start, end, node);
+> +		err = vmemmap_populate_basepages(start, end, node, NULL);
+>   	else if (boot_cpu_has(X86_FEATURE_PSE))
+>   		err = vmemmap_populate_hugepages(start, end, node, altmap);
+>   	else if (altmap) {
+> @@ -1491,7 +1491,7 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>   				__func__);
+>   		err = -ENOMEM;
+>   	} else
+> -		err = vmemmap_populate_basepages(start, end, node);
+> +		err = vmemmap_populate_basepages(start, end, node, NULL);
+>   	if (!err)
+>   		sync_global_pgds(start, end - 1);
+>   	return err;
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 52269e56c514..42f99c8d63c0 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2780,14 +2780,15 @@ pgd_t *vmemmap_pgd_populate(unsigned long addr, int node);
+>   p4d_t *vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node);
+>   pud_t *vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node);
+>   pmd_t *vmemmap_pmd_populate(pud_t *pud, unsigned long addr, int node);
+> -pte_t *vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node);
+> +pte_t *vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node,
+> +			    struct vmem_altmap *altmap);
+>   void *vmemmap_alloc_block(unsigned long size, int node);
+>   struct vmem_altmap;
+>   void *vmemmap_alloc_block_buf(unsigned long size, int node);
+>   void *altmap_alloc_block_buf(unsigned long size, struct vmem_altmap *altmap);
+>   void vmemmap_verify(pte_t *, int, unsigned long, unsigned long);
+>   int vmemmap_populate_basepages(unsigned long start, unsigned long end,
+> -			       int node);
+> +			       int node, struct vmem_altmap *altmap);
+>   int vmemmap_populate(unsigned long start, unsigned long end, int node,
+>   		struct vmem_altmap *altmap);
+>   void vmemmap_populate_print_last(void);
+> diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+> index 200aef686722..a407abc9b46c 100644
+> --- a/mm/sparse-vmemmap.c
+> +++ b/mm/sparse-vmemmap.c
+> @@ -140,12 +140,18 @@ void __meminit vmemmap_verify(pte_t *pte, int node,
+>   			start, end - 1);
+>   }
+>   
+> -pte_t * __meminit vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node)
+> +pte_t * __meminit vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node,
+> +				       struct vmem_altmap *altmap)
+>   {
+>   	pte_t *pte = pte_offset_kernel(pmd, addr);
+>   	if (pte_none(*pte)) {
+>   		pte_t entry;
+> -		void *p = vmemmap_alloc_block_buf(PAGE_SIZE, node);
+> +		void *p;
+> +
+> +		if (altmap)
+> +			p = altmap_alloc_block_buf(PAGE_SIZE, altmap);
+> +		else
+> +			p = vmemmap_alloc_block_buf(PAGE_SIZE, node);
 
->
-> Tim
---
-Best regards
-Oleksandr Suvorov
+This pattern ends up appearing a number of times by the end - if we do 
+go down the generic code route, might it be worth pushing it down into 
+vmmemmap_alloc_block_buf() itself to make it automatic? (possibly even 
+including the powerpc fallback behaviour too?)
 
-Toradex AG
-Ebenaustrasse 10 | 6048 Horw | Switzerland | T: +41 41 500 48 00
+Robin.
+
+>   		if (!p)
+>   			return NULL;
+>   		entry = pfn_pte(__pa(p) >> PAGE_SHIFT, PAGE_KERNEL);
+> @@ -213,8 +219,8 @@ pgd_t * __meminit vmemmap_pgd_populate(unsigned long addr, int node)
+>   	return pgd;
+>   }
+>   
+> -int __meminit vmemmap_populate_basepages(unsigned long start,
+> -					 unsigned long end, int node)
+> +int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
+> +					 int node, struct vmem_altmap *altmap)
+>   {
+>   	unsigned long addr = start;
+>   	pgd_t *pgd;
+> @@ -236,7 +242,7 @@ int __meminit vmemmap_populate_basepages(unsigned long start,
+>   		pmd = vmemmap_pmd_populate(pud, addr, node);
+>   		if (!pmd)
+>   			return -ENOMEM;
+> -		pte = vmemmap_pte_populate(pmd, addr, node);
+> +		pte = vmemmap_pte_populate(pmd, addr, node, altmap);
+>   		if (!pte)
+>   			return -ENOMEM;
+>   		vmemmap_verify(pte, node, addr, addr + PAGE_SIZE);
+> 
+
+----->8-----
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH] arm64/mm: Consolidate vmemmap_populate()
+
+Since we already have a custom vmemmap_populate() implementation, fold
+the non-section-map case into that as well, so that we can easily add
+altmap support for both cases without having to mess with core code.
+
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+  arch/arm64/mm/mmu.c | 34 +++++++++++++++++++++-------------
+  1 file changed, 21 insertions(+), 13 deletions(-)
+
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 128f70852bf3..e250fd414b2b 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -725,13 +725,6 @@ int kern_addr_valid(unsigned long addr)
+  	return pfn_valid(pte_pfn(pte));
+  }
+  #ifdef CONFIG_SPARSEMEM_VMEMMAP
+-#if !ARM64_SWAPPER_USES_SECTION_MAPS
+-int __meminit vmemmap_populate(unsigned long start, unsigned long end, 
+int node,
+-		struct vmem_altmap *altmap)
+-{
+-	return vmemmap_populate_basepages(start, end, node);
+-}
+-#else	/* !ARM64_SWAPPER_USES_SECTION_MAPS */
+  int __meminit vmemmap_populate(unsigned long start, unsigned long end, 
+int node,
+  		struct vmem_altmap *altmap)
+  {
+@@ -740,6 +733,7 @@ int __meminit vmemmap_populate(unsigned long start, 
+unsigned long end, int node,
+  	pgd_t *pgdp;
+  	pud_t *pudp;
+  	pmd_t *pmdp;
++	pte_t *ptep;
+
+  	do {
+  		next = pmd_addr_end(addr, end);
+@@ -752,22 +746,36 @@ int __meminit vmemmap_populate(unsigned long 
+start, unsigned long end, int node,
+  		if (!pudp)
+  			return -ENOMEM;
+
++#if ARM64_SWAPPER_USES_SECTION_MAPS
+  		pmdp = pmd_offset(pudp, addr);
+  		if (pmd_none(READ_ONCE(*pmdp))) {
+-			void *p = NULL;
+-
+-			p = vmemmap_alloc_block_buf(PMD_SIZE, node);
++			void *p = vmemmap_alloc_block_buf(PMD_SIZE, node);
+  			if (!p)
+  				return -ENOMEM;
+
+  			pmd_set_huge(pmdp, __pa(p), __pgprot(PROT_SECT_NORMAL));
+-		} else
+-			vmemmap_verify((pte_t *)pmdp, node, addr, next);
++			continue;
++		}
++#else
++		pmdp = vmemmap_pmd_populate(pmdp, addr, node);
++		if (!pmdp)
++			return -ENOMEM;
++
++		ptep = pte_offset_kernel(pmdp, addr);
++		if (pte_none(READ_ONCE(*ptep))) {
++			void *p = vmemmap_alloc_block_buf(PAGE_SIZE, node);
++			if (!p)
++				return -ENOMEM;
++
++			set_pte(ptep, pfn_pte(__pa(p) >> PAGE_SHIFT, PAGE_KERNEL));
++		}
++#endif
++		vmemmap_verify((pte_t *)pmdp, node, addr, next);
+  	} while (addr = next, addr != end);
+
+  	return 0;
+  }
+-#endif	/* !ARM64_SWAPPER_USES_SECTION_MAPS */
++
+  void vmemmap_free(unsigned long start, unsigned long end,
+  		struct vmem_altmap *altmap)
+  {
