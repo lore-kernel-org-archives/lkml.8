@@ -7,60 +7,61 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E623C43332
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8D8C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62F7C20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2684020767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Sl4jeNcX"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="W6a345w/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgCTJHK (ORCPT
+        id S1727046AbgCTJHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:07:10 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40440 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbgCTJHJ (ORCPT
+        Fri, 20 Mar 2020 05:07:35 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40650 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbgCTJHe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:07:09 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02K9749f001160;
-        Fri, 20 Mar 2020 04:07:04 -0500
+        Fri, 20 Mar 2020 05:07:34 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02K97UAp059436;
+        Fri, 20 Mar 2020 04:07:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584695224;
-        bh=Utp2bYw61RXYVAOCnJQvVihm8BNTybfuAKiMIT8R1Z4=;
+        s=ti-com-17Q1; t=1584695250;
+        bh=CA60fAxu2Om4P8TmIH8kKHYbjd79oYciPDz/3lq0gVE=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Sl4jeNcX4+ZPpF6DMIQR3I+jARl4W9KcDQ6lG32NW6KQ9aK+kOrjBCg+xsTyVaTlL
-         d9wN6hHlSsOAn8gzsN0hrgAAdQI7LEbaU4mcHy0E7cZV++UrUgJrFINq4a5YwSBV9R
-         rBPVSxQfRMTXjZcDGxZXXoZl+3bnGUpxb8ZKhTqI=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02K974bl035172;
-        Fri, 20 Mar 2020 04:07:04 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        b=W6a345w/oxVR7BQ8Mx0nAraxljHK6q8mHoD8zIYbYNlYknE8IriFVfvpsnYlqX17d
+         XH5cN29zm5HNH00+fvkguper0jBs6gWRXdEvh8sKWEtQRK89w9T6cCs8u75xyshlpz
+         64p4ysc4gKlPFdz9REjFgD9hiuQS+SqbWuHLjRvQ=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02K97UqX093926
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Mar 2020 04:07:30 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
- Mar 2020 04:07:04 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2020 04:07:29 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 20 Mar 2020 04:07:04 -0500
+ Frontend Transport; Fri, 20 Mar 2020 04:07:29 -0500
 Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02K970g2086730;
-        Fri, 20 Mar 2020 04:07:02 -0500
-Subject: Re: [PATCH] arm64: dts: ti: k3-am65: Add clocks to dwc3 nodes
-To:     Roger Quadros <rogerq@ti.com>
-CC:     <nm@ti.com>, <d-gerlach@ti.com>, <nsekhar@ti.com>,
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02K97QNc085215;
+        Fri, 20 Mar 2020 04:07:27 -0500
+Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-am65-mcu: Add DMA entries for ADC
+To:     Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stable@kernel.org>
-References: <20200311144111.7112-1-rogerq@ti.com>
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200312092823.21587-1-vigneshr@ti.com>
+ <20200312092823.21587-2-vigneshr@ti.com>
 From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <3dcb6199-2276-7aa5-2857-1208f8024b56@ti.com>
-Date:   Fri, 20 Mar 2020 11:07:00 +0200
+Message-ID: <5b1703e1-b1af-6436-3e46-34e27f7c8ada@ti.com>
+Date:   Fri, 20 Mar 2020 11:07:26 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200311144111.7112-1-rogerq@ti.com>
+In-Reply-To: <20200312092823.21587-2-vigneshr@ti.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -70,49 +71,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/03/2020 16:41, Roger Quadros wrote:
-> From: Dave Gerlach <d-gerlach@ti.com>
+On 12/03/2020 11:28, Vignesh Raghavendra wrote:
+> Add DMA entries for ADC nodes
 > 
-> The TI sci-clk driver can scan the DT for all clocks provided by system
-> firmware and does this by checking the clocks property of all nodes, so
-> we must add this to the dwc3 nodes so USB clocks are available.
-> 
-> Without this USB does not work with latest system firmware i.e.
-> [    1.714662] clk: couldn't get parent clock 0 for /interconnect@100000/dwc3@4020000
-> 
-> Fixes: cc54a99464ccd ("arm64: dts: ti: k3-am6: add USB suppor")
-> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Cc: stable@kernel.org
-> ---
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 
-Queued up towards 5.7, thanks.
+Queued both patches towards 5.7, thanks.
 
 -Tero
 
->   arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 2 ++
->   1 file changed, 2 insertions(+)
+> ---
+>   arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi | 6 ++++++
+>   1 file changed, 6 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> index e5df20a2d2f9..d86c5c7b82fc 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> @@ -296,6 +296,7 @@
->   		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
->   		dma-coherent;
->   		power-domains = <&k3_pds 151 TI_SCI_PD_EXCLUSIVE>;
-> +		clocks = <&k3_clks 151 2>, <&k3_clks 151 7>;
->   		assigned-clocks = <&k3_clks 151 2>, <&k3_clks 151 7>;
->   		assigned-clock-parents = <&k3_clks 151 4>,	/* set REF_CLK to 20MHz i.e. PER0_PLL/48 */
->   					 <&k3_clks 151 9>;	/* set PIPE3_TXB_CLK to CLK_12M_RC/256 (for HS only) */
-> @@ -335,6 +336,7 @@
->   		interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
->   		dma-coherent;
->   		power-domains = <&k3_pds 152 TI_SCI_PD_EXCLUSIVE>;
-> +		clocks = <&k3_clks 152 2>;
->   		assigned-clocks = <&k3_clks 152 2>;
->   		assigned-clock-parents = <&k3_clks 152 4>;	/* set REF_CLK to 20MHz i.e. PER0_PLL/48 */
+> diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+> index 92629cbdc184..e85498f0dd05 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+> @@ -82,6 +82,9 @@ tscadc0: tscadc@40200000 {
+>   		assigned-clocks = <&k3_clks 0 2>;
+>   		assigned-clock-rates = <60000000>;
+>   		clock-names = "adc_tsc_fck";
+> +		dmas = <&mcu_udmap 0x7100>,
+> +			<&mcu_udmap 0x7101 >;
+> +		dma-names = "fifo0", "fifo1";
 >   
+>   		adc {
+>   			#io-channel-cells = <1>;
+> @@ -97,6 +100,9 @@ tscadc1: tscadc@40210000 {
+>   		assigned-clocks = <&k3_clks 1 2>;
+>   		assigned-clock-rates = <60000000>;
+>   		clock-names = "adc_tsc_fck";
+> +		dmas = <&mcu_udmap 0x7102>,
+> +			<&mcu_udmap 0x7103>;
+> +		dma-names = "fifo0", "fifo1";
+>   
+>   		adc {
+>   			#io-channel-cells = <1>;
 > 
 
 --
