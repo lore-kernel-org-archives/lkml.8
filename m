@@ -2,96 +2,81 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABB3C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F909C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F122072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C45E20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:10:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbgCTRJ7 (ORCPT
+        id S1727268AbgCTRKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:09:59 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:57535 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbgCTRJ7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:09:59 -0400
-Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MwQKr-1jVudM1jCn-00sPyn; Fri, 20 Mar 2020 18:09:57 +0100
-Received: by mail-qk1-f178.google.com with SMTP id h14so7629762qke.5;
-        Fri, 20 Mar 2020 10:09:57 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3AjeCqF4eQedqqGLmc+BY9C1BRfVZznlpS/H8qbeC3Zle6nKq9
-        xjNsm0S3VDZykFS1rqvrzGG38jJwKuXUceWVtFE=
-X-Google-Smtp-Source: ADFU+vtjyO+ehLTD66pkWeXkdjTj4/yy0U6UhFzBOixds9km8+MN7n37hhenmQD129d14NVa+I+huaC/oF0GQuuVinA=
-X-Received: by 2002:a37:a4d6:: with SMTP id n205mr9299331qke.352.1584724196159;
- Fri, 20 Mar 2020 10:09:56 -0700 (PDT)
+        Fri, 20 Mar 2020 13:10:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35886 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726973AbgCTRKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 13:10:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 75934B00D;
+        Fri, 20 Mar 2020 17:10:02 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 10:09:02 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     dhowells@redhat.com
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH] security, keys: Optimize barrier usage for Rmw atomic
+ bitops
+Message-ID: <20200320170902.ilwugh33co3poqm3@linux-p48b>
+References: <20200129180625.24486-1-dave@stgolabs.net>
 MIME-Version: 1.0
-References: <cover.1584667964.git.gurus@codeaurora.org> <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
-In-Reply-To: <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 20 Mar 2020 18:09:39 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
-Message-ID: <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
-Subject: Re: [PATCH v11 06/12] pwm: imx27: Use 64-bit division macro and function
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:NT1QCBoJeAxayaviYjMCvNEQL3IYVL2LhtzFKOtdqS2IV0XjZa3
- wWW5chAgDpZ3YlZiAEunuXIMrORfU6DGtU3m6f3NpQn8z+7TRq+D5UQ2vxc0k8MvdT7smdY
- P6JgLiP+NviVJg4iv3gWtF9hMF5qM78kT4G8a2p6hCOBhbmDOAy/YOg86FgCCiHrTAIILiJ
- v3A65uoScg2fWVlqqgd5g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OBUSs1wKTYM=:uNmjh1lUYwUMomH/yU/kca
- y5KrySbLrEVfWmoFzAPv8r6OYcJKLNbEpw8jsnSChMIVM6SlO9MomD4glOZjrlimSW1XdsbSy
- OdH+GzYXuW/cmSDeB2y7p8Rc8XZ9qHPXcGOa0HlNDIgZ9ZIWgS4mUTHRjwNaihi/c+yoAZFX2
- HlYxkuqdbv04Lcu+/xQwdFcJ8hiuLkR/zYB2tpfxS7MAmZrTMIpTc44v/GpeHOtf2bIxTnSsS
- GRy+YNuoj6fMVh8Jhy01mtV1ZkNasY/++aDx0jtpFXP8PM8xU1HchXu8WZ4I41qemS4HcxGfT
- 0yXXGmlm/5rnHY8zgo46ADAPV4NgS+SJwu/5bCuF3JONkq5oXYLEPuEgWBJZxYs1fX1RnbdUI
- Lu3O/YIZboJ98fhSx6aRBYlzWaR4/xGgiOenIrAy3evjFJNrsF+jT/Kx6GuAZwR5mTYGnoAPv
- UG1gEXzdFQWfvlimucx+7TIRqMto3Bi2XhL7TACvifjHLtWCQ5DiGgwJ/hyLVXCYc6XrH5PBk
- kwRgVtYGB/xpn1CqktxKbWdzbZR4PrG8Q8wLRcpjXg71KIf3AZwMyJqz/w8tWVqgfI3maDZ6R
- YQ8J1jaWo7SKpwW7uDfWm6Rxj2x74gWhzudY+kkihrVoX9CKN3SXZRj4xemwrQcLk36pTwkj0
- O6PLhvmvessXcqMLM1kay+eRfxprkC+TpxrO4Vrq5NZ5XgcMJWX4XVXaP1YX642AjyxQSBUmh
- vh6Wie9lAV+r7XRSH1FXFuH+P/jkGrliM4KHf3Ca4TN+cqKePxXgwVRNrP5CXxl4HSRUxjdWF
- 70YRjzKWkbaV78eiHWOgrRwd7s35djMxif/rpr7M7DtCK5fRiE=
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200129180625.24486-1-dave@stgolabs.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
+ping?
 
-> @@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+On Wed, 29 Jan 2020, Davidlohr Bueso wrote:
+
+>For both set and clear_bit, we can avoid the unnecessary barriers
+>on non LL/SC architectures, such as x86. Instead, use the
+>smp_mb__{before,after}_atomic() calls.
 >
->         period_cycles /= prescale;
->         c = (unsigned long long)period_cycles * state->duty_cycle;
-> -       do_div(c, state->period);
-> -       duty_cycles = c;
-> +       duty_cycles = div64_u64(c, state->period);
+>Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+>---
+> security/keys/gc.c | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
 >
-
-This change looks fine, but I wonder if the code directly above it
-
-        c = clk_get_rate(imx->clk_per);
-        c *= state->period;
-        do_div(c, 1000000000);
-        period_cycles = c;
-
-might run into an overflow when both the clock rate and the period
-are large numbers.
-
-      Arnd
+>diff --git a/security/keys/gc.c b/security/keys/gc.c
+>index 671dd730ecfc..ce7b4c22e3c4 100644
+>--- a/security/keys/gc.c
+>+++ b/security/keys/gc.c
+>@@ -102,7 +102,7 @@ void key_gc_keytype(struct key_type *ktype)
+>
+> 	key_gc_dead_keytype = ktype;
+> 	set_bit(KEY_GC_REAPING_KEYTYPE, &key_gc_flags);
+>-	smp_mb();
+>+	smp_mb__after_atomic();
+> 	set_bit(KEY_GC_REAP_KEYTYPE, &key_gc_flags);
+>
+> 	kdebug("schedule");
+>@@ -308,7 +308,7 @@ static void key_garbage_collector(struct work_struct *work)
+>
+> 	if (unlikely(gc_state & KEY_GC_REAPING_DEAD_3)) {
+> 		kdebug("dead wake");
+>-		smp_mb();
+>+		smp_mb__before_atomic();
+> 		clear_bit(KEY_GC_REAPING_KEYTYPE, &key_gc_flags);
+> 		wake_up_bit(&key_gc_flags, KEY_GC_REAPING_KEYTYPE);
+> 	}
+>-- 
+>2.16.4
+>
