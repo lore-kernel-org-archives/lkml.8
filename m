@@ -2,43 +2,42 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD19EC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D63DCC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4BB20773
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5F1E20774
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Ax+m3e+n"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="OGigWW4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgCTILe (ORCPT
+        id S1727044AbgCTILi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 04:11:34 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:51318 "EHLO mail.andi.de1.cc"
+        Fri, 20 Mar 2020 04:11:38 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:51332 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbgCTILa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726631AbgCTILa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Mar 2020 04:11:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8uNn0pgvKn2fpP2I6JTFrcoatNgGZjsQe8kBMamy+W4=; b=Ax+m3e+nTo5xkxohG8wKZzCk/P
-        7wmG6uk2I1ntHVWUtwA/LWnMjkwZ4CsCKidBsmvjdYpN5nARe6/b7fz3Su2kvCKqY5t/6IcHVR8uV
-        TzHnciddPPUyjkwNO3UaFamd67sgr7WDYsEAJcw76hncz1Y3xUqG1l8X1gtZ1is+4Mts=;
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/tNgPzPvBgCPfKKRPyvUe6Q7AEQzyG6kRTYOs3M9DUI=; b=OGigWW4lHLlo1FNdpuKgv7a9Sf
+        5tPcRcz4mgKK9+Z8hPDypWqIOEEFxKXHH3WlFSZ6NT8cHEskwFIHdZQTF22EdRjYZmmtcMGOX6pF8
+        VDLXUvUxTaLEpks+CfyKyRNBWgK8fd6Nb0+grAXTDiVJ0QLre90WkBhI84n0z2innsq4=;
 Received: from p200300ccff093a00e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff09:3a00:e2ce:c3ff:fe93:fc31] helo=eeepc)
         by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <andreas@kemnade.info>)
-        id 1jFCkP-00058S-7M; Fri, 20 Mar 2020 09:11:18 +0100
+        id 1jFCkP-00058T-5a; Fri, 20 Mar 2020 09:11:18 +0100
 Received: from andi by eeepc with local (Exim 4.92)
         (envelope-from <andreas@kemnade.info>)
-        id 1jFCkK-00039Z-0g; Fri, 20 Mar 2020 09:11:12 +0100
+        id 1jFCkG-00039E-60; Fri, 20 Mar 2020 09:11:08 +0100
 From:   Andreas Kemnade <andreas@kemnade.info>
 To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
         a.zummo@towertech.it, alexandre.belloni@bootlin.com,
@@ -48,12 +47,10 @@ To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
         lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
         jic23@kernel.org
 Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v7 7/7] mfd: rn5t618: cleanup i2c_device_id
-Date:   Fri, 20 Mar 2020 09:11:05 +0100
-Message-Id: <20200320081105.12026-8-andreas@kemnade.info>
+Subject: [PATCH v7 0/7] mfd: rn5t618: Add RTC/ADC support
+Date:   Fri, 20 Mar 2020 09:10:58 +0100
+Message-Id: <20200320081105.12026-1-andreas@kemnade.info>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200320081105.12026-1-andreas@kemnade.info>
-References: <20200320081105.12026-1-andreas@kemnade.info>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,54 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-That list was just empty, so it can be removed if .probe_new
-instead of .probe is used
+In the variant RC5T619 the mfd has an RTC. This patchset adds
+support for it. To do so it adds the missing register defines in 
+rn5t618.h and general irq handling for that.
+It seems that the IRQ definitions are the same except missing RTC
+for the RN5T618 but due to missing ability to test that they are
+not added here.
+It also adds support for the ADC, it is available in both the
+RN5T618 and RC5T619 but due to missing ability to test that,
+the subdevice is only added for the RC5T619.
 
-Suggested-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-Functional independent from the other patches, but since they are
-touching similar areas, commit/merge conflicts would occur.
- drivers/mfd/rn5t618.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+It was tested on the Kobo Clara HD.
 
-diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-index bc117adede4c..232de50562f9 100644
---- a/drivers/mfd/rn5t618.c
-+++ b/drivers/mfd/rn5t618.c
-@@ -146,8 +146,7 @@ static const struct of_device_id rn5t618_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, rn5t618_of_match);
- 
--static int rn5t618_i2c_probe(struct i2c_client *i2c,
--			     const struct i2c_device_id *id)
-+static int rn5t618_i2c_probe(struct i2c_client *i2c)
- {
- 	const struct of_device_id *of_id;
- 	struct rn5t618 *priv;
-@@ -244,11 +243,6 @@ static int __maybe_unused rn5t618_i2c_resume(struct device *dev)
- 	return 0;
- }
- 
--static const struct i2c_device_id rn5t618_i2c_id[] = {
--	{ }
--};
--MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id);
--
- static SIMPLE_DEV_PM_OPS(rn5t618_i2c_dev_pm_ops,
- 			rn5t618_i2c_suspend,
- 			rn5t618_i2c_resume);
-@@ -259,9 +253,8 @@ static struct i2c_driver rn5t618_i2c_driver = {
- 		.of_match_table = of_match_ptr(rn5t618_of_match),
- 		.pm = &rn5t618_i2c_dev_pm_ops,
- 	},
--	.probe = rn5t618_i2c_probe,
-+	.probe_new = rn5t618_i2c_probe,
- 	.remove = rn5t618_i2c_remove,
--	.id_table = rn5t618_i2c_id,
- };
- 
- module_i2c_driver(rn5t618_i2c_driver);
+Changes in v7:
+- cleanup in IRQ init stuff
+
+Changes in v6:
+- put together with ADC series
+- also added cleanup i2_device_id patch to avoid merge
+  conflicts
+
+Changes in v5:
+- static rn5t618_irq_init
+- PLATFORM_DEVID_NONE
+- added some Acked-Bys
+
+Changes in v4:
+- use macros for IRQ definitions
+- merge rn5t618-core.c and rn5t618-irq.c
+
+Changes in v3:
+- alignment cleanup
+- output cleanup, remove useless toggling of alarm flag in rtc probe
+- updated bindings description, so patch 1/5 becomes 2/6 and so on
+
+Changes in v2:
+- no dead code in irq code
+- various improvements and cleanups in rtc driver itself
+
+
+Andreas Kemnade (7):
+  dt-bindings: mfd: rn5t618: Document optional property interrupts
+  mfd: rn5t618: add IRQ support
+  mfd: rn5t618: add RTC related registers
+  mfd: rn5t618: add more subdevices
+  rtc: rc5t619: add Ricoh RC5T619 RTC driver
+  iio: adc: rn5t618: Add ADC driver for RN5T618/RC5T619
+  mfd: rn5t618: cleanup i2c_device_id
+
+ .../devicetree/bindings/mfd/rn5t618.txt       |   4 +
+ drivers/iio/adc/Kconfig                       |  10 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/rn5t618-adc.c                 | 256 ++++++++++
+ drivers/mfd/Kconfig                           |   1 +
+ drivers/mfd/rn5t618.c                         | 109 ++++-
+ drivers/rtc/Kconfig                           |  10 +
+ drivers/rtc/Makefile                          |   1 +
+ drivers/rtc/rtc-rc5t619.c                     | 444 ++++++++++++++++++
+ include/linux/mfd/rn5t618.h                   |  26 +
+ 10 files changed, 851 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/iio/adc/rn5t618-adc.c
+ create mode 100644 drivers/rtc/rtc-rc5t619.c
+
 -- 
 2.20.1
 
