@@ -2,126 +2,149 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6021AC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09653C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31E762051A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:33:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DtbQTnt4"
+	by mail.kernel.org (Postfix) with ESMTP id DB3202076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgCTKdf (ORCPT
+        id S1727145AbgCTKd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:33:35 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:25000 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726876AbgCTKde (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:33:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584700413;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=v+O0TKG7RluopsB5+yUxCz0n+VTKJBvttmlO7TI6cs8=;
-        b=DtbQTnt4IsPB4QlHKgfFf6Le7IYNGGWRnkk5iRzhRpPlNNroeYH8DpiBIRR94yoLmTBn4v
-        uWZ4kZ4bAWifmMO658DnKq93YQeuPbYRPfwHkAv1tERtPV1HYGdgCtRhjc6qcSGuUW/lq3
-        K7ebwtQu9Wfm99Dr8OZfLD/ioFZK97E=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-315-5bzP6Y-IMg-H2SKmG-VkOA-1; Fri, 20 Mar 2020 06:33:27 -0400
-X-MC-Unique: 5bzP6Y-IMg-H2SKmG-VkOA-1
-Received: by mail-wm1-f70.google.com with SMTP id g26so2202727wmk.6
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 03:33:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=v+O0TKG7RluopsB5+yUxCz0n+VTKJBvttmlO7TI6cs8=;
-        b=LOkFKfC2tEgJxql0EG7GH9R8Unm+uyjQ513TQTPk0msfz4PLzx8b5QZKELdrL3JIqW
-         Vep3pzXtl2xfbVDXPLIXBVXfxjHVV7dXBB2940Gi/6fp8Ly6CuLnLoxxYrlCRRvHa1Kj
-         5VIz+Llrbf1RUmEuIRmeLofUworTvhONeXuU4DKjl0RHwd6VsCU+VvrWEqpDMAduaQjK
-         qX+x2S3MmPp658KkKrKKAB1Fzyl5rG+ew0MdPcO1AJ7v4LXS6DUy/rYHpsRCrvSEpV4d
-         MdFC/Pqi9rHNznxpqJNKewN4T0EQCW8lafXdLhT4Sy/arqvy5t/FoAtIOnkY33dyzUye
-         CFPQ==
-X-Gm-Message-State: ANhLgQ3DDuKJ+e/O3GZpDk9AGGsYciWO325ftxxfJIDRDI/pK5+wSJJ9
-        /hmYRook1p9gE7MyLSAVOKq3OsWblqkqB2dfunnBkuuPz4c71m6W5lexvYwHH4w1D1oZHcbiq6R
-        DeMvDvPltZN8M4e/g/AiE0ap+
-X-Received: by 2002:a7b:ce81:: with SMTP id q1mr9754279wmj.156.1584700406057;
-        Fri, 20 Mar 2020 03:33:26 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vt/QEmQN3xweTWPa2FLy03BaS+TOE+v1glMmu3TqcsJub4MqPOEiz7Nyx/IluChnKlphGwSIQ==
-X-Received: by 2002:a7b:ce81:: with SMTP id q1mr9754249wmj.156.1584700405771;
-        Fri, 20 Mar 2020 03:33:25 -0700 (PDT)
-Received: from [192.168.178.58] ([151.21.15.43])
-        by smtp.gmail.com with ESMTPSA id 61sm8303356wrn.82.2020.03.20.03.33.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Mar 2020 03:33:25 -0700 (PDT)
-Subject: Re: WARNING in vcpu_enter_guest
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     syzbot <syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com>,
-        bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, rkrcmar@redhat.com,
-        syzkaller-bugs@googlegroups.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, x86@kernel.org
-References: <000000000000f965b8059877e5e6@google.com>
- <00000000000081861f05a132b9cd@google.com>
- <20200319144952.GB11305@linux.intel.com>
- <20be9560-fce7-1495-3a83-e2b56dbc2389@redhat.com>
- <20200319173549.GC11305@linux.intel.com>
- <20200319173927.GD11305@linux.intel.com>
- <cd32ee6d-f30d-b221-8126-cf995ffca52e@redhat.com>
- <87k13f516q.fsf@nanos.tec.linutronix.de>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6686bde5-c1e8-5be5-f27a-61403c419a91@redhat.com>
-Date:   Fri, 20 Mar 2020 11:33:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 20 Mar 2020 06:33:58 -0400
+Received: from mga03.intel.com ([134.134.136.65]:1057 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726791AbgCTKd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 06:33:58 -0400
+IronPort-SDR: tsiJb2PXNe6dG/YOdJo0BY4Xw+EBdz0Eqf3MAUdZD7Kx/etQnH71yUWNjH8n7RknkHKnxj4XqV
+ z/8plm6znvoQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 03:33:57 -0700
+IronPort-SDR: dvyOOwpm3ck0vNEcjFg0Ln9rtXpCUZTdZcp6iT/sMJoJaRldBYM8OWYnTUButP6k1/hcmEEsxM
+ R4UhrSvV447g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,284,1580803200"; 
+   d="scan'208";a="446612540"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 20 Mar 2020 03:33:50 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jFEyM-00BKoR-Uc; Fri, 20 Mar 2020 12:33:50 +0200
+Date:   Fri, 20 Mar 2020 12:33:50 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Michal Suchanek <msuchanek@suse.de>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Eric Richter <erichte@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v12 8/8] MAINTAINERS: perf: Add pattern that matches ppc
+ perf to the perf entry.
+Message-ID: <20200320103350.GV1922688@smile.fi.intel.com>
+References: <20200225173541.1549955-1-npiggin@gmail.com>
+ <cover.1584699455.git.msuchanek@suse.de>
+ <4b150d01c60bd37705789200d9adee9f1c9b50ce.1584699455.git.msuchanek@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <87k13f516q.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4b150d01c60bd37705789200d9adee9f1c9b50ce.1584699455.git.msuchanek@suse.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/03/20 01:18, Thomas Gleixner wrote:
->> No, it is possible to do that depending on the clock setup on the live
->> migration source.  You could cause the warning anyway by setting the
->> clock to a very high (signed) value so that kernel_ns + kvmclock_offset
->> overflows.
->
-> If that overflow happens, then the original and the new host have an
-> uptime difference in the range of >200 hundreds of years. Very realistic
-> scenario...
+On Fri, Mar 20, 2020 at 11:20:19AM +0100, Michal Suchanek wrote:
+> While at it also simplify the existing perf patterns.
 > 
-> Of course this can happen if you feed crap into the interface, but do
-> you really think that forwarding all crap to a guest is the right thing
-> to do?
-> 
-> As we all know the hypervisor orchestration stuff is perfect and would
-> never feed crap into the kernel which happily proliferates that crap to
-> the guest...
 
-But the point is, is there a sensible way to detect it?  Only allowing
->= -2^62 and < 2^62 or something like that is an ad hoc fix for a
-warning that probably will never trigger outside fuzzing.  I would
-expect that passing the wrong sign is a more likely mistake than being
-off by 2^63.
+And still missed fixes from parse-maintainers.pl.
 
-This data is available everywhere between strace, kernel tracepoints and
-QEMU tracepoints or guest checkpoint (live migration) data.  I just
-don't see much advantage in keeping the warning.
+I see it like below in the linux-next (after the script)
 
-Paolo
+PERFORMANCE EVENTS SUBSYSTEM
+M:      Peter Zijlstra <peterz@infradead.org>
+M:      Ingo Molnar <mingo@redhat.com>
+M:      Arnaldo Carvalho de Melo <acme@kernel.org>
+R:      Mark Rutland <mark.rutland@arm.com>
+R:      Alexander Shishkin <alexander.shishkin@linux.intel.com>
+R:      Jiri Olsa <jolsa@redhat.com>
+R:      Namhyung Kim <namhyung@kernel.org>
+L:      linux-kernel@vger.kernel.org
+S:      Supported
+T:      git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
+F:      arch/*/events/*
+F:      arch/*/events/*/*
+F:      arch/*/include/asm/perf_event.h
+F:      arch/*/kernel/*/*/perf_event*.c
+F:      arch/*/kernel/*/perf_event*.c
+F:      arch/*/kernel/perf_callchain.c
+F:      arch/*/kernel/perf_event*.c
+F:      include/linux/perf_event.h
+F:      include/uapi/linux/perf_event.h
+F:      kernel/events/*
+F:      tools/perf/
+
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13080,7 +13080,7 @@ R:	Namhyung Kim <namhyung@kernel.org>
+>  L:	linux-kernel@vger.kernel.org
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
+>  S:	Supported
+> -F:	kernel/events/*
+> +F:	kernel/events/
+>  F:	include/linux/perf_event.h
+>  F:	include/uapi/linux/perf_event.h
+>  F:	arch/*/kernel/perf_event*.c
+> @@ -13088,8 +13088,8 @@ F:	arch/*/kernel/*/perf_event*.c
+>  F:	arch/*/kernel/*/*/perf_event*.c
+>  F:	arch/*/include/asm/perf_event.h
+>  F:	arch/*/kernel/perf_callchain.c
+> -F:	arch/*/events/*
+> -F:	arch/*/events/*/*
+> +F:	arch/*/events/
+> +F:	arch/*/perf/
+>  F:	tools/perf/
+>  
+>  PERFORMANCE EVENTS SUBSYSTEM ARM64 PMU EVENTS
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
