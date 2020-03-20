@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45085C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4F4C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1908420767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40BE020752
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584718515;
-	bh=vokPQstkXgxFr5sGvZb+kbRNuePjovDVn9LKFBHtdTU=;
+	s=default; t=1584718526;
+	bh=PCMtCPWpgRJ4SJUtOrkrxxNkDVKdaN+ir2Ppk0Q6Dig=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=efaX+JCYH3oMhHGRCl7o4bulubvIiBwl73FXApNAeGYzkdTcP9tT1Bsk9m8++bpr9
-	 Rm5MplSXBAYdcSg/GKIPJiGSVV//CIa9L7fNCQE4KDAnpDMTC603hl5MOAYQ6+vdPw
-	 XFo6rYcr2w2QuYR5giKN3dWd7S2VcJTf2uzRlaUA=
+	b=asbPRar5lDxmqnp0HtP4uJ1BXPM3hoAu+S5sveg2X1gsv3kDQzWjs05w+dBoTWAfc
+	 spgZ7f1OAUv49VPdYQGiN0f8/p1VcfPmc7zY9g374BOjqH8ntjWEznTMrA2u4HXCTm
+	 hF08Rkz7cChVb0Tqjzvo1zHGba+hjjdRQ/G0EZPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgCTPfO (ORCPT
+        id S1727502AbgCTPfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:35:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36780 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 11:35:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727060AbgCTPfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 11:35:13 -0400
+        id S1727060AbgCTPfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 11:35:24 -0400
 Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 426E92070A;
-        Fri, 20 Mar 2020 15:35:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 112912070A;
+        Fri, 20 Mar 2020 15:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584718513;
-        bh=vokPQstkXgxFr5sGvZb+kbRNuePjovDVn9LKFBHtdTU=;
+        s=default; t=1584718524;
+        bh=PCMtCPWpgRJ4SJUtOrkrxxNkDVKdaN+ir2Ppk0Q6Dig=;
         h=Date:From:To:Cc:Subject:From;
-        b=vMrRyUwZhI0GQyf9cX14oERx/4NHSInVqyycNzifFRO5h2V0OM2y3AndeLrPB7FWm
-         L7Zp6bzwXnwRJVAZNST4hxltuPzShB9u6TZUOf9xEFmw1JYNTqXcSReZrR4KliM7fT
-         e5qIlOOraCDg2qFeCDEqaqgyMxOjL4yDDi3QAUIY=
-Date:   Fri, 20 Mar 2020 15:35:09 +0000
+        b=ZnbSRZUXjKZ/oVvf1zRUFVbw8Ehqux0gkX2zaKJ6khisHbkvmeQKxrZSGQOlzDSSI
+         YcTff5BxuARj7/zu5Ezmam39siZsUv9vyI1A6SWob82GkM101PbnTp2/xzyW7N1e+7
+         mSG/91kWrfvQPMlbptIWr8sBmadoiDDVb4f+SWkg=
+Date:   Fri, 20 Mar 2020 15:35:20 +0000
 From:   Will Deacon <will@kernel.org>
-To:     torvalds@linux-foundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, catalin.marinas@arm.com
-Subject: [GIT PULL] arm64 fixes for -rc7
-Message-ID: <20200320153508.GA6815@willie-the-truck>
+To:     joro@8bytes.org
+Cc:     iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        robin.murphy@arm.com, jean-philippe@linaro.org,
+        kernel-team@android.com
+Subject: [GIT PULL] iommu/arm-smmu: Updates for 5.7
+Message-ID: <20200320153519.GB6815@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -55,9 +57,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Joerg,
 
-Please pull these four arm64 fixes for -rc7. Summary in the tag.
+Please pull these Arm SMMU updates for 5.7. The summary is in the tag (which
+you may need to re-fetch if you've got my tree added as a remote).
 
 Cheers,
 
@@ -65,41 +68,47 @@ Will
 
 --->8
 
-The following changes since commit 9abd515a6e4a5c58c6eb4d04110430325eb5f5ac:
+The following changes since commit f8788d86ab28f61f7b46eb6be375f8a726783636:
 
-  arm64: context: Fix ASID limit in boot messages (2020-03-02 12:10:38 +0000)
+  Linux 5.6-rc3 (2020-02-23 16:17:42 -0800)
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+  git://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git tags/arm-smmu-updates
 
-for you to fetch changes up to 3568b88944fef28db3ee989b957da49ffc627ede:
+for you to fetch changes up to 6a481a95d4c198a2dd0a61f8877b92a375757db8:
 
-  arm64: compat: Fix syscall number of compat_clock_getres (2020-03-19 19:23:46 +0000)
-
-----------------------------------------------------------------
-arm64 fixes for -rc7
-
-- Fix panic() when it occurs during secondary CPU startup
-
-- Fix "kpti=off" when KASLR is enabled
-
-- Fix howler in compat syscall table for vDSO clock_getres() fallback
+  iommu/arm-smmu-v3: Add SMMUv3.2 range invalidation support (2020-03-18 21:37:10 +0000)
 
 ----------------------------------------------------------------
-Cristian Marussi (2):
-      arm64: smp: fix smp_send_stop() behaviour
-      arm64: smp: fix crash_smp_send_stop() behaviour
+Arm SMMU updates for 5.7
 
-Vincenzo Frascino (1):
-      arm64: compat: Fix syscall number of compat_clock_getres
+- Support for the TLB range invalidation command in SMMUv3.2
 
-Will Deacon (1):
-      arm64: kpti: Fix "kpti=off" when KASLR is enabled
+- Introduction of command batching helpers...
 
- arch/arm64/include/asm/mmu.h          |  4 +---
- arch/arm64/include/asm/pgtable-prot.h |  6 ++++--
- arch/arm64/include/asm/unistd.h       |  2 +-
- arch/arm64/kernel/smp.c               | 25 ++++++++++++++++++++-----
- 4 files changed, 26 insertions(+), 11 deletions(-)
+- ... which are then used to batch up CD and ATC invalidation
 
+- Support for PCI PASID, along with necessary PCI symbol exports
+
+- MAINTAINERS update to include DT binding docs
+
+----------------------------------------------------------------
+Jean-Philippe Brucker (5):
+      PCI/ATS: Export symbols of PASID functions
+      iommu/arm-smmu-v3: Add support for PCI PASID
+      iommu/arm-smmu-v3: Write level-1 descriptors atomically
+      iommu/arm-smmu-v3: Add command queue batching helpers
+      iommu/arm-smmu-v3: Batch context descriptor invalidation
+
+Rob Herring (2):
+      iommu/arm-smmu-v3: Batch ATC invalidation commands
+      iommu/arm-smmu-v3: Add SMMUv3.2 range invalidation support
+
+Robin Murphy (1):
+      MAINTAINERS: Cover Arm SMMU DT bindings
+
+ MAINTAINERS                 |   1 +
+ drivers/iommu/arm-smmu-v3.c | 204 ++++++++++++++++++++++++++++++++++++++------
+ drivers/pci/ats.c           |   4 +
+ 3 files changed, 181 insertions(+), 28 deletions(-)
