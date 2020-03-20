@@ -2,87 +2,101 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C8FC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC2FC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0076320753
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:41:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584672115;
-	bh=VaOaDt5Ar0V7JbMhnQVSEdqQlneMYlnyedn/NWqYcWs=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=to+rpojtuqamOneUkTOl8uYlBPJy1KqHMz2hQqBZ/3SaA7SFER/7nf0MFrUb3tBCD
-	 9yvSgBq8VAEiSDmNecwfl+1gpbZ4cDSl9sERQDNhKsNukvTK6t0OAxMWrfhMDUS+pp
-	 cjsw9WTRHz5mtB4PzO6n/5Z2yrNrht0o4B1O9fdw=
+	by mail.kernel.org (Postfix) with ESMTP id 2AF1A20752
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:45:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/ntnAB8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgCTCly (ORCPT
+        id S1726726AbgCTCpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 22:41:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbgCTClx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 22:41:53 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A316206D7;
-        Fri, 20 Mar 2020 02:41:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584672113;
-        bh=VaOaDt5Ar0V7JbMhnQVSEdqQlneMYlnyedn/NWqYcWs=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=xteT3owz/emReDP4O3F7ndguFft5jjMAIb3GMNfc4G5m/jsNl4bjFnjRV2z2x4CW/
-         Dv8ryhEPcFjqfQAMTxSKRr5WcX+myTI4RkMZ+6AydU++Ab7LEhkEh0WNVU+mGMhq6E
-         MjYAGIXU7/hrqjSVZvybcQrmEWTAdSetImVgfVlA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 04F7835226B9; Thu, 19 Mar 2020 19:41:53 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 19:41:53 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>
-Subject: Re: [PATCH RFC v2 tip/core/rcu 14/22] rcu-tasks: Add an RCU Tasks
- Trace to simplify protection of tracing hooks
-Message-ID: <20200320024152.GM3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
- <20200319001100.24917-14-paulmck@kernel.org>
- <20200319154239.6d67877d@gandalf.local.home>
- <20200320002813.GL3199@paulmck-ThinkPad-P72>
- <20200319204838.1f78152a@gandalf.local.home>
+        Thu, 19 Mar 2020 22:45:14 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:55703 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbgCTCpN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 22:45:13 -0400
+Received: by mail-pj1-f68.google.com with SMTP id mj6so1842196pjb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 19:45:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=B0e5LRI2Wa1iU6sPlsrx1pyem4JRVh3a+Pduzbqq+EQ=;
+        b=B/ntnAB8R/IWZqllfofDf1Cy0HBW6QeVeOQaCQNaFEn54whxq7ET9gSZ0BSlGD7BbH
+         Amlr58LfHtL/28JEhAhbOZANiS/nZHcpmaKeLuomd19UpemBIH6dPv6qu5QdET5mq8qA
+         Yk/PZZKviUjbKNkWdwyKKutseoaFNuuIriz4DOBjP2m77i8mA5fyiwmysuTfAs0NPy45
+         1iiVV8rpD4gMpR8w07FDOJYpxY2ZMmlGGaO/MerpwVxtdTmdOXMCWXAR5ihYD0BDmfKa
+         iZ2paTN7MI9N54czPId6Mpt/bcW22GFlMf9mGz0rvhyYCWDHZXI5i45fh0gRVFdab3qx
+         WVYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=B0e5LRI2Wa1iU6sPlsrx1pyem4JRVh3a+Pduzbqq+EQ=;
+        b=lAedGvHJQp1A9+RyVoDsjAKuSZOeLlfG7QxVQtfv60p+f5S59YmxLwLtR6x8Hym9jo
+         uI0/2hiL243jng5ztVNiOvqk5yT9RePSl1LMw3LeFZ6iGADHWtLig2vFZ2OejaYsK6EX
+         a4FRd9PRRX8B/GMPvZkos1iUTI2humFUEwdfKEcSlGdckuctY/fej5SnixLs9PiV5L+t
+         5XeZoRHtgv6XhBhLNmtuu/QKPeBOb+9CKWm4GyAedutbc1CPQfvP0iloM9+L7FToWMmQ
+         tUCmplTHxcDKXfmrfhvaEaEGZHme/YSgoyKItGmLC/EeNkNi2Ffdr3XlDyootrSNEudV
+         FQhQ==
+X-Gm-Message-State: ANhLgQ3bzzc4CPHWGRmPF4cM4iQ6Ul9yM4xXpuzRdX/kxQ+Q520S+tSy
+        NdchESTSiD6tyhzz6kXm1OA=
+X-Google-Smtp-Source: ADFU+vuF2pQaGz8eLAO7mgZCbrs0IF/dZLOQnUVdHDWxWYd+f/NzUuKBiSZb8TeCTvygkmjZwLYdLg==
+X-Received: by 2002:a17:90a:d205:: with SMTP id o5mr6895475pju.46.1584672312336;
+        Thu, 19 Mar 2020 19:45:12 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id d13sm3075379pjs.44.2020.03.19.19.45.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 19:45:11 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 11:45:08 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Bruno Meneguele <bmeneg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, pmladek@suse.com,
+        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
+        David.Laight@ACULAB.COM
+Subject: Re: [PATCH v2] kernel/printk: add kmsg SEEK_CUR handling
+Message-ID: <20200320024508.GB104374@google.com>
+References: <20200317103344.574277-1-bmeneg@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200319204838.1f78152a@gandalf.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200317103344.574277-1-bmeneg@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 08:48:38PM -0400, Steven Rostedt wrote:
-> On Thu, 19 Mar 2020 17:28:13 -0700
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
+On (20/03/17 07:33), Bruno Meneguele wrote:
+> Userspace libraries, e.g. glibc's dprintf(), perform a SEEK_CUR operation
+> over any file descriptor requested to make sure the current position isn't
+> pointing to junk due to previous manipulation of that same fd. And whenever
+> that fd doesn't have support for such operation, the userspace code expects
+> -ESPIPE to be returned.
 > 
-> > Good point.  If interrupts are disabled, it will need to use some
-> > other mechanism.  One approach is irqwork.  Another is a timer.
-> > 
-> > Suggestions?
+> However, when the fd in question references the /dev/kmsg interface, the
+> current kernel code state returns -EINVAL instead, causing an unexpected
+> behavior in userspace: in the case of glibc, when -ESPIPE is returned it
+> gets ignored and the call completes successfully, while returning -EINVAL
+> forces dprintf to fail without performing any action over that fd:
 > 
-> Ftrace and perf use irq_work, I would think that should work here too.
+>   if (_IO_SEEKOFF (fp, (off64_t)0, _IO_seek_cur, _IOS_INPUT|_IOS_OUTPUT) ==
+>   _IO_pos_BAD && errno != ESPIPE)
+>     return NULL;
+> 
+> With this patch we make sure to return the correct value when SEEK_CUR is
+> requested over kmsg and also add some kernel doc information to formalize
+> this behavior.
+> 
+> Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
 
-Sounds good, will give it a go!  And thank you for catching this!
+Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-							Thans, Paul
+	-ss
