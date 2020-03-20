@@ -2,270 +2,234 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4821C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CFFC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C1A20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C6F20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:48:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZ0msRJt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbgCTNqZ (ORCPT
+        id S1727230AbgCTNs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:46:25 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39184 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgCTNqZ (ORCPT
+        Fri, 20 Mar 2020 09:48:28 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36362 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbgCTNs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:46:25 -0400
-Received: from [IPv6:2a02:810a:113f:ad1c:d59e:75b0:dca:337a] (unknown [IPv6:2a02:810a:113f:ad1c:d59e:75b0:dca:337a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: dafna)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A5F9B297525;
-        Fri, 20 Mar 2020 13:46:21 +0000 (GMT)
-Subject: Re: [PATCHv4 04/11] videobuf2: add queue memory consistency parameter
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Helen Koike <helen.koike@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        nicolas.dufresne@collabora.co.uk
-References: <20200302041213.27662-1-senozhatsky@chromium.org>
- <20200302041213.27662-5-senozhatsky@chromium.org>
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Message-ID: <6e4fc7f9-0068-92ff-77d7-9c77c047f3db@collabora.com>
-Date:   Fri, 20 Mar 2020 14:46:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 20 Mar 2020 09:48:27 -0400
+Received: by mail-qt1-f194.google.com with SMTP id m33so4910218qtb.3;
+        Fri, 20 Mar 2020 06:48:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=c1wuGKT9hZhCpFx5nSB8++iwzrWxM3FhotWrSYNWev8=;
+        b=nZ0msRJtsyPaxrEo2VlcllXgfvCKsz1NmENvZwevaDau0Lm+z02wG/5SWdsX7O/F8l
+         SrUOir23bD2bXR2keMRPNUBoAz8W1CdZMs0ubbUGF497irDFjfVEuuGBRjpI60SQJL28
+         Xl9QpewRbv+3KV2gQ+SfMfUo1Siv8XIwNYWLSJu7hKs4V+YlyjimjGWe7cr1ZyVzsd7e
+         v4xII4sY4YN2juRjhXsPC6OBDJCoAcQTHO+CSQCIb/ApiF/Ga6LwU+3QQYGUI3gG+tCW
+         swpfmr4d8s2qpSpQ4Bc1Wq90gpB/j50LEnqN5M1uWA7d8Q5oEcRyY5dI8X57u7zX2ggU
+         Q8xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=c1wuGKT9hZhCpFx5nSB8++iwzrWxM3FhotWrSYNWev8=;
+        b=cV018tM6YlHN8pZCuWPtizYbBgxWMrvFvbyRtlYfPrcRpmOk/rvE9tg+cmyAGKtjO1
+         8OZ+/QCea+dHH0hDFzhcV3JfAQPPi3M6Mg6p5neW4wr1NCtVKXPHLi6f65urZMsjSJwt
+         IzdhtJYuxzA/7UeAf3Cpacv3N/6GP4Leq4PcreZst058ZFfBIiCidbaeeYF+iCqQ8EjN
+         PjyzhWvWUcKaP97xQsVvQIEBxNZLSedvJq5RaadZZ0fLe2YsuownzuKobmCYjtmODj0q
+         PbxXEtHY4RrD480VU6DM3q2hczIQ8/LQEUvxUW9sQK7VYl/e/6llgIF9+5xVUBRmdZ1t
+         RC0A==
+X-Gm-Message-State: ANhLgQ2up5aog7TcCjP9GUeePB2gHD1qAGRjf/lxjteyMNR8xlLSxLfG
+        ZoqeZxbyQZ6bfx/QWf0ysG0=
+X-Google-Smtp-Source: ADFU+vsefeut3ZlWj4pOZNdAh3RRplwwfyXmnrYnHEU9RsOvwvNmbsYN0alPaZ2zwT2t3+N4v7P70g==
+X-Received: by 2002:ac8:1196:: with SMTP id d22mr8359279qtj.344.1584712105733;
+        Fri, 20 Mar 2020 06:48:25 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id y60sm4545045qtd.32.2020.03.20.06.48.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 06:48:24 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CE3E540F77; Fri, 20 Mar 2020 10:48:22 -0300 (-03)
+Date:   Fri, 20 Mar 2020 10:48:22 -0300
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH v1] perf tool: make Perf tool aware of SELinux access
+ control
+Message-ID: <20200320134822.GA29833@kernel.org>
+References: <b8a0669e-36e4-a0e8-fd35-3dbd890d2170@linux.intel.com>
+ <f5ed60b2-4a61-dc72-bfd5-6d0af74bc152@linux.intel.com>
+ <20200319190126.GF14841@kernel.org>
+ <20200319190504.GG14841@kernel.org>
+ <d521a22d-9fa7-1bca-fa60-f23b55953c91@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200302041213.27662-5-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d521a22d-9fa7-1bca-fa60-f23b55953c91@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Em Fri, Mar 20, 2020 at 03:24:47PM +0300, Alexey Budankov escreveu:
+> 
+> On 19.03.2020 22:05, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, Mar 19, 2020 at 04:01:26PM -0300, Arnaldo Carvalho de Melo escreveu:
+> <SNIP>
+> > 
+> > So I'll try the steps below with/without your patch, and then... what
+> > are the steps that a tester needs to go thru to have that refpolicy in?
+> > Install some new SELinux package or library, spelling out in detail the
+> > steps one needs to go thru helps reviewing/testing,
+> 
+> Yes, sure. Steps to extend FC31 Targeted policy for testing perf_events access control:
 
-On 02.03.20 05:12, Sergey Senozhatsky wrote:
-> Preparations for future V4L2_FLAG_MEMORY_NON_CONSISTENT support.
+Thanks a lot! This is the level of detail I was talking about, good job!
+
+- Arnaldo
+ 
+> * download selinux-policy srpm [1]: selinux-policy-3.14.4-48.fc31.src.rpm on my FC31
 > 
-> Extend vb2_core_reqbufs() with queue memory consistency flag
-> that is applied to the newly allocated buffers.
+> * install srpm - it creates rpmbuild dir: 
+>   [root@host ~]# rpm -Uhv selinux-policy-3.14.4-48.fc31.src.rpm
 > 
-> An attempt to allocate a buffer with consistency requirements
-> which don't match queue's consistency model will fail.
+> * get into rpmbuild/SPECS dir and unpack sources:
+>   [root@host ~]# rpmbuild -bp selinux-policy.spec
 > 
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> ---
->   .../media/common/videobuf2/videobuf2-core.c   | 47 +++++++++++++++----
->   .../media/common/videobuf2/videobuf2-v4l2.c   |  6 +--
->   drivers/media/dvb-core/dvb_vb2.c              |  2 +-
->   include/media/videobuf2-core.h                |  7 ++-
->   4 files changed, 47 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
-> index 4489744fbbd9..3ca0545db7ee 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-core.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-core.c
-> @@ -664,8 +664,19 @@ int vb2_verify_memory_type(struct vb2_queue *q,
->   }
->   EXPORT_SYMBOL(vb2_verify_memory_type);
->   
-> +static void set_queue_consistency(struct vb2_queue *q, bool consistent_mem)
-> +{
-> +	if (!vb2_queue_allows_cache_hints(q))
-> +		return;
+> * Place patch below at rpmbuild/BUILD/selinux-policy-b86eaaf4dbcf2d51dd4432df7185c0eaf3cbcc02
+>   dir and apply it:
+>   [root@host ~]# patch -p1 < selinux-policy-perf-events-perfmon.patch
+>   patching file policy/flask/access_vectors
+>   patching file policy/flask/security_classes
+>   [root@host ~]# cat selinux-policy-perf-events-perfmon.patch
+> diff -Nura a/policy/flask/access_vectors b/policy/flask/access_vectors
+> --- a/policy/flask/access_vectors	2020-02-04 18:19:53.000000000 +0300
+> +++ b/policy/flask/access_vectors	2020-02-28 23:37:25.000000000 +0300
+> @@ -174,6 +174,7 @@
+>  	wake_alarm
+>  	block_suspend
+>  	audit_read
+> +	perfmon
+>  }
+>  
+>  #
+> @@ -1099,3 +1100,15 @@
+>  
+>  class xdp_socket
+>  inherits socket
 > +
-> +	if (consistent_mem)
-> +		q->dma_attrs &= ~DMA_ATTR_NON_CONSISTENT;
-> +	else
-> +		q->dma_attrs |= DMA_ATTR_NON_CONSISTENT;
+> +class perf_event
+> +{
+> +	open
+> +	cpu
+> +	kernel
+> +	tracepoint
+> +	read
+> +	write
 > +}
 > +
->   int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
-> -		unsigned int *count)
-> +		bool consistent_mem, unsigned int *count)
-You extended the vb2_core_reqbufs accepting a new boolean that
-is decided according to the setting of the V4L2_FLAG_MEMORY_NON_CONSISTENT
-but in the future some other flags might be added, and so I think it
-is better to replace the boolean with a u32 consisting of all the flags.
-
-Thanks,
-Dafna
-
->   {
->   	unsigned int num_buffers, allocated_buffers, num_planes = 0;
->   	unsigned plane_sizes[VB2_MAX_PLANES] = { };
-> @@ -720,6 +731,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
->   	num_buffers = min_t(unsigned int, num_buffers, VB2_MAX_FRAME);
->   	memset(q->alloc_devs, 0, sizeof(q->alloc_devs));
->   	q->memory = memory;
-> +	set_queue_consistency(q, consistent_mem);
->   
->   	/*
->   	 * Ask the driver how many buffers and planes per buffer it requires.
-> @@ -803,9 +815,21 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
->   }
->   EXPORT_SYMBOL_GPL(vb2_core_reqbufs);
->   
-> +static bool verify_consistency_attr(struct vb2_queue *q, bool consistent_mem)
-> +{
-> +	bool queue_attr = q->dma_attrs & DMA_ATTR_NON_CONSISTENT;
 > +
-> +	if (consistent_mem != queue_attr) {
-> +		dprintk(1, "memory consistency model mismatch\n");
-> +		return false;
-> +	}
-> +	return true;
-> +}
+> diff -Nura a/policy/flask/security_classes b/policy/flask/security_classes
+> --- a/policy/flask/security_classes	2020-02-04 18:19:53.000000000 +0300
+> +++ b/policy/flask/security_classes	2020-02-28 21:35:17.000000000 +0300
+> @@ -200,4 +200,6 @@
+>  
+>  class xdp_socket
+>  
+> +class perf_event
 > +
->   int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
-> -		unsigned int *count, unsigned requested_planes,
-> -		const unsigned requested_sizes[])
-> +			 bool consistent_mem, unsigned int *count,
-> +			 unsigned requested_planes,
-> +			 const unsigned requested_sizes[])
->   {
->   	unsigned int num_planes = 0, num_buffers, allocated_buffers;
->   	unsigned plane_sizes[VB2_MAX_PLANES] = { };
-> @@ -823,10 +847,15 @@ int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
->   		}
->   		memset(q->alloc_devs, 0, sizeof(q->alloc_devs));
->   		q->memory = memory;
-> +		set_queue_consistency(q, consistent_mem);
->   		q->waiting_for_buffers = !q->is_output;
-> -	} else if (q->memory != memory) {
-> -		dprintk(1, "memory model mismatch\n");
-> -		return -EINVAL;
-> +	} else {
-> +		if (q->memory != memory) {
-> +			dprintk(1, "memory model mismatch\n");
-> +			return -EINVAL;
-> +		}
-> +		if (!verify_consistency_attr(q, consistent_mem))
-> +			return -EINVAL;
->   	}
->   
->   	num_buffers = min(*count, VB2_MAX_FRAME - q->num_buffers);
-> @@ -2498,7 +2527,7 @@ static int __vb2_init_fileio(struct vb2_queue *q, int read)
->   	fileio->memory = VB2_MEMORY_MMAP;
->   	fileio->type = q->type;
->   	q->fileio = fileio;
-> -	ret = vb2_core_reqbufs(q, fileio->memory, &fileio->count);
-> +	ret = vb2_core_reqbufs(q, fileio->memory, true, &fileio->count);
->   	if (ret)
->   		goto err_kfree;
->   
-> @@ -2555,7 +2584,7 @@ static int __vb2_init_fileio(struct vb2_queue *q, int read)
->   
->   err_reqbufs:
->   	fileio->count = 0;
-> -	vb2_core_reqbufs(q, fileio->memory, &fileio->count);
-> +	vb2_core_reqbufs(q, fileio->memory, true, &fileio->count);
->   
->   err_kfree:
->   	q->fileio = NULL;
-> @@ -2575,7 +2604,7 @@ static int __vb2_cleanup_fileio(struct vb2_queue *q)
->   		vb2_core_streamoff(q, q->type);
->   		q->fileio = NULL;
->   		fileio->count = 0;
-> -		vb2_core_reqbufs(q, fileio->memory, &fileio->count);
-> +		vb2_core_reqbufs(q, fileio->memory, true, &fileio->count);
->   		kfree(fileio);
->   		dprintk(3, "file io emulator closed\n");
->   	}
-> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> index c847bcea6e95..6111d74f68c9 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> @@ -724,7 +724,7 @@ int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req)
->   	int ret = vb2_verify_memory_type(q, req->memory, req->type);
->   
->   	fill_buf_caps(q, &req->capabilities);
-> -	return ret ? ret : vb2_core_reqbufs(q, req->memory, &req->count);
-> +	return ret ? ret : vb2_core_reqbufs(q, req->memory, true, &req->count);
->   }
->   EXPORT_SYMBOL_GPL(vb2_reqbufs);
->   
-> @@ -798,7 +798,7 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
->   	for (i = 0; i < requested_planes; i++)
->   		if (requested_sizes[i] == 0)
->   			return -EINVAL;
-> -	return ret ? ret : vb2_core_create_bufs(q, create->memory,
-> +	return ret ? ret : vb2_core_create_bufs(q, create->memory, true,
->   		&create->count, requested_planes, requested_sizes);
->   }
->   EXPORT_SYMBOL_GPL(vb2_create_bufs);
-> @@ -974,7 +974,7 @@ int vb2_ioctl_reqbufs(struct file *file, void *priv,
->   		return res;
->   	if (vb2_queue_is_busy(vdev, file))
->   		return -EBUSY;
-> -	res = vb2_core_reqbufs(vdev->queue, p->memory, &p->count);
-> +	res = vb2_core_reqbufs(vdev->queue, p->memory, true, &p->count);
->   	/* If count == 0, then the owner has released all buffers and he
->   	   is no longer owner of the queue. Otherwise we have a new owner. */
->   	if (res == 0)
-> diff --git a/drivers/media/dvb-core/dvb_vb2.c b/drivers/media/dvb-core/dvb_vb2.c
-> index 6974f1731529..e60063652164 100644
-> --- a/drivers/media/dvb-core/dvb_vb2.c
-> +++ b/drivers/media/dvb-core/dvb_vb2.c
-> @@ -342,7 +342,7 @@ int dvb_vb2_reqbufs(struct dvb_vb2_ctx *ctx, struct dmx_requestbuffers *req)
->   
->   	ctx->buf_siz = req->size;
->   	ctx->buf_cnt = req->count;
-> -	ret = vb2_core_reqbufs(&ctx->vb_q, VB2_MEMORY_MMAP, &req->count);
-> +	ret = vb2_core_reqbufs(&ctx->vb_q, VB2_MEMORY_MMAP, true, &req->count);
->   	if (ret) {
->   		ctx->state = DVB_VB2_STATE_NONE;
->   		dprintk(1, "[%s] count=%d size=%d errno=%d\n", ctx->name,
-> diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
-> index 731fd9fbd506..ba83ac754c21 100644
-> --- a/include/media/videobuf2-core.h
-> +++ b/include/media/videobuf2-core.h
-> @@ -737,6 +737,7 @@ void vb2_core_querybuf(struct vb2_queue *q, unsigned int index, void *pb);
->    * vb2_core_reqbufs() - Initiate streaming.
->    * @q:		pointer to &struct vb2_queue with videobuf2 queue.
->    * @memory:	memory type, as defined by &enum vb2_memory.
-> + * @consistent_mem:	memory consistency model.
->    * @count:	requested buffer count.
->    *
->    * Videobuf2 core helper to implement VIDIOC_REQBUF() operation. It is called
-> @@ -761,12 +762,13 @@ void vb2_core_querybuf(struct vb2_queue *q, unsigned int index, void *pb);
->    * Return: returns zero on success; an error code otherwise.
->    */
->   int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
-> -		unsigned int *count);
-> +		bool consistent_mem, unsigned int *count);
->   
->   /**
->    * vb2_core_create_bufs() - Allocate buffers and any required auxiliary structs
->    * @q: pointer to &struct vb2_queue with videobuf2 queue.
->    * @memory: memory type, as defined by &enum vb2_memory.
-> + * @consistent_mem: memory consistency model.
->    * @count: requested buffer count.
->    * @requested_planes: number of planes requested.
->    * @requested_sizes: array with the size of the planes.
-> @@ -784,7 +786,8 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
->    * Return: returns zero on success; an error code otherwise.
->    */
->   int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
-> -			 unsigned int *count, unsigned int requested_planes,
-> +			 bool consistent_mem, unsigned int *count,
-> +			 unsigned int requested_planes,
->   			 const unsigned int requested_sizes[]);
->   
->   /**
+>  # FLASK
 > 
+>   [root@host ~]#
+> 
+>  * get into rpmbuild/SPECS dir and build policy packages from patched sources: 
+>    [root@host ~]# rpmbuild --noclean --noprep -ba selinux-policy.spec
+>    so you have this:
+>    [root@host ~]# ls -alh rpmbuild/RPMS/noarch/
+>    total 33M
+>    drwxr-xr-x. 2 root root 4.0K Mar 20 12:16 .
+>    drwxr-xr-x. 3 root root 4.0K Mar 20 12:16 ..
+>    -rw-r--r--. 1 root root 112K Mar 20 12:16 selinux-policy-3.14.4-48.fc31.noarch.rpm
+>    -rw-r--r--. 1 root root 1.2M Mar 20 12:17 selinux-policy-devel-3.14.4-48.fc31.noarch.rpm
+>    -rw-r--r--. 1 root root 2.3M Mar 20 12:17 selinux-policy-doc-3.14.4-48.fc31.noarch.rpm
+>    -rw-r--r--. 1 root root  12M Mar 20 12:17 selinux-policy-minimum-3.14.4-48.fc31.noarch.rpm
+>    -rw-r--r--. 1 root root 4.5M Mar 20 12:16 selinux-policy-mls-3.14.4-48.fc31.noarch.rpm
+>    -rw-r--r--. 1 root root 111K Mar 20 12:16 selinux-policy-sandbox-3.14.4-48.fc31.noarch.rpm
+>    -rw-r--r--. 1 root root  14M Mar 20 12:17 selinux-policy-targeted-3.14.4-48.fc31.noarch.rpm
+> 
+>  * install SELinux packages from FC repo [2], if not already done so, and 
+>    update with the patched rpms above:
+>    [root@host ~]# rpm -Uhv rpmbuild/RPMS/noarch/selinux-policy-*
+> 
+>  * there are also packages providing GUI interface and visualizing SELinux management
+>    [root@host ~]# dnf install policycoreutils-gui
+> 
+>  * enable SELinux Permissive mode for Targeted policy, if not already done so:
+>    [root@host ~]# cat /etc/selinux/config
+>    # This file controls the state of SELinux on the system.
+>    # SELINUX= can take one of these three values:
+>    #     enforcing - SELinux security policy is enforced.
+>    #     permissive - SELinux prints warnings instead of enforcing.
+>    #     disabled - No SELinux policy is loaded.
+>    SELINUX=permissive
+>    # SELINUXTYPE= can take one of these three values:
+>    #     targeted - Targeted processes are protected,
+>    #     minimum - Modification of targeted policy. Only selected processes are protected. 
+>    #     mls - Multi Level Security protection.
+>    SELINUXTYPE=targeted
+> 
+>  * enable filesystem SELinux labeling at the next reboot
+>    [root@host ~]# touch /.autorelabel
+> 
+>  * reboot machine and it will label filesystems and load Targeted policy into the kernel
+> 
+>  * login and check that dmesg output doesn't mention that perf_event class is unknown to SELinux subsystem
+> 
+>  * check that SELinux is enabled and in Permissive mode
+>    [root@host ~]# getenforce
+>    Permissive
+> 
+>  * turn SELinux into Enforcing mode:
+>    [root@host ~]# setenforce 1
+>    [root@host ~]# getenforce
+>    Enforcing
+> 
+>  * Now the machine is enabled to test the patch
+> 
+> --- If something went wrong ---
+> 
+> * To turn SELinux into Permissive mode: setenforce 0
+> * To fully disable SELinux during kernel boot [3] set kernel command line parameter: selinux=0
+> * To remove SELinux labeling from local filesystems: find / -mount -print0 | xargs -0 setfattr -h -x security.selinux
+> * To fully turn SELinux off a machine set SELINUX=disabled at /etc/selinux/config file and reboot
+> 
+> ~Alexey
+> 
+> [1] https://download-ib01.fedoraproject.org/pub/fedora/linux/updates/31/Everything/SRPMS/Packages/s/selinux-policy-3.14.4-49.fc31.src.rpm
+> [2] https://docs.fedoraproject.org/en-US/Fedora/11/html/Security-Enhanced_Linux/sect-Security-Enhanced_Linux-Working_with_SELinux-Enabling_and_Disabling_SELinux.html
+> [3] https://danwalsh.livejournal.com/10972.html
+> 
+
+-- 
+
+- Arnaldo
