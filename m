@@ -2,230 +2,76 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5134BC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 762C7C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A65820767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:16:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qJm7mQBh"
+	by mail.kernel.org (Postfix) with ESMTP id 3BF7720724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgCTVQm (ORCPT
+        id S1727113AbgCTVWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:16:42 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46549 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgCTVQm (ORCPT
+        Fri, 20 Mar 2020 17:22:54 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:54122 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbgCTVWx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:16:42 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c19so3922592pfo.13
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 14:16:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=sPNjOMWv5tH+y8DR9zRGwW8VovTIaVhSNxirxK4bRvw=;
-        b=qJm7mQBhow7miniq3pN1Q0zWjYozOumz39ILHSWw5JPNezgYzOMGhNX+L3gKPrP27d
-         JCjmsCPRkVyEbcgRfYDdTRw756dZEeSiZm2bgGoOeHSwclYC/Q1n0YWq2oJIvhrqalQZ
-         iIoxbXPSUZ+4hW1YimFiHj6PW1vVqP4J9uvDihDGDjsAIYnjHjkXGJoVDCNA/5mnRr08
-         2IT4AItr8pVs0MiF6TVuU/mdnwbZrK0lO1TCBzT/eaelPWrdDtLsUKkndAfY5GRdMkTD
-         j9gYnTDx702HAwTyhozUabvs/Zwb/OMoq/7nXZfJc6BeTqYrX0fnwJWqQwZgOhA3KAww
-         5vtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=sPNjOMWv5tH+y8DR9zRGwW8VovTIaVhSNxirxK4bRvw=;
-        b=lqLPwORGRuOJEbCez3spJsriCNVqtyCQC0h/Pyb02M3/VoiJjBxeYwBz6Hcb9PGItv
-         hq8GOKzrIZefUPoXrQxUlHHWzghUdxsy9JeNuY+/SGlp/pnQ21CobIPg53FPhEf8/m4M
-         OLERNZE6R0PMCdbqvjy8mkcDUA91DntCqouTMXV/XSNvyTK+0n4UK3gkKs3I4lfslWSb
-         jyj5oLVma09Cc4PSA1ZZCQ4p7G58sm/sBPa2dpH5n+i9l0dDFI7EGB4P5KZ/nY4eClCK
-         cECCvG4gvnsMt5qQUm/8YXAkouQRckDd5UsORi0JY4YXn2OtepaBaXR4/DdDHmfFwMN3
-         6K9w==
-X-Gm-Message-State: ANhLgQ1fB5CYDBzZ6DKAh3nmaYlsJrMOXsHhwsTtsx3aPmrCpNx9DUqB
-        r0qpvfYM7qHgAyZ0xmCZinHT+Q==
-X-Google-Smtp-Source: ADFU+vt7tmXBZHZs8iTn2PbuBTIF+ft5pzs2V8T7GPerNEV6PCz3cI+0aORiv3PtC3ghNqnqMdZWjg==
-X-Received: by 2002:a63:30c4:: with SMTP id w187mr10906683pgw.239.1584739000823;
-        Fri, 20 Mar 2020 14:16:40 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id g14sm6323165pfb.131.2020.03.20.14.16.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 14:16:39 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 14:16:39 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Joerg Roedel <joro@8bytes.org>, erdemaktas@google.com
-cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 18/70] x86/boot/compressed/64: Add stage1 #VC handler
-In-Reply-To: <20200319091407.1481-19-joro@8bytes.org>
-Message-ID: <alpine.DEB.2.21.2003201413010.205664@chino.kir.corp.google.com>
-References: <20200319091407.1481-1-joro@8bytes.org> <20200319091407.1481-19-joro@8bytes.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 20 Mar 2020 17:22:53 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1jFP6N-00Bvcd-65; Fri, 20 Mar 2020 22:22:47 +0100
+Message-ID: <b4b1d7b252820591ebb00e3851d44dc6c3f2d1b9.camel@sipsolutions.net>
+Subject: Re: [PATCH net] netlink: check for null extack in cookie helpers
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Michal Kubecek <mkubecek@suse.cz>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Date:   Fri, 20 Mar 2020 22:22:45 +0100
+In-Reply-To: <20200320211343.4BD38E0FD3@unicorn.suse.cz>
+References: <20200320211343.4BD38E0FD3@unicorn.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Mar 2020, Joerg Roedel wrote:
+Hi Michal,
 
-> diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
-> new file mode 100644
-> index 000000000000..f524b40aef07
-> --- /dev/null
-> +++ b/arch/x86/include/asm/sev-es.h
-> @@ -0,0 +1,45 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * AMD Encrypted Register State Support
-> + *
-> + * Author: Joerg Roedel <jroedel@suse.de>
-> + */
-> +
-> +#ifndef __ASM_ENCRYPTED_STATE_H
-> +#define __ASM_ENCRYPTED_STATE_H
-> +
-> +#include <linux/types.h>
-> +
-> +#define GHCB_SEV_CPUID_REQ	0x004UL
-> +#define		GHCB_CPUID_REQ_EAX	0
-> +#define		GHCB_CPUID_REQ_EBX	1
-> +#define		GHCB_CPUID_REQ_ECX	2
-> +#define		GHCB_CPUID_REQ_EDX	3
-> +#define		GHCB_CPUID_REQ(fn, reg) (GHCB_SEV_CPUID_REQ | \
-> +					(((unsigned long)reg & 3) << 30) | \
-> +					(((unsigned long)fn) << 32))
-> +
-> +#define GHCB_SEV_CPUID_RESP	0x005UL
-> +#define GHCB_SEV_TERMINATE	0x100UL
-> +
-> +#define	GHCB_SEV_GHCB_RESP_CODE(v)	((v) & 0xfff)
-> +#define	VMGEXIT()			{ asm volatile("rep; vmmcall\n\r"); }
+> Unlike NL_SET_ERR_* macros, nl_set_extack_cookie_u64() and
+> nl_set_extack_cookie_u32() helpers do not check extack argument for null
+> and neither do their callers, as syzbot recently discovered for
+> ethnl_parse_header().
 
-Since preemption and irqs should be disabled before updating the GHCB and 
-its MSR and until the contents have been accessed following VMGEXIT, 
-should there be checks in place to ensure that's always the case?
+What exactly did it discover?
 
-> +
-> +static inline u64 lower_bits(u64 val, unsigned int bits)
-> +{
-> +	u64 mask = (1ULL << bits) - 1;
-> +
-> +	return (val & mask);
-> +}
-> +
-> +static inline u64 copy_lower_bits(u64 out, u64 in, unsigned int bits)
-> +{
-> +	u64 mask = (1ULL << bits) - 1;
-> +
-> +	out &= ~mask;
-> +	out |= lower_bits(in, bits);
-> +
-> +	return out;
-> +}
-> +
-> +#endif
-> diff --git a/arch/x86/include/asm/trap_defs.h b/arch/x86/include/asm/trap_defs.h
-> index 488f82ac36da..af45d65f0458 100644
-> --- a/arch/x86/include/asm/trap_defs.h
-> +++ b/arch/x86/include/asm/trap_defs.h
-> @@ -24,6 +24,7 @@ enum {
->  	X86_TRAP_AC,		/* 17, Alignment Check */
->  	X86_TRAP_MC,		/* 18, Machine Check */
->  	X86_TRAP_XF,		/* 19, SIMD Floating-Point Exception */
-> +	X86_TRAP_VC = 29,	/* 29, VMM Communication Exception */
->  	X86_TRAP_IRET = 32,	/* 32, IRET Exception */
->  };
->  
-> diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
-> new file mode 100644
-> index 000000000000..e963b48d3e86
-> --- /dev/null
-> +++ b/arch/x86/kernel/sev-es-shared.c
-> @@ -0,0 +1,65 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * AMD Encrypted Register State Support
-> + *
-> + * Author: Joerg Roedel <jroedel@suse.de>
-> + *
-> + * This file is not compiled stand-alone. It contains code shared
-> + * between the pre-decompression boot code and the running Linux kernel
-> + * and is included directly into both code-bases.
-> + */
-> +
-> +/*
-> + * Boot VC Handler - This is the first VC handler during boot, there is no GHCB
-> + * page yet, so it only supports the MSR based communication with the
-> + * hypervisor and only the CPUID exit-code.
-> + */
-> +void __init vc_no_ghcb_handler(struct pt_regs *regs, unsigned long exit_code)
-> +{
-> +	unsigned int fn = lower_bits(regs->ax, 32);
-> +	unsigned long val;
-> +
-> +	/* Only CPUID is supported via MSR protocol */
-> +	if (exit_code != SVM_EXIT_CPUID)
-> +		goto fail;
-> +
-> +	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EAX));
-> +	VMGEXIT();
-> +	val = sev_es_rd_ghcb_msr();
-> +	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
-> +		goto fail;
-> +	regs->ax = val >> 32;
-> +
-> +	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EBX));
-> +	VMGEXIT();
-> +	val = sev_es_rd_ghcb_msr();
-> +	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
-> +		goto fail;
-> +	regs->bx = val >> 32;
-> +
-> +	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_ECX));
-> +	VMGEXIT();
-> +	val = sev_es_rd_ghcb_msr();
-> +	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
-> +		goto fail;
-> +	regs->cx = val >> 32;
-> +
-> +	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EDX));
-> +	VMGEXIT();
-> +	val = sev_es_rd_ghcb_msr();
-> +	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
-> +		goto fail;
-> +	regs->dx = val >> 32;
-> +
-> +	regs->ip += 2;
-> +
-> +	return;
-> +
-> +fail:
-> +	sev_es_wr_ghcb_msr(GHCB_SEV_TERMINATE);
-> +	VMGEXIT();
-> +
-> +	/* Shouldn't get here - if we do halt the machine */
-> +	while (true)
-> +		asm volatile("hlt\n");
-> +}
-> -- 
-> 2.17.1
+> Instead of fixing the callers and leaving the trap in place, add check of
+> null extack to both helpers to make them consistent with NL_SET_ERR_*
+> macros.
 > 
-> 
+> Fixes: 2363d73a2f3e ("ethtool: reject unrecognized request flags")
+> Fixes: 9bb7e0f24e7e ("cfg80211: add peer measurement with FTM initiator API")
+
+I'm not really convinced, at least not for the second patch.
+
+After all, this is an important part of the functionality, and the whole
+thing is pretty useless if no extack/cookie is returned since then you
+don't have a handle to the in-progress operation.
+
+That was the intention originally too, until now the cookie also got
+used for auxiliary error information...
+
+Now, I don't think we need to *crash* when something went wrong here,
+but then I'd argue there should at least be a WARN_ON(). But then that
+means syzbot will just trigger the WARN_ON which also makes it unhappy,
+so you still would have to check in the caller?
+
+johannes
+
