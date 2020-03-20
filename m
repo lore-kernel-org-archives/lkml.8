@@ -2,79 +2,49 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D404C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1BEC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3EFD20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:06:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dF0p6Szc"
+	by mail.kernel.org (Postfix) with ESMTP id AF20020663
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:16:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgCTGGs (ORCPT
+        id S1726673AbgCTGQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 02:06:48 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48604 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgCTGGr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 02:06:47 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02K667HF013962;
-        Fri, 20 Mar 2020 01:06:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584684367;
-        bh=54+jme14f9l+F5m+jvtM+/CK152iu0QJDNvmuwSkKso=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dF0p6Szc2W4e1lfCb0KUwKB5d934NjsUCmhvtLSgw3fGFK78HNvmwRI9UneGh7grT
-         L/+MFnIw4JRXSgnGwaWBq4eqRlrnNFAT5GHTlXyWVPPYVwoMR499A8VY3GbMrWIg/H
-         7odLbJCtgHV8ri0MfbVTUaaeCO0QJdwvUqD3xOpg=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02K666rY003898
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Mar 2020 01:06:06 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
- Mar 2020 01:06:05 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 20 Mar 2020 01:06:06 -0500
-Received: from [10.250.132.43] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02K65wsQ029497;
-        Fri, 20 Mar 2020 01:05:59 -0500
-Subject: Re: [PATCH v12 1/4] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <broonie@kernel.org>, <robh+dt@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <boris.brezillon@free-electrons.com>,
-        <simon.k.r.goldschmidt@gmail.com>, <dinguyen@kernel.org>,
-        <tien.fong.chee@intel.com>, <marex@denx.de>,
-        <linux-mtd@lists.infradead.org>, <dwmw2@infradead.org>,
-        <richard@nod.at>, <computersforpeace@gmail.com>,
-        <cyrille.pitchen@atmel.com>, <david.oberhollenzer@sigma-star.at>,
-        <miquel.raynal@bootlin.com>, <tudor.ambarus@gmail.com>,
-        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>
-References: <20200310015213.1734-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200310015213.1734-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <c2ad909e-9042-6ba0-7213-83346c6b9908@ti.com>
-Date:   Fri, 20 Mar 2020 11:35:57 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 20 Mar 2020 02:16:35 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12113 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726030AbgCTGQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 02:16:35 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 3C57286598A0FBBAB9AA;
+        Fri, 20 Mar 2020 14:16:16 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.195) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Fri, 20 Mar 2020
+ 14:16:06 +0800
+Subject: Re: [PATCH v4 0/6] implement KASLR for powerpc/fsl_booke/64
+To:     Daniel Axtens <dja@axtens.net>, <mpe@ellerman.id.au>,
+        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
+        <christophe.leroy@c-s.fr>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
+CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>
+References: <20200306064033.3398-1-yanaijie@huawei.com>
+ <87imizww4i.fsf@dja-thinkpad.axtens.net>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <6546b653-c7d6-41cf-3954-0587600127e3@huawei.com>
+Date:   Fri, 20 Mar 2020 14:16:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200310015213.1734-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <87imizww4i.fsf@dja-thinkpad.axtens.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.221.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -82,88 +52,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 10/03/20 7:22 am, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+在 2020/3/20 11:19, Daniel Axtens 写道:
+> Hi Jason,
 > 
-> Add dt-bindings documentation for Cadence-QSPI controller to support
-> spi based flash memories.
+> I tried to compile this series and got the following error:
 > 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
->  .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 127 +++++++++++++++++++++
->  2 files changed, 127 insertions(+), 67 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->  create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+> /home/dja/dev/linux/linux/arch/powerpc/mm/nohash/kaslr_booke.c: In function ‘kaslr_early_init’:
+> /home/dja/dev/linux/linux/arch/powerpc/mm/nohash/kaslr_booke.c:357:33: error: ‘linear_sz’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
+>    357 |  regions.pa_end = memstart_addr + linear_sz;
+>        |                   ~~~~~~~~~~~~~~^~~~~~~~~~~
+> /home/dja/dev/linux/linux/arch/powerpc/mm/nohash/kaslr_booke.c:317:21: note: ‘linear_sz’ was declared here
+>    317 |  unsigned long ram, linear_sz;
+>        |                     ^~~~~~~~~
+> /home/dja/dev/linux/linux/arch/powerpc/mm/nohash/kaslr_booke.c:187:8: error: ‘ram’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
+>    187 |  ret = parse_crashkernel(boot_command_line, size, &crash_size,
+>        |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    188 |     &crash_base);
+>        |     ~~~~~~~~~~~~
+> /home/dja/dev/linux/linux/arch/powerpc/mm/nohash/kaslr_booke.c:317:16: note: ‘ram’ was declared here
+>    317 |  unsigned long ram, linear_sz;
+>        |                ^~~
+> cc1: all warnings being treated as errors
+> make[4]: *** [/home/dja/dev/linux/linux/scripts/Makefile.build:268: arch/powerpc/mm/nohash/kaslr_booke.o] Error 1
+> make[3]: *** [/home/dja/dev/linux/linux/scripts/Makefile.build:505: arch/powerpc/mm/nohash] Error 2
+> make[2]: *** [/home/dja/dev/linux/linux/scripts/Makefile.build:505: arch/powerpc/mm] Error 2
+> make[2]: *** Waiting for unfinished jobs....
 > 
-[...]
+> I have attached my .config file.
+> 
 
-> +
-> +# subnode's properties
-> +patternProperties:
-> +  "^.*@[0-9a-fA-F]+$":
-> +    type: object
-> +    description:
-> +      flash device uses the subnodes below defined properties.
-> +
-> +  cdns,read-delay:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Delay in 4 microseconds, read capture logic, in clock cycles.
+Thanks Daniel,
 
+My config had CC_DISABLE_WARN_MAYBE_UNINITIALIZED=y enabled so I missed 
+this warning. I will fix it.
 
-Not its not... See the old binding description please:
+Thanks again.
 
--- cdns,read-delay : Delay for read capture logic, in clock cycles
+Jason
 
-There is no mention of 4us. Range is 0x0 - 0xF
+> I'm using
+> powerpc64-linux-gnu-gcc (Ubuntu 9.2.1-9ubuntu1) 9.2.1 20191008
+> 
+> Regards,
+> Daniel
+> 
+> 
+> 
+> 
+>> This is a try to implement KASLR for Freescale BookE64 which is based on
+>> my earlier implementation for Freescale BookE32:
+>> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=131718&state=*
+>>
+>> The implementation for Freescale BookE64 is similar as BookE32. One
+>> difference is that Freescale BookE64 set up a TLB mapping of 1G during
+>> booting. Another difference is that ppc64 needs the kernel to be
+>> 64K-aligned. So we can randomize the kernel in this 1G mapping and make
+>> it 64K-aligned. This can save some code to creat another TLB map at
+>> early boot. The disadvantage is that we only have about 1G/64K = 16384
+>> slots to put the kernel in.
+>>
+>>      KERNELBASE
+>>
+>>            64K                     |--> kernel <--|
+>>             |                      |              |
+>>          +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+>>          |  |  |  |....|  |  |  |  |  |  |  |  |  |....|  |  |
+>>          +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+>>          |                         |                        1G
+>>          |----->   offset    <-----|
+>>
+>>                                kernstart_virt_addr
+>>
+>> I'm not sure if the slot numbers is enough or the design has any
+>> defects. If you have some better ideas, I would be happy to hear that.
+>>
+>> Thank you all.
+>>
+>> v3->v4:
+>>    Do not define __kaslr_offset as a fixed symbol. Reference __run_at_load and
+>>      __kaslr_offset by symbol instead of magic offsets.
+>>    Use IS_ENABLED(CONFIG_PPC32) instead of #ifdef CONFIG_PPC32.
+>>    Change kaslr-booke32 to kaslr-booke in index.rst
+>>    Switch some instructions to 64-bit.
+>> v2->v3:
+>>    Fix build error when KASLR is disabled.
+>> v1->v2:
+>>    Add __kaslr_offset for the secondary cpu boot up.
+>>
+>> Jason Yan (6):
+>>    powerpc/fsl_booke/kaslr: refactor kaslr_legal_offset() and
+>>      kaslr_early_init()
+>>    powerpc/fsl_booke/64: introduce reloc_kernel_entry() helper
+>>    powerpc/fsl_booke/64: implement KASLR for fsl_booke64
+>>    powerpc/fsl_booke/64: do not clear the BSS for the second pass
+>>    powerpc/fsl_booke/64: clear the original kernel if randomized
+>>    powerpc/fsl_booke/kaslr: rename kaslr-booke32.rst to kaslr-booke.rst
+>>      and add 64bit part
+>>
+>>   Documentation/powerpc/index.rst               |  2 +-
+>>   .../{kaslr-booke32.rst => kaslr-booke.rst}    | 35 +++++++-
+>>   arch/powerpc/Kconfig                          |  2 +-
+>>   arch/powerpc/kernel/exceptions-64e.S          | 23 +++++
+>>   arch/powerpc/kernel/head_64.S                 | 13 +++
+>>   arch/powerpc/kernel/setup_64.c                |  3 +
+>>   arch/powerpc/mm/mmu_decl.h                    | 23 ++---
+>>   arch/powerpc/mm/nohash/kaslr_booke.c          | 88 +++++++++++++------
+>>   8 files changed, 144 insertions(+), 45 deletions(-)
+>>   rename Documentation/powerpc/{kaslr-booke32.rst => kaslr-booke.rst} (59%)
+>>
+>> -- 
+>> 2.17.2
 
-> +
-> +  cdns,tshsl-ns:
-> +    description: |
-> +      Delay in 50 nanoseconds, for the length that the master mode chip select
-> +      outputs are de-asserted between transactions.
-
-Again see the description in old binding file:
-
- cdns,tshsl-ns : Delay in nanoseconds for the length that the master
-                  mode chip select outputs are de-asserted between
-	  	transactions.
-
-Need not be 50ns or its multiple
-
-> +
-> +  cdns,tsd2d-ns:
-> +    description: |
-> +      Delay in 50 nanoseconds, between one chip select being de-activated
-> +      and the activation of another.
-> +
-
-same here
-
-> +  cdns,tchsh-ns:
-> +    description: |
-> +      Delay in 4 nanoseconds, between last bit of current transaction and
-> +      deasserting the device chip select (qspi_n_ss_out).
-> +
-
-Same here... Need not be 4ns...
-
-> +  cdns,tslch-ns:
-> +    description: |
-> +      Delay in 4 nanoseconds, between setting qspi_n_ss_out low and
-> +      first bit transfer.
-
-
-Same here...
-
-Above four values ( cdns,*-ns) come directly from the flash datasheets.
-
-These values are converted appropriate number of cycles depending upon
-the QSPI ref_clk frequency. So, there is no easy way to express the
-constraint (or range) in DT schema. I would recommend to just stick with
-the description that is there in the old binding file without any
-modifications.
-
-Regards
-Vignesh
