@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE295C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFAEC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B5020739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACFED20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dl2A4Ucm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="y3wzMEkB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbgCTXSa (ORCPT
+        id S1727032AbgCTXTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 19:18:30 -0400
-Received: from gateway21.websitewelcome.com ([192.185.46.113]:48742 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726851AbgCTXSa (ORCPT
+        Fri, 20 Mar 2020 19:19:10 -0400
+Received: from gateway33.websitewelcome.com ([192.185.145.221]:41747 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726738AbgCTXTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 19:18:30 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id AF2DA400C5F61
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 18:18:29 -0500 (CDT)
+        Fri, 20 Mar 2020 19:19:10 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 547122309E68
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 18:19:09 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id FQuLjzvio8vkBFQuLjqlhA; Fri, 20 Mar 2020 18:18:29 -0500
+        id FQuzjBMEbAGTXFQuzjb6ga; Fri, 20 Mar 2020 18:19:09 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,24 +36,24 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=9eP2bjcfVom3DinFU3o1y7gbdTRhfgLbO9dZ0FlxOJQ=; b=dl2A4UcmiQipc55GupOW41eNZS
-        rQl2qfV84t+uN67XQdgzAMpeu8a1dNmvKQpaTdC14SvKBX4aSQVd47Hs+JJc439gGyQxxd0kMacc/
-        h93MArsoUVBXfirxv5OCKwZoCZ/zwYbxJYqlYa13wVa7FLoQhqceJVg5itjzNUi8w6fnl0xBd2lyO
-        fpijF53cWJpjnd72ADapM3NSPlopHOeVeOoYYiZfYGKqeWyFwxiX2nNDONA4CIa7m5xrEFKNS7Zka
-        UinSQFIhSjmUDzLQq9LFBBgzr2kZsGSeEUt3uQ2OUlyq/2rl12NwZsYEIqIhSIQ+luoLQbvVgyheh
-        Amr8BHSQ==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53582 helo=embeddedor)
+        bh=g8F4Yg5lyXhydDRq+jW8mvxrRBmfQgXV2fFC64D2XoE=; b=y3wzMEkBTeT3aERvfqGsWHsSn4
+        x4ksozk/l+6xu7AWLtpqh3RjpnU0eC5+ieh0qi8VdE8Ommf1Bzs7W3j9WH75YxsIGG8vPnIPGgRhS
+        7ZSfIl2AeCE39WJz8b1Exvn+gNaY3ndayjtYDLD4YTH8XKqAVKTgpNXZ2Sbo2fQvpdU7d2Ub0/tWh
+        SzKWWJzyCwTq2Em8Ly9WYSmpiE92C0yXoDJ+pUl8jTIH2bdqwmGHg1nFhAzZJTiclgiarcuryp28z
+        6JNX7QJKhVDH1q8J9Db4AJy8xarLjO/gI9jL55kNPIUv93pPraSmX4eljrSfaN1C2zF5aZ3G3C9hG
+        rHBiGYJA==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53586 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1jFQuK-001JJN-32; Fri, 20 Mar 2020 18:18:28 -0500
-Date:   Fri, 20 Mar 2020 18:18:27 -0500
+        id 1jFQux-001JYO-SG; Fri, 20 Mar 2020 18:19:07 -0500
+Date:   Fri, 20 Mar 2020 18:19:07 -0500
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
+To:     Santosh Shilimkar <ssantosh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] pnpbios: pnpbios.h: Replace zero-length array with
+Subject: [PATCH][next] soc: ti: knav_qmss.h: Replace zero-length array with
  flexible-array member
-Message-ID: <20200320231827.GA21969@embeddedor.com>
+Message-ID: <20200320231907.GA22135@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -66,13 +66,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.218.116.241
 X-Source-L: No
-X-Exim-ID: 1jFQuK-001JJN-32
+X-Exim-ID: 1jFQux-001JYO-SG
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53582
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53586
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 18
+X-Email-Count: 20
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -110,22 +110,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/pnp/pnpbios/pnpbios.h | 2 +-
+ drivers/soc/ti/knav_qmss.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pnp/pnpbios/pnpbios.h b/drivers/pnp/pnpbios/pnpbios.h
-index 37acb8378f39..2ce739ff9c1a 100644
---- a/drivers/pnp/pnpbios/pnpbios.h
-+++ b/drivers/pnp/pnpbios/pnpbios.h
-@@ -107,7 +107,7 @@ struct pnp_bios_node {
- 	__u32 eisa_id;
- 	__u8 type_code[3];
- 	__u16 flags;
--	__u8 data[0];
-+	__u8 data[];
+diff --git a/drivers/soc/ti/knav_qmss.h b/drivers/soc/ti/knav_qmss.h
+index 038aec352df7..a01eda720bf6 100644
+--- a/drivers/soc/ti/knav_qmss.h
++++ b/drivers/soc/ti/knav_qmss.h
+@@ -67,7 +67,7 @@ struct knav_reg_config {
+ 	u32		link_ram_size0;
+ 	u32		link_ram_base1;
+ 	u32		__pad2[2];
+-	u32		starvation[0];
++	u32		starvation[];
  };
- #pragma pack()
  
+ struct knav_reg_region {
 -- 
 2.23.0
 
