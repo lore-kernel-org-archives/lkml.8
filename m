@@ -2,172 +2,276 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C625CC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAECFC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8DF20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:42:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P0UE9GDZ"
+	by mail.kernel.org (Postfix) with ESMTP id 9B14920739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:44:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbgCTQmZ (ORCPT
+        id S1727520AbgCTQoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:42:25 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:43421 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727278AbgCTQmZ (ORCPT
+        Fri, 20 Mar 2020 12:44:21 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:58561 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbgCTQoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:42:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584722543;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JuSmP8mzKRWutGuMEZMfymlnZMnuod1hdzuq2jOD+58=;
-        b=P0UE9GDZIaoCWnLo4LDQqfzXv2y2SO2h0WJgjxHTtWehuN6pQ/TxO2dGZUizbEOZ9/pdrl
-        tx1guH1YFTC7vAx10ZxdgBnObW0dfHOqffW23aKJ1Am8fhs9uYrgO0FaBxz703eXRMdpU8
-        rxXqHrd9eKfKANqGfCoxC4VdTWwzHac=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-97-WECJ4nFYNWmPmmnXgNLQhw-1; Fri, 20 Mar 2020 12:42:06 -0400
-X-MC-Unique: WECJ4nFYNWmPmmnXgNLQhw-1
-Received: by mail-wr1-f69.google.com with SMTP id f13so2869697wro.23
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 09:42:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JuSmP8mzKRWutGuMEZMfymlnZMnuod1hdzuq2jOD+58=;
-        b=AQRJuWW+fTwsxKAM1hJ37ct1jWzuwvjKX/4nPyGMYkGJUC8QzTozaaEm/Pxfayc6Xc
-         ABBV9RseGDK2KqNX6jegGeNGhToxFvEuHSmbT4HJaH/+RUhLNsJRmmFLRPGmHWHmEs6r
-         GFXZ4DF07rp2IUpKf4EiriFLeJAkma5hdyGKRy4E8R4XJKlpcQ1HZRf/vtuAfIZHPTaJ
-         twI+vPOvv5NKCBodMlEWndnONLTdoiXM83iTlyR2yiGstr4Mii93aNkX0/RTwoU5Eh6A
-         8iIE/CVOpxrAy0P5vY1UzEMdHgiWF4ZTuL0MtRRTGfOmH8OtU+TmltEGroNA2N8LmMCn
-         7aiQ==
-X-Gm-Message-State: ANhLgQ2vOS8/XLWkjJoY3KWUaRWQBBbMjXgQs3bqIpA6dasdqMU8e+kX
-        CWn1243c80zkCWTT8GzkzCBDoAnEGZbH1zwFSrvVQa3EJrpqS3ruNb4nF8oAoEaINT4cq46jpP5
-        FLMkkg/pVinv6xbqcgGUWmkeY
-X-Received: by 2002:a7b:c62a:: with SMTP id p10mr10969797wmk.46.1584722523071;
-        Fri, 20 Mar 2020 09:42:03 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtkHHEonfjGBQvTJugKUJaMlAw3gGqsGRrGUr+boHYRapviCIkmO3jmDajId8xSHmrus3yopw==
-X-Received: by 2002:a7b:c62a:: with SMTP id p10mr10969692wmk.46.1584722521899;
-        Fri, 20 Mar 2020 09:42:01 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id s7sm9067396wro.10.2020.03.20.09.42.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Mar 2020 09:42:01 -0700 (PDT)
-Subject: Re: [PATCH v12 03/10] firmware: Rename FW_OPT_NOFALLBACK to
- FW_OPT_NOFALLBACK_SYSFS
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-References: <20200115163554.101315-1-hdegoede@redhat.com>
- <20200115163554.101315-4-hdegoede@redhat.com>
- <20200124085751.GA2957916@kroah.com>
- <d25d5d6e-0348-b19f-539e-048cfa70d6a6@redhat.com>
- <20200318132741.GA2794545@kroah.com>
- <8fa336bd-339f-40e0-08fe-e6b968736679@redhat.com>
- <20200320140243.GA636547@kroah.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <1107490b-0290-5b65-c392-84de0d9dbe0e@redhat.com>
-Date:   Fri, 20 Mar 2020 17:41:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 20 Mar 2020 12:44:21 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MtOT0-1jYO0j0xWY-00uttR for <linux-kernel@vger.kernel.org>; Fri, 20 Mar
+ 2020 17:44:19 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id 03C3F64FB08
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 16:44:19 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id fVvhJOD-LfbY for <linux-kernel@vger.kernel.org>;
+        Fri, 20 Mar 2020 17:44:18 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 8048964F8B2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 17:44:18 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.8.5.41) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 20 Mar 2020 17:44:18 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id D8C8280506; Fri, 20 Mar 2020 17:12:04 +0100 (CET)
+Date:   Fri, 20 Mar 2020 17:12:04 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [PATCH v3 09/11] arm64: dts: renesas: salvator: add a connection
+ from adv748x codec (HDMI input) to the R-Car SoC
+Message-ID: <077a97942890b79fef2b271e889055fc07c74939.1584720678.git.alexander.riesen@cetitec.com>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1584720678.git.alexander.riesen@cetitec.com>
 MIME-Version: 1.0
-In-Reply-To: <20200320140243.GA636547@kroah.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1584720678.git.alexander.riesen@cetitec.com>
+X-Originating-IP: [10.8.5.41]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A6D7660
+X-Provags-ID: V03:K1:6lfS/fl8OaHr3l6c1Xo5P16CUoHwnIANyv2WpXU1VRUDs0B9uyG
+ 0bUN5hQ96DHazbxuBYUuV5fofY5dnDm2l9R5iJY7FsNo8M+M/xZUlFywsnPXFHBNOEmX3iP
+ XxImsN4HPCdeilA3sPZt3Zj/g7jUsjjLNKxI45yviwIErLj77MaB9c8FbMryqbPp9R/bbeI
+ +MahdBKO7XzsgNKXEE7wA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:88//HWXXJ3o=:iRUrnBP0zjYRVwCRvXy41N
+ THjrN2FZOM2BUlIgCEn7/FfYBR2xbGCgA+Bsi3Wt+XtV4GMnM2pJnrWAoSSfz3svccT+sgkp4
+ 3jLVi2jX2j7aqGk0RMT+t12VJKDR5orYKXd+mzF/0bF1RRBmOYCyURi3PTXqrwhNDVvL0RDGn
+ B97hE78FCGkXmSld7MtgVNZswlWxY24FUjX2iIY19En5/uxa5d5Kes0LpERvH2p8ExHUOzwze
+ TX5lMHKVr3GveA3gyX0hUuWrlk6/G9HN2+xtq6Zq2MtG6Cb58niaD4feZhTyBFGpQUmHsqgW4
+ aLLsoatSELPuVJpDpcZAZsA+RjsTpa5EmPFRsSutT53cZXxaR1IdOyOT2JauOTnnvX+jAe0n8
+ LgroQaOp29w5C5BNGp5HskiQcZnp+SbXXbh3K742PUKfpcrOIgoCaDbA02NthWAO9no8QfUqV
+ JdJ1t50yworlJMIr3j1TpBAmC65du8IP3FRWbTrBoPp8h5NLK5Rzt/W6Fik2JaRRJn2QtB3MF
+ vC/bPGC/T1ghMsi9ZIKhZ7kphWeGbHDzrfVVDE2c4LbqpfSzXc4h70RgLEcYcKrMi9OZkBKPK
+ WGILjJJiQ544YgKlqiGU5xe7mpBGQh7eF/XibQ5R3rVEH7bVgEnScjDqrWhLQSLs3dqE3b7zm
+ ku984ELCOVVLyxTefQlDBqG+l9ogmVTCKysG13JIlM4njnX7d9JZV3Qs4sdG/OKGJoFhNBRQE
+ hZX4zZVhcEu6ZHLqkXEyZT8BE/iCcuMFU41ukoCErbRQ1Uh64jbqZ7vfGf5Ly7xfT5uSVEf7s
+ pTahgyOxEj6wHhTyEdahbhaRf+1CV5WDF6IHqR80vgUTYzFJ6T84bNkRpBaTbYbc1QfXoy4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+As all known variants of the Salvator board have the HDMI decoder
+chip (the ADV7482) connected to the SSI4 on R-Car SoC, the ADV7482
+endpoint and the connection definitions are placed in the common board
+file.
+For the same reason, the CLK_C clock line and I2C configuration (similar
+to the ak4613, on the same interface) are added into the common file.
 
-On 3/20/20 3:02 PM, Greg Kroah-Hartman wrote:
-> On Wed, Mar 18, 2020 at 02:56:23PM +0100, Hans de Goede wrote:
->> Hi Greg,
->>
->> On 3/18/20 2:27 PM, Greg Kroah-Hartman wrote:
->>> On Fri, Jan 24, 2020 at 10:16:48AM +0100, Hans de Goede wrote:
->>>> Hi,
->>>>
->>>> On 1/24/20 9:57 AM, Greg Kroah-Hartman wrote:
->>>>> On Wed, Jan 15, 2020 at 05:35:47PM +0100, Hans de Goede wrote:
->>>>>> This is a preparation patch for adding a new platform fallback mechanism,
->>>>>> which will have its own enable/disable FW_OPT_xxx option.
->>>>>>
->>>>>> Note this also fixes a typo in one of the re-wordwrapped comments:
->>>>>> enfoce -> enforce.
->>>>>>
->>>>>> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
->>>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>>>
->>>>> I've taken this in my tree for now in a quest to try to get others to
->>>>> pay attention to this series...
->>>>
->>>> Thank you.
->>>>
->>>> As mentioned before I believe that this series is ready for merging now.
->>>>
->>>> Andy Lutomirski had one last change request for v12 of the second
->>>> patch in the series, specifically to replace the loop searching for
->>>> the prefix with a memem, but the kernel does not have memmem.
->>>>
->>>> Andy, are you ok with v12 as is, given that we don't have memmem ?
->>>>
->>>> Assuming Andy is ok with v12 as is, then to merge this we need
->>>> to probably wait for 5.6-rc1 and then have the x86/efi folks do
->>>> an immutable branch with the first 2 patches of the series.
->>>
->>> Did this every happen?  Or do I need to dump this all into my tree?
->>
->> Ard has done a immutable branch with just the 2 patches:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/tag/?h=stable-shared-branch-for-driver-tree
->>
->> I did not see any mails about this being pulled / merged, but I just
->> checked and this has landed in the tip tree 10 days ago:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/include/linux/efi.h?h=efi/core
->>
->> So if you merge the stable-shared-branch-for-driver-tree tag and then
->> merge patches 3-8 of this series (or rather 4-8 since you already
->> merged 3 IIRC) that would be great.
-> 
-> Ok, I've merged the above branch with just the two patches, and the rest
-> of yours now, 
+Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Great, thank you!
+--
 
-> sorry this took so long.
+v2:
 
-No problem, I'm quite happy this is queued for 5.7 now, I was
-afraid it was going to slip to 5.8.
+Also add ssi4_ctrl pin group in the sound pins. The pins are
+responsible for SCK4 (sample clock) WS4 and (word boundary input),
+and are required for SSI audio input over I2S.
 
-Regards,
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Hans
+The adv748x shall provide its own implementation of the output clock
+(MCLK), connected to the audio_clk_c line of the R-Car SoC.
+
+If the frequency of the ADV748x MCLK were fixed, the clock
+implementation were not necessary, but it does not seem so: the MCLK
+depends on the value in a speed multiplier register and the input sample
+rate (48kHz).
+
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+Remove audio clock C from the clocks of adv7482.
+
+The clocks property of the video-receiver node lists the input
+clocks of the device, which is quite the opposite from the
+original intention: the adv7482 on Salvator X boards is a
+provide of the MCLK clock for I2S audio output.
+
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+Remove old definition of &sound_card.dais and reduce size of changes
+in the Salvator-X specific device tree source.
+
+Declare video-receiver a clock producer, as the adv748x driver
+implements the master clock used I2S audio output.
+
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+The driver provides only MCLK clock, not the SCLK and LRCLK,
+which are part of the I2S protocol.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ .../boot/dts/renesas/r8a77950-salvator-x.dts  |  3 +-
+ .../boot/dts/renesas/salvator-common.dtsi     | 47 +++++++++++++++++--
+ 2 files changed, 44 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
+index 2438825c9b22..e16c146808b6 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
+@@ -146,7 +146,8 @@ &sata {
+ &sound_card {
+ 	dais = <&rsnd_port0	/* ak4613 */
+ 		&rsnd_port1	/* HDMI0  */
+-		&rsnd_port2>;	/* HDMI1  */
++		&rsnd_port2	/* HDMI1  */
++		&rsnd_port3>;	/* adv7482 hdmi-in  */
+ };
+ 
+ &usb2_phy2 {
+diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+index 98bbcafc8c0d..ead7f8d7a929 100644
+--- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
++++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+@@ -460,7 +460,7 @@ pca9654: gpio@20 {
+ 		#gpio-cells = <2>;
+ 	};
+ 
+-	video-receiver@70 {
++	adv7482_hdmi_in: video-receiver@70 {
+ 		compatible = "adi,adv7482";
+ 		reg = <0x70 0x71 0x72 0x73 0x74 0x75
+ 		       0x60 0x61 0x62 0x63 0x64 0x65>;
+@@ -469,6 +469,7 @@ video-receiver@70 {
+ 
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		#clock-cells = <0>; /* the MCLK for I2S output */
+ 
+ 		interrupt-parent = <&gpio6>;
+ 		interrupt-names = "intrq1", "intrq2";
+@@ -510,6 +511,15 @@ adv7482_txb: endpoint {
+ 				remote-endpoint = <&csi20_in>;
+ 			};
+ 		};
++
++		port@c {
++			reg = <12>;
++
++			adv7482_i2s: endpoint {
++				remote-endpoint = <&rsnd_endpoint3>;
++				system-clock-direction-out;
++			};
++		};
+ 	};
+ 
+ 	csa_vdd: adc@7c {
+@@ -684,7 +694,8 @@ sdhi3_pins_uhs: sd3_uhs {
+ 	};
+ 
+ 	sound_pins: sound {
+-		groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
++		groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a",
++			 "ssi4_data", "ssi4_ctrl";
+ 		function = "ssi";
+ 	};
+ 
+@@ -733,8 +744,8 @@ &rcar_sound {
+ 	pinctrl-0 = <&sound_pins &sound_clk_pins>;
+ 	pinctrl-names = "default";
+ 
+-	/* Single DAI */
+-	#sound-dai-cells = <0>;
++	/* multi DAI */
++	#sound-dai-cells = <1>;
+ 
+ 	/* audio_clkout0/1/2/3 */
+ 	#clock-cells = <1>;
+@@ -758,8 +769,19 @@ &rcar_sound {
+ 		 <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
+ 		 <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
+ 		 <&audio_clk_a>, <&cs2000>,
+-		 <&audio_clk_c>,
++		 <&adv7482_hdmi_in>,
+ 		 <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
++	clock-names = "ssi-all",
++		      "ssi.9", "ssi.8", "ssi.7", "ssi.6",
++		      "ssi.5", "ssi.4", "ssi.3", "ssi.2",
++		      "ssi.1", "ssi.0",
++		      "src.9", "src.8", "src.7", "src.6",
++		      "src.5", "src.4", "src.3", "src.2",
++		      "src.1", "src.0",
++		      "mix.1", "mix.0",
++		      "ctu.1", "ctu.0",
++		      "dvc.0", "dvc.1",
++		      "clk_a", "clk_b", "clk_c", "clk_i";
+ 
+ 	ports {
+ 		#address-cells = <1>;
+@@ -777,6 +799,21 @@ rsnd_endpoint0: endpoint {
+ 				capture  = <&ssi1 &src1 &dvc1>;
+ 			};
+ 		};
++		rsnd_port3: port@3 {
++			reg = <3>;
++			rsnd_endpoint3: endpoint {
++				remote-endpoint = <&adv7482_i2s>;
++
++				dai-tdm-slot-num = <8>;
++				dai-tdm-slot-width = <32>;
++				dai-format = "left_j";
++				mclk-fs = <256>;
++				bitclock-master = <&adv7482_i2s>;
++				frame-master = <&adv7482_i2s>;
++
++				capture = <&ssi4>;
++			};
++		};
+ 	};
+ };
+ 
+-- 
+2.25.1.25.g9ecbe7eb18
+
 
