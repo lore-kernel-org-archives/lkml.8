@@ -2,102 +2,114 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A538BC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9BFC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71ED62072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D082072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:24:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vN1/Ute8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbgCTXYF (ORCPT
+        id S1727505AbgCTXYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 19:24:05 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37647 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgCTXYF (ORCPT
+        Fri, 20 Mar 2020 19:24:21 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42040 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbgCTXYV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 19:24:05 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFQzX-0005ew-Fg; Sat, 21 Mar 2020 00:23:51 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id D71B1FFC77; Sat, 21 Mar 2020 00:23:50 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Raj\, Ashok" <ashok.raj@intel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: Re: [PATCH v2 2/2] x86/delay: Introduce TPAUSE delay
-In-Reply-To: <CALCETrUxOd6P-Yh78qjmOYnh9jY0ggeb4vB=coVjMjthXMTREg@mail.gmail.com>
-References: <1584677604-32707-1-git-send-email-kyung.min.park@intel.com> <1584677604-32707-3-git-send-email-kyung.min.park@intel.com> <CALCETrWJ88CaGmij_NNysRjUQ6LPwwbPnMy1YPdKnM-cFDueSw@mail.gmail.com> <877dzf4a8v.fsf@nanos.tec.linutronix.de> <CALCETrUxOd6P-Yh78qjmOYnh9jY0ggeb4vB=coVjMjthXMTREg@mail.gmail.com>
-Date:   Sat, 21 Mar 2020 00:23:50 +0100
-Message-ID: <87zhcaobjt.fsf@nanos.tec.linutronix.de>
+        Fri, 20 Mar 2020 19:24:21 -0400
+Received: by mail-ot1-f65.google.com with SMTP id f66so2246553otf.9;
+        Fri, 20 Mar 2020 16:24:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=r1RjSBup4MWDnxcSCK94McxMdoDpG8eO0JDhY4wpKR0=;
+        b=vN1/Ute8SimVqT3y3hab78UyOf4VVJ7VRiHOmD/0YEw4RVsLYf+I9I+znQgoZJ4gdB
+         ictTZbD1FHachCP/sbEN+nf5NkPQ3zRL8Ac1BelFOIse/g9g6UpeoAfXXPC7J0vE8auY
+         ePcveIYKTMSHJgWhosQIxl0CCrkGF9pmyNFPTwd0v+oVmX5riIDdzQ03F5K6zEp+Yorg
+         xUhrv1K+sA6wqpG3J43WbuJGu1I6tO2+B7xlqRuhBhDVQUlM25cT94sYTuO+2rNTPHR+
+         wUJD/jin1TicQd15MZDDptDmvyxFQ3GYs+b1BI3MQaatUfXjIV8IMG9GTl9ZI1NYxiQ/
+         JVFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=r1RjSBup4MWDnxcSCK94McxMdoDpG8eO0JDhY4wpKR0=;
+        b=QZL1jtNh8XPVs7unt5QmsDE91zm2o+d6HscepsjM8qz3umFWJHFut6LIFLnr/+O+26
+         ajJ0TQEeL4kOtITohA1I/2eHwsLraFrkh3u18ik3AWrKLZMGhpqgrvXNzW9rtpxAuVCc
+         v0kGmtCJ8uEDMl5p18lPn2lQi20cPNbAPHurVBCpLuBDe8lH7fkGWzpHbSAIJRqL2EEA
+         6cUraD5laSLsO5X8GoBSj/CirYRexbb4A/GnnRL20QI+vLe05lXEaUxcWT/24LU1OffJ
+         bHn9w/xyadmMpSpWtrOZE1GRBXYG0RKyU+TnHt1ftBxy/TeWL30Savdx/gCL52LAqqeN
+         LwNQ==
+X-Gm-Message-State: ANhLgQ0L4NL6VJTLyfkHNa6bBh093xQ8sQK+HFBaSBG27aQkVGUqkY2C
+        ns3S3c+jYPPpV6vE+jXVoyv1i1rwigix0DJl5LE=
+X-Google-Smtp-Source: ADFU+vvk42JpEDDDlDUp6QEGUIHSuidkoO4gJ/JVIxwHCPUSqqRu1OBVOgg9ZhRrthX3kgHdC2yuDHRY3AYH9iDgANA=
+X-Received: by 2002:a05:6830:1608:: with SMTP id g8mr9414965otr.282.1584746659261;
+ Fri, 20 Mar 2020 16:24:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Received: by 2002:a8a:8e:0:0:0:0:0 with HTTP; Fri, 20 Mar 2020 16:24:18 -0700 (PDT)
+In-Reply-To: <20200320142231.2402-17-willy@infradead.org>
+References: <20200320142231.2402-1-willy@infradead.org> <20200320142231.2402-17-willy@infradead.org>
+From:   Namjae Jeon <linkinjeon@gmail.com>
+Date:   Sat, 21 Mar 2020 08:24:18 +0900
+Message-ID: <CAKYAXd-NGQvMoYg=TV1T=8OZdQcYwcncK_Hix8OkF0GqmYr9Wg@mail.gmail.com>
+Subject: Re: [PATCH v9 16/25] fs: Convert mpage_readpages to mpage_readahead
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        William Kucharski <william.kucharski@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
+> diff --git a/drivers/staging/exfat/exfat_super.c
+> b/drivers/staging/exfat/exfat_super.c
+> index b81d2a87b82e..96aad9b16d31 100644
+> --- a/drivers/staging/exfat/exfat_super.c
+> +++ b/drivers/staging/exfat/exfat_super.c
+Maybe, You should change fs/exfat instead of staging/exfat that is
+gone from -next ?
 
-> On Fri, Mar 20, 2020 at 3:00 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->> Andy Lutomirski <luto@kernel.org> writes:
->> > On Thu, Mar 19, 2020 at 9:13 PM Kyung Min Park <kyung.min.park@intel.com> wrote:
->> >>  void use_tsc_delay(void)
->> >>  {
->> >> -       if (delay_fn == delay_loop)
->> >> +       if (static_cpu_has(X86_FEATURE_WAITPKG)) {
->> >> +               delay_halt_fn = delay_halt_tpause;
->> >> +               delay_fn = delay_halt;
->> >> +       } else if (delay_fn == delay_loop) {
->> >>                 delay_fn = delay_tsc;
->> >> +       }
->> >>  }
->> >
->> > This is an odd way to dispatch: you're using static_cpu_has(), but
->> > you're using it once to populate a function pointer.  Why not just put
->> > the static_cpu_has() directly into delay_halt() and open-code the
->> > three variants?
->>
->> Two: mwaitx and tpause.
+> @@ -3002,10 +3002,9 @@ static int exfat_readpage(struct file *file, struct
+> page *page)
+>  	return  mpage_readpage(page, exfat_get_block);
+>  }
 >
-> I was imagining there would also be a variant for systems with neither feature.
-
-Oh I see, you want to get rid of both function pointers. That's tricky.
-
-The boot time function is delay_loop() which is using the magic (1 << 12)
-boot time value until calibration in one way or the other happens and
-something calls use_tsc_delay() or use_mwaitx_delay(). Yes, that's all
-horrible but X86_FEATURE_TSC is unusable for this.
-
-Let me think about it.
-
-Thanks,
-
-        tglx
-
-
-
-
-
-
-
-
+> -static int exfat_readpages(struct file *file, struct address_space
+> *mapping,
+> -			   struct list_head *pages, unsigned int nr_pages)
+> +static void exfat_readahead(struct readahead_control *rac)
+>  {
+> -	return  mpage_readpages(mapping, pages, nr_pages, exfat_get_block);
+> +	mpage_readahead(rac, exfat_get_block);
+>  }
+>
+>  static int exfat_writepage(struct page *page, struct writeback_control
+> *wbc)
+> @@ -3104,7 +3103,7 @@ static sector_t _exfat_bmap(struct address_space
+> *mapping, sector_t block)
+>
+>  static const struct address_space_operations exfat_aops = {
+>  	.readpage    = exfat_readpage,
+> -	.readpages   = exfat_readpages,
+> +	.readahead   = exfat_readahead,
+>  	.writepage   = exfat_writepage,
+>  	.writepages  = exfat_writepages,
+>  	.write_begin = exfat_write_begin,
