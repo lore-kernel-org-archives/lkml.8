@@ -2,80 +2,228 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB503C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AEAC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7C220781
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCB520775
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584730301;
-	bh=Pxh4RNwztfrlkMAQ30CdqLRP25VoysEoplJZh8LNfAc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=X6hzszwqZVt5jJifT9jxM+uOKVyId2KfSKxj9GHKzGZiTd9fKkHaPh/UFUqTMnC0a
-	 RDzswvYWfR2j4hZZSoulALVXvAMm3aIF2ebzdresRSnBjNDf3UXTABBwFLXT+lk9ad
-	 eF+zKeCbNXeD28l9t++BeiT6yiVErrZmHX1B2v7w=
+	s=default; t=1584730312;
+	bh=8x+c5hfe93aO5y0fHqTlCC+EdYfw+zTY52sRuEmUGxc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PHsr9z4JG/2X2WA5YL3IEcQmvSlQju1jRx7mpXQSPU4GLd1xojjgndvGj9EZvrHax
+	 NxrJi+jAp7JksPPWdT1aLeEmbwXHsqcWXjvOJB2sgHn8up8tE7reHS9U1o+DBJVJKN
+	 ZuEvXJgq6Qfw0AJndciaokpFpL37C+Cty0y1dKtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbgCTSvk (ORCPT
+        id S1727639AbgCTSvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:51:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45916 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 14:51:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727601AbgCTSvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:51:38 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        id S1727443AbgCTSvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 14:51:24 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DBA920781;
-        Fri, 20 Mar 2020 18:51:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6212C20789;
+        Fri, 20 Mar 2020 18:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584730297;
-        bh=Pxh4RNwztfrlkMAQ30CdqLRP25VoysEoplJZh8LNfAc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=b/GHHrqqQTaSpCsOvb2WLrNC6efZgRm1ZyJ155O9mE4abE8nziYOLt+LDXMRkX34b
-         MmwiWPl5oAPhPQEkQD/p6CEEebnt9w++UgPg/kiRSSCTr06fKVrVrefYknfIVcBqLU
-         KUovYTZ+PSG2vO+pSVILi4rBxHn1cZHjcg3lDYdk=
-Date:   Fri, 20 Mar 2020 13:51:35 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/12] pcie: qcom: add missing reset for ipq806x
-Message-ID: <20200320185135.GA242507@google.com>
+        s=default; t=1584730283;
+        bh=8x+c5hfe93aO5y0fHqTlCC+EdYfw+zTY52sRuEmUGxc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=r5zpMHrt7gwjAZSVllSvlxY/UaBmpvIjzBM3Q0zS7RPhgp3IfXI6hoquSm7c1292S
+         R+cL7rQ3rsxJC06DfAvBo9c6PNNZoZqn+B1WylqULQvVly1WeHGjRgHRvcDr4FOJiX
+         ImddGTvv1O0mO6cK2VHhiKCAhT0jEfTMZYjNEwp8=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jFMK1-00EKAx-Ki; Fri, 20 Mar 2020 18:24:41 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH v6 11/23] irqchip/gic-v4.1: Plumb get/set_irqchip_state SGI callbacks
+Date:   Fri, 20 Mar 2020 18:23:54 +0000
+Message-Id: <20200320182406.23465-12-maz@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200320182406.23465-1-maz@kernel.org>
+References: <20200320182406.23465-1-maz@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320183455.21311-5-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, tglx@linutronix.de, yuzenghui@huawei.com, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 07:34:47PM +0100, Ansuel Smith wrote:
-> Add missing ext reset used by ipq806x soc in
-> pcie qcom driver
+To implement the get/set_irqchip_state callbacks (limited to the
+PENDING state), we have to use a particular set of hacks:
 
-You say "missing" -- does that mean this is a *new* requirement for
-this ipq806x device, and previous devices work correctly without this
-patch?
+- Reading the pending state is done by using a pair of new redistributor
+  registers (GICR_VSGIR, GICR_VSGIPENDR), which allow the 16 interrupts
+  state to be retrieved.
+- Setting the pending state is done by generating it as we'd otherwise do
+  for a guest (writing to GITS_SGIR).
+- Clearing the pending state is done by emitting a VSGI command with the
+  "clear" bit set.
 
-Or does this fix an omission and previous devices actually didn't work
-correctly?
+This requires some interesting locking though:
+- When talking to the redistributor, we must make sure that the VPE
+  affinity doesn't change, hence taking the VPE lock.
+- At the same time, we must ensure that nobody accesses the same
+  redistributor's GICR_VSGIR registers for a different VPE, which
+  would corrupt the reading of the pending bits. We thus take the
+  per-RD spinlock. Much fun.
 
-s/soc/SoC/
-s/pcie/PCIe/
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+Link: https://lore.kernel.org/r/20200304203330.4967-12-maz@kernel.org
+---
+ drivers/irqchip/irq-gic-v3-its.c   | 77 ++++++++++++++++++++++++++++++
+ include/linux/irqchip/arm-gic-v3.h | 14 ++++++
+ 2 files changed, 91 insertions(+)
 
-Period at end of sentence.  Please wrap to fill 75 columns.
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index d89b9d78394d..ce11cba09d4d 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -3972,11 +3972,88 @@ static int its_sgi_set_affinity(struct irq_data *d,
+ 	return IRQ_SET_MASK_OK;
+ }
+ 
++static int its_sgi_set_irqchip_state(struct irq_data *d,
++				     enum irqchip_irq_state which,
++				     bool state)
++{
++	if (which != IRQCHIP_STATE_PENDING)
++		return -EINVAL;
++
++	if (state) {
++		struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
++		struct its_node *its = find_4_1_its();
++		u64 val;
++
++		val  = FIELD_PREP(GITS_SGIR_VPEID, vpe->vpe_id);
++		val |= FIELD_PREP(GITS_SGIR_VINTID, d->hwirq);
++		writeq_relaxed(val, its->sgir_base + GITS_SGIR - SZ_128K);
++	} else {
++		its_configure_sgi(d, true);
++	}
++
++	return 0;
++}
++
++static int its_sgi_get_irqchip_state(struct irq_data *d,
++				     enum irqchip_irq_state which, bool *val)
++{
++	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
++	void __iomem *base;
++	unsigned long flags;
++	u32 count = 1000000;	/* 1s! */
++	u32 status;
++	int cpu;
++
++	if (which != IRQCHIP_STATE_PENDING)
++		return -EINVAL;
++
++	/*
++	 * Locking galore! We can race against two different events:
++	 *
++	 * - Concurent vPE affinity change: we must make sure it cannot
++	 *   happen, or we'll talk to the wrong redistributor. This is
++	 *   identical to what happens with vLPIs.
++	 *
++	 * - Concurrent VSGIPENDR access: As it involves accessing two
++	 *   MMIO registers, this must be made atomic one way or another.
++	 */
++	cpu = vpe_to_cpuid_lock(vpe, &flags);
++	raw_spin_lock(&gic_data_rdist_cpu(cpu)->rd_lock);
++	base = gic_data_rdist_cpu(cpu)->rd_base + SZ_128K;
++	writel_relaxed(vpe->vpe_id, base + GICR_VSGIR);
++	do {
++		status = readl_relaxed(base + GICR_VSGIPENDR);
++		if (!(status & GICR_VSGIPENDR_BUSY))
++			goto out;
++
++		count--;
++		if (!count) {
++			pr_err_ratelimited("Unable to get SGI status\n");
++			goto out;
++		}
++		cpu_relax();
++		udelay(1);
++	} while (count);
++
++out:
++	raw_spin_unlock(&gic_data_rdist_cpu(cpu)->rd_lock);
++	vpe_to_cpuid_unlock(vpe, flags);
++
++	if (!count)
++		return -ENXIO;
++
++	*val = !!(status & (1 << d->hwirq));
++
++	return 0;
++}
++
+ static struct irq_chip its_sgi_irq_chip = {
+ 	.name			= "GICv4.1-sgi",
+ 	.irq_mask		= its_sgi_mask_irq,
+ 	.irq_unmask		= its_sgi_unmask_irq,
+ 	.irq_set_affinity	= its_sgi_set_affinity,
++	.irq_set_irqchip_state	= its_sgi_set_irqchip_state,
++	.irq_get_irqchip_state	= its_sgi_get_irqchip_state,
+ };
+ 
+ static int its_sgi_irq_domain_alloc(struct irq_domain *domain,
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index fd3be49ac9a5..590cdbeba9d5 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -345,6 +345,15 @@
+ #define GICR_VPENDBASER_4_1_VGRP1EN	(1ULL << 58)
+ #define GICR_VPENDBASER_4_1_VPEID	GENMASK_ULL(15, 0)
+ 
++#define GICR_VSGIR			0x0080
++
++#define GICR_VSGIR_VPEID		GENMASK(15, 0)
++
++#define GICR_VSGIPENDR			0x0088
++
++#define GICR_VSGIPENDR_BUSY		(1U << 31)
++#define GICR_VSGIPENDR_PENDING		GENMASK(15, 0)
++
+ /*
+  * ITS registers, offsets from ITS_base
+  */
+@@ -368,6 +377,11 @@
+ 
+ #define GITS_TRANSLATER			0x10040
+ 
++#define GITS_SGIR			0x20020
++
++#define GITS_SGIR_VPEID			GENMASK_ULL(47, 32)
++#define GITS_SGIR_VINTID		GENMASK_ULL(3, 0)
++
+ #define GITS_CTLR_ENABLE		(1U << 0)
+ #define GITS_CTLR_ImDe			(1U << 1)
+ #define	GITS_CTLR_ITS_NUMBER_SHIFT	4
+-- 
+2.20.1
+
