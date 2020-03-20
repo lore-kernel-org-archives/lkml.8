@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB2AC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208F5C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039E720781
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0194320781
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbgCTSjU (ORCPT
+        id S1727747AbgCTSjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:39:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36880 "EHLO
+        Fri, 20 Mar 2020 14:39:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36872 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgCTSiT (ORCPT
+        with ESMTP id S1727022AbgCTSiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:38:19 -0400
+        Fri, 20 Mar 2020 14:38:18 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFMXB-00022q-ME
-        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:17 +0100
+        id 1jFMXA-000228-32
+        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:16 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 2BDB61039FF
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:17 +0100 (CET)
-Message-Id: <20200320180033.373450806@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 7660A1039FF
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:15 +0100 (CET)
+Message-Id: <20200320180032.708673769@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 19:00:06 +0100
+Date:   Fri, 20 Mar 2020 18:59:59 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -48,7 +48,8 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [patch V3 10/23] x86/entry: Move irq tracing on syscall entry to C-code
+Subject: [patch V3 03/23] vmlinux.lds.h: Create section for protection against
+ instrumentation
 References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,141 +62,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the C entry points are safe, move the irq flags tracing code into
-the entry helper:
+Some code pathes, especially the low level entry code, must be protected
+against instrumentation for various reasons:
 
-    - Invoke lockdep before calling into context tracking
+ - Low level entry code can be a fragile beast, especially on x86.
 
-    - Use the safe __trace_hardirqs_on() trace function after context
-      tracking established state and RCU is watching.
+ - With NO_HZ_FULL RCU state needs to be established before using it.
+
+Having a dedicated section for such code allows to validate with tooling
+that no unsafe functions are invoked.
+
+Add the .noinstr.text section and the noinstr attribute to mark
+functions. noinstr implies notrace. Kprobes will gain a section check
+later.
+
+Provide also two sets of markers:
+
+ - instr_begin()/end()
+
+   This is used to mark code inside in a noinstr function which calls
+   into regular instrumentable text section as safe.
+
+ - noinstr_call_begin()/end()
+
+   Same as above but used to mark indirect calls which cannot be tracked by
+   tooling and need to be audited manually.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/common.c          |   21 +++++++++++++++++++--
- arch/x86/entry/entry_32.S        |   12 ------------
- arch/x86/entry/entry_64.S        |    2 --
- arch/x86/entry/entry_64_compat.S |   18 ------------------
- 4 files changed, 19 insertions(+), 34 deletions(-)
+ include/asm-generic/sections.h    |    3 +++
+ include/asm-generic/vmlinux.lds.h |    4 ++++
+ include/linux/compiler.h          |   24 ++++++++++++++++++++++++
+ include/linux/compiler_types.h    |    4 ++++
+ scripts/mod/modpost.c             |    2 +-
+ 5 files changed, 36 insertions(+), 1 deletion(-)
 
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -39,19 +39,36 @@
- #include <trace/events/syscalls.h>
+--- a/include/asm-generic/sections.h
++++ b/include/asm-generic/sections.h
+@@ -53,6 +53,9 @@ extern char __ctors_start[], __ctors_end
+ /* Start and end of .opd section - used for function descriptors. */
+ extern char __start_opd[], __end_opd[];
  
- #ifdef CONFIG_CONTEXT_TRACKING
--/* Called on entry from user mode with IRQs off. */
-+/**
-+ * enter_from_user_mode - Establish state when coming from user mode
-+ *
-+ * Syscall entry disables interrupts, but user mode is traced as interrupts
-+ * enabled. Also with NO_HZ_FULL RCU might be idle.
-+ *
-+ * 1) Tell lockdep that interrupts are disabled
-+ * 2) Invoke context tracking if enabled to reactivate RCU
-+ * 3) Trace interrupts off state
-+ */
- __visible noinstr void enter_from_user_mode(void)
- {
- 	enum ctx_state state = ct_state();
++/* Start and end of instrumentation protected text section */
++extern char __noinstr_text_start[], __noinstr_text_end[];
++
+ extern __visible const void __nosave_begin, __nosave_end;
  
-+	lockdep_hardirqs_off(CALLER_ADDR0);
- 	user_exit_irqoff();
+ /* Function descriptor handling (if any).  Override in asm/sections.h */
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -550,6 +550,10 @@
+ #define TEXT_TEXT							\
+ 		ALIGN_FUNCTION();					\
+ 		*(.text.hot TEXT_MAIN .text.fixup .text.unlikely)	\
++		ALIGN_FUNCTION();					\
++		__noinstr_text_start = .;				\
++		*(.noinstr.text)					\
++		__noinstr_text_end = .;					\
+ 		*(.text..refcount)					\
+ 		*(.ref.text)						\
+ 	MEM_KEEP(init.text*)						\
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -120,12 +120,36 @@ void ftrace_likely_update(struct ftrace_
+ /* Annotate a C jump table to allow objtool to follow the code flow */
+ #define __annotate_jump_table __section(.rodata..c_jump_table)
  
- 	instr_begin();
- 	CT_WARN_ON(state != CONTEXT_USER);
-+	__trace_hardirqs_off();
- 	instr_end();
- }
++/* Begin/end of an instrumentation safe region */
++#define instr_begin() ({						\
++	asm volatile("%c0:\n\t"						\
++		     ".pushsection .discard.instr_begin\n\t"		\
++		     ".long %c0b - .\n\t"				\
++		     ".popsection\n\t" : : "i" (__COUNTER__));		\
++})
++
++#define instr_end() ({							\
++	asm volatile("%c0:\n\t"						\
++		     ".pushsection .discard.instr_end\n\t"		\
++		     ".long %c0b - .\n\t"				\
++		     ".popsection\n\t" : : "i" (__COUNTER__));		\
++})
++
  #else
--static inline void enter_from_user_mode(void) {}
-+static __always_inline void enter_from_user_mode(void)
-+{
-+	lockdep_hardirqs_off(CALLER_ADDR0);
-+	instr_begin();
-+	__trace_hardirqs_off();
-+	instr_end();
-+}
+ #define annotate_reachable()
+ #define annotate_unreachable()
+ #define __annotate_jump_table
++#define instr_begin()		do { } while(0)
++#define instr_end()		do { } while(0)
  #endif
  
- static __always_inline void exit_to_user_mode(void)
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -960,12 +960,6 @@ SYM_FUNC_START(entry_SYSENTER_32)
- 	jnz	.Lsysenter_fix_flags
- .Lsysenter_flags_fixed:
++/*
++ * Annotation for audited indirect calls. Distinct from instr_begin() on
++ * purpose because the called function has to be noinstr as well.
++ */
++#define noinstr_call_begin()		instr_begin()
++#define noinstr_call_end()		instr_end()
++
+ #ifndef ASM_UNREACHABLE
+ # define ASM_UNREACHABLE
+ #endif
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -118,6 +118,10 @@ struct ftrace_likely_data {
+ #define notrace			__attribute__((__no_instrument_function__))
+ #endif
  
--	/*
--	 * User mode is traced as though IRQs are on, and SYSENTER
--	 * turned them off.
--	 */
--	TRACE_IRQS_OFF
--
- 	movl	%esp, %eax
- 	call	do_fast_syscall_32
- 	/* XEN PV guests always use IRET path */
-@@ -1075,12 +1069,6 @@ SYM_FUNC_START(entry_INT80_32)
++/* Section for code which can't be instrumented at all */
++#define noinstr								\
++	noinline notrace __attribute((__section__(".noinstr.text")))
++
+ /*
+  * it doesn't make sense on ARM (currently the only user of __naked)
+  * to trace naked functions because then mcount is called without
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -953,7 +953,7 @@ static void check_section(const char *mo
  
- 	SAVE_ALL pt_regs_ax=$-ENOSYS switch_stacks=1	/* save rest */
- 
--	/*
--	 * User mode is traced as though IRQs are on, and the interrupt gate
--	 * turned them off.
--	 */
--	TRACE_IRQS_OFF
--
- 	movl	%esp, %eax
- 	call	do_int80_syscall_32
- .Lsyscall_32_done:
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -167,8 +167,6 @@ SYM_INNER_LABEL(entry_SYSCALL_64_after_h
- 
- 	PUSH_AND_CLEAR_REGS rax=$-ENOSYS
- 
--	TRACE_IRQS_OFF
--
- 	/* IRQs are off. */
- 	movq	%rax, %rdi
- 	movq	%rsp, %rsi
---- a/arch/x86/entry/entry_64_compat.S
-+++ b/arch/x86/entry/entry_64_compat.S
-@@ -129,12 +129,6 @@ SYM_FUNC_START(entry_SYSENTER_compat)
- 	jnz	.Lsysenter_fix_flags
- .Lsysenter_flags_fixed:
- 
--	/*
--	 * User mode is traced as though IRQs are on, and SYSENTER
--	 * turned them off.
--	 */
--	TRACE_IRQS_OFF
--
- 	movq	%rsp, %rdi
- 	call	do_fast_syscall_32
- 	/* XEN PV guests always use IRET path */
-@@ -247,12 +241,6 @@ SYM_INNER_LABEL(entry_SYSCALL_compat_aft
- 	pushq   $0			/* pt_regs->r15 = 0 */
- 	xorl	%r15d, %r15d		/* nospec   r15 */
- 
--	/*
--	 * User mode is traced as though IRQs are on, and SYSENTER
--	 * turned them off.
--	 */
--	TRACE_IRQS_OFF
--
- 	movq	%rsp, %rdi
- 	call	do_fast_syscall_32
- 	/* XEN PV guests always use IRET path */
-@@ -403,12 +391,6 @@ SYM_CODE_START(entry_INT80_compat)
- 	xorl	%r15d, %r15d		/* nospec   r15 */
- 	cld
- 
--	/*
--	 * User mode is traced as though IRQs are on, and the interrupt
--	 * gate turned them off.
--	 */
--	TRACE_IRQS_OFF
--
- 	movq	%rsp, %rdi
- 	call	do_int80_syscall_32
- .Lsyscall_32_done:
+ #define DATA_SECTIONS ".data", ".data.rel"
+ #define TEXT_SECTIONS ".text", ".text.unlikely", ".sched.text", \
+-		".kprobes.text", ".cpuidle.text"
++		".kprobes.text", ".cpuidle.text", ".noinstr.text"
+ #define OTHER_TEXT_SECTIONS ".ref.text", ".head.text", ".spinlock.text", \
+ 		".fixup", ".entry.text", ".exception.text", ".text.*", \
+ 		".coldtext"
 
