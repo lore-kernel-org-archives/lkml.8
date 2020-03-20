@@ -2,48 +2,49 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AB6C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4583FC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260042075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A042076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgCTAsm (ORCPT
+        id S1727339AbgCTAtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 20:48:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36290 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 20:49:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCTAsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 20:48:41 -0400
+        id S1725787AbgCTAtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 20:49:02 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 672EB20753;
-        Fri, 20 Mar 2020 00:48:39 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 20:48:38 -0400
+        by mail.kernel.org (Postfix) with ESMTPSA id 8005620754;
+        Fri, 20 Mar 2020 00:49:00 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 20:48:59 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>
-Subject: Re: [PATCH RFC v2 tip/core/rcu 14/22] rcu-tasks: Add an RCU Tasks
- Trace to simplify protection of tracing hooks
-Message-ID: <20200319204838.1f78152a@gandalf.local.home>
-In-Reply-To: <20200320002813.GL3199@paulmck-ThinkPad-P72>
-References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
-        <20200319001100.24917-14-paulmck@kernel.org>
-        <20200319154239.6d67877d@gandalf.local.home>
-        <20200320002813.GL3199@paulmck-ThinkPad-P72>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     ben.hutchings@codethink.co.uk, Chris.Paterson2@renesas.com,
+        bigeasy@linutronix.de, LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Julia Cartwright <julia@ni.com>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Subject: Re: 4.19.106-rt44 -- boot problems with irqwork: push most work
+ into softirq context
+Message-ID: <20200319204859.5011a488@gandalf.local.home>
+In-Reply-To: <20200319232225.GA7878@duo.ucw.cz>
+References: <20200228170837.3fe8bb57@gandalf.local.home>
+        <20200319214835.GA29781@duo.ucw.cz>
+        <20200319232225.GA7878@duo.ucw.cz>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -53,14 +54,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Mar 2020 17:28:13 -0700
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
+On Fri, 20 Mar 2020 00:22:25 +0100
+Pavel Machek <pavel@denx.de> wrote:
 
-> Good point.  If interrupts are disabled, it will need to use some
-> other mechanism.  One approach is irqwork.  Another is a timer.
+> On Thu 2020-03-19 22:48:35, Pavel Machek wrote:
+> > Hi!
+
+Hi Pavel!
+
+> >   
+> > > I'm pleased to announce the 4.19.106-rt44 stable release.
+> > > 
+> > > 
+> > > This release is just an update to the new stable 4.19.106 version
+> > > and no RT specific changes have been made.
+> > > 
+> > > 
+> > > You can get this release via the git tree at:
+> > > 
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+> > > 
+> > >   branch: v4.19-rt
+> > >   Head SHA1: 0f2960c75dd68d339f0aff2935f51652b5625fbf  
+> > 
+> > This brought some problems for me. de0-nano board now fails to boot in
+> > cca 50% of cases if I move these patches on top of -cip tree.
+> > 
+> > This is example of failed job:
+> > 
+> > https://lava.ciplatform.org/scheduler/job/13037
+> > 
+> > de0-nano is 32-bit arm, should be based on Altera SoCFPGA if I understand
+> > things correctly.
+> > 
+> > "fc9f4631a290 irqwork: push most work into softirq context" touches
+> > area of the panic above. I tried to revert it on top of the full
+> > series, and tests passed twice so far...  
 > 
-> Suggestions?
+> Test passed 7 times now. So yes, reverting this fixes de0-nano
+> boot. Any ideas what might be wrong?
+> 
+> I'll be running it few more times.
+> 
+> https://gitlab.com/cip-project/cip-kernel/linux-cip/pipelines/127953471
+> 
 
-Ftrace and perf use irq_work, I would think that should work here too.
+Looks like you are running this without PREEMPT_RT enabled.
+
+Does this patch help?
 
 -- Steve
+
+
+diff --git a/kernel/irq_work.c b/kernel/irq_work.c
+index 2940622da5b3..0ca75c77536b 100644
+--- a/kernel/irq_work.c
++++ b/kernel/irq_work.c
+@@ -146,8 +146,9 @@ bool irq_work_needs_cpu(void)
+ 	raised = this_cpu_ptr(&raised_list);
+ 	lazy = this_cpu_ptr(&lazy_list);
+ 
+-	if (llist_empty(raised) && llist_empty(lazy))
+-		return false;
++	if (llist_empty(raised) || arch_irq_work_has_interrupt())
++		if (llist_empty(lazy))
++			return false;
+ 
+ 	/* All work should have been flushed before going offline */
+ 	WARN_ON_ONCE(cpu_is_offline(smp_processor_id()));
