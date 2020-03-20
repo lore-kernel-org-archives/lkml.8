@@ -2,97 +2,104 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F11C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB66CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C261E2051A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:15:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584706543;
-	bh=7DU4BFEH027DS1xtBiza35jxnRowW4xC2oTqrwQMZWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bKv1CBS5csvTE4X/hVgHDdg6CDq368CQ0i8BbrwTj/ncb6vf72LssLSchwXTu1q6m
-	 vhGUwKCoLZN1pX63Sse8OmxmMNeqGpZHVzbpmpxluUdi5p+az9pBW9bOwf3dzEM3Wc
-	 l0A8Kii0Ms086bi6ZygHFygtUkYIf6Z5ndCehRcs=
+	by mail.kernel.org (Postfix) with ESMTP id A3BEE20782
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:17:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="RURARdoH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgCTMPm (ORCPT
+        id S1727107AbgCTMRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 08:15:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:48282 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726893AbgCTMPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 08:15:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A50AC31B;
-        Fri, 20 Mar 2020 05:15:41 -0700 (PDT)
-Received: from localhost (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A0E13F85E;
-        Fri, 20 Mar 2020 05:15:41 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 12:15:39 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Alison Wang <alison.wang@nxp.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>
-Subject: Re: [alsa-devel] [EXT] Re: [PATCH] ASoC: sgtl5000: Revert "ASoC:
- sgtl5000: Fix of unmute outputs on probe"
-Message-ID: <20200320121539.GB3961@sirena.org.uk>
-References: <20191212071847.45561-1-alison.wang@nxp.com>
- <CAGgjyvHHzPWjRTqxYmGCmk3qa6=kOezHywVDFomgD6UNj-zwpQ@mail.gmail.com>
- <VI1PR04MB40627CDD5F0C17D8DCDCFFE2F4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
- <VI1PR04MB4062C67906888DA8142C17E1F4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
- <CAGgjyvGAjx1SV=K66AM24DxMTA_sAF2uhhDw5gXCFTGNZi8E7Q@mail.gmail.com>
- <VI1PR04MB40620DD55D5ED0FDC3E94C2BF4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
- <20191212122318.GB4310@sirena.org.uk>
- <CAJ+vNU0xZOb0R2VNkq6k3efdkgQUtO_-cEdNgZ643nt_G=vevQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9zSXsLTf0vkW971A"
-Content-Disposition: inline
-In-Reply-To: <CAJ+vNU0xZOb0R2VNkq6k3efdkgQUtO_-cEdNgZ643nt_G=vevQ@mail.gmail.com>
-X-Cookie: Laugh when you can
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 20 Mar 2020 08:17:06 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54850 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbgCTMRF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 08:17:05 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f130so5064878wmf.4
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 05:17:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=PE0xCP/YldjBqal9u3IvK3D+Ap2jsQmYbSPkKDPiuBs=;
+        b=RURARdoHLWJhlcqA4PGUxmKsA1WnU1gjp4I5mVWAGQAbeCKachmWlTMSoW41HuGbBd
+         iCAwWLW8PiQ0/DJa0mkuFubKgea+OGLg276aHzExdPgoGGkcCeApfhePSIxwa/DzHwXM
+         2Iongtg4zecxgge+IaukJbm2vv/abTGBUXVFFoWogf3BQ0w8O4K4pk17meGbLINVFYRF
+         ArWiFBKYbAWIfPxOYDUja9ZiSgiWw3D59QzOwq1UahQES0V3HedzOU8F+JhWtrVKGZQe
+         9YkaZLHinV+JhHCYP2QwCCODJqSwk62RVmFS6PXRy89zcElurEyCfyp7Wm8652yrda6+
+         7HZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=PE0xCP/YldjBqal9u3IvK3D+Ap2jsQmYbSPkKDPiuBs=;
+        b=C9d2cYtt3RAs5vrzSwFPnkBI4FV67/zOsYlKctvNjXUBxG0QylXMcw6WlSkIFvNHe1
+         hLrg35cPuD/Pn/dA3wNTNLy9/JuXivcMqBaWaweUQfARyC5PAyXT9vjbg95BvmTdY5p5
+         4LlgO64PPPXcfDjSJ9kDQfjboSc6n0kJ7VGHsHtnX0TiQbLF18q0VpbIeUUxvoDU8KfB
+         21UncPAg+9IzuFXUmoDHaf24U5NYLB5sXYJLDTNKyyqkVCAgFURyLD69WjGnXUDiYT8l
+         965r/OfalzG1Oc5V7Fcay0ABXVok+ZjaioVcQNU1+bx4XlVGc88dY8gbRQmfmkpYu4Yv
+         P+Zg==
+X-Gm-Message-State: ANhLgQ3yAXa9WRp5Nqnh67sL3g1Wyduo2o0K14YB7NYSXkvcGDo5Wh66
+        oKYj1Rfj9LK6lWoFbjfX1O3XrA==
+X-Google-Smtp-Source: ADFU+vsKq9UcpprQpxnQcostRJ5qfoz+PKsDqa7VgD+MsrC/897xeeLqDSPaJNF8e5wXEbkbP2KqQw==
+X-Received: by 2002:a05:600c:2297:: with SMTP id 23mr9703226wmf.135.1584706622112;
+        Fri, 20 Mar 2020 05:17:02 -0700 (PDT)
+Received: from jwang-Latitude-5491.fritz.box ([2001:16b8:4927:3900:64cf:432e:192d:75a2])
+        by smtp.gmail.com with ESMTPSA id j39sm8593662wre.11.2020.03.20.05.17.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 05:17:01 -0700 (PDT)
+From:   Jack Wang <jinpu.wang@cloud.ionos.com>
+To:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org
+Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
+        bvanassche@acm.org, leon@kernel.org, dledford@redhat.com,
+        jgg@ziepe.ca, danil.kipnis@cloud.ionos.com,
+        jinpu.wang@cloud.ionos.com, rpenyaev@suse.de,
+        pankaj.gupta@cloud.ionos.com,
+        Roman Pen <roman.penyaev@profitbricks.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v11 01/26] sysfs: export sysfs_remove_file_self()
+Date:   Fri, 20 Mar 2020 13:16:32 +0100
+Message-Id: <20200320121657.1165-2-jinpu.wang@cloud.ionos.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200320121657.1165-1-jinpu.wang@cloud.ionos.com>
+References: <20200320121657.1165-1-jinpu.wang@cloud.ionos.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Function is going to be used in transport over RDMA module
+in subsequent patches, so export it to GPL modules.
 
---9zSXsLTf0vkW971A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Roman Pen <roman.penyaev@profitbricks.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+[jwang: extend the commit message]
+Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+---
+ fs/sysfs/file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Thu, Mar 19, 2020 at 01:49:37PM -0700, Tim Harvey wrote:
+diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+index 130fc6fbcc03..1ff4672d7746 100644
+--- a/fs/sysfs/file.c
++++ b/fs/sysfs/file.c
+@@ -492,6 +492,7 @@ bool sysfs_remove_file_self(struct kobject *kobj, const struct attribute *attr)
+ 	kernfs_put(kn);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(sysfs_remove_file_self);
+ 
+ void sysfs_remove_files(struct kobject *kobj, const struct attribute * const *ptr)
+ {
+-- 
+2.17.1
 
-> The response above indicates maybe there was an additional ALSA
-> control perhaps added as a resolution but I don't see any differences
-> there.
-
-The response is talking about existing controls that are already in the
-driver.
-
---9zSXsLTf0vkW971A
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl50s+sACgkQJNaLcl1U
-h9BQ8wf/bNkc+gfjOgAy8vg35nBok4c9UrW/sr+phlxjxTDNXqHsikV9NU5wVryf
-PPMFtP7SNRjy3sKVlkVzph8IhxbMv5BA1DDp2ejW6L0Gh+atXdN4Wr9Cupiw4+PB
-mf9bOzJ7Ol0cL9nHaaLBZKyBRg8kjw2h9g5T94UDlelR4csnAI7NYlO6crY2xOlR
-CIDGMt06OapXefylEtQFRXc2usw180zscmOlEmafMku73M2qsyAWiXbvJD2O38Dz
-QZ9M/NoQpp62WHkPawJXe19ju6n1KrEuPhIr8hW2EcHRbWligh3stcdBrZupXQfd
-0TV+XAdvYJRrLzbCEu8v4+poN+b6hw==
-=PTUB
------END PGP SIGNATURE-----
-
---9zSXsLTf0vkW971A--
