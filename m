@@ -2,102 +2,102 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4D4C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18F4C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0628D2078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:27:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584721654;
-	bh=gwsNsin4/SYg1Xj0KQ+zV+B8Z3aO3Bg8kEnqtbQn7Oc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=kVAwT3Bk9f0kJkKw4+GsKtshs9vg9ONNwTt/wUmH8ad5ydDnU7BCYUthJzWvroNB3
-	 JP0+BYCa7sB39XY4TIr+l+OiFFuJ8+gpJcGI1qSti/ONXfeu0ERsiMRj95/O2IC1TF
-	 oAM4Ha7JBOoTNryFDNVQ81sb33L9QQjjil+5Tit8=
+	by mail.kernel.org (Postfix) with ESMTP id 79D802078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:28:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbgCTQ1c (ORCPT
+        id S1727526AbgCTQ2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:27:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52950 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 12:28:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44004 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727464AbgCTQ1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:27:32 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5E6520724;
-        Fri, 20 Mar 2020 16:27:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584721651;
-        bh=gwsNsin4/SYg1Xj0KQ+zV+B8Z3aO3Bg8kEnqtbQn7Oc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=sYpq5idgbfPCkOXvP9v10jUWhgcWOkAqCS6lMIHDNrKY4kHXbxslXyhOsVlWwOIEg
-         NsSPGQsIJGjWY0qvwWsQrO01v2+BmXBzVBKTeKmUh+3Fcs2XEPfCaT0FJtJC8qjXDI
-         8TtwLtKyYaJzXtwo3R9/8oiPfAcH+1X00W0867sg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id C0E0135226B4; Fri, 20 Mar 2020 09:27:31 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 09:27:31 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH RFC v2 tip/core/rcu 01/22] sched/core: Add function to
- sample state of locked-down task
-Message-ID: <20200320162731.GQ3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
- <20200319001100.24917-1-paulmck@kernel.org>
- <20200319132238.75a034c3@gandalf.local.home>
- <20200319173525.GI3199@paulmck-ThinkPad-P72>
- <20200320024943.GA29649@paulmck-ThinkPad-P72>
- <20200319230945.3f4701ed@oasis.local.home>
+        id S1727122AbgCTQ2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 12:28:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A38D7AEF8;
+        Fri, 20 Mar 2020 16:28:14 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 17:28:09 +0100
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Joe Perches <joe@perches.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        Jiri Olsa <jolsa@redhat.com>, Rob Herring <robh@kernel.org>,
+        Michael Neuling <mikey@neuling.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Jordan Niethe <jniethe5@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Eric Richter <erichte@linux.ibm.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: Re: [PATCH v12 8/8] MAINTAINERS: perf: Add pattern that matches ppc
+ perf to the perf entry.
+Message-ID: <20200320162809.GU25468@kitsune.suse.cz>
+References: <20200225173541.1549955-1-npiggin@gmail.com>
+ <cover.1584699455.git.msuchanek@suse.de>
+ <4b150d01c60bd37705789200d9adee9f1c9b50ce.1584699455.git.msuchanek@suse.de>
+ <20200320103350.GV1922688@smile.fi.intel.com>
+ <20200320112338.GP25468@kitsune.suse.cz>
+ <20200320124251.GW1922688@smile.fi.intel.com>
+ <b96c9dd4dba4afca5288a551158659bf545d29fb.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200319230945.3f4701ed@oasis.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b96c9dd4dba4afca5288a551158659bf545d29fb.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 11:09:45PM -0400, Steven Rostedt wrote:
-> On Thu, 19 Mar 2020 19:49:43 -0700
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> 
-> > > The current setup is very convenient for the use cases thus far.  It
-> > > allows the function to say "Yeah, I was called, but I couldn't do
-> > > anything", thus allowing the caller to make exactly one check to know
-> > > that corrective action is required.  
+On Fri, Mar 20, 2020 at 07:42:03AM -0700, Joe Perches wrote:
+> On Fri, 2020-03-20 at 14:42 +0200, Andy Shevchenko wrote:
+> > On Fri, Mar 20, 2020 at 12:23:38PM +0100, Michal Suchánek wrote:
+> > > On Fri, Mar 20, 2020 at 12:33:50PM +0200, Andy Shevchenko wrote:
+> > > > On Fri, Mar 20, 2020 at 11:20:19AM +0100, Michal Suchanek wrote:
+> > > > > While at it also simplify the existing perf patterns.
+> > > > And still missed fixes from parse-maintainers.pl.
+> > > 
+> > > Oh, that script UX is truly ingenious.
 > > 
-> > And here is another use case that led me to take this approach.
-> > The trc_inspect_reader_notrunning() function in the patch below is passed
-> > to try_invoke_on_locked_down_task() whose caller can continue testing
-> > just the return value from try_invoke_on_locked_down_task() to work out
-> > what to do next.
-> > 
-> > Thoughts?  Other use cases?
+> > You have at least two options, their combinations, etc:
+> >  - complain to the author :-)
+> >  - send a patch :-)
 > 
-> Note, I made this comment before looking at the use cases in the later
-> patches. I was looking at it for a more generic purpose, but I'm not
-> sure there is one.
+> Recently:
 > 
-> It's fine as is for now.
+> https://lore.kernel.org/lkml/4d5291fa3fb4962b1fa55e8fd9ef421ef0c1b1e5.camel@perches.com/
 
-Sounds good, and again thank you for looking this over!
+Can we expect that reaordering is taken care of in that discussion then?
 
-							Thanx, Paul
+Thanks
+
+Michal
