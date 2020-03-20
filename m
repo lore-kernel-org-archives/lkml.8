@@ -2,93 +2,151 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74991C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C2FC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488942076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584701728;
-	bh=LzPRF7DoVrNKXkyG1E1Ei1tvzAqqWFjViJMw82ItyMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a4skhh0QL7jcxvygV38wDpJxu4HfG+pl44A63tzSfJtxkVp3e13RGVD1upXqwDsxq
-	 YQZ6L6h5lq2wrC9KG4bUUBZdaHcMOs2n6LiUO/gBBSkYPUgyVw8U4dC0mtPeuGZOyR
-	 9C8/ogLeAqKB7s2/sSYApC2RF/i6ITImPi1mryU0=
+	by mail.kernel.org (Postfix) with ESMTP id A977620739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:57:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c7M1lzi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgCTKzT (ORCPT
+        id S1727193AbgCTK5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:55:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbgCTKzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:55:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 20 Mar 2020 06:57:01 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:44630 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726726AbgCTK5B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 06:57:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584701820;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=H3cw3n7DECAvhMsR5v/8iVgWxi7rS06XuVpILiRCFOk=;
+        b=c7M1lzi/nvhL3yQVFSwZQi9hUWrRFdIyzCFuelQ5+DIY84ynz+GeRSmdL/8qrs6eBXwsAf
+        Y3nuDvs/jJfQb1Pl7fuqI1ZHOcM/CUmNpT3tdEwAD120pcEPbt8P40tqc2XKWMfEaNNM3l
+        hGOsZDoLgBLseSSsMkmzOj+q3ol3JWg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-2-OwZAXjqLMAKh5q-K0N9TJQ-1; Fri, 20 Mar 2020 06:56:56 -0400
+X-MC-Unique: OwZAXjqLMAKh5q-K0N9TJQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B36B820739;
-        Fri, 20 Mar 2020 10:55:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584701718;
-        bh=LzPRF7DoVrNKXkyG1E1Ei1tvzAqqWFjViJMw82ItyMc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eARZ1fuD3zAgPxwkLApSrGBX0K2ZJbujfaf92u19zgJ8yXV5YuRJuWdOxDKSidKaP
-         S+M66UbVGD6NoYBbLxc7Q9DquA4qTi7m2bx1OLJ8ler2JJyY2RLe5FSUIR2tNio5TG
-         soj7EhMCg3YTB5biGf2Y4knelNaKzELZqkiztSmQ=
-Date:   Fri, 20 Mar 2020 11:55:13 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 00/60] 5.4.27-rc1 review
-Message-ID: <20200320105513.GA450546@kroah.com>
-References: <20200319123919.441695203@linuxfoundation.org>
- <bfdce3ef-5fe9-8dab-1695-be3d33727529@roeck-us.net>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EB188800EBD;
+        Fri, 20 Mar 2020 10:56:53 +0000 (UTC)
+Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C5565C1D8;
+        Fri, 20 Mar 2020 10:56:49 +0000 (UTC)
+Subject: Re: [PATCH v5 18/23] KVM: arm64: GICv4.1: Add direct injection
+ capability to SGI registers
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-19-maz@kernel.org>
+ <06705d70-0f99-e719-af52-1a5f778562d8@redhat.com>
+ <3f7094ffd77a6615d7179be94dbecc60@kernel.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <9b1ce453-f24f-7974-99ca-1608ad7c6a13@redhat.com>
+Date:   Fri, 20 Mar 2020 11:56:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bfdce3ef-5fe9-8dab-1695-be3d33727529@roeck-us.net>
+In-Reply-To: <3f7094ffd77a6615d7179be94dbecc60@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 04:55:20PM -0700, Guenter Roeck wrote:
-> On 3/19/20 6:03 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.4.27 release.
-> > There are 60 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
-> > Anything received after that time might be too late.
-> > 
-> 
-> Build results:
-> 	total: 158 pass: 158 fail: 0
-> Qemu test results:
-> 	total: 427 pass: 425 fail: 2
-> Failed tests:
-> 	mipsel64:64r6el_defconfig:notests:smp:ide:hd
-> 	mipsel64:64r6el_defconfig:notests:smp:ide:cd
-> 
-> Building mipsel64:64r6el_defconfig:notests:smp:ide:hd ... failed
-> ------------
-> Error log:
-> arch/mips/vdso/vdso.so.dbg.raw: PIC 'jalr t9' calls are not supported
-> 
-> I was unable to figure out why I only see this problem in v5.4.y.
-> The build error is easy to reproduce with gcc 9.2.0 and "64r6el_defconfig".
+Hi Marc,
 
-I've dropped a bunch of mips vdso patches from 5.5 and 5.4 queues now
-and will push out new -rcs with those in them to hopefully resolve these
-issues.
+On 3/20/20 11:05 AM, Marc Zyngier wrote:
+> Hi Eric,
+>=20
+> On 2020-03-20 08:11, Auger Eric wrote:
+>> Hi Marc,
+>> On 3/4/20 9:33 PM, Marc Zyngier wrote:
+>>> Most of the GICv3 emulation code that deals with SGIs now has to be
+>>> aware of the v4.1 capabilities in order to benefit from it.
+>>>
+>>> Add such support, keyed on the interrupt having the hw flag set and
+>>> being a SGI.
+>>>
+>>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>>> ---
+>>> =A0virt/kvm/arm/vgic/vgic-mmio-v3.c | 15 +++++-
+>>> =A0virt/kvm/arm/vgic/vgic-mmio.c=A0=A0=A0 | 88 ++++++++++++++++++++++=
+++++++++--
+>>> =A02 files changed, 96 insertions(+), 7 deletions(-)
+>>>
+>=20
+> [...]
+>=20
+>>> @@ -113,7 +125,21 @@ void vgic_mmio_write_senable(struct kvm_vcpu *vc=
+pu,
+>>> =A0=A0=A0=A0=A0=A0=A0=A0 struct vgic_irq *irq =3D vgic_get_irq(vcpu->=
+kvm, vcpu, intid +
+>>> i);
+>>>
+>>> =A0=A0=A0=A0=A0=A0=A0=A0 raw_spin_lock_irqsave(&irq->irq_lock, flags)=
+;
+>>> -=A0=A0=A0=A0=A0=A0=A0 if (vgic_irq_is_mapped_level(irq)) {
+>>> +=A0=A0=A0=A0=A0=A0=A0 if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (!irq->enabled) {
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 struct irq_data *data;
+>>> +
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 irq->enabled =3D true;
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 data =3D &irq_to_desc(=
+irq->host_irq)->irq_data;
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 while (irqd_irq_disabl=
+ed(data))
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 enable_irq=
+(irq->host_irq);
+>> could you explain me why the while() is requested?
+>=20
+> Ah, interesting question: disable_irq() (and its variants) can nest. Th=
+is
+> means that if you have done two disable_irq(), you must do two enable_i=
+rq()
+> to get back to the interrupt being enabled.
+>=20
+> The locking should ensure that this nesting doesn't happen, but I'm
+> paranoid
+> (see the GICv4.0 doorbell handling). It also makes it easier to reason
+> about
+> the initial state.
 
-thanks,
+OK! thank you for this explanation.
 
-greg k-h
+Thanks
+
+Eric
+>=20
+> [...]
+>=20
+>> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+>=20
+> Thanks!
+>=20
+> =A0=A0=A0=A0=A0=A0=A0=A0 M.
+
