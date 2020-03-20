@@ -2,153 +2,210 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F973C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BE0C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0204D20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:33:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fXOUpHvB"
+	by mail.kernel.org (Postfix) with ESMTP id 2EE9320722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:34:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgCTEdH (ORCPT
+        id S1727224AbgCTEeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 00:33:07 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39720 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbgCTEdG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 00:33:06 -0400
-Received: by mail-il1-f195.google.com with SMTP id w15so4433071ilq.6;
-        Thu, 19 Mar 2020 21:33:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ro5OadTTl3oAqQ/6no0uJfVHWvcAkSf0Yfq3aWJWa6g=;
-        b=fXOUpHvBPwDbnC68taQsc1k3pAGc2pwxjBqO/zc0oYzSgAmhaulpGsGTwsbBjWIFS/
-         SOyDc1vQ9hmjGCa/uiMZubIdICOei4he1mcycDYXSsTNGnw9F/yc70+pF6njq0cF7MZW
-         fMxe5L41GdcDzxqPoVJK4W9YOnfMUpN4XXA95sVo1KDYrHU5w5FeIGfbpUjhc5/f0HDl
-         9f0GpD/+Scynia4pKTyOuqYi+hPQw4KG3XKl5aWKab6SzNzYEpa+rkVV42c1HrVgEQBJ
-         H1eYxTubgoYzDmhbDyKVs2HOnUl9nyECytr1jkLscawh5SRjgvgvLNPfqI2G4ps3DhCo
-         2njA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ro5OadTTl3oAqQ/6no0uJfVHWvcAkSf0Yfq3aWJWa6g=;
-        b=hUKM4acv1xaAKfHBL/l9a2o2n8luJzdNRPpq9lEPsQjqHr2G/e+ujkOX51LHBZXEiR
-         IVE1mzZcF3x1C3N6OhtnLoJv/4oQheV7hWMFeDEJmgOzJIDN0x6mpK2z7TCxXk+9x/fb
-         A0tNA5JMMHN9ZLHwdax8HVV1XzNGrAr3LoGZUfGRj1ihWfkFxeyIykckIHyhxYnpkvJ8
-         8FbAoankPj1ReIWIBXrkdNxQmeo3IpDxC67NWVAdVm8lLCk7QnK/PDNmgkGyvnlQP9fV
-         orCt4BIoQ9FHNcVIuBCIVQY44q+OQZUx2tyeMVhQMiYAwwiIQCAGfxq1qIaYa5M3pZOg
-         h6wg==
-X-Gm-Message-State: ANhLgQ2hZfaDoFkBQ0Zpr275ybaWKGfYsfvREn3XPSVbkc1OUWFemMkF
-        nSOe7V9g9mzijs0sPt7woaITDEIWLLFKNXFZcB4=
-X-Google-Smtp-Source: ADFU+vtbcC/xcbQhZMdEZ8Lc2LQUNOxiprDZuV7nqcfWnoZVxekI/Le/jXYa4uUo/aA2/Cnk3NEIJhDfMdgceFlmw+c=
-X-Received: by 2002:a92:ba01:: with SMTP id o1mr6142269ili.217.1584678785668;
- Thu, 19 Mar 2020 21:33:05 -0700 (PDT)
+        Fri, 20 Mar 2020 00:34:07 -0400
+Received: from mga18.intel.com ([134.134.136.126]:24589 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725996AbgCTEeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 00:34:07 -0400
+IronPort-SDR: A2qWXjAG+jRTztS5AabkvMwXpAqs5y5kDbqfkhFjCUVF9wRft81vNC73KLoXseL3nDgkHvCC6j
+ oxzrze72iH5A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 21:34:04 -0700
+IronPort-SDR: gnGEYrtUbH34ErqJ7HIjadyITnkMUV/uSJmY9sJ8xc5XAohYFbca4BA/640am/x1tzWexVStHb
+ Hn0uI7l0OrAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,283,1580803200"; 
+   d="scan'208";a="280310316"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga002.fm.intel.com with ESMTP; 19 Mar 2020 21:34:03 -0700
+Date:   Thu, 19 Mar 2020 21:34:03 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Xu <peterx@redhat.com>, Marc Zyngier <maz@kernel.org>,
+        Christoffer Dall <christoffer.dall@arm.com>
+Subject: Re: slab-out-of-bounds due to "KVM: Dynamically size memslot array
+ based on number of used slots"
+Message-ID: <20200320043403.GH11305@linux.intel.com>
+References: <8922D835-ED2A-4C48-840A-F568E20B5A7C@lca.pw>
 MIME-Version: 1.0
-References: <CAGWqDJ7AccvoxjKfQJ3GytJ-+u56Bk3rEn0sSYv-zCuBe1brAg@mail.gmail.com>
- <CAL_JsqLz-0myc-PSSaCQWDFXQx+=X9nBSXWsJaGCVqTFn0d5kw@mail.gmail.com>
- <CAGWqDJ4yA4ikz5MwQQwW8CAvE_dt16iuvN6cKRL2DdAuw8QWww@mail.gmail.com>
- <CAL_JsqLU4kEmRnXhQ5+gP-ZisS2Za+s6mNFg4RnMdpDtDRQB3g@mail.gmail.com> <CAGWqDJ5O2Lw-=5gHMja0SWVG1ttc_+7ieo-aEf7BRq+W8DGOnA@mail.gmail.com>
-In-Reply-To: <CAGWqDJ5O2Lw-=5gHMja0SWVG1ttc_+7ieo-aEf7BRq+W8DGOnA@mail.gmail.com>
-From:   Vinay Simha B N <simhavcs@gmail.com>
-Date:   Fri, 20 Mar 2020 10:02:54 +0530
-Message-ID: <CAGWqDJ6MyLVVqfZvO4VY5NQ9ESz8vL1BE7j_pHrpe4X_LLwMJQ@mail.gmail.com>
-Subject: Re: graph connection to node is not bidirectional kernel-5.6.0-rc6
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8922D835-ED2A-4C48-840A-F568E20B5A7C@lca.pw>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rob,
+On Thu, Mar 19, 2020 at 11:59:23PM -0400, Qian Cai wrote:
+> Reverted the linux-next commit 36947254e5f98 (“KVM: Dynamically size memslot array based on number of used slots”)
+> fixed illegal slab object redzone accesses.
+> 
+> [6727.939776][ T1818] BUG: KASAN: slab-out-of-bounds in gfn_to_hva+0xc1/0x2b0 [kvm]
+> search_memslots at include/linux/kvm_host.h:1035
 
-issue got resolved. the problem was end node of the panel had the label.
+Drat.  I'm guessing lru_slot is out of range after a memslot is deleted.
+This should fix the issue, though it may not be the most proper fix, e.g.
+it might be better to reset lru_slot when deleting a memslot.  I'll try and
+reproduce tomorrow, unless you can confirm this does the trick.
 
-- panel2: eppendorf {
-+ lvds-out {
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index e9a7d3476a12..b8f5d3b2fe5c 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1021,6 +1021,12 @@ search_memslots(struct kvm_memslots *slots, gfn_t gfn)
+        int slot = atomic_read(&slots->lru_slot);
+        struct kvm_memory_slot *memslots = slots->memslots;
 
-https://github.com/vinaysimhabn/kernel-msm/commit/a7bf9ccd0b61cb355fe7fa768e65b6f04cfa686f
-
-thanks.
-
-On Thu, Mar 19, 2020 at 10:46 PM Vinay Simha B N <simhavcs@gmail.com> wrote:
->
-> On Thu, Mar 19, 2020 at 10:36 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Thu, Mar 19, 2020 at 9:56 AM Vinay Simha B N <simhavcs@gmail.com> wrote:
-> > >
-> > > On Thu, Mar 19, 2020 at 9:16 PM Rob Herring <robh@kernel.org> wrote:
-> > > >
-> > > > On Thu, Mar 19, 2020 at 1:31 AM Vinay Simha B N <simhavcs@gmail.com> wrote:
-> > > > >
-> > > > > hi,
-> > > > >
-> > > > > I am getting the endpoint' is not bidirectional(d2l_in, dsi0_out)
-> > > > > warning in compilation, built boot image works on qcom apq8016-ifc6309
-> > > > > board with the dsi->bridge->lvds panel.
-> > > > > Because of this warning i cannot create a .yaml documentation examples.
-> > > > > Please suggest.
-> > > > >
-> > > > > tc_bridge: bridge@f {
-> > > >
-> > > >              ^^^^^^^^
-> > > >
-> > > > > arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi:253.28-255.9: Warning
-> > > > > (graph_endpoint): /soc/i2c@78b8000/bridge@39/ports/port@0/endpoint:
-> > > >
-> > > >                                      ^^^^^^^^^
-> > > >
-> > > > Looks like you have 2 different bridges.
-> > > >
-> > > i had two bridges, if we disable one bridge also we get the warning
-> > >
-> > > arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi:333.53-335.35: Warning
-> > > (graph_endpoint): /soc/auo,b101xtn01/port/endpoint: graph connection
-> > > to node '/soc/i2c@78b8000/bridge@f/ports/port@1/endpoint' is not
-> > > bidirectional
-> >
-> > You can't just disable nodes. To switch which bridge is enabled, you
-> > already have to modify remote-endpoint at the other end. So the
-> > requirement is you have to modify both 'remote-endpoint' properties
-> > (or really all 3).
-> >
-> > The other options is if you want both connections described, then you
-> > need 2 'endpoint' nodes to connect both bridges.
-> even after removing one bridge(dsi2hdmi) in the device tree, currently
-> using only one bridge(dsi2lvds), i do still get the compilation warning.
->
->  graph connection
->  to node '/soc/i2c@78b8000/bridge@f/ports/port@1/endpoint' is not
-> bidirectional
->
-> This compilation warning does not cause any problem with the boot image created
-> dsi -> dsi2lvds bridge-> lvds panel . Able to get the display properly.
->
-> https://github.com/vinaysimhabn/kernel-msm/blob/08e4821646b5c128559c506a5777d8782f1ff79e/Documentation/devicetree/bindings/display/bridge/toshiba%2Ctc358775.yaml
->
-> But while creating documentation yaml, it is not allowing to add this examples.
-> --
-> regards,
-> vinaysimha
++       if (!slots->used_slots)
++               return NULL;
++
++       if (slot >= slots->used_slots)
++               slot = 0;
++
+        if (gfn >= memslots[slot].base_gfn &&
+            gfn < memslots[slot].base_gfn + memslots[slot].npages)
+                return &memslots[slot];
 
 
 
--- 
-regards,
-vinaysimha
+> (inlined by) __gfn_to_memslot at include/linux/kvm_host.h:1060
+> (inlined by) gfn_to_memslot at virt/kvm/kvm_main.c:1594
+> (inlined by) gfn_to_hva at virt/kvm/kvm_main.c:1674
+> [ 6727.975376][ T1818] Read of size 8 at addr ffff8885351c4c10 by task qemu-system-x86/1818
+> [ 6728.012769][ T1818] 
+> [ 6728.022690][ T1818] CPU: 11 PID: 1818 Comm: qemu-system-x86 Not tainted 5.6.0-rc6-next-20200319+ #5
+> [ 6728.069063][ T1818] Hardware name: HP Synergy 480 Gen9/Synergy 480 Gen9 Compute Module, BIOS I37 10/21/2019
+> [ 6728.117009][ T1818] Call Trace:
+> [ 6728.131504][ T1818]  dump_stack+0xa1/0xea
+> [ 6728.149757][ T1818]  print_address_description.constprop.0+0x33/0x270
+> [ 6728.179315][ T1818]  __kasan_report.cold+0x78/0xd0
+> [ 6728.201386][ T1818]  ? kvm_mmu_notifier_invalidate_range_start+0x50/0x150 [kvm]
+> [ 6728.235146][ T1818]  ? gfn_to_hva+0xc1/0x2b0 [kvm]
+> [ 6728.256942][ T1818]  kasan_report+0x41/0x60
+> [ 6728.276172][ T1818]  ? gfn_to_hva+0xc1/0x2b0 [kvm]
+> [ 6728.298089][ T1818]  __asan_load8+0x86/0xa0
+> [ 6728.317366][ T1818]  gfn_to_hva+0xc1/0x2b0 [kvm]
+> [ 6728.338687][ T1818]  kvm_arch_mmu_notifier_invalidate_range+0x21/0x50 [kvm]
+> [ 6728.370595][ T1818]  kvm_mmu_notifier_invalidate_range_start+0xfd/0x150 [kvm]
+> [ 6728.402904][ T1818]  mn_hlist_invalidate_range_start+0x109/0x2b0
+> [ 6728.430526][ T1818]  ? kvm_flush_remote_tlbs+0x170/0x170 [kvm]
+> [ 6728.457312][ T1818]  __mmu_notifier_invalidate_range_start+0x74/0x80
+> [ 6728.486687][ T1818]  wp_page_copy+0xd9f/0x12e0
+> [ 6728.506872][ T1818]  ? __lock_release+0x14d/0x2b0
+> [ 6728.528484][ T1818]  ? follow_pfn+0x160/0x160
+> [ 6728.548555][ T1818]  ? __kasan_check_read+0x11/0x20
+> [ 6728.573773][ T1818]  ? check_chain_key+0x1d3/0x2c0
+> [ 6728.599226][ T1818]  ? __kasan_check_read+0x11/0x20
+> [ 6728.622648][ T1818]  ? do_raw_spin_unlock+0x98/0xf0
+> [ 6728.644878][ T1818]  do_wp_page+0x37d/0xac0
+> [ 6728.664110][ T1818]  ? wp_page_shared+0x4e0/0x4e0
+> [ 6728.685702][ T1818]  handle_pte_fault+0x3b0/0x3e0
+> [ 6728.707315][ T1818]  __handle_mm_fault+0x5e7/0xaf0
+> [ 6728.729495][ T1818]  ? apply_to_existing_page_range+0x20/0x20
+> [ 6728.755780][ T1818]  handle_mm_fault+0x10b/0x320
+> [ 6728.776840][ T1818]  do_user_addr_fault+0x22c/0x5a0
+> [ 6728.799089][ T1818]  do_page_fault+0x9d/0x421
+> [ 6728.818910][ T1818]  page_fault+0x34/0x40
+> [ 6728.837424][ T1818] RIP: 0033:0x55cc277d6cc4
+> [ 6728.856867][ T1818] Code: 00 00 00 53 48 89 f3 48 83 ec 08 e8 a6 37 e1 ff 48 8b 15 27 a8 70 00 48 89 68 10 48 89 58 18 48 c7 00 00 00 00 00 48 89 50 08 <48> 89 02 48 89 05 0a a8 70 00 48 83 c4 08 5b 5d c3 66 66 2e 0f 1f
+> [ 6728.946881][ T1818] RSP: 002b:00007ffe79363de0 EFLAGS: 00010206
+> [ 6728.973883][ T1818] RAX: 000055cc29963830 RBX: 0000000000000000 RCX: 0000000000000030
+> [ 6729.009698][ T1818] RDX: 000055cc27ee14d0 RSI: 0000000000000020 RDI: 000055cc29963830
+> [ 6729.045698][ T1818] RBP: 000055cc277534b0 R08: 000055cc29963830 R09: 00007fc044602a40
+> [ 6729.084027][ T1818] R10: 000055cc29963880 R11: 0000000000000000 R12: 0000000000000001
+> [ 6729.125556][ T1818] R13: 000055cc29965180 R14: 0000000000000001 R15: 0000000000000001
+> [ 6729.160970][ T1818] 
+> [ 6729.170932][ T1818] Allocated by task 1818:
+> [ 6729.190130][ T1818]  save_stack+0x23/0x50
+> [ 6729.208517][ T1818]  __kasan_kmalloc.constprop.0+0xcf/0xe0
+> [ 6729.233816][ T1818]  kasan_kmalloc+0x9/0x10
+> [ 6729.252852][ T1818]  __kmalloc_node+0x1c3/0x410
+> [ 6729.273517][ T1818]  kvmalloc_node+0x7b/0x90
+> [ 6729.293002][ T1818]  kvm_create_vm+0x264/0x810 [kvm]
+> kvmalloc at include/linux/mm.h:759
+> (inlined by) kvzalloc at include/linux/mm.h:767
+> (inlined by) kvm_alloc_memslots at virt/kvm/kvm_main.c:562
+> (inlined by) kvm_create_vm at virt/kvm/kvm_main.c:697
+> [ 6729.315774][ T1818]  kvm_dev_ioctl_create_vm+0x14/0xf0 [kvm]
+> [ 6729.341840][ T1818]  kvm_dev_ioctl+0x6b/0x90 [kvm]
+> [ 6729.363821][ T1818]  ksys_ioctl+0xa3/0xc0
+> [ 6729.382166][ T1818]  __x64_sys_ioctl+0x43/0x4c
+> [ 6729.403174][ T1818]  do_syscall_64+0x69/0xf4
+> [ 6729.423242][ T1818]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> [ 6729.449985][ T1818] 
+> [ 6729.459896][ T1818] Freed by task 0:
+> [ 6729.476312][ T1818] (stack is not available)
+> [ 6729.495726][ T1818] 
+> [ 6729.505710][ T1818] The buggy address belongs to the object at ffff8885351c4800
+> [ 6729.505710][ T1818]  which belongs to the cache kmalloc-2k(976:session-c1.scope) of size 2048
+> [ 6729.579319][ T1818] The buggy address is located 1040 bytes inside of
+> [ 6729.579319][ T1818]  2048-byte region [ffff8885351c4800, ffff8885351c5000)
+> [ 6729.647086][ T1818] The buggy address belongs to the page:
+> [ 6729.671752][ T1818] page:ffffea0014d47100 refcount:1 mapcount:0 mapping:00000000b234685e index:0x0 head:ffffea0014d47100 order:1 compound_mapcount:0
+> [ 6729.734134][ T1818] flags: 0x5fffe000010200(slab|head)
+> [ 6729.757725][ T1818] raw: 005fffe000010200 ffffea0019590308 ffffea0013df5508 ffff888f05490ac0
+> [ 6729.796528][ T1818] raw: 0000000000000000 0000000000010001 00000001ffffffff 0000000000000000
+> [ 6729.835200][ T1818] page dumped because: kasan: bad access detected
+> [ 6729.864026][ T1818] page_owner tracks the page as allocated
+> [ 6729.889565][ T1818] page last allocated via order 1, migratetype Unmovable, gfp_mask 0x52cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP)
+> [ 6729.948959][ T1818]  prep_new_page+0x23e/0x270
+> [ 6729.969540][ T1818]  get_page_from_freelist+0x4f7/0x580
+> [ 6729.993824][ T1818]  __alloc_pages_nodemask+0x2de/0x780
+> [ 6730.017658][ T1818]  alloc_pages_current+0x9e/0x170
+> [ 6730.039922][ T1818]  alloc_slab_page+0x321/0x580
+> [ 6730.061106][ T1818]  allocate_slab+0x7f/0x3c0
+> [ 6730.081229][ T1818]  new_slab+0x4a/0x70
+> [ 6730.100073][ T1818]  ___slab_alloc+0x294/0x380
+> [ 6730.122658][ T1818]  __kmalloc_node+0x227/0x410
+> [ 6730.146452][ T1818]  kvmalloc_node+0x7b/0x90
+> [ 6730.166644][ T1818]  kvm_create_vm+0x264/0x810 [kvm]
+> [ 6730.189396][ T1818]  kvm_dev_ioctl_create_vm+0x14/0xf0 [kvm]
+> [ 6730.215647][ T1818]  kvm_dev_ioctl+0x6b/0x90 [kvm]
+> [ 6730.237526][ T1818]  ksys_ioctl+0xa3/0xc0
+> [ 6730.255755][ T1818]  __x64_sys_ioctl+0x43/0x4c
+> [ 6730.276150][ T1818]  do_syscall_64+0x69/0xf4
+> [ 6730.295871][ T1818] page last free stack trace:
+> [ 6730.316511][ T1818]  __free_pages_ok+0x678/0x760
+> [ 6730.337440][ T1818]  __free_pages+0xa2/0xe0
+> [ 6730.356259][ T1818]  free_pages+0x53/0x70
+> [ 6730.374572][ T1818]  stack_depot_save+0x9f/0x213
+> [ 6730.395761][ T1818]  save_stack+0x42/0x50
+> [ 6730.414042][ T1818]  __kasan_kmalloc.constprop.0+0xcf/0xe0
+> [ 6730.439088][ T1818]  kasan_slab_alloc+0xe/0x10
+> [ 6730.459349][ T1818]  kmem_cache_alloc+0x136/0x470
+> [ 6730.481158][ T1818]  mem_pool_alloc+0x38/0x170
+> [ 6730.501470][ T1818]  create_object.isra.0+0x27/0x430
+> [ 6730.524151][ T1818]  kmemleak_alloc_percpu+0xbb/0x150
+> [ 6730.547342][ T1818]  pcpu_alloc+0x537/0xad0
+> [ 6730.566651][ T1818]  __alloc_percpu+0x15/0x20
+> [ 6730.588291][ T1818]  init_srcu_struct_fields+0x208/0x220
+> [ 6730.612543][ T1818]  __init_srcu_struct+0x5c/0x70
+> [ 6730.636590][ T1818]  kvm_create_vm+0x20d/0x810 [kvm]
+> [ 6730.662421][ T1818] 
+> [ 6730.672838][ T1818] Memory state around the buggy address:
+> [ 6730.697743][ T1818]  ffff8885351c4b00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> [ 6730.734279][ T1818]  ffff8885351c4b80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> [ 6730.770594][ T1818] >ffff8885351c4c00: 00 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> [ 6730.806845][ T1818]                          ^
+> [ 6730.827097][ T1818]  ffff8885351c4c80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> [ 6730.863311][ T1818]  ffff8885351c4d00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> [ 6730.899350][ T1818] ==================================================================
+> [ 6730.935728][ T1818] Disabling lock debugging due to kernel taint
