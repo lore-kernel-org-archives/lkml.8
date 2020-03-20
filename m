@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6EDC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D09C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4E920767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0378A20658
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbgCTV3z (ORCPT
+        id S1727699AbgCTVaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:29:55 -0400
-Received: from mga09.intel.com ([134.134.136.24]:37251 "EHLO mga09.intel.com"
+        Fri, 20 Mar 2020 17:30:02 -0400
+Received: from mga02.intel.com ([134.134.136.20]:20439 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727473AbgCTV3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:29:00 -0400
-IronPort-SDR: 014SflZN0uXbgZsFcQgD5AU6+NYFF14XQtQpTuE9p+poB6ksZJRA5ealm8cEXu+YHfdkIi2Xwh
- yJcZT6x+eeQA==
+        id S1727463AbgCTV27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 17:28:59 -0400
+IronPort-SDR: cYgQYESna8R7YKcx92fzef3/0HgnD3Ok61uPdogyxb1CoxBvgaWGKYzS5soSKA8UFiHD6VSQN6
+ 1ReGy+RHND5Q==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:29:00 -0700
-IronPort-SDR: PFHinYdCGOy0qd6cxU35XcxTzmJ35pmKYNQAJMh+VFUoGo1MOQCuOOOYYThFgIvbURg4QkNx4M
- AMzfm/0l15sQ==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:56 -0700
+IronPort-SDR: BQuvdgm1FGjBAIk6IHCUyydsGAsPnr0KzjlI3XRWAjFzSumfIClbBPQPHEvCMsM4Li364afgW0
+ B52BglrbGrLg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
-   d="scan'208";a="269224526"
+   d="scan'208";a="269224498"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:59 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:56 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v3 34/37] KVM: nVMX: Don't flush TLB on nested VMX transition
-Date:   Fri, 20 Mar 2020 14:28:30 -0700
-Message-Id: <20200320212833.3507-35-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 26/37] KVM: nVMX: Selectively use TLB_FLUSH_CURRENT for nested VM-Enter/VM-Exit
+Date:   Fri, 20 Mar 2020 14:28:22 -0700
+Message-Id: <20200320212833.3507-27-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200320212833.3507-1-sean.j.christopherson@intel.com>
 References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
@@ -59,49 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unconditionally skip the TLB flush triggered when reusing a root for a
-nested transition as nested_vmx_transition_tlb_flush() ensures the TLB
-is flushed when needed, regardless of whether the MMU can reuse a cached
-root (or the last root).
+Flush only the current context, as opposed to all contexts, when
+requesting a TLB flush to handle the scenario where a L1 does not expect
+a TLB flush, but one is required because L1 and L2 shared an ASID.  This
+occurs if EPT is disabled (no per-EPTP tag), VPID is enabled (hardware
+doesn't flush unconditionally) and vmcs02 does not have its own VPID due
+to exhaustion of available VPIDs.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/mmu/mmu.c    | 2 +-
- arch/x86/kvm/vmx/nested.c | 6 ++++--
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 84e1e748c2b3..7b0fb7f2c24d 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -5038,7 +5038,7 @@ void kvm_init_shadow_ept_mmu(struct kvm_vcpu *vcpu, bool execonly,
- 		kvm_calc_shadow_ept_root_page_role(vcpu, accessed_dirty,
- 						   execonly, level);
- 
--	__kvm_mmu_new_cr3(vcpu, new_eptp, new_role.base, false, true);
-+	__kvm_mmu_new_cr3(vcpu, new_eptp, new_role.base, true, true);
- 
- 	if (new_role.as_u64 == context->mmu_role.as_u64)
- 		return;
 diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index db3ce8f297c2..92aab4166498 100644
+index b9fa2f89b564..e630d656b211 100644
 --- a/arch/x86/kvm/vmx/nested.c
 +++ b/arch/x86/kvm/vmx/nested.c
-@@ -1161,10 +1161,12 @@ static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool ne
- 	}
- 
- 	/*
--	 * See nested_vmx_transition_mmu_sync for details on skipping the MMU sync.
-+	 * Unconditionally skip the TLB flush on fast CR3 switch, all TLB
-+	 * flushes are handled by nested_vmx_transition_tlb_flush().  See
-+	 * nested_vmx_transition_mmu_sync for details on skipping the MMU sync.
+@@ -1174,8 +1174,8 @@ static void nested_vmx_transition_tlb_flush(struct kvm_vcpu *vcpu,
+ 	 *
+ 	 * If VPID is enabled and used by vmc12, but L2 does not have a unique
+ 	 * TLB tag (ASID), i.e. EPT is disabled and KVM was unable to allocate
+-	 * a VPID for L2, flush the TLB as the effective ASID is common to both
+-	 * L1 and L2.
++	 * a VPID for L2, flush the current context as the effective ASID is
++	 * common to both L1 and L2.
+ 	 *
+ 	 * Defer the flush so that it runs after vmcs02.EPTP has been set by
+ 	 * KVM_REQ_LOAD_MMU_PGD (if nested EPT is enabled) and to avoid
+@@ -1187,8 +1187,10 @@ static void nested_vmx_transition_tlb_flush(struct kvm_vcpu *vcpu,
+ 	 * mapping between vpid02 and vpid12, vpid02 is per-vCPU and reused for
+ 	 * all nested vCPUs.
  	 */
- 	if (!nested_ept)
--		kvm_mmu_new_cr3(vcpu, cr3, false,
-+		kvm_mmu_new_cr3(vcpu, cr3, true,
- 				!nested_vmx_transition_mmu_sync(vcpu));
- 
- 	vcpu->arch.cr3 = cr3;
+-	if (!nested_cpu_has_vpid(vmcs12) || !nested_has_guest_tlb_tag(vcpu)) {
++	if (!nested_cpu_has_vpid(vmcs12)) {
+ 		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
++	} else if (!nested_has_guest_tlb_tag(vcpu)) {
++		kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
+ 	} else if (is_vmenter &&
+ 		   vmcs12->virtual_processor_id != vmx->nested.last_vpid) {
+ 		vmx->nested.last_vpid = vmcs12->virtual_processor_id;
 -- 
 2.24.1
 
