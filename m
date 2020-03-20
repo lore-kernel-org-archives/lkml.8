@@ -2,140 +2,83 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C10EAC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D372FC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9457A20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584711875;
-	bh=ZZutdD5YPTWqPt41mFJKH6cFpW9EUFP9C9HiZAsGki0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P8PXcHM5u/JII5PVdZnKyOgZ8oiBpLT4chYbVlBGq6Wohpm4Vs4EzVqZB7NbMlVGY
-	 iZA6Ahho2hAH/RxV5WOTyCqRHOY/QbuYWkcDr/wESrh23SUqKo5FkIXKM1QKkWju19
-	 qFdDmEVC83ehhzbUiTHU1aje8FrKDiyDjQILxQqc=
+	by mail.kernel.org (Postfix) with ESMTP id A586E20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbgCTNoe (ORCPT
+        id S1727302AbgCTNo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:44:34 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36852 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgCTNod (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:44:33 -0400
-Received: by mail-wr1-f67.google.com with SMTP id 31so1534465wrs.3;
-        Fri, 20 Mar 2020 06:44:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JoMCT/BRNQiPNC0aagaWJkcjnStn6MMheHBwrTllAYE=;
-        b=PlUnHyS+XQ1zkv5WMm+aXYF7W7FzC81HX92HNNkkUW1HCS8GL9MTThfjoq90cMHCvV
-         sjEdbBjITa5PigGXXCaFqMhvFvyUSvv2Pn/TYRLDzdTA1eCtXVrn+VV5U/54dJCsHmId
-         c23VxxumlkR8rzrJQIBhL7AEE7QL2gfC7SOjsAbdJe1dIRZAjIjY1ReFbZaplUVJhuJ9
-         wac2o6cJ7E1zR3soErNRKhymEejgvmzSlw0HLezlpI3g3D1TLsGQ95TEsFna1cy0AH3X
-         AZ1Vk7g5sOiocHEkVLxLR6LumB15QLkJO8z70Fuy8PvgVYtSAUlzOLoRtf7pesN/pVOY
-         lX/Q==
-X-Gm-Message-State: ANhLgQ1m5WoX/GbiOYFg+MknCMjl0I2Ac6QKsJEjjce9W5ditOXQAbsn
-        A/0g819CBbvlHNee3LMsRSs=
-X-Google-Smtp-Source: ADFU+vvNQ+OVi0CDztzjk8c5YtCs3frJ0uwb28VpsQJngNtXMbSTyMNx7K5uLhR9puA4Gim3tpbQtg==
-X-Received: by 2002:adf:914e:: with SMTP id j72mr11378978wrj.109.1584711870045;
-        Fri, 20 Mar 2020 06:44:30 -0700 (PDT)
-Received: from localhost (ip-37-188-140-107.eurotel.cz. [37.188.140.107])
-        by smtp.gmail.com with ESMTPSA id n63sm4850139wmf.6.2020.03.20.06.44.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 06:44:29 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 14:44:28 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Ivan Teterevkov <ivan.teterevkov@nutanix.com>
-Cc:     "rientjes@google.com" <rientjes@google.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "vbabka@suse.cz" <vbabka@suse.cz>, "tj@kernel.org" <tj@kernel.org>,
-        "lizefan@huawei.com" <lizefan@huawei.com>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "vdavydov.dev@gmail.com" <vdavydov.dev@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "guro@fb.com" <guro@fb.com>,
-        "shakeelb@google.com" <shakeelb@google.com>,
-        "chris@chrisdown.name" <chris@chrisdown.name>,
-        "yang.shi@linux.alibaba.com" <yang.shi@linux.alibaba.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        "ying.huang@intel.com" <ying.huang@intel.com>,
-        "ziqian.lzq@antfin.com" <ziqian.lzq@antfin.com>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Jonathan Davies <jond@nutanix.com>
-Subject: Re: [RFC] memcg: fix default behaviour of non-overridden
- memcg.swappiness
-Message-ID: <20200320134428.GG24409@dhcp22.suse.cz>
-References: <BL0PR02MB560170CD4D4245D4B89BC22EE9F40@BL0PR02MB5601.namprd02.prod.outlook.com>
+        Fri, 20 Mar 2020 09:44:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:49174 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727039AbgCTNo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 09:44:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F09F11FB;
+        Fri, 20 Mar 2020 06:44:57 -0700 (PDT)
+Received: from [192.168.1.19] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D38743F85E;
+        Fri, 20 Mar 2020 06:44:56 -0700 (PDT)
+Subject: Re: [PATCH] sched: Remove unused last_load_update_tick rq member
+To:     vincent.donnefort@arm.com, mingo@redhat.com, peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, valentin.schneider@arm.com,
+        Vincent Guittot <vincent.guittot@linaro.org>
+References: <1584710495-308969-1-git-send-email-vincent.donnefort@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <e400d0b1-173f-bcfd-40c0-2e473e14e7ae@arm.com>
+Date:   Fri, 20 Mar 2020 14:44:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL0PR02MB560170CD4D4245D4B89BC22EE9F40@BL0PR02MB5601.namprd02.prod.outlook.com>
+In-Reply-To: <1584710495-308969-1-git-send-email-vincent.donnefort@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 19-03-20 17:38:30, Ivan Teterevkov wrote:
-> This patch tries to resolve uncertainty around the memcg.swappiness when
-> it's not overridden by the user: shall there be the latest vm_swappiness
-> or the value captured at the moment when the cgroup was created?
++ Vincent Guittot
+
+On 20.03.20 14:21, vincent.donnefort@arm.com wrote:
+> From: Vincent Donnefort <vincent.donnefort@arm.com>
 > 
-> I'm sitting on the fence with regards to this patch because cgroup v1 is
-> considered legacy nowadays and the semantics of "swappiness" is already
-> overwhelmed. However, the patch might be considered as a "fix" because
-> looking at the documentation [1] one might have the impression that it's
-> the latest /proc/sys/vm/swappiness value that should be found in the
-> memcg.swappiness unless it's overridden or inherited from a cgroup where
-> it was overridden when the given cgroup was created.
-
-Could you be more specific what makes you think this? Let me quote the
-whole thing here
-: 5.3 swappiness
-: --------------
-: 
-: Overrides /proc/sys/vm/swappiness for the particular group. The tunable
-: in the root cgroup corresponds to the global swappiness setting.
-: 
-: Please note that unlike during the global reclaim, limit reclaim
-: enforces that 0 swappiness really prevents from any swapping even if
-: there is a swap storage available. This might lead to memcg OOM killer
-: if there are no file pages to reclaim.
-
-I do not want to pick on words here but to me it sounds this tunable is
-clearly documented as the explicit override for the global value. The
-root memcg corresponds to the global limit because root tends to be
-special in many other aspects. But in general, the semantic of knobs is
-that they do not unexpectedly change their values without an explicit
-user/admin intervention.
+> The commit 5e83eafbfd3b ("sched/fair: Remove the rq->cpu_load[] update
+> code") eliminated the use case for rq->last_load_update_tick. Removing
+> it.
 > 
-> Also, shall this magic -1 be exposed to the user? I think it's a "no",
-> but what if the user wants to un-override the memcg.swappiness...
-
-If we are to use such a semantic then it absolutely has to be an opt-in
-behavior and expressed in some way to the user space (e.g. a symbolic
-name referring to the global setting).
+> Signed-off-by: Vincent Donnefort <vincent.donnefort@arm.com>
 > 
-> What do you reckon?
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 1a9983d..c41ee26 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -6685,7 +6685,6 @@ void __init sched_init(void)
+>  
+>  		rq_attach_root(rq, &def_root_domain);
+>  #ifdef CONFIG_NO_HZ_COMMON
+> -		rq->last_load_update_tick = jiffies;
+>  		rq->last_blocked_load_update_tick = jiffies;
+>  		atomic_set(&rq->nohz_flags, 0);
+>  #endif
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 9ea6478..6e14fad 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -860,7 +860,6 @@ struct rq {
+>  #endif
+>  #ifdef CONFIG_NO_HZ_COMMON
+>  #ifdef CONFIG_SMP
+> -	unsigned long		last_load_update_tick;
+>  	unsigned long		last_blocked_load_update_tick;
+>  	unsigned int		has_blocked_load;
+>  #endif /* CONFIG_SMP */
 
-I am not convinced we need it. There would have to be a real life
-usecase that cannot really work with the current semantic. I remember
-that this has been brought up when discussing early swappiness
-initialization [1]. But it seems there is a much better solution for
-that problem [2].
-
-[1] http://lkml.kernel.org/r/BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com
-[2] http://lkml.kernel.org/r/20200317132105.24555-1-vbabka@suse.cz
--- 
-Michal Hocko
-SUSE Labs
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
