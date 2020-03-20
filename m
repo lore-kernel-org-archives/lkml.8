@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AECE7C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34B7C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9074620767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3CB720658
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:31:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgCTVbP (ORCPT
+        id S1727792AbgCTVbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:31:15 -0400
-Received: from mga04.intel.com ([192.55.52.120]:59224 "EHLO mga04.intel.com"
+        Fri, 20 Mar 2020 17:31:31 -0400
+Received: from mga04.intel.com ([192.55.52.120]:59216 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727229AbgCTV2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:28:50 -0400
-IronPort-SDR: Gppo1ytxkjacjiTjAjoqw8ul8kAl85N2DSN1kQj+mPerY9kG+kjsetxWlLxFLgbp95afE6cVCa
- 5vIivvj/rNwQ==
+        id S1727196AbgCTV2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 17:28:49 -0400
+IronPort-SDR: /BTfO3cSd9DfqJU3krCOEH4TpiXUZ0pw6E9qPYv6eUYGD13BW4tzq5HyFap+pRyWlL5rPIv41v
+ 4XakFjBIschQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:48 -0700
-IronPort-SDR: PHaEuMOD1su58ecGI78AobGnSJ59cUR1Bx8C3se7yaCcDGg/fbUX3B+LGNO2eAed3KT2LfhP2B
- woAIpLuHZZyA==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:47 -0700
+IronPort-SDR: J1OPnNd6i3sRrq9TCUR5e0HX9p+ACwAPQ0I7iDmu2M6qlEeT+M+T143Z43EPyST0RHs0GfJKwC
+ jPQGmyVrplig==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
-   d="scan'208";a="269224440"
+   d="scan'208";a="269224425"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:47 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:46 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v3 11/37] KVM: VMX: Handle INVVPID fallback logic in vpid_sync_vcpu_addr()
-Date:   Fri, 20 Mar 2020 14:28:07 -0700
-Message-Id: <20200320212833.3507-12-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 09/37] KVM: VMX: Use vpid_sync_context() directly when possible
+Date:   Fri, 20 Mar 2020 14:28:05 -0700
+Message-Id: <20200320212833.3507-10-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200320212833.3507-1-sean.j.christopherson@intel.com>
 References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
@@ -59,11 +59,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Directly invoke vpid_sync_context() to do a global INVVPID when the
-individual address variant is not supported instead of deferring such
-behavior to the caller.  This allows for additional consolidation of
-code as the logic is basically identical to the emulation of the
-individual address variant in handle_invvpid().
+Use vpid_sync_context() directly for flows that run if and only if
+enable_vpid=1, or more specifically, nested VMX flows that are gated by
+vmx->nested.msrs.secondary_ctls_high.SECONDARY_EXEC_ENABLE_VPID being
+set, which is allowed if and only if enable_vpid=1.  Because these flows
+call __vmx_flush_tlb() with @invalidate_gpa=false, the if-statement that
+decides between INVEPT and INVVPID will always go down the INVVPID path,
+i.e. call vpid_sync_context() because
+"enable_ept && (invalidate_gpa || !enable_vpid)" always evaluates false.
+
+This helps pave the way toward removing @invalidate_gpa and @vpid from
+__vmx_flush_tlb() and its callers.
+
+Opportunstically drop unnecessary brackets in handle_invvpid() around an
+affected __vmx_flush_tlb()->vpid_sync_context() conversion.
 
 No functional change intended.
 
@@ -72,51 +81,49 @@ Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/ops.h | 12 +++++-------
- arch/x86/kvm/vmx/vmx.c |  3 +--
- 2 files changed, 6 insertions(+), 9 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/ops.h b/arch/x86/kvm/vmx/ops.h
-index dd7ab61bfcc1..39122699cfeb 100644
---- a/arch/x86/kvm/vmx/ops.h
-+++ b/arch/x86/kvm/vmx/ops.h
-@@ -276,17 +276,15 @@ static inline void vpid_sync_context(int vpid)
- 		vpid_sync_vcpu_global();
- }
- 
--static inline bool vpid_sync_vcpu_addr(int vpid, gva_t addr)
-+static inline void vpid_sync_vcpu_addr(int vpid, gva_t addr)
- {
- 	if (vpid == 0)
--		return true;
-+		return;
- 
--	if (cpu_has_vmx_invvpid_individual_addr()) {
-+	if (cpu_has_vmx_invvpid_individual_addr())
- 		__invvpid(VMX_VPID_EXTENT_INDIVIDUAL_ADDR, vpid, addr);
--		return true;
--	}
--
--	return false;
-+	else
-+		vpid_sync_context(vpid);
- }
- 
- static inline void ept_sync_global(void)
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index ba49323a89d8..ba24bbda2c12 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2853,8 +2853,7 @@ static void vmx_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t addr)
- {
- 	int vpid = to_vmx(vcpu)->vpid;
- 
--	if (!vpid_sync_vcpu_addr(vpid, addr))
--		vpid_sync_context(vpid);
-+	vpid_sync_vcpu_addr(vpid, addr);
- 
- 	/*
- 	 * If VPIDs are not supported or enabled, then the above is a no-op.
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 5554727d7ba8..81bc4791d704 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -2481,7 +2481,7 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
+ 		if (nested_cpu_has_vpid(vmcs12) && nested_has_guest_tlb_tag(vcpu)) {
+ 			if (vmcs12->virtual_processor_id != vmx->nested.last_vpid) {
+ 				vmx->nested.last_vpid = vmcs12->virtual_processor_id;
+-				__vmx_flush_tlb(vcpu, nested_get_vpid02(vcpu), false);
++				vpid_sync_context(nested_get_vpid02(vcpu));
+ 			}
+ 		} else {
+ 			/*
+@@ -5251,21 +5251,21 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
+ 		    is_noncanonical_address(operand.gla, vcpu))
+ 			return nested_vmx_failValid(vcpu,
+ 				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
+-		if (cpu_has_vmx_invvpid_individual_addr()) {
++		if (cpu_has_vmx_invvpid_individual_addr())
+ 			__invvpid(VMX_VPID_EXTENT_INDIVIDUAL_ADDR,
+ 				vpid02, operand.gla);
+-		} else
+-			__vmx_flush_tlb(vcpu, vpid02, false);
++		else
++			vpid_sync_context(vpid02);
+ 		break;
+ 	case VMX_VPID_EXTENT_SINGLE_CONTEXT:
+ 	case VMX_VPID_EXTENT_SINGLE_NON_GLOBAL:
+ 		if (!operand.vpid)
+ 			return nested_vmx_failValid(vcpu,
+ 				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
+-		__vmx_flush_tlb(vcpu, vpid02, false);
++		vpid_sync_context(vpid02);
+ 		break;
+ 	case VMX_VPID_EXTENT_ALL_CONTEXT:
+-		__vmx_flush_tlb(vcpu, vpid02, false);
++		vpid_sync_context(vpid02);
+ 		break;
+ 	default:
+ 		WARN_ON_ONCE(1);
 -- 
 2.24.1
 
