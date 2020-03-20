@@ -2,106 +2,73 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160E3C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C6AC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6CA020752
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869B720767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgCTIx7 (ORCPT
+        id S1726973AbgCTI4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 04:53:59 -0400
-Received: from smtprelay0177.hostedemail.com ([216.40.44.177]:46542 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726232AbgCTIx7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 04:53:59 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 4752E18012006;
-        Fri, 20 Mar 2020 08:53:58 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: glue61_3f8a7f1491e21
-X-Filterd-Recvd-Size: 2818
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 20 Mar 2020 08:53:56 +0000 (UTC)
-Message-ID: <4d40a0b9434042f51c4b21cd48db7ac55522db5a.camel@perches.com>
-Subject: Re: [v2,1/1] EDAC: (pnd2) Fix the log level and remove the word
- "error" for message "Failed to register device with error %d"
-From:   Joe Perches <joe@perches.com>
-To:     "she90122 ." <she90122@gmail.com>
-Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Amy.Shih" <Amy.Shih@advantech.com.tw>,
-        "Oakley.Ding" <Oakley.Ding@advantech.com.tw>
-Date:   Fri, 20 Mar 2020 01:52:10 -0700
-In-Reply-To: <CAMhTFw=OUaVSLGz1tyHJYiq6UXBNni5=fBp16M7vPXjA0HHEEA@mail.gmail.com>
-References: <CAMhTFw=OUaVSLGz1tyHJYiq6UXBNni5=fBp16M7vPXjA0HHEEA@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 20 Mar 2020 04:56:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43204 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbgCTI4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 04:56:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E9FE4AE5C;
+        Fri, 20 Mar 2020 08:56:33 +0000 (UTC)
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     tglx@linutronix.de
+Cc:     arnd@arndb.de, balbi@kernel.org, bhelgaas@google.com,
+        bigeasy@linutronix.de, dave@stgolabs.net, davem@davemloft.net,
+        gregkh@linuxfoundation.org, joel@joelfernandes.org,
+        kurt.schwemmer@microsemi.com, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, logang@deltatee.com,
+        mingo@kernel.org, mpe@ellerman.id.au, netdev@vger.kernel.org,
+        oleg@redhat.com, paulmck@kernel.org, peterz@infradead.org,
+        rdunlap@infradead.org, rostedt@goodmis.org,
+        torvalds@linux-foundation.org, will@kernel.org,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: [PATCH 16/15] rcuwait: Get rid of stale name comment
+Date:   Fri, 20 Mar 2020 01:55:24 -0700
+Message-Id: <20200320085527.23861-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20200318204302.693307984@linutronix.de>
+References: <20200318204302.693307984@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-03-20 at 16:26 +0800, she90122 . wrote:
-> From: Amy Shih <amy.shih@advantech.com.tw>
-> 
-> Fix the log level from "KERN_ERR" to "KERN_INFO" and remove the word
-> "error" for message "Failed to register device with error %d", since
-> it is not the error message but the information to notice the user.
-> 
-> Signed-off-by: Amy Shih <amy.shih@advantech.com.tw>
-> ---
-> Changes in v2:
-> - Remove the word "error" from output message.
-> ---
->  drivers/edac/pnd2_edac.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c index
-> 933f772..399da3e 100644
-> --- a/drivers/edac/pnd2_edac.c
-> +++ b/drivers/edac/pnd2_edac.c
-> @@ -1572,7 +1572,8 @@ static int __init pnd2_init(void)
-> 
->   rc = pnd2_probe();
->   if (rc < 0) {
-> - pnd2_printk(KERN_ERR, "Failed to register device with error %d.\n", rc);
-> + pnd2_printk(KERN_INFO,
-> +     "Failed to register device - %d.\n", rc);
->   return rc;
->   }
+The 'trywake' name was renamed to simply 'wake',
+update the comment.
 
-This will not apply as it's whitespace damaged.
-
-Another possibility would be to use the new %pe extension.
+Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
 ---
- drivers/edac/pnd2_edac.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/exit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c
-index 933f77..370f219 100644
---- a/drivers/edac/pnd2_edac.c
-+++ b/drivers/edac/pnd2_edac.c
-@@ -1572,7 +1572,8 @@ static int __init pnd2_init(void)
- 
- 	rc = pnd2_probe();
- 	if (rc < 0) {
--		pnd2_printk(KERN_ERR, "Failed to register device with error %d.\n", rc);
-+		pnd2_printk(KERN_INFO, "Failed to register device - %pe\n",
-+			    ERR_PTR(rc));
- 		return rc;
- 	}
- 
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 0b81b26a872a..6cc6cc485d07 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -243,7 +243,7 @@ void rcuwait_wake_up(struct rcuwait *w)
+ 	/*
+ 	 * Order condition vs @task, such that everything prior to the load
+ 	 * of @task is visible. This is the condition as to why the user called
+-	 * rcuwait_trywake() in the first place. Pairs with set_current_state()
++	 * rcuwait_wake() in the first place. Pairs with set_current_state()
+ 	 * barrier (A) in rcuwait_wait_event().
+ 	 *
+ 	 *    WAIT                WAKE
+-- 
+2.16.4
 
