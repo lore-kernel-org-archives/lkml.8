@@ -2,154 +2,177 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A368C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B9AC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5258020739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:26:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584721615;
-	bh=GRkJPRXSUPxB/4FaDSLTXZXzBr8dpjV+3HyNoC/Gdos=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=zNOD8dtn2vJKBs5re8iuijKoBmoG/PTdc1jhdqdyyXiOwfWFTDaGBe/rivBvJcrGJ
-	 EcbidrfCs6DA6/Eu2hYx5gKkOH7GPl2ZyqjpT3dSAmghuEMn1p9cDakwqzwThAHHpb
-	 /emJJokIAzXjSpluOf/IumD1JnT1lswuJMd8EAl4=
+	by mail.kernel.org (Postfix) with ESMTP id 5212F20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:27:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbgCTQ0x (ORCPT
+        id S1727417AbgCTQ1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:26:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727122AbgCTQ0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:26:52 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DD6D20724;
-        Fri, 20 Mar 2020 16:26:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584721611;
-        bh=GRkJPRXSUPxB/4FaDSLTXZXzBr8dpjV+3HyNoC/Gdos=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=E4YH+CNNo4ZnxnlmBJyLRcAUJDx8wp7GFj5JquWhmYs0ptqbKyXi6+JURFaKi02zi
-         ksBlpCIcrtMfQfq8cmv7BXcEQW6gySqmpoCU/FpVh5HD2YbRnBjvSfoubAmM1rCXSC
-         BIOFSDlRNd4e42leZi4PoTcQX4N7Hb4Edov12V7Q=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 00E7035226B4; Fri, 20 Mar 2020 09:26:50 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 09:26:50 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+792dec47d693ccdc05a0@syzkaller.appspotmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: linux-next build error (8)
-Message-ID: <20200320162650.GP3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <000000000000ae2ab305a123f146@google.com>
- <CACT4Y+a_d=5TNZth0dPov0B7tB5T9bAzWXBj1HjhXdn-=0KOOg@mail.gmail.com>
- <20200318214109.GV3199@paulmck-ThinkPad-P72>
- <CACT4Y+ZhP_Qu+WZ4t2dLjd__H+rUKCTRCNoghvW9Uf3QQYRcNg@mail.gmail.com>
- <20200319150414.GD3199@paulmck-ThinkPad-P72>
- <CACT4Y+YHQQWeeW44NYAxX+fFU6RyvFbbmcig1q8NSE7yV0zgjA@mail.gmail.com>
+        Fri, 20 Mar 2020 12:27:19 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:55615 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727101AbgCTQ1T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 12:27:19 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1Mj8eD-1jjB8C0bjR-00fA6M for <linux-kernel@vger.kernel.org>; Fri, 20 Mar
+ 2020 17:27:17 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id E59B1650374
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 16:27:16 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 2sEak8lm4fTd for <linux-kernel@vger.kernel.org>;
+        Fri, 20 Mar 2020 17:27:15 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 8BA9E64FD31
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 17:27:15 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.8.5.41) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 20 Mar 2020 17:27:15 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id E8DB480501; Fri, 20 Mar 2020 17:11:47 +0100 (CET)
+Date:   Fri, 20 Mar 2020 17:11:47 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [PATCH v3 04/11] media: adv748x: add definitions for audio output
+ related registers
+Message-ID: <c4314afadd7e0882d8e2cbcbe2fe9c6a46775016.1584720678.git.alexander.riesen@cetitec.com>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1584720678.git.alexander.riesen@cetitec.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+YHQQWeeW44NYAxX+fFU6RyvFbbmcig1q8NSE7yV0zgjA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <cover.1584720678.git.alexander.riesen@cetitec.com>
+X-Originating-IP: [10.8.5.41]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A6D7660
+X-Provags-ID: V03:K1:JPQtecOT6Xe/vZgyik8AGa0L3B+DLUrx8MdYsdsRMvPg2ccEcdG
+ CoYbtlDUtkzMuT1fOLUi1wrTWS49lZyCMkSY/XwzZN8XT4brA4Vr4LU3p75lrW3J6R/Npg9
+ +aOXGjl2ZgP7u8dMkSblf7YT94kXuMKAARszFRWKII/SRJu5evg6roEeUmdCpQyEJbdBbPE
+ B5onA4yFNPKQ6lRKcUhIA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QBEPN5o03M4=:ZfCytaNYMu6KazjM/T1RSv
+ ZgliicnEFogJlhviZdhmHjTM8zvJuD65+U0sqfNE50pq5VWeThipzjivg4S+7LAqs+PjaQM0H
+ 6PXN/QIu8+cNC7GB6gaBZ4CzTkvd4gr+jdfZlPpVH+q5ohXLmEbaDzFK/x7bhT0C1d9sXw/Ry
+ gtOm9OxfZOZeH4b0HWBQpzmyNFqmdYtFTA9UMUQ0pjmBquDOg0epxC9vTg+JFif18/KjOoTfw
+ uJtaIMtB7fMmm56J5i91HsqyXnxOQps3vxv18Arvfb+MalfODPIQKchm6eSfRau0RhCVOpbWm
+ w8Ni55RvujYywS+1S69USfUpYcM1GLfKAPQCqUtsxkmy+XT43AQdkUHgL98z3lIJg1S1B9E9z
+ 8RPAIXH8RibszGXnI1+vUkVglwxqJS2zh/Uj+ly2ZgMvcB6CquNG1eO01Q+/DhUhNhQwUfsIn
+ 4RrV7gBu3aUo5GAi+VB5AzW6lP0Aj2/MQ6pi9Y+TQY3G0IE4gtVE6j+YlLA8fxlmw4DtyQDKF
+ qB5ufYcoQIuEXh+VL28bzu0jJ9sCBJDBZCDDtKpm4EFdkAMV+UzmQRrOXPPmwJN/FoF62zlD4
+ BaPV6ByxRtLFZRvPehAFy9H8RUoSfelC9GQPpRfaFnaFfRS4BFlz1z+C/ayCb6xQxd40HOszd
+ z853Zbw/Ia1sunQAzLImanohczu4xMxKdI0T0PJWYUU+SZDdQOjqJtDXermALSMZONZ8SGlgM
+ 4nJMt2uGDg/Z7gblpsEdpw5D3XPsEnB2hurb66BwfCWjs+xsrdgvg1v6hb9DJcZ/cl25R993y
+ ayibIoZqHgVccgAXaOVH/u7Ov1duEsGyhK3jJKr2Oz6zAIn4BIkydNjNF6XHGl2r3aEN/KcPq
+ PG21AkJvXNtooG/14y+XW3COopyUKKa2nZqZJIwLczaIwnjII3aeqDlK73DT/+E+23dkJHzla
+ 3Pb2JAALjFt6Id1ufAqan7p49Oace7is=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 04:38:54PM +0100, Dmitry Vyukov wrote:
-> On Thu, Mar 19, 2020 at 4:04 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Thu, Mar 19, 2020 at 08:13:35AM +0100, Dmitry Vyukov wrote:
-> > > On Wed, Mar 18, 2020 at 10:41 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > >
-> > > > On Wed, Mar 18, 2020 at 09:54:07PM +0100, Dmitry Vyukov wrote:
-> > > > > On Wed, Mar 18, 2020 at 5:57 PM syzbot
-> > > > > <syzbot+792dec47d693ccdc05a0@syzkaller.appspotmail.com> wrote:
-> > > > > >
-> > > > > > Hello,
-> > > > > >
-> > > > > > syzbot found the following crash on:
-> > > > > >
-> > > > > > HEAD commit:    47780d78 Add linux-next specific files for 20200318
-> > > > > > git tree:       linux-next
-> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=14228745e00000
-> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=b68b7b89ad96c62a
-> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=792dec47d693ccdc05a0
-> > > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > > >
-> > > > > > Unfortunately, I don't have any reproducer for this crash yet.
-> > > > > >
-> > > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > > Reported-by: syzbot+792dec47d693ccdc05a0@syzkaller.appspotmail.com
-> > > > > >
-> > > > > > kernel/rcu/tasks.h:1070:37: error: 'rcu_tasks_rude' undeclared (first use in this function); did you mean 'rcu_tasks_qs'?
-> > > > >
-> > > > > +rcu maintainers
-> > > >
-> > > > The kbuild test robot beat you to it, and apologies for the hassle.
-> > > > Fixed in -rcu on current "dev" branch.
-> > >
-> > > If the kernel dev process would only have a way to avoid dups from all
-> > > test systems...
-> >
-> > I do significant testing before pushing to -next, but triggering this
-> > one requires a combination of Kconfig options that are incompatible
-> > with rcutorture.  :-/
-> >
-> > I suppose one strategy would be to give kbuild test robot some time before
-> > passing to -next, but they seem to sometimes get too far behind for me to
-> > be willing to wait that long.  So my current approach is to push my "dev"
-> > branch, run moderate rcutorture testing (three hours per scenario other
-> > than TREE10, which gets only one hour), and if that passes, push to -next.
-> >
-> > I suppose that I could push to -next only commits that are at least three
-> > days old or some such.  But I get in trouble pushing to -next too slowly
-> > as often as I get in trouble pushing too quickly, so I suspect that my
-> > current approach is in roughly the right place.
-> >
-> > > Now we need to spend time and deal with it. What has fixed it?
-> >
-> > It is fixed by commit c6ef38e4d595 ("rcu-tasks: Add RCU tasks to
-> > rcutorture writer stall output") and some of its predecessors.
-> >
-> > Perhaps more useful to you, this commit is included in next-20200319
-> > from the -next tree.  ;-)
-> 
-> Let's tell syzbot about the fix:
-> 
-> #syz fix: rcu-tasks: Add RCU tasks to rcutorture writer stall output
-> 
-> I think what you are doing is the best possible option in the current situation.
-> I don't think requiring all human maintainers to do more manual
-> repetitive work, which is not well defined and even without a way to
-> really require something from them is scalable nor reliable nor the
-> right approach.
+Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+---
+ drivers/media/i2c/adv748x/adv748x.h | 32 +++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-Thank you, and I do greatly appreciate the automation!
+diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
+index 0a9d78c2870b..1a1ea70086c6 100644
+--- a/drivers/media/i2c/adv748x/adv748x.h
++++ b/drivers/media/i2c/adv748x/adv748x.h
+@@ -226,6 +226,11 @@ struct adv748x_state {
+ 
+ #define ADV748X_IO_VID_STD		0x05
+ 
++#define ADV748X_IO_PAD_CONTROLS		0x0e
++#define ADV748X_IO_PAD_CONTROLS_TRI_AUD	BIT(5)
++#define ADV748X_IO_PAD_CONTROLS_PDN_AUD	BIT(1)
++#define ADV748X_IO_PAD_CONTROLS1	0x1d
++
+ #define ADV748X_IO_10			0x10	/* io_reg_10 */
+ #define ADV748X_IO_10_CSI4_EN		BIT(7)
+ #define ADV748X_IO_10_CSI1_EN		BIT(6)
+@@ -248,7 +253,21 @@ struct adv748x_state {
+ #define ADV748X_IO_REG_FF		0xff
+ #define ADV748X_IO_REG_FF_MAIN_RESET	0xff
+ 
++/* DPLL Map */
++#define ADV748X_DPLL_MCLK_FS		0xb5
++#define ADV748X_DPLL_MCLK_FS_N_MASK	GENMASK(2, 0)
++
+ /* HDMI RX Map */
++#define ADV748X_HDMI_I2S		0x03	/* I2S mode and width */
++#define ADV748X_HDMI_I2SBITWIDTH_MASK	GENMASK(4, 0)
++#define ADV748X_HDMI_I2SOUTMODE_SHIFT	5
++#define ADV748X_HDMI_I2SOUTMODE_MASK	\
++	GENMASK(6, ADV748X_HDMI_I2SOUTMODE_SHIFT)
++#define ADV748X_I2SOUTMODE_I2S 0
++#define ADV748X_I2SOUTMODE_RIGHT_J 1
++#define ADV748X_I2SOUTMODE_LEFT_J 2
++#define ADV748X_I2SOUTMODE_SPDIF 3
++
+ #define ADV748X_HDMI_LW1		0x07	/* line width_1 */
+ #define ADV748X_HDMI_LW1_VERT_FILTER	BIT(7)
+ #define ADV748X_HDMI_LW1_DE_REGEN	BIT(5)
+@@ -260,6 +279,16 @@ struct adv748x_state {
+ #define ADV748X_HDMI_F1H1		0x0b	/* field1 height_1 */
+ #define ADV748X_HDMI_F1H1_INTERLACED	BIT(5)
+ 
++#define ADV748X_HDMI_MUTE_CTRL		0x1a
++#define ADV748X_HDMI_MUTE_CTRL_MUTE_AUDIO BIT(4)
++#define ADV748X_HDMI_MUTE_CTRL_WAIT_UNMUTE_MASK	GENMASK(3, 1)
++#define ADV748X_HDMI_MUTE_CTRL_NOT_AUTO_UNMUTE	BIT(0)
++
++#define ADV748X_HDMI_AUDIO_MUTE_SPEED	0x0f
++#define ADV748X_HDMI_AUDIO_MUTE_SPEED_MASK	GENMASK(4, 0)
++#define ADV748X_MAN_AUDIO_DL_BYPASS BIT(7)
++#define ADV748X_AUDIO_DELAY_LINE_BYPASS BIT(6)
++
+ #define ADV748X_HDMI_HFRONT_PORCH	0x20	/* hsync_front_porch_1 */
+ #define ADV748X_HDMI_HFRONT_PORCH_MASK	0x1fff
+ 
+@@ -281,6 +310,9 @@ struct adv748x_state {
+ #define ADV748X_HDMI_TMDS_1		0x51	/* hdmi_reg_51 */
+ #define ADV748X_HDMI_TMDS_2		0x52	/* hdmi_reg_52 */
+ 
++#define ADV748X_HDMI_REG_6D		0x6d	/* hdmi_reg_6d */
++#define ADV748X_I2S_TDM_MODE_ENABLE BIT(7)
++
+ /* HDMI RX Repeater Map */
+ #define ADV748X_REPEATER_EDID_SZ	0x70	/* primary_edid_size */
+ #define ADV748X_REPEATER_EDID_SZ_SHIFT	4
+-- 
+2.25.1.25.g9ecbe7eb18
 
-> We would consume something like LKGR [1] if it existed for the kernel.
-> But it would require tighter integration of testing systems with
-> kernel dev processes, or of course throwing more manual labor at it to
-> track all uncoordinated testing systems and publishing LKGR tags.
-> 
-> [1] https://chromium.googlesource.com/chromiumos/docs/+/master/glossary.md
 
-At my end, it is pretty quick and easy to detect duplicate notifications
-of the same bug, so the current situation isn't causing me undue distress.
-
-							Thanx, Paul
