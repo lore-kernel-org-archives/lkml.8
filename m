@@ -2,113 +2,167 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 054F1C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C20C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C797320732
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:14:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BcRuWoVt"
+	by mail.kernel.org (Postfix) with ESMTP id 1611320732
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:16:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbgCTNO5 (ORCPT
+        id S1727227AbgCTNQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:14:57 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51078 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbgCTNO5 (ORCPT
+        Fri, 20 Mar 2020 09:16:28 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35713 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727027AbgCTNQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:14:57 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02KDCpNB053601;
-        Fri, 20 Mar 2020 13:14:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=mime-version :
- message-id : date : from : to : cc : subject : references : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=mj+mPOx49mvMn5UqX9Oy1oF60e1jGLIQt7Fz9oFtxdI=;
- b=BcRuWoVt1x10gOtlh0xk1020vWBIgssdfvPRrEpVgc9TpKVe9hWRKLVOjIbfNxXcLCnO
- R/W0OspeUvlyU9bW4UU/Ad6FFOe2JFr/FqqLhLdnS50dvnQeFDjRIxCeYQeGytGz6ACW
- Gafvf0MSfb3u1LOfDetfmFIGENNG099xQNNDBq71VAIh7laleIong0FYaRsmxD8Vd78x
- 4+fVegwenYoHu8h4Qzs9+uMyBaEoYZk0im63luIxD8xJGEIQzvrpfV0aYhADfk/AppD6
- 0mB8Ml2xCwtq1iUipekFp4i6lB5KzBv2BP/uiYCLk1T8n7w3lenxms/6rYhi/v4sW9Lu LQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2yrq7mdgjn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Mar 2020 13:14:39 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02KDCl4G063762;
-        Fri, 20 Mar 2020 13:14:39 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2ys8ty2pmg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Mar 2020 13:14:39 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02KDEbdh006265;
-        Fri, 20 Mar 2020 13:14:38 GMT
-Received: from kadam (/41.57.98.10) by default (Oracle Beehive Gateway v4.0)
- with ESMTP ; Fri, 20 Mar 2020 06:14:36 -0700
-USER-AGENT: Mutt/1.9.4 (2018-02-28)
+        Fri, 20 Mar 2020 09:16:27 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jFHVh-00048A-If
+        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 14:16:25 +0100
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id BB49B100375
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 14:16:24 +0100 (CET)
+Message-Id: <20200320131508.736205164@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Fri, 20 Mar 2020 14:13:46 +0100
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-pm@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        linux-edac@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org
+Subject: [patch 01/22] x86/devicetable: Move x86 specific macro out of generic
+ code
+References: <20200320131345.635023594@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <20200320131429.GH4650@kadam>
-Date:   Fri, 20 Mar 2020 06:14:29 -0700 (PDT)
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Leon Romanovsky <leonro@mellanox.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Derek Chickles <dchickles@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Satanand Burla <sburla@marvell.com>,
-        Felix Manlunas <fmanlunas@marvell.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH net-next] liquidio: remove set but not used variable 's'
-References: <20200306023254.61731-1-yuehaibing@huawei.com>
- <20200319120743.28056-1-yuehaibing@huawei.com>
- <20200319121035.GO126814@unreal>
-In-Reply-To: <20200319121035.GO126814@unreal>
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9565 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
- malwarescore=0 suspectscore=0 mlxlogscore=999 spamscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003200057
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9565 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- adultscore=0 bulkscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1011
- malwarescore=0 mlxscore=0 phishscore=0 impostorscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003200057
+Content-Type: text/plain; charset=UTF-8
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 02:10:35PM +0200, Leon Romanovsky wrote:
-> On Thu, Mar 19, 2020 at 12:07:43PM +0000, YueHaibing wrote:
-> > Fixes gcc '-Wunused-but-set-variable' warning:
-> >
-> > drivers/net/ethernet/cavium/liquidio/lio_main.c: In function 'octeon_chip_specific_setup':
-> > drivers/net/ethernet/cavium/liquidio/lio_main.c:1378:8: warning:
-> >  variable 's' set but not used [-Wunused-but-set-variable]
-> >
-> > It's not used since commit b6334be64d6f ("net/liquidio: Delete driver version assignment")
-> >
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> > ---
-> >  drivers/net/ethernet/cavium/liquidio/lio_main.c | 5 -----
-> >  1 file changed, 5 deletions(-)
-> >
-> 
-> I'm sorry for missing this warning.
-> 
+There is no reason that this gunk is in a generic header file. The wildcard
+defines need to stay as they are required by file2alias.
 
-The warning is not enabled by default.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/include/asm/cpu_device_id.h   |   13 ++++++++++++-
+ arch/x86/kvm/svm.c                     |    1 +
+ arch/x86/kvm/vmx/vmx.c                 |    1 +
+ drivers/cpufreq/acpi-cpufreq.c         |    1 +
+ drivers/cpufreq/amd_freq_sensitivity.c |    1 +
+ include/linux/mod_devicetable.h        |    4 +---
+ 6 files changed, 17 insertions(+), 4 deletions(-)
 
-regards,
-dan carpenter
+--- a/arch/x86/include/asm/cpu_device_id.h
++++ b/arch/x86/include/asm/cpu_device_id.h
+@@ -6,10 +6,21 @@
+  * Declare drivers belonging to specific x86 CPUs
+  * Similar in spirit to pci_device_id and related PCI functions
+  */
+-
+ #include <linux/mod_devicetable.h>
+ 
+ /*
++ * The wildcard initializers are in mod_devicetable.h because
++ * file2alias needs them. Sigh.
++ */
++
++#define X86_FEATURE_MATCH(x) {			\
++	.vendor		= X86_VENDOR_ANY,	\
++	.family		= X86_FAMILY_ANY,	\
++	.model		= X86_MODEL_ANY,	\
++	.feature	= x,			\
++}
++
++/*
+  * Match specific microcode revisions.
+  *
+  * vendor/family/model/stepping must be all set.
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -48,6 +48,7 @@
+ #include <asm/kvm_para.h>
+ #include <asm/irq_remapping.h>
+ #include <asm/spec-ctrl.h>
++#include <asm/cpu_device_id.h>
+ 
+ #include <asm/virtext.h>
+ #include "trace.h"
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -31,6 +31,7 @@
+ #include <asm/apic.h>
+ #include <asm/asm.h>
+ #include <asm/cpu.h>
++#include <asm/cpu_device_id.h>
+ #include <asm/debugreg.h>
+ #include <asm/desc.h>
+ #include <asm/fpu/internal.h>
+--- a/drivers/cpufreq/acpi-cpufreq.c
++++ b/drivers/cpufreq/acpi-cpufreq.c
+@@ -30,6 +30,7 @@
+ #include <asm/msr.h>
+ #include <asm/processor.h>
+ #include <asm/cpufeature.h>
++#include <asm/cpu_device_id.h>
+ 
+ MODULE_AUTHOR("Paul Diefenbaugh, Dominik Brodowski");
+ MODULE_DESCRIPTION("ACPI Processor P-States Driver");
+--- a/drivers/cpufreq/amd_freq_sensitivity.c
++++ b/drivers/cpufreq/amd_freq_sensitivity.c
+@@ -18,6 +18,7 @@
+ 
+ #include <asm/msr.h>
+ #include <asm/cpufeature.h>
++#include <asm/cpu_device_id.h>
+ 
+ #include "cpufreq_ondemand.h"
+ 
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -667,9 +667,7 @@ struct x86_cpu_id {
+ 	kernel_ulong_t driver_data;
+ };
+ 
+-#define X86_FEATURE_MATCH(x) \
+-	{ X86_VENDOR_ANY, X86_FAMILY_ANY, X86_MODEL_ANY, x }
+-
++/* Wild cards for x86_cpu_id::vendor, family, model and feature */
+ #define X86_VENDOR_ANY 0xffff
+ #define X86_FAMILY_ANY 0
+ #define X86_MODEL_ANY  0
 
