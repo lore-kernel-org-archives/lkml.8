@@ -2,321 +2,264 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0951DC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 475A8C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0A822051A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13ECE2051A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584671725;
+	bh=ilmHEwPWRPj4TcOpnxaJISvvNhZupHK136FrxxNG0T0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=icIItbvFlFz26mfDySdIRU0u2UX3KjeTUlBzesb3Xsxt8smyTgnT0ZfaTMuAqE/7n
+	 JCYqfCXY5z7Yepjlqq1zA6cIz2Rtw6oBGKzgK3Vh1oDfxLG2BjMn9lbu2I1zVGbjHJ
+	 WueuzAkeih1hbPDzGOF5J9+Kd581f2jEGaL2VqZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgCTCdV (ORCPT
+        id S1726866AbgCTCfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 22:33:21 -0400
-Received: from mga14.intel.com ([192.55.52.115]:29834 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726646AbgCTCdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 22:33:21 -0400
-IronPort-SDR: z0HNa5FV7vimi3PCrE6YjuPoXzYxGYprA43qYkCWbRQkWxQb/bcuQQsklk/SYAsMgI7Eefp60Z
- RZHKbZs+oTmg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 19:33:20 -0700
-IronPort-SDR: 3gLzar50WJh58Au/dPfS6lx/T+v8IZQKDkiOwfTZeGclg81UlL5H5XPgqdBU8Slfy0mjCfpB43
- XBZJWWCaLDQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,282,1580803200"; 
-   d="scan'208";a="239106177"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 19 Mar 2020 19:33:20 -0700
-Received: from [10.215.159.127] (vramuthx-mobl1.gar.corp.intel.com [10.215.159.127])
-        by linux.intel.com (Postfix) with ESMTP id 0E21358058B;
-        Thu, 19 Mar 2020 19:33:13 -0700 (PDT)
-Subject: Re: [PATCH v12 1/4] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        broonie@kernel.org, vigneshr@ti.com, devicetree@vger.kernel.org,
-        boris.brezillon@free-electrons.com,
-        simon.k.r.goldschmidt@gmail.com, dinguyen@kernel.org,
-        tien.fong.chee@intel.com, marex@denx.de,
-        linux-mtd@lists.infradead.org, dwmw2@infradead.org, richard@nod.at,
-        computersforpeace@gmail.com, cyrille.pitchen@atmel.com,
-        david.oberhollenzer@sigma-star.at, miquel.raynal@bootlin.com,
-        tudor.ambarus@gmail.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-References: <20200310015213.1734-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200310015213.1734-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200319184448.GA25121@bogus>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <7b12612b-17b2-3bab-5c58-57dd46b7d44d@linux.intel.com>
-Date:   Fri, 20 Mar 2020 10:33:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 19 Mar 2020 22:35:24 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:41678 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbgCTCfY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 22:35:24 -0400
+Received: by mail-il1-f196.google.com with SMTP id l14so4252366ilj.8;
+        Thu, 19 Mar 2020 19:35:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2Sq6oKLWDfJ+N+DDKC8RQHWKWhsyZ667cL6sIzF8qaQ=;
+        b=IawZQNN/uUQdqmFGqDjmWrYOSTAEejBpK4S5CsCvNgf0vZscPI1b7KqROlFsDBBFa9
+         /HQmLq/IQrNIDBJOYRWTD3hN0s6NumpzHV4B0RFfuPN30iEjSSErZbQOCQ2rgtcec2mR
+         dzYdYhtWJIPPRv6XEaQG5kQkInDp5wXgEAQnL1Ve+I4xOZAV//UbD6bQiUu0brE9pdo/
+         PVvET+Ogp206fl3Xva71lRWMU+11ivL9N8IvofU2erf6UWu9QtMLZMxSILC1R3btgvV2
+         GoRdnqM3rT4TBEkQb+bVn1Ys1FCaxo3SqrULaK1wOpzQdGI4CFoQJ/uVSm3XLxhYGb/L
+         UDZQ==
+X-Gm-Message-State: ANhLgQ076TRYQdeBaQGtRVZiPGYBxQDVjS6kbzPM0dgZgW4FRy53JfQk
+        jHCk7kUMjkvIrA4liKsv8A==
+X-Google-Smtp-Source: ADFU+vsVm+nifF98caUWQnSmDG2GKEgK2WvKO90v12PmyqZXcnTLBJgtj6xphBjSTbngRtG43Fwzbw==
+X-Received: by 2002:a92:dc06:: with SMTP id t6mr6053887iln.89.1584671722918;
+        Thu, 19 Mar 2020 19:35:22 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id j23sm1339289ioa.10.2020.03.19.19.35.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 19:35:22 -0700 (PDT)
+Received: (nullmailer pid 10779 invoked by uid 1000);
+        Fri, 20 Mar 2020 02:35:20 -0000
+Date:   Thu, 19 Mar 2020 20:35:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 1/3] dt-bindings: phy: Add DT bindings for Xilinx
+ ZynqMP PSGTR PHY
+Message-ID: <20200320023520.GA18490@bogus>
+References: <20200311103252.17514-1-laurent.pinchart@ideasonboard.com>
+ <20200311103252.17514-2-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <20200319184448.GA25121@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311103252.17514-2-laurent.pinchart@ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Wed, Mar 11, 2020 at 12:32:50PM +0200, Laurent Pinchart wrote:
+> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> 
+> Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
+> Processing System Gigabit Transceiver which provides PHY capabilities to
+> USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
+> 
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+> Changes since v5:
+> 
+> - Document clocks and clock-names properties
+> - Document resets and reset-names properties
+> - Replace subnodes with an additional entry in the PHY cells
+> - Drop lane frequency PHY cell, replaced by reference clock phandle
+> - Convert bindings to YAML
+> - Reword the subject line
+> - Drop Rob's R-b as the bindings have significantly changed
+> - Drop resets and reset-names properties
+> ---
+>  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 104 ++++++++++++++++++
+>  include/dt-bindings/phy/phy.h                 |   1 +
+>  2 files changed, 105 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> new file mode 100644
+> index 000000000000..9948e4a60e45
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> @@ -0,0 +1,104 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-      Thank you for the review comments...
+For new bindings:
 
-On 20/3/2020 2:44 am, Rob Herring wrote:
-> On Tue, Mar 10, 2020 at 09:52:10AM +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add dt-bindings documentation for Cadence-QSPI controller to support
->> spi based flash memories.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
->>   .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 127 +++++++++++++++++++++
->>   2 files changed, 127 insertions(+), 67 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->>   create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->> deleted file mode 100644
->> index 945be7d5b236..000000000000
->> --- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->> +++ /dev/null
->> @@ -1,67 +0,0 @@
->> -* Cadence Quad SPI controller
->> -
->> -Required properties:
->> -- compatible : should be one of the following:
->> -	Generic default - "cdns,qspi-nor".
->> -	For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
->> -	For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
->> -- reg : Contains two entries, each of which is a tuple consisting of a
->> -	physical address and length. The first entry is the address and
->> -	length of the controller register set. The second entry is the
->> -	address and length of the QSPI Controller data area.
->> -- interrupts : Unit interrupt specifier for the controller interrupt.
->> -- clocks : phandle to the Quad SPI clock.
->> -- cdns,fifo-depth : Size of the data FIFO in words.
->> -- cdns,fifo-width : Bus width of the data FIFO in bytes.
->> -- cdns,trigger-address : 32-bit indirect AHB trigger address.
->> -
->> -Optional properties:
->> -- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
->> -- cdns,rclk-en : Flag to indicate that QSPI return clock is used to latch
->> -  the read data rather than the QSPI clock. Make sure that QSPI return
->> -  clock is populated on the board before using this property.
->> -
->> -Optional subnodes:
->> -Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
->> -custom properties:
->> -- cdns,read-delay : Delay for read capture logic, in clock cycles
->> -- cdns,tshsl-ns : Delay in nanoseconds for the length that the master
->> -                  mode chip select outputs are de-asserted between
->> -		  transactions.
->> -- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being
->> -                  de-activated and the activation of another.
->> -- cdns,tchsh-ns : Delay in nanoseconds between last bit of current
->> -                  transaction and deasserting the device chip select
->> -		  (qspi_n_ss_out).
->> -- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
->> -                  and first bit transfer.
->> -- resets	: Must contain an entry for each entry in reset-names.
->> -		  See ../reset/reset.txt for details.
->> -- reset-names	: Must include either "qspi" and/or "qspi-ocp".
->> -
->> -Example:
->> -
->> -	qspi: spi@ff705000 {
->> -		compatible = "cdns,qspi-nor";
->> -		#address-cells = <1>;
->> -		#size-cells = <0>;
->> -		reg = <0xff705000 0x1000>,
->> -		      <0xffa00000 0x1000>;
->> -		interrupts = <0 151 4>;
->> -		clocks = <&qspi_clk>;
->> -		cdns,is-decoded-cs;
->> -		cdns,fifo-depth = <128>;
->> -		cdns,fifo-width = <4>;
->> -		cdns,trigger-address = <0x00000000>;
->> -		resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
->> -		reset-names = "qspi", "qspi-ocp";
->> -
->> -		flash0: n25q00@0 {
->> -			...
->> -			cdns,read-delay = <4>;
->> -			cdns,tshsl-ns = <50>;
->> -			cdns,tsd2d-ns = <50>;
->> -			cdns,tchsh-ns = <4>;
->> -			cdns,tslch-ns = <4>;
->> -		};
->> -	};
->> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
->> new file mode 100644
->> index 000000000000..d21f80604af4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
->> @@ -0,0 +1,127 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Cadence QSPI Flash Controller support
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +allOf:
->> +  - $ref: "spi-controller.yaml#"
->> +
->> +description: |
->> +  Binding Documentation for Cadence QSPI controller,This controller is
->> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
->> +  has been tested On Intel's LGM SoC.
->> +
->> +properties:
->> +  compatible:
->> +     enum:
->> +       - cdns,qspi-nor
->> +       - ti,k2g-qspi
->> +       - ti,am654-ospi
->> +       - intel,lgm-qspi
->> +
->> +  reg:
->> +    maxItems: 2
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  cdns,fifo-depth:
->> +    description:
->> +     Depth of hardware FIFOs.
->> +    allOf:
->> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
->> +      - enum: [ 128, 256 ]
->> +      - default: 128
->> +
->> +  cdns,fifo-width:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      4 byte bus width of the data FIFO in bytes.
->> +
->> +  cdns,trigger-address:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      32-bit indirect AHB trigger address.
->> +
->> +  cdns,rclk-en:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: |
->> +      Flag to indicate that QSPI return clock is used to latch the read data
->> +      rather than the QSPI clock. Make sure that QSPI return clock is populated
->> +      on the board before using this property.
-> Sounds like a boolean rather than a uint32? If not, then constraints on
-> the values?
-Good catch, will update.
->> +# subnode's properties
->> +patternProperties:
->> +  "^.*@[0-9a-fA-F]+$":
-> How many chip selects do you support? The unit-address can be limited as
-> I'd guess it's less than 16. Also, should be lowercase hex.
-MAX 16 , will update.
->> +    type: object
->> +    description:
->> +      flash device uses the subnodes below defined properties.
->> +
->> +  cdns,read-delay:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      Delay in 4 microseconds, read capture logic, in clock cycles.
-> 4us or clock cycles?
-clock cycles
->> +
->> +  cdns,tshsl-ns:
->> +    description: |
->> +      Delay in 50 nanoseconds, for the length that the master mode chip select
->> +      outputs are de-asserted between transactions.
-> Sounds like you can add:
->
-> multipleOf: 50
->
->> +
->> +  cdns,tsd2d-ns:
->> +    description: |
->> +      Delay in 50 nanoseconds, between one chip select being de-activated
->> +      and the activation of another.
-> Same here
->
->> +
->> +  cdns,tchsh-ns:
->> +    description: |
->> +      Delay in 4 nanoseconds, between last bit of current transaction and
->> +      deasserting the device chip select (qspi_n_ss_out).
-> multipleOf: 4
->
->> +
->> +  cdns,tslch-ns:
->> +    description: |
->> +      Delay in 4 nanoseconds, between setting qspi_n_ss_out low and
->> +      first bit transfer.
-> multipleOf: 4
-Noted, will update all of the above.
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - clocks
->> +  - cdns,fifo-depth
->> +  - cdns,fifo-width
->> +  - cdns,trigger-address
->> +
->> +examples:
->> +  - |
->> +    qspi: spi@ff705000 {
-> Drop the label.
-Agreed!
->> +          compatible = "cdns,qspi-nor";
->> +          #address-cells = <1>;
->> +          #size-cells = <0>;
->> +          reg = <0xff705000 0x1000>,
->> +                <0xffa00000 0x1000>;
->> +          interrupts = <0 151 4>;
->> +          clocks = <&qspi_clk>;
->> +          cdns,fifo-depth = <128>;
->> +          cdns,fifo-width = <4>;
->> +          cdns,trigger-address = <0x00000000>;
->> +
->> +          flash0: n25q00@0 {
-> flash@0
+(GPL-2.0-only OR BSD-2-Clause)
 
-Agreed!
+Though I guess Anurag needs to agree.
 
-Regards
-Vadivel
->> +              compatible = "jedec,spi-nor";
->> +              reg = <0x0>;
->> +              cdns,read-delay = <4>;
->> +              cdns,tshsl-ns = <50>;
->> +              cdns,tsd2d-ns = <50>;
->> +              cdns,tchsh-ns = <4>;
->> +              cdns,tslch-ns = <4>;
->> +          };
->> +    };
->> +
->> -- 
->> 2.11.0
->>
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
+> +
+> +maintainers:
+> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +
+> +description: |
+> +  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
+> +  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
+> +  Ethernet SGMII controllers.
+> +
+> +properties:
+> +  "#phy-cells":
+> +    const: 4
+> +    description: |
+> +      The cells contain the following arguments.
+> +
+> +      - description: The GTR lane
+> +        minimum: 0
+> +        maximum: 3
+> +      - description: The PHY type
+> +        enum:
+> +          - PHY_TYPE_DP
+> +          - PHY_TYPE_PCIE
+> +          - PHY_TYPE_SATA
+> +          - PHY_TYPE_SGMII
+> +          - PHY_TYPE_USB
+> +      - description: The PHY instance
+> +        minimum: 0
+> +        maximum: 1 # for DP, SATA or USB
+> +        maximum: 3 # for PCIE or SGMII
+> +      - description: The reference clock number
+> +        minimum: 0
+> +        maximum: 3
+
+Humm, interesting almost json-schema. I guess it's fine as-is.
+
+I would like to figure out how to apply a schema like this to the 
+consumer nodes. We'd have to look up the phandle, get that node's 
+compatible, find the provider's schema, find #.*-cells property, and 
+extract a schema from it. Actually, doesn't sound too hard.
+
+> +
+> +  compatible:
+> +    enum:
+> +      - xlnx,zynqmp-psgtr-v1.1
+> +      - xlnx,zynqmp-psgtr
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 4
+> +    description: |
+> +      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
+> +      inputs shall not have an entry.
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 4
+> +    items:
+> +      pattern: "^ref[0-3]$"
+> +
+> +  reg:
+> +    items:
+> +      - description: SERDES registers block
+> +      - description: SIOU registers block
+> +
+> +  reg-names:
+> +    items:
+> +      - const: serdes
+> +      - const: siou
+> +
+> +required:
+> +  - "#phy-cells"
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      const: xlnx,zynqmp-psgtr
+> +
+> +then:
+> +  properties:
+> +    xlnx,tx-termination-fix:
+> +      description: |
+> +        Include this for fixing functional issue with the TX termination
+> +        resistance in GT, which can be out of spec for the XCZU9EG silicon
+> +        version.
+> +      type: boolean
+> +
+> +additionalProperties: false
+
+This won't work with 'xlnx,tx-termination-fix'. You need to move it to 
+the main properties section and then do:
+
+if:
+  properties:
+    compatible:
+      const: xlnx,zynqmp-psgtr-v1.1
+
+then:
+  properties:
+    xlnx,tx-termination-fix: false
+
+I think this would also work:
+
+  not:
+    required:
+      - xlnx,tx-termination-fix
+> +
+> +examples:
+> +  - |
+> +    phy: phy@fd400000 {
+> +      compatible = "xlnx,zynqmp-psgtr-v1.1";
+> +      reg = <0x0 0xfd400000 0x0 0x40000>,
+> +            <0x0 0xfd3d0000 0x0 0x1000>;
+> +      reg-names = "serdes", "siou";
+> +      clocks = <&refclks 3>, <&refclks 2>, <&refclks 0>;
+> +      clock-names = "ref1", "ref2", "ref3";
+> +      #phy-cells = <4>;
+> +      status = "okay";
+
+Drop status in examples.
+
+> +    };
+> +
+> +...
+> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+> index 1f3f866fae7b..f6bc83b66ae9 100644
+> --- a/include/dt-bindings/phy/phy.h
+> +++ b/include/dt-bindings/phy/phy.h
+> @@ -17,5 +17,6 @@
+>  #define PHY_TYPE_USB3		4
+>  #define PHY_TYPE_UFS		5
+>  #define PHY_TYPE_DP		6
+> +#define PHY_TYPE_SGMII		7
+>  
+>  #endif /* _DT_BINDINGS_PHY */
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
