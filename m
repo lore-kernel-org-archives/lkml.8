@@ -2,86 +2,68 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADEAC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76330C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C661B20787
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:37:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584733079;
-	bh=OcAj1mRF3Wt0azKQU+0IX3Ycr8E2bKuEFpGJcAvc+tc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=WViOnMiMFWGNM5alCocpqfOggabBR8ZD6NOwTwVum0onpAunelhCUGYy8gXH9kxTI
-	 YU4ZR/Lzpvo43rcQTWTYLncQXnJ9r2dSGUB1vL52P4ZZTeMixORGfwAJFiRZh3iBSK
-	 RpIPeekvlPGDNhs95tFcV0Bp/XmxtJ4tU04vfS10=
+	by mail.kernel.org (Postfix) with ESMTP id 4B40020777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:43:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgCTTh6 (ORCPT
+        id S1726974AbgCTTm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 15:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33516 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 15:42:59 -0400
+Received: from 8bytes.org ([81.169.241.247]:54608 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726666AbgCTTh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 15:37:58 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F6D720777;
-        Fri, 20 Mar 2020 19:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584733077;
-        bh=OcAj1mRF3Wt0azKQU+0IX3Ycr8E2bKuEFpGJcAvc+tc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KvmFrZ52uZRJi9S5/w+0AuR8CoogezFW41f26E6VQGaGt7YSt3lscU75FgNYsBpL7
-         t4SynEUArqu65qcKHfHgkkcSId8a5L6gjHa+pL8itdh71BywpSxE2Pz5J4qA+/RdqM
-         c00MY4GD8jii+2ob7HGmrhLyoinGpvm91vg0yXw8=
-Date:   Fri, 20 Mar 2020 14:37:56 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/12] pcie: qcom: add Force GEN1 support
-Message-ID: <20200320193756.GA249654@google.com>
+        id S1726843AbgCTTm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 15:42:58 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id CD3DA4CA; Fri, 20 Mar 2020 20:42:56 +0100 (CET)
+Date:   Fri, 20 Mar 2020 20:42:52 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [RFC PATCH v2.1] x86/sev-es: Handle NMI State
+Message-ID: <20200320194251.GI5122@8bytes.org>
+References: <20200319091407.1481-1-joro@8bytes.org>
+ <20200319091407.1481-71-joro@8bytes.org>
+ <CALCETrUOQneBHjoZkP-7T5PDijb=WOyv7xF7TD0GLR2Aw77vyA@mail.gmail.com>
+ <20200320131707.GF5122@8bytes.org>
+ <7d1ee9d9-d333-4529-b21b-19758c99e029@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320183455.21311-10-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <7d1ee9d9-d333-4529-b21b-19758c99e029@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 07:34:52PM +0100, Ansuel Smith wrote:
-> From: Sham Muthayyan <smuthayy@codeaurora.org>
-> 
-> Add Force GEN1 support needed in some ipq806x board
-> that needs to limit some pcie line to gen1 for some
-> hardware limitation
+On Fri, Mar 20, 2020 at 07:42:09AM -0700, Dave Hansen wrote:
+> FWIW, perf plus the x86 selftests run in a big loop was my best way of
+> stressing the NMI path when we mucked with it for PTI.  The selftests
+> make sure to hit some of the more rare entry/exit paths.
 
-Usual commit log comments.
+Yeah, I ran the x86 selftests in an SEV-ES guest on-top of these
+patches, that works. But doing this together with 'perf top' is also on
+the list of tests to do.
 
-> +	uint32_t force_gen1;
+Regards,
 
-unsigned int force_gen1 : 1
-
-> +	of_property_read_u32(np, "force_gen1", &force_gen1);
-> +	pcie->force_gen1 = force_gen1;
-
-I think there's a more or less standard property you can use for this
-instead of inventing a new one specific to this device.
-
-Documentation/devicetree/bindings/pci/pci.txt:
-"max-link-speed"
+	Joerg
