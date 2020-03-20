@@ -2,100 +2,189 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A41C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4E7C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E72A20773
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:59:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584691151;
-	bh=Mszy2lxZVJLrMkR5k80DgVuQoQGtsJlqkm57nqwNUTc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=poG4o5tGwkQDdeC9tciTdxE1qhQ1bL9/S00duU3bYnqLC37gNzL4nbD6DCQXGEaHp
-	 YKfJQ+G2bJi+PbgPbU7gk1nGLAqHLOJINf9loAwhf0iW37a584kLlm81ZGlMM+EGxy
-	 nD1lxyaEt1hCKkVkMGC9GNkFjX120C2l0YvdQbgM=
+	by mail.kernel.org (Postfix) with ESMTP id D189B20774
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:00:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D72QvPDx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgCTH7K (ORCPT
+        id S1726840AbgCTH77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 03:59:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726614AbgCTH7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 03:59:10 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 20 Mar 2020 03:59:59 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:35414 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726527AbgCTH77 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 03:59:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584691197;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NCLldPyucn2EtjkD/YGvXmu67T8oQjms+EaHjNLuyLQ=;
+        b=D72QvPDxgZNPrq1/x/jF8QihyTmFn/XiU/SM0xyc+VSmO6Wh+GAADgohEcuN0K3h6K6CvY
+        AjXaWkk3UStGKnaYBWzShcU9fMviP+I8TsU0OayrhH4Plgh6urUtkGX4DcczHejgYbouKM
+        mWIlQC6OitgMLDtI1cW8VfrqoM2r9XE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-145-KENkeixLMkCVD1dP4OHYhg-1; Fri, 20 Mar 2020 03:59:54 -0400
+X-MC-Unique: KENkeixLMkCVD1dP4OHYhg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4336320767;
-        Fri, 20 Mar 2020 07:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584691149;
-        bh=Mszy2lxZVJLrMkR5k80DgVuQoQGtsJlqkm57nqwNUTc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V+8z5a+aty2pRVXUXTLoXOGEmyXZKGlIVJmT2cm3I2lFjhaBqLgIqFghjcTEfSSR5
-         uzf8IbFWB2B8qBJpC+Yz3ASM9OMIMfPxOnwUd7g2gxv3ND36kQ/ew3nYzJgXc9+EcU
-         /QFC9GEFfh3DrXP8v7UrOJqf6a5foKYDh0LaxR24=
-Date:   Fri, 20 Mar 2020 07:59:04 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Tuan Phan <tuanphan@amperemail.onmicrosoft.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Tuan Phan <tuanphan@os.amperecomputing.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] driver/perf: Add PMU driver for the ARM DMC-620 memory
- controller.
-Message-ID: <20200320075904.GA2549@willie-the-truck>
-References: <1584491381-31492-1-git-send-email-tuanphan@os.amperecomputing.com>
- <20200319151646.GC4876@lakrids.cambridge.arm.com>
- <23AD5E45-15E3-4487-9B0D-0D9554DD9DE8@amperemail.onmicrosoft.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CBAB8800D53;
+        Fri, 20 Mar 2020 07:59:52 +0000 (UTC)
+Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B2F365C1A5;
+        Fri, 20 Mar 2020 07:59:49 +0000 (UTC)
+Subject: Re: [PATCH v5 20/23] KVM: arm64: GICv4.1: Plumb SGI implementation
+ selection in the distributor
+To:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-21-maz@kernel.org>
+ <72832f51-bbde-8502-3e03-189ac20a0143@huawei.com>
+ <4a06fae9c93e10351276d173747d17f4@kernel.org>
+ <49995ec9-3970-1f62-5dfc-118563ca00fc@redhat.com>
+ <b98855a1-6300-d323-80f6-82d3b9854290@huawei.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <e60578b5-910c-0355-d231-29322900679d@redhat.com>
+Date:   Fri, 20 Mar 2020 08:59:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <23AD5E45-15E3-4487-9B0D-0D9554DD9DE8@amperemail.onmicrosoft.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b98855a1-6300-d323-80f6-82d3b9854290@huawei.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 12:03:43PM -0700, Tuan Phan wrote:
->    Please find my comments below.
-> 
->      On Mar 19, 2020, at 8:16 AM, Mark Rutland <[1]mark.rutland@arm.com>
->      wrote:
->      Hi Tuan,
-> 
->      On Tue, Mar 17, 2020 at 05:29:38PM -0700, Tuan Phan wrote:
-> 
->        DMC-620 PMU supports total 10 counters which each is
->        independently programmable to different events and can
->        be started and stopped individually.
-> 
->      Looking at the TRM for DMC-620, the PMU registers are not in a separate
->      frame from the other DMC control registers, and start at offset 0xA00
->      (AKA 2560). I would generally expect that access to the DMC control
->      registers was restricted to the secure world; is that not the case on
->      your platform?
-> 
->      I ask because if those are not restricted, the Normal world could
->      potentially undermine the Secure world through this (e.g. playing with
->      training settings, messing with the physical memory map, injecting RAS
->      errors). Have you considered this?
-> 
->    => Only PMU registers can be accessed within normal world. I only pass
->    PMU registers (offset 0xA00) to kernel so shouldn’t be problem.
+Hi Zenghui,
 
-Just a stylistic thing since there's been a bit of back-and-forth on this
-patch, but please can you fix your email client configuration so that the
-replies are threaded properly? '=>' is non-standard and it's pretty
-hard to spot in a mass of C code. You can look at
-Documentation/process/email-clients.rst for some information about
-configuring common clients.
+On 3/20/20 4:08 AM, Zenghui Yu wrote:
+> On 2020/3/20 4:38, Auger Eric wrote:
+>> Hi Marc,
+>> On 3/19/20 1:10 PM, Marc Zyngier wrote:
+>>> Hi Zenghui,
+>>>
+>>> On 2020-03-18 06:34, Zenghui Yu wrote:
+>>>> Hi Marc,
+>>>>
+>>>> On 2020/3/5 4:33, Marc Zyngier wrote:
+>>>>> The GICv4.1 architecture gives the hypervisor the option to let
+>>>>> the guest choose whether it wants the good old SGIs with an
+>>>>> active state, or the new, HW-based ones that do not have one.
+>>>>>
+>>>>> For this, plumb the configuration of SGIs into the GICv3 MMIO
+>>>>> handling, present the GICD_TYPER2.nASSGIcap to the guest,
+>>>>> and handle the GICD_CTLR.nASSGIreq setting.
+>>>>>
+>>>>> In order to be able to deal with the restore of a guest, also
+>>>>> apply the GICD_CTLR.nASSGIreq setting at first run so that we
+>>>>> can move the restored SGIs to the HW if that's what the guest
+>>>>> had selected in a previous life.
+>>>>
+>>>> I'm okay with the restore path.=A0 But it seems that we still fail t=
+o
+>>>> save the pending state of vSGI - software pending_latch of HW-based
+>>>> vSGIs will not be updated (and always be false) because we directly
+>>>> inject them through ITS, so vgic_v3_uaccess_read_pending() can't
+>>>> tell the correct pending state to user-space (the correct one should
+>>>> be latched in HW).
+>>>>
+>>>> It would be good if we can sync the hardware state into pending_latc=
+h
+>>>> at an appropriate time (just before save), but not sure if we can...
+>>>
+>>> The problem is to find the "appropriate time". It would require to
+>>> define
+>>> a point in the save sequence where we transition the state from HW to
+>>> SW. I'm not keen on adding more state than we already have.
+>>
+>> may be we could use a dedicated device group/attr as we have for the I=
+TS
+>> save tables? the user space would choose.
+>=20
+> It means that userspace will be aware of some form of GICv4.1 details
+> (e.g., get/set vSGI state at HW level) that KVM has implemented.
+> Is it something that userspace required to know? I'm open to this ;-)
+Not sure we would be obliged to expose fine details. This could be a
+generic save/restore device group/attr whose implementation at KVM level
+could differ depending on the version being implemented, no?
 
-Apologies if this comes across as pedantic, but it makes a surprising
-difference in how easy it is to keep up with the thread (at least to me).
+Thanks
 
-Will
+Eric
+>=20
+>>
+>> Thanks
+>>
+>> Eric
+>>>
+>>> But what we can do is to just ask the HW to give us the right state
+>>> on userspace access, at all times. How about this:
+>>>
+>>> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>>> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>>> index 48fd9fc229a2..281fe7216c59 100644
+>>> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>>> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>>> @@ -305,8 +305,18 @@ static unsigned long
+>>> vgic_v3_uaccess_read_pending(struct kvm_vcpu *vcpu,
+>>> =A0=A0=A0=A0=A0=A0 */
+>>> =A0=A0=A0=A0=A0 for (i =3D 0; i < len * 8; i++) {
+>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0 struct vgic_irq *irq =3D vgic_get_irq(vcp=
+u->kvm, vcpu, intid
+>>> + i);
+>>> +=A0=A0=A0=A0=A0=A0=A0 bool state =3D irq->pending_latch;
+>>>
+>>> -=A0=A0=A0=A0=A0=A0=A0 if (irq->pending_latch)
+>>> +=A0=A0=A0=A0=A0=A0=A0 if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 int err;
+>>> +
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 err =3D irq_get_irqchip_state(irq-=
+>host_irq,
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0 IRQCHIP_STATE_PENDING,
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0 &state);
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 WARN_ON(err);
+>>> +=A0=A0=A0=A0=A0=A0=A0 }
+>>> +
+>>> +=A0=A0=A0=A0=A0=A0=A0 if (state)
+>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 value |=3D (1U << i);
+>>>
+>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0 vgic_put_irq(vcpu->kvm, irq);
+>=20
+> Anyway this looks good to me and will do the right thing on a userspace
+> save.
+>=20
+>>>
+>>> I can add this to "KVM: arm64: GICv4.1: Add direct injection capabili=
+ty
+>>> to SGI registers".
+>=20
+> Thanks,
+> Zenghui
+>=20
+
