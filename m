@@ -2,78 +2,124 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D90C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD1CC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3611720722
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF01420722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgCTJ5j (ORCPT
+        id S1727188AbgCTJ6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:57:39 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35116 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbgCTJ5i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:57:38 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFEPC-0001Cs-H1; Fri, 20 Mar 2020 10:57:30 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 7A509100375; Fri, 20 Mar 2020 10:57:29 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Kyung Min Park <kyung.min.park@intel.com>, x86@kernel.org,
+        Fri, 20 Mar 2020 05:58:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:46804 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726527AbgCTJ6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 05:58:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0106030E;
+        Fri, 20 Mar 2020 02:58:50 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B7163F305;
+        Fri, 20 Mar 2020 02:58:49 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 09:58:43 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, hpa@zytor.com, gregkh@linuxfoundation.org,
-        ak@linux.intel.com, tony.luck@intel.com, ashok.raj@intel.com,
-        ravi.v.shankar@intel.com, fenghua.yu@intel.com,
-        kyung.min.park@intel.com
-Subject: Re: [PATCH v2 0/2] x86/delay: Introduce TPAUSE instruction
-In-Reply-To: <1584677604-32707-1-git-send-email-kyung.min.park@intel.com>
-References: <1584677604-32707-1-git-send-email-kyung.min.park@intel.com>
-Date:   Fri, 20 Mar 2020 10:57:29 +0100
-Message-ID: <87a74b4ad2.fsf@nanos.tec.linutronix.de>
+Subject: Re: [PATCH v5 0/4] dt-bindings: Convert Cadence PCIe RC/EP to DT
+ Schema
+Message-ID: <20200320095843.GA21858@e121166-lin.cambridge.arm.com>
+References: <20200305103017.16706-1-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305103017.16706-1-kishon@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Thu, Mar 05, 2020 at 04:00:13PM +0530, Kishon Vijay Abraham I wrote:
+> Cadence PCIe IP is used by multiple SoC vendors (e.g. TI). Cadence
+> themselves have a validation platform for validating the PCIe IP which
+> is already in the upstream kernel. Right now the binding only exists for
+> Cadence platform and this will result in adding redundant binding schema
+> for any platform using Cadence PCIe core.
+> 
+> This series:
+> 1) Create cdns-pcie.yaml which includes properties that are applicable
+>    to both host mode and endpoint mode of Cadence PCIe core.
+> 2) Create cdns-pcie-host.yaml to include properties that are specific to
+>    host mode of Cadence PCIe core. cdns-pcie-host.yaml will include
+>    cdns-pcie.yaml.
+> 3) Create cdns-pcie-ep.yaml to include properties that are specific to
+>    endpoint mode of Cadence PCIe core. cdns-pcie-ep.yaml will include
+>    cdns-pcie.yaml.
+> 4) Remove cdns,cdns-pcie-ep.txt and cdns,cdns-pcie-host.txt which had
+>    the binding for Cadence "platform" and add cdns,cdns-pcie-host.yaml
+>    and cdns,cdns-pcie-ep.yaml schema for Cadence Platform. The schema
+>    for Cadence platform then includes schema for Cadence PCIe core.
+> 
+> Changes from v4:
+> *) Deprecate "cdns,max-outbound-regions" only for host mode. For EP mode
+>    this will be a mandatory property.
+> 
+> Changes from v3:
+> *) Add "Reviewed-by: Rob Herring <robh@kernel.org>"
+> *) Fix typo in SPDX header
+> 
+> Changes from v2:
+> *) Created "pci-ep.yaml" for common endpoint controller bindings
+> *) Deprecate "cdns,max-outbound-regions" and "cdns,no-bar-match-nbits"
+>    binding
+> 
+> Changes from v1:
+> *) Fix maximum values of num-lanes and cdns,no-bar-match-nbits
+> *) Fix example DT node for PCIe Endpoint.
+> 
+> Ref: Patches to convert Cadence driver to library
+>      https://lkml.org/lkml/2019/11/11/317
+> 
+> Some of this was initially part of [1], but to accelerate it getting
+> into upstream, sending this as a separate series.
+> 
+> [1] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
+> 
+> Kishon Vijay Abraham I (4):
+>   dt-bindings: PCI: Add PCI Endpoint Controller Schema
+>   dt-bindings: PCI: cadence: Add PCIe RC/EP DT schema for Cadence PCIe
+>   dt-bindings: PCI: Convert PCIe Host/Endpoint in Cadence platform to DT
+>     schema
+>   dt-bindings: PCI: cadence: Deprecate inbound/outbound specific
+>     bindings
+> 
+>  .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
+>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 49 ++++++++++++
+>  .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
+>  .../bindings/pci/cdns,cdns-pcie-host.yaml     | 75 +++++++++++++++++++
+>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++
+>  .../bindings/pci/cdns-pcie-host.yaml          | 37 +++++++++
+>  .../devicetree/bindings/pci/cdns-pcie.yaml    | 23 ++++++
+>  .../devicetree/bindings/pci/pci-ep.yaml       | 41 ++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  9 files changed, 251 insertions(+), 94 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/pci-ep.yaml
 
-Kyung Min Park <kyung.min.park@intel.com> writes:
-
-> Intel processors that support the WAITPKG feature implement
-> the TPAUSE instruction that suspends execution in a lower power
-> state until the TSC (Time Stamp Counter) exceeds a certain value.
->
-> Update the udelay() function to use TPAUSE on systems where it
-> is available. Note that we hard code the deeper (C0.2) sleep
-> state because exit latency is small compared to the "microseconds"
-> that usleep() will delay.
->
-> ChangeLog:
-> - Change from v1 to v2:
->   1. The patchset applies after Thomas's cleanup patch as below:
->      https://lkml.org/lkml/diff/2020/3/18/893/1
-
-lkml.org is horrible. Please use lore.kernel.org if at all.
-
-Also please just add the patch to the series when posting so that people
-don't have to go through loops and hoops to grab that dependency.
+Applied first three patches to pci/dt for v5.7.
 
 Thanks,
-
-        tglx
-
-
+Lorenzo
