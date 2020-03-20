@@ -2,75 +2,83 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1217C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B11C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A08212072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 157AE2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:28:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbgCTP0J (ORCPT
+        id S1727319AbgCTP2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:26:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:51478 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbgCTP0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 11:26:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72C421FB;
-        Fri, 20 Mar 2020 08:26:08 -0700 (PDT)
-Received: from mbp (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6226F3F792;
-        Fri, 20 Mar 2020 08:26:05 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 15:26:02 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-mips@vger.kernel.org, x86@kernel.org,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>
-Subject: Re: [PATCH v5 18/26] arm64: vdso32: Code clean up
-Message-ID: <20200320152602.GA7448@mbp>
-References: <20200320145351.32292-1-vincenzo.frascino@arm.com>
- <20200320145351.32292-19-vincenzo.frascino@arm.com>
+        Fri, 20 Mar 2020 11:28:31 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36270 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727049AbgCTP2b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 11:28:31 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jFJZQ-0006lF-2N; Fri, 20 Mar 2020 16:28:24 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 8D8FC100375; Fri, 20 Mar 2020 16:28:23 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 04/17] kernel: futex.c: get rid of a docs build warning
+In-Reply-To: <aab1052263e340a3eada5522f32be318890314a1.1584456635.git.mchehab+huawei@kernel.org>
+References: <cover.1584456635.git.mchehab+huawei@kernel.org> <aab1052263e340a3eada5522f32be318890314a1.1584456635.git.mchehab+huawei@kernel.org>
+Date:   Fri, 20 Mar 2020 16:28:23 +0100
+Message-ID: <87h7yj59m0.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320145351.32292-19-vincenzo.frascino@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 02:53:43PM +0000, Vincenzo Frascino wrote:
-> The compat vdso library had some checks that are not anymore relevant.
-> 
-> Remove the unused code from the compat vDSO library.
-> 
-> Note: This patch is preparatory for a future one that will introduce
-> asm/vdso/processor.h on arm64.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Link: https://lore.kernel.org/lkml/20200317122220.30393-19-vincenzo.frascino@arm.com
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+The subject prefix for this is: 'futex:'
+
+> Adjust whitespaces and blank lines in order to get rid of this:
+>
+> 	./kernel/futex.c:491: WARNING: Definition list ends without a blank line; unexpected unindent.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  kernel/futex.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/futex.c b/kernel/futex.c
+> index 67f004133061..dda6ddbc2e7d 100644
+> --- a/kernel/futex.c
+> +++ b/kernel/futex.c
+> @@ -486,7 +486,8 @@ static u64 get_inode_sequence_number(struct inode *inode)
+>   * The key words are stored in @key on success.
+>   *
+>   * For shared mappings (when @fshared), the key is:
+> - *   ( inode->i_sequence, page->index, offset_within_page )
+> + * ( inode->i_sequence, page->index, offset_within_page )
+
+Sigh. Is there no better way to make this look sane both in the file and
+in the docs?
+
+Thanks,
+
+        tglx
+
+
