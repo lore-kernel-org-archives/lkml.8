@@ -2,102 +2,119 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18F4C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E449C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D802078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F52120724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:28:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbgCTQ2S (ORCPT
+        id S1727536AbgCTQ2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:28:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44004 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727122AbgCTQ2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:28:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A38D7AEF8;
-        Fri, 20 Mar 2020 16:28:14 +0000 (UTC)
-Date:   Fri, 20 Mar 2020 17:28:09 +0100
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Joe Perches <joe@perches.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        Jiri Olsa <jolsa@redhat.com>, Rob Herring <robh@kernel.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH v12 8/8] MAINTAINERS: perf: Add pattern that matches ppc
- perf to the perf entry.
-Message-ID: <20200320162809.GU25468@kitsune.suse.cz>
-References: <20200225173541.1549955-1-npiggin@gmail.com>
- <cover.1584699455.git.msuchanek@suse.de>
- <4b150d01c60bd37705789200d9adee9f1c9b50ce.1584699455.git.msuchanek@suse.de>
- <20200320103350.GV1922688@smile.fi.intel.com>
- <20200320112338.GP25468@kitsune.suse.cz>
- <20200320124251.GW1922688@smile.fi.intel.com>
- <b96c9dd4dba4afca5288a551158659bf545d29fb.camel@perches.com>
+        Fri, 20 Mar 2020 12:28:41 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:47719 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727163AbgCTQ2k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 12:28:40 -0400
+Received: from mail-lj1-f181.google.com ([209.85.208.181]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M4bd0-1jEm0n0TIs-001gHZ; Fri, 20 Mar 2020 17:28:39 +0100
+Received: by mail-lj1-f181.google.com with SMTP id o10so7060386ljc.8;
+        Fri, 20 Mar 2020 09:28:38 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1lXksRDg3jTxH1KKtFuAVYuecGKuXC9CYNcItFdBPNM5EypR0D
+        mxwH6fu9fygVkKi7EYe8BTpg9gbrP93VoADt6II=
+X-Google-Smtp-Source: ADFU+vvpQzCbtjOU/ac9luh0iy3YFl0a9lDUyyVpQqCoBSJMe7aSkeTdT1zPnEUT/etuCU6Df1Q0pOh+XidX5WSpNxk=
+X-Received: by 2002:a2e:811a:: with SMTP id d26mr5709626ljg.128.1584721718522;
+ Fri, 20 Mar 2020 09:28:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b96c9dd4dba4afca5288a551158659bf545d29fb.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
+ <1584200119-18594-5-git-send-email-mikelley@microsoft.com>
+ <CAK8P3a2Hnm74aUMNFHbjMr4HwHGZn1+xa4ERsxAJY6hMzhEOhQ@mail.gmail.com>
+ <632eb459dbe53a9b69df2a4f030a755b@kernel.org> <CAK8P3a3aihZeriUWAhWJMsOtdiY4Lo29syrRbB4Po3v4dsLhvA@mail.gmail.com>
+ <MW2PR2101MB1052D91D3A9CEEBD7E2EA82FD7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <CAK8P3a2AO4k3vJ7WuJQz7ick+XPgGY3Jfk8-ROqtwyNs0nWkDA@mail.gmail.com> <MW2PR2101MB10520CEF065A41EEBC17FFC2D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB10520CEF065A41EEBC17FFC2D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 20 Mar 2020 17:28:22 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1MfYDTiQ9j0o3tnd=ymZukPoSmuExLhEMRR+GRwVD7xA@mail.gmail.com>
+Message-ID: <CAK8P3a1MfYDTiQ9j0o3tnd=ymZukPoSmuExLhEMRR+GRwVD7xA@mail.gmail.com>
+Subject: Re: [PATCH v6 04/10] arm64: hyperv: Add memory alloc/free functions
+ for Hyper-V size pages
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Marc Zyngier <maz@kernel.org>, gregkh <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:YiwlX9iBdiXNg5xNtCEAFPdb1mkadbK81jrmhX7LRdvitySwwNa
+ I0MZ8RkloQ6Wlcj6yPAZH3KxYFj9R5P8CijRzmi4IEKMRQ3SC3zrS5uqCGDBDEHOSk0BUGw
+ ySjD0RZKR7qkyOKWvFA4tTYRiUyovBuByh3bMx0kN4kQ2pY2R6YP3/gqsSkn9LSJDEGDlqn
+ 1jKT4lbdm9MH/OxBCNijg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:p2Q7lJ7StFc=:JDSIaW/ZZxeHgXGY3IgFHv
+ E7dYB81ADyVZu2ueLhAM6M/33RM6j0PlwdFW3oe8a6v5Ifg30WApd8nxrrQr/a7+eg8IQn2iV
+ eLzn+a7Ot5YurHKeqvOKKjW7/s1Ss3BQNIsGrrxDErkTY4ThPFYA0QqYFq4wJcVfRIbWjm/t0
+ q6UOU9/W8eFKSN1cWIIWZPuQcyOYijM3HfDXk8A3ZPdeebOzLrx9EzF6qYsmbY5WZG4vdLzS6
+ 7zqhMtXadOSRlm2KKytTUJkp8lZtsB4skRcEAS9OURpuHqcyIMLeqpqLh31oygHLvXYzqvX3j
+ jirgTQbb5E8YKufVnzUFBl50/8Vu/ct8u/mjehvzEJQYnVLmNoCIyHmOUmhul1F/Aeej6wzEW
+ /SByQp0/H2S5mmoSlhClYS6d5pvyOF1l+z9woDfb0nSX2yP5cZyMu9sJcN7XfFyHWhwKwRV4g
+ 66+0FxqiTVrDy13KD3mnCw8cp8c2EVnamWhU0NhhynhLW85raJvFloYscH0lb+l4C/IVsvuDE
+ PqfwIiCU6JhTzXxLvHnCBnWN2EW0LvvHLYBBLMBqCZlb6K9eMtqObq7/AIahoH8rzZiZd5/fD
+ zEjVbKoc3VeqwIzN2dfVoha57MZ5NjX6cfZSA9+SFKK7qKWBFNckCf9cqKyLnrLKqZc+LTlgd
+ rbh7W37ozfk8r++8aYM3kHdGJ2eRMk6Y3NFGlqEuzyZmg85GyO93VyHQuw2hQbk8LYF4F6eEG
+ O4E7Rc+g1yCcnL5vyfT+wULZf+LNNZOGrEuwnrW0PVxWc/D7HohvhLTSQ6OjCffx0gQSgZCJG
+ dR9naK66fvrP5fTFu1dGR/9upk6iUh6zUNJ0Ki8+p9EJ9ohoiM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 07:42:03AM -0700, Joe Perches wrote:
-> On Fri, 2020-03-20 at 14:42 +0200, Andy Shevchenko wrote:
-> > On Fri, Mar 20, 2020 at 12:23:38PM +0100, Michal Suchánek wrote:
-> > > On Fri, Mar 20, 2020 at 12:33:50PM +0200, Andy Shevchenko wrote:
-> > > > On Fri, Mar 20, 2020 at 11:20:19AM +0100, Michal Suchanek wrote:
-> > > > > While at it also simplify the existing perf patterns.
-> > > > And still missed fixes from parse-maintainers.pl.
-> > > 
-> > > Oh, that script UX is truly ingenious.
-> > 
-> > You have at least two options, their combinations, etc:
-> >  - complain to the author :-)
-> >  - send a patch :-)
-> 
-> Recently:
-> 
-> https://lore.kernel.org/lkml/4d5291fa3fb4962b1fa55e8fd9ef421ef0c1b1e5.camel@perches.com/
+On Thu, Mar 19, 2020 at 10:43 PM Michael Kelley <mikelley@microsoft.com> wrote:
+> From: Arnd Bergmann <arnd@arndb.de> Sent: Wednesday, March 18, 2020 2:58 AM
+> > On Wed, Mar 18, 2020 at 1:15 AM Michael Kelley <mikelley@microsoft.com> wrote:
+> > My point was to keep the functions but use alloc_pages() internally,
+> > so you can deal with the hypervisor having a larger page size than
+> > the guest, which seems to be a more important scenario if I correctly
+> > understand the differences between the way Windows and Linux
+> > deal with page cache.
+>
+> OK, I see now what you are getting at.  I should spell out my
+> assumption, which is the opposite.  Hyper-V won't have a page
+> size other than 4K anytime in the foreseeable future.  The
+> code is too wedded to the x86 4K page size, and the host-guest
+> interfaces have a lot of implicit assumptions that the page size is
+> 4K (unfortunately).  But the last time I looked, RHEL for ARM64 is
+> delivered with a 64K page size.  So my assumption is that the only
+> combination that really matters is the guest page size being larger
+> than the Hyper-V page size.  The other way around just won't
+> happen without a major overhaul to Hyper-V, including a rework
+> of the guest-host interface.
 
-Can we expect that reaordering is taken care of in that discussion then?
+Ok, got it. We should really ask Red Hat to change the page size,
+but as long as you care existing systems, and you expect this to
+result in gigabytes of allocation on future systems, having the
+wrapper seems reasonable.
 
-Thanks
+Maybe you could fall back to alloc_page when PAGE_SIZE equals
+HV_HYP_PAGE_SIZE though? I'm not sure what the tradeoff
+between kmalloc and alloc_page is these days, other than the
+feeling that alloc_page is the more obvious choice when you know
+you always want exactly a page here.
 
-Michal
+      Arnd
