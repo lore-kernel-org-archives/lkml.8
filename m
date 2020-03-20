@@ -2,164 +2,115 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711D8C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3651C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD4820767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:01:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584694906;
-	bh=5GzmaNdbQWq4mwgMPIV3aDUnqAewqh/ptfOGOHCK+xw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FRSEV+roitD4f2Yk0+G5tVdGMFwC5vnO6A08QBPb3ZfXYYaPmk6WRliljGoZrAZRz
-	 d5xcTi424R2pWGbnHq6dO6dbQsRCy3sL7F5yOXgMZrZ6Re5AJLlKGErNg7BMNkApHh
-	 I/wGJfoDUTgX+pnGn6MRDROE1rKdcMprNS90BwE8=
+	by mail.kernel.org (Postfix) with ESMTP id 926A720752
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgCTJBp (ORCPT
+        id S1727089AbgCTJCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:01:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59310 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 05:02:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45570 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726690AbgCTJBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:01:44 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E46520752;
-        Fri, 20 Mar 2020 09:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584694903;
-        bh=5GzmaNdbQWq4mwgMPIV3aDUnqAewqh/ptfOGOHCK+xw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jYCIgVPLeSi75fxMO5TZ8B5x9GAI/akoG5C2R9NKp2C++xG9c/7L59CgHOC3bQ/KK
-         kxFbkaBZ/58TE5YR3tosXwXXhILQr5LeIR5nykEBB/cPR+MxWI5ff+pta1Dvp7u55A
-         a0/KdFglc2/CRpBetrGMRzDIrczZ3ze842l/MkGE=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jFDXA-00EBob-Vl; Fri, 20 Mar 2020 09:01:41 +0000
+        id S1726979AbgCTJCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 05:02:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 60CA0AECE;
+        Fri, 20 Mar 2020 09:02:12 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 02:01:06 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [patch V2 11/15] completion: Use simple wait queues
+Message-ID: <20200320090106.6p2lwqvs4jedhvds@linux-p48b>
+References: <20200318204302.693307984@linutronix.de>
+ <20200318204408.521507446@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 20 Mar 2020 09:01:40 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v5 20/23] KVM: arm64: GICv4.1: Plumb SGI implementation
- selection in the distributor
-In-Reply-To: <1c9fdfc8-bdb2-88b6-4bdc-2b9254dfa55c@huawei.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-21-maz@kernel.org>
- <72832f51-bbde-8502-3e03-189ac20a0143@huawei.com>
- <4a06fae9c93e10351276d173747d17f4@kernel.org>
- <1c9fdfc8-bdb2-88b6-4bdc-2b9254dfa55c@huawei.com>
-Message-ID: <256b58a9679412c96600217f316f424f@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200318204408.521507446@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
+On Wed, 18 Mar 2020, Thomas Gleixner wrote:
 
-On 2020-03-20 03:53, Zenghui Yu wrote:
-> Hi Marc,
-> 
-> On 2020/3/19 20:10, Marc Zyngier wrote:
->>> But I wonder that should we use nassgireq to *only* keep track what
->>> the guest had written into the GICD_CTLR.nASSGIreq.  If not, we may
->>> lose the guest-request bit after migration among hosts with different
->>> has_gicv4_1 settings.
->> 
->> I'm unsure of what you're suggesting here. If userspace tries to set
->> GICD_CTLR.nASSGIreq on a non-4.1 host, this bit will not latch.
-> 
-> This is exactly what I *was* concerning about.
-> 
->> Userspace can check that at restore time. Or we could fail the
->> userspace write, which is a bit odd (the bit is otherwise RES0).
->> 
->> Could you clarify your proposal?
-> 
-> Let's assume two hosts below. 'has_gicv4_1' is true on host-A while
-> it is false on host-B because of lack of HW support or the kernel
-> parameter "kvm-arm.vgic_v4_enable=0".
-> 
-> If we migrate guest through A->B->A, we may end-up lose the initial
-> guest-request "nASSGIreq=1" and don't use direct vSGI delivery for
-> this guest when it's migrated back to host-A.
+>From: Thomas Gleixner <tglx@linutronix.de>
+>
+>completion uses a wait_queue_head_t to enqueue waiters.
+>
+>wait_queue_head_t contains a spinlock_t to protect the list of waiters
+>which excludes it from being used in truly atomic context on a PREEMPT_RT
+>enabled kernel.
+>
+>The spinlock in the wait queue head cannot be replaced by a raw_spinlock
+>because:
+>
+>  - wait queues can have custom wakeup callbacks, which acquire other
+>    spinlock_t locks and have potentially long execution times
+>
+>  - wake_up() walks an unbounded number of list entries during the wake up
+>    and may wake an unbounded number of waiters.
+>
+>For simplicity and performance reasons complete() should be usable on
+>PREEMPT_RT enabled kernels.
+>
+>completions do not use custom wakeup callbacks and are usually single
+>waiter, except for a few corner cases.
+>
+>Replace the wait queue in the completion with a simple wait queue (swait),
+>which uses a raw_spinlock_t for protecting the waiter list and therefore is
+>safe to use inside truly atomic regions on PREEMPT_RT.
+>
+>There is no semantical or functional change:
+>
+>  - completions use the exclusive wait mode which is what swait provides
+>
+>  - complete() wakes one exclusive waiter
+>
+>  - complete_all() wakes all waiters while holding the lock which protects
+>    the wait queue against newly incoming waiters. The conversion to swait
+>    preserves this behaviour.
+>
+>complete_all() might cause unbound latencies with a large number of waiters
+>being woken at once, but most complete_all() usage sites are either in
+>testing or initialization code or have only a really small number of
+>concurrent waiters which for now does not cause a latency problem. Keep it
+>simple for now.
+>
+>The fixup of the warning check in the USB gadget driver is just a straight
+>forward conversion of the lockless waiter check from one waitqueue type to
+>the other.
+>
+>Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>Cc: Arnd Bergmann <arnd@arndb.de>
 
-My point above is that we shouldn't allow the A->B migration the first
-place, and fail it as quickly as possible. We don't know what the guest
-has observed in terms of GIC capability, and it may not have enabled the
-new flavour of SGIs just yet.
-
-> This can be "fixed" by keep track of what guest had written into
-> nASSGIreq. And we need to evaluate the need for using direct vSGI
-> for a specified guest by 'has_gicv4_1 && nassgireq'.
-
-It feels odd. It means we have more state than the HW normally has.
-I have an alternative proposal, see below.
-
-> But if it's expected that "if userspace tries to set nASSGIreq on
-> a non-4.1 host, this bit will not latch", then this shouldn't be
-> a problem at all.
-
-Well, that is the semantics of the RES0 bit. It applies from both
-guest and userspace.
-
-And actually, maybe we can handle that pretty cheaply. If userspace
-tries to restore GICD_TYPER2 to a value that isn't what KVM can
-offer, we just return an error. Exactly like we do for GICD_IIDR.
-Hence the following patch:
-
-diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c 
-b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-index 28b639fd1abc..e72dcc454247 100644
---- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-@@ -156,6 +156,7 @@ static int vgic_mmio_uaccess_write_v3_misc(struct 
-kvm_vcpu *vcpu,
-  	struct vgic_dist *dist = &vcpu->kvm->arch.vgic;
-
-  	switch (addr & 0x0c) {
-+	case GICD_TYPER2:
-  	case GICD_IIDR:
-  		if (val != vgic_mmio_read_v3_misc(vcpu, addr, len))
-  			return -EINVAL;
-
-Being a RO register, writing something that isn't compatible with the
-possible behaviour of the hypervisor will just return an error.
-
-What do you think?
-
-> Anyway this is not a big deal to me and I won't complain about it
-> in the future ;-) Either way, for this patch:
-> 
-> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-
-Thanks a lot!
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
