@@ -2,122 +2,142 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43D3C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B86DC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7760320739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:52:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="aV5+AQ5H";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="D3dkUm3e"
+	by mail.kernel.org (Postfix) with ESMTP id 6BA6A20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:52:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgCTTw3 (ORCPT
+        id S1727093AbgCTTwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 15:52:29 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:52360 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgCTTw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 15:52:29 -0400
-Received: by mail.z3ntu.xyz (Postfix, from userid 182)
-        id E1E16C43CD; Fri, 20 Mar 2020 19:52:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1584733946; bh=MDnzSJT+llofSXN9pFcQrkcAec3ckxZl7QrMwV659OU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=aV5+AQ5HFMQtjamOGfq2RPgVngbnXZM/kr1CKeliXJGmCvn29OoiLOtA6k1WRlax7
-         ppDPVYf6XCWEK9PcBUBVZ1Xni7o+4PhcPo24OtDDVKzAeMh6FFkVJUUdehwdS4CHkD
-         yWwVP/6VCUwDibK8MTf/YgWud5NfbK1AkV6/wBT0=
-Received: from g550jk.localnet (80-110-124-168.cgn.dynamic.surfer.at [80.110.124.168])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 7BB74C43BA;
-        Fri, 20 Mar 2020 19:52:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1584733942; bh=MDnzSJT+llofSXN9pFcQrkcAec3ckxZl7QrMwV659OU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=D3dkUm3eV3UFiDyYuYr9T3nrTLJiA18jxrZ26rNJ/7pLpyiLXTm1wf6cEuMUKeMhc
-         PDTdZxAD0QrTDo0qFjaXiqDhT3hLDf4SME6700HUqDMR8nbCvYuR4j7xFjEiURtWh1
-         TORTze3yF0dIb1duzBBDNGWr81ua4lgRGNUpmH7E=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        shawnguo@kernel.org, olof@lixom.net, maxime@cerno.tech,
-        Anson.Huang@nxp.com, dinguyen@kernel.org, leonard.crestez@nxp.com,
-        marcin.juszkiewicz@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Robert Foss <robert.foss@linaro.org>
-Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: Re: [v2 6/6] arm64: defconfig: Enable QCOM CAMCC, CAMSS and CCI drivers
-Date:   Fri, 20 Mar 2020 20:52:20 +0100
-Message-ID: <2523204.mvXUDI8C0e@g550jk>
-In-Reply-To: <20200317135740.19412-7-robert.foss@linaro.org>
-References: <20200317135740.19412-1-robert.foss@linaro.org> <20200317135740.19412-7-robert.foss@linaro.org>
+        Fri, 20 Mar 2020 15:52:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37003 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbgCTTwa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 15:52:30 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jFNgI-0002w2-14; Fri, 20 Mar 2020 20:51:46 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 626F61039FC; Fri, 20 Mar 2020 20:51:44 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     paulmck@kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting documentation
+In-Reply-To: <20200320160145.GN3199@paulmck-ThinkPad-P72>
+Date:   Fri, 20 Mar 2020 20:51:44 +0100
+Message-ID: <87mu8apzxr.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+"Paul E. McKenney" <paulmck@kernel.org> writes:
+>
+>  - The soft interrupt related suffix (_bh()) still disables softirq
+>    handlers.  However, unlike non-PREEMPT_RT kernels (which disable
+>    preemption to get this effect), PREEMPT_RT kernels use a per-CPU
+>    lock to exclude softirq handlers.
 
-On Dienstag, 17. M=E4rz 2020 14:57:40 CET Robert Foss wrote:
-> Build camera clock, isp and controller drivers as modules.
->=20
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  arch/arm64/configs/defconfig | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 4db223dbc549..7cb6989249ab 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -376,6 +376,7 @@ CONFIG_I2C_MESON=3Dy
->  CONFIG_I2C_MV64XXX=3Dy
->  CONFIG_I2C_OWL=3Dy
->  CONFIG_I2C_PXA=3Dy
-> +CONFIG_I2C_QCOM_CCI=3Dm
->  CONFIG_I2C_QCOM_GENI=3Dm
->  CONFIG_I2C_QUP=3Dy
->  CONFIG_I2C_RK3X=3Dy
-> @@ -530,6 +531,7 @@ CONFIG_VIDEO_SAMSUNG_S5P_MFC=3Dm
->  CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=3Dm
->  CONFIG_VIDEO_RENESAS_FCP=3Dm
->  CONFIG_VIDEO_RENESAS_VSP1=3Dm
-> +CONFIG_VIDEO_QCOM_CAMSS=3Dm
->  CONFIG_DRM=3Dm
->  CONFIG_DRM_I2C_NXP_TDA998X=3Dm
->  CONFIG_DRM_NOUVEAU=3Dm
-> @@ -732,6 +734,7 @@ CONFIG_MSM_GCC_8994=3Dy
->  CONFIG_MSM_MMCC_8996=3Dy
->  CONFIG_MSM_GCC_8998=3Dy
->  CONFIG_QCS_GCC_404=3Dy
-> +CONFIG_SDM_CAMCC_845=3Dm
+I've made that:
 
-You seem to have this option twice in this patch.
+  - The soft interrupt related suffix (_bh()) still disables softirq
+    handlers.
 
->  CONFIG_SDM_GCC_845=3Dy
->  CONFIG_SM_GCC_8150=3Dy
->  CONFIG_QCOM_HFPLL=3Dy
-> @@ -762,6 +765,7 @@ CONFIG_QCOM_COMMAND_DB=3Dy
->  CONFIG_QCOM_GENI_SE=3Dy
->  CONFIG_QCOM_GLINK_SSR=3Dm
->  CONFIG_QCOM_RMTFS_MEM=3Dm
-> +CONFIG_SDM_CAMCC_845=3Dm
+    Non-PREEMPT_RT kernels disable preemption to get this effect.
 
-^
+    PREEMPT_RT kernels use a per-CPU lock for serialization. The lock
+    disables softirq handlers and prevents reentrancy by a preempting
+    task.
+    
+On non-RT this is implicit through preemption disable, but it's non
+obvious for RT as preemption stays enabled.
 
->  CONFIG_QCOM_RPMH=3Dy
->  CONFIG_QCOM_RPMHPD=3Dy
->  CONFIG_QCOM_SMEM=3Dy
+> PREEMPT_RT kernels preserve all other spinlock_t semantics:
+>
+>  - Tasks holding a spinlock_t do not migrate.  Non-PREEMPT_RT kernels
+>    avoid migration by disabling preemption.  PREEMPT_RT kernels instead
+>    disable migration, which ensures that pointers to per-CPU variables
+>    remain valid even if the task is preempted.
+>
+>  - Task state is preserved across spinlock acquisition, ensuring that the
+>    task-state rules apply to all kernel configurations.  In non-PREEMPT_RT
+>    kernels leave task state untouched.  However, PREEMPT_RT must change
+>    task state if the task blocks during acquisition.  Therefore, the
+>    corresponding lock wakeup restores the task state.  Note that regular
+>    (not lock related) wakeups do not restore task state.
 
-Regards
-Luca
+   - Task state is preserved across spinlock acquisition, ensuring that the
+     task-state rules apply to all kernel configurations.  Non-PREEMPT_RT
+     kernels leave task state untouched.  However, PREEMPT_RT must change
+     task state if the task blocks during acquisition.  Therefore, it
+     saves the current task state before blocking and the corresponding
+     lock wakeup restores it. A regular not lock related wakeup sets the
+     task state to RUNNING. If this happens while the task is blocked on
+     a spinlock then the saved task state is changed so that correct
+     state is restored on lock wakeup.
 
+Hmm?
 
+> But this code failes on PREEMPT_RT kernels because the memory allocator
+> is fully preemptible and therefore cannot be invoked from truly atomic
+> contexts.  However, it is perfectly fine to invoke the memory allocator
+> while holding a normal non-raw spinlocks because they do not disable
+> preemption::
+>
+>> +  spin_lock(&lock);
+>> +  p = kmalloc(sizeof(*p), GFP_ATOMIC);
+>> +
+>> +Most places which use GFP_ATOMIC allocations are safe on PREEMPT_RT as the
+>> +execution is forced into thread context and the lock substitution is
+>> +ensuring preemptibility.
+>
+> Interestingly enough, most uses of GFP_ATOMIC allocations are
+> actually safe on PREEMPT_RT because the the lock substitution ensures
+> preemptibility.  Only those GFP_ATOMIC allocations that are invoke
+> while holding a raw spinlock or with preemption otherwise disabled need
+> adjustment to work correctly on PREEMPT_RT.
+>
+> [ I am not as confident of the above as I would like to be... ]
+
+I'd leave that whole paragraph out. This documents the rules and from
+the above code examples it's pretty clear what works and what not :)
+
+> And meeting time, will continue later!
+
+Enjoy!
+
+Thanks,
+
+        tglx
