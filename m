@@ -2,219 +2,542 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2D9C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F28A6C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46A952072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54762072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OTesBOFy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tWJ1kzv9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgCTURz (ORCPT
+        id S1726897AbgCTUXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 16:17:55 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34987 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgCTURy (ORCPT
+        Fri, 20 Mar 2020 16:23:09 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35088 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbgCTUXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 16:17:54 -0400
-Received: by mail-wm1-f67.google.com with SMTP id m3so7804515wmi.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 13:17:52 -0700 (PDT)
+        Fri, 20 Mar 2020 16:23:09 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g6so2992533plt.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 13:23:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:from:to:references:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LV6ApGTr42oJIX2YFh/VOpIWSbKzphlhhfcf1BtR2SM=;
-        b=OTesBOFyOkCqbqLwN08cjEqFh14QLs6p58T4qA/lI1x2f8hSlRdFMNxYPfMKDFd2Pl
-         3w7xLCB7uY6banJgDOvWT9vougBqHGPHyqVZm7GRUTxmlP2GccJf1+A2G5Y3eif6yKu4
-         5kvOd1/aug0IOP2OsFW/RD3TvaV1D6hew1qfQxZUfIutcdyWX8d7NYqSf3liyVOLytjI
-         +zvSa7/e9nHE1HHvlW1agLGHyilP1FdqOjtZIiXCDwjOdsh+g6ep6S+W6tbS+L7C9hyO
-         JOYJM2AAa8WE5VLxxAG36GQ0DxqQL+cNB0k9vGs+yO3AsI5f0pM2xHqJW6b1zWOa4uMQ
-         zUrA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dbNOQCUxe2/vzj63lSUBj4KF8zSc6jY0D+YCP7Ni2DY=;
+        b=tWJ1kzv9SNNa5EW/VjAtsMJjMO2ffUkXN7Zz1vJvBNS/xSLrM5cNouu7LdPHZwEMBF
+         p0YIH2yoaZRt6naQktGuhbuVTyg02hUEBSyGzLrJW3OA9rwjK2+vua6/P17dy62l7mVO
+         F4UM4kuv+cbpx9iWrA1XvYyMMnwS+z4krJiQTilm+IEnkGS2/EeQ1ya2lRFlurSkZWme
+         yGDTGudthND4UlxBihUL7mgbEzxTDtncMCB1pWK4YO1u0VByFRt+NxItiGnDheY6dHgY
+         iWP1H63EdNafdSWCC4e1YRI6K0WM+8zvX2wNKbGKpyVk8Qi1dJc/L3EVFYJfSeIbtj1Z
+         hbaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LV6ApGTr42oJIX2YFh/VOpIWSbKzphlhhfcf1BtR2SM=;
-        b=L+vfum0c6hqUgnwx+l45kfR5DFCvTKwzF1TAgrrEZv7f/dNmMUfNYAQ2u8hKGFUxf2
-         2/7lyws+k5y1n236xcF9OieApLBRwJwSQn0kk20R7TvGxTSjoqbbiHnFo4oWYYNBaRL9
-         5JtieGFFjx6UsvceqC9mlQyHB8tyYzJEeyrb/DaQ9Sc2TUlswiB+3ImM2L+/8aXaYVvN
-         KC+8RrND5WWde67zTyeOpZHiLgeaWolGs4u/eadKeOBlxE7NurhWP/XFrOFtu4PpoDkW
-         4viPCFhS4pkQZ5vgpFw5bZ4/QsNdk8lv03CStBXNzYb9zBnzovMjAoVlR0AZVpE7wGTw
-         MVOQ==
-X-Gm-Message-State: ANhLgQ22ehLZk1lqC+aOfKOSqRL3dVcyoZ7cMjFqJLEwYzdqzbuyYbcL
-        DTx6Gvo5BDXRFrI+xTz2jqBJaQ==
-X-Google-Smtp-Source: ADFU+vvDSge2YFjzgKqQZ+zA3ijbVGp4x9rXMvWgc3aWA0hQNLT8SSRnJpj3EPOWcVOzKx2lealyeQ==
-X-Received: by 2002:a1c:b642:: with SMTP id g63mr11725102wmf.108.1584735471557;
-        Fri, 20 Mar 2020 13:17:51 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:38ed:576d:5a6c:770c? ([2a01:e34:ed2f:f020:38ed:576d:5a6c:770c])
-        by smtp.googlemail.com with ESMTPSA id 127sm9500773wmd.38.2020.03.20.13.17.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Mar 2020 13:17:50 -0700 (PDT)
-Subject: Re: weird cooling_device/cur_state sysfs behaviour
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-References: <20200320151055.h32rh5hpnv7xyuey@macmini.local>
- <bbdd32b7-c376-d44b-df2f-a50911592692@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <96f75e90-9c14-5908-e9e9-979c9d28a898@linaro.org>
-Date:   Fri, 20 Mar 2020 21:17:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dbNOQCUxe2/vzj63lSUBj4KF8zSc6jY0D+YCP7Ni2DY=;
+        b=n7gJRXxDnqABP4VayFVtx/HWaTbX+3x8ddW2Ym6ctlMVKomMn60eh6+UqWOGs7toLS
+         b5dlojUVv0FjAxhtk+PqArYtD47Rc6ofm501PuW1UwTRJDzZeFnB8GVqq1UheEIfqkvx
+         9zuHuGQMIbz2hMQeHxn3DAG/HcrsZ744REZeKZ/6Bvh+QkoGbaL4wI5EXeokzfNvzEkZ
+         0lZu853QPGdLJ60116zDenfOoWRheW+YyyXrov9PGfN6pNK/w7XRd0h+psTqxX3sQ5YU
+         pLsItuncwL0wuu1Y1z7S/YfHIdDstDFyznA4PtjoCZnaDbS0hIhy71VmNXAqPkhDlYQp
+         cEZg==
+X-Gm-Message-State: ANhLgQ3SFvlm0Y5PEm/E12jH7i8T1CkuRhrqY82ayFq+tjX0lBn92HuW
+        3R122OMEwVw6Pjr+dgCH+rChIg==
+X-Google-Smtp-Source: ADFU+vto1aTBjo792uBHmFbPZg6cPl+10xgIJhnLuC3shWLWNxt8frE1g17NuYESEHoJmYb6hzVcuw==
+X-Received: by 2002:a17:90a:1784:: with SMTP id q4mr10909782pja.174.1584735786518;
+        Fri, 20 Mar 2020 13:23:06 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id a127sm6415356pfa.111.2020.03.20.13.23.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 13:23:05 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 14:23:03 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        s-anna@ti.com, afd@ti.com
+Subject: Re: [PATCHv8 12/15] remoteproc/omap: Add support for runtime
+ auto-suspend/resume
+Message-ID: <20200320202303.GA16145@xps15>
+References: <20200313081718.30612-1-t-kristo@ti.com>
+ <20200313081718.30612-13-t-kristo@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <bbdd32b7-c376-d44b-df2f-a50911592692@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313081718.30612-13-t-kristo@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding Rafael,
-
-On 20/03/2020 18:43, Daniel Lezcano wrote:
-> On 20/03/2020 16:10, Willy Wolff wrote:
->> Hi all,
->> Hope you're doing well with the situation.
->>
->> I fill that my board get a cold too...
->>
->> When I write to a sysfs node, I have a weird behaviour about the function that is called behind.
->> This bug appears on an arm32 odroid-xu3, and only after v5.4, v5.3.18 behave correctly.
->>
->>
->> Here my modification to see what's going on:
->>
->> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
->> index aa99edb4dff7..a437ae3f4b9f 100644
->> --- a/drivers/thermal/thermal_sysfs.c
->> +++ b/drivers/thermal/thermal_sysfs.c
->> @@ -706,11 +706,22 @@ cur_state_store(struct device *dev, struct device_attribute *attr,
+On Fri, Mar 13, 2020 at 10:17:15AM +0200, Tero Kristo wrote:
+> From: Suman Anna <s-anna@ti.com>
 > 
-> [ ... ]
+> This patch enhances the PM support in the OMAP remoteproc driver to
+> support the runtime auto-suspend. A remoteproc may not be required to
+> be running all the time, and typically will need to be active only
+> during certain usecases. As such, to save power, it should be turned
+> off during potential long periods of inactivity between usecases.
+> This suspend and resume of the device is a relatively heavy process
+> in terms of latencies, so a remoteproc should be suspended only after
+> a certain period of prolonged inactivity. The OMAP remoteproc driver
+> leverages the runtime pm framework's auto_suspend feature to accomplish
+> this functionality. This feature is automatically enabled when a remote
+> processor has successfully booted. The 'autosuspend_delay_ms' for each
+> device dictates the inactivity period/time to wait for before
+> suspending the device.
 > 
->>         return result ? result : count;
->>  }
->>  
->> +
+> The runtime auto-suspend design relies on marking the last busy time
+> on every communication (virtqueue kick) to and from the remote processor.
+> When there has been no activity for 'autosuspend_delay_ms' time, the
+> runtime PM framework invokes the driver's runtime pm suspend callback
+> to suspend the device. The remote processor will be woken up on the
+> initiation of the next communication message through the runtime pm
+> resume callback. The current auto-suspend design also allows a remote
+> processor to deny a auto-suspend attempt, if it wishes to, by sending a
+> NACK response to the initial suspend request message sent to the remote
+> processor as part of the suspend process. The auto-suspend request is
+> also only attempted if the remote processor is idled and in standby at
+> the time of inactivity timer expiry. This choice is made to avoid
+> unnecessary messaging, and the auto-suspend is simply rescheduled to
+> be attempted again after a further lapse of autosuspend_delay_ms.
 > 
-> [ ... ]
+> The runtime pm callbacks functionality in this patch reuses most of the
+> core logic from the suspend/resume support code, and make use of an
+> additional auto_suspend flag to differentiate the logic in common code
+> from system suspend. The system suspend/resume sequences are also updated
+> to reflect the proper pm_runtime statuses, and also to really perform a
+> suspend/resume only if the remoteproc has not been auto-suspended at the
+> time of request. The remote processor is left in suspended state on a
+> system resume if it has been auto-suspended before, and will be woken up
+> only when a usecase needs to run.
 > 
->>
->> As you can see, the function is recalled with one character less, until the "buffer is empty".
->> I don't understand why. Can anybody help me for this thing?
->> Many thanks in advance.
+> The OMAP remoteproc driver currently uses a default value of 10 seconds
+> for all OMAP remoteprocs, and a different value can be chosen either by
+> choosing a positive value for the 'ti,autosuspend-delay-ms' under DT or
+> by updating the 'autosuspend_delay_ms' field at runtime through the
+> sysfs interface. A negative value is equivalent to disabling the runtime
+> suspend.
+>     Eg: To use 25 seconds for IPU2 on DRA7xx,
+>       echo 25000 > /sys/bus/platform/devices/55020000.ipu/power/autosuspend_delay_ms
 > 
-> [ ... ]
+> The runtime suspend feature can also be similarly enabled or disabled by
+> writing 'auto' or 'on' to the device's 'control' power field. The default
+> is enabled.
+>     Eg: To disable auto-suspend for IPU2 on DRA7xx SoC,
+>       echo on > /sys/bus/platform/devices/55020000.ipu/power/control
 > 
-> Very likely the problem is coming from:
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> [t-kristo@ti.com: converted to use ti-sysc instead of hwmod]
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> Reviewed-by: Andrew F. Davis <afd@ti.com>
+> ---
+> v8:
+>   - added mutex handling under the runtime PM calls
+
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
 > 
->         result = cdev->ops->set_cur_state(cdev, state);
+>  drivers/remoteproc/omap_remoteproc.c | 212 +++++++++++++++++++++++++--
+>  1 file changed, 203 insertions(+), 9 deletions(-)
 > 
-> which returns '1' as showed by the traces:
+> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+> index e90cbeb66d6f..ba7c1a1c17d6 100644
+> --- a/drivers/remoteproc/omap_remoteproc.c
+> +++ b/drivers/remoteproc/omap_remoteproc.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/of_reserved_mem.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/remoteproc.h>
+>  #include <linux/mailbox_client.h>
+> @@ -37,6 +38,9 @@
+>  #include "omap_remoteproc.h"
+>  #include "remoteproc_internal.h"
+>  
+> +/* default auto-suspend delay (ms) */
+> +#define DEFAULT_AUTOSUSPEND_DELAY		10000
+> +
+>  /**
+>   * struct omap_rproc_boot_data - boot data structure for the DSP omap rprocs
+>   * @syscon: regmap handle for the system control configuration module
+> @@ -83,6 +87,8 @@ struct omap_rproc_timer {
+>   * @num_mems: number of internal memory regions
+>   * @num_timers: number of rproc timer(s)
+>   * @timers: timer(s) info used by rproc
+> + * @autosuspend_delay: auto-suspend delay value to be used for runtime pm
+> + * @need_resume: if true a resume is needed in the system resume callback
+>   * @rproc: rproc handle
+>   * @reset: reset handle
+>   * @pm_comp: completion primitive to sync for suspend response
+> @@ -97,6 +103,8 @@ struct omap_rproc {
+>  	int num_mems;
+>  	int num_timers;
+>  	struct omap_rproc_timer *timers;
+> +	int autosuspend_delay;
+> +	bool need_resume;
+>  	struct rproc *rproc;
+>  	struct reset_control *reset;
+>  	struct completion pm_comp;
+> @@ -407,11 +415,23 @@ static void omap_rproc_kick(struct rproc *rproc, int vqid)
+>  	struct device *dev = rproc->dev.parent;
+>  	int ret;
+>  
+> +	/* wake up the rproc before kicking it */
+> +	ret = pm_runtime_get_sync(dev);
+> +	if (WARN_ON(ret < 0)) {
+> +		dev_err(dev, "pm_runtime_get_sync() failed during kick, ret = %d\n",
+> +			ret);
+> +		pm_runtime_put_noidle(dev);
+> +		return;
+> +	}
+> +
+>  	/* send the index of the triggered virtqueue in the mailbox payload */
+>  	ret = mbox_send_message(oproc->mbox, (void *)vqid);
+>  	if (ret < 0)
+>  		dev_err(dev, "failed to send mailbox message, status = %d\n",
+>  			ret);
+> +
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+>  }
+>  
+>  /**
+> @@ -502,6 +522,18 @@ static int omap_rproc_start(struct rproc *rproc)
+>  		goto disable_timers;
+>  	}
+>  
+> +	/*
+> +	 * remote processor is up, so update the runtime pm status and
+> +	 * enable the auto-suspend. The device usage count is incremented
+> +	 * manually for balancing it for auto-suspend
+> +	 */
+> +	pm_runtime_set_active(dev);
+> +	pm_runtime_use_autosuspend(dev);
+> +	pm_runtime_get_noresume(dev);
+> +	pm_runtime_enable(dev);
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+> +
+>  	return 0;
+>  
+>  disable_timers:
+> @@ -514,20 +546,52 @@ static int omap_rproc_start(struct rproc *rproc)
+>  /* power off the remote processor */
+>  static int omap_rproc_stop(struct rproc *rproc)
+>  {
+> +	struct device *dev = rproc->dev.parent;
+>  	struct omap_rproc *oproc = rproc->priv;
+>  	int ret;
+>  
+> +	/*
+> +	 * cancel any possible scheduled runtime suspend by incrementing
+> +	 * the device usage count, and resuming the device. The remoteproc
+> +	 * also needs to be woken up if suspended, to avoid the remoteproc
+> +	 * OS to continue to remember any context that it has saved, and
+> +	 * avoid potential issues in misindentifying a subsequent device
+> +	 * reboot as a power restore boot
+> +	 */
+> +	ret = pm_runtime_get_sync(dev);
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(dev);
+> +		return ret;
+> +	}
+> +
+>  	ret = reset_control_assert(oproc->reset);
+>  	if (ret)
+> -		return ret;
+> +		goto out;
+>  
+>  	ret = omap_rproc_disable_timers(rproc, true);
+>  	if (ret)
+> -		return ret;
+> +		goto enable_device;
+>  
+>  	mbox_free_channel(oproc->mbox);
+>  
+> +	/*
+> +	 * update the runtime pm states and status now that the remoteproc
+> +	 * has stopped
+> +	 */
+> +	pm_runtime_disable(dev);
+> +	pm_runtime_dont_use_autosuspend(dev);
+> +	pm_runtime_put_noidle(dev);
+> +	pm_runtime_set_suspended(dev);
+> +
+>  	return 0;
+> +
+> +enable_device:
+> +	reset_control_deassert(oproc->reset);
+> +out:
+> +	/* schedule the next auto-suspend */
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+> +	return ret;
+>  }
+>  
+>  /**
+> @@ -584,17 +648,19 @@ static bool _is_rproc_in_standby(struct omap_rproc *oproc)
+>  
+>  /* 1 sec is long enough time to let the remoteproc side suspend the device */
+>  #define DEF_SUSPEND_TIMEOUT 1000
+> -static int _omap_rproc_suspend(struct rproc *rproc)
+> +static int _omap_rproc_suspend(struct rproc *rproc, bool auto_suspend)
+>  {
+>  	struct device *dev = rproc->dev.parent;
+>  	struct omap_rproc *oproc = rproc->priv;
+>  	unsigned long to = msecs_to_jiffies(DEF_SUSPEND_TIMEOUT);
+>  	unsigned long ta = jiffies + to;
+> +	u32 suspend_msg = auto_suspend ?
+> +				RP_MBOX_SUSPEND_AUTO : RP_MBOX_SUSPEND_SYSTEM;
+>  	int ret;
+>  
+>  	reinit_completion(&oproc->pm_comp);
+>  	oproc->suspend_acked = false;
+> -	ret = mbox_send_message(oproc->mbox, (void *)RP_MBOX_SUSPEND_SYSTEM);
+> +	ret = mbox_send_message(oproc->mbox, (void *)suspend_msg);
+>  	if (ret < 0) {
+>  		dev_err(dev, "PM mbox_send_message failed: %d\n", ret);
+>  		return ret;
+> @@ -638,32 +704,62 @@ static int _omap_rproc_suspend(struct rproc *rproc)
+>  		goto enable_device;
+>  	}
+>  
+> +	/*
+> +	 * IOMMUs would have to be disabled specifically for runtime suspend.
+> +	 * They are handled automatically through System PM callbacks for
+> +	 * regular system suspend
+> +	 */
+> +	if (auto_suspend) {
+> +		ret = omap_iommu_domain_deactivate(rproc->domain);
+> +		if (ret) {
+> +			dev_err(dev, "iommu domain deactivate failed %d\n",
+> +				ret);
+> +			goto enable_timers;
+> +		}
+> +	}
+> +
+>  	return 0;
+>  
+> +enable_timers:
+> +	/* ignore errors on re-enabling code */
+> +	omap_rproc_enable_timers(rproc, false);
+>  enable_device:
+>  	reset_control_deassert(oproc->reset);
+>  	return ret;
+>  }
+>  
+> -static int _omap_rproc_resume(struct rproc *rproc)
+> +static int _omap_rproc_resume(struct rproc *rproc, bool auto_suspend)
+>  {
+>  	struct device *dev = rproc->dev.parent;
+>  	struct omap_rproc *oproc = rproc->priv;
+>  	int ret;
+>  
+> +	/*
+> +	 * IOMMUs would have to be enabled specifically for runtime resume.
+> +	 * They would have been already enabled automatically through System
+> +	 * PM callbacks for regular system resume
+> +	 */
+> +	if (auto_suspend) {
+> +		ret = omap_iommu_domain_activate(rproc->domain);
+> +		if (ret) {
+> +			dev_err(dev, "omap_iommu activate failed %d\n", ret);
+> +			goto out;
+> +		}
+> +	}
+> +
+>  	/* boot address could be lost after suspend, so restore it */
+>  	if (oproc->boot_data) {
+>  		ret = omap_rproc_write_dsp_boot_addr(rproc);
+>  		if (ret) {
+>  			dev_err(dev, "boot address restore failed %d\n", ret);
+> -			goto out;
+> +			goto suspend_iommu;
+>  		}
+>  	}
+>  
+>  	ret = omap_rproc_enable_timers(rproc, false);
+>  	if (ret) {
+>  		dev_err(dev, "enabling timers during resume failed %d\n", ret);
+> -		goto out;
+> +		goto suspend_iommu;
+>  	}
+>  
+>  	ret = reset_control_deassert(oproc->reset);
+> @@ -676,6 +772,9 @@ static int _omap_rproc_resume(struct rproc *rproc)
+>  
+>  disable_timers:
+>  	omap_rproc_disable_timers(rproc, false);
+> +suspend_iommu:
+> +	if (auto_suspend)
+> +		omap_iommu_domain_deactivate(rproc->domain);
+>  out:
+>  	return ret;
+>  }
+> @@ -684,6 +783,7 @@ static int __maybe_unused omap_rproc_suspend(struct device *dev)
+>  {
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct rproc *rproc = platform_get_drvdata(pdev);
+> +	struct omap_rproc *oproc = rproc->priv;
+>  	int ret = 0;
+>  
+>  	mutex_lock(&rproc->lock);
+> @@ -698,13 +798,19 @@ static int __maybe_unused omap_rproc_suspend(struct device *dev)
+>  		goto out;
+>  	}
+>  
+> -	ret = _omap_rproc_suspend(rproc);
+> +	ret = _omap_rproc_suspend(rproc, false);
+>  	if (ret) {
+>  		dev_err(dev, "suspend failed %d\n", ret);
+>  		goto out;
+>  	}
+>  
+> +	/*
+> +	 * remoteproc is running at the time of system suspend, so remember
+> +	 * it so as to wake it up during system resume
+> +	 */
+> +	oproc->need_resume = true;
+>  	rproc->state = RPROC_SUSPENDED;
+> +
+>  out:
+>  	mutex_unlock(&rproc->lock);
+>  	return ret;
+> @@ -714,6 +820,7 @@ static int __maybe_unused omap_rproc_resume(struct device *dev)
+>  {
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct rproc *rproc = platform_get_drvdata(pdev);
+> +	struct omap_rproc *oproc = rproc->priv;
+>  	int ret = 0;
+>  
+>  	mutex_lock(&rproc->lock);
+> @@ -725,12 +832,91 @@ static int __maybe_unused omap_rproc_resume(struct device *dev)
+>  		goto out;
+>  	}
+>  
+> -	ret = _omap_rproc_resume(rproc);
+> +	/*
+> +	 * remoteproc was auto-suspended at the time of system suspend,
+> +	 * so no need to wake-up the processor (leave it in suspended
+> +	 * state, will be woken up during a subsequent runtime_resume)
+> +	 */
+> +	if (!oproc->need_resume)
+> +		goto out;
+> +
+> +	ret = _omap_rproc_resume(rproc, false);
+>  	if (ret) {
+>  		dev_err(dev, "resume failed %d\n", ret);
+>  		goto out;
+>  	}
+>  
+> +	oproc->need_resume = false;
+> +	rproc->state = RPROC_RUNNING;
+> +
+> +	pm_runtime_mark_last_busy(dev);
+> +out:
+> +	mutex_unlock(&rproc->lock);
+> +	return ret;
+> +}
+> +
+> +static int omap_rproc_runtime_suspend(struct device *dev)
+> +{
+> +	struct rproc *rproc = dev_get_drvdata(dev);
+> +	struct omap_rproc *oproc = rproc->priv;
+> +	int ret;
+> +
+> +	mutex_lock(&rproc->lock);
+> +	if (rproc->state == RPROC_CRASHED) {
+> +		dev_dbg(dev, "rproc cannot be runtime suspended when crashed!\n");
+> +		ret = -EBUSY;
+> +		goto out;
+> +	}
+> +
+> +	if (WARN_ON(rproc->state != RPROC_RUNNING)) {
+> +		dev_err(dev, "rproc cannot be runtime suspended when not running!\n");
+> +		ret = -EBUSY;
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * do not even attempt suspend if the remote processor is not
+> +	 * idled for runtime auto-suspend
+> +	 */
+> +	if (!_is_rproc_in_standby(oproc)) {
+> +		ret = -EBUSY;
+> +		goto abort;
+> +	}
+> +
+> +	ret = _omap_rproc_suspend(rproc, true);
+> +	if (ret)
+> +		goto abort;
+> +
+> +	rproc->state = RPROC_SUSPENDED;
+> +	mutex_unlock(&rproc->lock);
+> +	return 0;
+> +
+> +abort:
+> +	pm_runtime_mark_last_busy(dev);
+> +out:
+> +	mutex_unlock(&rproc->lock);
+> +	return ret;
+> +}
+> +
+> +static int omap_rproc_runtime_resume(struct device *dev)
+> +{
+> +	struct rproc *rproc = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	mutex_lock(&rproc->lock);
+> +	if (WARN_ON(rproc->state != RPROC_SUSPENDED)) {
+> +		dev_err(dev, "rproc cannot be runtime resumed if not suspended! state=%d\n",
+> +			rproc->state);
+> +		ret = -EBUSY;
+> +		goto out;
+> +	}
+> +
+> +	ret = _omap_rproc_resume(rproc, true);
+> +	if (ret) {
+> +		dev_err(dev, "runtime resume failed %d\n", ret);
+> +		goto out;
+> +	}
+> +
+>  	rproc->state = RPROC_RUNNING;
+>  out:
+>  	mutex_unlock(&rproc->lock);
+> @@ -997,6 +1183,12 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>  		goto free_rproc;
+>  
+>  	init_completion(&oproc->pm_comp);
+> +	oproc->autosuspend_delay = DEFAULT_AUTOSUSPEND_DELAY;
+> +
+> +	of_property_read_u32(pdev->dev.of_node, "ti,autosuspend-delay-ms",
+> +			     &oproc->autosuspend_delay);
+> +
+> +	pm_runtime_set_autosuspend_delay(&pdev->dev, oproc->autosuspend_delay);
+>  
+>  	oproc->fck = devm_clk_get(&pdev->dev, 0);
+>  	if (IS_ERR(oproc->fck)) {
+> @@ -1039,6 +1231,8 @@ static int omap_rproc_remove(struct platform_device *pdev)
+>  
+>  static const struct dev_pm_ops omap_rproc_pm_ops = {
+>  	SET_SYSTEM_SLEEP_PM_OPS(omap_rproc_suspend, omap_rproc_resume)
+> +	SET_RUNTIME_PM_OPS(omap_rproc_runtime_suspend,
+> +			   omap_rproc_runtime_resume, NULL)
+>  };
+>  
+>  static struct platform_driver omap_rproc_driver = {
+> -- 
+> 2.17.1
 > 
-> drivers/thermal/thermal_sysfs.c:735:cur_state_store result = 1, count = 3
-> 
-> And because of the return condition above:
-> 
-> 	return result ? result : count;
-> 
->  the function is returning result, so '1', which is interpreted by the
-> sysfs as "I wrote one character', so it recalls the function with the
-> two remaining characters, etc ...
-> 
-> The problem is from the governor AFAICT, which governor is it?
-
-I went through the code and I believe the problem is coming from:
-
-cpufreq_set_cur_state
- -> freq_qos_update_request
-   -> freq_qos_apply
-       -> pm_qos_update_target =>
-
-" * This function returns 1 if the aggregated constraint value has changed,"
-
-	freq_qos_apply() does:
-
-		ret = pm_qos_update_target()
-	...
-	return ret;
-
-
-At the first glance, it is related to commit 77751a466ebd1 (Nov 2019).
-
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
