@@ -2,144 +2,80 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDDFC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA642C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01FE320722
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:15:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="L3FmoXlO"
+	by mail.kernel.org (Postfix) with ESMTP id AA4DB20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgCTFPg (ORCPT
+        id S1726892AbgCTFPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 01:15:36 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7305 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCTFPg (ORCPT
+        Fri, 20 Mar 2020 01:15:44 -0400
+Received: from baldur.buserror.net ([165.227.176.147]:45018 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCTFPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 01:15:36 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e74516a0000>; Thu, 19 Mar 2020 22:15:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 19 Mar 2020 22:15:35 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 19 Mar 2020 22:15:35 -0700
-Received: from [10.25.97.155] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Mar
- 2020 05:15:32 +0000
-Subject: Re: [PATCH -next] PCI: dwc: fix compile err for pcie-tagra194
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Qiujun Huang <hqjagain@gmail.com>, <anders.roxell@linaro.org>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <amurray@thegoodpenguin.co.uk>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1584621380-21152-1-git-send-email-hqjagain@gmail.com>
- <20200319173710.GA7433@e121166-lin.cambridge.arm.com>
-From:   Vidya Sagar <vidyas@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <e16eb1a7-6ada-a8ed-c308-6fc5c9a8b7be@nvidia.com>
-Date:   Fri, 20 Mar 2020 10:45:29 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200319173710.GA7433@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+        Fri, 20 Mar 2020 01:15:44 -0400
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1jF9tu-0000dq-Qb; Fri, 20 Mar 2020 00:08:55 -0500
+Message-ID: <db764910fe2de8ae2d63c6adbb0b71d32c0e3886.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
+        christophe.leroy@c-s.fr, benh@kernel.crashing.org,
+        paulus@samba.org, npiggin@gmail.com, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com
+Cc:     linux-kernel@vger.kernel.org, zhaohongjiang@huawei.com,
+        dja@axtens.net
+Date:   Fri, 20 Mar 2020 00:08:53 -0500
+In-Reply-To: <20200306064033.3398-7-yanaijie@huawei.com>
+References: <20200306064033.3398-1-yanaijie@huawei.com>
+         <20200306064033.3398-7-yanaijie@huawei.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584681322; bh=5cDnCRVr/SQ+yk+RPLat6q5cSmCpBVeJdv46ovb/TLA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=L3FmoXlOLZBJDmfUoTpBdPgvdunMUXY0nysEiquE9EG4KKGiN6M0FQy4HZr/4+iGq
-         lYU7NsF7sarzjjH0C67tIepd2evlFb0HApy9iGvodOvFmW4iWX7zBWDirNHArKQMmf
-         YBeyJRnf4K8guy3MO3pVIiELn6umNXzspDxubf6sY5jbHO9m+CVOogvqABOMHEifkK
-         blqvFgjOqGqry/0nMgioizgsvjaBXRfUiZjjov1HEvBzlNjkuret1lVSkVo+3SiTwG
-         CGYLQeg/NPi2TPw6/Nqv6p+IwudYEIqEGwulJaFSWkvR3Na/LjdLVLqnRetJcb2h/9
-         8GAJ/F0LVZ6pw==
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: yanaijie@huawei.com, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com, christophe.leroy@c-s.fr, benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com, keescook@chromium.org, kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org, zhaohongjiang@huawei.com, dja@axtens.net
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v4 6/6] powerpc/fsl_booke/kaslr: rename
+ kaslr-booke32.rst to kaslr-booke.rst and add 64bit part
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2020-03-06 at 14:40 +0800, Jason Yan wrote:
+> @@ -38,5 +41,29 @@ bit of the entropy to decide the index of the 64M zone.
+> Then we chose a
+>  
+>                                kernstart_virt_addr
+>  
+> +
+> +KASLR for Freescale BookE64
+> +---------------------------
+> +
+> +The implementation for Freescale BookE64 is similar as BookE32. One
+
+similar to
+
+> +difference is that Freescale BookE64 set up a TLB mapping of 1G during
+> +booting. Another difference is that ppc64 needs the kernel to be
+> +64K-aligned. So we can randomize the kernel in this 1G mapping and make
+> +it 64K-aligned. This can save some code to creat another TLB map at early
+
+create
+
+-Scott
 
 
-On 3/19/2020 11:07 PM, Lorenzo Pieralisi wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Thu, Mar 19, 2020 at 08:36:20PM +0800, Qiujun Huang wrote:
->> make allmodconfig
->> ERROR: modpost: "dw_pcie_ep_init_notify" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
->> ERROR: modpost: "dw_pcie_ep_init_complete" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
->> ERROR: modpost: "dw_pcie_ep_linkup" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
->> make[2]: *** [__modpost] Error 1
->> make[1]: *** [modules] Error 2
->> make: *** [sub-make] Error 2
->>
->> need to export the symbols.
->>
->> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-designware-ep.c | 3 +++
->>   1 file changed, 3 insertions(+)
-> 
-> I have squashed this in with the original patch.
-> 
-> @Vidya: is this something we missed in the review cycle ? Asking just
-> to make sure it was not me who made a mistake while merging the code.
-My apologies. I wasn't compiling the driver as a module (instead built 
-into the kernel image)
-BTW, I see
-ERROR: modpost: "dw_pcie_ep_init" 
-[drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-also along with the above three. So I think even dw_pcie_ep_init() needs 
-to be exported.
-
-Thanks,
-Vidya Sagar
-> 
-> Thanks,
-> Lorenzo
-> 
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> index 4233c43..60d62ef 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> @@ -18,6 +18,7 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
->>
->>        pci_epc_linkup(epc);
->>   }
->> +EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
->>
->>   void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
->>   {
->> @@ -25,6 +26,7 @@ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
->>
->>        pci_epc_init_notify(epc);
->>   }
->> +EXPORT_SYMBOL_GPL(dw_pcie_ep_init_notify);
->>
->>   static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
->>                                   int flags)
->> @@ -535,6 +537,7 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->>
->>        return 0;
->>   }
->> +EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
->>
->>   int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>   {
->> --
->> 1.8.3.1
->>
