@@ -2,394 +2,949 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DEAC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D53C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB77920774
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5529D20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:04:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EnuLZE6q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgCTHAX convert rfc822-to-8bit (ORCPT
+        id S1726821AbgCTHEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 03:00:23 -0400
-Received: from mga11.intel.com ([192.55.52.93]:29769 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726030AbgCTHAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 03:00:22 -0400
-IronPort-SDR: Z7jCwTFPON1Lbr5bsP1MHSGhFuht36CcdBdK/0XnHfCLA07tTMQz8l5WkSyCZC7i5RWmi52B5V
- lPydsrkLNUkg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 00:00:20 -0700
-IronPort-SDR: yQmtV6g6mbucOm54zVhJ+bwVVb5eA5/Z9idp1Zah4IOJ5M4PWylSE2EsiJl3Oc8qIFNhaxhAft
- pV3Nxo+OA3gw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,283,1580803200"; 
-   d="scan'208";a="392065558"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by orsmga004.jf.intel.com with ESMTP; 20 Mar 2020 00:00:20 -0700
-Received: from orsmsx103.amr.corp.intel.com ([169.254.5.6]) by
- ORSMSX106.amr.corp.intel.com ([169.254.1.230]) with mapi id 14.03.0439.000;
- Fri, 20 Mar 2020 00:00:20 -0700
-From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "mkubecek@suse.cz" <mkubecek@suse.cz>,
-        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        "moderated list:INTEL ETHERNET DRIVERS" 
-        <intel-wired-lan@lists.osuosl.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [Intel-wired-lan] [PATCH v3 1/2] igb: Use device_lock() insead
- of rtnl_lock()
-Thread-Topic: [Intel-wired-lan] [PATCH v3 1/2] igb: Use device_lock() insead
- of rtnl_lock()
-Thread-Index: AQHV3Z7TQowGVpsUH068d9CcjdELQKgmcBOAgARebgCAJllakA==
-Date:   Fri, 20 Mar 2020 07:00:19 +0000
-Message-ID: <309B89C4C689E141A5FF6A0C5FB2118B97224361@ORSMSX103.amr.corp.intel.com>
-References: <20200207101005.4454-1-kai.heng.feng@canonical.com>
- <309B89C4C689E141A5FF6A0C5FB2118B971F9210@ORSMSX103.amr.corp.intel.com>
- <3CA021B0-FEB8-4DAA-9CF2-224F305A8C8A@canonical.com>
-In-Reply-To: <3CA021B0-FEB8-4DAA-9CF2-224F305A8C8A@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.139]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 20 Mar 2020 03:04:16 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:43426 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726614AbgCTHEP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 03:04:15 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200320070413euoutp01f093e571551324444e932c07631285ef~98TT14eFE2485324853euoutp01o
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 07:04:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200320070413euoutp01f093e571551324444e932c07631285ef~98TT14eFE2485324853euoutp01o
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1584687853;
+        bh=dXuVv/5vstlXAfkqMKXsEYRw+Q2cl9REYpCARno5wNE=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=EnuLZE6qzVKxD1veppv2Sh0P/9Wh8pfi2QUgdCASLYLGMTrP8nllZml4RXgmMWWVm
+         X/WnjSVkg1hg3D1UjDU396YQ7Q/4MGtXN5LBXzq4SKHNxZr4Bc6qH8PAMU60m4V0Nd
+         +UhXDvgg+C69xPzt9Rh5L+grDCHYUTObaKeA6/b0=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200320070413eucas1p106c1f846c8c8d6358edd4e7bcc980aea~98TTXH6e11728017280eucas1p1F;
+        Fri, 20 Mar 2020 07:04:13 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 06.66.60679.DEA647E5; Fri, 20
+        Mar 2020 07:04:13 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200320070412eucas1p2092edee7ae5a109d42f302587d221db0~98TS79xWK0364003640eucas1p2H;
+        Fri, 20 Mar 2020 07:04:12 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200320070412eusmtrp28524530c39d6163c89969bc0c175f28e~98TS7MMyp2634726347eusmtrp2N;
+        Fri, 20 Mar 2020 07:04:12 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-c0-5e746aed606b
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 23.CC.07950.CEA647E5; Fri, 20
+        Mar 2020 07:04:12 +0000 (GMT)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200320070411eusmtip2f984809cc17cbf190f581d0f518c11c6~98TR_Q1Z11994719947eusmtip2b;
+        Fri, 20 Mar 2020 07:04:11 +0000 (GMT)
+Subject: Re: [PATCH v3 2/2] ARM: DTS: Add devicetree file for the Galaxy S2
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
+        Jonas Heinrich <onny@project-insanity.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <c4103909-56e3-db88-e076-db8b07bd1cd3@samsung.com>
+Date:   Fri, 20 Mar 2020 08:04:11 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <20200319173411.20607-2-paul@crapouillou.net>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFKsWRmVeSWpSXmKPExsWy7djPc7pvs0riDGZvZbOYf+Qcq0X/49fM
+        FufPb2C32PT4GqvF5V1z2CxmnN/HZLH0+kUmi6MfeSz6F19isWjde4TdYsqSmewO3B5r5q1h
+        9Fh9qZ3NY+esu+wem1Z1snlsXlLvsfLLUXaPz5vkAtijuGxSUnMyy1KL9O0SuDJ+bJ3JWPB0
+        FWPF4p1H2RoYnzcydjFyckgImEhcOt/O3MXIxSEksIJR4vzU1awQzhdGibXdH6Ccz0CZd5fZ
+        YFoaPi1ghEgsZ5S42fyBBSQhJPCeUWLdai8QW1jAW2Lp45dgDSICOxklLvyJB2lgFnjMKHG0
+        8RETSIJNwFCi620XWBGvgJ3E3peH2UFsFgFViaWdC8AOFBWIkbh4uJ8VokZQ4uTMJ2DLOAWs
+        JJo3doHFmQXkJba/ncMMYYtL3HoynwlkmYTANXaJOy/esECc7SIxt/8+E4QtLPHq+BZ2CFtG
+        4v9OmIZmRomH59ayQzg9jBKXm2ZAw8la4s65X0CncgCt0JRYv0sfIuwocf/uchaQsIQAn8SN
+        t4IQR/BJTNo2nRkizCvR0SYEUa0mMev4Ori1By9cYp7AqDQLyWuzkLwzC8k7sxD2LmBkWcUo
+        nlpanJueWmyUl1quV5yYW1yal66XnJ+7iRGYwk7/O/5lB+OuP0mHGAU4GJV4eGe0FccJsSaW
+        FVfmHmKU4GBWEuHVTQcK8aYkVlalFuXHF5XmpBYfYpTmYFES5zVe9DJWSCA9sSQ1OzW1ILUI
+        JsvEwSnVwJi9Srwkz8xfcIdxbcgT2U33/6xSqJq7Y6VJY0L2+luMWslLyrYu51ydXFG69pS3
+        7J/95gzfxGS2zjY+ceHPGo/P0odzNgR0b5XYNqHtv3Pm6VuPnnXrSEkvUV7+y3jynySGUAfP
+        v6fzddbYzPm1Pf1RUa9PwHUJZjlRjR2T35uxzYzdUnVwt5ISS3FGoqEWc1FxIgB6wL1xXQMA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLIsWRmVeSWpSXmKPExsVy+t/xe7pvskriDJZ1q1nMP3KO1aL/8Wtm
+        i/PnN7BbbHp8jdXi8q45bBYzzu9jslh6/SKTxdGPPBb9iy+xWLTuPcJuMWXJTHYHbo8189Yw
+        eqy+1M7msXPWXXaPTas62Tw2L6n3WPnlKLvH501yAexRejZF+aUlqQoZ+cUltkrRhhZGeoaW
+        FnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJehk/ts5kLHi6irFi8c6jbA2MzxsZuxg5OSQE
+        TCQaPi0Asrk4hASWMkosaFkPlZCRODmtgRXCFpb4c62LDaLoLaPEtT/fWUASwgLeEksfvwRL
+        iAjsZJS4cP8kO0iCWeAxo0TbiVyIjr2MEtNu7wEbxSZgKNH1FmQUJwevgJ3E3peHwRpYBFQl
+        lnYuAFstKhAj8XNPFwtEjaDEyZlPwGxOASuJ5o1drBALzCTmbX7IDGHLS2x/OwfKFpe49WQ+
+        0wRGoVlI2mchaZmFpGUWkpYFjCyrGEVSS4tz03OLjfSKE3OLS/PS9ZLzczcxAqN227GfW3Yw
+        dr0LPsQowMGoxMM7o604Tog1say4MvcQowQHs5IIr246UIg3JbGyKrUoP76oNCe1+BCjKdBz
+        E5mlRJPzgQklryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QD44IE
+        njK7xN795xbdjuZ83pcrO8M579DPwMRSHYudTWsvxjyz5Pj8InwXc/BF1zUe9fful534N9dB
+        ps7Okd2Oy8Yua/+dm/z7T21ISeOsW5O59UL8pqtCbOeyk79kMi4SX14adlOl6/yOnSWnT9Y+
+        nXNzCfuXLxf/fLnt+zsnvHBuyV4/oYlvZJRYijMSDbWYi4oTAS5ANpXwAgAA
+X-CMS-MailID: 20200320070412eucas1p2092edee7ae5a109d42f302587d221db0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200319173432eucas1p1cdad961246badf3b9db363ad8958cf78
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200319173432eucas1p1cdad961246badf3b9db363ad8958cf78
+References: <20200319173411.20607-1-paul@crapouillou.net>
+        <CGME20200319173432eucas1p1cdad961246badf3b9db363ad8958cf78@eucas1p1.samsung.com>
+        <20200319173411.20607-2-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Sent: Monday, February 24, 2020 3:02 AM
-> To: Brown, Aaron F <aaron.f.brown@intel.com>
-> Cc: davem@davemloft.net; mkubecek@suse.cz; Kirsher, Jeffrey T
-> <jeffrey.t.kirsher@intel.com>; open list:NETWORKING DRIVERS
-> <netdev@vger.kernel.org>; moderated list:INTEL ETHERNET DRIVERS <intel-
-> wired-lan@lists.osuosl.org>; open list <linux-kernel@vger.kernel.org>
-> Subject: Re: [Intel-wired-lan] [PATCH v3 1/2] igb: Use device_lock() insead of
-> rtnl_lock()
-> 
-> 
-> 
-> > On Feb 22, 2020, at 08:30, Brown, Aaron F <aaron.f.brown@intel.com> wrote:
-> >
-> >
-> >
-> >> -----Original Message-----
-> >> From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf Of
-> >> Kai-Heng Feng
-> >> Sent: Friday, February 7, 2020 2:10 AM
-> >> To: davem@davemloft.net; mkubecek@suse.cz; Kirsher, Jeffrey T
-> >> <jeffrey.t.kirsher@intel.com>
-> >> Cc: open list:NETWORKING DRIVERS <netdev@vger.kernel.org>; Kai-Heng
-> >> Feng <kai.heng.feng@canonical.com>; moderated list:INTEL ETHERNET
-> >> DRIVERS <intel-wired-lan@lists.osuosl.org>; open list <linux-
-> >> kernel@vger.kernel.org>
-> >> Subject: [Intel-wired-lan] [PATCH v3 1/2] igb: Use device_lock() insead of
-> >> rtnl_lock()
-> >>
-> >> Commit 9474933caf21 ("igb: close/suspend race in netif_device_detach")
-> >> fixed race condition between close and power management ops by using
-> >> rtnl_lock().
-> >>
-> >> However we can achieve the same by using device_lock() since all power
-> >> management ops are protected by device_lock().
-> >>
-> >> This fix is a preparation for next patch, to prevent a dead lock under
-> >> rtnl_lock() when calling runtime resume routine.
-> >>
-> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> >> ---
-> >> v3:
-> >> - Fix unreleased lock reported by 0-day test bot.
-> >> v2:
-> >> - No change.
-> >>
-> >> drivers/net/ethernet/intel/igb/igb_main.c | 14 ++++++++------
-> >> 1 file changed, 8 insertions(+), 6 deletions(-)
-> >
-> > This patch introduces the following call trace / RIP when I sleep / resume (via
-> rtcwake) a system that has an igb port with link up:  I'm not sure if it introduces
-> the issue or just exposes / displays it as it only shows up on the first sleep /
-> resume cycle and the systems I have that were stable for many sleep / resume
-> cycles (arbitrarily 50+) continue to be so.
-> 
-> I can't reproduce the issue here.
-> 
+Hi Paul,
 
-I just got back to looking at the igb driver and  found a similar call trace / RIP with this patch.  Turns out any of my igb systems will freeze if the igb driver is unloaded while the interface is logically up with link.  The system continues to run if I switch to another console, but any attempt to look at the network (ifconfig, ethtool, etc...) makes that other session freeze up.  Then about 5 minutes later a trace appears on the screen and continues to do so every few minutes.  Here's what I pulled out of the system log for this instance:
------------------------------------------------------------------------------------------------------
-Mar 20 04:11:40 u1458 kernel: igb 0000:09:00.0 eth2: igb: eth2 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: RX/TX
-Mar 20 04:14:54 u1458 kernel: INFO: task kworker/7:1:53 blocked for more than 122 seconds.
-Mar 20 04:14:54 u1458 kernel:      Not tainted 5.6.0-rc5_next-queue_dev-queue_a601740+ #24
-Mar 20 04:14:54 u1458 kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-Mar 20 04:14:54 u1458 kernel: kworker/7:1     D    0    53      2 0x80004000
-Mar 20 04:14:54 u1458 kernel: Workqueue: events linkwatch_event
-Mar 20 04:14:54 u1458 kernel: Call Trace:
-Mar 20 04:14:54 u1458 kernel: ? __schedule+0x2ca/0x6e0
-Mar 20 04:14:54 u1458 kernel: schedule+0x4a/0xb0
-Mar 20 04:14:54 u1458 kernel: schedule_preempt_disabled+0xa/0x10
-Mar 20 04:14:54 u1458 kernel: __mutex_lock.isra.11+0x233/0x4e0
-Mar 20 04:14:54 u1458 kernel: ? igb_watchdog_task+0x2ef/0x770 [igb]
-Mar 20 04:14:54 u1458 kernel: linkwatch_event+0xa/0x30
-Mar 20 04:14:54 u1458 kernel: process_one_work+0x172/0x380
-Mar 20 04:14:54 u1458 kernel: worker_thread+0x49/0x3f0
-Mar 20 04:14:54 u1458 kernel: kthread+0xf8/0x130
-Mar 20 04:14:54 u1458 kernel: ? max_active_store+0x80/0x80
-Mar 20 04:14:54 u1458 kernel: ? kthread_bind+0x10/0x10
-Mar 20 04:14:54 u1458 kernel: ret_from_fork+0x35/0x40
-Mar 20 04:14:54 u1458 kernel: INFO: task kworker/1:1:174 blocked for more than 122 seconds.
-Mar 20 04:14:54 u1458 kernel:      Not tainted 5.6.0-rc5_next-queue_dev-queue_a601740+ #24
-Mar 20 04:14:54 u1458 kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-Mar 20 04:14:54 u1458 kernel: kworker/1:1     D    0   174      2 0x80004000
-Mar 20 04:14:54 u1458 kernel: Workqueue: ipv6_addrconf addrconf_dad_work
-Mar 20 04:14:54 u1458 kernel: Call Trace:
-Mar 20 04:14:54 u1458 kernel: ? __schedule+0x2ca/0x6e0
-Mar 20 04:14:54 u1458 kernel: schedule+0x4a/0xb0
-Mar 20 04:14:54 u1458 kernel: schedule_preempt_disabled+0xa/0x10
-Mar 20 04:14:54 u1458 kernel: __mutex_lock.isra.11+0x233/0x4e0
-Mar 20 04:14:54 u1458 kernel: ? __switch_to_asm+0x40/0x70
-Mar 20 04:14:54 u1458 kernel: ? __switch_to_asm+0x40/0x70
-Mar 20 04:14:54 u1458 kernel: ? __switch_to_asm+0x34/0x70
-Mar 20 04:14:54 u1458 kernel: addrconf_dad_work+0x3e/0x5b0
-Mar 20 04:14:54 u1458 kernel: ? __switch_to+0x7a/0x3e0
-Mar 20 04:14:54 u1458 kernel: ? __switch_to_asm+0x34/0x70
-Mar 20 04:14:54 u1458 kernel: process_one_work+0x172/0x380
-Mar 20 04:14:54 u1458 kernel: worker_thread+0x49/0x3f0
-Mar 20 04:14:54 u1458 kernel: kthread+0xf8/0x130
-Mar 20 04:14:54 u1458 kernel: ? max_active_store+0x80/0x80
-Mar 20 04:14:54 u1458 kernel: ? kthread_bind+0x10/0x10
-Mar 20 04:14:54 u1458 kernel: ret_from_fork+0x35/0x40
-Mar 20 04:14:54 u1458 kernel: INFO: task kworker/2:1:5008 blocked for more than 122 seconds.
-Mar 20 04:14:54 u1458 kernel:      Not tainted 5.6.0-rc5_next-queue_dev-queue_a601740+ #24
-Mar 20 04:14:54 u1458 kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-Mar 20 04:14:54 u1458 kernel: kworker/2:1     D    0  5008      2 0x80004000
-Mar 20 04:14:54 u1458 kernel: Workqueue: ipv6_addrconf addrconf_dad_work
-Mar 20 04:14:54 u1458 kernel: Call Trace:
-Mar 20 04:14:54 u1458 kernel: ? __schedule+0x2ca/0x6e0
-Mar 20 04:14:54 u1458 kernel: schedule+0x4a/0xb0
-Mar 20 04:14:54 u1458 kernel: schedule_preempt_disabled+0xa/0x10
-Mar 20 04:14:54 u1458 kernel: __mutex_lock.isra.11+0x233/0x4e0
-Mar 20 04:14:54 u1458 kernel: ? __switch_to_asm+0x40/0x70
-Mar 20 04:14:54 u1458 kernel: ? __switch_to_asm+0x40/0x70
-Mar 20 04:14:54 u1458 kernel: ? __switch_to_asm+0x34/0x70
-Mar 20 04:14:54 u1458 kernel: addrconf_dad_work+0x3e/0x5b0
-Mar 20 04:14:54 u1458 kernel: ? __switch_to+0x7a/0x3e0
-Mar 20 04:14:54 u1458 kernel: ? __switch_to_asm+0x34/0x70
-Mar 20 04:14:54 u1458 kernel: process_one_work+0x172/0x380
-Mar 20 04:14:54 u1458 kernel: worker_thread+0x49/0x3f0
-Mar 20 04:14:54 u1458 kernel: kthread+0xf8/0x130
-Mar 20 04:14:54 u1458 kernel: ? max_active_store+0x80/0x80
-Mar 20 04:14:54 u1458 kernel: ? kthread_bind+0x10/0x10
-Mar 20 04:14:54 u1458 kernel: ret_from_fork+0x35/0x40
-Mar 20 04:14:54 u1458 kernel: INFO: task rmmod:5322 blocked for more than 122 seconds.
-Mar 20 04:14:54 u1458 kernel:      Not tainted 5.6.0-rc5_next-queue_dev-queue_a601740+ #24
-Mar 20 04:14:54 u1458 kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-Mar 20 04:14:54 u1458 kernel: rmmod           D    0  5322   4580 0x00004000
-Mar 20 04:14:54 u1458 kernel: Call Trace:
-Mar 20 04:14:54 u1458 kernel: ? __schedule+0x2ca/0x6e0
-Mar 20 04:14:54 u1458 kernel: schedule+0x4a/0xb0
-Mar 20 04:14:54 u1458 kernel: schedule_preempt_disabled+0xa/0x10
-Mar 20 04:14:54 u1458 kernel: __mutex_lock.isra.11+0x233/0x4e0
-Mar 20 04:14:54 u1458 kernel: igb_close+0x22/0x60 [igb]
-Mar 20 04:14:54 u1458 kernel: __dev_close_many+0x96/0x100
-Mar 20 04:14:54 u1458 kernel: dev_close_many+0x96/0x150
-Mar 20 04:14:54 u1458 kernel: rollback_registered_many+0x140/0x530
-Mar 20 04:14:54 u1458 kernel: rollback_registered+0x56/0x90
-Mar 20 04:14:54 u1458 kernel: unregister_netdevice_queue+0x7e/0x100
-Mar 20 04:14:54 u1458 kernel: unregister_netdev+0x18/0x20
-Mar 20 04:14:54 u1458 kernel: igb_remove+0xa3/0x160 [igb]
-Mar 20 04:14:54 u1458 kernel: pci_device_remove+0x3b/0xc0
-Mar 20 04:14:54 u1458 kernel: device_release_driver_internal+0xec/0x1b0
-Mar 20 04:14:54 u1458 kernel: driver_detach+0x46/0x90
-Mar 20 04:14:54 u1458 kernel: bus_remove_driver+0x58/0xd0
-Mar 20 04:14:54 u1458 kernel: pci_unregister_driver+0x26/0xa0
-Mar 20 04:14:54 u1458 kernel: __x64_sys_delete_module+0x16c/0x260
-Mar 20 04:14:54 u1458 kernel: ? exit_to_usermode_loop+0xa4/0xcf
-Mar 20 04:14:54 u1458 kernel: do_syscall_64+0x5b/0x1d0
-Mar 20 04:14:54 u1458 kernel: entry_SYSCALL_64_after_hwframe+0x44/0xa9
-Mar 20 04:14:54 u1458 kernel: RIP: 0033:0x7f1aab487397
-Mar 20 04:14:54 u1458 kernel: Code: Bad RIP value.
-Mar 20 04:14:54 u1458 kernel: RSP: 002b:00007ffebcda13a8 EFLAGS: 00000202 ORIG_RAX: 00000000000000b0
-Mar 20 04:14:54 u1458 kernel: RAX: ffffffffffffffda RBX: 000000000098e190 RCX: 00007f1aab487397
-Mar 20 04:14:54 u1458 kernel: RDX: 00007f1aab4fbb20 RSI: 0000000000000800 RDI: 000000000098e1f8
-Mar 20 04:14:54 u1458 kernel: RBP: 0000000000000000 R08: 00007f1aab750060 R09: 00007f1aab4fbb20
-Mar 20 04:14:54 u1458 kernel: R10: 00007ffebcda0f70 R11: 0000000000000202 R12: 00007ffebcda2703
-Mar 20 04:14:54 u1458 kernel: R13: 0000000000000000 R14: 000000000098e190 R15: 000000000098e010
------------------------------------------------------------------------------------------------------
+On 2020-03-19 18:34, Paul Cercueil wrote:
+> From: Stenkin Evgeniy <stenkinevgeniy@gmail.com>
+>
+> Add devicetree file for the Exynos 4210 based Galaxy S2 (i9100 version).
+>
+> Signed-off-by: Stenkin Evgeniy <stenkinevgeniy@gmail.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>
+> Notes:
+>      v2: - Change i9100 to GT-I9100
+>          - Remove redundant description in header
+>      	- Add chosen node with stdout-path
+>      	- Rename regulator nodes since there was no regulator-2
+>      	- Rename i2c-gpio-3 to i2c-gpio
+>      	- Use IRQ_TYPE_EDGE_FALLING instead of hardcoded '2'
+>          - Remove spi-cpol, spi-cpha as they glitch the LCD panel
+>      	- Make CS gpio active-low
+>      	- Update ehci node to add 'phys' instead of ports
+>      	- Remove duplicated ehci node
+>      	- Reorder nodes to appear in alphabetical order
+>      	- Remove useless newlines
+>      	- Remove regulator provided to touchscreen node since it does not expect any
+>      
+>      v3: - Change CPU regulator name to VARM_1.2V_C210 as in the datasheet
+>          - Remove unused gpios for the max8997 pmic
+>          - Remove redundant interrupts/interrupt-parent for max8997 pmic
+>
+>   arch/arm/boot/dts/Makefile             |   1 +
+>   arch/arm/boot/dts/exynos4210-i9100.dts | 768 +++++++++++++++++++++++++
+>   2 files changed, 769 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/exynos4210-i9100.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index d6546d2676b9..522436d30690 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -181,6 +181,7 @@ dtb-$(CONFIG_ARCH_EXYNOS3) += \
+>   	exynos3250-monk.dtb \
+>   	exynos3250-rinato.dtb
+>   dtb-$(CONFIG_ARCH_EXYNOS4) += \
+> +	exynos4210-i9100.dtb \
+>   	exynos4210-origen.dtb \
+>   	exynos4210-smdkv310.dtb \
+>   	exynos4210-trats.dtb \
+> diff --git a/arch/arm/boot/dts/exynos4210-i9100.dts b/arch/arm/boot/dts/exynos4210-i9100.dts
+> new file mode 100644
+> index 000000000000..a4147113f0c4
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/exynos4210-i9100.dts
+> @@ -0,0 +1,768 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Samsung's Exynos4210 based Galaxy S2 (GT-I9100 version) device tree
+> + *
+> + * Copyright (c) 2012 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + * Copyright (c) 2020 Stenkin Evgeniy <stenkinevgeniy@gmail.com>
+> + * Copyright (c) 2020 Paul Cercueil <paul@crapouillou.net>
+> + */
+> +
+> +/dts-v1/;
+> +#include "exynos4210.dtsi"
+> +#include "exynos4412-ppmu-common.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/linux-event-codes.h>
+> +
+> +/ {
+> +	model = "Samsung Galaxy S2 (GT-I9100)";
+> +	compatible = "samsung,i9100", "samsung,exynos4210", "samsung,exynos4";
+> +
+> +	memory@40000000 {
+> +		device_type = "memory";
+> +		reg = <0x40000000 0x40000000>;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial2:115200n8";
+> +	};
+> +
+> +	vemmc_reg: regulator-0 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VMEM_VDD_2.8V";
+> +		regulator-min-microvolt = <2800000>;
+> +		regulator-max-microvolt = <2800000>;
+> +		gpio = <&gpk0 2 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	tsp_reg: regulator-1 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "TSP_FIXED_VOLTAGES";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpl0 3 GPIO_ACTIVE_HIGH>;
+> +		startup-delay-us = <70000>;
+> +		enable-active-high;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+> +	cam_af_28v_reg: regulator-2 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "8M_AF_2.8V_EN";
+> +		regulator-min-microvolt = <2800000>;
+> +		regulator-max-microvolt = <2800000>;
+> +		gpio = <&gpk1 1 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	cam_io_en_reg: regulator-3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "CAM_IO_EN";
+> +		regulator-min-microvolt = <2800000>;
+> +		regulator-max-microvolt = <2800000>;
+> +		gpio = <&gpe2 1 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	cam_io_12v_reg: regulator-4 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "8M_1.2V_EN";
+> +		regulator-min-microvolt = <1200000>;
+> +		regulator-max-microvolt = <1200000>;
+> +		gpio = <&gpe2 5 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	vt_core_15v_reg: regulator-5 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VT_CORE_1.5V";
+> +		regulator-min-microvolt = <1500000>;
+> +		regulator-max-microvolt = <1500000>;
+> +		gpio = <&gpe2 2 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +
+> +		vol-down {
+> +			gpios = <&gpx2 1 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_VOLUMEDOWN>;
+> +			label = "volume down";
+> +			debounce-interval = <10>;
+> +		};
+> +
+> +		vol-up {
+> +			gpios = <&gpx2 0 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_VOLUMEUP>;
+> +			label = "volume up";
+> +			debounce-interval = <10>;
+> +		};
+> +
+> +		power {
+> +			gpios = <&gpx2 7 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_POWER>;
+> +			label = "power";
+> +			debounce-interval = <10>;
+> +			wakeup-source;
+> +		};
+> +
+> +		ok {
+> +			gpios = <&gpx3 5 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_OK>;
+> +			label = "ok";
+> +			debounce-interval = <10>;
+> +		};
+> +	};
+> +
+> +	wlan_pwrseq: sdhci3-pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		reset-gpios = <&gpl1 2 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+> +	i2c_max17042_fuel: i2c-gpio {
+> +		compatible = "i2c-gpio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		sda-gpios = <&gpy4 0 GPIO_ACTIVE_HIGH>;
+> +		scl-gpios = <&gpy4 1 GPIO_ACTIVE_HIGH>;
+> +		i2c-gpio,delay-us = <5>;
+> +
+> +		battery@36 {
+> +			compatible = "maxim,max17042";
+> +
+> +			interrupt-parent = <&gpx2>;
+> +			interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +			pinctrl-0 = <&max17042_fuel_irq>;
+> +			pinctrl-names = "default";
+> +
+> +			reg = <0x36>;
+> +			maxim,over-heat-temp = <700>;
+> +			maxim,over-volt = <4500>;
+> +		};
+> +	};
+> +
+> +	spi-lcd {
+> +		compatible = "spi-gpio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		num-chipselects = <1>;
+> +		cs-gpios = <&gpy4 3 GPIO_ACTIVE_LOW>;
+> +		sck-gpios = <&gpy3 1 GPIO_ACTIVE_HIGH>;
+> +		mosi-gpios = <&gpy3 3 GPIO_ACTIVE_HIGH>;
+> +
+> +		lcd@0 {
+> +			compatible = "samsung,ld9040";
+> +			reg = <0>;
+> +
+> +			spi-max-frequency = <1200000>;
+> +
+> +			vdd3-supply = <&vmipi_reg>;
+> +			vci-supply = <&vcclcd_reg>;
+> +
+> +			reset-gpios = <&gpy4 5 GPIO_ACTIVE_HIGH>;
+> +			power-on-delay = <10>;
+> +			reset-delay = <10>;
+> +
+> +			panel-width-mm = <90>;
+> +			panel-height-mm = <154>;
+> +
+> +			display-timings {
+> +				timing {
+> +					clock-frequency = <23492370>;
+> +					hactive = <480>;
+> +					vactive = <800>;
+> +					hback-porch = <16>;
+> +					hfront-porch = <16>;
+> +					vback-porch = <2>;
+> +					vfront-porch = <28>;
+> +					hsync-len = <2>;
+> +					vsync-len = <1>;
+> +					hsync-active = <0>;
+> +					vsync-active = <0>;
+> +					de-active = <0>;
+> +					pixelclk-active = <0>;
+> +				};
+> +			};
+> +
+> +			port {
+> +				lcd_ep: endpoint {
+> +					remote-endpoint = <&fimd_dpi_ep>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	fixed-rate-clocks {
+> +		xxti {
+> +			compatible = "samsung,clock-xxti";
+> +			clock-frequency = <0>;
+> +		};
+> +
+> +		xusbxti {
+> +			compatible = "samsung,clock-xusbxti";
+> +			clock-frequency = <24000000>;
+> +		};
+> +	};
+> +
+> +	thermal-zones {
+> +		cpu_thermal: cpu-thermal {
+> +			cooling-maps {
+> +				map0 {
+> +					/* Corresponds to 800MHz */
+> +					cooling-device = <&cpu0 2 2>;
+> +				};
+> +				map1 {
+> +					/* Corresponds to 200MHz */
+> +					cooling-device = <&cpu0 4 4>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&camera {
+> +	status = "okay";
+> +};
+> +
+> +&cpu0 {
+> +	cpu0-supply = <&varm_breg>;
+> +};
+> +
+> +&ehci {
+> +	status = "okay";
+> +
+> +	phys = <&exynos_usbphy 1>;
+> +	phy-names = "host";
+> +};
+> +
+> +&exynos_usbphy {
+> +	status = "okay";
+> +
+> +	vbus-supply = <&safe1_sreg>;
+> +};
+> +
+> +&fimc_0 {
+> +	status = "okay";
+> +
+> +	assigned-clocks = <&clock CLK_MOUT_FIMC0>, <&clock CLK_SCLK_FIMC0>;
+> +	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
+> +	assigned-clock-rates = <0>, <160000000>;
+> +};
+> +
+> +&fimc_1 {
+> +	status = "okay";
+> +
+> +	assigned-clocks = <&clock CLK_MOUT_FIMC1>, <&clock CLK_SCLK_FIMC1>;
+> +	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
+> +	assigned-clock-rates = <0>, <160000000>;
+> +};
+> +
+> +&fimc_2 {
+> +	status = "okay";
+> +
+> +	assigned-clocks = <&clock CLK_MOUT_FIMC2>, <&clock CLK_SCLK_FIMC2>;
+> +	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
+> +	assigned-clock-rates = <0>, <160000000>;
+> +};
+> +
+> +&fimc_3 {
+> +	status = "okay";
+> +
+> +	assigned-clocks = <&clock CLK_MOUT_FIMC3>, <&clock CLK_SCLK_FIMC3>;
+> +	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
+> +	assigned-clock-rates = <0>, <160000000>;
+> +};
+> +
+> +&fimd {
+> +	status = "okay";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	samsung,invert-vden;
+> +	samsung,invert-vclk;
+> +
+> +	pinctrl-0 = <&lcd_clk>, <&lcd_data24>;
+> +	pinctrl-names = "default";
+> +
+> +	port@3 {
+> +		reg = <3>;
+> +
+> +		fimd_dpi_ep: endpoint {
+> +			remote-endpoint = <&lcd_ep>;
+> +		};
+> +	};
+> +};
+> +
+> +&gpu {
+> +	status = "okay";
+> +
+> +	mali-supply = <&vg3d_breg>;
+> +	regulator-microvolt-offset = <50000>;
+> +	regulator-microsecs-delay = <50>;
+> +};
+> +
+> +&hsotg {
+> +	status = "okay";
+> +
+> +	dr_mode = "otg";
+> +	vusb_d-supply = <&vusb_reg>;
+> +	vusb_a-supply = <&vusbdac_reg>;
+> +};
+> +
+> +&i2c_3 {
+> +	status = "okay";
+> +
+> +	samsung,i2c-sda-delay = <100>;
+> +	samsung,i2c-slave-addr = <0x10>;
+> +	samsung,i2c-max-bus-freq = <100000>;
+> +
+> +	pinctrl-0 = <&i2c3_bus>;
+> +	pinctrl-names = "default";
+> +
+> +	mxt224-touchscreen@4a {
+> +		compatible = "atmel,maxtouch";
+> +		reg = <0x4a>;
+> +
+> +		interrupt-parent = <&gpx0>;
+> +		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
+> +	};
+> +};
+> +
+> +&i2c_5 {
+> +	status = "okay";
+> +
+> +	samsung,i2c-sda-delay = <100>;
+> +	samsung,i2c-slave-addr = <0x10>;
+> +	samsung,i2c-max-bus-freq = <100000>;
+> +
+> +	pinctrl-0 = <&i2c5_bus>;
+> +	pinctrl-names = "default";
+> +
+> +	max8997_pmic@66 {
+> +		compatible = "maxim,max8997-pmic";
+> +		reg = <0x66>;
+> +
+> +		interrupts-extended = <&gpx0 7 IRQ_TYPE_NONE>,
+> +				      <&gpx2 3 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +		max8997,pmic-buck1-uses-gpio-dvs;
+> +		max8997,pmic-buck2-uses-gpio-dvs;
+> +		max8997,pmic-buck5-uses-gpio-dvs;
+> +
+> +		max8997,pmic-ignore-gpiodvs-side-effect;
+> +		max8997,pmic-buck125-default-dvs-idx = <0>;
+> +
+> +		max8997,pmic-buck125-dvs-gpios = <&gpx0 5 GPIO_ACTIVE_HIGH>,
+> +						 <&gpx0 6 GPIO_ACTIVE_HIGH>,
+> +						 <&gpl0 0 GPIO_ACTIVE_HIGH>;
+> +
+> +		max8997,pmic-buck1-dvs-voltage = <1350000>, <1300000>,
+> +						 <1250000>, <1200000>,
+> +						 <1150000>, <1100000>,
+> +						 <1000000>, <950000>;
+> +
+> +		max8997,pmic-buck2-dvs-voltage = <1100000>, <1000000>,
+> +						 <950000>,  <900000>,
+> +						 <1100000>, <1000000>,
+> +						 <950000>,  <900000>;
+> +
+> +		max8997,pmic-buck5-dvs-voltage = <1200000>, <1200000>,
+> +						 <1200000>, <1200000>,
+> +						 <1200000>, <1200000>,
+> +						 <1200000>, <1200000>;
+> +
+> +		pinctrl-0 = <&max8997_irq>, <&otg_gp>, <&usb_sel>;
+> +		pinctrl-names = "default";
+> +
+> +		regulators {
+> +			vadc_reg: LDO1 {
+> +				regulator-name = "VADC_3.3V_C210";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +
+> +			};
+> +			valive_reg: LDO2 {
+> +				regulator-name = "VALIVE_1.1V_C210";
+> +				regulator-min-microvolt = <1100000>;
+> +				regulator-max-microvolt = <1100000>;
+> +				regulator-always-on;
+> +
+> +			};
+> +
+> +			vusb_reg: LDO3 {
+> +				regulator-name = "VUSB_1.1V_C210";
+> +				regulator-min-microvolt = <1100000>;
+> +				regulator-max-microvolt = <1100000>;
+> +			};
+> +
+> +			vmipi_reg: LDO4 {
+> +				regulator-name = "VMIPI_1.8V";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vhsic_reg: LDO5 {
+> +				regulator-name = "VHSIC_1.2V";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <1200000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vpda_reg: LDO6 {
+> +				regulator-name = "VCC_1.8V_PDA";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vcam_reg: LDO7 {
+> +				regulator-name = "CAM_ISP_1.8V";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +			};
+> +
+> +			vusbdac_reg: LDO8 {
+> +				regulator-name = "VUSB+VDAC_3.3V_C210";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +			};
+> +
+> +			vccpda_reg: LDO9 {
+> +				regulator-name = "VCC_2.8V_PDA";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vtouch_reg: LDO11 {
+> +				regulator-name = "TOUCH_2.8V";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vpll_reg: LDO10 {
+> +				regulator-name = "VPLL_1.1V";
+> +				regulator-min-microvolt = <1100000>;
+> +				regulator-max-microvolt = <1100000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vtcam_reg: LDO12 {
+> +				regulator-name = "VT_CAM_1.8V";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +			};
+> +
+> +			vcclcd_reg: LDO13 {
+> +				regulator-name = "VCC_3.0V_LCD";
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +			};
+> +
+> +			vmotor_reg: LDO14 {
+> +				regulator-name = "VCC_2.8V_MOTOR";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +			};
+> +
+> +			vled_reg: LDO15 {
+> +				regulator-name = "LED_A_2.8V";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +			};
+> +
+> +			camsensor_reg: LDO16 {
+> +				regulator-name = "CAM_SENSOR_IO_1.8V";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +			};
+> +
+> +			vtf_reg: LDO17 {
+> +				regulator-name = "VTF_2.8V";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +			};
+> +
+> +			vtouchled_reg: LDO18 {
+> +				regulator-name = "TOUCH_LED_3.3V";
+> +				regulator-min-microvolt = <2500000>;
+> +				regulator-max-microvolt = <3300000>;
+> +			};
+> +
+> +			vddq_reg: LDO21 {
+> +				regulator-name = "VDDQ_M1M2_1.2V";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <1200000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			varm_breg: BUCK1 {
+> +				regulator-name = "VARM_1.2V_C210";
+> +				regulator-min-microvolt = <65000>;
+> +				regulator-max-microvolt = <2225000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vint_breg: BUCK2 {
+> +				regulator-name = "VINT_1.1V_C210";
+> +				regulator-min-microvolt = <65000>;
+> +				regulator-max-microvolt = <2225000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vg3d_breg: BUCK3 {
+> +				regulator-name = "G3D_1.1V";
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <1200000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			camisp_breg: BUCK4 {
+> +				regulator-name = "CAM_ISP_CORE_1.2V";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <1200000>;
+> +			};
+> +
+> +			vmem_breg: BUCK5 {
+> +				regulator-name = "VMEM_1.2V";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <1200000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vccsub_breg: BUCK7 {
+> +				regulator-name = "VCC_SUB_2.0V";
+> +				regulator-min-microvolt = <2000000>;
+> +				regulator-max-microvolt = <2000000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			safe1_sreg: ESAFEOUT1 {
+> +				regulator-name = "SAFEOUT1";
+> +			};
+> +
+> +			safe2_sreg: ESAFEOUT2 {
+> +				regulator-name = "SAFEOUT2";
+> +				regulator-boot-on;
+> +			};
+> +
+> +			charger_reg: CHARGER {
+> +				regulator-name = "CHARGER";
+> +				regulator-min-microamp = <60000>;
+> +				regulator-max-microamp = <2580000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			chargercv_reg: CHARGER_CV {
+> +				regulator-name = "CHARGER_CV";
+> +				regulator-min-microvolt = <3800000>;
+> +				regulator-max-microvolt = <4100000>;
+> +				regulator-always-on;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&i2c_7 {
+> +	status = "okay";
+> +
+> +	samsung,i2c-sda-delay = <100>;
+> +	samsung,i2c-slave-addr = <0x10>;
+> +	samsung,i2c-max-bus-freq = <400000>;
+> +
+> +	pinctrl-0 = <&i2c7_bus>;
+> +	pinctrl-names = "default";
+> +
+> +	ak8975@c {
+> +		compatible = "asahi-kasei,ak8975";
+> +		reg = <0x0c>;
+> +
+> +		gpios = <&gpx2 2 GPIO_ACTIVE_HIGH>;
+> +	};
+> +};
+> +
+> +&pinctrl_0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sleep0>;
+> +
+> +	sleep0: sleep-states {
+> +		gpa0-0 {
+> +			samsung,pins = "gpa0-0";
+> +			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_INPUT>;
+> +			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+> +		};
+> +
+> +		gpa0-1 {
+> +			samsung,pins = "gpa0-1";
+> +			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_OUT0>;
+> +			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+> +		};
+> +
+> +		gpa0-2 {
+> +			samsung,pins = "gpa0-2";
+> +			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_INPUT>;
+> +			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+> +		};
+> +
+> +		gpa0-3 {
+> +			samsung,pins = "gpa0-3";
+> +			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_OUT1>;
+> +			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+> +		};
+> +	};
+> +};
+> +
+> +&pinctrl_1 {
+> +	mhl_int: mhl-int {
+> +		samsung,pins = "gpf3-5";
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +	};
+> +
+> +	i2c_mhl_bus: i2c-mhl-bus {
+> +		samsung,pins = "gpf0-4", "gpf0-6";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +	};
+> +
+> +	usb_sel: usb-sel {
+> +		samsung,pins = "gpl0-6";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +		samsung,pin-val = <0>;
+> +	};
+> +
+> +	bt_en: bt-en {
+> +		samsung,pins = "gpl0-4";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
+> +		samsung,pin-val = <0>;
+> +	};
+> +
+> +	bt_res: bt-res {
+> +		samsung,pins = "gpl1-0";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
+> +		samsung,pin-val = <0>;
+> +	};
+> +
+> +	otg_gp: otg-gp {
+> +		samsung,pins = "gpx3-3";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +		samsung,pin-val = <0>;
+> +	};
+> +
+> +	mag_mhl_gpio: mag-mhl-gpio {
+> +		samsung,pins = "gpd0-2";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +	};
+> +
+> +	max8997_irq: max8997-irq {
+> +		samsung,pins = "gpx0-7";
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +	};
+> +
+> +	max17042_fuel_irq: max17042-fuel-irq {
+> +		samsung,pins = "gpx2-3";
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +	};
+> +
+> +	tsp224_irq: tsp224-irq {
+> +		samsung,pins = "gpx0-4";
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+> +	};
+> +};
+> +
+> +&sdhci_0 {
+> +	status = "okay";
+> +
+> +	bus-width = <8>;
+> +	non-removable;
+> +	vmmc-supply = <&vemmc_reg>;
+> +
+> +	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_bus8>;
+> +	pinctrl-names = "default";
+> +};
+> +
+> +&sdhci_2 {
+> +	status = "okay";
+> +
+> +	bus-width = <4>;
+> +	cd-gpios = <&gpx3 4 GPIO_ACTIVE_LOW>;
+> +	vmmc-supply = <&vtf_reg>;
+> +
+> +	pinctrl-0 = <&sd2_clk>, <&sd2_cmd>, <&sd2_bus4>;
+> +	pinctrl-names = "default";
+> +};
+> +
+> +&sdhci_3 {
+> +	status = "okay";
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	non-removable;
+> +	bus-width = <4>;
+> +	mmc-pwrseq = <&wlan_pwrseq>;
+> +	vmmc-supply = <&vtf_reg>;
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sd3_clk>, <&sd3_cmd>, <&sd3_bus4>;
+> +
+> +	brcmf: wifi@1 {
+> +		compatible = "brcm,bcm4330-fmac";
+> +		reg = <1>;
+> +
+> +		interrupt-parent = <&gpx2>;
+> +		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "host-wake";
+> +	};
+> +};
+> +
+> +&serial_0 {
+> +	status = "okay";
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&bt_en>, <&bt_res>, <&uart0_data>, <&uart0_fctl>;
+> +
+> +	bluetooth {
+> +		compatible = "brcm,bcm4330-bt";
+> +
+> +		shutdown-gpios = <&gpl0 4 GPIO_ACTIVE_HIGH>;
+> +		reset-gpios = <&gpl1 0 GPIO_ACTIVE_HIGH>;
+> +		device-wakeup-gpios = <&gpx3 1 GPIO_ACTIVE_HIGH>;
+> +		host-wakeup-gpios = <&gpx2 6 GPIO_ACTIVE_HIGH>;
+> +	};
+> +};
+> +
+> +&serial_1 {
+> +	status = "okay";
+> +};
+> +
+> +&serial_2 {
+> +	status = "okay";
+> +};
+> +
+> +&serial_3 {
+> +	status = "okay";
+> +};
+> +
+> +&tmu {
+> +	status = "okay";
+> +};
 
-> > -----------------------------------------------------------------------------------------------
-> --
-> > ...
-> > [   50.279436] usb usb3: root hub lost power or was reset
-> > [   50.279437] usb usb4: root hub lost power or was reset
-> > [   50.279491] sd 1:0:0:0: [sda] Starting disk
-> > [   50.317691] ------------[ cut here ]------------
-> > [   50.317692] RTNL: assertion failed at net/core/dev.c (2867)
-> > [   50.317700] WARNING: CPU: 6 PID: 5287 at net/core/dev.c:2867
-> netif_set_real_num_tx_queues+0x184/0x1a0
-> > [   50.317701] Modules linked in: rfcomm xt_conntrack nf_conntrack
-> nf_defrag_ipv6 nf_defrag_ipv4 ipt_REJECT nf_rej
-> > ect_ipv4 nft_counter nft_compat nf_tables nfnetlink tun bridge stp llc cmac
-> bnep iTCO_wdt intel_wmi_thunderbolt iT
-> > CO_vendor_support mxm_wmi wmi_bmof x86_pkg_temp_thermal
-> intel_powerclamp coretemp kvm_intel snd_hda_codec_hdmi kvm
-> > snd_hda_codec_realtek irqbypass snd_hda_codec_generic ledtrig_audio btusb
-> btrtl btbcm snd_hda_intel btintel snd_i
-> > ntel_dspcfg snd_hda_codec bluetooth snd_hwdep snd_hda_core snd_seq
-> crct10dif_pclmul crc32_pclmul joydev snd_seq_de
-> > vice ghash_clmulni_intel intel_cstate snd_pcm mei_me intel_uncore snd_timer
-> ecdh_generic snd ecc pcspkr mei rfkill
-> > i2c_i801 soundcore intel_rapl_perf sg wmi acpi_pad intel_pmc_core nfsd
-> auth_rpcgss nfs_acl lockd grace sunrpc ip_
-> > tables xfs libcrc32c sr_mod sd_mod cdrom t10_pi i915 intel_gtt
-> drm_kms_helper syscopyarea sysfillrect sysimgblt fb
-> > _sys_fops cec drm igb ahci libahci e1000e libata crc32c_intel dca i2c_algo_bit
-> video
-> > [   50.317719] CPU: 6 PID: 5287 Comm: kworker/u24:17 Not tainted 5.6.0-
-> rc2_next-queue_dev-queue_81b6341+ #5
-> > [   50.317720] Hardware name: Gigabyte Technology Co., Ltd. Z370 AORUS
-> Gaming 5/Z370 AORUS Gaming 5-CF, BIOS F6 04
-> > /03/2018
-> > [   50.317722] Workqueue: events_unbound async_run_entry_fn
-> > [   50.317723] RIP: 0010:netif_set_real_num_tx_queues+0x184/0x1a0
-> 
-> I added some debug message and made sure the ASSERT_RTNL() was reached.
-> However rtnl is locked for me.
-> 
-> > [   50.317724] Code: 43 1e e7 00 00 0f 85 fc fe ff ff ba 33 0b 00 00 48 c7 c6 92
-> 57 9a bd 48 c7 c7 e0 a4 91 bd c6
-> > 05 23 1e e7 00 01 e8 57 3c 97 ff <0f> 0b e9 d6 fe ff ff 41 be ea ff ff ff e9 a4 fe
-> ff ff 66 2e 0f 1f
-> > [   50.317724] RSP: 0018:ffffb57fc1347d38 EFLAGS: 00010282
-> > [   50.317725] RAX: 0000000000000000 RBX: ffff995a9e3e4000 RCX:
-> 0000000000000007
-> > [   50.317725] RDX: 0000000000000007 RSI: 0000000000000002 RDI:
-> ffff995abe398f40
-> > [   50.317725] RBP: 0000000000000004 R08: 0000000000000002 R09:
-> 000000000002b500
-> > [   50.317726] R10: 0000003a9dc62fa1 R11: 0000000000fed278 R12:
-> 0000000000000004
-> > [   50.317726] R13: 0000000000000004 R14: ffff995a9e3e4000 R15:
-> ffff995a9e3e4000
-> > [   50.317727] FS:  0000000000000000(0000) GS:ffff995abe380000(0000)
-> knlGS:0000000000000000
-> > [   50.317727] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [   50.317727] CR2: 00007f4dbd7fae20 CR3: 0000000efbe0a004 CR4:
-> 00000000003606e0
-> > [   50.317728] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> > [   50.317728] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> 0000000000000400
-> > [   50.317728] Call Trace:
-> > [   50.317734]  __igb_open+0x1ee/0x5c0 [igb]
-> > [   50.317737]  igb_resume+0x193/0x1c0 [igb]
-> > [   50.317739]  ? pci_pm_thaw+0x80/0x80
-> 
-> So this is hibernation instead of suspension. I tried both S3 and S4 and can't
-> reproduce the issue.
-
-I used rtc-wake with all the modes in /sys/power/state.  At the time I was thinking it was a good way to exercise various power states.
-> 
-> Kai-Heng
-> 
-> > [   50.317741]  dpm_run_callback+0x4f/0x140
-> > [   50.317742]  device_resume+0x107/0x180
-> > [   50.317743]  async_resume+0x19/0x50
-> > [   50.317744]  async_run_entry_fn+0x39/0x160
-> > [   50.317746]  process_one_work+0x1a7/0x370
-> > [   50.317747]  worker_thread+0x30/0x380
-> > [   50.317748]  ? process_one_work+0x370/0x370
-> > [   50.317749]  kthread+0x10c/0x130
-> > [   50.317750]  ? kthread_park+0x80/0x80
-> > [   50.317751]  ret_from_fork+0x35/0x40
-> > [   50.317752] ---[ end trace 45a9ec6b02347b6e ]---
-> > [   50.317753] ------------[ cut here ]------------
-> > [   50.317753] RTNL: assertion failed at net/core/dev.c (2913)
-> > [   50.317756] WARNING: CPU: 6 PID: 5287 at net/core/dev.c:2913
-> netif_set_real_num_rx_queues+0x79/0x80
-> > [   50.317757] Modules linked in: rfcomm xt_conntrack nf_conntrack
-> nf_defrag_ipv6 nf_defrag_ipv4 ipt_REJECT nf_rej
-> > ect_ipv4 nft_counter nft_compat nf_tables nfnetlink tun bridge stp llc cmac
-> bnep iTCO_wdt intel_wmi_thunderbolt iT
-> > CO_vendor_support mxm_wmi wmi_bmof x86_pkg_temp_thermal
-> intel_powerclamp coretemp kvm_intel snd_hda_codec_hdmi kvm
-> > snd_hda_codec_realtek irqbypass snd_hda_codec_generic ledtrig_audio btusb
-> btrtl btbcm snd_hda_intel btintel snd_i
-> > ntel_dspcfg snd_hda_codec bluetooth snd_hwdep snd_hda_core snd_seq
-> crct10dif_pclmul crc32_pclmul joydev snd_seq_de
-> > vice ghash_clmulni_intel intel_cstate snd_pcm mei_me intel_uncore snd_timer
-> ecdh_generic snd ecc pcspkr mei rfkill
-> > i2c_i801 soundcore intel_rapl_perf sg wmi acpi_pad intel_pmc_core nfsd
-> auth_rpcgss nfs_acl lockd grace sunrpc ip_
-> > tables xfs libcrc32c sr_mod sd_mod cdrom t10_pi i915 intel_gtt
-> drm_kms_helper syscopyarea sysfillrect sysimgblt fb
-> > _sys_fops cec drm igb ahci libahci e1000e libata crc32c_intel dca i2c_algo_bit
-> video
-> > [   50.317766] CPU: 6 PID: 5287 Comm: kworker/u24:17 Tainted: G        W
-> 5.6.0-rc2_next-queue_dev-queue_81
-> > b6341+ #5
-> > [   50.317766] Hardware name: Gigabyte Technology Co., Ltd. Z370 AORUS
-> Gaming 5/Z370 AORUS Gaming 5-CF, BIOS F6 04
-> > /03/2018
-> > [   50.317767] Workqueue: events_unbound async_run_entry_fn
-> > [   50.317768] RIP: 0010:netif_set_real_num_rx_queues+0x79/0x80
-> > [   50.317768] Code: ff c3 80 3d 89 6c e7 00 00 75 db ba 61 0b 00 00 48 c7 c6
-> 92 57 9a bd 48 c7 c7 e0 a4 91 bd c6
-> > 05 6d 6c e7 00 01 e8 a2 8a 97 ff <0f> 0b eb b8 0f 1f 00 0f 1f 44 00 00 53 f0 48
-> 0f ba af d8 00 00 00
-> > [   50.317769] RSP: 0018:ffffb57fc1347d58 EFLAGS: 00010282
-> > [   50.317769] RAX: 0000000000000000 RBX: ffff995a9e3e4000 RCX:
-> 0000000000000007
-> > [   50.317769] RDX: 0000000000000007 RSI: 0000000000000002 RDI:
-> ffff995abe398f40
-> > [   50.317770] RBP: 0000000000000004 R08: 0000000000000002 R09:
-> 000000000002b500
-> > [   50.317770] R10: 0000003a9dc92851 R11: 0000000000fec568 R12:
-> 0000000000000000
-> > [   50.317770] R13: 0000000000000001 R14: ffff995a9e3e4000 R15:
-> ffff995a9e3e4000
-> > [   50.317771] FS:  0000000000000000(0000) GS:ffff995abe380000(0000)
-> knlGS:0000000000000000
-> > [   50.317771] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [   50.317771] CR2: 00007f4dbd7fae20 CR3: 0000000efbe0a004 CR4:
-> 00000000003606e0
-> > [   50.317772] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> > [   50.317772] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> 0000000000000400
-> > [   50.317772] Call Trace:
-> > [   50.317775]  __igb_open+0x208/0x5c0 [igb]
-> > [   50.317777]  igb_resume+0x193/0x1c0 [igb]
-> > [   50.317777]  ? pci_pm_thaw+0x80/0x80
-> > [   50.317778]  dpm_run_callback+0x4f/0x140
-> > [   50.317779]  device_resume+0x107/0x180
-> > [   50.317780]  async_resume+0x19/0x50
-> > [   50.317781]  async_run_entry_fn+0x39/0x160
-> > [   50.317782]  process_one_work+0x1a7/0x370
-> > [   50.317783]  worker_thread+0x30/0x380
-> > [   50.317784]  ? process_one_work+0x370/0x370
-> > [   50.317785]  kthread+0x10c/0x130
-> > [   50.317785]  ? kthread_park+0x80/0x80
-> > [   50.317786]  ret_from_fork+0x35/0x40
-> > [   50.317787] ---[ end trace 45a9ec6b02347b6f ]---
-> > [   50.560158] OOM killer enabled.
-> > [   50.560158] Restarting tasks ... done.
-> > [   50.560713] video LNXVIDEO:00: Restoring backlight state
-> > [   50.560714] PM: suspend exit
-> > [   50.601179] ata5: SATA link down (SStatus 4 SControl 300)
-> > [   50.601201] ata4: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
-> > ...
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
