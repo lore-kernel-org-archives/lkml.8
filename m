@@ -2,118 +2,101 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4B0C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B499C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A91A20773
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2246F20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:53:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="L5lSxo1q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbgCTJxO (ORCPT
+        id S1727303AbgCTJxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:53:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35099 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgCTJxN (ORCPT
+        Fri, 20 Mar 2020 05:53:54 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:39080 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726767AbgCTJxw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:53:13 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFEKv-00015l-M7; Fri, 20 Mar 2020 10:53:05 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 07D27100375; Fri, 20 Mar 2020 10:52:59 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Evan Green <evgreen@chromium.org>,
-        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
-        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
-        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>
-Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
-In-Reply-To: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com>
-References: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com>
-Date:   Fri, 20 Mar 2020 10:52:59 +0100
-Message-ID: <87d0974akk.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 20 Mar 2020 05:53:52 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B1DD4405D7;
+        Fri, 20 Mar 2020 09:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1584698032; bh=Ymm/5LKRoh2QJTCsoRsq/h0o4nDI97/1ZTZoUMiBUGU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=L5lSxo1qf54eFQj0gbT1v97ko9bhj59wKI9OzRE6uoZjOkgGJcugK6kjWinlO6TNd
+         zppH2ValZErmNV9DbRwNep00pKp3Zt57HOFrs9yazIXbgR5DqKu6mqLood28I3Uiwz
+         zAdCbC7vr6449lXV2YrAeAA00qCFCuuT1u673Nu5mAUtH2BPjOwzBJUvy9mRVqAlC6
+         DtLEhFJoBENZUfzL9iKbN5wwfDmrrjnLKuTm57RxnGsWoDg6aZ0eJw79XFUmsfDhAs
+         F2dLOJZJdK1ay00YPQudi/ivZAMMYIV1nnneJ2/f157Wm2JZe9qlS/J0+ruq+dgIn9
+         j3Ls49gUhYBug==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 1CA6CA0069;
+        Fri, 20 Mar 2020 09:53:49 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 4/4] net: phy: xpcs: Restart AutoNeg if outcome was invalid
+Date:   Fri, 20 Mar 2020 10:53:37 +0100
+Message-Id: <a720d5d30787c38503e4f05dd8cbb225674a8a45.1584697754.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1584697754.git.Jose.Abreu@synopsys.com>
+References: <cover.1584697754.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1584697754.git.Jose.Abreu@synopsys.com>
+References: <cover.1584697754.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mathias,
+Restart AutoNeg if we didn't get a valid result from previous run.
 
-Mathias Nyman <mathias.nyman@linux.intel.com> writes:
-> I can reproduce the lost MSI interrupt issue on 5.6-rc6 which includes
-> the "Plug non-maskable MSI affinity race" patch.
->
-> I can see this on a couple platforms, I'm running a script that first generates
-> a lot of usb traffic, and then in a busyloop sets irq affinity and turns off
-> and on cpus:
->
-> for i in 1 3 5 7; do
-> 	echo "1" > /sys/devices/system/cpu/cpu$i/online
-> done
-> echo "A" > "/proc/irq/*/smp_affinity"
-> echo "A" > "/proc/irq/*/smp_affinity"
-> echo "F" > "/proc/irq/*/smp_affinity"
-> for i in 1 3 5 7; do
-> 	echo "0" > /sys/devices/system/cpu/cpu$i/online
-> done
-> trace snippet: 
->       <idle>-0     [001] d.h.   129.676900: xhci_irq: xhci irq
->       <idle>-0     [001] d.h.   129.677507: xhci_irq: xhci irq
->       <idle>-0     [001] d.h.   129.677556: xhci_irq: xhci irq
->       <idle>-0     [001] d.h.   129.677647: xhci_irq: xhci irq
->       <...>-14     [001] d..1   129.679802: msi_set_affinity: direct update msi 122, vector 33 -> 33, apicid: 2 -> 6
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-Looks like a regular affinity setting in interrupt context, but I can't
-make sense of the time stamps
+---
+Cc: Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/phy/mdio-xpcs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
->       <idle>-0     [003] d.h.   129.682639: xhci_irq: xhci irq
->       <idle>-0     [003] d.h.   129.702380: xhci_irq: xhci irq
->       <idle>-0     [003] d.h.   129.702493: xhci_irq: xhci irq
->  migration/3-24    [003] d..1   129.703150: msi_set_affinity: direct update msi 122, vector 33 -> 33, apicid: 6 -> 0
-
-So this is a CPU offline operation and after that irq 122 is silent, right?
-
->  kworker/0:0-5     [000] d.h.   131.328790: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
->  kworker/0:0-5     [000] d.h.   133.312704: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
->  kworker/0:0-5     [000] d.h.   135.360786: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
->       <idle>-0     [000] d.h.   137.344694: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
->  kworker/0:0-5     [000] d.h.   139.128679: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
->  kworker/0:0-5     [000] d.h.   141.312686: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
->  kworker/0:0-5     [000] d.h.   143.360703: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
->  kworker/0:0-5     [000] d.h.   145.344791: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
-
-That kworker context looks fishy. Can you please enable stacktraces in
-the tracer so I can see the call chains leading to this? OTOH that's irq
-121 not 122. Anyway moar information is always useful.
-
-And please add the patch below.
-
-Thanks,
-
-        tglx
-
-8<---------------
---- a/arch/x86/kernel/irq.c
-+++ b/arch/x86/kernel/irq.c
-@@ -243,6 +243,7 @@ u64 arch_irq_stat(void)
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "IRQ failed to wake up RCU");
+diff --git a/drivers/net/phy/mdio-xpcs.c b/drivers/net/phy/mdio-xpcs.c
+index f10d86b85fbd..0d66a8ba7eb6 100644
+--- a/drivers/net/phy/mdio-xpcs.c
++++ b/drivers/net/phy/mdio-xpcs.c
+@@ -433,8 +433,10 @@ static int xpcs_aneg_done(struct mdio_xpcs_args *xpcs,
+ 			return ret;
  
- 	desc = __this_cpu_read(vector_irq[vector]);
-+	trace_printk("vector: %u desc %lx\n", vector, (unsigned long) desc);
- 	if (likely(!IS_ERR_OR_NULL(desc))) {
- 		if (IS_ENABLED(CONFIG_X86_32))
- 			handle_irq(desc, regs);
+ 		/* Check if Aneg outcome is valid */
+-		if (!(ret & DW_C73_AN_ADV_SF))
++		if (!(ret & DW_C73_AN_ADV_SF)) {
++			xpcs_config_aneg(xpcs);
+ 			return 0;
++		}
+ 
+ 		return 1;
+ 	}
+-- 
+2.7.4
+
