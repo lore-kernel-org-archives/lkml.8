@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDDFC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1384C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 562C320775
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B698720775
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbgCTSi5 (ORCPT
+        id S1727589AbgCTSid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:38:57 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36911 "EHLO
+        Fri, 20 Mar 2020 14:38:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36894 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727569AbgCTSie (ORCPT
+        with ESMTP id S1727095AbgCTSi0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:38:34 -0400
+        Fri, 20 Mar 2020 14:38:26 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFMXO-00024W-Lr
-        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:30 +0100
+        id 1jFMXG-00022w-Um
+        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:23 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 0F1791040CD
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:20 +0100 (CET)
-Message-Id: <20200320180034.580811627@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 693721039FD
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:17 +0100 (CET)
+Message-Id: <20200320180033.481570410@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 19:00:18 +0100
+Date:   Fri, 20 Mar 2020 19:00:07 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -45,10 +45,11 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Brian Gerst <brgerst@gmail.com>,
         Juergen Gross <jgross@suse.com>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [patch V3 22/23] x86/kvm/vmx: Move guest enter/exit into .noinstr.text
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: [patch V3 11/23] x86/entry: Move irq flags tracing to
+ prepare_exit_to_usermode()
 References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,230 +62,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split out the really last steps of guest enter and the early guest exit
-code and mark it .noinstr.text along with the ASM code invoked from there.
+This is another step towards more C-code and less convoluted ASM.
 
-The few functions which are invoked from there are either made
-__always_inline or marked with noinstr which moves them into the
-.noinstr.text section.
+Similar to the entry path.
 
-Use native_wrmsr() in the L1D flush code to prevent a tracepoint from being
-inserted.
+ 1) invoke the tracer and the preparatory lockdep step
+ 2) invoke context tracking which might turn off RCU
+ 3) invoke the final lockdep step
+
+Annotate the code sections in exit_to_user_mode() accordingly so objtool
+won't complain about the tracer and lockdep invocation.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org
 ---
- arch/x86/include/asm/hardirq.h  |    4 -
- arch/x86/include/asm/kvm_host.h |    8 +++
- arch/x86/kvm/vmx/ops.h          |    4 +
- arch/x86/kvm/vmx/vmenter.S      |    2 
- arch/x86/kvm/vmx/vmx.c          |  105 ++++++++++++++++++++++------------------
- arch/x86/kvm/x86.c              |    2 
- 6 files changed, 76 insertions(+), 49 deletions(-)
+V3: Convert it to noinstr
 
---- a/arch/x86/include/asm/hardirq.h
-+++ b/arch/x86/include/asm/hardirq.h
-@@ -67,12 +67,12 @@ static inline void kvm_set_cpu_l1tf_flus
- 	__this_cpu_write(irq_stat.kvm_cpu_l1tf_flush_l1d, 1);
+V2: New patch simplifying the conversion and addressing Alex' review
+    comment of redundant tracing.
+---
+ arch/x86/entry/common.c          |   17 +++++++++++++++++
+ arch/x86/entry/entry_32.S        |   12 ++++--------
+ arch/x86/entry/entry_64.S        |    4 ----
+ arch/x86/entry/entry_64_compat.S |   14 +++++---------
+ 4 files changed, 26 insertions(+), 21 deletions(-)
+
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -71,10 +71,27 @@ static __always_inline void enter_from_u
  }
- 
--static inline void kvm_clear_cpu_l1tf_flush_l1d(void)
-+static __always_inline void kvm_clear_cpu_l1tf_flush_l1d(void)
- {
- 	__this_cpu_write(irq_stat.kvm_cpu_l1tf_flush_l1d, 0);
- }
- 
--static inline bool kvm_get_cpu_l1tf_flush_l1d(void)
-+static __always_inline bool kvm_get_cpu_l1tf_flush_l1d(void)
- {
- 	return __this_cpu_read(irq_stat.kvm_cpu_l1tf_flush_l1d);
- }
---- a/arch/x86/kvm/vmx/ops.h
-+++ b/arch/x86/kvm/vmx/ops.h
-@@ -131,7 +131,9 @@ do {									\
- 			  : : op1 : "cc" : error, fault);		\
- 	return;								\
- error:									\
-+	instr_begin();							\
- 	insn##_error(error_args);					\
-+	instr_end();							\
- 	return;								\
- fault:									\
- 	kvm_spurious_fault();						\
-@@ -146,7 +148,9 @@ do {									\
- 			  : : op1, op2 : "cc" : error, fault);		\
- 	return;								\
- error:									\
-+	instr_begin();							\
- 	insn##_error(error_args);					\
-+	instr_end();							\
- 	return;								\
- fault:									\
- 	kvm_spurious_fault();						\
---- a/arch/x86/kvm/vmx/vmenter.S
-+++ b/arch/x86/kvm/vmx/vmenter.S
-@@ -27,7 +27,7 @@
- #define VCPU_R15	__VCPU_REGS_R15 * WORD_SIZE
  #endif
  
--	.text
-+.section .noinstr.text, "ax"
- 
- /**
-  * vmx_vmenter - VM-Enter the current loaded VMCS
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5931,7 +5931,7 @@ static int vmx_handle_exit(struct kvm_vc
-  * information but as all relevant affected CPUs have 32KiB L1D cache size
-  * there is no point in doing so.
-  */
--static void vmx_l1d_flush(struct kvm_vcpu *vcpu)
-+static noinstr void vmx_l1d_flush(struct kvm_vcpu *vcpu)
++/**
++ * exit_to_user_mode - Fixup state when exiting to user mode
++ *
++ * Syscall exit enables interrupts, but the kernel state is interrupts
++ * disabled when this is invoked. Also tell RCU about it.
++ *
++ * 1) Trace interrupts on state
++ * 2) Invoke context tracking if enabled to adjust RCU state
++ * 3) Clear CPU buffers if CPU is affected by MDS and the migitation is on.
++ * 4) Tell lockdep that interrupts are enabled
++ */
+ static __always_inline void exit_to_user_mode(void)
  {
- 	int size = PAGE_SIZE << L1D_CACHE_ORDER;
- 
-@@ -5964,7 +5964,7 @@ static void vmx_l1d_flush(struct kvm_vcp
- 	vcpu->stat.l1d_flush++;
- 
- 	if (static_cpu_has(X86_FEATURE_FLUSH_L1D)) {
--		wrmsrl(MSR_IA32_FLUSH_CMD, L1D_FLUSH);
-+		native_wrmsrl(MSR_IA32_FLUSH_CMD, L1D_FLUSH);
- 		return;
- 	}
- 
-@@ -6452,7 +6452,7 @@ static void vmx_update_hv_timer(struct k
- 	}
- }
- 
--void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
-+void noinstr vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
- {
- 	if (unlikely(host_rsp != vmx->loaded_vmcs->host_state.rsp)) {
- 		vmx->loaded_vmcs->host_state.rsp = host_rsp;
-@@ -6462,6 +6462,61 @@ void vmx_update_host_rsp(struct vcpu_vmx
- 
- bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
- 
-+static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
-+					struct vcpu_vmx *vmx)
-+{
 +	instr_begin();
-+	/*
-+	 * VMENTER enables interrupts (host state), but the kernel state is
-+	 * interrupts disabled when this is invoked. Also tell RCU about
-+	 * it. This is the same logic as for exit_to_user_mode().
-+	 *
-+	 * 1) Trace interrupts on state
-+	 * 2) Prepare lockdep with RCU on
-+	 * 3) Invoke context tracking if enabled to adjust RCU state
-+	 * 4) Tell lockdep that interrupts are enabled
-+	 */
 +	__trace_hardirqs_on();
 +	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
 +	instr_end();
 +
-+	guest_enter_irqoff();
+ 	user_enter_irqoff();
+ 	mds_user_clear_cpu_buffers();
 +	lockdep_hardirqs_on(CALLER_ADDR0);
-+
-+	/* L1D Flush includes CPU buffer clear to mitigate MDS */
-+	if (static_branch_unlikely(&vmx_l1d_should_flush))
-+		vmx_l1d_flush(vcpu);
-+	else if (static_branch_unlikely(&mds_user_clear))
-+		mds_clear_cpu_buffers();
-+
-+	if (vcpu->arch.cr2 != read_cr2())
-+		write_cr2(vcpu->arch.cr2);
-+
-+	vmx->fail = __vmx_vcpu_run(vmx, (unsigned long *)&vcpu->arch.regs,
-+				   vmx->loaded_vmcs->launched);
-+
-+	vcpu->arch.cr2 = read_cr2();
-+
-+	/*
-+	 * VMEXIT disables interrupts (host state), but tracing and lockdep
-+	 * have them in state 'on'. Same as enter_from_user_mode().
-+	 *
-+	 * 1) Tell lockdep that interrupts are disabled
-+	 * 2) Invoke context tracking if enabled to reactivate RCU
-+	 * 3) Trace interrupts off state
-+	 *
-+	 * This needs to be done before the below as native_read_msr()
-+	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
-+	 * into world and some more.
-+	 */
-+	lockdep_hardirqs_off(CALLER_ADDR0);
-+	guest_exit_irqoff();
-+
-+	instr_begin();
-+	__trace_hardirqs_off();
-+	instr_end();
-+}
-+
- static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -6538,49 +6593,9 @@ static void vmx_vcpu_run(struct kvm_vcpu
- 	x86_spec_ctrl_set_guest(vmx->spec_ctrl, 0);
- 
- 	/*
--	 * VMENTER enables interrupts (host state), but the kernel state is
--	 * interrupts disabled when this is invoked. Also tell RCU about
--	 * it. This is the same logic as for exit_to_user_mode().
--	 *
--	 * 1) Trace interrupts on state
--	 * 2) Prepare lockdep with RCU on
--	 * 3) Invoke context tracking if enabled to adjust RCU state
--	 * 4) Tell lockdep that interrupts are enabled
-+	 * The actual VMENTER/EXIT is in the .noinstr.text section.
- 	 */
--	__trace_hardirqs_on();
--	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
--	guest_enter_irqoff();
--	lockdep_hardirqs_on(CALLER_ADDR0);
--
--	/* L1D Flush includes CPU buffer clear to mitigate MDS */
--	if (static_branch_unlikely(&vmx_l1d_should_flush))
--		vmx_l1d_flush(vcpu);
--	else if (static_branch_unlikely(&mds_user_clear))
--		mds_clear_cpu_buffers();
--
--	if (vcpu->arch.cr2 != read_cr2())
--		write_cr2(vcpu->arch.cr2);
--
--	vmx->fail = __vmx_vcpu_run(vmx, (unsigned long *)&vcpu->arch.regs,
--				   vmx->loaded_vmcs->launched);
--
--	vcpu->arch.cr2 = read_cr2();
--
--	/*
--	 * VMEXIT disables interrupts (host state), but tracing and lockdep
--	 * have them in state 'on'. Same as enter_from_user_mode().
--	 *
--	 * 1) Tell lockdep that interrupts are disabled
--	 * 2) Invoke context tracking if enabled to reactivate RCU
--	 * 3) Trace interrupts off state
--	 *
--	 * This needs to be done before the below as native_read_msr()
--	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
--	 * into world and some more.
--	 */
--	lockdep_hardirqs_off(CALLER_ADDR0);
--	guest_exit_irqoff();
--	__trace_hardirqs_off();
-+	vmx_vcpu_enter_exit(vcpu, vmx);
- 
- 	/*
- 	 * We do not use IBRS in the kernel. If this vCPU has used the
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -354,7 +354,7 @@ int kvm_set_apic_base(struct kvm_vcpu *v
  }
- EXPORT_SYMBOL_GPL(kvm_set_apic_base);
  
--asmlinkage __visible void kvm_spurious_fault(void)
-+asmlinkage __visible noinstr void kvm_spurious_fault(void)
- {
- 	/* Fault while not rebooting.  We want the trace. */
- 	BUG_ON(!kvm_rebooting);
+ static void do_audit_syscall_entry(struct pt_regs *regs, u32 arch)
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -811,8 +811,7 @@ SYM_CODE_START(ret_from_fork)
+ 	/* When we fork, we trace the syscall return in the child, too. */
+ 	movl    %esp, %eax
+ 	call    syscall_return_slowpath
+-	STACKLEAK_ERASE
+-	jmp     restore_all
++	jmp     .Lsyscall_32_done
+ 
+ 	/* kernel thread */
+ 1:	movl	%edi, %eax
+@@ -855,7 +854,7 @@ SYM_CODE_START_LOCAL(ret_from_exception)
+ 	TRACE_IRQS_OFF
+ 	movl	%esp, %eax
+ 	call	prepare_exit_to_usermode
+-	jmp	restore_all
++	jmp	restore_all_switch_stack
+ SYM_CODE_END(ret_from_exception)
+ 
+ SYM_ENTRY(__begin_SYSENTER_singlestep_region, SYM_L_GLOBAL, SYM_A_NONE)
+@@ -968,8 +967,7 @@ SYM_FUNC_START(entry_SYSENTER_32)
+ 
+ 	STACKLEAK_ERASE
+ 
+-/* Opportunistic SYSEXIT */
+-	TRACE_IRQS_ON			/* User mode traces as IRQs on. */
++	/* Opportunistic SYSEXIT */
+ 
+ 	/*
+ 	 * Setup entry stack - we keep the pointer in %eax and do the
+@@ -1072,11 +1070,9 @@ SYM_FUNC_START(entry_INT80_32)
+ 	movl	%esp, %eax
+ 	call	do_int80_syscall_32
+ .Lsyscall_32_done:
+-
+ 	STACKLEAK_ERASE
+ 
+-restore_all:
+-	TRACE_IRQS_ON
++restore_all_switch_stack:
+ 	SWITCH_TO_ENTRY_STACK
+ 	CHECK_AND_APPLY_ESPFIX
+ 
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -172,8 +172,6 @@ SYM_INNER_LABEL(entry_SYSCALL_64_after_h
+ 	movq	%rsp, %rsi
+ 	call	do_syscall_64		/* returns with IRQs disabled */
+ 
+-	TRACE_IRQS_ON			/* return enables interrupts */
+-
+ 	/*
+ 	 * Try to use SYSRET instead of IRET if we're returning to
+ 	 * a completely clean 64-bit userspace context.  If we're not,
+@@ -340,7 +338,6 @@ SYM_CODE_START(ret_from_fork)
+ 	UNWIND_HINT_REGS
+ 	movq	%rsp, %rdi
+ 	call	syscall_return_slowpath	/* returns with IRQs disabled */
+-	TRACE_IRQS_ON			/* user mode is traced as IRQS on */
+ 	jmp	swapgs_restore_regs_and_return_to_usermode
+ 
+ 1:
+@@ -617,7 +614,6 @@ SYM_CODE_START_LOCAL(common_interrupt)
+ .Lretint_user:
+ 	mov	%rsp,%rdi
+ 	call	prepare_exit_to_usermode
+-	TRACE_IRQS_ON
+ 
+ SYM_INNER_LABEL(swapgs_restore_regs_and_return_to_usermode, SYM_L_GLOBAL)
+ #ifdef CONFIG_DEBUG_ENTRY
+--- a/arch/x86/entry/entry_64_compat.S
++++ b/arch/x86/entry/entry_64_compat.S
+@@ -132,8 +132,8 @@ SYM_FUNC_START(entry_SYSENTER_compat)
+ 	movq	%rsp, %rdi
+ 	call	do_fast_syscall_32
+ 	/* XEN PV guests always use IRET path */
+-	ALTERNATIVE "testl %eax, %eax; jz .Lsyscall_32_done", \
+-		    "jmp .Lsyscall_32_done", X86_FEATURE_XENPV
++	ALTERNATIVE "testl %eax, %eax; jz swapgs_restore_regs_and_return_to_usermode", \
++		    "jmp swapgs_restore_regs_and_return_to_usermode", X86_FEATURE_XENPV
+ 	jmp	sysret32_from_system_call
+ 
+ .Lsysenter_fix_flags:
+@@ -244,8 +244,8 @@ SYM_INNER_LABEL(entry_SYSCALL_compat_aft
+ 	movq	%rsp, %rdi
+ 	call	do_fast_syscall_32
+ 	/* XEN PV guests always use IRET path */
+-	ALTERNATIVE "testl %eax, %eax; jz .Lsyscall_32_done", \
+-		    "jmp .Lsyscall_32_done", X86_FEATURE_XENPV
++	ALTERNATIVE "testl %eax, %eax; jz swapgs_restore_regs_and_return_to_usermode", \
++		    "jmp swapgs_restore_regs_and_return_to_usermode", X86_FEATURE_XENPV
+ 
+ 	/* Opportunistic SYSRET */
+ sysret32_from_system_call:
+@@ -254,7 +254,7 @@ SYM_INNER_LABEL(entry_SYSCALL_compat_aft
+ 	 * stack. So let's erase the thread stack right now.
+ 	 */
+ 	STACKLEAK_ERASE
+-	TRACE_IRQS_ON			/* User mode traces as IRQs on. */
++
+ 	movq	RBX(%rsp), %rbx		/* pt_regs->rbx */
+ 	movq	RBP(%rsp), %rbp		/* pt_regs->rbp */
+ 	movq	EFLAGS(%rsp), %r11	/* pt_regs->flags (in r11) */
+@@ -393,9 +393,5 @@ SYM_CODE_START(entry_INT80_compat)
+ 
+ 	movq	%rsp, %rdi
+ 	call	do_int80_syscall_32
+-.Lsyscall_32_done:
+-
+-	/* Go back to user mode. */
+-	TRACE_IRQS_ON
+ 	jmp	swapgs_restore_regs_and_return_to_usermode
+ SYM_CODE_END(entry_INT80_compat)
 
