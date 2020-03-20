@@ -2,107 +2,117 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EE7C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B20CC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2059320722
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:30:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EGKIuDKu"
+	by mail.kernel.org (Postfix) with ESMTP id 6715F20775
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:32:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584725538;
+	bh=WsjgjMc5V84hg2ru5hJzn4ARjRe9A0ITrIl/CNrlPLg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YO4mn7i55OMbwQpHOPBCgqc4JkFzHzX4eCVeev+Qjn5jd+/fM677G/fzj1L9fsPs0
+	 z8KJ2ykSWTviJXTh5J2K817yOfE55RVDLqS6G+z2/KE9XHbaMgsDvspjQYL9iDtvqX
+	 WqnPp/x9sIaoZt+GGJUl8wdpjF73RWG1RyG7uCNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgCTRan (ORCPT
+        id S1727113AbgCTRcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:30:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49498 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbgCTRam (ORCPT
+        Fri, 20 Mar 2020 13:32:17 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:46100 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbgCTRcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:30:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=UGITiyVmaO8X73R6wVMfMGWLW2W7neAq/9meuj1VHqo=; b=EGKIuDKu0tjZuVECGtavPDxi0D
-        O6qg1HxEZ5HTL6SQ+HnHGiXg3uMjLMXJy/QxU+RUtVkogm3OV1OoYySDKdd0TNCl75RNBRD/yIw4o
-        r5B74nN9dCjwBJMpXdmIQPMo0Dtd++oHnpRNcQiIMtN+2/YTHKBLp/Yz4yXCj69SdRRm0YxhO6rSh
-        QXAUKzLbScpAtIooOgBnixq+3fxkEPx9tp3sn8jy4Vs+FM4MKzh0fM6tnnEsYlBa1E1lxlobx/VwW
-        F43ky5cdb9YLYKc01lCcZou/2CPPrIQSZW4GwTB3CgHdAptXVKYA1oettmTxaZQrltP3u3grDMdAI
-        dACn5xZg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jFLTk-0003g5-Sd; Fri, 20 Mar 2020 17:30:40 +0000
-Date:   Fri, 20 Mar 2020 10:30:40 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-xfs@vger.kernel.org,
-        William Kucharski <william.kucharski@oracle.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH v9 12/25] mm: Move end_index check out of readahead loop
-Message-ID: <20200320173040.GB4971@bombadil.infradead.org>
-References: <20200320142231.2402-1-willy@infradead.org>
- <20200320142231.2402-13-willy@infradead.org>
- <20200320165828.GB851@sol.localdomain>
+        Fri, 20 Mar 2020 13:32:17 -0400
+Received: by mail-il1-f193.google.com with SMTP id e8so6291093ilc.13;
+        Fri, 20 Mar 2020 10:32:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FXIfsAVUFp8IJFPm+/hNheLawxwEVeZKgbspez8Hy3A=;
+        b=NV3q3F1RHAx2DDPQw5wFD8USkxgiYFTwB5BS3nBhoVdgwYTQRjJbamA1hzpGltxNFf
+         ne2Lpf4uE0E2ot/MYx9OW/HsaTjLjyjsUhAIbXdEx22yXe1YVBhqUQCei6xwH/WZlbXs
+         lsFsli4akYyzSqVyu6Z/FP8CfOUyTapktNXPay9blnkEqIk0hsCucoFagE5y7DIK/O7Z
+         FJCx/XQjYbylHp+f2nxDnvn3j4c8A9B4YNguLfVhYWkonPJPzbLhRO7jWe31+MfxIRbs
+         XT3O3ktDy6SvImTjaUN/FyfYG94n70Yv0u+T9kfn9ZDHoMlfzgVD9np56VBMbQ0aSpcy
+         a03w==
+X-Gm-Message-State: ANhLgQ2R1qWVSWtLIBIKLHRPFqm40Bc4HB1hk5C/6CtkgSFjJ26LqgEb
+        ObDHluqKj6RF3seZ+Pj3sg==
+X-Google-Smtp-Source: ADFU+vvyOEHh52ksLg64oqQQtskIyPgC3Gb9PgcVjz3NdBpqcYEYi8YkzZvcjgp/TY2ZkGE4F1dg5g==
+X-Received: by 2002:a92:d641:: with SMTP id x1mr9850010ilp.223.1584725536379;
+        Fri, 20 Mar 2020 10:32:16 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id j23sm1874792ioa.10.2020.03.20.10.32.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 10:32:15 -0700 (PDT)
+Received: (nullmailer pid 16573 invoked by uid 1000);
+        Fri, 20 Mar 2020 17:32:13 -0000
+Date:   Fri, 20 Mar 2020 11:32:13 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>, timur@kernel.org,
+        Xiubo.Lee@gmail.com, festevam@gmail.com, broonie@kernel.org,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/7] ASoC: dt-bindings: fsl_asrc: Add new property
+ fsl,asrc-format
+Message-ID: <20200320173213.GA9093@bogus>
+References: <cover.1583725533.git.shengjiu.wang@nxp.com>
+ <24f69c50925b93afd7a706bd888ee25d27247c78.1583725533.git.shengjiu.wang@nxp.com>
+ <20200309211943.GB11333@Asurada-Nvidia.nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320165828.GB851@sol.localdomain>
+In-Reply-To: <20200309211943.GB11333@Asurada-Nvidia.nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 09:58:28AM -0700, Eric Biggers wrote:
-> On Fri, Mar 20, 2020 at 07:22:18AM -0700, Matthew Wilcox wrote:
-> > +	/* Avoid wrapping to the beginning of the file */
-> > +	if (index + nr_to_read < index)
-> > +		nr_to_read = ULONG_MAX - index + 1;
-> > +	/* Don't read past the page containing the last byte of the file */
-> > +	if (index + nr_to_read >= end_index)
-> > +		nr_to_read = end_index - index + 1;
+On Mon, Mar 09, 2020 at 02:19:44PM -0700, Nicolin Chen wrote:
+> On Mon, Mar 09, 2020 at 11:58:28AM +0800, Shengjiu Wang wrote:
+> > In order to support new EASRC and simplify the code structure,
+> > We decide to share the common structure between them. This bring
+> > a problem that EASRC accept format directly from devicetree, but
+> > ASRC accept width from devicetree.
+> > 
+> > In order to align with new ESARC, we add new property fsl,asrc-format.
+> > The fsl,asrc-format can replace the fsl,asrc-width, then driver
+> > can accept format from devicetree, don't need to convert it to
+> > format through width.
+> > 
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/sound/fsl,asrc.txt | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > index cb9a25165503..780455cf7f71 100644
+> > --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > @@ -51,6 +51,11 @@ Optional properties:
+> >  			  will be in use as default. Otherwise, the big endian
+> >  			  mode will be in use for all the device registers.
+> >  
+> > +   - fsl,asrc-format	: Defines a mutual sample format used by DPCM Back
+> > +			  Ends, which can replace the fsl,asrc-width.
+> > +			  The value is SNDRV_PCM_FORMAT_S16_LE, or
+> > +			  SNDRV_PCM_FORMAT_S24_LE
 > 
-> There seem to be a couple off-by-one errors here.  Shouldn't it be:
-> 
-> 	/* Avoid wrapping to the beginning of the file */
-> 	if (index + nr_to_read < index)
-> 		nr_to_read = ULONG_MAX - index;
+> I am still holding the concern at the DT binding of this format,
+> as it uses values from ASoC header file instead of a dt-binding
+> header file -- not sure if we can do this. Let's wait for Rob's
+> comments.
 
-I think it's right.  Imagine that index is ULONG_MAX.  We should read one
-page (the one at ULONG_MAX).  That would be ULONG_MAX - ULONG_MAX + 1.
+I assume those are an ABI as well, so it's okay to copy them unless we 
+already have some format definitions for DT. But it does need to be copy 
+in a header under include/dt-bindings/.
 
-> 	/* Don't read past the page containing the last byte of the file */
-> 	if (index + nr_to_read > end_index)
-> 		nr_to_read = end_index - index + 1;
-> 
-> I.e., 'ULONG_MAX - index' rather than 'ULONG_MAX - index + 1', so that
-> 'index + nr_to_read' is then ULONG_MAX rather than overflowed to 0.
-> 
-> Then 'index + nr_to_read > end_index' rather 'index + nr_to_read >= end_index',
-> since otherwise nr_to_read can be increased by 1 rather than decreased or stay
-> the same as expected.
-
-Ooh, I missed the overflow case here.  It should be:
-
-+	if (index + nr_to_read - 1 > end_index)
-+		nr_to_read = end_index - index + 1;
-
-Let's say index comes in at ULONG_MAX - 2, end_index is ULONG_MAX - 1
-and nr_to_read is 8.  The first condition triggers and nr_to_read is
-reduced to 3.  But then the second condition wouldn't trigger because
-ULONG_MAX - 2 + 3 is 0.
-
-With the rewrite I have in this message, ULONG_MAX - 2 + 3 - 1 is ULONG_MAX,
-which is > ULONG_MAX - 1.  So the condition triggers and nr_to_read becomes
-(ULONG_MAX - 1) - (ULONG_MAX - 2) + 1.  Which is -1 + 2 + 1, which is 2.
-Which is the right answer because we want to read two pages; the one
-at ULONG_MAX - 2 and the one at ULONG_MAX - 1.
-
-Thank you!
+Rob
