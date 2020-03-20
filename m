@@ -2,172 +2,107 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9225BC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B68C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6061A2076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:26:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UAydlY7o"
+	by mail.kernel.org (Postfix) with ESMTP id 97C8A20754
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:26:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgCTK0N (ORCPT
+        id S1727047AbgCTK0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:26:13 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34228 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbgCTK0M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:26:12 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z15so6754050wrl.1;
-        Fri, 20 Mar 2020 03:26:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZyIwrVMgZez2hQpkOQoJh24f4SGL/SDIbhfYd4+eFuM=;
-        b=UAydlY7oGeViCzVQp1U34KBuIn8k1k64LWR2xxMnLoFWlAcCUoDO0dCGNB+PWe81pt
-         wYBi1XdwwBltZFcOuNQOi9gu6CLA0OYl7wkOhn5ONpGa0lnNsQwla2MUCFyrYEdCcW5v
-         TKmy3GA0gRA8WYfSZLEJzGW6yTkJPUNqhAIR7G01m0bAb8S8t1Z8WAFo5pIoc/1XqNt6
-         Qnadq98BWOW6DHykQpwvMjL9SbGotiEeeHV0bwfOSTfA544vCLRrarNjwmCyFNan3lWJ
-         CjHHXRdUcQ4WVMvNTVY0k3JlIGWSvzsqYfemOnxdx5SkmwBAE2dp618nXgGFDqFqcF5l
-         GU9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZyIwrVMgZez2hQpkOQoJh24f4SGL/SDIbhfYd4+eFuM=;
-        b=jSx0CD+S0yJ/IdQxx2mlPFS7TWwpb9WrII4lfTuXSOIcuD2VxyzRGg1y63OdeIizFO
-         OvVIegDB+f1fxaBTaAoxE1gcCPyfOV9OHTkRBQ9I9gX8zz+64xaq2k5NWBq8L7JAQ6OR
-         MdA2/TiopMpIs4TU8PostbyTMO0c6MWJWpCFZn9w1LZIo2QmKL9nWpHTtAgGIQZ7BC51
-         mUi1znaZSaSTodYt8VU/TKzD4M2pHqCtdbngPkXhBFEd0wl6WsXmVu7tsqX9PgN94P3t
-         iU63X+Mh2k+nIBjyEgqoheWW+/pZ2W+yT8fg/nk4pFhWiDDnlsD6dZd3+b7lFVPW7qzx
-         Pa/A==
-X-Gm-Message-State: ANhLgQ0FPWPzX0HYwxkvbV7lASfpu5AvSzpYVdFNdKp0J5adh4wp4Hau
-        xFx5593WMLptRQkTugC5Olc=
-X-Google-Smtp-Source: ADFU+vtQ2Cvkij5WfY49IP4qyU4ueCsNgP4yapkmAybB1/czoNW9zB2MtX6kNEh7d7f+XLtkCCZR6g==
-X-Received: by 2002:adf:90ee:: with SMTP id i101mr9888897wri.417.1584699969782;
-        Fri, 20 Mar 2020 03:26:09 -0700 (PDT)
-Received: from andrea ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id l12sm7423234wrt.73.2020.03.20.03.26.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 03:26:09 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 11:26:03 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>, linux-arch@vger.kernel.org,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Fri, 20 Mar 2020 06:26:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:47118 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726527AbgCTK0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 06:26:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D07DD31B;
+        Fri, 20 Mar 2020 03:26:17 -0700 (PDT)
+Received: from [10.57.21.157] (unknown [10.57.21.157])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C1B83F305;
+        Fri, 20 Mar 2020 03:26:13 -0700 (PDT)
+Subject: Re: [PATCH 2/2] Documentation/vmcoreinfo: Add documentation for
+ 'KERNELPACMASK'
+To:     John Donnelly <John.P.Donnelly@Oracle.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        James Morse <james.morse@arm.com>,
+        Dave Anderson <anderson@redhat.com>,
+        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
         Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 1/3] LKMM: Add litmus test for RCU GP guarantee where
- updater frees object
-Message-ID: <20200320102603.GA22784@andrea>
-References: <20200320065552.253696-1-joel@joelfernandes.org>
+References: <1584603551-23845-1-git-send-email-amit.kachhap@arm.com>
+ <1584603551-23845-2-git-send-email-amit.kachhap@arm.com>
+ <5235269c-e3c7-efff-6083-a05a39699735@Oracle.com>
+From:   Amit Kachhap <amit.kachhap@arm.com>
+Message-ID: <3d8eb414-c70c-f97b-b2e0-376ebd99403c@arm.com>
+Date:   Fri, 20 Mar 2020 15:56:11 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320065552.253696-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5235269c-e3c7-efff-6083-a05a39699735@Oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 02:55:50AM -0400, Joel Fernandes (Google) wrote:
-> This adds an example for the important RCU grace period guarantee, which
-> shows an RCU reader can never span a grace period.
+Hi,
+
+On 3/19/20 7:21 PM, John Donnelly wrote:
+> On 3/19/20 2:39 AM, Amit Daniel Kachhap wrote:
+>> Add documentation for KERNELPACMASK variable being added to vmcoreinfo.
+>>
+>> It indicates the PAC bits mask information of signed kernel pointers if
+>> ARMv8.3-A Pointer Authentication feature is present.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: James Morse <james.morse@arm.com>
+>> Cc: Dave Anderson <anderson@redhat.com>
+>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+>> ---
+>>   Documentation/admin-guide/kdump/vmcoreinfo.rst | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst 
+>> b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+>> index 007a6b8..5cc3ee6 100644
+>> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
+>> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+>> @@ -393,6 +393,12 @@ KERNELOFFSET
+>>   The kernel randomization offset. Used to compute the page offset. If
+>>   KASLR is disabled, this value is zero.
+>> +KERNELPACMASK
+>> +-------------
+>> +
+>> +Indicates the PAC bits mask information if Pointer Authentication is
+>> +enabled and address authentication feature is present.
+>> +
+>>   arm
+>>   ===
+>>
+>>
 > 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  .../litmus-tests/RCU+sync+free.litmus         | 40 +++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 tools/memory-model/litmus-tests/RCU+sync+free.litmus
 > 
-> diff --git a/tools/memory-model/litmus-tests/RCU+sync+free.litmus b/tools/memory-model/litmus-tests/RCU+sync+free.litmus
-> new file mode 100644
-> index 0000000000000..c4682502dd296
-> --- /dev/null
-> +++ b/tools/memory-model/litmus-tests/RCU+sync+free.litmus
-> @@ -0,0 +1,40 @@
-> +C RCU+sync+free
-> +
-> +(*
-> + * Result: Never
-> + *
-> + * This litmus test demonstrates that an RCU reader can never see a write after
-> + * the grace period, if it saw writes that happen before the grace period. This
-> + * is a typical pattern of RCU usage, where the write before the grace period
-> + * assigns a pointer, and the writes after destroy the object that the pointer
-> + * points to.
-> + *
-> + * This guarantee also implies, an RCU reader can never span a grace period and
-> + * is an important RCU grace period memory ordering guarantee.
-> + *)
-> +
-> +{
-> +x = 1;
-> +y = x;
-> +z = 1;
+> Hi,
+> 
+> Does this require changes to the  makedumpfile or crash utilities ?
 
-FYI, this could become a little more readable if we wrote it as follows:
-
-int x = 1;
-int *y = &x;
-int z = 1;
-
-The LKMM tools are happy either way, just a matter of style/preference;
-and yes, MP+onceassign+derefonce isn't currently following mine...  ;-/
-
-
-> +}
-> +
-> +P0(int *x, int *z, int **y)
-> +{
-> +	int r0;
-
-This would need to be "int *r0;" in order to make klitmus7(+gcc) happy.
-
-
-> +	int r1;
-> +
-> +	rcu_read_lock();
-> +	r0 = rcu_dereference(*y);
-> +	r1 = READ_ONCE(*r0);
-> +	rcu_read_unlock();
-> +}
-> +
-> +P1(int *x, int *z, int **y)
-> +{
-> +	rcu_assign_pointer(*y, z);
-
-AFAICT, you don't need this "RELEASE"; e.g., compare this test with the
-example in:
-
-  https://www.kernel.org/doc/Documentation/RCU/Design/Requirements/Requirements.html#Grace-Period%20Guarantee
-
-What am I missing?
+I did the corresponding change in crash tool. The link is mentioned in 
+first patch of the series.
 
 Thanks,
-  Andrea
-
-
-> +	synchronize_rcu();
-> +	WRITE_ONCE(*x, 0);
-> +}
-> +
-> +exists (0:r0=x /\ 0:r1=0)
-> -- 
-> 2.25.1.696.g5e7596f4ac-goog
+Amit Daniel
+> 
+> 
 > 
