@@ -2,112 +2,142 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC62C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E9DC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9766020773
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584727221;
-	bh=AOHcFFqPmmUrKkBgj3LGw8anyo9Fi+nPIa1g3zqyqMs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jBQ2zTar4bKKjAAC/yiJqxDMMswxJnYmpa5cxQdXISN2VQA7rRik4Zxa4P3F8PHLB
-	 bmx5ro/VN2B5vgTkH51UlRNTEEx1IIIwbDs3rZx2T8wNgCMpwxsWohHrC53anD0KvK
-	 7F1xXTTWNKtzLe5+wDYw62Zjq7u10FDal41z4B0Y=
+	by mail.kernel.org (Postfix) with ESMTP id 4EE8020739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:00:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uOyI4D1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbgCTSAU (ORCPT
+        id S1727372AbgCTSAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:00:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbgCTSAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:00:20 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 678A120739;
-        Fri, 20 Mar 2020 18:00:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584727219;
-        bh=AOHcFFqPmmUrKkBgj3LGw8anyo9Fi+nPIa1g3zqyqMs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NZ9HU316DvAVNcUxlvzbNwg+y2txH2gpkS3rUJxhCWe7t2TNzS4cSz0aP9oXCmCeZ
-         lA62gX2HF5PTlSZ1WRtHNFeEZvmAX/Jupq9oBbL1ohyHNdGKoAs/qCozdPyM6IUdHI
-         QNBy8s3jas9smKOGMMh5TBeJx1mwdzpN9wtLUJa0=
-Date:   Fri, 20 Mar 2020 11:00:17 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-xfs@vger.kernel.org,
-        William Kucharski <william.kucharski@oracle.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH v9 12/25] mm: Move end_index check out of readahead loop
-Message-ID: <20200320180017.GE851@sol.localdomain>
-References: <20200320142231.2402-1-willy@infradead.org>
- <20200320142231.2402-13-willy@infradead.org>
- <20200320165828.GB851@sol.localdomain>
- <20200320173040.GB4971@bombadil.infradead.org>
+        Fri, 20 Mar 2020 14:00:36 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40184 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbgCTSAg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 14:00:36 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t24so3464471pgj.7;
+        Fri, 20 Mar 2020 11:00:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=080snhj0lunX6VMRtG4/icf7cWVI3jexKvUDP50Ycfo=;
+        b=uOyI4D1SXSgdlrg3hkrj2eBBm3aw1AM8eNZkTtShIbWtX1ag2uRbCaBw7ZVDfdmm9T
+         0XHVBB/dB60a6/crqGGKgaZcrRqyzdS6cpqbks6bGF7IdJC+1qRd/pL1XollyYB7xz3G
+         mJy0GFC44wyRmCHHP1QNGHDhh2oxY2oBoJ+B6s2lRTXKfKLWAe59EBWFG7ADBCZ1KYnY
+         x8oaVHYB6DxohyjuQvNtg8YzWTw2q6ubV9T2IOuRK93ER1tWkNculhJip5td35yvTjHw
+         cmVuwCTmLpZfZrFjNoIuzBNxNbRlEjm3bT5GiWqphoJga3qYAeMNqYu3ryRIgI0jUhjL
+         g5SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=080snhj0lunX6VMRtG4/icf7cWVI3jexKvUDP50Ycfo=;
+        b=IChvCYegBxhSdrdIr8fwKKEFKoKyfwItRY+TompWhS71cb4Ph9NisD2h6fCXA9DtGU
+         7Akl1SDqRCzxChq14ce7TB0LDbTKK9mBVQmvKa8U4ptl/H7vMlkiexwtQjXX8ABhb660
+         ckf6DBoxkoUijaHbqPde4FhghSHbF5sEbf3ApSGrnyxHzreW38ZcgreTwWD5kVTJiYJ8
+         9Atm+ygpn5k2071blMpLCeuN0CZtMiVOcNmzsMhbIw+wXS7hg277YsnlP3kq2PdacDi0
+         8hWt6FrCDk99U6Soy4xT0qw9V80h27XwUvys3oxDafllGUaOxzbHT/fHZHs8gguWPYoi
+         GVtQ==
+X-Gm-Message-State: ANhLgQ0GUVMw1KCCPH9KufAWCYXQGUH97dwUoyFtUwkYRCwdmFGpVF90
+        Jix5bmhUcIy3Nku/9MVQ2P8F5Xa2
+X-Google-Smtp-Source: ADFU+vtcs4pqFgfEfymMazQv9Pi3A0vaPa2jSxtTF2KcXKm9cqGDrNbbDVfUMH7bUbQn9awm/kTMbQ==
+X-Received: by 2002:a63:161e:: with SMTP id w30mr9747703pgl.110.1584727232388;
+        Fri, 20 Mar 2020 11:00:32 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z11sm6157479pfa.149.2020.03.20.11.00.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Mar 2020 11:00:31 -0700 (PDT)
+Subject: Re: [PATCH 5.5 00/54] 5.5.11-rc3 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200320113335.277810029@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <53e0e115-6d12-1f1e-518c-26ae2ec5c2b1@roeck-us.net>
+Date:   Fri, 20 Mar 2020 11:00:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320173040.GB4971@bombadil.infradead.org>
+In-Reply-To: <20200320113335.277810029@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 10:30:40AM -0700, Matthew Wilcox wrote:
-> On Fri, Mar 20, 2020 at 09:58:28AM -0700, Eric Biggers wrote:
-> > On Fri, Mar 20, 2020 at 07:22:18AM -0700, Matthew Wilcox wrote:
-> > > +	/* Avoid wrapping to the beginning of the file */
-> > > +	if (index + nr_to_read < index)
-> > > +		nr_to_read = ULONG_MAX - index + 1;
-> > > +	/* Don't read past the page containing the last byte of the file */
-> > > +	if (index + nr_to_read >= end_index)
-> > > +		nr_to_read = end_index - index + 1;
-> > 
-> > There seem to be a couple off-by-one errors here.  Shouldn't it be:
-> > 
-> > 	/* Avoid wrapping to the beginning of the file */
-> > 	if (index + nr_to_read < index)
-> > 		nr_to_read = ULONG_MAX - index;
+On 3/20/20 4:34 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.5.11 release.
+> There are 54 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> I think it's right.  Imagine that index is ULONG_MAX.  We should read one
-> page (the one at ULONG_MAX).  That would be ULONG_MAX - ULONG_MAX + 1.
-> 
-> > 	/* Don't read past the page containing the last byte of the file */
-> > 	if (index + nr_to_read > end_index)
-> > 		nr_to_read = end_index - index + 1;
-> > 
-> > I.e., 'ULONG_MAX - index' rather than 'ULONG_MAX - index + 1', so that
-> > 'index + nr_to_read' is then ULONG_MAX rather than overflowed to 0.
-> > 
-> > Then 'index + nr_to_read > end_index' rather 'index + nr_to_read >= end_index',
-> > since otherwise nr_to_read can be increased by 1 rather than decreased or stay
-> > the same as expected.
-> 
-> Ooh, I missed the overflow case here.  It should be:
-> 
-> +	if (index + nr_to_read - 1 > end_index)
-> +		nr_to_read = end_index - index + 1;
+> Responses should be made by Sun, 22 Mar 2020 11:32:39 +0000.
+> Anything received after that time might be too late.
 > 
 
-But then if someone passes index=0 and nr_to_read=0, this underflows and the
-entire file gets read.
+For v5.5.10-55-gbea94317c526:
 
-The page cache isn't actually supposed to contain a page at index ULONG_MAX,
-since MAX_LFS_FILESIZE is at most ((loff_t)ULONG_MAX << PAGE_SHIFT), right?  So
-I don't think we need to worry about reading the page with index ULONG_MAX.
-I.e. I think it's fine to limit nr_to_read to 'ULONG_MAX - index', if that makes
-it easier to avoid an overflow or underflow in the next check.
+Build results:
+	total: 157 pass: 157 fail: 0
+Qemu test results:
+	total: 428 pass: 428 fail: 0
 
-- Eric
+Guenter
