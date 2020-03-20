@@ -2,159 +2,127 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2A4C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26B6C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3685520739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B521320739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:53:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dRAuHm70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbgCTQvE (ORCPT
+        id S1727479AbgCTQxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:51:04 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:53899 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbgCTQvD (ORCPT
+        Fri, 20 Mar 2020 12:53:06 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37214 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727232AbgCTQxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:51:03 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1MjxW4-1jhlqo2MQK-00kOBJ for <linux-kernel@vger.kernel.org>; Fri, 20 Mar
- 2020 17:51:02 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 660D864FB26
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 16:51:02 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id QdvdBVPMBxQn for <linux-kernel@vger.kernel.org>;
-        Fri, 20 Mar 2020 17:51:02 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 12F9864F849
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 17:51:02 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.8.5.41) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 20 Mar 2020 17:51:01 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id 86EAC80509; Fri, 20 Mar 2020 17:12:06 +0100 (CET)
-Date:   Fri, 20 Mar 2020 17:12:06 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH v3 11/11] media: adv748x: allow the HDMI sub-device to accept
- EDID
-Message-ID: <4fce566b68bbe4f85cf92cd80a455b575a5d95d1.1584720678.git.alexander.riesen@cetitec.com>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1584720678.git.alexander.riesen@cetitec.com>
+        Fri, 20 Mar 2020 12:53:06 -0400
+Received: by mail-pf1-f195.google.com with SMTP id h72so1333804pfe.4
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 09:53:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=of4yG/Vch/Qj/D9yPE0fo6j6XLR3095eAUqqs/YSOwY=;
+        b=dRAuHm70s32jvPsyJvaRFXlgBM+OeovibGCvoxVlik+9h50MIPbUWkDSZ4a8aBzq1l
+         GL5XNXRYj8NCKS1ZkuXYKkS6CpXCpF3ywncpFLeVlkJHeBJogxp+uD6jLjCMJaJRFPAZ
+         qmu7zcqMPkRrzPjQz+o/5t+L+KQ+PNi3fln9tbMAjjAdrjc5iEpBg2tDB/6pvRxWBo66
+         Zcrfit9iws2DBEOAKkY8SBbfUex7gkB592zgGvf7L39BfU7oHLKp/nOeJHXBieSeK1ne
+         nwk4HHBpCgS5kfE9EegxZPTsz3OP494UsZafp4XgRRiiE2zJIVdc2nEOs/H9AHz47VRR
+         wa0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=of4yG/Vch/Qj/D9yPE0fo6j6XLR3095eAUqqs/YSOwY=;
+        b=f56iql5XP4QqMHAN6lAiWJyTLSLzbYdpecHypHg1YotHv8sjTKs8WZVEQCcfQrTckG
+         NzHOAChY9W/bAzR7bXG98mbHIwfYeVn1FA1QQgqNWLe1tsalWk3Uw6c04qkjKpoOEuNv
+         D2WTn/q6/M+FYC1HbtVmP/5IWdE5X4fI7Y8Z/dk2i00HcR0xQZT73yd8X1cB0/A+2WfN
+         kmo2HODzq+tISKt/B4+uBV4G4A7d3ZdhDww1gbdkHywYaOz9noItPwplmqjLTFRTJx/i
+         6GFbpg8G+zv7Hbbqgskw6ukozSDxI3H4Nj41SFMtqZqT1PrkGER2MSi6hK5KbZPM1SQZ
+         eOqg==
+X-Gm-Message-State: ANhLgQ3wqal3Lx4wT+ARNLz3G0/T/PBha1TiYgMGPp6jeG25Rrdhm3Uw
+        P/MsWh9uySruDfhbls1OFP6oQDsn8ok=
+X-Google-Smtp-Source: ADFU+vuk5fqfRt3pgssw0+gJH1iTPp67oYT5MsVGMC+R4pwtrHcwWn3Nrm0p3QhoOUq62L8YDzj6uQ==
+X-Received: by 2002:a62:e409:: with SMTP id r9mr10332985pfh.119.1584723184948;
+        Fri, 20 Mar 2020 09:53:04 -0700 (PDT)
+Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id x17sm6064216pfn.16.2020.03.20.09.53.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 09:53:04 -0700 (PDT)
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     mike.leach@linaro.org, suzuki.poulose@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v11 00/12] coresight: next v5.6-rc6 
+Date:   Fri, 20 Mar 2020 10:52:51 -0600
+Message-Id: <20200320165303.13681-1-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1584720678.git.alexander.riesen@cetitec.com>
-X-Originating-IP: [10.8.5.41]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A6D7660
-X-Provags-ID: V03:K1:oEMA+4dVfXfsKRD4UklDmhZd9ABI6n8WPxTUfhnYtf8lhdkpo/X
- ukjobM0THDPTrCJ5wqCq8K3vL1spP+wsmzP3qjGeL7qOSxbo4XZIJTjOBOQK6KDUnTMygc9
- tdziSZCSYeJqz5cMJPbh3BZAHYEBfY4BvoYt66KShFAjQoS4PaVRAw34TiTcjQVB3Cbl9es
- kr6w+t1BSI8wZY0gfqQww==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TJCksSkjBSU=:UixXJXNyWD+aZWy4YzspeO
- eXrwaY1kdDRLkCdEBCpjqKC1NKSA18oqghjOUxNg8ltKc4iW9L40+t2rgZU/FGMIbglXh0+hW
- Goh4gWNIxH/v+juftoerbwTihbqwa88oFPMHkbAoSI9h2hOHttGKZDVmeYhts12cH0yPmmtrJ
- VBwGztd73NOMMBqDvohsWAFley0imXMfZuMyg4AQLlw18M8ZVMEqIxijo66rmGBppOtBSF+fg
- Bum0PR+4zv4yLF730aEDpwqRJ5fFxqa+fLsd5QkxCsseFDrPiFSKrrTGDTxeQCu+XhmDUKSrU
- B8qc0YJYlbLTAAcJsXNueLNyQ+3k2byZ8NygQ1u/Isp/YtZZsqDQdSaAMaa2VtI1tWLD5Ukg2
- 0UjBjgDSOZD747afmyOB1EIrecDDu01AvdBLF59O/2Hozx62OFlJ5Iy3mzgmf/UEJvVjX7mFM
- M1UauC4KWfmJfmaQyQnledTetVleMgEjKMEgml3ORWWexW/EUUtD+0xaBcq0avEWtHxjbGnyW
- ISwlSszaX1M9acklgByx9Cq4k6mGtxuHC+G/7/PKsDJr+exB2BvogiyOB4FO/7SEXJsSltSBS
- 8FeKnBdPX7E3ou5N7YaF1fCicaisHWvBa3CtzVc5hhC+XTQbrL1ckxyw37Q9RoAW2aBT0F2Zv
- wj4km57ZOr29s9528yd9BYIbnqqeAY5IAR7iOVTXYwPqv0eTOT4oUMFMAkM1e8+LeNJ0qaR8f
- fZHoxPzpur8RcD9gciyqgwDCPJto+B97j8MRwzKaavMUtjeB0xgh+fYTPXPqKeSyD84OyohBt
- M3HDGy12Qjdt/yBxKgGwAWAOT1EEN8yTG6EgurBXyvUMyGjucteD7cQmpaa+sNR7ZIkRLlr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes it possible to load a EDID reported by the device
-with v4l2-ctl utility:
+Hi Greg,
 
-  vdev=/dev/$(grep -l '^adv748x.*hdmi$' /sys/class/video4linux/v4l-subdev*/name |cut -d/ -f5-5)
-  v4l2-ctl -d $vdev --set-edid=pad=0,file=/etc/adv7482.edid
+As requested here is another respin - the only thing that changed is
+the replacement of scnprintf() and all sysfs output are now singular,
+i.e don't need any parsing.  That triggered some modification to
+sysfs entries, which have been taken into account in the documentation.
 
-Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+Applies and compile cleanly on your char-misc-next branch.
 
---
+Thanks,
+Mathieu
 
-I would like to avoid doing that, but found no other way yet.
-Suggestions very welcome.
----
- drivers/media/i2c/adv748x/adv748x-hdmi.c | 27 ++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Mike Leach (12):
+  coresight: cti: Initial CoreSight CTI Driver
+  coresight: cti: Add sysfs coresight mgmt register access
+  coresight: cti: Add sysfs access to program function registers
+  coresight: cti: Add sysfs trigger / channel programming API
+  dt-bindings: arm: Adds CoreSight CTI hardware definitions
+  coresight: cti: Add device tree support for v8 arch CTI
+  coresight: cti: Add device tree support for custom CTI
+  coresight: cti: Enable CTI associated with devices
+  coresight: cti: Add connection information to sysfs
+  docs: coresight: Update documentation for CoreSight to cover CTI
+  docs: sysfs: coresight: Add sysfs ABI documentation for CTI
+  Update MAINTAINERS to add reviewer for CoreSight
 
-diff --git a/drivers/media/i2c/adv748x/adv748x-hdmi.c b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-index 664930e55baf..fea133472911 100644
---- a/drivers/media/i2c/adv748x/adv748x-hdmi.c
-+++ b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-@@ -775,7 +775,34 @@ static int adv748x_hdmi_log_status(struct v4l2_subdev *sd)
- 	return 0;
- }
- 
-+static long adv748x_hdmi_querycap(struct adv748x_hdmi *hdmi,
-+				  struct v4l2_capability *cap)
-+{
-+	struct adv748x_state *state = adv748x_hdmi_to_state(hdmi);
-+
-+	cap->version = LINUX_VERSION_CODE;
-+	strlcpy(cap->driver, state->dev->driver->name, sizeof(cap->driver));
-+	strlcpy(cap->card, "hdmi", sizeof(cap->card));
-+	snprintf(cap->bus_info, sizeof(cap->bus_info), "i2c:%d-%04x",
-+		 i2c_adapter_id(state->client->adapter),
-+		 state->client->addr);
-+	cap->device_caps = V4L2_CAP_AUDIO | V4L2_CAP_VIDEO_CAPTURE;
-+	cap->capabilities = V4L2_CAP_DEVICE_CAPS;
-+	return 0;
-+}
-+
-+static long adv748x_hdmi_ioctl(struct v4l2_subdev *sd,
-+			       unsigned int cmd, void *arg)
-+{
-+	struct adv748x_hdmi *hdmi = adv748x_sd_to_hdmi(sd);
-+
-+	if (cmd == VIDIOC_QUERYCAP)
-+		return adv748x_hdmi_querycap(hdmi, arg);
-+	return -ENOTTY;
-+}
-+
- static const struct v4l2_subdev_core_ops adv748x_core_ops_hdmi = {
-+	.ioctl = adv748x_hdmi_ioctl,
- 	.log_status = adv748x_hdmi_log_status,
- };
- 
+ .../testing/sysfs-bus-coresight-devices-cti   |  241 ++++
+ .../bindings/arm/coresight-cti.yaml           |  336 +++++
+ .../devicetree/bindings/arm/coresight.txt     |    7 +
+ .../trace/coresight/coresight-ect.rst         |  222 +++
+ Documentation/trace/coresight/coresight.rst   |   13 +
+ MAINTAINERS                                   |    3 +
+ drivers/hwtracing/coresight/Kconfig           |   21 +
+ drivers/hwtracing/coresight/Makefile          |    3 +
+ .../coresight/coresight-cti-platform.c        |  485 +++++++
+ .../hwtracing/coresight/coresight-cti-sysfs.c | 1206 +++++++++++++++++
+ drivers/hwtracing/coresight/coresight-cti.c   |  745 ++++++++++
+ drivers/hwtracing/coresight/coresight-cti.h   |  235 ++++
+ .../hwtracing/coresight/coresight-platform.c  |   20 +
+ drivers/hwtracing/coresight/coresight-priv.h  |   15 +
+ drivers/hwtracing/coresight/coresight.c       |   86 +-
+ include/dt-bindings/arm/coresight-cti-dt.h    |   37 +
+ include/linux/coresight.h                     |   27 +
+ 17 files changed, 3688 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-coresight-devices-cti
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight-cti.yaml
+ create mode 100644 Documentation/trace/coresight/coresight-ect.rst
+ create mode 100644 drivers/hwtracing/coresight/coresight-cti-platform.c
+ create mode 100644 drivers/hwtracing/coresight/coresight-cti-sysfs.c
+ create mode 100644 drivers/hwtracing/coresight/coresight-cti.c
+ create mode 100644 drivers/hwtracing/coresight/coresight-cti.h
+ create mode 100644 include/dt-bindings/arm/coresight-cti-dt.h
+
 -- 
-2.25.1.25.g9ecbe7eb18
+2.20.1
 
