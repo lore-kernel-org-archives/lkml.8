@@ -2,329 +2,133 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA04C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C9FC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E161720658
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:01:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584738112;
-	bh=tc2/kp+Gi04uZcww80qhFuky/FzAKecwYkeUwz30xeg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=rRO2K4Di4Pxijyi96bDoVzgZLYvFVIIOvwT//z+0Cn+31XJm8l185+pjVjwN/pVy/
-	 wc04NVDY6obUxaKq3HPXWJF2sc1EmMB4WZpG12/8OiRes2oFypg+ltuq1GvHCQpTHl
-	 ckKH8KwnDWydkg1SxGdWY8RmVOogG9djisb6yobk=
+	by mail.kernel.org (Postfix) with ESMTP id ABF0320658
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:02:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbgCTVBv (ORCPT
+        id S1727190AbgCTVCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:01:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:57054 "EHLO foss.arm.com"
+        Fri, 20 Mar 2020 17:02:16 -0400
+Received: from mga04.intel.com ([192.55.52.120]:57314 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgCTVBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:01:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EFF131B;
-        Fri, 20 Mar 2020 14:01:49 -0700 (PDT)
-Received: from localhost (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3534B3F792;
-        Fri, 20 Mar 2020 14:01:49 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 21:01:47 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     alain.volmat@st.com, alexandre.torgue@st.com,
-        amelie.delaunay@st.com, broonie@kernel.org, fabrice.gasnier@st.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>, mcoquelin.stm32@gmail.com
-Subject: Applied "spi: stm32: Fix comments compilation warnings" to the spi tree
-In-Reply-To:  <1584711857-9162-1-git-send-email-alain.volmat@st.com>
-Message-Id:  <applied-1584711857-9162-1-git-send-email-alain.volmat@st.com>
-X-Patchwork-Hint: ignore
+        id S1726738AbgCTVCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 17:02:16 -0400
+IronPort-SDR: iUK8NiCv3loTp/wr8ZYxFgfWPjSVJD3C0sPehK0RT9t5gkCvtWcDOgVIbDbI3ajlKpYCsbsOs/
+ irATOZkwFA2Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:02:15 -0700
+IronPort-SDR: HboxVKvwZZOgIV6yB3TxFGy0JAOwS7iAeF7LpBdEIi7eqh2wKjhoIIwTOwu1SLQWSmMlA2rOa1
+ Dpx0Kp/ZA3PA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,285,1580803200"; 
+   d="scan'208";a="248999174"
+Received: from jralexan-mobl.amr.corp.intel.com (HELO [10.254.187.105]) ([10.254.187.105])
+  by orsmga006.jf.intel.com with ESMTP; 20 Mar 2020 14:02:14 -0700
+Subject: Re: [PATCH 21/70] x86/boot/compressed/64: Add function to map a page
+ unencrypted
+To:     David Rientjes <rientjes@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+References: <20200319091407.1481-1-joro@8bytes.org>
+ <20200319091407.1481-22-joro@8bytes.org>
+ <alpine.DEB.2.21.2003201350300.205664@chino.kir.corp.google.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <8a50c19f-aaf8-90bd-a415-0e3b71e5a010@intel.com>
+Date:   Fri, 20 Mar 2020 14:02:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.2003201350300.205664@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On 3/20/20 1:53 PM, David Rientjes wrote:
+>> +
+>> +	/* Clear encryption flag and write new pte */
+>> +	pte = pte_clear_flags(*ptep, _PAGE_ENC);
+>> +	set_pte(ptep, pte);
+>> +
+>> +	/* Flush TLB to map the page unencrypted */
+>> +	write_cr3(top_level_pgt);
+>> +
+> Is there a guarantee that this flushes the tlb if cr3 == top_level_pgt 
+> alrady without an invlpg?
 
-   spi: stm32: Fix comments compilation warnings
+Ahh, good catch.
 
-has been applied to the spi tree at
+It *never* flushes global pages.  For a generic function like this, that
+seems pretty dangerous because the PTEs it goes after could quite easily
+be Global.  It's also not _obviously_ correct if PCIDs are in play
+(which I don't think they are on AMD).
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 1c52be8bed83e1a67b47295177b355d0f58c1372 Mon Sep 17 00:00:00 2001
-From: Alain Volmat <alain.volmat@st.com>
-Date: Fri, 20 Mar 2020 14:44:17 +0100
-Subject: [PATCH] spi: stm32: Fix comments compilation warnings
-
-Fix all functions and structure descriptions to have the driver
-warning free when built with W=1.
-
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
-Reviewed-by: Amelie Delaunay <amelie.delaunay@st.com>
-Link: https://lore.kernel.org/r/1584711857-9162-1-git-send-email-alain.volmat@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-stm32.c | 62 ++++++++++++++++++++++++++++++-----------
- 1 file changed, 45 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index e041f9c4ec47..44ac6eb3298d 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -175,7 +175,7 @@
- #define SPI_DMA_MIN_BYTES	16
- 
- /**
-- * stm32_spi_reg - stm32 SPI register & bitfield desc
-+ * struct stm32_spi_reg - stm32 SPI register & bitfield desc
-  * @reg:		register offset
-  * @mask:		bitfield mask
-  * @shift:		left shift
-@@ -187,16 +187,16 @@ struct stm32_spi_reg {
- };
- 
- /**
-- * stm32_spi_regspec - stm32 registers definition, compatible dependent data
-- * en: enable register and SPI enable bit
-- * dma_rx_en: SPI DMA RX enable register end SPI DMA RX enable bit
-- * dma_tx_en: SPI DMA TX enable register end SPI DMA TX enable bit
-- * cpol: clock polarity register and polarity bit
-- * cpha: clock phase register and phase bit
-- * lsb_first: LSB transmitted first register and bit
-- * br: baud rate register and bitfields
-- * rx: SPI RX data register
-- * tx: SPI TX data register
-+ * struct stm32_spi_regspec - stm32 registers definition, compatible dependent data
-+ * @en: enable register and SPI enable bit
-+ * @dma_rx_en: SPI DMA RX enable register end SPI DMA RX enable bit
-+ * @dma_tx_en: SPI DMA TX enable register end SPI DMA TX enable bit
-+ * @cpol: clock polarity register and polarity bit
-+ * @cpha: clock phase register and phase bit
-+ * @lsb_first: LSB transmitted first register and bit
-+ * @br: baud rate register and bitfields
-+ * @rx: SPI RX data register
-+ * @tx: SPI TX data register
-  */
- struct stm32_spi_regspec {
- 	const struct stm32_spi_reg en;
-@@ -213,7 +213,7 @@ struct stm32_spi_regspec {
- struct stm32_spi;
- 
- /**
-- * stm32_spi_cfg - stm32 compatible configuration data
-+ * struct stm32_spi_cfg - stm32 compatible configuration data
-  * @regs: registers descriptions
-  * @get_fifo_size: routine to get fifo size
-  * @get_bpw_mask: routine to get bits per word mask
-@@ -223,13 +223,13 @@ struct stm32_spi;
-  * @set_mode: routine to configure registers to desired mode
-  * @set_data_idleness: optional routine to configure registers to desired idle
-  * time between frames (if driver has this functionality)
-- * set_number_of_data: optional routine to configure registers to desired
-+ * @set_number_of_data: optional routine to configure registers to desired
-  * number of data (if driver has this functionality)
-  * @can_dma: routine to determine if the transfer is eligible for DMA use
-  * @transfer_one_dma_start: routine to start transfer a single spi_transfer
-  * using DMA
-- * @dma_rx cb: routine to call after DMA RX channel operation is complete
-- * @dma_tx cb: routine to call after DMA TX channel operation is complete
-+ * @dma_rx_cb: routine to call after DMA RX channel operation is complete
-+ * @dma_tx_cb: routine to call after DMA TX channel operation is complete
-  * @transfer_one_irq: routine to configure interrupts for driver
-  * @irq_handler_event: Interrupt handler for SPI controller events
-  * @irq_handler_thread: thread of interrupt handler for SPI controller
-@@ -587,6 +587,7 @@ static void stm32f4_spi_read_rx(struct stm32_spi *spi)
- /**
-  * stm32h7_spi_read_rxfifo - Read bytes in Receive Data Register
-  * @spi: pointer to the spi controller data structure
-+ * @flush: boolean indicating that FIFO should be flushed
-  *
-  * Write in rx_buf depends on remaining bytes to avoid to write beyond
-  * rx_buf end.
-@@ -756,6 +757,9 @@ static void stm32h7_spi_disable(struct stm32_spi *spi)
- 
- /**
-  * stm32_spi_can_dma - Determine if the transfer is eligible for DMA use
-+ * @master: controller master interface
-+ * @spi_dev: pointer to the spi device
-+ * @transfer: pointer to spi transfer
-  *
-  * If driver has fifo and the current transfer size is greater than fifo size,
-  * use DMA. Otherwise use DMA for transfer longer than defined DMA min bytes.
-@@ -974,6 +978,8 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
- 
- /**
-  * stm32_spi_prepare_msg - set up the controller to transfer a single message
-+ * @master: controller master interface
-+ * @msg: pointer to spi message
-  */
- static int stm32_spi_prepare_msg(struct spi_master *master,
- 				 struct spi_message *msg)
-@@ -1026,6 +1032,7 @@ static int stm32_spi_prepare_msg(struct spi_master *master,
- 
- /**
-  * stm32f4_spi_dma_tx_cb - dma callback
-+ * @data: pointer to the spi controller data structure
-  *
-  * DMA callback is called when the transfer is complete for DMA TX channel.
-  */
-@@ -1041,6 +1048,7 @@ static void stm32f4_spi_dma_tx_cb(void *data)
- 
- /**
-  * stm32f4_spi_dma_rx_cb - dma callback
-+ * @data: pointer to the spi controller data structure
-  *
-  * DMA callback is called when the transfer is complete for DMA RX channel.
-  */
-@@ -1054,6 +1062,7 @@ static void stm32f4_spi_dma_rx_cb(void *data)
- 
- /**
-  * stm32h7_spi_dma_cb - dma callback
-+ * @data: pointer to the spi controller data structure
-  *
-  * DMA callback is called when the transfer is complete or when an error
-  * occurs. If the transfer is complete, EOT flag is raised.
-@@ -1079,6 +1088,9 @@ static void stm32h7_spi_dma_cb(void *data)
- /**
-  * stm32_spi_dma_config - configure dma slave channel depending on current
-  *			  transfer bits_per_word.
-+ * @spi: pointer to the spi controller data structure
-+ * @dma_conf: pointer to the dma_slave_config structure
-+ * @dir: direction of the dma transfer
-  */
- static void stm32_spi_dma_config(struct stm32_spi *spi,
- 				 struct dma_slave_config *dma_conf,
-@@ -1126,6 +1138,7 @@ static void stm32_spi_dma_config(struct stm32_spi *spi,
- /**
-  * stm32f4_spi_transfer_one_irq - transfer a single spi_transfer using
-  *				  interrupts
-+ * @spi: pointer to the spi controller data structure
-  *
-  * It must returns 0 if the transfer is finished or 1 if the transfer is still
-  * in progress.
-@@ -1166,6 +1179,7 @@ static int stm32f4_spi_transfer_one_irq(struct stm32_spi *spi)
- /**
-  * stm32h7_spi_transfer_one_irq - transfer a single spi_transfer using
-  *				  interrupts
-+ * @spi: pointer to the spi controller data structure
-  *
-  * It must returns 0 if the transfer is finished or 1 if the transfer is still
-  * in progress.
-@@ -1207,6 +1221,7 @@ static int stm32h7_spi_transfer_one_irq(struct stm32_spi *spi)
- /**
-  * stm32f4_spi_transfer_one_dma_start - Set SPI driver registers to start
-  *					transfer using DMA
-+ * @spi: pointer to the spi controller data structure
-  */
- static void stm32f4_spi_transfer_one_dma_start(struct stm32_spi *spi)
- {
-@@ -1227,6 +1242,7 @@ static void stm32f4_spi_transfer_one_dma_start(struct stm32_spi *spi)
- /**
-  * stm32h7_spi_transfer_one_dma_start - Set SPI driver registers to start
-  *					transfer using DMA
-+ * @spi: pointer to the spi controller data structure
-  */
- static void stm32h7_spi_transfer_one_dma_start(struct stm32_spi *spi)
- {
-@@ -1243,6 +1259,8 @@ static void stm32h7_spi_transfer_one_dma_start(struct stm32_spi *spi)
- 
- /**
-  * stm32_spi_transfer_one_dma - transfer a single spi_transfer using DMA
-+ * @spi: pointer to the spi controller data structure
-+ * @xfer: pointer to the spi_transfer structure
-  *
-  * It must returns 0 if the transfer is finished or 1 if the transfer is still
-  * in progress.
-@@ -1405,7 +1423,7 @@ static void stm32_spi_set_mbr(struct stm32_spi *spi, u32 mbrdiv)
- /**
-  * stm32_spi_communication_type - return transfer communication type
-  * @spi_dev: pointer to the spi device
-- * transfer: pointer to spi transfer
-+ * @transfer: pointer to spi transfer
-  */
- static unsigned int stm32_spi_communication_type(struct spi_device *spi_dev,
- 						 struct spi_transfer *transfer)
-@@ -1522,7 +1540,7 @@ static void stm32h7_spi_data_idleness(struct stm32_spi *spi, u32 len)
- /**
-  * stm32h7_spi_number_of_data - configure number of data at current transfer
-  * @spi: pointer to the spi controller data structure
-- * @len: transfer length
-+ * @nb_words: transfer length (in words)
-  */
- static int stm32h7_spi_number_of_data(struct stm32_spi *spi, u32 nb_words)
- {
-@@ -1546,6 +1564,9 @@ static int stm32h7_spi_number_of_data(struct stm32_spi *spi, u32 nb_words)
-  * stm32_spi_transfer_one_setup - common setup to transfer a single
-  *				  spi_transfer either using DMA or
-  *				  interrupts.
-+ * @spi: pointer to the spi controller data structure
-+ * @spi_dev: pointer to the spi device
-+ * @transfer: pointer to spi transfer
-  */
- static int stm32_spi_transfer_one_setup(struct stm32_spi *spi,
- 					struct spi_device *spi_dev,
-@@ -1625,6 +1646,9 @@ static int stm32_spi_transfer_one_setup(struct stm32_spi *spi,
- 
- /**
-  * stm32_spi_transfer_one - transfer a single spi_transfer
-+ * @master: controller master interface
-+ * @spi_dev: pointer to the spi device
-+ * @transfer: pointer to spi transfer
-  *
-  * It must return 0 if the transfer is finished or 1 if the transfer is still
-  * in progress.
-@@ -1658,6 +1682,8 @@ static int stm32_spi_transfer_one(struct spi_master *master,
- 
- /**
-  * stm32_spi_unprepare_msg - relax the hardware
-+ * @master: controller master interface
-+ * @msg: pointer to the spi message
-  */
- static int stm32_spi_unprepare_msg(struct spi_master *master,
- 				   struct spi_message *msg)
-@@ -1671,6 +1697,7 @@ static int stm32_spi_unprepare_msg(struct spi_master *master,
- 
- /**
-  * stm32f4_spi_config - Configure SPI controller as SPI master
-+ * @spi: pointer to the spi controller data structure
-  */
- static int stm32f4_spi_config(struct stm32_spi *spi)
- {
-@@ -1701,6 +1728,7 @@ static int stm32f4_spi_config(struct stm32_spi *spi)
- 
- /**
-  * stm32h7_spi_config - Configure SPI controller as SPI master
-+ * @spi: pointer to the spi controller data structure
-  */
- static int stm32h7_spi_config(struct stm32_spi *spi)
- {
--- 
-2.20.1
-
+A flush_tlb_global() is probably more appropriate.  Better yet, is there
+a reason not to use flush_tlb_kernel_range()?  I don't think it's
+necessary to whack the entire TLB for one PTE set.
