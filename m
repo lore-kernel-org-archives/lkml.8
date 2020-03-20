@@ -2,145 +2,159 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3D4C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2552FC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F91720709
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0489220709
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbgCTRSx (ORCPT
+        id S1727232AbgCTRUH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:18:53 -0400
-Received: from mga01.intel.com ([192.55.52.88]:27716 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgCTRSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:18:53 -0400
-IronPort-SDR: h8AV/6FI2EEoHL9RglLWgBtAbT/CsoOWhWocIMy00S/A7vCdLO47wPLE+eauroEVneQB80BBmU
- GwxkwLJpzCKQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 10:18:52 -0700
-IronPort-SDR: 0cz85uFwoQtLLVv7DCcCeNiE5EgXeu5SUeyZK1XhF4/047s7fdBY9zcyPOUOvtE0HMNoksIQW9
- c7qhA4E3mdDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,285,1580803200"; 
-   d="scan'208";a="239283183"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 20 Mar 2020 10:18:50 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jFLIH-0003RB-CC; Sat, 21 Mar 2020 01:18:49 +0800
-Date:   Sat, 21 Mar 2020 01:18:14 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kbuild-all@lists.01.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
-        pbonzini@redhat.com, jmattson@google.com
-Subject: Re: [PATCH v10 8/8] KVM: X86: Set CET feature bits for CPUID
- enumeration
-Message-ID: <202003210154.29vmxMsO%lkp@intel.com>
-References: <20200320034342.26610-9-weijiang.yang@intel.com>
+        Fri, 20 Mar 2020 13:20:07 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:37759 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbgCTRUG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 13:20:06 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id CD39D20010;
+        Fri, 20 Mar 2020 17:20:03 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 18:20:02 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
+Cc:     vigneshr@ti.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v3] mtd: rawnand: toshiba: Support actual bitflips for
+ BENAND (Built-in ECC NAND)
+Message-ID: <20200320182002.4573fa61@xps13>
+In-Reply-To: <1583907583-5967-1-git-send-email-ytc-mb-yfuruyama7@kioxia.com>
+References: <1583907583-5967-1-git-send-email-ytc-mb-yfuruyama7@kioxia.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320034342.26610-9-weijiang.yang@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yang,
+Hi Yoshio,
 
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on kvm/linux-next]
-[also build test WARNING on next-20200320]
-[cannot apply to vhost/linux-next tip/auto-latest linux/master linus/master v5.6-rc6]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Yang-Weijiang/Introduce-support-for-guest-CET-feature/20200320-155517
-base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git linux-next
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-181-g83789bbc-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com> wrote on Wed, 11 Mar
+2020 15:19:43 +0900:
 
 
-sparse warnings: (new ones prefixed by >>)
+The title is misleading, would it be better:
 
-   arch/x86/kvm/x86.c:98:46: sparse: sparse: undefined identifier 'X86_CR4_CET'
->> arch/x86/kvm/x86.c:98:46: sparse: sparse: cast from unknown type
-   arch/x86/kvm/x86.c:809:60: sparse: sparse: undefined identifier 'X86_CR4_CET'
-   arch/x86/kvm/x86.c:940:29: sparse: sparse: undefined identifier 'X86_CR4_CET'
-   arch/x86/kvm/x86.c:940:29: sparse: sparse: cast from unknown type
-   arch/x86/kvm/x86.c:956:19: sparse: sparse: undefined identifier 'X86_CR4_CET'
-   arch/x86/kvm/x86.c:956:19: sparse: sparse: cast from unknown type
-   arch/x86/kvm/x86.c:1233:23: sparse: sparse: undefined identifier 'MSR_IA32_U_CET'
-   arch/x86/kvm/x86.c:1233:39: sparse: sparse: undefined identifier 'MSR_IA32_S_CET'
-   arch/x86/kvm/x86.c:1234:9: sparse: sparse: undefined identifier 'MSR_IA32_PL0_SSP'
-   arch/x86/kvm/x86.c:1234:27: sparse: sparse: undefined identifier 'MSR_IA32_PL1_SSP'
-   arch/x86/kvm/x86.c:1234:45: sparse: sparse: undefined identifier 'MSR_IA32_PL2_SSP'
-   arch/x86/kvm/x86.c:1235:9: sparse: sparse: undefined identifier 'MSR_IA32_PL3_SSP'
-   arch/x86/kvm/x86.c:1235:27: sparse: sparse: undefined identifier 'MSR_IA32_INT_SSP_TAB'
-   arch/x86/kvm/x86.c:1512:14: sparse: sparse: undefined identifier 'MSR_IA32_PL0_SSP'
-   arch/x86/kvm/x86.c:1512:35: sparse: sparse: undefined identifier 'MSR_IA32_PL3_SSP'
-   arch/x86/kvm/x86.c:1513:14: sparse: sparse: undefined identifier 'MSR_IA32_U_CET'
-   arch/x86/kvm/x86.c:1514:14: sparse: sparse: undefined identifier 'MSR_IA32_S_CET'
-   arch/x86/kvm/x86.c:1515:14: sparse: sparse: undefined identifier 'MSR_IA32_INT_SSP_TAB'
-   arch/x86/kvm/x86.c:1512:14: sparse: sparse: incompatible types for 'case' statement
-   arch/x86/kvm/x86.c:1512:35: sparse: sparse: incompatible types for 'case' statement
-   arch/x86/kvm/x86.c:1513:14: sparse: sparse: incompatible types for 'case' statement
-   arch/x86/kvm/x86.c:1514:14: sparse: sparse: incompatible types for 'case' statement
-   arch/x86/kvm/x86.c:1515:14: sparse: sparse: incompatible types for 'case' statement
-   arch/x86/kvm/x86.c:2646:38: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const [noderef] <asn:1> * @@    got  const [noderef] <asn:1> * @@
-   arch/x86/kvm/x86.c:2646:38: sparse:    expected void const [noderef] <asn:1> *
-   arch/x86/kvm/x86.c:2646:38: sparse:    got unsigned char [usertype] *
-   arch/x86/kvm/x86.c:3267:25: sparse: sparse: undefined identifier 'MSR_IA32_U_CET'
-   arch/x86/kvm/x86.c:7549:15: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   arch/x86/kvm/x86.c:7549:15: sparse:    struct kvm_apic_map [noderef] <asn:4> *
-   arch/x86/kvm/x86.c:7549:15: sparse:    struct kvm_apic_map *
-   arch/x86/kvm/x86.c:9678:44: sparse: sparse: undefined identifier 'XFEATURE_MASK_CET_USER'
-   arch/x86/kvm/x86.c:9678:44: sparse: sparse: undefined identifier 'XFEATURE_MASK_CET_KERNEL'
-   arch/x86/kvm/x86.c:9912:16: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   arch/x86/kvm/x86.c:9912:16: sparse:    struct kvm_apic_map [noderef] <asn:4> *
-   arch/x86/kvm/x86.c:9912:16: sparse:    struct kvm_apic_map *
-   arch/x86/kvm/x86.c:9913:15: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   arch/x86/kvm/x86.c:9913:15: sparse:    struct kvm_pmu_event_filter [noderef] <asn:4> *
-   arch/x86/kvm/x86.c:9913:15: sparse:    struct kvm_pmu_event_filter *
-   arch/x86/kvm/x86.c:1512:14: sparse: sparse: Expected constant expression in case statement
-   arch/x86/kvm/x86.c:1512:35: sparse: sparse: Expected constant expression in case statement
-   arch/x86/kvm/x86.c:1513:14: sparse: sparse: Expected constant expression in case statement
-   arch/x86/kvm/x86.c:1514:14: sparse: sparse: Expected constant expression in case statement
-   arch/x86/kvm/x86.c:1515:14: sparse: sparse: Expected constant expression in case statement
---
-   arch/x86/kvm/emulate.c:5495:21: sparse: sparse: arithmetics on pointers to functions
-   arch/x86/kvm/emulate.c:4206:17: sparse: sparse: undefined identifier 'X86_CR4_CET'
->> arch/x86/kvm/emulate.c:4206:17: sparse: sparse: cast from unknown type
+	"Support reading the number of bitflips" 
 
-vim +98 arch/x86/kvm/x86.c
+> Add support vendor specific commands for KIOXIA CORPORATION BENAND.
+> The actual bitflips number can be get by this command.
 
-313a3dc75da206 drivers/kvm/x86.c  Carsten Otte        2007-10-11  97  
-b11306b53b2540 arch/x86/kvm/x86.c Sean Christopherson 2019-12-10 @98  static u64 __read_mostly cr4_reserved_bits = CR4_RESERVED_BITS;
-b11306b53b2540 arch/x86/kvm/x86.c Sean Christopherson 2019-12-10  99  
+                                    retrieved?
 
-:::::: The code at line 98 was first introduced by commit
-:::::: b11306b53b2540c6ba068c4deddb6a17d9f8d95b KVM: x86: Don't let userspace set host-reserved cr4 bits
+> 
+> Signed-off-by: Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
+> ---
+> changelog[v3]:Tested version.
+> original patch:"[RFC,v2] mtd: nand: toshiba: Add support for ->exec_op()".
+> 
+>  drivers/mtd/nand/raw/nand_toshiba.c | 55 +++++++++++++++++++++++++++++++++++--
+>  1 file changed, 53 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/raw/nand_toshiba.c b/drivers/mtd/nand/raw/nand_toshiba.c
+> index 9c03fbb..10fcfbd 100644
+> --- a/drivers/mtd/nand/raw/nand_toshiba.c
+> +++ b/drivers/mtd/nand/raw/nand_toshiba.c
+> @@ -14,14 +14,65 @@
+>  /* Recommended to rewrite for BENAND */
+>  #define TOSHIBA_NAND_STATUS_REWRITE_RECOMMENDED	BIT(3)
+>  
+> +/* ECC Status Read Command for BENAND */
+> +#define TOSHIBA_NAND_CMD_ECC_STATUS_READ	0x7A
+> +
+> +/* ECC Status Mask for BENAND */
+> +#define TOSHIBA_NAND_ECC_STATUS_MASK		0x0F
+> +
+> +/* Uncorrectable Error for BENAND */
+> +#define TOSHIBA_NAND_ECC_STATUS_UNCORR		0x0F
+> +
+> +static int toshiba_nand_benand_read_eccstatus_op(struct nand_chip *chip,
+> +						 u8 *buf)
+> +{
+> +	u8 *ecc_status = buf;
+> +
+> +	if (nand_has_exec_op(chip)) {
+> +		const struct nand_sdr_timings *sdr =
+> +			nand_get_sdr_timings(&chip->data_interface);
+> +		struct nand_op_instr instrs[] = {
+> +			NAND_OP_CMD(TOSHIBA_NAND_CMD_ECC_STATUS_READ,
+> +				    PSEC_TO_NSEC(sdr->tADL_min)),
+> +			NAND_OP_8BIT_DATA_IN(chip->ecc.steps, ecc_status, 0),
+> +		};
+> +		struct nand_operation op = NAND_OPERATION(chip->cur_cs, instrs);
+> +
+> +		return nand_exec_op(chip, &op);
+> +	}
+> +
+> +	return -ENOTSUPP;
+> +}
+> +
+>  static int toshiba_nand_benand_eccstatus(struct nand_chip *chip)
+>  {
+>  	struct mtd_info *mtd = nand_to_mtd(chip);
+>  	int ret;
+>  	unsigned int max_bitflips = 0;
+> -	u8 status;
+> +	u8 status, ecc_status[8];
 
-:::::: TO: Sean Christopherson <sean.j.christopherson@intel.com>
-:::::: CC: Paolo Bonzini <pbonzini@redhat.com>
+Shall we define this          ^ ?
+It is strange to have the number of steps hardcoded this way.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>  
+>  	/* Check Status */
+> +	ret = toshiba_nand_benand_read_eccstatus_op(chip, ecc_status);
+> +	if (!ret) {
+> +		unsigned int i, bitflips = 0;
+> +
+> +		for (i = 0; i < chip->ecc.steps; i++) {
+> +			bitflips = ecc_status[i] & TOSHIBA_NAND_ECC_STATUS_MASK;
+> +			if (bitflips == TOSHIBA_NAND_ECC_STATUS_UNCORR) {
+> +				mtd->ecc_stats.failed++;
+> +			} else {
+> +				mtd->ecc_stats.corrected += bitflips;
+> +				max_bitflips = max(max_bitflips, bitflips);
+> +			}
+> +		}
+> +
+> +		return max_bitflips;
+> +	}
+> +
+> +	/*
+> +	 * Fallback to regular status check if
+> +	 * toshiba_nand_benand_read_eccstatus_op() failed.
+> +	 */
+>  	ret = nand_status_op(chip, &status);
+>  	if (ret)
+>  		return ret;
+> @@ -108,7 +159,7 @@ static void toshiba_nand_decode_id(struct nand_chip *chip)
+>  	 */
+>  	if (chip->id.len >= 6 && nand_is_slc(chip) &&
+>  	    (chip->id.data[5] & 0x7) == 0x6 /* 24nm */ &&
+> -	    !(chip->id.data[4] & 0x80) /* !BENAND */) {
+> +	    !(chip->id.data[4] & TOSHIBA_NAND_ID4_IS_BENAND) /* !BENAND */) {
+>  		memorg->oobsize = 32 * memorg->pagesize >> 9;
+>  		mtd->oobsize = memorg->oobsize;
+>  	}
+
+Looks fine otherwise.
+
+Thanks,
+Miquèl
