@@ -2,153 +2,114 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430FCC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22BAC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 158362076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:22:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pnQNW5h4"
+	by mail.kernel.org (Postfix) with ESMTP id 8FEF720722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgCTKWj (ORCPT
+        id S1727154AbgCTKXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:22:39 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:36125 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgCTKWi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:22:38 -0400
-Received: by mail-vk1-f193.google.com with SMTP id m131so1584798vkh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 03:22:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8Ahg+K1LklBOYWBRqmStRbuNfs/FmsalbYYMIdthFUE=;
-        b=pnQNW5h4aMDIgh8RiTJcOrlLJPuG2Sy9cfcvjMPaQ7UYihYb1g1mZbvAvrxoa+Sbry
-         ZzZUm3jwhLJFzwiphhQOkznH3NY+RHCdBWCUmeyw+0NlzARUqQzVr9Ayq+0mVn7AFdIH
-         bpj0coq3pT7GieHK2dRjvUKLbWVasGg/BAvmXagNzJNKWni07lFLN0ckVK0ZS/sP3dAr
-         sVVky75+pEfM6wgXZS0hfZAWH2SptLcSJhDOPeoPOSZHU8hqDd+An/SiAa48K32BlJ06
-         K0TtrIPXZEAWP8bq3MZNQCyKOEVPGAavLqlmB+PRmvNDNDr6FHW/9mS4JN9hLfed0F2a
-         qQrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8Ahg+K1LklBOYWBRqmStRbuNfs/FmsalbYYMIdthFUE=;
-        b=obF+dIQQ4hldquWWpnK7xXIsdmOHL/2G+mweDCKGhLLwtpw4Uy4DLoqLJHProgZd6o
-         6sWbS4tpbP/ZT/MCHwfOVTJSJVyllh1ZL5WpwSJJW6zK1medyONeF2zeehi5OSoQOA4M
-         pjRiL/3IA7LPJsYyyCe0GO2rn3b8RJBfYoEk/hLEbVZwQ/uGQaNvwpXGoWfL2pduGyMh
-         oxfj4zBjREL/vS26lgogsg7kiYNw+YEz7iEmZ9OLoqQk9D4LVs/hCaadA+3wXLxBsgtz
-         nJXudv39l4GrGnGEFMgF6bChqpJBihZiFBWEgpVTfwfvFW5l3pPED78E99hVCZLfSMx0
-         84lQ==
-X-Gm-Message-State: ANhLgQ0Xu7u3uT391eN/p6hewfD0N7/uXq6GSnVm7H8peaJGM2vcpezV
-        hWsEbWfat3gCKbtbRJNmCN+2nx0swUuTGGswFtjTeA==
-X-Google-Smtp-Source: ADFU+vu54A/Qz9IrM4XdvkGAJ9wVr6A5ugW7FnZJwnfFEJmJccYTXWgPOZXeS7RZsCmmNsF4/LxwxKerSA7kqUU40r0=
-X-Received: by 2002:a1f:7f1d:: with SMTP id o29mr5723265vki.101.1584699757213;
- Fri, 20 Mar 2020 03:22:37 -0700 (PDT)
+        Fri, 20 Mar 2020 06:23:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:47072 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726847AbgCTKXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 06:23:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF43131B;
+        Fri, 20 Mar 2020 03:23:09 -0700 (PDT)
+Received: from [10.37.12.158] (unknown [10.37.12.158])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B3393F305;
+        Fri, 20 Mar 2020 03:23:07 -0700 (PDT)
+Subject: Re: [PATCH 2/2] perf: arm_dsu: Support DSU ACPI devices.
+To:     tuanphan@amperemail.onmicrosoft.com
+Cc:     mark.rutland@arm.com, tuanphan@os.amperecomputing.com,
+        linux-kernel@vger.kernel.org, sudeep.holla@arm.com,
+        patches@amperecomputing.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1584491323-31436-1-git-send-email-tuanphan@os.amperecomputing.com>
+ <a571cf7e-c2a5-e8f8-e782-8087249143b0@arm.com>
+ <64AE7BB3-F2A9-4A62-82FD-FFF2D6B7101C@amperemail.onmicrosoft.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <ba33d1fa-1afb-941b-0961-dc2394af03c6@arm.com>
+Date:   Fri, 20 Mar 2020 10:27:51 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <1582181100-29914-1-git-send-email-sbhanu@codeaurora.org>
- <CAPDyKFqSJ4h7UvQfQzWmSq9gg97A0MXvdcuXXaY7b-YUHs=V2g@mail.gmail.com>
- <158334039680.7173.16159724456027777605@swboyd.mtv.corp.google.com>
- <CAPDyKFqecH=AsvtN+JMxdk6pY2dntWUrhUWF6LEq_DLCcPe6pw@mail.gmail.com> <158463974696.152100.8345578995373250448@swboyd.mtv.corp.google.com>
-In-Reply-To: <158463974696.152100.8345578995373250448@swboyd.mtv.corp.google.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 20 Mar 2020 11:22:01 +0100
-Message-ID: <CAPDyKFrL6uWaKK1zkn6ag2ZqW7ro50VGq6DJnTNyoFS2yGMmRw@mail.gmail.com>
-Subject: Re: [PATCH V4] mmc: sdhci-msm: Update system suspend/resume callbacks
- of sdhci-msm platform driver
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Ram Prakash Gupta <rampraka@codeaurora.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <64AE7BB3-F2A9-4A62-82FD-FFF2D6B7101C@amperemail.onmicrosoft.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Mar 2020 at 18:42, Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Ulf Hansson (2020-03-06 02:07:41)
-> > On Wed, 4 Mar 2020 at 17:46, Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > Quoting Ulf Hansson (2020-03-04 07:34:29)
-> > > > On Thu, 20 Feb 2020 at 07:45, Shaik Sajida Bhanu <sbhanu@codeaurora.org> wrote:
-> > > > >
-> > > > > The existing suspend/resume callbacks of sdhci-msm driver are just
-> > > > > gating/un-gating the clocks. During suspend cycle more can be done
-> > > > > like disabling controller, disabling card detection, enabling wake-up events.
-> > > > >
-> > > > > So updating the system pm callbacks for performing these extra
-> > > > > actions besides controlling the clocks.
-> > > > >
-> > > > > Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-> > > > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > > > > ---
-> [...]
-> >
-> > >
-> > > >
-> > > > > +
-> > > > > +       ret = pm_runtime_force_suspend(dev);
-> > > >
-> > > > It looks to me that perhaps you could make use of solely
-> > > > pm_runtime_force_suspend(), then just skip calling
-> > > > sdhci_suspend|resume_host() altogether. Do you think that could work?
-> > >
-> > > Does that do all the things the commit text mentions is desired for
-> > > system suspend?
-> >
-> > No. :-)
-> >
-> > But why is system wakeup needed for an eMMC card?
-> >
->
-> I don't know if system wakeup is needed for an eMMC card. Probably only
-> if you plug in a card and some daemon wants to wake up and probe the
-> card for auto-play or something like that? Seems possible so might as
-> well expose the CD gpio as a wakeup in that case and let userspace
-> decide if it wants to do that.
+Hi Tuan
 
-Right, card detect IRQs could be useful for system wakeups.
+On 03/19/2020 10:49 PM, Tuan Phan wrote:
+> Hi Suzuki,
+> 
+>> On Mar 18, 2020, at 5:45 PM, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>>
+>> Hello,
+>>
+>>
+>> Please find my comments below.
+>>
+>> On 03/18/2020 12:28 AM, Tuan Phan wrote:
+>>> Add support for probing device from ACPI node.
+>>> Each DSU ACPI node defines "cpus" package which
+>>> each element is the MPIDR of associated cpu.
+>>> Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
 
-I assume you are using a GPIO IRQ for that, which is easily managed,
-as the runtime PM status of the mmc controller is irrelevant when
-configuring the GPIO IRQ as wakeup.
+...
 
-We even have a helper for doing this, mmc_gpio_set_cd_wake().
+>>> +#else /* CONFIG_ACPI */
+>>> +	int i, cpu, ret;
+>>> +	const union acpi_object *obj;
+>>> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
+>>> +	struct dsu_pmu *dsu_pmu =
+>>> +		(struct dsu_pmu *) platform_get_drvdata(pdev);
+>>> +
+>>
+>>> +	ret = acpi_dev_get_property(adev, "cpus", ACPI_TYPE_ANY, &obj);
+>>
+>> Is the binding documented somewhere ?
+>>
+>>
+>> nit: Also, why not :
+>> 	ret = acpi_dev_get_propert(adev, "cpus", ACPI_TYPE_PACKAGE, &obj);
+>> 	if (ret < 0)
+>> 		return ret;
+>> ?
+> => I couldn’t find the device tree binding document of DSU anywhere. Is It enough
 
->
-> Is runtime suspended state the same as system suspended state here
-> though? The commit text seems to imply that only clks are disabled when
-> it's desirable to disable the entire controller. I'm still fuzzy on how
-> runtime PM and system PM interact because it seems to have changed since
-> I looked last a few years ago. If the driver can stay in a runtime
-> suspended state across system suspend then I'm all for it. That would
-> save time for system PM transitions.
+The DT bindings are here :
 
-In most cases this should be possible. And so far, for this case, I
-haven't found a good reason to why it shouldn't work.
+Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt
 
-Although, perhaps we need to improve some of the sdhci's library
-functions for PM, to better support this.
+> to put a comment describing the acpi binding in the code or need somewhere else?
+
+The concern here is that we are simply trying to replicate the DT
+binding here, especially replacing the CPU phandles with MPIDRs.
+I am not an expert in the ACPI bindings, but I prefer ACPI
+phandle reference to the CPUs (which is much simpler) to
+MPIDRs (which is not that intuitive). And this is the same message
+that I got from our ACPI folks.
+
+Irrespective of what we end up with, this must be part of the "ACPI 
+bindings" document here :
+
+DEN0093 - Generic ACPI for Arm Components x.y Platform Design Document
+
+So that everybody uses the same bindings irrespective of the OS.
+You don't need to document the bindings here with the Linux kernel code.
+
 
 Kind regards
-Uffe
+Suzuki
