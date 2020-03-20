@@ -2,57 +2,57 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E20EAC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0598BC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04FA20740
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE5F320740
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nI5ulvVv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K/inijt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgCTCCC (ORCPT
+        id S1727499AbgCTCCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 22:02:02 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:40162 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgCTCCC (ORCPT
+        Thu, 19 Mar 2020 22:02:05 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40365 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgCTCCD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 22:02:02 -0400
-Received: by mail-pj1-f67.google.com with SMTP id bo3so1801042pjb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 19:02:01 -0700 (PDT)
+        Thu, 19 Mar 2020 22:02:03 -0400
+Received: by mail-pl1-f195.google.com with SMTP id h11so1854932plk.7
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 19:02:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WeyRq0Bbk2RSmZHgEPCvdWM5jbjVDDe5W4E9CInHi0c=;
-        b=nI5ulvVv/nvxRZe2zSkfLXLUG8f5/8rBe9na7G3cgR5oFJNs4hueir+3tAw/CQezO4
-         TJiS593SCUNa0EEGx9K4JeiGyWzQUK4fw+GYXvdwrhjll63fSCq/PZMbdQHm8BEvgC+S
-         wlh+lRcRcu+o+BH2PA/8+NVCdi2a3SrGugkz8=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WxCmmJIeQXXMDK4PXyk/uUgKhxeXHbfjhMrYeRKTAzE=;
+        b=K/inijt5Xy0NkV/t8PMLdVKiD30W6z9IktWegvVpXBE+kDdLb8I93hNCeXtvU1dQ5E
+         kp6mqdYVJdSQyLJYfFG62u0b41plJY16VIH1Q79pJpub5tIb/jrjcb50jd+nylUrI2Ms
+         WaQOjl5/jZD6LH7SdhpwICTtvNCmLyBPTvvLk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WeyRq0Bbk2RSmZHgEPCvdWM5jbjVDDe5W4E9CInHi0c=;
-        b=aypHyxwHmbc+bsVPhZ5aNAInDn4NRzMzeBpi67QucFqMpg0wWMhmDiTK09hOXdqC5F
-         H08pX8S2o7WHQWOImet/JzQB0VjVXuYVvFvHkLr86HlArD2wT0YBixHepjfGQz9r8aQe
-         8u5TZj5M+hb0DyphPHpznhyF4/oh7vWmlKQw0fTo2eTjyTZEytqqmBdQoG3mcwmuhVdi
-         Jdc3jxCeiTbHioge7NBg1gyLEYkR1wG8I6eBXgLX+szPWzxdiHvswT3fyjqLT9RKHk+x
-         7KzZm1tIp7wSENBI22QH1rPJArmARwU9LnwynQKSmBDvX805QJ+yATSu07wnGNHv7MTh
-         Oa8w==
-X-Gm-Message-State: ANhLgQ2dw+smc8T9PX4sB8fKS/r7PCuBFX8JYT4VDvUJtOaASHkEG7ds
-        NExVXImauFQyep5xNPWdQ3KlNA==
-X-Google-Smtp-Source: ADFU+vtuipaonYkXPOtPWNXbbTxyKTJprONJWA7md1SSm0Equk8vCQ2nX8F/bQllzMXTgTP1I7bGng==
-X-Received: by 2002:a17:90a:e98e:: with SMTP id v14mr6815170pjy.114.1584669721211;
-        Thu, 19 Mar 2020 19:02:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WxCmmJIeQXXMDK4PXyk/uUgKhxeXHbfjhMrYeRKTAzE=;
+        b=mVL4VZwvHP8gZ/91boSz/xzUcLUAAsSSoQg3IVtImAGvPbsgblo9HTi1hfDMfBn9Yp
+         NCv9WGvO6SNVa44jT2wEWqtyZs9Rnd6OqMQbtSQNcQWbTcb0OWMsS8YbcA+qX0Zr5uQC
+         61Tj3S1rTI+86ReF52THQ6yMWlBQRbFEnkjUoLmw4kND/7cG5V4BdfHJxKBvu3RiDhus
+         l6QFJ/lCXQJCNPn+dkMrjX3Zt3jQRLeoXXKVDvxCuGwZWcUD2E27S2k3Vt5t5LrMOtgG
+         CBfc+plkQDSSIyT1qzb8WMZd71RZQPKuZmjXG5UEGoR8Ys54AOwRqw7AY543ZYFh6J39
+         DNPQ==
+X-Gm-Message-State: ANhLgQ3GmgsU7qPUWJXKe+rIFZhwIhmzXWCFwbkJV3w5SxoWtzwcMbwT
+        tfhmCr+K6RgfEUz5sV++x2kXEg==
+X-Google-Smtp-Source: ADFU+vt0iHeozfFwcY0DOwR+KMv94sZ1RWrzdYePPtfXVvqMNZvkMhHZrPMAJ6ya0IuoOq9Xg6O+4Q==
+X-Received: by 2002:a17:902:8207:: with SMTP id x7mr5985653pln.185.1584669722286;
+        Thu, 19 Mar 2020 19:02:02 -0700 (PDT)
 Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id y13sm3475705pfp.88.2020.03.19.19.02.00
+        by smtp.gmail.com with ESMTPSA id y13sm3475705pfp.88.2020.03.19.19.02.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 19:02:00 -0700 (PDT)
+        Thu, 19 Mar 2020 19:02:01 -0700 (PDT)
 From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 To:     marcel@holtmann.org, linux-bluetooth@vger.kernel.org,
         ulf.hansson@linaro.org
@@ -61,10 +61,12 @@ Cc:     chromeos-bluetooth-upstreaming@chromium.org, mka@chromium.org,
         Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
         Johan Hedberg <johan.hedberg@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/1] Bluetooth: btmrvl: Reset SDIO card on hang
-Date:   Thu, 19 Mar 2020 19:01:52 -0700
-Message-Id: <20200320020153.98280-1-abhishekpandit@chromium.org>
+Subject: [PATCH 1/1] Bluetooth: btmrvl: Detect hangs and force a reset of the SDIO card
+Date:   Thu, 19 Mar 2020 19:01:53 -0700
+Message-Id: <20200319190144.1.I40cc9b3d5de04f0631c931d94757fb0f462b24bd@changeid>
 X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+In-Reply-To: <20200320020153.98280-1-abhishekpandit@chromium.org>
+References: <20200320020153.98280-1-abhishekpandit@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,35 +74,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Matthias Kaehlcke <mka@chromium.org>
 
-Hi Marcel,
+When scanning for BLE devices for a longer period (e.g. because a
+BLE device is paired, but not connected) the Marvell 8997 often
+ends up in a borked state, which manifests through failures on
+certain SDIO transactions.
 
-This patch adds an error recovery mechanism to the btmrvl driver. We
-have been using it on ChromeOS on kernel v4.19 and it has been on the
-stable channel release of ChromeOS for a few months now.
+When such a SDIO failure is detected force a reset of the SDIO
+card to initialize it from scratch. Since the SDIO bus is shared
+with the WiFi part of the chip this also involves a reset of WiFi.
 
-A side effect of this change is that other functions on the same card
-will be affected by the reset. The necessary patches to support this
-reset have already been added to the mwifiex driver by Ulf:
-
-11239229 New          [v3,1/3] mwifiex: Re-work support for SDIO HW reset
-11239233 New          [v3,2/3] mmc: core: Drop check for mmc_card_is_removable() in mmc_rescan()
-11239237 New          [v3,3/3] mmc: core: Re-work HW reset for SDIO cards
-
-You can see more information at crbug.com/1004473
-
-Thanks
-Abhishek
-
-
-
-Matthias Kaehlcke (1):
-  Bluetooth: btmrvl: Detect hangs and force a reset of the SDIO card
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+---
 
  drivers/bluetooth/btmrvl_sdio.c | 24 ++++++++++++++++++++++++
  drivers/bluetooth/btmrvl_sdio.h |  1 +
  2 files changed, 25 insertions(+)
 
+diff --git a/drivers/bluetooth/btmrvl_sdio.c b/drivers/bluetooth/btmrvl_sdio.c
+index 0f3a020703ab..69a8b6b3c11c 100644
+--- a/drivers/bluetooth/btmrvl_sdio.c
++++ b/drivers/bluetooth/btmrvl_sdio.c
+@@ -22,6 +22,8 @@
+ #include <linux/slab.h>
+ #include <linux/suspend.h>
+ 
++#include <linux/mmc/core.h>
++#include <linux/mmc/card.h>
+ #include <linux/mmc/sdio_ids.h>
+ #include <linux/mmc/sdio_func.h>
+ #include <linux/module.h>
+@@ -59,6 +61,23 @@ static const struct of_device_id btmrvl_sdio_of_match_table[] = {
+ 	{ }
+ };
+ 
++static void btmrvl_sdio_card_reset_work(struct work_struct *work)
++{
++	struct btmrvl_sdio_card *card =
++		container_of(work, struct btmrvl_sdio_card, reset_work);
++	struct sdio_func *func = card->func;
++
++	sdio_claim_host(func);
++	mmc_hw_reset(func->card->host);
++	sdio_release_host(func);
++}
++
++static void btmrvl_sdio_card_reset(struct btmrvl_sdio_card *card)
++{
++	BT_ERR("resetting SDIO card!");
++	schedule_work(&card->reset_work);
++}
++
+ static irqreturn_t btmrvl_wake_irq_bt(int irq, void *priv)
+ {
+ 	struct btmrvl_sdio_card *card = priv;
+@@ -774,6 +793,7 @@ static int btmrvl_sdio_card_to_host(struct btmrvl_private *priv)
+ 	ret = btmrvl_sdio_read_rx_len(card, &buf_len);
+ 	if (ret < 0) {
+ 		BT_ERR("read rx_len failed");
++		btmrvl_sdio_card_reset(card);
+ 		ret = -EIO;
+ 		goto exit;
+ 	}
+@@ -809,6 +829,7 @@ static int btmrvl_sdio_card_to_host(struct btmrvl_private *priv)
+ 			  num_blocks * blksz);
+ 	if (ret < 0) {
+ 		BT_ERR("readsb failed: %d", ret);
++		btmrvl_sdio_card_reset(card);
+ 		ret = -EIO;
+ 		goto exit;
+ 	}
+@@ -913,6 +934,7 @@ static int btmrvl_sdio_read_to_clear(struct btmrvl_sdio_card *card, u8 *ireg)
+ 	ret = sdio_readsb(card->func, adapter->hw_regs, 0, SDIO_BLOCK_SIZE);
+ 	if (ret) {
+ 		BT_ERR("sdio_readsb: read int hw_regs failed: %d", ret);
++		btmrvl_sdio_card_reset(card);
+ 		return ret;
+ 	}
+ 
+@@ -1591,6 +1613,8 @@ static int btmrvl_sdio_probe(struct sdio_func *func,
+ 		card->supports_fw_dump = data->supports_fw_dump;
+ 	}
+ 
++	INIT_WORK(&card->reset_work, btmrvl_sdio_card_reset_work);
++
+ 	if (btmrvl_sdio_register_dev(card) < 0) {
+ 		BT_ERR("Failed to register BT device!");
+ 		return -ENODEV;
+diff --git a/drivers/bluetooth/btmrvl_sdio.h b/drivers/bluetooth/btmrvl_sdio.h
+index 3a522d23ee6e..d35a2f1b7046 100644
+--- a/drivers/bluetooth/btmrvl_sdio.h
++++ b/drivers/bluetooth/btmrvl_sdio.h
+@@ -103,6 +103,7 @@ struct btmrvl_sdio_card {
+ 	struct btmrvl_private *priv;
+ 	struct device_node *plt_of_node;
+ 	struct btmrvl_plt_wake_cfg *plt_wake_cfg;
++	struct work_struct reset_work;
+ };
+ 
+ struct btmrvl_sdio_device {
 -- 
 2.25.1.696.g5e7596f4ac-goog
 
