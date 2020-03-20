@@ -2,75 +2,321 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4313DC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0951DC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A9D2051A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A822051A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:33:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgCTCdW (ORCPT
+        id S1727015AbgCTCdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 22:33:22 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33404 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726666AbgCTCdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 22:33:21 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BAFFA24877BE96986CAF;
-        Fri, 20 Mar 2020 10:33:14 +0800 (CST)
-Received: from [127.0.0.1] (10.173.223.234) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Fri, 20 Mar 2020
- 10:33:13 +0800
-Subject: Re: [PATCH bpf-next] bpf: tcp: Fix unused function warnings
-To:     Jakub Sitnicki <jakub@cloudflare.com>
-References: <20200319124631.58432-1-yuehaibing@huawei.com>
- <87fte4xot3.fsf@cloudflare.com>
-CC:     <lmb@cloudflare.com>, <daniel@iogearbox.net>,
-        <john.fastabend@gmail.com>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <f27ae22a-e5e4-2873-1e00-bb59979e92ff@huawei.com>
+Received: from mga14.intel.com ([192.55.52.115]:29834 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726646AbgCTCdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 22:33:21 -0400
+IronPort-SDR: z0HNa5FV7vimi3PCrE6YjuPoXzYxGYprA43qYkCWbRQkWxQb/bcuQQsklk/SYAsMgI7Eefp60Z
+ RZHKbZs+oTmg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 19:33:20 -0700
+IronPort-SDR: 3gLzar50WJh58Au/dPfS6lx/T+v8IZQKDkiOwfTZeGclg81UlL5H5XPgqdBU8Slfy0mjCfpB43
+ XBZJWWCaLDQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,282,1580803200"; 
+   d="scan'208";a="239106177"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 19 Mar 2020 19:33:20 -0700
+Received: from [10.215.159.127] (vramuthx-mobl1.gar.corp.intel.com [10.215.159.127])
+        by linux.intel.com (Postfix) with ESMTP id 0E21358058B;
+        Thu, 19 Mar 2020 19:33:13 -0700 (PDT)
+Subject: Re: [PATCH v12 1/4] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        broonie@kernel.org, vigneshr@ti.com, devicetree@vger.kernel.org,
+        boris.brezillon@free-electrons.com,
+        simon.k.r.goldschmidt@gmail.com, dinguyen@kernel.org,
+        tien.fong.chee@intel.com, marex@denx.de,
+        linux-mtd@lists.infradead.org, dwmw2@infradead.org, richard@nod.at,
+        computersforpeace@gmail.com, cyrille.pitchen@atmel.com,
+        david.oberhollenzer@sigma-star.at, miquel.raynal@bootlin.com,
+        tudor.ambarus@gmail.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+References: <20200310015213.1734-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200310015213.1734-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200319184448.GA25121@bogus>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <7b12612b-17b2-3bab-5c58-57dd46b7d44d@linux.intel.com>
 Date:   Fri, 20 Mar 2020 10:33:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <87fte4xot3.fsf@cloudflare.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200319184448.GA25121@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/20 1:00, Jakub Sitnicki wrote:
-> On Thu, Mar 19, 2020 at 01:46 PM CET, YueHaibing wrote:
->> If BPF_STREAM_PARSER is not set, gcc warns:
+Hi Rob,
+
+      Thank you for the review comments...
+
+On 20/3/2020 2:44 am, Rob Herring wrote:
+> On Tue, Mar 10, 2020 at 09:52:10AM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 >>
->> net/ipv4/tcp_bpf.c:483:12: warning: 'tcp_bpf_sendpage' defined but not used [-Wunused-function]
->> net/ipv4/tcp_bpf.c:395:12: warning: 'tcp_bpf_sendmsg' defined but not used [-Wunused-function]
->> net/ipv4/tcp_bpf.c:13:13: warning: 'tcp_bpf_stream_read' defined but not used [-Wunused-function]
+>> Add dt-bindings documentation for Cadence-QSPI controller to support
+>> spi based flash memories.
 >>
->> Moves the unused functions into the #ifdef
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 >> ---
-> 
-> In addition to this fix, looks like tcp_bpf_recvmsg can be static and
-> also conditional on CONFIG_BPF_STREAM_PARSER.
+>>   .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
+>>   .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 127 +++++++++++++++++++++
+>>   2 files changed, 127 insertions(+), 67 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+>>   create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+>> deleted file mode 100644
+>> index 945be7d5b236..000000000000
+>> --- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+>> +++ /dev/null
+>> @@ -1,67 +0,0 @@
+>> -* Cadence Quad SPI controller
+>> -
+>> -Required properties:
+>> -- compatible : should be one of the following:
+>> -	Generic default - "cdns,qspi-nor".
+>> -	For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
+>> -	For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
+>> -- reg : Contains two entries, each of which is a tuple consisting of a
+>> -	physical address and length. The first entry is the address and
+>> -	length of the controller register set. The second entry is the
+>> -	address and length of the QSPI Controller data area.
+>> -- interrupts : Unit interrupt specifier for the controller interrupt.
+>> -- clocks : phandle to the Quad SPI clock.
+>> -- cdns,fifo-depth : Size of the data FIFO in words.
+>> -- cdns,fifo-width : Bus width of the data FIFO in bytes.
+>> -- cdns,trigger-address : 32-bit indirect AHB trigger address.
+>> -
+>> -Optional properties:
+>> -- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
+>> -- cdns,rclk-en : Flag to indicate that QSPI return clock is used to latch
+>> -  the read data rather than the QSPI clock. Make sure that QSPI return
+>> -  clock is populated on the board before using this property.
+>> -
+>> -Optional subnodes:
+>> -Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
+>> -custom properties:
+>> -- cdns,read-delay : Delay for read capture logic, in clock cycles
+>> -- cdns,tshsl-ns : Delay in nanoseconds for the length that the master
+>> -                  mode chip select outputs are de-asserted between
+>> -		  transactions.
+>> -- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being
+>> -                  de-activated and the activation of another.
+>> -- cdns,tchsh-ns : Delay in nanoseconds between last bit of current
+>> -                  transaction and deasserting the device chip select
+>> -		  (qspi_n_ss_out).
+>> -- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
+>> -                  and first bit transfer.
+>> -- resets	: Must contain an entry for each entry in reset-names.
+>> -		  See ../reset/reset.txt for details.
+>> -- reset-names	: Must include either "qspi" and/or "qspi-ocp".
+>> -
+>> -Example:
+>> -
+>> -	qspi: spi@ff705000 {
+>> -		compatible = "cdns,qspi-nor";
+>> -		#address-cells = <1>;
+>> -		#size-cells = <0>;
+>> -		reg = <0xff705000 0x1000>,
+>> -		      <0xffa00000 0x1000>;
+>> -		interrupts = <0 151 4>;
+>> -		clocks = <&qspi_clk>;
+>> -		cdns,is-decoded-cs;
+>> -		cdns,fifo-depth = <128>;
+>> -		cdns,fifo-width = <4>;
+>> -		cdns,trigger-address = <0x00000000>;
+>> -		resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
+>> -		reset-names = "qspi", "qspi-ocp";
+>> -
+>> -		flash0: n25q00@0 {
+>> -			...
+>> -			cdns,read-delay = <4>;
+>> -			cdns,tshsl-ns = <50>;
+>> -			cdns,tsd2d-ns = <50>;
+>> -			cdns,tchsh-ns = <4>;
+>> -			cdns,tslch-ns = <4>;
+>> -		};
+>> -	};
+>> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>> new file mode 100644
+>> index 000000000000..d21f80604af4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>> @@ -0,0 +1,127 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Cadence QSPI Flash Controller support
+>> +
+>> +maintainers:
+>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> +
+>> +allOf:
+>> +  - $ref: "spi-controller.yaml#"
+>> +
+>> +description: |
+>> +  Binding Documentation for Cadence QSPI controller,This controller is
+>> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
+>> +  has been tested On Intel's LGM SoC.
+>> +
+>> +properties:
+>> +  compatible:
+>> +     enum:
+>> +       - cdns,qspi-nor
+>> +       - ti,k2g-qspi
+>> +       - ti,am654-ospi
+>> +       - intel,lgm-qspi
+>> +
+>> +  reg:
+>> +    maxItems: 2
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  cdns,fifo-depth:
+>> +    description:
+>> +     Depth of hardware FIFOs.
+>> +    allOf:
+>> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+>> +      - enum: [ 128, 256 ]
+>> +      - default: 128
+>> +
+>> +  cdns,fifo-width:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      4 byte bus width of the data FIFO in bytes.
+>> +
+>> +  cdns,trigger-address:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      32-bit indirect AHB trigger address.
+>> +
+>> +  cdns,rclk-en:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      Flag to indicate that QSPI return clock is used to latch the read data
+>> +      rather than the QSPI clock. Make sure that QSPI return clock is populated
+>> +      on the board before using this property.
+> Sounds like a boolean rather than a uint32? If not, then constraints on
+> the values?
+Good catch, will update.
+>> +# subnode's properties
+>> +patternProperties:
+>> +  "^.*@[0-9a-fA-F]+$":
+> How many chip selects do you support? The unit-address can be limited as
+> I'd guess it's less than 16. Also, should be lowercase hex.
+MAX 16 , will update.
+>> +    type: object
+>> +    description:
+>> +      flash device uses the subnodes below defined properties.
+>> +
+>> +  cdns,read-delay:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      Delay in 4 microseconds, read capture logic, in clock cycles.
+> 4us or clock cycles?
+clock cycles
+>> +
+>> +  cdns,tshsl-ns:
+>> +    description: |
+>> +      Delay in 50 nanoseconds, for the length that the master mode chip select
+>> +      outputs are de-asserted between transactions.
+> Sounds like you can add:
+>
+> multipleOf: 50
+>
+>> +
+>> +  cdns,tsd2d-ns:
+>> +    description: |
+>> +      Delay in 50 nanoseconds, between one chip select being de-activated
+>> +      and the activation of another.
+> Same here
+>
+>> +
+>> +  cdns,tchsh-ns:
+>> +    description: |
+>> +      Delay in 4 nanoseconds, between last bit of current transaction and
+>> +      deasserting the device chip select (qspi_n_ss_out).
+> multipleOf: 4
+>
+>> +
+>> +  cdns,tslch-ns:
+>> +    description: |
+>> +      Delay in 4 nanoseconds, between setting qspi_n_ss_out low and
+>> +      first bit transfer.
+> multipleOf: 4
+Noted, will update all of the above.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - clocks
+>> +  - cdns,fifo-depth
+>> +  - cdns,fifo-width
+>> +  - cdns,trigger-address
+>> +
+>> +examples:
+>> +  - |
+>> +    qspi: spi@ff705000 {
+> Drop the label.
+Agreed!
+>> +          compatible = "cdns,qspi-nor";
+>> +          #address-cells = <1>;
+>> +          #size-cells = <0>;
+>> +          reg = <0xff705000 0x1000>,
+>> +                <0xffa00000 0x1000>;
+>> +          interrupts = <0 151 4>;
+>> +          clocks = <&qspi_clk>;
+>> +          cdns,fifo-depth = <128>;
+>> +          cdns,fifo-width = <4>;
+>> +          cdns,trigger-address = <0x00000000>;
+>> +
+>> +          flash0: n25q00@0 {
+> flash@0
 
-Thanks, will do this in next version.
+Agreed!
 
-> 
-> Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
-> 
-> .
-> 
-
+Regards
+Vadivel
+>> +              compatible = "jedec,spi-nor";
+>> +              reg = <0x0>;
+>> +              cdns,read-delay = <4>;
+>> +              cdns,tshsl-ns = <50>;
+>> +              cdns,tsd2d-ns = <50>;
+>> +              cdns,tchsh-ns = <4>;
+>> +              cdns,tslch-ns = <4>;
+>> +          };
+>> +    };
+>> +
+>> -- 
+>> 2.11.0
+>>
