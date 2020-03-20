@@ -2,85 +2,76 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDC4C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21888C43332
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A1102070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C7820724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:33:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgCTD25 (ORCPT
+        id S1726902AbgCTDdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 23:28:57 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:46326 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbgCTD25 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 23:28:57 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 84615158EC784;
-        Thu, 19 Mar 2020 20:28:56 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 20:28:55 -0700 (PDT)
-Message-Id: <20200319.202855.777232170285897789.davem@davemloft.net>
-To:     dhowells@redhat.com
-Cc:     netdev@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 0/6] rxrpc, afs: Interruptibility fixes
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <158461880968.3094720.5019510060910604912.stgit@warthog.procyon.org.uk>
-References: <158461880968.3094720.5019510060910604912.stgit@warthog.procyon.org.uk>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 19 Mar 2020 20:28:56 -0700 (PDT)
+        Thu, 19 Mar 2020 23:33:35 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:38620 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726103AbgCTDde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 23:33:34 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6FA3E1A034C;
+        Fri, 20 Mar 2020 04:33:32 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E738D1A0340;
+        Fri, 20 Mar 2020 04:33:24 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C18D9402E4;
+        Fri, 20 Mar 2020 11:33:15 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, horia.geanta@nxp.com, peng.fan@nxp.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 1/3] dt-bindings: thermal: imx8mm-thermal: Add support for i.MX8MP
+Date:   Fri, 20 Mar 2020 11:26:29 +0800
+Message-Id: <1584674791-9717-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
-Date: Thu, 19 Mar 2020 11:53:29 +0000
+Add thermal binding doc for Freescale's i.MX8MP Thermal Monitoring Unit.
 
-> Here are a number of fixes for AF_RXRPC and AFS that make AFS system calls
-> less interruptible and so less likely to leave the filesystem in an
-> uncertain state.  There's also a miscellaneous patch to make tracing
-> consistent.
-> 
->  (1) Firstly, abstract out the Tx space calculation in sendmsg.  Much the
->      same code is replicated in a number of places that subsequent patches
->      are going to alter, including adding another copy.
-> 
->  (2) Fix Tx interruptibility by allowing a kernel service, such as AFS, to
->      request that a call be interruptible only when waiting for a call slot
->      to become available (ie. the call has not taken place yet) or that a
->      call be not interruptible at all (e.g. when we want to do writeback
->      and don't want a signal interrupting a VM-induced writeback).
-> 
->  (3) Increase the minimum delay on MSG_WAITALL for userspace sendmsg() when
->      waiting for Tx buffer space as a 2*RTT delay is really small over 10G
->      ethernet and a 1 jiffy timeout might be essentially 0 if at the end of
->      the jiffy period.
-> 
->  (4) Fix some tracing output in AFS to make it consistent with rxrpc.
-> 
->  (5) Make sure aborted asynchronous AFS operations are tidied up properly
->      so we don't end up with stuck rxrpc calls.
-> 
->  (6) Make AFS client calls uninterruptible in the Rx phase.  If we don't
->      wait for the reply to be fully gathered, we can't update the local VFS
->      state and we end up in an indeterminate state with respect to the
->      server.
-> 
-> The patches are tagged here:
-> 
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
-> 	rxrpc-fixes-20200319
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+No change.
+---
+ Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Pulled, thanks David.
+diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+index d09ae82..3629d3c 100644
+--- a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+@@ -1,10 +1,10 @@
+ * Thermal Monitoring Unit (TMU) on Freescale i.MX8MM SoC
+ 
+ Required properties:
+-- compatible : Must be "fsl,imx8mm-tmu".
++- compatible : Must be "fsl,imx8mm-tmu" or "fsl,imx8mp-tmu".
+ - reg : Address range of TMU registers.
+ - clocks : TMU's clock source.
+-- #thermal-sensor-cells : Should be 0. See ./thermal.txt for a description.
++- #thermal-sensor-cells : Should be 0 or 1. See ./thermal.txt for a description.
+ 
+ Example:
+ tmu: tmu@30260000 {
+-- 
+2.7.4
+
