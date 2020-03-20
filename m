@@ -2,121 +2,144 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6890CC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDDFC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5BD20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:10:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584681053;
-	bh=bHqz/mmjyWz7y2CbYXKF3rlS2vNGxaJf7CYZ9FIl/Hc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vx5Mktb34ib7dDR25bhP/QqEYKhlNfOkX8pI/XgGix7GenBcaU3UzVK24ycCFQabU
-	 8zLOQLKoUiQQikU+DP04cFaSLkxOr2gZxGiHb/yZ2ze/Og24AIB0ra1obOvUxm8Eiv
-	 uN/Yy96NyFqgllsxj3SQlkPzm+xdm6e/ERvGNp+Y=
+	by mail.kernel.org (Postfix) with ESMTP id 01FE320722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:15:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="L3FmoXlO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgCTFKw (ORCPT
+        id S1726831AbgCTFPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 01:10:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgCTFKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 01:10:52 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05DE12072D;
-        Fri, 20 Mar 2020 05:10:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584681051;
-        bh=bHqz/mmjyWz7y2CbYXKF3rlS2vNGxaJf7CYZ9FIl/Hc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CS+AMu4Ldrf5EQrnN3qqOyzcwytupsd2xi8te7S9EclBM61mvUsK4Ty8Ax7mBMCL4
-         JrRgTSfUZMEg0PH+nsGHFpcp9255sLia17GXV7e0lwLANmIZg5fIe0HcAz1VnEFoNM
-         EZeQ0BASP2vftBfk6DI/UUBTAVFxJ3Wqo5/e0Rkg=
-Date:   Thu, 19 Mar 2020 22:10:49 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Jiri Slaby <jslaby@suse.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        Eric Dumazet <edumazet@google.com>,
-        Nicolas Pitre <nico@fluxnic.net>
-Subject: Re: [PATCH v2 1/2] vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use
- virtual console
-Message-ID: <20200320051049.GA1315@sol.localdomain>
-References: <20200318222704.GC2334@sol.localdomain>
- <20200318223810.162440-1-ebiggers@kernel.org>
- <20200318223810.162440-2-ebiggers@kernel.org>
- <2f762aee-720b-9bec-620f-61129c724de6@suse.com>
+        Fri, 20 Mar 2020 01:15:36 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7305 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCTFPg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 01:15:36 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e74516a0000>; Thu, 19 Mar 2020 22:15:22 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 19 Mar 2020 22:15:35 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 19 Mar 2020 22:15:35 -0700
+Received: from [10.25.97.155] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Mar
+ 2020 05:15:32 +0000
+Subject: Re: [PATCH -next] PCI: dwc: fix compile err for pcie-tagra194
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Qiujun Huang <hqjagain@gmail.com>, <anders.roxell@linaro.org>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <amurray@thegoodpenguin.co.uk>, <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1584621380-21152-1-git-send-email-hqjagain@gmail.com>
+ <20200319173710.GA7433@e121166-lin.cambridge.arm.com>
+From:   Vidya Sagar <vidyas@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <e16eb1a7-6ada-a8ed-c308-6fc5c9a8b7be@nvidia.com>
+Date:   Fri, 20 Mar 2020 10:45:29 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2f762aee-720b-9bec-620f-61129c724de6@suse.com>
+In-Reply-To: <20200319173710.GA7433@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1584681322; bh=5cDnCRVr/SQ+yk+RPLat6q5cSmCpBVeJdv46ovb/TLA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=L3FmoXlOLZBJDmfUoTpBdPgvdunMUXY0nysEiquE9EG4KKGiN6M0FQy4HZr/4+iGq
+         lYU7NsF7sarzjjH0C67tIepd2evlFb0HApy9iGvodOvFmW4iWX7zBWDirNHArKQMmf
+         YBeyJRnf4K8guy3MO3pVIiELn6umNXzspDxubf6sY5jbHO9m+CVOogvqABOMHEifkK
+         blqvFgjOqGqry/0nMgioizgsvjaBXRfUiZjjov1HEvBzlNjkuret1lVSkVo+3SiTwG
+         CGYLQeg/NPi2TPw6/Nqv6p+IwudYEIqEGwulJaFSWkvR3Na/LjdLVLqnRetJcb2h/9
+         8GAJ/F0LVZ6pw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 08:36:28AM +0100, Jiri Slaby wrote:
-> On 18. 03. 20, 23:38, Eric Biggers wrote:
-> > --- a/drivers/tty/vt/vt.c
-> > +++ b/drivers/tty/vt/vt.c
-> > @@ -1102,6 +1102,9 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
-> >  	tty_port_init(&vc->port);
-> >  	INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
-> >  
-> > +	/* if this wasn't the case, we'd have to implement port->ops.destruct */
-> > +	BUILD_BUG_ON(offsetof(struct vc_data, port) != 0);
-> > +
-> 
-> This is 3 lines, implementing destruct would be like 4-5 :)? Please
-> implement destruct instead.
-> 
-> Otherwise looks good.
-> 
 
-Actually implementing destruct would be 12 lines, see below.  Remember there is
-no tty_port_operations defined yet so we'd have to define it just for destruct.
 
-Do you still prefer it?
+On 3/19/2020 11:07 PM, Lorenzo Pieralisi wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Thu, Mar 19, 2020 at 08:36:20PM +0800, Qiujun Huang wrote:
+>> make allmodconfig
+>> ERROR: modpost: "dw_pcie_ep_init_notify" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+>> ERROR: modpost: "dw_pcie_ep_init_complete" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+>> ERROR: modpost: "dw_pcie_ep_linkup" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+>> make[2]: *** [__modpost] Error 1
+>> make[1]: *** [modules] Error 2
+>> make: *** [sub-make] Error 2
+>>
+>> need to export the symbols.
+>>
+>> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-designware-ep.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+> 
+> I have squashed this in with the original patch.
+> 
+> @Vidya: is this something we missed in the review cycle ? Asking just
+> to make sure it was not me who made a mistake while merging the code.
+My apologies. I wasn't compiling the driver as a module (instead built 
+into the kernel image)
+BTW, I see
+ERROR: modpost: "dw_pcie_ep_init" 
+[drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+also along with the above three. So I think even dw_pcie_ep_init() needs 
+to be exported.
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index ec34f1f5f3bb5..309a39197be0a 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -1075,6 +1075,17 @@ static void visual_deinit(struct vc_data *vc)
- 	module_put(vc->vc_sw->owner);
- }
- 
-+static void vc_port_destruct(struct tty_port *port)
-+{
-+	struct vc_data *vc = container_of(port, struct vc_data, port);
-+
-+	kfree(vc);
-+}
-+
-+static const struct tty_port_operations vc_port_ops = {
-+	.destruct = vc_port_destruct,
-+};
-+
- int vc_allocate(unsigned int currcons)	/* return 0 on success */
- {
- 	struct vt_notifier_param param;
-@@ -1100,11 +1111,9 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
- 
- 	vc_cons[currcons].d = vc;
- 	tty_port_init(&vc->port);
-+	vc->port.ops = &vc_port_ops;
- 	INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
- 
--	/* if this wasn't the case, we'd have to implement port->ops.destruct */
--	BUILD_BUG_ON(offsetof(struct vc_data, port) != 0);
--
- 	visual_init(vc, currcons, 1);
- 
- 	if (!*vc->vc_uni_pagedir_loc)
+Thanks,
+Vidya Sagar
+> 
+> Thanks,
+> Lorenzo
+> 
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> index 4233c43..60d62ef 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> @@ -18,6 +18,7 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+>>
+>>        pci_epc_linkup(epc);
+>>   }
+>> +EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
+>>
+>>   void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
+>>   {
+>> @@ -25,6 +26,7 @@ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
+>>
+>>        pci_epc_init_notify(epc);
+>>   }
+>> +EXPORT_SYMBOL_GPL(dw_pcie_ep_init_notify);
+>>
+>>   static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
+>>                                   int flags)
+>> @@ -535,6 +537,7 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+>>
+>>        return 0;
+>>   }
+>> +EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
+>>
+>>   int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>>   {
+>> --
+>> 1.8.3.1
+>>
