@@ -2,230 +2,217 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694CAC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098B4C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA1D2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:18:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dyq1Yvhz"
+	by mail.kernel.org (Postfix) with ESMTP id D409B20781
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:21:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbgCTPSo (ORCPT
+        id S1727347AbgCTPVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:18:44 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43263 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbgCTPSn (ORCPT
+        Fri, 20 Mar 2020 11:21:54 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39970 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbgCTPVy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 11:18:43 -0400
-Received: by mail-qk1-f193.google.com with SMTP id o10so1424750qki.10
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 08:18:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CMdn/vEztvR1JjJusqBbOT1Y2kMsnjTOnNP0m/IulTk=;
-        b=Dyq1YvhzCMXXJn5C3ZtTSfvSLGH/jsTRYChDT+32XwQEgscbnwPh3yTchjEuWiOl7y
-         gqyHg15oGFEyqu9dRA9MQ9zJs1BUkymVQwrs589VVRq9LP/7lfpwwBhs7eW8A0ifbXwm
-         AfP0CpEXgSQNeN5tnkDHE78f3txWsKMmHpdm2r+G0/InoZbJwhIl2TtIK3/JIuWhor18
-         er4D8FHEDc4bzwueUYtW+ONFWM8JZ4BcxQl7Y+U4T2RRB85Epu9HhCTTCoADot4PRsIb
-         Ps0omVR6YqqE6fhI7uvdlZ4GZ/3uyRPr9hpjljGF51PBLEamauaDTCUqzPPy0Q85Dicm
-         4v9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CMdn/vEztvR1JjJusqBbOT1Y2kMsnjTOnNP0m/IulTk=;
-        b=RZXHiedHq19oADIRFRDf5Y4SNkAvB3CpPZalWu8x+vvcPuxJx4l28XeifbamQtEjkm
-         EGyf5pCyE9dgaI5rETVcWpS72nDpADZnBfH13pFHmO07cjCL7OebnBXx2kz35Ec7k/m9
-         WFGieddm5a0wBkssUH4N9GJ3atyb/DY/yF7P42fpvubIUdVycicj+w/omND6/iIGX1Yo
-         9fYloGtg73yfkEgL1DQcDBQIo3XHOTy6Q6IXc1v3X202PW76Mx/Dmr7/+D7GOi4nTUiG
-         HrrC/3iS4XZGFlz+Er5bmql4sgGdpt769CYsKPCkN1Kk7jQZz9baHPhCfkvyX2BnieoC
-         S5sg==
-X-Gm-Message-State: ANhLgQ3mWUJjHvw8KZf3SewLNHqdqvKL0H2ee4KJRbZfwERIUFqfrwys
-        XZa5qkABgSHxRy5+sXJyMQR6gLasqYQyHd8RtQyh0g==
-X-Google-Smtp-Source: ADFU+vtzr7VU58zGNc4KSQSr/KCr50ImaVWUg3vTbElEM7j6/APuIlOpZtpoy4ufI1XzPHmHv/tIvaQBOrIhaQmySrU=
-X-Received: by 2002:a37:8b01:: with SMTP id n1mr7514871qkd.407.1584717521649;
- Fri, 20 Mar 2020 08:18:41 -0700 (PDT)
+        Fri, 20 Mar 2020 11:21:54 -0400
+Received: from [IPv6:2a02:810a:113f:ad1c:d59e:75b0:dca:337a] (unknown [IPv6:2a02:810a:113f:ad1c:d59e:75b0:dca:337a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: dafna)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9A4662975DA;
+        Fri, 20 Mar 2020 15:21:51 +0000 (GMT)
+Subject: Re: [PATCH] dt-bindings: input: atmel_mxt_ts: convert
+ atmel,maxtouch.txt to yaml
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, Nick Dyer <nick@shmanahar.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Linux Input <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Collabora Kernel ML <kernel@collabora.com>, dafna3@gmail.com
+References: <20200303172533.30602-1-dafna.hirschfeld@collabora.com>
+ <20200310211437.GA18992@bogus>
+ <f612396e-e5e2-db76-6297-a108b53e4000@collabora.com>
+ <CAL_JsqLTMdG-=_pTPsazspEO3LtDth=xm9s8sqzW+AswWttKJA@mail.gmail.com>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <496a1e2d-a595-f6a6-0ce5-559453b15702@collabora.com>
+Date:   Fri, 20 Mar 2020 16:21:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200226004608.8128-1-trishalfonso@google.com>
- <CAKFsvULd7w21T_nEn8QiofQGMovFBmi94dq2W_-DOjxf5oD-=w@mail.gmail.com>
- <4b8c1696f658b4c6c393956734d580593b55c4c0.camel@sipsolutions.net>
- <674ad16d7de34db7b562a08b971bdde179158902.camel@sipsolutions.net>
- <CACT4Y+bdxmRmr57JO_k0whhnT2BqcSA=Jwa5M6=9wdyOryv6Ug@mail.gmail.com> <ded22d68e623d2663c96a0e1c81d660b9da747bc.camel@sipsolutions.net>
-In-Reply-To: <ded22d68e623d2663c96a0e1c81d660b9da747bc.camel@sipsolutions.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 20 Mar 2020 16:18:30 +0100
-Message-ID: <CACT4Y+YzM5bwvJ=yryrz1_y=uh=NX+2PNu4pLFaqQ2BMS39Fdg@mail.gmail.com>
-Subject: Re: [PATCH] UML: add support for KASAN under x86_64
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Patricia Alfonso <trishalfonso@google.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        anton.ivanov@cambridgegreys.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>, linux-um@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAL_JsqLTMdG-=_pTPsazspEO3LtDth=xm9s8sqzW+AswWttKJA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 2:39 PM Johannes Berg <johannes@sipsolutions.net> wrote:
->
-> On Wed, 2020-03-11 at 18:34 +0100, Dmitry Vyukov wrote:
->
-> > > $ gdb -p ...
-> > > (gdb) p/x task_size
-> > > $1 = 0x7fc0000000
-> > > (gdb) p/x __end_of_fixed_addresses
-> > > $2 = 0x0
-> > > (gdb) p/x end_iomem
-> > > $3 = 0x70000000
-> > > (gdb) p/x __va_space
-> > >
-> > > #define TASK_SIZE (task_size)
-> > > #define FIXADDR_TOP        (TASK_SIZE - 2 * PAGE_SIZE)
-> > >
-> > > #define FIXADDR_START      (FIXADDR_TOP - FIXADDR_SIZE)
-> > > #define FIXADDR_SIZE       (__end_of_fixed_addresses << PAGE_SHIFT)
-> > >
-> > > #define VMALLOC_END       (FIXADDR_START-2*PAGE_SIZE)
-> > >
-> > > #define MODULES_VADDR   VMALLOC_START
-> > > #define MODULES_END       VMALLOC_END
-> > > #define VMALLOC_START ((end_iomem + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1))
-> > > #define VMALLOC_OFFSET  (__va_space)
-> > > #define __va_space (8*1024*1024)
-> > >
-> > >
-> > > So from that, it would look like the UML vmalloc area is from
-> > > 0x  70800000 all the way to
-> > > 0x7fbfffc000, which obviously clashes with the KASAN_SHADOW_OFFSET being
-> > > just 0x7fff8000.
-> > >
-> > >
-> > > I'm guessing that basically the module loading overwrote the kasan
-> > > shadow then?
-> >
-> > Well, ok, this is definitely not going to fly :)
->
-> Yeah, not with vmalloc/modules at least, but you can't really prevent
-> vmalloc :)
->
-> > I don't know if it's easy to move modules to a different location.
->
-> We'd have to not just move modules, but also vmalloc space. They're one
-> and the same in UML.
->
-> > It
-> > would be nice because 0x7fbfffc000 is the shadow start that's used in
-> > userspace asan and it allows to faster instrumentation (if offset is
-> > within first 2 gigs, the instruction encoding is much more compact,
-> > for >2gigs it will require several instructions).
->
-> Wait ... Now you say 0x7fbfffc000, but that is almost fine? I think you
-> confused the values - because I see, on userspace, the following:
-
-Oh, sorry, I copy-pasted wrong number. I meant 0x7fff8000. Here is the
-user-space mapping that uses it:
-https://github.com/llvm/llvm-project/blob/master/compiler-rt/lib/asan/asan_mapping.h#L25
 
 
-> || `[0x10007fff8000, 0x7fffffffffff]` || HighMem    ||
-> || `[0x02008fff7000, 0x10007fff7fff]` || HighShadow ||
-> || `[0x00008fff7000, 0x02008fff6fff]` || ShadowGap  ||
-> || `[0x00007fff8000, 0x00008fff6fff]` || LowShadow  ||
-> || `[0x000000000000, 0x00007fff7fff]` || LowMem     ||
->
->
-> Now, I also don't really understand what UML is doing here -
-> os_get_top_address() determines some sort of "top address"? But all that
-> is only on 32-bit, on 64-bit, that's always 0x7fc0000000.
+On 11.03.20 16:48, Rob Herring wrote:
+> On Wed, Mar 11, 2020 at 10:23 AM Dafna Hirschfeld
+> <dafna.hirschfeld@collabora.com> wrote:
+>>
+>> Hi,
+>> Thanks for the review
+>>
+>> On 10.03.20 22:14, Rob Herring wrote:
+>>> On Tue, Mar 03, 2020 at 07:25:33PM +0200, Dafna Hirschfeld wrote:
+>>>> Convert the binding file atmel,maxtouch.txt to yaml format.
+>>>> Also change the file name in the MAINTAINERS file.
+>>>>
+>>>> This was tested and verified on ARM and ARM64 with:
+>>>>
+>>>> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+>>>> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+>>>>
+>>>> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+>>>> ---
+>>>>    .../bindings/input/atmel,maxtouch.txt         | 41 ------------
+>>>>    .../bindings/input/atmel,maxtouch.yaml        | 64 +++++++++++++++++++
+>>>>    MAINTAINERS                                   |  2 +-
+>>>>    3 files changed, 65 insertions(+), 42 deletions(-)
+>>>>    delete mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>>>>    create mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>>>> deleted file mode 100644
+>>>> index c88919480d37..000000000000
+>>>> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>>>> +++ /dev/null
+>>>> @@ -1,41 +0,0 @@
+>>>> -Atmel maXTouch touchscreen/touchpad
+>>>> -
+>>>> -Required properties:
+>>>> -- compatible:
+>>>> -    atmel,maxtouch
+>>>> -
+>>>> -    The following compatibles have been used in various products but are
+>>>> -    deprecated:
+>>>> -    atmel,qt602240_ts
+>>>> -    atmel,atmel_mxt_ts
+>>>> -    atmel,atmel_mxt_tp
+>>>> -    atmel,mXT224
+>>>> -
+>>>> -- reg: The I2C address of the device
+>>>> -
+>>>> -- interrupts: The sink for the touchpad's IRQ output
+>>>> -    See ../interrupt-controller/interrupts.txt
+>>>> -
+>>>> -Optional properties for main touchpad device:
+>>>> -
+>>>> -- linux,gpio-keymap: When enabled, the SPT_GPIOPWN_T19 object sends messages
+>>>> -    on GPIO bit changes. An array of up to 8 entries can be provided
+>>>> -    indicating the Linux keycode mapped to each bit of the status byte,
+>>>> -    starting at the LSB. Linux keycodes are defined in
+>>>> -    <dt-bindings/input/input.h>.
+>>>> -
+>>>> -    Note: the numbering of the GPIOs and the bit they start at varies between
+>>>> -    maXTouch devices. You must either refer to the documentation, or
+>>>> -    experiment to determine which bit corresponds to which input. Use
+>>>> -    KEY_RESERVED for unused padding values.
+>>>> -
+>>>> -- reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
+>>>> -
+>>>> -Example:
+>>>> -
+>>>> -    touch@4b {
+>>>> -            compatible = "atmel,maxtouch";
+>>>> -            reg = <0x4b>;
+>>>> -            interrupt-parent = <&gpio>;
+>>>> -            interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
+>>>> -    };
+>>>> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..024dc4ded4f3
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+>>>> @@ -0,0 +1,64 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/input/atmel,maxtouch.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Atmel maXTouch touchscreen/touchpad
+>>>> +
+>>>> +maintainers:
+>>>> +  - Nick Dyer <nick@shmanahar.org>
+>>>> +
+>>>> +description: |
+>>>> +  Atmel maXTouch touchscreen/touchpad
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    const: atmel,maxtouch
+>>>> +
+>>>> +  reg:
+>>>> +    description: The I2C address of the device
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  interrupts:
+>>>> +    description: The sink for the touchpad's IRQ output
+>>>
+>>> How many? Needs 'maxItems: 1'>
+>>> You can drop the description.
+>>>
+>>>> +
+>>>> +  linux,gpio-keymap:
+>>>> +    description:
+>>>> +      When enabled, the SPT_GPIOPWN_T19 object sends messages
+>>>> +      on GPIO bit changes. An array of up to 8 entries can be provided
+>>>> +      indicating the Linux keycode mapped to each bit of the status byte,
+>>>> +      starting at the LSB. Linux keycodes are defined in
+>>>> +      <dt-bindings/input/input.h>.
+>>>> +      Note, the numbering of the GPIOs and the bit they start at varies between
+>>>> +      maXTouch devices. You must either refer to the documentation, or
+>>>> +      experiment to determine which bit corresponds to which input. Use
+>>>> +      KEY_RESERVED for unused padding values.
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>>>> +    maxItems: 8
+>>>> +
+>>>> +  reset-gpios:
+>>>> +    description: GPIO specifier for the touchscreen's reset pin (active low)
+>>>> +    maxItems: 1
+>>>> +
+>>>> +required:
+>>>> +  - compatible
+>>>> +  - reg
+>>>> +  - interrupts
+>>>> +
+>>>> +additionalProperties: true
+>>>
+>>> That's the default and we generally want this to be 'false'.
+>> but many nodes has more properties not described here so I could not
+>> set it to false.
+> 
+> Like touchscreen-* properties? Then you should reference
+> touchscreen.yaml. And add 'unevaluatedProperties: false' here. That
+> doesn't yet do anything, but will when the tools support the lastest
+> json-schema release.
 
-Then I would expect 0x1000 0000 0000 to work, but you say it doesn't...
+Hi, no it is other properties, these are the warnings:
+arch/arm/boot/dts/s5pv210-goni.dt.yaml: tsp@4a: 'atmel,burst-length', 'atmel,orientation', 'atmel,threshold', 'atmel,x-line', 'atmel,x-size', 'atmel,y-line', 'atmel,y-size', 'vdd-supply' do not match any of the regexes: 'pinctrl-[0-9]+'
 
-> So basically that means it's just _slightly_ higher than what you
-> suggested as the KASAN_SHADOW_OFFSET now (even if erroneously?), and
-> shouldn't actually clash (and we can just change the top address value
-> to be slightly lower anyway to prevent clashing).
->
-> > But if it's not really easy, I guess we go with a large shadow start
-> > (at least initially). A slower but working KASAN is better than fast
-> > non-working KASAN :)
->
-> Indeed, but I can't even get it to work regardless of the offset.
->
-> Note that I have lockdep enabled, and at least some crashes appear to be
-> because of the stack unwinding code that is called by lockdep in various
-> situations...
+arch/arm/boot/dts/omap4-droid4-xt894.dt.yaml: touchscreen@4a: 'interrupt-names', 'wakeup-source' do not match any of the regexes: 'pinctrl-[0-9]+'
 
-This is something new, right? The previous stacks you posted did not
-mention lockdep.
+arch/arm/boot/dts/exynos5800-peach-pi.dt.yaml: trackpad@4b: 'wakeup-source' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-> > > I tried changing it
-> > >
-> > >  config KASAN_SHADOW_OFFSET
-> > >         hex
-> > >         depends on KASAN
-> > > -       default 0x7fff8000
-> > > +       default 0x8000000000
-> > >
-> > >
-> > > and also put a check in like this:
-> > >
-> > > +++ b/arch/um/kernel/um_arch.c
-> > > @@ -13,6 +13,7 @@
-> > >  #include <linux/sched.h>
-> > >  #include <linux/sched/task.h>
-> > >  #include <linux/kmsg_dump.h>
-> > > +#include <linux/kasan.h>
-> > >
-> > >  #include <asm/pgtable.h>
-> > >  #include <asm/processor.h>
-> > > @@ -267,9 +268,11 @@ int __init linux_main(int argc, char **argv)
-> > >         /*
-> > >          * TASK_SIZE needs to be PGDIR_SIZE aligned or else exit_mmap craps
-> > >          * out
-> > >          */
-> > >         task_size = host_task_size & PGDIR_MASK;
-> > >
-> > > +       if (task_size > KASAN_SHADOW_OFFSET)
-> > > +               panic("KASAN shadow offset must be bigger than task size");
-> > >
-> > >
-> > > but now I just crash accessing the shadow even though it was mapped fine?
-> >
-> > Yes, this is puzzling.
-> > I noticed that RIP is the same in both cases and it relates to vmap code.
-> > A support for shadow for vmalloced-memory was added to KASAN recently
-> > and I suspect it may conflict with UML.
->
-> This can't be it - HAVE_ARCH_KASAN_VMALLOC isn't selected, so
-> KASAN_VMALLOC isn't set.
->
-> > What does pte-manipulation code even do under UML?
->
-> No idea.
->
-> > Looking at the code around, kasan_mem_notifier may be a problem too,
-> > or at least excessive and confusing. We already have shadow for
-> > everything, we don't need _any_ of dynamic/lazy shadow mapping.
->
-> CONFIG_MEMORY_HOTPLUG is also not supported in ARCH=um, or at least not
-> used in my config.
+Dafna
 
-Ack.
-
-Maybe if you dump /proc/self/maps for the process, it will shed some light.
-Or is it possible to run it under strace? If we get all
-mmap/munmap/mprotect, we will maybe see the offender that messes the
-shadow...
+> 
+> Rob
+> 
