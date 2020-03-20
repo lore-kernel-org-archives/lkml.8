@@ -2,138 +2,118 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD79AC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0327EC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 800CF20777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584731513;
-	bh=WHYaY5JGW4wMqTdBEG+VlqBPEPHmHlXETR+cfjM253g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cmCnNbERHiV7V1aFR9Z4JOBYDZYZ+0u7PbrYo7hr3RTo9U1HnBDo3VyQcmaV058SR
-	 i4oG2DJwA61FtZTbrYoehvqukPoHNy0m3DPtr/E7V8auCGhMGumqaJ7Q2cahO9+jlJ
-	 eWvRJZeahO4jmNQkCky4dejTdGlVkyoRU9akYtZQ=
+	by mail.kernel.org (Postfix) with ESMTP id C375620775
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:13:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="PEvj5kKo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbgCTTLw (ORCPT
+        id S1727239AbgCTTNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 15:11:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726829AbgCTTLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 15:11:52 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F43B20767;
-        Fri, 20 Mar 2020 19:11:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584731511;
-        bh=WHYaY5JGW4wMqTdBEG+VlqBPEPHmHlXETR+cfjM253g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FhaxDy9UC5o6f2YNJzvSSFRn0Ei8VAm6JOOdrhtb8Z0lbMUGXquZQwKz2pk7GOIq3
-         6C+Mts/Mhp1wKCnEyWDz7k4Hv1CsqJE++OZo2HGkIPoyBAfMHv9LydSAu7T49LeP+5
-         zss4fx8ZDNio623uelHkIPNIpOrsDqf0F5tOMAhE=
-Date:   Fri, 20 Mar 2020 12:11:49 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH 3/4] f2fs: fix NULL pointer dereference in
- f2fs_verity_work()
-Message-ID: <20200320191149.GL851@sol.localdomain>
-References: <20200319115800.108926-1-yuchao0@huawei.com>
- <20200319115800.108926-3-yuchao0@huawei.com>
+        Fri, 20 Mar 2020 15:13:13 -0400
+Received: from mail-co1nam11on2055.outbound.protection.outlook.com ([40.107.220.55]:6218
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726814AbgCTTNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 15:13:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GC1tTRhlvIYYaYF59hJ4PWVCYP4mo+hRT/pjlA284oYsvCphTX0VcSje5A/bHcAooWJFguD2V3iuMReemNZ4sDGVmqGp7tcCatd7Omhf5gzxI1nwNHkAn8GvQcx2X1G/gqGSTMrIiFwarEaaf6ztTMXvlbfyJmA59l78GzYyjnJDs/roZCRlGmcu81pkwdYajJ0a5Lo/bqjEjtXrzoxsHmjJzXaKsqzView6baN69+crJZMN2cbAxicVquh+nWXjJAlWMwY5ju0uEZB1Kxmdca899pJ0LXQmtAAiocJGi4lQyIwg++6R6KclXq3kgZUTBEh28h/O2Gwt+HN0kFo/KA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Shnng4AvX5lOhmnWKLU9C1Q4b+WEC4dXj3oLRhH8riM=;
+ b=DrKM9MDlcgB3M9ToQsI91NgtYqAIHPietPcue+sta9VjQf4SCEeIo7lSWTlUN++SdtNUHS/0TyA5U7NvidvEcXF73WGE0vtBU0yL6eAnrSzTLLFLeHGrmAa2KJEbnxrxzJ8g3PxUSTcWJGTuNQoc170mEigo1YnK6Q3sh21/MIisohkbAqDijaPY6W54vVxdOrtfL9H+Xnmer3ZnTQkWjbQnnK3xAczOaRpqmAomL+blLct/zaMFdIOd3Mkcw/xdk8coGcdW6TuQ383Gj6vuX7KsgNEFB49SsRtOZ2Dx7EmOfNGopVTbAz589o8s3j6BC4fWXH1eX4oyf6hv8tZ5og==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Shnng4AvX5lOhmnWKLU9C1Q4b+WEC4dXj3oLRhH8riM=;
+ b=PEvj5kKodr+PsLuZWxONSnsk3juv0OUw8+ceO7Jf+6UmUvzbXeUOGy7MYnCWqK953wxGB6ByjzgIvXB7eB/F9PaVQXMialkN/2pRgxLzzpz8pu/KRQkTE05TId35BSH0XMUakJHkk34dL1IwFyfq+pNwyF6S0OjVFZsjLKs8g/E=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=brijesh.singh@amd.com; 
+Received: from CY4PR12MB1926.namprd12.prod.outlook.com (2603:10b6:903:11b::11)
+ by CY4PR12MB1525.namprd12.prod.outlook.com (2603:10b6:910:11::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Fri, 20 Mar
+ 2020 19:13:09 +0000
+Received: from CY4PR12MB1926.namprd12.prod.outlook.com
+ ([fe80::e5ec:63d5:a9a8:74c4]) by CY4PR12MB1926.namprd12.prod.outlook.com
+ ([fe80::e5ec:63d5:a9a8:74c4%12]) with mapi id 15.20.2835.017; Fri, 20 Mar
+ 2020 19:13:09 +0000
+Cc:     brijesh.singh@amd.com
+Subject: Re: [PATCH] KVM: SVM: document KVM_MEM_ENCRYPT_OP, let userspace
+ detect if SEV is available
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20200320174245.5220-1-pbonzini@redhat.com>
+From:   Brijesh Singh <brijesh.singh@amd.com>
+Message-ID: <e7a293bf-acbf-b69a-a082-4a2cce9701b0@amd.com>
+Date:   Fri, 20 Mar 2020 14:14:19 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.5.0
+In-Reply-To: <20200320174245.5220-1-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: SN4PR0501CA0024.namprd05.prod.outlook.com
+ (2603:10b6:803:40::37) To CY4PR12MB1926.namprd12.prod.outlook.com
+ (2603:10b6:903:11b::11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319115800.108926-3-yuchao0@huawei.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from Brijeshs-MacBook-Pro.local (165.204.77.11) by SN4PR0501CA0024.namprd05.prod.outlook.com (2603:10b6:803:40::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.12 via Frontend Transport; Fri, 20 Mar 2020 19:13:08 +0000
+X-Originating-IP: [165.204.77.11]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 7668df3a-f9ee-40d1-9e80-08d7cd02ba11
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1525:|CY4PR12MB1525:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR12MB1525412092667CEDB3CDF5BCE5F50@CY4PR12MB1525.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 03484C0ABF
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(366004)(39860400002)(396003)(376002)(199004)(2906002)(36756003)(52116002)(44832011)(5660300002)(478600001)(186003)(8936002)(16526019)(6666004)(4326008)(2616005)(81156014)(31686004)(26005)(956004)(316002)(4744005)(81166006)(31696002)(86362001)(6506007)(8676002)(66946007)(53546011)(6512007)(66556008)(6486002)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1525;H:CY4PR12MB1926.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 88ON0HfLkkNTVm61RWpiKni4qhDLtmPTuW5V6m1ikDYiKDmf+SE9j0j/xf08YTkSW41n905cvr1unnXRWl89HejSdF+rv4KS2FQNFO9o7KCX0LMLIZeADhOMmrxfLbfidv14QLdaV/H0owPu0ZCXnLBwalC5CeC08kYIM3Mv33HcS0TeMSSfCAwRhPnvQhUIgnXAkP9pIspjiKzb1L/0EEVhf7B2l5Xl/OhAg64T1djxZvCM+CiD8NEi57S4kYLnlojaeOdCHiOnCeT3Dm4ynLVWQSqrrTJj7lkFsFd4F75hnw1+jd3gT1agczFWQzzTB1i1WxBj5+b4iyuNvp7xWUekFg0cLskdi1JFdApST1rhDdXA+xIa5umsttMH1PVM4W2az1UQGOl8f9OczK8qWzu9gMY0J7SQXmOQ7ycKq3LHn9quGmBwlzart+owjY1X
+X-MS-Exchange-AntiSpam-MessageData: fGgF5qZof3t5ZFMqP6+yjgNNNbJ0DA2+iqw3pVUEIGW1S0Z8VB0Ky/BWMHPOv44Zj+aandLtwDLhlisW6hybT5ytUyQNqqi0TsQcWzqZ4CHgWEBOaYh61qtym+FZaAxntzywfSD6eIh28VUYpXTLkg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7668df3a-f9ee-40d1-9e80-08d7cd02ba11
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2020 19:13:09.4718
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eb3R7EMRrXnX9rPTNASL+ou24m5eH2TSTmtdxsxaz2xXi1YWV1Apwn1UpTzzsZEXDVJb/KUH9Vc2OriLO2zP4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1525
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 07:57:59PM +0800, Chao Yu wrote:
-> If both compression and fsverity feature is on, generic/572 will
-> report below NULL pointer dereference bug.
-> 
->  BUG: kernel NULL pointer dereference, address: 0000000000000018
->  RIP: 0010:f2fs_verity_work+0x60/0x90 [f2fs]
->  #PF: supervisor read access in kernel mode
->  Workqueue: fsverity_read_queue f2fs_verity_work [f2fs]
->  RIP: 0010:f2fs_verity_work+0x60/0x90 [f2fs]
->  Call Trace:
->   process_one_work+0x16c/0x3f0
->   worker_thread+0x4c/0x440
->   ? rescuer_thread+0x350/0x350
->   kthread+0xf8/0x130
->   ? kthread_unpark+0x70/0x70
->   ret_from_fork+0x35/0x40
-> 
-> There are two issue in f2fs_verity_work():
-> - it needs to traverse and verify all pages in bio.
-> - if pages in bio belong to non-compressed cluster, accessing
-> decompress IO context stored in page private will cause NULL
-> pointer dereference.
-> 
-> Fix them.
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/f2fs/data.c | 35 ++++++++++++++++++++++++++++++-----
->  1 file changed, 30 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index 5c5db09324b7..66e49fc1056e 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -187,12 +187,37 @@ static void f2fs_verify_pages(struct page **rpages, unsigned int cluster_size)
->  
->  static void f2fs_verify_bio(struct bio *bio)
->  {
-> -	struct page *page = bio_first_page_all(bio);
-> -	struct decompress_io_ctx *dic =
-> -			(struct decompress_io_ctx *)page_private(page);
-> +	struct bio_vec *bv;
-> +	struct bvec_iter_all iter_all;
-> +	struct decompress_io_ctx *dic, *pdic = NULL;
-> +
-> +	bio_for_each_segment_all(bv, bio, iter_all) {
-> +		struct page *page = bv->bv_page;
-> +
-> +		dic = (struct decompress_io_ctx *)page_private(page);
-> +
-> +		if (dic) {
-> +			if (dic != pdic) {
-> +				f2fs_verify_pages(dic->rpages,
-> +							dic->cluster_size);
-> +				f2fs_free_dic(dic);
-> +				pdic = dic;
-> +			}
-> +			continue;
-> +		}
-> +		pdic = dic;
->  
-> -	f2fs_verify_pages(dic->rpages, dic->cluster_size);
-> -	f2fs_free_dic(dic);
-> +		if (bio->bi_status || PageError(page)) {
-> +			ClearPageUptodate(page);
-> +			ClearPageError(page);
-> +		} else {
-> +			if (fsverity_verify_page(page))
-> +				SetPageUptodate(page);
-> +			else
-> +				SetPageError(page);
-> +		}
-> +		unlock_page(page);
-> +	}
 
-I'm a bit confused why you added SetPageError() before unlocking the page.
-The other error paths actually clear the Error flag, not set it.  I thought
-there's a reason for that?
+On 3/20/20 12:42 PM, Paolo Bonzini wrote:
+> Userspace has no way to query if SEV has been disabled with the
+> sev module parameter of kvm-amd.ko.  Actually it has one, but it
+> is a hack: do ioctl(KVM_MEM_ENCRYPT_OP, NULL) and check if it
+> returns EFAULT.  Make it a little nicer by returning zero for
+> SEV enabled and NULL argument, and while at it document the
+> ioctl arguments.
+>
+> Cc: Brijesh Singh <brijesh.singh@amd.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 
-- Eric
+thanks
+
+Reviewed-by: Brijesh Singh <brijesh.singh@amd.com>
+
+
