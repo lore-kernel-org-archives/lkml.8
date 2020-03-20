@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BB7C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A4CC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2BA620777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DBB020777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgCTWFQ (ORCPT
+        id S1727743AbgCTWFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:05:16 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37505 "EHLO
+        Fri, 20 Mar 2020 18:05:25 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37484 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727425AbgCTWES (ORCPT
+        with ESMTP id S1727210AbgCTWEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:04:18 -0400
+        Fri, 20 Mar 2020 18:04:15 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFPk2-0004TY-Bh; Fri, 20 Mar 2020 23:03:46 +0100
+        id 1jFPk2-0004Te-Sk; Fri, 20 Mar 2020 23:03:47 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id DB9A41039FC;
-        Fri, 20 Mar 2020 23:03:45 +0100 (CET)
-Message-Id: <20200320180032.895128936@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 5F3ED1039FF;
+        Fri, 20 Mar 2020 23:03:46 +0100 (CET)
+Message-Id: <20200320180033.092520097@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 19:00:01 +0100
+Date:   Fri, 20 Mar 2020 19:00:03 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -47,8 +47,7 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [RESEND][patch V3 05/23] tracing: Provide lockdep less
- trace_hardirqs_on/off() variants
+Subject: [RESEND][patch V3 07/23] lockdep: Prepare for noinstr sections
 References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,83 +59,234 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200320180001.ad17nULe9N4VSqeg2lVZzyPkDdvNY7xXKUPSlzh7zfY@z>
+Message-ID: <20200320180003.sIRYOgLDtBK3txdq2-YqwWAgw_XHCbFaP_FuKqOabVA@z>
 
-trace_hardirqs_on/off() is only partially safe vs. RCU idle. The tracer
-core itself is safe, but the resulting tracepoints can be utilized by
-e.g. BPF which is unsafe.
+From: Peter Zijlstra <peterz@infradead.org>
 
-Provide variants which do not contain the lockdep invocation so the lockdep
-and tracer invocations can be split at the call site and placed properly.
+Lockdep is invoked after RCU stopped watching or before it restarted
+watching from the low level entry/exit code.
 
-The new variants also do not use rcuidle as they are going to be called
-from entry code after/before context tracking.
+lockdep_hardirqs_on() is part of the irq-state tracking; it is the
+callback that indicates we're about to enable IRQs. But because of
+this, lockdep has co-opted this callback to do lock state updates. All
+(still) held locks will get marked with ENABLED_HARDIRQ, which then
+also looks for cycles connecting to USED_IN_HARDIRQ for IRQ recursion
+deadlocks.
 
+This results in quite a lot of lockdep code getting ran, but worse, it
+will want to do stack-traces for the lock state changes. Stack traces
+require RCU.
+
+Because code that requires RCU must not run after we've shut down RCU,
+and shutting down RCU itself requires locks in some circumstances,
+split this into two parts:
+
+  - lockdep_hardirqs_on_prepare() -- updates the held lock state
+  - lockdep_hardirqs_on() -- does the irq state tracking
+
+This allows running the lock state changes and stack-traces with RCU
+enaabled, while doing the IRQ state change later. Of course, this
+opens a window where the lock stack can change. Therefore
+lockdep_hardirqs_on_prepare() will snapshot the chain_key and
+lockdep_hardirqs_on() will validate it still matches. This ensures
+that, even when interleaved code uses locks, the actual lock state
+didn't change between these two calls.
+
+Signed-off-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
-V2: New patch
----
- include/linux/irqflags.h        |    4 ++++
- kernel/trace/trace_preemptirq.c |   23 +++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ include/linux/irqflags.h        |    2 +
+ include/linux/sched.h           |    1 
+ kernel/locking/lockdep.c        |   66 +++++++++++++++++++++++++++++-----------
+ kernel/trace/trace_preemptirq.c |    2 +
+ lib/debug_locks.c               |    2 -
+ 5 files changed, 55 insertions(+), 18 deletions(-)
 
 --- a/include/linux/irqflags.h
 +++ b/include/linux/irqflags.h
-@@ -29,6 +29,8 @@
- #endif
- 
- #ifdef CONFIG_TRACE_IRQFLAGS
-+  extern void __trace_hardirqs_on(void);
-+  extern void __trace_hardirqs_off(void);
-   extern void trace_hardirqs_on(void);
-   extern void trace_hardirqs_off(void);
- # define trace_hardirq_context(p)	((p)->hardirq_context)
-@@ -52,6 +54,8 @@ do {						\
- 	current->softirq_context--;		\
- } while (0)
+@@ -19,11 +19,13 @@
+ #ifdef CONFIG_PROVE_LOCKING
+   extern void trace_softirqs_on(unsigned long ip);
+   extern void trace_softirqs_off(unsigned long ip);
++  extern void lockdep_hardirqs_on_prepare(unsigned long ip);
+   extern void lockdep_hardirqs_on(unsigned long ip);
+   extern void lockdep_hardirqs_off(unsigned long ip);
  #else
-+# define __trace_hardirqs_on()		do { } while (0)
-+# define __trace_hardirqs_off()		do { } while (0)
- # define trace_hardirqs_on()		do { } while (0)
- # define trace_hardirqs_off()		do { } while (0)
- # define trace_hardirq_context(p)	0
+   static inline void trace_softirqs_on(unsigned long ip) { }
+   static inline void trace_softirqs_off(unsigned long ip) { }
++  static inline void lockdep_hardirqs_on_prepare(unsigned long ip) { }
+   static inline void lockdep_hardirqs_on(unsigned long ip) { }
+   static inline void lockdep_hardirqs_off(unsigned long ip) { }
+ #endif
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -976,6 +976,7 @@ struct task_struct {
+ 	unsigned int			hardirq_disable_event;
+ 	int				hardirqs_enabled;
+ 	int				hardirq_context;
++	u64				hardirq_chain_key;
+ 	unsigned long			softirq_disable_ip;
+ 	unsigned long			softirq_enable_ip;
+ 	unsigned int			softirq_disable_event;
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3370,9 +3370,6 @@ static void __trace_hardirqs_on_caller(u
+ {
+ 	struct task_struct *curr = current;
+ 
+-	/* we'll do an OFF -> ON transition: */
+-	curr->hardirqs_enabled = 1;
+-
+ 	/*
+ 	 * We are going to turn hardirqs on, so set the
+ 	 * usage bit for all held locks:
+@@ -3384,16 +3381,13 @@ static void __trace_hardirqs_on_caller(u
+ 	 * bit for all held locks. (disabled hardirqs prevented
+ 	 * this bit from being set before)
+ 	 */
+-	if (curr->softirqs_enabled)
++	if (curr->softirqs_enabled) {
+ 		if (!mark_held_locks(curr, LOCK_ENABLED_SOFTIRQ))
+ 			return;
+-
+-	curr->hardirq_enable_ip = ip;
+-	curr->hardirq_enable_event = ++curr->irq_events;
+-	debug_atomic_inc(hardirqs_on_events);
++	}
+ }
+ 
+-void lockdep_hardirqs_on(unsigned long ip)
++void lockdep_hardirqs_on_prepare(unsigned long ip)
+ {
+ 	if (unlikely(!debug_locks || current->lockdep_recursion))
+ 		return;
+@@ -3429,20 +3423,59 @@ void lockdep_hardirqs_on(unsigned long i
+ 	if (DEBUG_LOCKS_WARN_ON(current->hardirq_context))
+ 		return;
+ 
++	current->hardirq_chain_key = current->curr_chain_key;
++
+ 	current->lockdep_recursion = 1;
+ 	__trace_hardirqs_on_caller(ip);
+ 	current->lockdep_recursion = 0;
+ }
+-NOKPROBE_SYMBOL(lockdep_hardirqs_on);
+ 
++void noinstr lockdep_hardirqs_on(unsigned long ip)
++{
++	struct task_struct *curr = current;
++
++	if (unlikely(!debug_locks || curr->lockdep_recursion))
++		return;
++
++	if (curr->hardirqs_enabled) {
++		/*
++		 * Neither irq nor preemption are disabled here
++		 * so this is racy by nature but losing one hit
++		 * in a stat is not a big deal.
++		 */
++		__debug_atomic_inc(redundant_hardirqs_on);
++		return;
++	}
++
++	/*
++	 * We're enabling irqs and according to our state above irqs weren't
++	 * already enabled, yet we find the hardware thinks they are in fact
++	 * enabled.. someone messed up their IRQ state tracing.
++	 */
++	if (DEBUG_LOCKS_WARN_ON(!irqs_disabled()))
++		return;
++
++	/*
++	 * Ensure the lock stack remained unchanged between
++	 * lockdep_hardirqs_on_prepare() and lockdep_hardirqs_on().
++	 */
++	DEBUG_LOCKS_WARN_ON(current->hardirq_chain_key !=
++			    current->curr_chain_key);
++
++	/* we'll do an OFF -> ON transition: */
++	curr->hardirqs_enabled = 1;
++	curr->hardirq_enable_ip = ip;
++	curr->hardirq_enable_event = ++curr->irq_events;
++	debug_atomic_inc(hardirqs_on_events);
++}
+ /*
+  * Hardirqs were disabled:
+  */
+-void lockdep_hardirqs_off(unsigned long ip)
++void noinstr lockdep_hardirqs_off(unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
+ 
+-	if (unlikely(!debug_locks || current->lockdep_recursion))
++	if (unlikely(!debug_locks || curr->lockdep_recursion))
+ 		return;
+ 
+ 	/*
+@@ -3463,7 +3496,6 @@ void lockdep_hardirqs_off(unsigned long
+ 	} else
+ 		debug_atomic_inc(redundant_hardirqs_off);
+ }
+-NOKPROBE_SYMBOL(lockdep_hardirqs_off);
+ 
+ /*
+  * Softirqs will be enabled:
+@@ -4007,8 +4039,8 @@ static void print_unlock_imbalance_bug(s
+ 	dump_stack();
+ }
+ 
+-static int match_held_lock(const struct held_lock *hlock,
+-					const struct lockdep_map *lock)
++static noinstr int match_held_lock(const struct held_lock *hlock,
++				   const struct lockdep_map *lock)
+ {
+ 	if (hlock->instance == lock)
+ 		return 1;
+@@ -4293,7 +4325,7 @@ static int
+ 	return 0;
+ }
+ 
+-static nokprobe_inline
++static __always_inline
+ int __lock_is_held(const struct lockdep_map *lock, int read)
+ {
+ 	struct task_struct *curr = current;
+@@ -4506,7 +4538,7 @@ void lock_release(struct lockdep_map *lo
+ }
+ EXPORT_SYMBOL_GPL(lock_release);
+ 
+-int lock_is_held_type(const struct lockdep_map *lock, int read)
++noinstr int lock_is_held_type(const struct lockdep_map *lock, int read)
+ {
+ 	unsigned long flags;
+ 	int ret = 0;
 --- a/kernel/trace/trace_preemptirq.c
 +++ b/kernel/trace/trace_preemptirq.c
-@@ -19,6 +19,17 @@
- /* Per-cpu variable to prevent redundant calls when IRQs already off */
- static DEFINE_PER_CPU(int, tracing_irq_cpu);
+@@ -39,6 +39,7 @@ void trace_hardirqs_on(void)
+ 		this_cpu_write(tracing_irq_cpu, 0);
+ 	}
  
-+void __trace_hardirqs_on(void)
-+{
-+	if (this_cpu_read(tracing_irq_cpu)) {
-+		if (!in_nmi())
-+			trace_irq_enable(CALLER_ADDR0, CALLER_ADDR1);
-+		tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
-+		this_cpu_write(tracing_irq_cpu, 0);
-+	}
-+}
-+NOKPROBE_SYMBOL(__trace_hardirqs_on);
-+
- void trace_hardirqs_on(void)
- {
- 	if (this_cpu_read(tracing_irq_cpu)) {
-@@ -33,6 +44,18 @@ void trace_hardirqs_on(void)
++	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
+ 	lockdep_hardirqs_on(CALLER_ADDR0);
+ }
  EXPORT_SYMBOL(trace_hardirqs_on);
- NOKPROBE_SYMBOL(trace_hardirqs_on);
+@@ -79,6 +80,7 @@ NOKPROBE_SYMBOL(trace_hardirqs_off);
+ 		this_cpu_write(tracing_irq_cpu, 0);
+ 	}
  
-+void __trace_hardirqs_off(void)
-+{
-+	if (!this_cpu_read(tracing_irq_cpu)) {
-+		this_cpu_write(tracing_irq_cpu, 1);
-+		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
-+		if (!in_nmi())
-+			trace_irq_disable(CALLER_ADDR0, CALLER_ADDR1);
-+	}
-+
-+}
-+NOKPROBE_SYMBOL(__trace_hardirqs_off);
-+
- void trace_hardirqs_off(void)
++	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
+ 	lockdep_hardirqs_on(CALLER_ADDR0);
+ }
+ EXPORT_SYMBOL(trace_hardirqs_on_caller);
+--- a/lib/debug_locks.c
++++ b/lib/debug_locks.c
+@@ -36,7 +36,7 @@ EXPORT_SYMBOL_GPL(debug_locks_silent);
+ /*
+  * Generic 'turn off all lock debugging' function:
+  */
+-int debug_locks_off(void)
++noinstr int debug_locks_off(void)
  {
- 	if (!this_cpu_read(tracing_irq_cpu)) {
+ 	if (debug_locks && __debug_locks_off()) {
+ 		if (!debug_locks_silent) {
 
