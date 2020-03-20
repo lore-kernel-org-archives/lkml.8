@@ -2,401 +2,129 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C31C41620
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B564DC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F270820722
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB4120767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:42:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EXteLxpI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgCTRlT (ORCPT
+        id S1727039AbgCTRmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:41:19 -0400
-Received: from v6.sk ([167.172.42.174]:51716 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727070AbgCTRlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:41:18 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 9D97B60EED;
-        Fri, 20 Mar 2020 17:41:16 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 01/10] ARM: dts: pxa*: Don't redeclare phandle references
-Date:   Fri, 20 Mar 2020 18:40:58 +0100
-Message-Id: <20200320174107.29406-2-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200320174107.29406-1-lkundrak@v3.sk>
-References: <20200320174107.29406-1-lkundrak@v3.sk>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 20 Mar 2020 13:42:50 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:51336 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726829AbgCTRmu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 13:42:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584726169;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=ef36637kDnXkE6FllS0yNPka1X9FChEYgiakf6+7Z7c=;
+        b=EXteLxpIPtvpvuZEpCDVmeV2uOacj9OqidEjQBwSo0KCmWWQ8kt2vqFUnpSZGwDt0yEMd3
+        IRCpOHiMq2I+M9RalrsJjo1bcIAnPTyQ9bP3KfBYw0td4tJtvxq6TSJhqqMLl4iElLatZD
+        5fLn436FeLEV6dUcK5301FNIwD8T+uE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-308-JCGm1F3lNn-DLjAE_M3WPg-1; Fri, 20 Mar 2020 13:42:47 -0400
+X-MC-Unique: JCGm1F3lNn-DLjAE_M3WPg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97C389B823;
+        Fri, 20 Mar 2020 17:42:46 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3932D19757;
+        Fri, 20 Mar 2020 17:42:46 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Brijesh Singh <brijesh.singh@amd.com>
+Subject: [PATCH] KVM: SVM: document KVM_MEM_ENCRYPT_OP, let userspace detect if SEV is available
+Date:   Fri, 20 Mar 2020 13:42:45 -0400
+Message-Id: <20200320174245.5220-1-pbonzini@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend the nodes by their phandle references instead of recreating the
-tree and declaring references of the same names.
+Userspace has no way to query if SEV has been disabled with the
+sev module parameter of kvm-amd.ko.  Actually it has one, but it
+is a hack: do ioctl(KVM_MEM_ENCRYPT_OP, NULL) and check if it
+returns EFAULT.  Make it a little nicer by returning zero for
+SEV enabled and NULL argument, and while at it document the
+ioctl arguments.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/arm/boot/dts/pxa168-aspenite.dts |  26 ++-
- arch/arm/boot/dts/pxa910-dkb.dts      | 288 +++++++++++++-------------
- 2 files changed, 155 insertions(+), 159 deletions(-)
+ .../virt/kvm/amd-memory-encryption.rst        | 25 +++++++++++++++++++
+ arch/x86/kvm/svm.c                            |  3 +++
+ 2 files changed, 28 insertions(+)
 
-diff --git a/arch/arm/boot/dts/pxa168-aspenite.dts b/arch/arm/boot/dts/pxa168-aspenite.dts
-index 2ad40e373194c..8bade6bf395b3 100644
---- a/arch/arm/boot/dts/pxa168-aspenite.dts
-+++ b/arch/arm/boot/dts/pxa168-aspenite.dts
-@@ -18,18 +18,16 @@ chosen {
- 	memory {
- 		reg = <0x00000000 0x04000000>;
- 	};
--
--	soc {
--		apb@d4000000 {
--			uart1: uart@d4017000 {
--				status = "okay";
--			};
--			twsi1: i2c@d4011000 {
--				status = "okay";
--			};
--			rtc: rtc@d4010000 {
--				status = "okay";
--			};
--		};
--	};
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&twsi1 {
-+	status = "okay";
-+};
-+
-+&rtc {
-+	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/pxa910-dkb.dts b/arch/arm/boot/dts/pxa910-dkb.dts
-index 0f899e672e824..ce76158867c7f 100644
---- a/arch/arm/boot/dts/pxa910-dkb.dts
-+++ b/arch/arm/boot/dts/pxa910-dkb.dts
-@@ -18,155 +18,153 @@ chosen {
- 	memory {
- 		reg = <0x00000000 0x10000000>;
- 	};
-+};
+diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
+index d18c97b4e140..c3129b9ba5cb 100644
+--- a/Documentation/virt/kvm/amd-memory-encryption.rst
++++ b/Documentation/virt/kvm/amd-memory-encryption.rst
+@@ -53,6 +53,29 @@ key management interface to perform common hypervisor activities such as
+ encrypting bootstrap code, snapshot, migrating and debugging the guest. For more
+ information, see the SEV Key Management spec [api-spec]_
  
--	soc {
--		apb@d4000000 {
--			uart1: uart@d4017000 {
--				status = "okay";
-+&uart1 {
-+	status = "okay";
-+};
++The main ioctl to access SEV is KVM_MEM_ENCRYPT_OP.  If the argument
++to KVM_MEM_ENCRYPT_OP is NULL, the ioctl returns 0 if SEV is enabled
++and ``ENOTTY` if it is disabled (on some older versions of Linux,
++the ioctl runs normally even with a NULL argument, and therefore will
++likely return ``EFAULT``).  If non-NULL, the argument to KVM_MEM_ENCRYPT_OP
++must be a struct kvm_sev_cmd::
 +
-+&twsi1 {
-+	status = "okay";
++       struct kvm_sev_cmd {
++               __u32 id;
++               __u64 data;
++               __u32 error;
++               __u32 sev_fd;
++       };
 +
-+	pmic: 88pm860x@34 {
-+		compatible = "marvell,88pm860x";
-+		reg = <0x34>;
-+		interrupts = <4>;
-+		interrupt-parent = <&intc>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
 +
-+		marvell,88pm860x-irq-read-clr;
-+		marvell,88pm860x-slave-addr = <0x11>;
++The ``id`` field contains the subcommand, and the ``data`` field points to
++another struct containing arguments specific to command.  The ``sev_fd``
++should point to a file descriptor that is opened on the ``/dev/sev``
++device, if needed (see individual commands).
 +
-+		regulators {
-+			BUCK1 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-boot-on;
-+				regulator-always-on;
- 			};
--			twsi1: i2c@d4011000 {
--				status = "okay";
--
--				pmic: 88pm860x@34 {
--					compatible = "marvell,88pm860x";
--					reg = <0x34>;
--					interrupts = <4>;
--					interrupt-parent = <&intc>;
--					interrupt-controller;
--					#interrupt-cells = <1>;
--
--					marvell,88pm860x-irq-read-clr;
--					marvell,88pm860x-slave-addr = <0x11>;
--
--					regulators {
--						BUCK1 {
--							regulator-min-microvolt = <1000000>;
--							regulator-max-microvolt = <1500000>;
--							regulator-boot-on;
--							regulator-always-on;
--						};
--						BUCK2 {
--							regulator-min-microvolt = <1000000>;
--							regulator-max-microvolt = <1500000>;
--							regulator-boot-on;
--							regulator-always-on;
--						};
--						BUCK3 {
--							regulator-min-microvolt = <1000000>;
--							regulator-max-microvolt = <3000000>;
--							regulator-boot-on;
--							regulator-always-on;
--						};
--						LDO1 {
--							regulator-min-microvolt = <1200000>;
--							regulator-max-microvolt = <2800000>;
--							regulator-boot-on;
--							regulator-always-on;
--						};
--						LDO2 {
--							regulator-min-microvolt = <1800000>;
--							regulator-max-microvolt = <3300000>;
--							regulator-boot-on;
--							regulator-always-on;
--						};
--						LDO3 {
--							regulator-min-microvolt = <1800000>;
--							regulator-max-microvolt = <3300000>;
--							regulator-boot-on;
--							regulator-always-on;
--						};
--						LDO4 {
--							regulator-min-microvolt = <1800000>;
--							regulator-max-microvolt = <3300000>;
--							regulator-always-on;
--						};
--						LDO5 {
--							regulator-min-microvolt = <2900000>;
--							regulator-max-microvolt = <3300000>;
--							regulator-boot-on;
--							regulator-always-on;
--						};
--						LDO6 {
--							regulator-min-microvolt = <1800000>;
--							regulator-max-microvolt = <3300000>;
--							regulator-boot-on;
--							regulator-always-on;
--						};
--						LDO7 {
--							regulator-min-microvolt = <1800000>;
--							regulator-max-microvolt = <2900000>;
--							regulator-boot-on;
--							regulator-always-on;
--						};
--						LDO8 {
--							regulator-min-microvolt = <1800000>;
--							regulator-max-microvolt = <2900000>;
--							regulator-boot-on;
--							regulator-always-on;
--						};
--						LDO9 {
--							regulator-min-microvolt = <1800000>;
--							regulator-max-microvolt = <3300000>;
--							regulator-boot-on;
--							regulator-always-on;
--						};
--						LDO10 {
--							regulator-min-microvolt = <1200000>;
--							regulator-max-microvolt = <3300000>;
--							regulator-boot-on;
--							regulator-always-on;
--						};
--						LDO12 {
--							regulator-min-microvolt = <1200000>;
--							regulator-max-microvolt = <3300000>;
--							regulator-always-on;
--						};
--						LDO13 {
--							regulator-min-microvolt = <1200000>;
--							regulator-max-microvolt = <3300000>;
--							regulator-always-on;
--						};
--						LDO14 {
--							regulator-min-microvolt = <1800000>;
--							regulator-max-microvolt = <3300000>;
--							regulator-always-on;
--						};
--					};
--					rtc {
--						marvell,88pm860x-vrtc = <1>;
--					};
--					touch {
--						marvell,88pm860x-gpadc-prebias = <1>;
--						marvell,88pm860x-gpadc-slot-cycle = <1>;
--						marvell,88pm860x-tsi-prebias = <6>;
--						marvell,88pm860x-pen-prebias = <16>;
--						marvell,88pm860x-pen-prechg = <2>;
--						marvell,88pm860x-resistor-X = <300>;
--					};
--					backlights {
--						backlight-0 {
--							marvell,88pm860x-iset = <4>;
--							marvell,88pm860x-pwm = <3>;
--						};
--						backlight-2 {
--						};
--					};
--					leds {
--						led0-red {
--							marvell,88pm860x-iset = <12>;
--						};
--						led0-green {
--							marvell,88pm860x-iset = <12>;
--						};
--						led0-blue {
--							marvell,88pm860x-iset = <12>;
--						};
--					};
--				};
-+			BUCK2 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-boot-on;
-+				regulator-always-on;
- 			};
--			rtc: rtc@d4010000 {
--				status = "okay";
-+			BUCK3 {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+			LDO1 {
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+			LDO2 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+			LDO3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+			LDO4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+			LDO5 {
-+				regulator-min-microvolt = <2900000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+			LDO6 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+			LDO7 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <2900000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+			LDO8 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <2900000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+			LDO9 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+			LDO10 {
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+			LDO12 {
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+			LDO13 {
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+			LDO14 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+		rtc {
-+			marvell,88pm860x-vrtc = <1>;
-+		};
-+		touch {
-+			marvell,88pm860x-gpadc-prebias = <1>;
-+			marvell,88pm860x-gpadc-slot-cycle = <1>;
-+			marvell,88pm860x-tsi-prebias = <6>;
-+			marvell,88pm860x-pen-prebias = <16>;
-+			marvell,88pm860x-pen-prechg = <2>;
-+			marvell,88pm860x-resistor-X = <300>;
-+		};
-+		backlights {
-+			backlight-0 {
-+				marvell,88pm860x-iset = <4>;
-+				marvell,88pm860x-pwm = <3>;
-+			};
-+			backlight-2 {
-+			};
-+		};
-+		leds {
-+			led0-red {
-+				marvell,88pm860x-iset = <12>;
-+			};
-+			led0-green {
-+				marvell,88pm860x-iset = <12>;
-+			};
-+			led0-blue {
-+				marvell,88pm860x-iset = <12>;
- 			};
- 		};
- 	};
- };
++On output, ``error`` is zero on success, or an error code.  Error codes
++are defined in ``<linux/psp-dev.h>`.
 +
-+&rtc {
-+	status = "okay";
-+};
+ KVM implements the following commands to support common lifecycle events of SEV
+ guests, such as launching, running, snapshotting, migrating and decommissioning.
+ 
+@@ -90,6 +113,8 @@ Returns: 0 on success, -negative on error
+ 
+ On success, the 'handle' field contains a new handle and on error, a negative value.
+ 
++KVM_SEV_LAUNCH_START requires the ``sev_fd`` field to be valid.
++
+ For more details, see SEV spec Section 6.2.
+ 
+ 3. KVM_SEV_LAUNCH_UPDATE_DATA
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 91000501756e..f0aa9ff9666f 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -7158,6 +7158,9 @@ static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+ 	if (!svm_sev_enabled())
+ 		return -ENOTTY;
+ 
++	if (!argp)
++		return 0;
++
+ 	if (copy_from_user(&sev_cmd, argp, sizeof(struct kvm_sev_cmd)))
+ 		return -EFAULT;
+ 
 -- 
-2.25.1
+2.18.2
 
