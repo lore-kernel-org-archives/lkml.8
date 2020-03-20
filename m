@@ -2,102 +2,78 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B55C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA31C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A824520714
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD4B20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:01:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbgCTO74 (ORCPT
+        id S1727297AbgCTPBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:59:56 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:60257 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726778AbgCTO74 (ORCPT
+        Fri, 20 Mar 2020 11:01:48 -0400
+Received: from www62.your-server.de ([213.133.104.62]:50940 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCTPBr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:59:56 -0400
-Received: (qmail 28990 invoked by uid 500); 20 Mar 2020 10:59:55 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 20 Mar 2020 10:59:55 -0400
-Date:   Fri, 20 Mar 2020 10:59:55 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-cc:     linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        <linux-arch@vger.kernel.org>, Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 1/3] LKMM: Add litmus test for RCU GP guarantee where
- updater frees object
-In-Reply-To: <20200320065552.253696-1-joel@joelfernandes.org>
-Message-ID: <Pine.LNX.4.44L0.2003201049230.27303-100000@netrider.rowland.org>
+        Fri, 20 Mar 2020 11:01:47 -0400
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jFJ9R-0004Ty-AF; Fri, 20 Mar 2020 16:01:33 +0100
+Received: from [85.7.42.192] (helo=pc-9.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jFJ9Q-000LQU-Ua; Fri, 20 Mar 2020 16:01:32 +0100
+Subject: Re: [PATCH bpf-next 1/2] bpf: tcp: Fix unused function warnings
+To:     Yonghong Song <yhs@fb.com>, YueHaibing <yuehaibing@huawei.com>,
+        lmb@cloudflare.com, jakub@cloudflare.com, john.fastabend@gmail.com
+Cc:     davem@davemloft.net, netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andrii.nakryiko@gmail.com
+References: <20200319124631.58432-1-yuehaibing@huawei.com>
+ <20200320023426.60684-1-yuehaibing@huawei.com>
+ <20200320023426.60684-2-yuehaibing@huawei.com>
+ <d18a19a0-f147-03ad-b8a5-4b502199cd72@fb.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <71161d44-da82-b4ae-ee9e-8291d9d03021@iogearbox.net>
+Date:   Fri, 20 Mar 2020 16:01:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <d18a19a0-f147-03ad-b8a5-4b502199cd72@fb.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25757/Fri Mar 20 14:13:59 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Mar 2020, Joel Fernandes (Google) wrote:
-
-> This adds an example for the important RCU grace period guarantee, which
-> shows an RCU reader can never span a grace period.
+On 3/20/20 5:21 AM, Yonghong Song wrote:
+> On 3/19/20 7:34 PM, YueHaibing wrote:
+>> If BPF_STREAM_PARSER is not set, gcc warns:
+>>
+>> net/ipv4/tcp_bpf.c:483:12: warning: 'tcp_bpf_sendpage' defined but not used [-Wunused-function]
+>> net/ipv4/tcp_bpf.c:395:12: warning: 'tcp_bpf_sendmsg' defined but not used [-Wunused-function]
+>> net/ipv4/tcp_bpf.c:13:13: warning: 'tcp_bpf_stream_read' defined but not used [-Wunused-function]
+>>
+>> Moves the unused functions into the #ifdef
 > 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  .../litmus-tests/RCU+sync+free.litmus         | 40 +++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 tools/memory-model/litmus-tests/RCU+sync+free.litmus
+> Maybe explicit "into the #ifdef CONFIG_BPF_STREAM_PARSER"?
 > 
-> diff --git a/tools/memory-model/litmus-tests/RCU+sync+free.litmus b/tools/memory-model/litmus-tests/RCU+sync+free.litmus
-> new file mode 100644
-> index 0000000000000..c4682502dd296
-> --- /dev/null
-> +++ b/tools/memory-model/litmus-tests/RCU+sync+free.litmus
-> @@ -0,0 +1,40 @@
-> +C RCU+sync+free
-> +
-> +(*
-> + * Result: Never
-> + *
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Fixes: f747632b608f ("bpf: sockmap: Move generic sockmap hooks from BPF TCP")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> Reviewed-by: Lorenz Bauer <lmb@cloudflare.com>
+>> Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+> 
+> Acked-by: Yonghong Song <yhs@fb.com>
 
-The following comment needs some rewriting.  The grammar is somewhat
-awkward and a very important "not" is missing.
-
-> + * This litmus test demonstrates that an RCU reader can never see a write after
-> + * the grace period, if it saw writes that happen before the grace period.
-
-An RCU reader can never see a write that follows a grace period if it
-did _not_ see writes that precede the grace period.
-
->  This
-> + * is a typical pattern of RCU usage, where the write before the grace period
-> + * assigns a pointer, and the writes after destroy the object that the pointer
-> + * points to.
-
-... that the pointer used to point to.
-
-> + *
-> + * This guarantee also implies, an RCU reader can never span a grace period and
-> + * is an important RCU grace period memory ordering guarantee.
-
-Unnecessary comma, and it is not clear what "This" refers to.  The 
-whole sentence should be phrased differently:
-
-	This is one implication of the RCU grace-period guarantee,
-	which says (among other things) that an RCU reader cannot span 
-	a grace period.
-
-Alan
-
+Both applied and addressed feedback from Yonghong, thanks!
