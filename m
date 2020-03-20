@@ -2,83 +2,141 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE27FC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB8EC43332
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9977120739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3923B20754
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:00:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ArtPZJsu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbgCTKAH (ORCPT
+        id S1727266AbgCTKAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:00:07 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35131 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgCTKAH (ORCPT
+        Fri, 20 Mar 2020 06:00:13 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:26525 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727163AbgCTKAM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:00:07 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFERc-0001Fs-Vc; Fri, 20 Mar 2020 11:00:01 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 682AA100375; Fri, 20 Mar 2020 11:00:00 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>,
-        Kyung Min Park <kyung.min.park@intel.com>
-Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Raj\, Ashok" <ashok.raj@intel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: Re: [PATCH v2 2/2] x86/delay: Introduce TPAUSE delay
-In-Reply-To: <CALCETrWJ88CaGmij_NNysRjUQ6LPwwbPnMy1YPdKnM-cFDueSw@mail.gmail.com>
-References: <1584677604-32707-1-git-send-email-kyung.min.park@intel.com> <1584677604-32707-3-git-send-email-kyung.min.park@intel.com> <CALCETrWJ88CaGmij_NNysRjUQ6LPwwbPnMy1YPdKnM-cFDueSw@mail.gmail.com>
-Date:   Fri, 20 Mar 2020 11:00:00 +0100
-Message-ID: <877dzf4a8v.fsf@nanos.tec.linutronix.de>
+        Fri, 20 Mar 2020 06:00:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584698411;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wav6xNqI9ihDDoXx/GoMx+TsMvEpi21uQTIJBLfXuG4=;
+        b=ArtPZJsuV5zjr8g5tZpggswtPafK/aolowqcIzdh/Los1y5qeMzT1xOqlfgcS+XRxy/Vlb
+        bN0i+mXLLlJk0HzlSXH9VFNcIirVXsLxuXDvNlyRIA7iRQiDYaoHYPQFIFw9ossX/l3ECl
+        GshujYM9CekJazDvSqI4FvBRxAeDd94=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-256-1Zz8HvToOJmcmiDI4OJmtA-1; Fri, 20 Mar 2020 06:00:07 -0400
+X-MC-Unique: 1Zz8HvToOJmcmiDI4OJmtA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 960B418CA245;
+        Fri, 20 Mar 2020 10:00:05 +0000 (UTC)
+Received: from localhost (ovpn-13-97.pek2.redhat.com [10.72.13.97])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 315A37389C;
+        Fri, 20 Mar 2020 10:00:00 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 17:59:58 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v3 3/8] drivers/base/memory: store mapping between MMOP_*
+ and string in an array
+Message-ID: <20200320095958.GF2987@MiWiFi-R3L-srv>
+References: <20200319131221.14044-1-david@redhat.com>
+ <20200319131221.14044-4-david@redhat.com>
+ <20200320073653.GE2987@MiWiFi-R3L-srv>
+ <166f7f03-eda9-00a8-bd18-128898526313@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <166f7f03-eda9-00a8-bd18-128898526313@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
-> On Thu, Mar 19, 2020 at 9:13 PM Kyung Min Park <kyung.min.park@intel.com> wrote:
->>  void use_tsc_delay(void)
->>  {
->> -       if (delay_fn == delay_loop)
->> +       if (static_cpu_has(X86_FEATURE_WAITPKG)) {
->> +               delay_halt_fn = delay_halt_tpause;
->> +               delay_fn = delay_halt;
->> +       } else if (delay_fn == delay_loop) {
->>                 delay_fn = delay_tsc;
->> +       }
->>  }
->
-> This is an odd way to dispatch: you're using static_cpu_has(), but
-> you're using it once to populate a function pointer.  Why not just put
-> the static_cpu_has() directly into delay_halt() and open-code the
-> three variants?
+On 03/20/20 at 10:50am, David Hildenbrand wrote:
+> On 20.03.20 08:36, Baoquan He wrote:
+> > On 03/19/20 at 02:12pm, David Hildenbrand wrote:
+> >> Let's use a simple array which we can reuse soon. While at it, move the
+> >> string->mmop conversion out of the device hotplug lock.
+> >>
+> >> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+> >> Acked-by: Michal Hocko <mhocko@suse.com>
+> >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >> Cc: Andrew Morton <akpm@linux-foundation.org>
+> >> Cc: Michal Hocko <mhocko@kernel.org>
+> >> Cc: Oscar Salvador <osalvador@suse.de>
+> >> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> >> Cc: Baoquan He <bhe@redhat.com>
+> >> Cc: Wei Yang <richard.weiyang@gmail.com>
+> >> Signed-off-by: David Hildenbrand <david@redhat.com>
+> >> ---
+> >>  drivers/base/memory.c | 38 +++++++++++++++++++++++---------------
+> >>  1 file changed, 23 insertions(+), 15 deletions(-)
+> >>
+> >> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> >> index e7e77cafef80..8a7f29c0bf97 100644
+> >> --- a/drivers/base/memory.c
+> >> +++ b/drivers/base/memory.c
+> >> @@ -28,6 +28,24 @@
+> >>  
+> >>  #define MEMORY_CLASS_NAME	"memory"
+> >>  
+> >> +static const char *const online_type_to_str[] = {
+> >> +	[MMOP_OFFLINE] = "offline",
+> >> +	[MMOP_ONLINE] = "online",
+> >> +	[MMOP_ONLINE_KERNEL] = "online_kernel",
+> >> +	[MMOP_ONLINE_MOVABLE] = "online_movable",
+> >> +};
+> >> +
+> >> +static int memhp_online_type_from_str(const char *str)
+> >> +{
+> >> +	int i;
+> > 
+> > I would change it as: 
+> > 
+> > 	for (int i = 0; i < ARRAY_SIZE(online_type_to_str); i++) {
+> > 
+> 
+> That's not allowed by the C90 standard (and -std=gnu89).
+> 
+> $ gcc main.c -std=gnu89
+> main.c: In function 'main':
+> main.c:3:2: error: 'for' loop initial declarations are only allowed in
+> C99 or C11 mode
+>     3 |  for (int i = 0; i < 8; i++) {
+>       |  ^~~
 
-Two: mwaitx and tpause.
+Good to know, thanks.
 
-> That will also make it a lot easier to understand the oddity with
-> start and cycles.
+> 
+> One of the reasons why
+> 	git grep "for (int "
+> 
+> will result in very little hits (IOW, only 5 in driver code only).
+> 
+> -- 
+> Thanks,
+> 
+> David / dhildenb
 
-Indeed. That makes sense. Should have thought about it :)
-
-Thanks,
-
-        tglx
