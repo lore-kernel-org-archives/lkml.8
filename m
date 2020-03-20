@@ -2,176 +2,172 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01124C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B848DC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C32AE20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:11:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584720681;
-	bh=pga0nnKgW8xg9uhns1BYEZ40Eed+kmdH4uF0UjG48lw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=kTW6EQaAdWPVtZNDYMnn9wnWic5VZU+OUZZXGfNhqYON4kz79J3ZSAsXwtUV2zQwc
-	 mJkn2hKgol3iTARre6cHwrh8zAkvV0tYym1OOv80U2N3LQhUI0wiakFIc6lmjpSZ2y
-	 OOlYt2MAOcPn0OVUKGWaaBshXK3GiKwu1lx8h4T0=
+	by mail.kernel.org (Postfix) with ESMTP id 8BA7A20753
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:11:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LTd0t+/4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbgCTQLU (ORCPT
+        id S1727016AbgCTQL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:11:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47156 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727016AbgCTQLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:11:19 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 20 Mar 2020 12:11:26 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:52351 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727427AbgCTQLZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 12:11:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584720685;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UupNCCxt4n1UUir8pm0L2/8EWRBOSv9Ad1mpCsKanlQ=;
+        b=LTd0t+/4h0F9d+59WIxpmMMr/OUyCbt8n8IgMNlja0fs9P4/azWY3Bvcb6FSmG9b27uh/C
+        LRwPefRO2sHsi+V+D9VdVigLcK5QshMiOkOooLXSERjySE0TxN26pxNBV10apF9vqIsXHd
+        Rdq9LiCc0taLRSKxFkecBCq9omiABsI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-374-NQQs-AD-MQ26fpjdPqUm-w-1; Fri, 20 Mar 2020 12:11:23 -0400
+X-MC-Unique: NQQs-AD-MQ26fpjdPqUm-w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCE8320739;
-        Fri, 20 Mar 2020 16:11:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584720678;
-        bh=pga0nnKgW8xg9uhns1BYEZ40Eed+kmdH4uF0UjG48lw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=a3WXVveqaO6ZDJtkp9YMyrQbUe38YQ0w7yVS4S2kZWd8O3UYdfEWDiNF97NFqvRBR
-         Dmz7YwV2IDZ8jw+UhW0qvzW71sGzuXs9EPksJgBVr/4Y++O1RSSguuycN62LPymX1S
-         DR+m6ovlusTmMjzxq2s+ay1zIxZT2LoszNVq4qQs=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id AFDF835226B4; Fri, 20 Mar 2020 09:11:18 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 09:11:18 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org
-Subject: Re: [PATCH RFC v2 tip/core/rcu 03/22] rcutorture: Add flag to
- produce non-busy-wait task stalls
-Message-ID: <20200320161118.GO3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
- <20200319104614.11444-1-hdanton@sina.com>
- <20200319133947.12172-1-hdanton@sina.com>
- <20200320040329.9840-1-hdanton@sina.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 85A57101C81E;
+        Fri, 20 Mar 2020 16:10:56 +0000 (UTC)
+Received: from laptop.redhat.com (ovpn-113-142.ams2.redhat.com [10.36.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CDDF75C1D8;
+        Fri, 20 Mar 2020 16:10:52 +0000 (UTC)
+From:   Eric Auger <eric.auger@redhat.com>
+To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
+        will.deacon@arm.com, robin.murphy@arm.com
+Cc:     marc.zyngier@arm.com, peter.maydell@linaro.org,
+        zhangfei.gao@gmail.com
+Subject: [PATCH v10 08/13] iommu/smmuv3: Implement cache_invalidate
+Date:   Fri, 20 Mar 2020 17:09:27 +0100
+Message-Id: <20200320160932.27222-9-eric.auger@redhat.com>
+In-Reply-To: <20200320160932.27222-1-eric.auger@redhat.com>
+References: <20200320160932.27222-1-eric.auger@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320040329.9840-1-hdanton@sina.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 12:03:29PM +0800, Hillf Danton wrote:
-> 
-> On Thu, 19 Mar 2020 08:22:53 -0700 "Paul E. McKenney" wrote:
-> > 
-> > On Thu, Mar 19, 2020 at 09:39:47PM +0800, Hillf Danton wrote:
-> > > 
-> > > On Thu, 19 Mar 2020 05:38:12 -0700 "Paul E. McKenney" wrote:
-> > > > 
-> > > > On Thu, Mar 19, 2020 at 06:46:14PM +0800, Hillf Danton wrote:
-> > > > > 
-> > > > > On Wed, 18 Mar 2020 17:10:41 -0700
-> > > > > >  static int rcu_torture_stall(void *args)
-> > > > > >  {
-> > > > > > +	int idx;
-> > > > > >  	unsigned long stop_at;
-> > > > > >  
-> > > > > >  	VERBOSE_TOROUT_STRING("rcu_torture_stall task started");
-> > > > > > @@ -1610,21 +1612,22 @@ static int rcu_torture_stall(void *args)
-> > > > > >  	if (!kthread_should_stop()) {
-> > > > > >  		stop_at = ktime_get_seconds() + stall_cpu;
-> > > > > >  		/* RCU CPU stall is expected behavior in following code. */
-> > > > > > -		rcu_read_lock();
-> > > > > > +		idx = cur_ops->readlock();
-> > > > > >  		if (stall_cpu_irqsoff)
-> > > > > >  			local_irq_disable();
-> > > > > > -		else
-> > > > > > +		else if (!stall_cpu_block)
-> > > > > >  			preempt_disable();
-> > > > > >  		pr_alert("rcu_torture_stall start on CPU %d.\n",
-> > > > > > -			 smp_processor_id());
-> > > > > > +			 raw_smp_processor_id());
-> > > > > >  		while (ULONG_CMP_LT((unsigned long)ktime_get_seconds(),
-> > > > > >  				    stop_at))
-> > > > > > -			continue;  /* Induce RCU CPU stall warning. */
-> > > > > > +			if (stall_cpu_block)
-> > > > > > +				schedule_timeout_uninterruptible(HZ);
-> > > > > 
-> > > > > Why is the scheduled-in task so special that it will be running on
-> > > > > the current CPU with irq disabled?
-> > > > 
-> > > > You lost me on this one.
-> > > 
-> > > Quite likely :)
-> > > 
-> > > > IRQs are not at all disabled.
-> > > > 
-> > > > > >  		if (stall_cpu_irqsoff)
-> > > > > >  			local_irq_enable();
-> > > 
-> > > Local IRQs get enabled here depending on stall_cpu_irqsoff.
-> > > 
-> > > What I was asking is the scheduling case like
-> > > 
-> > > 	local_irq_disable();
-> > > 	schedule_timeout(HZ);
-> > > 	local_irq_enable();
-> > > 
-> > > Is it likely going to be ruled out in this patch?
-> > 
-> > If an rcutorture run specified both the rcutorture.stall_cpu_irqsoff and
-> > the rcutorture.stall_cpu_block module parameters, then yes, exactly the
-> > sequence you call out should occur.  Can't say that I have tried this,
-> > though.  Nor would I expect to have ever done so without your suggesting
-> > that I do.
-> > 
-> > But why not try it on current -rcu?
-> > 
-> > tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 12 --duration 3 --configs "TRACE01" --bootargs "rcutorture.stall_cpu=25 rcutorture.stall_cpu_holdoff=30 rcutorture.stall_cpu_block=1 rcupdate.rcu_task_stall_timeout=10000 rcutorture.stall_cpu_irqsoff"
-> > 
-> > This tells rcutorture to use all 12 hardware threads, to run the kernel for
-> > three minutes, to run only the TRACE01 rcutorture scenario, and to test
-> > RCU CPU stall warnings:
-> > 
-> > rcutorture.stall_cpu=25: Stall the CPU for 25 seconds.
-> > 
-> > rcutorture.stall_cpu_holdoff=30: Wait 30 seconds after boot to start stalling.
-> > 
-> > rcutorture.stall_cpu_block=1: Do the schedule_timeout_uninterruptible()
-> > 	while stalling.
-> > 
-> > rcupdate.rcu_task_stall_timeout=10000: Set the stall-warning timeout
-> > 	to 10,000 jiffies, or ten seconds.
-> > 
-> > rcutorture.stall_cpu_irqsoff: This tells rcutorture to execute the
-> > 	local_irq_disable() that you called out above.
-> > 
-> > And this results in a couple of stall warning messages, as expected
-> 
-> Given these warning messages,
-> 
-> > given that you get two ten-second intervals in a 25-second interval.
-> 
-> I suspect it is likely to induce RCU CPU stall using
-> schedule_timeout_uninterruptible(HZ).
+Implement domain-selective and page-selective IOTLB invalidations.
 
-Exactly.  In fact, inducing an RCU CPU stall warning is the whole purpose
-of those rcutorture module parameters.
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
 
-But it depends on the flavor of RCU in use.  Feel free to experiment!
+---
+v7 -> v8:
+- ASID based invalidation using iommu_inv_pasid_info
+- check ARCHID/PASID flags in addr based invalidation
+- use __arm_smmu_tlb_inv_context and __arm_smmu_tlb_inv_range_nosync
 
-And again, I do not expect to be using rcutorture.stall_cpu_block=1 and
-rcutorture.stall_cpu_irqsoff at the same time except as a demonstration
-of something silly.  So I do not see the need to make a change.  If you
-are advocating some change or reporting some bug, I am missing your point.
+v6 -> v7
+- check the uapi version
 
-							Thanx, Paul
+v3 -> v4:
+- adapt to changes in the uapi
+- add support for leaf parameter
+- do not use arm_smmu_tlb_inv_range_nosync or arm_smmu_tlb_inv_context
+  anymore
+
+v2 -> v3:
+- replace __arm_smmu_tlb_sync by arm_smmu_cmdq_issue_sync
+
+v1 -> v2:
+- properly pass the asid
+---
+ drivers/iommu/arm-smmu-v3.c | 53 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 39deddea6ae5..538e368c2e13 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -3407,6 +3407,58 @@ static void arm_smmu_detach_pasid_table(struct iom=
+mu_domain *domain)
+ 	mutex_unlock(&smmu_domain->init_mutex);
+ }
+=20
++static int
++arm_smmu_cache_invalidate(struct iommu_domain *domain, struct device *de=
+v,
++			  struct iommu_cache_invalidate_info *inv_info)
++{
++	struct arm_smmu_domain *smmu_domain =3D to_smmu_domain(domain);
++	struct arm_smmu_device *smmu =3D smmu_domain->smmu;
++
++	if (smmu_domain->stage !=3D ARM_SMMU_DOMAIN_NESTED)
++		return -EINVAL;
++
++	if (!smmu)
++		return -EINVAL;
++
++	if (inv_info->version !=3D IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
++		return -EINVAL;
++
++	if (inv_info->cache & IOMMU_CACHE_INV_TYPE_IOTLB) {
++		if (inv_info->granularity =3D=3D IOMMU_INV_GRANU_PASID) {
++			struct iommu_inv_pasid_info *info =3D
++				&inv_info->pasid_info;
++
++			if (!(info->flags & IOMMU_INV_PASID_FLAGS_ARCHID) ||
++			     (info->flags & IOMMU_INV_PASID_FLAGS_PASID))
++				return -EINVAL;
++
++			__arm_smmu_tlb_inv_context(smmu_domain, info->archid);
++
++		} else if (inv_info->granularity =3D=3D IOMMU_INV_GRANU_ADDR) {
++			struct iommu_inv_addr_info *info =3D &inv_info->addr_info;
++			size_t size =3D info->nb_granules * info->granule_size;
++			bool leaf =3D info->flags & IOMMU_INV_ADDR_FLAGS_LEAF;
++
++			if (!(info->flags & IOMMU_INV_ADDR_FLAGS_ARCHID) ||
++			     (info->flags & IOMMU_INV_ADDR_FLAGS_PASID))
++				return -EINVAL;
++
++			__arm_smmu_tlb_inv_range(info->addr, size,
++						 info->granule_size, leaf,
++						  smmu_domain, info->archid);
++
++			arm_smmu_cmdq_issue_sync(smmu);
++		} else {
++			return -EINVAL;
++		}
++	}
++	if (inv_info->cache & IOMMU_CACHE_INV_TYPE_PASID ||
++	    inv_info->cache & IOMMU_CACHE_INV_TYPE_DEV_IOTLB) {
++		return -ENOENT;
++	}
++	return 0;
++}
++
+ static struct iommu_ops arm_smmu_ops =3D {
+ 	.capable		=3D arm_smmu_capable,
+ 	.domain_alloc		=3D arm_smmu_domain_alloc,
+@@ -3427,6 +3479,7 @@ static struct iommu_ops arm_smmu_ops =3D {
+ 	.put_resv_regions	=3D generic_iommu_put_resv_regions,
+ 	.attach_pasid_table	=3D arm_smmu_attach_pasid_table,
+ 	.detach_pasid_table	=3D arm_smmu_detach_pasid_table,
++	.cache_invalidate	=3D arm_smmu_cache_invalidate,
+ 	.pgsize_bitmap		=3D -1UL, /* Restricted during device attach */
+ };
+=20
+--=20
+2.20.1
+
