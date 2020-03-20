@@ -2,88 +2,195 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D088C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1F9C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30FA620658
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 197CC20658
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:59:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="jRZ4w7iR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BozUlhIa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgCTU70 (ORCPT
+        id S1727135AbgCTU7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 16:59:26 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:37872 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726951AbgCTU7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 16:59:25 -0400
-Received: from zn.tnic (p200300EC2F0A5A0095ADC0D452E3E28B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:95ad:c0d4:52e3:e28b])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1043D1EC0570;
-        Fri, 20 Mar 2020 21:59:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584737962;
+        Fri, 20 Mar 2020 16:59:45 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:39069 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726912AbgCTU7p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 16:59:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584737984;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=8iI8IWPehZ1KW+x62OpAlz0HlN2gIEWJg2Hn2mzEzMA=;
-        b=jRZ4w7iRJ1EiRXuIFuvaqqn9IbV3+wN+Q1T2vSEeDASwPUcW7/HiNd7GqP/3xfZa37ol+a
-        kzD/Mi/5tK1eAWsYKFVeIu5C44Cp8X/ZtfqbmOWUX4chL2kEJHfSR0oq+Fgiw9+ENQ8DJC
-        JyFt3DzmdDeh6DuYrhferPDmppBdrwA=
-Date:   Fri, 20 Mar 2020 21:59:29 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Alexey Makhalov <amakhalov@vmware.com>
-Cc:     linux-x86_64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH 0/5] x86/vmware: Steal time accounting support
-Message-ID: <20200320205929.GH23532@zn.tnic>
-References: <20200320203443.27742-1-amakhalov@vmware.com>
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VGrhaAgQuGc4nR5mDjGTeAxa5W8ePSIqBYL4zLw6fxw=;
+        b=BozUlhIavgSKPfdCDobBwxpMDzrX80oiQuQKKSXu0P9kUPyZaTLIS7uoJuP4jASOSxdhwP
+        YNjLbd2HJmbDUuaqbGFuhiNJ7XtjX8oi1WxXEXwdjFM+JNIEr9HVV2g2+f0a72AR/D6I4j
+        jYe2pt/bXotjPMEfK8zyo09hf1buTZk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-135-H-tmYnP7P422El7JWjAGDQ-1; Fri, 20 Mar 2020 16:59:37 -0400
+X-MC-Unique: H-tmYnP7P422El7JWjAGDQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5EF2A107ACC4;
+        Fri, 20 Mar 2020 20:59:36 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B1B5D17B91;
+        Fri, 20 Mar 2020 20:59:35 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 14:59:35 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yonghyun Hwang <yonghyun@google.com>
+Cc:     Kirti Wankhede <kwankhede@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Havard Skinnemoen <hskinnemoen@google.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Joshua Lang <joshualang@google.com>
+Subject: Re: [PATCH] vfio-mdev: support mediated device creation in kernel
+Message-ID: <20200320145935.4617c7c0@w520.home>
+In-Reply-To: <CAEauFbx1Su7Lg5kdxXnvUwfwLCH67qaGB6EZ7g3OOH-tbRfBBA@mail.gmail.com>
+References: <20200320175910.180266-1-yonghyun@google.com>
+        <20200320123425.49c6568e@w520.home>
+        <CAEauFbx1Su7Lg5kdxXnvUwfwLCH67qaGB6EZ7g3OOH-tbRfBBA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200320203443.27742-1-amakhalov@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 08:34:38PM +0000, Alexey Makhalov wrote:
-> Hello,
+On Fri, 20 Mar 2020 13:46:04 -0700
+Yonghyun Hwang <yonghyun@google.com> wrote:
+
+> On Fri, Mar 20, 2020 at 11:34 AM Alex Williamson
+> <alex.williamson@redhat.com> wrote:
+> >
+> > On Fri, 20 Mar 2020 10:59:10 -0700
+> > Yonghyun Hwang <yonghyun@google.com> wrote:
+> >  
+> > > To enable a mediated device, a device driver registers its device to VFIO
+> > > MDev framework. Once the mediated device gets enabled, UUID gets fed onto
+> > > the sysfs attribute, "create", to create the mediated device. This
+> > > additional step happens after boot-up gets complete. If the driver knows
+> > > how many mediated devices need to be created during probing time, the
+> > > additional step becomes cumbersome. This commit implements a new function
+> > > to allow the driver to create a mediated device in kernel.  
+> >
+> > But pre-creating mdev devices seems like a policy decision.  Why can't
+> > userspace make such a policy decision, and do so with persistent uuids,
+> > via something like mdevctl?  Thanks,
+> >
+> > Alex  
 > 
-> This patchset introduces steal time accounting support for
-> the VMware guest. The idea and implementation of guest
-> steal time support is similar to KVM ones and it is based
-> on steal clock. The steal clock is a per CPU structure in
-> a shared memory between hypervisor and guest, initialized
-> by each CPU through hypercall. Steal clock is got updated
-> by the hypervisor and read by the guest. 
+> Yep, it can be viewed as the policy decision and userspace can make
+> the decision. However, it would be handy and plausible, if a device
+> driver can pre-create "fixed or default" # of mdev devices, while
+> allowing the device policy to come into play after bootup gets
+> complete. Without this patch, a device driver should release the
+> policy and the policy should be aligned with the driver, which would
+> be cumbersome (sometimes painful) in a cloud environment. My use case
+> with mdev is to enable a subset of vfio-pci features without losing my
+> device driver.
 
-...
+Does this last comment suggest the parent device is not being
+multiplexed through mdev, but only mediated?  If so, would something
+like Yan's vendor-ops approach[1] be better?  Without a multiplexed
+device, the lifecycle management of an mdev device doesn't make a lot
+of sense, and I wonder if that's what you're trying to bypass here.
+Even SR-IOV devices have moved to userspace enablement with most module
+options to enable a default number of VFs being deprecated.  I do see
+that that transition left a gap, but I'm not sure that heading in the
+opposite direction with mdevs is a good idea either.  Thanks,
 
->  Documentation/admin-guide/kernel-parameters.txt |   2 +-
->  arch/x86/kernel/cpu/vmware.c                    | 227 +++++++++++++++++++++++-
->  2 files changed, 220 insertions(+), 9 deletions(-)
+Alex
 
-Did you not see my reply to you the last time?
+[1]https://lore.kernel.org/kvm/20200131020803.27519-1-yan.y.zhao@intel.com/
 
-https://marc.info/?l=linux-virtualization&m=158410546921328
 
--- 
-Regards/Gruss,
-    Boris.
+> > > Signed-off-by: Yonghyun Hwang <yonghyun@google.com>
+> > > ---
+> > >  drivers/vfio/mdev/mdev_core.c | 45 +++++++++++++++++++++++++++++++++++
+> > >  include/linux/mdev.h          |  3 +++
+> > >  2 files changed, 48 insertions(+)
+> > >
+> > > diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> > > index b558d4cfd082..a6d32516de42 100644
+> > > --- a/drivers/vfio/mdev/mdev_core.c
+> > > +++ b/drivers/vfio/mdev/mdev_core.c
+> > > @@ -350,6 +350,51 @@ int mdev_device_create(struct kobject *kobj,
+> > >       return ret;
+> > >  }
+> > >
+> > > +/*
+> > > + * mdev_create_device : Create a mdev device
+> > > + * @dev: device structure representing parent device.
+> > > + * @uuid: uuid char string for a mdev device.
+> > > + * @group: index to supported type groups for a mdev device.
+> > > + *
+> > > + * Create a mdev device in kernel.
+> > > + * Returns a negative value on error, otherwise 0.
+> > > + */
+> > > +int mdev_create_device(struct device *dev,
+> > > +                     const char *uuid, int group)
+> > > +{
+> > > +     struct mdev_parent *parent = NULL;
+> > > +     struct mdev_type *type = NULL;
+> > > +     guid_t guid;
+> > > +     int i = 1;
+> > > +     int ret;
+> > > +
+> > > +     ret = guid_parse(uuid, &guid);
+> > > +     if (ret) {
+> > > +             dev_err(dev, "Failed to parse UUID");
+> > > +             return ret;
+> > > +     }
+> > > +
+> > > +     parent = __find_parent_device(dev);
+> > > +     if (!parent) {
+> > > +             dev_err(dev, "Failed to find parent mdev device");
+> > > +             return -ENODEV;
+> > > +     }
+> > > +
+> > > +     list_for_each_entry(type, &parent->type_list, next) {
+> > > +             if (i == group)
+> > > +                     break;
+> > > +             i++;
+> > > +     }
+> > > +
+> > > +     if (!type || i != group) {
+> > > +             dev_err(dev, "Failed to find mdev device");
+> > > +             return -ENODEV;
+> > > +     }
+> > > +
+> > > +     return mdev_device_create(&type->kobj, parent->dev, &guid);
+> > > +}
+> > > +EXPORT_SYMBOL(mdev_create_device);
+> > > +
+> > >  int mdev_device_remove(struct device *dev)
+> > >  {
+> > >       struct mdev_device *mdev, *tmp;
+> > > diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+> > > index 0ce30ca78db0..b66f67998916 100644
+> > > --- a/include/linux/mdev.h
+> > > +++ b/include/linux/mdev.h
+> > > @@ -145,4 +145,7 @@ struct device *mdev_parent_dev(struct mdev_device *mdev);
+> > >  struct device *mdev_dev(struct mdev_device *mdev);
+> > >  struct mdev_device *mdev_from_dev(struct device *dev);
+> > >
+> > > +extern int mdev_create_device(struct device *dev,
+> > > +                     const char *uuid, int group_idx);
+> > > +
+> > >  #endif /* MDEV_H */  
+> >  
+> 
 
-https://people.kernel.org/tglx/notes-about-netiquette
