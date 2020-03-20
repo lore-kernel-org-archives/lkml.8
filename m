@@ -2,127 +2,148 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CA3C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DECC43332
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 248D020787
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA9520739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:52:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xi/LH+k7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J0tHg/vI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgCTMss (ORCPT
+        id S1727016AbgCTMwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 08:48:48 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:27768 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726925AbgCTMss (ORCPT
+        Fri, 20 Mar 2020 08:52:04 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48628 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgCTMwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 08:48:48 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02KCd871016964;
-        Fri, 20 Mar 2020 13:48:43 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=2C+GCWBhrcZX26tCjQgEyQLMF2n9xcx1LptRAb/JNO4=;
- b=xi/LH+k7xfxxpNKWNaWn0rDhI3NDdqrwa3yNyj+x+H5fCQdkK7OJchDcdP9CUnlg9K5d
- mvyxOAR+eyYGGqm+lpsWt/o7oGQSnOYE9PK66M7V42acngG/Ptlykd4LkS4WkPHbPIZh
- ShssC7Mqa9BiBllVMcx+VWsHaoPHMJOH6eb30MMsa4hI0XUJ1npogQqeWUOqi0UQWn0x
- SN7nV1wbQYNalhj5uw9EHtMszLQhnlFozkmgct6FqkpcvVCAZ+dD58kXmyic+kmGgVtl
- sP8bRHEgO6K75kobhyO32t8iS0IZzoBlENJY77kJwXNXsPoyr801qbbKNN8cIfzk30RH ug== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yu6xdr4k6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Mar 2020 13:48:43 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1148C10002A;
-        Fri, 20 Mar 2020 13:48:39 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 04EF82ADC3B;
-        Fri, 20 Mar 2020 13:48:39 +0100 (CET)
-Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Mar
- 2020 13:48:38 +0100
-Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
- SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
- 15.00.1473.003; Fri, 20 Mar 2020 13:48:38 +0100
-From:   Patrice CHOTARD <patrice.chotard@st.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Erwan LE RAY <erwan.leray@st.com>,
-        "Alexandre TORGUE" <alexandre.torgue@st.com>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>
-Subject: Re: PM / wakeup: Add dev_wakeup_path() helper
-Thread-Topic: PM / wakeup: Add dev_wakeup_path() helper
-Thread-Index: AQHV/qtJLW56mUXPdUSe6gOaf+QjAKhRTq2AgAAO94A=
-Date:   Fri, 20 Mar 2020 12:48:38 +0000
-Message-ID: <8d434829-ba4d-e2be-9889-3f6eb88c46b8@st.com>
-References: <20200320113233.10219-1-patrice.chotard@st.com>
- <CAPDyKFrWnK-TCMDExYHqpyo+5Fz9tKa0xWeauuQfTT1bQjepqQ@mail.gmail.com>
-In-Reply-To: <CAPDyKFrWnK-TCMDExYHqpyo+5Fz9tKa0xWeauuQfTT1bQjepqQ@mail.gmail.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.47]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6427126BE4D11F4DA9351D2EC9B8EA5C@st.com>
-Content-Transfer-Encoding: base64
+        Fri, 20 Mar 2020 08:52:04 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02KCpsvZ116690;
+        Fri, 20 Mar 2020 07:51:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584708714;
+        bh=KOUeiPoRHoGPb/5jBL8TKLgULIFGDNl5+M3+te9LDzM=;
+        h=From:To:CC:Subject:Date;
+        b=J0tHg/vI5vvTH3sEYwrAdo8gXp5dqpn60EVb8N02m6iShHCAPtRSdMSDNHW61uvae
+         1xt8Pbu3xT4mdyoKVB7zefMsqr8l1WVbu8857ntSQRkYKcv+bJfFbNY3ne21THfmXB
+         2zGEvyDHaUJDusNFw0mZE2QHojYCLyypu1964BUI=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02KCps3P078768;
+        Fri, 20 Mar 2020 07:51:54 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Mar 2020 07:51:53 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Mar 2020 07:51:53 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02KCpoq7074768;
+        Fri, 20 Mar 2020 07:51:51 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <gregkh@linuxfoundation.org>, <vigneshr@ti.com>
+CC:     <nsekhar@ti.com>, <t-kristo@ti.com>, <tomi.valkeinen@ti.com>,
+        <tony@atomide.com>, <linux-serial@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH] serial: 8250_omap: Fix sleeping function called from invalid context during probe
+Date:   Fri, 20 Mar 2020 14:52:00 +0200
+Message-ID: <20200320125200.6772-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-20_03:2020-03-20,2020-03-20 signatures=0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgVWxmDQoNCk9uIDMvMjAvMjAgMTI6NTUgUE0sIFVsZiBIYW5zc29uIHdyb3RlOg0KPiBPbiBG
-cmksIDIwIE1hciAyMDIwIGF0IDEyOjMyLCA8cGF0cmljZS5jaG90YXJkQHN0LmNvbT4gd3JvdGU6
-DQo+PiBGcm9tOiBQYXRyaWNlIENob3RhcmQgPHBhdHJpY2UuY2hvdGFyZEBzdC5jb20+DQo+Pg0K
-Pj4gQWRkIGRldl93YWtldXBfcGF0aCgpIGhlbHBlciB0byBhdm9pZCB0byBzcHJlYWQNCj4+IGRl
-di0+cG93ZXIud2FrZXVwX3BhdGggdGVzdCBpbiBkcml2ZXJzLg0KPiBJIGFtIG9rYXkgYWRkaW5n
-IGEgaGVscGVyLCBidXQgd291bGQgYXBwcmVjaWF0ZSBpZiB5b3Ugc2VuZCBhIHNlcmllcw0KPiB0
-byBjb252ZXJ0IHRob3NlIHVzaW5nIHRoZSBmbGFnIGN1cnJlbnRseS4NCg0KT2ssIHdlIHdhbnRl
-ZCB0byBiZSBzdXJlIHRoYXQgdGhpcyBoZWxwZXIgd2lsbCBiZSBhY2NlcHRlZCBiZWZvcmUgdXBk
-YXRpbmcgb3VyIGRyaXZlciB3aXRoIGl0Lg0KDQpBIG5ldyBzZXJpZXMgd2lsbCBiZSBzZW50IGlu
-Y2x1ZGluZyB0aGlzIHBhdGNoIGFuZCBkcml2ZXIgdXNpbmcgaXQuDQoNCj4NCj4+IEluIGNhc2Ug
-Q09ORklHX1BNX1NMRUVQIGlzIG5vdCBzZXQsIHdha2V1cF9wYXRoIGlzIG5vdCBkZWZpbmVkLA0K
-Pj4gZGV2X3dha2V1cF9wYXRoKCkgaXMgcmV0dXJuaW5nIGZhbHNlLg0KPj4NCj4+IFNpZ25lZC1v
-ZmYtYnk6IFBhdHJpY2UgQ2hvdGFyZCA8cGF0cmljZS5jaG90YXJkQHN0LmNvbT4NCj4+IC0tLQ0K
-Pj4NCj4+IEN1cnJlbnRseSwgaW4gbWFpbmxpbmUga2VybmVsLCBubyBkcml2ZXJzIGFyZSB0ZXN0
-aW5nIGRldi0+cG93ZXIud2FrZXVwX3BhdGgNCj4+IGZvciBQTSBwdXJwb3NlLiBBIHN0bTMyIHNl
-cmlhbCBkcml2ZXIgcGF0Y2ggd2lsbCBiZSBzdWJtaXR0ZWQgc29vbiBhbmQgd2lsbA0KPj4gbWFr
-ZSB1c2FnZSBvZiB0aGlzIGhlbHBlci4NCj4+DQo+PiAgaW5jbHVkZS9saW51eC9wbV93YWtldXAu
-aCB8IDEwICsrKysrKysrKysNCj4+ICAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKQ0K
-Pj4NCj4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3BtX3dha2V1cC5oIGIvaW5jbHVkZS9s
-aW51eC9wbV93YWtldXAuaA0KPj4gaW5kZXggYWEzZGE2NjExNTMzLi5kMGJkMTNjMTkyNTMgMTAw
-NjQ0DQo+PiAtLS0gYS9pbmNsdWRlL2xpbnV4L3BtX3dha2V1cC5oDQo+PiArKysgYi9pbmNsdWRl
-L2xpbnV4L3BtX3dha2V1cC5oDQo+PiBAQCAtODQsNiArODQsMTEgQEAgc3RhdGljIGlubGluZSBi
-b29sIGRldmljZV9tYXlfd2FrZXVwKHN0cnVjdCBkZXZpY2UgKmRldikNCj4+ICAgICAgICAgcmV0
-dXJuIGRldi0+cG93ZXIuY2FuX3dha2V1cCAmJiAhIWRldi0+cG93ZXIud2FrZXVwOw0KPj4gIH0N
-Cj4+DQo+PiArc3RhdGljIGlubGluZSBib29sIGRldmljZV93YWtldXBfcGF0aChzdHJ1Y3QgZGV2
-aWNlICpkZXYpDQo+PiArew0KPj4gKyAgICAgICByZXR1cm4gISFkZXYtPnBvd2VyLndha2V1cF9w
-YXRoOw0KPiBXaHkgdXNpbmcgIiEhIiBoZXJlPw0KDQpyaWdodCwgbm90IG5lZWRlZCzCoCB3YWtl
-dXBfcGF0aCBpcyBhbHJlYWR5IGEgYm9vbGVhbi4uLi4NCg0KVGhhbmtzDQoNClBhdHJpY2UNCg0K
-Pg0KPj4gK30NCj4+ICsNCj4+ICBzdGF0aWMgaW5saW5lIHZvaWQgZGV2aWNlX3NldF93YWtldXBf
-cGF0aChzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+PiAgew0KPj4gICAgICAgICBkZXYtPnBvd2VyLndh
-a2V1cF9wYXRoID0gdHJ1ZTsNCj4+IEBAIC0xNzQsNiArMTc5LDExIEBAIHN0YXRpYyBpbmxpbmUg
-Ym9vbCBkZXZpY2VfbWF5X3dha2V1cChzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+PiAgICAgICAgIHJl
-dHVybiBkZXYtPnBvd2VyLmNhbl93YWtldXAgJiYgZGV2LT5wb3dlci5zaG91bGRfd2FrZXVwOw0K
-Pj4gIH0NCj4+DQo+PiArc3RhdGljIGlubGluZSBib29sIGRldmljZV93YWtldXBfcGF0aChzdHJ1
-Y3QgZGV2aWNlICpkZXYpDQo+PiArew0KPj4gKyAgICAgICByZXR1cm4gZmFsc2U7DQo+PiArfQ0K
-Pj4gKw0KPj4gIHN0YXRpYyBpbmxpbmUgdm9pZCBkZXZpY2Vfc2V0X3dha2V1cF9wYXRoKHN0cnVj
-dCBkZXZpY2UgKmRldikge30NCj4+DQo+PiAgc3RhdGljIGlubGluZSB2b2lkIF9fcG1fc3RheV9h
-d2FrZShzdHJ1Y3Qgd2FrZXVwX3NvdXJjZSAqd3MpIHt9DQo+PiAtLQ0KPj4gMi4xNy4xDQo+Pg0K
-PiBLaW5kIHJlZ2FyZHMNCj4gVWZmZQ==
+When booting j721e the following bug is printed:
+
+[    1.154821] BUG: sleeping function called from invalid context at kernel/sched/completion.c:99
+[    1.154827] in_atomic(): 0, irqs_disabled(): 128, non_block: 0, pid: 12, name: kworker/0:1
+[    1.154832] 3 locks held by kworker/0:1/12:
+[    1.154836]  #0: ffff000840030728 ((wq_completion)events){+.+.}, at: process_one_work+0x1d4/0x6e8
+[    1.154852]  #1: ffff80001214fdd8 (deferred_probe_work){+.+.}, at: process_one_work+0x1d4/0x6e8
+[    1.154860]  #2: ffff00084060b170 (&dev->mutex){....}, at: __device_attach+0x38/0x138
+[    1.154872] irq event stamp: 63096
+[    1.154881] hardirqs last  enabled at (63095): [<ffff800010b74318>] _raw_spin_unlock_irqrestore+0x70/0x78
+[    1.154887] hardirqs last disabled at (63096): [<ffff800010b740d8>] _raw_spin_lock_irqsave+0x28/0x80
+[    1.154893] softirqs last  enabled at (62254): [<ffff800010080c88>] _stext+0x488/0x564
+[    1.154899] softirqs last disabled at (62247): [<ffff8000100fdb3c>] irq_exit+0x114/0x140
+[    1.154906] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.0-rc6-next-20200318-00094-g45e4089b0bd3 #221
+[    1.154911] Hardware name: Texas Instruments K3 J721E SoC (DT)
+[    1.154917] Workqueue: events deferred_probe_work_func
+[    1.154923] Call trace:
+[    1.154928]  dump_backtrace+0x0/0x190
+[    1.154933]  show_stack+0x14/0x20
+[    1.154940]  dump_stack+0xe0/0x148
+[    1.154946]  ___might_sleep+0x150/0x1f0
+[    1.154952]  __might_sleep+0x4c/0x80
+[    1.154957]  wait_for_completion_timeout+0x40/0x140
+[    1.154964]  ti_sci_set_device_state+0xa0/0x158
+[    1.154969]  ti_sci_cmd_get_device_exclusive+0x14/0x20
+[    1.154977]  ti_sci_dev_start+0x34/0x50
+[    1.154984]  genpd_runtime_resume+0x78/0x1f8
+[    1.154991]  __rpm_callback+0x3c/0x140
+[    1.154996]  rpm_callback+0x20/0x80
+[    1.155001]  rpm_resume+0x568/0x758
+[    1.155007]  __pm_runtime_resume+0x44/0xb0
+[    1.155013]  omap8250_probe+0x2b4/0x508
+[    1.155019]  platform_drv_probe+0x50/0xa0
+[    1.155023]  really_probe+0xd4/0x318
+[    1.155028]  driver_probe_device+0x54/0xe8
+[    1.155033]  __device_attach_driver+0x80/0xb8
+[    1.155039]  bus_for_each_drv+0x74/0xc0
+[    1.155044]  __device_attach+0xdc/0x138
+[    1.155049]  device_initial_probe+0x10/0x18
+[    1.155053]  bus_probe_device+0x98/0xa0
+[    1.155058]  deferred_probe_work_func+0x74/0xb0
+[    1.155063]  process_one_work+0x280/0x6e8
+[    1.155068]  worker_thread+0x48/0x430
+[    1.155073]  kthread+0x108/0x138
+[    1.155079]  ret_from_fork+0x10/0x18
+
+To fix the bug we need to first call pm_runtime_enable() prior to any
+pm_runtime calls.
+
+Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ drivers/tty/serial/8250/8250_omap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
+index a2e5a4e77000..611e3002d68c 100644
+--- a/drivers/tty/serial/8250/8250_omap.c
++++ b/drivers/tty/serial/8250/8250_omap.c
+@@ -1202,6 +1202,7 @@ static int omap8250_probe(struct platform_device *pdev)
+ 	spin_lock_init(&priv->rx_dma_lock);
+ 
+ 	device_init_wakeup(&pdev->dev, true);
++	pm_runtime_enable(&pdev->dev);
+ 	pm_runtime_use_autosuspend(&pdev->dev);
+ 
+ 	/*
+@@ -1215,7 +1216,6 @@ static int omap8250_probe(struct platform_device *pdev)
+ 		pm_runtime_set_autosuspend_delay(&pdev->dev, -1);
+ 
+ 	pm_runtime_irq_safe(&pdev->dev);
+-	pm_runtime_enable(&pdev->dev);
+ 
+ 	pm_runtime_get_sync(&pdev->dev);
+ 
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
