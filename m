@@ -2,205 +2,108 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC578C10F29
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB91C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8633E2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:19:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="anm9V0gj"
+	by mail.kernel.org (Postfix) with ESMTP id 3CDA920739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584732169;
+	bh=rWnoP1riuCvNNYCzIbjMc7qlfY3uiyflNfFYWPDEhU4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=no2gK0Shq6Wy946c/gv4avrJLZ/18azlkVOJ+VLmPdOBxeL9IwHOFVkyoWvC+iwlQ
+	 18U4Tq01GmMDlhbi/UYgewmlsVzkBLqVwbIeBpdlWjxd6Lq+PVShgtLfyXeFJLAPs+
+	 3i3S2UHx9JzX74BtlZnEcjCOlRJMDW6SVl/KO7Q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgCTTTd (ORCPT
+        id S1727244AbgCTTWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 15:19:33 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:30414 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727362AbgCTTT1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 15:19:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584731966;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=QRTCx7iUFxWApQLdwBhGyDxdNRfn8szKdemehtnU9Mo=;
-        b=anm9V0gjYxDmr+c16m7VLEOcZ71+magfFYQkppIBsaGpZW4FJCJh486lTI5+YN+CkYxf9x
-        DRGvthGyv55UwMzXbgon5NgWpK8Nyyt4OVksKKikYBs35pFlJZsIWutnDb3vCAo2SP4x/0
-        54WLheAsMFnCBlfzA6ZUeFy7EBea9Dg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-358-oi80VyK-P_SJHLTY9NPDjQ-1; Fri, 20 Mar 2020 15:19:22 -0400
-X-MC-Unique: oi80VyK-P_SJHLTY9NPDjQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 20 Mar 2020 15:22:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726783AbgCTTWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 15:22:48 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1C1A1800D53;
-        Fri, 20 Mar 2020 19:19:20 +0000 (UTC)
-Received: from llong.com (ovpn-118-190.rdu2.redhat.com [10.10.118.190])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 308A45C1AB;
-        Fri, 20 Mar 2020 19:19:18 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
-        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH v6 2/2] KEYS: Avoid false positive ENOMEM error on key read
-Date:   Fri, 20 Mar 2020 15:19:03 -0400
-Message-Id: <20200320191903.19494-3-longman@redhat.com>
-In-Reply-To: <20200320191903.19494-1-longman@redhat.com>
-References: <20200320191903.19494-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        by mail.kernel.org (Postfix) with ESMTPSA id 01E582070A;
+        Fri, 20 Mar 2020 19:22:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584732167;
+        bh=rWnoP1riuCvNNYCzIbjMc7qlfY3uiyflNfFYWPDEhU4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=NpDppWNKQ52upTUQbZAmJIh9nI/tN1HMTzOR3Qs7mOPciRLiMc0lgnqKXeEPAwLF5
+         Q8pLQUUDBVSo97ubsDW9mZhsUzY3xeXt5riduh5LmplytDICjotdFfocsS1k7uQluD
+         Bkvx+fL8sfG+MJOjO8Qxuo1arUqbwlLPm/Z2HXFw=
+Date:   Fri, 20 Mar 2020 14:22:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Sham Muthayyan <smuthayy@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/12] pcie: qcom: add tx term offset support
+Message-ID: <20200320192245.GA242952@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320183455.21311-7-ansuelsmth@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By allocating a kernel buffer with a user-supplied buffer length, it
-is possible that a false positive ENOMEM error may be returned because
-the user-supplied length is just too large even if the system do have
-enough memory to hold the actual key data.
+On Fri, Mar 20, 2020 at 07:34:49PM +0100, Ansuel Smith wrote:
+> From: Sham Muthayyan <smuthayy@codeaurora.org>
+> 
+> Add tx term offset support to pcie qcom driver
+> need in some revision of the ipq806x soc
 
-Moreover, if the buffer length is larger than the maximum amount of
-memory that can be returned by kmalloc() (2^(MAX_ORDER-1) number of
-pages), a warning message will also be printed.
+The usual (s/pcie/PCIe/, s/soc/SoC/, wrap to fill 75 columns, add
+period at end).  Apply to all patches.
 
-To reduce this possibility, we set a threshold (page size) over which we
-do check the actual key length first before allocating a buffer of the
-right size to hold it. The threshold is arbitrary, it is just used to
-trigger a buffer length check. It does not limit the actual key length
-as long as there is enough memory to satisfy the memory request.
+> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	(0x1f << 16)
+> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		(x << 16)
 
-To further avoid large buffer allocation failure due to page
-fragmentation, kvmalloc() is used to allocate the buffer so that vmapped
-pages can be used when there is not a large enough contiguous set of
-pages available for allocation.
+Since the rest of the file uses BIT(), I think it would make sense to
+use GENMASK() here.  And below, of course.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- security/keys/internal.h | 12 ++++++++++++
- security/keys/keyctl.c   | 39 +++++++++++++++++++++++++++++++--------
- 2 files changed, 43 insertions(+), 8 deletions(-)
+> +static inline void
+> +writel_masked(void __iomem *addr, u32 clear_mask, u32 set_mask)
 
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index ba3e2da14cef..6d0ca48ae9a5 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -16,6 +16,8 @@
- #include <linux/keyctl.h>
- #include <linux/refcount.h>
- #include <linux/compat.h>
-+#include <linux/mm.h>
-+#include <linux/vmalloc.h>
- 
- struct iovec;
- 
-@@ -349,4 +351,14 @@ static inline void key_check(const struct key *key)
- 
- #endif
- 
-+/*
-+ * Helper function to clear and free a kvmalloc'ed memory object.
-+ */
-+static inline void __kvzfree(const void *addr, size_t len)
-+{
-+	if (addr) {
-+		memset((void *)addr, 0, len);
-+		kvfree(addr);
-+	}
-+}
- #endif /* _INTERNAL_H */
-diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index 5a0794cb8815..ded69108db0d 100644
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -339,7 +339,7 @@ long keyctl_update_key(key_serial_t id,
- 	payload = NULL;
- 	if (plen) {
- 		ret = -ENOMEM;
--		payload = kmalloc(plen, GFP_KERNEL);
-+		payload = kvmalloc(plen, GFP_KERNEL);
- 		if (!payload)
- 			goto error;
- 
-@@ -360,7 +360,7 @@ long keyctl_update_key(key_serial_t id,
- 
- 	key_ref_put(key_ref);
- error2:
--	kzfree(payload);
-+	__kvzfree(payload, plen);
- error:
- 	return ret;
- }
-@@ -877,13 +877,23 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
- 		 * transferring them to user buffer to avoid potential
- 		 * deadlock involving page fault and mmap_sem.
- 		 */
--		char *key_data = kmalloc(buflen, GFP_KERNEL);
-+		char *key_data = NULL;
-+		size_t key_data_len = buflen;
- 
--		if (!key_data) {
--			ret = -ENOMEM;
--			goto error2;
-+		/*
-+		 * When the user-supplied key length is larger than
-+		 * PAGE_SIZE, we get the actual key length first before
-+		 * allocating a right-sized key data buffer.
-+		 */
-+		if (buflen <= PAGE_SIZE) {
-+allocbuf:
-+			key_data = kvmalloc(key_data_len, GFP_KERNEL);
-+			if (!key_data) {
-+				ret = -ENOMEM;
-+				goto error2;
-+			}
- 		}
--		ret = __keyctl_read_key(key, key_data, buflen);
-+		ret = __keyctl_read_key(key, key_data, key_data_len);
- 
- 		/*
- 		 * Read methods will just return the required length
-@@ -891,10 +901,23 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
- 		 * enough.
- 		 */
- 		if (ret > 0 && ret <= buflen) {
-+			/*
-+			 * The key may change (unlikely) in between 2
-+			 * consecutive __keyctl_read_key() calls. We will
-+			 * need to allocate a larger buffer and redo the key
-+			 * read when key_data_len < ret <= buflen.
-+			 */
-+			if (!key_data || unlikely(ret > key_data_len)) {
-+				if (unlikely(key_data))
-+					__kvzfree(key_data, key_data_len);
-+				key_data_len = ret;
-+				goto allocbuf;
-+			}
-+
- 			if (copy_to_user(buffer, key_data, ret))
- 				ret = -EFAULT;
- 		}
--		kzfree(key_data);
-+		__kvzfree(key_data, key_data_len);
- 	}
- 
- error2:
--- 
-2.18.1
+Follow coding style of rest of file, i.e.,
 
+  static inline void writel_masked(...)
+
+The name "writel_masked" suggests that we're writing "val & mask" to a
+register, but that's not what's happening.  This is really a "clear
+some bits and set others" operation.
+
+The names are wordy, but we do have pci_clear_and_set_dword(),
+pcie_capability_clear_and_set_word(), etc., functions that work
+similarly.
+
+> +{
+> +	u32 val = readl(addr);
+> +
+> +	val &= ~clear_mask;
+> +	val |= set_mask;
+> +	writel(val, addr);
+> +}
+
+> +	/* Set Tx termination offset */
+
+Capitalize consistently with other comments in the file.  Below also.
+Hmm, I see the file is already a bit of a mess in that regard.  So
+just do what you can.
