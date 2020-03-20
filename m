@@ -2,151 +2,182 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F6FC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8431DC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7AE720739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F68520739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:35:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="A9iJYj3R";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ila7XhRI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hj0Gjr3w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbgCTSet (ORCPT
+        id S1727334AbgCTSfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:34:49 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:23502 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727151AbgCTSes (ORCPT
+        Fri, 20 Mar 2020 14:35:05 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35005 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727178AbgCTSfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:34:48 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 02KISUvn004863;
-        Fri, 20 Mar 2020 11:34:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=fGIsdNVIWwBAjXHczvKw1KrMK7d2nJTkgXva2Z4gcWs=;
- b=A9iJYj3RZ7uprlmhr6Au1akjwIWnpC1txItRdBBGntrgQSea6ptISZDCnFa0cCBeJFOs
- pjLvcdrXjKBSMjlOHzGKaaZr2IXPWAbzSGp+vUqMgQJMdPRlD9UjLe1I2sfECYpDCRTC
- z0tQrTxfryUzFPuqqFUiVm3K+DdPnIKql5o= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0001303.ppops.net with ESMTP id 2yu7ynyrxj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 20 Mar 2020 11:34:30 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 20 Mar 2020 11:34:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YZqC6LdFWjs6QZ/g3TH+WH62L9/gTmNjs4bhUb4fQ6FGKSuKOLf0SAIdJQeiOysRp6Sx+couSEEnx3XnyBbooSsS8/s2XEXkkGOl0PIENdFwNo3yAvI5wTlE8vv9rnyL9Ojzt3xgz8bTkr79xd1sPaX0o78hR0FtfVzIvyV+AsakmXKvE7VtqQPUZnNGjF/A+MUc0PhS5eItMc/m1xzMwi+PnJyxXsecZlVlE9MtqSuD7MoErRUrjBA0X0SZYXbW3K6ZRzwBE+LbpOevKAhN6HrDCocARQvq2nWeCNiT/BSirdm1PLBRs48D3uDfBpeOn50mFtO8WX+Gd6nTxZLHYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fGIsdNVIWwBAjXHczvKw1KrMK7d2nJTkgXva2Z4gcWs=;
- b=hpakoFrvgrr4O3va+cuR6pbcdyxm9Nlen88xBGGkj+BT/AWN3b6UYEhiyKIGXqPNXr4gT5de9iKxfVC2V4KxQY3X4hAUa5bvIX8M9TzhDlwGqr3KrJptz1TRmnzA+WKdmlBKA/y97lD6Mbp1nFUMl87bhpd7N8HNsqDDW8ByWdsskJFafey3JQtmNesfKUcnadqQzb4tp5VBXbtG3v38luaWJuJZpjX2h3jI54jmIZ3xVFIVhXXXNJEw+4gIdGPpB/Spl1phcTTRVfSGf0F6JDZuisj8xblcKYdBWbDzFIkCyDuV9C6oz5PL6xv+lTtO9Q4/omoOW5vKcFMYo+pstQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fGIsdNVIWwBAjXHczvKw1KrMK7d2nJTkgXva2Z4gcWs=;
- b=ila7XhRIFPEQI7osDPR+wI73duelmocBoX2hisEwLvIv+CjEQkUIEi/FQf2wwD5nI3XgceCwB8jb512VYclymQtkFed98LY9N+cK6hzhUVs0ogf4hG/H2gRB8lkbSsbhVPhodGllU8eNLR11N+ZLamlTNAnHuUJqQorb6mKbCa8=
-Received: from MW3PR15MB3883.namprd15.prod.outlook.com (2603:10b6:303:51::22)
- by MW3PR15MB3818.namprd15.prod.outlook.com (2603:10b6:303:47::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.19; Fri, 20 Mar
- 2020 18:34:29 +0000
-Received: from MW3PR15MB3883.namprd15.prod.outlook.com
- ([fe80::a49b:8546:912f:dd98]) by MW3PR15MB3883.namprd15.prod.outlook.com
- ([fe80::a49b:8546:912f:dd98%5]) with mapi id 15.20.2835.017; Fri, 20 Mar 2020
- 18:34:29 +0000
-Subject: Re: [PATCH] bpf: explicitly memset some bpf info structures declared
- on the stack
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-CC:     Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Maciej_=c5=bbenczykowski?= <maze@google.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alistair Delva <adelva@google.com>
-References: <20200320094813.GA421650@kroah.com>
- <3bcf52da-0930-a27f-60f9-28a40e639949@iogearbox.net>
- <20200320154518.GA765793@kroah.com>
- <d55983b3-0f94-cc7f-2055-a0b4ab8075ed@iogearbox.net>
- <20200320161515.GA778529@kroah.com> <20200320162258.GA794295@kroah.com>
-From:   Yonghong Song <yhs@fb.com>
-Message-ID: <f7063856-8d52-8e29-9593-cdfa0d26799b@fb.com>
-Date:   Fri, 20 Mar 2020 11:34:11 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
-In-Reply-To: <20200320162258.GA794295@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MWHPR22CA0024.namprd22.prod.outlook.com
- (2603:10b6:300:ef::34) To MW3PR15MB3883.namprd15.prod.outlook.com
- (2603:10b6:303:51::22)
+        Fri, 20 Mar 2020 14:35:05 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a20so8339174edj.2;
+        Fri, 20 Mar 2020 11:35:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PjUrNIBTHiGRlXltBoWnInenBouwnlz0OaURyGduRc8=;
+        b=hj0Gjr3w7oKqG+/bfA2jN473nqLzbMpQSum+y5Z1mOejc+pz4plw/F1SS2BcZJPin1
+         3hSggqTP+ZKnFEorHvTKwBJGC6D8k1fe3lMlhlWO+2edrUDp6pA4DxdGmDFa6YWp2ZwF
+         PIn2YbAmk2uwlWE9sBGAJdkhdTPUQxPi6XtXdgjZ6QP5+rhGhBPpJsuQ7UYyWxVO5xQE
+         yNi9T6f9F575tiLs0KnMRN71falp6acddOa3YP63mskZDGNGzTPlJ7OVRd/JwfMH7aYs
+         YOXt/F81Or2DZUD4kotD8mSSK6xX1Fy4UV9u3qjEWjQOyhgPsmTL8MQRZ6luhDX5Cby1
+         Z6tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PjUrNIBTHiGRlXltBoWnInenBouwnlz0OaURyGduRc8=;
+        b=V//eSk71K+jJ0M1/9cIqbRYeYz1ReHdm/nG1efntCPLms48H66U9AlhCZqZXVwogur
+         YoteZvx8qjlmVF4TbxG1nxK/CFezhyR+wcdqbBTF48c4yAcryDDaxikRjA7xRFfuM2+/
+         oe6EANzOl6D05Fz3hIVqWdWHvL2ODrevJqS+y2dEevbCA595XJ2WMQOqUP2sHOOkW6DZ
+         9SBIMIWIkaERxvJI5ARdmmYpR+4rCVfa1hHPwvve+CMiY5W40ovsZzfYFkAYYU5dW663
+         cbkl6HEpaeN0nbGqPd6kgmMiJAv0TIRu88l6u2KTc+0w+urBx1h4eM1LwxdZkUe70VwJ
+         YRwQ==
+X-Gm-Message-State: ANhLgQ14xGU74G0MIYLKqQZbUVZE6IWltNkoag/2LwmBF2WK4jysqrE9
+        5AmCdCtaAAKmYIXnU4hTT5A=
+X-Google-Smtp-Source: ADFU+vvHAO5MesgNDreNBT9MSjyANUd4rdBiCnfzEigRlv0T/4Z7d4CGHTe31T+t2ccvEkSD2uqiZQ==
+X-Received: by 2002:a50:cdc7:: with SMTP id h7mr9669266edj.208.1584729302756;
+        Fri, 20 Mar 2020 11:35:02 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host203-232-dynamic.53-79-r.retail.telecomitalia.it. [79.53.232.203])
+        by smtp.googlemail.com with ESMTPSA id y13sm172916eje.3.2020.03.20.11.35.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 11:35:02 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Sham Muthayyan <smuthayy@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 01/12] pcie: qcom: add missing ipq806x clocks in pcie driver
+Date:   Fri, 20 Mar 2020 19:34:43 +0100
+Message-Id: <20200320183455.21311-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from macbook-pro-52.local.dhcp.thefacebook.com (2620:10d:c090:400::5:a280) by MWHPR22CA0024.namprd22.prod.outlook.com (2603:10b6:300:ef::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.21 via Frontend Transport; Fri, 20 Mar 2020 18:34:27 +0000
-X-Originating-IP: [2620:10d:c090:400::5:a280]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f8c30a4d-6526-4cc6-35d6-08d7ccfd52f6
-X-MS-TrafficTypeDiagnostic: MW3PR15MB3818:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MW3PR15MB3818B8216054DA4B8E60EBD1D3F50@MW3PR15MB3818.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:2331;
-X-Forefront-PRVS: 03484C0ABF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(136003)(376002)(346002)(396003)(199004)(81166006)(8936002)(81156014)(53546011)(6506007)(2906002)(31686004)(7416002)(36756003)(4744005)(110136005)(4326008)(54906003)(8676002)(52116002)(86362001)(2616005)(316002)(6486002)(186003)(16526019)(5660300002)(6666004)(31696002)(66556008)(66476007)(6512007)(478600001)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:MW3PR15MB3818;H:MW3PR15MB3883.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: b8t+nlORG12gaTWKEihzgwvkBstUp5jSBl/sXHwb9dYIEULw0y8/f2YlM5FpHWvBYJzaY8kvEhioLjPiicRAwYvRiRvUlLwvLV0+3xfSmEItRMilrzFQXqWQTbFIlc2Kc+DaqERu0Gm+XCgoG0iYnN3S9sUlkkyZ0KOGVxJ46BBxochF7Y+51LLVmzzS/WfUP86xHDJSRYI+ZWqOgQXCRMXi6Ms5Od8i6Qi17kY7ytdqKG2Jn+2/CiU0FBpsoif6zYfvo/u3rPzgPieXkOXlUKkK/g+JhFe8/H5V4e9j13LwT23DeedpOWod3x9Owb9t4r8bB6vDmpNAcz/Y9b7BucUwYMUW+DAr6p9lqmrtShRCsk/AqC6iWf8+EvERrdl0HvZmRN4yICTSPZmkQPPSGPdC+FJrxcvVfmAK+hU/M7jQsxTLWv0CFOUDtU3Ylene
-X-MS-Exchange-AntiSpam-MessageData: KWDyn2sThXDVsU5n6qEoqbmdqn/mjjd4gRUIvv5JQ2zPpoD419VIkqFpcy7RxOAULTuB9lwqPU7qXQMsmSSIyXPyMpWw8eKydZRTKI9RktcWMBb5rL+OiQgvRg9bZoihD62xjl+XlLmYXZiWfvTOPi99ZzrtND94gopggqWOemxwCbQftdn5o5un0UWzN4di
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8c30a4d-6526-4cc6-35d6-08d7ccfd52f6
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2020 18:34:28.8596
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vYVLiaemsp9qmPHAgNidEZOubqBsQ94tf7Lba/Yhz4u+EdgQUdCvxRpeC9lx+ntC
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB3818
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-20_06:2020-03-20,2020-03-20 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 impostorscore=0 adultscore=0 mlxlogscore=685
- clxscore=1015 mlxscore=0 spamscore=0 malwarescore=0 priorityscore=1501
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003200074
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Aux and Ref clk are missing in pcie qcom driver.
+Add support in the driver to fix pcie inizialization
+in ipq806x
 
+Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 38 ++++++++++++++++++++++----
+ 1 file changed, 33 insertions(+), 5 deletions(-)
 
-On 3/20/20 9:22 AM, Greg Kroah-Hartman wrote:
-> Trying to initialize a structure with "= {};" will not always clean out
-> all padding locations in a structure.  So be explicit and call memset to
-> initialize everything for a number of bpf information structures that
-> are then copied from userspace, sometimes from smaller memory locations
-> than the size of the structure.
-> 
-> Reported-by: Daniel Borkmann <daniel@iogearbox.net
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 5ea527a6bd9f..f958c535de6e 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -88,6 +88,8 @@ struct qcom_pcie_resources_2_1_0 {
+ 	struct clk *iface_clk;
+ 	struct clk *core_clk;
+ 	struct clk *phy_clk;
++	struct clk *aux_clk;
++	struct clk *ref_clk;
+ 	struct reset_control *pci_reset;
+ 	struct reset_control *axi_reset;
+ 	struct reset_control *ahb_reset;
+@@ -246,6 +248,14 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+ 	if (IS_ERR(res->phy_clk))
+ 		return PTR_ERR(res->phy_clk);
+ 
++	res->aux_clk = devm_clk_get(dev, "aux");
++	if (IS_ERR(res->aux_clk))
++		return PTR_ERR(res->aux_clk);
++
++	res->ref_clk = devm_clk_get(dev, "ref");
++	if (IS_ERR(res->ref_clk))
++		return PTR_ERR(res->ref_clk);
++
+ 	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
+ 	if (IS_ERR(res->pci_reset))
+ 		return PTR_ERR(res->pci_reset);
+@@ -278,6 +288,8 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+ 	clk_disable_unprepare(res->iface_clk);
+ 	clk_disable_unprepare(res->core_clk);
+ 	clk_disable_unprepare(res->phy_clk);
++	clk_disable_unprepare(res->aux_clk);
++	clk_disable_unprepare(res->ref_clk);
+ 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+ }
+ 
+@@ -307,16 +319,28 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 		goto err_assert_ahb;
+ 	}
+ 
++	ret = clk_prepare_enable(res->core_clk);
++	if (ret) {
++		dev_err(dev, "cannot prepare/enable core clock\n");
++		goto err_clk_core;
++	}
++
+ 	ret = clk_prepare_enable(res->phy_clk);
+ 	if (ret) {
+ 		dev_err(dev, "cannot prepare/enable phy clock\n");
+ 		goto err_clk_phy;
+ 	}
+ 
+-	ret = clk_prepare_enable(res->core_clk);
++	ret = clk_prepare_enable(res->aux_clk);
+ 	if (ret) {
+-		dev_err(dev, "cannot prepare/enable core clock\n");
+-		goto err_clk_core;
++		dev_err(dev, "cannot prepare/enable aux clock\n");
++		goto err_clk_aux;
++	}
++
++	ret = clk_prepare_enable(res->ref_clk);
++	if (ret) {
++		dev_err(dev, "cannot prepare/enable ref clock\n");
++		goto err_clk_ref;
+ 	}
+ 
+ 	ret = reset_control_deassert(res->ahb_reset);
+@@ -372,10 +396,14 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 	return 0;
+ 
+ err_deassert_ahb:
+-	clk_disable_unprepare(res->core_clk);
+-err_clk_core:
++	clk_disable_unprepare(res->ref_clk);
++err_clk_ref:
++	clk_disable_unprepare(res->aux_clk);
++err_clk_aux:
+ 	clk_disable_unprepare(res->phy_clk);
+ err_clk_phy:
++	clk_disable_unprepare(res->core_clk);
++err_clk_core:
+ 	clk_disable_unprepare(res->iface_clk);
+ err_assert_ahb:
+ 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+-- 
+2.25.1
 
-Acked-by: Yonghong Song <yhs@fb.com>
