@@ -2,96 +2,138 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 658D7C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80323C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 327FA20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57F5020753
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:00:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584720041;
+	bh=OPX7ZO8XdqiJ3pBNxueMaQkzxx8QgkND10VWalu31ME=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oBOzKAF8ZghFs7HfvJ8akkdkvvzOOsu/ds4F5/Hvg66xJug2IcLeSUswQTE0I6Gmv
+	 bCp3necCdQ9jQRP22+aKEu9CH8NZ6jsDIB++0XZAsav2fpjUw76LhtMa8rBc9MlrCh
+	 Geiqm99dunlCKWgNdBNQ2fbmsw4r7gm20T4uGa1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbgCTP52 (ORCPT
+        id S1727151AbgCTQAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:57:28 -0400
-Received: from ivanoab7.miniserver.com ([37.128.132.42]:59610 "EHLO
-        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgCTP51 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 11:57:27 -0400
-Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
-        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1jFK1T-0005Zf-3d; Fri, 20 Mar 2020 15:57:23 +0000
-Received: from jain.kot-begemot.co.uk ([192.168.3.3])
-        by jain.kot-begemot.co.uk with esmtp (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1jFK1Q-0003GD-J5; Fri, 20 Mar 2020 15:57:22 +0000
-Subject: Re: [PATCH] arch/um: falloc.h needs to be directly included for older
- libc
-To:     Alan Maguire <alan.maguire@oracle.com>, jdike@addtoit.com,
-        richard@nod.at, alex.dewar@gmx.co.uk, erelx.geron@intel.com,
-        johannes.berg@intel.com, arnd@arndb.de,
-        linux-um@lists.infradead.org
-Cc:     brendanhiggins@google.com, linux-kernel@vger.kernel.org
-References: <1584466534-13248-1-git-send-email-alan.maguire@oracle.com>
-From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Message-ID: <2295c218-74a6-d785-f4b1-2046ee91503a@cambridgegreys.com>
-Date:   Fri, 20 Mar 2020 15:57:20 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 20 Mar 2020 12:00:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43686 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbgCTQAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 12:00:40 -0400
+Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D4F020739;
+        Fri, 20 Mar 2020 16:00:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584720039;
+        bh=OPX7ZO8XdqiJ3pBNxueMaQkzxx8QgkND10VWalu31ME=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IEyqH9TcePuGXHORtyUR9KDgBpOXXy72zESirAsUANr+PH49tOOvCm2aAImrHb1Mr
+         vXsVm7aX2suMYZrUWKBY7MJ2Lz3R9hmBwCCtUpndewdUMNvkgAtlV0/WgDrDsndFPt
+         BHi8ClBkjeZ1PQW166ifePoVzhx0u2QrK7VeR/qw=
+Date:   Fri, 20 Mar 2020 17:00:35 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 04/17] kernel: futex.c: get rid of a docs build warning
+Message-ID: <20200320170035.581f5095@coco.lan>
+In-Reply-To: <87h7yj59m0.fsf@nanos.tec.linutronix.de>
+References: <cover.1584456635.git.mchehab+huawei@kernel.org>
+        <aab1052263e340a3eada5522f32be318890314a1.1584456635.git.mchehab+huawei@kernel.org>
+        <87h7yj59m0.fsf@nanos.tec.linutronix.de>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1584466534-13248-1-git-send-email-alan.maguire@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Clacks-Overhead: GNU Terry Pratchett
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Fri, 20 Mar 2020 16:28:23 +0100
+Thomas Gleixner <tglx@linutronix.de> escreveu:
+
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+> 
+> The subject prefix for this is: 'futex:'
+
+Ok!
+
+> 
+> > Adjust whitespaces and blank lines in order to get rid of this:
+> >
+> > 	./kernel/futex.c:491: WARNING: Definition list ends without a blank line; unexpected unindent.
+> >
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> >  kernel/futex.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/futex.c b/kernel/futex.c
+> > index 67f004133061..dda6ddbc2e7d 100644
+> > --- a/kernel/futex.c
+> > +++ b/kernel/futex.c
+> > @@ -486,7 +486,8 @@ static u64 get_inode_sequence_number(struct inode *inode)
+> >   * The key words are stored in @key on success.
+> >   *
+> >   * For shared mappings (when @fshared), the key is:
+> > - *   ( inode->i_sequence, page->index, offset_within_page )
+> > + * ( inode->i_sequence, page->index, offset_within_page )  
+> 
+> Sigh. Is there no better way to make this look sane both in the file and
+> in the docs?
+
+The enclosed patch would do the trick.
+
+I noticed another problem on it, however: "!@fshared" is not properly
+parsed by kernel-docs. It basically converts it to "!**fshared**", with is
+not what we want.
+
+IMHO, this specific case should be handled by kernel-doc script. I'll
+write a patch addressing this issue.
+
+Regards,
+Mauro
+
+---
 
 
-On 17/03/2020 17:35, Alan Maguire wrote:
-> When building UML with glibc 2.17 installed, compilation
-> of arch/um/os-Linux/file.c fails due to failure to find
-> FALLOC_FL_PUNCH_HOLE and FALLOC_FL_KEEP_SIZE definitions.
-> 
-> It appears that /usr/include/bits/fcntl-linux.h (indirectly
-> included by /usr/include/fcntl.h) does not include falloc.h
-> with an older glibc, whereas a more up-to-date version
-> does.
-> 
-> Adding the direct include to file.c resolves the issue
-> and does not cause problems for more recent glibc.
-> 
-> Fixes: 50109b5a03b4 ("um: Add support for DISCARD in the UBD Driver")
-> Cc: Brendan Higgins <brendanhiggins@google.com>
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> ---
->   arch/um/os-Linux/file.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/um/os-Linux/file.c b/arch/um/os-Linux/file.c
-> index fbda105..5c819f8 100644
-> --- a/arch/um/os-Linux/file.c
-> +++ b/arch/um/os-Linux/file.c
-> @@ -8,6 +8,7 @@
->   #include <errno.h>
->   #include <fcntl.h>
->   #include <signal.h>
-> +#include <linux/falloc.h>
->   #include <sys/ioctl.h>
->   #include <sys/mount.h>
->   #include <sys/socket.h>
-> 
+[PATCH 04/17 v2] kernel: futex: get rid of a docs build warning
 
-Acked-By: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Adjust whitespaces and blank lines in order to get rid of this:
 
--- 
-Anton R. Ivanov
-Cambridgegreys Limited. Registered in England. Company Number 10273661
-https://www.cambridgegreys.com/
+	./kernel/futex.c:491: WARNING: Definition list ends without a blank line; unexpected unindent.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+diff --git a/kernel/futex.c b/kernel/futex.c
+index 67f004133061..81ad379cbadf 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -486,10 +486,13 @@ static u64 get_inode_sequence_number(struct inode *inode)
+  * The key words are stored in @key on success.
+  *
+  * For shared mappings (when @fshared), the key is:
++ *
+  *   ( inode->i_sequence, page->index, offset_within_page )
++ *
+  * [ also see get_inode_sequence_number() ]
+  *
+  * For private mappings (or when !@fshared), the key is:
++ *
+  *   ( current->mm, address, 0 )
+  *
+  * This allows (cross process, where applicable) identification of the futex
+
