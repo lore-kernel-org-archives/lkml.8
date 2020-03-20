@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB4AC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE2DC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDAC92072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09622072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbgCTPXA (ORCPT
+        id S1727453AbgCTPXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:23:00 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36246 "EHLO
+        Fri, 20 Mar 2020 11:23:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36251 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgCTPXA (ORCPT
+        with ESMTP id S1727177AbgCTPXc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 11:23:00 -0400
+        Fri, 20 Mar 2020 11:23:32 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFJU3-0006eY-EQ; Fri, 20 Mar 2020 16:22:51 +0100
+        id 1jFJUe-0006fU-2I; Fri, 20 Mar 2020 16:23:28 +0100
 Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id C62A5100375; Fri, 20 Mar 2020 16:22:50 +0100 (CET)
+        id 8E72F100375; Fri, 20 Mar 2020 16:23:27 +0100 (CET)
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
 Cc:     syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com,
         Sean Christopherson <sean.j.christopherson@intel.com>
 Subject: Re: [PATCH] KVM: x86: remove bogus user-triggerable WARN_ON
-In-Reply-To: <20200319174318.20752-1-pbonzini@redhat.com>
-References: <20200319174318.20752-1-pbonzini@redhat.com>
-Date:   Fri, 20 Mar 2020 16:22:50 +0100
-Message-ID: <87o8sr59v9.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87o8sr59v9.fsf@nanos.tec.linutronix.de>
+References: <20200319174318.20752-1-pbonzini@redhat.com> <87o8sr59v9.fsf@nanos.tec.linutronix.de>
+Date:   Fri, 20 Mar 2020 16:23:27 +0100
+Message-ID: <87lfnv59u8.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Linutronix-Spam-Score: -1.0
@@ -47,16 +47,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
-> The WARN_ON is essentially comparing a user-provided value with 0.  It is
-> trivial to trigger it just by passing garbage to KVM_SET_CLOCK.  Guests
-> can break if you do so, but if it hurts when you do like this just do not
-> do it.
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-Yes, it's a user provided value and it's completely unchecked. If that
-value is bogus then the guest will go sideways because timekeeping is
-completely busted. At least you should explain WHY you don't care.
+> Paolo Bonzini <pbonzini@redhat.com> writes:
+>> The WARN_ON is essentially comparing a user-provided value with 0.  It is
+>> trivial to trigger it just by passing garbage to KVM_SET_CLOCK.  Guests
+>> can break if you do so, but if it hurts when you do like this just do not
+>> do it.
+>
+> Yes, it's a user provided value and it's completely unchecked. If that
+> value is bogus then the guest will go sideways because timekeeping is
+> completely busted. At least you should explain WHY you don't care.
 
-Thanks,
-
-        tglx
+Or why it does not matter....
