@@ -2,193 +2,131 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8020C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F15BC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3F320739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:38:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="p5GIWO9Y"
+	by mail.kernel.org (Postfix) with ESMTP id DBDB420724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgCTUiL (ORCPT
+        id S1727258AbgCTUlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 16:38:11 -0400
-Received: from mail-mw2nam10on2056.outbound.protection.outlook.com ([40.107.94.56]:6050
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727175AbgCTUiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 16:38:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gxXiIBMkcZjYyWeRLjGXbwaTDceYRHhPUI0UJofaHhmo7qUzXKNYfuHrdZ8HhHZfV9VCYjIjY/Mc5JDVJTXA45FB4RmJURehY2Tw7asyZCAHwTbxCu2eCIEQCpMEa9D+q7RNtx89lKKfpjZum00A7K3C15HRpvaSSiFbYoJQkUkFFsR92drIJ+QZkNbDs85JgqrEmI0KI8Y/T3xw5AAcOIZKtjqGsbTg9cdzm8ekuk4Uox9Cah6d60rm42lb3XW0zf6K3zIpNpwEzn6LzS+UwUgeatp1nlj70/kQj34nnPsNm0Ex1BtJzqmilPNTLJLmHu74zv5J+U2BguFqCxAsZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wn5YV1jI25T53rRibzoAe1TnCJWzBHMekEj8MPt0Ieo=;
- b=k0vT9VZvZqpfKNvbOngkISOJuQfx7iOKXLU97HyldYcj2BZdH60JL+5zH2nJL2bIKhVMIXVvbvsu12uHTGoXqHSReCGVChiOLY7XJuPOvp5zH2/TrU+m2F+2bdHwiHcwp01k/42oe9rv6xw3nvUiNXyzyDJ/XUCoN70rRVmVskc79VF23cJX5SQuyfOcLOxMeHxVcfCzwxXi/u52MbPs8qAsTRKaCpMp5a1jBfl8tXt3ezQIVlbpVTijkfGhwuo7rk3KGI39MJ37Qkwmtbv0pOfVqdQYvYk1y2MZNlIA+QHHHk3mfYsrNRil2FHWsY4jMW6bi4IMAgDzu6qHVWDD5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wn5YV1jI25T53rRibzoAe1TnCJWzBHMekEj8MPt0Ieo=;
- b=p5GIWO9Yz86nicEe+fWLqFFvJK6laGydClYcoTuB5+3axXFv3k20jjEN2g2PH52zPfHnHfeTz00GugOMnNDwzo/fgLmwnkJUQjBfF6vktKUE+5/3aAsmUDqNFt+3dPmmJFUDaOh4+0kURxfo3UmT0nVoOsMlx1Ba0Y1pmZcUJ0o=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
- by DM6PR12MB3116.namprd12.prod.outlook.com (2603:10b6:5:38::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Fri, 20 Mar
- 2020 20:37:28 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::f0f9:a88f:f840:2733]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::f0f9:a88f:f840:2733%7]) with mapi id 15.20.2814.025; Fri, 20 Mar 2020
- 20:37:28 +0000
-Subject: Re: [PATCH] KVM: SVM: Issue WBINVD after deactivating an SEV guest
-To:     David Rientjes <rientjes@google.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Brijesh Singh <brijesh.singh@amd.com>
-References: <c8bf9087ca3711c5770bdeaafa3e45b717dc5ef4.1584720426.git.thomas.lendacky@amd.com>
- <alpine.DEB.2.21.2003201333510.205664@chino.kir.corp.google.com>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <7b8d0c8c-d685-627b-676c-01c3d194fc82@amd.com>
-Date:   Fri, 20 Mar 2020 15:37:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <alpine.DEB.2.21.2003201333510.205664@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN6PR04CA0081.namprd04.prod.outlook.com
- (2603:10b6:805:f2::22) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:15e::26)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from office-linux.texastahm.com (165.204.84.11) by SN6PR04CA0081.namprd04.prod.outlook.com (2603:10b6:805:f2::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20 via Frontend Transport; Fri, 20 Mar 2020 20:37:26 +0000
-X-Originating-IP: [165.204.84.11]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a34b4a7a-8357-4bef-8e9d-08d7cd0e8134
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3116:|DM6PR12MB3116:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB311603DBB0B1B1C8B4286056ECF50@DM6PR12MB3116.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 03484C0ABF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(376002)(136003)(396003)(199004)(956004)(6506007)(53546011)(6486002)(31686004)(66556008)(52116002)(6916009)(66476007)(8936002)(6512007)(54906003)(8676002)(81156014)(81166006)(31696002)(86362001)(66946007)(316002)(6666004)(16526019)(2616005)(4326008)(36756003)(26005)(186003)(5660300002)(478600001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3116;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ETK06Uu3FDraM9mNPKdvMltmd3Dl3OeqhngR5ole2BYc15HWru8KGlBzJuYLDJ81KMSeBzxJNLt9B8RjDDIWA+X4xWgbc2GVGldHr8ITBC6o0keeqqcLjt9wfjPP6yBzgsw6rjH3t56+JXHUtXwztRI5mMOUO3aqn7Gtx4sZGr091T7TCpB4oLJkXlXJ09FA9V6GFP3m7NrIoncDYQ/7ELJ62jpKHZa++SwcYLuT0Sj76WfyBQp7B2yplrE7T1Nbm43+56aeUS5jWPHb1lVlS1cGzTlmR9jtgrtbss7qA2y8cIuqYo08/gkIMXYuWN/iAODpvR9ATDhTQkf153UzWURLNnkE2Y8Hnf1t1joVeaJZ7lERgjnMovk+14qxVTiPnAhknnLj9LBpTxMIixx9wVAsSd1hA3WQ/9YIqW5PLO8XZHLdDQHezCUMFS4Zf42u
-X-MS-Exchange-AntiSpam-MessageData: 3cp48oa6c7gtzaJRMpVTL+gihGeLkmyawm4lbUrkuoF9p8VRYE15rAGE7AgNBUAvGbXrKiTmmSHoBFBVOlI4vwvlyMbw0lLooRBjSev+dePApATLq4LC65nhnQSp2SfEDE2aEm69jMaANCcHKuvl1Q==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a34b4a7a-8357-4bef-8e9d-08d7cd0e8134
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2020 20:37:27.9114
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O9Zjm0spBHQFIHdJPounKENJWhVcinjeWoUAW1Zu1lc3SMKFNACwsWfdNp7WLFwBP7NtwtwwctgbDC/nhaGDtw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3116
+        Fri, 20 Mar 2020 16:41:55 -0400
+Received: from mga11.intel.com ([192.55.52.93]:31053 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726951AbgCTUly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 16:41:54 -0400
+IronPort-SDR: MsdOcJkIGyJnFnhBYq5HzkaZoWFPWSGVr7vxojSFvN67bXk19VUIUCxo2tmLExouwVZx2yWfR2
+ 85J9rZZZpPQQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 13:41:44 -0700
+IronPort-SDR: l/7ORJ/V1k+H7ybtuEZS2UH6rKz8/XOCrrZuHzZ6Tm6nAMnFab797IpR+XM6HVSGnf/Lf2JjDl
+ mvKNGPsuxvyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,285,1580803200"; 
+   d="scan'208";a="392265091"
+Received: from gayuk-dev-mach.sc.intel.com ([10.3.79.171])
+  by orsmga004.jf.intel.com with ESMTP; 20 Mar 2020 13:41:43 -0700
+From:   Gayatri Kammela <gayatri.kammela@intel.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com,
+        dvhart@infradead.org, mika.westerberg@intel.com,
+        peterz@infradead.org, charles.d.prestopine@intel.com,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Chen Zhou <chenzhou10@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David E . Box" <david.e.box@intel.com>
+Subject: [PATCH v5] platform/x86: intel_pmc_core: Make pmc_core_substate_res_show() generic
+Date:   Fri, 20 Mar 2020 13:36:20 -0700
+Message-Id: <434440f39a0ec5074e2a310dc3b5c4c7a6ebe7b2.1584735971.git.gayatri.kammela@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/20/20 3:34 PM, David Rientjes wrote:
-> On Fri, 20 Mar 2020, Tom Lendacky wrote:
-> 
->> Currently, CLFLUSH is used to flush SEV guest memory before the guest is
->> terminated (or a memory hotplug region is removed). However, CLFLUSH is
->> not enough to ensure that SEV guest tagged data is flushed from the cache.
->>
->> With 33af3a7ef9e6 ("KVM: SVM: Reduce WBINVD/DF_FLUSH invocations"), the
->> original WBINVD was removed. This then exposed crashes at random times
->> because of a cache flush race with a page that had both a hypervisor and
->> a guest tag in the cache.
->>
->> Restore the WBINVD when destroying an SEV guest and add a WBINVD to the
->> svm_unregister_enc_region() function to ensure hotplug memory is flushed
->> when removed. The DF_FLUSH can still be avoided at this point.
->>
->> Fixes: 33af3a7ef9e6 ("KVM: SVM: Reduce WBINVD/DF_FLUSH invocations")
->> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> 
-> Acked-by: David Rientjes <rientjes@google.com>
-> 
-> Should this be marked for stable?
+Just like pmc_core_lpm_display(), pmc_core_substate_res_show() is also
+hardcoded to work for Tiger Lake and cannot be re-used for future
+platforms that support sub-states. To maintain readability, make
+pmc_core_substate_res_show() generic, so that it can re-used for future
+platforms.
 
-The Fixes tag should take care of that.
+Cc: Chen Zhou <chenzhou10@huawei.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David E. Box <david.e.box@intel.com>
+Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+---
 
-Thanks,
-Tom
+Changes since v1:
+1) Changed the order of the patches i.e., patch 2 in v1 is made first in
+   the order for v2.
+2) Fixed the warnings reported by kbuild test robot.
 
-> 
-> Cc: stable@vger.kernel.org # 5.5+
-> 
->> ---
->>   arch/x86/kvm/svm.c | 22 ++++++++++++++--------
->>   1 file changed, 14 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
->> index 08568ae9f7a1..d54cdca9c140 100644
->> --- a/arch/x86/kvm/svm.c
->> +++ b/arch/x86/kvm/svm.c
->> @@ -1980,14 +1980,6 @@ static void sev_clflush_pages(struct page *pages[], unsigned long npages)
->>   static void __unregister_enc_region_locked(struct kvm *kvm,
->>   					   struct enc_region *region)
->>   {
->> -	/*
->> -	 * The guest may change the memory encryption attribute from C=0 -> C=1
->> -	 * or vice versa for this memory range. Lets make sure caches are
->> -	 * flushed to ensure that guest data gets written into memory with
->> -	 * correct C-bit.
->> -	 */
->> -	sev_clflush_pages(region->pages, region->npages);
->> -
->>   	sev_unpin_memory(kvm, region->pages, region->npages);
->>   	list_del(&region->list);
->>   	kfree(region);
->> @@ -2004,6 +1996,13 @@ static void sev_vm_destroy(struct kvm *kvm)
->>   
->>   	mutex_lock(&kvm->lock);
->>   
->> +	/*
->> +	 * Ensure that all guest tagged cache entries are flushed before
->> +	 * releasing the pages back to the system for use. CLFLUSH will
->> +	 * not do this, so issue a WBINVD.
->> +	 */
->> +	wbinvd_on_all_cpus();
->> +
->>   	/*
->>   	 * if userspace was terminated before unregistering the memory regions
->>   	 * then lets unpin all the registered memory.
->> @@ -7247,6 +7246,13 @@ static int svm_unregister_enc_region(struct kvm *kvm,
->>   		goto failed;
->>   	}
->>   
->> +	/*
->> +	 * Ensure that all guest tagged cache entries are flushed before
->> +	 * releasing the pages back to the system for use. CLFLUSH will
->> +	 * not do this, so issue a WBINVD.
->> +	 */
->> +	wbinvd_on_all_cpus();
->> +
->>   	__unregister_enc_region_locked(kvm, region);
->>   
->>   	mutex_unlock(&kvm->lock);
->> -- 
->> 2.17.1
->>
->>
+Changes since v2:
+1) Add "Make pmc_core_substate_res_show() generic" patch to v3.
+2) Fixed the memory leak issue in pmc_core_lpm_display().
+3) Moved patch 2 in v2 to the last in the series in v3.
+
+Changes since v3:
+1) Addressed the comments received in v3.
+2) Sending patch 5 of v3 alone in v4.
+
+Changes since v4:
+1) Modified the commit message to keep it to the point.
+2) Sending patch 4 of v3 alone in v5.
+
+ drivers/platform/x86/intel_pmc_core.c | 2 ++
+ drivers/platform/x86/intel_pmc_core.h | 3 ++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 6ddb74d05ea6..d265cd5b1f45 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -567,6 +567,7 @@ static const struct pmc_reg_map tgl_reg_map = {
+ 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
+ 	.ltr_ignore_max = TGL_NUM_IP_IGN_ALLOWED,
++	.lpm_modes = tgl_lpm_modes,
+ 	.lpm_en_offset = TGL_LPM_EN_OFFSET,
+ 	.lpm_residency_offset = TGL_LPM_RESIDENCY_OFFSET,
+ 	.lpm_sts = tgl_lpm_maps,
+@@ -1009,6 +1010,7 @@ DEFINE_SHOW_ATTRIBUTE(pmc_core_ltr);
+ static int pmc_core_substate_res_show(struct seq_file *s, void *unused)
+ {
+ 	struct pmc_dev *pmcdev = s->private;
++	const char **lpm_modes = pmcdev->map->lpm_modes;
+ 	u32 offset = pmcdev->map->lpm_residency_offset;
+ 	u32 lpm_en;
+ 	int index;
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index 1bbdffe80bde..0d50b2402abe 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -198,7 +198,7 @@ enum ppfear_regs {
+ #define TGL_LPM_STATUS_OFFSET			0x1C3C
+ #define TGL_LPM_LIVE_STATUS_OFFSET		0x1C5C
+ 
+-const char *lpm_modes[] = {
++const char *tgl_lpm_modes[] = {
+ 	"S0i2.0",
+ 	"S0i2.1",
+ 	"S0i2.2",
+@@ -255,6 +255,7 @@ struct pmc_reg_map {
+ 	const u32 ltr_ignore_max;
+ 	const u32 pm_vric1_offset;
+ 	/* Low Power Mode registers */
++	const char **lpm_modes;
+ 	const u32 lpm_en_offset;
+ 	const u32 lpm_residency_offset;
+ 	const u32 lpm_status_offset;
+
+base-commit: 267fc714cab797574a3a9df2074f05c3cdeb2511
+-- 
+2.17.1
+
