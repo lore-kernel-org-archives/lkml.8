@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A6FC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C10C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15F720777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D860A20775
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbgCTSi0 (ORCPT
+        id S1727640AbgCTSie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:38:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36883 "EHLO
+        Fri, 20 Mar 2020 14:38:34 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36901 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727389AbgCTSiV (ORCPT
+        with ESMTP id S1727502AbgCTSi1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:38:21 -0400
+        Fri, 20 Mar 2020 14:38:27 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFMXA-00022E-8g
-        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:16 +0100
+        id 1jFMXG-00023Q-GH
+        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:22 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id AFF94100239
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:15 +0100 (CET)
-Message-Id: <20200320180032.799569116@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 640691039FF
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:18 +0100 (CET)
+Message-Id: <20200320180033.897314494@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 19:00:00 +0100
+Date:   Fri, 20 Mar 2020 19:00:11 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -48,7 +48,7 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [patch V3 04/23] kprobes: Prevent probes in .noinstr.text section
+Subject: [patch V3 15/23] x86/entry/64: Check IF in __preempt_enable_notrace() thunk
 References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,39 +61,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instrumentation is forbidden in the .noinstr.text section. Make kprobes
-respect this.
+The preempt_enable_notrace() ASM thunk is called from tracing, entry code
+RCU and other places which are already in or going to be in the noinstr
+section which protects sensitve code from being instrumented.
 
-This lacks support for .noinstr.text sections in modules, which is required
-to handle VMX and SVM.
+Calls out of these sections happen with interrupts disabled, which is
+handled in C code, but the push regs, call, pop regs sequence can be
+completely avoided in this case.
+
+This is also a preparatory step for annotating the call from the thunk to
+preempt_enable_notrace() safe from a noinstr section.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/kprobes.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+New patch
+---
+ arch/x86/entry/thunk_64.S       |   27 +++++++++++++++++++++++----
+ arch/x86/include/asm/irqflags.h |    3 +--
+ arch/x86/include/asm/paravirt.h |    3 +--
+ 3 files changed, 25 insertions(+), 8 deletions(-)
 
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1443,10 +1443,21 @@ static bool __within_kprobe_blacklist(un
- 	return false;
- }
- 
-+/* Functions in .noinstr.text must not be probed */
-+static bool within_noinstr_text(unsigned long addr)
-+{
-+	/* FIXME: Handle module .noinstr.text */
-+	return addr >= (unsigned long)__noinstr_text_start &&
-+	       addr < (unsigned long)__noinstr_text_end;
-+}
+--- a/arch/x86/entry/thunk_64.S
++++ b/arch/x86/entry/thunk_64.S
+@@ -9,10 +9,28 @@
+ #include "calling.h"
+ #include <asm/asm.h>
+ #include <asm/export.h>
++#include <asm/irqflags.h>
 +
- bool within_kprobe_blacklist(unsigned long addr)
- {
- 	char symname[KSYM_NAME_LEN], *p;
++.code64
  
-+	if (within_noinstr_text(addr))
-+		return true;
+ 	/* rdi:	arg1 ... normal C conventions. rax is saved/restored. */
+-	.macro THUNK name, func, put_ret_addr_in_rdi=0
++	.macro THUNK name, func, put_ret_addr_in_rdi=0, check_if=0
+ SYM_FUNC_START_NOALIGN(\name)
 +
- 	if (__within_kprobe_blacklist(addr))
- 		return true;
++	.if \check_if
++	/*
++	 * Check for interrupts disabled right here. No point in
++	 * going all the way down
++	 */
++	pushq	%rax
++	SAVE_FLAGS(CLBR_RAX)
++	testl	$X86_EFLAGS_IF, %eax
++	popq	%rax
++	jnz	1f
++	ret
++1:
++	.endif
++
+ 	pushq %rbp
+ 	movq %rsp, %rbp
+ 
+@@ -38,8 +56,8 @@ SYM_FUNC_END(\name)
+ 	.endm
+ 
+ #ifdef CONFIG_TRACE_IRQFLAGS
+-	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller,1
+-	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller,1
++	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller, put_ret_addr_in_rdi=1
++	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller, put_ret_addr_in_rdi=1
+ #endif
+ 
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+@@ -48,8 +66,9 @@ SYM_FUNC_END(\name)
+ 
+ #ifdef CONFIG_PREEMPTION
+ 	THUNK ___preempt_schedule, preempt_schedule
+-	THUNK ___preempt_schedule_notrace, preempt_schedule_notrace
+ 	EXPORT_SYMBOL(___preempt_schedule)
++
++	THUNK ___preempt_schedule_notrace, preempt_schedule_notrace, check_if=1
+ 	EXPORT_SYMBOL(___preempt_schedule_notrace)
+ #endif
+ 
+--- a/arch/x86/include/asm/irqflags.h
++++ b/arch/x86/include/asm/irqflags.h
+@@ -127,9 +127,8 @@ static inline notrace unsigned long arch
+ #define DISABLE_INTERRUPTS(x)	cli
+ 
+ #ifdef CONFIG_X86_64
+-#ifdef CONFIG_DEBUG_ENTRY
++
+ #define SAVE_FLAGS(x)		pushfq; popq %rax
+-#endif
+ 
+ #define SWAPGS	swapgs
+ /*
+--- a/arch/x86/include/asm/paravirt.h
++++ b/arch/x86/include/asm/paravirt.h
+@@ -900,14 +900,13 @@ extern void default_banner(void);
+ 		  ANNOTATE_RETPOLINE_SAFE;				\
+ 		  jmp PARA_INDIRECT(pv_ops+PV_CPU_usergs_sysret64);)
+ 
+-#ifdef CONFIG_DEBUG_ENTRY
+ #define SAVE_FLAGS(clobbers)                                        \
+ 	PARA_SITE(PARA_PATCH(PV_IRQ_save_fl),			    \
+ 		  PV_SAVE_REGS(clobbers | CLBR_CALLEE_SAVE);        \
+ 		  ANNOTATE_RETPOLINE_SAFE;			    \
+ 		  call PARA_INDIRECT(pv_ops+PV_IRQ_save_fl);	    \
+ 		  PV_RESTORE_REGS(clobbers | CLBR_CALLEE_SAVE);)
+-#endif
++
+ #endif /* CONFIG_PARAVIRT_XXL */
+ #endif	/* CONFIG_X86_64 */
  
 
