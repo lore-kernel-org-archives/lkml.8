@@ -2,138 +2,131 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A976FC43333
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EA0C43332
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80F3320777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6B620776
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584712970;
-	bh=dRU3m+00mM/qn+r/7DmddOrNxDCjsWb2CGdhg6vzeFc=;
+	s=default; t=1584712969;
+	bh=5Z1pwexTYyYy7sJMHe5keJj5QUuvGZ/XrTgYgp87Uzs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EasYSJS4daJI2fYQLelGMhsvC+LiAZG+saftJsCSNDVv8wfgREnv1rj7CddWfRTb5
-	 7QX/WcSH4w9/8oJVy6z9y9nyaEcw5eM8CETnOQZ5FtsYM/n9yuxRDUCE6bcCIkSiHp
-	 seYiHLDplBfXoP7hSL513/TsrLkwkezB55jGVcyE=
+	b=S2wLOKIRiV8K5TpvYJPoJyWOmO7TMp4KxeT65l1L+ROwHXbr8F8uXU+xbYAZVSAWL
+	 gs4pEfi5SlXjEpAQpp3c2EdPwKg29QPYXLFXBABbTr0JFqH8hXttjokixtqW92VYL1
+	 7adHJ/sEDXf5oAKdBkKmQJ7NDBqKUfnHO70xd3yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgCTOCt (ORCPT
+        id S1726953AbgCTOCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:02:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60278 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726866AbgCTOCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Mar 2020 10:02:48 -0400
-Received: from localhost (unknown [122.167.82.180])
+Received: from mail.kernel.org ([198.145.29.99]:60234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726773AbgCTOCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:02:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53A8320754;
-        Fri, 20 Mar 2020 14:02:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F21AA2051A;
+        Fri, 20 Mar 2020 14:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584712968;
-        bh=dRU3m+00mM/qn+r/7DmddOrNxDCjsWb2CGdhg6vzeFc=;
+        s=default; t=1584712965;
+        bh=5Z1pwexTYyYy7sJMHe5keJj5QUuvGZ/XrTgYgp87Uzs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZnzPTbu1jeHcUFu2Fd0MKrkt+pOutqg0GkJw0/c2dsotJN2IcNxyL4rcnhxyPq/wo
-         +iaUgupnmVaXEp4bRDes7uC3x5WsgHj2+85zFxYppJG5rPSa6/6euur1eFc49JmE5v
-         T5g5zPVh33AH9guBvk7xcMbLJWYij5bebUO7ngxk=
-Date:   Fri, 20 Mar 2020 19:32:43 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     broonie@kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     pierre-louis.bossart@linux.intel.com, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH 2/2] ASoC: wsa881x: mark read_only_wordlength flag
-Message-ID: <20200320140243.GG4885@vkoul-mobl>
-References: <20200311113545.23773-1-srinivas.kandagatla@linaro.org>
- <20200311113545.23773-3-srinivas.kandagatla@linaro.org>
+        b=CU1YZ99qYJjikO714HJH+W1kSSWtM3oLBz3Ba5Qr9MKPBBgyb81IhZjckTVEYTERa
+         0qZq+Oz5Wb63F44ixOBDajGaMzEvL6yRLxI/ao0QE5aP/fhFTp68/17ewN2mScGYWN
+         tx1uwXKWpzgaWa6Dycv2plDnaEhOoo9lzTw5v9PE=
+Date:   Fri, 20 Mar 2020 15:02:43 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v12 03/10] firmware: Rename FW_OPT_NOFALLBACK to
+ FW_OPT_NOFALLBACK_SYSFS
+Message-ID: <20200320140243.GA636547@kroah.com>
+References: <20200115163554.101315-1-hdegoede@redhat.com>
+ <20200115163554.101315-4-hdegoede@redhat.com>
+ <20200124085751.GA2957916@kroah.com>
+ <d25d5d6e-0348-b19f-539e-048cfa70d6a6@redhat.com>
+ <20200318132741.GA2794545@kroah.com>
+ <8fa336bd-339f-40e0-08fe-e6b968736679@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311113545.23773-3-srinivas.kandagatla@linaro.org>
+In-Reply-To: <8fa336bd-339f-40e0-08fe-e6b968736679@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
-
-On 11-03-20, 11:35, Srinivas Kandagatla wrote:
-> WSA881x works in PDM mode so the wordlength is fixed, which also makes
-> the only field "WordLength" in DPN_BlockCtrl1 register a read-only.
-> Writing to this register will throw up errors with Qualcomm Controller.
-> So use ro_blockctrl1_reg flag to mark this field as read-only so that
-> core will not write to this register.
-
-I have applied the sdw patch. Since this depends on sdw patch, feel free
-to pull the below tag before you apply this
-
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
-
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire.git topic/ro_wordlength
-
-for you to fetch changes up to a9107de4b03604ce0d279315c91b31b8065ee4ea:
-
-  soundwire: stream: Add read_only_wordlength flag to port properties (2020-03-20 19:24:59 +0530)
-
-----------------------------------------------------------------
-Srinivas Kandagatla (1):
-      soundwire: stream: Add read_only_wordlength flag to port properties
-
- drivers/soundwire/stream.c    | 16 +++++++++-------
- include/linux/soundwire/sdw.h |  2 ++
- 2 files changed, 11 insertions(+), 7 deletions(-)
-
+On Wed, Mar 18, 2020 at 02:56:23PM +0100, Hans de Goede wrote:
+> Hi Greg,
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  sound/soc/codecs/wsa881x.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> On 3/18/20 2:27 PM, Greg Kroah-Hartman wrote:
+> > On Fri, Jan 24, 2020 at 10:16:48AM +0100, Hans de Goede wrote:
+> > > Hi,
+> > > 
+> > > On 1/24/20 9:57 AM, Greg Kroah-Hartman wrote:
+> > > > On Wed, Jan 15, 2020 at 05:35:47PM +0100, Hans de Goede wrote:
+> > > > > This is a preparation patch for adding a new platform fallback mechanism,
+> > > > > which will have its own enable/disable FW_OPT_xxx option.
+> > > > > 
+> > > > > Note this also fixes a typo in one of the re-wordwrapped comments:
+> > > > > enfoce -> enforce.
+> > > > > 
+> > > > > Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+> > > > > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > > > 
+> > > > I've taken this in my tree for now in a quest to try to get others to
+> > > > pay attention to this series...
+> > > 
+> > > Thank you.
+> > > 
+> > > As mentioned before I believe that this series is ready for merging now.
+> > > 
+> > > Andy Lutomirski had one last change request for v12 of the second
+> > > patch in the series, specifically to replace the loop searching for
+> > > the prefix with a memem, but the kernel does not have memmem.
+> > > 
+> > > Andy, are you ok with v12 as is, given that we don't have memmem ?
+> > > 
+> > > Assuming Andy is ok with v12 as is, then to merge this we need
+> > > to probably wait for 5.6-rc1 and then have the x86/efi folks do
+> > > an immutable branch with the first 2 patches of the series.
+> > 
+> > Did this every happen?  Or do I need to dump this all into my tree?
 > 
-> diff --git a/sound/soc/codecs/wsa881x.c b/sound/soc/codecs/wsa881x.c
-> index b59f1d0e7f84..35b44b297f9e 100644
-> --- a/sound/soc/codecs/wsa881x.c
-> +++ b/sound/soc/codecs/wsa881x.c
-> @@ -394,6 +394,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
->  		.min_ch = 1,
->  		.max_ch = 1,
->  		.simple_ch_prep_sm = true,
-> +		.read_only_wordlength = true,
->  	}, {
->  		/* COMP */
->  		.num = 2,
-> @@ -401,6 +402,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
->  		.min_ch = 1,
->  		.max_ch = 1,
->  		.simple_ch_prep_sm = true,
-> +		.read_only_wordlength = true,
->  	}, {
->  		/* BOOST */
->  		.num = 3,
-> @@ -408,6 +410,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
->  		.min_ch = 1,
->  		.max_ch = 1,
->  		.simple_ch_prep_sm = true,
-> +		.read_only_wordlength = true,
->  	}, {
->  		/* VISENSE */
->  		.num = 4,
-> @@ -415,6 +418,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
->  		.min_ch = 1,
->  		.max_ch = 1,
->  		.simple_ch_prep_sm = true,
-> +		.read_only_wordlength = true,
->  	}
->  };
->  
-> -- 
-> 2.21.0
+> Ard has done a immutable branch with just the 2 patches:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/tag/?h=stable-shared-branch-for-driver-tree
+> 
+> I did not see any mails about this being pulled / merged, but I just
+> checked and this has landed in the tip tree 10 days ago:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/include/linux/efi.h?h=efi/core
+> 
+> So if you merge the stable-shared-branch-for-driver-tree tag and then
+> merge patches 3-8 of this series (or rather 4-8 since you already
+> merged 3 IIRC) that would be great.
 
--- 
-~Vinod
+Ok, I've merged the above branch with just the two patches, and the rest
+of yours now, sorry this took so long.
+
+greg k-h
