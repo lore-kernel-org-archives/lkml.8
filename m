@@ -2,152 +2,160 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D91AC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76433C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFFD720739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47ED720775
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:34:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YprCCeD9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RLsZNvbz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbgCTUeO (ORCPT
+        id S1727275AbgCTUeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 16:34:14 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:50825 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbgCTUeO (ORCPT
+        Fri, 20 Mar 2020 16:34:16 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38952 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbgCTUeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Mar 2020 16:34:14 -0400
-Received: by mail-pj1-f68.google.com with SMTP id v13so3013152pjb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 13:34:13 -0700 (PDT)
+Received: by mail-pg1-f194.google.com with SMTP id b22so3648866pgb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 13:34:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x8zGXsapHuWnqMC8cZSaagYiLOs94TGgifWsiIRGTSM=;
-        b=YprCCeD9Wl+McB6ZRErSXSnfWwEZBH5YThXbWzDhm9ZWAPbyBLeTaZxu4kts8/HVC+
-         7zB1EcA5VN5akzU7Mp+X2R2flpKXTzM62cvzUUWSu8v9W0SkHw3vTIupRKLok16UN10k
-         eAKKs52fMZzRnNJwBb2X+mfGkFNg1bGMItzSxbwHcsoF4ymsUPOqrAzE0c1G4H0qft4E
-         +phE/Ml3hNTb+rO/d1d3qvhJTelnmlyTaa5VczkZDFQjnnQQ1RXPnVruhAtBDbr0JRxk
-         xWzLW2z2FGckcMgPmizse39QL4IeQSnV94UuzyNPINKDxKU+SKeDsK5sP+kG0CHYZHn9
-         8Lsw==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=+N0bQ4JlxAy2jfmVhmfgL9o3zKHhJL+I15S0ny2lKgs=;
+        b=RLsZNvbzOdBVhWrbvFQr3CKCdKtnq0K+ohA8v7c0w2gc/e5LPRQ7JGoNHVRoeXa984
+         2z3VSPKSoz7GWala01EO5uP5GlkIL9GqUS1EeA4kAuhwaKOk9cWUv0Epbqx+W7fTHG26
+         F7GSf84Ed0e/vmNEPjG99lgw+qHi5S5N4O5Z7eWZI4tt13hwNTSs9RSZrckzBagL8Xec
+         vB7KAdDqQ4/LDtPSw0rwyPF5jUdN/dbp0migODoWfLJveA8otGKFz4Vi4ZzssqyfKx7L
+         Lq3fZqlYdRzjncLjUv324t9/cYxxu5IwiOO8MK7leI4eFF6Fp11guAennTNahV8u7/TW
+         amlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x8zGXsapHuWnqMC8cZSaagYiLOs94TGgifWsiIRGTSM=;
-        b=tVrD8VNciIHUTMvAVkW2vlmqZyAnnSOV8ahSWsTsemPKQq4nx/Kzh1+7JrO9bTRMFO
-         VEOVQml+xTK23efhxmNOsfxwIzK+I3qx9yiLd5/bITmbE1JbhjGSn/HpZc9mY+luhP/o
-         RbfavrIAu50u/CtyaJkOhFSzaxtb9qTGiipK1oFnTRUr7kBMjS0thVRBGW+BlBJUU7Kx
-         5T4k9bdParnEXLqYH8Elv9QYppiMG+AoPq7udD/51mDCW2NOGdFI+i2Epr1Kjn5GoBPw
-         oFvB8c01Qn5VXXqleihc9ZQKCbYrkHxkz2PE/EO2l5aIcSeScMSFY4PYUhP5uiuAZJYg
-         9QcA==
-X-Gm-Message-State: ANhLgQ1lA8iXOQDsrFzg5dlT/Ky+M4ADKgylV2o/7bNcRKAL3uS6V08E
-        HR24UyE0CVx3C04Z9U2dDsM8Aw==
-X-Google-Smtp-Source: ADFU+vtZlnHDo2zCjA+NB50NqFM3kOSwr9ntQAIkhkaWBh3ON1lfL7OI5PQTvzgPqzaiaFCejv3GZQ==
-X-Received: by 2002:a17:90a:e013:: with SMTP id u19mr11095637pjy.65.1584736452872;
-        Fri, 20 Mar 2020 13:34:12 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id d206sm6174522pfd.160.2020.03.20.13.34.11
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=+N0bQ4JlxAy2jfmVhmfgL9o3zKHhJL+I15S0ny2lKgs=;
+        b=V91/f0ZTDYGKktJ7G072QKE6Difn48hGY42GOCYfzPg2boE+3itqFbEn0c0Ea3uy9R
+         P0rCByuGsemT6+KW4DKdVvDi2I9gl9dgi2CtWr1njtAeCQgQkgosGXN9IvHaLG/aXprB
+         NiPpUeEer95EitkB5NXPtZ/i5NlZars7GalKHRFuAqwh0a95eV6fB+0zw/1aIrtZj3sB
+         TEGYhNp+88lAFSEJEXH0Bn7WFVZ4tw91cHwtiMyGMeUWeX0Q+hARC1IRcYEWafKB5BX7
+         iSW6C6w1u2DWvtDQs5qyx+Nx/YRwgFCUNdvEAT+ZylDxvVqTMuWOJeW04obbUd7U+xPS
+         1BmA==
+X-Gm-Message-State: ANhLgQ1ySYNIUGlGOFw8tQie6smgt29+1loHhneDj+njI0S7+fFU5mFI
+        UhrgctJQ3ucmAKYq99wVriKOXA==
+X-Google-Smtp-Source: ADFU+vvR5V4d3Av2dfFh7WwI8fAcwnWol4/NYm+baHmdq6gt93cp+asM2U0D8WNlss8Unt2oKz1U3w==
+X-Received: by 2002:a63:d351:: with SMTP id u17mr10257174pgi.396.1584736453455;
+        Fri, 20 Mar 2020 13:34:13 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id 93sm5153147pjo.43.2020.03.20.13.34.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 20 Mar 2020 13:34:12 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 14:34:09 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Andrew F. Davis" <afd@ti.com>, Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv8 RESEND 03/15] remoteproc/omap: Add a sanity check for
- DSP boot address alignment
-Message-ID: <20200320203409.GC16145@xps15>
-References: <20200313081718.30612-4-t-kristo@ti.com>
- <20200314004334.26509-1-s-anna@ti.com>
+Date:   Fri, 20 Mar 2020 13:34:12 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: Re: [PATCH] KVM: SVM: Issue WBINVD after deactivating an SEV guest
+In-Reply-To: <c8bf9087ca3711c5770bdeaafa3e45b717dc5ef4.1584720426.git.thomas.lendacky@amd.com>
+Message-ID: <alpine.DEB.2.21.2003201333510.205664@chino.kir.corp.google.com>
+References: <c8bf9087ca3711c5770bdeaafa3e45b717dc5ef4.1584720426.git.thomas.lendacky@amd.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200314004334.26509-1-s-anna@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 07:43:34PM -0500, Suman Anna wrote:
-> The DSP remote processors on OMAP SoCs require a boot register to
-> be programmed with a boot address, and this boot address needs to
-> be on a 1KB boundary. The current code is simply masking the boot
-> address appropriately without performing any sanity checks before
-> releasing the resets. An unaligned boot address results in an
-> undefined execution behavior and can result in various bus errors
-> like MMU Faults or L3 NoC errors. Such errors are hard to debug and
-> can be easily avoided by adding a sanity check for the alignment
-> before booting a DSP remote processor.
+On Fri, 20 Mar 2020, Tom Lendacky wrote:
+
+> Currently, CLFLUSH is used to flush SEV guest memory before the guest is
+> terminated (or a memory hotplug region is removed). However, CLFLUSH is
+> not enough to ensure that SEV guest tagged data is flushed from the cache.
 > 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Reviewed-by: Andrew F. Davis <afd@ti.com>
-> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> With 33af3a7ef9e6 ("KVM: SVM: Reduce WBINVD/DF_FLUSH invocations"), the
+> original WBINVD was removed. This then exposed crashes at random times
+> because of a cache flush race with a page that had both a hypervisor and
+> a guest tag in the cache.
+> 
+> Restore the WBINVD when destroying an SEV guest and add a WBINVD to the
+> svm_unregister_enc_region() function to ensure hotplug memory is flushed
+> when removed. The DF_FLUSH can still be avoided at this point.
+> 
+> Fixes: 33af3a7ef9e6 ("KVM: SVM: Reduce WBINVD/DF_FLUSH invocations")
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+
+Acked-by: David Rientjes <rientjes@google.com>
+
+Should this be marked for stable?
+
+Cc: stable@vger.kernel.org # 5.5+
+
 > ---
-> v8-Resend: Updated to fix compilation issues against rproc-next
+>  arch/x86/kvm/svm.c | 22 ++++++++++++++--------
+>  1 file changed, 14 insertions(+), 8 deletions(-)
 > 
->  drivers/remoteproc/omap_remoteproc.c | 20 ++++++++++++++++----
->  1 file changed, 16 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-> index d47d5ded651a..fe11cb709770 100644
-> --- a/drivers/remoteproc/omap_remoteproc.c
-> +++ b/drivers/remoteproc/omap_remoteproc.c
-> @@ -121,14 +121,23 @@ static void omap_rproc_kick(struct rproc *rproc, int vqid)
->   * @rproc: handle of a remote processor
->   *
->   * Set boot address for a supported DSP remote processor.
-> + *
-> + * Return: 0 on success, or -EINVAL if boot address is not aligned properly
->   */
-> -static void omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
-> +static int omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 08568ae9f7a1..d54cdca9c140 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -1980,14 +1980,6 @@ static void sev_clflush_pages(struct page *pages[], unsigned long npages)
+>  static void __unregister_enc_region_locked(struct kvm *kvm,
+>  					   struct enc_region *region)
 >  {
-> +	struct device *dev = rproc->dev.parent;
->  	struct omap_rproc *oproc = rproc->priv;
->  	struct omap_rproc_boot_data *bdata = oproc->boot_data;
->  	u32 offset = bdata->boot_reg;
+> -	/*
+> -	 * The guest may change the memory encryption attribute from C=0 -> C=1
+> -	 * or vice versa for this memory range. Lets make sure caches are
+> -	 * flushed to ensure that guest data gets written into memory with
+> -	 * correct C-bit.
+> -	 */
+> -	sev_clflush_pages(region->pages, region->npages);
+> -
+>  	sev_unpin_memory(kvm, region->pages, region->npages);
+>  	list_del(&region->list);
+>  	kfree(region);
+> @@ -2004,6 +1996,13 @@ static void sev_vm_destroy(struct kvm *kvm)
 >  
-> -	regmap_write(bdata->syscon, offset, rproc->bootaddr);
-> +	if (rproc->bootaddr & (SZ_1K - 1)) {
-> +		dev_err(dev, "invalid boot address 0x%llx, must be aligned on a 1KB boundary\n",
-> +			rproc->bootaddr);
-
-Yes it does fix the compilation problem but after that patch 7 doesn't apply
-anymore.
-
-> +		return -EINVAL;
-> +	}
+>  	mutex_lock(&kvm->lock);
+>  
+> +	/*
+> +	 * Ensure that all guest tagged cache entries are flushed before
+> +	 * releasing the pages back to the system for use. CLFLUSH will
+> +	 * not do this, so issue a WBINVD.
+> +	 */
+> +	wbinvd_on_all_cpus();
 > +
-> +	return regmap_write(bdata->syscon, offset, rproc->bootaddr);
->  }
+>  	/*
+>  	 * if userspace was terminated before unregistering the memory regions
+>  	 * then lets unpin all the registered memory.
+> @@ -7247,6 +7246,13 @@ static int svm_unregister_enc_region(struct kvm *kvm,
+>  		goto failed;
+>  	}
 >  
->  /*
-> @@ -145,8 +154,11 @@ static int omap_rproc_start(struct rproc *rproc)
->  	int ret;
->  	struct mbox_client *client = &oproc->client;
+> +	/*
+> +	 * Ensure that all guest tagged cache entries are flushed before
+> +	 * releasing the pages back to the system for use. CLFLUSH will
+> +	 * not do this, so issue a WBINVD.
+> +	 */
+> +	wbinvd_on_all_cpus();
+> +
+>  	__unregister_enc_region_locked(kvm, region);
 >  
-> -	if (oproc->boot_data)
-> -		omap_rproc_write_dsp_boot_addr(rproc);
-> +	if (oproc->boot_data) {
-> +		ret = omap_rproc_write_dsp_boot_addr(rproc);
-> +		if (ret)
-> +			return ret;
-> +	}
->  
->  	client->dev = dev;
->  	client->tx_done = NULL;
+>  	mutex_unlock(&kvm->lock);
 > -- 
-> 2.23.0
+> 2.17.1
+> 
 > 
