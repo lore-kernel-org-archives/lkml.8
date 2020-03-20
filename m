@@ -2,27 +2,28 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCEFC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2017C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAA7E20786
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F82D20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:20:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbgCTKUj (ORCPT
+        id S1727453AbgCTKUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:20:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54428 "EHLO mx2.suse.de"
+        Fri, 20 Mar 2020 06:20:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54670 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbgCTKUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:20:37 -0400
+        id S1727386AbgCTKUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 06:20:43 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6F690B303;
-        Fri, 20 Mar 2020 10:20:34 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 3FA44B310;
+        Fri, 20 Mar 2020 10:20:41 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Michal Suchanek <msuchanek@suse.de>,
@@ -61,9 +62,9 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         Allison Randal <allison@lohutok.net>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v12 3/8] powerpc/perf: consolidate read_user_stack_32
-Date:   Fri, 20 Mar 2020 11:20:14 +0100
-Message-Id: <0c21c919ed1296420199c78f7c3cfd29d3c7e909.1584699455.git.msuchanek@suse.de>
+Subject: [PATCH v12 8/8] MAINTAINERS: perf: Add pattern that matches ppc perf to the perf entry.
+Date:   Fri, 20 Mar 2020 11:20:19 +0100
+Message-Id: <4b150d01c60bd37705789200d9adee9f1c9b50ce.1584699455.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1584699455.git.msuchanek@suse.de>
 References: <20200225173541.1549955-1-npiggin@gmail.com> <cover.1584699455.git.msuchanek@suse.de>
@@ -74,95 +75,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two almost identical copies for 32bit and 64bit.
-
-The function is used only in 32bit code which will be split out in next
-patch so consolidate to one function.
+While at it also simplify the existing perf patterns.
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
-v6:  new patch
-v8:  move the consolidated function out of the ifdef block.
-v11: rebase on top of def0bfdbd603
+v10: new patch
+V12: remove redundant entries
 ---
- arch/powerpc/perf/callchain.c | 48 +++++++++++++++++------------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
+ MAINTAINERS | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-index cbc251981209..c9a78c6e4361 100644
---- a/arch/powerpc/perf/callchain.c
-+++ b/arch/powerpc/perf/callchain.c
-@@ -161,18 +161,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
- 	return read_user_stack_slow(ptr, ret, 8);
- }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e1a99197fb34..578429d22220 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13080,7 +13080,7 @@ R:	Namhyung Kim <namhyung@kernel.org>
+ L:	linux-kernel@vger.kernel.org
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
+ S:	Supported
+-F:	kernel/events/*
++F:	kernel/events/
+ F:	include/linux/perf_event.h
+ F:	include/uapi/linux/perf_event.h
+ F:	arch/*/kernel/perf_event*.c
+@@ -13088,8 +13088,8 @@ F:	arch/*/kernel/*/perf_event*.c
+ F:	arch/*/kernel/*/*/perf_event*.c
+ F:	arch/*/include/asm/perf_event.h
+ F:	arch/*/kernel/perf_callchain.c
+-F:	arch/*/events/*
+-F:	arch/*/events/*/*
++F:	arch/*/events/
++F:	arch/*/perf/
+ F:	tools/perf/
  
--static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
--{
--	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
--	    ((unsigned long)ptr & 3))
--		return -EFAULT;
--
--	if (!probe_user_read(ret, ptr, sizeof(*ret)))
--		return 0;
--
--	return read_user_stack_slow(ptr, ret, 4);
--}
--
- static inline int valid_user_sp(unsigned long sp, int is_64)
- {
- 	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
-@@ -277,19 +265,9 @@ static void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
- }
- 
- #else  /* CONFIG_PPC64 */
--/*
-- * On 32-bit we just access the address and let hash_page create a
-- * HPTE if necessary, so there is no need to fall back to reading
-- * the page tables.  Since this is called at interrupt level,
-- * do_page_fault() won't treat a DSI as a page fault.
-- */
--static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-+static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
- {
--	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
--	    ((unsigned long)ptr & 3))
--		return -EFAULT;
--
--	return probe_user_read(ret, ptr, sizeof(*ret));
-+	return 0;
- }
- 
- static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
-@@ -312,6 +290,28 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
- 
- #endif /* CONFIG_PPC64 */
- 
-+/*
-+ * On 32-bit we just access the address and let hash_page create a
-+ * HPTE if necessary, so there is no need to fall back to reading
-+ * the page tables.  Since this is called at interrupt level,
-+ * do_page_fault() won't treat a DSI as a page fault.
-+ */
-+static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-+{
-+	int rc;
-+
-+	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-+	    ((unsigned long)ptr & 3))
-+		return -EFAULT;
-+
-+	rc = probe_user_read(ret, ptr, sizeof(*ret));
-+
-+	if (IS_ENABLED(CONFIG_PPC64) && rc)
-+		return read_user_stack_slow(ptr, ret, 4);
-+
-+	return rc;
-+}
-+
- /*
-  * Layout for non-RT signal frames
-  */
+ PERFORMANCE EVENTS SUBSYSTEM ARM64 PMU EVENTS
 -- 
 2.23.0
 
