@@ -2,35 +2,35 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D19F5C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BB7C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A947920777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2BA620777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbgCTWFJ (ORCPT
+        id S1727709AbgCTWFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:05:09 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37507 "EHLO
+        Fri, 20 Mar 2020 18:05:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37505 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbgCTWET (ORCPT
+        with ESMTP id S1727425AbgCTWES (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:04:19 -0400
+        Fri, 20 Mar 2020 18:04:18 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFPk1-0004TN-5N; Fri, 20 Mar 2020 23:03:45 +0100
+        id 1jFPk2-0004TY-Bh; Fri, 20 Mar 2020 23:03:46 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 9F4A8FFC8D;
-        Fri, 20 Mar 2020 23:03:44 +0100 (CET)
-Message-Id: <20200320175956.033706968@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id DB9A41039FC;
+        Fri, 20 Mar 2020 23:03:45 +0100 (CET)
+Message-Id: <20200320180032.895128936@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 18:59:56 +0100
+Date:   Fri, 20 Mar 2020 19:00:01 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -47,7 +47,11 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [RESEND][patch V3 00/23] x86/entry: Consolidation part II (syscalls)
+Subject: [RESEND][patch V3 05/23] tracing: Provide lockdep less
+ trace_hardirqs_on/off() variants
+References: <20200320175956.033706968@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-transfer-encoding: 8-bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
@@ -56,95 +60,83 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200320175956.DsWEfD90qUAuCxC6fdGgnETzdTBh-m5Co4aCwcF54EI@z>
+Message-ID: <20200320180001.ad17nULe9N4VSqeg2lVZzyPkDdvNY7xXKUPSlzh7zfY@z>
 
-Hi!
+trace_hardirqs_on/off() is only partially safe vs. RCU idle. The tracer
+core itself is safe, but the resulting tracepoints can be utilized by
+e.g. BPF which is unsafe.
 
-Sorry for the resend noise. I managed to fatfinger one of my scripts
-so it dropped all Ccs and sent it only to LKML. Sigh....
+Provide variants which do not contain the lockdep invocation so the lockdep
+and tracer invocations can be split at the call site and placed properly.
 
-This is the third version of the syscall entry code consolidation
-series. V2 can be found here:
+The new variants also do not use rcuidle as they are going to be called
+from entry code after/before context tracking.
 
-  https://lore.kernel.org/r/20200308222359.370649591@linutronix.de
-
-It applies on top of
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
-
-and is also available from git:
-
-    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel entry-v3-part2
-
-The changes vs. V2:
-
- - A massive rework utilizing Peter Zijlstras objtool patches to analyze
-   the new .noinstr.text section:
-
-   https://lore.kernel.org/r/20200317170234.897520633@infradead.org
-
-   Working with this was really helpful as it clearly pin pointed code
-   which calls out of the protected section which is much more efficient
-   and focussed than chasing everything manually.
-
- - Picked up the two RCU patches from Paul for completeness. The bugfix
-   is required anyway and the comments have been really helpful to see
-   where the defense line has to be.
-
- - As the tool flagged KVM as red zone, I looked at the context tracking
-   usage there and it has similar if not worse issues. New set of patches
-   dealing with that.
-
-Please have a close look at the approach and the resulting protected areas.
-
-Known issues:
-
-  - The kprobes '.noinstr.text' exclusion currently works only for built
-    in code. Haven't figured out how to to fix that, but I'm sure that
-    Masami knows :)
-
-  - The various SANitizers if enabled ruin the picture. Peter and I still
-    have no brilliant idea what to do about that.
-
-Thanks,
-
-	tglx
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/common.c                |  173 ++++++++++++++++++++++++---------
- arch/x86/entry/entry_32.S              |   24 ----
- arch/x86/entry/entry_64.S              |    6 -
- arch/x86/entry/entry_64_compat.S       |   32 ------
- arch/x86/entry/thunk_64.S              |   45 +++++++-
- arch/x86/include/asm/bug.h             |    3 
- arch/x86/include/asm/hardirq.h         |    4 
- arch/x86/include/asm/irqflags.h        |    3 
- arch/x86/include/asm/nospec-branch.h   |    4 
- arch/x86/include/asm/paravirt.h        |    3 
- arch/x86/kvm/svm.c                     |  152 ++++++++++++++++++----------
- arch/x86/kvm/vmx/ops.h                 |    4 
- arch/x86/kvm/vmx/vmenter.S             |    2 
- arch/x86/kvm/vmx/vmx.c                 |   78 +++++++++++---
- arch/x86/kvm/x86.c                     |    4 
- b/include/asm-generic/bug.h            |    9 +
- include/asm-generic/sections.h         |    3 
- include/asm-generic/vmlinux.lds.h      |    4 
- include/linux/compiler.h               |   24 ++++
- include/linux/compiler_types.h         |    4 
- include/linux/context_tracking.h       |   27 +++--
- include/linux/context_tracking_state.h |    6 -
- include/linux/irqflags.h               |    6 +
- include/linux/sched.h                  |    1 
- kernel/context_tracking.c              |   14 +-
- kernel/kprobes.c                       |   11 ++
- kernel/locking/lockdep.c               |   66 +++++++++---
- kernel/panic.c                         |    4 
- kernel/rcu/tree.c                      |   91 +++++++++++------
- kernel/rcu/tree_plugin.h               |    4 
- kernel/rcu/update.c                    |    7 -
- kernel/trace/trace_preemptirq.c        |   25 ++++
- lib/debug_locks.c                      |    2 
- lib/smp_processor_id.c                 |   10 -
- scripts/mod/modpost.c                  |    2 
- 35 files changed, 590 insertions(+), 267 deletions(-)
+V2: New patch
+---
+ include/linux/irqflags.h        |    4 ++++
+ kernel/trace/trace_preemptirq.c |   23 +++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -29,6 +29,8 @@
+ #endif
+ 
+ #ifdef CONFIG_TRACE_IRQFLAGS
++  extern void __trace_hardirqs_on(void);
++  extern void __trace_hardirqs_off(void);
+   extern void trace_hardirqs_on(void);
+   extern void trace_hardirqs_off(void);
+ # define trace_hardirq_context(p)	((p)->hardirq_context)
+@@ -52,6 +54,8 @@ do {						\
+ 	current->softirq_context--;		\
+ } while (0)
+ #else
++# define __trace_hardirqs_on()		do { } while (0)
++# define __trace_hardirqs_off()		do { } while (0)
+ # define trace_hardirqs_on()		do { } while (0)
+ # define trace_hardirqs_off()		do { } while (0)
+ # define trace_hardirq_context(p)	0
+--- a/kernel/trace/trace_preemptirq.c
++++ b/kernel/trace/trace_preemptirq.c
+@@ -19,6 +19,17 @@
+ /* Per-cpu variable to prevent redundant calls when IRQs already off */
+ static DEFINE_PER_CPU(int, tracing_irq_cpu);
+ 
++void __trace_hardirqs_on(void)
++{
++	if (this_cpu_read(tracing_irq_cpu)) {
++		if (!in_nmi())
++			trace_irq_enable(CALLER_ADDR0, CALLER_ADDR1);
++		tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
++		this_cpu_write(tracing_irq_cpu, 0);
++	}
++}
++NOKPROBE_SYMBOL(__trace_hardirqs_on);
++
+ void trace_hardirqs_on(void)
+ {
+ 	if (this_cpu_read(tracing_irq_cpu)) {
+@@ -33,6 +44,18 @@ void trace_hardirqs_on(void)
+ EXPORT_SYMBOL(trace_hardirqs_on);
+ NOKPROBE_SYMBOL(trace_hardirqs_on);
+ 
++void __trace_hardirqs_off(void)
++{
++	if (!this_cpu_read(tracing_irq_cpu)) {
++		this_cpu_write(tracing_irq_cpu, 1);
++		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
++		if (!in_nmi())
++			trace_irq_disable(CALLER_ADDR0, CALLER_ADDR1);
++	}
++
++}
++NOKPROBE_SYMBOL(__trace_hardirqs_off);
++
+ void trace_hardirqs_off(void)
+ {
+ 	if (!this_cpu_read(tracing_irq_cpu)) {
 
