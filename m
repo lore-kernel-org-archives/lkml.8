@@ -2,75 +2,78 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CB8C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDB2C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FB520714
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA9320409
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:07:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgCTUFs (ORCPT
+        id S1726980AbgCTUHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 16:05:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43120 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgCTUFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 16:05:48 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BF2920409;
-        Fri, 20 Mar 2020 20:05:46 +0000 (UTC)
-Date:   Fri, 20 Mar 2020 16:05:45 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     ben.hutchings@codethink.co.uk, Chris.Paterson2@renesas.com,
-        bigeasy@linutronix.de, LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Julia Cartwright <julia@ni.com>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Subject: Re: 4.19.106-rt44 -- boot problems with irqwork: push most work
- into softirq context
-Message-ID: <20200320160545.26a65de3@gandalf.local.home>
-In-Reply-To: <20200320195432.GA12666@duo.ucw.cz>
-References: <20200228170837.3fe8bb57@gandalf.local.home>
-        <20200319214835.GA29781@duo.ucw.cz>
-        <20200319232225.GA7878@duo.ucw.cz>
-        <20200319204859.5011a488@gandalf.local.home>
-        <20200320195432.GA12666@duo.ucw.cz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 20 Mar 2020 16:07:31 -0400
+Received: from www62.your-server.de ([213.133.104.62]:39318 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbgCTUHa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 16:07:30 -0400
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jFNvR-0006Vm-I2; Fri, 20 Mar 2020 21:07:25 +0100
+Received: from [85.7.42.192] (helo=pc-9.home)
+        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jFNvR-0009xC-4J; Fri, 20 Mar 2020 21:07:25 +0100
+Subject: Re: [PATCH] bpf: explicitly memset the bpf_attr structure
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Maciej_=c5=bbenczykowski?= <maze@google.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alexander Potapenko <glider@google.com>,
+        Alistair Delva <adelva@google.com>
+References: <20200320094813.GA421650@kroah.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <cea7babd-48a6-d89a-c93b-32659d6d8a28@iogearbox.net>
+Date:   Fri, 20 Mar 2020 21:07:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200320094813.GA421650@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25757/Fri Mar 20 14:13:59 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Mar 2020 20:54:32 +0100
-Pavel Machek <pavel@denx.de> wrote:
-
-> > Does this patch help?  
+On 3/20/20 10:48 AM, Greg Kroah-Hartman wrote:
+> For the bpf syscall, we are relying on the compiler to properly zero out
+> the bpf_attr union that we copy userspace data into.  Unfortunately that
+> doesn't always work properly, padding and other oddities might not be
+> correctly zeroed, and in some tests odd things have been found when the
+> stack is pre-initialized to other values.
 > 
-> I don't think so. It also failed, and the failure seems to be
-> identical to me.
+> Fix this by explicitly memsetting the structure to 0 before using it.
 > 
-> https://gitlab.com/cip-project/cip-kernel/linux-cip/tree/ci/pavel/linux-cip
-> https://lava.ciplatform.org/scheduler/job/13110
-> 
+> Reported-by: Maciej Żenczykowski <maze@google.com>
+> Reported-by: John Stultz <john.stultz@linaro.org>
+> Reported-by: Alexander Potapenko <glider@google.com>
+> Reported-by: Alistair Delva <adelva@google.com>
+> Cc: stable <stable@vger.kernel.org>
+> Link: https://android-review.googlesource.com/c/kernel/common/+/1235490
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Can you send me a patch that shows the difference between the revert that
-you say works, and the upstream v4.19-rt tree (let me know which version
-of v4.19-rt you are basing it on).
-
-Thanks!
-
--- Steve
+Applied, thanks!
