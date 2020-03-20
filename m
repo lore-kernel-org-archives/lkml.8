@@ -2,124 +2,111 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD1CC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F7AC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF01420722
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD77420757
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:59:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Ohp5TXh1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbgCTJ6u (ORCPT
+        id S1727230AbgCTJ7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:58:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:46804 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726527AbgCTJ6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:58:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0106030E;
-        Fri, 20 Mar 2020 02:58:50 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B7163F305;
-        Fri, 20 Mar 2020 02:58:49 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 09:58:43 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/4] dt-bindings: Convert Cadence PCIe RC/EP to DT
- Schema
-Message-ID: <20200320095843.GA21858@e121166-lin.cambridge.arm.com>
-References: <20200305103017.16706-1-kishon@ti.com>
+        Fri, 20 Mar 2020 05:59:15 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58876 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbgCTJ7P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 05:59:15 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CA6A1504;
+        Fri, 20 Mar 2020 10:59:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584698353;
+        bh=ZzexViwT1sNWNVrixfFMMsQEew/KhYKWu3YzN5cmzCI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ohp5TXh1V32/7TUc41A62vGmBmoziycU4oAdYUdLefFdH37z8W96SsCvO+jDYOPci
+         yl56teBS9RGHB2sEtwfPKoIF4R0VFKV7zfs7bEv6wK6b+oVhRBgi9uw+HZ903G71qx
+         CnOC7JOVk/Z9/c2QQky3jfKcRhZ0B5Dqi7Y4FRrw=
+Date:   Fri, 20 Mar 2020 11:59:07 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Alex Riesen <alexander.riesen@cetitec.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v2 07/10] dt-bindings: adv748x: add information about
+ serial audio interface (I2S/TDM)
+Message-ID: <20200320095907.GB5193@pendragon.ideasonboard.com>
+References: <cover.1584639664.git.alexander.riesen@cetitec.com>
+ <c9ff553f804f178a247dca356306948e971432fb.1584639664.git.alexander.riesen@cetitec.com>
+ <20200319180125.GJ14585@pendragon.ideasonboard.com>
+ <20200320084406.GB4344@pflmari>
+ <CAMuHMdUdVb0LwZDx-MH2FLYYPvgq=uj_3Nrzo9obWAi-Q-2ZnA@mail.gmail.com>
+ <20200320090339.GD4344@pflmari>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200305103017.16706-1-kishon@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200320090339.GD4344@pflmari>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 04:00:13PM +0530, Kishon Vijay Abraham I wrote:
-> Cadence PCIe IP is used by multiple SoC vendors (e.g. TI). Cadence
-> themselves have a validation platform for validating the PCIe IP which
-> is already in the upstream kernel. Right now the binding only exists for
-> Cadence platform and this will result in adding redundant binding schema
-> for any platform using Cadence PCIe core.
-> 
-> This series:
-> 1) Create cdns-pcie.yaml which includes properties that are applicable
->    to both host mode and endpoint mode of Cadence PCIe core.
-> 2) Create cdns-pcie-host.yaml to include properties that are specific to
->    host mode of Cadence PCIe core. cdns-pcie-host.yaml will include
->    cdns-pcie.yaml.
-> 3) Create cdns-pcie-ep.yaml to include properties that are specific to
->    endpoint mode of Cadence PCIe core. cdns-pcie-ep.yaml will include
->    cdns-pcie.yaml.
-> 4) Remove cdns,cdns-pcie-ep.txt and cdns,cdns-pcie-host.txt which had
->    the binding for Cadence "platform" and add cdns,cdns-pcie-host.yaml
->    and cdns,cdns-pcie-ep.yaml schema for Cadence Platform. The schema
->    for Cadence platform then includes schema for Cadence PCIe core.
-> 
-> Changes from v4:
-> *) Deprecate "cdns,max-outbound-regions" only for host mode. For EP mode
->    this will be a mandatory property.
-> 
-> Changes from v3:
-> *) Add "Reviewed-by: Rob Herring <robh@kernel.org>"
-> *) Fix typo in SPDX header
-> 
-> Changes from v2:
-> *) Created "pci-ep.yaml" for common endpoint controller bindings
-> *) Deprecate "cdns,max-outbound-regions" and "cdns,no-bar-match-nbits"
->    binding
-> 
-> Changes from v1:
-> *) Fix maximum values of num-lanes and cdns,no-bar-match-nbits
-> *) Fix example DT node for PCIe Endpoint.
-> 
-> Ref: Patches to convert Cadence driver to library
->      https://lkml.org/lkml/2019/11/11/317
-> 
-> Some of this was initially part of [1], but to accelerate it getting
-> into upstream, sending this as a separate series.
-> 
-> [1] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
-> 
-> Kishon Vijay Abraham I (4):
->   dt-bindings: PCI: Add PCI Endpoint Controller Schema
->   dt-bindings: PCI: cadence: Add PCIe RC/EP DT schema for Cadence PCIe
->   dt-bindings: PCI: Convert PCIe Host/Endpoint in Cadence platform to DT
->     schema
->   dt-bindings: PCI: cadence: Deprecate inbound/outbound specific
->     bindings
-> 
->  .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
->  .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 49 ++++++++++++
->  .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
->  .../bindings/pci/cdns,cdns-pcie-host.yaml     | 75 +++++++++++++++++++
->  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++
->  .../bindings/pci/cdns-pcie-host.yaml          | 37 +++++++++
->  .../devicetree/bindings/pci/cdns-pcie.yaml    | 23 ++++++
->  .../devicetree/bindings/pci/pci-ep.yaml       | 41 ++++++++++
->  MAINTAINERS                                   |  2 +-
->  9 files changed, 251 insertions(+), 94 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/pci-ep.yaml
+Hi Alex,
 
-Applied first three patches to pci/dt for v5.7.
+On Fri, Mar 20, 2020 at 10:03:39AM +0100, Alex Riesen wrote:
+> Geert Uytterhoeven, Fri, Mar 20, 2020 09:48:14 +0100:
+> > On Fri, Mar 20, 2020 at 9:44 AM Alex Riesen <alexander.riesen@cetitec.com> wrote:
+> > > Laurent Pinchart, Thu, Mar 19, 2020 19:01:25 +0100:
+> > > > On Thu, Mar 19, 2020 at 06:42:36PM +0100, Alex Riesen wrote:
+> > > > > As the driver has some support for the audio interface of the device,
+> > > > > the bindings file should mention it.
+> > > > >
+> > > > > @@ -16,6 +18,8 @@ Required Properties:
+> > > > >      slave device on the I2C bus. The main address is mandatory, others are
+> > > > >      optional and remain at default values if not specified.
+> > > > >
+> > > > > +  - #clock-cells: must be <0> if the I2S port is used
+> > > >
+> > > > Wouldn't it be simpler to set it to 0 unconditionally ?
+> > >
+> > > Would it? If the port itself is optional, shouldn't the clock be an option
+> > > too?
+> > 
+> > You'd be surprised how many board designers would consider this a cheap
+> > 12.288 MHz clock source, without using the I2S port ;-)
+> 
+> Well, I am :-)
+> 
+> Especially considering that the driver will not switch the MCLK pin aktive
+> (all I2S-related pins are tristate by default).
 
-Thanks,
-Lorenzo
+If the MCLK can't be output without enabling the I2S then I don't mind
+if we make the #clock-cells optional, although, as Geert mentioned,
+someone may still want to use it.
+
+> And how do I require it to be set unconditionally? By just removing the
+> "if ..." part of the statement?
+
+Yes. For YAML it's easy too, the hard part is making properties
+conditional :-)
+
+-- 
+Regards,
+
+Laurent Pinchart
