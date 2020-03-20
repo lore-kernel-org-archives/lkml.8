@@ -2,175 +2,135 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BD6C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBEBC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79AF62076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B728A20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:10:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IyFklPLw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="id84JLVQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbgCTLJe (ORCPT
+        id S1727357AbgCTLKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 07:09:34 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:60564 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726951AbgCTLJe (ORCPT
+        Fri, 20 Mar 2020 07:10:07 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34330 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbgCTLKH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 07:09:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584702573;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FG3rV03ORdL5dZYsmjHuCpupbanGtM2DORWeRbjL06s=;
-        b=IyFklPLwBBNSJnXHPNtrJD0FTAEeClPAFoOPgeElJLuJ3DnWqNZSPTXxSHl+LghT3PdMug
-        5uhJyRoksxAmqAQY7bMWLYtZgzmOHz6NsXhPWurObg0YxZr94X9Gl0bkhgwju0z0LsTZkZ
-        KvMcg0gqwOjx3YL8cZuAeZre0m3dIuo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-368-XhybzQHaNwiNF6Rbkf4nkw-1; Fri, 20 Mar 2020 07:09:29 -0400
-X-MC-Unique: XhybzQHaNwiNF6Rbkf4nkw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4D3D189D6C3;
-        Fri, 20 Mar 2020 11:09:26 +0000 (UTC)
-Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B60AD60C18;
-        Fri, 20 Mar 2020 11:09:22 +0000 (UTC)
-Subject: Re: [PATCH v5 20/23] KVM: arm64: GICv4.1: Plumb SGI implementation
- selection in the distributor
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>, kvm@vger.kernel.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Robert Richter <rrichter@marvell.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-21-maz@kernel.org>
- <72832f51-bbde-8502-3e03-189ac20a0143@huawei.com>
- <4a06fae9c93e10351276d173747d17f4@kernel.org>
- <49995ec9-3970-1f62-5dfc-118563ca00fc@redhat.com>
- <b98855a1-6300-d323-80f6-82d3b9854290@huawei.com>
- <e60578b5-910c-0355-d231-29322900679d@redhat.com>
- <dfaf8a1b7c7fd8b769a244a8a779d952@kernel.org>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <02350520-8591-c62c-e7fa-33db30c25b96@redhat.com>
-Date:   Fri, 20 Mar 2020 12:09:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <dfaf8a1b7c7fd8b769a244a8a779d952@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+        Fri, 20 Mar 2020 07:10:07 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t3so2929002pgn.1;
+        Fri, 20 Mar 2020 04:10:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=8DC0Aw490tAtEteDyenp5f58iML9PsV1SemgO6pMc4k=;
+        b=id84JLVQrc1pByXQ0kRoTprdf6KnYiB0t8lk6sCBFM9RdBrAOUPfbvVMzV9qiaL87i
+         Wvp0xRICCAcPHoCFnMV8StTu3kzu2Ft7+QZOs/hvVTDp5jVlpx8UGbuABCSV+viP2YNC
+         mRkOrLWy6XA1ndOvPPBf3ObeCBzPs4nSgMonij7C0tCECY+ai9NEJSlOfTAmCYY7HowQ
+         ypNdhiNr1c38NknrwPv2fPDaonMx/BfmL48kL+8o3LrdM6Fc0w3969as+h8J+OwPzxsa
+         HnPzBg+fibzVhbE8FTsCvmqAH8+x9IkWTNoFBL3QbbE2qNdzuWnBsNsWef+oiodFcD1e
+         9u1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8DC0Aw490tAtEteDyenp5f58iML9PsV1SemgO6pMc4k=;
+        b=om4pd303E0mgA1BPEs76WWotfJpBWkwFrcgK7xyoelHDpjpVsJ2JZw0iMmcVq+nlJu
+         +gCQI0PDrbgb6amHrjhs9kn1X3mcFtZPz8BVbIJWey2KfHnzBU6Bkn1sHEci1H2ehHru
+         B9JEfMx1ttJoBBAXdlpmb4pylRxHYqwLP10CuUzURjEvkglvkBziDWWzyH5A2EKClFj1
+         kGGZdYH0gJEjLaqtss/zLf1mBTONyD9NE5J7NYOhqzaoSUq7N06mbnneuvSRkDmh0PQV
+         b/Rg2ucj3kuxpBUJYECCS+81X7bQZasOcyzrDY0WDlNR6iwvCcmNhYcPA/CufCaVhYom
+         WYGg==
+X-Gm-Message-State: ANhLgQ2JKfDZxtRw9RH0SYH4wXJrpfiueMatf5FKmY6fOp0nBKxqSXiY
+        83Gpc0F5nk/aUdPacOWjQIwcU/TOHCkWlg==
+X-Google-Smtp-Source: ADFU+vuVlMHmABpQyheyAcx3cY1cUhb6lfIhNDQ0xBjDWcqim11OoGyYbBSUhx+SgoDYa54pUcjH7w==
+X-Received: by 2002:a62:d144:: with SMTP id t4mr1396205pfl.10.1584702605420;
+        Fri, 20 Mar 2020 04:10:05 -0700 (PDT)
+Received: from localhost ([161.117.239.120])
+        by smtp.gmail.com with ESMTPSA id u9sm5202984pfn.116.2020.03.20.04.10.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 20 Mar 2020 04:10:04 -0700 (PDT)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     marcelo.leitner@gmail.com, davem@davemloft.net
+Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com, kuba@kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, anenbupt@gmail.com,
+        Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH v3] sctp: fix refcount bug in sctp_wfree
+Date:   Fri, 20 Mar 2020 19:09:59 +0800
+Message-Id: <20200320110959.2114-1-hqjagain@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Do accounting for skb's real sk.
+In some case skb->sk != asoc->base.sk:
 
-On 3/20/20 10:46 AM, Marc Zyngier wrote:
-> On 2020-03-20 07:59, Auger Eric wrote:
->> Hi Zenghui,
->>
->> On 3/20/20 4:08 AM, Zenghui Yu wrote:
->>> On 2020/3/20 4:38, Auger Eric wrote:
->>>> Hi Marc,
->>>> On 3/19/20 1:10 PM, Marc Zyngier wrote:
->>>>> Hi Zenghui,
->>>>>
->>>>> On 2020-03-18 06:34, Zenghui Yu wrote:
->>>>>> Hi Marc,
->>>>>>
->>>>>> On 2020/3/5 4:33, Marc Zyngier wrote:
->>>>>>> The GICv4.1 architecture gives the hypervisor the option to let
->>>>>>> the guest choose whether it wants the good old SGIs with an
->>>>>>> active state, or the new, HW-based ones that do not have one.
->>>>>>>
->>>>>>> For this, plumb the configuration of SGIs into the GICv3 MMIO
->>>>>>> handling, present the GICD_TYPER2.nASSGIcap to the guest,
->>>>>>> and handle the GICD_CTLR.nASSGIreq setting.
->>>>>>>
->>>>>>> In order to be able to deal with the restore of a guest, also
->>>>>>> apply the GICD_CTLR.nASSGIreq setting at first run so that we
->>>>>>> can move the restored SGIs to the HW if that's what the guest
->>>>>>> had selected in a previous life.
->>>>>>
->>>>>> I'm okay with the restore path.=C2=A0 But it seems that we still f=
-ail to
->>>>>> save the pending state of vSGI - software pending_latch of HW-base=
-d
->>>>>> vSGIs will not be updated (and always be false) because we directl=
-y
->>>>>> inject them through ITS, so vgic_v3_uaccess_read_pending() can't
->>>>>> tell the correct pending state to user-space (the correct one shou=
-ld
->>>>>> be latched in HW).
->>>>>>
->>>>>> It would be good if we can sync the hardware state into pending_la=
-tch
->>>>>> at an appropriate time (just before save), but not sure if we can.=
-..
->>>>>
->>>>> The problem is to find the "appropriate time". It would require to
->>>>> define
->>>>> a point in the save sequence where we transition the state from HW =
-to
->>>>> SW. I'm not keen on adding more state than we already have.
->>>>
->>>> may be we could use a dedicated device group/attr as we have for the
->>>> ITS
->>>> save tables? the user space would choose.
->>>
->>> It means that userspace will be aware of some form of GICv4.1 details
->>> (e.g., get/set vSGI state at HW level) that KVM has implemented.
->>> Is it something that userspace required to know? I'm open to this ;-)
->> Not sure we would be obliged to expose fine details. This could be a
->> generic save/restore device group/attr whose implementation at KVM lev=
-el
->> could differ depending on the version being implemented, no?
->=20
-> What prevents us from hooking this synchronization to the current behav=
-iour
-> of KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES? After all, this is already the
-> point
-> where we synchronize the KVM view of the pending state with userspace.
-> Here, it's just a matter of picking the information from some other pla=
-ce
-> (i.e. the host's virtual pending table).
-agreed
->=20
-> The thing we need though is the guarantee that the guest isn't going to
-> get more vLPIs at that stage, as they would be lost. This effectively
-> assumes that we can also save/restore the state of the signalling devic=
-es,
-> and I don't know if we're quite there yet.
-On QEMU, when KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES is called, the VM is
-stopped.
-See cddafd8f353d ("hw/intc/arm_gicv3_its: Implement state save/restore")
-So I think it should work, no?
+for the trouble SKB, it was in outq->transmitted queue
 
-Thanks
+sctp_outq_sack
+	sctp_check_transmitted
+		SKB was moved to outq->sack
+	then throw away the sack queue
+		SKB was deleted from outq->sack
+(but the datamsg held SKB at sctp_datamsg_to_asoc
+So, sctp_wfree was not called to destroy SKB)
 
-Eric
+then migrate happened
 
->=20
-> Thanks,
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 M.
+	sctp_for_each_tx_datachunk(
+	sctp_clear_owner_w);
+	sctp_assoc_migrate();
+	sctp_for_each_tx_datachunk(
+	sctp_set_owner_w);
+SKB was not in the outq, and was not changed to newsk
+
+finally
+
+__sctp_outq_teardown
+	sctp_chunk_put (for another skb)
+		sctp_datamsg_put
+			__kfree_skb(msg->frag_list)
+				sctp_wfree (for SKB)
+this case in sctp_wfree SKB->sk was oldsk.
+
+It looks only trouble here so handling it in sctp_wfree is enough.
+
+Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ net/sctp/socket.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+index 1b56fc440606..5f5c28b30e25 100644
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -9080,7 +9080,7 @@ static void sctp_wfree(struct sk_buff *skb)
+ {
+ 	struct sctp_chunk *chunk = skb_shinfo(skb)->destructor_arg;
+ 	struct sctp_association *asoc = chunk->asoc;
+-	struct sock *sk = asoc->base.sk;
++	struct sock *sk = skb->sk;
+ 
+ 	sk_mem_uncharge(sk, skb->truesize);
+ 	sk->sk_wmem_queued -= skb->truesize + sizeof(struct sctp_chunk);
+@@ -9109,7 +9109,7 @@ static void sctp_wfree(struct sk_buff *skb)
+ 	}
+ 
+ 	sock_wfree(skb);
+-	sctp_wake_up_waiters(sk, asoc);
++	sctp_wake_up_waiters(asoc->base.sk, asoc);
+ 
+ 	sctp_association_put(asoc);
+ }
+-- 
+2.17.1
 
