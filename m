@@ -2,146 +2,75 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF4BC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48061C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE73320777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:15:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584713736;
-	bh=iY20u/IgUH7ck1uzIJTEsr4J0NsnrcVYd97wLs96ABE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fyBIBLsvIhVqa9O5sZOJKboQJoci81BDIuZkMyhxbGPTLQTCyT9s3f7ZiKwAq275c
-	 icmUp2BHcG05dE1aMqMOeFp1DmBFiQMrnEWW0w1gzEf/kKC+eizJo9r/dFZ3PA2vKj
-	 T+YVtmLTwjpkSIjtmh8MEotIJDcS2/wns1LABMqk=
+	by mail.kernel.org (Postfix) with ESMTP id 0E01F20754
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:19:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B6/zKn9h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgCTOPe (ORCPT
+        id S1726951AbgCTOTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:15:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726666AbgCTOPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:15:34 -0400
-Received: from localhost (unknown [122.167.82.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4937220739;
-        Fri, 20 Mar 2020 14:15:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584713733;
-        bh=iY20u/IgUH7ck1uzIJTEsr4J0NsnrcVYd97wLs96ABE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A6gOnR5ST2SPsthWP2DMt5zLXqGWOTdPzerYXOyXz9HbBgUUWJJuHs5BLT3HuznPe
-         r1jlv6E5Zp6LeBJakOw7eZVupiM/ousyLYqJ1NXfzHVt38I7Z4BUnS75kKQcr2Z5wD
-         tEjKA8VkJyoKcK1a8frGbti8KTYzTLBarbjcAyYc=
-Date:   Fri, 20 Mar 2020 19:45:28 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH] soundwire: stream: only change state if needed
-Message-ID: <20200320141528.GI4885@vkoul-mobl>
-References: <20200317105142.4998-1-pierre-louis.bossart@linux.intel.com>
+        Fri, 20 Mar 2020 10:19:10 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56638 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbgCTOTJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:19:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=fP76rVZ78wXp8cMUTCCjVQv5iPeDciWQiuxMnftZdbU=; b=B6/zKn9hIGXiUR1+IFAOol+kv1
+        XjmHCPdWqbtmD9fPyqucY8V+g+o9OLOvI3t+vrDdb/DQOqyScEnQli0GsUE5QpHE3YjdPBKaRCK68
+        rQSN6kmN+N0Smxlwq+SoFYRFj3SxRcSTi1Yh+KaTdPyhzA+m1CzeAqONaNmB+4ZAaLWxYwgTBl+jb
+        ILStHKt07ubvKmWQ63yuEZKU86Ihy8RxKbgZoXwxkIDn8QKjcBqMVb/ZK6RXAsYaxHRY42JJ2qj0L
+        6LlhF9zgzO3uCzN93uOom5TnQF6sMVJq6DscqerEEnHaIo7nFdfFl+Nips+DMKRf9Hob7GPC7Kewo
+        JcfqGpuA==;
+Received: from 089144202225.atnat0011.highway.a1.net ([89.144.202.225] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jFIUF-0007Ej-D6; Fri, 20 Mar 2020 14:18:59 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     iommu@lists.linux-foundation.org,
+        Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     linuxppc-dev@lists.ozlabs.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: generic DMA bypass flag v2
+Date:   Fri, 20 Mar 2020 15:16:38 +0100
+Message-Id: <20200320141640.366360-1-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317105142.4998-1-pierre-louis.bossart@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-03-20, 05:51, Pierre-Louis Bossart wrote:
-> In a multi-cpu DAI context, the stream routines may be called from
-> multiple DAI callbacks. Make sure the stream state only changes for
-> the first call, and don't return error messages if the target state is
-> already reached.
+Hi all,
 
-For stream-apis we have documented explicitly in Documentation/driver-api/soundwire/stream.rst
+I've recently beeing chatting with Lu about using dma-iommu and
+per-device DMA ops in the intel IOMMU driver, and one missing feature
+in dma-iommu is a bypass mode where the direct mapping is used even
+when an iommu is attached to improve performance.  The powerpc
+code already has a similar mode, so I'd like to move it to the core
+DMA mapping code.  As part of that I noticed that the current
+powerpc code has a little bug in that it used the wrong check in the
+dma_sync_* routines to see if the direct mapping code is used.
 
-"Bus implements below API for allocate a stream which needs to be called once
-per stream. From ASoC DPCM framework, this stream state maybe linked to
-.startup() operation.
+These two patches just add the generic code and move powerpc over,
+the intel IOMMU bits will require a separate discussion.
 
-.. code-block:: c
+The x86 AMD Gart code also has a bypass mode, but it is a lot
+strange, so I'm not going to touch it for now.
 
-  int sdw_alloc_stream(char * stream_name); "
-
-This is documented for all stream-apis.
-
-This can be resolved by moving the calling of these APIs from
-master-dais/slave-dais to machine-dais. They are unique in the card.
-
-> 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->  drivers/soundwire/stream.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-> index 1b43d03c79ea..3319121cd706 100644
-> --- a/drivers/soundwire/stream.c
-> +++ b/drivers/soundwire/stream.c
-> @@ -1572,6 +1572,7 @@ int sdw_prepare_stream(struct sdw_stream_runtime *stream)
->  	sdw_acquire_bus_lock(stream);
->  
->  	if (stream->state == SDW_STREAM_PREPARED) {
-> +		/* nothing to do */
->  		ret = 0;
->  		goto state_err;
->  	}
-> @@ -1661,6 +1662,12 @@ int sdw_enable_stream(struct sdw_stream_runtime *stream)
->  
->  	sdw_acquire_bus_lock(stream);
->  
-> +	if (stream->state == SDW_STREAM_ENABLED) {
-> +		/* nothing to do */
-> +		ret = 0;
-> +		goto state_err;
-> +	}
-> +
->  	if (stream->state != SDW_STREAM_PREPARED &&
->  	    stream->state != SDW_STREAM_DISABLED) {
->  		pr_err("%s: %s: inconsistent state state %d\n",
-> @@ -1744,6 +1751,12 @@ int sdw_disable_stream(struct sdw_stream_runtime *stream)
->  
->  	sdw_acquire_bus_lock(stream);
->  
-> +	if (stream->state == SDW_STREAM_DISABLED) {
-> +		/* nothing to do */
-> +		ret = 0;
-> +		goto state_err;
-> +	}
-> +
->  	if (stream->state != SDW_STREAM_ENABLED) {
->  		pr_err("%s: %s: inconsistent state state %d\n",
->  		       __func__, stream->name, stream->state);
-> @@ -1809,6 +1822,12 @@ int sdw_deprepare_stream(struct sdw_stream_runtime *stream)
->  
->  	sdw_acquire_bus_lock(stream);
->  
-> +	if (stream->state == SDW_STREAM_DEPREPARED) {
-> +		/* nothing to do */
-> +		ret = 0;
-> +		goto state_err;
-> +	}
-> +
->  	if (stream->state != SDW_STREAM_PREPARED &&
->  	    stream->state != SDW_STREAM_DISABLED) {
->  		pr_err("%s: %s: inconsistent state state %d\n",
-> -- 
-> 2.20.1
-
--- 
-~Vinod
+Changes since v1:
+ - rebased to the current dma-mapping-for-next tree
