@@ -2,112 +2,54 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF259C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B26C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBF2720781
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:36:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXlg6pGG"
+	by mail.kernel.org (Postfix) with ESMTP id 87CA120775
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbgCTSfP (ORCPT
+        id S1727241AbgCTSg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:35:15 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37987 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727178AbgCTSfN (ORCPT
+        Fri, 20 Mar 2020 14:36:28 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36860 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbgCTSg2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:35:13 -0400
-Received: by mail-ed1-f67.google.com with SMTP id h5so8305505edn.5;
-        Fri, 20 Mar 2020 11:35:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yRo9nDnkvpVgGMO52y9SDq2QLhuKK/RpwLheS8dxEdo=;
-        b=KXlg6pGGu7+fH+4J6SwTdmp3qRTOwbLeFyRc9llXU6NFZtCXG6y1ZL9UP42MReM4hK
-         Gn/CMltyY5HsmEeAnqsYpo9Ip2LyDJJQEBBQAMVbxRKt4I97B6B57gFesIt5eNQ61w00
-         AkUauYmKgMfzt26t/5/AZ9GRZ/FbOTwD1W3YC5JuyxHuPhR11Y/NZRp6eFldsyERVl+7
-         hwsGD/XchuHDwV/bjzdD/Rfc0QAfnrY5MEqIK2hsPk3FNC14QwvYigVo3uGexIeceUkc
-         8uEeuY3QTRDvx1me//9PydnQaziaISGFo1jvXtIstLEbQmrFJGhjecRBlSEGWIhnYvLD
-         MLew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yRo9nDnkvpVgGMO52y9SDq2QLhuKK/RpwLheS8dxEdo=;
-        b=kAt7wOm9tsUCIE5axI+IDHX9uPGQmisaO06YdOkJxlK2Ikt7wOuEjQvrheb7Zi1dk4
-         Pn6CGyd0WwR2XPIgoquOZisBblf2fm7iH3C8dmT2XlBmKP7H56iOE1fP7yUwMvbu1WDg
-         xiKbn9ty+DB5iJ9WDg6XeMEnqJXQVqUAgOuCcT593ewZCPSHmJn4NgNH5FW9su5sU34C
-         1zWnbM9SUPVwsCbTLxR+HMfWECj2KZbhivpKQhW0KrYf8dwlYhY0wNW2ATktOuI1KTyg
-         oYW9aQLIbP4mR4s3cA4lm3qHSP3BIPV2D2l5p5ppDnG/x+srthHEhMBdZjLZDizY8GTL
-         d4oQ==
-X-Gm-Message-State: ANhLgQ2KJ8lZhl79TvAmgjgASL8mGl3ugGrPEgkYnQFL/rmF20lqRSPL
-        5ISeAxxlNy9qbaNNB7QnJGA=
-X-Google-Smtp-Source: ADFU+vvNTp8sqzvhS1hnXVHuvIPBtK5wJsYEAeb0/JoRA6lZ9eu2HocXv6m9ZSeJEMfzrbSHH628gw==
-X-Received: by 2002:a50:a9a6:: with SMTP id n35mr671753edc.57.1584729310266;
-        Fri, 20 Mar 2020 11:35:10 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host203-232-dynamic.53-79-r.retail.telecomitalia.it. [79.53.232.203])
-        by smtp.googlemail.com with ESMTPSA id y13sm172916eje.3.2020.03.20.11.35.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 11:35:09 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc:     Abhishek Sahu <absahu@codeaurora.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/12] pcie: qcom: change duplicate pci reset to phy reset
-Date:   Fri, 20 Mar 2020 19:34:45 +0100
-Message-Id: <20200320183455.21311-3-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200320183455.21311-1-ansuelsmth@gmail.com>
-References: <20200320183455.21311-1-ansuelsmth@gmail.com>
+        Fri, 20 Mar 2020 14:36:28 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jFMVC-0001zz-JW; Fri, 20 Mar 2020 19:36:14 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 03C6E1039FC; Fri, 20 Mar 2020 19:36:13 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>, rostedt@goodmis.org,
+        mingo@kernel.org
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, will@kernel.org, peterz@infradead.org
+Subject: Re: [PATCH 0/4] A bunch of renames
+In-Reply-To: <20200320115638.737385408@infradead.org>
+References: <20200320115638.737385408@infradead.org>
+Date:   Fri, 20 Mar 2020 19:36:13 +0100
+Message-ID: <87r1xm7u1u.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abhishek Sahu <absahu@codeaurora.org>
+Peter Zijlstra <peterz@infradead.org> writes:
 
-The deinit issues reset_control_assert for pci twice and
-does not contain phy reset.
+> While going over a lot of code, we ran into a bunch of confusingly named
+> functions. These 4 patches try and fix some of that.
 
-Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index f958c535de6e..1fcc7fed8443 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -284,7 +284,7 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
- 	reset_control_assert(res->axi_reset);
- 	reset_control_assert(res->ahb_reset);
- 	reset_control_assert(res->por_reset);
--	reset_control_assert(res->pci_reset);
-+	reset_control_assert(res->phy_reset);
- 	clk_disable_unprepare(res->iface_clk);
- 	clk_disable_unprepare(res->core_clk);
- 	clk_disable_unprepare(res->phy_clk);
--- 
-2.25.1
-
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
