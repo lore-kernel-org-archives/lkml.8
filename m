@@ -4,23 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4D4C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AC7C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2321920752
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0433B20782
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:14:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbgCTJOr (ORCPT
+        id S1727365AbgCTJOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:14:47 -0400
-Received: from 8bytes.org ([81.169.241.247]:54182 "EHLO theia.8bytes.org"
+        Fri, 20 Mar 2020 05:14:51 -0400
+Received: from 8bytes.org ([81.169.241.247]:54196 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbgCTJO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:14:26 -0400
+        id S1727195AbgCTJOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 05:14:25 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 5E946452; Fri, 20 Mar 2020 10:14:21 +0100 (CET)
+        id 6C50F36C; Fri, 20 Mar 2020 10:14:20 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     iommu@lists.linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -35,10 +35,11 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Jean-Philippe Brucker <jean-philippe@linaro.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v3 11/15] iommu/renesas: Use accessor functions for iommu private data
-Date:   Fri, 20 Mar 2020 10:14:10 +0100
-Message-Id: <20200320091414.3941-12-joro@8bytes.org>
+        Joerg Roedel <jroedel@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v3 06/15] iommu: Move iommu_fwspec to struct dev_iommu
+Date:   Fri, 20 Mar 2020 10:14:05 +0100
+Message-Id: <20200320091414.3941-7-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200320091414.3941-1-joro@8bytes.org>
 References: <20200320091414.3941-1-joro@8bytes.org>
@@ -49,45 +50,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Make use of dev_iommu_priv_set/get() functions.
+Move the iommu_fwspec pointer in struct device into struct dev_iommu.
+This is a step in the effort to reduce the iommu related pointers in
+struct device to one.
 
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Tested-by: Will Deacon <will@kernel.org> # arm-smmu
 Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/ipmmu-vmsa.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/iommu/iommu.c  |  3 +++
+ include/linux/device.h |  3 ---
+ include/linux/iommu.h  | 12 ++++++++----
+ 3 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
-index ecb3f9464dd5..310cf09feea3 100644
---- a/drivers/iommu/ipmmu-vmsa.c
-+++ b/drivers/iommu/ipmmu-vmsa.c
-@@ -89,9 +89,7 @@ static struct ipmmu_vmsa_domain *to_vmsa_domain(struct iommu_domain *dom)
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index beac2ef063dd..826a67ba247f 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -2405,6 +2405,9 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
+ 	if (fwspec)
+ 		return ops == fwspec->ops ? 0 : -EINVAL;
  
- static struct ipmmu_vmsa_device *to_ipmmu(struct device *dev)
++	if (!dev_iommu_get(dev))
++		return -ENOMEM;
++
+ 	fwspec = kzalloc(sizeof(*fwspec), GFP_KERNEL);
+ 	if (!fwspec)
+ 		return -ENOMEM;
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 405a8f11bec1..fc1427ab7e85 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -42,7 +42,6 @@ struct device_node;
+ struct fwnode_handle;
+ struct iommu_ops;
+ struct iommu_group;
+-struct iommu_fwspec;
+ struct dev_pin_info;
+ struct dev_iommu;
+ 
+@@ -513,7 +512,6 @@ struct dev_links_info {
+  * 		gone away. This should be set by the allocator of the
+  * 		device (i.e. the bus driver that discovered the device).
+  * @iommu_group: IOMMU group the device belongs to.
+- * @iommu_fwspec: IOMMU-specific properties supplied by firmware.
+  * @iommu:	Per device generic IOMMU runtime data
+  *
+  * @offline_disabled: If set, the device is permanently online.
+@@ -613,7 +611,6 @@ struct device {
+ 
+ 	void	(*release)(struct device *dev);
+ 	struct iommu_group	*iommu_group;
+-	struct iommu_fwspec	*iommu_fwspec;
+ 	struct dev_iommu	*iommu;
+ 
+ 	bool			offline_disabled:1;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 1c9fa5c1174b..f5edc21a644d 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -368,14 +368,15 @@ struct iommu_fault_param {
+  * struct dev_iommu - Collection of per-device IOMMU data
+  *
+  * @fault_param: IOMMU detected device fault reporting data
++ * @fwspec:	 IOMMU fwspec data
+  *
+  * TODO: migrate other per device data pointers under iommu_dev_data, e.g.
+  *	struct iommu_group	*iommu_group;
+- *	struct iommu_fwspec	*iommu_fwspec;
+  */
+ struct dev_iommu {
+ 	struct mutex lock;
+-	struct iommu_fault_param *fault_param;
++	struct iommu_fault_param	*fault_param;
++	struct iommu_fwspec		*fwspec;
+ };
+ 
+ int  iommu_device_register(struct iommu_device *iommu);
+@@ -614,13 +615,16 @@ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode);
+ 
+ static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device *dev)
  {
--	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
--
--	return fwspec ? fwspec->iommu_priv : NULL;
-+	return dev_iommu_priv_get(dev);
+-	return dev->iommu_fwspec;
++	if (dev->iommu)
++		return dev->iommu->fwspec;
++	else
++		return NULL;
  }
  
- #define TLB_LOOP_TIMEOUT		100	/* 100us */
-@@ -727,14 +725,13 @@ static phys_addr_t ipmmu_iova_to_phys(struct iommu_domain *io_domain,
- static int ipmmu_init_platform_device(struct device *dev,
- 				      struct of_phandle_args *args)
+ static inline void dev_iommu_fwspec_set(struct device *dev,
+ 					struct iommu_fwspec *fwspec)
  {
--	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
- 	struct platform_device *ipmmu_pdev;
- 
- 	ipmmu_pdev = of_find_device_by_node(args->np);
- 	if (!ipmmu_pdev)
- 		return -ENODEV;
- 
--	fwspec->iommu_priv = platform_get_drvdata(ipmmu_pdev);
-+	dev_iommu_priv_set(dev, platform_get_drvdata(ipmmu_pdev));
- 
- 	return 0;
+-	dev->iommu_fwspec = fwspec;
++	dev->iommu->fwspec = fwspec;
  }
+ 
+ int iommu_probe_device(struct device *dev);
 -- 
 2.17.1
 
