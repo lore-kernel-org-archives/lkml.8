@@ -7,98 +7,96 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD82C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB530C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4D920722
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8994820722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584743703;
-	bh=3pMwYGuvn7XhcJgp/i6E3lfVCCge6BuAIw+OQtQNinw=;
+	s=default; t=1584743729;
+	bh=H2hHwEkhnLUgG71TWPVFfUlwH99X4byfnT0UMWintaM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p4WtpxemT4pt3z98KX6D47j5mEQG71QPfQuQJuY5rb0XxHz7TIxnKSibE9vgExM/a
-	 /1EiH/svNMX/915g4RmvQcPIlTr68Bdlt3kSZ2Ej8nxti4vn7C4T9OsFo1qZT87wcS
-	 sF3niHZnZ8yE2WB+n0LPbxsE86G7QjGVjVfC5GNw=
+	b=rgWmWIhLXa0F2i2lkh8iMYRZE8vB8HDE9KKiSY0m5TPrIWU7daF8LEea+Koa1CaAK
+	 I+hpRvL9EDT4S3Mlm1NjTXJGxKV7kTZlVfED9TnyeM3lwcExrK40XLRp1DagKrinko
+	 k6I8ik7JFhXFdr0ECCwrxBostYQvpN8GyS9U+9+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgCTWfC (ORCPT
+        id S1727190AbgCTWf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:35:02 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:32783 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbgCTWfC (ORCPT
+        Fri, 20 Mar 2020 18:35:28 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40866 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726855AbgCTWf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:35:02 -0400
-Received: by mail-io1-f65.google.com with SMTP id o127so7719614iof.0;
-        Fri, 20 Mar 2020 15:35:01 -0700 (PDT)
+        Fri, 20 Mar 2020 18:35:28 -0400
+Received: by mail-io1-f66.google.com with SMTP id h18so7656874ioh.7;
+        Fri, 20 Mar 2020 15:35:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=iYciGqaZt2GL/kj0/kVz5mt7vxAxWiWPCnXAqKnI3no=;
-        b=fuUVRKA5JgJVdgPXFvHPRM8B1go/Vs3PwswVYbDv4fQCgkRci2DbptNcbDRMbnVztV
-         pYNbdCIEcnNZ0nR60yj/NwKTbCLbVE2LtB8DdWX3D2tO6xPGgl6pEAhwoFqt/Vd6dKKn
-         xxHcyeOtha1DN+FcXpG1vouohDSFo1EKESlhCqqwEgNe7iLP3yCX0kM1vxA0tcAWd63h
-         e8gl7I61Goo1L3IzZNLkv3j81eDNHf2KP9ca3AvV0t8EHYJ8NEuKniAxS5BsQzKCsA/x
-         J89kk9X5maVpQ0LyLfa6pT7pNwS0KAL4l1vfMS7ocjrnduh6Si9SaTkQl+GUi7DSV+fN
-         +Dvg==
-X-Gm-Message-State: ANhLgQ3vsqYi3DFCh8OAJd3Zu2vOB098E/SV0DdDs9t4+NS2KeMKne7d
-        oHKDdNtSUzIf3W5xZ42Txg==
-X-Google-Smtp-Source: ADFU+vtfbO55Y84haPlaouVd2A0t5+O/OMxe2jOE3ZF5rxCay9OVhEtzVFY1uwiNSp5ffMR9k4zBhA==
-X-Received: by 2002:a5d:814a:: with SMTP id f10mr9397108ioo.7.1584743701048;
-        Fri, 20 Mar 2020 15:35:01 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LRGI96tcI4ghnjFtC4NBoCbXfwi3WMWoeeiOveVxAlo=;
+        b=o2003rKgxG0vwqCtWteBesehbiGFikRIOurCP5C3lbrYZUa4u8cEi5Okw3dqNAA5So
+         KLC34BQ6vGp7PF8yOYnwHNxai2siKcamn5t19+8O9qT9p12SRXrkHXqADwmdAAaMciVS
+         DZUOGecraS7JMhuXjC5yTtw2GIFFVGrxLR/DjmDmSZvqx78HJncwYH2e1O+U+vOdZc5P
+         yVRCWW8DKVFvst/TEV7iIzgj5BGJlo647A5M0GdYeLYVa2qtgX8nUiM1hQ3EQfeEm/6r
+         ybg0t2MV5lK+lQ+E5G9VqMJx5iaHUZGiNmE/yopciPu+fd7li3KTcEzZyelKYaVIuSvt
+         PLvA==
+X-Gm-Message-State: ANhLgQ0uW8kMdo8edModu+EfRWxjA+TiMsBt9AQCxomAufiwjvADD7pu
+        cVKGkKo8eOITfZTF5zyLdw==
+X-Google-Smtp-Source: ADFU+vstZqfejwgfrWB4ZuxMmHA68v/Z1RwURf4BOfv0nPRoPofxGNKzQ2XmCiQNzs3JDFNcY9p6zg==
+X-Received: by 2002:a05:6638:59b:: with SMTP id a27mr10099268jar.25.1584743727296;
+        Fri, 20 Mar 2020 15:35:27 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id f80sm2469907ild.25.2020.03.20.15.34.59
+        by smtp.gmail.com with ESMTPSA id f12sm2082920iog.46.2020.03.20.15.35.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 15:35:00 -0700 (PDT)
-Received: (nullmailer pid 21112 invoked by uid 1000);
-        Fri, 20 Mar 2020 22:34:58 -0000
-Date:   Fri, 20 Mar 2020 16:34:58 -0600
+        Fri, 20 Mar 2020 15:35:26 -0700 (PDT)
+Received: (nullmailer pid 21977 invoked by uid 1000);
+        Fri, 20 Mar 2020 22:35:24 -0000
+Date:   Fri, 20 Mar 2020 16:35:24 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Enric Balletbo Serra <eballetbo@gmail.com>
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v5 1/4] dt-bindings: Add cros-ec Type C port driver
-Message-ID: <20200320223458.GA15213@bogus>
-References: <20200316090021.52148-1-pmalani@chromium.org>
- <20200316090021.52148-2-pmalani@chromium.org>
- <CAFqH_50eGjYu7dHFW82CY4-EyDtq+AF+6tHCAjKbaAjW5_7WYA@mail.gmail.com>
+To:     Igor Opaniuk <igor.opaniuk@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robert Jones <rjones@gateworks.com>,
+        =?iso-8859-1?Q?S=E9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: arm: fsl: add nxp based toradex
+ colibri bindings
+Message-ID: <20200320223524.GA21944@bogus>
+References: <20200316143345.30823-1-igor.opaniuk@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFqH_50eGjYu7dHFW82CY4-EyDtq+AF+6tHCAjKbaAjW5_7WYA@mail.gmail.com>
+In-Reply-To: <20200316143345.30823-1-igor.opaniuk@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 04:14:13PM +0100, Enric Balletbo Serra wrote:
-> Hi Prashant,
+On Mon, 16 Mar 2020 16:33:44 +0200, Igor Opaniuk wrote:
+> From: Igor Opaniuk <igor.opaniuk@toradex.com>
 > 
-> Missatge de Prashant Malani <pmalani@chromium.org> del dia dl., 16 de
-> març 2020 a les 10:02:
-> >
-> > Some Chrome OS devices with Embedded Controllers (EC) can read and
-> > modify Type C port state.
-> >
-> > Add an entry in the DT Bindings documentation that lists out the logical
-> > device and describes the relevant port information, to be used by the
-> > corresponding driver.
-> >
-> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> Document Colibri iMX6S/DL V1.1x re-design devicetree binding.
 > 
-> After Rob review, it can go together with the other patches through
-> the chrome-platform tree. From my side:
+> Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+> ---
+> 
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-LGTM, but it is dependent on usb-connector.yaml which I picked up. 
-Either I can take this patch or you pull my dt/next branch in.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
