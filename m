@@ -2,182 +2,209 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A20BBC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FD4C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8039C20777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FFAF21473
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:07:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MEta4Wf9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgCTWGD (ORCPT
+        id S1727421AbgCTWHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:06:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37472 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgCTWEN (ORCPT
+        Fri, 20 Mar 2020 18:07:30 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46031 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727175AbgCTWHa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:04:13 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFPk9-0004d8-QA; Fri, 20 Mar 2020 23:03:53 +0100
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 1AAE61040C9;
-        Fri, 20 Mar 2020 23:03:49 +0100 (CET)
-Message-Id: <20200320180034.203489576@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 19:00:14 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [RESEND][patch V3 18/23] x86/kvm: Move context tracking where it belongs
-References: <20200320175956.033706968@linutronix.de>
+        Fri, 20 Mar 2020 18:07:30 -0400
+Received: by mail-ed1-f66.google.com with SMTP id u59so8923719edc.12
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 15:07:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Wh832PW/B1ZgleHxeKKirrgEKzecxyBhNJtn0lhwADc=;
+        b=MEta4Wf9GQWtqP9zfzhGnHT1uVRTqhsv0k0HpdrMcd5nXqYD/oZ5XQkcvyjcRBLxvK
+         4sjs3srDN4vRDd/1/A5aywN1VHgeJ56SUmTLpj37QG+9Q+Sar4AK4yxSIAbjCDAocg8I
+         bEuiugbnwliceIspvKxYjjPcJxE6UuklQR9VqVhpMo+Um3Yea4J9S7JI5Av+XvDYhkwv
+         uvwRdatsyTBwel1vtOBU3nWvcPLEWjmk18oTq8WiEWmkIKLVTsx06V63yofilVl69glZ
+         wIb1bdf3V6k6bHQCg+WGKkP49BmZcXUBFbzf0HtfTkbEl7uJP7esc0Q3H2i8f0Ma0s0F
+         ZD9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wh832PW/B1ZgleHxeKKirrgEKzecxyBhNJtn0lhwADc=;
+        b=RmXJL9PSgTefn5uVux+XBJY34xvP+8TAFCx4YAptJ+Jf3zULCHmqhqLBNGAZ/duZol
+         xs+Y5K2zgfSM79eBt4Egg9bySHy/yK+0U+ZCGo7oFIgHxR2JJd5a7s/Onw07uvXba75T
+         g52ASjVEbKGe0sb6PfiJhbssA4CdDr/pOgi4c6aLNVDrz9/ESjiivnt8gkpmfYAn8nfW
+         H23XcXlp3V3OgC0VwZeyYHX78/156uHbD1wQD1VwUwlJ+pnRrz5pxhR8VZaKRxTVl4VM
+         mtBja4nmH9UAdIZqfSs5ArLaFm7kkJEtrn1j5PiYebilQ8TLxfitvl2t3iVOsXxpaEE8
+         dA0A==
+X-Gm-Message-State: ANhLgQ0xC1OhiR5HnpkOiq/yLNC40sSZL2GCo1aLaB0+g9Dr/Vzv3+7k
+        8a5y+9W+LFF3koyyChBKImugz8246p0g3TiUIPjMbg==
+X-Google-Smtp-Source: ADFU+vvMZyPS+wPi1ycr/20HKTaxuIp65bGgppsOIattbmrIpYaU1PgnwSdKnstpYWRRM5ZFTdryZbvhjNC04CydJL8=
+X-Received: by 2002:a05:6402:22c7:: with SMTP id dm7mr10403457edb.283.1584742046426;
+ Fri, 20 Mar 2020 15:07:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200320175910.180266-1-yonghyun@google.com> <20200320123425.49c6568e@w520.home>
+ <CAEauFbx1Su7Lg5kdxXnvUwfwLCH67qaGB6EZ7g3OOH-tbRfBBA@mail.gmail.com> <20200320145935.4617c7c0@w520.home>
+In-Reply-To: <20200320145935.4617c7c0@w520.home>
+From:   Yonghyun Hwang <yonghyun@google.com>
+Date:   Fri, 20 Mar 2020 15:07:15 -0700
+Message-ID: <CAEauFbyE547joLxswMVLn2mreKgp-kEeQ_S4xyOQmmRsOqr_Wg@mail.gmail.com>
+Subject: Re: [PATCH] vfio-mdev: support mediated device creation in kernel
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Kirti Wankhede <kwankhede@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Havard Skinnemoen <hskinnemoen@google.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Joshua Lang <joshualang@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200320180014.1gpTu48VUwCeXGP9r_jKl0E2_YWovH4uUHiHGK-bEME@z>
 
-The invocation of guest_enter_irqoff() is way before the actual VMENTER
-happens. guest_exit_irqoff() happens way after the VMEXIT.
+If my patch is not aligned with the direction, it results in a
+maintenance burden for the kernel. Thanks for sharing the direction
+and  Yan's vendor-ops approach[1].
 
-While the comment in guest_enter_irqoff() says that KVM does not hold
-references to RCU protected data, for the whole call chain before VMENTER
-and after VMEXIT there is no guarantee that no RCU protected data is
-accessed.
+Thank you,
+Yonghyun
 
-There are tracepoints hidden in MSR access functions and there are calls
-into code which takes locks. The latter might cause lockdep to run into RCU
-trouble. As the call chains are hard to follow it's unclear whether there
-might be RCU trouble lurking in some corner cases.
-
-The VMENTER path after context tracking contains also exit conditions which
-abort the VMENTER. The VMEXIT return path reenables interrupts before
-switching RCU back on which means that the interrupt entry/exit has to
-switch in on and then off again. If tracepoints on local_irq_enable() and
-local_irqdisable() are enabled then two more RCU on/off transitions are
-happening.
-
-Move it down into the VMX/SVM code close to the actual entry/exit. This is
-the first step to bring parts of this code into the .noinstr.text section
-so it can be verified with objtool.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org
----
- arch/x86/kvm/svm.c     |   18 ++++++++++++++++++
- arch/x86/kvm/vmx/vmx.c |   10 ++++++++++
- arch/x86/kvm/x86.c     |    2 --
- 3 files changed, 28 insertions(+), 2 deletions(-)
-
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5766,6 +5766,15 @@ static void svm_vcpu_run(struct kvm_vcpu
- 	 */
- 	x86_spec_ctrl_set_guest(svm->spec_ctrl, svm->virt_spec_ctrl);
- 
-+	/*
-+	 * Tell context tracking that this CPU is about to enter guest
-+	 * mode. This has to be after x86_spec_ctrl_set_guest() because
-+	 * that can take locks (lockdep needs RCU) and calls into world and
-+	 * some more.
-+	 */
-+	guest_enter_irqoff();
-+
-+	/* This is wrong vs. lockdep. Will be fixed in the next step */
- 	local_irq_enable();
- 
- 	asm volatile (
-@@ -5869,6 +5878,14 @@ static void svm_vcpu_run(struct kvm_vcpu
- 	loadsegment(gs, svm->host.gs);
- #endif
- #endif
-+	/*
-+	 * Tell context tracking that this CPU is back.
-+	 *
-+	 * This needs to be done before the below as native_read_msr()
-+	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
-+	 * into world and some more.
-+	 */
-+	guest_exit_irqoff();
- 
- 	/*
- 	 * We do not use IBRS in the kernel. If this vCPU has used the
-@@ -5890,6 +5907,7 @@ static void svm_vcpu_run(struct kvm_vcpu
- 
- 	reload_tss(vcpu);
- 
-+	/* This is wrong vs. lockdep. Will be fixed in the next step */
- 	local_irq_disable();
- 
- 	x86_spec_ctrl_restore_host(svm->spec_ctrl, svm->virt_spec_ctrl);
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6537,6 +6537,11 @@ static void vmx_vcpu_run(struct kvm_vcpu
- 	 */
- 	x86_spec_ctrl_set_guest(vmx->spec_ctrl, 0);
- 
-+	/*
-+	 * Tell context tracking that this CPU is about to enter guest mode.
-+	 */
-+	guest_enter_irqoff();
-+
- 	/* L1D Flush includes CPU buffer clear to mitigate MDS */
- 	if (static_branch_unlikely(&vmx_l1d_should_flush))
- 		vmx_l1d_flush(vcpu);
-@@ -6552,6 +6557,11 @@ static void vmx_vcpu_run(struct kvm_vcpu
- 	vcpu->arch.cr2 = read_cr2();
- 
- 	/*
-+	 * Tell context tracking that this CPU is back.
-+	 */
-+	guest_exit_irqoff();
-+
-+	/*
- 	 * We do not use IBRS in the kernel. If this vCPU has used the
- 	 * SPEC_CTRL MSR it may have left it on; save the value and
- 	 * turn it off. This is much more efficient than blindly adding
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8350,7 +8350,6 @@ static int vcpu_enter_guest(struct kvm_v
- 	}
- 
- 	trace_kvm_entry(vcpu->vcpu_id);
--	guest_enter_irqoff();
- 
- 	fpregs_assert_state_consistent();
- 	if (test_thread_flag(TIF_NEED_FPU_LOAD))
-@@ -8413,7 +8412,6 @@ static int vcpu_enter_guest(struct kvm_v
- 	local_irq_disable();
- 	kvm_after_interrupt(vcpu);
- 
--	guest_exit_irqoff();
- 	if (lapic_in_kernel(vcpu)) {
- 		s64 delta = vcpu->arch.apic->lapic_timer.advance_expire_delta;
- 		if (delta != S64_MIN) {
-
+On Fri, Mar 20, 2020 at 1:59 PM Alex Williamson
+<alex.williamson@redhat.com> wrote:
+>
+> On Fri, 20 Mar 2020 13:46:04 -0700
+> Yonghyun Hwang <yonghyun@google.com> wrote:
+>
+> > On Fri, Mar 20, 2020 at 11:34 AM Alex Williamson
+> > <alex.williamson@redhat.com> wrote:
+> > >
+> > > On Fri, 20 Mar 2020 10:59:10 -0700
+> > > Yonghyun Hwang <yonghyun@google.com> wrote:
+> > >
+> > > > To enable a mediated device, a device driver registers its device to VFIO
+> > > > MDev framework. Once the mediated device gets enabled, UUID gets fed onto
+> > > > the sysfs attribute, "create", to create the mediated device. This
+> > > > additional step happens after boot-up gets complete. If the driver knows
+> > > > how many mediated devices need to be created during probing time, the
+> > > > additional step becomes cumbersome. This commit implements a new function
+> > > > to allow the driver to create a mediated device in kernel.
+> > >
+> > > But pre-creating mdev devices seems like a policy decision.  Why can't
+> > > userspace make such a policy decision, and do so with persistent uuids,
+> > > via something like mdevctl?  Thanks,
+> > >
+> > > Alex
+> >
+> > Yep, it can be viewed as the policy decision and userspace can make
+> > the decision. However, it would be handy and plausible, if a device
+> > driver can pre-create "fixed or default" # of mdev devices, while
+> > allowing the device policy to come into play after bootup gets
+> > complete. Without this patch, a device driver should release the
+> > policy and the policy should be aligned with the driver, which would
+> > be cumbersome (sometimes painful) in a cloud environment. My use case
+> > with mdev is to enable a subset of vfio-pci features without losing my
+> > device driver.
+>
+> Does this last comment suggest the parent device is not being
+> multiplexed through mdev, but only mediated?  If so, would something
+> like Yan's vendor-ops approach[1] be better?  Without a multiplexed
+> device, the lifecycle management of an mdev device doesn't make a lot
+> of sense, and I wonder if that's what you're trying to bypass here.
+> Even SR-IOV devices have moved to userspace enablement with most module
+> options to enable a default number of VFs being deprecated.  I do see
+> that that transition left a gap, but I'm not sure that heading in the
+> opposite direction with mdevs is a good idea either.  Thanks,
+>
+> Alex
+>
+> [1]https://lore.kernel.org/kvm/20200131020803.27519-1-yan.y.zhao@intel.com/
+>
+>
+> > > > Signed-off-by: Yonghyun Hwang <yonghyun@google.com>
+> > > > ---
+> > > >  drivers/vfio/mdev/mdev_core.c | 45 +++++++++++++++++++++++++++++++++++
+> > > >  include/linux/mdev.h          |  3 +++
+> > > >  2 files changed, 48 insertions(+)
+> > > >
+> > > > diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> > > > index b558d4cfd082..a6d32516de42 100644
+> > > > --- a/drivers/vfio/mdev/mdev_core.c
+> > > > +++ b/drivers/vfio/mdev/mdev_core.c
+> > > > @@ -350,6 +350,51 @@ int mdev_device_create(struct kobject *kobj,
+> > > >       return ret;
+> > > >  }
+> > > >
+> > > > +/*
+> > > > + * mdev_create_device : Create a mdev device
+> > > > + * @dev: device structure representing parent device.
+> > > > + * @uuid: uuid char string for a mdev device.
+> > > > + * @group: index to supported type groups for a mdev device.
+> > > > + *
+> > > > + * Create a mdev device in kernel.
+> > > > + * Returns a negative value on error, otherwise 0.
+> > > > + */
+> > > > +int mdev_create_device(struct device *dev,
+> > > > +                     const char *uuid, int group)
+> > > > +{
+> > > > +     struct mdev_parent *parent = NULL;
+> > > > +     struct mdev_type *type = NULL;
+> > > > +     guid_t guid;
+> > > > +     int i = 1;
+> > > > +     int ret;
+> > > > +
+> > > > +     ret = guid_parse(uuid, &guid);
+> > > > +     if (ret) {
+> > > > +             dev_err(dev, "Failed to parse UUID");
+> > > > +             return ret;
+> > > > +     }
+> > > > +
+> > > > +     parent = __find_parent_device(dev);
+> > > > +     if (!parent) {
+> > > > +             dev_err(dev, "Failed to find parent mdev device");
+> > > > +             return -ENODEV;
+> > > > +     }
+> > > > +
+> > > > +     list_for_each_entry(type, &parent->type_list, next) {
+> > > > +             if (i == group)
+> > > > +                     break;
+> > > > +             i++;
+> > > > +     }
+> > > > +
+> > > > +     if (!type || i != group) {
+> > > > +             dev_err(dev, "Failed to find mdev device");
+> > > > +             return -ENODEV;
+> > > > +     }
+> > > > +
+> > > > +     return mdev_device_create(&type->kobj, parent->dev, &guid);
+> > > > +}
+> > > > +EXPORT_SYMBOL(mdev_create_device);
+> > > > +
+> > > >  int mdev_device_remove(struct device *dev)
+> > > >  {
+> > > >       struct mdev_device *mdev, *tmp;
+> > > > diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+> > > > index 0ce30ca78db0..b66f67998916 100644
+> > > > --- a/include/linux/mdev.h
+> > > > +++ b/include/linux/mdev.h
+> > > > @@ -145,4 +145,7 @@ struct device *mdev_parent_dev(struct mdev_device *mdev);
+> > > >  struct device *mdev_dev(struct mdev_device *mdev);
+> > > >  struct mdev_device *mdev_from_dev(struct device *dev);
+> > > >
+> > > > +extern int mdev_create_device(struct device *dev,
+> > > > +                     const char *uuid, int group_idx);
+> > > > +
+> > > >  #endif /* MDEV_H */
+> > >
+> >
+>
