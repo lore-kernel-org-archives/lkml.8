@@ -2,181 +2,160 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE15CC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3071FC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC0E2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A852072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:34:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hu21JmRQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gDPJeP35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgCTSd7 (ORCPT
+        id S1727129AbgCTSeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:33:59 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:33041 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbgCTSd7 (ORCPT
+        Fri, 20 Mar 2020 14:34:31 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:58837 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726783AbgCTSeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:33:59 -0400
-Received: by mail-pj1-f68.google.com with SMTP id dw20so3720952pjb.0;
-        Fri, 20 Mar 2020 11:33:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=S7Fui894R9lUu2xo1vf09TLmig4naq9sdfWsRqwPmJ0=;
-        b=hu21JmRQA0gv0PwiesOLkjyJGbNmheJ8OF1ARDPC13kWSznREiboKE/qbGYpwIQpSB
-         IJodTlinDcyiAkUbd4IrTokwyNJefZHgPEWSnFHPUqXHLWXJyRlQ/QTcCQjbxzn+DKZl
-         EITX/zvsIQyKis61huEbg86FiK7+FReoTKsTnpx4yKQ7nCb9Vawe3DTHA2lecbteAhm0
-         0S5UwBXX6GE6/aGkL41/8jVH2oGpWaFmxxQh6zAuc66jeuibyN+tua3muXEYo2JuECzO
-         mWnqlDc3lqDE/3hV6ctM/dE5sD1IoXyc5y8ujhqT2LCX17C8oq7gQHRuRRNskPahirY3
-         GOsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=S7Fui894R9lUu2xo1vf09TLmig4naq9sdfWsRqwPmJ0=;
-        b=Qd4qnCqtJ3aC76jb2QU0XAL1PLdRTfrOIGLSMykMSiMsVCc2hBXlYPrBxPwZDuEsAM
-         vwjkZfNoL7pcJL9FnBWZ4C6acV8sHtYaN5qhXfN/nvOQNLQJpSiELwCzbbiKEQyx7OqI
-         iozDFmp6O7Fr9Uy8P5YUmcTuJI2jSWZ0VO9eOyJnUsRzO13NwGawFH4TCUfKgrocOek7
-         RJKrMmKdphKB/TObEUqJVT7FKrzga2VbPqIf0SiPk1PzjkzMcL0vAqv3Xazko2ImaTwU
-         fyKc8C70tjiFTSR41SLt5cKjtxBiPdbWiXGGUulkjTGU8KoqWruV43p33xZa/h66Hzj3
-         XbHw==
-X-Gm-Message-State: ANhLgQ3Gu8ARQZd5m9ZOXQimMkqCl0CRTMR+qFzUtjGZ/3VtaFQW3aqU
-        C5omZmy1HW9PbAwS+ohDk48=
-X-Google-Smtp-Source: ADFU+vvUspVXpPWj0jZAAuPx+ygVkmstUOzsVMpCR7zHEhcpsHtwhIEN8zcuSygrsCJPw3ysito5tA==
-X-Received: by 2002:a17:90a:da01:: with SMTP id e1mr11297095pjv.100.1584729237878;
-        Fri, 20 Mar 2020 11:33:57 -0700 (PDT)
-Received: from gmail.com ([2601:600:817f:a132:df3e:521d:99d5:710d])
-        by smtp.gmail.com with ESMTPSA id h11sm6359312pfn.103.2020.03.20.11.33.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 11:33:57 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 11:33:55 -0700
-From:   Andrei Vagin <avagin@gmail.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Adrian Reber <areber@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: clone3: allow creation of time namespace with offset
-Message-ID: <20200320183355.GA118769@gmail.com>
-References: <20200317083043.226593-1-areber@redhat.com>
- <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
- <20200319081137.GC223854@dcbz.redhat.com>
- <CAK8P3a18YySozk6P77JpS58Hbtz=QQmLKw+PrzXbdOwtOQQuJA@mail.gmail.com>
- <20200319102955.i7slokibkkysz6g6@wittgenstein>
+        Fri, 20 Mar 2020 14:34:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584729269;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=y0Np0CarGBUbN7siKQ/jnSvkwfPUS2q7/dKzjlzIzSk=;
+        b=gDPJeP35XH+1nM3TumcQ7jAUTeTyz0adMp9XixloxNfU4JSogzJ1daqsDMi9qMgfpjMcI+
+        o7zeUuNmrfUTPp83z6BDqSntE7TH3VEFAGAS4bO5pR+TZpfOQ7zZD5Bb7o5VzOEB0xMiGG
+        Gz0AmByQE+o7ttuBwkJho6nPzdki4MU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-429-A2lGiqZvP1aGsscMkHDWpQ-1; Fri, 20 Mar 2020 14:34:28 -0400
+X-MC-Unique: A2lGiqZvP1aGsscMkHDWpQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C0CFF101FC64;
+        Fri, 20 Mar 2020 18:34:26 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A2A45C3FD;
+        Fri, 20 Mar 2020 18:34:26 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 12:34:25 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yonghyun Hwang <yonghyun@google.com>
+Cc:     Kirti Wankhede <kwankhede@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Havard Skinnemoen <hskinnemoen@google.com>,
+        Moritz Fischer <mdf@kernel.org>
+Subject: Re: [PATCH] vfio-mdev: support mediated device creation in kernel
+Message-ID: <20200320123425.49c6568e@w520.home>
+In-Reply-To: <20200320175910.180266-1-yonghyun@google.com>
+References: <20200320175910.180266-1-yonghyun@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <20200319102955.i7slokibkkysz6g6@wittgenstein>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 11:29:55AM +0100, Christian Brauner wrote:
-> On Thu, Mar 19, 2020 at 09:16:43AM +0100, Arnd Bergmann wrote:
-> > On Thu, Mar 19, 2020 at 9:11 AM Adrian Reber <areber@redhat.com> wrote:
-> > 
-> > > With Arnd's idea of only using nanoseconds, timens_offset would then
-> > > contain something like this:
-> > >
-> > > struct timens_offset {
-> > >         __aligned_s64 monotonic_offset_ns;
-> > >         __aligned_s64 boottime_offset_ns;
-> > > };
-> > >
-> > > I kind of prefer adding boottime and monotonic directly to struct clone_args
-> > >
-> > >         __aligned_u64 tls;
-> > >         __aligned_u64 set_tid;
-> > >         __aligned_u64 set_tid_size;
-> > > +       __aligned_s64 monotonic_offset_ns;
-> > > +       __aligned_s64 boottime_offset_ns;
-> > >  };
-> > 
-> > I would also prefer the second approach using two 64-bit integers
-> > instead of a pointer, as it keeps the interface simpler to implement
-> > and simpler to interpret by other tools.
+On Fri, 20 Mar 2020 10:59:10 -0700
+Yonghyun Hwang <yonghyun@google.com> wrote:
+
+> To enable a mediated device, a device driver registers its device to VFIO
+> MDev framework. Once the mediated device gets enabled, UUID gets fed onto
+> the sysfs attribute, "create", to create the mediated device. This
+> additional step happens after boot-up gets complete. If the driver knows
+> how many mediated devices need to be created during probing time, the
+> additional step becomes cumbersome. This commit implements a new function
+> to allow the driver to create a mediated device in kernel.
+
+But pre-creating mdev devices seems like a policy decision.  Why can't
+userspace make such a policy decision, and do so with persistent uuids,
+via something like mdevctl?  Thanks,
+
+Alex
+
+ 
+> Signed-off-by: Yonghyun Hwang <yonghyun@google.com>
+> ---
+>  drivers/vfio/mdev/mdev_core.c | 45 +++++++++++++++++++++++++++++++++++
+>  include/linux/mdev.h          |  3 +++
+>  2 files changed, 48 insertions(+)
 > 
-> Why I don't like has two reasons. There's the scenario where we have
-> added new extensions after the new boottime member and then we introduce
-> another offset. Then you'd be looking at:
-> 
-> __aligned_u64 tls;
-> __aligned_u64 set_tid;
-> __aligned_u64 set_tid_size;
-> + __aligned_s64 monotonic_offset_ns;
-> + __aligned_s64 boottime_offset_ns;
-> __aligned_s64 something_1
-> __aligned_s64 anything_2
-> + __aligned_s64 sometime_offset_ns
-> 
-> which bothers me just by looking at it. That's in addition to adding two
-> new members to the struct when most people will never set CLONE_NEWTIME.
-> We'll also likely have more features in the future that will want to
-> pass down more info than we want to directly expose in struct
-> clone_args, e.g. for a long time I have been thinking about adding a
-> struct for CLONE_NEWUSER that allows you to specify the id mappings you
-> want the new user namespace to get. We surely don't want to force all
-> new info into the uppermost struct. So I'm not convinced we should here.
-
-I think here we can start thinking about a netlink-like interface.
-
-struct clone_args {
-	....
-	u64	attrs_offset;
-}
-
-struct clone_attr {
-	u16 cla_len;
-	u16 cla_type;
-}
-
-
-....
-
-int parse_clone_attributes(struct kernel_clone_args *kargs, struct clone_args *args, size_t args_size)
-{
-	u64 off = args->attrs_offset;
-
-	while (off < size) {
-		struct clone_attr *attr;
-
-		if (off + sizeof(struct clone_attr) uargs_size)
-			return -EINVAL;
-
-		attr = (struct clone_attr *) ((void *)args + off);
-
-		if (attr->cla_type > CLONE_ATTR_TYPE_MAX)
-			return -ENOSYS;
-
-		kargs->attrs[attr->cla_type] = CLONE_ATTR_DATA(attr);
-		off += CLONE_ATTR_LEN(attr);
-	}
-
-	return 0;
-}
-
-This interface doesn't suffer from problems what you enumerated before:
-
-* clone_args contains only fields which are often used.
-* per-feature attributes can be extended in a future without breaking
-  backward compatibility.
-* unused features don't affect clone3 argument size.
-* seccomp-friendly (I am not 100% sure about this)
+> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> index b558d4cfd082..a6d32516de42 100644
+> --- a/drivers/vfio/mdev/mdev_core.c
+> +++ b/drivers/vfio/mdev/mdev_core.c
+> @@ -350,6 +350,51 @@ int mdev_device_create(struct kobject *kobj,
+>  	return ret;
+>  }
+>  
+> +/*
+> + * mdev_create_device : Create a mdev device
+> + * @dev: device structure representing parent device.
+> + * @uuid: uuid char string for a mdev device.
+> + * @group: index to supported type groups for a mdev device.
+> + *
+> + * Create a mdev device in kernel.
+> + * Returns a negative value on error, otherwise 0.
+> + */
+> +int mdev_create_device(struct device *dev,
+> +			const char *uuid, int group)
+> +{
+> +	struct mdev_parent *parent = NULL;
+> +	struct mdev_type *type = NULL;
+> +	guid_t guid;
+> +	int i = 1;
+> +	int ret;
+> +
+> +	ret = guid_parse(uuid, &guid);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to parse UUID");
+> +		return ret;
+> +	}
+> +
+> +	parent = __find_parent_device(dev);
+> +	if (!parent) {
+> +		dev_err(dev, "Failed to find parent mdev device");
+> +		return -ENODEV;
+> +	}
+> +
+> +	list_for_each_entry(type, &parent->type_list, next) {
+> +		if (i == group)
+> +			break;
+> +		i++;
+> +	}
+> +
+> +	if (!type || i != group) {
+> +		dev_err(dev, "Failed to find mdev device");
+> +		return -ENODEV;
+> +	}
+> +
+> +	return mdev_device_create(&type->kobj, parent->dev, &guid);
+> +}
+> +EXPORT_SYMBOL(mdev_create_device);
+> +
+>  int mdev_device_remove(struct device *dev)
+>  {
+>  	struct mdev_device *mdev, *tmp;
+> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+> index 0ce30ca78db0..b66f67998916 100644
+> --- a/include/linux/mdev.h
+> +++ b/include/linux/mdev.h
+> @@ -145,4 +145,7 @@ struct device *mdev_parent_dev(struct mdev_device *mdev);
+>  struct device *mdev_dev(struct mdev_device *mdev);
+>  struct mdev_device *mdev_from_dev(struct device *dev);
+>  
+> +extern int mdev_create_device(struct device *dev,
+> +			const char *uuid, int group_idx);
+> +
+>  #endif /* MDEV_H */
 
