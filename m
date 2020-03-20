@@ -2,64 +2,49 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EBAC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46192C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E332020709
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18C8820709
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:23:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbgCTDVT (ORCPT
+        id S1726970AbgCTDX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 23:21:19 -0400
-Received: from mga09.intel.com ([134.134.136.24]:24463 "EHLO mga09.intel.com"
+        Thu, 19 Mar 2020 23:23:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:43734 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726103AbgCTDVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 23:21:19 -0400
-IronPort-SDR: mBhsYZVjZNSQZ8UTmCAti8ZmW8sK8JOm8Spi8EBLW5GYLi8/QNgeYixqdqXtMrUDdnIOavvhET
- mkR2owc0Tbiw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 20:21:19 -0700
-IronPort-SDR: mR03DYeqvkIQcgn0WcWd2qJ7otYBW15lrJjlF8zdd6PSU699Wr5FRC2o0WZ3rL9yRLtxxBUDjJ
- ut+0mQv3w5ng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,283,1580803200"; 
-   d="scan'208";a="324731214"
-Received: from jliu231-mobl1.ccr.corp.intel.com (HELO [10.254.208.65]) ([10.254.208.65])
-  by orsmga001.jf.intel.com with ESMTP; 19 Mar 2020 20:21:16 -0700
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-To:     Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        kuninori.morimoto.gx@renesas.com, alsa-devel@alsa-project.org,
-        curtis@malainey.com, linux-kernel@vger.kernel.org, tiwai@suse.com,
-        liam.r.girdwood@linux.intel.com
-References: <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
- <20200318192213.GA2987@light.dominikbrodowski.net>
- <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
- <20200318215218.GA2439@light.dominikbrodowski.net>
- <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
- <20200319130049.GA2244@light.dominikbrodowski.net>
- <20200319134139.GB3983@sirena.org.uk>
- <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
- <20200319165157.GA2254@light.dominikbrodowski.net>
- <eef45d20-3bce-184a-842c-216c15252014@linux.intel.com>
- <20200319173502.GC3983@sirena.org.uk>
-From:   Keyon Jie <yang.jie@linux.intel.com>
-Message-ID: <0d01b2ce-9531-1a08-e632-4608ab894fbe@linux.intel.com>
-Date:   Fri, 20 Mar 2020 11:21:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726596AbgCTDXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 23:23:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1AB811FB;
+        Thu, 19 Mar 2020 20:23:25 -0700 (PDT)
+Received: from [10.163.1.20] (unknown [10.163.1.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E8E883F85E;
+        Thu, 19 Mar 2020 20:23:21 -0700 (PDT)
+Subject: Re: [PATCH] x86/mm: Make pud_present() check _PAGE_PROTNONE and
+ _PAGE_PSE as well
+To:     linux-mm@kvack.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <1584507679-11976-1-git-send-email-anshuman.khandual@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <c03165c8-6d44-49c2-2dad-a85759200718@arm.com>
+Date:   Fri, 20 Mar 2020 08:53:16 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200319173502.GC3983@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <1584507679-11976-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,35 +54,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 3/20/20 1:35 AM, Mark Brown wrote:
-> On Thu, Mar 19, 2020 at 12:21:47PM -0500, Pierre-Louis Bossart wrote:
->> On 3/19/20 11:51 AM, Dominik Brodowski wrote:
+On 03/18/2020 10:31 AM, Anshuman Khandual wrote:
+> pud_present() should also check _PAGE_PROTNONE and _PAGE_PSE bits like in
+> case pmd_present(). This makes a PUD entry test positive for pud_present()
+> after getting invalidated with pud_mknotpresent(), hence standardizing the
+> semantics with PMD helpers.
 > 
->>> That patch fixes the issue(s). I didn't even need to revert 64df6afa0dab
->>> ("ASoC: Intel: broadwell: change cpu_dai and platform components for SOF")
->>> on top of that. But you can assess better whether that patch needs care for
->>> other reasons; for me, this one-liner you have suggested is perfect.
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Dave Hansen <dave.hansen@intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: x86@kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> Even though pud_mknotpresent() is not used any where currently, there is
+> a discrepancy between PMD and PUD.
 > 
-> Good news!
+> WARN_ON(!pud_present(pud_mknotpresent(pud_mkhuge(pud)))) -> Fail
+> WARN_ON(!pmd_present(pmd_mknotpresent(pmd_mkhuge(pmd)))) -> Pass
 > 
->> .ignore_suspend is set for bdw-rt5677.c and bdw-rt5650.c as well. I don't
->> know if that was intentional.
+> Though pud_mknotpresent() currently clears _PAGE_PROTNONE, pud_present()
+> does not check it. This change fixes both inconsistencies.
 > 
-> The intended use case is for applications doing audio during suspend
-> like telephony audio between the modem and CODEC on a phone or
-> compressed audio playback.  I guess the compressed audio playback case
-> could possibly apply with these systems though x86 suspend/resume is
-> usually sufficiently heavyweight that it's surprising.
+> This has been build and boot tested on x86.
 
-I think that's true, on many of SKL- intel platforms(byt, hsw, bdw), we 
-are seeing this .ignore_suspend set with offload or deep buffer FE 
-dai_links configured together.
+Adding Kirill and Dan.
 
-So it looks we can't ignore calling codec's suspend/resume callbacks 
-during the power cycle for rt286 codec(on the Dell XPS here), which is 
-actually supported on Chromebook SAMUS(rt5677)?
-
-Thanks,
-~Keyon
-
-> 
++Cc: Kirill A. Shutemov <kirill@shutemov.name>
++Cc: Dan Williams <dan.j.williams@intel.com>
