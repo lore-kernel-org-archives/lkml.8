@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B27C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00A9C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E586C20777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC5F21473
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgCTWFt (ORCPT
+        id S1727572AbgCTWFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:05:49 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37483 "EHLO
+        Fri, 20 Mar 2020 18:05:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37486 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727197AbgCTWEO (ORCPT
+        with ESMTP id S1727334AbgCTWEO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Mar 2020 18:04:14 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFPk1-0004TP-M1; Fri, 20 Mar 2020 23:03:45 +0100
+        id 1jFPkB-0004fC-LG; Fri, 20 Mar 2020 23:03:55 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 256901039FD;
-        Fri, 20 Mar 2020 23:03:45 +0100 (CET)
-Message-Id: <20200320180032.614150506@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id CF2D91039FF;
+        Fri, 20 Mar 2020 23:03:49 +0100 (CET)
+Message-Id: <20200320180034.488016631@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 18:59:58 +0100
+Date:   Fri, 20 Mar 2020 19:00:17 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -44,11 +44,11 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Brian Gerst <brgerst@gmail.com>,
         Juergen Gross <jgross@suse.com>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [RESEND][patch V3 02/23] rcu: Add comments marking transitions
- between RCU watching and not
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [RESEND][patch V3 21/23] context_tracking: Make
+ guest_enter/exit_irqoff() .noinstr ready
 References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,132 +60,88 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200320175958.yrYeUCkEskR_TA3OPLUKo83jE8NkMlYGSF7kWbk74Ks@z>
+Message-ID: <20200320180017.bukYcnfr3WZIStJ1F9pmtBcpb-c2YQjETsrMR6ak-Wk@z>
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+Mark the functions __always_inline and add the annotations for the "safe"
+calls into regular text sections where RCU is watching.
 
-It is not as clear as it might be just where in RCU's idle entry/exit
-code RCU stops and starts watching the current CPU.  This commit therefore
-adds comments calling out the transitions.
-
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200313024046.27622-2-paulmck@kernel.org
-
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org
 ---
- kernel/rcu/tree.c |   29 +++++++++++++++++++++++++----
- 1 file changed, 25 insertions(+), 4 deletions(-)
+ include/linux/context_tracking.h |   21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -224,7 +224,9 @@ void rcu_softirq_qs(void)
+--- a/include/linux/context_tracking.h
++++ b/include/linux/context_tracking.h
+@@ -101,12 +101,14 @@ static inline void context_tracking_init
  
- /*
-  * Record entry into an extended quiescent state.  This is only to be
-- * called when not already in an extended quiescent state.
-+ * called when not already in an extended quiescent state, that is,
-+ * RCU is watching prior to the call to this function and is no longer
-+ * watching upon return.
-  */
- static void rcu_dynticks_eqs_enter(void)
+ #ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
+ /* must be called with irqs disabled */
+-static inline void guest_enter_irqoff(void)
++static __always_inline void guest_enter_irqoff(void)
  {
-@@ -237,7 +239,7 @@ static void rcu_dynticks_eqs_enter(void)
- 	 * next idle sojourn.
- 	 */
- 	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
--	/* Better be in an extended quiescent state! */
-+	// RCU is no longer watching.  Better be in extended quiescent state!
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
- 		     (seq & RCU_DYNTICK_CTRL_CTR));
- 	/* Better not have special action (TLB flush) pending! */
-@@ -247,7 +249,8 @@ static void rcu_dynticks_eqs_enter(void)
++	instr_begin();
+ 	if (vtime_accounting_enabled_this_cpu())
+ 		vtime_guest_enter(current);
+ 	else
+ 		current->flags |= PF_VCPU;
++	instr_end();
  
- /*
-  * Record exit from an extended quiescent state.  This is only to be
-- * called from an extended quiescent state.
-+ * called from an extended quiescent state, that is, RCU is not watching
-+ * prior to the call to this function and is watching upon return.
-  */
- static void rcu_dynticks_eqs_exit(void)
- {
-@@ -260,6 +263,7 @@ static void rcu_dynticks_eqs_exit(void)
- 	 * critical section.
+ 	if (context_tracking_enabled())
+ 		__context_tracking_enter(CONTEXT_GUEST);
+@@ -118,39 +120,48 @@ static inline void guest_enter_irqoff(vo
+ 	 * one time slice). Lets treat guest mode as quiescent state, just like
+ 	 * we do with user-mode execution.
  	 */
- 	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
-+	// RCU is now watching.  Better not be in an extended quiescent state!
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
- 		     !(seq & RCU_DYNTICK_CTRL_CTR));
- 	if (seq & RCU_DYNTICK_CTRL_MASK) {
-@@ -562,6 +566,7 @@ static void rcu_eqs_enter(bool user)
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
- 		     rdp->dynticks_nesting == 0);
- 	if (rdp->dynticks_nesting != 1) {
-+		// RCU will still be watching, so just do accounting and leave.
- 		rdp->dynticks_nesting--;
- 		return;
- 	}
-@@ -574,7 +579,9 @@ static void rcu_eqs_enter(bool user)
- 	rcu_prepare_for_idle();
- 	rcu_preempt_deferred_qs(current);
- 	WRITE_ONCE(rdp->dynticks_nesting, 0); /* Avoid irq-access tearing. */
-+	// RCU is watching here ...
- 	rcu_dynticks_eqs_enter();
-+	// ... but is no longer watching here.
- 	rcu_dynticks_task_enter();
+-	if (!context_tracking_enabled_this_cpu())
++	if (!context_tracking_enabled_this_cpu()) {
++		instr_begin();
+ 		rcu_virt_note_context_switch(smp_processor_id());
++		instr_end();
++	}
  }
  
-@@ -654,7 +661,9 @@ static __always_inline void rcu_nmi_exit
- 	if (irq)
- 		rcu_prepare_for_idle();
+-static inline void guest_exit_irqoff(void)
++static __always_inline void guest_exit_irqoff(void)
+ {
+ 	if (context_tracking_enabled())
+ 		__context_tracking_exit(CONTEXT_GUEST);
  
-+	// RCU is watching here ...
- 	rcu_dynticks_eqs_enter();
-+	// ... but is no longer watching here.
++	instr_begin();
+ 	if (vtime_accounting_enabled_this_cpu())
+ 		vtime_guest_exit(current);
+ 	else
+ 		current->flags &= ~PF_VCPU;
++	instr_end();
+ }
  
- 	if (irq)
- 		rcu_dynticks_task_enter();
-@@ -729,11 +738,14 @@ static void rcu_eqs_exit(bool user)
- 	oldval = rdp->dynticks_nesting;
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && oldval < 0);
- 	if (oldval) {
-+		// RCU was already watching, so just do accounting and leave.
- 		rdp->dynticks_nesting++;
- 		return;
- 	}
- 	rcu_dynticks_task_exit();
-+	// RCU is not watching here ...
- 	rcu_dynticks_eqs_exit();
-+	// ... but is watching here.
- 	rcu_cleanup_after_idle();
- 	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, atomic_read(&rdp->dynticks));
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
-@@ -810,7 +822,9 @@ static __always_inline void rcu_nmi_ente
- 		if (irq)
- 			rcu_dynticks_task_exit();
+ #else
+-static inline void guest_enter_irqoff(void)
++static __always_inline void guest_enter_irqoff(void)
+ {
+ 	/*
+ 	 * This is running in ioctl context so its safe
+ 	 * to assume that it's the stime pending cputime
+ 	 * to flush.
+ 	 */
++	instr_begin();
+ 	vtime_account_kernel(current);
+ 	current->flags |= PF_VCPU;
+ 	rcu_virt_note_context_switch(smp_processor_id());
++	instr_end();
+ }
  
-+		// RCU is not watching here ...
- 		rcu_dynticks_eqs_exit();
-+		// ... but is watching here.
+-static inline void guest_exit_irqoff(void)
++static __always_inline void guest_exit_irqoff(void)
+ {
++	instr_begin();
+ 	/* Flush the guest cputime we spent on the guest */
+ 	vtime_account_kernel(current);
+ 	current->flags &= ~PF_VCPU;
++	instr_end();
+ }
+ #endif /* CONFIG_VIRT_CPU_ACCOUNTING_GEN */
  
- 		if (irq)
- 			rcu_cleanup_after_idle();
-@@ -819,9 +833,16 @@ static __always_inline void rcu_nmi_ente
- 	} else if (irq && tick_nohz_full_cpu(rdp->cpu) &&
- 		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
- 		   READ_ONCE(rdp->rcu_urgent_qs) && !rdp->rcu_forced_tick) {
-+		// We get here only if we had already exited the extended
-+		// quiescent state and this was an interrupt (not an NMI).
-+		// Therefore, (1) RCU is already watching and (2) The fact
-+		// that we are in an interrupt handler and that the rcu_node
-+		// lock is an irq-disabled lock prevents self-deadlock.
-+		// So we can safely recheck under the lock.
- 		raw_spin_lock_rcu_node(rdp->mynode);
--		// Recheck under lock.
- 		if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-+			// A nohz_full CPU is in the kernel and RCU
-+			// needs a quiescent state.  Turn on the tick!
- 			rdp->rcu_forced_tick = true;
- 			tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
- 		}
 
