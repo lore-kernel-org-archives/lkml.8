@@ -2,115 +2,136 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 400F0C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AD4C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2636220775
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0101820767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:44:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584729862;
+	bh=5pZqAya2TSGOpl920vnSvHi9jKtNxmt64mv8PAdFI3A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LvZitpE6vmU6IpEkCafLTrAife4rFznWmfzYR/PsANYgyQbh76pcHrpbLmfaNcBWK
+	 YXmA/2tr6u7elj8HzCKr1/lsOEG67qqxbHURJrWlQ4vf04GHfee91jTmmUcbJiRVA6
+	 4ngdqpLbt7i9smLrxYzF11pBDuhTMK4qgr1jLrVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgCTSmo (ORCPT
+        id S1727183AbgCTSoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:42:44 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:34051 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726956AbgCTSmo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:42:44 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-175-Rpihu1x7PlGFiVtSHu5gzQ-1; Fri, 20 Mar 2020 18:42:40 +0000
-X-MC-Unique: Rpihu1x7PlGFiVtSHu5gzQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 20 Mar 2020 18:42:39 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 20 Mar 2020 18:42:39 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Arnd Bergmann' <arnd@arndb.de>,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-CC:     Linux PWM List <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: RE: [PATCH v11 11/12] clk: pwm: Assign u64 divisor to unsigned int
- before use
-Thread-Topic: [PATCH v11 11/12] clk: pwm: Assign u64 divisor to unsigned int
- before use
-Thread-Index: AQHV/tkrw1kYAaX6uEKWXuZ3TfBb1KhR0DSQ
-Date:   Fri, 20 Mar 2020 18:42:39 +0000
-Message-ID: <9943d663c74046d798f4614343f25187@AcuMS.aculab.com>
-References: <cover.1584667964.git.gurus@codeaurora.org>
- <ab7b568b1d287949276b3b1c9efdb1cad1f92004.1584667964.git.gurus@codeaurora.org>
- <CAK8P3a0XrYGYBQ_hTKF4fVBr7DDZsLnR+8o=09cig_gAje=v3w@mail.gmail.com>
-In-Reply-To: <CAK8P3a0XrYGYBQ_hTKF4fVBr7DDZsLnR+8o=09cig_gAje=v3w@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 20 Mar 2020 14:44:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgCTSoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 14:44:20 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9895A2051A;
+        Fri, 20 Mar 2020 18:44:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584729860;
+        bh=5pZqAya2TSGOpl920vnSvHi9jKtNxmt64mv8PAdFI3A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VyRgr5LelhylhzZlcVYEomgTosDPQP2hFACxdbSh1g8cxdYQj8CURPVdAol5gz7Rg
+         ExBTz35Q8O5vnKTi+DibRxVv6t5mUtWBLawcyZ38iKpEQsk8AEImcLdLmORUJEYHIs
+         e+oJ5iVBFhvWYyFYTKBJXTMNGFlzAY6GTvEUiHMY=
+Date:   Fri, 20 Mar 2020 11:44:18 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        William Kucharski <william.kucharski@oracle.com>
+Subject: Re: [PATCH v9 21/25] ext4: Pass the inode to ext4_mpage_readpages
+Message-ID: <20200320184418.GH851@sol.localdomain>
+References: <20200320142231.2402-1-willy@infradead.org>
+ <20200320142231.2402-22-willy@infradead.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320142231.2402-22-willy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQXJuZCBCZXJnbWFubg0KPiBTZW50OiAyMCBNYXJjaCAyMDIwIDE3OjAxDQo+IE9uIEZy
-aSwgTWFyIDIwLCAyMDIwIGF0IDI6NDIgQU0gR3VydSBEYXMgU3JpbmFnZXNoIDxndXJ1c0Bjb2Rl
-YXVyb3JhLm9yZz4gd3JvdGU6DQo+ID4NCj4gPiBTaW5jZSB0aGUgUFdNIGZyYW1ld29yayBpcyBz
-d2l0Y2hpbmcgc3RydWN0IHB3bV9hcmdzLnBlcmlvZCdzIGRhdGF0eXBlDQo+ID4gdG8gdTY0LCBw
-cmVwYXJlIGZvciB0aGlzIHRyYW5zaXRpb24gYnkgYXNzaWduaW5nIHRoZSA2NC1iaXQgZGl2aXNv
-ciB0bw0KPiA+IGFuIHVuc2lnbmVkIGludCB2YXJpYWJsZSB0byB1c2UgYXMgdGhlIGRpdmlzb3Iu
-IFRoaXMgaXMgYmVpbmcgZG9uZQ0KPiA+IGJlY2F1c2UgdGhlIGRpdmlzb3IgaXMgYSAzMi1iaXQg
-Y29uc3RhbnQgYW5kIHRoZSBxdW90aWVudCB3aWxsIGJlIHplcm8NCj4gPiBpZiB0aGUgZGl2aXNv
-ciBleGNlZWRzIDJeMzIuDQo+ID4NCj4gPiBDYzogTWljaGFlbCBUdXJxdWV0dGUgPG10dXJxdWV0
-dGVAYmF5bGlicmUuY29tPg0KPiA+IENjOiBTdGVwaGVuIEJveWQgPHNib3lkQGtlcm5lbC5vcmc+
-DQo+ID4gQ2M6IGxpbnV4LWNsa0B2Z2VyLmtlcm5lbC5vcmcNCj4gPiBDYzogRGF2aWQgTGFpZ2h0
-IDxEYXZpZC5MYWlnaHRAQUNVTEFCLkNPTT4NCj4gPg0KPiA+IFJlcG9ydGVkLWJ5OiBrYnVpbGQg
-dGVzdCByb2JvdCA8bGtwQGludGVsLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBHdXJ1IERhcyBT
-cmluYWdlc2ggPGd1cnVzQGNvZGVhdXJvcmEub3JnPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2Ns
-ay9jbGstcHdtLmMgfCA0ICsrKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygr
-KSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2Nsay1w
-d20uYyBiL2RyaXZlcnMvY2xrL2Nsay1wd20uYw0KPiA+IGluZGV4IDg3ZmUwYjBlLi5jMGI1ZGEz
-IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvY2xrL2Nsay1wd20uYw0KPiA+ICsrKyBiL2RyaXZl
-cnMvY2xrL2Nsay1wd20uYw0KPiA+IEBAIC03Miw2ICs3Miw3IEBAIHN0YXRpYyBpbnQgY2xrX3B3
-bV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICAgICAgICAgc3RydWN0
-IHB3bV9kZXZpY2UgKnB3bTsNCj4gPiAgICAgICAgIHN0cnVjdCBwd21fYXJncyBwYXJnczsNCj4g
-PiAgICAgICAgIGNvbnN0IGNoYXIgKmNsa19uYW1lOw0KPiA+ICsgICAgICAgdW5zaWduZWQgaW50
-IHBlcmlvZDsNCj4gPiAgICAgICAgIGludCByZXQ7DQo+ID4NCj4gPiAgICAgICAgIGNsa19wd20g
-PSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCpjbGtfcHdtKSwgR0ZQX0tFUk5FTCk7
-DQo+ID4gQEAgLTg4LDggKzg5LDkgQEAgc3RhdGljIGludCBjbGtfcHdtX3Byb2JlKHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gICAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFM
-Ow0KPiA+ICAgICAgICAgfQ0KPiA+DQo+ID4gKyAgICAgICBwZXJpb2QgPSBwYXJncy5wZXJpb2Q7
-DQo+ID4gICAgICAgICBpZiAob2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImNsb2NrLWZyZXF1
-ZW5jeSIsICZjbGtfcHdtLT5maXhlZF9yYXRlKSkNCj4gPiAtICAgICAgICAgICAgICAgY2xrX3B3
-bS0+Zml4ZWRfcmF0ZSA9IE5TRUNfUEVSX1NFQyAvIHBhcmdzLnBlcmlvZDsNCj4gPiArICAgICAg
-ICAgICAgICAgY2xrX3B3bS0+Zml4ZWRfcmF0ZSA9IE5TRUNfUEVSX1NFQyAvIHBlcmlvZDsNCj4g
-Pg0KPiA+ICAgICAgICAgaWYgKHBhcmdzLnBlcmlvZCAhPSBOU0VDX1BFUl9TRUMgLyBjbGtfcHdt
-LT5maXhlZF9yYXRlICYmDQo+ID4gICAgICAgICAgICAgcGFyZ3MucGVyaW9kICE9IERJVl9ST1VO
-RF9VUChOU0VDX1BFUl9TRUMsIGNsa19wd20tPmZpeGVkX3JhdGUpKSB7DQo+IA0KPiBEb2Vzbid0
-IHRoaXMgb25lIG5lZWQgYSBjaGVjayBmb3IgInBhcmdzLnBlcmlvZD5VSU5UX01BWCIgb3INCj4g
-InBhcmdzLnBlcmlvZCA+IE5TRUNfUEVSX1NFQyI/DQo+IA0KPiBJdCBsb29rcyBsaWtlIHRydW5j
-YXRpbmcgdGhlIDY0LWJpdCB2YWx1ZSB0byBhIDMyLWJpdCB0eXBlIGNhbiByZXN1bHQgaW4NCj4g
-dW5leHBlY3RlZCBiZWhhdmlvci4NCg0KSSBhbHNvIHN1c3BlY3QgdGhlIGxhc3QgdHdvIGxpbmVz
-IG91Z2h0IHRvIHVzZSB0aGUgMzJiaXQgY29weS4NCkFuZCB0aGVyZSBpcyBhIGNoYW5jZSB0aGF0
-IHRoZSBkaXZpc2lvbiB3aWxsIGV4cGxvZGUuDQoNClRoaXMgd2hvbGUgc2VyaWVzIGlzIGZhaWxp
-bmcgdG8gZGlmZmVyZW50aWF0ZSBiZXR3ZWVuIHRoZSB0eXBlIG9mDQp0aGUgdmFyaWFibGVzIGFu
-ZCB0aGUgZG9tYWluIG9uIHRoZSB2YWxpZCB2YWx1ZXMuDQoNCglEYXZpZA0KDQotDQpSZWdpc3Rl
-cmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtl
-eW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+On Fri, Mar 20, 2020 at 07:22:27AM -0700, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> This function now only uses the mapping argument to look up the inode,
+> and both callers already have the inode, so just pass the inode instead
+> of the mapping.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+> ---
+>  fs/ext4/ext4.h     | 2 +-
+>  fs/ext4/inode.c    | 4 ++--
+>  fs/ext4/readpage.c | 3 +--
+>  3 files changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index 1570a0b51b73..bc1b34ba6eab 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -3278,7 +3278,7 @@ static inline void ext4_set_de_type(struct super_block *sb,
+>  }
+>  
+>  /* readpages.c */
+> -extern int ext4_mpage_readpages(struct address_space *mapping,
+> +extern int ext4_mpage_readpages(struct inode *inode,
+>  		struct readahead_control *rac, struct page *page);
+>  extern int __init ext4_init_post_read_processing(void);
+>  extern void ext4_exit_post_read_processing(void);
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index d674c5f9066c..4f3703c1408d 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -3226,7 +3226,7 @@ static int ext4_readpage(struct file *file, struct page *page)
+>  		ret = ext4_readpage_inline(inode, page);
+>  
+>  	if (ret == -EAGAIN)
+> -		return ext4_mpage_readpages(page->mapping, NULL, page);
+> +		return ext4_mpage_readpages(inode, NULL, page);
+>  
+>  	return ret;
+>  }
+> @@ -3239,7 +3239,7 @@ static void ext4_readahead(struct readahead_control *rac)
+>  	if (ext4_has_inline_data(inode))
+>  		return;
+>  
+> -	ext4_mpage_readpages(rac->mapping, rac, NULL);
+> +	ext4_mpage_readpages(inode, rac, NULL);
+>  }
+>  
+>  static void ext4_invalidatepage(struct page *page, unsigned int offset,
+> diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
+> index 66275f25235d..5761e9961682 100644
+> --- a/fs/ext4/readpage.c
+> +++ b/fs/ext4/readpage.c
+> @@ -221,13 +221,12 @@ static inline loff_t ext4_readpage_limit(struct inode *inode)
+>  	return i_size_read(inode);
+>  }
+>  
+> -int ext4_mpage_readpages(struct address_space *mapping,
+> +int ext4_mpage_readpages(struct inode *inode,
+>  		struct readahead_control *rac, struct page *page)
+>  {
+>  	struct bio *bio = NULL;
+>  	sector_t last_block_in_bio = 0;
+>  
+> -	struct inode *inode = mapping->host;
+>  	const unsigned blkbits = inode->i_blkbits;
+>  	const unsigned blocks_per_page = PAGE_SIZE >> blkbits;
+>  	const unsigned blocksize = 1 << blkbits;
+> -- 
 
+Reviewed-by: Eric Biggers <ebiggers@google.com>
+
+- Eric
