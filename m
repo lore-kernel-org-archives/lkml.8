@@ -2,102 +2,122 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A80BC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A13EC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6095D2076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584715621;
-	bh=EkWxp6DOsISjV04sDISIAHdyAJaajF7MydZzKwlbcuQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tjeBKKQwtyto/ekB2THHjJDzeiL2oGro9KcpkoIuxJU/HtbB1JWvU0NvuO+nDyj8A
-	 moKr26pwhl87tA70ctgV6OHy6CRPF13MLjVnAqNE6pahYHxspFCgFTc1dIWYms7Vfv
-	 fVybKum/Ddq0TsNg1nQYx9oNVY6Czx9JRoKhMSPI=
+	by mail.kernel.org (Postfix) with ESMTP id 6E20120739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:47:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Sl5t5NPs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbgCTOrA (ORCPT
+        id S1727321AbgCTOrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:47:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726913AbgCTOrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:47:00 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 326BD20714;
-        Fri, 20 Mar 2020 14:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584715619;
-        bh=EkWxp6DOsISjV04sDISIAHdyAJaajF7MydZzKwlbcuQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W7LjqDAg8NykX6zsT1JTH+tARE5M4KboA4UGxmkUj0wIpzzJEBJwfL/9AWnVgJTD1
-         /2hMIzIvD/GmLKIN3xvUnbQ7kuxao9s+6dP0ZcWvT8jQw2wq+/X/YtBFBOXRdoLvuf
-         mlbqM3Kb+yHUAaRpq6K7R0hWTiAlKy87UBvitK6M=
-Date:   Fri, 20 Mar 2020 10:46:58 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>
-Subject: Re: [PATCH 5.5 00/65] 5.5.11-rc1 review
-Message-ID: <20200320144658.GK4189@sasha-vm>
-References: <20200319123926.466988514@linuxfoundation.org>
- <fcf6db4c-cebe-9ad3-9f19-00d49a7b1043@roeck-us.net>
- <20200319145900.GC92193@kroah.com>
- <32c627bf-0e6b-8bc4-88d3-032a69484aa6@roeck-us.net>
+        Fri, 20 Mar 2020 10:47:14 -0400
+Received: from mail.efficios.com ([167.114.26.124]:37078 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgCTOrO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:47:14 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 3AB6A280E48;
+        Fri, 20 Mar 2020 10:47:12 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id suxPyYVnrqRF; Fri, 20 Mar 2020 10:47:11 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id BE47F281196;
+        Fri, 20 Mar 2020 10:47:11 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com BE47F281196
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1584715631;
+        bh=2iunU2dZUhpFG4YHr4G0tAZUqMAnPToZ4DCStcYLdFU=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=Sl5t5NPse6vfN7D2uDFbVteRf/Ago9K9aloGWAR3RwMoiBmfOLQQg4aS4BNvvWALe
+         KZhfiKaThD54AdXmOqq7jEHz6U/kZR0kVV1z/UXDBNQI5UeUJrTw7R/kR2MMw5OmZw
+         aFKTX4FAKgecZ/k6HpW7sCzSbacaM6YD6q/Lu63odRCPWM+FIK29+OJ2KoxP4C/WuF
+         i8UzfPhEmvdXxdAxWlB08B9Oh3vh+MQMQuAokBNDpCLP/AT2zRKj36oIB38yCQLN0c
+         DmkgwJpNytyXwMmRL+80+26686lG+UuNfB3GOIjF8qqVyXcchnCTBErzhZ60OKNSvO
+         RmCF4CA9CSwtQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id LFY6lmoKTf5Y; Fri, 20 Mar 2020 10:47:11 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id AE29B28118D;
+        Fri, 20 Mar 2020 10:47:11 -0400 (EDT)
+Date:   Fri, 20 Mar 2020 10:47:11 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     libc-alpha <libc-alpha@sourceware.org>, carlos <carlos@redhat.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Maurer <bmaurer@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
+        Joseph Myers <joseph@codesourcery.com>
+Message-ID: <82259847.4696.1584715631625.JavaMail.zimbra@efficios.com>
+In-Reply-To: <1854222804.4643.1584711847409.JavaMail.zimbra@efficios.com>
+References: <20200319144110.3733-1-mathieu.desnoyers@efficios.com> <87sgi4gqhf.fsf@mid.deneb.enyo.de> <1103782439.4046.1584642531222.JavaMail.zimbra@efficios.com> <87k13ggpmf.fsf@mid.deneb.enyo.de> <900536577.4062.1584644126425.JavaMail.zimbra@efficios.com> <87fte4go6w.fsf@mid.deneb.enyo.de> <624584479.4115.1584647163775.JavaMail.zimbra@efficios.com> <1854222804.4643.1584711847409.JavaMail.zimbra@efficios.com>
+Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C
+ startup and thread creation (v15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <32c627bf-0e6b-8bc4-88d3-032a69484aa6@roeck-us.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v15)
+Thread-Index: poZ7JQ5/Qt1CQs9uPvdRib/AmVGsDnhrNsAXpMewnwU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 08:15:40AM -0700, Guenter Roeck wrote:
->On 3/19/20 7:59 AM, Greg Kroah-Hartman wrote:
->> On Thu, Mar 19, 2020 at 07:44:33AM -0700, Guenter Roeck wrote:
->>> On 3/19/20 6:03 AM, Greg Kroah-Hartman wrote:
->>>> This is the start of the stable review cycle for the 5.5.11 release.
->>>> There are 65 patches in this series, all will be posted as a response
->>>> to this one.  If anyone has any issues with these being applied, please
->>>> let me know.
->>>>
->>>> Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
->>>> Anything received after that time might be too late.
->>>>
->>>
->>> arm:davinci_all_defconfig fails to build.
->>>
->>> include/linux/gpio/driver.h: In function 'gpiochip_populate_parent_fwspec_twocell':
->>> include/linux/gpio/driver.h:552:1: error: no return statement in function returning non-void [-Werror=return-type]
->>>   552 | }
->>>
->>> The problem is caused by commit 8db6a5905e98 ("gpiolib: Add support for the
->>> irqdomain which doesn't use irq_fwspec as arg") which is missing its fix,
->>> commit 9c6722d85e922 ("gpio: Fix the no return statement warning"). That one
->>> is missing a Fixes: tag, providing a good example why such tags are desirable.
->>
->> Thanks for letting me know, I've now dropped that patch (others
->> complained about it for other reasons) and will push out a -rc2 with
->> that fix.
->>
->
->I did wonder why the offending patch was included, but then I figured that
->I lost the "we apply too many patches to stable releases" battle, and I didn't
->want to re-litigate it.
+----- On Mar 20, 2020, at 9:44 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+[...]
+> Actually, here is an important clarification: the Linux kernel validates
+> the struct rseq alignment on registration:
+> 
+>        if (!IS_ALIGNED((unsigned long)rseq, __alignof__(*rseq)) ||
+>            rseq_len != sizeof(*rseq))
+>                return -EINVAL;
+> 
+> So removing the aligned attribute from struct rseq is actually an
+> ABI-breaking change, because it would be incompatible with older
+> kernels which perform the IS_ALIGNED check expecting at least at
+> 32 bytes alignment.
 
-I usually much rather take prerequisite patches rather than do
-backports, which is why that patch was selected.
+So I plan to add the following to glibc's sys/rseq.h:
+
+#include <sys/cdefs.h>
+
+[...]
+
+/* Ensure the compiler supports __attribute__ ((aligned)).  */
+_Static_assert (__alignof__ (struct rseq_cs) >= 4 * sizeof(uint64_t),
+                "alignment");
+_Static_assert (__alignof__ (struct rseq) >= 4 * sizeof(uint64_t),
+                "alignment");
+
+/* Allocations of struct rseq and struct rseq_cs on the heap need to
+   be aligned on 32 bytes. Therefore, use of malloc is discouraged
+   because it does not guarantee alignment. posix_memalign should be
+   used instead.  */
+
+Does it help mitigating your concerns ?
+
+Thanks,
+
+Mathieu
 
 -- 
-Thanks,
-Sasha
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
