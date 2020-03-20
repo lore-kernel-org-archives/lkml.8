@@ -2,232 +2,178 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF41C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24892C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D0D220777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584728725;
-	bh=aClN8UeiHwUMz8z63kLsMCkyzam/LGTQg5gjY78foT4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WZwqXYmotprTdvBJsaDyGd/JpkvjtSKWRbtJ2WVJHTxbiFBQ6Ja1gLp/Dq4Hj/bIj
-	 ww3XTLwym2TMvt2tB5bBiXqXIVUiCe7FZ8bV5eQZ2aL5u2Ebwvn2fkZvsEDR7BAPCa
-	 FYw5wxTvhAyYr21krYA/1nlha9731NFMWtxsdtR8=
+	by mail.kernel.org (Postfix) with ESMTP id E6D3720767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:26:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eq9B/yMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbgCTSZX (ORCPT
+        id S1727275AbgCTS0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:25:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727227AbgCTSYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:24:37 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6964920786;
-        Fri, 20 Mar 2020 18:24:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584728676;
-        bh=aClN8UeiHwUMz8z63kLsMCkyzam/LGTQg5gjY78foT4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cf8u5uqIdAdCtXXh6ptgWpBzINsDA6cpbZSoesm1iY65wfm+1RImmJxmHDS6WXtSx
-         u+WZi98OkQtqCLfg3pn3qXMT4A5PtWp8sqkXBl3ReMAxik/MwqaX2P1WcnQFv2k1Ad
-         SFAOWyZDN3AxVBKMbTNnbHEu4lg6mDs/KP7XceE8=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jFMJu-00EKAx-Nb; Fri, 20 Mar 2020 18:24:34 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v6 03/23] irqchip/gic-v4.1: Ensure mutual exclusion between vPE affinity change and RD access
-Date:   Fri, 20 Mar 2020 18:23:46 +0000
-Message-Id: <20200320182406.23465-4-maz@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200320182406.23465-1-maz@kernel.org>
-References: <20200320182406.23465-1-maz@kernel.org>
+        Fri, 20 Mar 2020 14:26:01 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:41181 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbgCTS0A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 14:26:00 -0400
+Received: by mail-yb1-f193.google.com with SMTP id d5so2935792ybs.8
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 11:25:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sAuZ5tw5lKEWRwYrS4t2K3YVE1qFf5yYC3/QDtY6LpA=;
+        b=eq9B/yMzD83gZKl8onYSVe1kBSqEMnm9UKp6UpnjkPodiaLkvaTx0o3L9PJtBqaXvZ
+         IJ4UIsVvVz0tr4o9NtLxvn2WnUfXPJ7pNmFgrM9BRpm0S0zJhreDKiY/7NWkwq3j0Syt
+         1s+Ngn7MXDiS8MQD2ioLYn3M51JsUGDoqaoDFe0uMEW92vPtzx+TYgjyskZ1eYFAcGmI
+         5vULqgrrkCY4ZLuJ1qiDtB+TsZ9EKJ/JjTljn4BqtleUuD1oQxbNWKpZXgPShWEUDH1/
+         owrGVpm+g9xf9JqP6Oy3tVpK2hjtYd8+3SX6M9P6S9HZW1DLpW5cLg2WP7gDn0A1fhgf
+         Tc/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sAuZ5tw5lKEWRwYrS4t2K3YVE1qFf5yYC3/QDtY6LpA=;
+        b=WoFz25FsztRoUwyhOalsLgGHoS5/cj62VU0cXbKOnDlypn8CK1/TJ/2MdGzbGGOcRZ
+         9HxcAkjEKzjeXKZJC4NClYd+TggsdqzBdmrfnOVPrQ094jXT6t/oiYSxygYyFWzxiqp9
+         CyqB1kmNlGXbZrNwjxQAsoCO4RkJ2hlM2qG9rmnzNwQKjGhDVV/wjhjuuIam5u6yupO3
+         TdcjLprQiOnx4AdjVBo2tWYmhb2SNACwNN2g+TPv8XvVJECGJmK1C1UgUslYE9tdcKju
+         kgwi/L1WwbeoFJ4MgBOK4TaKrzqu6KQiQbRyH0jswan4r+KJudoDGE2/3gq9Rogr0U5D
+         mkYg==
+X-Gm-Message-State: ANhLgQ1hhS6Uvyjh7CF+jc4QL5xxEdTbvG/z3qCnP4YheCdtaPmGIkdN
+        vDO17JG1c9QSzq8oDhkG63qnFxJ81ZU6JbUKGZUoxQ==
+X-Google-Smtp-Source: ADFU+vuN7dISVFh18WjZo0+rmu386OeNrATWOHmGmrHsgQjtnCBy4vOqQjDzGI7BmyzEffTFRPamtrTHmm5cFwRE0to=
+X-Received: by 2002:a25:c482:: with SMTP id u124mr14970611ybf.286.1584728758311;
+ Fri, 20 Mar 2020 11:25:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, tglx@linutronix.de, yuzenghui@huawei.com, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200314042826.166953-1-irogers@google.com> <20200314142332.GB492969@krava>
+ <CAP-5=fXZJidxHYeCqHcNPBArMe_aYwP0+u2dxiTD+V1fammK_Q@mail.gmail.com> <20200315093013.GC492969@krava>
+In-Reply-To: <20200315093013.GC492969@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 20 Mar 2020 11:25:47 -0700
+Message-ID: <CAP-5=fWmJdAC3GtwO3sf+725roY6T8s8GRvDJL4Rfqv+ByysGQ@mail.gmail.com>
+Subject: Re: [PATCH] perf mem2node: avoid double free related to realloc
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before GICv4.1, all operations would be serialized with the affinity
-changes by virtue of using the same ITS command queue. With v4.1, things
-change, as invalidations (and a number of other operations) are issued
-using the redistributor MMIO frame.
+On Sun, Mar 15, 2020 at 2:30 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Sat, Mar 14, 2020 at 09:49:37AM -0700, Ian Rogers wrote:
+> > On Sat, Mar 14, 2020 at 7:23 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> > >
+> > > On Fri, Mar 13, 2020 at 09:28:26PM -0700, Ian Rogers wrote:
+> > > > Realloc of size zero is a free not an error, avoid this causing a double
+> > > > free. Caught by clang's address sanitizer:
+> > > >
+> > > > ==2634==ERROR: AddressSanitizer: attempting double-free on 0x6020000015f0 in thread T0:
+> > > >     #0 0x5649659297fd in free llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:123:3
+> > > >     #1 0x5649659e9251 in __zfree tools/lib/zalloc.c:13:2
+> > > >     #2 0x564965c0f92c in mem2node__exit tools/perf/util/mem2node.c:114:2
+> > > >     #3 0x564965a08b4c in perf_c2c__report tools/perf/builtin-c2c.c:2867:2
+> > > >     #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
+> > > >     #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
+> > > >     #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
+> > > >     #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
+> > > >     #8 0x564965942e41 in main tools/perf/perf.c:538:3
+> > > >
+> > > > 0x6020000015f0 is located 0 bytes inside of 1-byte region [0x6020000015f0,0x6020000015f1)
+> > > > freed by thread T0 here:
+> > > >     #0 0x564965929da3 in realloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:164:3
+> > > >     #1 0x564965c0f55e in mem2node__init tools/perf/util/mem2node.c:97:16
+> > > >     #2 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
+> > > >     #3 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
+> > > >     #4 0x564965944348 in run_builtin tools/perf/perf.c:312:11
+> > > >     #5 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
+> > > >     #6 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
+> > > >     #7 0x564965942e41 in main tools/perf/perf.c:538:3
+> > > >
+> > > > previously allocated by thread T0 here:
+> > > >     #0 0x564965929c42 in calloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:154:3
+> > > >     #1 0x5649659e9220 in zalloc tools/lib/zalloc.c:8:9
+> > > >     #2 0x564965c0f32d in mem2node__init tools/perf/util/mem2node.c:61:12
+> > > >     #3 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
+> > > >     #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
+> > > >     #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
+> > > >     #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
+> > > >     #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
+> > > >     #8 0x564965942e41 in main tools/perf/perf.c:538:3
+> > > >
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > ---
+> > > >  tools/perf/util/mem2node.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/tools/perf/util/mem2node.c b/tools/perf/util/mem2node.c
+> > > > index 797d86a1ab09..7f97aa69eb65 100644
+> > > > --- a/tools/perf/util/mem2node.c
+> > > > +++ b/tools/perf/util/mem2node.c
+> > > > @@ -95,7 +95,7 @@ int mem2node__init(struct mem2node *map, struct perf_env *env)
+> > > >
+> > > >       /* Cut unused entries, due to merging. */
+> > > >       tmp_entries = realloc(entries, sizeof(*entries) * j);
+> > > > -     if (tmp_entries)
+> > > > +     if (j == 0 || tmp_entries)
+> > >
+> > > nice catch.. I wonder if we should fail in here, or at least
+> > > warn that there're no entris.. which is really strange ;-)
+> >
+> > The workload was the stream benchmark with perf c2c, but stream isn't
+> > particularly long running. Not sure how j became 0, there's 2
+> > possibilities in the code. The worry with a warning is the spam, so I
+> > just wanted to make the code correct.
+>
+> I was wondering if we should fail completely,
+> but we might break some c2c expected behaviour
+>
+> how about just WARN_ONCE pn j == 0, and then
+> the lookup will fail already with:
+>
+>         if (WARN_ONCE(node < 0, "WARNING: failed to find node\n"))
+>                 return;
+>
+> just get enough hints ;-)
 
-We must thus make sure that these redistributor accesses cannot race
-against aginst the affinity change, or we may end-up talking to the
-wrong redistributor.
+Sorry for the delay. I sent a v2 hopefully doing what you asked :-)
+https://lkml.org/lkml/2020/3/20/858
 
-To ensure this, we expand the irq_to_cpuid() helper to take a spinlock
-when the LPI is mapped to a vLPI (a new per-VPE lock) on each operation
-that requires mutual exclusion.
+Thanks,
+Ian
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-Link: https://lore.kernel.org/r/20200304203330.4967-4-maz@kernel.org
----
- drivers/irqchip/irq-gic-v3-its.c   | 56 +++++++++++++++++++++++++-----
- include/linux/irqchip/arm-gic-v4.h |  5 +++
- 2 files changed, 53 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index da883a691028..1af713990123 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -239,15 +239,41 @@ static struct its_vlpi_map *get_vlpi_map(struct irq_data *d)
- 	return NULL;
- }
- 
--static int irq_to_cpuid(struct irq_data *d)
-+static int vpe_to_cpuid_lock(struct its_vpe *vpe, unsigned long *flags)
-+{
-+	raw_spin_lock_irqsave(&vpe->vpe_lock, *flags);
-+	return vpe->col_idx;
-+}
-+
-+static void vpe_to_cpuid_unlock(struct its_vpe *vpe, unsigned long flags)
-+{
-+	raw_spin_unlock_irqrestore(&vpe->vpe_lock, flags);
-+}
-+
-+static int irq_to_cpuid_lock(struct irq_data *d, unsigned long *flags)
- {
--	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
- 	struct its_vlpi_map *map = get_vlpi_map(d);
-+	int cpu;
- 
--	if (map)
--		return map->vpe->col_idx;
-+	if (map) {
-+		cpu = vpe_to_cpuid_lock(map->vpe, flags);
-+	} else {
-+		/* Physical LPIs are already locked via the irq_desc lock */
-+		struct its_device *its_dev = irq_data_get_irq_chip_data(d);
-+		cpu = its_dev->event_map.col_map[its_get_event_id(d)];
-+		/* Keep GCC quiet... */
-+		*flags = 0;
-+	}
- 
--	return its_dev->event_map.col_map[its_get_event_id(d)];
-+	return cpu;
-+}
-+
-+static void irq_to_cpuid_unlock(struct irq_data *d, unsigned long flags)
-+{
-+	struct its_vlpi_map *map = get_vlpi_map(d);
-+
-+	if (map)
-+		vpe_to_cpuid_unlock(map->vpe, flags);
- }
- 
- static struct its_collection *valid_col(struct its_collection *col)
-@@ -1329,7 +1355,9 @@ static void direct_lpi_inv(struct irq_data *d)
- {
- 	struct its_vlpi_map *map = get_vlpi_map(d);
- 	void __iomem *rdbase;
-+	unsigned long flags;
- 	u64 val;
-+	int cpu;
- 
- 	if (map) {
- 		struct its_device *its_dev = irq_data_get_irq_chip_data(d);
-@@ -1344,10 +1372,12 @@ static void direct_lpi_inv(struct irq_data *d)
- 	}
- 
- 	/* Target the redistributor this LPI is currently routed to */
--	rdbase = per_cpu_ptr(gic_rdists->rdist, irq_to_cpuid(d))->rd_base;
-+	cpu = irq_to_cpuid_lock(d, &flags);
-+	rdbase = per_cpu_ptr(gic_rdists->rdist, cpu)->rd_base;
- 	gic_write_lpir(val, rdbase + GICR_INVLPIR);
- 
- 	wait_for_syncr(rdbase);
-+	irq_to_cpuid_unlock(d, flags);
- }
- 
- static void lpi_update_config(struct irq_data *d, u8 clr, u8 set)
-@@ -3486,17 +3516,25 @@ static int its_vpe_set_affinity(struct irq_data *d,
- {
- 	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
- 	int from, cpu = cpumask_first(mask_val);
-+	unsigned long flags;
- 
- 	/*
- 	 * Changing affinity is mega expensive, so let's be as lazy as
- 	 * we can and only do it if we really have to. Also, if mapped
- 	 * into the proxy device, we need to move the doorbell
- 	 * interrupt to its new location.
-+	 *
-+	 * Another thing is that changing the affinity of a vPE affects
-+	 * *other interrupts* such as all the vLPIs that are routed to
-+	 * this vPE. This means that the irq_desc lock is not enough to
-+	 * protect us, and that we must ensure nobody samples vpe->col_idx
-+	 * during the update, hence the lock below which must also be
-+	 * taken on any vLPI handling path that evaluates vpe->col_idx.
- 	 */
--	if (vpe->col_idx == cpu)
-+	from = vpe_to_cpuid_lock(vpe, &flags);
-+	if (from == cpu)
- 		goto out;
- 
--	from = vpe->col_idx;
- 	vpe->col_idx = cpu;
- 
- 	/*
-@@ -3512,6 +3550,7 @@ static int its_vpe_set_affinity(struct irq_data *d,
- 
- out:
- 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
-+	vpe_to_cpuid_unlock(vpe, flags);
- 
- 	return IRQ_SET_MASK_OK_DONE;
- }
-@@ -3855,6 +3894,7 @@ static int its_vpe_init(struct its_vpe *vpe)
- 		return -ENOMEM;
- 	}
- 
-+	raw_spin_lock_init(&vpe->vpe_lock);
- 	vpe->vpe_id = vpe_id;
- 	vpe->vpt_page = vpt_page;
- 	if (gic_rdists->has_rvpeid)
-diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
-index d9c34968467a..439963f4c66a 100644
---- a/include/linux/irqchip/arm-gic-v4.h
-+++ b/include/linux/irqchip/arm-gic-v4.h
-@@ -53,6 +53,11 @@ struct its_vpe {
- 		};
- 	};
- 
-+	/*
-+	 * Ensures mutual exclusion between affinity setting of the
-+	 * vPE and vLPI operations using vpe->col_idx.
-+	 */
-+	raw_spinlock_t		vpe_lock;
- 	/*
- 	 * This collection ID is used to indirect the target
- 	 * redistributor for this VPE. The ID itself isn't involved in
--- 
-2.20.1
-
+> jirka
+>
+> >
+> > Thanks,
+> > Ian
+> >
+> > > thanks,
+> > > jirka
+> > >
+> > > >               entries = tmp_entries;
+> > > >
+> > > >       for (i = 0; i < j; i++) {
+> > > > --
+> > > > 2.25.1.481.gfbce0eb801-goog
+> > > >
+> > >
+> >
+>
