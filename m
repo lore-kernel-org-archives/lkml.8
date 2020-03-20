@@ -2,150 +2,295 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9452DC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FC2C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E65220781
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:34:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584732869;
-	bh=aEvsi6aPUPNwJ9dvXmrIO+AidW7tr3gfQQCtLkGp4ic=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w4uLf2QNi976CGwaxojGRKbVDpnR3SjymH6rSCDIm9ZLwHjIA6u32skmgU44BGfe0
-	 fDsM81zar6OVvlV7GTdQ3yxIkyurjOLMxKpOYpzPZwcqsXRh9/yARkBOdTTq1a0FsU
-	 59wXO1ijA1cWOlU5tjbLIaMGCggI40XhwwHGkIfY=
+	by mail.kernel.org (Postfix) with ESMTP id E0A9F20781
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:35:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbgCTTe2 (ORCPT
+        id S1726855AbgCTTfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 15:34:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32784 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 15:35:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:56450 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726783AbgCTTe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 15:34:28 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BAE020777;
-        Fri, 20 Mar 2020 19:34:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584732867;
-        bh=aEvsi6aPUPNwJ9dvXmrIO+AidW7tr3gfQQCtLkGp4ic=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B204xgDCd/79pkFl0pZhrNAW/wtFHXPaj+3w1T2k9EkoOjStCtRapyXkiRH5LhwVz
-         TU/uDFvO+QYceG3GvRchskKMjYL6pmyctGfE8Q/rFkwD3nef2cFGtwUY2hOUGGJYHg
-         zv1oO+Zn9bAU8dExcZi3D3CYxOL/LJtEYqwJnOww=
-Date:   Fri, 20 Mar 2020 12:34:24 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Jiri Slaby <jslaby@suse.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        Eric Dumazet <edumazet@google.com>,
-        Nicolas Pitre <nico@fluxnic.net>
-Subject: Re: [PATCH v2 2/2] vt: vt_ioctl: fix use-after-free in vt_in_use()
-Message-ID: <20200320193424.GM851@sol.localdomain>
-References: <20200318222704.GC2334@sol.localdomain>
- <20200318223810.162440-1-ebiggers@kernel.org>
- <20200318223810.162440-3-ebiggers@kernel.org>
- <e2846610-ae0b-8e50-0fc4-c2cad6b23e9a@suse.com>
+        id S1726666AbgCTTfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 15:35:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 457FB1FB;
+        Fri, 20 Mar 2020 12:35:54 -0700 (PDT)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 68C873F52E;
+        Fri, 20 Mar 2020 12:35:52 -0700 (PDT)
+Subject: Re: [PATCH V2 2/2] arm64/mm: Enable vmem_altmap support for vmemmap
+ mappings
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Mark Rutland <mark.rutland@arm.com>, Yu Zhao <yuzhao@google.com>,
+        David Hildenbrand <david@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steve Capper <steve.capper@arm.com>,
+        linux-kernel@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <1583331030-7335-1-git-send-email-anshuman.khandual@arm.com>
+ <1583331030-7335-3-git-send-email-anshuman.khandual@arm.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <d428e636-0f48-6738-2296-91dba8fc6404@arm.com>
+Date:   Fri, 20 Mar 2020 19:35:50 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e2846610-ae0b-8e50-0fc4-c2cad6b23e9a@suse.com>
+In-Reply-To: <1583331030-7335-3-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 02:42:12PM +0100, Jiri Slaby wrote:
-> On 18. 03. 20, 23:38, Eric Biggers wrote:
-> > --- a/drivers/tty/vt/vt_ioctl.c
-> > +++ b/drivers/tty/vt/vt_ioctl.c
-> > @@ -43,9 +43,11 @@ bool vt_dont_switch;
-> >  
-> >  static inline bool vt_in_use(unsigned int i)
-> >  {
-> > -	extern struct tty_driver *console_driver;
-> > +	const struct vc_data *vc = vc_cons[i].d;
-> >  
-> > -	return console_driver->ttys[i] && console_driver->ttys[i]->count;
-> > +	WARN_CONSOLE_UNLOCKED();
-> > +
-> > +	return vc && kref_read(&vc->port.kref) > 1;
-> >  }
-> >  
-> >  static inline bool vt_busy(int i)
-> > @@ -643,15 +645,16 @@ int vt_ioctl(struct tty_struct *tty,
-> >  		struct vt_stat __user *vtstat = up;
-> >  		unsigned short state, mask;
-> >  
-> > -		/* Review: FIXME: Console lock ? */
-> >  		if (put_user(fg_console + 1, &vtstat->v_active))
-> >  			ret = -EFAULT;
-> >  		else {
-> >  			state = 1;	/* /dev/tty0 is always open */
-> > +			console_lock();
+On 2020-03-04 2:10 pm, Anshuman Khandual wrote:
+> Device memory ranges when getting hot added into ZONE_DEVICE, might require
+> their vmemmap mapping's backing memory to be allocated from their own range
+> instead of consuming system memory. This prevents large system memory usage
+> for potentially large device memory ranges. Device driver communicates this
+> request via vmem_altmap structure. Architecture needs to take this request
+> into account while creating and tearing down vemmmap mappings.
 > 
-> Could you comment on this one and the lock below why you added it here?
+> This enables vmem_altmap support in vmemmap_populate() and vmemmap_free()
+> which includes vmemmap_populate_basepages() used for ARM64_16K_PAGES and
+> ARM64_64K_PAGES configs.
 > 
-> To me, it seems, we should rather introduce a vt alloc/dealloc lock
-> protecting cases like this, not console lock. But not now, some time
-> later. So a comment would help when/once we/I get into it...
-
-I think the locking I added to VT_GETSTATE and VT_OPENQRY is pretty
-self-explanatory: it's needed because they call vt_in_use() which now requires
-console_lock.  So I'm not sure what you'd like me to add there?
-
-As for vt_in_use() itself, I already added WARN_CONSOLE_UNLOCKED() to it.
-But I can add a comment to it too if it would be useful, like:
-
-static inline bool vt_in_use(unsigned int i)
-{
-        const struct vc_data *vc = vc_cons[i].d;
-
-        /*
-         * console_lock must be held to prevent the vc from being deallocated
-         * while we're checking whether it's in-use.
-         */
-        WARN_CONSOLE_UNLOCKED();
-
-        return vc && kref_read(&vc->port.kref) > 1;
-}
-
-
-> The interface (ie. the ioctls) also look weird and racy. Both of them.
-> Like the "OK, I give you this number, but it might not be correct by
-> now." kind of thing.
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Steve Capper <steve.capper@arm.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Yu Zhao <yuzhao@google.com>
+> Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
 > 
-> This let me think, who could use this? The answer is many 8-/. openpt,
-> systemd, sysvinit, didn't check others.
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>   arch/arm64/mm/mmu.c | 71 ++++++++++++++++++++++++++++++++-------------
+>   1 file changed, 51 insertions(+), 20 deletions(-)
 > 
-> Perhaps we should provide openvt -- analogy of openpty and deprecate
-> VT_OPENQRY?
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 27cb95c471eb..0e0a0ecc812e 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -727,15 +727,30 @@ int kern_addr_valid(unsigned long addr)
+>   }
+>   
+>   #ifdef CONFIG_MEMORY_HOTPLUG
+> -static void free_hotplug_page_range(struct page *page, size_t size)
+> +static void free_hotplug_page_range(struct page *page, size_t size,
+> +				    struct vmem_altmap *altmap)
+>   {
+> -	WARN_ON(PageReserved(page));
+> -	free_pages((unsigned long)page_address(page), get_order(size));
+> +	if (altmap) {
+> +		/*
+> +		 * Though unmap_hotplug_range() will tear down altmap based
+> +		 * vmemmap mappings at all page table levels, these mappings
+> +		 * should only have been created either at PTE or PMD level
+> +		 * with vmemmap_populate_basepages() or vmemmap_populate()
+> +		 * respectively. Unmapping requests at any other level will
+> +		 * be problematic. Drop these warnings when vmemmap mapping
+> +		 * is supported at PUD (even perhaps P4D) level.
+> +		 */
+> +		WARN_ON((size != PAGE_SIZE) && (size != PMD_SIZE));
+
+Isn't that comment equally true of the regular case? AFAICS we don't 
+call vmemmap_alloc_block_buf() with larger than PMD_SIZE either. If the 
+warnings are useful, shouldn't they cover both cases equally? However, 
+given that we never warned before, and the code here appears that it 
+would work fine anyway, *are* they really useful?
+
+> +		vmem_altmap_free(altmap, size >> PAGE_SHIFT);
+> +	} else {
+> +		WARN_ON(PageReserved(page));
+> +		free_pages((unsigned long)page_address(page), get_order(size));
+> +	}
+>   }
+>   
+>   static void free_hotplug_pgtable_page(struct page *page)
+>   {
+> -	free_hotplug_page_range(page, PAGE_SIZE);
+> +	free_hotplug_page_range(page, PAGE_SIZE, NULL);
+>   }
+>   
+>   static bool pgtable_range_aligned(unsigned long start, unsigned long end,
+> @@ -758,7 +773,8 @@ static bool pgtable_range_aligned(unsigned long start, unsigned long end,
+>   }
+>   
+>   static void unmap_hotplug_pte_range(pmd_t *pmdp, unsigned long addr,
+> -				    unsigned long end, bool free_mapped)
+> +				    unsigned long end, bool free_mapped,
+> +				    struct vmem_altmap *altmap)
+>   {
+>   	pte_t *ptep, pte;
+>   
+> @@ -772,12 +788,14 @@ static void unmap_hotplug_pte_range(pmd_t *pmdp, unsigned long addr,
+>   		pte_clear(&init_mm, addr, ptep);
+>   		flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+>   		if (free_mapped)
+> -			free_hotplug_page_range(pte_page(pte), PAGE_SIZE);
+> +			free_hotplug_page_range(pte_page(pte),
+> +						PAGE_SIZE, altmap);
+>   	} while (addr += PAGE_SIZE, addr < end);
+>   }
+>   
+>   static void unmap_hotplug_pmd_range(pud_t *pudp, unsigned long addr,
+> -				    unsigned long end, bool free_mapped)
+> +				    unsigned long end, bool free_mapped,
+> +				    struct vmem_altmap *altmap)
+>   {
+>   	unsigned long next;
+>   	pmd_t *pmdp, pmd;
+> @@ -800,16 +818,17 @@ static void unmap_hotplug_pmd_range(pud_t *pudp, unsigned long addr,
+>   			flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+>   			if (free_mapped)
+>   				free_hotplug_page_range(pmd_page(pmd),
+> -							PMD_SIZE);
+> +							PMD_SIZE, altmap);
+>   			continue;
+>   		}
+>   		WARN_ON(!pmd_table(pmd));
+> -		unmap_hotplug_pte_range(pmdp, addr, next, free_mapped);
+> +		unmap_hotplug_pte_range(pmdp, addr, next, free_mapped, altmap);
+>   	} while (addr = next, addr < end);
+>   }
+>   
+>   static void unmap_hotplug_pud_range(p4d_t *p4dp, unsigned long addr,
+> -				    unsigned long end, bool free_mapped)
+> +				    unsigned long end, bool free_mapped,
+> +				    struct vmem_altmap *altmap)
+>   {
+>   	unsigned long next;
+>   	pud_t *pudp, pud;
+> @@ -832,16 +851,17 @@ static void unmap_hotplug_pud_range(p4d_t *p4dp, unsigned long addr,
+>   			flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+>   			if (free_mapped)
+>   				free_hotplug_page_range(pud_page(pud),
+> -							PUD_SIZE);
+> +							PUD_SIZE, altmap);
+>   			continue;
+>   		}
+>   		WARN_ON(!pud_table(pud));
+> -		unmap_hotplug_pmd_range(pudp, addr, next, free_mapped);
+> +		unmap_hotplug_pmd_range(pudp, addr, next, free_mapped, altmap);
+>   	} while (addr = next, addr < end);
+>   }
+>   
+>   static void unmap_hotplug_p4d_range(pgd_t *pgdp, unsigned long addr,
+> -				    unsigned long end, bool free_mapped)
+> +				    unsigned long end, bool free_mapped,
+> +				    struct vmem_altmap *altmap)
+>   {
+>   	unsigned long next;
+>   	p4d_t *p4dp, p4d;
+> @@ -854,16 +874,24 @@ static void unmap_hotplug_p4d_range(pgd_t *pgdp, unsigned long addr,
+>   			continue;
+>   
+>   		WARN_ON(!p4d_present(p4d));
+> -		unmap_hotplug_pud_range(p4dp, addr, next, free_mapped);
+> +		unmap_hotplug_pud_range(p4dp, addr, next, free_mapped, altmap);
+>   	} while (addr = next, addr < end);
+>   }
+>   
+>   static void unmap_hotplug_range(unsigned long addr, unsigned long end,
+> -				bool free_mapped)
+> +				bool free_mapped, struct vmem_altmap *altmap)
+>   {
+>   	unsigned long next;
+>   	pgd_t *pgdp, pgd;
+>   
+> +	/*
+> +	 * vmem_altmap can only be used as backing memory in a given
+> +	 * page table mapping. In case backing memory itself is not
+> +	 * being freed, then altmap is irrelevant. Warn about this
+> +	 * inconsistency when encountered.
+> +	 */
+> +	WARN_ON(!free_mapped && altmap);
+
+Personally I find that comment a bit unclear (particularly the first 
+sentence which just seems like a confusing tautology). Is the overall 
+point that the altmap only matters when we're unmapping and freeing 
+vmemmap pages (such that we free them to the right allocator)? At face 
+value it doesn't seem to warrant a warning - it's not necessary to know 
+which allocator owns pages that we aren't freeing, but it isn't harmful 
+either.
+
+That said, however, after puzzling through the code I get the distinct 
+feeling it would be more useful if all those "free_mapped" arguments 
+were actually named "is_vmemmap" instead. A that point, the conceptual 
+inconsistency would be a little more obvious (and arguably might not 
+even need commenting).
+
+All the altmap plumbing itself looks pretty mechanical and hard to 
+disagree with :)
+
+Robin.
+
+> +
+>   	do {
+>   		next = pgd_addr_end(addr, end);
+>   		pgdp = pgd_offset_k(addr);
+> @@ -872,7 +900,7 @@ static void unmap_hotplug_range(unsigned long addr, unsigned long end,
+>   			continue;
+>   
+>   		WARN_ON(!pgd_present(pgd));
+> -		unmap_hotplug_p4d_range(pgdp, addr, next, free_mapped);
+> +		unmap_hotplug_p4d_range(pgdp, addr, next, free_mapped, altmap);
+>   	} while (addr = next, addr < end);
+>   }
+>   
+> @@ -1036,7 +1064,7 @@ static void free_empty_tables(unsigned long addr, unsigned long end,
+>   int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>   		struct vmem_altmap *altmap)
+>   {
+> -	return vmemmap_populate_basepages(start, end, node, NULL);
+> +	return vmemmap_populate_basepages(start, end, node, altmap);
+>   }
+>   #else	/* !ARM64_SWAPPER_USES_SECTION_MAPS */
+>   int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+> @@ -1063,7 +1091,10 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>   		if (pmd_none(READ_ONCE(*pmdp))) {
+>   			void *p = NULL;
+>   
+> -			p = vmemmap_alloc_block_buf(PMD_SIZE, node);
+> +			if (altmap)
+> +				p = altmap_alloc_block_buf(PMD_SIZE, altmap);
+> +			else
+> +				p = vmemmap_alloc_block_buf(PMD_SIZE, node);
+>   			if (!p)
+>   				return -ENOMEM;
+>   
+> @@ -1081,7 +1112,7 @@ void vmemmap_free(unsigned long start, unsigned long end,
+>   #ifdef CONFIG_MEMORY_HOTPLUG
+>   	WARN_ON((start < VMEMMAP_START) || (end > VMEMMAP_END));
+>   
+> -	unmap_hotplug_range(start, end, true);
+> +	unmap_hotplug_range(start, end, true, altmap);
+>   	free_empty_tables(start, end, VMEMMAP_START, VMEMMAP_END);
+>   #endif
+>   }
+> @@ -1369,7 +1400,7 @@ static void __remove_pgd_mapping(pgd_t *pgdir, unsigned long start, u64 size)
+>   	WARN_ON(pgdir != init_mm.pgd);
+>   	WARN_ON((start < PAGE_OFFSET) || (end > PAGE_END));
+>   
+> -	unmap_hotplug_range(start, end, false);
+> +	unmap_hotplug_range(start, end, false, NULL);
+>   	free_empty_tables(start, end, PAGE_OFFSET, PAGE_END);
+>   }
+>   
 > 
-> With VT_GETSTATE, the situation is more complicated:
-> sysvinit uses VT_GETSTATE only if TIOCGDEV is not available, so
-> VT_GETSTATE is actually unneeded there.
-> 
-> systemd uses it to find the current console (vtstat->v_active) and
-> systemd-logind uses it for spawning autovt on free consoles. That sort
-> of makes sense...
-> 
-
-Yes, these are bad APIs.
-
-Once I did remove a buggy ioctl elsewhere in the kernel rather than fixing it.
-But you have to be very, very confident that nothing is using it.  That doesn't
-seem to be the case for VT_GETSTATE and VT_OPENQRY as it's not hard to find code
-using them.  E.g. here's another user of both of them:
-https://android.googlesource.com/platform/system/core/+/ccecf1425412beb2bc3bb38d470293fdc244d6f1/toolbox/setconsole.c
-
-So we're probably stuck with them for now.  If you'd like to explore adding a
-better API and trying to get all users to use it, you're certainly welcome to.
-But it would be orthogonal to fixing this bug.
-
-- Eric
