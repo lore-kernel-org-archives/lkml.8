@@ -2,160 +2,151 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76433C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3B4C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47ED720775
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:34:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RLsZNvbz"
+	by mail.kernel.org (Postfix) with ESMTP id EF41620739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:35:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbgCTUeQ (ORCPT
+        id S1727192AbgCTUf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 16:34:16 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38952 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbgCTUeO (ORCPT
+        Fri, 20 Mar 2020 16:35:59 -0400
+Received: from lists.gateworks.com ([108.161.130.12]:58105 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbgCTUf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 16:34:14 -0400
-Received: by mail-pg1-f194.google.com with SMTP id b22so3648866pgb.6
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 13:34:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=+N0bQ4JlxAy2jfmVhmfgL9o3zKHhJL+I15S0ny2lKgs=;
-        b=RLsZNvbzOdBVhWrbvFQr3CKCdKtnq0K+ohA8v7c0w2gc/e5LPRQ7JGoNHVRoeXa984
-         2z3VSPKSoz7GWala01EO5uP5GlkIL9GqUS1EeA4kAuhwaKOk9cWUv0Epbqx+W7fTHG26
-         F7GSf84Ed0e/vmNEPjG99lgw+qHi5S5N4O5Z7eWZI4tt13hwNTSs9RSZrckzBagL8Xec
-         vB7KAdDqQ4/LDtPSw0rwyPF5jUdN/dbp0migODoWfLJveA8otGKFz4Vi4ZzssqyfKx7L
-         Lq3fZqlYdRzjncLjUv324t9/cYxxu5IwiOO8MK7leI4eFF6Fp11guAennTNahV8u7/TW
-         amlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=+N0bQ4JlxAy2jfmVhmfgL9o3zKHhJL+I15S0ny2lKgs=;
-        b=V91/f0ZTDYGKktJ7G072QKE6Difn48hGY42GOCYfzPg2boE+3itqFbEn0c0Ea3uy9R
-         P0rCByuGsemT6+KW4DKdVvDi2I9gl9dgi2CtWr1njtAeCQgQkgosGXN9IvHaLG/aXprB
-         NiPpUeEer95EitkB5NXPtZ/i5NlZars7GalKHRFuAqwh0a95eV6fB+0zw/1aIrtZj3sB
-         TEGYhNp+88lAFSEJEXH0Bn7WFVZ4tw91cHwtiMyGMeUWeX0Q+hARC1IRcYEWafKB5BX7
-         iSW6C6w1u2DWvtDQs5qyx+Nx/YRwgFCUNdvEAT+ZylDxvVqTMuWOJeW04obbUd7U+xPS
-         1BmA==
-X-Gm-Message-State: ANhLgQ1ySYNIUGlGOFw8tQie6smgt29+1loHhneDj+njI0S7+fFU5mFI
-        UhrgctJQ3ucmAKYq99wVriKOXA==
-X-Google-Smtp-Source: ADFU+vvR5V4d3Av2dfFh7WwI8fAcwnWol4/NYm+baHmdq6gt93cp+asM2U0D8WNlss8Unt2oKz1U3w==
-X-Received: by 2002:a63:d351:: with SMTP id u17mr10257174pgi.396.1584736453455;
-        Fri, 20 Mar 2020 13:34:13 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id 93sm5153147pjo.43.2020.03.20.13.34.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 13:34:12 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 13:34:12 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH] KVM: SVM: Issue WBINVD after deactivating an SEV guest
-In-Reply-To: <c8bf9087ca3711c5770bdeaafa3e45b717dc5ef4.1584720426.git.thomas.lendacky@amd.com>
-Message-ID: <alpine.DEB.2.21.2003201333510.205664@chino.kir.corp.google.com>
-References: <c8bf9087ca3711c5770bdeaafa3e45b717dc5ef4.1584720426.git.thomas.lendacky@amd.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 20 Mar 2020 16:35:58 -0400
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1jFOOS-0004rF-93; Fri, 20 Mar 2020 20:37:24 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Jones <rjones@gateworks.com>
+Cc:     Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v7 0/3] Add support for the Gateworks System Controller
+Date:   Fri, 20 Mar 2020 13:35:47 -0700
+Message-Id: <1584736550-7520-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Mar 2020, Tom Lendacky wrote:
+This series adds support for the Gateworks System Controller used on Gateworks
+Laguna, Ventana, and Newport product families.
 
-> Currently, CLFLUSH is used to flush SEV guest memory before the guest is
-> terminated (or a memory hotplug region is removed). However, CLFLUSH is
-> not enough to ensure that SEV guest tagged data is flushed from the cache.
-> 
-> With 33af3a7ef9e6 ("KVM: SVM: Reduce WBINVD/DF_FLUSH invocations"), the
-> original WBINVD was removed. This then exposed crashes at random times
-> because of a cache flush race with a page that had both a hypervisor and
-> a guest tag in the cache.
-> 
-> Restore the WBINVD when destroying an SEV guest and add a WBINVD to the
-> svm_unregister_enc_region() function to ensure hotplug memory is flushed
-> when removed. The DF_FLUSH can still be avoided at this point.
-> 
-> Fixes: 33af3a7ef9e6 ("KVM: SVM: Reduce WBINVD/DF_FLUSH invocations")
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+The GSC is an MSP430 I2C slave controller whose firmware embeds the following
+features:
+ - I/O expander (16 GPIO's emulating a PCA955x)
+ - EEPROM (enumating AT24)
+ - RTC (enumating DS1672)
+ - HWMON
+ - Interrupt controller with tamper detect, user pushbotton
+ - Watchdog controller capable of full board power-cycle
+ - Power Control capable of full board power-cycle
 
-Acked-by: David Rientjes <rientjes@google.com>
+see http://trac.gateworks.com/wiki/gsc for more details
+---
+v7:
+ - dt-bindings: change divider from mili-ohms to ohms
+ - dt-bindings: add constraints for voltage divider and offset
+ - dt-bindings: remove unnecessary ref for offset
+ - dt-bindings: renamed fan to fan-controller and changed base prop to reg
+ - mfd:  remove irq from private data struct
+ - hwmon: fix whitespace in Kconfig
+ - hwmon: remove unnecessary device pointer in private data
+ - hwmon: change divider from mili-ohms to ohms
+ - hwmon: move fan base property to reg
 
-Should this be marked for stable?
+v6:
+ - hwmon: fix size of info field
+ - hwmon: improve pwm output control documentation
+ - hwmon: include unit suffix in divider and offset
+ - hwmon: change subnode name to gsc-adc
+ - hwmon: change to fan subnode
+ - hwmon: fix voltage offset
+ - dt-bindings: fix commit message typo
+ - dt-bindings: drop invalid description from #interrupt-cells property
+ - dt-bindings: fix adc pattern property
+ - dt-bindings: add unit suffix
+ - dt-bindings: replace hwmon/adc with adc/channel
+ - dt-bindings: changed adc type to gw,mode
+ - dt-bindings: add unit suffix and drop ref for voltage-divider
+ - dt-bindings: add unit suffix for voltage-offset
+ - dt-bindings: moved fan to its own subnode with base register
 
-Cc: stable@vger.kernel.org # 5.5+
+v5:
+ - fix checkpatch issues
+ - fix dt_binding_check issues
+ - address feedback from v4
 
-> ---
->  arch/x86/kvm/svm.c | 22 ++++++++++++++--------
->  1 file changed, 14 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 08568ae9f7a1..d54cdca9c140 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -1980,14 +1980,6 @@ static void sev_clflush_pages(struct page *pages[], unsigned long npages)
->  static void __unregister_enc_region_locked(struct kvm *kvm,
->  					   struct enc_region *region)
->  {
-> -	/*
-> -	 * The guest may change the memory encryption attribute from C=0 -> C=1
-> -	 * or vice versa for this memory range. Lets make sure caches are
-> -	 * flushed to ensure that guest data gets written into memory with
-> -	 * correct C-bit.
-> -	 */
-> -	sev_clflush_pages(region->pages, region->npages);
-> -
->  	sev_unpin_memory(kvm, region->pages, region->npages);
->  	list_del(&region->list);
->  	kfree(region);
-> @@ -2004,6 +1996,13 @@ static void sev_vm_destroy(struct kvm *kvm)
->  
->  	mutex_lock(&kvm->lock);
->  
-> +	/*
-> +	 * Ensure that all guest tagged cache entries are flushed before
-> +	 * releasing the pages back to the system for use. CLFLUSH will
-> +	 * not do this, so issue a WBINVD.
-> +	 */
-> +	wbinvd_on_all_cpus();
-> +
->  	/*
->  	 * if userspace was terminated before unregistering the memory regions
->  	 * then lets unpin all the registered memory.
-> @@ -7247,6 +7246,13 @@ static int svm_unregister_enc_region(struct kvm *kvm,
->  		goto failed;
->  	}
->  
-> +	/*
-> +	 * Ensure that all guest tagged cache entries are flushed before
-> +	 * releasing the pages back to the system for use. CLFLUSH will
-> +	 * not do this, so issue a WBINVD.
-> +	 */
-> +	wbinvd_on_all_cpus();
-> +
->  	__unregister_enc_region_locked(kvm, region);
->  
->  	mutex_unlock(&kvm->lock);
-> -- 
-> 2.17.1
-> 
-> 
+v4:
+ - hwmon: move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+ - hwmon: remove unncessary resolution/scaling properties for ADCs
+ - bindings: update to yaml Documentation
+ - removed watchdog driver
+
+v3:
+ - removed unnecessary input driver
+ - added wdt driver
+ - bindings: encorporated feedback from mailng list
+ - hwmon:
+ - encoroprated feedback from mailng list
+ - added support for raw ADC voltage input used in newer GSC firmware
+
+v2:
+ - change license comment block style
+ - remove COMPILE_TEST
+ - fixed whitespace issues
+ - replaced a printk with dev_err
+ - remove DEBUG
+ - simplify regmap_bulk_read err check
+ - remove break after returns in switch statement
+ - fix fan setpoint buffer address
+ - remove unnecessary parens
+ - consistently use struct device *dev pointer
+ - add validation for hwmon child node props
+ - move parsing of of to own function
+ - use strlcpy to ensure null termination
+ - fix static array sizes and removed unnecessary initializers
+ - dynamically allocate channels
+ - fix fan input label
+ - support platform data
+
+Tim Harvey (3):
+  dt-bindings: mfd: Add Gateworks System Controller bindings
+  mfd: add Gateworks System Controller core driver
+  hwmon: add Gateworks System Controller support
+
+ .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 173 ++++++++++
+ Documentation/hwmon/gsc-hwmon.rst                  |  53 +++
+ Documentation/hwmon/index.rst                      |   1 +
+ MAINTAINERS                                        |  11 +
+ drivers/hwmon/Kconfig                              |   9 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/gsc-hwmon.c                          | 372 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |  10 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/gateworks-gsc.c                        | 291 ++++++++++++++++
+ include/linux/mfd/gsc.h                            |  71 ++++
+ include/linux/platform_data/gsc_hwmon.h            |  44 +++
+ 12 files changed, 1037 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+ create mode 100644 Documentation/hwmon/gsc-hwmon.rst
+ create mode 100644 drivers/hwmon/gsc-hwmon.c
+ create mode 100644 drivers/mfd/gateworks-gsc.c
+ create mode 100644 include/linux/mfd/gsc.h
+ create mode 100644 include/linux/platform_data/gsc_hwmon.h
+
+-- 
+2.7.4
+
