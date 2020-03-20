@@ -2,175 +2,172 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5426EC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC7AC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3F520754
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5740420754
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:17:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbgCTNRM (ORCPT
+        id S1727522AbgCTNRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:17:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35734 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727312AbgCTNQe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:16:34 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFHVo-00048x-8M
-        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 14:16:32 +0100
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id B2BB11039FF
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 14:16:26 +0100 (CET)
-Message-Id: <20200320131509.673579000@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 14:13:55 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>, linux-edac@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-pm@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org
-Subject: [patch 10/22] EDAC: Convert to new X86 CPU match macros
-References: <20200320131345.635023594@linutronix.de>
+        Fri, 20 Mar 2020 09:17:16 -0400
+Received: from 8bytes.org ([81.169.241.247]:54470 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727502AbgCTNRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 09:17:11 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id EDAE0364; Fri, 20 Mar 2020 14:17:09 +0100 (CET)
+Date:   Fri, 20 Mar 2020 14:17:07 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [RFC PATCH v2.1] x86/sev-es: Handle NMI State
+Message-ID: <20200320131707.GF5122@8bytes.org>
+References: <20200319091407.1481-1-joro@8bytes.org>
+ <20200319091407.1481-71-joro@8bytes.org>
+ <CALCETrUOQneBHjoZkP-7T5PDijb=WOyv7xF7TD0GLR2Aw77vyA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrUOQneBHjoZkP-7T5PDijb=WOyv7xF7TD0GLR2Aw77vyA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new macro set has a consistent namespace and uses C99 initializers
-instead of the grufty C89 ones.
+On Thu, Mar 19, 2020 at 08:35:59AM -0700, Andy Lutomirski wrote:
+> 1. Just put the NMI unmask in do_nmi().  The kernel *already* knows
+> how to handle running do_nmi() with NMIs unmasked.  This is much, much
+> simpler than your code.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-edac@vger.kernel.org
+Okay, attached is the updated patch which implements this approach. I
+tested it in an SEV-ES guest with 'perf top' running for a little more
+than 30 minutes and all looked good. I also removed the dead code from
+the patch.
+
+
+From ec3b021c5d9130fd66e00d823c4fabc675c4b49e Mon Sep 17 00:00:00 2001
+From: Joerg Roedel <jroedel@suse.de>
+Date: Tue, 28 Jan 2020 17:31:05 +0100
+Subject: [PATCH] x86/sev-es: Handle NMI State
+
+When running under SEV-ES the kernel has to tell the hypervisor when to
+open the NMI window again after an NMI was injected. This is done with
+an NMI-complete message to the hypervisor.
+
+Add code to the kernels NMI handler to send this message right at the
+beginning of do_nmi(). This always allows nesting NMIs.
+
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/edac/amd64_edac.c |   14 +++++++-------
- drivers/edac/i10nm_base.c |    8 ++++----
- drivers/edac/pnd2_edac.c  |    4 ++--
- drivers/edac/sb_edac.c    |   14 +++++++-------
- drivers/edac/skx_base.c   |    2 +-
- 5 files changed, 21 insertions(+), 21 deletions(-)
+ arch/x86/include/asm/sev-es.h   |  2 ++
+ arch/x86/include/uapi/asm/svm.h |  1 +
+ arch/x86/kernel/nmi.c           |  8 ++++++++
+ arch/x86/kernel/sev-es.c        | 18 ++++++++++++++++++
+ 4 files changed, 29 insertions(+)
 
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -3626,13 +3626,13 @@ static void setup_pci_device(void)
+diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+index 63acf50e6280..441ec1ba2cc7 100644
+--- a/arch/x86/include/asm/sev-es.h
++++ b/arch/x86/include/asm/sev-es.h
+@@ -82,11 +82,13 @@ struct real_mode_header;
+ 
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+ int sev_es_setup_ap_jump_table(struct real_mode_header *rmh);
++void sev_es_nmi_complete(void);
+ #else /* CONFIG_AMD_MEM_ENCRYPT */
+ static inline int sev_es_setup_ap_jump_table(struct real_mode_header *rmh)
+ {
+ 	return 0;
  }
++static inline void sev_es_nmi_complete(void) { }
+ #endif /* CONFIG_AMD_MEM_ENCRYPT*/
  
- static const struct x86_cpu_id amd64_cpuids[] = {
--	{ X86_VENDOR_AMD, 0xF,	X86_MODEL_ANY,	X86_FEATURE_ANY, 0 },
--	{ X86_VENDOR_AMD, 0x10, X86_MODEL_ANY,	X86_FEATURE_ANY, 0 },
--	{ X86_VENDOR_AMD, 0x15, X86_MODEL_ANY,	X86_FEATURE_ANY, 0 },
--	{ X86_VENDOR_AMD, 0x16, X86_MODEL_ANY,	X86_FEATURE_ANY, 0 },
--	{ X86_VENDOR_AMD, 0x17, X86_MODEL_ANY,	X86_FEATURE_ANY, 0 },
--	{ X86_VENDOR_HYGON, 0x18, X86_MODEL_ANY, X86_FEATURE_ANY, 0 },
--	{ X86_VENDOR_AMD, 0x19, X86_MODEL_ANY,	X86_FEATURE_ANY, 0 },
-+	X86_MATCH_VENDOR_FAM(AMD,	0x0F, NULL),
-+	X86_MATCH_VENDOR_FAM(AMD,	0x10, NULL),
-+	X86_MATCH_VENDOR_FAM(AMD,	0x15, NULL),
-+	X86_MATCH_VENDOR_FAM(AMD,	0x16, NULL),
-+	X86_MATCH_VENDOR_FAM(AMD,	0x17, NULL),
-+	X86_MATCH_VENDOR_FAM(HYGON,	0x18, NULL),
-+	X86_MATCH_VENDOR_FAM(AMD,	0x19, NULL),
- 	{ }
- };
- MODULE_DEVICE_TABLE(x86cpu, amd64_cpuids);
---- a/drivers/edac/i10nm_base.c
-+++ b/drivers/edac/i10nm_base.c
-@@ -123,10 +123,10 @@ static int i10nm_get_all_munits(void)
- }
+ #endif
+diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
+index 20a05839dd9a..0f837339db66 100644
+--- a/arch/x86/include/uapi/asm/svm.h
++++ b/arch/x86/include/uapi/asm/svm.h
+@@ -84,6 +84,7 @@
+ /* SEV-ES software-defined VMGEXIT events */
+ #define SVM_VMGEXIT_MMIO_READ			0x80000001
+ #define SVM_VMGEXIT_MMIO_WRITE			0x80000002
++#define SVM_VMGEXIT_NMI_COMPLETE		0x80000003
+ #define SVM_VMGEXIT_AP_HLT_LOOP			0x80000004
+ #define SVM_VMGEXIT_AP_JUMP_TABLE		0x80000005
+ #define		SVM_VMGEXIT_SET_AP_JUMP_TABLE			0
+diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+index 54c21d6abd5a..fc872a7e0ed1 100644
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -37,6 +37,7 @@
+ #include <asm/reboot.h>
+ #include <asm/cache.h>
+ #include <asm/nospec-branch.h>
++#include <asm/sev-es.h>
  
- static const struct x86_cpu_id i10nm_cpuids[] = {
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_ATOM_TREMONT_D, 0, 0 },
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_ICELAKE_X, 0, 0 },
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_ICELAKE_D, 0, 0 },
--	{ }
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	NULL),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		NULL),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,		NULL),
-+	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, i10nm_cpuids);
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/nmi.h>
+@@ -510,6 +511,13 @@ NOKPROBE_SYMBOL(is_debug_stack);
+ dotraplinkage notrace void
+ do_nmi(struct pt_regs *regs, long error_code)
+ {
++	/*
++	 * Re-enable NMIs right here when running as an SEV-ES guest. This might
++	 * cause nested NMIs, but those can be handled safely.
++	 */
++	if (sev_es_active())
++		sev_es_nmi_complete();
++
+ 	if (IS_ENABLED(CONFIG_SMP) && cpu_is_offline(smp_processor_id()))
+ 		return;
  
---- a/drivers/edac/pnd2_edac.c
-+++ b/drivers/edac/pnd2_edac.c
-@@ -1537,8 +1537,8 @@ static struct dunit_ops dnv_ops = {
- };
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index 3c22f256645e..a7e2739771e7 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -270,6 +270,24 @@ static phys_addr_t vc_slow_virt_to_phys(struct ghcb *ghcb, long vaddr)
+ /* Include code shared with pre-decompression boot stage */
+ #include "sev-es-shared.c"
  
- static const struct x86_cpu_id pnd2_cpuids[] = {
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_ATOM_GOLDMONT, 0, (kernel_ulong_t)&apl_ops },
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_ATOM_GOLDMONT_D, 0, (kernel_ulong_t)&dnv_ops },
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	&apl_ops),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_D,	&dnv_ops),
- 	{ }
- };
- MODULE_DEVICE_TABLE(x86cpu, pnd2_cpuids);
---- a/drivers/edac/sb_edac.c
-+++ b/drivers/edac/sb_edac.c
-@@ -3420,13 +3420,13 @@ static int sbridge_register_mci(struct s
- }
- 
- static const struct x86_cpu_id sbridge_cpuids[] = {
--	INTEL_CPU_FAM6(SANDYBRIDGE_X,	  pci_dev_descr_sbridge_table),
--	INTEL_CPU_FAM6(IVYBRIDGE_X,	  pci_dev_descr_ibridge_table),
--	INTEL_CPU_FAM6(HASWELL_X,	  pci_dev_descr_haswell_table),
--	INTEL_CPU_FAM6(BROADWELL_X,	  pci_dev_descr_broadwell_table),
--	INTEL_CPU_FAM6(BROADWELL_D,	  pci_dev_descr_broadwell_table),
--	INTEL_CPU_FAM6(XEON_PHI_KNL,	  pci_dev_descr_knl_table),
--	INTEL_CPU_FAM6(XEON_PHI_KNM,	  pci_dev_descr_knl_table),
-+	X86_MATCH_INTEL_FAM6_MODEL(SANDYBRIDGE_X, &pci_dev_descr_sbridge_table),
-+	X86_MATCH_INTEL_FAM6_MODEL(IVYBRIDGE_X,	  &pci_dev_descr_ibridge_table),
-+	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_X,	  &pci_dev_descr_haswell_table),
-+	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_X,	  &pci_dev_descr_broadwell_table),
-+	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_D,	  &pci_dev_descr_broadwell_table),
-+	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,  &pci_dev_descr_knl_table),
-+	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNM,  &pci_dev_descr_knl_table),
- 	{ }
- };
- MODULE_DEVICE_TABLE(x86cpu, sbridge_cpuids);
---- a/drivers/edac/skx_base.c
-+++ b/drivers/edac/skx_base.c
-@@ -158,7 +158,7 @@ static int get_all_munits(const struct m
- }
- 
- static const struct x86_cpu_id skx_cpuids[] = {
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_SKYLAKE_X, 0, 0 },
-+	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,	NULL),
- 	{ }
- };
- MODULE_DEVICE_TABLE(x86cpu, skx_cpuids);
++void sev_es_nmi_complete(void)
++{
++	struct ghcb_state state;
++	struct ghcb *ghcb;
++
++	ghcb = sev_es_get_ghcb(&state);
++
++	vc_ghcb_invalidate(ghcb);
++	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_NMI_COMPLETE);
++	ghcb_set_sw_exit_info_1(ghcb, 0);
++	ghcb_set_sw_exit_info_2(ghcb, 0);
++
++	sev_es_wr_ghcb_msr(__pa(ghcb));
++	VMGEXIT();
++
++	sev_es_put_ghcb(&state);
++}
++
+ static u64 sev_es_get_jump_table_addr(void)
+ {
+ 	struct ghcb_state state;
+-- 
+2.16.4
 
