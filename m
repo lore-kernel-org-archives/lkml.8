@@ -2,132 +2,129 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF6CC43332
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53458C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2FE120739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:01:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ygxm+18K"
+	by mail.kernel.org (Postfix) with ESMTP id 274C520773
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:03:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584691403;
+	bh=bRnAE2BZzmnm9zfy861oxYKceMOXcysEHwarSkXKHmk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pzq+H2pBl97LEaI+O7Yi7RznNZIUhQMKrvrmQ8lPzhJmICxX3tTYNjZWEdD9iqX10
+	 LUrP+CL4Q/Vlk28CLRKDztGglcnv/CLLfzYqVMfpSc0wcRkxuBGK3q7bZWfYCgMkVM
+	 XV6gAgmsGVqGzm0Ro1mjkycfk3bvjTdzE/VdIWDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgCTIBZ (ORCPT
+        id S1726954AbgCTIDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 04:01:25 -0400
-Received: from mail-pl1-f170.google.com ([209.85.214.170]:42867 "EHLO
-        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbgCTIBZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 04:01:25 -0400
-Received: by mail-pl1-f170.google.com with SMTP id t3so2163052plz.9
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 01:01:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=F4z4DhLVGvbna7aIcuhJEG+lKoXYnQgbcpPqw2ITAKU=;
-        b=Ygxm+18KOXZTFbzvkGg+Tf7RqavXc344b9FQ2nlvHUhRyxiLwNSVZZzOH4mFW/b2RH
-         LJhABONmxCTa+PLt5Tu7POF1qsT8W4TE/ODvrLFy0CuQPCmjym4SToq6doAWMB11DSxd
-         Qar6z2Y3XBEf4v/OJ+QpNzrR9HiEBwUA+wQ+g3GXu4fMFziYPlhtt0njTouf6ExMH0Ro
-         pMPfS9RoHlMQ8ijIOcX1HAAWFwoZHgnhc8sEQyaHf1KHLhHiLgBaenncmhJvMPm4r7po
-         U2n/elBRNUUOMppW5/2Sw8Ks6whUl9OOigfw8icHCwZXxRsq2PF7H5xZFEGmrVnOo0c0
-         Yqig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=F4z4DhLVGvbna7aIcuhJEG+lKoXYnQgbcpPqw2ITAKU=;
-        b=oXhqkJtEjn8ynf4zZcp8O5ZE+nCn3PpXlHV7qTGreyeI7ymlHshYfb/TVjwwSHEjpz
-         Ulp07ovaxxLTdQzEgSVyr4NzdQtaCr+MMO5g4gpXwuChUdxYOOkgT2r0Mk9k9ShCrOPp
-         vyzZK9rsm8i5hAJ7+E7Nl7ylYOWyAm5pJ+y44JiEQ/oxsYXjpIBHBwSoSZA0wt7esOT6
-         e8aNARPrGf2eI1kV/xwUGyt3FEqYAsj5ZEby7/pnC+JPMZOQNwCQfWGNfJ9V+S9Ep8wc
-         HnLKMrPtplEQtW29SP+ikzkyED7eyRZARkZAAXLf9GcKtVQgEQN53swKKit/xBBF1VML
-         Gk8w==
-X-Gm-Message-State: ANhLgQ369ZKjptWm1sitobLkZQ9mKsAc/4YKLAtOmGBM4hOp9UcK4Lro
-        nAaRGTzXkoi1SubY522jSyzUrw==
-X-Google-Smtp-Source: ADFU+vuiOBTrlaYtXDptNfRvUosd7l5Aa1+h2LxNOdqrM0CsGlfVE5Q6aFN1jDdM00w5TC2vObqltg==
-X-Received: by 2002:a17:902:aa49:: with SMTP id c9mr7501332plr.145.1584691282393;
-        Fri, 20 Mar 2020 01:01:22 -0700 (PDT)
-Received: from localhost ([122.171.118.46])
-        by smtp.gmail.com with ESMTPSA id g7sm3825789pjl.17.2020.03.20.01.01.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Mar 2020 01:01:21 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 13:31:19 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Sibi Sankar <sibis@codeaurora.org>, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
-Message-ID: <20200320080119.gztifbmenwpi6rrp@vireshk-i7>
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
- <20200318034243.o2metmggzuah6cqw@vireshk-i7>
- <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
- <ea4265f3f4b5a439d70d3c80bcc77b7f@codeaurora.org>
- <20200319102411.oivesngrk7gy7vtw@vireshk-i7>
- <78d92969-0219-d140-d788-d1b14e643e90@codeaurora.org>
- <20200319110805.glmuc2qvgcei3mon@vireshk-i7>
- <53065b03-22d5-fb78-aa6f-e4711b8ffd3b@codeaurora.org>
+        Fri, 20 Mar 2020 04:03:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726654AbgCTIDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 04:03:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1D6520739;
+        Fri, 20 Mar 2020 08:03:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584691400;
+        bh=bRnAE2BZzmnm9zfy861oxYKceMOXcysEHwarSkXKHmk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zICLjguFpSe4iEbNGib3KO7bTg93WnXfiaF9l0sW4sz8zP9LR15NuCoY/hK4VysGI
+         3pF1HK4Ygkofs1Hqtf7Rpqo+PHCpa7ECHmwMACFtY0tRcsq1KvI5y7g+xE15mUSnqY
+         dDzxHkAK0s43Fo2YozS2N4A0yiMfWhvxIfBvYMM4=
+Date:   Fri, 20 Mar 2020 09:03:17 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: [PATCH 4.19 00/48] 4.19.112-rc1 review
+Message-ID: <20200320080317.GA312074@kroah.com>
+References: <20200319123902.941451241@linuxfoundation.org>
+ <CA+G9fYsDw6JEznSHm2X=Wvq1dysGbGa4-VpXJyzKWZQxLMdagw@mail.gmail.com>
+ <7a8c6a752793f0907662c3e9c197c284fc461550.camel@codethink.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <53065b03-22d5-fb78-aa6f-e4711b8ffd3b@codeaurora.org>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7a8c6a752793f0907662c3e9c197c284fc461550.camel@codethink.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-03-20, 17:03, Rajendra Nayak wrote:
-> sure, I understand there is a dependency, however refusing to review the approach
-> (to add multiple OPPS tables per device) that this series is taking because of an outstanding
-> question which, if I read it right is "We can not add multiple OPP tables for a single device right now"
-> seems odd.
+On Thu, Mar 19, 2020 at 08:00:32PM +0000, Ben Hutchings wrote:
+> On Fri, 2020-03-20 at 01:12 +0530, Naresh Kamboju wrote:
+> > On Thu, 19 Mar 2020 at 18:50, Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > > This is the start of the stable review cycle for the 4.19.112 release.
+> > > There are 48 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > > 
+> > > Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
+> > > Anything received after that time might be too late.
+> > > 
+> > > The whole patch series can be found in one patch at:
+> > >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.112-rc1.gz
+> > > or in the git tree and branch at:
+> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> > > and the diffstat can be found below.
+> > > 
+> > > thanks,
+> > > 
+> > > greg k-h
+> > > 
+> > > Faiz Abbas <faiz_abbas@ti.com>
+> > >     mmc: sdhci-omap: Fix Tuning procedure for temperatures < -20C
+> > > 
+> > > Faiz Abbas <faiz_abbas@ti.com>
+> > >     mmc: sdhci-omap: Don't finish_mrq() on a command error during tuning
+> > 
+> > Results from Linaro’s test farm.
+> > No regressions on arm64, arm, x86_64, and i386.
+> > 
+> > NOTE:
+> > The arm beagleboard x15 device running stable rc 4.19.112-rc1, 5.4.27-rc1
+> > and 5.5.11-rc2 kernel pops up the following messages on console log,
+> > Is this a problem ?
+> >
+> > [   15.737765] mmc1: unspecified timeout for CMD6 - use generic
+> > [   16.754248] mmc1: unspecified timeout for CMD6 - use generic
+> > [   16.842071] mmc1: unspecified timeout for CMD6 - use generic
+> > ...
+> > [  977.126652] mmc1: unspecified timeout for CMD6 - use generic
+> > [  985.449798] mmc1: unspecified timeout for CMD6 - use generic
+> [...]
 > 
-> Its fine if you are not happy with the approach taken here and you can propose something else,
-> but it looks inevitable that we would need something like this to be supported (multiple OPP tables per device)
-> and hence the request to review the patches.
+> This warning was introduced by commit 533a6cfe08f9 "mmc: core: Default
+> to generic_cmd6_time as timeout in __mmc_switch()".  That should not be
+> applied to stable branches; it is not valid without (at least) these
+> preparatory changes:
+> 
+> 0c204979c691 mmc: core: Cleanup BKOPS support
+> 24ed3bd01d6a mmc: core: Specify timeouts for BKOPS and CACHE_FLUSH for eMMC
+> ad91619aa9d7 mmc: block: Use generic_cmd6_time when modifying INAND_CMD38_ARG_EXT_CSD
 
-I understand the frustration you have right now, but honestly most of
-the delay is not from my part. I normally try to be very quick in
-giving reviews or even accepting material for next cycle. Still, I am
-part of the chain which has blocked this series and I am really sorry
-for that.
+Ok, I've now dropped that patch, which also required me to drop
+1292e3efb149 ("mmc: core: Allow host controllers to require R1B for
+CMD6").  I've done so for 5.5.y, 5.4.y, and 4.19.y.
 
-Coming back to reviews. I never liked the idea of keeping separate OPP
-tables just for the relation that a peripheral share with the
-interconnect, i.e. the b/w tables getting discussed right now.
+thanks,
 
-And I am not at all sure if such tables should be added as device
-tables anyway, it was present in cover letter of Saravana for sometime
-but not in the real patches and so I missed it until the time Sibi
-asked me something on IRC.
-
-To be clear, I don't think we will allow multiple active OPP tables
-for a device for now, unless we have a very good reason to do that. It
-just doesn't make sense to me to have one table for keeping
-frequency/voltage thing, and another set of tables for b/w
-requirements from interconnect.
-
-So, the changes proposed by this patchset even doesn't matter as I am
-not agreeing on the binding itself. And we need a binding change for
-that, which Saravana never sent, i.e. to have multiple active tables
-for a device.
-
-Yes, we need a solution for this and a quick one. I am fine to discuss
-this all on a hangout session (anyway, everyone is working from home
-now anyways) anytime next week with the interested parties. I think
-/me and Vincent can join it.
-
--- 
-viresh
+greg k-h
