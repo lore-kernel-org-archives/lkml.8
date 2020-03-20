@@ -2,314 +2,140 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4500C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10EAC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781CE20754
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:44:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cI4WXI3y"
+	by mail.kernel.org (Postfix) with ESMTP id 9457A20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:44:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584711875;
+	bh=ZZutdD5YPTWqPt41mFJKH6cFpW9EUFP9C9HiZAsGki0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P8PXcHM5u/JII5PVdZnKyOgZ8oiBpLT4chYbVlBGq6Wohpm4Vs4EzVqZB7NbMlVGY
+	 iZA6Ahho2hAH/RxV5WOTyCqRHOY/QbuYWkcDr/wESrh23SUqKo5FkIXKM1QKkWju19
+	 qFdDmEVC83ehhzbUiTHU1aje8FrKDiyDjQILxQqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbgCTNoa (ORCPT
+        id S1727298AbgCTNoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:44:30 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57526 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726843AbgCTNoa (ORCPT
+        Fri, 20 Mar 2020 09:44:34 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36852 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbgCTNod (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:44:30 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02KDdWBJ018194;
-        Fri, 20 Mar 2020 14:44:18 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=76LWxNmSrLcSGRcg4g7Zi1Kwv4e4NUwj8UcZLmOsR/A=;
- b=cI4WXI3y9bFxguxSW/ud9wbG8G9O66qDQz31hGwVmuOo03h3bRRKSL6o4aAenEMwce6D
- skY8oS2lH5MEBKZNt9POdKywz9e7Nfa/WiltXMN/PomQVCK0RxTJ6nXswEt2FfSQLjPb
- 8SH+Gd/lKaXCEJKr7P7wnaUM5matY2HDFBLAyd9RAUppD4QG5uEtP4+XTm4HnibUcbLd
- Xkx8D4PDuMiv7wuVz6ZoWNFYIYodxonvnHaFF1yhW+yFzko4nvIHL76C+Le4uwd8Tx+8
- 8P6AUsgQZjTV6Gc6wHYKPn3o6O9X0O5bfycnMeu0q4AJEg3KpC0SZ1qAqOvsoiZ74Ock dw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yu95uys1k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Mar 2020 14:44:18 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AC9CC100034;
-        Fri, 20 Mar 2020 14:44:17 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9CE2A2AF351;
-        Fri, 20 Mar 2020 14:44:17 +0100 (CET)
-Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 20 Mar 2020 14:44:17
- +0100
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <broonie@kernel.org>, <amelie.delaunay@st.com>
-CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
-        <alain.volmat@st.com>
-Subject: [PATCH] spi: stm32: Fix comments compilation warnings
-Date:   Fri, 20 Mar 2020 14:44:17 +0100
-Message-ID: <1584711857-9162-1-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 20 Mar 2020 09:44:33 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 31so1534465wrs.3;
+        Fri, 20 Mar 2020 06:44:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JoMCT/BRNQiPNC0aagaWJkcjnStn6MMheHBwrTllAYE=;
+        b=PlUnHyS+XQ1zkv5WMm+aXYF7W7FzC81HX92HNNkkUW1HCS8GL9MTThfjoq90cMHCvV
+         sjEdbBjITa5PigGXXCaFqMhvFvyUSvv2Pn/TYRLDzdTA1eCtXVrn+VV5U/54dJCsHmId
+         c23VxxumlkR8rzrJQIBhL7AEE7QL2gfC7SOjsAbdJe1dIRZAjIjY1ReFbZaplUVJhuJ9
+         wac2o6cJ7E1zR3soErNRKhymEejgvmzSlw0HLezlpI3g3D1TLsGQ95TEsFna1cy0AH3X
+         AZ1Vk7g5sOiocHEkVLxLR6LumB15QLkJO8z70Fuy8PvgVYtSAUlzOLoRtf7pesN/pVOY
+         lX/Q==
+X-Gm-Message-State: ANhLgQ1m5WoX/GbiOYFg+MknCMjl0I2Ac6QKsJEjjce9W5ditOXQAbsn
+        A/0g819CBbvlHNee3LMsRSs=
+X-Google-Smtp-Source: ADFU+vvNQ+OVi0CDztzjk8c5YtCs3frJ0uwb28VpsQJngNtXMbSTyMNx7K5uLhR9puA4Gim3tpbQtg==
+X-Received: by 2002:adf:914e:: with SMTP id j72mr11378978wrj.109.1584711870045;
+        Fri, 20 Mar 2020 06:44:30 -0700 (PDT)
+Received: from localhost (ip-37-188-140-107.eurotel.cz. [37.188.140.107])
+        by smtp.gmail.com with ESMTPSA id n63sm4850139wmf.6.2020.03.20.06.44.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 06:44:29 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 14:44:28 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Ivan Teterevkov <ivan.teterevkov@nutanix.com>
+Cc:     "rientjes@google.com" <rientjes@google.com>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "vbabka@suse.cz" <vbabka@suse.cz>, "tj@kernel.org" <tj@kernel.org>,
+        "lizefan@huawei.com" <lizefan@huawei.com>,
+        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "vdavydov.dev@gmail.com" <vdavydov.dev@gmail.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "guro@fb.com" <guro@fb.com>,
+        "shakeelb@google.com" <shakeelb@google.com>,
+        "chris@chrisdown.name" <chris@chrisdown.name>,
+        "yang.shi@linux.alibaba.com" <yang.shi@linux.alibaba.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "minchan@kernel.org" <minchan@kernel.org>,
+        "ying.huang@intel.com" <ying.huang@intel.com>,
+        "ziqian.lzq@antfin.com" <ziqian.lzq@antfin.com>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Jonathan Davies <jond@nutanix.com>
+Subject: Re: [RFC] memcg: fix default behaviour of non-overridden
+ memcg.swappiness
+Message-ID: <20200320134428.GG24409@dhcp22.suse.cz>
+References: <BL0PR02MB560170CD4D4245D4B89BC22EE9F40@BL0PR02MB5601.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-20_04:2020-03-20,2020-03-20 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL0PR02MB560170CD4D4245D4B89BC22EE9F40@BL0PR02MB5601.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix all functions and structure descriptions to have the driver
-warning free when built with W=1.
+On Thu 19-03-20 17:38:30, Ivan Teterevkov wrote:
+> This patch tries to resolve uncertainty around the memcg.swappiness when
+> it's not overridden by the user: shall there be the latest vm_swappiness
+> or the value captured at the moment when the cgroup was created?
+> 
+> I'm sitting on the fence with regards to this patch because cgroup v1 is
+> considered legacy nowadays and the semantics of "swappiness" is already
+> overwhelmed. However, the patch might be considered as a "fix" because
+> looking at the documentation [1] one might have the impression that it's
+> the latest /proc/sys/vm/swappiness value that should be found in the
+> memcg.swappiness unless it's overridden or inherited from a cgroup where
+> it was overridden when the given cgroup was created.
 
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
----
- drivers/spi/spi-stm32.c | 62 +++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 45 insertions(+), 17 deletions(-)
+Could you be more specific what makes you think this? Let me quote the
+whole thing here
+: 5.3 swappiness
+: --------------
+: 
+: Overrides /proc/sys/vm/swappiness for the particular group. The tunable
+: in the root cgroup corresponds to the global swappiness setting.
+: 
+: Please note that unlike during the global reclaim, limit reclaim
+: enforces that 0 swappiness really prevents from any swapping even if
+: there is a swap storage available. This might lead to memcg OOM killer
+: if there are no file pages to reclaim.
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index e041f9c4ec47..44ac6eb3298d 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -175,7 +175,7 @@
- #define SPI_DMA_MIN_BYTES	16
- 
- /**
-- * stm32_spi_reg - stm32 SPI register & bitfield desc
-+ * struct stm32_spi_reg - stm32 SPI register & bitfield desc
-  * @reg:		register offset
-  * @mask:		bitfield mask
-  * @shift:		left shift
-@@ -187,16 +187,16 @@ struct stm32_spi_reg {
- };
- 
- /**
-- * stm32_spi_regspec - stm32 registers definition, compatible dependent data
-- * en: enable register and SPI enable bit
-- * dma_rx_en: SPI DMA RX enable register end SPI DMA RX enable bit
-- * dma_tx_en: SPI DMA TX enable register end SPI DMA TX enable bit
-- * cpol: clock polarity register and polarity bit
-- * cpha: clock phase register and phase bit
-- * lsb_first: LSB transmitted first register and bit
-- * br: baud rate register and bitfields
-- * rx: SPI RX data register
-- * tx: SPI TX data register
-+ * struct stm32_spi_regspec - stm32 registers definition, compatible dependent data
-+ * @en: enable register and SPI enable bit
-+ * @dma_rx_en: SPI DMA RX enable register end SPI DMA RX enable bit
-+ * @dma_tx_en: SPI DMA TX enable register end SPI DMA TX enable bit
-+ * @cpol: clock polarity register and polarity bit
-+ * @cpha: clock phase register and phase bit
-+ * @lsb_first: LSB transmitted first register and bit
-+ * @br: baud rate register and bitfields
-+ * @rx: SPI RX data register
-+ * @tx: SPI TX data register
-  */
- struct stm32_spi_regspec {
- 	const struct stm32_spi_reg en;
-@@ -213,7 +213,7 @@ struct stm32_spi_regspec {
- struct stm32_spi;
- 
- /**
-- * stm32_spi_cfg - stm32 compatible configuration data
-+ * struct stm32_spi_cfg - stm32 compatible configuration data
-  * @regs: registers descriptions
-  * @get_fifo_size: routine to get fifo size
-  * @get_bpw_mask: routine to get bits per word mask
-@@ -223,13 +223,13 @@ struct stm32_spi;
-  * @set_mode: routine to configure registers to desired mode
-  * @set_data_idleness: optional routine to configure registers to desired idle
-  * time between frames (if driver has this functionality)
-- * set_number_of_data: optional routine to configure registers to desired
-+ * @set_number_of_data: optional routine to configure registers to desired
-  * number of data (if driver has this functionality)
-  * @can_dma: routine to determine if the transfer is eligible for DMA use
-  * @transfer_one_dma_start: routine to start transfer a single spi_transfer
-  * using DMA
-- * @dma_rx cb: routine to call after DMA RX channel operation is complete
-- * @dma_tx cb: routine to call after DMA TX channel operation is complete
-+ * @dma_rx_cb: routine to call after DMA RX channel operation is complete
-+ * @dma_tx_cb: routine to call after DMA TX channel operation is complete
-  * @transfer_one_irq: routine to configure interrupts for driver
-  * @irq_handler_event: Interrupt handler for SPI controller events
-  * @irq_handler_thread: thread of interrupt handler for SPI controller
-@@ -587,6 +587,7 @@ static void stm32f4_spi_read_rx(struct stm32_spi *spi)
- /**
-  * stm32h7_spi_read_rxfifo - Read bytes in Receive Data Register
-  * @spi: pointer to the spi controller data structure
-+ * @flush: boolean indicating that FIFO should be flushed
-  *
-  * Write in rx_buf depends on remaining bytes to avoid to write beyond
-  * rx_buf end.
-@@ -756,6 +757,9 @@ static void stm32h7_spi_disable(struct stm32_spi *spi)
- 
- /**
-  * stm32_spi_can_dma - Determine if the transfer is eligible for DMA use
-+ * @master: controller master interface
-+ * @spi_dev: pointer to the spi device
-+ * @transfer: pointer to spi transfer
-  *
-  * If driver has fifo and the current transfer size is greater than fifo size,
-  * use DMA. Otherwise use DMA for transfer longer than defined DMA min bytes.
-@@ -974,6 +978,8 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
- 
- /**
-  * stm32_spi_prepare_msg - set up the controller to transfer a single message
-+ * @master: controller master interface
-+ * @msg: pointer to spi message
-  */
- static int stm32_spi_prepare_msg(struct spi_master *master,
- 				 struct spi_message *msg)
-@@ -1026,6 +1032,7 @@ static int stm32_spi_prepare_msg(struct spi_master *master,
- 
- /**
-  * stm32f4_spi_dma_tx_cb - dma callback
-+ * @data: pointer to the spi controller data structure
-  *
-  * DMA callback is called when the transfer is complete for DMA TX channel.
-  */
-@@ -1041,6 +1048,7 @@ static void stm32f4_spi_dma_tx_cb(void *data)
- 
- /**
-  * stm32f4_spi_dma_rx_cb - dma callback
-+ * @data: pointer to the spi controller data structure
-  *
-  * DMA callback is called when the transfer is complete for DMA RX channel.
-  */
-@@ -1054,6 +1062,7 @@ static void stm32f4_spi_dma_rx_cb(void *data)
- 
- /**
-  * stm32h7_spi_dma_cb - dma callback
-+ * @data: pointer to the spi controller data structure
-  *
-  * DMA callback is called when the transfer is complete or when an error
-  * occurs. If the transfer is complete, EOT flag is raised.
-@@ -1079,6 +1088,9 @@ static void stm32h7_spi_dma_cb(void *data)
- /**
-  * stm32_spi_dma_config - configure dma slave channel depending on current
-  *			  transfer bits_per_word.
-+ * @spi: pointer to the spi controller data structure
-+ * @dma_conf: pointer to the dma_slave_config structure
-+ * @dir: direction of the dma transfer
-  */
- static void stm32_spi_dma_config(struct stm32_spi *spi,
- 				 struct dma_slave_config *dma_conf,
-@@ -1126,6 +1138,7 @@ static void stm32_spi_dma_config(struct stm32_spi *spi,
- /**
-  * stm32f4_spi_transfer_one_irq - transfer a single spi_transfer using
-  *				  interrupts
-+ * @spi: pointer to the spi controller data structure
-  *
-  * It must returns 0 if the transfer is finished or 1 if the transfer is still
-  * in progress.
-@@ -1166,6 +1179,7 @@ static int stm32f4_spi_transfer_one_irq(struct stm32_spi *spi)
- /**
-  * stm32h7_spi_transfer_one_irq - transfer a single spi_transfer using
-  *				  interrupts
-+ * @spi: pointer to the spi controller data structure
-  *
-  * It must returns 0 if the transfer is finished or 1 if the transfer is still
-  * in progress.
-@@ -1207,6 +1221,7 @@ static int stm32h7_spi_transfer_one_irq(struct stm32_spi *spi)
- /**
-  * stm32f4_spi_transfer_one_dma_start - Set SPI driver registers to start
-  *					transfer using DMA
-+ * @spi: pointer to the spi controller data structure
-  */
- static void stm32f4_spi_transfer_one_dma_start(struct stm32_spi *spi)
- {
-@@ -1227,6 +1242,7 @@ static void stm32f4_spi_transfer_one_dma_start(struct stm32_spi *spi)
- /**
-  * stm32h7_spi_transfer_one_dma_start - Set SPI driver registers to start
-  *					transfer using DMA
-+ * @spi: pointer to the spi controller data structure
-  */
- static void stm32h7_spi_transfer_one_dma_start(struct stm32_spi *spi)
- {
-@@ -1243,6 +1259,8 @@ static void stm32h7_spi_transfer_one_dma_start(struct stm32_spi *spi)
- 
- /**
-  * stm32_spi_transfer_one_dma - transfer a single spi_transfer using DMA
-+ * @spi: pointer to the spi controller data structure
-+ * @xfer: pointer to the spi_transfer structure
-  *
-  * It must returns 0 if the transfer is finished or 1 if the transfer is still
-  * in progress.
-@@ -1405,7 +1423,7 @@ static void stm32_spi_set_mbr(struct stm32_spi *spi, u32 mbrdiv)
- /**
-  * stm32_spi_communication_type - return transfer communication type
-  * @spi_dev: pointer to the spi device
-- * transfer: pointer to spi transfer
-+ * @transfer: pointer to spi transfer
-  */
- static unsigned int stm32_spi_communication_type(struct spi_device *spi_dev,
- 						 struct spi_transfer *transfer)
-@@ -1522,7 +1540,7 @@ static void stm32h7_spi_data_idleness(struct stm32_spi *spi, u32 len)
- /**
-  * stm32h7_spi_number_of_data - configure number of data at current transfer
-  * @spi: pointer to the spi controller data structure
-- * @len: transfer length
-+ * @nb_words: transfer length (in words)
-  */
- static int stm32h7_spi_number_of_data(struct stm32_spi *spi, u32 nb_words)
- {
-@@ -1546,6 +1564,9 @@ static int stm32h7_spi_number_of_data(struct stm32_spi *spi, u32 nb_words)
-  * stm32_spi_transfer_one_setup - common setup to transfer a single
-  *				  spi_transfer either using DMA or
-  *				  interrupts.
-+ * @spi: pointer to the spi controller data structure
-+ * @spi_dev: pointer to the spi device
-+ * @transfer: pointer to spi transfer
-  */
- static int stm32_spi_transfer_one_setup(struct stm32_spi *spi,
- 					struct spi_device *spi_dev,
-@@ -1625,6 +1646,9 @@ static int stm32_spi_transfer_one_setup(struct stm32_spi *spi,
- 
- /**
-  * stm32_spi_transfer_one - transfer a single spi_transfer
-+ * @master: controller master interface
-+ * @spi_dev: pointer to the spi device
-+ * @transfer: pointer to spi transfer
-  *
-  * It must return 0 if the transfer is finished or 1 if the transfer is still
-  * in progress.
-@@ -1658,6 +1682,8 @@ static int stm32_spi_transfer_one(struct spi_master *master,
- 
- /**
-  * stm32_spi_unprepare_msg - relax the hardware
-+ * @master: controller master interface
-+ * @msg: pointer to the spi message
-  */
- static int stm32_spi_unprepare_msg(struct spi_master *master,
- 				   struct spi_message *msg)
-@@ -1671,6 +1697,7 @@ static int stm32_spi_unprepare_msg(struct spi_master *master,
- 
- /**
-  * stm32f4_spi_config - Configure SPI controller as SPI master
-+ * @spi: pointer to the spi controller data structure
-  */
- static int stm32f4_spi_config(struct stm32_spi *spi)
- {
-@@ -1701,6 +1728,7 @@ static int stm32f4_spi_config(struct stm32_spi *spi)
- 
- /**
-  * stm32h7_spi_config - Configure SPI controller as SPI master
-+ * @spi: pointer to the spi controller data structure
-  */
- static int stm32h7_spi_config(struct stm32_spi *spi)
- {
+I do not want to pick on words here but to me it sounds this tunable is
+clearly documented as the explicit override for the global value. The
+root memcg corresponds to the global limit because root tends to be
+special in many other aspects. But in general, the semantic of knobs is
+that they do not unexpectedly change their values without an explicit
+user/admin intervention.
+> 
+> Also, shall this magic -1 be exposed to the user? I think it's a "no",
+> but what if the user wants to un-override the memcg.swappiness...
+
+If we are to use such a semantic then it absolutely has to be an opt-in
+behavior and expressed in some way to the user space (e.g. a symbolic
+name referring to the global setting).
+> 
+> What do you reckon?
+
+I am not convinced we need it. There would have to be a real life
+usecase that cannot really work with the current semantic. I remember
+that this has been brought up when discussing early swappiness
+initialization [1]. But it seems there is a much better solution for
+that problem [2].
+
+[1] http://lkml.kernel.org/r/BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com
+[2] http://lkml.kernel.org/r/20200317132105.24555-1-vbabka@suse.cz
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
