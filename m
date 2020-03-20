@@ -2,82 +2,93 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13723C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74991C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE6E20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 488942076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584701728;
+	bh=LzPRF7DoVrNKXkyG1E1Ei1tvzAqqWFjViJMw82ItyMc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a4skhh0QL7jcxvygV38wDpJxu4HfG+pl44A63tzSfJtxkVp3e13RGVD1upXqwDsxq
+	 YQZ6L6h5lq2wrC9KG4bUUBZdaHcMOs2n6LiUO/gBBSkYPUgyVw8U4dC0mtPeuGZOyR
+	 9C8/ogLeAqKB7s2/sSYApC2RF/i6ITImPi1mryU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbgCTKrY (ORCPT
+        id S1727113AbgCTKzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:47:24 -0400
-Received: from smtprelay0225.hostedemail.com ([216.40.44.225]:58422 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726955AbgCTKrY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:47:24 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 73F96182CF66A;
-        Fri, 20 Mar 2020 10:47:23 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: plant48_233358f93502b
-X-Filterd-Recvd-Size: 2147
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 20 Mar 2020 10:47:21 +0000 (UTC)
-Message-ID: <f957b11abb70457e7bd8c2652d41e7f07024e301.camel@perches.com>
-Subject: Re: [PATCH v11 08/12] pwm: stm32-lp: Use %llu format specifier for
- period
-From:   Joe Perches <joe@perches.com>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>,
-        linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Date:   Fri, 20 Mar 2020 03:45:35 -0700
-In-Reply-To: <5ea1fa27dd036ce732c1c7a1a5d84362752a911f.1584667964.git.gurus@codeaurora.org>
-References: <cover.1584667964.git.gurus@codeaurora.org>
-         <5ea1fa27dd036ce732c1c7a1a5d84362752a911f.1584667964.git.gurus@codeaurora.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Fri, 20 Mar 2020 06:55:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726726AbgCTKzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 06:55:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B36B820739;
+        Fri, 20 Mar 2020 10:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584701718;
+        bh=LzPRF7DoVrNKXkyG1E1Ei1tvzAqqWFjViJMw82ItyMc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eARZ1fuD3zAgPxwkLApSrGBX0K2ZJbujfaf92u19zgJ8yXV5YuRJuWdOxDKSidKaP
+         S+M66UbVGD6NoYBbLxc7Q9DquA4qTi7m2bx1OLJ8ler2JJyY2RLe5FSUIR2tNio5TG
+         soj7EhMCg3YTB5biGf2Y4knelNaKzELZqkiztSmQ=
+Date:   Fri, 20 Mar 2020 11:55:13 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 00/60] 5.4.27-rc1 review
+Message-ID: <20200320105513.GA450546@kroah.com>
+References: <20200319123919.441695203@linuxfoundation.org>
+ <bfdce3ef-5fe9-8dab-1695-be3d33727529@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bfdce3ef-5fe9-8dab-1695-be3d33727529@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-03-19 at 18:41 -0700, Guru Das Srinagesh wrote:
-> Since the PWM framework is switching struct pwm_args.period's
-> datatype to u64, prepare for this transition by using the right
-> specifier for printing a 64-bit value.
-[]
-> diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-[]
-> @@ -61,7 +61,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	do_div(div, NSEC_PER_SEC);
->  	if (!div) {
->  		/* Clock is too slow to achieve requested period. */
-> -		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
-> +		dev_dbg(priv->chip.dev, "Can't reach %llu ns\n", state->period);
->  		return -EINVAL;
->  	}
+On Thu, Mar 19, 2020 at 04:55:20PM -0700, Guenter Roeck wrote:
+> On 3/19/20 6:03 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.4.27 release.
+> > There are 60 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
+> > Anything received after that time might be too late.
+> > 
+> 
+> Build results:
+> 	total: 158 pass: 158 fail: 0
+> Qemu test results:
+> 	total: 427 pass: 425 fail: 2
+> Failed tests:
+> 	mipsel64:64r6el_defconfig:notests:smp:ide:hd
+> 	mipsel64:64r6el_defconfig:notests:smp:ide:cd
+> 
+> Building mipsel64:64r6el_defconfig:notests:smp:ide:hd ... failed
+> ------------
+> Error log:
+> arch/mips/vdso/vdso.so.dbg.raw: PIC 'jalr t9' calls are not supported
+> 
+> I was unable to figure out why I only see this problem in v5.4.y.
+> The build error is easy to reproduce with gcc 9.2.0 and "64r6el_defconfig".
 
-Doesn't this introduce a warning now without the
-actual change to the type of state->period?
+I've dropped a bunch of mips vdso patches from 5.5 and 5.4 queues now
+and will push out new -rcs with those in them to hopefully resolve these
+issues.
 
-Likely these patches should either not be separated
-or this should also use a cast to avoid introducing
-intermediate compilation warnings.
+thanks,
 
-
+greg k-h
