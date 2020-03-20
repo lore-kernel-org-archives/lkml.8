@@ -2,121 +2,97 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9A4C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DAEC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8502072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC1792072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:08:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584745689;
+	bh=U26CY0BQGcpUtPuH/7HtSD84yz0NB/7PRIZLpRdJOoA=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=b/oLVorf84328xexhT8wXXaNf7gytBqlmARpv8wH8JRo+zcZDrkiUVzuLilXLBew1
+	 gTgz+NvxLdOBNd8NYJzRh5o6VXPR/dAFJzfb1TfMJE2k+2c9kGHCfl6XMbh5rWyO7x
+	 chQc+k/ugorePooD/zC1CVNbA3qjl4myT1WLQB/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbgCTXIA (ORCPT
+        id S1727629AbgCTXII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 19:08:00 -0400
-Received: from mga02.intel.com ([134.134.136.20]:27376 "EHLO mga02.intel.com"
+        Fri, 20 Mar 2020 19:08:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbgCTXH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 19:07:59 -0400
-IronPort-SDR: I+AQGVERzFSy+qilyyhu/KMMQDmcJpUY/a1mZloSmQJvY/9EiU/XFCTD+j8mEoMLr2wTKSG2J/
- EWyv05OxlPQA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 16:07:59 -0700
-IronPort-SDR: LU95IsHGJJyqn4kA6wEBUyYA9ONo3x2Gm+6Ul+T+H68nK64sJKq6PjQzzvg/mk4uT4QPVOSHmA
- VsEWcRS5D2fA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
-   d="scan'208";a="249025235"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 20 Mar 2020 16:07:58 -0700
-Date:   Fri, 20 Mar 2020 16:07:58 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: Re: [PATCH 1/7] KVM: Fix out of range accesses to memslots
-Message-ID: <20200320230758.GA8418@linux.intel.com>
-References: <20200320205546.2396-1-sean.j.christopherson@intel.com>
- <20200320205546.2396-2-sean.j.christopherson@intel.com>
- <20200320221708.GF127076@xz-x1>
- <20200320224041.GB3866@linux.intel.com>
- <20200320225802.GH127076@xz-x1>
+        id S1727550AbgCTXII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 19:08:08 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 060122072C;
+        Fri, 20 Mar 2020 23:08:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584745688;
+        bh=U26CY0BQGcpUtPuH/7HtSD84yz0NB/7PRIZLpRdJOoA=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=mIY8xyMYxhFbdVAAr8V0NjP439UxHAwqqKMAk5ZJKQuUeAhobURyBW76+2wqPo2BU
+         DLefhhg3oeoONuOTMS9gAp1Bfu27Lv5brDztYrzpSDGSzyaqa5CySnrMI5fBe3vWpA
+         bU81cEDTcHC+7lMIfM0nlhMF49uOjyqD31VtU7I8=
+Date:   Sat, 21 Mar 2020 00:08:05 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] intel-ish-hid: ishtp: ishtp-dev.h: Replace
+ zero-length array with flexible-array member
+In-Reply-To: <20200319213108.GA9320@embeddedor.com>
+Message-ID: <nycvar.YFH.7.76.2003210007530.19500@cbobk.fhfr.pm>
+References: <20200319213108.GA9320@embeddedor.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320225802.GH127076@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 06:58:02PM -0400, Peter Xu wrote:
-> On Fri, Mar 20, 2020 at 03:40:41PM -0700, Sean Christopherson wrote:
- > > I thought resetting lru_slot to zero would be good enough when
-> > > duplicating the slots... however if we want to do finer grained reset,
-> > > maybe even better to reset also those invalidated ones (since we know
-> > > this information)?
-> > > 
-> > >    	if (slots->lru_slot >= slots->id_to_index[memslot->id])
-> > >    		slots->lru_slot = 0;
-> > 
-> > I'd prefer to go with the more obviously correct version.  This code will
-> > rarely trigger, e.g. larger slots have lower indices and are more likely to
-> > be the LRU (by virtue of being the biggest), and dynamic memslot deletion
-> > is usually for relatively small ranges that are being remapped by the guest.
+On Thu, 19 Mar 2020, Gustavo A. R. Silva wrote:
+
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
-> IMHO the more obvious correct version could be unconditionally setting
-> lru_slot to something invalid (e.g. -1) in kvm_dup_memslots(), then in
-> the two search_memslots() skip the cache if lru_slot is invalid.
-> That's IMHO easier to understand than the "!slots->used_slots" checks.
-> But I've no strong opinion.
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-We'd still need the !slots->used_slots check.  I considered adding an
-explicit check on @slot for the cache lookup, e.g.
+Applied, thanks.
 
-static inline struct kvm_memory_slot *
-search_memslots(struct kvm_memslots *slots, gfn_t gfn)
-{
-	int start = 0, end = slots->used_slots;
-	int slot = atomic_read(&slots->lru_slot);
-	struct kvm_memory_slot *memslots = slots->memslots;
+-- 
+Jiri Kosina
+SUSE Labs
 
-	if (likely(slot < slots->used_slots) &&
-	    gfn >= memslots[slot].base_gfn &&
-	    gfn < memslots[slot].base_gfn + memslots[slot].npages)
-		return &memslots[slot];
-
-
-But then the back half of the function still ends up with an out-of-bounds
-bug.  E.g. if used_slots == 0, then start==0, and memslots[start].base_gfn
-accesses garbage.
-
-	while (start < end) {
-		slot = start + (end - start) / 2;
-
-		if (gfn >= memslots[slot].base_gfn)
-			end = slot;
-		else
-			start = slot + 1;
-	}
-
-	if (gfn >= memslots[start].base_gfn &&
-	    gfn < memslots[start].base_gfn + memslots[start].npages) {
-		atomic_set(&slots->lru_slot, start);
-		return &memslots[start];
-	}
-
-	return NULL;
-}
-
-I also didn't want to invalidate the lru_slot any more than is necessary,
-not that I'd expect it to make a noticeable difference even in a
-pathalogical scenario, but it seemed prudent.
