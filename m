@@ -2,95 +2,128 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24800C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 06:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EFDC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 06:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E456A20753
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 06:45:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584773116;
-	bh=kCtRiTU7crd5ifKSb3kmQ7l5gFP8U6qpxWv87hCw/p8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fJa63HMA9g4/n05pfvtXbo8iOKq8Oovswqa9+9FH8ZvuY9QHJhLgFitB1724tNJ3y
-	 6TvpQ7fwwTyhDS3tDIibOMi1hrCuJM9E2XEpjs2+WxxZv6at7J7Eq+57Kq1jG2Povv
-	 tPH2u+0/FQOun61yQsutnhWmhN8nkyGVPlva3Hu8=
+	by mail.kernel.org (Postfix) with ESMTP id C7BF0206F9
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 06:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgCUGpO (ORCPT
+        id S1728059AbgCUG6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 02:45:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726942AbgCUGpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 02:45:14 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBB79206F9;
-        Sat, 21 Mar 2020 06:45:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584773113;
-        bh=kCtRiTU7crd5ifKSb3kmQ7l5gFP8U6qpxWv87hCw/p8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NNpbUJEoMq2YS88femhVeYjAXVTEfjwAmJHB33aqr9h6UaOry15uZl8mcckGB3pg/
-         B68T8AYTq4GuH3+U/0dMUT+XnUSBgPtwAJkqHros+KGiRhbq1yDETi90l50ch484dr
-         /zg6lJXhue6kSwpaU+IKrxZQ7y/LpEpvkFaxJ2jM=
-Date:   Fri, 20 Mar 2020 23:45:13 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Entropy Moe <3ntr0py1337@gmail.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: KASAN: stack-out-of-bounds Write in mpol_to_str
-Message-Id: <20200320234513.9b05abe1ade85712db2d6478@linux-foundation.org>
-In-Reply-To: <CALzBtj+8AYASaYW2fqgmgthCgeAJ2N0Q+ey2wqgEKjBtH34Vcg@mail.gmail.com>
-References: <CALzBtjLSqFhSNAf4YusxuE1piUTzOSLFGFD4RrhPLQAmgpyL5g@mail.gmail.com>
-        <9e699198-d1e4-f285-f4ed-15fbf8a8c16e@infradead.org>
-        <CALzBtj+8AYASaYW2fqgmgthCgeAJ2N0Q+ey2wqgEKjBtH34Vcg@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 21 Mar 2020 02:58:24 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:32972 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728010AbgCUG6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 02:58:24 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 86C6C5A21D6BF93A4766;
+        Sat, 21 Mar 2020 14:58:20 +0800 (CST)
+Received: from localhost.localdomain (10.175.34.53) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 21 Mar 2020 14:57:22 +0800
+From:   Luo bin <luobin9@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoxianjun@huawei.com>, <luobin9@huawei.com>,
+        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
+Subject: [PATCH net 1/5] hinic: fix a bug of waitting for IO stopped
+Date:   Fri, 20 Mar 2020 23:13:16 +0000
+Message-ID: <20200320231320.1001-2-luobin9@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200320231320.1001-1-luobin9@huawei.com>
+References: <20200320231320.1001-1-luobin9@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.34.53]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Mar 2020 12:36:38 +0400 Entropy Moe <3ntr0py1337@gmail.com> wrote:
+it's unreliable for fw to check whether IO is stopped, so driver
+wait for enough time to ensure IO process is done in hw before
+freeing resources
 
-> Hello Randy,
-> please see attached POC for the vulnerability.
-> 
+Signed-off-by: Luo bin <luobin9@huawei.com>
+---
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.c  | 51 +------------------
+ 1 file changed, 2 insertions(+), 49 deletions(-)
 
-Thanks.  Ouch.  afaict shmem's S_IFREG inode's mpol's preferred_node is
-messed up.
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+index 79b3d53f2fbf..c7c75b772a86 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+@@ -360,50 +360,6 @@ static int wait_for_db_state(struct hinic_hwdev *hwdev)
+ 	return -EFAULT;
+ }
+ 
+-static int wait_for_io_stopped(struct hinic_hwdev *hwdev)
+-{
+-	struct hinic_cmd_io_status cmd_io_status;
+-	struct hinic_hwif *hwif = hwdev->hwif;
+-	struct pci_dev *pdev = hwif->pdev;
+-	struct hinic_pfhwdev *pfhwdev;
+-	unsigned long end;
+-	u16 out_size;
+-	int err;
+-
+-	if (!HINIC_IS_PF(hwif) && !HINIC_IS_PPF(hwif)) {
+-		dev_err(&pdev->dev, "Unsupported PCI Function type\n");
+-		return -EINVAL;
+-	}
+-
+-	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
+-
+-	cmd_io_status.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
+-
+-	end = jiffies + msecs_to_jiffies(IO_STATUS_TIMEOUT);
+-	do {
+-		err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
+-					HINIC_COMM_CMD_IO_STATUS_GET,
+-					&cmd_io_status, sizeof(cmd_io_status),
+-					&cmd_io_status, &out_size,
+-					HINIC_MGMT_MSG_SYNC);
+-		if ((err) || (out_size != sizeof(cmd_io_status))) {
+-			dev_err(&pdev->dev, "Failed to get IO status, ret = %d\n",
+-				err);
+-			return err;
+-		}
+-
+-		if (cmd_io_status.status == IO_STOPPED) {
+-			dev_info(&pdev->dev, "IO stopped\n");
+-			return 0;
+-		}
+-
+-		msleep(20);
+-	} while (time_before(jiffies, end));
+-
+-	dev_err(&pdev->dev, "Wait for IO stopped - Timeout\n");
+-	return -ETIMEDOUT;
+-}
+-
+ /**
+  * clear_io_resource - set the IO resources as not active in the NIC
+  * @hwdev: the NIC HW device
+@@ -423,11 +379,8 @@ static int clear_io_resources(struct hinic_hwdev *hwdev)
+ 		return -EINVAL;
+ 	}
+ 
+-	err = wait_for_io_stopped(hwdev);
+-	if (err) {
+-		dev_err(&pdev->dev, "IO has not stopped yet\n");
+-		return err;
+-	}
++	/* sleep 100ms to wait for firmware stopping I/O */
++	msleep(100);
+ 
+ 	cmd_clear_io_res.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
+ 
+-- 
+2.17.1
 
-I don't think anyone has worked on this code in a decade or more.  Is
-someone up to taking a look please?
-
-
-> On Mon, Mar 16, 2020 at 10:46 PM Randy Dunlap <rdunlap@infradead.org> wrote:
-> 
-> > On 3/15/20 12:57 PM, Entropy Moe wrote:
-> > > Hello team,
-> > > how are you ?
-> > > I wanted to report a bug on mempolicy.c. I found the bug on the latest
-> > version of the kernel.
-> > >
-> > > which is stack out of bound vulnerability.
-> > >
-> > > I am attaching  report.
-> > >
-> > > If you need the POC crash code, I can provide.
-> >
-> > Hi Moe,
-> >
-> > Please post the POC code and your kernel .config file.
-> >
-> > thanks.
-> > --
-> > ~Randy
-> >
-> >
