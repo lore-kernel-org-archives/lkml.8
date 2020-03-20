@@ -2,178 +2,115 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74457C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3B2C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 514C72072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CFEE20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:36:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wX3eXeSN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgCTDdk (ORCPT
+        id S1726956AbgCTDgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 23:33:40 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:38672 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726103AbgCTDdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 23:33:38 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3381A1A035A;
-        Fri, 20 Mar 2020 04:33:35 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6A17D1A0344;
-        Fri, 20 Mar 2020 04:33:27 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3FAD7402F3;
-        Fri, 20 Mar 2020 11:33:18 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, horia.geanta@nxp.com, peng.fan@nxp.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 3/3] arm64: dts: imx8mp: Add thermal zones support
-Date:   Fri, 20 Mar 2020 11:26:31 +0800
-Message-Id: <1584674791-9717-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584674791-9717-1-git-send-email-Anson.Huang@nxp.com>
-References: <1584674791-9717-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 19 Mar 2020 23:36:41 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:12548 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726603AbgCTDgl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 23:36:41 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584675400; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=znBJGhFi3/HMKJ6NsPkvkKTgdVlBcafwD2Un8aWndTg=; b=wX3eXeSNJhOjckI1aDEC1L4UdwskQps2pTteMaJeegi/tp2UAxnW3eJTO4aPtCwTyI/5LPH8
+ QjO7ScoayTyKkNUYIjPFkweddd0sbzGxVTDoLNwe/jnB/W9hjaF/Oqb1qK/z5ptE+FnaZ9Eq
+ HlV8FKMd/9VWys2sR+0Et1ZZ/pI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e743a3c.7f7fe2817b58-smtp-out-n05;
+ Fri, 20 Mar 2020 03:36:28 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BE01AC44788; Fri, 20 Mar 2020 03:36:26 +0000 (UTC)
+Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1DC4CC433D2;
+        Fri, 20 Mar 2020 03:36:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1DC4CC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     John Stultz <john.stultz@linaro.org>, smasetty@codeaurora.org,
+        Brian Masney <masneyb@onstation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Douglas Anderson <dianders@chromium.org>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>,
+        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/2] msm/gpu/a6xx: use the DMA-API for GMU memory allocations
+Date:   Thu, 19 Mar 2020 21:36:09 -0600
+Message-Id: <20200320033611.7623-1-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX8MP has a TMU inside which supports two thermal zones, add support
-for them.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No change.
----
- arch/arm64/boot/dts/freescale/imx8mp.dtsi | 63 +++++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+When CONFIG_INIT_ON_ALLOC_DEFAULT_ON the GMU memory allocator runs afoul of
+cache coherency issues because it is mapped as write-combine without clearing
+the cache after it was zeroed.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index 9b1616e..175165b 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -7,6 +7,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/thermal/thermal.h>
- 
- #include "imx8mp-pinfunc.h"
- 
-@@ -43,6 +44,7 @@
- 			clocks = <&clk IMX8MP_CLK_ARM>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_1: cpu@1 {
-@@ -53,6 +55,7 @@
- 			clocks = <&clk IMX8MP_CLK_ARM>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_2: cpu@2 {
-@@ -63,6 +66,7 @@
- 			clocks = <&clk IMX8MP_CLK_ARM>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_3: cpu@3 {
-@@ -73,6 +77,7 @@
- 			clocks = <&clk IMX8MP_CLK_ARM>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_L2: l2-cache0 {
-@@ -127,6 +132,57 @@
- 		method = "smc";
- 	};
- 
-+	thermal-zones {
-+		cpu-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <2000>;
-+			thermal-sensors = <&tmu 0x0>;
-+			trips {
-+				cpu_alert0: trip0 {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu_crit0: trip1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert0>;
-+					cooling-device =
-+						<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		soc-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <2000>;
-+			thermal-sensors = <&tmu 0x1>;
-+			trips {
-+				soc_alert0: trip0 {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				soc_crit0: trip1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-@@ -215,6 +271,13 @@
- 				gpio-ranges = <&iomuxc 0 114 30>;
- 			};
- 
-+			tmu: tmu@30260000 {
-+				compatible = "fsl,imx8mp-tmu";
-+				reg = <0x30260000 0x10000>;
-+				clocks = <&clk IMX8MP_CLK_TSENSOR_ROOT>;
-+				#thermal-sensor-cells = <1>;
-+			};
-+
- 			wdog1: watchdog@30280000 {
- 				compatible = "fsl,imx8mp-wdt", "fsl,imx21-wdt";
- 				reg = <0x30280000 0x10000>;
+Rather than duplicate the hacky workaround we use in the GEM allocator for the
+same reason it turns out that we don't need to have a bespoke memory allocator
+for the GMU anyway. It uses a flat, global address space and there are only
+two relatively minor allocations anyway. In short this is essentially what the
+DMA API was created for so replace a bunch of memory management code with two
+calls to allocate and free DMA memory and we're fine.
+
+In a previous version of this series I added the dma-ranges property to the
+device tree file for the GMU and updated the bindings to YAML. Rob correctly
+pointed out that we didn't need dma-ranges any more but I'm still pushing the
+YAML conversion because it is good and we'll eventually need it anyway so why
+not.
+
+v6: Check return value of dma_set_mask_and_coherent per Christoph Hellwig
+
+v5: Refresh on Brian Masney's patch that removes sram from gmu.txt [1]
+
+v4: Use dma_alloc_wc() wrappers per Michael Ruhl.
+
+v3: Fix YAML description per RobH and remove dma-ranges and replace it with the
+correct DMA mask in the GMU device. Convert the iova type to a dma_attr_t to
+make it 32 bit friendly.
+
+v2: Fix the example bindings for dma-ranges - the third item is the size
+Pass false to of_dma_configure so that it fails probe if the DMA region is not
+set up.
+
+[1] https://patchwork.freedesktop.org/patch/356869/?series=74446&rev=1
+
+Jordan Crouse (2):
+  dt-bindings: display: msm: Convert GMU bindings to YAML
+  drm/msm/a6xx: Use the DMA API for GMU memory objects
+
+ .../devicetree/bindings/display/msm/gmu.txt   |  65 ---------
+ .../devicetree/bindings/display/msm/gmu.yaml  | 123 ++++++++++++++++++
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c         | 115 ++--------------
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.h         |   6 +-
+ 4 files changed, 137 insertions(+), 172 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
+ create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.yaml
+
 -- 
-2.7.4
-
+2.17.1
