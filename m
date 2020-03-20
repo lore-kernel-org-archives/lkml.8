@@ -2,134 +2,534 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C11C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E67C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D52720663
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0EA420663
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:51:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bOREPh6B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZFrqKoFX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgCTRvL (ORCPT
+        id S1727092AbgCTRvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:51:11 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39552 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbgCTRvL (ORCPT
+        Fri, 20 Mar 2020 13:51:35 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33454 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCTRvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:51:11 -0400
-Received: by mail-qk1-f196.google.com with SMTP id t17so7751172qkm.6;
-        Fri, 20 Mar 2020 10:51:10 -0700 (PDT)
+        Fri, 20 Mar 2020 13:51:35 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r7so7811220wmg.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 10:51:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hxHH0kI7s1vSpVNgl5JYOWg+jijYanmSy/fK/k59mT8=;
-        b=bOREPh6B9ekSJA6CE6WbUoN4PEKqt+XZgcxLZUZqrwE/Qf1daE1U/j9xt2w6ebgFp0
-         0M46nVb/5VZLl5ExIYy0TMgkyox0HTEbDTQSIBZCpdYaJ6jP3tHgifgOvuLCjW+77yZQ
-         HnVt1OCNXk/KQH6VrM57fFVIKLQh4lpuGPLVwOIYYIp/lYlYiojoURwfVNHHy3kesBV2
-         Rm6hrK6GnvFkoHuI7zO//Ar+i2JwvXVtFySdI3FOMdJ5QtIJxQW4bGmdGBTXkAcHTv4S
-         xQ4cfh+InlKtIFTLEQx/ptuKpAzPmebKwdlnkEFg9dNKwZsSmTxJxSm9PsJSjC9KceP/
-         +0YA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mRdsdIDHZ/uk3P+vR5Dpf7xsgikM9X1ufq5doVe+IrM=;
+        b=ZFrqKoFXjATo3tihNTfSa1MsqsJSJb8hPcVAt8/qgu+wq7k0dYGzCj5wtMTFutRCXn
+         nhm38OvbI/y7v08N6bKC1jALZIZi9hDGVl5cyhFS4nZGC5kxC81Ohzrx2TVMEPOZG2FL
+         NyoW8e3q1bgqjROUPIm/ckNGn8e5/zG5QP3EBlPF+8t56fCxpU81mSJsuLA5DzZwoq+d
+         JNGYxx20c8jvl1n3lRdfnmktVsm1Ue36CLdy8rszBgRJMAKDlr2g3S97ZoeKz3nq0Nlr
+         57HH8Rr3xQZjnU9PHDuMZ3l9sPSDl4+zhndaJCcQ/Od4K9Ov64ldDmfJW/OlkZD1DPPb
+         35mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hxHH0kI7s1vSpVNgl5JYOWg+jijYanmSy/fK/k59mT8=;
-        b=sNsqfBisxENwUj/HIfRt6hhZEGaDxZNmQxPD53id+kmZDS2ZOoxJqYItKaFkqieFCO
-         sj/t0x2Csdo6cs8giFgqO1k8ZVVncovlOj4gR4q8y/CDu9E+fdK19/ap/yA0kmBj6hCh
-         S5/w8oILKgqJ96Tpg/rquWd6Gpkys1X4fJnpS9h5HoSRWqps7v8ZaMO36OJWI30BoGnZ
-         IxHDsDG9mTpTu9fLR1Bkve0d/uuH26N0udgowZPkCHV1nE3mje9zAmkr+e7fTAIPNaNM
-         j7ovnj4VIPl9hy4hmr5MYOoHDtfyvSm4GLX+RX8NGD37FXp42Kx6uuC0sTma5qbPzrtI
-         LRXA==
-X-Gm-Message-State: ANhLgQ3bsL4zhcIxL3ZDmPRkPmeBQTceglFtYrnbZwwxAB8gr9It6b/F
-        rHuddUOFAUpxQFad1fhKQ1k=
-X-Google-Smtp-Source: ADFU+vtfxAY9dL7Q7kXhNYv31rCod+UHnzHqE+xyavb3dEcZvHd+VebFGeabrnJckiMgwi3q1ojrLw==
-X-Received: by 2002:a37:9104:: with SMTP id t4mr9634724qkd.449.1584726669509;
-        Fri, 20 Mar 2020 10:51:09 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id z1sm5136726qtc.51.2020.03.20.10.51.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 10:51:09 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 20 Mar 2020 13:51:07 -0400
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     kbuild@lists.01.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        kbuild-all@lists.01.org, Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/14] efi/gop: Allow specifying mode number on command
- line
-Message-ID: <20200320175104.GA3101477@rani.riverdale.lan>
-References: <20200319192855.29876-12-nivedita@alum.mit.edu>
- <20200320143526.GI4650@kadam>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mRdsdIDHZ/uk3P+vR5Dpf7xsgikM9X1ufq5doVe+IrM=;
+        b=MY+TEUKdONuSGeNG8xqxqp+UQhibNx3d9+PF6GsBsiw9foItfVbiUx9M1if74wnXiv
+         BpPmCOYIApAss0Vt7g32oAG1mNnLixob16HriZTi627nlSoov5JBfPzxETGYt+OSvn8n
+         hRAHaDmiRm+vgK61xmpjx2D+rc4QKuwu2T+cIYjXhQN2DNY9Qx/moZ7exLSqVaiIDSJ5
+         bb6kFiNao6NeaZZAao9yJO5vdl6aXTeWvM6xUfbUAZNDfOjiScSkyTAvydd54A9oK/MC
+         L5n9/lWlxVi+cuLcmdTwTG6Cpnyf6uj42jXoekb4kS0bXnwZNRicXfWwAIWLk++USshg
+         pY0Q==
+X-Gm-Message-State: ANhLgQ0h8qJ3B2HNiWFhAR1/Mg1fYBg4lUKp//yYRroSCp75HfnRKe1I
+        wFHJRuHC41J7iWUn4WjmvoIW3w==
+X-Google-Smtp-Source: ADFU+vuQji2l9DYu4oGqkosZbg6rDTxzIAUhv40ED4Dj8frDAN8tYjJg6MUuBocZb2sVv0CTIVtBnQ==
+X-Received: by 2002:a1c:5544:: with SMTP id j65mr10232638wmb.60.1584726690960;
+        Fri, 20 Mar 2020 10:51:30 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id w11sm9544960wrv.86.2020.03.20.10.51.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Mar 2020 10:51:30 -0700 (PDT)
+Subject: Re: [PATCH 1/5] soundwire: bus_type: add master_device/driver support
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20200320162947.17663-1-pierre-louis.bossart@linux.intel.com>
+ <20200320162947.17663-2-pierre-louis.bossart@linux.intel.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <5d78f0f8-7418-e50e-6f0b-dd6988224744@linaro.org>
+Date:   Fri, 20 Mar 2020 17:51:29 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200320143526.GI4650@kadam>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200320162947.17663-2-pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 05:36:04PM +0300, Dan Carpenter wrote:
-> Hi Arvind,
-> 
-> Thank you for the patch! Perhaps something to improve:
-> 
-> url:    https://github.com/0day-ci/linux/commits/Arvind-Sankar/efi-gop-Refactoring-mode-setting-feature/20200320-044605
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git next
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> 
-> New smatch warnings:
-> drivers/firmware/efi/libstub/gop.c:113 set_mode() error: uninitialized symbol 'new_mode'.
-> 
-> # https://github.com/0day-ci/linux/commit/af85e496c9f577df9743784171b1cda94220dd8f
-> git remote add linux-review https://github.com/0day-ci/linux
-> git remote update linux-review
-> git checkout af85e496c9f577df9743784171b1cda94220dd8f
-> vim +/info +85 drivers/firmware/efi/libstub/gop.c
-> 
-> af85e496c9f577 Arvind Sankar 2020-03-19   97  static void set_mode(efi_graphics_output_protocol_t *gop)
-> af85e496c9f577 Arvind Sankar 2020-03-19   98  {
-> af85e496c9f577 Arvind Sankar 2020-03-19   99  	efi_graphics_output_protocol_mode_t *mode;
-> af85e496c9f577 Arvind Sankar 2020-03-19  100  	u32 cur_mode, new_mode;
-> af85e496c9f577 Arvind Sankar 2020-03-19  101  
-> af85e496c9f577 Arvind Sankar 2020-03-19  102  	switch (cmdline.option) {
-> af85e496c9f577 Arvind Sankar 2020-03-19  103  	case EFI_CMDLINE_NONE:
-> af85e496c9f577 Arvind Sankar 2020-03-19  104  		return;
-> af85e496c9f577 Arvind Sankar 2020-03-19  105  	case EFI_CMDLINE_MODE_NUM:
-> af85e496c9f577 Arvind Sankar 2020-03-19  106  		new_mode = choose_mode_modenum(gop);
-> af85e496c9f577 Arvind Sankar 2020-03-19  107  		break;
-> 
-> No default case?
 
-Yeah, it's an enum with the only two values covered by the switch cases,
-so it's really a bogus warning. I posted a v2 with a default case
-instead anyway to silence it.
 
+On 20/03/2020 16:29, Pierre-Louis Bossart wrote:
+> In the existing SoundWire code, Master Devices are not explicitly
+> represented - only SoundWire Slave Devices are exposed (the use of
+> capital letters follows the SoundWire specification conventions).
 > 
-> af85e496c9f577 Arvind Sankar 2020-03-19  108  	}
-> af85e496c9f577 Arvind Sankar 2020-03-19  109  
-> af85e496c9f577 Arvind Sankar 2020-03-19  110  	mode = efi_table_attr(gop, mode);
-> af85e496c9f577 Arvind Sankar 2020-03-19  111  	cur_mode = efi_table_attr(mode, mode);
-> af85e496c9f577 Arvind Sankar 2020-03-19  112  
-> af85e496c9f577 Arvind Sankar 2020-03-19 @113  	if (new_mode == cur_mode)
-> af85e496c9f577 Arvind Sankar 2020-03-19  114  		return;
-> af85e496c9f577 Arvind Sankar 2020-03-19  115  
-> af85e496c9f577 Arvind Sankar 2020-03-19  116  	if (efi_call_proto(gop, set_mode, new_mode) != EFI_SUCCESS)
-> af85e496c9f577 Arvind Sankar 2020-03-19  117  		efi_printk("Failed to set requested mode\n");
-> af85e496c9f577 Arvind Sankar 2020-03-19  118  }
+> The SoundWire Master Device provides the clock, synchronization
+> information and command/control channels. When multiple links are
+> supported, a Controller may expose more than one Master Device; they
+> are typically embedded inside a larger audio cluster (be it in an
+> SOC/chipset or an external audio codec), and we need to describe it
+> using the Linux device and driver model.  This will allow for
+> configuration functions to account for external dependencies such as
+> power rails, clock sources or wake-up mechanisms. This transition will
+> also allow for better sysfs support without the reference count issues
+> mentioned in the initial reviews.
 > 
+> In this patch, we convert the existing code to use an explicit
+> sdw_slave_type, then define new objects (sdw_master_device and
+> sdw_master_driver).
+> 
+> A parent (such as the Intel audio controller or its equivalent on
+> Qualcomm devices) would use sdw_master_device_add() to create the
+> device, passing a driver name as a parameter. The master device would
+> be released when device_unregister() is invoked by the parent.
+> 
+> Note that since there is no standard for the Master host-facing
+> interface, so the bus matching relies on a simple string matching (as
+> previously done with platform devices).
+> 
+> The 'Master Device' driver exposes callbacks for
+> probe/startup/shutdown/remove/process_wake. The startup and process
+> wake need to be called by the parent directly (using wrappers), while
+> the probe/shutdown/remove are handled by the SoundWire bus core upon
+> device creation and release.
+> 
+> Additional callbacks will be added in the future for e.g. autonomous
+> clock stop modes.
+> 
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 > ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>   drivers/soundwire/Makefile         |   2 +-
+>   drivers/soundwire/bus_type.c       | 139 +++++++++++++++++++++++++++--
+>   drivers/soundwire/master.c         | 129 ++++++++++++++++++++++++++
+>   drivers/soundwire/slave.c          |   7 +-
+>   include/linux/soundwire/sdw.h      |  59 ++++++++++++
+>   include/linux/soundwire/sdw_type.h |  36 +++++++-
+>   6 files changed, 363 insertions(+), 9 deletions(-)
+>   create mode 100644 drivers/soundwire/master.c
+> 
+
+
+This patch in general is missing device tree support for both matching 
+and uevent so this will not clearly work for Qualcomm controller unless 
+we do via platform bus, which does not sound right!
+
+
+> diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
+> index e2cdff990e9f..7319918e0aec 100644
+> --- a/drivers/soundwire/Makefile
+> +++ b/drivers/soundwire/Makefile
+> @@ -4,7 +4,7 @@
+>   #
+>   
+>   #Bus Objs
+> -soundwire-bus-objs := bus_type.o bus.o slave.o mipi_disco.o stream.o
+> +soundwire-bus-objs := bus_type.o bus.o master.o slave.o mipi_disco.o stream.o
+>   obj-$(CONFIG_SOUNDWIRE) += soundwire-bus.o
+>   
+>   ifdef CONFIG_DEBUG_FS
+> diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
+> index 17f096dd6806..09a25075e770 100644
+> --- a/drivers/soundwire/bus_type.c
+> +++ b/drivers/soundwire/bus_type.c
+> @@ -33,13 +33,33 @@ sdw_get_device_id(struct sdw_slave *slave, struct sdw_driver *drv)
+>   
+>   static int sdw_bus_match(struct device *dev, struct device_driver *ddrv)
+>   {
+> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
+> -	struct sdw_driver *drv = drv_to_sdw_driver(ddrv);
+> +	struct sdw_slave *slave;
+> +	struct sdw_driver *drv;
+> +	struct sdw_master_device *md;
+> +	struct sdw_master_driver *mdrv;
+> +	int ret = 0;
+>   
+> -	return !!sdw_get_device_id(slave, drv);
+> +	if (is_sdw_slave(dev)) {
+> +		slave = dev_to_sdw_dev(dev);
+> +		drv = drv_to_sdw_driver(ddrv);
+> +
+> +		ret = !!sdw_get_device_id(slave, drv);
+> +	} else {
+> +		md = dev_to_sdw_master_device(dev);
+> +		mdrv = drv_to_sdw_master_driver(ddrv);
+> +
+> +		/*
+> +		 * we don't have any hardware information so
+> +		 * match with a hopefully unique string
+> +		 */
+> +		ret = !strncmp(md->master_name, mdrv->driver.name,
+> +			       strlen(md->master_name));
+> +	}
+> +	return ret;
+>   }
+>   
+> -int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size)
+> +static int sdw_slave_modalias(const struct sdw_slave *slave, char *buf,
+> +			      size_t size)
+>   {
+>   	/* modalias is sdw:m<mfg_id>p<part_id> */
+>   
+> @@ -47,12 +67,31 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size)
+>   			slave->id.mfg_id, slave->id.part_id);
+>   }
+>   
+> +static int sdw_master_modalias(const struct sdw_master_device *md,
+> +			       char *buf, size_t size)
+> +{
+> +	/* modalias is sdw:<string> since we don't have any hardware info */
+> +
+> +	return snprintf(buf, size, "sdw:%s\n",
+> +			md->master_name);
+> +}
+> +
+>   static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
+>   {
+> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
+> +	struct sdw_slave *slave;
+> +	struct sdw_master_device *md;
+>   	char modalias[32];
+>   
+> -	sdw_slave_modalias(slave, modalias, sizeof(modalias));
+> +	if (is_sdw_slave(dev)) {
+> +		slave = dev_to_sdw_dev(dev);
+> +
+> +		sdw_slave_modalias(slave, modalias, sizeof(modalias));
+> +
+> +	} else {
+> +		md = dev_to_sdw_master_device(dev);
+> +
+> +		sdw_master_modalias(md, modalias, sizeof(modalias));
+> +	}
+>   
+>   	if (add_uevent_var(env, "MODALIAS=%s", modalias))
+>   		return -ENOMEM;
+> @@ -181,6 +220,94 @@ void sdw_unregister_driver(struct sdw_driver *drv)
+>   }
+>   EXPORT_SYMBOL_GPL(sdw_unregister_driver);
+>   
+> +static int sdw_master_drv_probe(struct device *dev)
+> +{
+> +	struct sdw_master_device *md = dev_to_sdw_master_device(dev);
+> +	struct sdw_master_driver *mdrv = drv_to_sdw_master_driver(dev->driver);
+> +	int ret;
+> +
+> +	/*
+> +	 * attach to power domain but don't turn on (last arg)
+> +	 */
+> +	ret = dev_pm_domain_attach(dev, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = mdrv->probe(md, md->pdata);
+> +	if (ret) {
+> +		dev_err(dev, "Probe of %s failed: %d\n",
+> +			mdrv->driver.name, ret);
+> +		dev_pm_domain_detach(dev, false);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int sdw_master_drv_remove(struct device *dev)
+> +{
+> +	struct sdw_master_device *md = dev_to_sdw_master_device(dev);
+> +	struct sdw_master_driver *mdrv = drv_to_sdw_master_driver(dev->driver);
+> +	int ret = 0;
+> +
+> +	if (mdrv->remove)
+> +		ret = mdrv->remove(md);
+> +
+> +	dev_pm_domain_detach(dev, false);
+> +
+> +	return ret;
+> +}
+> +
+
+...
+
+> diff --git a/drivers/soundwire/master.c b/drivers/soundwire/master.c
+> new file mode 100644
+> index 000000000000..fbfa1c35137d
+> --- /dev/null
+> +++ b/drivers/soundwire/master.c
+> @@ -0,0 +1,129 @@
+> +// SPDX-License-Identifier: (GPL-2.0)
+> +// Copyright(c) 2019-2020 Intel Corporation.
+> +
+> +#include <linux/device.h>
+> +#include <linux/acpi.h>
+> +#include <linux/soundwire/sdw.h>
+> +#include <linux/soundwire/sdw_type.h>
+> +#include "bus.h"
+> +
+
+...
+
+> +
+> +/**
+> + * sdw_master_device_startup() - startup hardware
+> + * @md: Linux Soundwire master device
+> + *
+> + * This use of this function is optional. It is only needed if the
+> + * hardware cannot be started during a driver probe, e.g. due to power
+> + * rail dependencies. The implementation is platform-specific but the
+> + * bus will typically go through a hardware-reset sequence and devices
+> + * will be enumerated once they report as ATTACHED.
+> + */
+> +int sdw_master_device_startup(struct sdw_master_device *md)
+> +{
+> +	struct sdw_master_driver *mdrv;
+> +	struct device *dev;
+> +	int ret = 0;
+> +
+> +	if (IS_ERR_OR_NULL(md))
+> +		return -EINVAL;
+> +
+> +	dev = &md->dev;
+> +	mdrv = drv_to_sdw_master_driver(dev->driver);
+> +
+> +	if (mdrv && mdrv->startup)
+> +		ret = mdrv->startup(md);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(sdw_master_device_startup);
+
+Who would call this function? and How would it get hold of master device 
+instance ?
+
+
+How would soundwire core also ensure that we do not actively use this 
+master if it is not ready. Similar comment for shutdown callback.
+
+> +
+> +/**
+> + * sdw_master_device_process_wake_event() - handle external wake event
+> + * @md: Linux Soundwire master device
+> + *
+> + * The use of this function is optional, and only needed when e.g. an
+> + * external wake event is provided by another subsystem, such as PCI.
+> + */
+> +
+> +int sdw_master_device_process_wake_event(struct sdw_master_device *md)
+> +{
+> +	struct sdw_master_driver *mdrv;
+> +	struct device *dev;
+> +	int ret = 0;
+> +
+> +	if (IS_ERR_OR_NULL(md))
+> +		return -EINVAL;
+> +
+> +	dev = &md->dev;
+> +	mdrv = drv_to_sdw_master_driver(dev->driver);
+> +
+> +	if (mdrv && mdrv->process_wake_event)
+> +		ret = mdrv->process_wake_event(md);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(sdw_master_device_process_wake_event);
+> diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
+> index aace57fae7f8..7ca4f2d9bfa6 100644
+> --- a/drivers/soundwire/slave.c
+> +++ b/drivers/soundwire/slave.c
+> @@ -14,6 +14,11 @@ static void sdw_slave_release(struct device *dev)
+>   	kfree(slave);
+>   }
+>   
+> +struct device_type sdw_slave_type = {
+> +	.name =		"sdw_slave",
+> +	.release =	sdw_slave_release,
+> +};
+> +
+>   static int sdw_slave_add(struct sdw_bus *bus,
+>   			 struct sdw_slave_id *id, struct fwnode_handle *fwnode)
+>   {
+> @@ -41,9 +46,9 @@ static int sdw_slave_add(struct sdw_bus *bus,
+>   			     id->class_id, id->unique_id);
+>   	}
+>   
+> -	slave->dev.release = sdw_slave_release;
+>   	slave->dev.bus = &sdw_bus_type;
+>   	slave->dev.of_node = of_node_get(to_of_node(fwnode));
+> +	slave->dev.type = &sdw_slave_type;
+>   	slave->bus = bus;
+>   	slave->status = SDW_SLAVE_UNATTACHED;
+>   	init_completion(&slave->enumeration_complete);
+> diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
+> index 00f5826092e3..523b8fc86f7d 100644
+> --- a/include/linux/soundwire/sdw.h
+> +++ b/include/linux/soundwire/sdw.h
+> @@ -632,6 +632,31 @@ struct sdw_slave {
+>   
+>   #define dev_to_sdw_dev(_dev) container_of(_dev, struct sdw_slave, dev)
+>   
+> +/**
+> + * struct sdw_master_device - SoundWire 'Master Device' representation
+> + * @dev: Linux device for this Master
+> + * @master_name: Linux driver name
+> + * @driver: Linux driver for this Master (set by SoundWire core during probe)
+> + * @probe_complete: used by parent if synchronous probe behavior is needed
+> + * @link_id: link index as defined by MIPI DisCo specification
+> + * @pm_runtime_suspended: flag set on system suspend and used on system resume.
+> + * This is an optimization to avoid calling pm_runtime_suspended() twice.
+> + * @pdata: private data typically provided with sdw_master_device_add()
+> + */
+> +
+> +struct sdw_master_device {
+> +	struct device dev;
+> +	const char *master_name;
+> +	struct sdw_master_driver *driver;
+> +	struct completion probe_complete;
+> +	int link_id;
+> +	bool pm_runtime_suspended;
+> +	void *pdata;
+> +};
+> +
+> +#define dev_to_sdw_master_device(d)	\
+> +	container_of(d, struct sdw_master_device, dev)
+> +
+>   struct sdw_driver {
+>   	const char *name;
+>   
+> @@ -646,6 +671,29 @@ struct sdw_driver {
+>   	struct device_driver driver;
+>   };
+>   
+> +/**
+> + * struct sdw_master_driver - SoundWire 'Master Device' driver
+> + * @probe: initializations and allocation (hardware may not be enabled yet)
+> + * @startup: initialization handled after the hardware is enabled, all
+> + * clock/power dependencies are available (optional)
+> + * @shutdown: cleanups before hardware is disabled (optional)
+> + * @remove: free all remaining resources
+> + * @process_wake_event: handle external wake (optional)
+> + * @driver: baseline structure used for name/PM hooks.
+> + *
+> + * The use of sdw_master_driver is optional, and typically only needed
+> + * when a controller has multiple links and needs to deal with power
+> + * management at the link level.
+> + */
+> +struct sdw_master_driver {
+> +	int (*probe)(struct sdw_master_device *md, void *link_ctx);
+> +	int (*startup)(struct sdw_master_device *md);
+> +	int (*shutdown)(struct sdw_master_device *md);
+> +	int (*remove)(struct sdw_master_device *md);
+> +	int (*process_wake_event)(struct sdw_master_device *md);
+> +	struct device_driver driver;
+> +};
+> +
+>   #define SDW_SLAVE_ENTRY(_mfg_id, _part_id, _drv_data) \
+>   	{ .mfg_id = (_mfg_id), .part_id = (_part_id), \
+>   	  .driver_data = (unsigned long)(_drv_data) }
+> @@ -835,6 +883,17 @@ struct sdw_bus {
+>   int sdw_add_bus_master(struct sdw_bus *bus);
+>   void sdw_delete_bus_master(struct sdw_bus *bus);
+>   
+> +struct sdw_master_device
+> +*sdw_master_device_add(const char *master_name,
+> +		       struct device *parent,
+> +		       struct fwnode_handle *fwnode,
+> +		       int link_id,
+> +		       void *pdata);
+> +
+> +int sdw_master_device_startup(struct sdw_master_device *md);
+> +
+> +int sdw_master_device_process_wake_event(struct sdw_master_device *md);
+> +
+>   /**
+>    * sdw_port_config: Master or Slave Port configuration
+>    *
+> diff --git a/include/linux/soundwire/sdw_type.h b/include/linux/soundwire/sdw_type.h
+> index aaa7f4267c14..331ba58bda27 100644
+> --- a/include/linux/soundwire/sdw_type.h
+> +++ b/include/linux/soundwire/sdw_type.h
+> @@ -5,16 +5,36 @@
+>   #define __SOUNDWIRE_TYPES_H
+>   
+>   extern struct bus_type sdw_bus_type;
+> +extern struct device_type sdw_slave_type;
+> +extern struct device_type sdw_master_type;
+> +
+> +static inline int is_sdw_slave(const struct device *dev)
+> +{
+> +	return dev->type == &sdw_slave_type;
+> +}
+>   
+>   #define drv_to_sdw_driver(_drv) container_of(_drv, struct sdw_driver, driver)
+>   
+>   #define sdw_register_driver(drv) \
+>   	__sdw_register_driver(drv, THIS_MODULE)
+>   
+> +static inline int is_sdw_master_device(const struct device *dev)
+> +{
+> +	return dev->type == &sdw_master_type;
+> +}
+> +
+> +#define drv_to_sdw_master_driver(_drv) \
+> +	container_of(_drv, struct sdw_master_driver, driver)
+> +
+> +#define sdw_register_master_driver(drv) \
+> +	__sdw_register_master_driver(drv, THIS_MODULE)
+> +
+>   int __sdw_register_driver(struct sdw_driver *drv, struct module *owner);
+>   void sdw_unregister_driver(struct sdw_driver *drv);
+>   
+> -int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size);
+> +int __sdw_register_master_driver(struct sdw_master_driver *mdrv,
+> +				 struct module *owner);
+> +void sdw_unregister_master_driver(struct sdw_master_driver *mdrv);
+>   
+>   /**
+>    * module_sdw_driver() - Helper macro for registering a Soundwire driver
+> @@ -27,4 +47,18 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size);
+>   #define module_sdw_driver(__sdw_driver) \
+>   	module_driver(__sdw_driver, sdw_register_driver, \
+>   			sdw_unregister_driver)
+> +
+> +/**
+> + * module_sdw_master_driver() - Helper macro for registering a Soundwire
+> + * Master driver
+> + * @__sdw_master_driver: soundwire Master driver struct
+> + *
+> + * Helper macro for Soundwire Master drivers which do not do anything special in
+> + * module init/exit. This eliminates a lot of boilerplate. Each module may only
+> + * use this macro once, and calling it replaces module_init() and module_exit()
+> + */
+> +#define module_sdw_master_driver(__sdw_master_driver) \
+> +	module_driver(__sdw_master_driver, sdw_register_master_driver, \
+> +			sdw_unregister_master_driver)
+> +
+>   #endif /* __SOUNDWIRE_TYPES_H */
+> 
