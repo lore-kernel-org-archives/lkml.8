@@ -2,307 +2,274 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFDAC43332
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6914CC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A79E22070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:52:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8SvnsEN"
+	by mail.kernel.org (Postfix) with ESMTP id 3D9482070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgCTOwu (ORCPT
+        id S1727163AbgCTOyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:52:50 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40018 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCTOwt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:52:49 -0400
-Received: by mail-pl1-f194.google.com with SMTP id h11so2578320plk.7;
-        Fri, 20 Mar 2020 07:52:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3oEaq4RbS2pIFT8sPysCqAhlN3jcufDI+zt2Oe41Lro=;
-        b=P8SvnsENfuOknSqZmMvi/roCMBcb8J8TMXjDdMh9gupZ0HPRswGikQcRGP1Ut2pX2c
-         SRlVwwuQEyEC+k6m8TOwOu/QOJ9IIZaHAGnNfgwLjH7OBv3l1VVqe6XIajERY99A3yVS
-         XGsDjXtQNMF5XuHLlrQS08ZIK80W+3DDWYPzPdzGNqNcCPg1ZZ3biTOHv2WUZ2mtINQD
-         IIE6zey5oLtflTLcGV6205Ul/YAk1jwFhbRoooGzkCmBBp92dClvObaTrxN8O83UEcIR
-         DyPErqq5ZeiubnXtSZSd+Hfyf3Fvg6qjMFOtQbmVKf4716POi1pW733WxcKLonmeUW9G
-         TIZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3oEaq4RbS2pIFT8sPysCqAhlN3jcufDI+zt2Oe41Lro=;
-        b=cs1nDda1t+1NX6l/2v674LagnueMCrBIHd2XH/O+psh/bo891j0QPV8mi2OT9N3PZo
-         s0SDwe8LXVw19GEwG6yELc1lv1gZr4SHcc9REWfSknxRxQukx2IpGj5CypzD+EKUr9pS
-         cBjXvP24DkBiIm1J/KWmphXRJqxUc/0/ovUdijK6RKvAfOSu6DD6gp78G6bCefZ2gCrU
-         VUqfHloIOtvoAyVdY+tqFu/omTwOGmLGYtTvKSvIaYWeqh4AqAKETrmgjFPuVWZYCIEL
-         jn0Bf9Dci1guaX9wMN602gpQ7PHPQHaQB+yfFyc8LtOssLfucEaT4TnEXDGMK3YbzSR7
-         dm7g==
-X-Gm-Message-State: ANhLgQ0btGQYa+xxg4jc68ozVzRKAB4qFMhaKNPFbUgJI3yMhOTtHPmn
-        GlkKYV86AHOsY7cQk6iNPdZQCqfCKr1neQs6Dgk=
-X-Google-Smtp-Source: ADFU+vvGj6448MxKAOzD6zr1G0ngvNivZvk8WZGlcUExDmWxPozdHr1ocb6J3Vd+QOp/QajXMZTU6F7YR4TIY6QXI9g=
-X-Received: by 2002:a17:902:8d92:: with SMTP id v18mr9173478plo.18.1584715967554;
- Fri, 20 Mar 2020 07:52:47 -0700 (PDT)
+        Fri, 20 Mar 2020 10:54:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:49984 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726816AbgCTOyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:54:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B02CC1FB;
+        Fri, 20 Mar 2020 07:54:43 -0700 (PDT)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DA973F792;
+        Fri, 20 Mar 2020 07:54:40 -0700 (PDT)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-mips@vger.kernel.org, x86@kernel.org
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>
+Subject: [PATCH v5 00/26] Introduce common headers for vDSO
+Date:   Fri, 20 Mar 2020 14:53:25 +0000
+Message-Id: <20200320145351.32292-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200320131345.635023594@linutronix.de> <20200320131509.766573641@linutronix.de>
-In-Reply-To: <20200320131509.766573641@linutronix.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 20 Mar 2020 16:52:40 +0200
-Message-ID: <CAHp75Veb_9a7adSZ__j0viFvTi-eRzeJqMphwOL-yjvfqom3Hw@mail.gmail.com>
-Subject: Re: [patch 11/22] platform/x86: Convert to new CPU match macros
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        linux-edac@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 3:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> The new macro set has a consistent namespace and uses C99 initializers
-> instead of the grufty C89 ones.
->
-> Get rid the of the local macro wrappers for consistency.
->
+Back in July last year we started having a problem in building compat
+vDSOs on arm64 [1] [2] that was not present when the arm64 porting to
+the Unified vDSO was done. In particular when the compat vDSO on such
+architecture is built with gcc it generates the warning below:
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+In file included from ./arch/arm64/include/asm/thread_info.h:17:0,
+                 from ./include/linux/thread_info.h:38,
+                 from ./arch/arm64/include/asm/preempt.h:5,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/spinlock.h:51,
+                 from ./include/linux/seqlock.h:36,
+                 from ./include/linux/time.h:6,
+                 from ./lib/vdso/gettimeofday.c:7,
+                 from <command-line>:0:
+./arch/arm64/include/asm/memory.h: In function ‘__tag_set’:
+./arch/arm64/include/asm/memory.h:233:15: warning: cast from pointer
+                to integer of different size [-Wpointer-to-int-cast]
+  u64 __addr = (u64)addr & ~__tag_shifted(0xff);
+               ^
+In file included from ./arch/arm64/include/asm/pgtable-hwdef.h:8:0,
+                 from ./arch/arm64/include/asm/processor.h:34,
+                 from ./arch/arm64/include/asm/elf.h:118,
+                 from ./include/linux/elf.h:5,
+                 from ./include/linux/elfnote.h:62,
+                 from arch/arm64/kernel/vdso32/note.c:11:
+./arch/arm64/include/asm/memory.h: In function ‘__tag_set’:
+./arch/arm64/include/asm/memory.h:233:15: warning: cast from pointer
+                to integer of different size [-Wpointer-to-int-cast]
+  u64 __addr = (u64)addr & ~__tag_shifted(0xff);
 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Andy Shevchenko <andy@infradead.org>
-> Cc: platform-driver-x86@vger.kernel.org
-> ---
->  drivers/platform/x86/intel-uncore-frequency.c                 |   14 ++---
->  drivers/platform/x86/intel_int0002_vgpio.c                    |    4 -
->  drivers/platform/x86/intel_mid_powerbtn.c                     |    4 -
->  drivers/platform/x86/intel_pmc_core.c                         |   24 +++++-----
->  drivers/platform/x86/intel_pmc_core_pltdrv.c                  |   16 +++---
->  drivers/platform/x86/intel_speed_select_if/isst_if_mbox_msr.c |    4 -
->  drivers/platform/x86/intel_telemetry_debugfs.c                |    5 --
->  drivers/platform/x86/intel_telemetry_pltdrv.c                 |    7 --
->  drivers/platform/x86/intel_turbo_max_3.c                      |    6 --
->  9 files changed, 37 insertions(+), 47 deletions(-)
->
-> --- a/drivers/platform/x86/intel-uncore-frequency.c
-> +++ b/drivers/platform/x86/intel-uncore-frequency.c
-> @@ -358,15 +358,13 @@ static struct notifier_block uncore_pm_n
->         .notifier_call = uncore_pm_notify,
->  };
->
-> -#define ICPU(model)     { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
-> -
->  static const struct x86_cpu_id intel_uncore_cpu_ids[] = {
-> -       ICPU(INTEL_FAM6_BROADWELL_G),
-> -       ICPU(INTEL_FAM6_BROADWELL_X),
-> -       ICPU(INTEL_FAM6_BROADWELL_D),
-> -       ICPU(INTEL_FAM6_SKYLAKE_X),
-> -       ICPU(INTEL_FAM6_ICELAKE_X),
-> -       ICPU(INTEL_FAM6_ICELAKE_D),
-> +       X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_G, NULL),
-> +       X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_X, NULL),
-> +       X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_D, NULL),
-> +       X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,   NULL),
-> +       X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,   NULL),
-> +       X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,   NULL),
->         {}
->  };
->
-> --- a/drivers/platform/x86/intel_int0002_vgpio.c
-> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
-> @@ -148,8 +148,8 @@ static struct irq_chip int0002_cht_irqch
->  };
->
->  static const struct x86_cpu_id int0002_cpu_ids[] = {
-> -       INTEL_CPU_FAM6(ATOM_SILVERMONT, int0002_byt_irqchip),   /* Valleyview, Bay Trail  */
-> -       INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_cht_irqchip),      /* Braswell, Cherry Trail */
-> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,     &int0002_byt_irqchip),
-> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,        &int0002_cht_irqchip),
->         {}
->  };
->
-> --- a/drivers/platform/x86/intel_mid_powerbtn.c
-> +++ b/drivers/platform/x86/intel_mid_powerbtn.c
-> @@ -113,8 +113,8 @@ static const struct mid_pb_ddata mrfld_d
->  };
->
->  static const struct x86_cpu_id mid_pb_cpu_ids[] = {
-> -       INTEL_CPU_FAM6(ATOM_SALTWELL_MID,       mfld_ddata),
-> -       INTEL_CPU_FAM6(ATOM_SILVERMONT_MID,     mrfld_ddata),
-> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_SALTWELL_MID,   &mfld_ddata),
-> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_MID, &mrfld_ddata),
->         {}
->  };
->
-> --- a/drivers/platform/x86/intel_pmc_core.c
-> +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -871,18 +871,18 @@ static inline void pmc_core_dbgfs_unregi
->  #endif /* CONFIG_DEBUG_FS */
->
->  static const struct x86_cpu_id intel_pmc_core_ids[] = {
-> -       INTEL_CPU_FAM6(SKYLAKE_L, spt_reg_map),
-> -       INTEL_CPU_FAM6(SKYLAKE, spt_reg_map),
-> -       INTEL_CPU_FAM6(KABYLAKE_L, spt_reg_map),
-> -       INTEL_CPU_FAM6(KABYLAKE, spt_reg_map),
-> -       INTEL_CPU_FAM6(CANNONLAKE_L, cnp_reg_map),
-> -       INTEL_CPU_FAM6(ICELAKE_L, icl_reg_map),
-> -       INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
-> -       INTEL_CPU_FAM6(COMETLAKE, cnp_reg_map),
-> -       INTEL_CPU_FAM6(COMETLAKE_L, cnp_reg_map),
-> -       INTEL_CPU_FAM6(TIGERLAKE_L, tgl_reg_map),
-> -       INTEL_CPU_FAM6(TIGERLAKE, tgl_reg_map),
-> -       INTEL_CPU_FAM6(ATOM_TREMONT, tgl_reg_map),
-> +       X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,           &spt_reg_map),
-> +       X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,             &spt_reg_map),
-> +       X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,          &spt_reg_map),
-> +       X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,            &spt_reg_map),
-> +       X86_MATCH_INTEL_FAM6_MODEL(CANNONLAKE_L,        &cnp_reg_map),
-> +       X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,           &icl_reg_map),
-> +       X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_NNPI,        &icl_reg_map),
-> +       X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,           &cnp_reg_map),
-> +       X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,         &cnp_reg_map),
-> +       X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L,         &tgl_reg_map),
-> +       X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE,           &tgl_reg_map),
-> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,        &tgl_reg_map),
->         {}
->  };
->
-> --- a/drivers/platform/x86/intel_pmc_core_pltdrv.c
-> +++ b/drivers/platform/x86/intel_pmc_core_pltdrv.c
-> @@ -38,14 +38,14 @@ static struct platform_device pmc_core_d
->   * other list may grow, but this list should not.
->   */
->  static const struct x86_cpu_id intel_pmc_core_platform_ids[] = {
-> -       INTEL_CPU_FAM6(SKYLAKE_L, pmc_core_device),
-> -       INTEL_CPU_FAM6(SKYLAKE, pmc_core_device),
-> -       INTEL_CPU_FAM6(KABYLAKE_L, pmc_core_device),
-> -       INTEL_CPU_FAM6(KABYLAKE, pmc_core_device),
-> -       INTEL_CPU_FAM6(CANNONLAKE_L, pmc_core_device),
-> -       INTEL_CPU_FAM6(ICELAKE_L, pmc_core_device),
-> -       INTEL_CPU_FAM6(COMETLAKE, pmc_core_device),
-> -       INTEL_CPU_FAM6(COMETLAKE_L, pmc_core_device),
-> +       X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,           &pmc_core_device),
-> +       X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,             &pmc_core_device),
-> +       X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,          &pmc_core_device),
-> +       X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,            &pmc_core_device),
-> +       X86_MATCH_INTEL_FAM6_MODEL(CANNONLAKE_L,        &pmc_core_device),
-> +       X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,           &pmc_core_device),
-> +       X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,           &pmc_core_device),
-> +       X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,         &pmc_core_device),
->         {}
->  };
->  MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_platform_ids);
-> --- a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_msr.c
-> +++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_msr.c
-> @@ -160,10 +160,8 @@ static struct notifier_block isst_pm_nb
->         .notifier_call = isst_pm_notify,
->  };
->
-> -#define ICPU(model)     { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
-> -
->  static const struct x86_cpu_id isst_if_cpu_ids[] = {
-> -       ICPU(INTEL_FAM6_SKYLAKE_X),
-> +       X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X, NULL),
->         {}
->  };
->  MODULE_DEVICE_TABLE(x86cpu, isst_if_cpu_ids);
-> --- a/drivers/platform/x86/intel_telemetry_debugfs.c
-> +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-> @@ -308,11 +308,10 @@ static struct telemetry_debugfs_conf tel
->  };
->
->  static const struct x86_cpu_id telemetry_debugfs_cpu_ids[] = {
-> -       INTEL_CPU_FAM6(ATOM_GOLDMONT, telem_apl_debugfs_conf),
-> -       INTEL_CPU_FAM6(ATOM_GOLDMONT_PLUS, telem_apl_debugfs_conf),
-> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,       &telem_apl_debugfs_conf),
-> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_PLUS,  &telem_apl_debugfs_conf),
->         {}
->  };
-> -
->  MODULE_DEVICE_TABLE(x86cpu, telemetry_debugfs_cpu_ids);
->
->  static int telemetry_debugfs_check_evts(void)
-> --- a/drivers/platform/x86/intel_telemetry_pltdrv.c
-> +++ b/drivers/platform/x86/intel_telemetry_pltdrv.c
-> @@ -67,9 +67,6 @@
->  #define TELEM_CLEAR_VERBOSITY_BITS(x)  ((x) &= ~(BIT(27) | BIT(28)))
->  #define TELEM_SET_VERBOSITY_BITS(x, y) ((x) |= ((y) << 27))
->
-> -#define TELEM_CPU(model, data) \
-> -       { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)&data }
-> -
->  enum telemetry_action {
->         TELEM_UPDATE = 0,
->         TELEM_ADD,
-> @@ -183,8 +180,8 @@ static struct telemetry_plt_config telem
->  };
->
->  static const struct x86_cpu_id telemetry_cpu_ids[] = {
-> -       TELEM_CPU(INTEL_FAM6_ATOM_GOLDMONT, telem_apl_config),
-> -       TELEM_CPU(INTEL_FAM6_ATOM_GOLDMONT_PLUS, telem_glk_config),
-> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,       &telem_apl_config),
-> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_PLUS,  &telem_glk_config),
->         {}
->  };
->
-> --- a/drivers/platform/x86/intel_turbo_max_3.c
-> +++ b/drivers/platform/x86/intel_turbo_max_3.c
-> @@ -113,11 +113,9 @@ static int itmt_legacy_cpu_online(unsign
->         return 0;
->  }
->
-> -#define ICPU(model)     { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
-> -
->  static const struct x86_cpu_id itmt_legacy_cpu_ids[] = {
-> -       ICPU(INTEL_FAM6_BROADWELL_X),
-> -       ICPU(INTEL_FAM6_SKYLAKE_X),
-> +       X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_X, NULL),
-> +       X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,   NULL),
->         {}
->  };
->
->
+The same porting does not build at all when the selected compiler is
+clang.
 
+I started an investigation to try to understand better the problem and
+after various discussions at Plumbers and Recipes last year the
+conclusion was that the vDSO library as it stands it is including more
+headers that it needs. In particular, being a user-space library, it
+should require only the UAPI and a minimal vDSO kernel interface instead
+of all the kernel-related inline functions which are not directly used
+and in some cases can have side effects.
+
+To solve the problem, I decided to use the approach below:
+  * Extract from include/linux/ the vDSO required kernel interface
+    and place it in include/vdso/
+  * Make sure that where meaningful the kernel includes "vdso" headers.
+  * Limit the vDSO library to include headers coming only from UAPI
+    and "vdso" (with 2 exceptions compiler.h for barriers and param.h
+    for HZ).
+  * Adapt all the architectures that support the unified vDSO library
+    to use "vdso" headers.
+
+According to me this approach allows up to exercise a better control on
+what the vDSO library can include and to prevent potential issues in
+future.
+
+This patch series contains the implementation of the described approach.
+
+The "vdso" headers have been verified on all the architectures that support
+unified vDSO using the vdsotest [3] testsuite for what concerns the vDSO part
+and randconfig to verify that they are included in the correct places.
+
+To simplify the testing, a copy of the patchset on top of a recent linux
+tree can be found at [4].
+
+[1] https://github.com/ClangBuiltLinux/linux/issues/595
+[2] https://lore.kernel.org/lkml/20190926151704.GH9689@arrakis.emea.arm.com
+[3] https://github.com/nathanlynch/vdsotest
+[4] git://linux-arm.org/linux-vf.git common-headers/v5
+
+Changes:
+--------
+v5:
+  - Dropped UINTPTR_MAX check patch.
+  - Introduced a new headers cleanup patch.
+  - Addressed review comments.
+  - Rebased on tip/timers/core.
+v4:
+  - Dropped vDSO optimization patch for arm64.
+  - Introduce a new patch to drop dependency from TASK_SIZE_32 on arm64.
+  - Addressed review comments.
+  - Rebased on tip/timers/core.
+v3:
+  - Changed the namespace from common to vdso.
+  - Addressed an issue involving parisc modules compilation.
+  - Added vdso header for clocksource.h.
+  - Addressed review comments.
+  - Rebased on tip/timers/core.
+v2:
+  - Addressed review comments for clang support.
+  - Rebased on 5.6-rc4.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Mark Salyzyn <salyzyn@android.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Peter Collingbourne <pcc@google.com>
+Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: Andrei Vagin <avagin@openvz.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+
+Vincenzo Frascino (26):
+  linux/const.h: Extract common header for vDSO
+  linux/bits.h: Extract common header for vDSO
+  linux/limits.h: Extract common header for vDSO
+  x86:Introduce asm/vdso/clocksource.h
+  arm: Introduce asm/vdso/clocksource.h
+  arm64: Introduce asm/vdso/clocksource.h
+  mips: Introduce asm/vdso/clocksource.h
+  linux/clocksource.h: Extract common header for vDSO
+  linux/math64.h: Extract common header for vDSO
+  linux/time.h: Extract common header for vDSO
+  linux/time32.h: Extract common header for vDSO
+  linux/time64.h: Extract common header for vDSO
+  linux/jiffies.h: Extract common header for vDSO
+  linux/ktime.h: Extract common header for vDSO
+  common: Introduce processor.h
+  scripts: Fix the inclusion order in modpost
+  linux/elfnote.h: Replace elf.h with UAPI equivalent
+  arm64: vdso32: Code clean up
+  arm64: Introduce asm/vdso/processor.h
+  arm64: vdso: Include common headers in the vdso library
+  arm64: vdso32: Include common headers in the vdso library
+  mips: vdso: Enable mips to use common headers
+  x86: vdso: Enable x86 to use common headers
+  arm: vdso: Enable arm to use common headers
+  lib: vdso: Enable common headers
+  arm64: vdso32: Enable Clang Compilation
+
+ arch/arm/include/asm/clocksource.h            |  6 +--
+ arch/arm/include/asm/cp15.h                   | 20 +---------
+ arch/arm/include/asm/processor.h              | 11 +-----
+ arch/arm/include/asm/vdso/clocksource.h       |  8 ++++
+ arch/arm/include/asm/vdso/cp15.h              | 38 +++++++++++++++++++
+ arch/arm/include/asm/vdso/gettimeofday.h      |  4 +-
+ arch/arm/include/asm/vdso/processor.h         | 22 +++++++++++
+ arch/arm64/include/asm/clocksource.h          |  3 +-
+ arch/arm64/include/asm/processor.h            |  7 +---
+ arch/arm64/include/asm/vdso/clocksource.h     |  8 ++++
+ .../include/asm/vdso/compat_gettimeofday.h    | 10 +----
+ arch/arm64/include/asm/vdso/gettimeofday.h    |  1 -
+ arch/arm64/include/asm/vdso/processor.h       | 17 +++++++++
+ arch/arm64/kernel/vdso/vgettimeofday.c        |  2 -
+ arch/arm64/kernel/vdso32/Makefile             | 11 ++++++
+ arch/arm64/kernel/vdso32/vgettimeofday.c      | 14 -------
+ arch/mips/include/asm/clocksource.h           |  4 +-
+ arch/mips/include/asm/processor.h             | 16 +-------
+ arch/mips/include/asm/vdso/clocksource.h      |  9 +++++
+ arch/mips/include/asm/vdso/gettimeofday.h     |  4 --
+ arch/mips/include/asm/vdso/processor.h        | 27 +++++++++++++
+ arch/x86/include/asm/clocksource.h            |  5 +--
+ arch/x86/include/asm/processor.h              | 12 +-----
+ arch/x86/include/asm/vdso/clocksource.h       | 10 +++++
+ arch/x86/include/asm/vdso/processor.h         | 23 +++++++++++
+ include/linux/bits.h                          |  2 +-
+ include/linux/clocksource.h                   | 11 +-----
+ include/linux/const.h                         |  5 +--
+ include/linux/elfnote.h                       |  2 +-
+ include/linux/jiffies.h                       |  4 +-
+ include/linux/ktime.h                         |  9 +----
+ include/linux/limits.h                        | 13 +------
+ include/linux/math64.h                        | 20 +---------
+ include/linux/time.h                          |  5 +--
+ include/linux/time32.h                        | 14 +------
+ include/linux/time64.h                        | 10 +----
+ include/vdso/bits.h                           |  9 +++++
+ include/vdso/clocksource.h                    | 23 +++++++++++
+ include/vdso/const.h                          | 10 +++++
+ include/vdso/datapage.h                       | 33 ++++++++++++++--
+ include/vdso/jiffies.h                        | 11 ++++++
+ include/vdso/ktime.h                          | 16 ++++++++
+ include/vdso/limits.h                         | 19 ++++++++++
+ include/vdso/math64.h                         | 24 ++++++++++++
+ include/vdso/processor.h                      | 14 +++++++
+ include/vdso/time.h                           | 12 ++++++
+ include/vdso/time32.h                         | 17 +++++++++
+ include/vdso/time64.h                         | 14 +++++++
+ lib/vdso/gettimeofday.c                       | 22 -----------
+ scripts/mod/modpost.c                         |  6 ++-
+ 50 files changed, 404 insertions(+), 213 deletions(-)
+ create mode 100644 arch/arm/include/asm/vdso/clocksource.h
+ create mode 100644 arch/arm/include/asm/vdso/cp15.h
+ create mode 100644 arch/arm/include/asm/vdso/processor.h
+ create mode 100644 arch/arm64/include/asm/vdso/clocksource.h
+ create mode 100644 arch/arm64/include/asm/vdso/processor.h
+ create mode 100644 arch/mips/include/asm/vdso/clocksource.h
+ create mode 100644 arch/mips/include/asm/vdso/processor.h
+ create mode 100644 arch/x86/include/asm/vdso/clocksource.h
+ create mode 100644 arch/x86/include/asm/vdso/processor.h
+ create mode 100644 include/vdso/bits.h
+ create mode 100644 include/vdso/clocksource.h
+ create mode 100644 include/vdso/const.h
+ create mode 100644 include/vdso/jiffies.h
+ create mode 100644 include/vdso/ktime.h
+ create mode 100644 include/vdso/limits.h
+ create mode 100644 include/vdso/math64.h
+ create mode 100644 include/vdso/processor.h
+ create mode 100644 include/vdso/time.h
+ create mode 100644 include/vdso/time32.h
+ create mode 100644 include/vdso/time64.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
+
