@@ -3,121 +3,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A13EC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC63C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E20120739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D3520714
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Sl5t5NPs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jvK6zIz+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbgCTOrO (ORCPT
+        id S1727422AbgCTOrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:47:14 -0400
-Received: from mail.efficios.com ([167.114.26.124]:37078 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbgCTOrO (ORCPT
+        Fri, 20 Mar 2020 10:47:20 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45145 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgCTOrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:47:14 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 3AB6A280E48;
-        Fri, 20 Mar 2020 10:47:12 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id suxPyYVnrqRF; Fri, 20 Mar 2020 10:47:11 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id BE47F281196;
-        Fri, 20 Mar 2020 10:47:11 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com BE47F281196
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1584715631;
-        bh=2iunU2dZUhpFG4YHr4G0tAZUqMAnPToZ4DCStcYLdFU=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=Sl5t5NPse6vfN7D2uDFbVteRf/Ago9K9aloGWAR3RwMoiBmfOLQQg4aS4BNvvWALe
-         KZhfiKaThD54AdXmOqq7jEHz6U/kZR0kVV1z/UXDBNQI5UeUJrTw7R/kR2MMw5OmZw
-         aFKTX4FAKgecZ/k6HpW7sCzSbacaM6YD6q/Lu63odRCPWM+FIK29+OJ2KoxP4C/WuF
-         i8UzfPhEmvdXxdAxWlB08B9Oh3vh+MQMQuAokBNDpCLP/AT2zRKj36oIB38yCQLN0c
-         DmkgwJpNytyXwMmRL+80+26686lG+UuNfB3GOIjF8qqVyXcchnCTBErzhZ60OKNSvO
-         RmCF4CA9CSwtQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id LFY6lmoKTf5Y; Fri, 20 Mar 2020 10:47:11 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id AE29B28118D;
-        Fri, 20 Mar 2020 10:47:11 -0400 (EDT)
-Date:   Fri, 20 Mar 2020 10:47:11 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     libc-alpha <libc-alpha@sourceware.org>, carlos <carlos@redhat.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>
-Message-ID: <82259847.4696.1584715631625.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1854222804.4643.1584711847409.JavaMail.zimbra@efficios.com>
-References: <20200319144110.3733-1-mathieu.desnoyers@efficios.com> <87sgi4gqhf.fsf@mid.deneb.enyo.de> <1103782439.4046.1584642531222.JavaMail.zimbra@efficios.com> <87k13ggpmf.fsf@mid.deneb.enyo.de> <900536577.4062.1584644126425.JavaMail.zimbra@efficios.com> <87fte4go6w.fsf@mid.deneb.enyo.de> <624584479.4115.1584647163775.JavaMail.zimbra@efficios.com> <1854222804.4643.1584711847409.JavaMail.zimbra@efficios.com>
-Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C
- startup and thread creation (v15)
+        Fri, 20 Mar 2020 10:47:18 -0400
+Received: by mail-pf1-f193.google.com with SMTP id j10so3317028pfi.12;
+        Fri, 20 Mar 2020 07:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lzqksOZo9oKzssQWd4+TCqMTVJHNfIm+9Q0SEfaLBjU=;
+        b=jvK6zIz+Qr1G8bcWBVBwn3UfzcaK9sRBJks8raIHNoHYfHO2DmiGRVxPhd4Zu5DrCz
+         ssEKRSg6XEUN2Bh1T3t8FxP+2Llw4OryQC/PYqdtuX2VGcpgpXUJOggqoxLEX14U+Ycg
+         LuBarYM6L87ZRlUuDNsMpGMqd9Lb0heHLMtAbs43E7wHfpmR6nmXZQONvOHiQl54CxGC
+         FbYDgx36/VNKIJit0ypjsiN2/VZSsJQdz4/Mwai+3I0nY+qHqo5TS73yp5yHMdK5Qlep
+         kuFS3nbtw7pZAsbQO+unr7n7vI9tW6NkdNc+MtzoBeK6iS8kQ/6WAkOhGDlo0f0qjuhv
+         Qn5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lzqksOZo9oKzssQWd4+TCqMTVJHNfIm+9Q0SEfaLBjU=;
+        b=U5ck6+lKlgn5sTOS5RWvgpsCNcJXPaHjnWkqQU1h1GU6ZY7YR/YtKJaq/xELTmo7+H
+         aTrxPs/1yuSrMx+tDzdd4BpBR3gkjY9/iEpf+qcWKTrS554suBY+H2NCKz8utLTGa7H+
+         0uqqxV3yLvKEmIw9765/E/KTYlRY+ko/tnoeCg7HOwJQzNrewJg5aCWxc3N9gJznTAEP
+         SGbJqu7clSt3/osBYr+skzxiuqLqRQI3YnZuUoVgdAMBnAd3ekffZCg7nzCppopSmjra
+         PqxlKei2M/AWTkFJ/nOkeQd1rNlT2IgzAtuVcZDfwfAxnIQhBh0RI34faWQI6zJWFx4Q
+         zPuQ==
+X-Gm-Message-State: ANhLgQ0sgjdP5uJfn7kQg/7n9J4P5lEe9bxQQhopwtfSRDfIIepf2szt
+        eBXcz4PkzABVgVx7ZZxseX2hdKXW6jvw0upGOaw=
+X-Google-Smtp-Source: ADFU+vtsQgQOnLRlTrTgGM50EY41vnr51HFNUk9V7349gPUFHWyFKZzvnxnlkchBu6NONcJcSUPuUU7T2einYPojAXw=
+X-Received: by 2002:aa7:9348:: with SMTP id 8mr10286496pfn.36.1584715637228;
+ Fri, 20 Mar 2020 07:47:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v15)
-Thread-Index: poZ7JQ5/Qt1CQs9uPvdRib/AmVGsDnhrNsAXpMewnwU=
+References: <20200320131345.635023594@linutronix.de> <20200320131509.467730627@linutronix.de>
+In-Reply-To: <20200320131509.467730627@linutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 20 Mar 2020 16:47:10 +0200
+Message-ID: <CAHp75VcK3tL0YayjF=CSkSkHiOpg2zOV3rdkXQWJmLZ9fmevpg@mail.gmail.com>
+Subject: Re: [patch 08/22] ACPI: Convert to new X86 CPU match macros
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        linux-edac@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Mar 20, 2020, at 9:44 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
-[...]
-> Actually, here is an important clarification: the Linux kernel validates
-> the struct rseq alignment on registration:
-> 
->        if (!IS_ALIGNED((unsigned long)rseq, __alignof__(*rseq)) ||
->            rseq_len != sizeof(*rseq))
->                return -EINVAL;
-> 
-> So removing the aligned attribute from struct rseq is actually an
-> ABI-breaking change, because it would be incompatible with older
-> kernels which perform the IS_ALIGNED check expecting at least at
-> 32 bytes alignment.
+On Fri, Mar 20, 2020 at 3:19 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> The new macro set has a consistent namespace and uses C99 initializers
+> instead of the grufty C89 ones.
+>
+> Rename the local macro wrapper to X86_MATCH for consistency. It stays for
+> readability sake.
 
-So I plan to add the following to glibc's sys/rseq.h:
+> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,     NULL),
+> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,        NULL),
 
-#include <sys/cdefs.h>
+> -#define ICPU(model)    { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
+> +#define X86_MATCH(model)       X86_MATCH_INTEL_FAM6_MODEL(model, NULL)
 
-[...]
-
-/* Ensure the compiler supports __attribute__ ((aligned)).  */
-_Static_assert (__alignof__ (struct rseq_cs) >= 4 * sizeof(uint64_t),
-                "alignment");
-_Static_assert (__alignof__ (struct rseq) >= 4 * sizeof(uint64_t),
-                "alignment");
-
-/* Allocations of struct rseq and struct rseq_cs on the heap need to
-   be aligned on 32 bytes. Therefore, use of malloc is discouraged
-   because it does not guarantee alignment. posix_memalign should be
-   used instead.  */
-
-Does it help mitigating your concerns ?
-
-Thanks,
-
-Mathieu
+Maybe we can do a generic macro to avoid all these ', NULL' repetitions?
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+With Best Regards,
+Andy Shevchenko
