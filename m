@@ -2,107 +2,83 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24847C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C812C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE93C20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77EA20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:44:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qNh+7ws2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rN2A5MqD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgCTHkz (ORCPT
+        id S1726704AbgCTHo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 03:40:55 -0400
-Received: from mail-qk1-f176.google.com ([209.85.222.176]:44202 "EHLO
-        mail-qk1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgCTHkz (ORCPT
+        Fri, 20 Mar 2020 03:44:56 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15275 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726030AbgCTHo4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 03:40:55 -0400
-Received: by mail-qk1-f176.google.com with SMTP id j4so5876585qkc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 00:40:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ku7qwHiv4AZSPNdmRrr8awe0lsh/dLBWtOgrxpXV/hU=;
-        b=qNh+7ws2t++iS2hHk3cdNGcZPPGDY08PDxqnE3KcRQITjB+5iOC9lnRWwrFj7gLWKT
-         rIvccmkA/Yr/4J1zI8riwhgz76iftHQtg5kdNIcS5AtWT8YEjPhlRtwtLZ4ksRUpHzA7
-         fZoW3ZTq+Y54sr7zZuiIcsxPBACy1IIla7nBH7nCCWqOksrJRq5th8SuXO+GXPADHpfY
-         ajnCXGQR3oWr35u2FfImbAr9Twfske2do5U28N8WeHD/cxZ8qGH6sv60/mTZrg0X3e4G
-         2VUm8ltaZsPAgI1zAo15vXiWFfha4bqB1vE8vsCuVTHdQszMLQOzYXlKbccFuriujJCT
-         ddBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ku7qwHiv4AZSPNdmRrr8awe0lsh/dLBWtOgrxpXV/hU=;
-        b=kY8IGJ3H8YkiAjDjAyZYmMadoeZbbOVtNFhFokPuwr1nHqV64pkZoYmKUkCiZ48Du4
-         WC0F5/IXCIPThB2A6tBJwoyIjiWWbb2j5d04irVLbCyDDqd18VXdPes43KHzCc0PsRwd
-         5wfpBLaEvTcwuM7jx70WdAz20OrSUDgUYTDev1LA+sddFXIpgeYoKToSBM8/GIBZUtTS
-         y/zD+XRfO5A4DJisxj+M33aXL7XYHKPS28yk9JKfqiOLeoRAozDsL5dEChRbEC5PF7/D
-         DZGVYRjvln1K75YEPNbY4hEZaLSrasCdLegjjxc5rYlJWPViMtPVkSqQcEaWHaTf6ybp
-         x2KQ==
-X-Gm-Message-State: ANhLgQ1usK/C3sJus8/wG4yvCyIjdFgozKEeq/28Bj86xpZeP1QjvoAs
-        Qfa0pcRPVR+pb5H9KFCsqedxWKD+wvwLwzvjSZI=
-X-Google-Smtp-Source: ADFU+vunQpu+yReUVHUdAGT0ff+bFISOLphFku642HYW07MbagUtE2hcI52/EtAB0hFXwQFKScUM/eI4/Gda2TFlbRI=
-X-Received: by 2002:a37:546:: with SMTP id 67mr6436299qkf.272.1584690053832;
- Fri, 20 Mar 2020 00:40:53 -0700 (PDT)
+        Fri, 20 Mar 2020 03:44:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584690295; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=QwXPbKoKH6xzIv8s1ctZL0kXCPKC+6ncADVros5jJV0=; b=rN2A5MqDZgbZjDLjtr6frZqrj7XzgNEowymWdKOmxOJTs8Iz8Tqw/n3KZCqgMtq1WTOiMFWL
+ pD+xYxQasIu/UfaxeGdN4jxe4usda1mFZGeGpVxdNHiidpQS2/rsb24+rdlQuS2mLskR5i5a
+ z0sLrKitXOQ+1PZ8u8trWZ3aMys=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e747475.7f03fcfc09d0-smtp-out-n03;
+ Fri, 20 Mar 2020 07:44:53 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C6D93C432C2; Fri, 20 Mar 2020 07:44:52 +0000 (UTC)
+Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4E480C433CB;
+        Fri, 20 Mar 2020 07:44:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4E480C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH 0/2] Add coresight support for QCOM SC7180 SoC
+Date:   Fri, 20 Mar 2020 13:14:27 +0530
+Message-Id: <cover.1584689229.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <1584502378-12609-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1584502378-12609-3-git-send-email-iamjoonsoo.kim@lge.com> <99196b17-24fb-8990-2d21-c459d2321747@suse.cz>
-In-Reply-To: <99196b17-24fb-8990-2d21-c459d2321747@suse.cz>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Fri, 20 Mar 2020 16:40:42 +0900
-Message-ID: <CAAmzW4NJd2kh8-81sYLjRR8gcsmLpndhS4s5Jh6kB-FLM-wNKg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] mm/page_alloc: integrate classzone_idx and high_zoneidx
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Ye Xiaolong <xiaolong.ye@intel.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 3=EC=9B=94 19=EC=9D=BC (=EB=AA=A9) =EC=98=A4=ED=9B=84 9:32, V=
-lastimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On 3/18/20 4:32 AM, js1304@gmail.com wrote:
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> >
-> > classzone_idx is just different name for high_zoneidx now.
-> > So, integrate them and add some comment to struct alloc_context
-> > in order to reduce future confusion about the meaning of this variable.
-> >
-> > In addition to integration, this patch also renames high_zoneidx
-> > to highest_zoneidx since it represents more precise meaning.
->
-> 2 years ago I suggested max_zone_idx.
-> Not insisting, but perhaps max_zoneidx would simply be shorter than
-> highest_zoneidx, while saying the same thing?
+Patch 1 adds the ETM PIDs for Kryo 4XX CPU cores and
+Patch 2 adds the DT nodes for coresight components on SC7180.
 
-I think that highest_zoneidx looks more familiar than max_zoneidx since
-it is previously high_zoneidx. It would cause less confusion.
+Sai Prakash Ranjan (2):
+  coresight: etm4x: Add support for Qualcomm SC7180 SoC
+  arm64: dts: qcom: sc7180: Add Coresight support
 
-> Also I wonder if we still need the accessor ac_classzone_idx() (before re=
-name),
-> or just replace it with ac->highest_zoneidx (or whatever the final name i=
-s)
-> instead of renaming it?
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          | 507 ++++++++++++++++++
+ drivers/hwtracing/coresight/coresight-etm4x.c |   2 +
+ 2 files changed, 509 insertions(+)
 
-Okay. Looks like we don't need the accessor. I will use open-code.
-
-Thanks.
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
