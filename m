@@ -2,127 +2,90 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB5DC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BD3C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C097920773
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:58:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584687483;
-	bh=PIsypC08bJWE4+6MHuQaFuvnG+0cWY+CmeuIGkWOgCY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nZanqcUEIxvDEAEFHfcFR2gWYewvJ80aGxenehd12ryBNGEbNVFD5depbEaVas8rg
-	 oJLCGLDk9XhzirV6Rkaem+6l7in+6RhO68gD0MKkf+08sVeSpE5iIztUsj56z4L1UU
-	 nSymTS655qIi/biBQ6eYzJjlvgYcm5m7FKA19e2M=
+	by mail.kernel.org (Postfix) with ESMTP id BE54920767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:59:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SS2stUyn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgCTG6D (ORCPT
+        id S1726876AbgCTG75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 02:58:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbgCTG6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 02:58:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39C7220724;
-        Fri, 20 Mar 2020 06:58:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584687481;
-        bh=PIsypC08bJWE4+6MHuQaFuvnG+0cWY+CmeuIGkWOgCY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HfVVJ8Ed99pmOAmwj9fvwyf8AtF0zak3Pa6CBMSeoWFfBk0ww+GnBdFynv9p6gm8O
-         Fy6/2pfT2jRwoq8pN4MIRj/m2k3sLMyEebmJqP+bRuxZPv5njZTlz5EozE9ZqNGK3T
-         TxJZ4rLXzGdZyLqjHDDtPz0cUacPKSBO+iZegXFY=
-Date:   Fri, 20 Mar 2020 07:57:59 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        Eric Dumazet <edumazet@google.com>,
-        Nicolas Pitre <nico@fluxnic.net>
-Subject: Re: [PATCH v2 1/2] vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use
- virtual console
-Message-ID: <20200320065759.GA307955@kroah.com>
-References: <20200318222704.GC2334@sol.localdomain>
- <20200318223810.162440-1-ebiggers@kernel.org>
- <20200318223810.162440-2-ebiggers@kernel.org>
- <2f762aee-720b-9bec-620f-61129c724de6@suse.com>
- <20200320051049.GA1315@sol.localdomain>
+        Fri, 20 Mar 2020 02:59:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43512 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgCTG75 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 02:59:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=iZ+tfXP9s+9EAQeQf95cP5ovh7AcQ3rFatDjmNA0Hpo=; b=SS2stUyn7rcx2bDE5sgbJPy234
+        X9zm/vp1W32VRiUAiag9wc6+PVqSgvIgsex3vU9E84yi9emMqCBjOL8b7qfPZtQkzzDv+ofwjR/c0
+        QqIG4wFoyXYG03dKfZLr/ByjjOnzQZgMIsED/UXA3TjGOpdi16UiLfl7+s/pKrebSwQXNd9u4pstl
+        +qXtTUiOQHDVZkhWsyHsqIFLLUunbIQgVzbJEP1S4/2sDgk9ikKUV9u7HOeGT3pSs1gwB2yhFrrPK
+        c3xR/dV7sjrTgGqDl4NyeXhuFf9XPfBkHa1DsefnsUIiMYD5W+PnILH3G4rhCIrK0mmmME0frAQvb
+        yfAFAVTA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jFBdD-00080q-N8; Fri, 20 Mar 2020 06:59:47 +0000
+Date:   Thu, 19 Mar 2020 23:59:47 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Julian Calaby <julian.calaby@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-pci@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        linux-wireless@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [patch V2 11/15] completion: Use simple wait queues
+Message-ID: <20200320065947.GA25206@infradead.org>
+References: <20200318204302.693307984@linutronix.de>
+ <20200318204408.521507446@linutronix.de>
+ <CAGRGNgXAW14=8ntTiB_hJ_nLq7WC_oFR3N9BNjqVEZM=ze85tQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320051049.GA1315@sol.localdomain>
+In-Reply-To: <CAGRGNgXAW14=8ntTiB_hJ_nLq7WC_oFR3N9BNjqVEZM=ze85tQ@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 10:10:49PM -0700, Eric Biggers wrote:
-> On Thu, Mar 19, 2020 at 08:36:28AM +0100, Jiri Slaby wrote:
-> > On 18. 03. 20, 23:38, Eric Biggers wrote:
-> > > --- a/drivers/tty/vt/vt.c
-> > > +++ b/drivers/tty/vt/vt.c
-> > > @@ -1102,6 +1102,9 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
-> > >  	tty_port_init(&vc->port);
-> > >  	INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
-> > >  
-> > > +	/* if this wasn't the case, we'd have to implement port->ops.destruct */
-> > > +	BUILD_BUG_ON(offsetof(struct vc_data, port) != 0);
-> > > +
-> > 
-> > This is 3 lines, implementing destruct would be like 4-5 :)? Please
-> > implement destruct instead.
-> > 
-> > Otherwise looks good.
-> > 
+On Fri, Mar 20, 2020 at 10:25:41AM +1100, Julian Calaby wrote:
+> > +++ b/drivers/usb/gadget/function/f_fs.c
+> > @@ -1703,7 +1703,7 @@ static void ffs_data_put(struct ffs_data
+> >                 pr_info("%s(): freeing\n", __func__);
+> >                 ffs_data_clear(ffs);
+> >                 BUG_ON(waitqueue_active(&ffs->ev.waitq) ||
+> > -                      waitqueue_active(&ffs->ep0req_completion.wait) ||
+> > +                      swait_active(&ffs->ep0req_completion.wait) ||
 > 
-> Actually implementing destruct would be 12 lines, see below.  Remember there is
-> no tty_port_operations defined yet so we'd have to define it just for destruct.
-> 
-> Do you still prefer it?
-> 
-> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> index ec34f1f5f3bb5..309a39197be0a 100644
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
-> @@ -1075,6 +1075,17 @@ static void visual_deinit(struct vc_data *vc)
->  	module_put(vc->vc_sw->owner);
->  }
->  
-> +static void vc_port_destruct(struct tty_port *port)
-> +{
-> +	struct vc_data *vc = container_of(port, struct vc_data, port);
-> +
-> +	kfree(vc);
-> +}
-> +
-> +static const struct tty_port_operations vc_port_ops = {
-> +	.destruct = vc_port_destruct,
-> +};
-> +
->  int vc_allocate(unsigned int currcons)	/* return 0 on success */
->  {
->  	struct vt_notifier_param param;
-> @@ -1100,11 +1111,9 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
->  
->  	vc_cons[currcons].d = vc;
->  	tty_port_init(&vc->port);
-> +	vc->port.ops = &vc_port_ops;
->  	INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
->  
-> -	/* if this wasn't the case, we'd have to implement port->ops.destruct */
-> -	BUILD_BUG_ON(offsetof(struct vc_data, port) != 0);
-> -
->  	visual_init(vc, currcons, 1);
->  
->  	if (!*vc->vc_uni_pagedir_loc)
+> This looks like some code is reaching deep into the dirty dark corners
+> of the completion implementation, should there be some wrapper around
+> this to hide that?
 
-
-Yes, this is good to have, thanks for doing this.
-
-greg k-h
+Or just remote it entirely..
