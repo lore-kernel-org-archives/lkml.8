@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A4CC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7520CC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBB020777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5341B20777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbgCTWFZ (ORCPT
+        id S1727747AbgCTWFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:05:25 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37484 "EHLO
+        Fri, 20 Mar 2020 18:05:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37498 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727210AbgCTWEP (ORCPT
+        with ESMTP id S1727411AbgCTWEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:04:15 -0400
+        Fri, 20 Mar 2020 18:04:16 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFPk2-0004Te-Sk; Fri, 20 Mar 2020 23:03:47 +0100
+        id 1jFPk1-0004TO-DC; Fri, 20 Mar 2020 23:03:45 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 5F3ED1039FF;
-        Fri, 20 Mar 2020 23:03:46 +0100 (CET)
-Message-Id: <20200320180033.092520097@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id DCEF61039FC;
+        Fri, 20 Mar 2020 23:03:44 +0100 (CET)
+Message-Id: <20200320180032.523372590@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 19:00:03 +0100
+Date:   Fri, 20 Mar 2020 18:59:57 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -47,7 +47,8 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [RESEND][patch V3 07/23] lockdep: Prepare for noinstr sections
+Subject: [RESEND][patch V3 01/23] rcu: Dont acquire lock in NMI handler in
+ rcu_nmi_enter_common()
 References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,234 +60,41 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200320180003.sIRYOgLDtBK3txdq2-YqwWAgw_XHCbFaP_FuKqOabVA@z>
+Message-ID: <20200320175957.77sArBn8gC73qZAoGzTvxDE_DE6ATfxvgPOhwGsDh38@z>
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Lockdep is invoked after RCU stopped watching or before it restarted
-watching from the low level entry/exit code.
+The rcu_nmi_enter_common() function can be invoked both in interrupt
+and NMI handlers.  If it is invoked from process context (as opposed
+to userspace or idle context) on a nohz_full CPU, it might acquire the
+CPU's leaf rcu_node structure's ->lock.  Because this lock is held only
+with interrupts disabled, this is safe from an interrupt handler, but
+doing so from an NMI handler can result in self-deadlock.
 
-lockdep_hardirqs_on() is part of the irq-state tracking; it is the
-callback that indicates we're about to enable IRQs. But because of
-this, lockdep has co-opted this callback to do lock state updates. All
-(still) held locks will get marked with ENABLED_HARDIRQ, which then
-also looks for cycles connecting to USED_IN_HARDIRQ for IRQ recursion
-deadlocks.
+This commit therefore adds "irq" to the "if" condition so as to only
+acquire the ->lock from irq handlers or process context, never from
+an NMI handler.
 
-This results in quite a lot of lockdep code getting ran, but worse, it
-will want to do stack-traces for the lock state changes. Stack traces
-require RCU.
-
-Because code that requires RCU must not run after we've shut down RCU,
-and shutting down RCU itself requires locks in some circumstances,
-split this into two parts:
-
-  - lockdep_hardirqs_on_prepare() -- updates the held lock state
-  - lockdep_hardirqs_on() -- does the irq state tracking
-
-This allows running the lock state changes and stack-traces with RCU
-enaabled, while doing the IRQ state change later. Of course, this
-opens a window where the lock stack can change. Therefore
-lockdep_hardirqs_on_prepare() will snapshot the chain_key and
-lockdep_hardirqs_on() will validate it still matches. This ensures
-that, even when interleaved code uses locks, the actual lock state
-didn't change between these two calls.
-
-Signed-off-by: Peter Zijlstra <peterz@infradead.org>
+Fixes: 5b14557b073c ("rcu: Avoid tick_dep_set_cpu() misordering")
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- include/linux/irqflags.h        |    2 +
- include/linux/sched.h           |    1 
- kernel/locking/lockdep.c        |   66 +++++++++++++++++++++++++++++-----------
- kernel/trace/trace_preemptirq.c |    2 +
- lib/debug_locks.c               |    2 -
- 5 files changed, 55 insertions(+), 18 deletions(-)
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Link: https://lkml.kernel.org/r/20200313024046.27622-1-paulmck@kernel.org
 
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -19,11 +19,13 @@
- #ifdef CONFIG_PROVE_LOCKING
-   extern void trace_softirqs_on(unsigned long ip);
-   extern void trace_softirqs_off(unsigned long ip);
-+  extern void lockdep_hardirqs_on_prepare(unsigned long ip);
-   extern void lockdep_hardirqs_on(unsigned long ip);
-   extern void lockdep_hardirqs_off(unsigned long ip);
- #else
-   static inline void trace_softirqs_on(unsigned long ip) { }
-   static inline void trace_softirqs_off(unsigned long ip) { }
-+  static inline void lockdep_hardirqs_on_prepare(unsigned long ip) { }
-   static inline void lockdep_hardirqs_on(unsigned long ip) { }
-   static inline void lockdep_hardirqs_off(unsigned long ip) { }
- #endif
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -976,6 +976,7 @@ struct task_struct {
- 	unsigned int			hardirq_disable_event;
- 	int				hardirqs_enabled;
- 	int				hardirq_context;
-+	u64				hardirq_chain_key;
- 	unsigned long			softirq_disable_ip;
- 	unsigned long			softirq_enable_ip;
- 	unsigned int			softirq_disable_event;
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3370,9 +3370,6 @@ static void __trace_hardirqs_on_caller(u
- {
- 	struct task_struct *curr = current;
+---
+ kernel/rcu/tree.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -816,7 +816,7 @@ static __always_inline void rcu_nmi_ente
+ 			rcu_cleanup_after_idle();
  
--	/* we'll do an OFF -> ON transition: */
--	curr->hardirqs_enabled = 1;
--
- 	/*
- 	 * We are going to turn hardirqs on, so set the
- 	 * usage bit for all held locks:
-@@ -3384,16 +3381,13 @@ static void __trace_hardirqs_on_caller(u
- 	 * bit for all held locks. (disabled hardirqs prevented
- 	 * this bit from being set before)
- 	 */
--	if (curr->softirqs_enabled)
-+	if (curr->softirqs_enabled) {
- 		if (!mark_held_locks(curr, LOCK_ENABLED_SOFTIRQ))
- 			return;
--
--	curr->hardirq_enable_ip = ip;
--	curr->hardirq_enable_event = ++curr->irq_events;
--	debug_atomic_inc(hardirqs_on_events);
-+	}
- }
- 
--void lockdep_hardirqs_on(unsigned long ip)
-+void lockdep_hardirqs_on_prepare(unsigned long ip)
- {
- 	if (unlikely(!debug_locks || current->lockdep_recursion))
- 		return;
-@@ -3429,20 +3423,59 @@ void lockdep_hardirqs_on(unsigned long i
- 	if (DEBUG_LOCKS_WARN_ON(current->hardirq_context))
- 		return;
- 
-+	current->hardirq_chain_key = current->curr_chain_key;
-+
- 	current->lockdep_recursion = 1;
- 	__trace_hardirqs_on_caller(ip);
- 	current->lockdep_recursion = 0;
- }
--NOKPROBE_SYMBOL(lockdep_hardirqs_on);
- 
-+void noinstr lockdep_hardirqs_on(unsigned long ip)
-+{
-+	struct task_struct *curr = current;
-+
-+	if (unlikely(!debug_locks || curr->lockdep_recursion))
-+		return;
-+
-+	if (curr->hardirqs_enabled) {
-+		/*
-+		 * Neither irq nor preemption are disabled here
-+		 * so this is racy by nature but losing one hit
-+		 * in a stat is not a big deal.
-+		 */
-+		__debug_atomic_inc(redundant_hardirqs_on);
-+		return;
-+	}
-+
-+	/*
-+	 * We're enabling irqs and according to our state above irqs weren't
-+	 * already enabled, yet we find the hardware thinks they are in fact
-+	 * enabled.. someone messed up their IRQ state tracing.
-+	 */
-+	if (DEBUG_LOCKS_WARN_ON(!irqs_disabled()))
-+		return;
-+
-+	/*
-+	 * Ensure the lock stack remained unchanged between
-+	 * lockdep_hardirqs_on_prepare() and lockdep_hardirqs_on().
-+	 */
-+	DEBUG_LOCKS_WARN_ON(current->hardirq_chain_key !=
-+			    current->curr_chain_key);
-+
-+	/* we'll do an OFF -> ON transition: */
-+	curr->hardirqs_enabled = 1;
-+	curr->hardirq_enable_ip = ip;
-+	curr->hardirq_enable_event = ++curr->irq_events;
-+	debug_atomic_inc(hardirqs_on_events);
-+}
- /*
-  * Hardirqs were disabled:
-  */
--void lockdep_hardirqs_off(unsigned long ip)
-+void noinstr lockdep_hardirqs_off(unsigned long ip)
- {
- 	struct task_struct *curr = current;
- 
--	if (unlikely(!debug_locks || current->lockdep_recursion))
-+	if (unlikely(!debug_locks || curr->lockdep_recursion))
- 		return;
- 
- 	/*
-@@ -3463,7 +3496,6 @@ void lockdep_hardirqs_off(unsigned long
- 	} else
- 		debug_atomic_inc(redundant_hardirqs_off);
- }
--NOKPROBE_SYMBOL(lockdep_hardirqs_off);
- 
- /*
-  * Softirqs will be enabled:
-@@ -4007,8 +4039,8 @@ static void print_unlock_imbalance_bug(s
- 	dump_stack();
- }
- 
--static int match_held_lock(const struct held_lock *hlock,
--					const struct lockdep_map *lock)
-+static noinstr int match_held_lock(const struct held_lock *hlock,
-+				   const struct lockdep_map *lock)
- {
- 	if (hlock->instance == lock)
- 		return 1;
-@@ -4293,7 +4325,7 @@ static int
- 	return 0;
- }
- 
--static nokprobe_inline
-+static __always_inline
- int __lock_is_held(const struct lockdep_map *lock, int read)
- {
- 	struct task_struct *curr = current;
-@@ -4506,7 +4538,7 @@ void lock_release(struct lockdep_map *lo
- }
- EXPORT_SYMBOL_GPL(lock_release);
- 
--int lock_is_held_type(const struct lockdep_map *lock, int read)
-+noinstr int lock_is_held_type(const struct lockdep_map *lock, int read)
- {
- 	unsigned long flags;
- 	int ret = 0;
---- a/kernel/trace/trace_preemptirq.c
-+++ b/kernel/trace/trace_preemptirq.c
-@@ -39,6 +39,7 @@ void trace_hardirqs_on(void)
- 		this_cpu_write(tracing_irq_cpu, 0);
- 	}
- 
-+	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
- 	lockdep_hardirqs_on(CALLER_ADDR0);
- }
- EXPORT_SYMBOL(trace_hardirqs_on);
-@@ -79,6 +80,7 @@ NOKPROBE_SYMBOL(trace_hardirqs_off);
- 		this_cpu_write(tracing_irq_cpu, 0);
- 	}
- 
-+	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
- 	lockdep_hardirqs_on(CALLER_ADDR0);
- }
- EXPORT_SYMBOL(trace_hardirqs_on_caller);
---- a/lib/debug_locks.c
-+++ b/lib/debug_locks.c
-@@ -36,7 +36,7 @@ EXPORT_SYMBOL_GPL(debug_locks_silent);
- /*
-  * Generic 'turn off all lock debugging' function:
-  */
--int debug_locks_off(void)
-+noinstr int debug_locks_off(void)
- {
- 	if (debug_locks && __debug_locks_off()) {
- 		if (!debug_locks_silent) {
+ 		incby = 1;
+-	} else if (tick_nohz_full_cpu(rdp->cpu) &&
++	} else if (irq && tick_nohz_full_cpu(rdp->cpu) &&
+ 		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
+ 		   READ_ONCE(rdp->rcu_urgent_qs) && !rdp->rcu_forced_tick) {
+ 		raw_spin_lock_rcu_node(rdp->mynode);
 
