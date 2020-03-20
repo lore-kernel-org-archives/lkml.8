@@ -2,193 +2,200 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C09C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A70C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 457442072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:22:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="h1+6Goms"
+	by mail.kernel.org (Postfix) with ESMTP id 29D882072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:24:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgCTMWG (ORCPT
+        id S1727023AbgCTMY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 08:22:06 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:37885 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbgCTMWF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 08:22:05 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200320122203euoutp01ef1d743223d21e1fe67b4ab2938e1976~_Ao0Kbkmm2793027930euoutp01M
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 12:22:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200320122203euoutp01ef1d743223d21e1fe67b4ab2938e1976~_Ao0Kbkmm2793027930euoutp01M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1584706923;
-        bh=7DqLPwT9jbPp3D97g2+PtisAfL6UoBNG8W7Dxa+4fzE=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=h1+6GomsQX8LYM/ct8EeOjZlXHjv1/biu7yjoMVwl7w//5Y0TOw/WzfX8p4AoZlKW
-         PKsRU9kOxwi6pDOelVvUYxhiL41aDqkaMTXYtcVuKcJzYUfgoBG8gsgVk0W0pHznj6
-         Emz/1aXR3N3JYkouVigujO2mP21QTJn962eEM8aA=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200320122203eucas1p2796c4346372fcca05d81513f0755c00a~_Aoz6LGEB1895918959eucas1p2E;
-        Fri, 20 Mar 2020 12:22:03 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id FB.E7.60679.B65B47E5; Fri, 20
-        Mar 2020 12:22:03 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200320122202eucas1p1747dddcf74680d35fadb4a48b7271b86~_AozhKBc21554515545eucas1p1r;
-        Fri, 20 Mar 2020 12:22:02 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200320122202eusmtrp1b7f2d5df9f18069507bdf47c13200529~_AozgdfDj0150901509eusmtrp1G;
-        Fri, 20 Mar 2020 12:22:02 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-a6-5e74b56b7a44
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 21.DD.08375.A65B47E5; Fri, 20
-        Mar 2020 12:22:02 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200320122202eusmtip1e694c85f6bd876b4852242dc1648c826~_AozKCLoy0224302243eusmtip1R;
-        Fri, 20 Mar 2020 12:22:02 +0000 (GMT)
-Subject: Re: [PATCH v2] fbdev: s1d13xxxfb: add missed unregister_framebuffer
- in remove
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Kristoffer Ericson <kristoffer.ericson@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <eda0b4c0-93ff-dfb3-4f63-907a8bef01ec@samsung.com>
-Date:   Fri, 20 Mar 2020 13:22:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Fri, 20 Mar 2020 08:24:56 -0400
+Received: from mga04.intel.com ([192.55.52.120]:12268 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726894AbgCTMYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 08:24:55 -0400
+IronPort-SDR: yItKqDZ39bsWUxYreeZdJJI59RO2OmLUx7OGjoRT+bCTunpezdMqa4vdwhtsgO48a+KXZmv85s
+ LUbje9P4Bw4Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 05:24:55 -0700
+IronPort-SDR: c6OPt5+DAUXhd1iqPAMDsU8JwkRpwJ5TVV4rP0h7SdGKrYH3MnLgUG7OeMyXMcpoUeRIO07T0x
+ QOcoypavU3rw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,284,1580803200"; 
+   d="scan'208";a="264054631"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 20 Mar 2020 05:24:54 -0700
+Received: from [10.249.224.114] (abudanko-mobl.ccr.corp.intel.com [10.249.224.114])
+        by linux.intel.com (Postfix) with ESMTP id 8D252580342;
+        Fri, 20 Mar 2020 05:24:49 -0700 (PDT)
+Subject: Re: [PATCH v1] perf tool: make Perf tool aware of SELinux access
+ control
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>
+References: <b8a0669e-36e4-a0e8-fd35-3dbd890d2170@linux.intel.com>
+ <f5ed60b2-4a61-dc72-bfd5-6d0af74bc152@linux.intel.com>
+ <20200319190126.GF14841@kernel.org> <20200319190504.GG14841@kernel.org>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <d521a22d-9fa7-1bca-fa60-f23b55953c91@linux.intel.com>
+Date:   Fri, 20 Mar 2020 15:24:47 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200310143033.5098-1-hslester96@gmail.com>
+In-Reply-To: <20200319190504.GG14841@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCKsWRmVeSWpSXmKPExsWy7djPc7rZW0viDO5NF7e48vU9m8XsQy+Z
-        LeadlLA40feB1eLyrjlsDqweO2fdZfe4332cyePzJrkA5igum5TUnMyy1CJ9uwSujNkvexgL
-        eoQqTtw/wdbAeJOvi5GTQ0LARKKv8TVzFyMXh5DACkaJVSfnsYMkhAS+MErc/MUIkfjMKHG5
-        eTUrTMffm91QieWMEu9+XmCDcN4ySpy4cZMZpEpYIEJi/pw+MFtEQF3i866dYGOZBaYySry+
-        lQtiswlYSUxsX8UIYvMK2Encn3gVaBAHB4uAqsSmw7IgYVGgMZ8eHGaFKBGUODnzCQuIzSlg
-        KTFn7j4miJHiEreezIey5SW2v50D9o6EwGR2ifU31zBBXO0i0bT8LguELSzx6vgWdghbRuL0
-        5B4WiIZ1jBJ/O15AdW9nlFg++R8bRJW1xJ1zv8CuYxbQlFi/Sx/ElBBwlNjx2hLC5JO48VYQ
-        4gY+iUnbpjNDhHklOtqEIGaoSWxYtoENZmvXzpXMExiVZiH5bBaSb2Yh+WYWwtoFjCyrGMVT
-        S4tz01OLjfJSy/WKE3OLS/PS9ZLzczcxAtPK6X/Hv+xg3PUn6RCjAAejEg+vxcqSOCHWxLLi
-        ytxDjBIczEoivLrpxXFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeY0XvYwVEkhPLEnNTk0tSC2C
-        yTJxcEo1MMbu16/O6G3KMNK7IGH6dG3I0nPq8UyHl6me98o63KF+XOhq9Vx7q1+5QWK2rj+S
-        xSY4n7qh5bPGrzBz96XDfZrOR32mrNp2q3yqNSc/39aHT9flPZkXyKydtvGtpdjinKx8FTm1
-        uZkL/b8LapyOVLnhtkVeoDHoiluZM/fPNXV37i1YxFHIp8RSnJFoqMVcVJwIABhaXwYnAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOIsWRmVeSWpSXmKPExsVy+t/xu7pZW0viDKY8Nbe48vU9m8XsQy+Z
-        LeadlLA40feB1eLyrjlsDqweO2fdZfe4332cyePzJrkA5ig9m6L80pJUhYz84hJbpWhDCyM9
-        Q0sLPSMTSz1DY/NYKyNTJX07m5TUnMyy1CJ9uwS9jNkvexgLeoQqTtw/wdbAeJOvi5GTQ0LA
-        ROLvzW5GEFtIYCmjxI1dml2MHEBxGYnj68sgSoQl/lzrYuti5AIqec0ocW/FAhaQhLBAhMT8
-        OX3MILaIgLrE51072UGKmAWmMkpM6JzICNHRwyjx5PgrJpAqNgEriYntq8C28QrYSdyfeJUN
-        ZBuLgKrEpsOyIGFRoKGHd8yCKhGUODnzCdgyTgFLiTlz94GNYQZa9mfeJWYIW1zi1pP5UHF5
-        ie1v5zBPYBSahaR9FpKWWUhaZiFpWcDIsopRJLW0ODc9t9hQrzgxt7g0L10vOT93EyMwkrYd
-        +7l5B+OljcGHGAU4GJV4eC1WlsQJsSaWFVfmHmKU4GBWEuHVTS+OE+JNSaysSi3Kjy8qzUkt
-        PsRoCvTbRGYp0eR8YJTnlcQbmhqaW1gamhubG5tZKInzdggcjBESSE8sSc1OTS1ILYLpY+Lg
-        lGpg5HNkk/5h5/qk1XjvwR+fDkeH7Li58tq2VSqHnm3PvWx8/ZpG05u1B562b5Q7I5Dx+UL8
-        2kMvoi+2ur7iL8zc41rkanXm6IJbQi+Y/gcHRQZL6Z9Z1rm3cWb268zfZrcrWjLuqa1Nj3O+
-        tu8Ql+N2nkKmEr2UmHTW/7+l+mojzjz+2JHkt91aT4mlOCPRUIu5qDgRAI+TI5W6AgAA
-X-CMS-MailID: 20200320122202eucas1p1747dddcf74680d35fadb4a48b7271b86
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200310143051eucas1p2ad43ac5aee1f9132db0c377212ec8419
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200310143051eucas1p2ad43ac5aee1f9132db0c377212ec8419
-References: <CGME20200310143051eucas1p2ad43ac5aee1f9132db0c377212ec8419@eucas1p2.samsung.com>
-        <20200310143033.5098-1-hslester96@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 3/10/20 3:30 PM, Chuhong Yuan wrote:
-> The driver calls register_framebuffer() in probe but does not call
-> unregister_framebuffer() in remove.
-> Rename current remove to __s1d13xxxfb_remove() for error handler.
-> Then add a new remove to call unregister_framebuffer().
+On 19.03.2020 22:05, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Mar 19, 2020 at 04:01:26PM -0300, Arnaldo Carvalho de Melo escreveu:
+<SNIP>
 > 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
-> Changes in v2:
->   - Rename the existing remove and add a new one to ensure the correctness
->     of error handler in probe.
-> 
->  drivers/video/fbdev/s1d13xxxfb.c | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/s1d13xxxfb.c b/drivers/video/fbdev/s1d13xxxfb.c
-> index 8048499e398d..bafea3d09bba 100644
-> --- a/drivers/video/fbdev/s1d13xxxfb.c
-> +++ b/drivers/video/fbdev/s1d13xxxfb.c
-> @@ -721,9 +721,8 @@ static void s1d13xxxfb_fetch_hw_state(struct fb_info *info)
->  		xres, yres, xres_virtual, yres_virtual, is_color, is_dual, is_tft);
->  }
->  
-> -
->  static int
-> -s1d13xxxfb_remove(struct platform_device *pdev)
-> +__s1d13xxxfb_remove(struct platform_device *pdev)
+> So I'll try the steps below with/without your patch, and then... what
+> are the steps that a tester needs to go thru to have that refpolicy in?
+> Install some new SELinux package or library, spelling out in detail the
+> steps one needs to go thru helps reviewing/testing,
 
-The new function can be made void as it always returns 0.
+Yes, sure. Steps to extend FC31 Targeted policy for testing perf_events access control:
 
-Also please use the standard CodingStyle while at it:
+* download selinux-policy srpm [1]: selinux-policy-3.14.4-48.fc31.src.rpm on my FC31
 
-void __s1d13xxxfb_remove(struct platform_device *pdev)
+* install srpm - it creates rpmbuild dir: 
+  [root@host ~]# rpm -Uhv selinux-policy-3.14.4-48.fc31.src.rpm
 
->  {
->  	struct fb_info *info = platform_get_drvdata(pdev);
->  	struct s1d13xxxfb_par *par = NULL;
-> @@ -752,6 +751,18 @@ s1d13xxxfb_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static int
-> +s1d13xxxfb_remove(struct platform_device *pdev)
+* get into rpmbuild/SPECS dir and unpack sources:
+  [root@host ~]# rpmbuild -bp selinux-policy.spec
 
-Please use the standard CodingStyle while at it:
+* Place patch below at rpmbuild/BUILD/selinux-policy-b86eaaf4dbcf2d51dd4432df7185c0eaf3cbcc02
+  dir and apply it:
+  [root@host ~]# patch -p1 < selinux-policy-perf-events-perfmon.patch
+  patching file policy/flask/access_vectors
+  patching file policy/flask/security_classes
+  [root@host ~]# cat selinux-policy-perf-events-perfmon.patch
+diff -Nura a/policy/flask/access_vectors b/policy/flask/access_vectors
+--- a/policy/flask/access_vectors	2020-02-04 18:19:53.000000000 +0300
++++ b/policy/flask/access_vectors	2020-02-28 23:37:25.000000000 +0300
+@@ -174,6 +174,7 @@
+ 	wake_alarm
+ 	block_suspend
+ 	audit_read
++	perfmon
+ }
+ 
+ #
+@@ -1099,3 +1100,15 @@
+ 
+ class xdp_socket
+ inherits socket
++
++class perf_event
++{
++	open
++	cpu
++	kernel
++	tracepoint
++	read
++	write
++}
++
++
+diff -Nura a/policy/flask/security_classes b/policy/flask/security_classes
+--- a/policy/flask/security_classes	2020-02-04 18:19:53.000000000 +0300
++++ b/policy/flask/security_classes	2020-02-28 21:35:17.000000000 +0300
+@@ -200,4 +200,6 @@
+ 
+ class xdp_socket
+ 
++class perf_event
++
+ # FLASK
 
-static int s1d13xxxfb_remove(struct platform_device *pdev)
+  [root@host ~]#
 
-> +{
-> +	struct fb_info *info = platform_get_drvdata(pdev);
-> +
-> +	if (info)
+ * get into rpmbuild/SPECS dir and build policy packages from patched sources: 
+   [root@host ~]# rpmbuild --noclean --noprep -ba selinux-policy.spec
+   so you have this:
+   [root@host ~]# ls -alh rpmbuild/RPMS/noarch/
+   total 33M
+   drwxr-xr-x. 2 root root 4.0K Mar 20 12:16 .
+   drwxr-xr-x. 3 root root 4.0K Mar 20 12:16 ..
+   -rw-r--r--. 1 root root 112K Mar 20 12:16 selinux-policy-3.14.4-48.fc31.noarch.rpm
+   -rw-r--r--. 1 root root 1.2M Mar 20 12:17 selinux-policy-devel-3.14.4-48.fc31.noarch.rpm
+   -rw-r--r--. 1 root root 2.3M Mar 20 12:17 selinux-policy-doc-3.14.4-48.fc31.noarch.rpm
+   -rw-r--r--. 1 root root  12M Mar 20 12:17 selinux-policy-minimum-3.14.4-48.fc31.noarch.rpm
+   -rw-r--r--. 1 root root 4.5M Mar 20 12:16 selinux-policy-mls-3.14.4-48.fc31.noarch.rpm
+   -rw-r--r--. 1 root root 111K Mar 20 12:16 selinux-policy-sandbox-3.14.4-48.fc31.noarch.rpm
+   -rw-r--r--. 1 root root  14M Mar 20 12:17 selinux-policy-targeted-3.14.4-48.fc31.noarch.rpm
 
-'info' check is superfluous in the ->remove only code-path.
+ * install SELinux packages from FC repo [2], if not already done so, and 
+   update with the patched rpms above:
+   [root@host ~]# rpm -Uhv rpmbuild/RPMS/noarch/selinux-policy-*
 
-> +		unregister_framebuffer(info);
-> +
-> +	return __s1d13xxxfb_remove(pdev);
-> +}
-> +
-> +
->  static int s1d13xxxfb_probe(struct platform_device *pdev)
->  {
->  	struct s1d13xxxfb_par *default_par;
-> @@ -895,7 +906,7 @@ static int s1d13xxxfb_probe(struct platform_device *pdev)
->  	return 0;
->  
->  bail:
-> -	s1d13xxxfb_remove(pdev);
-> +	__s1d13xxxfb_remove(pdev);
->  	return ret;
->  
->  }
-> 
+ * there are also packages providing GUI interface and visualizing SELinux management
+   [root@host ~]# dnf install policycoreutils-gui
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+ * enable SELinux Permissive mode for Targeted policy, if not already done so:
+   [root@host ~]# cat /etc/selinux/config
+   # This file controls the state of SELinux on the system.
+   # SELINUX= can take one of these three values:
+   #     enforcing - SELinux security policy is enforced.
+   #     permissive - SELinux prints warnings instead of enforcing.
+   #     disabled - No SELinux policy is loaded.
+   SELINUX=permissive
+   # SELINUXTYPE= can take one of these three values:
+   #     targeted - Targeted processes are protected,
+   #     minimum - Modification of targeted policy. Only selected processes are protected. 
+   #     mls - Multi Level Security protection.
+   SELINUXTYPE=targeted
+
+ * enable filesystem SELinux labeling at the next reboot
+   [root@host ~]# touch /.autorelabel
+
+ * reboot machine and it will label filesystems and load Targeted policy into the kernel
+
+ * login and check that dmesg output doesn't mention that perf_event class is unknown to SELinux subsystem
+
+ * check that SELinux is enabled and in Permissive mode
+   [root@host ~]# getenforce
+   Permissive
+
+ * turn SELinux into Enforcing mode:
+   [root@host ~]# setenforce 1
+   [root@host ~]# getenforce
+   Enforcing
+
+ * Now the machine is enabled to test the patch
+
+--- If something went wrong ---
+
+* To turn SELinux into Permissive mode: setenforce 0
+* To fully disable SELinux during kernel boot [3] set kernel command line parameter: selinux=0
+* To remove SELinux labeling from local filesystems: find / -mount -print0 | xargs -0 setfattr -h -x security.selinux
+* To fully turn SELinux off a machine set SELINUX=disabled at /etc/selinux/config file and reboot
+
+~Alexey
+
+[1] https://download-ib01.fedoraproject.org/pub/fedora/linux/updates/31/Everything/SRPMS/Packages/s/selinux-policy-3.14.4-49.fc31.src.rpm
+[2] https://docs.fedoraproject.org/en-US/Fedora/11/html/Security-Enhanced_Linux/sect-Security-Enhanced_Linux-Working_with_SELinux-Enabling_and_Disabling_SELinux.html
+[3] https://danwalsh.livejournal.com/10972.html
+
