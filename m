@@ -2,77 +2,81 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F57C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B82C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A42C20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C4A20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:13:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbgCTVJd convert rfc822-to-8bit (ORCPT
+        id S1727070AbgCTVNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:09:33 -0400
-Received: from mga04.intel.com ([192.55.52.120]:57838 "EHLO mga04.intel.com"
+        Fri, 20 Mar 2020 17:13:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33226 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbgCTVJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:09:32 -0400
-IronPort-SDR: LxgOgxgznAo4msQlLblk4Wif1FgwUATYG/JulmEwSNjEyjplwoeCCBDBzdyMKfRC9IDbfrEPg9
- oYJR2DUZ4UcQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:09:32 -0700
-IronPort-SDR: LUEt3r3KJDk1vUWMuhI4tievXJrHC+iPEvvACtJw1waq1DqF5WxC0DTorkzBmPULg1QDWb5240
- Mu6+YY8m4/kg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
-   d="scan'208";a="237327604"
-Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
-  by fmsmga007.fm.intel.com with ESMTP; 20 Mar 2020 14:09:32 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.102]) by
- ORSMSX103.amr.corp.intel.com ([169.254.5.6]) with mapi id 14.03.0439.000;
- Fri, 20 Mar 2020 14:09:32 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Wei Huang <wei.huang2@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "bp@suse.de" <bp@suse.de>,
-        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "smita.koralahallichannabasappa@amd.com" 
-        <smita.koralahallichannabasappa@amd.com>
-Subject: RE: [PATCH V2 1/1] x86/mce/amd: Add PPIN support for AMD MCE
-Thread-Topic: [PATCH V2 1/1] x86/mce/amd: Add PPIN support for AMD MCE
-Thread-Index: AQHV/u/OOpAw4hNzbky7vzrJSNSJL6hR+Ysw
-Date:   Fri, 20 Mar 2020 21:09:31 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F5B7CE7@ORSMSX115.amr.corp.intel.com>
-References: <20200320194305.3532606-1-wei.huang2@amd.com>
-In-Reply-To: <20200320194305.3532606-1-wei.huang2@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        id S1726851AbgCTVNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 17:13:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5F12DABD7;
+        Fri, 20 Mar 2020 21:13:44 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 4BD38E0FD3; Fri, 20 Mar 2020 22:13:43 +0100 (CET)
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net] netlink: check for null extack in cookie helpers
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Message-Id: <20200320211343.4BD38E0FD3@unicorn.suse.cz>
+Date:   Fri, 20 Mar 2020 22:13:43 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Tony Luck <tony.luck@intel.com>
+Unlike NL_SET_ERR_* macros, nl_set_extack_cookie_u64() and
+nl_set_extack_cookie_u32() helpers do not check extack argument for null
+and neither do their callers, as syzbot recently discovered for
+ethnl_parse_header().
 
-Still true for this new version.
+Instead of fixing the callers and leaving the trap in place, add check of
+null extack to both helpers to make them consistent with NL_SET_ERR_*
+macros.
 
--Tony
+Fixes: 2363d73a2f3e ("ethtool: reject unrecognized request flags")
+Fixes: 9bb7e0f24e7e ("cfg80211: add peer measurement with FTM initiator API")
+Reported-by: syzbot+258a9089477493cea67b@syzkaller.appspotmail.com
+Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+---
+ include/linux/netlink.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/include/linux/netlink.h b/include/linux/netlink.h
+index 4090524c3462..60739d0cbf93 100644
+--- a/include/linux/netlink.h
++++ b/include/linux/netlink.h
+@@ -115,6 +115,8 @@ static inline void nl_set_extack_cookie_u64(struct netlink_ext_ack *extack,
+ {
+ 	u64 __cookie = cookie;
+ 
++	if (!extack)
++		return;
+ 	memcpy(extack->cookie, &__cookie, sizeof(__cookie));
+ 	extack->cookie_len = sizeof(__cookie);
+ }
+@@ -124,6 +126,8 @@ static inline void nl_set_extack_cookie_u32(struct netlink_ext_ack *extack,
+ {
+ 	u32 __cookie = cookie;
+ 
++	if (!extack)
++		return;
+ 	memcpy(extack->cookie, &__cookie, sizeof(__cookie));
+ 	extack->cookie_len = sizeof(__cookie);
+ }
+-- 
+2.25.1
 
