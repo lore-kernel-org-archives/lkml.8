@@ -2,122 +2,177 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D770C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B185C43332
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 041A520773
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:01:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ldf/NL40"
+	by mail.kernel.org (Postfix) with ESMTP id 2841C20754
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584698576;
+	bh=tAagerYt8beIuUrN7d/g4MUF0Cj/cXQBUpXKUuT2zho=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fVIUR5IFMTRmKgrwSL6TsiearlZfTZh+Hfr6/EwxOwZkUwLc4yJxCuNJw/rym0ZdQ
+	 LP1acjIUkvSYbfvhisYXECDsu+PYkwtfgTpaSY+ZolIZYpPwUFHIP+iBssx5gzOJeu
+	 bkf69EKVazxrZhq3kvHZmBEeS71I5Z8ii9ETRSKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgCTKBw (ORCPT
+        id S1727217AbgCTKCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:01:52 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:36977 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726527AbgCTKBw (ORCPT
+        Fri, 20 Mar 2020 06:02:55 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38406 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbgCTKCy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:01:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584698510;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WzV2FN2ok/NhA5NWpOHsyZ7D0zfIBp3v9eJJSSNVJkQ=;
-        b=Ldf/NL400QFhgIEG3vM8AetYxopBl16vVyQA+9FL2dEnNU3V/l57e/8PEax+gqjeWHQ++H
-        uz1LpixKVICa5j9Sn6UCjeq3MB0nckrjlrrqWCPWO+t5Fp7inyeyCbLObK75nxmssMuk8o
-        vE+XkRrQuVD9Pav/wdhDMbGQ96yqFZI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-333-w0dPq5DaN-2l2TxvoiClSQ-1; Fri, 20 Mar 2020 06:01:49 -0400
-X-MC-Unique: w0dPq5DaN-2l2TxvoiClSQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0130418B5F78;
-        Fri, 20 Mar 2020 10:01:33 +0000 (UTC)
-Received: from localhost (ovpn-13-97.pek2.redhat.com [10.72.13.97])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 83DD396F92;
-        Fri, 20 Mar 2020 10:01:30 +0000 (UTC)
-Date:   Fri, 20 Mar 2020 18:01:27 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Yumei Huang <yuhuang@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Eduardo Habkost <ehabkost@redhat.com>,
-        Milan Zamazal <mzamazal@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Paul Mackerras <paulus@samba.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v3 0/8] mm/memory_hotplug: allow to specify a default
- online_type
-Message-ID: <20200320100127.GG2987@MiWiFi-R3L-srv>
-References: <20200319131221.14044-1-david@redhat.com>
+        Fri, 20 Mar 2020 06:02:54 -0400
+Received: by mail-ed1-f66.google.com with SMTP id h5so6445707edn.5;
+        Fri, 20 Mar 2020 03:02:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yKhEFD0HDc489I3cxzxcRx7nCJ4icJCiGjR0lWOPd2k=;
+        b=m0yWlKwpPPS1pBzUL5NnkA5mvuLbPIDdPqWMwWiDARWIoLNWkrc7SIYeRA+xASdqMC
+         KxCWT1RUD9yR+r5rzYrf4ZaxO1JMtYsYT2rrAohor/ptAzgmtvW4+8WlngVxGhhN+MdT
+         Fh+llBMH0889nhVKUbx+xTZiK2/I2BZ2EqnLSvBT5XliZVDAzKQxl1jZp6keYHBnV3XE
+         DvuVC/c9xRZTb2HKs5JJLZc7wY8vrP3F+S6rtRuJCZ1BZAJFUEmrcF8dJRJiHkSpvFFp
+         NHFLabftPUjMyH54qtF7YYAUnqgE11mPpCFrJMMXISZedAK42TcEPotSCk+UjnQZJt9O
+         +IBw==
+X-Gm-Message-State: ANhLgQ1IZts2jDJQKOKJ2qcCw7VAIZzOMMMJyg2Zb6FfZlVF+ZVvFFF/
+        Z1UJm4df8341Wdyvbjs+2qk=
+X-Google-Smtp-Source: ADFU+vtTJo8GuuHT33eJ8VISdzNZK+dw+AG9XHRSiOF+v3/TwxvILo+kc3y2aVtBOdqG/TC06c4U9g==
+X-Received: by 2002:a17:906:80d5:: with SMTP id a21mr7612042ejx.240.1584698571643;
+        Fri, 20 Mar 2020 03:02:51 -0700 (PDT)
+Received: from pi3 ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id e16sm319824ejx.53.2020.03.20.03.02.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 03:02:50 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 11:02:43 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        David Lechner <david@lechnology.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Peter Rosin <peda@axentia.se>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Tony Lindgren <tony@atomide.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [RFC PATCH 7/7] arm: dts: pwm: replace polarity constant with
+ macro
+Message-ID: <20200320100243.GA16931@pi3>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-8-oleksandr.suvorov@toradex.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200319131221.14044-1-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200317123231.2843297-8-oleksandr.suvorov@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/19/20 at 02:12pm, David Hildenbrand wrote:
-> Distributions nowadays use udev rules ([1] [2]) to specify if and
-> how to online hotplugged memory. The rules seem to get more complex with
-> many special cases. Due to the various special cases,
-> CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE cannot be used. All memory hotplug
-> is handled via udev rules.
+On Tue, Mar 17, 2020 at 02:32:31PM +0200, Oleksandr Suvorov wrote:
+> There is the PWM_POLARITY_NORMAL defined and describled in
+> <dt-bindings/pwm/pwm.h> and used by pwm drivers.
 > 
-> Everytime we hotplug memory, the udev rule will come to the same
-> conclusion. Especially Hyper-V (but also soon virtio-mem) add a lot of
-> memory in separate memory blocks and wait for memory to get onlined by user
-> space before continuing to add more memory blocks (to not add memory faster
-> than it is getting onlined). This of course slows down the whole memory
-> hotplug process.
+> This patch converts all '0' constant in pwms parameters into
+> PWM_POLARITY_NORMAL.
 > 
-> To make the job of distributions easier and to avoid udev rules that get
-> more and more complicated, let's extend the mechanism provided by
-> - /sys/devices/system/memory/auto_online_blocks
-> - "memhp_default_state=" on the kernel cmdline
-> to be able to specify also "online_movable" as well as "online_kernel"
+> Replace with sed regexp:
+> 's/(pwms = <&[a-zA-Z_0-9]+ [0-9]+ [0-9]+) 0>/\1 PWM_POLARITY_NORMAL>/'
 > 
-> v2 -> v3:
-> - "hv_balloon: don't check for memhp_auto_online manually"
-> -- init_completion() before register_memory_notifier()
-> - Minor typo fix
+> Then:
+> - included pwm.h in some dts/dtsi to fix building errors about undefined
+>   symbols.
+> - fixed the patman warnings about the code format;
 > 
-> v1 -> v2:
-> - Tweaked some patch descriptions
-> - Added
-> -- "powernv/memtrace: always online added memory blocks"
-> -- "hv_balloon: don't check for memhp_auto_online manually"
-> -- "mm/memory_hotplug: unexport memhp_auto_online"
-> - "mm/memory_hotplug: convert memhp_auto_online to store an online_type"
-> -- No longer touches hv/memtrace code
+> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> ---
+> 
+>  arch/arm/boot/dts/am335x-cm-t335.dts               | 2 +-
+>  arch/arm/boot/dts/am335x-evm.dts                   | 2 +-
+>  arch/arm/boot/dts/am3517-evm.dts                   | 2 +-
+>  arch/arm/boot/dts/at91-dvk_su60_somc_lcm.dtsi      | 2 +-
+>  arch/arm/boot/dts/at91-kizbox2-common.dtsi         | 6 +++---
+>  arch/arm/boot/dts/at91-kizbox3_common.dtsi         | 8 ++++----
+>  arch/arm/boot/dts/at91-kizboxmini-common.dtsi      | 6 +++---
+>  arch/arm/boot/dts/at91-nattis-2-natte-2.dts        | 2 +-
+>  arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts        | 2 +-
+>  arch/arm/boot/dts/at91sam9n12ek.dts                | 2 +-
+>  arch/arm/boot/dts/at91sam9x5dm.dtsi                | 2 +-
+>  arch/arm/boot/dts/berlin2cd-google-chromecast.dts  | 4 ++--
+>  arch/arm/boot/dts/da850-evm.dts                    | 2 +-
+>  arch/arm/boot/dts/da850-lego-ev3.dts               | 4 ++--
+>  arch/arm/boot/dts/exynos4412-midas.dtsi            | 2 +-
+>  arch/arm/boot/dts/exynos4412-odroidu3.dts          | 2 +-
+>  arch/arm/boot/dts/exynos5250-snow-common.dtsi      | 2 +-
+>  arch/arm/boot/dts/exynos5410-odroidxu.dts          | 2 +-
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts         | 2 +-
+>  arch/arm/boot/dts/exynos5422-odroidhc1.dts         | 2 +-
+>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 2 +-
+>  arch/arm/boot/dts/exynos5422-odroidxu4.dts         | 2 +-
+>  arch/arm/boot/dts/exynos54xx-odroidxu-leds.dtsi    | 4 ++--
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts          | 2 +-
+>  arch/arm/boot/dts/imx53-tx53-x13x.dts              | 5 +++--
+>  arch/arm/boot/dts/imx6dl-tx6dl-comtft.dts          | 2 +-
+>  arch/arm/boot/dts/imx6q-display5.dtsi              | 2 +-
+>  arch/arm/boot/dts/imx6q-tx6q-1010-comtft.dts       | 2 +-
+>  arch/arm/boot/dts/imx6q-tx6q-1020-comtft.dts       | 2 +-
+>  arch/arm/boot/dts/imx6qdl-tx6-lvds.dtsi            | 4 ++--
+>  arch/arm/boot/dts/imx7-colibri.dtsi                | 4 +++-
+>  arch/arm/boot/dts/imx7d-nitrogen7.dts              | 3 ++-
+>  arch/arm/boot/dts/imx7d-pico.dtsi                  | 3 ++-
+>  arch/arm/boot/dts/imx7d-sdb.dts                    | 3 ++-
+>  arch/arm/boot/dts/imx7ulp-evk.dts                  | 3 ++-
+>  arch/arm/boot/dts/iwg20d-q7-common.dtsi            | 2 +-
+>  arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi   | 2 +-
+>  arch/arm/boot/dts/meson8b-ec100.dts                | 4 ++--
+>  arch/arm/boot/dts/meson8b-mxq.dts                  | 4 ++--
+>  arch/arm/boot/dts/meson8b-odroidc1.dts             | 4 ++--
+>  arch/arm/boot/dts/motorola-mapphone-common.dtsi    | 3 ++-
+>  arch/arm/boot/dts/omap3-gta04.dtsi                 | 2 +-
+>  arch/arm/boot/dts/omap3-n900.dts                   | 2 +-
+>  arch/arm/boot/dts/rk3288-veyron-edp.dtsi           | 2 +-
+>  arch/arm/boot/dts/rk3288-veyron.dtsi               | 2 +-
+>  arch/arm/boot/dts/rv1108-evb.dts                   | 2 +-
+>  arch/arm/boot/dts/s3c6410-mini6410.dts             | 2 +-
+>  arch/arm/boot/dts/s5pv210-aries.dtsi               | 2 +-
+>  arch/arm/boot/dts/s5pv210-smdkv210.dts             | 2 +-
 
-Ack the series.
+For Exynos/S3C/S5P:
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Reviewed-by: Baoquan He <bhe@redhat.com>
-
+Best regards,
+Krzysztof
