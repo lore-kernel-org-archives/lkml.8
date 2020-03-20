@@ -2,78 +2,97 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3E8C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4E3C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C97F420739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:27:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584725259;
-	bh=9Rmx4sIHCfciKwdk1TlIL8UQL6z2SYFTiMvIISrnXWw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NWxYnXE1L6ERKQFx7sSdQKGlqfAb+OQDHTeuMae/0ZBhgc1PPn91knQcNpkO+8yxt
-	 uY46+Pr8n+wJmykJvV7LY5D4IZp7iDzAsz+eiS/8z5jH2vsnRyK9tNP3sTyTK8mVgg
-	 aB17OfNrhj6/yYn31J/hfhoafXPE221VP7ayCfIs=
+	by mail.kernel.org (Postfix) with ESMTP id 7E1EF20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:28:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgCTR1i (ORCPT
+        id S1727015AbgCTR2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:27:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgCTR1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:27:38 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 730F020722;
-        Fri, 20 Mar 2020 17:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584725257;
-        bh=9Rmx4sIHCfciKwdk1TlIL8UQL6z2SYFTiMvIISrnXWw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l/YkKArfq1iF3otzHszrdNEK4pGZu8HmyG06yoUAx/x7Zmux14+oQSDHmTEj+ASkO
-         Ut9Lxt32+DGg8O7DncGb51HyQWEXBRRA2k/YwVYoHBih1SPbfHbofIIG4q5up22QYO
-         QL5J3+neUV0oZD8wLEzn53mMK4ACXSmYlzLi7NcA=
-Date:   Fri, 20 Mar 2020 10:27:36 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: Re: [PATCH v9 13/25] mm: Add page_cache_readahead_unbounded
-Message-ID: <20200320172736.GC851@sol.localdomain>
-References: <20200320142231.2402-1-willy@infradead.org>
- <20200320142231.2402-14-willy@infradead.org>
+        Fri, 20 Mar 2020 13:28:37 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:4781 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCTR2h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 13:28:37 -0400
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id BF196240003;
+        Fri, 20 Mar 2020 17:28:31 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 18:28:31 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Yangbo Lu <yangbo.lu@nxp.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: Re: [PATCH 2/6] MAINTAINERS: add entry for Microsemi Ocelot PTP
+ driver
+Message-ID: <20200320172831.GS5504@piout.net>
+References: <20200320103726.32559-1-yangbo.lu@nxp.com>
+ <20200320103726.32559-3-yangbo.lu@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320142231.2402-14-willy@infradead.org>
+In-Reply-To: <20200320103726.32559-3-yangbo.lu@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 07:22:19AM -0700, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> ext4 and f2fs have duplicated the guts of the readahead code so
-> they can read past i_size.  Instead, separate out the guts of the
-> readahead code so they can call it directly.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+Hi,
 
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Tested-by: Eric Biggers <ebiggers@google.com>
+On 20/03/2020 18:37:22+0800, Yangbo Lu wrote:
+> Add entry for Microsemi Ocelot PTP driver.
+> 
+> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> ---
+>  MAINTAINERS | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5dbee41..8da6fc1 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11115,6 +11115,15 @@ S:	Supported
+>  F:	drivers/net/ethernet/mscc/
+>  F:	include/soc/mscc/ocelot*
+>  
+> +MICROSEMI OCELOT PTP CLOCK DRIVER
+> +M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-- Eric
+I'm open to not be listed here as I'm not the main author of the code
+and I'm not actively working on ptp for ocelot...
+
+> +M:	Yangbo Lu <yangbo.lu@nxp.com>
+> +M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+
+...as long as you keep that address.
+
+> +L:	netdev@vger.kernel.org
+> +S:	Supported
+> +F:	drivers/ptp/ptp_ocelot.c
+> +F:	include/soc/mscc/ptp_ocelot.h
+> +
+>  MICROSOFT SURFACE PRO 3 BUTTON DRIVER
+>  M:	Chen Yu <yu.c.chen@intel.com>
+>  L:	platform-driver-x86@vger.kernel.org
+> -- 
+> 2.7.4
+> 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
