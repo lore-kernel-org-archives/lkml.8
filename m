@@ -2,65 +2,85 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5001FC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBA7C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3351C20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0F6E20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:07:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584727670;
+	bh=U8oXIP5oXGvZd/1FPI5kRuFkzQslAnVxi3jbhT86N8g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZypCAOGqmel9ROwBIUqwvWg38MyYfmrZepcJbZZHylStjJ06sfar7H5HqNZBbmJ2u
+	 FiRJ05VMhpKW8tt1QeexduZEV2OEesxCwR4kmv9xpuxZMGPFAvQrEWyzzmgW7vumAX
+	 ywsAGwGI3gROXa6pdPOmWDyt9QosZAi17+HfRAwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbgCTSHE (ORCPT
+        id S1727154AbgCTSHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:07:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:55186 "EHLO foss.arm.com"
+        Fri, 20 Mar 2020 14:07:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgCTSHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:07:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C7DE1FB;
-        Fri, 20 Mar 2020 11:07:03 -0700 (PDT)
-Received: from [10.37.12.158] (unknown [10.37.12.158])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E3B523F305;
-        Fri, 20 Mar 2020 11:07:01 -0700 (PDT)
-Subject: Re: [PATCH 3/6] arm64/cpufeature: Add remaining feature bits in
- ID_MMFR4 register
-To:     anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1580215149-21492-1-git-send-email-anshuman.khandual@arm.com>
- <1580215149-21492-4-git-send-email-anshuman.khandual@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <54e53bb4-beb3-1a36-e8a4-2f3bda433739@arm.com>
-Date:   Fri, 20 Mar 2020 18:11:46 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        id S1725446AbgCTSHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 14:07:49 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9FED20739;
+        Fri, 20 Mar 2020 18:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584727668;
+        bh=U8oXIP5oXGvZd/1FPI5kRuFkzQslAnVxi3jbhT86N8g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Zl8vTyVaCE7XSqVRaFQHGYQ1hpT6gdLgT/OoUVQkp8avDWWFAKgBIZ23zn4RsyXhZ
+         VguFbxdJpa/PGLXWCV9PaVDpQjjZHtZSseureYdhCvaemCgfMmOM3Bv3sFN2Lsmaew
+         mrsprz7Pwc35y2W87l/SHVNcMFgNDyeyT4nWo3Uk=
+Received: by mail-qk1-f173.google.com with SMTP id l25so2944357qki.7;
+        Fri, 20 Mar 2020 11:07:48 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1SQ2xxjsfeClJc2ACehrcRA1ASOgmw5nO7QbHIEsOlEAMNugo8
+        uOobKars663p97UVtEYV1LjJB9aoYG6Hvtbqvw==
+X-Google-Smtp-Source: ADFU+vuxhlkoXyT1YY53b7HKSyPc40/5axtT/yKvtUn1tYpPSEZWkUnm5O/F/s11tGwXXgPTo5JaJMBZdIsGq9/lTho=
+X-Received: by 2002:a37:634d:: with SMTP id x74mr9645562qkb.254.1584727667842;
+ Fri, 20 Mar 2020 11:07:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1580215149-21492-4-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1584095350-841-1-git-send-email-akashast@codeaurora.org> <1584095350-841-4-git-send-email-akashast@codeaurora.org>
+In-Reply-To: <1584095350-841-4-git-send-email-akashast@codeaurora.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 20 Mar 2020 12:07:36 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKLoiPUhiJDuYX+bSQwoCLTXOvtNyEB8ti__xMfEDyxNQ@mail.gmail.com>
+Message-ID: <CAL_JsqKLoiPUhiJDuYX+bSQwoCLTXOvtNyEB8ti__xMfEDyxNQ@mail.gmail.com>
+Subject: Re: [PATCH V5 3/3] dt-bindings: geni-se: Add binding for UART pin swap
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Manu Gautam <mgautam@codeaurora.org>, rojay@codeaurora.org,
+        c_skakit@codeaurora.org, Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/28/2020 12:39 PM, Anshuman Khandual wrote:
-> Enable all remaining feature bits like EVT, CCIDX, LSM, HPDS, CnP, XNX,
-> SpecSEI in ID_MMFR4 register per ARM DDI 0487E.a.
+On Fri, Mar 13, 2020 at 4:29 AM Akash Asthana <akashast@codeaurora.org> wrote:
+>
+> Add documentation to support RX/TX/CTS/RTS pin swap in HW.
+>
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes in V5:
+>  -  As per Matthias's comment, remove rx-tx-cts-rts-swap property from UART
+>     child node.
+>
+>  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-It might be worth adding a comment here mentioning why SpecSEI is
-HIGHER_SAFE, unlike the majority.
+STM32 folks need something similar. Can you move this to a common
+location. That's serial.txt, but that is being converted to DT schema.
 
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-
-With that:
-
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Rob
