@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DFEC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390EDC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBF8820753
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E340C20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:53:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jEgzjPtW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CqL9nM86"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgCTQx2 (ORCPT
+        id S1727742AbgCTQxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:53:28 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40124 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727729AbgCTQxT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Mar 2020 12:53:19 -0400
-Received: by mail-pl1-f196.google.com with SMTP id h11so2738341plk.7
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 09:53:18 -0700 (PDT)
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40418 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727639AbgCTQxM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 12:53:12 -0400
+Received: by mail-pf1-f193.google.com with SMTP id l184so3543525pfl.7
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 09:53:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8C5zF5efYYsMOrxwG696qzZ9hZHWQO5hRWUAVyuQn/A=;
-        b=jEgzjPtWyscKRs2WuTkrzJfGnJfstU4MA3VmdQ7HzVuEugLYMadBa4nxmjQE2QVvt7
-         tz09q3WdiKf20szPrhYihH9y2Jfwk9WQOik70R/8cxSV1Rm+rxFiW/BrbPXFjNktP+TH
-         MJtcvmWIdApF6Gy+X6kUDu6dQWmLksMYHJ1+Fhlh1bibSASEwX3rGTxbHNVS/xl/hXld
-         jjZO2WlA2NGD5B85l0KnXmvt1zxxlsxeb9WNOB2g2mTfEmrRSLtpu1U5l0pBhQOmHIlq
-         Bczm08clWYU/ih4O/gikpuLyAvJtzRuN8EzGS6QuKgxd1LlZfH7kAmE1TySdt1pVcaW0
-         Dxzw==
+        bh=P4ellv65hyMeNnh0YMq8KimEuDdUHYeCVos/VMmk310=;
+        b=CqL9nM86YZP7IkIR+tQE1NVE5v6Nurh7syC1+0Jez1HK6lcDBoHS6kWsP4PNxOa1IV
+         FT8shGmLboYydq7xogDiWsgYSXCPVdTMEcOiIVIt3U8yBWP1/bZVrl3v9hgWB8QiTnpt
+         5nCChEx6suXPeOb3fPFdfIla1iLhgKf98gAFaXTUCm8KSazwJDspY72CUU/rL83wQBX6
+         pC+JRJH/vUW5um1AFWZlLcT6YanSvqdXGA9NND7TcIErf4WPTO2gYyiOCSYRU1zlxp0Q
+         lKnAO4FTQDnK2z/HxVOpu6Z54DAzZtpcK1FUnqCjbII/tw+B7TAjL1PKAEWeMS81/DQx
+         LX+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8C5zF5efYYsMOrxwG696qzZ9hZHWQO5hRWUAVyuQn/A=;
-        b=IAjcMS28Psh91Hkw/pp70SyT4he7X1+gbTiLx2YPjRPhPRsh+xFPtDB9kdWRCOVu2w
-         MRUoP6FHv+iuMsUrESDLKgFOVwXS7qp/oYmH9laKlhJebiAarPVEVeNSy7Hd4ddNP/NY
-         7HKynm57wwd5AyTuIzG3Ap3gk/EWtqdWHYvBeUt90gD8TlNIGLAYqzjCnqc/SP2U1jLU
-         FwbvKohmCuz0vNQPYfVQbNu2LcW5KMLAGQUq/LRQsNJYu70Y3Hoi08DC5/8Gr5Z++V7I
-         PiqRvIkU1n7LcntKR8szHdzJrpHbmJ+2LM12vMkB6JZ73W54TYobdCylM+JgBv7NWgvX
-         nQ7w==
-X-Gm-Message-State: ANhLgQ2JDvg27uCoVUNvP3HxlIpnhVmPNN97yxdoqyHqGs79m/Ej1TKc
-        joMZTYeXunCZijV638Zp1QB6UFTKaWs=
-X-Google-Smtp-Source: ADFU+vtRe919J/SSKPVEiKE6V6vNE9b6JsqF2kgUqNKrTg23ho0+VFqm9dm4DWsnZLdlZfmA5iGL6w==
-X-Received: by 2002:a17:90a:1acd:: with SMTP id p71mr11010660pjp.112.1584723197974;
-        Fri, 20 Mar 2020 09:53:17 -0700 (PDT)
+        bh=P4ellv65hyMeNnh0YMq8KimEuDdUHYeCVos/VMmk310=;
+        b=kKo3mVuC/rjQTp8PeUZvRYpz1qVAywlTLvw39CFakGIwrZM2jCxi92rqNYLPMAxIEH
+         vpSgR1X+K62poGB/5sBMs7jY3d6J0qZAzQ4DcwspfLTV65Hg+wib39hdxEs3x01Bhnhe
+         ZzgDDYp9fehcagvijof44NYxnJXcKg3KjUNKzBFTSjPcI2BLlc5EWpFqzEMpJ4F8KKH8
+         5WintH9UFLLc9fHqSSEDA4XoIQ+9/E1GZPcIpDsXrgbw8nj9x7AQdhZY1AdkjyMlw20H
+         RDNTngiWRz/NEk7fUUYvIs96jm5wGNidXrte0OJeMa2KfQNA2Om3R1cdc7HOj84CDK+/
+         h/lg==
+X-Gm-Message-State: ANhLgQ1+yZ5OfD54JxUK90VMmDRrmvVtPwmv8irqaZk8wtI9qWpdY4as
+        UHMC2m1dVAwVMTqp5xOP4vJsUg==
+X-Google-Smtp-Source: ADFU+vtTSyQpEf/y4vjtOMKU4Df3qeFRQqw20e7RDspZ6NJ3gTDHpvn+2Y/DCA8H7tBrdvGU0l8gLw==
+X-Received: by 2002:a62:6dc1:: with SMTP id i184mr2409787pfc.25.1584723190890;
+        Fri, 20 Mar 2020 09:53:10 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id x17sm6064216pfn.16.2020.03.20.09.53.16
+        by smtp.gmail.com with ESMTPSA id x17sm6064216pfn.16.2020.03.20.09.53.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 09:53:17 -0700 (PDT)
+        Fri, 20 Mar 2020 09:53:10 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     mike.leach@linaro.org, suzuki.poulose@arm.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v11 11/12] docs: sysfs: coresight: Add sysfs ABI documentation for CTI
-Date:   Fri, 20 Mar 2020 10:53:02 -0600
-Message-Id: <20200320165303.13681-12-mathieu.poirier@linaro.org>
+Subject: [PATCH v11 05/12] dt-bindings: arm: Adds CoreSight CTI hardware definitions
+Date:   Fri, 20 Mar 2020 10:52:56 -0600
+Message-Id: <20200320165303.13681-6-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200320165303.13681-1-mathieu.poirier@linaro.org>
 References: <20200320165303.13681-1-mathieu.poirier@linaro.org>
@@ -75,262 +75,451 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mike Leach <mike.leach@linaro.org>
 
-Add API usage document for sysfs API in CTI driver.
+Adds new coresight-cti.yaml file describing the bindings required to define
+CTI in the device trees.
+
+Adds an include file to dt-bindings/arm to define constants describing
+common signal functionality used in CoreSight and generic usage.
 
 Signed-off-by: Mike Leach <mike.leach@linaro.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- .../testing/sysfs-bus-coresight-devices-cti   | 241 ++++++++++++++++++
- 1 file changed, 241 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-coresight-devices-cti
+ .../bindings/arm/coresight-cti.yaml           | 336 ++++++++++++++++++
+ .../devicetree/bindings/arm/coresight.txt     |   7 +
+ MAINTAINERS                                   |   2 +
+ include/dt-bindings/arm/coresight-cti-dt.h    |  37 ++
+ 4 files changed, 382 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight-cti.yaml
+ create mode 100644 include/dt-bindings/arm/coresight-cti-dt.h
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-coresight-devices-cti b/Documentation/ABI/testing/sysfs-bus-coresight-devices-cti
+diff --git a/Documentation/devicetree/bindings/arm/coresight-cti.yaml b/Documentation/devicetree/bindings/arm/coresight-cti.yaml
 new file mode 100644
-index 000000000000..9d11502b4390
+index 000000000000..3db3642bd532
 --- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-coresight-devices-cti
-@@ -0,0 +1,241 @@
-+What:		/sys/bus/coresight/devices/<cti-name>/enable
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Enable/Disable the CTI hardware.
++++ b/Documentation/devicetree/bindings/arm/coresight-cti.yaml
+@@ -0,0 +1,336 @@
++# SPDX-License-Identifier: GPL-2.0-only or BSD-2-Clause
++# Copyright 2019 Linaro Ltd.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/coresight-cti.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/powered
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Indicate if the CTI hardware is powered.
++title: ARM Coresight Cross Trigger Interface (CTI) device.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/ctmid
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Display the associated CTM ID
++description: |
++  The CoreSight Embedded Cross Trigger (ECT) consists of CTI devices connected
++  to one or more CoreSight components and/or a CPU, with CTIs interconnected in
++  a star topology via the Cross Trigger Matrix (CTM), which is not programmable.
++  The ECT components are not part of the trace generation data path and are thus
++  not part of the CoreSight graph described in the general CoreSight bindings
++  file coresight.txt.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/nr_trigger_cons
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Number of devices connected to triggers on this CTI
++  The CTI component properties define the connections between the individual
++  CTI and the components it is directly connected to, consisting of input and
++  output hardware trigger signals. CTIs can have a maximum number of input and
++  output hardware trigger signals (8 each for v1 CTI, 32 each for v2 CTI). The
++  number is defined at design time, the maximum of each defined in the DEVID
++  register.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/name
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Name of connected device <N>
++  CTIs are interconnected in a star topology via the CTM, using a number of
++  programmable channels, usually 4, but again implementation defined and
++  described in the DEVID register. The star topology is not required to be
++  described in the bindings as the actual connections are software
++  programmable.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/in_signals
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Input trigger signals from connected device <N>
++  In general the connections between CTI and components via the trigger signals
++  are implementation defined, except when the CTI is connected to an ARM v8
++  architecture core and optional ETM.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/in_types
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Functional types for the input trigger signals
-+		from connected device <N>
++  In this case the ARM v8 architecture defines the required signal connections
++  between CTI and the CPU core and ETM if present. In the case of a v8
++  architecturally connected CTI an additional compatible string is used to
++  indicate this feature (arm,coresight-cti-v8-arch).
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/out_signals
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Output trigger signals to connected device <N>
++  When CTI trigger connection information is unavailable then a minimal driver
++  binding can be declared with no explicit trigger signals. This will result
++  the driver detecting the maximum available triggers and channels from the
++  DEVID register and make them all available for use as a single default
++  connection. Any user / client application will require additional information
++  on the connections between the CTI and other components for correct operation.
++  This information might be found by enabling the Integration Test registers in
++  the driver (set CONFIG_CORESIGHT_CTI_INTEGRATION_TEST in Kernel
++  configuration). These registers may be used to explore the trigger connections
++  between CTI and other CoreSight components.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/out_types
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Functional types for the output trigger signals
-+		to connected device <N>
++  Certain triggers between CoreSight devices and the CTI have specific types
++  and usages. These can be defined along with the signal indexes with the
++  constants defined in <dt-bindings/arm/coresight-cti-dt.h>
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/inout_sel
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Select the index for inen and outen registers.
++  For example a CTI connected to a core will usually have a DBGREQ signal. This
++  is defined in the binding as type PE_EDBGREQ. These types will appear in an
++  optional array alongside the signal indexes. Omitting types will default all
++  signals to GEN_IO.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/inen
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Read or write the CTIINEN register selected by inout_sel.
++  Note that some hardware trigger signals can be connected to non-CoreSight
++  components (e.g. UART etc) depending on hardware implementation.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/outen
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Read or write the CTIOUTEN register selected by inout_sel.
++maintainers:
++  - Mike Leach <mike.leach@linaro.org>
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/gate
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Read or write CTIGATE register.
++allOf:
++  - $ref: /schemas/arm/primecell.yaml#
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/asicctl
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Read or write ASICCTL register.
++# Need a custom select here or 'arm,primecell' will match on lots of nodes
++select:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - arm,coresight-cti
++  required:
++    - compatible
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/intack
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Write the INTACK register.
++properties:
++  $nodename:
++    pattern: "^cti(@[0-9a-f]+)$"
++  compatible:
++    oneOf:
++      - items:
++        - const: arm,coresight-cti
++        - const: arm,primecell
++      - items:
++        - const: arm,coresight-cti-v8-arch
++        - const: arm,coresight-cti
++        - const: arm,primecell
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/appset
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Set CTIAPPSET register to activate channel. Read back to
-+		determine current value of register.
++  reg:
++    maxItems: 1
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/appclear
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Write APPCLEAR register to deactivate channel.
++  cpu:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Handle to cpu this device is associated with. This must appear in the
++      base cti node if compatible string arm,coresight-cti-v8-arch is used,
++      or may appear in a trig-conns child node when appropriate.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/apppulse
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Write APPPULSE to pulse a channel active for one clock
-+		cycle.
++  arm,cti-ctm-id:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Defines the CTM this CTI is connected to, in large systems with multiple
++      separate CTI/CTM nets. Typically multi-socket systems where the CTM is
++      propagated between sockets.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/chinstatus
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Read current status of channel inputs.
++  arm,cs-dev-assoc:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      defines a phandle reference to an associated CoreSight trace device.
++      When the associated trace device is enabled, then the respective CTI
++      will be enabled. Use in a trig-conns node, or in CTI base node when
++      compatible string arm,coresight-cti-v8-arch used. If the associated
++      device has not been registered then the node name will be stored as
++      the connection name for later resolution. If the associated device is
++      not a CoreSight device or not registered then the node name will remain
++      the connection name and automatic enabling will not occur.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/choutstatus
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) read current status of channel outputs.
++  # size cells and address cells required if trig-conns node present.
++  "#size-cells":
++    const: 0
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/triginstatus
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) read current status of input trigger signals
++  "#address-cells":
++    const: 1
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/trigoutstatus
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) read current status of output trigger signals.
++patternProperties:
++  '^trig-conns@([0-9]+)$':
++    type: object
++    description:
++      A trigger connections child node which describes the trigger signals
++      between this CTI and another hardware device. This device may be a CPU,
++      CoreSight device, any other hardware device or simple external IO lines.
++      The connection may have both input and output triggers, or only one or the
++      other.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trigin_attach
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Attach a CTI input trigger to a CTM channel.
++    properties:
++      reg:
++        maxItems: 1
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trigin_detach
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Detach a CTI input trigger from a CTM channel.
++      arm,trig-in-sigs:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        minItems: 1
++        maxItems: 32
++        description:
++          List of CTI trigger in signal numbers in use by a trig-conns node.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trigout_attach
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Attach a CTI output trigger to a CTM channel.
++      arm,trig-in-types:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        minItems: 1
++        maxItems: 32
++        description:
++          List of constants representing the types for the CTI trigger in
++          signals. Types in this array match to the corresponding signal in the
++          arm,trig-in-sigs array. If the -types array is smaller, or omitted
++          completely, then the types will default to GEN_IO.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trigout_detach
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Detach a CTI output trigger from a CTM channel.
++      arm,trig-out-sigs:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        minItems: 1
++        maxItems: 32
++        description:
++          List of CTI trigger out signal numbers in use by a trig-conns node.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_gate_enable
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Enable CTIGATE for single channel (W) or list enabled
-+		channels through the gate (R).
++      arm,trig-out-types:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        minItems: 1
++        maxItems: 32
++        description:
++          List of constants representing the types for the CTI trigger out
++          signals. Types in this array match to the corresponding signal
++          in the arm,trig-out-sigs array. If the "-types" array is smaller,
++          or omitted completely, then the types will default to GEN_IO.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_gate_disable
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Disable CTIGATE for single channel.
++      arm,trig-filters:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        minItems: 1
++        maxItems: 32
++        description:
++          List of CTI trigger out signals that will be blocked from becoming
++          active, unless filtering is disabled on the driver.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_set
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Activate a single channel.
++      arm,trig-conn-name:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/string
++        description:
++          Defines a connection name that will be displayed, if the cpu or
++          arm,cs-dev-assoc properties are not being used in this connection.
++          Principle use for CTI that are connected to non-CoreSight devices, or
++          external IO.
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_clear
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Deactivate a single channel.
++    anyOf:
++      - required:
++        - arm,trig-in-sigs
++      - required:
++        - arm,trig-out-sigs
++    oneOf:
++      - required:
++        - arm,trig-conn-name
++      - required:
++        - cpu
++      - required:
++        - arm,cs-dev-assoc
++    required:
++      - reg
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_pulse
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Pulse a single channel - activate for a single clock cycle.
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trigout_filtered
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) List of output triggers filtered across all connections.
++if:
++  properties:
++    compatible:
++      contains:
++        const: arm,coresight-cti-v8-arch
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trig_filter_enable
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Enable or disable trigger output signal filtering.
++then:
++  required:
++    - cpu
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_inuse
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) show channels with at least one attached trigger signal.
++examples:
++  # minimum CTI definition. DEVID register used to set number of triggers.
++  - |
++    cti@20020000 {
++      compatible = "arm,coresight-cti", "arm,primecell";
++      reg = <0x20020000 0x1000>;
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_free
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) show channels with no attached trigger signals.
++      clocks = <&soc_smc50mhz>;
++      clock-names = "apb_pclk";
++    };
++  #  v8 architecturally defined CTI - CPU + ETM connections generated by the
++  #  driver according to the v8 architecture specification.
++  - |
++    cti@859000 {
++      compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
++                   "arm,primecell";
++      reg = <0x859000 0x1000>;
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_xtrigs_sel
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Write channel number to select a channel to view, read to
-+		see selected channel number.
++      clocks = <&soc_smc50mhz>;
++      clock-names = "apb_pclk";
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_xtrigs_in
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Read to see input triggers connected to selected view
-+		channel.
++      cpu = <&CPU1>;
++      arm,cs-dev-assoc = <&etm1>;
++    };
++  # Implementation defined CTI - CPU + ETM connections explicitly defined..
++  # Shows use of type constants from dt-bindings/arm/coresight-cti-dt.h
++  # #size-cells and #address-cells are required if trig-conns@ nodes present.
++  - |
++    #include <dt-bindings/arm/coresight-cti-dt.h>
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_xtrigs_out
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Read to see output triggers connected to selected view
-+		channel.
++    cti@858000 {
++      compatible = "arm,coresight-cti", "arm,primecell";
++      reg = <0x858000 0x1000>;
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_xtrigs_reset
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Clear all channel / trigger programming.
++      clocks = <&soc_smc50mhz>;
++      clock-names = "apb_pclk";
++
++      arm,cti-ctm-id = <1>;
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      trig-conns@0 {
++            reg = <0>;
++            arm,trig-in-sigs = <4 5 6 7>;
++            arm,trig-in-types = <ETM_EXTOUT
++                                 ETM_EXTOUT
++                                 ETM_EXTOUT
++                                 ETM_EXTOUT>;
++            arm,trig-out-sigs = <4 5 6 7>;
++            arm,trig-out-types = <ETM_EXTIN
++                                  ETM_EXTIN
++                                  ETM_EXTIN
++                                  ETM_EXTIN>;
++            arm,cs-dev-assoc = <&etm0>;
++      };
++
++      trig-conns@1 {
++            reg = <1>;
++            cpu = <&CPU0>;
++            arm,trig-in-sigs = <0 1>;
++            arm,trig-in-types = <PE_DBGTRIGGER
++                                 PE_PMUIRQ>;
++            arm,trig-out-sigs=<0 1 2 >;
++            arm,trig-out-types = <PE_EDBGREQ
++                                  PE_DBGRESTART
++                                  PE_CTIIRQ>;
++
++            arm,trig-filters = <0>;
++      };
++    };
++  # Implementation defined CTI - non CoreSight component connections.
++  - |
++    cti@20110000 {
++      compatible = "arm,coresight-cti", "arm,primecell";
++      reg = <0 0x20110000 0 0x1000>;
++
++      clocks = <&soc_smc50mhz>;
++      clock-names = "apb_pclk";
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      trig-conns@0 {
++        reg = <0>;
++        arm,trig-in-sigs=<0>;
++        arm,trig-in-types=<GEN_INTREQ>;
++        arm,trig-out-sigs=<0>;
++        arm,trig-out-types=<GEN_HALTREQ>;
++        arm,trig-conn-name = "sys_profiler";
++      };
++
++      trig-conns@1 {
++        reg = <1>;
++        arm,trig-out-sigs=<2 3>;
++        arm,trig-out-types=<GEN_HALTREQ GEN_RESTARTREQ>;
++        arm,trig-conn-name = "watchdog";
++      };
++
++      trig-conns@2 {
++        reg = <2>;
++        arm,trig-in-sigs=<1 6>;
++        arm,trig-in-types=<GEN_HALTREQ GEN_RESTARTREQ>;
++        arm,trig-conn-name = "g_counter";
++      };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+index d02c42d21f2f..846f6daae71b 100644
+--- a/Documentation/devicetree/bindings/arm/coresight.txt
++++ b/Documentation/devicetree/bindings/arm/coresight.txt
+@@ -45,6 +45,10 @@ its hardware characteristcs.
+ 		- Coresight Address Translation Unit (CATU)
+ 			"arm,coresight-catu", "arm,primecell";
+ 
++		- Coresight Cross Trigger Interface (CTI):
++			"arm,coresight-cti", "arm,primecell";
++			See coresight-cti.yaml for full CTI definitions.
++
+ 	* reg: physical base address and length of the register
+ 	  set(s) of the component.
+ 
+@@ -72,6 +76,9 @@ its hardware characteristcs.
+ 	* reg-names: the only acceptable values are "stm-base" and
+ 	  "stm-stimulus-base", each corresponding to the areas defined in "reg".
+ 
++* Required properties for Coresight Cross Trigger Interface (CTI)
++	See coresight-cti.yaml for full CTI definitions.
++
+ * Required properties for devices that don't show up on the AMBA bus, such as
+   non-configurable replicators and non-configurable funnels:
+ 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f6d07ade8e2e..847d1da852f9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1679,9 +1679,11 @@ R:	Suzuki K Poulose <suzuki.poulose@arm.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	drivers/hwtracing/coresight/*
++F:	include/dt-bindings/arm/coresight-cti-dt.h
+ F:	Documentation/trace/coresight/*
+ F:	Documentation/devicetree/bindings/arm/coresight.txt
+ F:	Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
++F:	Documentation/devicetree/bindings/arm/coresight-cti.yaml
+ F:	Documentation/ABI/testing/sysfs-bus-coresight-devices-*
+ F:	tools/perf/arch/arm/util/pmu.c
+ F:	tools/perf/arch/arm/util/auxtrace.c
+diff --git a/include/dt-bindings/arm/coresight-cti-dt.h b/include/dt-bindings/arm/coresight-cti-dt.h
+new file mode 100644
+index 000000000000..61e7bdf8ea6e
+--- /dev/null
++++ b/include/dt-bindings/arm/coresight-cti-dt.h
+@@ -0,0 +1,37 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides constants for the defined trigger signal
++ * types on CoreSight CTI.
++ */
++
++#ifndef _DT_BINDINGS_ARM_CORESIGHT_CTI_DT_H
++#define _DT_BINDINGS_ARM_CORESIGHT_CTI_DT_H
++
++#define GEN_IO		0
++#define GEN_INTREQ	1
++#define GEN_INTACK	2
++#define GEN_HALTREQ	3
++#define GEN_RESTARTREQ	4
++#define PE_EDBGREQ	5
++#define PE_DBGRESTART	6
++#define PE_CTIIRQ	7
++#define PE_PMUIRQ	8
++#define PE_DBGTRIGGER	9
++#define ETM_EXTOUT	10
++#define ETM_EXTIN	11
++#define SNK_FULL	12
++#define SNK_ACQCOMP	13
++#define SNK_FLUSHCOMP	14
++#define SNK_FLUSHIN	15
++#define SNK_TRIGIN	16
++#define STM_ASYNCOUT	17
++#define STM_TOUT_SPTE	18
++#define STM_TOUT_SW	19
++#define STM_TOUT_HETE	20
++#define STM_HWEVENT	21
++#define ELA_TSTART	22
++#define ELA_TSTOP	23
++#define ELA_DBGREQ	24
++#define CTI_TRIG_MAX	25
++
++#endif /*_DT_BINDINGS_ARM_CORESIGHT_CTI_DT_H */
 -- 
 2.20.1
 
