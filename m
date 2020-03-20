@@ -2,86 +2,80 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE99C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89979C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE5E20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:54:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="F0FOPtBw"
+	by mail.kernel.org (Postfix) with ESMTP id 4C56320754
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:56:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584712568;
+	bh=bQLfnNJ21tARCpyrrG8kAbYnLEtL50j8Wc8tG/DdL90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lL4DSaGDY+HrTE/TxwWUasPwQH//s2KK8HPoGZwaN+tcEyPTZdjjLbrFUcr4THCkY
+	 /04eev0jBbG2Qtnw5OF6u6suHwc4dTWtRXkINmeZ5E/JjXiASpoRlsTKe72/HhCTYS
+	 wpjUrT7uj4H+UQvIkURrlplYgiauEqsYmfDicgq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbgCTNyc (ORCPT
+        id S1726869AbgCTN4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:54:32 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:37678 "EHLO mail.skyhub.de"
+        Fri, 20 Mar 2020 09:56:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbgCTNyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:54:31 -0400
-Received: from zn.tnic (p200300EC2F0A5A004DAD0A631927B72B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:4dad:a63:1927:b72b])
+        id S1726778AbgCTN4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 09:56:07 -0400
+Received: from localhost (unknown [122.167.82.180])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 67BE21EC0CF9;
-        Fri, 20 Mar 2020 14:54:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584712470;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=4kRlOKjHakNgyDMJ+wwWO6fJ9qGChnt/waqHmA/UUGY=;
-        b=F0FOPtBwjQP0paqttkINRGbxEcmOMVhN4oL0yj58aGG1avkm9QONlkR8NBXjqQSmqDIw9L
-        vxUZqNovMOIpqMvYdssliy14K12ktEZxIEt77Wsy46H0CUd3oWK+NCFRLHn2wB6zcdZ5JU
-        D0uVIwOLBo4Llp8mhOb2XsweNN/eGPw=
-Date:   Fri, 20 Mar 2020 14:54:36 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, x86@kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: [PATCH] Revert "x86/reboot, efi: Use EFI reboot for Acer
- TravelMate X514-51T"
-Message-ID: <20200320135436.GA23532@zn.tnic>
-References: <20200312083341.9365-1-jian-hong@endlessm.com>
- <20200312104643.GA15619@zn.tnic>
- <CAD8Lp47ndRqeS5VbkCMR_Faq-du9eDW28rHOG4Owxq862t-kGQ@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id D559720709;
+        Fri, 20 Mar 2020 13:56:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584712566;
+        bh=bQLfnNJ21tARCpyrrG8kAbYnLEtL50j8Wc8tG/DdL90=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NavK74h2sYbbhdArU4x0jD1mqxNRojoZeiD2Qy9BRwIEIPCfkuC+cttylna7mGG05
+         3T+ScfauWK8yJSIU57Kgg7uh7YuKBXjGJzKIjUsdwR+KV3jL0gVuXPAk+tXokSx3AM
+         NAtOipTPMM2f+0SYs0ggJCObPHK0GAaWtS0N/pmY=
+Date:   Fri, 20 Mar 2020 19:26:02 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     broonie@kernel.org, pierre-louis.bossart@linux.intel.com,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 1/2] soundwire: stream: Add read_only_wordlength flag to
+ port properties
+Message-ID: <20200320135602.GF4885@vkoul-mobl>
+References: <20200311113545.23773-1-srinivas.kandagatla@linaro.org>
+ <20200311113545.23773-2-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD8Lp47ndRqeS5VbkCMR_Faq-du9eDW28rHOG4Owxq862t-kGQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200311113545.23773-2-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 08:37:54PM +0800, Daniel Drake wrote:
-> Based on that I was considering that the patch could be reverted for
-> cleanliness/ At the same time, I do not have strong feelings on this,
-> no issues if the quirk is left in place.
+On 11-03-20, 11:35, Srinivas Kandagatla wrote:
+> According to SoundWire Specification Version 1.2.
+> "A Data Port number X (in the range 0-14) which supports only one
+> value of WordLength may implement the WordLength field in the
+> DPX_BlockCtrl1 Register as Read-Only, returning the fixed value of
+> WordLength in response to reads."
+> 
+> As WSA881x interfaces in PDM mode making the only field "WordLength"
+> in DPX_BlockCtrl1" fixed and read-only. Behaviour of writing to this
+> register on WSA881x soundwire slave with Qualcomm Soundwire Controller
+> is throwing up an error. Not sure how other controllers deal with
+> writing to readonly registers, but this patch provides a way to avoid
+> writes to DPN_BlockCtrl1 register by providing a read_only_wordlength
+> flag in struct sdw_dpn_prop
 
-Oh, I'd take the revert on cleanliness grounds any day of the week. But
-if that broken fw has snuck out and someone comes and complains that it
-wouldn't reboot properly, then I'd have to revert the revert.
+Applied, thanks
 
-And looking at that reboot_dmi_table[] of who's who of broken BIOSes,
-one entry less ain't gonna make it prettier.
+I will send a tag, so that mark can apply the second patch for asoc
 
-:-)
-
+Thanks
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+~Vinod
