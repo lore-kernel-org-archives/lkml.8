@@ -2,37 +2,36 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BC6C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94ED3C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E878F20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DC220767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbgCTV3P (ORCPT
+        id S1727639AbgCTV3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:29:15 -0400
-Received: from mga09.intel.com ([134.134.136.24]:37251 "EHLO mga09.intel.com"
+        Fri, 20 Mar 2020 17:29:14 -0400
+Received: from mga02.intel.com ([134.134.136.20]:20439 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727464AbgCTV27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727416AbgCTV27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Mar 2020 17:28:59 -0400
-IronPort-SDR: S+kNTz+Ca2P8ijDnvM4ENUShzw0Qsl+FciRF5cZRbg4RIWuQEbeof6UNBIcbBgJeRxYV/RNplb
- JeZnd8ySm1ng==
+IronPort-SDR: 6Pjuj3TSaZ3yORS2+Ku9tPC9Xa8uOFpqk8HNb74gwdAJHfQiSHIO+v7RK1vNgYVzk5L6Vb0IB2
+ Yc0JyjOAsfDg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:59 -0700
-IronPort-SDR: Pz5h6Pt6IKRABLbELMnLS8nJe1vFzK0tlge+EwhI7nus2COGZVDL4pUxCbkINtsettnVsa3ond
- XpQs91dN3o+w==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:56 -0700
+IronPort-SDR: Vu97rLrGvYiVmK+Cs9I/DgfJuVxopoq7INqG5/+zm9qoUkZH7ay3w9vo1cu+ZtzawHh4a9MlGF
+ 3C/FFjlHiL1Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
-   d="scan'208";a="269224516"
+   d="scan'208";a="269224492"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:58 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:55 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -47,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v3 31/37] KVM: x86/mmu: Add separate override for MMU sync during fast CR3 switch
-Date:   Fri, 20 Mar 2020 14:28:27 -0700
-Message-Id: <20200320212833.3507-32-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 24/37] KVM: x86: Introduce KVM_REQ_TLB_FLUSH_CURRENT to flush current ASID
+Date:   Fri, 20 Mar 2020 14:28:20 -0700
+Message-Id: <20200320212833.3507-25-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200320212833.3507-1-sean.j.christopherson@intel.com>
 References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
@@ -60,108 +59,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a separate "skip" override for MMU sync, a future change to avoid
-TLB flushes on nested VMX transitions may need to sync the MMU even if
-the TLB flush is unnecessary.
+Add KVM_REQ_TLB_FLUSH_CURRENT to allow optimized TLB flushing of VMX's
+EPTP/VPID contexts[*] from the KVM MMU and/or in a deferred manner, e.g.
+to flush L2's context during nested VM-Enter.
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+Convert KVM_REQ_TLB_FLUSH to KVM_REQ_TLB_FLUSH_CURRENT in flows where
+the flush is directly associated with vCPU-scoped instruction emulation,
+i.e. MOV CR3 and INVPCID.
+
+Add a comment in vmx_vcpu_load_vmcs() above its KVM_REQ_TLB_FLUSH to
+make it clear that it deliberately requests a flush of all contexts.
+
+Service any pending flush request on nested VM-Exit as it's possible a
+nested VM-Exit could occur after requesting a flush for L2.  Add the
+same logic for nested VM-Enter even though it's _extremely_ unlikely
+for flush to be pending on nested VM-Enter, but theoretically possible
+(in the future) due to RSM (SMM) emulation.
+
+[*] Intel also has an Address Space Identifier (ASID) concept, e.g.
+    EPTP+VPID+PCID == ASID, it's just not documented in the SDM because
+    the rules of invalidation are different based on which piece of the
+    ASID is being changed, i.e. whether the EPTP, VPID, or PCID context
+    must be invalidated.
+
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h |  3 ++-
- arch/x86/kvm/mmu/mmu.c          | 13 +++++++------
- arch/x86/kvm/vmx/nested.c       |  2 +-
- arch/x86/kvm/x86.c              |  2 +-
- 4 files changed, 11 insertions(+), 9 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  2 ++
+ arch/x86/kvm/svm.c              |  1 +
+ arch/x86/kvm/vmx/nested.c       |  7 +++++++
+ arch/x86/kvm/vmx/vmx.c          |  7 ++++++-
+ arch/x86/kvm/x86.c              | 11 +++++++++--
+ arch/x86/kvm/x86.h              |  6 ++++++
+ 6 files changed, 31 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 31aa93088bf9..6fca2e45886c 100644
+index 0392a9db110d..26fa52450569 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -1517,7 +1517,8 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
- 		       void *insn, int insn_len);
- void kvm_mmu_invlpg(struct kvm_vcpu *vcpu, gva_t gva);
- void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid);
--void kvm_mmu_new_cr3(struct kvm_vcpu *vcpu, gpa_t new_cr3, bool skip_tlb_flush);
-+void kvm_mmu_new_cr3(struct kvm_vcpu *vcpu, gpa_t new_cr3, bool skip_tlb_flush,
-+		     bool skip_mmu_sync);
+@@ -83,6 +83,7 @@
+ #define KVM_REQ_GET_VMCS12_PAGES	KVM_ARCH_REQ(24)
+ #define KVM_REQ_APICV_UPDATE \
+ 	KVM_ARCH_REQ_FLAGS(25, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
++#define KVM_REQ_TLB_FLUSH_CURRENT	KVM_ARCH_REQ(26)
  
- void kvm_configure_mmu(bool enable_tdp, int tdp_page_level);
+ #define CR0_RESERVED_BITS                                               \
+ 	(~(unsigned long)(X86_CR0_PE | X86_CR0_MP | X86_CR0_EM | X86_CR0_TS \
+@@ -1106,6 +1107,7 @@ struct kvm_x86_ops {
+ 	void (*set_rflags)(struct kvm_vcpu *vcpu, unsigned long rflags);
  
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index b95933198f4c..06e94ca59a2d 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4307,7 +4307,7 @@ static bool fast_cr3_switch(struct kvm_vcpu *vcpu, gpa_t new_cr3,
+ 	void (*tlb_flush_all)(struct kvm_vcpu *vcpu);
++	void (*tlb_flush_current)(struct kvm_vcpu *vcpu);
+ 	int  (*tlb_remote_flush)(struct kvm *kvm);
+ 	int  (*tlb_remote_flush_with_range)(struct kvm *kvm,
+ 			struct kvm_tlb_range *range);
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 10e5b8c4b515..0bf7ad5f62ad 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -7406,6 +7406,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+ 	.set_rflags = svm_set_rflags,
  
- static void __kvm_mmu_new_cr3(struct kvm_vcpu *vcpu, gpa_t new_cr3,
- 			      union kvm_mmu_page_role new_role,
--			      bool skip_tlb_flush)
-+			      bool skip_tlb_flush, bool skip_mmu_sync)
- {
- 	if (!fast_cr3_switch(vcpu, new_cr3, new_role)) {
- 		kvm_mmu_free_roots(vcpu, vcpu->arch.mmu, KVM_MMU_ROOT_CURRENT);
-@@ -4322,10 +4322,10 @@ static void __kvm_mmu_new_cr3(struct kvm_vcpu *vcpu, gpa_t new_cr3,
- 	 */
- 	kvm_make_request(KVM_REQ_LOAD_MMU_PGD, vcpu);
+ 	.tlb_flush_all = svm_flush_tlb,
++	.tlb_flush_current = svm_flush_tlb,
+ 	.tlb_flush_gva = svm_flush_tlb_gva,
+ 	.tlb_flush_guest = svm_flush_tlb,
  
--	if (!skip_tlb_flush) {
-+	if (!skip_mmu_sync)
- 		kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
-+	if (!skip_tlb_flush)
- 		kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
--	}
- 
- 	/*
- 	 * The last MMIO access's GVA and GPA are cached in the VCPU. When
-@@ -4338,10 +4338,11 @@ static void __kvm_mmu_new_cr3(struct kvm_vcpu *vcpu, gpa_t new_cr3,
- 	__clear_sp_write_flooding_count(page_header(vcpu->arch.mmu->root_hpa));
- }
- 
--void kvm_mmu_new_cr3(struct kvm_vcpu *vcpu, gpa_t new_cr3, bool skip_tlb_flush)
-+void kvm_mmu_new_cr3(struct kvm_vcpu *vcpu, gpa_t new_cr3, bool skip_tlb_flush,
-+		     bool skip_mmu_sync)
- {
- 	__kvm_mmu_new_cr3(vcpu, new_cr3, kvm_mmu_calc_root_page_role(vcpu),
--			  skip_tlb_flush);
-+			  skip_tlb_flush, skip_mmu_sync);
- }
- EXPORT_SYMBOL_GPL(kvm_mmu_new_cr3);
- 
-@@ -5034,7 +5035,7 @@ void kvm_init_shadow_ept_mmu(struct kvm_vcpu *vcpu, bool execonly,
- 		kvm_calc_shadow_ept_root_page_role(vcpu, accessed_dirty,
- 						   execonly, level);
- 
--	__kvm_mmu_new_cr3(vcpu, new_eptp, new_role.base, false);
-+	__kvm_mmu_new_cr3(vcpu, new_eptp, new_role.base, false, false);
- 
- 	if (new_role.as_u64 == context->mmu_role.as_u64)
- 		return;
 diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 06fc0b68ecf3..dd58563ee793 100644
+index 580d5c98352f..b9fa2f89b564 100644
 --- a/arch/x86/kvm/vmx/nested.c
 +++ b/arch/x86/kvm/vmx/nested.c
-@@ -1123,7 +1123,7 @@ static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool ne
- 	}
+@@ -3230,6 +3230,9 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
+ 	u32 exit_reason = EXIT_REASON_INVALID_STATE;
+ 	u32 exit_qual;
  
- 	if (!nested_ept)
--		kvm_mmu_new_cr3(vcpu, cr3, false);
-+		kvm_mmu_new_cr3(vcpu, cr3, false, false);
++	if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu))
++		kvm_vcpu_flush_tlb_current(vcpu);
++
+ 	evaluate_pending_interrupts = exec_controls_get(vmx) &
+ 		(CPU_BASED_INTR_WINDOW_EXITING | CPU_BASED_NMI_WINDOW_EXITING);
+ 	if (likely(!evaluate_pending_interrupts) && kvm_vcpu_apicv_active(vcpu))
+@@ -4295,6 +4298,10 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
+ 	/* trying to cancel vmlaunch/vmresume is a bug */
+ 	WARN_ON_ONCE(vmx->nested.nested_run_pending);
  
- 	vcpu->arch.cr3 = cr3;
- 	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
++	/* Service the TLB flush request for L2 before switching to L1. */
++	if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu))
++		kvm_vcpu_flush_tlb_current(vcpu);
++
+ 	leave_guest_mode(vcpu);
+ 
+ 	if (nested_cpu_has_preemption_timer(vmcs12))
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index d6cf625b4011..ae7279802652 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1367,6 +1367,10 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
+ 		void *gdt = get_current_gdt_ro();
+ 		unsigned long sysenter_esp;
+ 
++		/*
++		 * Flush all EPTP/VPID contexts, the new pCPU may have stale
++		 * TLB entries from its previous association with the vCPU.
++		 */
+ 		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
+ 
+ 		/*
+@@ -5479,7 +5483,7 @@ static int handle_invpcid(struct kvm_vcpu *vcpu)
+ 
+ 		if (kvm_get_active_pcid(vcpu) == operand.pcid) {
+ 			kvm_mmu_sync_roots(vcpu);
+-			kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
++			kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
+ 		}
+ 
+ 		for (i = 0; i < KVM_MMU_NUM_PREV_ROOTS; i++)
+@@ -7921,6 +7925,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+ 	.set_rflags = vmx_set_rflags,
+ 
+ 	.tlb_flush_all = vmx_flush_tlb_all,
++	.tlb_flush_current = vmx_flush_tlb_current,
+ 	.tlb_flush_gva = vmx_flush_tlb_gva,
+ 	.tlb_flush_guest = vmx_flush_tlb_guest,
+ 
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 26c24af87cca..0d1572a0791c 100644
+index 333968e5ef3c..cccfcf612008 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -1045,7 +1045,7 @@ int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
- 		 !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
- 		return 1;
+@@ -1033,7 +1033,7 @@ int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
+ 	if (cr3 == kvm_read_cr3(vcpu) && !pdptrs_changed(vcpu)) {
+ 		if (!skip_tlb_flush) {
+ 			kvm_mmu_sync_roots(vcpu);
+-			kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
++			kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
+ 		}
+ 		return 0;
+ 	}
+@@ -8222,8 +8222,15 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 			kvm_mmu_sync_roots(vcpu);
+ 		if (kvm_check_request(KVM_REQ_LOAD_MMU_PGD, vcpu))
+ 			kvm_mmu_load_pgd(vcpu);
+-		if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu))
++		if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu)) {
+ 			kvm_vcpu_flush_tlb_all(vcpu);
++
++			/* Flushing all ASIDs flushes the current ASID... */
++			kvm_clear_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
++		}
++		if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu))
++			kvm_vcpu_flush_tlb_current(vcpu);
++
+ 		if (kvm_check_request(KVM_REQ_REPORT_TPR_ACCESS, vcpu)) {
+ 			vcpu->run->exit_reason = KVM_EXIT_TPR_ACCESS;
+ 			r = 0;
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index c1954e216b41..e0816850ce5e 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -125,6 +125,12 @@ static inline bool mmu_is_nested(struct kvm_vcpu *vcpu)
+ 	return vcpu->arch.walk_mmu == &vcpu->arch.nested_mmu;
+ }
  
--	kvm_mmu_new_cr3(vcpu, cr3, skip_tlb_flush);
-+	kvm_mmu_new_cr3(vcpu, cr3, skip_tlb_flush, skip_tlb_flush);
- 	vcpu->arch.cr3 = cr3;
- 	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
- 
++static inline void kvm_vcpu_flush_tlb_current(struct kvm_vcpu *vcpu)
++{
++	++vcpu->stat.tlb_flush;
++	kvm_x86_ops->tlb_flush_current(vcpu);
++}
++
+ static inline int is_pae(struct kvm_vcpu *vcpu)
+ {
+ 	return kvm_read_cr4_bits(vcpu, X86_CR4_PAE);
 -- 
 2.24.1
 
