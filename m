@@ -2,129 +2,146 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7839AC43332
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAFCC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5062E20409
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F9C720409
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:36:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qQN54ML1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WMiqKpov"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgCTJbe (ORCPT
+        id S1726843AbgCTJg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:31:34 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34212 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbgCTJbc (ORCPT
+        Fri, 20 Mar 2020 05:36:26 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42622 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbgCTJgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:31:32 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02K9VQFN012302;
-        Fri, 20 Mar 2020 04:31:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584696686;
-        bh=KQmoqh9mgTESw16TTxpzd8iXS+b+Uiyj7E0qjX+WhS8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=qQN54ML1xrErkmup4pW50gsVV9LxL3ikZaBLIRM+J+4Zb3tUQqhv++8+lOwIb+SgH
-         or2QBHG3d+Z44IaN+BLyo0OsJGmnWg5YDi0UH0rgi28dNqSPiHCdGHangCpWIH5UDU
-         c6p+FJH9cWqQDzEiVL2TTJcvPO+PpvNa1xvGO2GQ=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02K9VQFR130683
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Mar 2020 04:31:26 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
- Mar 2020 04:31:25 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 20 Mar 2020 04:31:26 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02K9VNxq018507;
-        Fri, 20 Mar 2020 04:31:24 -0500
-Subject: Re: [PATCH 2/3] bindings: sound: Add documentation for TI j721e EVM
- (CPB and IVI)
-To:     Rob Herring <robh@kernel.org>
-CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>, <robh+dt@kernel.org>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200319092815.3776-1-peter.ujfalusi@ti.com>
- <20200319092815.3776-3-peter.ujfalusi@ti.com> <20200320002112.GA10030@bogus>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <412ff8fd-bab2-39b0-5885-82823981655b@ti.com>
-Date:   Fri, 20 Mar 2020 11:31:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200320002112.GA10030@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 20 Mar 2020 05:36:25 -0400
+Received: by mail-pf1-f196.google.com with SMTP id x2so2938757pfn.9
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 02:36:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=6OV3MJtnwHmBj9IvKnU2jj48Eg9Ml8gSZFTsDf/nk+o=;
+        b=WMiqKpovon8ayUXjyLEzv+OwMEUBJuBJ9hMuktNFhY48Izr1idFbw/MfFmkPOhcj+v
+         9xrTbQVEe8K8ivSs5OdJjDBT0a6OKM6QijTie2/86RINbmZPPsZVfOSqmleNzQinxJYM
+         doma38WDeC+P0oQdXIaTsD73zWM3+4WL1V616nq8+Uylhqt+oIO/mU5AgZkvm1/6VOsL
+         NPLWitsRMMhYzSR1scFRab3D3WAYBssMMfcVEaIkExqRk+W+pDWTb4aE0qGpAbam0yHx
+         QFGz7DKIgtXlWY5ysY8OoqQqp95tCHEO7MfsI8+vV8eRzJEahvt40VrH0lAjvloN2rgR
+         +caQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6OV3MJtnwHmBj9IvKnU2jj48Eg9Ml8gSZFTsDf/nk+o=;
+        b=ZeapaqhuveOlTXUhyH/re+LhOMyAihkynQVy/7DMmO8TeZGbZchP9nx2knHAtjI+tA
+         GNxI8YQU6oLKs1zVt6Hw7/eLuz9t6nBOIj0Ro3/PN3mKpKTVFErjV2az7ldaop+GOY+3
+         q9sjW8/GHof9LJZtmtNr9R5vRLuIsqEaufEaQv3Xzk+P0AbZ5Vg8DV2/fup8Cs4FiYaD
+         80riV/FumZ37i5Q1bhoE2cGh4QbPkzQtAgFc3Yje8mXuSQDLQP9aQtiANDQLtH+Pvdms
+         b1js3Xt2ixFqSqOEoVFZ+Qy5KecPlUe+IefjrIay//nY/L2jzvi/hO0vdhd8xzSyB1HM
+         JNfg==
+X-Gm-Message-State: ANhLgQ1Sfg2j01QPKSH07xISll6UA34ODUa3apdiSSINj4GCwx0YGR0M
+        yHwrarVv4JamvCyb/bj9q6BGqw==
+X-Google-Smtp-Source: ADFU+vu96g4sr+58Bfq6iUmA7kCu4qTiGLNvmkhrbuyuayATxiGwtwonY7BFIsC+CTiPCHCvDNHBhQ==
+X-Received: by 2002:a63:68a:: with SMTP id 132mr7844539pgg.12.1584696982648;
+        Fri, 20 Mar 2020 02:36:22 -0700 (PDT)
+Received: from localhost ([2400:8904::f03c:91ff:fe8a:bbe4])
+        by smtp.gmail.com with ESMTPSA id g11sm4868415pfm.4.2020.03.20.02.36.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 20 Mar 2020 02:36:22 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Al Grant <Al.Grant@arm.com>, James Clark <James.Clark@arm.com>
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH] arm64: perf_event: Fix time_offset for arch timer
+Date:   Fri, 20 Mar 2020 17:35:45 +0800
+Message-Id: <20200320093545.28227-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob,
+Between the system powering on and kernel's sched clock registration,
+the arch timer usually has been enabled at the early time and its
+counter is incremented during the period of the booting up.  Thus the
+arch timer's counter is not completely accounted into the sched clock,
+and has a delta between the arch timer's counter and sched clock.  This
+delta value should be stored into userpg->time_offset, which later can
+be retrieved by Perf tool in the user space for sample timestamp
+calculation.
 
-On 20/03/2020 2.21, Rob Herring wrote:
-> On Thu, 19 Mar 2020 11:28:14 +0200, Peter Ujfalusi wrote:
->> The audio support on the Common Processor Board board is using
->> pcm3168a codec connected to McASP10 serializers in parallel setup.
->>
->> The Infotainment board plugs into the Common Processor Board, the support
->> of the extension board is extending the CPB audio support by adding
->> the two codecs on the expansion board.
->>
->> The audio support on the Infotainment Expansion Board consists of McASP0
->> connected to two pcm3168a codecs with dedicated set of serializers to each.
->> The SCKI for pcm3168a is sourced from j721e AUDIO_REFCLK0 pin.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  .../bindings/sound/ti,j721e-cpb-audio.yaml    |  93 +++++++++++
->>  .../sound/ti,j721e-cpb-ivi-audio.yaml         | 145 ++++++++++++++++++
->>  2 files changed, 238 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml
->>  create mode 100644 Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml
->>
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml: $id: relative path/filename doesn't match actual path or filename
-> 	expected: http://devicetree.org/schemas/sound/ti,j721e-cpb-ivi-audio.yaml#
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml: duplicate '$id' value 'http://devicetree.org/schemas/sound/ti,j721e-cpb-audio.yaml#'
-> Error: Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.example.dts:21.23-24 syntax error
-> FATAL ERROR: Unable to parse input tree
-> scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.example.dt.yaml' failed
-> make[1]: *** [Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.example.dt.yaml] Error 1
-> make[1]: *** Waiting for unfinished jobs....
-> Makefile:1262: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
+Now userpg->time_offset is assigned to the negative sched clock with
+'-now', this value cannot reflect the delta between arch timer's counter
+and sched clock, so Perf cannot use it to calculate the sample time.
 
-I made copy-paste error (two) when creating the cpb-ivi yaml and forgot
-to re-run the dt_binding_check
+To fix this issue, this patch calculate the delta between the arch
+timer's and sched clock and assign the delta to userpg->time_offset.
+The detailed steps are firstly to convert counter to nanoseconds 'ns',
+then the offset is calculated as 'now' minus 'ns'.
 
-Fixed up and verified that the build is clean now.
+        |<------------------- 'ns' ---------------------->|
+                                |<-------- 'now' -------->|
+        |<---- time_offset ---->|
+        |-----------------------|-------------------------|
+        ^                       ^                         ^
+  Power on system     sched clock registration      Perf starts
 
-> See https://patchwork.ozlabs.org/patch/1258054
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-> 
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ arch/arm64/kernel/perf_event.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-- Péter
+diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+index e40b65645c86..226d25d77072 100644
+--- a/arch/arm64/kernel/perf_event.c
++++ b/arch/arm64/kernel/perf_event.c
+@@ -1143,6 +1143,7 @@ void arch_perf_update_userpage(struct perf_event *event,
+ {
+ 	u32 freq;
+ 	u32 shift;
++	u64 count, ns, quot, rem;
+ 
+ 	/*
+ 	 * Internal timekeeping for enabled/running/stopped times
+@@ -1164,5 +1165,21 @@ void arch_perf_update_userpage(struct perf_event *event,
+ 		userpg->time_mult >>= 1;
+ 	}
+ 	userpg->time_shift = (u16)shift;
+-	userpg->time_offset = -now;
++
++	/*
++	 * Since arch timer is enabled ealier than sched clock registration,
++	 * compuate the delta (in nanosecond unit) between the arch timer
++	 * counter and sched clock, assign the delta to time_offset and
++	 * perf tool can use it for timestamp calculation.
++	 *
++	 * The formula for conversion arch timer cycle to ns is:
++	 *   quot = (cyc >> time_shift);
++	 *   rem  = cyc & ((1 << time_shift) - 1);
++	 *   ns   = quot * time_mult + ((rem * time_mult) >> time_shift);
++	 */
++	count = arch_timer_read_counter();
++	quot = count >> shift;
++	rem = count & ((1 << shift) - 1);
++	ns = quot * userpg->time_mult + ((rem * userpg->time_mult) >> shift);
++	userpg->time_offset = now - ns;
+ }
+-- 
+2.17.1
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
