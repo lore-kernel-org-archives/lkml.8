@@ -2,53 +2,53 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 312A6C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149BAC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD9420752
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E324920752
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:01:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbgCTCBV (ORCPT
+        id S1727683AbgCTCBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 22:01:21 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:34177 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727438AbgCTCAf (ORCPT
+        Thu, 19 Mar 2020 22:01:24 -0400
+Received: from mail-qk1-f181.google.com ([209.85.222.181]:43435 "EHLO
+        mail-qk1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727389AbgCTCAd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 22:00:35 -0400
-Received: by mail-qv1-f67.google.com with SMTP id o18so2215914qvf.1;
-        Thu, 19 Mar 2020 19:00:34 -0700 (PDT)
+        Thu, 19 Mar 2020 22:00:33 -0400
+Received: by mail-qk1-f181.google.com with SMTP id x18so5376578qki.10;
+        Thu, 19 Mar 2020 19:00:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eypfN+K25jzdF1LBfT16FtLYEkY8rsAbd9XPwaPc/Ns=;
-        b=keiV4ZBPaomb6Xrp3EhLu+NszRYJYC3rBfNWqae3uc7FzUhP/pzMEcXg7GBtGgUN7/
-         FBPJ+TlSRfH4CbLeeBafZVEf/55BRmr7UVA0vkA1EOkdSGhpWxEjINR6sZfmdOi059uo
-         XvDyMc7rbKRV6cLMz3d8sYWLLIA9qQmvxPyJLdTaypPh/7OqF9UlvTAzUhOLNK10KAwF
-         WoqaCmWMvg+bqCVrF2d6ZtzLrhiVW/leJqCw0c2YevWzwQPlD/bTYCClMZfoB3ivTN2E
-         Jyl2B3Uf4xBzezv17t1C5NAbtxIf1xwgLJhErozpfEhz23f/J1AlUnRdKiiU7vI8YC/6
-         RfUA==
-X-Gm-Message-State: ANhLgQ2NroSL87BzYWRRxNYyoiypdixIjiOC9yCbjmkCjXt6LIxMr2iD
-        Uk++OuJyWXz1yMQRFGSlSWmY4Vfw
-X-Google-Smtp-Source: ADFU+vuR/UVvBf2qErNf/0Je+K7jCbyq/HuIfxcblcSPfdk7WhZWvaX+BNnPW7opNgvjyVK9WH2HRQ==
-X-Received: by 2002:a05:6214:611:: with SMTP id z17mr4186982qvw.125.1584669633798;
-        Thu, 19 Mar 2020 19:00:33 -0700 (PDT)
+        bh=AeGhU+XJtuOPs3cRLNFViNTkzOH17jcA/a34LgeIkSw=;
+        b=aq4OHE/phBWP1IjK3aZCrnawXgjFXaWfTifotFP7BuXGd2TSc3K2gfLzel3p9rN6y8
+         CHjYypIJ3s7MifasLxUVGqOdHnSV9vhzcIPaKyIQOpkPTuORtvUoMqcNanzoYzzwwflk
+         fFFQd0w5w6HgRKHfclgj89U0Axu15OPh/vdrB5jtSkgui2zGmWdC+UDuwb5Bn8Z+775h
+         dDRVOd1Ly8nvbh4IWoy6wOo2/RK52N+g6r+DLxPkedgFjnXToe16EIQphUMPluccd9gG
+         lPrdoux7212Swb4OPiuYd1Q7RXpcoLDsos0HjhrUlaqa7XhFDTuZJpLCmoR4tjXXfOeI
+         Dpqw==
+X-Gm-Message-State: ANhLgQ2ry76fn9D7aFdIPoEam585NgQjHb0+1StlXmYv2LLbomA4cSdL
+        P7d1z+6+pONOTWi6abLuTvs=
+X-Google-Smtp-Source: ADFU+vuYAuraRM34QGCeIGQxO2X9JnyFXoVl2vLu4umGI3M8e/EYAYX6dEjzwMv0Ww/mVra5lFffwQ==
+X-Received: by 2002:a37:7e82:: with SMTP id z124mr5776266qkc.360.1584669630572;
+        Thu, 19 Mar 2020 19:00:30 -0700 (PDT)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id n46sm3342198qtb.48.2020.03.19.19.00.33
+        by smtp.gmail.com with ESMTPSA id n46sm3342198qtb.48.2020.03.19.19.00.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 19:00:33 -0700 (PDT)
+        Thu, 19 Mar 2020 19:00:29 -0700 (PDT)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Ard Biesheuvel <ardb@kernel.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>, linux-efi@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 04/14] efi/gop: Factor out locating the gop into a function
-Date:   Thu, 19 Mar 2020 22:00:18 -0400
-Message-Id: <20200320020028.1936003-5-nivedita@alum.mit.edu>
+Subject: [PATCH v2 00/14] efi/gop: Refactoring + mode-setting feature
+Date:   Thu, 19 Mar 2020 22:00:14 -0400
+Message-Id: <20200320020028.1936003-1-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200319192855.29876-1-nivedita@alum.mit.edu>
 References: <20200319192855.29876-1-nivedita@alum.mit.edu>
@@ -59,67 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the loop to find a gop into its own function.
+This series is against tip:efi/core.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- drivers/firmware/efi/libstub/gop.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+Patches 1-9 are small cleanups and refactoring of the code in
+libstub/gop.c.
 
-diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
-index d692b8c65813..92abcf558845 100644
---- a/drivers/firmware/efi/libstub/gop.c
-+++ b/drivers/firmware/efi/libstub/gop.c
-@@ -85,19 +85,17 @@ setup_pixel_info(struct screen_info *si, u32 pixels_per_scan_line,
- 	}
- }
- 
--static efi_status_t setup_gop(struct screen_info *si, efi_guid_t *proto,
--			      unsigned long size, void **handles)
-+static efi_graphics_output_protocol_t *
-+find_gop(efi_guid_t *proto, unsigned long size, void **handles)
- {
- 	efi_graphics_output_protocol_t *gop, *first_gop;
- 	efi_graphics_output_protocol_mode_t *mode;
- 	efi_graphics_output_mode_info_t *info = NULL;
--	efi_physical_addr_t fb_base;
- 	efi_status_t status;
- 	efi_handle_t h;
- 	int i;
- 
- 	first_gop = NULL;
--	gop = NULL;
- 
- 	for_each_efi_handle(h, handles, size, i) {
- 		efi_guid_t conout_proto = EFI_CONSOLE_OUT_DEVICE_GUID;
-@@ -134,12 +132,25 @@ static efi_status_t setup_gop(struct screen_info *si, efi_guid_t *proto,
- 		}
- 	}
- 
-+	return first_gop;
-+}
-+
-+static efi_status_t setup_gop(struct screen_info *si, efi_guid_t *proto,
-+			      unsigned long size, void **handles)
-+{
-+	efi_graphics_output_protocol_t *gop;
-+	efi_graphics_output_protocol_mode_t *mode;
-+	efi_graphics_output_mode_info_t *info = NULL;
-+	efi_physical_addr_t fb_base;
-+
-+	gop = find_gop(proto, size, handles);
-+
- 	/* Did we find any GOPs? */
--	if (!first_gop)
-+	if (!gop)
- 		return EFI_NOT_FOUND;
- 
- 	/* EFI framebuffer */
--	mode = efi_table_attr(first_gop, mode);
-+	mode = efi_table_attr(gop, mode);
- 	info = efi_table_attr(mode, info);
- 
- 	si->orig_video_isVGA = VIDEO_TYPE_EFI;
+The rest of the patches add the ability to use a command-line option to
+switch the gop's display mode.
+
+The options supported are:
+video=efifb:mode=n
+        Choose a specific mode number
+video=efifb:<xres>x<yres>[-(rgb|bgr|<bpp>)]
+        Specify mode by resolution and optionally color depth
+video=efifb:auto
+        Let the EFI stub choose the highest resolution mode available.
+
+The mode-setting additions increase code size of gop.o by about 3k on
+x86-64 with EFI_MIXED enabled.
+
+Changes in v2 (HT lkp@intel.com):
+- Fix __efistub_global attribute to be after the variable.
+  (NB: bunch of other places should ideally be fixed, those I guess
+  don't matter as they are scalars?)
+- Silence -Wmaybe-uninitialized warning in set_mode function.
+
+Arvind Sankar (14):
+  efi/gop: Remove redundant current_fb_base
+  efi/gop: Move check for framebuffer before con_out
+  efi/gop: Get mode information outside the loop
+  efi/gop: Factor out locating the gop into a function
+  efi/gop: Slightly re-arrange logic of find_gop
+  efi/gop: Move variable declarations into loop block
+  efi/gop: Use helper macros for populating lfb_base
+  efi/gop: Use helper macros for find_bits
+  efi/gop: Remove unreachable code from setup_pixel_info
+  efi/gop: Add prototypes for query_mode and set_mode
+  efi/gop: Allow specifying mode number on command line
+  efi/gop: Allow specifying mode by <xres>x<yres>
+  efi/gop: Allow specifying depth as well as resolution
+  efi/gop: Allow automatically choosing the best mode
+
+ Documentation/fb/efifb.rst                    |  33 +-
+ arch/x86/include/asm/efi.h                    |   4 +
+ .../firmware/efi/libstub/efi-stub-helper.c    |   3 +
+ drivers/firmware/efi/libstub/efistub.h        |   8 +-
+ drivers/firmware/efi/libstub/gop.c            | 489 ++++++++++++++----
+ 5 files changed, 428 insertions(+), 109 deletions(-)
+
+
+base-commit: d5528d5e91041e68e8eab9792ce627705a0ed273
 -- 
 2.24.1
 
