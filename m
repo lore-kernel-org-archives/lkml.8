@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB98FC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923E5C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B920720658
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E8120781
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbgCTV3Q (ORCPT
+        id S1727664AbgCTV3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:29:16 -0400
+        Fri, 20 Mar 2020 17:29:15 -0400
 Received: from mga09.intel.com ([134.134.136.24]:37248 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727511AbgCTV3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:29:02 -0400
-IronPort-SDR: JS5pgH6HeZ8tVZKdcxtcanStZ+Q2wWnECXE8dHxt5ri23p33JlECTtJmXp6qdhoMH8Rg7aJQoW
- Qn83VctAot/w==
+        id S1727471AbgCTV3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 17:29:00 -0400
+IronPort-SDR: WMZlB4YdnvF3TfxTwJyi7aMY5UV0qkABwkKb412w+dWrnK8vtGJGC7S4Gk9yk4Zzex9KNPRbYF
+ lMA89y5ycpeQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:29:01 -0700
-IronPort-SDR: gl4xcI5Quwj/T3m+RSsym7vw+sozdnbXskihwRnY6aVF1ObxFZRWDZpTuF2sQ2RZrLeFdLR+3i
- XvCVKSEbDTfg==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:59 -0700
+IronPort-SDR: /1oWUYtsLwZuN0ce5+LqHg2F5Sbv0xKWpsRQ/h18+JNu9jBdCOiSgfnhy9kIJJDV7HZ7qlLnss
+ tya41tqf0HLw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
-   d="scan'208";a="269224536"
+   d="scan'208";a="269224523"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:29:01 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:59 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v3 37/37] KVM: VMX: Clean cr3/pgd handling in vmx_load_mmu_pgd()
-Date:   Fri, 20 Mar 2020 14:28:33 -0700
-Message-Id: <20200320212833.3507-38-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 33/37] KVM: nVMX: Skip MMU sync on nested VMX transition when possible
+Date:   Fri, 20 Mar 2020 14:28:29 -0700
+Message-Id: <20200320212833.3507-34-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200320212833.3507-1-sean.j.christopherson@intel.com>
 References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
@@ -59,50 +59,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename @cr3 to @pgd in vmx_load_mmu_pgd() to reflect that it will be
-loaded into vmcs.EPT_POINTER and not vmcs.GUEST_CR3 when EPT is enabled.
-Similarly, load guest_cr3 with @pgd if and only if EPT is disabled.
+Skip the MMU sync when reusing a cached root if EPT is enabled or L1
+enabled VPID for L2.
 
-This fixes one of the last, if not _the_ last, cases in KVM where a
-variable that is not strictly a cr3 value uses "cr3" isntead of "pgd".
+If EPT is enabled, guest-physical mappings aren't flushed even if VPID
+is disabled, i.e. L1 can't expect stale TLB entries to be flushed if it
+has enabled EPT and L0 isn't shadowing PTEs (for L1 or L2) if L1 has
+EPT disabled.
+
+If VPID is enabled (and EPT is disabled), then L1 can't expect stale TLB
+entries to be flushed (for itself or L2).
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/x86/kvm/mmu/mmu.c    |  2 +-
+ arch/x86/kvm/vmx/nested.c | 44 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 44 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 53fea2d38590..b7ca11d4766c 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -3045,16 +3045,15 @@ u64 construct_eptp(struct kvm_vcpu *vcpu, unsigned long root_hpa)
- 	return eptp;
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 6a986b66c867..84e1e748c2b3 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -5038,7 +5038,7 @@ void kvm_init_shadow_ept_mmu(struct kvm_vcpu *vcpu, bool execonly,
+ 		kvm_calc_shadow_ept_root_page_role(vcpu, accessed_dirty,
+ 						   execonly, level);
+ 
+-	__kvm_mmu_new_cr3(vcpu, new_eptp, new_role.base, false, false);
++	__kvm_mmu_new_cr3(vcpu, new_eptp, new_role.base, false, true);
+ 
+ 	if (new_role.as_u64 == context->mmu_role.as_u64)
+ 		return;
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index dd58563ee793..db3ce8f297c2 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -1095,6 +1095,44 @@ static bool nested_cr3_valid(struct kvm_vcpu *vcpu, unsigned long val)
+ 	return (val & invalid_mask) == 0;
  }
  
--void vmx_load_mmu_pgd(struct kvm_vcpu *vcpu, unsigned long cr3)
-+void vmx_load_mmu_pgd(struct kvm_vcpu *vcpu, unsigned long pgd)
- {
- 	struct kvm *kvm = vcpu->kvm;
- 	bool update_guest_cr3 = true;
- 	unsigned long guest_cr3;
- 	u64 eptp;
- 
--	guest_cr3 = cr3;
- 	if (enable_ept) {
--		eptp = construct_eptp(vcpu, cr3);
-+		eptp = construct_eptp(vcpu, pgd);
- 		vmcs_write64(EPT_POINTER, eptp);
- 
- 		if (kvm_x86_ops->tlb_remote_flush) {
-@@ -3075,6 +3074,8 @@ void vmx_load_mmu_pgd(struct kvm_vcpu *vcpu, unsigned long cr3)
- 		else /* vmcs01.GUEST_CR3 is already up-to-date. */
- 			update_guest_cr3 = false;
- 		ept_load_pdptrs(vcpu);
-+	} else {
-+		guest_cr3 = pgd;
++/*
++ * Returns true if the MMU needs to be sync'd on nested VM-Enter/VM-Exit.  The
++ * MMU needs to be sync if L0 is using shadow paging (EPT disabled) and L1
++ * didn't enable VPID for L2, i.e. L1 expects a TLB flush on VMX transitions.
++ *
++ * If EPT is enabled by L0 but disabled by L1, then L0 is not shadowing L1 or
++ * L2 PTEs, there cannot be unsync'd SPTEs for either L1 or L2.
++ *
++ * If EPT is enabled by L1 (and therefore L0), then L0 doesn't need to sync on
++ * VM-Enter as VM-Enter isn't required to invalidate guest-physical mappings
++ * (irrespective of VPID), i.e. L1 can't rely on the (virtual) CPU to flush
++ * stale GPA->HPA translations for L2 from the TLB.  And as above, L0 isn't
++ * shadowing L1 PTEs so there are no unsync'd SPTEs to sync on VM-Exit.
++ *
++ * If VPID is enabled by L1 (for L2), then L0 doesn't need to sync as VM-Enter
++ * and VM-Exit aren't required to invaliate linear mappings (EPT is disabled so
++ * there are no combined or guest-physical mappings), i.e. L1 can't rely on the
++ * (virtual) CPU to flush stale VA->PA mappings for either L2 or itself (L1).
++ *
++ * If EPT is disabled (by L0 and therefore L1) and VPID is disabled by L1, then
++ * a sync is needed as L1 expects all VA->PA mappings to be flushed on both
++ * VM-Enter and VM-Exit.
++ *
++ * Note, this logic is subtly different than nested_has_guest_tlb_tag(), which
++ * additionally checks that L2 has been assigned a VPID (when EPT is disabled).
++ * Whether or not L2 has been assigned a VPID by L0 is irrelevant with respect
++ * to L1's expectations, e.g. L0 needs to invalidate hardware TLB entries if L2
++ * doesn't have a unique VPID to prevent reusing L1's entries (assuming L1 has
++ * been assigned a VPID), but L0 doesn't need to do a MMU sync because L1
++ * doesn't expect stale (virtual) TLB entries to be flushed, i.e. L1 doesn't
++ * know that L0 will flush the TLB and so L1 will do INVVPID as needed to flush
++ * stale TLB entries, at which point L0 will sync L2's MMU.
++ */
++static bool nested_vmx_transition_mmu_sync(struct kvm_vcpu *vcpu)
++{
++	return !enable_ept && !nested_cpu_has_vpid(get_vmcs12(vcpu));
++}
++
+ /*
+  * Load guest's/host's cr3 at nested entry/exit.  @nested_ept is true if we are
+  * emulating VM-Entry into a guest with EPT enabled.  On failure, the expected
+@@ -1122,8 +1160,12 @@ static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool ne
+ 		}
  	}
  
- 	if (update_guest_cr3)
++	/*
++	 * See nested_vmx_transition_mmu_sync for details on skipping the MMU sync.
++	 */
+ 	if (!nested_ept)
+-		kvm_mmu_new_cr3(vcpu, cr3, false, false);
++		kvm_mmu_new_cr3(vcpu, cr3, false,
++				!nested_vmx_transition_mmu_sync(vcpu));
+ 
+ 	vcpu->arch.cr3 = cr3;
+ 	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
 -- 
 2.24.1
 
