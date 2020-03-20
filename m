@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E130FC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 417E7C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0DF52072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C4C2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:53:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QdFHTAxl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8W6322Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbgCTXsb (ORCPT
+        id S1727223AbgCTXxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 19:48:31 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33582 "EHLO
+        Fri, 20 Mar 2020 19:53:42 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40160 "EHLO
         mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgCTXsa (ORCPT
+        with ESMTP id S1726773AbgCTXxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 19:48:30 -0400
-Received: by mail-io1-f68.google.com with SMTP id o127so7950888iof.0;
-        Fri, 20 Mar 2020 16:48:30 -0700 (PDT)
+        Fri, 20 Mar 2020 19:53:42 -0400
+Received: by mail-io1-f68.google.com with SMTP id h18so7906477ioh.7;
+        Fri, 20 Mar 2020 16:53:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=URvaWyYWBa0ayTSuI6CuJhuWpQmYDLzB0f4F17e6SGY=;
-        b=QdFHTAxlp5ub6AxMCvW0vdF3zo4oy+YbBUy0p7HoV8X9s/qS9pfEmP5LO8mD3dT2tK
-         dMR7+fK+ZXNR8rD6EfERXVdmG3Y26g051UojL8FON/EalPaOgraMFKg2zl1CNLN1OqZ+
-         LQMT+Jm7aY2R48IrUvbEWEPzPKnF7kpxphl6NQTLWIcxartjcMw+JzD+DkbUYey2FyoY
-         R0e6dFxaqaSveThhXVvEt0+qD91yWySiun9XgVhLZkPcHvZ4mb93VRIM46YhWGI+mJmG
-         ZoZmoiocGmVwe6Qdbb7eJ22QjD045Zfg7PHhRHtLaSaHq8r2ZXN08pl99uVdtN78Coka
-         XwAw==
+        bh=jKtX3XsPK0x/T0OMk3ex7iQL++t5aTe227uSyhjTMuw=;
+        b=Z8W6322Yy3C2QWBTL6KGNVo+NCWp6LkDgxzjvBD12bGchzZmqjiKxu8S1SLa4/8ZyZ
+         LRvLjCMJg3Uf5rqDOMK5LX8TJAcYcaG/m3Pq00l9o/B8FK7KpGA3g4gUw+InFJ0j4O23
+         mNaO7aqWvEN2vJbKtqJma1BJwqJof5xRMZUCL4w4RDIbL51r3pofrvofSm90yvY2aoK0
+         kCBF3C1G5K+0Cm1+5bw3ZSw+oaIvSLIxxdwVeo8+knpQqG7wYx5qapodNS8Ofp2hIIym
+         a8c2B+f1NlO6OCpTuvcXV2ak80cZPWt17+vYFWcvo/mAAq6ayuAEq1S+rrqSVT+zMu8B
+         YdGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=URvaWyYWBa0ayTSuI6CuJhuWpQmYDLzB0f4F17e6SGY=;
-        b=JzqF36lW5fxodz3qHBNunnFsBZVoP6CNwLD0ECzycBfqnnl2sNi7a+cbYpIQG7429z
-         3TGbLVIQVUxTupn1+IjBUIA09QViqzBiiOgVU5sdGGBCRQ8tomCw7ZZ8PrxhssXyqTYB
-         XslZ/YlFrNR5k7pl8cS0Bs6HiAPtQi7T6k5iV5TocC5Qi5GwKzCpMLZTz2wWe6k+3TDv
-         QsJjphZ0goblTr8FcSO/gh93KPm7ad6eaguPtz6Ns5y1nChSwgE/KAlktmwwrUT1ReiY
-         iOcU6YQPQx6E1AgI/wPgl1m8kTsU+vD9IBfj9+AWQt1qSPRKvKNhhxoBOQh+XoU7uedQ
-         88Sg==
-X-Gm-Message-State: ANhLgQ2euCJhd9MDyZgLa2mkopO3KwfeezSeMf0K1G909rAbtHT7C2oi
-        3Mg/nhsgg3nn8pskccZLmoRHwylfXPEdYeCQFFo=
-X-Google-Smtp-Source: ADFU+vvGaiBuyqe+aGFYuLaKmr5DieVsKbqaD4HuUFc/H07YS2gEMTr+9jjbbJd7rLp9eHOu24QRrl5tTVEv1ALQWUQ=
-X-Received: by 2002:a02:9288:: with SMTP id b8mr10709077jah.59.1584748110039;
- Fri, 20 Mar 2020 16:48:30 -0700 (PDT)
+        bh=jKtX3XsPK0x/T0OMk3ex7iQL++t5aTe227uSyhjTMuw=;
+        b=K0idLmXb7Ph0YJWV1yTOnm56+Qzk/Lxf9eZTNs05w/s4YVCvv9FggvNski+MN6zWGs
+         WHkodstuIMpwx1HgnLZmFXrFUuEniuu0YcuR1rIGvPi3vD6JZY2lTenBtHdJrl48q/vO
+         JRNFVFMUE1fwoS5Bh1NMvbAE7cag5Ao5cfYCdJ5RFC4dG4b4KQNL9cHm8ySvyd7j6IEW
+         dvZ0XD8yE1NLh4sxvqToX4pTvGr6LAs/DPAvNjOs6ehFtjP+VGrtaO11+TQO/Q7prnkl
+         rZ0kQvnCUPlQTX2YGLaaqZ9z0UMMnKN1n98vLosV7NyGVGihUU2vfRyUsO/VKKeckVlR
+         ZbVQ==
+X-Gm-Message-State: ANhLgQ27NGwO+lBXU+gtinIZh70+4gqOSD2hYcDJfVR9hGwNiwtO9QqP
+        h3M8qNVTsFZ9uvapNPSqpGjXDnyrvVZ1qmCUhfo=
+X-Google-Smtp-Source: ADFU+vvIqEsKaEyeE8ULMwxKomVDncLG2PjT8bMo6bP/MjNX+49wkqt+YxNYXS+pVAsPhXo8VX9LMWJIT4tSARdj598=
+X-Received: by 2002:a6b:f404:: with SMTP id i4mr9845414iog.175.1584748421648;
+ Fri, 20 Mar 2020 16:53:41 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200320110959.2114-1-hqjagain@gmail.com> <20200320185204.GB3828@localhost.localdomain>
 In-Reply-To: <20200320185204.GB3828@localhost.localdomain>
 From:   Qiujun Huang <hqjagain@gmail.com>
-Date:   Sat, 21 Mar 2020 07:48:18 +0800
-Message-ID: <CAJRQjocyUUYDXR5G5sNmbWzG1=PsJ1iGyN=e7Kkpa1DcXG+KWQ@mail.gmail.com>
+Date:   Sat, 21 Mar 2020 07:53:29 +0800
+Message-ID: <CAJRQjoc-U_K-2THbmBOj2TOWDTfP9yr5Vec-WjhTjS8sj19fHA@mail.gmail.com>
 Subject: Re: [PATCH v3] sctp: fix refcount bug in sctp_wfree
 To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 Cc:     "David S. Miller" <davem@davemloft.net>, vyasevich@gmail.com,
@@ -84,9 +84,6 @@ On Sat, Mar 21, 2020 at 2:52 AM Marcelo Ricardo Leitner
 > >               SKB was moved to outq->sack
 >
 > There is no outq->sack. You mean outq->sacked, I assume.
-
-Yes, my typo.
-
 >
 > >       then throw away the sack queue
 >
@@ -103,18 +100,9 @@ Yes, my typo.
 >                             SCTP_PR_PRIO_ENABLED(chunk->sinfo.sinfo_flags))
 >                                 asoc->sent_cnt_removable--;
 >                         sctp_chunk_free(tchunk);
-
-Yes, it was delected here.
-
 >
 > Then sctp_chunk_free is supposed to free the datamsg as well for
 > chunks that were cumulative-sacked.
-
-Datamsg should be freed until all his chunks had been freed.
-
-sctp_datamsg_from_user->sctp_datamsg_assign
-every chunks holds datamsg.
-
 > For those not cumulative-sacked, sctp_for_each_tx_datachunk() will
 > handle q->sacked queue as well:
 >         list_for_each_entry(chunk, &q->sacked, transmitted_list)
@@ -127,8 +115,6 @@ every chunks holds datamsg.
 >
 > You mean sctp_datamsg_from_user ? If so, isn't it the other way
 > around? sctp_datamsg_assign() will hold the datamsg, not the skb.
-yeah.
-
 >
 > > So, sctp_wfree was not called to destroy SKB)
 > >
@@ -149,6 +135,18 @@ yeah.
 > fragmentation to happen. That means the datamsg will contain several
 > skbs. But still, the sacked chunks should be freed if needed while the
 > remaining ones will be left on the queues that they are.
+
+in sctp_sendmsg_to_asoc
+datamsg holds his chunk result in that the sacked chunks can't be freed
+
+list_for_each_entry(chunk, &datamsg->chunks, frag_list) {
+sctp_chunk_hold(chunk);
+sctp_set_owner_w(chunk);
+chunk->transport = transport;
+}
+
+any ideas to handle it?
+
 >
 > Thanks,
 > Marcelo
