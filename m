@@ -2,269 +2,391 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA02C43332
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF17C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7731720753
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:53:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584723217;
-	bh=SUbZeebq2OONQq8LMWFOH9NX2Sbm+ozg8Th8tzFckYU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fKdVzZpbDt2sCem/NczIt4KmmXjgG7Id6s8p7Z+j2nQNhaOf9xRan4XebLnwlZoaN
-	 iJ/fdAUVZ2kQsDc7t8sWZT9LaTfQqSTCUcx2zPNddAUuPGjjq6L7E45X3U9oj+6xnp
-	 zEKPR+WAEda6/p1hlelXLKYYVMMtQw8FkQJfVnhc=
+	by mail.kernel.org (Postfix) with ESMTP id 31E8B20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:53:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MyYuNiBH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgCTQxg (ORCPT
+        id S1727693AbgCTQxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:53:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727718AbgCTQxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:53:18 -0400
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EBE22076F;
-        Fri, 20 Mar 2020 16:53:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584723197;
-        bh=SUbZeebq2OONQq8LMWFOH9NX2Sbm+ozg8Th8tzFckYU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bTH3vd97Pt8kd9zl64OoU6o+cL0J2/cFcPZlPRLd5crl6MsogX1+Q+qRTK1MvnW56
-         SjtaeD2M78vXw5bVqKf8PrkOcMh9ZGR8xKkXhTjPbI28erlEKLHmADMmo645RUAeIo
-         M57crmxqMKjEYnJMw9my6FHHFbUaa6i+T+vCbrCg=
-Received: by mail-qv1-f50.google.com with SMTP id o18so3323642qvf.1;
-        Fri, 20 Mar 2020 09:53:17 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3H1uaNjRGw7xXO56ZpbLl/FP3sFCXvWDEAHflBB6SNQBgSz5WA
-        Pu63FYXkqjCsq6/gBxE7WJ8UxiRT5Jac9/H/Hw==
-X-Google-Smtp-Source: ADFU+vsMjlPOxytEUWukU50ZVC3dzXv3n2NYqa5n45Md60Vhbk7YA2fh97wZC7a46wDxIGTK9RSllaTWR6GMaB3eFaY=
-X-Received: by 2002:ad4:4766:: with SMTP id d6mr8592149qvx.136.1584723196260;
- Fri, 20 Mar 2020 09:53:16 -0700 (PDT)
+        Fri, 20 Mar 2020 12:53:16 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34133 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727653AbgCTQxP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 12:53:15 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t3so3387650pgn.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 09:53:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TWULYEXriG3KLEg/mRA26xdMFOI4GCH0YfvoVoZ55XA=;
+        b=MyYuNiBHiAVJtc1FdGZ59DonGHal5n2kWg+CD7ROa0ZWJ2ghICG3zJLLl9DMzdlWoG
+         NTVRhHs1vP627UfOhkKnQs1IpYwvwP9OquMsILX1N9QlMn6Xy5+oDk4NSQZ9GA+Un/Hz
+         BYFXZ8PHn6dITEbXet/xj6mDwumu9btZOXWd1I01sVdMRTgUF4aay1lTEHi4C+FCQFDM
+         80VVyIhbi+9zR5IPpYpaZGrdyLVwwOwk0GFgF9iKrosd7wz3NIAs2pUyB4xgXVEXU0j5
+         KFVLGZ91ckq/kOu6mboS/eBURGD0wj5RnYRgmJCTA/2PfFPubbyDkEQ/CKHGoGTRioOW
+         91Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TWULYEXriG3KLEg/mRA26xdMFOI4GCH0YfvoVoZ55XA=;
+        b=RrNkiPaTwWxvFg53sjp6SUfFyp2ZBYHUw4NOsmEMWhzPCzZltzRhGGDf4eFG7wLJkF
+         CMdP/OzPPwLrC1MGBSpHOWEFUL1ka0R0c8dcP7qHWG8xNK4Vw+cbUlp/mBgnCLK6KDvq
+         ihSUlP0gwZJtlBPab8qYsHYptTL67Pj/sZNoN74bX6C9CaGWMxFHm6ptgw4xlZFmyTGw
+         sLpIPuUYILp/TyqxepWw6KX63+Tq84EAx+7jHqKyEc/aIlXCaRTlBIxIBE+m3r88ZfRo
+         2e0kJwBbfmNjkRdCgeTMNr5+y/SOUg3lxiG5QFR4jvAAHDD/2CNZ0YhkY7sgwZy7UyQv
+         UP3w==
+X-Gm-Message-State: ANhLgQ1z7lMb86xBY1XR7kMPH8JdZG19tU9cjtYqw7uPUaF+xaCKBnTd
+        NMUMnMn4pgWfW1podPrtz6bd+w==
+X-Google-Smtp-Source: ADFU+vtxbB3GD213S9gMxDhwL0uNeQm2TwZkyT8mpQjcmtdx+ftn2gzviwHbtRa14kaTf5Ga/djtIg==
+X-Received: by 2002:a63:b706:: with SMTP id t6mr9506980pgf.329.1584723193366;
+        Fri, 20 Mar 2020 09:53:13 -0700 (PDT)
+Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id x17sm6064216pfn.16.2020.03.20.09.53.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 09:53:12 -0700 (PDT)
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     mike.leach@linaro.org, suzuki.poulose@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v11 07/12] coresight: cti: Add device tree support for custom CTI
+Date:   Fri, 20 Mar 2020 10:52:58 -0600
+Message-Id: <20200320165303.13681-8-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200320165303.13681-1-mathieu.poirier@linaro.org>
+References: <20200320165303.13681-1-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-References: <20200311103252.17514-1-laurent.pinchart@ideasonboard.com>
- <20200311103252.17514-2-laurent.pinchart@ideasonboard.com>
- <20200320023520.GA18490@bogus> <20200320095036.GA5193@pendragon.ideasonboard.com>
-In-Reply-To: <20200320095036.GA5193@pendragon.ideasonboard.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 20 Mar 2020 10:53:05 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLYUooc-9i6U6Br9DQKPHZMrLJf3f883PeM4Ctbwycs8w@mail.gmail.com>
-Message-ID: <CAL_JsqLYUooc-9i6U6Br9DQKPHZMrLJf3f883PeM4Ctbwycs8w@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: phy: Add DT bindings for Xilinx
- ZynqMP PSGTR PHY
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 3:50 AM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Rob,
->
-> On Thu, Mar 19, 2020 at 08:35:20PM -0600, Rob Herring wrote:
-> > On Wed, Mar 11, 2020 at 12:32:50PM +0200, Laurent Pinchart wrote:
-> > > From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> > >
-> > > Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
-> > > Processing System Gigabit Transceiver which provides PHY capabilities to
-> > > USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
-> > >
-> > > Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> > > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > ---
-> > > Changes since v5:
-> > >
-> > > - Document clocks and clock-names properties
-> > > - Document resets and reset-names properties
-> > > - Replace subnodes with an additional entry in the PHY cells
-> > > - Drop lane frequency PHY cell, replaced by reference clock phandle
-> > > - Convert bindings to YAML
-> > > - Reword the subject line
-> > > - Drop Rob's R-b as the bindings have significantly changed
-> > > - Drop resets and reset-names properties
-> > > ---
-> > >  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 104 ++++++++++++++++++
-> > >  include/dt-bindings/phy/phy.h                 |   1 +
-> > >  2 files changed, 105 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > > new file mode 100644
-> > > index 000000000000..9948e4a60e45
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > > @@ -0,0 +1,104 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> >
-> > For new bindings:
-> >
-> > (GPL-2.0-only OR BSD-2-Clause)
-> >
-> > Though I guess Anurag needs to agree.
->
-> There's an ongoing similar discussion regarding the DPSUB (DRM/KMS)
-> bindings. Hyun is checking with the Xilinx legal department. If they
-> agree, I'll change the license here, otherwise I'll keep it as-is.
+From: Mike Leach <mike.leach@linaro.org>
 
-TBC, the choice is change it or take your toys elsewhere and play by
-yourself. I don't really want to end up with whatever each submitter
-desires. I don't expect there's many companies that object to a
-permissive license.
+Adds support for CTIs whose connections are implementation defined at
+hardware design time, and not constrained by v8 architecture.
 
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
-> > > +
-> > > +maintainers:
-> > > +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > +
-> > > +description: |
-> > > +  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
-> > > +  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
-> > > +  Ethernet SGMII controllers.
-> > > +
-> > > +properties:
-> > > +  "#phy-cells":
-> > > +    const: 4
-> > > +    description: |
-> > > +      The cells contain the following arguments.
-> > > +
-> > > +      - description: The GTR lane
-> > > +        minimum: 0
-> > > +        maximum: 3
-> > > +      - description: The PHY type
-> > > +        enum:
-> > > +          - PHY_TYPE_DP
-> > > +          - PHY_TYPE_PCIE
-> > > +          - PHY_TYPE_SATA
-> > > +          - PHY_TYPE_SGMII
-> > > +          - PHY_TYPE_USB
-> > > +      - description: The PHY instance
-> > > +        minimum: 0
-> > > +        maximum: 1 # for DP, SATA or USB
-> > > +        maximum: 3 # for PCIE or SGMII
-> > > +      - description: The reference clock number
-> > > +        minimum: 0
-> > > +        maximum: 3
-> >
-> > Humm, interesting almost json-schema. I guess it's fine as-is.
-> >
-> > I would like to figure out how to apply a schema like this to the
-> > consumer nodes. We'd have to look up the phandle, get that node's
-> > compatible, find the provider's schema, find #.*-cells property, and
-> > extract a schema from it. Actually, doesn't sound too hard.
->
-> That would be nice :-)
->
-> > > +
-> > > +  compatible:
-> > > +    enum:
-> > > +      - xlnx,zynqmp-psgtr-v1.1
-> > > +      - xlnx,zynqmp-psgtr
-> > > +
-> > > +  clocks:
-> > > +    minItems: 1
-> > > +    maxItems: 4
-> > > +    description: |
-> > > +      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
-> > > +      inputs shall not have an entry.
-> > > +
-> > > +  clock-names:
-> > > +    minItems: 1
-> > > +    maxItems: 4
-> > > +    items:
-> > > +      pattern: "^ref[0-3]$"
-> > > +
-> > > +  reg:
-> > > +    items:
-> > > +      - description: SERDES registers block
-> > > +      - description: SIOU registers block
-> > > +
-> > > +  reg-names:
-> > > +    items:
-> > > +      - const: serdes
-> > > +      - const: siou
-> > > +
-> > > +required:
-> > > +  - "#phy-cells"
-> > > +  - compatible
-> > > +  - reg
-> > > +  - reg-names
-> > > +
-> > > +if:
-> > > +  properties:
-> > > +    compatible:
-> > > +      const: xlnx,zynqmp-psgtr
-> > > +
-> > > +then:
-> > > +  properties:
-> > > +    xlnx,tx-termination-fix:
-> > > +      description: |
-> > > +        Include this for fixing functional issue with the TX termination
-> > > +        resistance in GT, which can be out of spec for the XCZU9EG silicon
-> > > +        version.
-> > > +      type: boolean
-> > > +
-> > > +additionalProperties: false
-> >
-> > This won't work with 'xlnx,tx-termination-fix'. You need to move it to
-> > the main properties section and then do:
-> >
-> > if:
-> >   properties:
-> >     compatible:
-> >       const: xlnx,zynqmp-psgtr-v1.1
->
-> It doesn't make a big difference as only two compatible values are
-> allowed, but is there a way to express the condition the other way
-> around, if (compatible != "xlnx,zynqmp-psgtr") ?
+These CTIs have no standard connection setup, all the settings have to
+be defined in the device tree files. The patch creates a set of connections
+and trigger signals based on the information provided.
 
-if:
-  properties:
-    compatible:
-      not:
-        const: xlnx,zynqmp-psgtr
+Signed-off-by: Mike Leach <mike.leach@linaro.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+---
+ .../coresight/coresight-cti-platform.c        | 235 +++++++++++++++++-
+ .../hwtracing/coresight/coresight-cti-sysfs.c |  10 +
+ 2 files changed, 241 insertions(+), 4 deletions(-)
 
-I think if: { not: ... } would also work. You'll have to test them out.
+diff --git a/drivers/hwtracing/coresight/coresight-cti-platform.c b/drivers/hwtracing/coresight/coresight-cti-platform.c
+index 36a276eda50a..b44d83142b62 100644
+--- a/drivers/hwtracing/coresight/coresight-cti-platform.c
++++ b/drivers/hwtracing/coresight/coresight-cti-platform.c
+@@ -13,9 +13,19 @@
+ #define NR_V8PE_OUT_SIGS	3
+ #define NR_V8ETM_INOUT_SIGS	4
+ 
++/* CTI device tree trigger connection node keyword */
++#define CTI_DT_CONNS		"trig-conns"
++
+ /* CTI device tree connection property keywords */
+ #define CTI_DT_V8ARCH_COMPAT	"arm,coresight-cti-v8-arch"
+ #define CTI_DT_CSDEV_ASSOC	"arm,cs-dev-assoc"
++#define CTI_DT_TRIGIN_SIGS	"arm,trig-in-sigs"
++#define CTI_DT_TRIGOUT_SIGS	"arm,trig-out-sigs"
++#define CTI_DT_TRIGIN_TYPES	"arm,trig-in-types"
++#define CTI_DT_TRIGOUT_TYPES	"arm,trig-out-types"
++#define CTI_DT_FILTER_OUT_SIGS	"arm,trig-filters"
++#define CTI_DT_CONN_NAME	"arm,trig-conn-name"
++#define CTI_DT_CTM_ID		"arm,cti-ctm-id"
+ 
+ #ifdef CONFIG_OF
+ /*
+@@ -87,6 +97,14 @@ cti_plat_get_csdev_or_node_name(struct fwnode_handle *fwnode,
+ 	return name;
+ }
+ 
++static bool cti_plat_node_name_eq(struct fwnode_handle *fwnode,
++				  const char *name)
++{
++	if (is_of_node(fwnode))
++		return of_node_name_eq(to_of_node(fwnode), name);
++	return false;
++}
++
+ static int cti_plat_create_v8_etm_connection(struct device *dev,
+ 					     struct cti_drvdata *drvdata)
+ {
+@@ -205,6 +223,211 @@ static int cti_plat_check_v8_arch_compatible(struct device *dev)
+ 	return 0;
+ }
+ 
++static int cti_plat_count_sig_elements(const struct fwnode_handle *fwnode,
++				       const char *name)
++{
++	int nr_elem = fwnode_property_count_u32(fwnode, name);
++
++	return (nr_elem < 0 ? 0 : nr_elem);
++}
++
++static int cti_plat_read_trig_group(struct cti_trig_grp *tgrp,
++				    const struct fwnode_handle *fwnode,
++				    const char *grp_name)
++{
++	int idx, err = 0;
++	u32 *values;
++
++	if (!tgrp->nr_sigs)
++		return 0;
++
++	values = kcalloc(tgrp->nr_sigs, sizeof(u32), GFP_KERNEL);
++	if (!values)
++		return -ENOMEM;
++
++	err = fwnode_property_read_u32_array(fwnode, grp_name,
++					     values, tgrp->nr_sigs);
++
++	if (!err) {
++		/* set the signal usage mask */
++		for (idx = 0; idx < tgrp->nr_sigs; idx++)
++			tgrp->used_mask |= BIT(values[idx]);
++	}
++
++	kfree(values);
++	return err;
++}
++
++static int cti_plat_read_trig_types(struct cti_trig_grp *tgrp,
++				    const struct fwnode_handle *fwnode,
++				    const char *type_name)
++{
++	int items, err = 0, nr_sigs;
++	u32 *values = NULL, i;
++
++	/* allocate an array according to number of signals in connection */
++	nr_sigs = tgrp->nr_sigs;
++	if (!nr_sigs)
++		return 0;
++
++	/* see if any types have been included in the device description */
++	items = cti_plat_count_sig_elements(fwnode, type_name);
++	if (items > nr_sigs)
++		return -EINVAL;
++
++	/* need an array to store the values iff there are any */
++	if (items) {
++		values = kcalloc(items, sizeof(u32), GFP_KERNEL);
++		if (!values)
++			return -ENOMEM;
++
++		err = fwnode_property_read_u32_array(fwnode, type_name,
++						     values, items);
++		if (err)
++			goto read_trig_types_out;
++	}
++
++	/*
++	 * Match type id to signal index, 1st type to 1st index etc.
++	 * If fewer types than signals default remainder to GEN_IO.
++	 */
++	for (i = 0; i < nr_sigs; i++) {
++		if (i < items) {
++			tgrp->sig_types[i] =
++				values[i] < CTI_TRIG_MAX ? values[i] : GEN_IO;
++		} else {
++			tgrp->sig_types[i] = GEN_IO;
++		}
++	}
++
++read_trig_types_out:
++	kfree(values);
++	return err;
++}
++
++static int cti_plat_process_filter_sigs(struct cti_drvdata *drvdata,
++					const struct fwnode_handle *fwnode)
++{
++	struct cti_trig_grp *tg = NULL;
++	int err = 0, nr_filter_sigs;
++
++	nr_filter_sigs = cti_plat_count_sig_elements(fwnode,
++						     CTI_DT_FILTER_OUT_SIGS);
++	if (nr_filter_sigs == 0)
++		return 0;
++
++	if (nr_filter_sigs > drvdata->config.nr_trig_max)
++		return -EINVAL;
++
++	tg = kzalloc(sizeof(*tg), GFP_KERNEL);
++	if (!tg)
++		return -ENOMEM;
++
++	err = cti_plat_read_trig_group(tg, fwnode, CTI_DT_FILTER_OUT_SIGS);
++	if (!err)
++		drvdata->config.trig_out_filter |= tg->used_mask;
++
++	kfree(tg);
++	return err;
++}
++
++static int cti_plat_create_connection(struct device *dev,
++				      struct cti_drvdata *drvdata,
++				      struct fwnode_handle *fwnode)
++{
++	struct cti_trig_con *tc = NULL;
++	int cpuid = -1, err = 0;
++	struct fwnode_handle *cs_fwnode = NULL;
++	struct coresight_device *csdev = NULL;
++	const char *assoc_name = "unknown";
++	char cpu_name_str[16];
++	int nr_sigs_in, nr_sigs_out;
++
++	/* look to see how many in and out signals we have */
++	nr_sigs_in = cti_plat_count_sig_elements(fwnode, CTI_DT_TRIGIN_SIGS);
++	nr_sigs_out = cti_plat_count_sig_elements(fwnode, CTI_DT_TRIGOUT_SIGS);
++
++	if ((nr_sigs_in > drvdata->config.nr_trig_max) ||
++	    (nr_sigs_out > drvdata->config.nr_trig_max))
++		return -EINVAL;
++
++	tc = cti_allocate_trig_con(dev, nr_sigs_in, nr_sigs_out);
++	if (!tc)
++		return -ENOMEM;
++
++	/* look for the signals properties. */
++	err = cti_plat_read_trig_group(tc->con_in, fwnode,
++				       CTI_DT_TRIGIN_SIGS);
++	if (err)
++		goto create_con_err;
++
++	err = cti_plat_read_trig_types(tc->con_in, fwnode,
++				       CTI_DT_TRIGIN_TYPES);
++	if (err)
++		goto create_con_err;
++
++	err = cti_plat_read_trig_group(tc->con_out, fwnode,
++				       CTI_DT_TRIGOUT_SIGS);
++	if (err)
++		goto create_con_err;
++
++	err = cti_plat_read_trig_types(tc->con_out, fwnode,
++				       CTI_DT_TRIGOUT_TYPES);
++	if (err)
++		goto create_con_err;
++
++	err = cti_plat_process_filter_sigs(drvdata, fwnode);
++	if (err)
++		goto create_con_err;
++
++	/* read the connection name if set - may be overridden by later */
++	fwnode_property_read_string(fwnode, CTI_DT_CONN_NAME, &assoc_name);
++
++	/* associated cpu ? */
++	cpuid = cti_plat_get_cpu_at_node(fwnode);
++	if (cpuid >= 0) {
++		drvdata->ctidev.cpu = cpuid;
++		scnprintf(cpu_name_str, sizeof(cpu_name_str), "cpu%d", cpuid);
++		assoc_name = cpu_name_str;
++	} else {
++		/* associated device ? */
++		cs_fwnode = fwnode_find_reference(fwnode,
++						  CTI_DT_CSDEV_ASSOC, 0);
++		if (!IS_ERR_OR_NULL(cs_fwnode)) {
++			assoc_name = cti_plat_get_csdev_or_node_name(cs_fwnode,
++								     &csdev);
++			fwnode_handle_put(cs_fwnode);
++		}
++	}
++	/* set up a connection */
++	err = cti_add_connection_entry(dev, drvdata, tc, csdev, assoc_name);
++
++create_con_err:
++	return err;
++}
++
++static int cti_plat_create_impdef_connections(struct device *dev,
++					      struct cti_drvdata *drvdata)
++{
++	int rc = 0;
++	struct fwnode_handle *fwnode = dev_fwnode(dev);
++	struct fwnode_handle *child = NULL;
++
++	if (IS_ERR_OR_NULL(fwnode))
++		return -EINVAL;
++
++	fwnode_for_each_child_node(fwnode, child) {
++		if (cti_plat_node_name_eq(child, CTI_DT_CONNS))
++			rc = cti_plat_create_connection(dev, drvdata,
++							child);
++		if (rc != 0)
++			break;
++	}
++	fwnode_handle_put(child);
++
++	return rc;
++}
++
+ /* get the hardware configuration & connection data. */
+ int cti_plat_get_hw_data(struct device *dev,
+ 			 struct cti_drvdata *drvdata)
+@@ -212,12 +435,16 @@ int cti_plat_get_hw_data(struct device *dev,
+ 	int rc = 0;
+ 	struct cti_device *cti_dev = &drvdata->ctidev;
+ 
++	/* get any CTM ID - defaults to 0 */
++	device_property_read_u32(dev, CTI_DT_CTM_ID, &cti_dev->ctm_id);
++
+ 	/* check for a v8 architectural CTI device */
+-	if (cti_plat_check_v8_arch_compatible(dev)) {
++	if (cti_plat_check_v8_arch_compatible(dev))
+ 		rc = cti_plat_create_v8_connections(dev, drvdata);
+-		if (rc)
+-			return rc;
+-	}
++	else
++		rc = cti_plat_create_impdef_connections(dev, drvdata);
++	if (rc)
++		return rc;
+ 
+ 	/* if no connections, just add a single default based on max IN-OUT */
+ 	if (cti_dev->nr_trig_con == 0)
+diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+index 565e17680dea..552393525436 100644
+--- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
++++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+@@ -66,10 +66,20 @@ static ssize_t powered_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(powered);
+ 
++static ssize_t ctmid_show(struct device *dev,
++			  struct device_attribute *attr, char *buf)
++{
++	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
++
++	return sprintf(buf, "%d\n", drvdata->ctidev.ctm_id);
++}
++static DEVICE_ATTR_RO(ctmid);
++
+ /* attribute and group sysfs tables. */
+ static struct attribute *coresight_cti_attrs[] = {
+ 	&dev_attr_enable.attr,
+ 	&dev_attr_powered.attr,
++	&dev_attr_ctmid.attr,
+ 	NULL,
+ };
+ 
+-- 
+2.20.1
 
-> > then:
-> >   properties:
-> >     xlnx,tx-termination-fix: false
->
-> This works.
->
-> > I think this would also work:
-> >
-> >   not:
-> >     required:
-> >       - xlnx,tx-termination-fix
->
-> I've tested it and it works, but I'm not sure why, given that the
-> property isn't required required in the first place. Could you enlighten
-> me ?
-
-'required' is true or false based on presence or absence of properties
-in the list. If 'xlnx,tx-termination-fix' is present, then 'required'
-evaluates to true. And the inverse is true. Then we take the inverse
-of of that with 'not'.
-
-The first case is what trips me up more because a property not present
-evaluates to true. So if you look at 'select' schemas, we have to make
-any properties we list (compatible typically) required.
-
-Rob
