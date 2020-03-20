@@ -2,193 +2,132 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAF8C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B62C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2423020740
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78DF720752
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:03:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="GwoDQ3g5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kLlN+Nnm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbgCTA7m (ORCPT
+        id S1727302AbgCTBDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 20:59:42 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:56173 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727235AbgCTA7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 20:59:41 -0400
-Received: from [IPv6:2601:646:8600:3281:9577:eff3:b2f7:e372] ([IPv6:2601:646:8600:3281:9577:eff3:b2f7:e372])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 02K0xNMM1255369
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Thu, 19 Mar 2020 17:59:26 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 02K0xNMM1255369
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020022001; t=1584665967;
-        bh=xSIh/pQjs7n22PEUnpcaVeF1w3izG60H/Jy62WK+v/Q=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=GwoDQ3g5acr+/b+Xb9ZLFOSp0sSVI/I3SelpYFwrA4ei0qAUVET9ZngILcFmmeNQY
-         3oxpvxF2Oz5FX5oU8R7kq7+Y/xPeqQspNOM/gO64O7D8BifMjGjw8q/yBe5Xu8HsTm
-         qQMmfbiBqllvZxIJlHvS/pEX/eyVV4GO0ZnNt4lxoHZFr1mCfq8fjknzQTXCTfMXhd
-         XTktfn3FZbbkY6+IgYdvzMkYGZynrpwCE6g4ia2VoQ4u736Wvi2lCO3MO18xyeUppx
-         Duh0CsKasVT3Iz3e15Qg95ahBPlJ4SAqX/hpAOVZhz5DCj43nIN/TyFe+9JfrMO2T5
-         A5P6K0IZ2WeUw==
-Date:   Thu, 19 Mar 2020 17:59:16 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAP6exYJHgqsNq84DCjgNP=nOjp1Aud9J5JAiEZMXe=+dtm-QGA@mail.gmail.com>
-References: <CAP6exY+LnUXaOVRZUXmi2wajCPZoJVMFFAwbCzN3YywWyhi8ZA@mail.gmail.com> <D31718CF-1755-4846-8043-6E62D57E4937@zytor.com> <CAP6exYJHgqsNq84DCjgNP=nOjp1Aud9J5JAiEZMXe=+dtm-QGA@mail.gmail.com>
+        Thu, 19 Mar 2020 21:03:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41106 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgCTBDi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 21:03:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
+        bh=Ys84MSFThr+iceWVOVJ1ydyxTrqVWchEPrhB/TlXSx4=; b=kLlN+Nnmx9HvogqnfJbpvfqQI8
+        +MkKfXUUVy3e9kgGREXRcrq0vebzEsqrATfd/gUCaIn5TL4QIvw+g5oDaG3faiFTZwjmwW0lntlDY
+        yJe18b9P/M7QPu7WPTull9l52/9WPB4Fq8pD3VXQzrBwTvwdS56asp6YVQRo+TzRYlDqsMjQiKacn
+        ISf+sYy/t02OJjuS+Of2UZWkKujLE14J9guIWcgdpuqZu5khzDAcJfhDW5zfQh1VJl3Y7Wrql4Uv8
+        cqYW+KvV9y+dEH0qEy5OhjjmgKkjqpsYb8UDF/uTiOJyUdSqn/YXDxD9phBCoYC3xKKi3YDu3GPNQ
+        9ZKo9I4g==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jF64X-0003Lf-B9; Fri, 20 Mar 2020 01:03:37 +0000
+Subject: Re: [PATCH -next] mm/hugetlb.c: fix printk format warning for 32-bit
+ phys_addr_t
+To:     Joe Perches <joe@perches.com>, Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <b74dcb60-ef35-f06e-de2d-b165ed38036a@infradead.org>
+ <f4f8090c1be1a5a5ca663345751fb39893c89814.camel@perches.com>
+ <ff8cc527-e02e-4f4b-56cd-a94ac5e527a3@infradead.org>
+ <be55765b11f925f15f338152399923e169a20f53.camel@perches.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <58454a65-5022-7517-df65-7bf504cd1432@infradead.org>
+Date:   Thu, 19 Mar 2020 18:03:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/1] x86 support for the initrd= command line option
-To:     ron minnich <rminnich@gmail.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
-        mjg59@google.com,
-        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   hpa@zytor.com
-Message-ID: <8E80838A-7A3F-4600-AF58-923EDA3DE91D@zytor.com>
+In-Reply-To: <be55765b11f925f15f338152399923e169a20f53.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 19, 2020 5:50:52 PM PDT, ron minnich <rminnich@gmail=2Ecom> wrote:
->Thanks for looking, but I'm not entirely sure how to parse your answer
->:-)
->
->In LinuxBoot, we compile Linux into a UEFI driver and load it in
->FLASH=2E It's started by the UEFI driver scheduler, a=2Ek=2Ea DxeCore=2E =
-In
->this case, Linux is both a bootloader (for the Linux or other kernel
->it will boot) and Linux is also the thing booted by UEFI=2E As I
->mentioned, we want to avoid writing a UEFI driver just to tell Linux
->where to find the initramfs=2E Further, we want to be able to boot this
->kernel and have it use an initramfs provided by a different bootloader
->(pxeboot, for example)=2E This flexibility is proving very useful for
->companies deploying LinuxBoot today=2E
->
->I got the idea of using initrd=3D because u-boot is able to pass that
->option to the ARM kernel and the ARM kernel will process it: see,
->e=2Eg=2E, the usage in arch/arm/configs/acs5k_defconfig=2E
->
->Are you saying initrd is reserved for a bootloader to produce it or
->consume it? It's certainly not either on ARM: it is in some cases
->included in a compiled-in command line, and used by the kernel, just
->as we are doing in this patch=2E The kernel build process produces it,
->and the kernel consumes it=2E All this functionality is there, and all
->this patch does it bring it into the x86 kernel with this 6 line
->patch=2E
->
->If, in spite of this usage on ARM, you'd still not rather see a
->corresponding usage on x86, how do we get the effect we need here?
->Again, we don't want to write UEFI drivers, but we would like some
->minimal way to communicate to the kernel where an initramfs is in
->memory; and, further, we want it to be the lowest priority option, so
->we easily override it=2E Suggestions on how to do this are welcome=2E
->
->ron
->
->On Thu, Mar 19, 2020 at 4:57 PM <hpa@zytor=2Ecom> wrote:
+On 3/18/20 7:37 PM, Joe Perches wrote:
+> On Wed, 2020-03-18 at 19:11 -0700, Randy Dunlap wrote:
+>> On 3/18/20 7:04 PM, Joe Perches wrote:
+>>> On Wed, 2020-03-18 at 14:33 -0700, Randy Dunlap wrote:
+>>>> From: Randy Dunlap <rdunlap@infradead.org>
+>>>>
+>>>> Fix printk format warnings when phys_addr_t is 32 bits, i.e.,
+>>>> CONFIG_PHYS_ADDR_T_64BIT is not set/enabled.
+>>> []
+>>>> ../mm/hugetlb.c:5472:73: note: format string is defined here
+>>>>     pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%llu, %llu)",
+>>>>                                                                       ~~~^
+>>> []
+>>>> --- linux-next-20200318.orig/mm/hugetlb.c
+>>>> +++ linux-next-20200318/mm/hugetlb.c
+>>>> @@ -5469,8 +5469,10 @@ void __init hugetlb_cma_reserve(int orde
+>>>>  					     0, false,
+>>>>  					     "hugetlb", &hugetlb_cma[nid]);
+>>>>  		if (res) {
+>>>> -			pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%llu, %llu)",
+>>>> -				res, nid, PFN_PHYS(min_pfn), PFN_PHYS(max_pfn));
+>>>> +			phys_addr_t begpa = PFN_PHYS(min_pfn);
+>>>> +			phys_addr_t endpa = PFN_PHYS(max_pfn);
+>>>> +			pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%pap, %pap)",
+>>>> +				res, nid, &begpa, &endpa);
+>>>
+>>> You might correct the odd use of an open bracket
+>>> then close parenthesis and add a new line too
 >>
->> On March 19, 2020 4:49:05 PM PDT, ron minnich <rminnich@gmail=2Ecom>
->wrote:
->> >In LinuxBoot systems, a kernel and initramfs are loaded into FLASH
->> >to replace proprietary firmware/BIOS code=2E Space being at a premium
->> >on some systems, the kernel and initramfs must be place in whatever
->> >open corners of the FLASH exist=2E These corners are not always
->> >easily used=2E
->> >
->> >For example, on Intel-based UEFI systems, the Management Engine
->> >(ME) is given half the FLASH, though it uses very little, as little
->> >as 1=2E25MiB=2E  Not only is 2=2E75MiB of an 8MiB part unused; but
->> >10=2E75MiB of a 16MiB part is unused=2E This space can be recovered by
->> >a number of tools, e=2Eg=2E utk and its tighten_me command, and if
->> >Linux can be told where the space is Linux can load an initrd from
->> >it=2E
->> >
->> >In an ideal case, we would take the space from the ME and add it to
->> >a FLASH-based filesystem=2E  While UEFI does have filesystem-like
->> >structures, this recovered space can only be added to its "file
->> >system" by rebuilding UEFI from source or writing a UEFI device
->> >driver=2E Both these options are impractical in most cases=2E The spac=
-e
->> >can only be referenced as a physical address=2E
->> >
->> >There is code in the core that allows specification of the initrd
->> >as a physical address and size, but it is not supported on all
->> >architectures=2E This patch adds support for initrd=3D to the x86=2E
->> >
->> >For debugging and recovery purposes, if initrd=3D is present in the
->> >command line, other existing initrd sources should still have
->> >higher priority=2E The initramfs in flash might be damaged or
->> >broken=2E Hence, it must still be possible to load a kernel and
->> >initramfs with a conventional bootloader, or even load the
->> >FLASH-based kernel with a different initramfs; or boot a
->> >kernel and let it use the initrd in FLASH=2E
->> >
->> >In support of that priority ordering, this patch sets the ramdisk
->> >image pointer to phys_initrd_start only if it is not already set;
->> >and sets ramdisk_size to phys_initrd_size only if it is not already
->> >set=2E
->> >
->> >It has been tested extensively in LinuxBoot environments=2E
->> >
->> >Signed-off-by: Ronald G=2E Minnich <rminnich@gmail=2Ecom>
->> >---
->> > arch/x86/kernel/setup=2Ec | 6 ++++++
->> > 1 file changed, 6 insertions(+)
->> >
->> >diff --git a/arch/x86/kernel/setup=2Ec b/arch/x86/kernel/setup=2Ec
->> >index a74262c71484=2E=2E1b04ef8ea12d 100644
->> >--- a/arch/x86/kernel/setup=2Ec
->> >+++ b/arch/x86/kernel/setup=2Ec
->> >@@ -237,6 +237,9 @@ static u64 __init get_ramdisk_image(void)
->> >
->> >     ramdisk_image |=3D (u64)boot_params=2Eext_ramdisk_image << 32;
->> >
->> >+    if (ramdisk_image =3D=3D 0) {
->> >+        ramdisk_image =3D phys_initrd_start;
->> >+    }
->> >     return ramdisk_image;
->> > }
->> > static u64 __init get_ramdisk_size(void)
->> >@@ -245,6 +248,9 @@ static u64 __init get_ramdisk_size(void)
->> >
->> >     ramdisk_size |=3D (u64)boot_params=2Eext_ramdisk_size << 32;
->> >
->> >+    if (ramdisk_size =3D=3D 0) {
->> >+        ramdisk_size =3D phys_initrd_size;
->> >+    }
->> >     return ramdisk_size;
->> > }
+>> Definitely needs a newline char.
 >>
->> The initrd=3D option is reserved namespace for the bootloader=2E It is
->also worth noting that the x86 boot protocol now allows the bootloader
->to point to arbitrary chunks of memory for the initrd=2E
->> --
->> Sent from my Android device with K-9 Mail=2E Please excuse my brevity=
-=2E
+>> I'm fairly sure that the [begin, end) notation is done on purpose, meaning
+>> <begin> is included in the range and <end> is not included in the range.
+> 
+> OK, that seems a pretty obscure and not obvious use of
+> interval notation, at least to me. (18 uses treewide ?)
+> 
+> Maybe it could be documented somewhere?
 
-It has been designated consumed by the bootloader on x86 since at least 19=
-95=2E So ARM broke it=2E
+I thought about where to put that and came up empty.
 
-How is this information passed to any version of Linux in the first place,=
- and how do you then start up Linux? I suspect this is probably rather simp=
-le in the end=2E=2E=2E
+> It's an odd pattern to grep.  Maybe I missed some.
 
-Note that when Linux is run as an UEFI binary the kernel UEFI stub can loa=
-d an initrd file via the UEFI file I/O interface=2E
+It's probably not used much more than this.
 
-In some ways, arguably the Right Thing for the firmware to expose this wou=
-ld be to have a resource exposed via ACPI =2E
+> $ git grep -P '".*[\[\{]\s*%\d*[ldux]+\s*[/:,\.\-]?\s*%\d*[ldux]+\).*"'
+> arch/x86/kernel/alternative.c:  DUMP_BYTES(instr, a->instrlen, "%px: [%d:%d) optimized NOPs: ",
+> drivers/clk/qcom/clk-alpha-pll.c:               pr_err("%s: Rounded rate %lu not within range [%lu, %lu)\n",
+> fs/ext4/extents_status.c:               printk(KERN_DEBUG " [%u/%u) %llu %x",
+> fs/ext4/extents_status.c:                       es_debug("%u cached by [%u/%u) %llu %x\n",
+> fs/ext4/extents_status.c:       es_debug("add [%u/%u) %llu %x to extent status tree of inode %lu\n",
+> fs/ext4/extents_status.c:                       es_debug("%u cached by [%u/%u)\n",
+> fs/ext4/extents_status.c:       es_debug("remove [%u/%u) from extent status tree of inode %lu\n",
+> fs/nilfs2/cpfile.c:                       "cannot delete checkpoints: invalid range [%llu, %llu)",
+> fs/nilfs2/dat.c:                          "%s: invalid vblocknr = %llu, [%llu, %llu)",
+> include/trace/events/ext4.h:    TP_printk("dev %d,%d ino %lu es [%u/%u) mapped %llu status %s",
+> include/trace/events/ext4.h:    TP_printk("dev %d,%d ino %lu es [%lld/%lld)",
+> include/trace/events/ext4.h:    TP_printk("dev %d,%d ino %lu es [%u/%u) mapped %llu status %s",
+> include/trace/events/ext4.h:    TP_printk("dev %d,%d ino %lu found %d [%u/%u) %llu %s",
+> include/trace/events/ext4.h:    TP_printk("dev %d,%d ino %lu es [%u/%u) mapped %llu status %s "
+> mm/hugetlb.c:                   pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%llu, %llu)",
+> mm/kasan/report.c:              pr_err(" [%lu, %lu) '%s'", offset, offset + size, token);
+> mm/page_alloc.c:                pr_info_ratelimited("%s: [%lx, %lx) PFNs busy\n",
+> tools/testing/selftests/kvm/demand_paging_test.c:               PER_VCPU_DEBUG("Added VCPU %d with test mem gpa [%lx, %lx)\n",
+> 
+> 
 
+thanks.
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+-- 
+~Randy
+
