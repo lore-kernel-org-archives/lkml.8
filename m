@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922B2C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB7EC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7567420775
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC82208DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbgCTSiS (ORCPT
+        id S1727364AbgCTSiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 20 Mar 2020 14:38:18 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36867 "EHLO
+Received: from Galois.linutronix.de ([193.142.43.55]:36874 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgCTSiS (ORCPT
+        with ESMTP id S1727070AbgCTSiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Mar 2020 14:38:18 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFMX9-00021z-Lw
-        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:15 +0100
+        id 1jFMXA-00022G-IM
+        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:16 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id F1BFC1039FC
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:14 +0100 (CET)
-Message-Id: <20200320180032.523372590@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id EC27C1039FC
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:15 +0100 (CET)
+Message-Id: <20200320180032.895128936@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 18:59:57 +0100
+Date:   Fri, 20 Mar 2020 19:00:01 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -48,8 +48,8 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [patch V3 01/23] rcu: Dont acquire lock in NMI handler in
- rcu_nmi_enter_common()
+Subject: [patch V3 05/23] tracing: Provide lockdep less
+ trace_hardirqs_on/off() variants
 References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,39 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+trace_hardirqs_on/off() is only partially safe vs. RCU idle. The tracer
+core itself is safe, but the resulting tracepoints can be utilized by
+e.g. BPF which is unsafe.
 
-The rcu_nmi_enter_common() function can be invoked both in interrupt
-and NMI handlers.  If it is invoked from process context (as opposed
-to userspace or idle context) on a nohz_full CPU, it might acquire the
-CPU's leaf rcu_node structure's ->lock.  Because this lock is held only
-with interrupts disabled, this is safe from an interrupt handler, but
-doing so from an NMI handler can result in self-deadlock.
+Provide variants which do not contain the lockdep invocation so the lockdep
+and tracer invocations can be split at the call site and placed properly.
 
-This commit therefore adds "irq" to the "if" condition so as to only
-acquire the ->lock from irq handlers or process context, never from
-an NMI handler.
+The new variants also do not use rcuidle as they are going to be called
+from entry code after/before context tracking.
 
-Fixes: 5b14557b073c ("rcu: Avoid tick_dep_set_cpu() misordering")
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Link: https://lkml.kernel.org/r/20200313024046.27622-1-paulmck@kernel.org
-
 ---
- kernel/rcu/tree.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+V2: New patch
+---
+ include/linux/irqflags.h        |    4 ++++
+ kernel/trace/trace_preemptirq.c |   23 +++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -816,7 +816,7 @@ static __always_inline void rcu_nmi_ente
- 			rcu_cleanup_after_idle();
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -29,6 +29,8 @@
+ #endif
  
- 		incby = 1;
--	} else if (tick_nohz_full_cpu(rdp->cpu) &&
-+	} else if (irq && tick_nohz_full_cpu(rdp->cpu) &&
- 		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
- 		   READ_ONCE(rdp->rcu_urgent_qs) && !rdp->rcu_forced_tick) {
- 		raw_spin_lock_rcu_node(rdp->mynode);
+ #ifdef CONFIG_TRACE_IRQFLAGS
++  extern void __trace_hardirqs_on(void);
++  extern void __trace_hardirqs_off(void);
+   extern void trace_hardirqs_on(void);
+   extern void trace_hardirqs_off(void);
+ # define trace_hardirq_context(p)	((p)->hardirq_context)
+@@ -52,6 +54,8 @@ do {						\
+ 	current->softirq_context--;		\
+ } while (0)
+ #else
++# define __trace_hardirqs_on()		do { } while (0)
++# define __trace_hardirqs_off()		do { } while (0)
+ # define trace_hardirqs_on()		do { } while (0)
+ # define trace_hardirqs_off()		do { } while (0)
+ # define trace_hardirq_context(p)	0
+--- a/kernel/trace/trace_preemptirq.c
++++ b/kernel/trace/trace_preemptirq.c
+@@ -19,6 +19,17 @@
+ /* Per-cpu variable to prevent redundant calls when IRQs already off */
+ static DEFINE_PER_CPU(int, tracing_irq_cpu);
+ 
++void __trace_hardirqs_on(void)
++{
++	if (this_cpu_read(tracing_irq_cpu)) {
++		if (!in_nmi())
++			trace_irq_enable(CALLER_ADDR0, CALLER_ADDR1);
++		tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
++		this_cpu_write(tracing_irq_cpu, 0);
++	}
++}
++NOKPROBE_SYMBOL(__trace_hardirqs_on);
++
+ void trace_hardirqs_on(void)
+ {
+ 	if (this_cpu_read(tracing_irq_cpu)) {
+@@ -33,6 +44,18 @@ void trace_hardirqs_on(void)
+ EXPORT_SYMBOL(trace_hardirqs_on);
+ NOKPROBE_SYMBOL(trace_hardirqs_on);
+ 
++void __trace_hardirqs_off(void)
++{
++	if (!this_cpu_read(tracing_irq_cpu)) {
++		this_cpu_write(tracing_irq_cpu, 1);
++		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
++		if (!in_nmi())
++			trace_irq_disable(CALLER_ADDR0, CALLER_ADDR1);
++	}
++
++}
++NOKPROBE_SYMBOL(__trace_hardirqs_off);
++
+ void trace_hardirqs_off(void)
+ {
+ 	if (!this_cpu_read(tracing_irq_cpu)) {
 
