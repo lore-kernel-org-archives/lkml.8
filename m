@@ -2,133 +2,329 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 762C6C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90633C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 479C22070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D52C2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:22:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KspCKo3i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbgCTOWP (ORCPT
+        id S1727422AbgCTOWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:22:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:49536 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726893AbgCTOWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:22:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 644CD1FB;
-        Fri, 20 Mar 2020 07:22:14 -0700 (PDT)
-Received: from mbp (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38BB73F792;
-        Fri, 20 Mar 2020 07:22:11 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 14:22:08 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-mips@vger.kernel.org, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 18/26] arm64: vdso32: Replace TASK_SIZE_32 check in
- vgettimeofday
-Message-ID: <20200320142208.GC29214@mbp>
-References: <20200317143834.GC632169@arrakis.emea.arm.com>
- <f03a9493-c8c2-e981-f560-b2f437a208e4@arm.com>
- <20200317155031.GD632169@arrakis.emea.arm.com>
- <83aaf9e1-0a8f-4908-577a-23766541b2ba@arm.com>
- <20200317174806.GE632169@arrakis.emea.arm.com>
- <93cfe94a-c2a3-1025-bc9c-e7c3fd891100@arm.com>
- <20200318183603.GF94111@arrakis.emea.arm.com>
- <1bc25a53-7a59-0f60-ecf2-a3cace46b823@arm.com>
- <20200319181004.GA29214@mbp>
- <b937d1eb-c7fd-e903-fa36-b261662bf40b@arm.com>
+        Fri, 20 Mar 2020 10:22:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59770 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727229AbgCTOWe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:22:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=tZo8Vpuo1sLSU1vltlBlrLpp+JLJFr9pp04deQaZr50=; b=KspCKo3iZFVFcfh8ZFGnRdUvLr
+        Tg7RmP2PmZqH3Dg5ZRFox5iRVkZ02yX36npfEwa2wtwQOR55rHk5GO5Bakeeh6RB+y7yx22i5bKPU
+        3kfUPvk3AkB9OVfoIJx5+XEG3j2bowAzmsIUkFpNhLW9Hnh1RLK2sKPru8EeUus/ITZTcsDvelCe8
+        toxg4Zyq5RZCKKdWu0yexgONoJsDX4s2LCOH/Avu/dXZAOPITZM18rzVkDfjR+eyOHSBZsJWT3+yk
+        cJQ8oiOeh6a03Igj7ZQiB5laRYLkR6C6T9S2JnKUMiCxnMUvWO5lpjH8igiF1898Atipr+RtDVrcc
+        Nc0lxk5g==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jFIXh-0000iR-Lm; Fri, 20 Mar 2020 14:22:33 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        William Kucharski <william.kucharski@oracle.com>
+Subject: [PATCH v9 13/25] mm: Add page_cache_readahead_unbounded
+Date:   Fri, 20 Mar 2020 07:22:19 -0700
+Message-Id: <20200320142231.2402-14-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200320142231.2402-1-willy@infradead.org>
+References: <20200320142231.2402-1-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b937d1eb-c7fd-e903-fa36-b261662bf40b@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 01:05:14PM +0000, Vincenzo Frascino wrote:
-> On 3/19/20 6:10 PM, Catalin Marinas wrote:
-> > On Thu, Mar 19, 2020 at 12:38:42PM +0000, Vincenzo Frascino wrote:
-> >> On 3/18/20 6:36 PM, Catalin Marinas wrote:
-> >>> On Wed, Mar 18, 2020 at 04:14:26PM +0000, Vincenzo Frascino wrote:
-> >>>> On 3/17/20 5:48 PM, Catalin Marinas wrote:
-> >>>>> So clock_gettime() on arm32 always falls back to the syscall?
-> >>>>
-> >>>> This seems not what you asked, and I think I answered accordingly. Anyway, in
-> >>>> the case of arm32 the error code path is handled via syscall fallback.
-> >>>>
-> >>>> Look at the code below as an example (I am using getres because I know this
-> >>>> email will be already too long, and I do not want to add pointless code, but the
-> >>>> concept is the same for gettime and the others):
-> >>>>
-> >>>> static __maybe_unused
-> >>>> int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
-> >>>> {
-> >>>> 	int ret = __cvdso_clock_getres_common(clock, res);
-> >>>>
-> >>>> 	if (unlikely(ret))
-> >>>> 		return clock_getres_fallback(clock, res);
-> >>>> 	return 0;
-> >>>> }
-> >>>>
-> >>>> When the return code of the "vdso" internal function returns an error the system
-> >>>> call is triggered.
-> >>>
-> >>> But when __cvdso_clock_getres_common() does *not* return an error, it
-> >>> means that it handled the clock_getres() call without a fallback to the
-> >>> syscall. I assume this is possible on arm32. When the clock_getres() is
-> >>> handled directly (not as a syscall), why doesn't arm32 need the same
-> >>> (res >= TASK_SIZE) check?
-> >>
-> >> Ok, I see what you mean.
-> > 
-> > I'm not sure.
-> 
-> Thank you for the long chat this morning. As we agreed I am going to repost the
-> patches removing the checks discussed in this thread
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Great, thanks.
+ext4 and f2fs have duplicated the guts of the readahead code so
+they can read past i_size.  Instead, separate out the guts of the
+readahead code so they can call it directly.
 
-> and we will address the syscall ABI difference subsequently with a
-> different series.
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+---
+ fs/ext4/verity.c        | 35 ++-----------------
+ fs/f2fs/data.c          |  2 +-
+ fs/f2fs/f2fs.h          |  3 --
+ fs/f2fs/verity.c        | 35 ++-----------------
+ include/linux/pagemap.h |  3 ++
+ mm/readahead.c          | 74 ++++++++++++++++++++++++++++-------------
+ 6 files changed, 58 insertions(+), 94 deletions(-)
 
-Now I'm even less convinced we need any additional patches. The arm64
-compat syscall would still return -EFAULT for res >= TASK_SIZE_32
-because copy_to_user() will fail. So it would be entirely consistent
-with the arm32 syscall. In the vdso-only case, both arm32 and arm64
-compat would generate a signal.
-
-As Will said, arguably, the syscall semantics may not be applicable to
-the vdso implementation. But if you do want to get down this route (tp =
-UINTPTR_MAX - sizeof(*tp) returning -EFAULT), please do it for all
-architectures, not just arm64 compat. However, I'm not sure anyone
-relies on this functionality, other than the vdsotest, so no real
-application broken.
-
+diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
+index dc5ec724d889..dec1244dd062 100644
+--- a/fs/ext4/verity.c
++++ b/fs/ext4/verity.c
+@@ -342,37 +342,6 @@ static int ext4_get_verity_descriptor(struct inode *inode, void *buf,
+ 	return desc_size;
+ }
+ 
+-/*
+- * Prefetch some pages from the file's Merkle tree.
+- *
+- * This is basically a stripped-down version of __do_page_cache_readahead()
+- * which works on pages past i_size.
+- */
+-static void ext4_merkle_tree_readahead(struct address_space *mapping,
+-				       pgoff_t start_index, unsigned long count)
+-{
+-	LIST_HEAD(pages);
+-	unsigned int nr_pages = 0;
+-	struct page *page;
+-	pgoff_t index;
+-	struct blk_plug plug;
+-
+-	for (index = start_index; index < start_index + count; index++) {
+-		page = xa_load(&mapping->i_pages, index);
+-		if (!page || xa_is_value(page)) {
+-			page = __page_cache_alloc(readahead_gfp_mask(mapping));
+-			if (!page)
+-				break;
+-			page->index = index;
+-			list_add(&page->lru, &pages);
+-			nr_pages++;
+-		}
+-	}
+-	blk_start_plug(&plug);
+-	ext4_mpage_readpages(mapping, &pages, NULL, nr_pages, true);
+-	blk_finish_plug(&plug);
+-}
+-
+ static struct page *ext4_read_merkle_tree_page(struct inode *inode,
+ 					       pgoff_t index,
+ 					       unsigned long num_ra_pages)
+@@ -386,8 +355,8 @@ static struct page *ext4_read_merkle_tree_page(struct inode *inode,
+ 		if (page)
+ 			put_page(page);
+ 		else if (num_ra_pages > 1)
+-			ext4_merkle_tree_readahead(inode->i_mapping, index,
+-						   num_ra_pages);
++			page_cache_readahead_unbounded(inode->i_mapping, NULL,
++					index, num_ra_pages, 0);
+ 		page = read_mapping_page(inode->i_mapping, index, NULL);
+ 	}
+ 	return page;
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index b27b72107911..8e9aa2254490 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -2159,7 +2159,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+  * use ->readpage() or do the necessary surgery to decouple ->readpages()
+  * from read-ahead.
+  */
+-int f2fs_mpage_readpages(struct address_space *mapping,
++static int f2fs_mpage_readpages(struct address_space *mapping,
+ 			struct list_head *pages, struct page *page,
+ 			unsigned nr_pages, bool is_readahead)
+ {
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 5355be6b6755..4a414e06a8af 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3344,9 +3344,6 @@ int f2fs_reserve_new_block(struct dnode_of_data *dn);
+ int f2fs_get_block(struct dnode_of_data *dn, pgoff_t index);
+ int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from);
+ int f2fs_reserve_block(struct dnode_of_data *dn, pgoff_t index);
+-int f2fs_mpage_readpages(struct address_space *mapping,
+-			struct list_head *pages, struct page *page,
+-			unsigned nr_pages, bool is_readahead);
+ struct page *f2fs_get_read_data_page(struct inode *inode, pgoff_t index,
+ 			int op_flags, bool for_write);
+ struct page *f2fs_find_data_page(struct inode *inode, pgoff_t index);
+diff --git a/fs/f2fs/verity.c b/fs/f2fs/verity.c
+index d7d430a6f130..865c9fb774fb 100644
+--- a/fs/f2fs/verity.c
++++ b/fs/f2fs/verity.c
+@@ -222,37 +222,6 @@ static int f2fs_get_verity_descriptor(struct inode *inode, void *buf,
+ 	return size;
+ }
+ 
+-/*
+- * Prefetch some pages from the file's Merkle tree.
+- *
+- * This is basically a stripped-down version of __do_page_cache_readahead()
+- * which works on pages past i_size.
+- */
+-static void f2fs_merkle_tree_readahead(struct address_space *mapping,
+-				       pgoff_t start_index, unsigned long count)
+-{
+-	LIST_HEAD(pages);
+-	unsigned int nr_pages = 0;
+-	struct page *page;
+-	pgoff_t index;
+-	struct blk_plug plug;
+-
+-	for (index = start_index; index < start_index + count; index++) {
+-		page = xa_load(&mapping->i_pages, index);
+-		if (!page || xa_is_value(page)) {
+-			page = __page_cache_alloc(readahead_gfp_mask(mapping));
+-			if (!page)
+-				break;
+-			page->index = index;
+-			list_add(&page->lru, &pages);
+-			nr_pages++;
+-		}
+-	}
+-	blk_start_plug(&plug);
+-	f2fs_mpage_readpages(mapping, &pages, NULL, nr_pages, true);
+-	blk_finish_plug(&plug);
+-}
+-
+ static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
+ 					       pgoff_t index,
+ 					       unsigned long num_ra_pages)
+@@ -266,8 +235,8 @@ static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
+ 		if (page)
+ 			put_page(page);
+ 		else if (num_ra_pages > 1)
+-			f2fs_merkle_tree_readahead(inode->i_mapping, index,
+-						   num_ra_pages);
++			page_cache_readahead_unbounded(inode->i_mapping, NULL,
++					index, num_ra_pages, 0);
+ 		page = read_mapping_page(inode->i_mapping, index, NULL);
+ 	}
+ 	return page;
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 232892d37071..0c25625ed27d 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -621,6 +621,9 @@ void page_cache_sync_readahead(struct address_space *, struct file_ra_state *,
+ void page_cache_async_readahead(struct address_space *, struct file_ra_state *,
+ 		struct file *, struct page *, pgoff_t index,
+ 		unsigned long req_count);
++void page_cache_readahead_unbounded(struct address_space *, struct file *,
++		pgoff_t index, unsigned long nr_to_read,
++		unsigned long lookahead_count);
+ 
+ /*
+  * Like add_to_page_cache_locked, but used to add newly allocated pages:
+diff --git a/mm/readahead.c b/mm/readahead.c
+index a37b68f66233..8ee9036fd681 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -156,40 +156,34 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
+ 		rac->_index++;
+ }
+ 
+-/*
+- * __do_page_cache_readahead() actually reads a chunk of disk.  It allocates
+- * the pages first, then submits them for I/O. This avoids the very bad
+- * behaviour which would occur if page allocations are causing VM writeback.
+- * We really don't want to intermingle reads and writes like that.
++/**
++ * page_cache_readahead_unbounded - Start unchecked readahead.
++ * @mapping: File address space.
++ * @file: This instance of the open file; used for authentication.
++ * @index: First page index to read.
++ * @nr_to_read: The number of pages to read.
++ * @lookahead_size: Where to start the next readahead.
++ *
++ * This function is for filesystems to call when they want to start
++ * readahead beyond a file's stated i_size.  This is almost certainly
++ * not the function you want to call.  Use page_cache_async_readahead()
++ * or page_cache_sync_readahead() instead.
++ *
++ * Context: File is referenced by caller.  Mutexes may be held by caller.
++ * May sleep, but will not reenter filesystem to reclaim memory.
+  */
+-void __do_page_cache_readahead(struct address_space *mapping,
+-		struct file *filp, pgoff_t index, unsigned long nr_to_read,
++void page_cache_readahead_unbounded(struct address_space *mapping,
++		struct file *file, pgoff_t index, unsigned long nr_to_read,
+ 		unsigned long lookahead_size)
+ {
+-	struct inode *inode = mapping->host;
+ 	LIST_HEAD(page_pool);
+-	loff_t isize = i_size_read(inode);
+ 	gfp_t gfp_mask = readahead_gfp_mask(mapping);
+ 	struct readahead_control rac = {
+ 		.mapping = mapping,
+-		.file = filp,
++		.file = file,
+ 		._index = index,
+ 	};
+ 	unsigned long i;
+-	pgoff_t end_index;	/* The last page we want to read */
+-
+-	if (isize == 0)
+-		return;
+-
+-	end_index = (isize - 1) >> PAGE_SHIFT;
+-	if (index > end_index)
+-		return;
+-	/* Avoid wrapping to the beginning of the file */
+-	if (index + nr_to_read < index)
+-		nr_to_read = ULONG_MAX - index + 1;
+-	/* Don't read past the page containing the last byte of the file */
+-	if (index + nr_to_read >= end_index)
+-		nr_to_read = end_index - index + 1;
+ 
+ 	/*
+ 	 * Preallocate as many pages as we will need.
+@@ -233,6 +227,38 @@ void __do_page_cache_readahead(struct address_space *mapping,
+ 	 */
+ 	read_pages(&rac, &page_pool, false);
+ }
++EXPORT_SYMBOL_GPL(page_cache_readahead_unbounded);
++
++/*
++ * __do_page_cache_readahead() actually reads a chunk of disk.  It allocates
++ * the pages first, then submits them for I/O. This avoids the very bad
++ * behaviour which would occur if page allocations are causing VM writeback.
++ * We really don't want to intermingle reads and writes like that.
++ */
++void __do_page_cache_readahead(struct address_space *mapping,
++		struct file *file, pgoff_t index, unsigned long nr_to_read,
++		unsigned long lookahead_size)
++{
++	struct inode *inode = mapping->host;
++	loff_t isize = i_size_read(inode);
++	pgoff_t end_index;	/* The last page we want to read */
++
++	if (isize == 0)
++		return;
++
++	end_index = (isize - 1) >> PAGE_SHIFT;
++	if (index > end_index)
++		return;
++	/* Avoid wrapping to the beginning of the file */
++	if (index + nr_to_read < index)
++		nr_to_read = ULONG_MAX - index + 1;
++	/* Don't read past the page containing the last byte of the file */
++	if (index + nr_to_read >= end_index)
++		nr_to_read = end_index - index + 1;
++
++	page_cache_readahead_unbounded(mapping, file, index, nr_to_read,
++			lookahead_size);
++}
+ 
+ /*
+  * Chunk the readahead into 2 megabyte units, so that we don't pin too much
 -- 
-Catalin
+2.25.1
+
