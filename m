@@ -4,93 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0252EC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE33C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D014520724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D753020767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:24:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgCTHOl (ORCPT
+        id S1726805AbgCTHYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 03:14:41 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12169 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725802AbgCTHOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 03:14:41 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2D561D47507366A7B8F7;
-        Fri, 20 Mar 2020 15:14:32 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Fri, 20 Mar 2020
- 15:14:25 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <ldewangan@nvidia.com>, <jonathanh@nvidia.com>,
-        <dan.j.williams@intel.com>, <vkoul@kernel.org>,
-        <thierry.reding@gmail.com>, <swarren@wwwdotorg.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <digetx@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] dmaengine: tegra-apb: mark PM functions as __maybe_unused
-Date:   Fri, 20 Mar 2020 15:13:37 +0800
-Message-ID: <20200320071337.59756-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+        Fri, 20 Mar 2020 03:24:52 -0400
+Received: from mga09.intel.com ([134.134.136.24]:41360 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbgCTHYw (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 03:24:52 -0400
+IronPort-SDR: VJIS0SJPrFoUbdRfyKvEWqFG5qGqFkK2j4xNICRYJ6SIB4421UmUqt2F5LZUjbCnj8ILS3sliu
+ 0k9cACBRXkOQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 00:24:51 -0700
+IronPort-SDR: 5z5V2JgRyYBBsMkF7ISBsYsoBodK4MkjON1v5LCQjWc04obM/zttsd/18cgEjsHenFgzlxvjUl
+ hFNqZu1w+lqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,283,1580803200"; 
+   d="scan'208";a="269004837"
+Received: from kbl.sh.intel.com ([10.239.159.24])
+  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 00:24:48 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH 1/2] perf top: Support --group-sort-idx to change the sort order
+Date:   Fri, 20 Mar 2020 15:24:13 +0800
+Message-Id: <20200320072414.25551-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_PM is disabled, gcc warning this:
+perf report has supported the option --group-sort-idx, which
+sorts the output by the event at the index n in event group.
 
-drivers/dma/tegra20-apb-dma.c:1587:12: warning: 'tegra_dma_runtime_resume' defined but not used [-Wunused-function]
-drivers/dma/tegra20-apb-dma.c:1578:12: warning: 'tegra_dma_runtime_suspend' defined but not used [-Wunused-function]
+For example,
+perf record -e cycles,instructions,cache-misses
+perf report --group --group-sort-idx 2 --stdio
 
-Make it as __maybe_unused to fix the warnings,
-also remove unneeded function declarations.
+The perf-report output is sorted by cache-misses.
 
-Fixes: ec8a1586780c ("dma: tegra: add dmaengine based dma driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+This patch supports --group-sort-idx in perf-top.
+
+For example,
+perf top --group -e cycles,instructions,cache-misses --group-sort-idx 2
+
+The perf-top output is sorted by cache-misses.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- drivers/dma/tegra20-apb-dma.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ tools/perf/Documentation/perf-top.txt | 5 +++++
+ tools/perf/builtin-top.c              | 4 ++++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 4e295d121be6..b33000976f66 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -263,8 +263,6 @@ static inline struct device *tdc2dev(struct tegra_dma_channel *tdc)
- }
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index 324b6b53c86b..0e97dcef794d 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -53,6 +53,11 @@ Default is to monitor all CPUS.
+ --group::
+         Put the counters into a counter group.
  
- static dma_cookie_t tegra_dma_tx_submit(struct dma_async_tx_descriptor *tx);
--static int tegra_dma_runtime_suspend(struct device *dev);
--static int tegra_dma_runtime_resume(struct device *dev);
- 
- /* Get DMA desc from free list, if not there then allocate it.  */
- static struct tegra_dma_desc *tegra_dma_desc_get(struct tegra_dma_channel *tdc)
-@@ -1575,7 +1573,7 @@ static int tegra_dma_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int tegra_dma_runtime_suspend(struct device *dev)
-+static int __maybe_unused tegra_dma_runtime_suspend(struct device *dev)
- {
- 	struct tegra_dma *tdma = dev_get_drvdata(dev);
- 
-@@ -1584,7 +1582,7 @@ static int tegra_dma_runtime_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int tegra_dma_runtime_resume(struct device *dev)
-+static int __maybe_unused tegra_dma_runtime_resume(struct device *dev)
- {
- 	struct tegra_dma *tdma = dev_get_drvdata(dev);
- 
++--group-sort-idx::
++	Sort the output by the event at the index n in group. If n is invalid,
++	sort by the first event. It can support multiple groups with different
++	amount of events. WARNING: This should be used on grouped events.
++
+ -F <freq>::
+ --freq=<freq>::
+ 	Profile at this frequency. Use 'max' to use the currently maximum
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index f6dd1a63f159..144043637cec 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1543,6 +1543,10 @@ int cmd_top(int argc, const char **argv)
+ 			"number of thread to run event synthesize"),
+ 	OPT_BOOLEAN(0, "namespaces", &opts->record_namespaces,
+ 		    "Record namespaces events"),
++	OPT_INTEGER(0, "group-sort-idx", &symbol_conf.group_sort_idx,
++		    "Sort the output by the event at the index n in group. "
++		    "If n is invalid, sort by the first event. "
++		    "WARNING: should be used on grouped events."),
+ 	OPTS_EVSWITCH(&top.evswitch),
+ 	OPT_END()
+ 	};
 -- 
 2.17.1
-
 
