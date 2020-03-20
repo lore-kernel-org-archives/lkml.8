@@ -2,115 +2,87 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF22C43332
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E83C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B7D20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:25:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bB1YkUN+"
+	by mail.kernel.org (Postfix) with ESMTP id 713012072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:27:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584714441;
+	bh=7XWuZryHtfWvsLZhM76IcRNhObhLjJKgrixahU+eeQM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=uGYuaaqqtVKmIyc+GUdf4UJF0nAXzHuXlgBFIv3FxE28ZdLtqDlOFqqff/s4cB40S
+	 shXsoLZxBJZKlFp0X8aJwv5IWCsknBLOAMe39+uJsZH853hwCB0fzVGPytBFJ2BvUb
+	 ukBKlq2PwBCRGPW2PzZmh5P9murY8gHv/wh+X4T4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbgCTOZR (ORCPT
+        id S1727319AbgCTO1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:25:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59706 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbgCTOWd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:22:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=kZSWYbADCDtb2xc4p+R2B9mS5JBLfDUqpyTeSWepChg=; b=bB1YkUN+c4hb4E+15c2Bv0iGay
-        +SDBgbKmQNnw8WCVEzkD9AjSyAG/Duc0mSxeBzm9vNFiqgVBCga/ONv1sC9Z/x2gLeLsprFdD7d55
-        fb4fU4tE6hAVru9RD3+fkzUAhnvT5hqpWAYaDS2ta9B6vW7QnE3Ad6BWDMyL6yXMC7AhsTnap/D7o
-        CLkw8bitrOE2eV3BOGbVDrKqlEe6AhWvpt1Zi3HXruIh/gOfKr+eE1uk9dMdYEuWb3zeetZaFyHNP
-        3jwyYZ7/vNQrxMti6w5s9Lj/pMBfx+duk9APtD5AhxIl+FrG8GmaHBNWJGs7UohjuOF+HnlGyhL31
-        SdKSXPUg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jFIXh-0000h8-3h; Fri, 20 Mar 2020 14:22:33 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Chinner <dchinner@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: [PATCH v9 03/25] mm: Ignore return value of ->readpages
-Date:   Fri, 20 Mar 2020 07:22:09 -0700
-Message-Id: <20200320142231.2402-4-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200320142231.2402-1-willy@infradead.org>
-References: <20200320142231.2402-1-willy@infradead.org>
+        Fri, 20 Mar 2020 10:27:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726896AbgCTO1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:27:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B4DF2070A;
+        Fri, 20 Mar 2020 14:27:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584714439;
+        bh=7XWuZryHtfWvsLZhM76IcRNhObhLjJKgrixahU+eeQM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=g4W1ECiUIITNnXksH9VzXhGLRRSP5/V9gZjmfQ7KfpoWYvZRZHike4FkBu3tgTPSl
+         y4zojU/zgWPyfgEOQ/rzAK/zKwhGovWSpBv2bjWT3/s5lu7/QnSS1n3VBIjpcb7RwS
+         luutaZRnJs8O0GqWlEnPn+L5C/ob24MYFs/+iq+o=
+Date:   Fri, 20 Mar 2020 15:27:15 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jiri Slaby <jslaby@suse.cz>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [GIT PULL] TTY driver fixes for 5.6-rc7
+Message-ID: <20200320142715.GA760292@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+The following changes since commit 2c523b344dfa65a3738e7039832044aa133c75fb:
 
-We used to assign the return value to a variable, which we then ignored.
-Remove the pretence of caring.
+  Linux 5.6-rc5 (2020-03-08 17:44:44 -0700)
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>
----
- mm/readahead.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+are available in the Git repository at:
 
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 41a592886da7..61b15b6b9e72 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -113,17 +113,16 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
- 
- EXPORT_SYMBOL(read_cache_pages);
- 
--static int read_pages(struct address_space *mapping, struct file *filp,
-+static void read_pages(struct address_space *mapping, struct file *filp,
- 		struct list_head *pages, unsigned int nr_pages, gfp_t gfp)
- {
- 	struct blk_plug plug;
- 	unsigned page_idx;
--	int ret;
- 
- 	blk_start_plug(&plug);
- 
- 	if (mapping->a_ops->readpages) {
--		ret = mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
-+		mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
- 		/* Clean up the remaining pages */
- 		put_pages_list(pages);
- 		goto out;
-@@ -136,12 +135,9 @@ static int read_pages(struct address_space *mapping, struct file *filp,
- 			mapping->a_ops->readpage(filp, page);
- 		put_page(page);
- 	}
--	ret = 0;
- 
- out:
- 	blk_finish_plug(&plug);
--
--	return ret;
- }
- 
- /*
--- 
-2.25.1
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.6-rc7
 
+for you to fetch changes up to 6e622cd8bd888c7fa3ee2b7dfb3514ab53b21570:
+
+  tty: fix compat TIOCGSERIAL checking wrong function ptr (2020-03-18 13:15:13 +0100)
+
+----------------------------------------------------------------
+TTY fixes for 5.6-rc7
+
+Here are 3 small tty_io bugfixes for reported issues that Eric has
+resolved for 5.6-rc7
+
+All of these have been in linux-next with no reported issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Eric Biggers (3):
+      tty: drop outdated comments about release_tty() locking
+      tty: fix compat TIOCGSERIAL leaking uninitialized memory
+      tty: fix compat TIOCGSERIAL checking wrong function ptr
+
+ drivers/tty/tty_io.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
