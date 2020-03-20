@@ -2,94 +2,88 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF8EC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D088C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D85C20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30FA620658
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:59:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="jRZ4w7iR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbgCTU5A (ORCPT
+        id S1727046AbgCTU70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 16:57:00 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:51187 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726880AbgCTU5A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 16:57:00 -0400
-Received: (qmail 2866 invoked by uid 500); 20 Mar 2020 16:56:59 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 20 Mar 2020 16:56:59 -0400
-Date:   Fri, 20 Mar 2020 16:56:59 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Joel Fernandes <joel@joelfernandes.org>
-cc:     linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        <linux-arch@vger.kernel.org>, Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 2/3] LKMM: Add litmus test for RCU GP guarantee where
- reader stores
-In-Reply-To: <20200320165948.GB155212@google.com>
-Message-ID: <Pine.LNX.4.44L0.2003201643370.31761-100000@netrider.rowland.org>
+        Fri, 20 Mar 2020 16:59:26 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:37872 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726951AbgCTU7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 16:59:25 -0400
+Received: from zn.tnic (p200300EC2F0A5A0095ADC0D452E3E28B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:95ad:c0d4:52e3:e28b])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1043D1EC0570;
+        Fri, 20 Mar 2020 21:59:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584737962;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=8iI8IWPehZ1KW+x62OpAlz0HlN2gIEWJg2Hn2mzEzMA=;
+        b=jRZ4w7iRJ1EiRXuIFuvaqqn9IbV3+wN+Q1T2vSEeDASwPUcW7/HiNd7GqP/3xfZa37ol+a
+        kzD/Mi/5tK1eAWsYKFVeIu5C44Cp8X/ZtfqbmOWUX4chL2kEJHfSR0oq+Fgiw9+ENQ8DJC
+        JyFt3DzmdDeh6DuYrhferPDmppBdrwA=
+Date:   Fri, 20 Mar 2020 21:59:29 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Alexey Makhalov <amakhalov@vmware.com>
+Cc:     linux-x86_64@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>
+Subject: Re: [PATCH 0/5] x86/vmware: Steal time accounting support
+Message-ID: <20200320205929.GH23532@zn.tnic>
+References: <20200320203443.27742-1-amakhalov@vmware.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200320203443.27742-1-amakhalov@vmware.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Mar 2020, Joel Fernandes wrote:
-
-> On Fri, Mar 20, 2020 at 11:03:30AM -0400, Alan Stern wrote:
-> > On Fri, 20 Mar 2020, Joel Fernandes (Google) wrote:
-> > 
-> > > This adds an example for the important RCU grace period guarantee, which
-> > > shows an RCU reader can never span a grace period.
-> > > 
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > ---
-> > >  .../litmus-tests/RCU+sync+read.litmus         | 37 +++++++++++++++++++
-> > >  1 file changed, 37 insertions(+)
-> > >  create mode 100644 tools/memory-model/litmus-tests/RCU+sync+read.litmus
-> > > 
-> > > diff --git a/tools/memory-model/litmus-tests/RCU+sync+read.litmus b/tools/memory-model/litmus-tests/RCU+sync+read.litmus
-> > > new file mode 100644
-> > > index 0000000000000..73557772e2a32
-> > > --- /dev/null
-> > > +++ b/tools/memory-model/litmus-tests/RCU+sync+read.litmus
-> > 
-> > Do these new tests really belong here?  I thought we were adding a new 
-> > directory under Documentation/ for litmus tests that illustrate parts 
-> > of the LKMM or memory-barriers.txt.
-> > 
-> > By contrast, the tests under tools/memory-model are merely to show 
-> > people what litmus tests look like and how they should be written.
+On Fri, Mar 20, 2020 at 08:34:38PM +0000, Alexey Makhalov wrote:
+> Hello,
 > 
-> I could add it to tools/memory-model/Documentation/ under a new
-> 'examples' directory there. We could also create an 'rcu' directory in
-> tools/memory-model/litmus-tests/ and add these there. Thoughts?
+> This patchset introduces steal time accounting support for
+> the VMware guest. The idea and implementation of guest
+> steal time support is similar to KVM ones and it is based
+> on steal clock. The steal clock is a per CPU structure in
+> a shared memory between hypervisor and guest, initialized
+> by each CPU through hypercall. Steal clock is got updated
+> by the hypervisor and read by the guest. 
 
-What happened was that about a month ago, Boqun Feng added
-Documentation/atomic-tests for litmus tests related to handling of
-atomic_t types (see
-<https://marc.info/?l=linux-kernel&m=158276408609029&w=2>.)  Should we
-interpose an extra directory level, making it
-Documentation/litmus-tests/atomic?  Or
-Documentation/LKMM-litmus-tests/atomic?
+...
 
-Then the new tests added here could go into
-Documentation/litmus-tests/rcu, or whatever.
+>  Documentation/admin-guide/kernel-parameters.txt |   2 +-
+>  arch/x86/kernel/cpu/vmware.c                    | 227 +++++++++++++++++++++++-
+>  2 files changed, 220 insertions(+), 9 deletions(-)
 
-Alan
+Did you not see my reply to you the last time?
 
+https://marc.info/?l=linux-virtualization&m=158410546921328
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
