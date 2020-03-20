@@ -2,117 +2,127 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F84C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CA3C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A367820732
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248D020787
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:48:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xi/LH+k7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgCTMm7 (ORCPT
+        id S1727015AbgCTMss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 08:42:59 -0400
-Received: from mga17.intel.com ([192.55.52.151]:60770 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726814AbgCTMm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 08:42:59 -0400
-IronPort-SDR: ufhMNGto9PjFF2+mOsWjzfIkt8Z9nafY5Pc8DtQINmlMp5CRia3eixLHsnprCHNmDcnFl2lIdi
- GQGGUAc2Z28w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 05:42:58 -0700
-IronPort-SDR: 0/OsodWYisZ15FchVhY+LE0tssKBlrz8wUbaTT8zOfSO5P1J0YnLfKtH2gtZJlWDuOQxVTd0QY
- jqlbIcdxAXfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,284,1580803200"; 
-   d="scan'208";a="392137412"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 20 Mar 2020 05:42:50 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jFGzD-00BMsA-8E; Fri, 20 Mar 2020 14:42:51 +0200
-Date:   Fri, 20 Mar 2020 14:42:51 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v12 8/8] MAINTAINERS: perf: Add pattern that matches ppc
- perf to the perf entry.
-Message-ID: <20200320124251.GW1922688@smile.fi.intel.com>
-References: <20200225173541.1549955-1-npiggin@gmail.com>
- <cover.1584699455.git.msuchanek@suse.de>
- <4b150d01c60bd37705789200d9adee9f1c9b50ce.1584699455.git.msuchanek@suse.de>
- <20200320103350.GV1922688@smile.fi.intel.com>
- <20200320112338.GP25468@kitsune.suse.cz>
+        Fri, 20 Mar 2020 08:48:48 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:27768 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726925AbgCTMss (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 08:48:48 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02KCd871016964;
+        Fri, 20 Mar 2020 13:48:43 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=2C+GCWBhrcZX26tCjQgEyQLMF2n9xcx1LptRAb/JNO4=;
+ b=xi/LH+k7xfxxpNKWNaWn0rDhI3NDdqrwa3yNyj+x+H5fCQdkK7OJchDcdP9CUnlg9K5d
+ mvyxOAR+eyYGGqm+lpsWt/o7oGQSnOYE9PK66M7V42acngG/Ptlykd4LkS4WkPHbPIZh
+ ShssC7Mqa9BiBllVMcx+VWsHaoPHMJOH6eb30MMsa4hI0XUJ1npogQqeWUOqi0UQWn0x
+ SN7nV1wbQYNalhj5uw9EHtMszLQhnlFozkmgct6FqkpcvVCAZ+dD58kXmyic+kmGgVtl
+ sP8bRHEgO6K75kobhyO32t8iS0IZzoBlENJY77kJwXNXsPoyr801qbbKNN8cIfzk30RH ug== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yu6xdr4k6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Mar 2020 13:48:43 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1148C10002A;
+        Fri, 20 Mar 2020 13:48:39 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 04EF82ADC3B;
+        Fri, 20 Mar 2020 13:48:39 +0100 (CET)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Mar
+ 2020 13:48:38 +0100
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1473.003; Fri, 20 Mar 2020 13:48:38 +0100
+From:   Patrice CHOTARD <patrice.chotard@st.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Erwan LE RAY <erwan.leray@st.com>,
+        "Alexandre TORGUE" <alexandre.torgue@st.com>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+Subject: Re: PM / wakeup: Add dev_wakeup_path() helper
+Thread-Topic: PM / wakeup: Add dev_wakeup_path() helper
+Thread-Index: AQHV/qtJLW56mUXPdUSe6gOaf+QjAKhRTq2AgAAO94A=
+Date:   Fri, 20 Mar 2020 12:48:38 +0000
+Message-ID: <8d434829-ba4d-e2be-9889-3f6eb88c46b8@st.com>
+References: <20200320113233.10219-1-patrice.chotard@st.com>
+ <CAPDyKFrWnK-TCMDExYHqpyo+5Fz9tKa0xWeauuQfTT1bQjepqQ@mail.gmail.com>
+In-Reply-To: <CAPDyKFrWnK-TCMDExYHqpyo+5Fz9tKa0xWeauuQfTT1bQjepqQ@mail.gmail.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.47]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6427126BE4D11F4DA9351D2EC9B8EA5C@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200320112338.GP25468@kitsune.suse.cz>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-20_03:2020-03-20,2020-03-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 12:23:38PM +0100, Michal Suchánek wrote:
-> On Fri, Mar 20, 2020 at 12:33:50PM +0200, Andy Shevchenko wrote:
-> > On Fri, Mar 20, 2020 at 11:20:19AM +0100, Michal Suchanek wrote:
-> > > While at it also simplify the existing perf patterns.
-
-> > And still missed fixes from parse-maintainers.pl.
-> 
-> Oh, that script UX is truly ingenious.
-
-You have at least two options, their combinations, etc:
- - complain to the author :-)
- - send a patch :-)
-
-> It provides no output and quietly
-> creates MAINTAINERS.new which is, of course, not included in the patch.
-
-Yes. it also took me a while to understand how it works, luckily it has a
-little help note.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+SGkgVWxmDQoNCk9uIDMvMjAvMjAgMTI6NTUgUE0sIFVsZiBIYW5zc29uIHdyb3RlOg0KPiBPbiBG
+cmksIDIwIE1hciAyMDIwIGF0IDEyOjMyLCA8cGF0cmljZS5jaG90YXJkQHN0LmNvbT4gd3JvdGU6
+DQo+PiBGcm9tOiBQYXRyaWNlIENob3RhcmQgPHBhdHJpY2UuY2hvdGFyZEBzdC5jb20+DQo+Pg0K
+Pj4gQWRkIGRldl93YWtldXBfcGF0aCgpIGhlbHBlciB0byBhdm9pZCB0byBzcHJlYWQNCj4+IGRl
+di0+cG93ZXIud2FrZXVwX3BhdGggdGVzdCBpbiBkcml2ZXJzLg0KPiBJIGFtIG9rYXkgYWRkaW5n
+IGEgaGVscGVyLCBidXQgd291bGQgYXBwcmVjaWF0ZSBpZiB5b3Ugc2VuZCBhIHNlcmllcw0KPiB0
+byBjb252ZXJ0IHRob3NlIHVzaW5nIHRoZSBmbGFnIGN1cnJlbnRseS4NCg0KT2ssIHdlIHdhbnRl
+ZCB0byBiZSBzdXJlIHRoYXQgdGhpcyBoZWxwZXIgd2lsbCBiZSBhY2NlcHRlZCBiZWZvcmUgdXBk
+YXRpbmcgb3VyIGRyaXZlciB3aXRoIGl0Lg0KDQpBIG5ldyBzZXJpZXMgd2lsbCBiZSBzZW50IGlu
+Y2x1ZGluZyB0aGlzIHBhdGNoIGFuZCBkcml2ZXIgdXNpbmcgaXQuDQoNCj4NCj4+IEluIGNhc2Ug
+Q09ORklHX1BNX1NMRUVQIGlzIG5vdCBzZXQsIHdha2V1cF9wYXRoIGlzIG5vdCBkZWZpbmVkLA0K
+Pj4gZGV2X3dha2V1cF9wYXRoKCkgaXMgcmV0dXJuaW5nIGZhbHNlLg0KPj4NCj4+IFNpZ25lZC1v
+ZmYtYnk6IFBhdHJpY2UgQ2hvdGFyZCA8cGF0cmljZS5jaG90YXJkQHN0LmNvbT4NCj4+IC0tLQ0K
+Pj4NCj4+IEN1cnJlbnRseSwgaW4gbWFpbmxpbmUga2VybmVsLCBubyBkcml2ZXJzIGFyZSB0ZXN0
+aW5nIGRldi0+cG93ZXIud2FrZXVwX3BhdGgNCj4+IGZvciBQTSBwdXJwb3NlLiBBIHN0bTMyIHNl
+cmlhbCBkcml2ZXIgcGF0Y2ggd2lsbCBiZSBzdWJtaXR0ZWQgc29vbiBhbmQgd2lsbA0KPj4gbWFr
+ZSB1c2FnZSBvZiB0aGlzIGhlbHBlci4NCj4+DQo+PiAgaW5jbHVkZS9saW51eC9wbV93YWtldXAu
+aCB8IDEwICsrKysrKysrKysNCj4+ICAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKQ0K
+Pj4NCj4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3BtX3dha2V1cC5oIGIvaW5jbHVkZS9s
+aW51eC9wbV93YWtldXAuaA0KPj4gaW5kZXggYWEzZGE2NjExNTMzLi5kMGJkMTNjMTkyNTMgMTAw
+NjQ0DQo+PiAtLS0gYS9pbmNsdWRlL2xpbnV4L3BtX3dha2V1cC5oDQo+PiArKysgYi9pbmNsdWRl
+L2xpbnV4L3BtX3dha2V1cC5oDQo+PiBAQCAtODQsNiArODQsMTEgQEAgc3RhdGljIGlubGluZSBi
+b29sIGRldmljZV9tYXlfd2FrZXVwKHN0cnVjdCBkZXZpY2UgKmRldikNCj4+ICAgICAgICAgcmV0
+dXJuIGRldi0+cG93ZXIuY2FuX3dha2V1cCAmJiAhIWRldi0+cG93ZXIud2FrZXVwOw0KPj4gIH0N
+Cj4+DQo+PiArc3RhdGljIGlubGluZSBib29sIGRldmljZV93YWtldXBfcGF0aChzdHJ1Y3QgZGV2
+aWNlICpkZXYpDQo+PiArew0KPj4gKyAgICAgICByZXR1cm4gISFkZXYtPnBvd2VyLndha2V1cF9w
+YXRoOw0KPiBXaHkgdXNpbmcgIiEhIiBoZXJlPw0KDQpyaWdodCwgbm90IG5lZWRlZCzCoCB3YWtl
+dXBfcGF0aCBpcyBhbHJlYWR5IGEgYm9vbGVhbi4uLi4NCg0KVGhhbmtzDQoNClBhdHJpY2UNCg0K
+Pg0KPj4gK30NCj4+ICsNCj4+ICBzdGF0aWMgaW5saW5lIHZvaWQgZGV2aWNlX3NldF93YWtldXBf
+cGF0aChzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+PiAgew0KPj4gICAgICAgICBkZXYtPnBvd2VyLndh
+a2V1cF9wYXRoID0gdHJ1ZTsNCj4+IEBAIC0xNzQsNiArMTc5LDExIEBAIHN0YXRpYyBpbmxpbmUg
+Ym9vbCBkZXZpY2VfbWF5X3dha2V1cChzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+PiAgICAgICAgIHJl
+dHVybiBkZXYtPnBvd2VyLmNhbl93YWtldXAgJiYgZGV2LT5wb3dlci5zaG91bGRfd2FrZXVwOw0K
+Pj4gIH0NCj4+DQo+PiArc3RhdGljIGlubGluZSBib29sIGRldmljZV93YWtldXBfcGF0aChzdHJ1
+Y3QgZGV2aWNlICpkZXYpDQo+PiArew0KPj4gKyAgICAgICByZXR1cm4gZmFsc2U7DQo+PiArfQ0K
+Pj4gKw0KPj4gIHN0YXRpYyBpbmxpbmUgdm9pZCBkZXZpY2Vfc2V0X3dha2V1cF9wYXRoKHN0cnVj
+dCBkZXZpY2UgKmRldikge30NCj4+DQo+PiAgc3RhdGljIGlubGluZSB2b2lkIF9fcG1fc3RheV9h
+d2FrZShzdHJ1Y3Qgd2FrZXVwX3NvdXJjZSAqd3MpIHt9DQo+PiAtLQ0KPj4gMi4xNy4xDQo+Pg0K
+PiBLaW5kIHJlZ2FyZHMNCj4gVWZmZQ==
