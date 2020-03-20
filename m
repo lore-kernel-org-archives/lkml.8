@@ -2,35 +2,35 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A15CC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19F5C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6D820777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A947920777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbgCTWET (ORCPT
+        id S1727700AbgCTWFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:04:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37481 "EHLO
+        Fri, 20 Mar 2020 18:05:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37507 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727175AbgCTWEO (ORCPT
+        with ESMTP id S1727426AbgCTWET (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:04:14 -0400
+        Fri, 20 Mar 2020 18:04:19 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFPk6-0004Th-5q; Fri, 20 Mar 2020 23:03:50 +0100
+        id 1jFPk1-0004TN-5N; Fri, 20 Mar 2020 23:03:45 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 9E0B5FFC8D;
-        Fri, 20 Mar 2020 23:03:46 +0100 (CET)
-Message-Id: <20200320180033.187967761@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 9F4A8FFC8D;
+        Fri, 20 Mar 2020 23:03:44 +0100 (CET)
+Message-Id: <20200320175956.033706968@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 19:00:04 +0100
+Date:   Fri, 20 Mar 2020 18:59:56 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -47,10 +47,7 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [RESEND][patch V3 08/23] x86/entry: Mark enter_from_user_mode() noinstr
-References: <20200320175956.033706968@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [RESEND][patch V3 00/23] x86/entry: Consolidation part II (syscalls)
 Content-transfer-encoding: 8-bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
@@ -59,37 +56,95 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200320180004.7P81KwoWeBdUD8l-oF-q0K1hpbhtIGR3szcJBYIzvnQ@z>
+Message-ID: <20200320175956.DsWEfD90qUAuCxC6fdGgnETzdTBh-m5Co4aCwcF54EI@z>
 
-Both the callers in the low level ASM code and __context_tracking_exit()
-which is invoked from enter_from_user_mode() via user_exit_irqoff() are
-marked NOKPROBE. Allowing enter_from_user_mode() to be probed is
-inconsistent at best.
+Hi!
 
-Aside of that while function tracing per se is safe the function trace
-entry/exit points can be used via BPF as well which is not safe to use
-before context tracking has reached CONTEXT_KERNEL and adjusted RCU.
+Sorry for the resend noise. I managed to fatfinger one of my scripts
+so it dropped all Ccs and sent it only to LKML. Sigh....
 
-Mark it noinstr which moves it into the instrumentation protected text
-section and includes notrace.
+This is the third version of the syscall entry code consolidation
+series. V2 can be found here:
 
-Note, this needs further fixups in context tracking to ensure that the
-full call chain is protected. Will be addressed in follow up changes.
+  https://lore.kernel.org/r/20200308222359.370649591@linutronix.de
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+It applies on top of
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
+
+and is also available from git:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel entry-v3-part2
+
+The changes vs. V2:
+
+ - A massive rework utilizing Peter Zijlstras objtool patches to analyze
+   the new .noinstr.text section:
+
+   https://lore.kernel.org/r/20200317170234.897520633@infradead.org
+
+   Working with this was really helpful as it clearly pin pointed code
+   which calls out of the protected section which is much more efficient
+   and focussed than chasing everything manually.
+
+ - Picked up the two RCU patches from Paul for completeness. The bugfix
+   is required anyway and the comments have been really helpful to see
+   where the defense line has to be.
+
+ - As the tool flagged KVM as red zone, I looked at the context tracking
+   usage there and it has similar if not worse issues. New set of patches
+   dealing with that.
+
+Please have a close look at the approach and the resulting protected areas.
+
+Known issues:
+
+  - The kprobes '.noinstr.text' exclusion currently works only for built
+    in code. Haven't figured out how to to fix that, but I'm sure that
+    Masami knows :)
+
+  - The various SANitizers if enabled ruin the picture. Peter and I still
+    have no brilliant idea what to do about that.
+
+Thanks,
+
+	tglx
 ---
- arch/x86/entry/common.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/entry/common.c                |  173 ++++++++++++++++++++++++---------
+ arch/x86/entry/entry_32.S              |   24 ----
+ arch/x86/entry/entry_64.S              |    6 -
+ arch/x86/entry/entry_64_compat.S       |   32 ------
+ arch/x86/entry/thunk_64.S              |   45 +++++++-
+ arch/x86/include/asm/bug.h             |    3 
+ arch/x86/include/asm/hardirq.h         |    4 
+ arch/x86/include/asm/irqflags.h        |    3 
+ arch/x86/include/asm/nospec-branch.h   |    4 
+ arch/x86/include/asm/paravirt.h        |    3 
+ arch/x86/kvm/svm.c                     |  152 ++++++++++++++++++----------
+ arch/x86/kvm/vmx/ops.h                 |    4 
+ arch/x86/kvm/vmx/vmenter.S             |    2 
+ arch/x86/kvm/vmx/vmx.c                 |   78 +++++++++++---
+ arch/x86/kvm/x86.c                     |    4 
+ b/include/asm-generic/bug.h            |    9 +
+ include/asm-generic/sections.h         |    3 
+ include/asm-generic/vmlinux.lds.h      |    4 
+ include/linux/compiler.h               |   24 ++++
+ include/linux/compiler_types.h         |    4 
+ include/linux/context_tracking.h       |   27 +++--
+ include/linux/context_tracking_state.h |    6 -
+ include/linux/irqflags.h               |    6 +
+ include/linux/sched.h                  |    1 
+ kernel/context_tracking.c              |   14 +-
+ kernel/kprobes.c                       |   11 ++
+ kernel/locking/lockdep.c               |   66 +++++++++---
+ kernel/panic.c                         |    4 
+ kernel/rcu/tree.c                      |   91 +++++++++++------
+ kernel/rcu/tree_plugin.h               |    4 
+ kernel/rcu/update.c                    |    7 -
+ kernel/trace/trace_preemptirq.c        |   25 ++++
+ lib/debug_locks.c                      |    2 
+ lib/smp_processor_id.c                 |   10 -
+ scripts/mod/modpost.c                  |    2 
+ 35 files changed, 590 insertions(+), 267 deletions(-)
 
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -40,7 +40,7 @@
- 
- #ifdef CONFIG_CONTEXT_TRACKING
- /* Called on entry from user mode with IRQs off. */
--__visible inline void enter_from_user_mode(void)
-+__visible noinstr void enter_from_user_mode(void)
- {
- 	CT_WARN_ON(ct_state() != CONTEXT_USER);
- 	user_exit_irqoff();
 
