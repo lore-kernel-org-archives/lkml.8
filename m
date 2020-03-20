@@ -2,258 +2,171 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9FEC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF71C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1D320767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BCAE20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:07:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nfq5IR3I"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="aFVwLwZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbgCTQFn (ORCPT
+        id S1727304AbgCTQH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:05:43 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51590 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727384AbgCTQFj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:05:39 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c187so7100051wme.1;
-        Fri, 20 Mar 2020 09:05:38 -0700 (PDT)
+        Fri, 20 Mar 2020 12:07:27 -0400
+Received: from mail-mw2nam12on2055.outbound.protection.outlook.com ([40.107.244.55]:29205
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726801AbgCTQH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 12:07:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MsQNDax5xu1dm77EI/fB1uAQwEwFdumaxqyJznNB0V0Kd1Xyf/14YgRxUX9hwEvv+VRfZPnQkKSFkUTJaEDJGWtlTlOQ0+xdV/lmrYa1YNw/KP/s/ig+f+q9Ga3evX/dx7Jxz7ZNYeimneV21yQcLsKVVq67d9c+aLqQZaAzmOSK6IGRZbh/i3JFX1314C7dIh6rCqGge9sZZAF8h9dGrqrJRDpmfktxkrJtR5A5juqMA76ZFrtb9kwcdwUMLTReN9NqKbRWptqcnksEhkzMuF1KzpwOGs+q8Xcrfu0dYBDPAvo6gW/S1lMGg/SO9sV4cO3kHxxpd7bA2WT9F63Klw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jcSUvjmPVj9MOMcNAcCDLYw3mDeUTIfAbz1UKrFI3qA=;
+ b=CXUtdFAONT4YDOCnvWspuWBGvJCX1ooK6cg0TZZGlTLAeCEdh6VQbUouPd+jiB1DvylaIDq881tIzile4B6VeLPMVFxLQvWDcCFzJlrryXlfCxpcLLdp69WYRvdhhuh4ynLXtNTBxI6GqlK/vnLJXtL/gDDBBhQxRG+0WhP7MkeyM1ShnUcY+O8vgRfzbUYgJ27f45im+qxOAuoXZSdjIbfp2eNb/Q23TMp6WboO+6Ev3z2rv82eG4bY2quZdjuHWaKQYEnw4U6x88IBQD89VR+544sdh7GGXytgCIrBxKUsOdlQl6Vq0HDGFBtWZd18XPJrdO9MRxi6slIqckmA/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hwCmGDqsEh9XOKRvHr9se8XJIEtfRxaXZTs5ZhiqEL0=;
-        b=nfq5IR3I5y/CtEhmWS4dAo4T71K0TWyauykhZfx604NbduITMZ29zsKGtucCFIlUy1
-         Q8bFx8vUanJPEFejhDya8vC5Z5VS30ELCRDBEBhgv0MRh+1c0q/RF7MgCCydrM0INFMI
-         yFMuhBmtNXpPpTS6PkmWzYJ/og4Aw1JnkduW0XONr+buoN5T9bmJpkW4rxbzdpjWIpCm
-         hs4TTCTz83aoDF6S37IVNOHNL8sBYU2MBW8Inox2UOs7V7k8nqhwMpNDN/8rbKhoY3QA
-         7+KXYlw/BJJxMCm943TvaoN35DwReqhAWDaRAD4HF4YrxSVd+rPx88CJVmhxGxKcPJid
-         MoeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hwCmGDqsEh9XOKRvHr9se8XJIEtfRxaXZTs5ZhiqEL0=;
-        b=Lg0gvL5LwUMvmd7PIXQ6ZUulWFl2TGGeAzCYJlkXAoljUTgRugEhoqE48ZZZ5Yb8jk
-         wHbx+6QIZrrmwahfi9WZX3Cvj/hvv4RWAY7uz0Ps59rOR0GmwA+Gubtj8t+UGuC6Mnv4
-         BG9BEfisOg7dloGVxA1BnrKz+q2CqgCBUK858+kEQr6Z2GQCQejfB8YlXZ8bzxmuCAxz
-         X8br7X7My0eoKvIH+sVTvInJN4XUVI6ZBqLg2ETfScaNdDc8UcMQ7WZdhnwAU35TL/Ob
-         b+dheY8Gp5aG4ZWao9GkQBap5YLkk0Poryks22dvS8wPyqQS8QVk9o2uyUqLVfh8fdbM
-         YPFQ==
-X-Gm-Message-State: ANhLgQ0e4XKkudUsn8yKOGQXMaxAp5j5P2uxFDuoNv/DUUodt81jdu5p
-        o01VN1RJbbH4utG1sSgA4kChcZOK
-X-Google-Smtp-Source: ADFU+vuN/to9EqmHpQqvUDQkiydTx44sr67zS0wADgQ5jKmk8fFfOdAb/meCqrmz1yRsb+YuQb5ahA==
-X-Received: by 2002:a1c:408b:: with SMTP id n133mr10505879wma.182.1584720335366;
-        Fri, 20 Mar 2020 09:05:35 -0700 (PDT)
-Received: from localhost.localdomain ([95.77.248.51])
-        by smtp.gmail.com with ESMTPSA id k3sm8348895wro.59.2020.03.20.09.05.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 09:05:34 -0700 (PDT)
-From:   Alexandru Tachici <tachicialex@gmail.com>
-X-Google-Original-From: Alexandru Tachici <alexandru.tachici@analog.com>
-To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     jic23@kernel.org
-Subject: [PATCH 2/2] dt-bindings: iio: dac: AD5570R fix bindings errors
-Date:   Fri, 20 Mar 2020 18:05:31 +0200
-Message-Id: <20200320160531.23732-3-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200320160531.23732-1-alexandru.tachici@analog.com>
-References: <20200320160531.23732-1-alexandru.tachici@analog.com>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jcSUvjmPVj9MOMcNAcCDLYw3mDeUTIfAbz1UKrFI3qA=;
+ b=aFVwLwZL946gHVMubM14TXpiE0auflm190KFCRw7Hq6lXgDzvigS5fV6Ah25I3NBvQ1gWH1wENRphkqac5IxjHgIjuC99ewBUYQTN57Ck9MvqEOPGvuats1Tuil3DtdQC/ropLOM3EH3btTHkSqwsp7EkLwV16IFUXxXiMGvnVQ=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
+ by DM6PR12MB4467.namprd12.prod.outlook.com (2603:10b6:5:2a8::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.19; Fri, 20 Mar
+ 2020 16:07:22 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::f0f9:a88f:f840:2733]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::f0f9:a88f:f840:2733%7]) with mapi id 15.20.2814.025; Fri, 20 Mar 2020
+ 16:07:22 +0000
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        David Rientjes <rientjes@google.com>
+Subject: [PATCH] KVM: SVM: Issue WBINVD after deactivating an SEV guest
+Date:   Fri, 20 Mar 2020 11:07:07 -0500
+Message-Id: <c8bf9087ca3711c5770bdeaafa3e45b717dc5ef4.1584720426.git.thomas.lendacky@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: DM6PR14CA0045.namprd14.prod.outlook.com
+ (2603:10b6:5:18f::22) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:15e::26)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from tlendack-t1.amd.com (165.204.77.1) by DM6PR14CA0045.namprd14.prod.outlook.com (2603:10b6:5:18f::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.19 via Frontend Transport; Fri, 20 Mar 2020 16:07:21 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5038347a-264c-4821-946f-08d7cce8c5ad
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4467:|DM6PR12MB4467:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB44679A0E04C7E1D40649C7DDECF50@DM6PR12MB4467.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 03484C0ABF
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(366004)(39860400002)(136003)(346002)(199004)(956004)(81156014)(16526019)(86362001)(4326008)(8676002)(2906002)(81166006)(186003)(52116002)(26005)(7696005)(6486002)(54906003)(478600001)(8936002)(316002)(2616005)(5660300002)(66946007)(36756003)(66556008)(66476007)(6666004)(136400200001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB4467;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: U9TykCzCiLrtdeeZPaZ0/b5Uoq3UmF/uQvCMZ9WWCswDO0hO6UHj/Xt/gYcf+beOsQNnFXb6fVnyx+Y/stw/JwKRkEi2xH9guO2mifnnXjBN0hvA5nzDAOc54rqcY6+nxMO8HTU1PazVafKAvgPnqqw3gLn+H0pH02O0rhoCh6HhJv6uyJm0VJku3JXc5+uipdUznConzXlEEGSBsjdb/FxJXo+oP8dZN3TXNBWapam0hrybawrNjoYA1u/JKknwseTWrY3sLygNsAa5LCMnYe6Vi5j+5e5n9Dev22tjySbsxXcsbZ++wn7g3iU2A0BYRoTqerP9LKrvHGzVgqNISaO9ov1+d5Y2FyiETv0yIoV0I861j/dzUNtE/ywSJL8oU7LbZGrg5jyRzQdK6cjo7KFtTYT8LJGBdnRFfa2Op1sBAdBwx9WgA2TJ+3/JEhOsBG/RIkQ9EDqrFuEg6UeVd7lNNoUEcVS9HDFMVFGA+FdlEySDCKxv0OKJnzKpa1/j
+X-MS-Exchange-AntiSpam-MessageData: ndNwna2iAeNBTdImWrM/PBzUDDArBm/RhqgADL7/vAMpnrj6ETEQtOvS3jdFIWDuqW9XB1Nt7EHfxFlXWGRi/smWGlCAnD+vXrDd1qZyx7L0WJT+8bzu/vvr8HO+Cdjxz0tdu+AoZq3vEda8eAol6Q==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5038347a-264c-4821-946f-08d7cce8c5ad
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2020 16:07:21.9939
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5eN2YB/iNTM327zoNYjYHXVGywiwZJtow16YYW1PyZHDyNJtvwN6hVURwGEgUSPUVDBhHw2yVgatvSQdJBYuiw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4467
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replaced num property with reg property, fixed errors
-reported by dt-binding-check.
+Currently, CLFLUSH is used to flush SEV guest memory before the guest is
+terminated (or a memory hotplug region is removed). However, CLFLUSH is
+not enough to ensure that SEV guest tagged data is flushed from the cache.
 
-Fixes: ea52c21268e6 ("iio: dac: ad5770r: Add AD5770R support")
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+With 33af3a7ef9e6 ("KVM: SVM: Reduce WBINVD/DF_FLUSH invocations"), the
+original WBINVD was removed. This then exposed crashes at random times
+because of a cache flush race with a page that had both a hypervisor and
+a guest tag in the cache.
+
+Restore the WBINVD when destroying an SEV guest and add a WBINVD to the
+svm_unregister_enc_region() function to ensure hotplug memory is flushed
+when removed. The DF_FLUSH can still be avoided at this point.
+
+Fixes: 33af3a7ef9e6 ("KVM: SVM: Reduce WBINVD/DF_FLUSH invocations")
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- .../bindings/iio/dac/adi,ad5770r.yaml         | 77 ++++++++++---------
- 1 file changed, 40 insertions(+), 37 deletions(-)
+ arch/x86/kvm/svm.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-index d9c25cf4b92f..d1755dbc1a41 100644
---- a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-+++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-@@ -2,7 +2,7 @@
- # Copyright 2020 Analog Devices Inc.
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/bindings/iio/dac/adi,ad5770r.yaml#
-+$id: http://devicetree.org/schemas/iio/dac/adi,ad5770r.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 08568ae9f7a1..d54cdca9c140 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -1980,14 +1980,6 @@ static void sev_clflush_pages(struct page *pages[], unsigned long npages)
+ static void __unregister_enc_region_locked(struct kvm *kvm,
+ 					   struct enc_region *region)
+ {
+-	/*
+-	 * The guest may change the memory encryption attribute from C=0 -> C=1
+-	 * or vice versa for this memory range. Lets make sure caches are
+-	 * flushed to ensure that guest data gets written into memory with
+-	 * correct C-bit.
+-	 */
+-	sev_clflush_pages(region->pages, region->npages);
+-
+ 	sev_unpin_memory(kvm, region->pages, region->npages);
+ 	list_del(&region->list);
+ 	kfree(region);
+@@ -2004,6 +1996,13 @@ static void sev_vm_destroy(struct kvm *kvm)
  
- title: Analog Devices AD5770R DAC device driver
-@@ -49,83 +49,84 @@ properties:
-       asserted during driver probe.
-     maxItems: 1
+ 	mutex_lock(&kvm->lock);
  
--  channel0:
-+  channel@0:
-     description: Represents an external channel which are
-       connected to the DAC. Channel 0 can act both as a current
-       source and sink.
-     type: object
++	/*
++	 * Ensure that all guest tagged cache entries are flushed before
++	 * releasing the pages back to the system for use. CLFLUSH will
++	 * not do this, so issue a WBINVD.
++	 */
++	wbinvd_on_all_cpus();
++
+ 	/*
+ 	 * if userspace was terminated before unregistering the memory regions
+ 	 * then lets unpin all the registered memory.
+@@ -7247,6 +7246,13 @@ static int svm_unregister_enc_region(struct kvm *kvm,
+ 		goto failed;
+ 	}
  
-     properties:
--      num:
-+      reg:
-         description: This represents the channel number.
--        items:
--          const: 0
++	/*
++	 * Ensure that all guest tagged cache entries are flushed before
++	 * releasing the pages back to the system for use. CLFLUSH will
++	 * not do this, so issue a WBINVD.
++	 */
++	wbinvd_on_all_cpus();
++
+ 	__unregister_enc_region_locked(kvm, region);
  
-       adi,range-microamp:
-           description: Output range of the channel.
-           oneOf:
--            - $ref: /schemas/types.yaml#/definitions/int32-array
-             - items:
--                - enum: [0 300000]
--                - enum: [-60000 0]
--                - enum: [-60000 300000]
-+                - const: 0
-+                - const: 300000
-+            - items:
-+                - const: -60000
-+                - const: 0
-+            - items:
-+                - const: -60000
-+                - const: 300000
- 
--  channel1:
-+  channel@1:
-     description: Represents an external channel which are
-       connected to the DAC.
-     type: object
- 
-     properties:
--      num:
-+      reg:
-         description: This represents the channel number.
--        items:
--          const: 1
- 
-       adi,range-microamp:
-           description: Output range of the channel.
-           oneOf:
--            - $ref: /schemas/types.yaml#/definitions/uint32-array
-             - items:
--                - enum: [0 140000]
--                - enum: [0 250000]
-+                - const: 0
-+                - const: 140000
-+            - items:
-+                - const: 0
-+                - const: 250000
- 
--  channel2:
-+  channel@2:
-     description: Represents an external channel which are
-       connected to the DAC.
-     type: object
- 
-     properties:
--      num:
-+      reg:
-         description: This represents the channel number.
--        items:
--          const: 2
- 
-       adi,range-microamp:
-           description: Output range of the channel.
-           oneOf:
--            - $ref: /schemas/types.yaml#/definitions/uint32-array
-             - items:
--                - enum: [0 140000]
--                - enum: [0 250000]
-+                - const: 0
-+                - const: 55000
-+            - items:
-+                - const: 0
-+                - const: 150000
- 
- patternProperties:
-   "^channel@([3-5])$":
-     type: object
-     description: Represents the external channels which are connected to the DAC.
-     properties:
--      num:
-+      reg:
-         description: This represents the channel number.
--        items:
--          minimum: 3
--          maximum: 5
- 
-       adi,range-microamp:
-           description: Output range of the channel.
-           oneOf:
--            - $ref: /schemas/types.yaml#/definitions/uint32-array
-             - items:
--                - enum: [0 45000]
--                - enum: [0 100000]
-+                - const: 0
-+                - const: 45000
-+            - items:
-+                - const: 0
-+                - const: 100000
- 
- required:
- - reg
-@@ -150,34 +151,36 @@ examples:
-                         vref-supply = <&vref>;
-                         adi,external-resistor;
-                         reset-gpios = <&gpio 22 0>;
-+                        #address-cells = <1>;
-+                        #size-cells = <0>;
- 
-                         channel@0 {
--                                num = <0>;
--                                adi,range-microamp = <(-60000) 300000>;
-+                                reg = <0>;
-+                                adi,range-microamp = <0 300000>;
-                         };
- 
-                         channel@1 {
--                                num = <1>;
-+                                reg = <1>;
-                                 adi,range-microamp = <0 140000>;
-                         };
- 
-                         channel@2 {
--                                num = <2>;
-+                                reg = <2>;
-                                 adi,range-microamp = <0 55000>;
-                         };
- 
-                         channel@3 {
--                                num = <3>;
-+                                reg = <3>;
-                                 adi,range-microamp = <0 45000>;
-                         };
- 
-                         channel@4 {
--                                num = <4>;
-+                                reg = <4>;
-                                 adi,range-microamp = <0 45000>;
-                         };
- 
-                         channel@5 {
--                                num = <5>;
-+                                reg = <5>;
-                                 adi,range-microamp = <0 45000>;
-                         };
-                 };
+ 	mutex_unlock(&kvm->lock);
 -- 
-2.20.1
+2.17.1
 
