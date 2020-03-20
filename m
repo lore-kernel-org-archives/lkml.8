@@ -2,262 +2,111 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369FFC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0EEC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D15A20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF06C20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:13:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="YzsIlOb0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gNtKi/k9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbgCTIMJ (ORCPT
+        id S1726956AbgCTINA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 04:12:09 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:51326 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbgCTILb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 04:11:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=V7ao2BxZREvse3XwoWf/L44QfzmREzjIcPwYKWepRPE=; b=YzsIlOb0QNyiwbeGx9tQAb1TBr
-        Wc6NNJ7LNAMHfASNsbsSsHHf88CCmqLE47HdufFMjjQBM60lDRs+kwTjCRu86z8W2iWPYJ2qofHo0
-        Zi932bL/DlSHYGdfp5n/1rj7KeDS866+1yQE71wwCfy0NRiKG/Ayt5xhbTPG2CpYzCTs=;
-Received: from p200300ccff093a00e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff09:3a00:e2ce:c3ff:fe93:fc31] helo=eeepc)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jFCkP-00058W-5O; Fri, 20 Mar 2020 09:11:18 +0100
-Received: from andi by eeepc with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jFCkH-00039K-9N; Fri, 20 Mar 2020 09:11:09 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
-        phh@phh.me, letux-kernel@openphoenux.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        jic23@kernel.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v7 2/7] mfd: rn5t618: add IRQ support
-Date:   Fri, 20 Mar 2020 09:11:00 +0100
-Message-Id: <20200320081105.12026-3-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200320081105.12026-1-andreas@kemnade.info>
-References: <20200320081105.12026-1-andreas@kemnade.info>
+        Fri, 20 Mar 2020 04:13:00 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:26465 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726673AbgCTIM7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 04:12:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584691978;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8MAqyKfJ2pHFLOBo7NW3E2Ykhz/QSuq5efa4hJ0jsIk=;
+        b=gNtKi/k9K+67e5lA1VjEJaHE4B5WIEC5FmSGGwZisqnlfP9DZJzNJvdmJTnl6PAP2R4yXJ
+        +79Rv2u86jRBHhRETXKUW9qZDybWsJGVJInGDex5zBqpSI+zzd+dNT1sVvHH9HTiepBOSd
+        KueihLgrp2ISrFZxpVJ3GtlpfIkMy9s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-343-tyaOxDRDOMaZqNnRvGlzAA-1; Fri, 20 Mar 2020 04:12:54 -0400
+X-MC-Unique: tyaOxDRDOMaZqNnRvGlzAA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B401018B9FC1;
+        Fri, 20 Mar 2020 08:12:52 +0000 (UTC)
+Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C90F66EF9D;
+        Fri, 20 Mar 2020 08:12:49 +0000 (UTC)
+Subject: Re: [PATCH v5 22/23] KVM: arm64: GICv4.1: Allow non-trapping WFI when
+ using HW SGIs
+To:     Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-23-maz@kernel.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <01014c0e-0151-302c-2a7a-fc60f63fba27@redhat.com>
+Date:   Fri, 20 Mar 2020 09:12:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200304203330.4967-23-maz@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for IRQ handling in the RC5T619 which is required
-for properly implementing subdevices like RTC.
-For now only definitions for the variant RC5T619 are included.
+Hi Marc,
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-Changes in v7:
-more cleanups in IRQ init
+On 3/4/20 9:33 PM, Marc Zyngier wrote:
+> Just like for VLPIs, it is beneficial to avoid trapping on WFI when the
+> vcpu is using the GICv4.1 SGIs.
+> 
+> Add such a check to vcpu_clear_wfx_traps().
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-Changes in v5:
-rn5t618_irq_init static
+Thanks
 
-Changes in v4:
-merge rn5t618-irq.c into rn5t618.c
-use macros for IRQ table
-
-Changes in v3:
-alignment cleanup
-
-Changes in v2:
-- no dead code, did some more testing and thinking for that
-- remove extra empty lines
- drivers/mfd/Kconfig         |  1 +
- drivers/mfd/rn5t618.c       | 78 ++++++++++++++++++++++++++++++++++++-
- include/linux/mfd/rn5t618.h | 15 +++++++
- 3 files changed, 93 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 2b203290e7b9..a7067888a41e 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1058,6 +1058,7 @@ config MFD_RN5T618
- 	depends on OF
- 	select MFD_CORE
- 	select REGMAP_I2C
-+	select REGMAP_IRQ
- 	help
- 	  Say yes here to add support for the Ricoh RN5T567,
- 	  RN5T618, RC5T619 PMIC.
-diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-index ead2e79036a9..b66dc4605d56 100644
---- a/drivers/mfd/rn5t618.c
-+++ b/drivers/mfd/rn5t618.c
-@@ -8,6 +8,8 @@
- 
- #include <linux/delay.h>
- #include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
- #include <linux/mfd/core.h>
- #include <linux/mfd/rn5t618.h>
- #include <linux/module.h>
-@@ -46,9 +48,56 @@ static const struct regmap_config rn5t618_regmap_config = {
- 	.cache_type	= REGCACHE_RBTREE,
- };
- 
-+static const struct regmap_irq rc5t619_irqs[] = {
-+	REGMAP_IRQ_REG(RN5T618_IRQ_SYS, 0, BIT(0)),
-+	REGMAP_IRQ_REG(RN5T618_IRQ_DCDC, 0, BIT(1)),
-+	REGMAP_IRQ_REG(RN5T618_IRQ_RTC, 0, BIT(2)),
-+	REGMAP_IRQ_REG(RN5T618_IRQ_ADC, 0, BIT(3)),
-+	REGMAP_IRQ_REG(RN5T618_IRQ_GPIO, 0, BIT(4)),
-+	REGMAP_IRQ_REG(RN5T618_IRQ_CHG, 0, BIT(6)),
-+};
-+
-+static const struct regmap_irq_chip rc5t619_irq_chip = {
-+	.name = "rc5t619",
-+	.irqs = rc5t619_irqs,
-+	.num_irqs = ARRAY_SIZE(rc5t619_irqs),
-+	.num_regs = 1,
-+	.status_base = RN5T618_INTMON,
-+	.mask_base = RN5T618_INTEN,
-+	.mask_invert = true,
-+};
-+
- static struct rn5t618 *rn5t618_pm_power_off;
- static struct notifier_block rn5t618_restart_handler;
- 
-+static int rn5t618_irq_init(struct rn5t618 *rn5t618)
-+{
-+	const struct regmap_irq_chip *irq_chip = NULL;
-+	int ret;
-+
-+	if (!rn5t618->irq)
-+		return 0;
-+
-+	switch (rn5t618->variant) {
-+	case RC5T619:
-+		irq_chip = &rc5t619_irq_chip;
-+		break;
-+	default:
-+		dev_err(rn5t618->dev, "Currently no IRQ support for variant %d\n",
-+			(int)rn5t618->variant);
-+		return -ENOENT;
-+	}
-+
-+	ret = devm_regmap_add_irq_chip(rn5t618->dev, rn5t618->regmap,
-+				       rn5t618->irq,
-+				       IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+				       0, irq_chip, &rn5t618->irq_data);
-+	if (ret)
-+		dev_err(rn5t618->dev, "Failed to register IRQ chip\n");
-+
-+	return ret;
-+}
-+
- static void rn5t618_trigger_poweroff_sequence(bool repower)
- {
- 	/* disable automatic repower-on */
-@@ -106,6 +155,8 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
- 
- 	i2c_set_clientdata(i2c, priv);
- 	priv->variant = (long)of_id->data;
-+	priv->irq = i2c->irq;
-+	priv->dev = &i2c->dev;
- 
- 	priv->regmap = devm_regmap_init_i2c(i2c, &rn5t618_regmap_config);
- 	if (IS_ERR(priv->regmap)) {
-@@ -138,7 +189,7 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
- 
--	return 0;
-+	return rn5t618_irq_init(priv);
- }
- 
- static int rn5t618_i2c_remove(struct i2c_client *i2c)
-@@ -155,15 +206,40 @@ static int rn5t618_i2c_remove(struct i2c_client *i2c)
- 	return 0;
- }
- 
-+static int __maybe_unused rn5t618_i2c_suspend(struct device *dev)
-+{
-+	struct rn5t618 *priv = dev_get_drvdata(dev);
-+
-+	if (priv->irq)
-+		disable_irq(priv->irq);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused rn5t618_i2c_resume(struct device *dev)
-+{
-+	struct rn5t618 *priv = dev_get_drvdata(dev);
-+
-+	if (priv->irq)
-+		enable_irq(priv->irq);
-+
-+	return 0;
-+}
-+
- static const struct i2c_device_id rn5t618_i2c_id[] = {
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id);
- 
-+static SIMPLE_DEV_PM_OPS(rn5t618_i2c_dev_pm_ops,
-+			rn5t618_i2c_suspend,
-+			rn5t618_i2c_resume);
-+
- static struct i2c_driver rn5t618_i2c_driver = {
- 	.driver = {
- 		.name = "rn5t618",
- 		.of_match_table = of_match_ptr(rn5t618_of_match),
-+		.pm = &rn5t618_i2c_dev_pm_ops,
- 	},
- 	.probe = rn5t618_i2c_probe,
- 	.remove = rn5t618_i2c_remove,
-diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
-index d62ef48060b5..739571656f2b 100644
---- a/include/linux/mfd/rn5t618.h
-+++ b/include/linux/mfd/rn5t618.h
-@@ -242,9 +242,24 @@ enum {
- 	RC5T619,
- };
- 
-+/* RN5T618 IRQ definitions */
-+enum {
-+	RN5T618_IRQ_SYS = 0,
-+	RN5T618_IRQ_DCDC,
-+	RN5T618_IRQ_RTC,
-+	RN5T618_IRQ_ADC,
-+	RN5T618_IRQ_GPIO,
-+	RN5T618_IRQ_CHG,
-+	RN5T618_NR_IRQS,
-+};
-+
- struct rn5t618 {
- 	struct regmap *regmap;
-+	struct device *dev;
- 	long variant;
-+
-+	int irq;
-+	struct regmap_irq_chip_data *irq_data;
- };
- 
- #endif /* __LINUX_MFD_RN5T618_H */
--- 
-2.20.1
+Eric
+> ---
+>  arch/arm64/include/asm/kvm_emulate.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
+> index f658dda12364..a30b4eec7cb4 100644
+> --- a/arch/arm64/include/asm/kvm_emulate.h
+> +++ b/arch/arm64/include/asm/kvm_emulate.h
+> @@ -89,7 +89,8 @@ static inline unsigned long *vcpu_hcr(struct kvm_vcpu *vcpu)
+>  static inline void vcpu_clear_wfx_traps(struct kvm_vcpu *vcpu)
+>  {
+>  	vcpu->arch.hcr_el2 &= ~HCR_TWE;
+> -	if (atomic_read(&vcpu->arch.vgic_cpu.vgic_v3.its_vpe.vlpi_count))
+> +	if (atomic_read(&vcpu->arch.vgic_cpu.vgic_v3.its_vpe.vlpi_count) ||
+> +	    vcpu->kvm->arch.vgic.nassgireq)
+>  		vcpu->arch.hcr_el2 &= ~HCR_TWI;
+>  	else
+>  		vcpu->arch.hcr_el2 |= HCR_TWI;
+> 
 
