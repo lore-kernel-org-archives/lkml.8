@@ -2,95 +2,88 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3951CC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 925E2C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170AB20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA7C20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:18:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584721093;
+	bh=VITXHo0sHdLtyj6pXdOB5yREmxZwclBqfrqMV2mzXOQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HSJE0mL0aMYhkdYECbjkrYMxf17xsluAM+MQkPbZiETGwdNiC6HPD7mLS/Z2HcixK
+	 nmCbyqyptwfooWWSEss3gqQYE6YjwK+VxHU4W7Hf/gTWP0jCLvC5TinV5n/T5BST2S
+	 Oby0C+UGnqT6om898kfStI/6rTpeqbmCAzYoCM6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbgCTQR4 (ORCPT
+        id S1727579AbgCTQSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:17:56 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:40787 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbgCTQR4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:17:56 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 02KGGrb5030347, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 02KGGrb5030347
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 21 Mar 2020 00:16:53 +0800
-Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sat, 21 Mar 2020 00:16:53 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sat, 21 Mar 2020 00:16:52 +0800
-Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
- RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
- 15.01.1779.005; Sat, 21 Mar 2020 00:16:52 +0800
-From:   =?utf-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
-        Marc Zyngier <maz@kernel.org>
-CC:     "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-Subject: RE: [PATCH v3 8/8] ARM: realtek: Enable RTD1195 arch timer
-Thread-Topic: [PATCH v3 8/8] ARM: realtek: Enable RTD1195 arch timer
-Thread-Index: AQHVnRfphxbe4z/+/k6zznL3djiEj6eOrKMAgABmPQCAARF9gIAA3/EAgMDPpbA=
-Date:   Fri, 20 Mar 2020 16:16:52 +0000
-Message-ID: <bb54e2e716b14ec6bbeb40dafeca56d6@realtek.com>
-References: <20191117072109.20402-1-afaerber@suse.de>
- <20191117072109.20402-9-afaerber@suse.de> <20191117110214.6b160b2e@why>
- <7015e4c4-f999-d2e8-fd1f-e15e74a0d092@suse.de>
- <e99e40d8c95147861ab600c5d5287f8f@www.loen.fr>
- <4dc05879-f6d9-f754-908e-ad2431d8ff5a@suse.de>
-In-Reply-To: <4dc05879-f6d9-f754-908e-ad2431d8ff5a@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [114.37.136.86]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 20 Mar 2020 12:18:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726801AbgCTQSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 12:18:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BDC120739;
+        Fri, 20 Mar 2020 16:18:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584721091;
+        bh=VITXHo0sHdLtyj6pXdOB5yREmxZwclBqfrqMV2mzXOQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dliZ1UGBNJQVcgyrav8UrCNriV6EBlp6Ok7U/K0GNtcj8e2JZogie6BZNPVEEaHuo
+         oy5pWyifbExLOljoC0t0fLa8MklsTV3S59QQkbw129EKO+lWulDjMSZ0+stTffiUf9
+         ePx0w9xGT9QsGE4iWuQlekl4a+RHICTBMuFp+w2w=
+Date:   Fri, 20 Mar 2020 17:18:08 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Andrei Botila <andrei.botila@nxp.com>
+Subject: Re: [PATCH v9 0/9] enable CAAM's HWRNG as default
+Message-ID: <20200320161808.GB778529@kroah.com>
+References: <20200319161233.8134-1-andrew.smirnov@gmail.com>
+ <fab6192d-d35b-b26e-5bdc-b52b7d0347b7@nxp.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fab6192d-d35b-b26e-5bdc-b52b7d0347b7@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5kcmVhcywNCg0KPiA+Pj4+IMKgV2hhdCBpcyB0aGUgbmFtZSBvZiB0aGUgcmVnaXN0ZXIg
-MHhmZjAxODAwMD8NCj4gPj4+PiDCoElzIDB4MSBhIEJJVCgwKSB3cml0ZSwgb3IgaG93IGFyZSB0
-aGUgcmVnaXN0ZXIgYml0cyBkZWZpbmVkPw0KPiA+Pj4+IMKgSXMgdGhpcyBhIHJlc2V0IG9yIGEg
-Y2xvY2sgZ2F0ZT8gSG93IHNob3VsZCB3ZSBtb2RlbCBpdCBpbiBEVD8NCj4gDQo+IE5vLCBJIHdh
-cyBwb2ludGluZyBvdXQgdGhhdCBJIG15c2VsZiBoYWQgYWxyZWFkeSBhc2tlZCBwcmV0dHkgbXVj
-aCB0aGUgc2FtZQ0KPiBxdWVzdGlvbnMgeW91IGp1c3QgYXNrZWQgbWUuIEhvdyBkaWQgeW91IGV4
-cGVjdCBtZSB0byBoYXZlIGFuc3dlcnMgdG8geW91cg0KPiAiU2hvdWxkbid0IHRoaXMgYmUgYSBy
-ZWFkL21vZGlmeS93cml0ZSBzZXF1ZW5jZT8iIHRoZW4/IEl0IHNlZW1lZCBsaWtlIHlvdQ0KPiBt
-aXNzZWQgbXkgcXVlc3Rpb25zIHVwIHRoZXJlOg0KPiANCj4gV2l0aG91dCBrbm93aW5nIGhvdyB0
-aGUgcmVnaXN0ZXIgaXMgc3RydWN0dXJlZCwgSSBjYW4ndCBpbXBsZW1lbnQgYQ0KPiByZWFkL21v
-ZGlmeS93cml0ZSBzZXF1ZW5jZSAtIGZvciB0aGF0IHdlJ2QgbmVlZCB0byBrbm93IHdoZXRoZXIg
-aXQncyBhIHNpbmdsZQ0KPiBiaXQgd2UgY2FuIGp1c3Qgc2V0IG9yIGEgZmllbGQgdGhhdCB3ZSB3
-b3VsZCBuZWVkIHRvIG1hc2sgZmlyc3QgYmVmb3JlIHdyaXRpbmcNCj4gaW50byBpdC4NCg0KVGhp
-cyByZWdpc3RlciBpcyBjb3VudGVyIGNvbnRyb2wgcmVnaXN0ZXIgb2YgQ29yZVNpZ2h0IHRpbWVz
-dGFtcCBnZW5lcmF0b3IuIFsxXVsyXS4NClRoZSBDUFUgdGltZXIgY291bnQgaW5wdXQgc2lnbmFs
-IGlzIGluaGVyaXRlZCBmcm9tIHRoZSB0aW1lc3RhbXAgZ2VuZXJhdG9yLCBzbyBpdCBtdXN0IGJl
-IGVuYWJsZWQgYmVmb3JlIENQVSB0aW1lciBpbml0aWFsLg0KDQpUaGlzIHJlZ2lzdGVyIHNldHRp
-bmcgY2FuIG1vdmUgaW50byBib290IGNvZGUuDQoNClsxXSBodHRwczovL2RldmVsb3Blci5hcm0u
-Y29tL2RvY3MvMTAwODA2LzAyMDAvOS1wcm9ncmFtbWVycy1tb2RlbC9jc3M2MDBfdHNnZW4vY29u
-dHJvbC1pbnRlcmZhY2UtcmVnaXN0ZXItZGVzY3JpcHRpb25zDQpbMl0gaHR0cHM6Ly9kZXZlbG9w
-ZXIuYXJtLmNvbS9kb2NzLzEwMDgwNi8wMjAwLzUtdGltZXN0YW1wLWNvbXBvbmVudHMtZnVuY3Rp
-b25hbC1kZXNjcmlwdGlvbi90aW1lc3RhbXAtZ2VuZXJhdG9yDQoNCg0KVGhhbmtzLg0KDQpSZWdh
-cmRzLA0KSmFtZXMNCg0KDQo=
+On Fri, Mar 20, 2020 at 06:13:18PM +0200, Horia Geantă wrote:
+> On 3/19/2020 6:12 PM, Andrey Smirnov wrote:
+> > Everyone:
+> > 
+> > This series is a continuation of original [discussion]. I don't know
+> > if what's in the series is enough to use CAAMs HWRNG system wide, but
+> > I am hoping that with enough iterations and feedback it will be.
+> > 
+> Andrey, thanks for the effort!
+> 
+> Herbert, Greg,
+> 
+> I hope it's ok to go with the fsl-mc bus dependency
+> 	"bus: fsl-mc: add api to retrieve mc version"
+> 	https://patchwork.kernel.org/patch/11447637/
+> included in this series through cryptodev-2.6 tree.
+> 
+> It applies cleanly on latest linux-next (next-20200320),
+> and it has been Acked-by Laurențiu (one of the fsl-mc bus maintainers).
+
+No objection from me.
+
+greg k-h
