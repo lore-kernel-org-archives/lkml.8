@@ -2,197 +2,346 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37513C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 799ADC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0478A2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:11:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TN+StXxr"
+	by mail.kernel.org (Postfix) with ESMTP id 3D1CF20781
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:11:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584717070;
+	bh=wPIgZHlHXIpvX7rbWR9bBXdthfipdOWJrHs3flWe2dg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iCGKWDk0RaHYL+mhDomBYheoD9UBECOsnkKeurZMgGFXOQ7bLkPSQ5hQ6IV5bXlfe
+	 Lv+Ua3YBjf015sSsP8WKw6VFU6nmrJvUmhjEYnqGSQi93IKvof9WPB7TRYernlcwQa
+	 uNnK8UCcpSdoFgCJq4QmpSMJetDo6QjpVHQIecAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgCTPK7 (ORCPT
+        id S1727486AbgCTPLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:10:59 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36658 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbgCTPK6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 11:10:58 -0400
-Received: by mail-wr1-f66.google.com with SMTP id 31so1913206wrs.3;
-        Fri, 20 Mar 2020 08:10:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition;
-        bh=r/HJVW45rg7ZqchRNDlAomvDfH0elmnsWp+QvkJ8qcs=;
-        b=TN+StXxrSvaW1MM29M7PTAzvwViDUQT3dHiUZY3Fgqx2UD7PDEq2DSAg2c92Qsn5hY
-         g9sd5xGrcY86MYsNWDKiT5SNP6QLXvl6BV46uWiarVjfrpXzug3q3SxTq4gN/PA+FK50
-         Uf9RL/lPpv7CCkJ2yllaq20XHAKntwB7cDXXya/06u7NWLePHXIEl98urkShwYFdbU4p
-         eAT1g1V5LsH8qI1bXNaJF66nlW53KyU9dP0eV4qSZNoan57RZy6VwNQx51JghxZuo5Nl
-         OkY/XnkVsFhjfNdtf1L3LT9nQy0p8jiJ9pW/QBSBa46Ir9rYwPt6N2/xu77um9KW2Shw
-         KVog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=r/HJVW45rg7ZqchRNDlAomvDfH0elmnsWp+QvkJ8qcs=;
-        b=AV+WHxRfekJBR8EuayfcBkAySIFv05zkljOGMJf5zFNCt245VLpOR/WGlfaXh1tPC4
-         BcC74rQnmKBxpoBtiP0Q2leQHxBY7kdH/ZW0wccqKixhSJ1uJCgqA1iDKb0bqDenj3ad
-         shAMkIITK3qf76s+br6tRTO9Cj6QytWt6dJuPXMCWpvWEtuzJo32lsERMDjq30dgETqw
-         ZknDjnYkkAM62AqH+cuSyfHIvqvusv+eLQvkDG7Vnws9hQ8K1ohQRf84IVv0V4ynWi2V
-         7QMs3BrhQ/lPuS+JUYXnNCBCUQeJ3mz0AkcOnWJEjNvjRnyHEqiS1P2AIDtkRUodWl6k
-         gGHQ==
-X-Gm-Message-State: ANhLgQ2uSzeUFxYYLRoOGvlR5slFXYIyoUZp4mPcpqw5Hzya02TUYAWi
-        JRNo/BloTojO7eH+0bb05GM=
-X-Google-Smtp-Source: ADFU+vth79CKxwi4leU6rH1zJHxdHJm9oUjQihXp7rwe9rB7ljPyHKeuY50C2t3QsyxvjvDIpWDuag==
-X-Received: by 2002:a5d:458c:: with SMTP id p12mr12319023wrq.66.1584717056945;
-        Fri, 20 Mar 2020 08:10:56 -0700 (PDT)
-Received: from macmini.local (181.4.199.77.rev.sfr.net. [77.199.4.181])
-        by smtp.gmail.com with ESMTPSA id z22sm8144090wmi.1.2020.03.20.08.10.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 08:10:56 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 15:10:55 +0000
-From:   Willy Wolff <willy.mh.wolff.ml@gmail.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: weird cooling_device/cur_state sysfs behaviour
-Message-ID: <20200320151055.h32rh5hpnv7xyuey@macmini.local>
+        Fri, 20 Mar 2020 11:11:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727401AbgCTPLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 11:11:07 -0400
+Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4A622076E;
+        Fri, 20 Mar 2020 15:11:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584717066;
+        bh=wPIgZHlHXIpvX7rbWR9bBXdthfipdOWJrHs3flWe2dg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tdeBs9eHiGwMvjF82a2CVzT9xi8PtrAbwc5pkRONZ3Z5ptdlWgjU1n4VkU7m49VX0
+         r2w+CcJcrLX2XFku9R2PhaMoyhuCFiy/QlcAdojG9ypNIBN+s0jJ0YQ9Ta9uoPRRuC
+         zthMoq13v0KsDaQDfceTTfODcKCAHBeB+I/WUKKM=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jFJIe-000ukg-JM; Fri, 20 Mar 2020 16:11:04 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Vinod Koul <vkoul@kernel.org>, Tyler Hicks <code@tyhicks.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Johannes Berg <johannes.berg@intel.com>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        Matthias Maennich <maennich@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Jacopo Mondi <jacopo@jmondi.org>, dmaengine@vger.kernel.org,
+        ecryptfs@vger.kernel.org, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH v2 1/2] docs: prevent warnings due to autosectionlabel
+Date:   Fri, 20 Mar 2020 16:11:02 +0100
+Message-Id: <2bffb91e4a63d41bf5fae1c23e1e8b3bba0b8806.1584716446.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.1584716446.git.mchehab+huawei@kernel.org>
+References: <cover.1584716446.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-Hope you're doing well with the situation.
+Changeset 58ad30cf91f0 ("docs: fix reference to core-api/namespaces.rst")
+enabled a new feature at Sphinx: it will now generate index for each
+document title, plus to each chapter inside it.
 
-I fill that my board get a cold too...
+There's a drawback, though: one document cannot have two sections
+with the same name anymore.
 
-When I write to a sysfs node, I have a weird behaviour about the function that is called behind.
-This bug appears on an arm32 odroid-xu3, and only after v5.4, v5.3.18 behave correctly.
+A followup patch will change the logic of autosectionlabel to
+avoid most creating references for every single section title,
+but still we need to be able to reference the chapters inside
+a document.
 
+There are a few places where there are two chapters with the
+same name. This patch renames one of the chapters, in order to
+avoid symbol conflict within the same document.
 
-Here my modification to see what's going on:
+PS.: as I don't speach Chinese, I had some help from a friend
+(Wen Liu) at the Chinese translation for "publishing patches"
+for this document:
 
-diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-index aa99edb4dff7..a437ae3f4b9f 100644
---- a/drivers/thermal/thermal_sysfs.c
-+++ b/drivers/thermal/thermal_sysfs.c
-@@ -706,11 +706,22 @@ cur_state_store(struct device *dev, struct device_attribute *attr,
-        unsigned long state;
-        int result;
+	Documentation/translations/zh_CN/process/5.Posting.rst
+
+Fixes: 58ad30cf91f0 ("docs: fix reference to core-api/namespaces.rst")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/driver-api/80211/mac80211-advanced.rst  |  8 ++++----
+ Documentation/driver-api/dmaengine/index.rst          |  4 ++--
+ Documentation/filesystems/ecryptfs.rst                | 11 +++++------
+ Documentation/kernel-hacking/hacking.rst              |  4 ++--
+ Documentation/media/kapi/v4l2-controls.rst            |  8 ++++----
+ Documentation/networking/snmp_counter.rst             |  4 ++--
+ Documentation/powerpc/ultravisor.rst                  |  4 ++--
+ Documentation/security/siphash.rst                    |  8 ++++----
+ Documentation/target/tcmu-design.rst                  |  6 +++---
+ .../translations/zh_CN/process/5.Posting.rst          |  2 +-
+ Documentation/x86/intel-iommu.rst                     |  3 ++-
+ 11 files changed, 31 insertions(+), 31 deletions(-)
+
+diff --git a/Documentation/driver-api/80211/mac80211-advanced.rst b/Documentation/driver-api/80211/mac80211-advanced.rst
+index 9f1c5bb7ac35..24cb64b3b715 100644
+--- a/Documentation/driver-api/80211/mac80211-advanced.rst
++++ b/Documentation/driver-api/80211/mac80211-advanced.rst
+@@ -272,8 +272,8 @@ STA information lifetime rules
+ .. kernel-doc:: net/mac80211/sta_info.c
+    :doc: STA information lifetime rules
  
--       if (sscanf(buf, "%ld\n", &state) != 1)
-+       dump_stack();
-+
-+       printk(KERN_INFO "%s:%d:%s buf = \"%s\", count = %zu\n",
-+              __FILE__, __LINE__, __func__, buf, count);
-+
-+       if (sscanf(buf, "%ld\n", &state) != 1) {
-+               printk(KERN_INFO "%s:%d:%s\n",
-+                      __FILE__, __LINE__, __func__);
-                return -EINVAL;
-+       }
+-Aggregation
+-===========
++Aggregation Functions
++=====================
  
--       if ((long)state < 0)
-+       if ((long)state < 0) {
-+               printk(KERN_INFO "%s:%d:%s\n",
-+                      __FILE__, __LINE__, __func__);
-                return -EINVAL;
-+       }
+ .. kernel-doc:: net/mac80211/sta_info.h
+    :functions: sta_ampdu_mlme
+@@ -284,8 +284,8 @@ Aggregation
+ .. kernel-doc:: net/mac80211/sta_info.h
+    :functions: tid_ampdu_rx
  
-        mutex_lock(&cdev->lock);
+-Synchronisation
+-===============
++Synchronisation Functions
++=========================
  
-@@ -719,9 +730,14 @@ cur_state_store(struct device *dev, struct device_attribute *attr,
-                thermal_cooling_device_stats_update(cdev, state);
+ TBD
  
-        mutex_unlock(&cdev->lock);
-+
-+       printk(KERN_INFO "%s:%d:%s result = %d, count = %zu\n",
-+              __FILE__, __LINE__, __func__, result, count);
-+
-        return result ? result : count;
- }
+diff --git a/Documentation/driver-api/dmaengine/index.rst b/Documentation/driver-api/dmaengine/index.rst
+index b9df904d0a79..bdc45d8b4cfb 100644
+--- a/Documentation/driver-api/dmaengine/index.rst
++++ b/Documentation/driver-api/dmaengine/index.rst
+@@ -5,8 +5,8 @@ DMAEngine documentation
+ DMAEngine documentation provides documents for various aspects of DMAEngine
+ framework.
  
-+
- static struct device_attribute
- dev_attr_cdev_type = __ATTR(type, 0444, cdev_type_show, NULL);
- static DEVICE_ATTR_RO(max_state);
-
-
-
-And here the prob:
-Thursday 2019-02-14 10:26:46 root@odroid-xu3-0 ~
-$ echo 11 > /sys/devices/virtual/thermal/cooling_device1/cur_state                                                                                    
-[  908.109955] CPU: 5 PID: 500 Comm: bash Not tainted 5.4.0-dirty #6
-[  908.114910] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-[  908.121014] [<c0112f08>] (unwind_backtrace) from [<c010df38>] (show_stack+0x10/0x14)
-[  908.128796] [<c010df38>] (show_stack) from [<c0ae89cc>] (dump_stack+0xa4/0xd0)
-[  908.135962] [<c0ae89cc>] (dump_stack) from [<c0759e0c>] (cur_state_store+0x2c/0x14c)
-[  908.143686] [<c0759e0c>] (cur_state_store) from [<c033b360>] (kernfs_fop_write+0x100/0x1e0)
-[  908.152035] [<c033b360>] (kernfs_fop_write) from [<c02a93f4>] (__vfs_write+0x2c/0x1c0)
-[  908.159908] [<c02a93f4>] (__vfs_write) from [<c02ac25c>] (vfs_write+0xa4/0x188)
-[  908.167163] [<c02ac25c>] (vfs_write) from [<c02ac4b0>] (ksys_write+0x58/0xd0)
-[  908.174242] [<c02ac4b0>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-[  908.181874] Exception stack(0xeb915fa8 to 0xeb915ff0)
-[  908.186800] 5fa0:                   00000074 0050ba08 00000001 0050ba08 00000003 00000000
-[  908.195083] 5fc0: 00000074 0050ba08 b6eb3db0 00000004 00000003 00000003 00000000 00000000
-[  908.203218] 5fe0: 00000004 bef3c830 b6e4b5b3 b6dd4746
-[  908.210744] drivers/thermal/thermal_sysfs.c:712:cur_state_store buf = "11
-[  908.210744] ", count = 3
-[  908.221520] drivers/thermal/thermal_sysfs.c:735:cur_state_store result = 1, count = 3
-[  908.228681] CPU: 5 PID: 500 Comm: bash Not tainted 5.4.0-dirty #6
-[  908.234268] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-[  908.240372] [<c0112f08>] (unwind_backtrace) from [<c010df38>] (show_stack+0x10/0x14)
-[  908.248159] [<c010df38>] (show_stack) from [<c0ae89cc>] (dump_stack+0xa4/0xd0)
-[  908.255325] [<c0ae89cc>] (dump_stack) from [<c0759e0c>] (cur_state_store+0x2c/0x14c)
-[  908.263048] [<c0759e0c>] (cur_state_store) from [<c033b360>] (kernfs_fop_write+0x100/0x1e0)
-[  908.271398] [<c033b360>] (kernfs_fop_write) from [<c02a93f4>] (__vfs_write+0x2c/0x1c0)
-[  908.279271] [<c02a93f4>] (__vfs_write) from [<c02ac25c>] (vfs_write+0xa4/0x188)
-[  908.286527] [<c02ac25c>] (vfs_write) from [<c02ac4b0>] (ksys_write+0x58/0xd0)
-[  908.293608] [<c02ac4b0>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-[  908.301241] Exception stack(0xeb915fa8 to 0xeb915ff0)
-[  908.306168] 5fa0:                   00000074 0050ba09 00000001 0050ba09 00000002 00000000
-[  908.314448] 5fc0: 00000074 0050ba09 b6eb3db0 00000004 00000003 00000003 00000000 00000000
-[  908.322581] 5fe0: 00000004 bef3c830 b6e4b5b3 b6dd4746
-[  908.328660] drivers/thermal/thermal_sysfs.c:712:cur_state_store buf = "1
-[  908.328660] ", count = 2
-[  908.338432] drivers/thermal/thermal_sysfs.c:735:cur_state_store result = 1, count = 2
-[  908.345695] CPU: 5 PID: 500 Comm: bash Not tainted 5.4.0-dirty #6
-[  908.351172] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-[  908.357276] [<c0112f08>] (unwind_backtrace) from [<c010df38>] (show_stack+0x10/0x14)
-[  908.365062] [<c010df38>] (show_stack) from [<c0ae89cc>] (dump_stack+0xa4/0xd0)
-[  908.372227] [<c0ae89cc>] (dump_stack) from [<c0759e0c>] (cur_state_store+0x2c/0x14c)
-[  908.379951] [<c0759e0c>] (cur_state_store) from [<c033b360>] (kernfs_fop_write+0x100/0x1e0)
-[  908.388302] [<c033b360>] (kernfs_fop_write) from [<c02a93f4>] (__vfs_write+0x2c/0x1c0)
-[  908.396176] [<c02a93f4>] (__vfs_write) from [<c02ac25c>] (vfs_write+0xa4/0x188)
-[  908.403433] [<c02ac25c>] (vfs_write) from [<c02ac4b0>] (ksys_write+0x58/0xd0)
-[  908.410511] [<c02ac4b0>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-[  908.418145] Exception stack(0xeb915fa8 to 0xeb915ff0)
-[  908.423068] 5fa0:                   00000074 0050ba0a 00000001 0050ba0a 00000001 00000000
-[  908.431352] 5fc0: 00000074 0050ba0a b6eb3db0 00000004 00000003 00000003 00000000 00000000
-[  908.439487] 5fe0: 00000004 bef3c830 b6e4b5b3 b6dd4746
-[  908.445365] drivers/thermal/thermal_sysfs.c:712:cur_state_store buf = "
-[  908.445365] ", count = 1
-[  908.454762] drivers/thermal/thermal_sysfs.c:716:cur_state_store
--bash: echo: write error: Invalid argument
-
-
-
-
-As you can see, the function is recalled with one character less, until the "buffer is empty".
-I don't understand why. Can anybody help me for this thing?
-Many thanks in advance.
-
-Best Regards,
-Willy
+-DMAEngine documentation
+------------------------
++DMAEngine development documentation
++-----------------------------------
+ 
+ This book helps with DMAengine internal APIs and guide for DMAEngine device
+ driver writers.
+diff --git a/Documentation/filesystems/ecryptfs.rst b/Documentation/filesystems/ecryptfs.rst
+index 7236172300ef..1f2edef4c57a 100644
+--- a/Documentation/filesystems/ecryptfs.rst
++++ b/Documentation/filesystems/ecryptfs.rst
+@@ -30,13 +30,12 @@ Userspace requirements include:
+ - Libgcrypt
+ 
+ 
+-Notes
+-=====
++.. note::
+ 
+-In the beta/experimental releases of eCryptfs, when you upgrade
+-eCryptfs, you should copy the files to an unencrypted location and
+-then copy the files back into the new eCryptfs mount to migrate the
+-files.
++   In the beta/experimental releases of eCryptfs, when you upgrade
++   eCryptfs, you should copy the files to an unencrypted location and
++   then copy the files back into the new eCryptfs mount to migrate the
++   files.
+ 
+ 
+ Mount-wide Passphrase
+diff --git a/Documentation/kernel-hacking/hacking.rst b/Documentation/kernel-hacking/hacking.rst
+index d707a0a61cc9..eed2136d847f 100644
+--- a/Documentation/kernel-hacking/hacking.rst
++++ b/Documentation/kernel-hacking/hacking.rst
+@@ -601,7 +601,7 @@ Defined in ``include/linux/export.h``
+ 
+ This is the variant of `EXPORT_SYMBOL()` that allows specifying a symbol
+ namespace. Symbol Namespaces are documented in
+-:ref:`Documentation/core-api/symbol-namespaces.rst <Symbol Namespaces>`
++:doc:`../core-api/symbol-namespaces`
+ 
+ :c:func:`EXPORT_SYMBOL_NS_GPL()`
+ --------------------------------
+@@ -610,7 +610,7 @@ Defined in ``include/linux/export.h``
+ 
+ This is the variant of `EXPORT_SYMBOL_GPL()` that allows specifying a symbol
+ namespace. Symbol Namespaces are documented in
+-:ref:`Documentation/core-api/symbol-namespaces.rst <Symbol Namespaces>`
++:doc:`../core-api/symbol-namespaces`
+ 
+ Routines and Conventions
+ ========================
+diff --git a/Documentation/media/kapi/v4l2-controls.rst b/Documentation/media/kapi/v4l2-controls.rst
+index b20800cae3f2..5129019afb49 100644
+--- a/Documentation/media/kapi/v4l2-controls.rst
++++ b/Documentation/media/kapi/v4l2-controls.rst
+@@ -291,8 +291,8 @@ and QUERYMENU. And G/S_CTRL as well as G/TRY/S_EXT_CTRLS are automatically suppo
+    In practice the basic usage as described above is sufficient for most drivers.
+ 
+ 
+-Inheriting Controls
+--------------------
++Inheriting Sub-device Controls
++------------------------------
+ 
+ When a sub-device is registered with a V4L2 driver by calling
+ v4l2_device_register_subdev() and the ctrl_handler fields of both v4l2_subdev
+@@ -757,8 +757,8 @@ attempting to find another control from the same handler will deadlock.
+ It is recommended not to use this function from inside the control ops.
+ 
+ 
+-Inheriting Controls
+--------------------
++Preventing Controls inheritance
++-------------------------------
+ 
+ When one control handler is added to another using v4l2_ctrl_add_handler, then
+ by default all controls from one are merged to the other. But a subdev might
+diff --git a/Documentation/networking/snmp_counter.rst b/Documentation/networking/snmp_counter.rst
+index 38a4edc4522b..10e11099e74a 100644
+--- a/Documentation/networking/snmp_counter.rst
++++ b/Documentation/networking/snmp_counter.rst
+@@ -908,8 +908,8 @@ A TLP probe packet is sent.
+ 
+ A packet loss is detected and recovered by TLP.
+ 
+-TCP Fast Open
+-=============
++TCP Fast Open description
++=========================
+ TCP Fast Open is a technology which allows data transfer before the
+ 3-way handshake complete. Please refer the `TCP Fast Open wiki`_ for a
+ general description.
+diff --git a/Documentation/powerpc/ultravisor.rst b/Documentation/powerpc/ultravisor.rst
+index 363736d7fd36..df136c8f91fa 100644
+--- a/Documentation/powerpc/ultravisor.rst
++++ b/Documentation/powerpc/ultravisor.rst
+@@ -8,8 +8,8 @@ Protected Execution Facility
+ .. contents::
+     :depth: 3
+ 
+-Protected Execution Facility
+-############################
++Introduction
++############
+ 
+     Protected Execution Facility (PEF) is an architectural change for
+     POWER 9 that enables Secure Virtual Machines (SVMs). DD2.3 chips
+diff --git a/Documentation/security/siphash.rst b/Documentation/security/siphash.rst
+index 9965821ab333..4eba68cdf0a1 100644
+--- a/Documentation/security/siphash.rst
++++ b/Documentation/security/siphash.rst
+@@ -128,8 +128,8 @@ then when you can be absolutely certain that the outputs will never be
+ transmitted out of the kernel. This is only remotely useful over `jhash` as a
+ means of mitigating hashtable flooding denial of service attacks.
+ 
+-Generating a key
+-================
++Generating a HalfSipHash key
++============================
+ 
+ Keys should always be generated from a cryptographically secure source of
+ random numbers, either using get_random_bytes or get_random_once:
+@@ -139,8 +139,8 @@ get_random_bytes(&key, sizeof(key));
+ 
+ If you're not deriving your key from here, you're doing it wrong.
+ 
+-Using the functions
+-===================
++Using the HalfSipHash functions
++===============================
+ 
+ There are two variants of the function, one that takes a list of integers, and
+ one that takes a buffer::
+diff --git a/Documentation/target/tcmu-design.rst b/Documentation/target/tcmu-design.rst
+index a7b426707bf6..e47047e32e27 100644
+--- a/Documentation/target/tcmu-design.rst
++++ b/Documentation/target/tcmu-design.rst
+@@ -5,7 +5,7 @@ TCM Userspace Design
+ 
+ .. Contents:
+ 
+-   1) TCM Userspace Design
++   1) Design
+      a) Background
+      b) Benefits
+      c) Design constraints
+@@ -23,8 +23,8 @@ TCM Userspace Design
+    3) A final note
+ 
+ 
+-TCM Userspace Design
+-====================
++Design
++======
+ 
+ TCM is another name for LIO, an in-kernel iSCSI target (server).
+ Existing TCM targets run in the kernel.  TCMU (TCM in Userspace)
+diff --git a/Documentation/translations/zh_CN/process/5.Posting.rst b/Documentation/translations/zh_CN/process/5.Posting.rst
+index 41aba21ff050..9ff9945f918c 100644
+--- a/Documentation/translations/zh_CN/process/5.Posting.rst
++++ b/Documentation/translations/zh_CN/process/5.Posting.rst
+@@ -5,7 +5,7 @@
+ 
+ .. _cn_development_posting:
+ 
+-发送补丁
++发布补丁
+ ========
+ 
+ 迟早，当您的工作准备好提交给社区进行审查，并最终包含到主线内核中时。不出所料，
+diff --git a/Documentation/x86/intel-iommu.rst b/Documentation/x86/intel-iommu.rst
+index 9dae6b47e398..099f13d51d5f 100644
+--- a/Documentation/x86/intel-iommu.rst
++++ b/Documentation/x86/intel-iommu.rst
+@@ -95,9 +95,10 @@ and any RMRR's processed::
+ When DMAR is enabled for use, you will notice..
+ 
+ PCI-DMA: Using DMAR IOMMU
++-------------------------
+ 
+ Fault reporting
+----------------
++^^^^^^^^^^^^^^^
+ 
+ ::
+ 
+-- 
+2.24.1
 
