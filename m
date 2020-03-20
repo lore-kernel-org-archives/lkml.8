@@ -6,40 +6,40 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51738C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A253AC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33E9320724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D41620732
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbgCTDlM (ORCPT
+        id S1727461AbgCTDlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 23:41:12 -0400
+        Thu, 19 Mar 2020 23:41:20 -0400
 Received: from mga01.intel.com ([192.55.52.88]:27908 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726842AbgCTDk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 23:40:58 -0400
-IronPort-SDR: C8fOYa9/pSrTcR9FxR6dQw7+eqGsrCh+oo3Wct3yKLpBL+22sSdOh5a3iUEbj1ihY/3FQezBT4
- ulwjQwk3AyhQ==
+        id S1726789AbgCTDkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 23:40:53 -0400
+IronPort-SDR: pCT/WNIrKvK1W3k4aKIYTWpInTOuGwJettrcVbQ2f702esrNxGDDUq1N14mT5RUrQYKQOgYDJU
+ WvTO0Hsmt8Fw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 20:40:57 -0700
-IronPort-SDR: W5ZstaUtz9maRJDfTqM6VJdpg6BetG4lmAq+nuI1GkdcH+I+YVx08Xm0bxJkb599L2/8GxUelu
- r/QYBLjoHNgQ==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 20:40:53 -0700
+IronPort-SDR: yyamiEG1I9WRd/Ovice+J1Y/dGo78B1yYGRXopKHoL+pOjaG1Dt9xPaLFNJztXN6u5ZZyk1NZq
+ szbxRdSGetHg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,283,1580803200"; 
-   d="scan'208";a="263945619"
+   d="scan'208";a="263945602"
 Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
-  by orsmga002.jf.intel.com with ESMTP; 19 Mar 2020 20:40:55 -0700
+  by orsmga002.jf.intel.com with ESMTP; 19 Mar 2020 20:40:51 -0700
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         sean.j.christopherson@intel.com, pbonzini@redhat.com,
         jmattson@google.com
 Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v10 7/8] KVM: VMX: Enable CET support for nested VM
-Date:   Fri, 20 Mar 2020 11:43:40 +0800
-Message-Id: <20200320034342.26610-8-weijiang.yang@intel.com>
+Subject: [PATCH v10 5/8] KVM: X86: Load guest fpu state when accessing MSRs managed by XSAVES
+Date:   Fri, 20 Mar 2020 11:43:38 +0800
+Message-Id: <20200320034342.26610-6-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200320034342.26610-1-weijiang.yang@intel.com>
 References: <20200320034342.26610-1-weijiang.yang@intel.com>
@@ -48,150 +48,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CET MSRs are passed to guests for performance consideration.
-Configure the MSRs to match L0/L1 settings so that nested VM
-is able to run with CET.
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
+A handful of CET MSRs are not context switched through "traditional"
+methods, e.g. VMCS or manual switching, but rather are passed through
+to the guest and are saved and restored by XSAVES/XRSTORS, i.e. in the
+guest's FPU state.
+
+Load the guest's FPU state if userspace is accessing MSRs whose values
+are managed by XSAVES so that the MSR helper, e.g. vmx_{get,set}_msr(),
+can simply do {RD,WR}MSR to access the guest's value.
+
+Note that guest_cpuid_has() is not queried as host userspace is allowed
+to access MSRs that have not been exposed to the guest, e.g. it might do
+KVM_SET_MSRS prior to KVM_SET_CPUID2.
+
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Co-developed-by: Yang Weijiang <weijiang.yang@intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
- arch/x86/kvm/vmx/nested.c | 41 +++++++++++++++++++++++++++++++++++++--
- arch/x86/kvm/vmx/vmcs12.c |  6 ++++++
- arch/x86/kvm/vmx/vmcs12.h | 14 ++++++++++++-
- arch/x86/kvm/vmx/vmx.c    |  1 +
- 4 files changed, 59 insertions(+), 3 deletions(-)
+ arch/x86/kvm/x86.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index e47eb7c0fbae..a71ef33de55f 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -627,6 +627,41 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
- 	nested_vmx_disable_intercept_for_msr(msr_bitmap_l1, msr_bitmap_l0,
- 					     MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5be6fad6e08d..99e5b1df8555 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -109,6 +109,8 @@ static void enter_smm(struct kvm_vcpu *vcpu);
+ static void __kvm_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags);
+ static void store_regs(struct kvm_vcpu *vcpu);
+ static int sync_regs(struct kvm_vcpu *vcpu);
++static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu);
++static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu);
  
-+	/* Pass CET MSRs to nested VM if L0 and L1 are set to pass-through. */
-+	if (!msr_write_intercepted_l01(vcpu, MSR_IA32_U_CET))
-+		nested_vmx_disable_intercept_for_msr(
-+					msr_bitmap_l1, msr_bitmap_l0,
-+					MSR_IA32_U_CET, MSR_TYPE_RW);
-+
-+	if (!msr_write_intercepted_l01(vcpu, MSR_IA32_PL3_SSP))
-+		nested_vmx_disable_intercept_for_msr(
-+					msr_bitmap_l1, msr_bitmap_l0,
-+					MSR_IA32_PL3_SSP, MSR_TYPE_RW);
-+
-+	if (!msr_write_intercepted_l01(vcpu, MSR_IA32_S_CET))
-+		nested_vmx_disable_intercept_for_msr(
-+					msr_bitmap_l1, msr_bitmap_l0,
-+					MSR_IA32_S_CET, MSR_TYPE_RW);
-+
-+	if (!msr_write_intercepted_l01(vcpu, MSR_IA32_PL0_SSP))
-+		nested_vmx_disable_intercept_for_msr(
-+					msr_bitmap_l1, msr_bitmap_l0,
-+					MSR_IA32_PL0_SSP, MSR_TYPE_RW);
-+
-+	if (!msr_write_intercepted_l01(vcpu, MSR_IA32_PL1_SSP))
-+		nested_vmx_disable_intercept_for_msr(
-+					msr_bitmap_l1, msr_bitmap_l0,
-+					MSR_IA32_PL1_SSP, MSR_TYPE_RW);
-+
-+	if (!msr_write_intercepted_l01(vcpu, MSR_IA32_PL2_SSP))
-+		nested_vmx_disable_intercept_for_msr(
-+					msr_bitmap_l1, msr_bitmap_l0,
-+					MSR_IA32_PL2_SSP, MSR_TYPE_RW);
-+
-+	if (!msr_write_intercepted_l01(vcpu, MSR_IA32_INT_SSP_TAB))
-+		nested_vmx_disable_intercept_for_msr(
-+					msr_bitmap_l1, msr_bitmap_l0,
-+					MSR_IA32_INT_SSP_TAB, MSR_TYPE_RW);
- 	/*
- 	 * Checking the L0->L1 bitmap is trying to verify two things:
- 	 *
-@@ -6040,7 +6075,8 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps)
- 	msrs->exit_ctls_high |=
- 		VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR |
- 		VM_EXIT_LOAD_IA32_EFER | VM_EXIT_SAVE_IA32_EFER |
--		VM_EXIT_SAVE_VMX_PREEMPTION_TIMER | VM_EXIT_ACK_INTR_ON_EXIT;
-+		VM_EXIT_SAVE_VMX_PREEMPTION_TIMER | VM_EXIT_ACK_INTR_ON_EXIT |
-+		VM_EXIT_LOAD_HOST_CET_STATE;
+ struct kvm_x86_ops *kvm_x86_ops __read_mostly;
+ EXPORT_SYMBOL_GPL(kvm_x86_ops);
+@@ -3249,6 +3251,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ }
+ EXPORT_SYMBOL_GPL(kvm_get_msr_common);
  
- 	/* We support free control of debug control saving. */
- 	msrs->exit_ctls_low &= ~VM_EXIT_SAVE_DEBUG_CONTROLS;
-@@ -6057,7 +6093,8 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps)
- #endif
- 		VM_ENTRY_LOAD_IA32_PAT;
- 	msrs->entry_ctls_high |=
--		(VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR | VM_ENTRY_LOAD_IA32_EFER);
-+		(VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR | VM_ENTRY_LOAD_IA32_EFER |
-+		 VM_ENTRY_LOAD_GUEST_CET_STATE);
++static bool is_xsaves_msr(u32 index)
++{
++	return index == MSR_IA32_U_CET ||
++	       (index >= MSR_IA32_PL0_SSP && index <= MSR_IA32_PL3_SSP);
++}
++
+ /*
+  * Read or write a bunch of msrs. All parameters are kernel addresses.
+  *
+@@ -3259,11 +3267,20 @@ static int __msr_io(struct kvm_vcpu *vcpu, struct kvm_msrs *msrs,
+ 		    int (*do_msr)(struct kvm_vcpu *vcpu,
+ 				  unsigned index, u64 *data))
+ {
++	bool fpu_loaded = false;
+ 	int i;
  
- 	/* We support free control of debug control loading. */
- 	msrs->entry_ctls_low &= ~VM_ENTRY_LOAD_DEBUG_CONTROLS;
-diff --git a/arch/x86/kvm/vmx/vmcs12.c b/arch/x86/kvm/vmx/vmcs12.c
-index 53dfb401316d..82b82bebeee0 100644
---- a/arch/x86/kvm/vmx/vmcs12.c
-+++ b/arch/x86/kvm/vmx/vmcs12.c
-@@ -141,6 +141,9 @@ const unsigned short vmcs_field_to_offset_table[] = {
- 	FIELD(GUEST_PENDING_DBG_EXCEPTIONS, guest_pending_dbg_exceptions),
- 	FIELD(GUEST_SYSENTER_ESP, guest_sysenter_esp),
- 	FIELD(GUEST_SYSENTER_EIP, guest_sysenter_eip),
-+	FIELD(GUEST_S_CET, guest_s_cet),
-+	FIELD(GUEST_SSP, guest_ssp),
-+	FIELD(GUEST_INTR_SSP_TABLE, guest_ssp_tbl),
- 	FIELD(HOST_CR0, host_cr0),
- 	FIELD(HOST_CR3, host_cr3),
- 	FIELD(HOST_CR4, host_cr4),
-@@ -153,5 +156,8 @@ const unsigned short vmcs_field_to_offset_table[] = {
- 	FIELD(HOST_IA32_SYSENTER_EIP, host_ia32_sysenter_eip),
- 	FIELD(HOST_RSP, host_rsp),
- 	FIELD(HOST_RIP, host_rip),
-+	FIELD(HOST_S_CET, host_s_cet),
-+	FIELD(HOST_SSP, host_ssp),
-+	FIELD(HOST_INTR_SSP_TABLE, host_ssp_tbl),
- };
- const unsigned int nr_vmcs12_fields = ARRAY_SIZE(vmcs_field_to_offset_table);
-diff --git a/arch/x86/kvm/vmx/vmcs12.h b/arch/x86/kvm/vmx/vmcs12.h
-index d0c6df373f67..62b7be68f05c 100644
---- a/arch/x86/kvm/vmx/vmcs12.h
-+++ b/arch/x86/kvm/vmx/vmcs12.h
-@@ -118,7 +118,13 @@ struct __packed vmcs12 {
- 	natural_width host_ia32_sysenter_eip;
- 	natural_width host_rsp;
- 	natural_width host_rip;
--	natural_width paddingl[8]; /* room for future expansion */
-+	natural_width host_s_cet;
-+	natural_width host_ssp;
-+	natural_width host_ssp_tbl;
-+	natural_width guest_s_cet;
-+	natural_width guest_ssp;
-+	natural_width guest_ssp_tbl;
-+	natural_width paddingl[2]; /* room for future expansion */
- 	u32 pin_based_vm_exec_control;
- 	u32 cpu_based_vm_exec_control;
- 	u32 exception_bitmap;
-@@ -301,6 +307,12 @@ static inline void vmx_check_vmcs12_offsets(void)
- 	CHECK_OFFSET(host_ia32_sysenter_eip, 656);
- 	CHECK_OFFSET(host_rsp, 664);
- 	CHECK_OFFSET(host_rip, 672);
-+	CHECK_OFFSET(host_s_cet, 680);
-+	CHECK_OFFSET(host_ssp, 688);
-+	CHECK_OFFSET(host_ssp_tbl, 696);
-+	CHECK_OFFSET(guest_s_cet, 704);
-+	CHECK_OFFSET(guest_ssp, 712);
-+	CHECK_OFFSET(guest_ssp_tbl, 720);
- 	CHECK_OFFSET(pin_based_vm_exec_control, 744);
- 	CHECK_OFFSET(cpu_based_vm_exec_control, 748);
- 	CHECK_OFFSET(exception_bitmap, 752);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 2654bd099fe6..1de03da2bda6 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7141,6 +7141,7 @@ static void nested_vmx_cr_fixed1_bits_update(struct kvm_vcpu *vcpu)
- 	cr4_fixed1_update(X86_CR4_PKE,        ecx, feature_bit(PKU));
- 	cr4_fixed1_update(X86_CR4_UMIP,       ecx, feature_bit(UMIP));
- 	cr4_fixed1_update(X86_CR4_LA57,       ecx, feature_bit(LA57));
-+	cr4_fixed1_update(X86_CR4_CET,	      ecx, feature_bit(SHSTK));
+-	for (i = 0; i < msrs->nmsrs; ++i)
++	for (i = 0; i < msrs->nmsrs; ++i) {
++		if (vcpu && !fpu_loaded && supported_xss &&
++		    is_xsaves_msr(entries[i].index)) {
++			kvm_load_guest_fpu(vcpu);
++			fpu_loaded = true;
++		}
+ 		if (do_msr(vcpu, entries[i].index, &entries[i].data))
+ 			break;
++	}
++	if (fpu_loaded)
++		kvm_put_guest_fpu(vcpu);
  
- #undef cr4_fixed1_update
+ 	return i;
  }
 -- 
 2.17.2
