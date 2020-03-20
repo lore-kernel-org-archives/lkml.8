@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0CFC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6745BC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF7E20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B7020767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbgCTV3C (ORCPT
+        id S1727500AbgCTV3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:29:02 -0400
-Received: from mga02.intel.com ([134.134.136.20]:20436 "EHLO mga02.intel.com"
+        Fri, 20 Mar 2020 17:29:01 -0400
+Received: from mga17.intel.com ([192.55.52.151]:42047 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727334AbgCTV2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:28:54 -0400
-IronPort-SDR: CbqLyTRo98r3jKpQNJLTHwZuJVz1Hrjmkp258mdghZc+IdKvarD1mZHvoH/0xo/NRsq6zE+xp5
- zR2y8Nrfn5Gg==
+        id S1727278AbgCTV2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 17:28:53 -0400
+IronPort-SDR: VitMlAAuMcDYzmYQEjZm1JKrtc5BvLME768MrpKrGCgVpO7esX6HETt8yyF16W0QQ1qg7wR/Xd
+ gfPPWW2FQA0A==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:53 -0700
-IronPort-SDR: BkBF0tHYPDCTwd2a7FDUBKw3S0tTNYfbPk5bZEHVzitfptS0V2oO5v+YSyGqnzx95FsprkH+y5
- K1aCAFzHJK/w==
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:52 -0700
+IronPort-SDR: ghAuvcOx6OeLT+TT0hWokk53Kj6URsyVcJrzWRXNop1mQNLjcTFDB0vI3muLMVp8pehK1+G0uy
+ DSVu5+SzqRSQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
-   d="scan'208";a="269224476"
+   d="scan'208";a="269224465"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:53 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:52 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v3 20/37] KVM: VMX: Introduce vmx_flush_tlb_current()
-Date:   Fri, 20 Mar 2020 14:28:16 -0700
-Message-Id: <20200320212833.3507-21-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 17/37] KVM: SVM: Wire up ->tlb_flush_guest() directly to svm_flush_tlb()
+Date:   Fri, 20 Mar 2020 14:28:13 -0700
+Message-Id: <20200320212833.3507-18-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200320212833.3507-1-sean.j.christopherson@intel.com>
 References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
@@ -59,64 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to flush TLB entries only for the current EPTP/VPID context
-and use it for the existing direct invocations of vmx_flush_tlb().  TLB
-flushes that are specific to the current vCPU state do not need to flush
-other contexts.
+Use svm_flush_tlb() directly for kvm_x86_ops->tlb_flush_guest() now that
+the @invalidate_gpa param to ->tlb_flush() is gone, i.e. the wrapper for
+->tlb_flush_guest() is no longer necessary.
 
-Note, both converted call sites happen to be related to the APIC access
-page, this is purely coincidental.
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ arch/x86/kvm/svm.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c6affaaef138..2d0a8c7654d7 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2874,6 +2874,22 @@ static void vmx_flush_tlb(struct kvm_vcpu *vcpu)
- 	}
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 62fa45dcb6a4..dfa3b53f8437 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -5643,11 +5643,6 @@ static void svm_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t gva)
+ 	invlpga(gva, svm->vmcb->control.asid);
  }
  
-+static void vmx_flush_tlb_current(struct kvm_vcpu *vcpu)
-+{
-+	u64 root_hpa = vcpu->arch.mmu->root_hpa;
-+
-+	/* No flush required if the current context is invalid. */
-+	if (!VALID_PAGE(root_hpa))
-+		return;
-+
-+	if (enable_ept)
-+		ept_sync_context(construct_eptp(vcpu, root_hpa));
-+	else if (!is_guest_mode(vcpu))
-+		vpid_sync_context(to_vmx(vcpu)->vpid);
-+	else
-+		vpid_sync_context(nested_get_vpid02(vcpu));
-+}
-+
- static void vmx_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t addr)
+-static void svm_flush_tlb_guest(struct kvm_vcpu *vcpu)
+-{
+-	svm_flush_tlb(vcpu);
+-}
+-
+ static void svm_prepare_guest_switch(struct kvm_vcpu *vcpu)
  {
- 	/*
-@@ -6104,7 +6120,7 @@ void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu)
- 		if (flexpriority_enabled) {
- 			sec_exec_control |=
- 				SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES;
--			vmx_flush_tlb(vcpu);
-+			vmx_flush_tlb_current(vcpu);
- 		}
- 		break;
- 	case LAPIC_MODE_X2APIC:
-@@ -6122,7 +6138,7 @@ static void vmx_set_apic_access_page_addr(struct kvm_vcpu *vcpu, hpa_t hpa)
- {
- 	if (!is_guest_mode(vcpu)) {
- 		vmcs_write64(APIC_ACCESS_ADDR, hpa);
--		vmx_flush_tlb(vcpu);
-+		vmx_flush_tlb_current(vcpu);
- 	}
  }
+@@ -7405,7 +7400,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
  
+ 	.tlb_flush = svm_flush_tlb,
+ 	.tlb_flush_gva = svm_flush_tlb_gva,
+-	.tlb_flush_guest = svm_flush_tlb_guest,
++	.tlb_flush_guest = svm_flush_tlb,
+ 
+ 	.run = svm_vcpu_run,
+ 	.handle_exit = handle_exit,
 -- 
 2.24.1
 
