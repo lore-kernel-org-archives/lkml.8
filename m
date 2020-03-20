@@ -2,309 +2,143 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988FBC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1101C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A7320786
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584730331;
-	bh=zdyx+soSZeTAP2ojZnJTUsLxFVcyFu3o9E/v/FnMtCI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D/sYeQ8NKGtULvRusgfaoDXgWk9EB0pRh6z/YZ0A1t3e3LU3x4X2ZrMLym0ofva63
-	 4AsWzJC3lxoTcbIuNXb+9hRABOyBj9X1voYLxWr6VQa/cM4/bh907X4LmaMJTXOan2
-	 mG9t5svKqhW+LHU5g5xKQawIrgBUWJdt8n7wSH6s=
+	by mail.kernel.org (Postfix) with ESMTP id B4A4420777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:52:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDqmFhl7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbgCTSwK (ORCPT
+        id S1726912AbgCTSwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:52:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727407AbgCTSvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:51:13 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B37A820775;
-        Fri, 20 Mar 2020 18:51:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584730271;
-        bh=zdyx+soSZeTAP2ojZnJTUsLxFVcyFu3o9E/v/FnMtCI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=13EpXDmmVrqF7ecGFnxqZPUN5HsT6yQRTRCVdwW2AXnteDUl5azw7CJingV+m643H
-         4MktcPEAf5HL+ohwzIlM8uZEM74Z+DGxJXM4G8TwACDKv6zVSsxaFA5j0syket0g3o
-         2HL1+sZQZKybEbge6O5je2i1wH8q5yfOPOtOaXGg=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jFMK7-00EKAx-QG; Fri, 20 Mar 2020 18:24:48 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v6 18/23] KVM: arm64: GICv4.1: Add direct injection capability to SGI registers
-Date:   Fri, 20 Mar 2020 18:24:01 +0000
-Message-Id: <20200320182406.23465-19-maz@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200320182406.23465-1-maz@kernel.org>
-References: <20200320182406.23465-1-maz@kernel.org>
+        Fri, 20 Mar 2020 14:52:16 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37433 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727669AbgCTSwJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 14:52:09 -0400
+Received: by mail-qk1-f194.google.com with SMTP id z25so8025206qkj.4;
+        Fri, 20 Mar 2020 11:52:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=otmorsE/p9yVYit1B4E2Fo3uYEvHK3kalR11YV3EIR0=;
+        b=KDqmFhl7PlI8cqrekS70TdybR/cBo9bP1dcWoWHQ2D9mhZ8kwfyn6ttKk957+cOoBp
+         7Mb9VnBPd8r2lNyo37LwcRn4wd4X3DtoQPvSjFpk6Y63JYUSeMNjK4lw38Y5myCjIX24
+         nm4WbmO6/QBul+eoG126Wn4OQ2Y0yoRxKkqbJ9ubkgOUWMIiOpUFhEYPoR7ncb68T4nc
+         hGQiactjc5+lbTman+80F2+ws32ZzEUIjMKvRtthtDy8a4T5TLUpvScUOfEbk1uGVudb
+         j6FL+Gue3npK4+uGbJa4fja/dCmx2IS9k4R16aIycx1OcMliHlhG13Jg4DCYuiL5t6hQ
+         ikDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=otmorsE/p9yVYit1B4E2Fo3uYEvHK3kalR11YV3EIR0=;
+        b=d91MX2vFYmlDILZFOeEp7J8DNSioG2fS/YaHZAGvlBfNLIS7OfWTkhjoKgxrg88roF
+         KPIWblwewMYivvBhzKihVOtdO73kB6hFGaQTUmLsiwKICy6J7sP5V2DHahV3Ng6GnEug
+         QfZEJ+ANS6BUN5pgGPrR+wirVbRoN+SJO79ZpjE7X6JYXOP97rLcswUkjP3I3aNjB8DK
+         rO8Z2bS7iGOFIiv8ChTJsfu9I4FrWeVTPsm/h79sTRZlxfG6gOa4QxI7aZGWjcvidc2O
+         niIsgxi9tKc/HBnjp1dGJQxtJSkCr/n0RQb+fJfmt1j2oLiZirL2wNOEC31n8dXhmvib
+         ab7g==
+X-Gm-Message-State: ANhLgQ0bV4S7gBL0K5tEFhLNXevBFYK8vGyLDXxymbZiRMm4z2X4ATxo
+        JXTEgYeXu52s7Tok4EJzSeE=
+X-Google-Smtp-Source: ADFU+vsLaMKBQfa91QrFcTCCfGbvag6eFOwipkI3VTsOJqJuGAXiB38uA1I4ak8puiSO6rGub8/nhA==
+X-Received: by 2002:a37:61d0:: with SMTP id v199mr9310307qkb.292.1584730328304;
+        Fri, 20 Mar 2020 11:52:08 -0700 (PDT)
+Received: from localhost.localdomain ([177.220.176.176])
+        by smtp.gmail.com with ESMTPSA id f16sm5543535qtk.61.2020.03.20.11.52.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 11:52:07 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 035FAC215F; Fri, 20 Mar 2020 15:52:04 -0300 (-03)
+Date:   Fri, 20 Mar 2020 15:52:04 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Qiujun Huang <hqjagain@gmail.com>
+Cc:     davem@davemloft.net, vyasevich@gmail.com, nhorman@tuxdriver.com,
+        kuba@kernel.org, linux-sctp@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        anenbupt@gmail.com
+Subject: Re: [PATCH v3] sctp: fix refcount bug in sctp_wfree
+Message-ID: <20200320185204.GB3828@localhost.localdomain>
+References: <20200320110959.2114-1-hqjagain@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, tglx@linutronix.de, yuzenghui@huawei.com, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320110959.2114-1-hqjagain@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most of the GICv3 emulation code that deals with SGIs now has to be
-aware of the v4.1 capabilities in order to benefit from it.
+On Fri, Mar 20, 2020 at 07:09:59PM +0800, Qiujun Huang wrote:
+> Do accounting for skb's real sk.
+> In some case skb->sk != asoc->base.sk:
+> 
+> for the trouble SKB, it was in outq->transmitted queue
+> 
+> sctp_outq_sack
+> 	sctp_check_transmitted
+> 		SKB was moved to outq->sack
 
-Add such support, keyed on the interrupt having the hw flag set and
-being a SGI.
+There is no outq->sack. You mean outq->sacked, I assume.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Link: https://lore.kernel.org/r/20200304203330.4967-19-maz@kernel.org
----
- virt/kvm/arm/vgic/vgic-mmio-v3.c | 27 ++++++++--
- virt/kvm/arm/vgic/vgic-mmio.c    | 88 ++++++++++++++++++++++++++++++--
- 2 files changed, 107 insertions(+), 8 deletions(-)
+> 	then throw away the sack queue
 
-diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-index ebc218840fc2..f4da9d1a6bff 100644
---- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-@@ -6,6 +6,7 @@
- #include <linux/irqchip/arm-gic-v3.h>
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
-+#include <linux/interrupt.h>
- #include <kvm/iodev.h>
- #include <kvm/arm_vgic.h>
- 
-@@ -257,8 +258,18 @@ static unsigned long vgic_v3_uaccess_read_pending(struct kvm_vcpu *vcpu,
- 	 */
- 	for (i = 0; i < len * 8; i++) {
- 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
-+		bool state = irq->pending_latch;
- 
--		if (irq->pending_latch)
-+		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-+			int err;
-+
-+			err = irq_get_irqchip_state(irq->host_irq,
-+						    IRQCHIP_STATE_PENDING,
-+						    &state);
-+			WARN_ON(err);
-+		}
-+
-+		if (state)
- 			value |= (1U << i);
- 
- 		vgic_put_irq(vcpu->kvm, irq);
-@@ -942,8 +953,18 @@ void vgic_v3_dispatch_sgi(struct kvm_vcpu *vcpu, u64 reg, bool allow_group1)
- 		 * generate interrupts of either group.
- 		 */
- 		if (!irq->group || allow_group1) {
--			irq->pending_latch = true;
--			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-+			if (!irq->hw) {
-+				irq->pending_latch = true;
-+				vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-+			} else {
-+				/* HW SGI? Ask the GIC to inject it */
-+				int err;
-+				err = irq_set_irqchip_state(irq->host_irq,
-+							    IRQCHIP_STATE_PENDING,
-+							    true);
-+				WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-+				raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-+			}
- 		} else {
- 			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
- 		}
-diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
-index 97fb2a40e6ba..2199302597fa 100644
---- a/virt/kvm/arm/vgic/vgic-mmio.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio.c
-@@ -5,6 +5,8 @@
- 
- #include <linux/bitops.h>
- #include <linux/bsearch.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
- #include <kvm/iodev.h>
-@@ -59,6 +61,11 @@ unsigned long vgic_mmio_read_group(struct kvm_vcpu *vcpu,
- 	return value;
- }
- 
-+static void vgic_update_vsgi(struct vgic_irq *irq)
-+{
-+	WARN_ON(its_prop_update_vsgi(irq->host_irq, irq->priority, irq->group));
-+}
-+
- void vgic_mmio_write_group(struct kvm_vcpu *vcpu, gpa_t addr,
- 			   unsigned int len, unsigned long val)
- {
-@@ -71,7 +78,12 @@ void vgic_mmio_write_group(struct kvm_vcpu *vcpu, gpa_t addr,
- 
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
- 		irq->group = !!(val & BIT(i));
--		vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-+		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-+			vgic_update_vsgi(irq);
-+			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-+		} else {
-+			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-+		}
- 
- 		vgic_put_irq(vcpu->kvm, irq);
- 	}
-@@ -113,7 +125,21 @@ void vgic_mmio_write_senable(struct kvm_vcpu *vcpu,
- 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
- 
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
--		if (vgic_irq_is_mapped_level(irq)) {
-+		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-+			if (!irq->enabled) {
-+				struct irq_data *data;
-+
-+				irq->enabled = true;
-+				data = &irq_to_desc(irq->host_irq)->irq_data;
-+				while (irqd_irq_disabled(data))
-+					enable_irq(irq->host_irq);
-+			}
-+
-+			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-+			vgic_put_irq(vcpu->kvm, irq);
-+
-+			continue;
-+		} else if (vgic_irq_is_mapped_level(irq)) {
- 			bool was_high = irq->line_level;
- 
- 			/*
-@@ -148,6 +174,8 @@ void vgic_mmio_write_cenable(struct kvm_vcpu *vcpu,
- 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
- 
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-+		if (irq->hw && vgic_irq_is_sgi(irq->intid) && irq->enabled)
-+			disable_irq_nosync(irq->host_irq);
- 
- 		irq->enabled = false;
- 
-@@ -167,10 +195,22 @@ unsigned long vgic_mmio_read_pending(struct kvm_vcpu *vcpu,
- 	for (i = 0; i < len * 8; i++) {
- 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
- 		unsigned long flags;
-+		bool val;
- 
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
--		if (irq_is_pending(irq))
--			value |= (1U << i);
-+		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-+			int err;
-+
-+			val = false;
-+			err = irq_get_irqchip_state(irq->host_irq,
-+						    IRQCHIP_STATE_PENDING,
-+						    &val);
-+			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-+		} else {
-+			val = irq_is_pending(irq);
-+		}
-+
-+		value |= ((u32)val << i);
- 		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
- 
- 		vgic_put_irq(vcpu->kvm, irq);
-@@ -215,6 +255,21 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
- 		}
- 
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-+
-+		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-+			/* HW SGI? Ask the GIC to inject it */
-+			int err;
-+			err = irq_set_irqchip_state(irq->host_irq,
-+						    IRQCHIP_STATE_PENDING,
-+						    true);
-+			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-+
-+			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-+			vgic_put_irq(vcpu->kvm, irq);
-+
-+			continue;
-+		}
-+
- 		if (irq->hw)
- 			vgic_hw_irq_spending(vcpu, irq, is_uaccess);
- 		else
-@@ -269,6 +324,20 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
- 
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
- 
-+		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-+			/* HW SGI? Ask the GIC to clear its pending bit */
-+			int err;
-+			err = irq_set_irqchip_state(irq->host_irq,
-+						    IRQCHIP_STATE_PENDING,
-+						    false);
-+			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-+
-+			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-+			vgic_put_irq(vcpu->kvm, irq);
-+
-+			continue;
-+		}
-+
- 		if (irq->hw)
- 			vgic_hw_irq_cpending(vcpu, irq, is_uaccess);
- 		else
-@@ -318,8 +387,15 @@ static void vgic_mmio_change_active(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
- 
- 	raw_spin_lock_irqsave(&irq->irq_lock, flags);
- 
--	if (irq->hw) {
-+	if (irq->hw && !vgic_irq_is_sgi(irq->intid)) {
- 		vgic_hw_irq_change_active(vcpu, irq, active, !requester_vcpu);
-+	} else if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-+		/*
-+		 * GICv4.1 VSGI feature doesn't track an active state,
-+		 * so let's not kid ourselves, there is nothing we can
-+		 * do here.
-+		 */
-+		irq->active = false;
- 	} else {
- 		u32 model = vcpu->kvm->arch.vgic.vgic_model;
- 		u8 active_source;
-@@ -493,6 +569,8 @@ void vgic_mmio_write_priority(struct kvm_vcpu *vcpu,
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
- 		/* Narrow the priority range to what we actually support */
- 		irq->priority = (val >> (i * 8)) & GENMASK(7, 8 - VGIC_PRI_BITS);
-+		if (irq->hw && vgic_irq_is_sgi(irq->intid))
-+			vgic_update_vsgi(irq);
- 		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
- 
- 		vgic_put_irq(vcpu->kvm, irq);
--- 
-2.20.1
+Where? How?
+If you mean:
+        /* Throw away stuff rotting on the sack queue.  */
+        list_for_each_safe(lchunk, temp, &q->sacked) {
+                tchunk = list_entry(lchunk, struct sctp_chunk,
+                                    transmitted_list);
+                tsn = ntohl(tchunk->subh.data_hdr->tsn);
+                if (TSN_lte(tsn, ctsn)) {
+                        list_del_init(&tchunk->transmitted_list);
+                        if (asoc->peer.prsctp_capable &&
+                            SCTP_PR_PRIO_ENABLED(chunk->sinfo.sinfo_flags))
+                                asoc->sent_cnt_removable--;
+                        sctp_chunk_free(tchunk);
 
+Then sctp_chunk_free is supposed to free the datamsg as well for
+chunks that were cumulative-sacked.
+For those not cumulative-sacked, sctp_for_each_tx_datachunk() will
+handle q->sacked queue as well:
+        list_for_each_entry(chunk, &q->sacked, transmitted_list)
+                cb(chunk);
+
+So I don't see how skbs can be overlooked here.
+
+> 		SKB was deleted from outq->sack
+> (but the datamsg held SKB at sctp_datamsg_to_asoc
+
+You mean sctp_datamsg_from_user ? If so, isn't it the other way
+around? sctp_datamsg_assign() will hold the datamsg, not the skb.
+
+> So, sctp_wfree was not called to destroy SKB)
+> 
+> then migrate happened
+> 
+> 	sctp_for_each_tx_datachunk(
+> 	sctp_clear_owner_w);
+> 	sctp_assoc_migrate();
+> 	sctp_for_each_tx_datachunk(
+> 	sctp_set_owner_w);
+> SKB was not in the outq, and was not changed to newsk
+
+The real fix is to fix the migration to the new socket, though the
+situation on which it is happening is still not clear.
+
+The 2nd sendto() call on the reproducer is sending 212992 bytes on a
+single call. That's usually the whole sndbuf size, and will cause
+fragmentation to happen. That means the datamsg will contain several
+skbs. But still, the sacked chunks should be freed if needed while the
+remaining ones will be left on the queues that they are.
+
+Thanks,
+Marcelo
