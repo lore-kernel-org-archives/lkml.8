@@ -2,106 +2,79 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9CFC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2417C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F19F20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF172072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:19:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbgCTWTP (ORCPT
+        id S1727400AbgCTWT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:19:15 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37559 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgCTWTO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:19:14 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFPyQ-00050m-N3; Fri, 20 Mar 2020 23:18:38 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 3A4771039FC; Fri, 20 Mar 2020 23:18:38 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "maintainer\:X86 ARCHITECTURE \(32-BIT AND 64-BIT\)" <x86@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-edac@vger.kernel.org,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto <linux-crypto@vger.kernel.org>
-Subject: Re: [patch 09/22] cpufreq: Convert to new X86 CPU match macros
-In-Reply-To: <CAHp75VfuU98gEriS+GDJqZX4BV-cZT9hPbrDX-roeo63O8UvYQ@mail.gmail.com>
-References: <20200320131345.635023594@linutronix.de> <20200320131509.564059710@linutronix.de> <CAHp75VdkvyqOaAsLmz8K2j4bdd0sboPoUpRr6U-zvtkSaQfPRQ@mail.gmail.com> <87eetmpy56.fsf@nanos.tec.linutronix.de> <CAHp75VfuU98gEriS+GDJqZX4BV-cZT9hPbrDX-roeo63O8UvYQ@mail.gmail.com>
-Date:   Fri, 20 Mar 2020 23:18:38 +0100
-Message-ID: <877dzept4x.fsf@nanos.tec.linutronix.de>
+        Fri, 20 Mar 2020 18:19:26 -0400
+Received: from 8bytes.org ([81.169.241.247]:54714 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726666AbgCTWT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 18:19:26 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 87BB24CA; Fri, 20 Mar 2020 23:19:24 +0100 (CET)
+Date:   Fri, 20 Mar 2020 23:19:23 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     erdemaktas@google.com, x86@kernel.org, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 18/70] x86/boot/compressed/64: Add stage1 #VC handler
+Message-ID: <20200320221923.GL5122@8bytes.org>
+References: <20200319091407.1481-1-joro@8bytes.org>
+ <20200319091407.1481-19-joro@8bytes.org>
+ <alpine.DEB.2.21.2003201413010.205664@chino.kir.corp.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2003201413010.205664@chino.kir.corp.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+On Fri, Mar 20, 2020 at 02:16:39PM -0700, David Rientjes wrote:
+> On Thu, 19 Mar 2020, Joerg Roedel wrote:
+> > +#define	GHCB_SEV_GHCB_RESP_CODE(v)	((v) & 0xfff)
+> > +#define	VMGEXIT()			{ asm volatile("rep; vmmcall\n\r"); }
+> 
+> Since preemption and irqs should be disabled before updating the GHCB and 
+> its MSR and until the contents have been accessed following VMGEXIT, 
+> should there be checks in place to ensure that's always the case?
 
-> On Fri, Mar 20, 2020 at 10:30 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
->> > On Fri, Mar 20, 2020 at 3:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> >
->> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6,  9, X86_FEATURE_EST, NULL),
->> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6, 13, X86_FEATURE_EST, NULL),
->> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  3, X86_FEATURE_EST, NULL),
->> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  4, X86_FEATURE_EST, NULL),
->> >
->> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
->> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
->> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
->> >
->> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
->> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
->> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
->> >
->> > Perhaps use names instead of 6 and 15?
->>
->> Thought about that and did not come up with anyting useful. FAM6 vs. 6
->> is not really any better
->
-> Hmm... Do we have family 15 for Intel? Perhaps I missed something...
-> Or is it for any family?
+Good point, some checking is certainly helpful. Currently it is the
+case, because the GHCB is accessed and used only:
 
-Pentium 4
+	1) At boot when only the boot CPU is running
+
+	2) In the #VC handler, which does not enable interrupts
+
+	3) In the NMI handler, which is also not preemptible
+
+I can also add code to sev_es_get/put_ghcb to make sure these conditions
+are met. All this does not prevent the preemption by NMIs, which could
+cause another nested #VC exception, but that is handled separatly.
+
+
+Regards,
+
+	Joerg
