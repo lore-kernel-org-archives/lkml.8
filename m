@@ -2,115 +2,150 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED469C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4531CC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBF3B20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1701F20775
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:56:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gcT/fSxv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbgCTU4c (ORCPT
+        id S1727453AbgCTU4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 16:56:32 -0400
-Received: from mga11.intel.com ([192.55.52.93]:32133 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbgCTUzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 16:55:48 -0400
-IronPort-SDR: zBOXt9AIK2pA/NfnUCLlmB88OZU4UxuqvreV8/at98T3h62uRy2txAGSjOODIIlCzO9UroCUrg
- UeqCv10w1bkA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 13:55:47 -0700
-IronPort-SDR: OUj5t6iz8d0eZtivRlx4QNpH4zqb8RymZ0YbZYk/OPYGii3ES4xsc5w3DGMWvQqAlBRFaZvkyg
- 9q4P3wc+4UTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,285,1580803200"; 
-   d="scan'208";a="280543317"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 20 Mar 2020 13:55:47 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Peter Xu <peterx@redhat.com>
-Subject: [PATCH 1/7] KVM: Fix out of range accesses to memslots
-Date:   Fri, 20 Mar 2020 13:55:40 -0700
-Message-Id: <20200320205546.2396-2-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200320205546.2396-1-sean.j.christopherson@intel.com>
-References: <20200320205546.2396-1-sean.j.christopherson@intel.com>
+        Fri, 20 Mar 2020 16:56:38 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:32939 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727422AbgCTU4g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 16:56:36 -0400
+Received: by mail-vs1-f68.google.com with SMTP id y138so4941525vsy.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 13:56:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OYdG2hZZXDgzoLuLkSsYKB717kSEQmaZ6NuxIAkbkRI=;
+        b=gcT/fSxvwm997aNwLBz/zCmRcQu7nWKXDJpT0PIDSQR8ASPqr6q7+iYrqwNI9OOzx5
+         HHoQ5CvwCFDFgIo3RDlaOMxpWDiYkob13WZ1XDH5c0lg54kPSz9RBhPZ9UN6Qh7jhU5U
+         MUILZ0Echiv7Ns1i1d7cKl6S/BY1KfmH59RFQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OYdG2hZZXDgzoLuLkSsYKB717kSEQmaZ6NuxIAkbkRI=;
+        b=GGOqODzP0xl4w0RnULoA3nl42oBlQ62RPJWsWA/uOYriEZWtnfdY54DSmjUbyhP7TL
+         SrodpZTQNyo3pMB0l7vnl3lslMTRNyQBjwlxX/YeRaRJSEoa49vckDyU/BqVW7sOZs86
+         7LDH+0QHCLsnj9r7IO9Ac/5n4USROsgLHl/ob58jcxe2sHCYXk9VeQcoJmnKfg0MiPop
+         B/pYJm2r5Mw4pSszgrLhaLEDtlTBU2sekPzwBozPgQmO+2Bwcrw9xHTsrxXwEfrewfN5
+         Ep/T8+MH8Ln/FhIEyAkqy2LJ8KtcAY9cXQfX2rAs0Nxb4D7xUDg+v4dmutbmAY9mBT1G
+         EIGA==
+X-Gm-Message-State: ANhLgQ3pNOtDcGeCVRL0gHq5FgZ1eAQp/COTW+KzXIjHuwwwgKdOrbvJ
+        5orFbX64Ui0YEoYooVVRYWulGvfEOlvPt6+QFxU1hg==
+X-Google-Smtp-Source: ADFU+vtcGXL3fhlGGMllbHl+g02q56snlZV+onuaMun/wEuC1hbpQwMm+tjNvRXzZoBInnt9/mzSWyrRn3dNAiDI9JE=
+X-Received: by 2002:a67:ec81:: with SMTP id h1mr6782268vsp.96.1584737794701;
+ Fri, 20 Mar 2020 13:56:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200320020153.98280-1-abhishekpandit@chromium.org>
+ <20200319190144.1.I40cc9b3d5de04f0631c931d94757fb0f462b24bd@changeid> <CAD=FV=XT=NTyPag9wNCotATBzT4v9pg=OOa8X6=xWkMH2AFiLQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=XT=NTyPag9wNCotATBzT4v9pg=OOa8X6=xWkMH2AFiLQ@mail.gmail.com>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Fri, 20 Mar 2020 13:56:23 -0700
+Message-ID: <CANFp7mUKRRQT0m9jRB4aeE3GeSW8UM6d-NVJ3CZmHibhSny3+g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] Bluetooth: btmrvl: Detect hangs and force a reset of
+ the SDIO card
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        BlueZ <linux-bluetooth@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reset the LRU slot if it becomes invalid when deleting a memslot to fix
-an out-of-bounds/use-after-free access when searching through memslots.
+Thanks for the heads up Doug. I'll resend the patch once I handle the
+case where the reset is immediate and not a full unplug/replug.
 
-Explicitly check for there being no used slots in search_memslots(), and
-in the caller of s390's approximation variant.
+In the meantime, please do not merge this patch.
 
-Fixes: 36947254e5f9 ("KVM: Dynamically size memslot array based on number of used slots")
-Reported-by: Qian Cai <cai@lca.pw>
-Cc: Peter Xu <peterx@redhat.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/s390/kvm/kvm-s390.c | 3 +++
- include/linux/kvm_host.h | 3 +++
- virt/kvm/kvm_main.c      | 3 +++
- 3 files changed, 9 insertions(+)
+Thanks
+Abhishek
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 807ed6d722dd..cb15fdda1fee 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -2002,6 +2002,9 @@ static int kvm_s390_get_cmma(struct kvm *kvm, struct kvm_s390_cmma_log *args,
- 	struct kvm_memslots *slots = kvm_memslots(kvm);
- 	struct kvm_memory_slot *ms;
- 
-+	if (unlikely(!slots->used_slots))
-+		return 0;
-+
- 	cur_gfn = kvm_s390_next_dirty_cmma(slots, args->start_gfn);
- 	ms = gfn_to_memslot(kvm, cur_gfn);
- 	args->count = 0;
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 35bc52e187a2..b19dee4ed7d9 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1032,6 +1032,9 @@ search_memslots(struct kvm_memslots *slots, gfn_t gfn)
- 	int slot = atomic_read(&slots->lru_slot);
- 	struct kvm_memory_slot *memslots = slots->memslots;
- 
-+	if (unlikely(!slots->used_slots))
-+		return NULL;
-+
- 	if (gfn >= memslots[slot].base_gfn &&
- 	    gfn < memslots[slot].base_gfn + memslots[slot].npages)
- 		return &memslots[slot];
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 28eae681859f..f744bc603c53 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -882,6 +882,9 @@ static inline void kvm_memslot_delete(struct kvm_memslots *slots,
- 
- 	slots->used_slots--;
- 
-+	if (atomic_read(&slots->lru_slot) >= slots->used_slots)
-+		atomic_set(&slots->lru_slot, 0);
-+
- 	for (i = slots->id_to_index[memslot->id]; i < slots->used_slots; i++) {
- 		mslots[i] = mslots[i + 1];
- 		slots->id_to_index[mslots[i].id] = i;
--- 
-2.24.1
-
+On Fri, Mar 20, 2020 at 1:00 PM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Thu, Mar 19, 2020 at 7:02 PM Abhishek Pandit-Subedi
+> <abhishekpandit@chromium.org> wrote:
+> >
+> > From: Matthias Kaehlcke <mka@chromium.org>
+> >
+> > When scanning for BLE devices for a longer period (e.g. because a
+> > BLE device is paired, but not connected) the Marvell 8997 often
+> > ends up in a borked state, which manifests through failures on
+> > certain SDIO transactions.
+> >
+> > When such a SDIO failure is detected force a reset of the SDIO
+> > card to initialize it from scratch. Since the SDIO bus is shared
+> > with the WiFi part of the chip this also involves a reset of WiFi.
+> >
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > ---
+> >
+> >  drivers/bluetooth/btmrvl_sdio.c | 24 ++++++++++++++++++++++++
+> >  drivers/bluetooth/btmrvl_sdio.h |  1 +
+> >  2 files changed, 25 insertions(+)
+> >
+> > diff --git a/drivers/bluetooth/btmrvl_sdio.c b/drivers/bluetooth/btmrvl_sdio.c
+> > index 0f3a020703ab..69a8b6b3c11c 100644
+> > --- a/drivers/bluetooth/btmrvl_sdio.c
+> > +++ b/drivers/bluetooth/btmrvl_sdio.c
+> > @@ -22,6 +22,8 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/suspend.h>
+> >
+> > +#include <linux/mmc/core.h>
+> > +#include <linux/mmc/card.h>
+> >  #include <linux/mmc/sdio_ids.h>
+> >  #include <linux/mmc/sdio_func.h>
+> >  #include <linux/module.h>
+> > @@ -59,6 +61,23 @@ static const struct of_device_id btmrvl_sdio_of_match_table[] = {
+> >         { }
+> >  };
+> >
+> > +static void btmrvl_sdio_card_reset_work(struct work_struct *work)
+> > +{
+> > +       struct btmrvl_sdio_card *card =
+> > +               container_of(work, struct btmrvl_sdio_card, reset_work);
+> > +       struct sdio_func *func = card->func;
+> > +
+> > +       sdio_claim_host(func);
+> > +       mmc_hw_reset(func->card->host);
+>
+> The fact that you don't check the return value here seems like a
+> problem.  See specifically how commit cdb2256f795e ("mwifiex: Re-work
+> support for SDIO HW reset") handles it.
+>
+> This is a distinct difference between the solution that we landed in
+> Chrome OS 4.19 and what landed upstream.  In Chrome OS 4.19 we went
+> the simple approach and said that there was only one way to reset the
+> card: treat it as a full unplug / replug of the card.  ...but upstream
+> adopted a different solution.  For upstream if there is only a single
+> function on the SD card it will not trigger a full unplug/replug and
+> it's up to the function driver to re-init itself.  This wasn't such a
+> big deal for the WiFi driver since it already had a way to re-init
+> itself (mwifiex_reinit_sw).  I don't know how hard it will be for
+> Bluetooth, but that needs to be part of this patch I think?
+>
+> -Doug
