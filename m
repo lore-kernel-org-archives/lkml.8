@@ -2,91 +2,127 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B532C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C104AC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 007AB20772
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584682104;
-	bh=FO5gNo9ZRts77UVIBxkgq5rmiyJY3FXlj5T8dqql1WQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y3qVItUsf82Gsjk6ZHw7ympmGLfnNVsoflYb4ApIS5KN+L7C6UCPrDiOj4JUt1o7O
-	 cF0tnyrCQjx69JhDJqFBGT/lLfuIWC2ad7OgETyjfgsxMevD/6QIs6iOoQc5aALjCB
-	 94IBegP6tSU7fwsk5ao/MMoE+dqGasx/ZIKlK94U=
+	by mail.kernel.org (Postfix) with ESMTP id 9891B20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:30:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EZIUuPiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgCTF2W (ORCPT
+        id S1726831AbgCTFaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 01:28:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33458 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgCTF2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 01:28:22 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53DEC20722;
-        Fri, 20 Mar 2020 05:28:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584682101;
-        bh=FO5gNo9ZRts77UVIBxkgq5rmiyJY3FXlj5T8dqql1WQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H/b4YGiVzb7bQp0TUbbBp0010RaSpXSa0f4jToSs924V8kn//Kf5H5RD/40y+A+X3
-         dIu9nuUjUU4T3mBAvB7O+OMdRhHhZip0YrGigwJEiSJzw2j9BWKw6QNOnMwWuoDyyh
-         elefiarDP+nrvRZ7MRxDafmpflzRy3X7vgsm2mPE=
-Date:   Thu, 19 Mar 2020 22:28:19 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        NeilBrown <neilb@suse.com>
-Subject: Re: [PATCH v4 0/5] module autoloading fixes and cleanups
-Message-ID: <20200320052819.GB1315@sol.localdomain>
-References: <20200318230515.171692-1-ebiggers@kernel.org>
+        Fri, 20 Mar 2020 01:30:13 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:32837 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgCTFaM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 01:30:12 -0400
+Received: by mail-oi1-f196.google.com with SMTP id r7so5370615oij.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 22:30:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+thAp6yyX7UKE9dtUxDENsQxMtVNf3sefwYHyrkPjH0=;
+        b=EZIUuPizsyWJamEo8OnXltTQLT0zbEnN7i0eoveXQdd8aAXB0sTHgk0h0j2aPv3xdl
+         PvlcmCU9Qqo6UPCU0YGJjPZHZklXi0mnfTFFSMmLJO2+8XQJhgG2+SrUYGqJLbRUs34w
+         MHA/fMaS5ydEyWuSCzaNeVFjEQP3llaZOTs2mjgeihPn7LkbpRz5ycvSOPlzm6gBjn0W
+         OaxQcy9AeArJqrxxJWa3gm8Z8TuZZTaY8qlWeFQ/x5EcXXheQhyOAhxkq6P9XBi6DkuI
+         q84xSlpwp6t9y/DeFQzUxsQx2V8ge6Z5qW1kL9lgqfzvKq4NqI8zeJih0o6Bvzr7ePwC
+         XgPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+thAp6yyX7UKE9dtUxDENsQxMtVNf3sefwYHyrkPjH0=;
+        b=aTIFmyDcBAi3D+I8pfxLxiPxMC3dLYXY9jCIk5e0QEoo7L76kakf1u33lsKF96CzAM
+         vUfS06knQElg71Z6RZM3S66nsIui6LW98cLriXu3fUV0sK3zcvhvroN8sQnR7gy1rDkd
+         RYjfiNWCYL2M2uYCqhcCOIocButouGBK/Ju34zB6mxNJwDq+lAfz3fRc4g7qX7TXLkJL
+         wAONkQ9/jicuMd2CxVbvs4kxHKNELwXpOaibQI7IsbchzfvtPWnW6/YhXlEkrYVYsG3+
+         S3IQNH52ReTDRT6yx3LMjrGLx22wrAM4btqJysya/DfIAYn9P6gkY0MR9LBn2bQYvaH7
+         XRSQ==
+X-Gm-Message-State: ANhLgQ1Hdb3pBLgj30QzHXc/PHrYydrhp9/jHJm82ffX+ABgE8oIlvHJ
+        HyDwj+pJdjBjR+pEPGmQSn/FdilgRWPMedugR7Ahvw==
+X-Google-Smtp-Source: ADFU+vs9ry2XYsgdK4314uO1jxo2AlhedtLaVepDUfyzcjwnRtJPqD/97uig5eK0Wc99bItxHnujbp8fjRWMCAR3xjM=
+X-Received: by 2002:aca:f541:: with SMTP id t62mr5236270oih.172.1584682212108;
+ Thu, 19 Mar 2020 22:30:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318230515.171692-1-ebiggers@kernel.org>
+References: <20200317065452.236670-1-saravanak@google.com> <CAGETcx-uZ3YJHCYqFm3so8-woTvL3SSDY2deNonthTetcE+mXQ@mail.gmail.com>
+ <20200319073927.GA3442166@kroah.com>
+In-Reply-To: <20200319073927.GA3442166@kroah.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 19 Mar 2020 22:29:36 -0700
+Message-ID: <CAGETcx-3oeJOvpCYj==RJuBU9HP8F0ZNr0YLvUHGHF52b=F7HA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/6] Fix device links functional breakage in 4.19.99
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     stable <stable@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 04:05:10PM -0700, Eric Biggers wrote:
-> This series fixes a bug where request_module() was reporting success to
-> kernel code when module autoloading had been completely disabled via
-> 'echo > /proc/sys/kernel/modprobe'.
-> 
-> It also addresses the issues raised on the original thread
-> (https://lkml.kernel.org/lkml/20200310223731.126894-1-ebiggers@kernel.org/T/#u)
-> by documenting the modprobe sysctl, adding a self-test for the empty
-> path case, and downgrading a user-reachable WARN_ONCE().
-> 
-> Changed since v3:
->   - Added Fixes tag to the fs/filesystems.c patch, and mentioned why the
->     warning is continued to be printed once only.
-> 
-> Changed since v2:
->   - Adjusted the new documentation to avoid implicitly bringing up
->     module aliases, which are a more complex topic.
->   - Split the selftest patch into two patches, one to fix the test
->     numbering bug and one to add the new tests.
-> 
-> Changed since v1:
->   - Added patches to address the other issues raised on the thread.
+On Thu, Mar 19, 2020 at 12:39 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Mar 18, 2020 at 12:10:43PM -0700, Saravana Kannan wrote:
+> > On Mon, Mar 16, 2020 at 11:54 PM Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > As mentioned in an earlier email thread [1], 4.19.99 broke the ability
+> > > to create stateful and stateless device links between the same set of
+> > > devices when it pulled in a valid bug fix [2]. While the fix was valid,
+> > > it removes a functionality that was present before the bug fix.
+> > >
+> > > This patch series attempts to fix that by pulling in more patches from
+> > > upstream. I've just done compilation testing so far. But wanted to send
+> > > out a v1 to see if this patch list was acceptable before I fixed up the
+> > > commit text format to match what's needed for stable mailing list.
+> > >
+> > > Some of the patches are new functionality, but for a first pass, it was
+> > > easier to pull these in than try and fix the conflicts. If these patches
+> > > are okay to pull into stable, then all I need to do is fix the commit
+> > > text.
+> >
+> > I took a closer look at all the patches. Everyone of them is a bug fix
+> > except Patch 4/6. But Patch 4/6 is a fairly minimal change and I think
+> > it's easier/cleaner to just pick it up too instead of trying to
+> > resolve merge conflicts in the stable branch.
+> >
+> > 1/6 - Fixes what appears to be a memory leak bug in upstream.
+> > 2/6 - Fixes error in initial state of the device link if it's created
+> > under some circumstances.
+> > 3/6 - Fixes a ref count bug in upstream. Looks like it can lead to memory leaks?
+> > 4/6 - Adds a minor feature to kick off a probe attempt of a consumer
+> > 5/6 - Fixes the break in functionality that happened in 4.19.99
+> > 6/6 - Fixes bug in 5/6 (upstream bug)
+> >
+> > Greg
+> >
+> > Do these patches look okay for you to pull into 4.19 stable? If so,
+> > please let me know if you need me to send v2 with commit fix up.
+> >
+> > The only fix up needed is to these patches at this point is changing
+> > "(cherry picked from commit ...)" with "[ Upstream commit ... ]". The
+> > SHAs themselves are the correct SHAs from upstream.
+>
+> These all look good to me, now all queued up, thanks.
 
-It seems that people are relatively happy with this patch series now.
-Andrew, will you be taking it through -mm?  I don't see any better place.
+Awesome, thanks!
 
-Thanks,
-
-- Eric
+-Saravana
