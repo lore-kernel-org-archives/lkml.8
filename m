@@ -2,151 +2,148 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C2FC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B83C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A977620739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:57:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c7M1lzi/"
+	by mail.kernel.org (Postfix) with ESMTP id 4007920739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbgCTK5B (ORCPT
+        id S1727127AbgCTK7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:57:01 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:44630 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726726AbgCTK5B (ORCPT
+        Fri, 20 Mar 2020 06:59:03 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:41897 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgCTK7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:57:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584701820;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=H3cw3n7DECAvhMsR5v/8iVgWxi7rS06XuVpILiRCFOk=;
-        b=c7M1lzi/nvhL3yQVFSwZQi9hUWrRFdIyzCFuelQ5+DIY84ynz+GeRSmdL/8qrs6eBXwsAf
-        Y3nuDvs/jJfQb1Pl7fuqI1ZHOcM/CUmNpT3tdEwAD120pcEPbt8P40tqc2XKWMfEaNNM3l
-        hGOsZDoLgBLseSSsMkmzOj+q3ol3JWg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-2-OwZAXjqLMAKh5q-K0N9TJQ-1; Fri, 20 Mar 2020 06:56:56 -0400
-X-MC-Unique: OwZAXjqLMAKh5q-K0N9TJQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EB188800EBD;
-        Fri, 20 Mar 2020 10:56:53 +0000 (UTC)
-Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C5565C1D8;
-        Fri, 20 Mar 2020 10:56:49 +0000 (UTC)
-Subject: Re: [PATCH v5 18/23] KVM: arm64: GICv4.1: Add direct injection
- capability to SGI registers
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-19-maz@kernel.org>
- <06705d70-0f99-e719-af52-1a5f778562d8@redhat.com>
- <3f7094ffd77a6615d7179be94dbecc60@kernel.org>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <9b1ce453-f24f-7974-99ca-1608ad7c6a13@redhat.com>
-Date:   Fri, 20 Mar 2020 11:56:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 20 Mar 2020 06:59:02 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MPXta-1itszl3gFW-00Meet; Fri, 20 Mar 2020 11:58:47 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id E62146501DB;
+        Fri, 20 Mar 2020 10:58:46 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id iWOs4ZaNJtNh; Fri, 20 Mar 2020 11:58:46 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 9777564F45C;
+        Fri, 20 Mar 2020 11:58:46 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.8.5.41) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 20 Mar 2020 11:58:46 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id 09B4B8050D; Fri, 20 Mar 2020 11:58:46 +0100 (CET)
+Date:   Fri, 20 Mar 2020 11:58:46 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH v2 05/10] media: adv748x: add support for HDMI audio
+Message-ID: <20200320105846.GG4344@pflmari>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+References: <cover.1584639664.git.alexander.riesen@cetitec.com>
+ <252bb433f47b0ccb61bb077abdbd892091abc550.1584639664.git.alexander.riesen@cetitec.com>
+ <CAMuHMdXOAQtuxCAfb=sZKodyJWwSrf-GO-pdV3HYkOytQW4ENg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <3f7094ffd77a6615d7179be94dbecc60@kernel.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXOAQtuxCAfb=sZKodyJWwSrf-GO-pdV3HYkOytQW4ENg@mail.gmail.com>
+X-Originating-IP: [10.8.5.41]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A6D776A
+X-Provags-ID: V03:K1:gtuij3dAJiYujWnkoDtooYsdCMWO9pBYd9dPTTa/FSGo8gecAfC
+ URld0b8m+Rp/auU0krCrDaaXNorutl+DDrafS3dPrrUAUOLw7JXbbvI1mVibbmCOQXKYIvk
+ ezIQmWEASa/+6YHZ8Nfa+MiLM9ojp8w1V24gfWxek7ZCKQc2SYBW8lqtwAlfUqUNBAHSTiF
+ EN9Z693r2b9T7rDM9t6vg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yiw+bxjplYU=:Ewjxxm0gcp4ntRvEsGYeZV
+ 7zsQK2sxjP4AvCducAmfHAokJ7y7uzrkl94oaECFh2BrRJAu3ejMBZF/xGwQ6mEU6ch2eF3ai
+ +e5+DXZKEnwPks+ue3r3fdoivP8aHalIYyPyU985b9l6MxYUwD+HCH6pmXJCjxUs+lUM/eNnR
+ FL2gELpL5xDn+LSoxgshN4HtlUsVsbdA0O/j/I6+SLmzLUmUVT6mRYa4pAuk7xcGnGyPecIfA
+ GLa4+oKFgR8O7bUD82KNyDd6tpBW8XR1x7SveaCTuseqNhPh3AOcrjbg/wF/SOsTcRWzZW+OS
+ U0o1JKMpS3kl/tiOK1422h1IhlIJrm9HrXpaGgNYbdZlduKP+ca3K0TG7CfSzY9ktakOwvz+j
+ 56qmx28b5g2RRObGPwhBroXwwoPgc3gTPkKe3ry9Df8Q8OgdFhUFoXtUOpXvMh/r1zDFcHHjt
+ q3kYsrP0V1jK8wgyDLeXUwcpXIMhtKQqPLHDax5JQKry9aROE1ZHnYYE/Ry/l7TeXPsDAiJk9
+ P1Z2Mj03clbdY7v+q8Sr6OrUv8A+DctE3EWGIl+O3NBTTPgW4qMXJdP0mPEySD8/6Ril78eRB
+ M9F7a9Jsvx+KRD0PYuHlsFHbOCO/L03+TIq9h/QqGSy3iJJk2Rq9A3mrF424z5RPQMexoaDkH
+ ZLjACeKiLhLL9c+q3He+e7JtW9U0VpcRFOhf83VZLB7a2sLRDBVGkAw4/GgxsEk9LtLLrlbeN
+ p7bVmEDYKxkPIf0ma4MYQTesQoacvZBurF3+V7+He138APayDX/wotHV3s/4bHVjLeyxL2fCY
+ 2k6hd/GA7rcIiLAvEWHiGy6CD+6IB45WQRwnTx/P8sAoSTnzaiPEtJ9qEsR4B2aKBJLTW2X
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Hi Geert,
 
-On 3/20/20 11:05 AM, Marc Zyngier wrote:
-> Hi Eric,
->=20
-> On 2020-03-20 08:11, Auger Eric wrote:
->> Hi Marc,
->> On 3/4/20 9:33 PM, Marc Zyngier wrote:
->>> Most of the GICv3 emulation code that deals with SGIs now has to be
->>> aware of the v4.1 capabilities in order to benefit from it.
->>>
->>> Add such support, keyed on the interrupt having the hw flag set and
->>> being a SGI.
->>>
->>> Signed-off-by: Marc Zyngier <maz@kernel.org>
->>> ---
->>> =A0virt/kvm/arm/vgic/vgic-mmio-v3.c | 15 +++++-
->>> =A0virt/kvm/arm/vgic/vgic-mmio.c=A0=A0=A0 | 88 ++++++++++++++++++++++=
-++++++++--
->>> =A02 files changed, 96 insertions(+), 7 deletions(-)
->>>
->=20
-> [...]
->=20
->>> @@ -113,7 +125,21 @@ void vgic_mmio_write_senable(struct kvm_vcpu *vc=
-pu,
->>> =A0=A0=A0=A0=A0=A0=A0=A0 struct vgic_irq *irq =3D vgic_get_irq(vcpu->=
-kvm, vcpu, intid +
->>> i);
->>>
->>> =A0=A0=A0=A0=A0=A0=A0=A0 raw_spin_lock_irqsave(&irq->irq_lock, flags)=
-;
->>> -=A0=A0=A0=A0=A0=A0=A0 if (vgic_irq_is_mapped_level(irq)) {
->>> +=A0=A0=A0=A0=A0=A0=A0 if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (!irq->enabled) {
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 struct irq_data *data;
->>> +
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 irq->enabled =3D true;
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 data =3D &irq_to_desc(=
-irq->host_irq)->irq_data;
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 while (irqd_irq_disabl=
-ed(data))
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 enable_irq=
-(irq->host_irq);
->> could you explain me why the while() is requested?
->=20
-> Ah, interesting question: disable_irq() (and its variants) can nest. Th=
-is
-> means that if you have done two disable_irq(), you must do two enable_i=
-rq()
-> to get back to the interrupt being enabled.
->=20
-> The locking should ensure that this nesting doesn't happen, but I'm
-> paranoid
-> (see the GICv4.0 doorbell handling). It also makes it easier to reason
-> about
-> the initial state.
+Geert Uytterhoeven, Fri, Mar 20, 2020 09:43:29 +0100:
+> CC linux-clk for the clock provider.
+> 
+> On Thu, Mar 19, 2020 at 6:42 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
+> > This adds an implemention of SoC DAI driver which provides access to the
+> > I2S port of the device.
 
-OK! thank you for this explanation.
+I just noticed I don't do clk_prepare_enable anywhere.
+Shouldn't the clock master enable its clocks somewhere?
 
-Thanks
+> > diff --git a/drivers/media/i2c/adv748x/adv748x-dai.c b/drivers/media/i2c/adv748x/adv748x-dai.c
+> > new file mode 100644
+> > index 000000000000..4775a0c7ed7f
+> > --- /dev/null
+> > +++ b/drivers/media/i2c/adv748x/adv748x-dai.c
+...
+> > +static int adv748x_dai_startup(struct snd_pcm_substream *sub, struct snd_soc_dai *dai)
+> > +{
+> > +       struct adv748x_state *state = state_of(dai);
+> > +
+> > +       if (sub->stream != SNDRV_PCM_STREAM_CAPTURE)
+> > +               return -EINVAL;
+> > +       return set_audio_pads_state(state, 1);
+> > +}
 
-Eric
->=20
-> [...]
->=20
->> Reviewed-by: Eric Auger <eric.auger@redhat.com>
->=20
-> Thanks!
->=20
-> =A0=A0=A0=A0=A0=A0=A0=A0 M.
+For example, here, after activation of the lines succeeded?
+
+> > +static void adv748x_dai_shutdown(struct snd_pcm_substream *sub, struct snd_soc_dai *dai)
+> > +{
+> > +       struct adv748x_state *state = state_of(dai);
+> > +
+> > +       set_audio_pads_state(state, 0);
+> > +}
+
+And clk_disable_unprepare here, before shutting down the pads?
+
+Regards,
+Alex
 
