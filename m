@@ -2,155 +2,142 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAF6C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52422C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C538E20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7A720739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:59:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WwkwjMkf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cel4M515"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbgCTR7V (ORCPT
+        id S1727298AbgCTR7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:59:21 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:56712 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbgCTR7U (ORCPT
+        Fri, 20 Mar 2020 13:59:45 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34264 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbgCTR7o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:59:20 -0400
-Received: by mail-pg1-f201.google.com with SMTP id k67so5022713pga.23
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 10:59:17 -0700 (PDT)
+        Fri, 20 Mar 2020 13:59:44 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t3so3485106pgn.1;
+        Fri, 20 Mar 2020 10:59:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=BFKQlA+rN199Va5nr23TqQIycC+OcxA0r1dVNGT3ndc=;
-        b=WwkwjMkfWqynU21gEP781F/xVflZE/NNYGlclPqx9ywAgFasUK5BRdkXiEO/2xQ/51
-         2Xk+I1WmJSTBxZiaAzPm3nOr365l+PvdkDSfwjOffNT14H0bSUgVbnqgzdLZBbSUtblu
-         2+q3FcoYntWBHEqeBZX0kD3P3w8IFRnrL/yzHF8z2OC5mIdPjHvKW49zgEFueK/7tqn3
-         ivhbjPu2byo3GLM7K29s3buNddcau6QtYP6Ct5Kb20HEE86ZUHq2pmykK4Zq1snArdQC
-         W2Z3eKS9C+DQ6DwdtmMUc9IVpbSyWXWGW6upL7+iaciknJSb47en+Syvht6qk55+takl
-         4yDg==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tT8WVBAGjROehmH8Lz//A/94zt8FktAEWkgYe0x/CrI=;
+        b=Cel4M515gR/+DHzUc9XUZEIvPuqZ9LL8RTkvOzVhWx/9b4Zupy0l2EV5i5WtTimwW0
+         YATO4P4c6PvKZr1IVhdu7AghiBlW/vFHLhitziRzJTRWVWEHFAZnAjsQd/0OCblShuze
+         V7fmLBNuZ49ZfMULKSPbBr8TSEWdY60PAl+fnNMU8iSSkBfKZT8gB/wfJ2IB+lKNfpLg
+         34smVJev/oDbqb8xgdE10xYg2d3vB4IG/p9FhUhvYBPKpX6wjN3dADpju8q8i5B6W0A/
+         hOPTYVg5yp9SYLvS5170ePy1W9qgAYtP+GJTyNAFVvo3iaWJ3mubqTf8/TSRO0kgvqG2
+         0ltg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=BFKQlA+rN199Va5nr23TqQIycC+OcxA0r1dVNGT3ndc=;
-        b=WTZ97LuoGLj8ItPmPrs2tvhyOPWtu3fqodrwLLvzSgh/9bUZU3IgBHE/n40IDT7nQj
-         0/qbiOAjaYWbvwLEM+Ey0nHYy5img2xU8L/3fNeinRkCFeJ3QW+TlAOKy8RIUI6IZlxd
-         uF2JWS7/F60GdhiXy0ZQy0RDntKlotZv7EA6W9NrJPl0J5J3L2Yh7ZfvHIbzoQFRiwTR
-         rG2Ebb5spjHTbONWiywZyyaiehM68fff/lW0wN2+VOCYNLDIwcapgOthIXOcQdEJM/tY
-         MKoeoYz3OhCZZQysD9hu6AXkzXCsikUYG3pneJi70tusT2bvvIv8tGqYdTlItSswSpnx
-         nChQ==
-X-Gm-Message-State: ANhLgQ1boMpWASbNp2O3ZHK0CvaditqA/K73+JiNDSyG5cC7OFh36Lal
-        iqkYAWiZH9qbkdISMl4ztwef0eSjbFK9qQ==
-X-Google-Smtp-Source: ADFU+vs8Z2St3JcTr4qu4OOe01NMcgpT5FDfG+os5ZS9ricqsq1zYpSsmAAH0fUB4R4FqDOC2oN6QmtHff8a8w==
-X-Received: by 2002:a17:90a:d205:: with SMTP id o5mr10592978pju.46.1584727157226;
- Fri, 20 Mar 2020 10:59:17 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 10:59:10 -0700
-Message-Id: <20200320175910.180266-1-yonghyun@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH] vfio-mdev: support mediated device creation in kernel
-From:   Yonghyun Hwang <yonghyun@google.com>
-To:     Kirti Wankhede <kwankhede@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Havard Skinnemoen <hskinnemoen@google.com>,
-        Moritz Fischer <mdf@kernel.org>
-Cc:     Yonghyun Hwang <yonghyun@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tT8WVBAGjROehmH8Lz//A/94zt8FktAEWkgYe0x/CrI=;
+        b=VOumeeN/hIBJClSLfRlSGqK7PUkDZ1Uetf8qexrIx/c2K+qAuXelZZZNI1YcmbjLrA
+         MeHl/HnvtxIwXhP3zZIoYa6xDQqzJKHFQ09A0vsr3EagZSrOHf6jr5bgMNHKrjUERxSy
+         aa5BIM47u+hwkGtFnitQveyKnHIcVzfStExliJVLilXKs8u3+1QT4791UC2jogN7GeZG
+         kBvYAkdSIdCM2ngdgkp3imvHMXBiOlQC0GUHGLsTFHUd3Q0G3YZvRqt7yKYbyT3vYYM8
+         IQ9BOmeSi9KB2e2arzZ/Ry3iiz11W9QxzejOhwCWQlTF67GNX0wBsiNkOj/8krokcIRP
+         ZRnA==
+X-Gm-Message-State: ANhLgQ2zFFhJCinWd2nind+RxGFsoi2keB3rABYZ/9IAmOIrP3oN3ijg
+        Gzh7tcxhMArW73gTJk70F+5TjnNH
+X-Google-Smtp-Source: ADFU+vu6gsyPpAGfdJt2HyayBZ7UcdIKTsQJm1kPPqXh31MhCKIhCX2h/XjyHgBbgy0Hq/7i7Hogig==
+X-Received: by 2002:aa7:8513:: with SMTP id v19mr8678117pfn.241.1584727183453;
+        Fri, 20 Mar 2020 10:59:43 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j126sm6191366pfg.60.2020.03.20.10.59.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Mar 2020 10:59:43 -0700 (PDT)
+Subject: Re: [PATCH 5.4 00/50] 5.4.27-rc3 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200320113334.675365993@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <72f4d4c8-dfe6-5556-811d-fa81b309481d@roeck-us.net>
+Date:   Fri, 20 Mar 2020 10:59:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200320113334.675365993@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To enable a mediated device, a device driver registers its device to VFIO
-MDev framework. Once the mediated device gets enabled, UUID gets fed onto
-the sysfs attribute, "create", to create the mediated device. This
-additional step happens after boot-up gets complete. If the driver knows
-how many mediated devices need to be created during probing time, the
-additional step becomes cumbersome. This commit implements a new function
-to allow the driver to create a mediated device in kernel.
+On 3/20/20 4:34 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.27 release.
+> There are 50 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun, 22 Mar 2020 11:32:39 +0000.
+> Anything received after that time might be too late.
+> 
 
-Signed-off-by: Yonghyun Hwang <yonghyun@google.com>
----
- drivers/vfio/mdev/mdev_core.c | 45 +++++++++++++++++++++++++++++++++++
- include/linux/mdev.h          |  3 +++
- 2 files changed, 48 insertions(+)
+For v5.4.26-51-ge72abf1:
 
-diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-index b558d4cfd082..a6d32516de42 100644
---- a/drivers/vfio/mdev/mdev_core.c
-+++ b/drivers/vfio/mdev/mdev_core.c
-@@ -350,6 +350,51 @@ int mdev_device_create(struct kobject *kobj,
- 	return ret;
- }
- 
-+/*
-+ * mdev_create_device : Create a mdev device
-+ * @dev: device structure representing parent device.
-+ * @uuid: uuid char string for a mdev device.
-+ * @group: index to supported type groups for a mdev device.
-+ *
-+ * Create a mdev device in kernel.
-+ * Returns a negative value on error, otherwise 0.
-+ */
-+int mdev_create_device(struct device *dev,
-+			const char *uuid, int group)
-+{
-+	struct mdev_parent *parent = NULL;
-+	struct mdev_type *type = NULL;
-+	guid_t guid;
-+	int i = 1;
-+	int ret;
-+
-+	ret = guid_parse(uuid, &guid);
-+	if (ret) {
-+		dev_err(dev, "Failed to parse UUID");
-+		return ret;
-+	}
-+
-+	parent = __find_parent_device(dev);
-+	if (!parent) {
-+		dev_err(dev, "Failed to find parent mdev device");
-+		return -ENODEV;
-+	}
-+
-+	list_for_each_entry(type, &parent->type_list, next) {
-+		if (i == group)
-+			break;
-+		i++;
-+	}
-+
-+	if (!type || i != group) {
-+		dev_err(dev, "Failed to find mdev device");
-+		return -ENODEV;
-+	}
-+
-+	return mdev_device_create(&type->kobj, parent->dev, &guid);
-+}
-+EXPORT_SYMBOL(mdev_create_device);
-+
- int mdev_device_remove(struct device *dev)
- {
- 	struct mdev_device *mdev, *tmp;
-diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-index 0ce30ca78db0..b66f67998916 100644
---- a/include/linux/mdev.h
-+++ b/include/linux/mdev.h
-@@ -145,4 +145,7 @@ struct device *mdev_parent_dev(struct mdev_device *mdev);
- struct device *mdev_dev(struct mdev_device *mdev);
- struct mdev_device *mdev_from_dev(struct device *dev);
- 
-+extern int mdev_create_device(struct device *dev,
-+			const char *uuid, int group_idx);
-+
- #endif /* MDEV_H */
--- 
-2.25.1.696.g5e7596f4ac-goog
+Build results:
+	total: 158 pass: 158 fail: 0
+Qemu test results:
+	total: 427 pass: 427 fail: 0
 
+Guenter
