@@ -2,151 +2,191 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 417E7C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7B5C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C4C2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D3012072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:54:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8W6322Y"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="WuxRt2Gn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbgCTXxm (ORCPT
+        id S1727422AbgCTXyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 19:53:42 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40160 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgCTXxm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 19:53:42 -0400
-Received: by mail-io1-f68.google.com with SMTP id h18so7906477ioh.7;
-        Fri, 20 Mar 2020 16:53:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jKtX3XsPK0x/T0OMk3ex7iQL++t5aTe227uSyhjTMuw=;
-        b=Z8W6322Yy3C2QWBTL6KGNVo+NCWp6LkDgxzjvBD12bGchzZmqjiKxu8S1SLa4/8ZyZ
-         LRvLjCMJg3Uf5rqDOMK5LX8TJAcYcaG/m3Pq00l9o/B8FK7KpGA3g4gUw+InFJ0j4O23
-         mNaO7aqWvEN2vJbKtqJma1BJwqJof5xRMZUCL4w4RDIbL51r3pofrvofSm90yvY2aoK0
-         kCBF3C1G5K+0Cm1+5bw3ZSw+oaIvSLIxxdwVeo8+knpQqG7wYx5qapodNS8Ofp2hIIym
-         a8c2B+f1NlO6OCpTuvcXV2ak80cZPWt17+vYFWcvo/mAAq6ayuAEq1S+rrqSVT+zMu8B
-         YdGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jKtX3XsPK0x/T0OMk3ex7iQL++t5aTe227uSyhjTMuw=;
-        b=K0idLmXb7Ph0YJWV1yTOnm56+Qzk/Lxf9eZTNs05w/s4YVCvv9FggvNski+MN6zWGs
-         WHkodstuIMpwx1HgnLZmFXrFUuEniuu0YcuR1rIGvPi3vD6JZY2lTenBtHdJrl48q/vO
-         JRNFVFMUE1fwoS5Bh1NMvbAE7cag5Ao5cfYCdJ5RFC4dG4b4KQNL9cHm8ySvyd7j6IEW
-         dvZ0XD8yE1NLh4sxvqToX4pTvGr6LAs/DPAvNjOs6ehFtjP+VGrtaO11+TQO/Q7prnkl
-         rZ0kQvnCUPlQTX2YGLaaqZ9z0UMMnKN1n98vLosV7NyGVGihUU2vfRyUsO/VKKeckVlR
-         ZbVQ==
-X-Gm-Message-State: ANhLgQ27NGwO+lBXU+gtinIZh70+4gqOSD2hYcDJfVR9hGwNiwtO9QqP
-        h3M8qNVTsFZ9uvapNPSqpGjXDnyrvVZ1qmCUhfo=
-X-Google-Smtp-Source: ADFU+vvIqEsKaEyeE8ULMwxKomVDncLG2PjT8bMo6bP/MjNX+49wkqt+YxNYXS+pVAsPhXo8VX9LMWJIT4tSARdj598=
-X-Received: by 2002:a6b:f404:: with SMTP id i4mr9845414iog.175.1584748421648;
- Fri, 20 Mar 2020 16:53:41 -0700 (PDT)
+        Fri, 20 Mar 2020 19:54:00 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:53063 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726773AbgCTXyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 19:54:00 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id b4c7f8d8;
+        Fri, 20 Mar 2020 23:47:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=Mtj2WRqHX3tgMyvl90+dc3Czy10=; b=WuxRt2
+        GnkKVyNhw21V8+90/uKXGU0p3tyz0cRd3azMH143xDiKaNKbkdZG83IHxWUHWM6F
+        FxRyu7XqRyRX/mx3XeB74X2ylvaR234sfOCRC3RDeRp3uZ0i7gGyAtvytHYrXXqe
+        Bu12ONv1gzEg6DWE3YgBFSN4Z1rCaUPAagiyp6NymIheLmpqiaPi3XQjnwihK+Wq
+        aZeUyyiF9qhyGgOvZ/vneZzVJZD/u2bcrzoMhDaRi2REEo2MlzWbnEndlw/KLRQl
+        FDRrbqTTvdkXANH54ZWM46/qEmyaaEd6wYg4DeyXCtNMPzKs1vKuxd2P54IIfKsK
+        Au2+pTI1vN37plpA==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 383b6d3b (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Fri, 20 Mar 2020 23:47:18 +0000 (UTC)
+Received: by mail-io1-f44.google.com with SMTP id q9so7950166iod.4;
+        Fri, 20 Mar 2020 16:53:58 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3QaR+aQZ+wMzJi1A/4bcAJ3awiu3N+XDO+QGbLPb5C+DiU6XIy
+        cAQQSZp2nSQ67h39c6LNvBVDqxqiT2lV3BZ+mos=
+X-Google-Smtp-Source: ADFU+vtD2BOYtouQvGPrKn2qGzWbV9DrmPDWV/bENvOwrYIOXBNvHBBFneWZTychusgjfeKVQUaJE7Ai014Nkod+OK4=
+X-Received: by 2002:a6b:7902:: with SMTP id i2mr9941218iop.67.1584748437245;
+ Fri, 20 Mar 2020 16:53:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200320110959.2114-1-hqjagain@gmail.com> <20200320185204.GB3828@localhost.localdomain>
-In-Reply-To: <20200320185204.GB3828@localhost.localdomain>
-From:   Qiujun Huang <hqjagain@gmail.com>
-Date:   Sat, 21 Mar 2020 07:53:29 +0800
-Message-ID: <CAJRQjoc-U_K-2THbmBOj2TOWDTfP9yr5Vec-WjhTjS8sj19fHA@mail.gmail.com>
-Subject: Re: [PATCH v3] sctp: fix refcount bug in sctp_wfree
-To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, vyasevich@gmail.com,
-        nhorman@tuxdriver.com, Jakub Kicinski <kuba@kernel.org>,
-        linux-sctp@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, anenbupt@gmail.com
+References: <20190916084901.GA20338@gondor.apana.org.au> <20190923050515.GA6980@gondor.apana.org.au>
+ <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au> <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
+ <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au> <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
+ <20200224060042.GA26184@gondor.apana.org.au> <20200312115714.GA21470@gondor.apana.org.au>
+ <CAHk-=wjbTF2iw3EbKgfiRRq_keb4fHwLO8xJyRXbfK3Q7cscuQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wjbTF2iw3EbKgfiRRq_keb4fHwLO8xJyRXbfK3Q7cscuQ@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Fri, 20 Mar 2020 17:53:46 -0600
+X-Gmail-Original-Message-ID: <CAHmME9pME41uHvhu5f_JGZbUNCuG0YVgRkBUQF9wtTO6YnMijw@mail.gmail.com>
+Message-ID: <CAHmME9pME41uHvhu5f_JGZbUNCuG0YVgRkBUQF9wtTO6YnMijw@mail.gmail.com>
+Subject: Re: [GIT PULL] Crypto Fixes for 5.6
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 2:52 AM Marcelo Ricardo Leitner
-<marcelo.leitner@gmail.com> wrote:
->
-> On Fri, Mar 20, 2020 at 07:09:59PM +0800, Qiujun Huang wrote:
-> > Do accounting for skb's real sk.
-> > In some case skb->sk != asoc->base.sk:
-> >
-> > for the trouble SKB, it was in outq->transmitted queue
-> >
-> > sctp_outq_sack
-> >       sctp_check_transmitted
-> >               SKB was moved to outq->sack
->
-> There is no outq->sack. You mean outq->sacked, I assume.
->
-> >       then throw away the sack queue
->
-> Where? How?
-> If you mean:
->         /* Throw away stuff rotting on the sack queue.  */
->         list_for_each_safe(lchunk, temp, &q->sacked) {
->                 tchunk = list_entry(lchunk, struct sctp_chunk,
->                                     transmitted_list);
->                 tsn = ntohl(tchunk->subh.data_hdr->tsn);
->                 if (TSN_lte(tsn, ctsn)) {
->                         list_del_init(&tchunk->transmitted_list);
->                         if (asoc->peer.prsctp_capable &&
->                             SCTP_PR_PRIO_ENABLED(chunk->sinfo.sinfo_flags))
->                                 asoc->sent_cnt_removable--;
->                         sctp_chunk_free(tchunk);
->
-> Then sctp_chunk_free is supposed to free the datamsg as well for
-> chunks that were cumulative-sacked.
-> For those not cumulative-sacked, sctp_for_each_tx_datachunk() will
-> handle q->sacked queue as well:
->         list_for_each_entry(chunk, &q->sacked, transmitted_list)
->                 cb(chunk);
->
-> So I don't see how skbs can be overlooked here.
->
-> >               SKB was deleted from outq->sack
-> > (but the datamsg held SKB at sctp_datamsg_to_asoc
->
-> You mean sctp_datamsg_from_user ? If so, isn't it the other way
-> around? sctp_datamsg_assign() will hold the datamsg, not the skb.
->
-> > So, sctp_wfree was not called to destroy SKB)
-> >
-> > then migrate happened
-> >
-> >       sctp_for_each_tx_datachunk(
-> >       sctp_clear_owner_w);
-> >       sctp_assoc_migrate();
-> >       sctp_for_each_tx_datachunk(
-> >       sctp_set_owner_w);
-> > SKB was not in the outq, and was not changed to newsk
->
-> The real fix is to fix the migration to the new socket, though the
-> situation on which it is happening is still not clear.
->
-> The 2nd sendto() call on the reproducer is sending 212992 bytes on a
-> single call. That's usually the whole sndbuf size, and will cause
-> fragmentation to happen. That means the datamsg will contain several
-> skbs. But still, the sacked chunks should be freed if needed while the
-> remaining ones will be left on the queues that they are.
+Funny, I always thought it was like that "for a good reason" that I
+just didn't know about -- assumedly something having to do with a
+difference between config time and compile time. I agree with you that
+everything gets so much cleaner if we can do this in Kconfig. I've put
+together the patch pasted below, which appears to work well. I'll work
+on replumbing the other stuff and will send a series off to the list
+hopefully not before too long.
 
-in sctp_sendmsg_to_asoc
-datamsg holds his chunk result in that the sacked chunks can't be freed
+From 12375354ddb4c8b1c75663312a9b6d9b9bc5f520 Mon Sep 17 00:00:00 2001
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date: Fri, 20 Mar 2020 17:49:36 -0600
+Subject: [PATCH] x86: probe assembler instead of kconfig instead of makefile
 
-list_for_each_entry(chunk, &datamsg->chunks, frag_list) {
-sctp_chunk_hold(chunk);
-sctp_set_owner_w(chunk);
-chunk->transport = transport;
-}
+Doing this probing inside of the Makefiles means we have a maze of
+ifdefs inside the source code and child Makefiles that need to make
+proper decisions on this too. Instead, we do it at Kconfig time, like
+many other compiler and assembler options, which allows us to set up the
+dependencies normally for full compilation units.
 
-any ideas to handle it?
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
+ arch/x86/Kconfig           |  2 ++
+ arch/x86/Kconfig.assembler | 33 +++++++++++++++++++++++++++++++++
+ arch/x86/Makefile          | 22 ----------------------
+ 3 files changed, 35 insertions(+), 22 deletions(-)
+ create mode 100644 arch/x86/Kconfig.assembler
 
->
-> Thanks,
-> Marcelo
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index beea77046f9b..707673227837 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2935,3 +2935,5 @@ config HAVE_ATOMIC_IOMAP
+ source "drivers/firmware/Kconfig"
+
+ source "arch/x86/kvm/Kconfig"
++
++source "arch/x86/Kconfig.assembler"
+diff --git a/arch/x86/Kconfig.assembler b/arch/x86/Kconfig.assembler
+new file mode 100644
+index 000000000000..809adcf6f7c3
+--- /dev/null
++++ b/arch/x86/Kconfig.assembler
+@@ -0,0 +1,33 @@
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2020 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
++
++config AS_CFI
++ def_bool $(as-instr,.cfi_startproc\n.cfi_rel_offset
+rsp$(comma)0\n.cfi_endproc) if 64BIT
++ def_bool $(as-instr,.cfi_startproc\n.cfi_rel_offset
+esp$(comma)0\n.cfi_endproc) if !64BIT
++
++config AS_CFI_SIGNAL_FRAME
++ def_bool $(as-instr,.cfi_startproc\n.cfi_signal_frame\n.cfi_endproc)
++
++config AS_CFI_SECTIONS
++ def_bool $(as-instr,.cfi_sections .debug_frame)
++
++config AS_SSSE3
++ def_bool $(as-instr,pshufb %xmm0$(comma)%xmm0)
++
++config AS_AVX
++ def_bool $(as-instr,vxorps %ymm0$(comma)%ymm1$(comma)%ymm2)
++
++config AS_AVX2
++ def_bool $(as-instr,vpbroadcastb %xmm0$(comma)%ymm1)
++
++config AS_AVX512
++ def_bool $(as-instr,vpmovm2b %k1$(comma)%zmm5)
++
++config AS_SHA1_NI
++ def_bool $(as-instr,sha1msg1 %xmm0$(comma)%xmm1)
++
++config AS_SHA256_NI
++ def_bool $(as-instr,sha256msg1 %xmm0$(comma)%xmm1)
++
++config AS_ADX
++ def_bool $(as-instr,adox %r10$(comma)%r10)
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 513a55562d75..b65ec63c7db7 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -177,28 +177,6 @@ ifeq ($(ACCUMULATE_OUTGOING_ARGS), 1)
+  KBUILD_CFLAGS += $(call cc-option,-maccumulate-outgoing-args,)
+ endif
+
+-# Stackpointer is addressed different for 32 bit and 64 bit x86
+-sp-$(CONFIG_X86_32) := esp
+-sp-$(CONFIG_X86_64) := rsp
+-
+-# do binutils support CFI?
+-cfi := $(call as-instr,.cfi_startproc\n.cfi_rel_offset
+$(sp-y)$(comma)0\n.cfi_endproc,-DCONFIG_AS_CFI=1)
+-# is .cfi_signal_frame supported too?
+-cfi-sigframe := $(call
+as-instr,.cfi_startproc\n.cfi_signal_frame\n.cfi_endproc,-DCONFIG_AS_CFI_SIGNAL_FRAME=1)
+-cfi-sections := $(call as-instr,.cfi_sections
+.debug_frame,-DCONFIG_AS_CFI_SECTIONS=1)
+-
+-# does binutils support specific instructions?
+-asinstr += $(call as-instr,pshufb %xmm0$(comma)%xmm0,-DCONFIG_AS_SSSE3=1)
+-avx_instr := $(call as-instr,vxorps
+%ymm0$(comma)%ymm1$(comma)%ymm2,-DCONFIG_AS_AVX=1)
+-avx2_instr :=$(call as-instr,vpbroadcastb
+%xmm0$(comma)%ymm1,-DCONFIG_AS_AVX2=1)
+-avx512_instr :=$(call as-instr,vpmovm2b %k1$(comma)%zmm5,-DCONFIG_AS_AVX512=1)
+-sha1_ni_instr :=$(call as-instr,sha1msg1
+%xmm0$(comma)%xmm1,-DCONFIG_AS_SHA1_NI=1)
+-sha256_ni_instr :=$(call as-instr,sha256msg1
+%xmm0$(comma)%xmm1,-DCONFIG_AS_SHA256_NI=1)
+-adx_instr := $(call as-instr,adox %r10$(comma)%r10,-DCONFIG_AS_ADX=1)
+-
+-KBUILD_AFLAGS += $(cfi) $(cfi-sigframe) $(cfi-sections) $(asinstr)
+$(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr)
+$(sha256_ni_instr) $(adx_instr)
+-KBUILD_CFLAGS += $(cfi) $(cfi-sigframe) $(cfi-sections) $(asinstr)
+$(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr)
+$(sha256_ni_instr) $(adx_instr)
+-
+ KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
+
+ #
+-- 
+2.25.1
