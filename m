@@ -1,200 +1,107 @@
-Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43711C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2706FC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1662B20753
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:58:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584662312;
-	bh=1Iilp28i0bCTskgCsO8oASv9W7OdeQt1V3gTWMx3C9w=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=LRNMJ2qFtIm/M+s75+J/z/NRfZRqBeCmrlJnU3ZndIilyjR7LF9OGf4r2ogXpO83I
-	 vgtaJg2iFpGa2ra6mycoYwDOsfwI3J2rFSvx2oiuTNkimNIn0usTnCP2RU3ZHZDKwd
-	 VD7msRXdB3y6BGj+3QfFerLmmmylRPrHaQvQP+5o=
+	by mail.kernel.org (Postfix) with ESMTP id F0CC120409
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:01:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kiLnA4+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbgCSX6b (ORCPT
+        id S1727337AbgCTABO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 19:58:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727159AbgCSX6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 19:58:30 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C21C20754;
-        Thu, 19 Mar 2020 23:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584662309;
-        bh=1Iilp28i0bCTskgCsO8oASv9W7OdeQt1V3gTWMx3C9w=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=elmVnY1ABSGb+xRrvQ9PcXrqvEzg7FUzJ8x5d4XySe6/R7CY5EuUbuwIqVmiHvmYk
-         Oeroik0vKThlwP2ABGqsFEnevbm2UG7svAs2L0l7b4i4BbWUfVJHHE05dawmBDhHpv
-         h8Pn9EhppW+Ju+LisnA8r3T6cMvB0Hych4BTQ+lg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 49DA235226B9; Thu, 19 Mar 2020 16:58:29 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 16:58:29 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org
-Subject: Re: [PATCH RFC v2 tip/core/rcu 09/22] rcu-tasks: Add an RCU-tasks
- rude variant
-Message-ID: <20200319235829.GK3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
- <20200319001100.24917-9-paulmck@kernel.org>
- <20200319150432.1ac9dac9@gandalf.local.home>
+        Thu, 19 Mar 2020 20:01:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37320 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727238AbgCTABL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 20:01:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=vHZuTkIraH0j18C0yesq0h37iJWXExpW0+pRP9wHAFQ=; b=kiLnA4+HBazSxcmaF2vYSeDjTi
+        GZySNj/qYjY7qWPGZkmvHOClubyAs6vb7qNyQfZbboMzJvAC4SHO+rElmWzJ0jHKOLMyU89vHKXK/
+        n1M8PZ7nzbZS/ryrjge0YuJsfT2QgYPpt2RAbDeongoVB9W/tMUNAm/+H2dBMRuDAuWrU0PwbnQ75
+        54EFHJNVY0SnoWPPNthdT3GTBbdGU8DxgXaRaLjrQZFGUO+ooZjTCdCB5e4iC3O2gyhwvHlCijgXg
+        qdZtqnhJd8ufbtliHGhktsMMJQdKUHbLmcPLdZ0UbErD8gWdNNPnllI27n2u1y0WLcmNSdyDJUoWb
+        Kec+VEjg==;
+Received: from 99-123-7-132.lightspeed.sntcca.sbcglobal.net ([99.123.7.132] helo=[192.168.1.71])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jF562-0000eU-0Q; Fri, 20 Mar 2020 00:01:06 +0000
+Subject: Re: [patch V2 07/15] powerpc/ps3: Convert half completion to rcuwait
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-usb@vger.kernel.org, linux-pci@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Will Deacon <will@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-wireless@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+References: <20200318204302.693307984@linutronix.de>
+ <20200318204408.102694393@linutronix.de>
+ <20200319100459.GA18506@infradead.org>
+ <20200319102613.hbwax7zrrvgcde4x@linutronix.de>
+From:   Geoff Levand <geoff@infradead.org>
+Message-ID: <efc2378e-cf8e-8bf9-d009-34c6bcf43c8e@infradead.org>
+Date:   Thu, 19 Mar 2020 17:01:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319150432.1ac9dac9@gandalf.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200319102613.hbwax7zrrvgcde4x@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 03:04:32PM -0400, Steven Rostedt wrote:
-> On Wed, 18 Mar 2020 17:10:47 -0700
-> paulmck@kernel.org wrote:
+Hi,
+
+On 3/19/20 3:26 AM, Sebastian Andrzej Siewior wrote:
+> On 2020-03-19 03:04:59 [-0700], Christoph Hellwig wrote:
+>> But I wonder how alive the whole PS3 support is to start with..
 > 
-> > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > 
-> > This commit adds a "rude" variant of RCU-tasks that has as quiescent
-> > states schedule(), cond_resched_tasks_rcu_qs(), userspace execution,
-> > and (in theory, anyway) cond_resched().  In other words, RCU-tasks rude
-> > readers are regions of code with preemption disabled, but excluding code
-> > early in the CPU-online sequence and late in the CPU-offline sequence.
-> > Updates make use of IPIs and force an IPI and a context switch on each
-> > online CPU.  This variant is useful in some situations in tracing.
-> > 
-> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> > [ paulmck: Apply EXPORT_SYMBOL_GPL() feedback from Qiujun Huang. ]
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > ---
-> >  include/linux/rcupdate.h |  3 ++
-> >  kernel/rcu/Kconfig       | 12 +++++-
-> >  kernel/rcu/tasks.h       | 98 ++++++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 112 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-> > index 5523145..2be97a8 100644
-> > --- a/include/linux/rcupdate.h
-> > +++ b/include/linux/rcupdate.h
-> > @@ -37,6 +37,7 @@
-> >  /* Exported common interfaces */
-> >  void call_rcu(struct rcu_head *head, rcu_callback_t func);
-> >  void rcu_barrier_tasks(void);
-> > +void rcu_barrier_tasks_rude(void);
-> >  void synchronize_rcu(void);
-> >  
-> >  #ifdef CONFIG_PREEMPT_RCU
-> > @@ -138,6 +139,8 @@ static inline void rcu_init_nohz(void) { }
-> >  #define rcu_note_voluntary_context_switch(t) rcu_tasks_qs(t)
-> >  void call_rcu_tasks(struct rcu_head *head, rcu_callback_t func);
-> >  void synchronize_rcu_tasks(void);
-> > +void call_rcu_tasks_rude(struct rcu_head *head, rcu_callback_t func);
-> > +void synchronize_rcu_tasks_rude(void);
-> >  void exit_tasks_rcu_start(void);
-> >  void exit_tasks_rcu_finish(void);
-> >  #else /* #ifdef CONFIG_TASKS_RCU_GENERIC */
-> > diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
-> > index 38475d0..0d43ec1 100644
-> > --- a/kernel/rcu/Kconfig
-> > +++ b/kernel/rcu/Kconfig
-> > @@ -71,7 +71,7 @@ config TREE_SRCU
-> >  	  This option selects the full-fledged version of SRCU.
-> >  
-> >  config TASKS_RCU_GENERIC
-> > -	def_bool TASKS_RCU
-> > +	def_bool TASKS_RCU || TASKS_RUDE_RCU
-> >  	select SRCU
-> >  	help
-> >  	  This option enables generic infrastructure code supporting
-> > @@ -84,6 +84,16 @@ config TASKS_RCU
-> >  	  only voluntary context switch (not preemption!), idle, and
-> >  	  user-mode execution as quiescent states.  Not for manual selection.
-> >  
-> > +config TASKS_RUDE_RCU
-> > +	def_bool 0
-> > +	default n
+> OtherOS can only be used on "old" PS3 which do not have have their
+> firmware upgraded past version 3.21, released April 1, 2010 [0].
+> It was not possible to install OtherOS on PS3-slim and I don't remember
+> if it was a successor or a budget version (but it had lower power
+> consumption as per my memory).
+> *I* remember from back then that a few universities bought quite a few
+> of them and used them as a computation cluster. However, whatever broke
+> over the last 10 years is broken.
 > 
-> No need for "default n" as that's the default without it.
+> [0] https://en.wikipedia.org/wiki/OtherOS
+There are still PS3-Linux users out there.  They generally use firmware
+and other tools available through the 'hacker' communities that allow
+Linux to be run on more than just the 'officially supported' platforms.
 
-Removed!
+Anyway, the change to use rcuwait seems fine if that's needed for the
+completion re-work.  I'll try to do some testing with the patch set
+next week.
 
-> > +	help
-> > +	  This option enables a task-based RCU implementation that uses
-> > +	  only context switch (including preemption) and user-mode
-> > +	  execution as quiescent states.  It forces IPIs and context
-> > +	  switches on all online CPUs, including idle ones, so use
-> > +	  with caution.  Not for manual selection.
-> 
-> Really don't need the "Not for manual selection", as not having a prompt
-> shows that too.
-
-And also removed.
-
-> > +
-> >  config RCU_STALL_COMMON
-> >  	def_bool TREE_RCU
-> >  	help
-> > diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-> > index d77921e..7ba1730 100644
-> > --- a/kernel/rcu/tasks.h
-> > +++ b/kernel/rcu/tasks.h
-> > @@ -180,6 +180,9 @@ static void __init rcu_tasks_bootup_oddness(void)
-> >  	else
-> >  		pr_info("\tTasks RCU enabled.\n");
-> >  #endif /* #ifdef CONFIG_TASKS_RCU */
-> > +#ifdef CONFIG_TASKS_RUDE_RCU
-> > +	pr_info("\tRude variant of Tasks RCU enabled.\n");
-> > +#endif /* #ifdef CONFIG_TASKS_RUDE_RCU */
-> >  }
-> >  
-> >  #endif /* #ifndef CONFIG_TINY_RCU */
-> > @@ -410,3 +413,98 @@ static int __init rcu_spawn_tasks_kthread(void)
-> >  core_initcall(rcu_spawn_tasks_kthread);
-> >  
-> >  #endif /* #ifdef CONFIG_TASKS_RCU */
-> > +
-> > +#ifdef CONFIG_TASKS_RUDE_RCU
-> > +
-> > +////////////////////////////////////////////////////////////////////////
-> > +//
-> > +// "Rude" variant of Tasks RCU, inspired by Steve Rostedt's trick of
-> > +// passing an empty function to schedule_on_each_cpu().  This approach
-> > +// provides an asynchronous call_rcu_rude() API and batching of concurrent
-> > +// calls to the synchronous synchronize_rcu_rude() API.  This sends IPIs
-> > +// far and wide and induces otherwise unnecessary context switches on all
-> > +// online CPUs, whether online or not.
-> 
->    "on all online CPUs, whether online or not" ????
-
-Good catch!  It should be "whether idle or not".  Fixed.  ;-)
-
-							Thanx, Paul
-
-> -- Steve
-> 
-> > +
-> > +// Empty function to allow workqueues to force a context switch.
-> > +static void rcu_tasks_be_rude(struct work_struct *work)
-> > +{
-> > +}
-> > +
+-Geoff
