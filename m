@@ -2,72 +2,245 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C14C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3DDC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15AF720732
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:11:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RG4d5K1o"
+	by mail.kernel.org (Postfix) with ESMTP id EA90520732
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgCTLLN (ORCPT
+        id S1726935AbgCTLMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 07:11:13 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:33875 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgCTLLN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 07:11:13 -0400
-Received: by mail-vs1-f65.google.com with SMTP id t10so3726277vsp.1;
-        Fri, 20 Mar 2020 04:11:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oN4/KUQ8b4ahyaIikru+djpxL5XQQFIKZYbjC0vKpsU=;
-        b=RG4d5K1oz2ont5jUJjkmBXY8+/64X5o3IKIS4LOSaudxUVUe8DU1ydUBqbiQboKELu
-         1ShHuDcThMIFNOAeKf9tDwjqw0JD2VD1JpQID7+cH7o6+JfICVKvz4V984jiknR/mmw8
-         DzXs1jdJJTlxXsvtCLrKUH2u3HagA7ZvDhtaP2ox+KWSqtIM1C271gNXEtCd2P3dytUn
-         O6nm8l1TYAlQbcFMaJdY2GR7PMy/utD82oPmrj9xG2NfYizrVrVaMn5tRiLHtcL3ZkNv
-         ghk2Px//JSIsj1S93uV8jR/iFOdRWNaPme7LthP+qDx+QkfrE65yHJJ82m04tVoXmP86
-         Bisw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oN4/KUQ8b4ahyaIikru+djpxL5XQQFIKZYbjC0vKpsU=;
-        b=eAQ1GBq+dPcXJrEutbZxXCgPnwmw6O84rAJUCTyB1iJ0NY6kifb4kbsyHNyK5wK6S7
-         1fNfkh3lRxrmq5V8RYXjZLROLuoUO6oTZeaf6xvB+SJfGhfFx6LnhztJhjam6gxvUCC2
-         QVMMkmir/CTtcjPwrPHXgcN2TwgLFx2UE+SSnhlk/jXbgpjayf/nO0dpqwfAXsWbxKhq
-         ikLa6lNIGoyvASufSbU1Nq+0ZHYDtgWPhaxAllkYhyEdDrpfo9tMyGnyPdqO9Dl+7pnS
-         RN4td6oTPiom6N6z64Zci0eM3uvlnu1gz0QuXA6CXoEH35uI3fW+mkrBltTNh1P7RTgn
-         /NNQ==
-X-Gm-Message-State: ANhLgQ2KAHY+HPF/cUlR4gKhYoOUeCh2EFu67630hXJm2yQAEMfECuId
-        dhEfEKkXi8puZcl7eMGIPGlNWo56YGhIT7N00zE=
-X-Google-Smtp-Source: ADFU+vsejFVbOnAEdlAKw8nIgzTdGgU0d2mSV9i20J6AFqSFFPnk0AB6zKSwUyzGRMagEavDO/mDBNZWfo1spYVz3hc=
-X-Received: by 2002:a05:6102:303c:: with SMTP id v28mr5230330vsa.91.1584702672495;
- Fri, 20 Mar 2020 04:11:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <00000000000088452f05a07621d2@google.com>
-In-Reply-To: <00000000000088452f05a07621d2@google.com>
-From:   Qiujun Huang <anenbupt@gmail.com>
-Date:   Fri, 20 Mar 2020 19:11:00 +0800
-Message-ID: <CADG63jAwaYMP+Q3WNqpOnf39_XZ3z5ZZu-ST-f5q2XM+kHgcgg@mail.gmail.com>
-Subject: Re: WARNING: refcount bug in sctp_wfree
-To:     syzbot <syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 20 Mar 2020 07:12:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37436 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726726AbgCTLMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 07:12:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id CB696AEB1;
+        Fri, 20 Mar 2020 11:12:10 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 12:12:10 +0100
+Message-ID: <s5hv9mzs2k5.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 5.6-rc7
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz test: https://github.com/hqj/hqjagain_test.git sctp_wfree_refcount_bug
+Linus,
+
+please pull sound fixes for v5.6-rc7 from:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.6-rc7
+
+The topmost commit is a124458a127ccd7629e20cd7bae3e1f758ed32aa
+
+----------------------------------------------------------------
+
+sound fixes for 5.6-rc7
+
+A few fixes covering the issues reported by syzkaller, a couple of
+fixes for the MIDI decoding bug, and a few usual HD-audio quirks.
+Some of them are about ALSA core stuff, but they are small fixes just
+for corner cases, and nothing thrilling.
+
+----------------------------------------------------------------
+
+Jian-Hong Pan (2):
+      ALSA: hda/realtek - Enable headset mic of Acer X2660G with ALC662
+      ALSA: hda/realtek - Enable the headset of Acer N50-600 with ALC662
+
+Kai-Heng Feng (1):
+      ALSA: hda/realtek: Fix pop noise on ALC225
+
+Takashi Iwai (5):
+      ALSA: pcm: oss: Avoid plugin buffer overflow
+      ALSA: line6: Fix endless MIDI read loop
+      ALSA: pcm: oss: Remove WARNING from snd_pcm_plug_alloc() checks
+      ALSA: seq: virmidi: Fix running status after receiving sysex
+      ALSA: seq: oss: Fix running status after receiving sysex
+
+---
+ sound/core/oss/pcm_plugin.c       | 12 ++++++++++--
+ sound/core/seq/oss/seq_oss_midi.c |  1 +
+ sound/core/seq/seq_virmidi.c      |  1 +
+ sound/pci/hda/patch_realtek.c     | 25 +++++++++++++++++++++++++
+ sound/usb/line6/driver.c          |  2 +-
+ sound/usb/line6/midibuf.c         |  2 +-
+ 6 files changed, 39 insertions(+), 4 deletions(-)
+
+diff --git a/sound/core/oss/pcm_plugin.c b/sound/core/oss/pcm_plugin.c
+index 240e4702c098..752d078908e9 100644
+--- a/sound/core/oss/pcm_plugin.c
++++ b/sound/core/oss/pcm_plugin.c
+@@ -111,7 +111,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->next) {
+ 			if (plugin->dst_frames)
+ 				frames = plugin->dst_frames(plugin, frames);
+-			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
++			if ((snd_pcm_sframes_t)frames <= 0)
+ 				return -ENXIO;
+ 			plugin = plugin->next;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
+@@ -123,7 +123,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->prev) {
+ 			if (plugin->src_frames)
+ 				frames = plugin->src_frames(plugin, frames);
+-			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
++			if ((snd_pcm_sframes_t)frames <= 0)
+ 				return -ENXIO;
+ 			plugin = plugin->prev;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
+@@ -209,6 +209,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_size(struct snd_pcm_substream *plug, snd_p
+ 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
+ 		plugin = snd_pcm_plug_last(plug);
+ 		while (plugin && drv_frames > 0) {
++			if (drv_frames > plugin->buf_frames)
++				drv_frames = plugin->buf_frames;
+ 			plugin_prev = plugin->prev;
+ 			if (plugin->src_frames)
+ 				drv_frames = plugin->src_frames(plugin, drv_frames);
+@@ -220,6 +222,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_size(struct snd_pcm_substream *plug, snd_p
+ 			plugin_next = plugin->next;
+ 			if (plugin->dst_frames)
+ 				drv_frames = plugin->dst_frames(plugin, drv_frames);
++			if (drv_frames > plugin->buf_frames)
++				drv_frames = plugin->buf_frames;
+ 			plugin = plugin_next;
+ 		}
+ 	} else
+@@ -248,11 +252,15 @@ snd_pcm_sframes_t snd_pcm_plug_slave_size(struct snd_pcm_substream *plug, snd_pc
+ 				if (frames < 0)
+ 					return frames;
+ 			}
++			if (frames > plugin->buf_frames)
++				frames = plugin->buf_frames;
+ 			plugin = plugin_next;
+ 		}
+ 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
+ 		plugin = snd_pcm_plug_last(plug);
+ 		while (plugin) {
++			if (frames > plugin->buf_frames)
++				frames = plugin->buf_frames;
+ 			plugin_prev = plugin->prev;
+ 			if (plugin->src_frames) {
+ 				frames = plugin->src_frames(plugin, frames);
+diff --git a/sound/core/seq/oss/seq_oss_midi.c b/sound/core/seq/oss/seq_oss_midi.c
+index a88c235b2ea3..2ddfe2226651 100644
+--- a/sound/core/seq/oss/seq_oss_midi.c
++++ b/sound/core/seq/oss/seq_oss_midi.c
+@@ -602,6 +602,7 @@ send_midi_event(struct seq_oss_devinfo *dp, struct snd_seq_event *ev, struct seq
+ 		len = snd_seq_oss_timer_start(dp->timer);
+ 	if (ev->type == SNDRV_SEQ_EVENT_SYSEX) {
+ 		snd_seq_oss_readq_sysex(dp->readq, mdev->seq_device, ev);
++		snd_midi_event_reset_decode(mdev->coder);
+ 	} else {
+ 		len = snd_midi_event_decode(mdev->coder, msg, sizeof(msg), ev);
+ 		if (len > 0)
+diff --git a/sound/core/seq/seq_virmidi.c b/sound/core/seq/seq_virmidi.c
+index 626d87c1539b..77d7037d1476 100644
+--- a/sound/core/seq/seq_virmidi.c
++++ b/sound/core/seq/seq_virmidi.c
+@@ -81,6 +81,7 @@ static int snd_virmidi_dev_receive_event(struct snd_virmidi_dev *rdev,
+ 			if ((ev->flags & SNDRV_SEQ_EVENT_LENGTH_MASK) != SNDRV_SEQ_EVENT_LENGTH_VARIABLE)
+ 				continue;
+ 			snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)snd_rawmidi_receive, vmidi->substream);
++			snd_midi_event_reset_decode(vmidi->parser);
+ 		} else {
+ 			len = snd_midi_event_decode(vmidi->parser, msg, sizeof(msg), ev);
+ 			if (len > 0)
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 0ac06ff1a17c..63e1a56f705b 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -8051,6 +8051,8 @@ static int patch_alc269(struct hda_codec *codec)
+ 		spec->gen.mixer_nid = 0;
+ 		break;
+ 	case 0x10ec0225:
++		codec->power_save_node = 1;
++		/* fall through */
+ 	case 0x10ec0295:
+ 	case 0x10ec0299:
+ 		spec->codec_variant = ALC269_TYPE_ALC225;
+@@ -8610,6 +8612,8 @@ enum {
+ 	ALC669_FIXUP_ACER_ASPIRE_ETHOS,
+ 	ALC669_FIXUP_ACER_ASPIRE_ETHOS_HEADSET,
+ 	ALC671_FIXUP_HP_HEADSET_MIC2,
++	ALC662_FIXUP_ACER_X2660G_HEADSET_MODE,
++	ALC662_FIXUP_ACER_NITRO_HEADSET_MODE,
+ };
+ 
+ static const struct hda_fixup alc662_fixups[] = {
+@@ -8955,6 +8959,25 @@ static const struct hda_fixup alc662_fixups[] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc671_fixup_hp_headset_mic2,
+ 	},
++	[ALC662_FIXUP_ACER_X2660G_HEADSET_MODE] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x1a, 0x02a1113c }, /* use as headset mic, without its own jack detect */
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC662_FIXUP_USI_FUNC
++	},
++	[ALC662_FIXUP_ACER_NITRO_HEADSET_MODE] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x1a, 0x01a11140 }, /* use as headset mic, without its own jack detect */
++			{ 0x1b, 0x0221144f },
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC662_FIXUP_USI_FUNC
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc662_fixup_tbl[] = {
+@@ -8966,6 +8989,8 @@ static const struct snd_pci_quirk alc662_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1025, 0x0349, "eMachines eM250", ALC662_FIXUP_INV_DMIC),
+ 	SND_PCI_QUIRK(0x1025, 0x034a, "Gateway LT27", ALC662_FIXUP_INV_DMIC),
+ 	SND_PCI_QUIRK(0x1025, 0x038b, "Acer Aspire 8943G", ALC662_FIXUP_ASPIRE),
++	SND_PCI_QUIRK(0x1025, 0x123c, "Acer Nitro N50-600", ALC662_FIXUP_ACER_NITRO_HEADSET_MODE),
++	SND_PCI_QUIRK(0x1025, 0x124e, "Acer 2660G", ALC662_FIXUP_ACER_X2660G_HEADSET_MODE),
+ 	SND_PCI_QUIRK(0x1028, 0x05d8, "Dell", ALC668_FIXUP_DELL_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1028, 0x05db, "Dell", ALC668_FIXUP_DELL_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1028, 0x05fe, "Dell XPS 15", ALC668_FIXUP_DELL_XPS13),
+diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
+index b5a3f754a4f1..4f096685ed65 100644
+--- a/sound/usb/line6/driver.c
++++ b/sound/usb/line6/driver.c
+@@ -305,7 +305,7 @@ static void line6_data_received(struct urb *urb)
+ 				line6_midibuf_read(mb, line6->buffer_message,
+ 						LINE6_MIDI_MESSAGE_MAXLEN);
+ 
+-			if (done == 0)
++			if (done <= 0)
+ 				break;
+ 
+ 			line6->message_length = done;
+diff --git a/sound/usb/line6/midibuf.c b/sound/usb/line6/midibuf.c
+index 8d6eefa0d936..6a70463f82c4 100644
+--- a/sound/usb/line6/midibuf.c
++++ b/sound/usb/line6/midibuf.c
+@@ -159,7 +159,7 @@ int line6_midibuf_read(struct midi_buffer *this, unsigned char *data,
+ 			int midi_length_prev =
+ 			    midibuf_message_length(this->command_prev);
+ 
+-			if (midi_length_prev > 0) {
++			if (midi_length_prev > 1) {
+ 				midi_length = midi_length_prev - 1;
+ 				repeat = 1;
+ 			} else
