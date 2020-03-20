@@ -2,154 +2,102 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFFBC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D039C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C53D2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 040D020722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:38:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584743904;
+	bh=nZ+PMUgb3HVA8rcBAZm6Djd6N5+bgJDS4jqRa126iAk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lsLcBck+Zg5L1FF0r+vP4u/MKbHDqb+OineKVVpHQpM1Ni6kIsfk+XLBfRQCZ6Zo0
+	 +NM0o8WVI/xvPAhtyNXuZUw9tSCHkK0nZ+z08OjmxKg0aPXu6cNzZDfEzRVEU76+ij
+	 mG/7TOK/BPHQb33qe0lcsNJtNV8OCuXRonwzKizY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbgCTWgg (ORCPT
+        id S1727468AbgCTWiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:36:36 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37622 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbgCTWgf (ORCPT
+        Fri, 20 Mar 2020 18:38:23 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43941 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726855AbgCTWiW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:36:35 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFQFI-0005GA-2c; Fri, 20 Mar 2020 23:36:04 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 7EC4C1039FC; Fri, 20 Mar 2020 23:36:03 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     paulmck@kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting documentation
-In-Reply-To: <20200320210243.GT3199@paulmck-ThinkPad-P72>
-References: <20200320160145.GN3199@paulmck-ThinkPad-P72> <87mu8apzxr.fsf@nanos.tec.linutronix.de> <20200320210243.GT3199@paulmck-ThinkPad-P72>
-Date:   Fri, 20 Mar 2020 23:36:03 +0100
-Message-ID: <874kuipsbw.fsf@nanos.tec.linutronix.de>
+        Fri, 20 Mar 2020 18:38:22 -0400
+Received: by mail-io1-f66.google.com with SMTP id n21so7639493ioo.10;
+        Fri, 20 Mar 2020 15:38:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qSFUyWECzAXW0HX43CgH2zDgAz8AxAWVffEW3w/kp5o=;
+        b=oPRpCt+c35KS/HB2OnqzfwEBwfyAfZmsFwPRVh4v+jzWw/+7/K1VWXQdcsEcWLi0vl
+         C5OEd/4f2TTyeBDGR1/iDp5p89j/7r0AiOfnJof8AzVP78fhgL2InJ765EQfwXy5BWRN
+         Ny9h1mul29iNSQdzkj2/JabhHSrhCbmje46E9ON9MgWJoUTBy6zL4p8SsF4G+OwTRgWy
+         h5sPp+OxE6ZeH+2T2zCpD4LkzoP5g/ALphIjgkEgzQo+ssqRLI4I1ZDjQCg7VQkVWpex
+         MWjrbkyDr+aZP1ZJiOIMbfSE2ZQ04RSNcRzKvjZFMZqxcFJK2kUVUm6i6NrKN1W2a0jL
+         wQAw==
+X-Gm-Message-State: ANhLgQ2wWkurAKT6sayLxoxlP/7EDSktQE4jXQbhzrmomGHIGeUnp48+
+        lO/2zdvNjQWxG6jK5EpD4Q==
+X-Google-Smtp-Source: ADFU+vtdBLoVFwGWQgsKmCoa9A7999apEHu+ZaZVMplwZDVgvWAW6SOKN3FTPrzrV0mrY+rEp0Ct5g==
+X-Received: by 2002:a6b:7504:: with SMTP id l4mr9722601ioh.184.1584743901517;
+        Fri, 20 Mar 2020 15:38:21 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id n29sm2386822ila.86.2020.03.20.15.38.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 15:38:20 -0700 (PDT)
+Received: (nullmailer pid 26889 invoked by uid 1000);
+        Fri, 20 Mar 2020 22:38:18 -0000
+Date:   Fri, 20 Mar 2020 16:38:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com,
+        Sebastian Reichel <sre@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
+Subject: Re: [PATCH v5 2/9] dt_bindings: ROHM BD99954 Charger
+Message-ID: <20200320223818.GA26851@bogus>
+References: <cover.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
+ <a697e85a2c21758e00a28ca64b6e55ff7fb2f7d0.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a697e85a2c21758e00a28ca64b6e55ff7fb2f7d0.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Paul E. McKenney" <paulmck@kernel.org> writes:
-> On Fri, Mar 20, 2020 at 08:51:44PM +0100, Thomas Gleixner wrote:
->> "Paul E. McKenney" <paulmck@kernel.org> writes:
->> >
->> >  - The soft interrupt related suffix (_bh()) still disables softirq
->> >    handlers.  However, unlike non-PREEMPT_RT kernels (which disable
->> >    preemption to get this effect), PREEMPT_RT kernels use a per-CPU
->> >    lock to exclude softirq handlers.
->> 
->> I've made that:
->> 
->>   - The soft interrupt related suffix (_bh()) still disables softirq
->>     handlers.
->> 
->>     Non-PREEMPT_RT kernels disable preemption to get this effect.
->> 
->>     PREEMPT_RT kernels use a per-CPU lock for serialization. The lock
->>     disables softirq handlers and prevents reentrancy by a preempting
->>     task.
->
-> That works!  At the end, I would instead say "prevents reentrancy
-> due to task preemption", but what you have works.
+On Wed, 18 Mar 2020 13:49:47 +0200, Matti Vaittinen wrote:
+> The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
+> secondary battery. Intended to be used in space-constraint equipment such
+> as Low profile Notebook PC, Tablets and other applications. BD99954
+> provides a Dual-source Battery Charger, two port BC1.2 detection and a
+> Battery Monitor.
+> 
+> Document the DT bindings for BD99954
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+> 
+> 
+> Changes since v4:
+>  - change compatible name and file name accordingly
+>  - Fix the title
+> 
+> 
+> 
+>  .../bindings/power/supply/rohm,bd99954.yaml   | 155 ++++++++++++++++++
+>  1 file changed, 155 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
+> 
 
-Yours is better.
-
->>    - Task state is preserved across spinlock acquisition, ensuring that the
->>      task-state rules apply to all kernel configurations.  Non-PREEMPT_RT
->>      kernels leave task state untouched.  However, PREEMPT_RT must change
->>      task state if the task blocks during acquisition.  Therefore, it
->>      saves the current task state before blocking and the corresponding
->>      lock wakeup restores it. A regular not lock related wakeup sets the
->>      task state to RUNNING. If this happens while the task is blocked on
->>      a spinlock then the saved task state is changed so that correct
->>      state is restored on lock wakeup.
->> 
->> Hmm?
->
-> I of course cannot resist editing the last two sentences:
->
->    ... Other types of wakeups unconditionally set task state to RUNNING.
->    If this happens while a task is blocked while acquiring a spinlock,
->    then the task state is restored to its pre-acquisition value at
->    lock-wakeup time.
-
-Errm no. That would mean
-
-     state = UNINTERRUPTIBLE
-     lock()
-       block()
-         real_state = state
-         state = SLEEPONLOCK
-
-                               non lock wakeup
-                                 state = RUNNING    <--- FAIL #1
-
-                               lock wakeup
-                                 state = real_state <--- FAIL #2
-
-How it works is:
-
-     state = UNINTERRUPTIBLE
-     lock()
-       block()
-         real_state = state
-         state = SLEEPONLOCK
-
-                               non lock wakeup
-                                 real_state = RUNNING
-
-                               lock wakeup
-                                 state = real_state == RUNNING
-
-If there is no 'non lock wakeup' before the lock wakeup:
-
-     state = UNINTERRUPTIBLE
-     lock()
-       block()
-         real_state = state
-         state = SLEEPONLOCK
-
-                               lock wakeup
-                                 state = real_state == UNINTERRUPTIBLE
-
-I agree that what I tried to express is hard to parse, but it's at least
-halfways correct :)
-
-Thanks,
-
-        tglx
+Reviewed-by: Rob Herring <robh@kernel.org>
