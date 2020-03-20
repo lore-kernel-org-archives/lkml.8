@@ -2,175 +2,150 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D61C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BEDC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F2520732
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:45:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="nFFjlvQ7"
+	by mail.kernel.org (Postfix) with ESMTP id 56C5820781
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:46:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584704765;
+	bh=HrKySj1MBtd+8/lD1DXHRMSp6ON+5Q7xA/4ZRnHjIP4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=tRgfowwy7aDEc/n3FzcvsSeKsSvk98cmgYliLknIfufDMCh4ZxR3nglDE/aezSNmC
+	 TSVLbdKE0AFPw9axazIsCrwOd0u8ddel8e9PTmD6NbyXjZtNWrpXj6wKt93Ah5sGjC
+	 VjKlZukB1mC4U8+Y5USrG8FJPUb/vLc0Rgpb8RGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgCTLpi (ORCPT
+        id S1727016AbgCTLqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 07:45:38 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45367 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbgCTLpi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 07:45:38 -0400
-Received: by mail-lf1-f67.google.com with SMTP id v4so573956lfo.12
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 04:45:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=pWbPjHYC+o2SW9jmTmeqllECnseGArz1efl29XkdYuY=;
-        b=nFFjlvQ7pQEp2l9CFv+38pFxZZwmMMuZTaolsXZt4iZiwpWJJkoI0hFQUCj8zuNv6D
-         suZ783bs6HKFp3AGVaSz7/wsX8WqMMM8C5RePhwhX/atSbqb64pyD5RNsh5UuwllVx3k
-         8N7bztTPxMqls2wtBZT+9htJH0kF6FLzugXlNheJXjQgEqBMkyik0HwbWqt6vC+iMFz6
-         jnz7Or8rFFHtd/4ItqK+52y6E9vKLgADOB7xktp6XKfN+op5SzLCnDbpqvOWe8jG+6UW
-         i5JI+Zia6qoO3Seka0lUYfqx6kw5nsn3dmHX4FLKSXY+ueVLq55HiGsfqF3m6gX/fAG1
-         fKTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=pWbPjHYC+o2SW9jmTmeqllECnseGArz1efl29XkdYuY=;
-        b=Xr3N14IzvaJuoUW0wP0++YxVFnnRxRYg6zi/Ah6LPFEkq1BbEoETBRM4x3fIl/DnSz
-         XAO7ucXThTwmDnpSA2bJJdyN3NPSk/qxS8p1T2ROMzLv/dOqP1Mnu6x7M/3SH2fOg4oN
-         y/nLSGnP6Y4Cp8ZoPYRWh/YQ7y/SqiLK+Lp3+IsefI+1g0W6jhINpJC22fbCqDBGK07f
-         J5AjVqGg7e2Lj2v808TOZrMsQng4EDkaJO9Eq9XSyh53Gy4xCRrFuhP8SVhO/kEV3Mt8
-         cwyGRNvYqLZRKwIt3KmcBn/MqdKLzqC45vC/0R6j3iMP/rdgYUZe9upen8bFDeLnztmv
-         XJIg==
-X-Gm-Message-State: ANhLgQ3SwlsnoiTyNX7q0fwGC+2Ri1XXOtxgAWO47dE7GMQeViH6u1WZ
-        Ph0FY0c/097LI4psviE9YlDd8g==
-X-Google-Smtp-Source: ADFU+vsVfDBHgLfeD0LZC7cAqByG7wtuUVuzjaAYMXDUbwY/wS+RQ4hVLw2jNExdjkagIYFhP8aN0A==
-X-Received: by 2002:ac2:59c6:: with SMTP id x6mr5155659lfn.177.1584704734826;
-        Fri, 20 Mar 2020 04:45:34 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id u10sm3211342ljk.56.2020.03.20.04.45.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 04:45:33 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id CC2231020EE; Fri, 20 Mar 2020 14:45:36 +0300 (+03)
-Date:   Fri, 20 Mar 2020 14:45:36 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     kirill.shutemov@linux.intel.com, hughd@google.com,
-        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: khugepaged: fix potential page state corruption
-Message-ID: <20200320114536.brigxjkgjmxyhdu5@box>
-References: <1584573582-116702-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200319001258.creziw6ffw4jvwl3@box>
- <2cdc734c-c222-4b9d-9114-1762b29dafb4@linux.alibaba.com>
- <db660bef-c927-b793-7a79-a88df197a756@linux.alibaba.com>
- <20200319104938.vphyajoyz6ob6jtl@box>
- <e716c8c6-898e-5199-019c-161ea3ec06c3@linux.alibaba.com>
+        Fri, 20 Mar 2020 07:46:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726806AbgCTLqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 07:46:03 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F34B020732;
+        Fri, 20 Mar 2020 11:46:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584704763;
+        bh=HrKySj1MBtd+8/lD1DXHRMSp6ON+5Q7xA/4ZRnHjIP4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=was0UZ+X/2igmR+WLyQUlzJnfUkPZw0ttsPQgxhqOdbeUnSRpsDmMcwxqwh0A6noU
+         PAUPGPqhb5vYy9BHfiAukTMzgXuu/42Y/3XYzO5tzzRDAtE9XCTDSjfnAhy45JEhbU
+         V8QzeclgcQdDGMBgm8S/45DR7DI+C3925Xs2e5Nc=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jFG6D-00EEOQ-9X; Fri, 20 Mar 2020 11:46:01 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e716c8c6-898e-5199-019c-161ea3ec06c3@linux.alibaba.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 20 Mar 2020 11:46:01 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     Auger Eric <eric.auger@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v5 23/23] KVM: arm64: GICv4.1: Expose HW-based SGIs in
+ debugfs
+In-Reply-To: <8d7fdb7f-7a21-da22-52a2-51ee8ac9393f@huawei.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-24-maz@kernel.org>
+ <4cb4c3d4-7b02-bb77-cd7a-c185346b6a2f@redhat.com>
+ <45c282bddd43420024633943c1befac3@kernel.org>
+ <e1a1e537-9f8e-5cfb-0132-f796e8bf06c9@huawei.com>
+ <b63950513f519d9a04f9719f5aa6a2db@kernel.org>
+ <8d7fdb7f-7a21-da22-52a2-51ee8ac9393f@huawei.com>
+Message-ID: <40cbdf23c0f8bfc229400c14899ecbe0@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, eric.auger@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 09:57:47AM -0700, Yang Shi wrote:
+On 2020-03-20 11:35, Zenghui Yu wrote:
+> Hi Marc,
 > 
+> On 2020/3/20 17:09, Marc Zyngier wrote:
+>> Hi Zenghui,
+>> 
+>> On 2020-03-20 04:38, Zenghui Yu wrote:
+>>> Hi Marc,
+>>> 
+>>> On 2020/3/19 23:21, Marc Zyngier wrote:
+>>>> With GICv4.1, you can introspect the HW state for SGIs. You can also
+>>>> look at the vLPI state by peeking at the virtual pending table, but
+>>>> you'd need to unmap the VPE first,
+>>> 
+>>> Out of curiosity, could you please point me to the "unmap the VPE"
+>>> requirement in the v4.1 spec? I'd like to have a look.
+>> 
+>> Sure. See IHI0069F, 5.3.19 (VMAPP GICv4.1), "Caching of virtual LPI 
+>> data
+>> structures", and the bit that says:
+>> 
+>> "A VMAPP with {V,Alloc}=={0,1} cleans and invalidates any caching of 
+>> the
+>> Virtual Pending Table and Virtual Configuration Table associated with 
+>> the
+>> vPEID held in the GIC"
+>> 
+>> which is what was crucially missing from the GICv4.0 spec (it doesn't 
+>> say
+>> when the GIC is done writing to memory).
 > 
-> On 3/19/20 3:49 AM, Kirill A. Shutemov wrote:
-> > On Wed, Mar 18, 2020 at 10:39:21PM -0700, Yang Shi wrote:
-> > > 
-> > > On 3/18/20 5:55 PM, Yang Shi wrote:
-> > > > 
-> > > > On 3/18/20 5:12 PM, Kirill A. Shutemov wrote:
-> > > > > On Thu, Mar 19, 2020 at 07:19:42AM +0800, Yang Shi wrote:
-> > > > > > When khugepaged collapses anonymous pages, the base pages would
-> > > > > > be freed
-> > > > > > via pagevec or free_page_and_swap_cache().  But, the anonymous page may
-> > > > > > be added back to LRU, then it might result in the below race:
-> > > > > > 
-> > > > > >      CPU A                CPU B
-> > > > > > khugepaged:
-> > > > > >     unlock page
-> > > > > >     putback_lru_page
-> > > > > >       add to lru
-> > > > > >                  page reclaim:
-> > > > > >                    isolate this page
-> > > > > >                    try_to_unmap
-> > > > > >     page_remove_rmap <-- corrupt _mapcount
-> > > > > > 
-> > > > > > It looks nothing would prevent the pages from isolating by reclaimer.
-> > > > > Hm. Why should it?
-> > > > > 
-> > > > > try_to_unmap() doesn't exclude parallel page unmapping. _mapcount is
-> > > > > protected by ptl. And this particular _mapcount pin is reachable for
-> > > > > reclaim as it's not part of usual page table tree. Basically
-> > > > > try_to_unmap() will never succeeds until we give up the _mapcount on
-> > > > > khugepaged side.
-> > > > I don't quite get. What does "not part of usual page table tree" means?
-> > > > 
-> > > > How's about try_to_unmap() acquires ptl before khugepaged?
-> > The page table we are dealing with was detached from the process' page
-> > table tree: see pmdp_collapse_flush(). try_to_unmap() will not see the
-> > pte.
-> > 
-> > try_to_unmap() can only reach the ptl if split ptl is disabled
-> > (mm->page_table_lock is used), but it still will not be able to reach pte.
+> OK. Thanks for the pointer!
 > 
-> Aha, got it. Thanks for explaining. I definitely missed this point. Yes,
-> pmdp_collapse_flush() would clear the pmd, then others won't see the page
-> table.
+>> 
+>> Side note: it'd be good to know what the rules are for your own GICv4
+>> implementations, so that we can at least make sure the current code is 
+>> safe.
 > 
-> However, it looks the vmscan would not stop at try_to_unmap() at all,
-> try_to_unmap() would just return true since pmd_present() should return
-> false in pvmw. Then it would go all the way down to __remove_mapping(), but
-> freezing the page would fail since try_to_unmap() doesn't actually drop the
-> refcount from the pte map.
+> As far as I know, there will be some clean and invalidate operations
+> when v4.0 VPENDBASER.Valid gets programmed.
 
-No. try_to_unmap() checks mapcount at the end and only returns true if
-it's zero.
+Interesting. The ideal behaviour would be that the VPT is up-to-date and
+the caches clean when Valid is cleared (and once Dirty flips to 0).
 
-> It would not result in any critical problem AFAICT, but suboptimal and it
-> may causes some unnecessary I/O due to swap.
-> 
-> > 
-> > > > > I don't see the issue right away.
-> > > > > 
-> > > > > > The other problem is the page's active or unevictable flag might be
-> > > > > > still set when freeing the page via free_page_and_swap_cache().
-> > > > > So what?
-> > > > The flags may leak to page free path then kernel may complain if
-> > > > DEBUG_VM is set.
-> > Could you elaborate on what codepath you are talking about?
-> 
-> __put_page ->
->     __put_single_page ->
->         free_unref_page ->
->             put_unref_page_prepare ->
->                 free_pcp_prepare ->
->                     free_pages_prepare ->
->                         free_pages_check
-> 
-> This check would just be run when DEBUG_VM is enabled.
+> But not sure about behaviors
+> on VMAPP (unmap), it may be a totally v4.1 stuff. I'll have a talk with
+> our SOC team.
 
-I'm not 100% sure, but I belive these flags will ge cleared on adding into
-lru:
+The VMAPP stuff is purely v4.1.
 
-  release_pte_page()
-    putback_lru_page()
-      lru_cache_add()
-       __lru_cache_add()
-         __pagevec_lru_add()
-	   __pagevec_lru_add_fn()
-	     __pagevec_lru_add_fn()
+> But how can the current code be unsafe? Is anywhere in the current code
+> will peek/poke the vpt (whilst GIC continues writing things into it)?
 
+No. But on VM termination, the memory will be freed, and will eventually 
+be
+reallocated. If the GIC can still write to that memory after it has been
+freed, you end-up with memory corruption... Which is why I'm curious of
+what ensures that on your implementation.
+
+I'd also like to know the same thing about the QC implementation, but
+there's nobody left to find out...
+
+Thanks,
+
+          M.
 -- 
- Kirill A. Shutemov
+Jazz is not dead. It just smells funny...
