@@ -2,144 +2,129 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFDEC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457F8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA4412070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190A12070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:50:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q2if4FSJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbgCTOuV (ORCPT
+        id S1727352AbgCTOu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:50:21 -0400
-Received: from 7.mo173.mail-out.ovh.net ([46.105.44.159]:33852 "EHLO
-        7.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgCTOuV (ORCPT
+        Fri, 20 Mar 2020 10:50:26 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:51520 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgCTOuY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:50:21 -0400
-X-Greylist: delayed 8434 seconds by postgrey-1.27 at vger.kernel.org; Fri, 20 Mar 2020 10:50:19 EDT
-Received: from player728.ha.ovh.net (unknown [10.110.208.160])
-        by mo173.mail-out.ovh.net (Postfix) with ESMTP id A6375135FBD
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 13:23:05 +0100 (CET)
-Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
-        (Authenticated sender: groug@kaod.org)
-        by player728.ha.ovh.net (Postfix) with ESMTPSA id 060EF108AE6BD;
-        Fri, 20 Mar 2020 12:22:49 +0000 (UTC)
-Date:   Fri, 20 Mar 2020 13:22:48 +0100
-From:   Greg Kurz <groug@kaod.org>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, Bharata B Rao <bharata@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH 1/2] KVM: PPC: Book3S HV: check caller of H_SVM_* Hcalls
-Message-ID: <20200320132248.44b81b3b@bahia.lan>
-In-Reply-To: <20200320102643.15516-2-ldufour@linux.ibm.com>
-References: <20200320102643.15516-1-ldufour@linux.ibm.com>
-        <20200320102643.15516-2-ldufour@linux.ibm.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 20 Mar 2020 10:50:24 -0400
+Received: by mail-pj1-f65.google.com with SMTP id hg10so2565870pjb.1;
+        Fri, 20 Mar 2020 07:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3awxwIekRDUBiBlAlaIOOsVcqd9E8h+LzREGVIDTmsg=;
+        b=Q2if4FSJkS5b1GBTG4smedIbHgap+zOMxVKm0PGblSmtf/+NGn7hAlBY00C7COP4f7
+         C27sulG3G4VyEPccPDcjaordcpDVP/LDpNNmf7sdqdm28JOAOGKJshLks4pc/y5oKIVO
+         KGWjEZRwmp9A5QPvKXR3HNp5EoCLSmTcvq/nHwo4lmnaUuCmvV03rO9qJQY+zLejwizQ
+         rVPqPIO2lxX31ILA01SzR6U32fbAhkTK2XzMSE/6hJ7rSCIXhI1QFX+fZOO1s9e7xvNw
+         N+qg30+gWi9AmmMO1AhsmNG/jzt0vIS4zqFSm63+qxFyPIPUowT5GJhOKpZjttaJD3NN
+         t2ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3awxwIekRDUBiBlAlaIOOsVcqd9E8h+LzREGVIDTmsg=;
+        b=jYbzGxAffTFUJ0pX+A1BWagftbqXOTxECj/vzAZRFCTItFX9pCgyddf7DzVKvuDVNT
+         T4D5aC1w4z7k+86Nivm59QBxW0qVCK0QPsBNCZ2L2GpkofA59ztBC/B3aA8QvtKQI3T5
+         kh0fo80aLT086Ky0BNb2N5Mo3KwDdOAgF/Ckx7NkeqbxEyPoDsk7+P7niMfgc7wO5KA+
+         0FHjkL3RDdX4ipugbUGE/9p0CcxXkMYaA+CRtVDp117OS/Fkd3+liWliecZoGJeJnDl3
+         LCOy3mLhzXVKKHALRfvQLVaBjk9qzG1dQAtLzP4+TcNBUNFdeT7Nk+K9MzUV4j1Ov4GO
+         hbVw==
+X-Gm-Message-State: ANhLgQ3taz6cC7ffCEDvPIAMkk+LZ6/bAqE5HkvloYIL7hjGSkkBBrvc
+        /ZYeM2jOuFcAH4j1nAOZADuSvK0aDJ+hX4zG/Ng=
+X-Google-Smtp-Source: ADFU+vsJEMZmNCk8RrzRySH+vRQdh+TFU7wWO6UeDM8ozVAsygQtqKjCFI/e2CTKyamUM7Q0lbVz1aA3GBN4lADHJkU=
+X-Received: by 2002:a17:902:54f:: with SMTP id 73mr8649803plf.255.1584715822790;
+ Fri, 20 Mar 2020 07:50:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 13089993795129285060
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrudeguddgfeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtgfesthejredtredtvdenucfhrhhomhepifhrvghgucfmuhhriicuoehgrhhouhhgsehkrghougdrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrvdehfedrvddtkedrvdegkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejvdekrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepghhrohhugheskhgrohgurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+References: <20200320131345.635023594@linutronix.de> <20200320131509.564059710@linutronix.de>
+In-Reply-To: <20200320131509.564059710@linutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 20 Mar 2020 16:50:15 +0200
+Message-ID: <CAHp75VdkvyqOaAsLmz8K2j4bdd0sboPoUpRr6U-zvtkSaQfPRQ@mail.gmail.com>
+Subject: Re: [patch 09/22] cpufreq: Convert to new X86 CPU match macros
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-edac@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Mar 2020 11:26:42 +0100
-Laurent Dufour <ldufour@linux.ibm.com> wrote:
+On Fri, Mar 20, 2020 at 3:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> The new macro set has a consistent namespace and uses C99 initializers
+> instead of the grufty C89 ones.
+>
+> Get rid the of most local macro wrappers for consistency. The ones which
+> make sense for readability are renamed to X86_MATCH*.
+>
+> In the centrino driver this also removes the two extra duplicates of family
+> 6 model 13 which have no value at all.
 
-> The Hcall named H_SVM_* are reserved to the Ultravisor. However, nothing
-> prevent a malicious VM or SVM to call them. This could lead to weird result
-> and should be filtered out.
-> 
-> Checking the Secure bit of the calling MSR ensure that the call is coming
-> from either the Ultravisor or a SVM. But any system call made from a SVM
-> are going through the Ultravisor, and the Ultravisor should filter out
-> these malicious call. This way, only the Ultravisor is able to make such a
-> Hcall.
+> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6,  9, X86_FEATURE_EST, NULL),
+> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6, 13, X86_FEATURE_EST, NULL),
+> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  3, X86_FEATURE_EST, NULL),
+> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  4, X86_FEATURE_EST, NULL),
 
-"Ultravisor should filter" ? And what if it doesn't (eg. because of a bug) ?
+> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
+> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
+> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
 
-Shouldn't we also check the HV bit of the calling MSR as well to
-disambiguate SVM and UV ?
+> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
+> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
+> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
 
-> 
-> Cc: Bharata B Rao <bharata@linux.ibm.com>
-> Cc: Paul Mackerras <paulus@ozlabs.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
-> ---
->  arch/powerpc/kvm/book3s_hv.c | 32 +++++++++++++++++++++-----------
->  1 file changed, 21 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-> index 33be4d93248a..43773182a737 100644
-> --- a/arch/powerpc/kvm/book3s_hv.c
-> +++ b/arch/powerpc/kvm/book3s_hv.c
-> @@ -1074,25 +1074,35 @@ int kvmppc_pseries_do_hcall(struct kvm_vcpu *vcpu)
->  					 kvmppc_get_gpr(vcpu, 6));
->  		break;
->  	case H_SVM_PAGE_IN:
-> -		ret = kvmppc_h_svm_page_in(vcpu->kvm,
-> -					   kvmppc_get_gpr(vcpu, 4),
-> -					   kvmppc_get_gpr(vcpu, 5),
-> -					   kvmppc_get_gpr(vcpu, 6));
-> +		ret = H_UNSUPPORTED;
-> +		if (kvmppc_get_srr1(vcpu) & MSR_S)
-> +			ret = kvmppc_h_svm_page_in(vcpu->kvm,
-> +						   kvmppc_get_gpr(vcpu, 4),
-> +						   kvmppc_get_gpr(vcpu, 5),
-> +						   kvmppc_get_gpr(vcpu, 6));
+Perhaps use names instead of 6 and 15?
+Also, NULL vs. 0?
 
-If calling kvmppc_h_svm_page_in() produces a "weird result" when
-the MSR_S bit isn't set, then I think it should do the checking
-itself, ie. pass vcpu.
-
-This would also prevent adding that many lines in kvmppc_pseries_do_hcall()
-which is a big enough function already. The checking could be done in a
-helper in book3s_hv_uvmem.c and used by all UV specific hcalls.
-
->  		break;
->  	case H_SVM_PAGE_OUT:
-> -		ret = kvmppc_h_svm_page_out(vcpu->kvm,
-> -					    kvmppc_get_gpr(vcpu, 4),
-> -					    kvmppc_get_gpr(vcpu, 5),
-> -					    kvmppc_get_gpr(vcpu, 6));
-> +		ret = H_UNSUPPORTED;
-> +		if (kvmppc_get_srr1(vcpu) & MSR_S)
-> +			ret = kvmppc_h_svm_page_out(vcpu->kvm,
-> +						    kvmppc_get_gpr(vcpu, 4),
-> +						    kvmppc_get_gpr(vcpu, 5),
-> +						    kvmppc_get_gpr(vcpu, 6));
->  		break;
->  	case H_SVM_INIT_START:
-> -		ret = kvmppc_h_svm_init_start(vcpu->kvm);
-> +		ret = H_UNSUPPORTED;
-> +		if (kvmppc_get_srr1(vcpu) & MSR_S)
-> +			ret = kvmppc_h_svm_init_start(vcpu->kvm);
->  		break;
->  	case H_SVM_INIT_DONE:
-> -		ret = kvmppc_h_svm_init_done(vcpu->kvm);
-> +		ret = H_UNSUPPORTED;
-> +		if (kvmppc_get_srr1(vcpu) & MSR_S)
-> +			ret = kvmppc_h_svm_init_done(vcpu->kvm);
->  		break;
->  	case H_SVM_INIT_ABORT:
-> -		ret = kvmppc_h_svm_init_abort(vcpu->kvm);
-> +		ret = H_UNSUPPORTED;
-> +		if (kvmppc_get_srr1(vcpu) & MSR_S)
-> +			ret = kvmppc_h_svm_init_abort(vcpu->kvm);
->  		break;
->  
->  	default:
-
+-- 
+With Best Regards,
+Andy Shevchenko
