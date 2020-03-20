@@ -2,133 +2,102 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6279DC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B55C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 367EA2076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:59:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584716357;
-	bh=Hd3zAvAezuFSVlozOz44ullhVT1eSajSxemMLbZxlBE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xWlnsfX9Z2RpkQZ8xnAyKnVQac6ac1z39kIRY0JP2gpPtmlRGx7Njhkf30L1JRAZr
-	 FoPeXTjodNm6xt6/WYviCFdtWs1VfrxFI3vABJZOBxKil0MTCx3f0YEt4gC8IiVoim
-	 GzhXHKXJdYVWWtNJBAtCF9peqoN3yy87tANsvb38=
+	by mail.kernel.org (Postfix) with ESMTP id A824520714
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgCTO7Q (ORCPT
+        id S1727458AbgCTO74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:59:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgCTO7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:59:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99F7A2072D;
-        Fri, 20 Mar 2020 14:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584716354;
-        bh=Hd3zAvAezuFSVlozOz44ullhVT1eSajSxemMLbZxlBE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ff33wKiw1HbXy93zCGoh1lWvVOk00lgxJdeoknvNzKnVdJSPvefa0ML3LysbJ4nTO
-         6rAp6ASm4qt4uUIq2mtTpgvdRMDHrrSeBb59UaWhHjcJKEKHYeRpe3xmrMj7LtAtPD
-         nmjVJ+xUohzhMq/MhLV3uoj+bRi4FVjkP6UigI8o=
-Date:   Fri, 20 Mar 2020 15:59:06 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-pm@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        linux-edac@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org
-Subject: Re: [patch 00/22] x86/treewide: Consolidate CPU match macro maze and
- get rid of C89 (sic!) initializers
-Message-ID: <20200320145906.GA762057@kroah.com>
-References: <20200320131345.635023594@linutronix.de>
+        Fri, 20 Mar 2020 10:59:56 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:60257 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726778AbgCTO74 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:59:56 -0400
+Received: (qmail 28990 invoked by uid 500); 20 Mar 2020 10:59:55 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 20 Mar 2020 10:59:55 -0400
+Date:   Fri, 20 Mar 2020 10:59:55 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+cc:     linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        <linux-arch@vger.kernel.org>, Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 1/3] LKMM: Add litmus test for RCU GP guarantee where
+ updater frees object
+In-Reply-To: <20200320065552.253696-1-joel@joelfernandes.org>
+Message-ID: <Pine.LNX.4.44L0.2003201049230.27303-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320131345.635023594@linutronix.de>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 02:13:45PM +0100, Thomas Gleixner wrote:
-> The x86 CPU matching based on struct x86_cpu_id:
-> 
->   - is using an inconsistent macro mess with pointlessly duplicated and
->     slightly different local macros. Finding the places is an art as there
->     is no consistent name space at all.
-> 
->   - is still mostly based on C89 struct initializers which rely on the
->     ordering of the struct members. That's proliferated forever as every
->     new driver just copies the mess from some exising one.
-> 
-> A recent offlist conversation about adding more match criteria to the CPU
-> matching logic instead of creating yet another set of horrors, reminded me
-> of a pile of scripts and patches which I hacked on a few years ago when I
-> tried to add something to struct x86_cpu_id.
-> 
-> That stuff was finally not needed and ended up in my ever growing todo list
-> and collected dust and cobwebs, but (un)surprisingly enough most of it
-> still worked out of the box. The copy & paste machinery still works as it
-> did years ago.
-> 
-> There are a few places which needed extra care due to new creative macros,
-> new check combinations etc. and surprisingly ONE open coded proper C99
-> initializer.
-> 
-> It was reasonably simple to make it at least compile and pass a quick
-> binary equivalence check.
-> 
-> The result is a X86_MATCH prefix based set of macros which are reflecting
-> the needs of the usage sites and shorten the base macro which takes all
-> possible parameters (vendor, family, model, feature, data) and uses proper
-> C99 initializers.
-> 
-> So extensions of the match logic are trivial after that.
-> 
-> The patch set is against Linus tree and has trivial conflicts against
-> linux-next.
-> 
-> The diffstat is:
->  71 files changed, 525 insertions(+), 472 deletions(-)
-> 
-> but the extra lines are pretty much kernel-doc documentation which I added
-> to each of the new macros. The usage sites diffstat is:
-> 
->  70 files changed, 393 insertions(+), 471 deletions(-)
-> 
-> Thoughts?
+On Fri, 20 Mar 2020, Joel Fernandes (Google) wrote:
 
-Much nicer looking, thanks for cleaning up this mess:
+> This adds an example for the important RCU grace period guarantee, which
+> shows an RCU reader can never span a grace period.
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+>  .../litmus-tests/RCU+sync+free.litmus         | 40 +++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 tools/memory-model/litmus-tests/RCU+sync+free.litmus
+> 
+> diff --git a/tools/memory-model/litmus-tests/RCU+sync+free.litmus b/tools/memory-model/litmus-tests/RCU+sync+free.litmus
+> new file mode 100644
+> index 0000000000000..c4682502dd296
+> --- /dev/null
+> +++ b/tools/memory-model/litmus-tests/RCU+sync+free.litmus
+> @@ -0,0 +1,40 @@
+> +C RCU+sync+free
+> +
+> +(*
+> + * Result: Never
+> + *
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The following comment needs some rewriting.  The grammar is somewhat
+awkward and a very important "not" is missing.
+
+> + * This litmus test demonstrates that an RCU reader can never see a write after
+> + * the grace period, if it saw writes that happen before the grace period.
+
+An RCU reader can never see a write that follows a grace period if it
+did _not_ see writes that precede the grace period.
+
+>  This
+> + * is a typical pattern of RCU usage, where the write before the grace period
+> + * assigns a pointer, and the writes after destroy the object that the pointer
+> + * points to.
+
+... that the pointer used to point to.
+
+> + *
+> + * This guarantee also implies, an RCU reader can never span a grace period and
+> + * is an important RCU grace period memory ordering guarantee.
+
+Unnecessary comma, and it is not clear what "This" refers to.  The 
+whole sentence should be phrased differently:
+
+	This is one implication of the RCU grace-period guarantee,
+	which says (among other things) that an RCU reader cannot span 
+	a grace period.
+
+Alan
+
