@@ -2,347 +2,146 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF7EC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B4EC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF2020739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE26620776
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:38:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584711520;
+	bh=lJF3p8wBmDcPt7q/ttSYu3J0rSwSBfMouALJLtfIRec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cBXluwb3c9Dga7lGtvi+0POURfURqKsonRP4b/71ugBcAvwlF0j6HE5j9TL8RCHUT
+	 P+wl+ItYfPnI1VGMJ6YQcyq5uL5ehiDINRglB2D2qLqAsEBdM6rUtTocHiqMx5/jZP
+	 X/wJ8DNvw/Wdzm4H2OOCnpZXWj8hCwLgdoCy2bis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbgCTNg2 convert rfc822-to-8bit (ORCPT
+        id S1727238AbgCTNij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:36:28 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39929 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgCTNg1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:36:27 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jFHow-0004Ec-6K; Fri, 20 Mar 2020 14:36:18 +0100
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jFHov-0005h3-3F; Fri, 20 Mar 2020 14:36:17 +0100
-Date:   Fri, 20 Mar 2020 14:36:17 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     peng.fan@nxp.com
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de,
-        jassisinghbrar@gmail.com, leonard.crestez@nxp.com,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, aisheng.dong@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V7 3/4] mailbox: imx: add SCU MU support
-Message-ID: <20200320133617.vcvodz7nxw32cdd6@pengutronix.de>
-References: <1584604193-2945-1-git-send-email-peng.fan@nxp.com>
- <1584604193-2945-4-git-send-email-peng.fan@nxp.com>
+        Fri, 20 Mar 2020 09:38:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726843AbgCTNij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 09:38:39 -0400
+Received: from localhost (unknown [122.167.82.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EE5D20739;
+        Fri, 20 Mar 2020 13:38:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584711519;
+        bh=lJF3p8wBmDcPt7q/ttSYu3J0rSwSBfMouALJLtfIRec=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bgk4salsY3Fwi2RzwNkN/s40VAPuS25fuKUhR89286TkBkN8BVsg/VKixsEHWV+Ub
+         Hi0jhXQsIZEwXLTBKu1gbNZtDRywKU8Ax3Pg/BeC/5X/vblZdU2wpeN1hFv8l6g+C2
+         UscdLToEAS/KZ5+J/IkBkv9VTkxVUaEz2LCQnT5I=
+Date:   Fri, 20 Mar 2020 19:08:34 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH 2/7] soundwire: intel: reuse code for wait loops to
+ set/clear bits
+Message-ID: <20200320133834.GB4885@vkoul-mobl>
+References: <20200311221026.18174-1-pierre-louis.bossart@linux.intel.com>
+ <20200311221026.18174-3-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <1584604193-2945-4-git-send-email-peng.fan@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 14:34:45 up 126 days,  4:53, 161 users,  load average: 0.05, 0.06,
- 0.02
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200311221026.18174-3-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 03:49:52PM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On 11-03-20, 17:10, Pierre-Louis Bossart wrote:
+> Refactor code and use same routines on set/clear
 > 
-> i.MX8/8X SCU MU is dedicated for communication between SCU and Cortex-A
-> cores from hardware design, and could not be reused for other purpose.
-> 
-> Per i.MX8/8X Reference mannual, Chapter "12.9.2.3.2 Messaging Examples",
->  Passing short messages: Transmit register(s) can be used to pass
->  short messages from one to four words in length. For example, when
->  a four-word message is desired, only one of the registers needs to
->  have its corresponding interrupt enable bit set at the receiver side;
->  the message’s first three words are written to the registers whose
->  interrupt is masked, and the fourth word is written to the other
->  register (which triggers an interrupt at the receiver side).
-> 
-> i.MX8/8X SCU firmware IPC is an implementation of passing short
-> messages. But current imx-mailbox driver only support one word
-> message, i.MX8/8X linux side firmware has to request four TX
-> and four RX to support IPC to SCU firmware. This is low efficent
-> and more interrupts triggered compared with one TX and
-> one RX.
-> 
-> To make SCU MU work,
->   - parse the size of msg.
->   - Only enable TR0/RR0 interrupt for transmit/receive message.
->   - For TX/RX, only support one TX channel and one RX channel
->   - For RX, support receive msg larger than 4 u32 words.
->   - Support 6 channels, TX0/RX0/RXDB[0-3], not support TXDB.
-> 
-> Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-
-Looks ok.
-
-Thank you
-
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 > ---
-> V7:
->  Add TE/RE check
+>  drivers/soundwire/intel.c | 45 +++++++++++++++++----------------------
+>  1 file changed, 19 insertions(+), 26 deletions(-)
 > 
-> V6:
->  Add R-b tag
->  Use %zu for printk sizeof
-> 
-> V5:
->  Code style cleanup
->  Add more debug msg
->  Drop __packed aligned
->  idx santity check in scu xlate
-> 
-> V4:
->  Added separate chans init and xlate function for SCU MU
->  Limit chans to TX0/RX0/RXDB[0-3], max 6 chans.
->  Santity check to msg size
-> 
-> V3:
->  Added scu type tx/rx and SCU MU type
-> 
->  drivers/mailbox/imx-mailbox.c | 155 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 155 insertions(+)
-> 
-> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-> index df6c4ecd913c..7906624a731c 100644
-> --- a/drivers/mailbox/imx-mailbox.c
-> +++ b/drivers/mailbox/imx-mailbox.c
-> @@ -4,8 +4,10 @@
->   */
->  
->  #include <linux/clk.h>
-> +#include <linux/firmware/imx/ipc.h>
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
-> +#include <linux/iopoll.h>
->  #include <linux/kernel.h>
->  #include <linux/mailbox_controller.h>
->  #include <linux/module.h>
-> @@ -27,6 +29,8 @@
->  #define IMX_MU_xCR_GIRn(x)	BIT(16 + (3 - (x)))
->  
->  #define IMX_MU_CHANS		16
-> +/* TX0/RX0/RXDB[0-3] */
-> +#define IMX_MU_SCU_CHANS	6
->  #define IMX_MU_CHAN_NAME_SIZE	20
->  
->  enum imx_mu_chan_type {
-> @@ -36,6 +40,11 @@ enum imx_mu_chan_type {
->  	IMX_MU_TYPE_RXDB,	/* Rx doorbell */
->  };
->  
-> +struct imx_sc_rpc_msg_max {
-> +	struct imx_sc_rpc_msg hdr;
-> +	u32 data[7];
-> +};
-> +
->  struct imx_mu_con_priv {
->  	unsigned int		idx;
->  	char			irq_desc[IMX_MU_CHAN_NAME_SIZE];
-> @@ -134,6 +143,83 @@ static int imx_mu_generic_rx(struct imx_mu_priv *priv,
->  	return 0;
+> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+> index 28a8563c4e0f..1a3b828b03a1 100644
+> --- a/drivers/soundwire/intel.c
+> +++ b/drivers/soundwire/intel.c
+> @@ -134,40 +134,33 @@ static inline void intel_writew(void __iomem *base, int offset, u16 value)
+>  	writew(value, base + offset);
 >  }
 >  
-> +static int imx_mu_scu_tx(struct imx_mu_priv *priv,
-> +			 struct imx_mu_con_priv *cp,
-> +			 void *data)
+> +static int intel_wait_bit(void __iomem *base, int offset, u32 mask, u32 target)
 > +{
-> +	struct imx_sc_rpc_msg_max *msg = data;
-> +	u32 *arg = data;
-> +	int i, ret;
-> +	u32 xsr;
+> +	int timeout = 10;
+> +	u32 reg_read;
 > +
-> +	switch (cp->type) {
-> +	case IMX_MU_TYPE_TX:
-> +		if (msg->hdr.size > sizeof(*msg)) {
-> +			/*
-> +			 * The real message size can be different to
-> +			 * struct imx_sc_rpc_msg_max size
-> +			 */
-> +			dev_err(priv->dev, "Exceed max msg size (%zu) on TX, got: %i\n", sizeof(*msg), msg->hdr.size);
-> +			return -EINVAL;
-> +		}
+> +	do {
+> +		reg_read = readl(base + offset);
+> +		if ((reg_read & mask) == target)
+> +			return 0;
 > +
-> +		for (i = 0; i < 4 && i < msg->hdr.size; i++)
-> +			imx_mu_write(priv, *arg++, priv->dcfg->xTR[i % 4]);
-> +		for (; i < msg->hdr.size; i++) {
-> +			ret = readl_poll_timeout(priv->base + priv->dcfg->xSR,
-> +						 xsr,
-> +						 xsr & IMX_MU_xSR_TEn(i % 4),
-> +						 0, 100);
-> +			if (ret) {
-> +				dev_err(priv->dev, "Send data index: %d timeout\n", i);
-> +				return ret;
-> +			}
-> +			imx_mu_write(priv, *arg++, priv->dcfg->xTR[i % 4]);
-> +		}
+> +		timeout--;
+> +		udelay(50);
+
+This should use udelay_range, but this can be different patch as this is
+code move, so okay
+
+> +	} while (timeout != 0);
 > +
-> +		imx_mu_xcr_rmw(priv, IMX_MU_xCR_TIEn(cp->idx), 0);
-> +		break;
-> +	default:
-> +		dev_warn_ratelimited(priv->dev, "Send data on wrong channel type: %d\n", cp->type);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
+> +	return -EAGAIN;
 > +}
 > +
-> +static int imx_mu_scu_rx(struct imx_mu_priv *priv,
-> +			 struct imx_mu_con_priv *cp)
-> +{
-> +	struct imx_sc_rpc_msg_max msg;
-> +	u32 *data = (u32 *)&msg;
-> +	int i, ret;
-> +	u32 xsr;
-> +
-> +	imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_RIEn(0));
-> +	*data++ = imx_mu_read(priv, priv->dcfg->xRR[0]);
-> +
-> +	if (msg.hdr.size > sizeof(msg)) {
-> +		dev_err(priv->dev, "Exceed max msg size (%zu) on RX, got: %i\n",
-> +			sizeof(msg), msg.hdr.size);
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (i = 1; i < msg.hdr.size; i++) {
-> +		ret = readl_poll_timeout(priv->base + priv->dcfg->xSR, xsr,
-> +					 xsr & IMX_MU_xSR_RFn(i % 4), 0, 100);
-> +		if (ret) {
-> +			dev_err(priv->dev, "timeout read idx %d\n", i);
-> +			return ret;
-> +		}
-> +		*data++ = imx_mu_read(priv, priv->dcfg->xRR[i % 4]);
-> +	}
-> +
-> +	imx_mu_xcr_rmw(priv, IMX_MU_xCR_RIEn(0), 0);
-> +	mbox_chan_received_data(cp->chan, (void *)&msg);
-> +
-> +	return 0;
-> +}
-> +
->  static void imx_mu_txdb_tasklet(unsigned long data)
+>  static int intel_clear_bit(void __iomem *base, int offset, u32 value, u32 mask)
 >  {
->  	struct imx_mu_con_priv *cp = (struct imx_mu_con_priv *)data;
-> @@ -263,6 +349,42 @@ static const struct mbox_chan_ops imx_mu_ops = {
->  	.shutdown = imx_mu_shutdown,
->  };
->  
-> +static struct mbox_chan *imx_mu_scu_xlate(struct mbox_controller *mbox,
-> +					  const struct of_phandle_args *sp)
-> +{
-> +	u32 type, idx, chan;
-> +
-> +	if (sp->args_count != 2) {
-> +		dev_err(mbox->dev, "Invalid argument count %d\n", sp->args_count);
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	type = sp->args[0]; /* channel type */
-> +	idx = sp->args[1]; /* index */
-> +
-> +	switch (type) {
-> +	case IMX_MU_TYPE_TX:
-> +	case IMX_MU_TYPE_RX:
-> +		if (idx != 0)
-> +			dev_err(mbox->dev, "Invalid chan idx: %d\n", idx);
-> +		chan = type;
-> +		break;
-> +	case IMX_MU_TYPE_RXDB:
-> +		chan = 2 + idx;
-> +		break;
-> +	default:
-> +		dev_err(mbox->dev, "Invalid chan type: %d\n", type);
-> +		return NULL;
-> +	}
-> +
-> +	if (chan >= mbox->num_chans) {
-> +		dev_err(mbox->dev, "Not supported channel number: %d. (type: %d, idx: %d)\n", chan, type, idx);
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	return &mbox->chans[chan];
-> +}
-> +
->  static struct mbox_chan * imx_mu_xlate(struct mbox_controller *mbox,
->  				       const struct of_phandle_args *sp)
->  {
-> @@ -310,6 +432,28 @@ static void imx_mu_init_generic(struct imx_mu_priv *priv)
->  	imx_mu_write(priv, 0, priv->dcfg->xCR);
+> -	int timeout = 10;
+> -	u32 reg_read;
+> -
+>  	writel(value, base + offset);
+> -	do {
+> -		reg_read = readl(base + offset);
+> -		if (!(reg_read & mask))
+> -			return 0;
+> -
+> -		timeout--;
+> -		udelay(50);
+> -	} while (timeout != 0);
+> -
+> -	return -EAGAIN;
+> +	return intel_wait_bit(base, offset, mask, 0);
 >  }
 >  
-> +static void imx_mu_init_scu(struct imx_mu_priv *priv)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < IMX_MU_SCU_CHANS; i++) {
-> +		struct imx_mu_con_priv *cp = &priv->con_priv[i];
-> +
-> +		cp->idx = i < 2 ? 0 : i - 2;
-> +		cp->type = i < 2 ? i : IMX_MU_TYPE_RXDB;
-> +		cp->chan = &priv->mbox_chans[i];
-> +		priv->mbox_chans[i].con_priv = cp;
-> +		snprintf(cp->irq_desc, sizeof(cp->irq_desc),
-> +			 "imx_mu_chan[%i-%i]", cp->type, cp->idx);
-> +	}
-> +
-> +	priv->mbox.num_chans = IMX_MU_SCU_CHANS;
-> +	priv->mbox.of_xlate = imx_mu_scu_xlate;
-> +
-> +	/* Set default MU configuration */
-> +	imx_mu_write(priv, 0, priv->dcfg->xCR);
-> +}
-> +
->  static int imx_mu_probe(struct platform_device *pdev)
+>  static int intel_set_bit(void __iomem *base, int offset, u32 value, u32 mask)
 >  {
->  	struct device *dev = &pdev->dev;
-> @@ -396,9 +540,20 @@ static const struct imx_mu_dcfg imx_mu_cfg_imx7ulp = {
->  	.xCR	= 0x64,
->  };
+> -	int timeout = 10;
+> -	u32 reg_read;
+> -
+>  	writel(value, base + offset);
+> -	do {
+> -		reg_read = readl(base + offset);
+> -		if (reg_read & mask)
+> -			return 0;
+> -
+> -		timeout--;
+> -		udelay(50);
+> -	} while (timeout != 0);
+> -
+> -	return -EAGAIN;
+> +	return intel_wait_bit(base, offset, mask, mask);
+>  }
 >  
-> +static const struct imx_mu_dcfg imx_mu_cfg_imx8_scu = {
-> +	.tx	= imx_mu_scu_tx,
-> +	.rx	= imx_mu_scu_rx,
-> +	.init	= imx_mu_init_scu,
-> +	.xTR	= {0x0, 0x4, 0x8, 0xc},
-> +	.xRR	= {0x10, 0x14, 0x18, 0x1c},
-> +	.xSR	= 0x20,
-> +	.xCR	= 0x24,
-> +};
-> +
->  static const struct of_device_id imx_mu_dt_ids[] = {
->  	{ .compatible = "fsl,imx7ulp-mu", .data = &imx_mu_cfg_imx7ulp },
->  	{ .compatible = "fsl,imx6sx-mu", .data = &imx_mu_cfg_imx6sx },
-> +	{ .compatible = "fsl,imx8-mu-scu", .data = &imx_mu_cfg_imx8_scu },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
+>  /*
 > -- 
-> 2.16.4
-> 
-> 
+> 2.20.1
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+~Vinod
