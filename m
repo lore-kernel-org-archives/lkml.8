@@ -2,90 +2,82 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3EDC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F627C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3415420781
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:48:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ghp/qxRR"
+	by mail.kernel.org (Postfix) with ESMTP id 3353420781
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:53:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584687232;
+	bh=ExI1kfSKUVZS2XzqSdVhVyWr/Qtz6K6BVNxaXsqXMDs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qr8VmD6kreCjvJ7i5sLhb10g1u8NA914y8E+TreLHe42spjUwOeQAIlNjwQyC+5rc
+	 KZB0+tXjAtpG7eqHv7DuXX35ZK9F6jKC2OwxBLyT3aW4XCiWVWKjfzG85qfGFtWzRp
+	 0IrH9YqdQdseLYDIKzqHw3rI5xCI298G4Fb1deb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgCTGsp (ORCPT
+        id S1726867AbgCTGxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 02:48:45 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:33451 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726673AbgCTGso (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 02:48:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584686923;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=I8J6IN+TuY0BJsRchoBI9oAN0K/XoUEqJ8kuURXbQjM=;
-        b=ghp/qxRR52Pa0JwCFG1E1YEfoc/yEsoQuokJKQ7Qn+eBjtTomqE5VsuzSSGL0dEopJ+JgE
-        GQSzSWq2WSjhIjWhsekd4nZnvM6dSh1OlzHr5FxrMTACUY6wVVDVnLUqjUHu0Tiatpyb3E
-        FkumCf2/05Vox2eY/VnX20B1//K6QAs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-155-hj1uEHnlPI2nAfHMwlmZAQ-1; Fri, 20 Mar 2020 02:48:37 -0400
-X-MC-Unique: hj1uEHnlPI2nAfHMwlmZAQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 20 Mar 2020 02:53:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbgCTGxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 02:53:51 -0400
+Received: from localhost.localdomain (unknown [223.93.147.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BBE23477;
-        Fri, 20 Mar 2020 06:48:34 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-112-49.ams2.redhat.com [10.36.112.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C96EEBBBF2;
-        Fri, 20 Mar 2020 06:48:31 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 954249DB3; Fri, 20 Mar 2020 07:48:30 +0100 (CET)
-Date:   Fri, 20 Mar 2020 07:48:30 +0100
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     David Stevens <stevensd@chromium.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        virtio-dev@lists.oasis-open.org
-Subject: Re: [PATCH v3 0/4] Support virtio cross-device resources
-Message-ID: <20200320064830.svdgh4xuxbxz6bc4@sirius.home.kraxel.org>
-References: <20200311112004.47138-1-stevensd@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311112004.47138-1-stevensd@chromium.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C14120776;
+        Fri, 20 Mar 2020 06:53:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584687230;
+        bh=ExI1kfSKUVZS2XzqSdVhVyWr/Qtz6K6BVNxaXsqXMDs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cKTqTZDshlB1lRM9r5dVcPtGnlFPxL7114xBariQgVvQYnFztpRP/lHmDAwPEUXoE
+         c9pabuEMgWPyYBxmJoo+9VZneQ2Bbqds9K8r6DiLmWWsElk0VgeuxkC6dQAOAHaCkE
+         2AL1UZbjx1sHhoI1/bEbhimr7XEpN3t7Y4ApGddg=
+From:   guoren@kernel.org
+To:     rostedt@goodmis.org, mingo@redhat.co, linux@armlinux.org.uk
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Guo Ren <guoren@linux.alibaba.com>
+Subject: [PATCH] arm/ftrace: Remove duplicate function
+Date:   Fri, 20 Mar 2020 14:53:40 +0800
+Message-Id: <20200320065340.32685-1-guoren@kernel.org>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 08:20:00PM +0900, David Stevens wrote:
-> This patchset implements the current proposal for virtio cross-device
-> resource sharing [1], with minor changes based on recent comments. It
-> is expected that this will be used to import virtio resources into the
-> virtio-video driver currently under discussion [2].
-> 
-> This patchset adds a new hook to dma-buf, for querying the dma-buf's
-> underlying virtio UUID. This hook is then plumbed through DRM PRIME
-> buffers, and finally implemented in virtgpu.
+From: Guo Ren <guoren@linux.alibaba.com>
 
-Looks all fine to me.  We should wait for the virtio protocol update
-(patch 3/4) being accepted into the virtio specification.  When this is
-done I'll go commit this to drm-misc-next.
+There is no arch implementation of ftrace_arch_code_modify_prepare in arm,
+so just use the __weak one in kernel/trace/ftrace.c.
 
-cheers,
-  Gerd
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+---
+ arch/arm/kernel/ftrace.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
+index 10499d44964a..f66ade28eb8a 100644
+--- a/arch/arm/kernel/ftrace.c
++++ b/arch/arm/kernel/ftrace.c
+@@ -56,11 +56,6 @@ static unsigned long adjust_address(struct dyn_ftrace *rec, unsigned long addr)
+ 	return addr;
+ }
+ 
+-int ftrace_arch_code_modify_prepare(void)
+-{
+-	return 0;
+-}
+-
+ int ftrace_arch_code_modify_post_process(void)
+ {
+ 	/* Make sure any TLB misses during machine stop are cleared. */
+-- 
+2.17.0
 
