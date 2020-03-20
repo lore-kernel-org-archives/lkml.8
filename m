@@ -2,98 +2,113 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92203C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E336FC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC3E2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F1320709
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584714503;
-	bh=0niX5yJhBANk5/IEJUjBttVj9AstOui80GiFGQ6iwkE=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=YJHZ9Bvp01X+4cCVU7mf0wDcb3QPv2J/LccknaPFl01a9iDR6EsiqlW4fM7GQWI0f
-	 aE2ucClk7pa5LcQ+BpriV15YT5yApE0yRPptMj4y0V9FR6zHrdbifZc5IWi6TbCxnR
-	 94vI8XISPe/KOGck/HAuhLEdDax+je7vqo7BtiMU=
+	s=default; t=1584714556;
+	bh=zLmNUAA4P1tSFHHWI4Xam3091wLPGZ+vmX5HjmCwmR0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=oA3RcQ9MCCWgSSU8M9HPcW40xbrB5GU/WqqFNahszaf5hGuXlb2tNQfbnck045E+y
+	 TN0R2VudCqbzFQaghSRpZYNHDfXBpvUxg2z08PnGYsUTjClI71A79rYogLphgPK7Yg
+	 ZTey7oHMRNrrh0tT8Ti4wf1lIi7+IZBVU6P9w7XA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbgCTO2W (ORCPT
+        id S1727541AbgCTO3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:28:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52156 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 10:29:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727268AbgCTO2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:28:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1727123AbgCTO3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:29:15 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 808BF2070A;
-        Fri, 20 Mar 2020 14:28:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF00C2070A;
+        Fri, 20 Mar 2020 14:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584714501;
-        bh=0niX5yJhBANk5/IEJUjBttVj9AstOui80GiFGQ6iwkE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=IUP1yYbidOW/x1rfheQYwcL0GIwF07vM+U3bBMFBiRPzAtc2Vy0mdGbiaInfM1YLR
-         mP4IdOu/E9J9s4LXcSGf/kqvdat5DtWWIAbLqy7jsceZ/BFAvUk/2WivYh2qG5blNc
-         LbZEHw6Z5j3U8IBSpmWuqaWqx2HT0KCXnwacenNY=
-Date:   Fri, 20 Mar 2020 15:28:18 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Char/Misc driver fixes for 5.6-rc7
-Message-ID: <20200320142818.GA760640@kroah.com>
+        s=default; t=1584714554;
+        bh=zLmNUAA4P1tSFHHWI4Xam3091wLPGZ+vmX5HjmCwmR0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nwAeGaU8qigoXMYurhIrdwIitZrUDneAFgBTrb5mReZswg0PkpXOth9NT3V9N2YFa
+         3cy442JJiVUidsTyRkniPmwskvAf7Tk+csvS0wyBNiUBUWP2FBIRcGkfikyQ9ZiDiF
+         gTv7OWpZTiM4gB7F67Ku0ksNKQyMRCtGl1eoQa7o=
+Date:   Fri, 20 Mar 2020 09:29:12 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-pm@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        linux-edac@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc@vger.kernel.org, linux-pci@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org
+Subject: Re: [patch 02/22] x86/cpu: Add conistent CPU match macros
+Message-ID: <20200320142912.GA186731@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200320131508.826011988@linutronix.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 2c523b344dfa65a3738e7039832044aa133c75fb:
+s/conistent/consistent/ in subject
 
-  Linux 5.6-rc5 (2020-03-08 17:44:44 -0700)
+On Fri, Mar 20, 2020 at 02:13:47PM +0100, Thomas Gleixner wrote:
+> Finding all places which build x86_cpu_id match tables is tedious and the
+> logic is hidden in lots of differently named macro wrappers.
+> 
+> Most of these initializer macros use plain C89 initializers which rely on
+> the ordering of the struct members. So new members could only be added at
+> the end of the struct, but that's ugly as hell and C99 initializers are
+> really the right thing to use.
+> 
+> Provide a set of macros which:
+> 
+>   - Have a proper naming scheme, starting with X86_MATCH_
+> 
+>   - Use C99 initializers
+> 
+> The set of provided macros are all subsets of the base macro
+> 
+>     X86_MATCH_VENDOR_FAM_MODEL_FEATURE()
+> 
+> which allows to supply all possible selection criteria:
+> 
+>       vendor, family, model, feature
+> 
+> The other macros shorten this to avoid typing all arguments when they are
+> not needed and would require one of the _ANY constants. They have been
+> created due to the requirements of the existing usage sites.
+> 
+> Also a add a few model constants for Centaur CPUs and QUARK.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.6-rc7
-
-for you to fetch changes up to add492d2e9446a77ede9bb43699ec85ca8fc1aba:
-
-  intel_th: pci: Add Elkhart Lake CPU support (2020-03-18 11:32:56 +0100)
-
-----------------------------------------------------------------
-Char/misc driver fixes for 5.6-rc7
-
-Here are some small different driver fixes for 5.6-rc7
-  - binderfs fix, yet again
-  - slimbus new device id added
-  - hwtracing bugfixes for reported issues and a new device id
-
-All of these have been in linux-next with no reported issues.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Alexander Shishkin (4):
-      stm class: sys-t: Fix the use of time_after()
-      intel_th: msu: Fix the unexpected state warning
-      intel_th: Fix user-visible error codes
-      intel_th: pci: Add Elkhart Lake CPU support
-
-Christian Brauner (1):
-      binderfs: use refcount for binder control devices too
-
-Srinivas Kandagatla (1):
-      slimbus: ngd: add v2.1.0 compatible
-
- drivers/android/binderfs.c       |  1 +
- drivers/hwtracing/intel_th/msu.c | 13 +++++++------
- drivers/hwtracing/intel_th/pci.c |  5 +++++
- drivers/hwtracing/stm/p_sys-t.c  |  6 +++---
- drivers/slimbus/qcom-ngd-ctrl.c  |  3 +++
- 5 files changed, 19 insertions(+), 9 deletions(-)
+s/Also a/Also/
