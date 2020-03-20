@@ -2,242 +2,91 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B71C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0FAC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B4A20781
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487E820709
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:55:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbgCTUzJ (ORCPT
+        id S1727177AbgCTUzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 16:55:09 -0400
-Received: from mga07.intel.com ([134.134.136.100]:23549 "EHLO mga07.intel.com"
+        Fri, 20 Mar 2020 16:55:48 -0400
+Received: from mga11.intel.com ([192.55.52.93]:32133 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgCTUzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 16:55:08 -0400
-IronPort-SDR: LR3BH3CPet6PqMRg4mfp/keKZMKpxlE6hgGwaGERYr3D3859KqsZ76ANTrwpD48msA3XXQ13uh
- msAjO7TZg4pA==
+        id S1726738AbgCTUzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 16:55:47 -0400
+IronPort-SDR: Mrtax5r6S7je/QHfg4sI2au75xzgLMcQ/DAQsUZy12gjghMc7G+ERsPFcTQ1PdU++ln95lU7Uf
+ gZNnPWKTVK8A==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 13:55:06 -0700
-IronPort-SDR: 1nGp64HZhwHHiHPXk3rFR9wAuTGZHkuMyiI1YdwKTloCNEIJoqRfCOIPhgIQ7V1i/yQofo4brv
- DFr+x7PX351Q==
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 13:55:47 -0700
+IronPort-SDR: Wokbp1xezwQOg04lztcVSu+PjFiTzDPfBLqx5B6LgK3OObVC7Tz3rYthmd8sfETKC33SiH7a3o
+ +AAl+xhNCOJg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,285,1580803200"; 
-   d="scan'208";a="445105289"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Mar 2020 13:55:05 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jFOfY-0007JX-P3; Sat, 21 Mar 2020 04:55:04 +0800
-Date:   Sat, 21 Mar 2020 04:54:17 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:locking/core] BUILD SUCCESS
- f6f48e18040402136874a6a71611e081b4d0788a
-Message-ID: <5e752d79.9TRsm/28lTVrK1iZ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="280543314"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by fmsmga002.fm.intel.com with ESMTP; 20 Mar 2020 13:55:47 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Peter Xu <peterx@redhat.com>
+Subject: [PATCH 0/7] KVM: Fix memslot use-after-free bug
+Date:   Fri, 20 Mar 2020 13:55:39 -0700
+Message-Id: <20200320205546.2396-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/core
-branch HEAD: f6f48e18040402136874a6a71611e081b4d0788a  lockdep: Teach lockdep about "USED" <- "IN-NMI" inversions
+Fix a bug introduced by dynamic memslot allocation where the LRU slot can
+become invalid and lead to a out-of-bounds/use-after-free scenario.
 
-elapsed time: 524m
+The patch is different that what Qian has already tested, but I was able
+to reproduce the bad behavior by enhancing the set memory region selftest,
+i.e. I'm relatively confident the bug is fixed.
 
-configs tested: 175
-configs skipped: 0
+Patches 2-6 are a variety of selftest cleanup, with the aforementioned
+set memory region enhancement coming in patch 7.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Note, I couldn't get the selftest to fail outright or with KASAN, but was
+able to hit a WARN_ON an invalid slot 100% of the time (without the fix,
+obviously).
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-nios2                         3c120_defconfig
-i386                                defconfig
-s390                             allyesconfig
-parisc                generic-32bit_defconfig
-powerpc                           allnoconfig
-riscv                          rv32_defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200320
-x86_64               randconfig-a002-20200320
-x86_64               randconfig-a003-20200320
-i386                 randconfig-a001-20200320
-i386                 randconfig-a002-20200320
-i386                 randconfig-a003-20200320
-x86_64               randconfig-a001-20200321
-x86_64               randconfig-a002-20200321
-x86_64               randconfig-a003-20200321
-i386                 randconfig-a001-20200321
-i386                 randconfig-a002-20200321
-i386                 randconfig-a003-20200321
-alpha                randconfig-a001-20200320
-mips                 randconfig-a001-20200320
-nds32                randconfig-a001-20200320
-parisc               randconfig-a001-20200320
-alpha                randconfig-a001-20200321
-m68k                 randconfig-a001-20200321
-mips                 randconfig-a001-20200321
-nds32                randconfig-a001-20200321
-parisc               randconfig-a001-20200321
-riscv                randconfig-a001-20200321
-m68k                 randconfig-a001-20200320
-c6x                  randconfig-a001-20200320
-h8300                randconfig-a001-20200320
-microblaze           randconfig-a001-20200320
-nios2                randconfig-a001-20200320
-sparc64              randconfig-a001-20200320
-csky                 randconfig-a001-20200320
-openrisc             randconfig-a001-20200320
-s390                 randconfig-a001-20200320
-sh                   randconfig-a001-20200320
-xtensa               randconfig-a001-20200320
-x86_64               randconfig-b001-20200320
-x86_64               randconfig-b002-20200320
-x86_64               randconfig-b003-20200320
-i386                 randconfig-b001-20200320
-i386                 randconfig-b002-20200320
-i386                 randconfig-b003-20200320
-x86_64               randconfig-c001-20200320
-x86_64               randconfig-c002-20200320
-x86_64               randconfig-c003-20200320
-i386                 randconfig-c001-20200320
-i386                 randconfig-c002-20200320
-i386                 randconfig-c003-20200320
-x86_64               randconfig-d001-20200320
-x86_64               randconfig-d002-20200320
-x86_64               randconfig-d003-20200320
-i386                 randconfig-d001-20200320
-i386                 randconfig-d002-20200320
-i386                 randconfig-d003-20200320
-x86_64               randconfig-e001-20200320
-x86_64               randconfig-e002-20200320
-x86_64               randconfig-e003-20200320
-i386                 randconfig-e001-20200320
-i386                 randconfig-e002-20200320
-i386                 randconfig-e003-20200320
-x86_64               randconfig-f001-20200320
-x86_64               randconfig-f002-20200320
-x86_64               randconfig-f003-20200320
-i386                 randconfig-f001-20200320
-i386                 randconfig-f002-20200320
-i386                 randconfig-f003-20200320
-x86_64               randconfig-g001-20200320
-x86_64               randconfig-g002-20200320
-x86_64               randconfig-g003-20200320
-i386                 randconfig-g001-20200320
-i386                 randconfig-g002-20200320
-i386                 randconfig-g003-20200320
-x86_64               randconfig-h001-20200320
-x86_64               randconfig-h002-20200320
-x86_64               randconfig-h003-20200320
-i386                 randconfig-h001-20200320
-i386                 randconfig-h002-20200320
-i386                 randconfig-h003-20200320
-arc                  randconfig-a001-20200320
-arm                  randconfig-a001-20200320
-arm64                randconfig-a001-20200320
-ia64                 randconfig-a001-20200320
-powerpc              randconfig-a001-20200320
-sparc                randconfig-a001-20200320
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+Regarding s390, I played around a bit with merging gfn_to_memslot_approx()
+into search_memslots().  Code wise it's trivial since they're basically
+identical, but doing so increases the code footprint of search_memslots()
+on x86 by 30 bytes, so I ended up abandoning the effort.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Sean Christopherson (7):
+  KVM: Fix out of range accesses to memslots
+  KVM: selftests: Fix cosmetic copy-paste error in vm_mem_region_move()
+  KVM: selftests: Take vcpu pointer instead of id in vm_vcpu_rm()
+  KVM: selftests: Add helpers to consolidate open coded list operations
+  KVM: selftests: Add util to delete memory region
+  KVM: selftests: Expose the primary memslot number to tests
+  KVM: selftests: Add "delete" testcase to set_memory_region_test
+
+ arch/s390/kvm/kvm-s390.c                      |   3 +
+ include/linux/kvm_host.h                      |   3 +
+ .../testing/selftests/kvm/include/kvm_util.h  |   3 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    | 139 ++++++++++--------
+ .../kvm/x86_64/set_memory_region_test.c       | 122 +++++++++++++--
+ virt/kvm/kvm_main.c                           |   3 +
+ 6 files changed, 201 insertions(+), 72 deletions(-)
+
+-- 
+2.24.1
+
