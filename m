@@ -2,172 +2,75 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38498C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4313DC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA7A82051A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A9D2051A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:33:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgCTCbf (ORCPT
+        id S1727049AbgCTCdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 22:31:35 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12166 "EHLO huawei.com"
+        Thu, 19 Mar 2020 22:33:22 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33404 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725856AbgCTCbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 22:31:34 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2AC509635A3A5CBCEBBC;
-        Fri, 20 Mar 2020 10:31:31 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Fri, 20 Mar 2020
- 10:31:22 +0800
-Subject: Re: [PATCH v5 16/23] irqchip/gic-v4.1: Eagerly vmap vPEs
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Robert Richter" <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Eric Auger" <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        "Julien Thierry" <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-17-maz@kernel.org>
- <2817cb89-4cc2-549f-6e40-91d941aa8a5f@huawei.com>
- <d45e7ddfd51d4d8229e02efc42c8da04@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <2f667113-8241-dce6-0a5e-3acb5ef9cf7f@huawei.com>
-Date:   Fri, 20 Mar 2020 10:31:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1726666AbgCTCdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 22:33:21 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id BAFFA24877BE96986CAF;
+        Fri, 20 Mar 2020 10:33:14 +0800 (CST)
+Received: from [127.0.0.1] (10.173.223.234) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Fri, 20 Mar 2020
+ 10:33:13 +0800
+Subject: Re: [PATCH bpf-next] bpf: tcp: Fix unused function warnings
+To:     Jakub Sitnicki <jakub@cloudflare.com>
+References: <20200319124631.58432-1-yuehaibing@huawei.com>
+ <87fte4xot3.fsf@cloudflare.com>
+CC:     <lmb@cloudflare.com>, <daniel@iogearbox.net>,
+        <john.fastabend@gmail.com>, <davem@davemloft.net>,
+        <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <f27ae22a-e5e4-2873-1e00-bb59979e92ff@huawei.com>
+Date:   Fri, 20 Mar 2020 10:33:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <d45e7ddfd51d4d8229e02efc42c8da04@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.222.27]
+In-Reply-To: <87fte4xot3.fsf@cloudflare.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.223.234]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+On 2020/3/20 1:00, Jakub Sitnicki wrote:
+> On Thu, Mar 19, 2020 at 01:46 PM CET, YueHaibing wrote:
+>> If BPF_STREAM_PARSER is not set, gcc warns:
+>>
+>> net/ipv4/tcp_bpf.c:483:12: warning: 'tcp_bpf_sendpage' defined but not used [-Wunused-function]
+>> net/ipv4/tcp_bpf.c:395:12: warning: 'tcp_bpf_sendmsg' defined but not used [-Wunused-function]
+>> net/ipv4/tcp_bpf.c:13:13: warning: 'tcp_bpf_stream_read' defined but not used [-Wunused-function]
+>>
+>> Moves the unused functions into the #ifdef
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+> 
+> In addition to this fix, looks like tcp_bpf_recvmsg can be static and
+> also conditional on CONFIG_BPF_STREAM_PARSER.
 
-On 2020/3/19 18:55, Marc Zyngier wrote:
-> On 2020-03-17 02:49, Zenghui Yu wrote:
->> Hi Marc,
->>
->> On 2020/3/5 4:33, Marc Zyngier wrote:
->>> Now that we have HW-accelerated SGIs being delivered to VPEs, it
->>> becomes required to map the VPEs on all ITSs instead of relying
->>> on the lazy approach that we would use when using the ITS-list
->>> mechanism.
->>>
->>> Signed-off-by: Marc Zyngier <maz@kernel.org>
->>
->> Before GICv4.1, we use vlpi_count to evaluate whether the vPE has been
->> mapped on the specified ITS, and use this refcount to only issue VMOVP
->> to those involved ITSes. It's broken after this patch.
->>
->> We may need to re-evaluate "whether the vPE is mapped" now that we're at
->> GICv4.1, otherwise *no* VMOVP will be issued on the v4.1 capable machine
->> (I mean those without single VMOVP support).
->>
->> What I'm saying is something like below (only an idea, it even can't
->> compile), any thoughts?
->>
->>
->> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
->> b/drivers/irqchip/irq-gic-v3-its.c
->> index 2e12bc52e3a2..3450b5e847ca 100644
->> --- a/drivers/irqchip/irq-gic-v3-its.c
->> +++ b/drivers/irqchip/irq-gic-v3-its.c
->> @@ -198,7 +198,8 @@ static u16 get_its_list(struct its_vm *vm)
->>          if (!is_v4(its))
->>              continue;
->>
->> -        if (vm->vlpi_count[its->list_nr])
->> +        if (vm->vlpi_count[its->list_nr] ||
->> +            gic_requires_eager_mapping())
->>              __set_bit(its->list_nr, &its_list);
->>      }
->>
->> @@ -1295,7 +1296,8 @@ static void its_send_vmovp(struct its_vpe *vpe)
->>          if (!is_v4(its))
->>              continue;
->>
->> -        if (!vpe->its_vm->vlpi_count[its->list_nr])
->> +        if (!vpe->its_vm->vlpi_count[its->list_nr] &&
->> +            !gic_requires_eager_mapping())
->>              continue;
->>
->>          desc.its_vmovp_cmd.col = &its->collections[col_id];
-> 
-> It took me a while to wrap my head around that one, but you're as usual 
-> spot on.
-> 
-> The use of gic_requires_eager_mapping() is a bit confusing here, as it 
-> isn't
-> so much that the VPE is eagerly mapped, but the predicate on which we 
-> evaluate
-> the need for a VMOVP. How about this:
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
-> b/drivers/irqchip/irq-gic-v3-its.c
-> index cd6451e190c9..348f7a909a69 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -189,6 +189,15 @@ static DEFINE_IDA(its_vpeid_ida);
->   #define gic_data_rdist_rd_base()    (gic_data_rdist()->rd_base)
->   #define gic_data_rdist_vlpi_base()    (gic_data_rdist_rd_base() + 
-> SZ_128K)
-> 
-> +/*
-> + * Skip ITSs that have no vLPIs mapped, unless we're on GICv4.1, as we
-> + * always have vSGIs mapped.
-> + */
-> +static bool require_its_list_vmovp(struct its_vm *vm, struct its_node 
-> *its)
-> +{
-> +    return (gic_rdists->has_rvpeid || vm->vlpi_count[its->list_nr]);
-> +}
-> +
->   static u16 get_its_list(struct its_vm *vm)
->   {
->       struct its_node *its;
-> @@ -198,7 +207,7 @@ static u16 get_its_list(struct its_vm *vm)
->           if (!is_v4(its))
->               continue;
-> 
-> -        if (vm->vlpi_count[its->list_nr])
-> +        if (require_its_list_vmovp(vm, its))
->               __set_bit(its->list_nr, &its_list);
->       }
-> 
-> @@ -1295,7 +1304,7 @@ static void its_send_vmovp(struct its_vpe *vpe)
->           if (!is_v4(its))
->               continue;
-> 
-> -        if (!vpe->its_vm->vlpi_count[its->list_nr])
-> +        if (!require_its_list_vmovp(vpe->its_vm, its))
->               continue;
-> 
->           desc.its_vmovp_cmd.col = &its->collections[col_id];
+Thanks, will do this in next version.
 
-Indeed this looks much clearer. We're actually evaluating the need
-for issuing VMOVP to a specified ITS, on system using its_list_map
-feature (though we evaluate it by checking whether the vPE is mapped
-on this ITS).
-
-
-Thanks,
-Zenghui
+> 
+> Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+> 
+> .
+> 
 
