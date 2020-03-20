@@ -2,90 +2,104 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C965C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE29C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F22520714
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218CF20752
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:36:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jIglHsdB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J6gb8ana"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbgCTXgj (ORCPT
+        id S1727752AbgCTXgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 19:36:39 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38976 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727631AbgCTXgh (ORCPT
+        Fri, 20 Mar 2020 19:36:38 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:26250 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726851AbgCTXgf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 19:36:37 -0400
-Received: by mail-io1-f67.google.com with SMTP id c19so7865543ioo.6;
-        Fri, 20 Mar 2020 16:36:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r56c2sC6zamlywNB9189icYDyAGKVdxKEKYyEkkrtbs=;
-        b=jIglHsdBBqGfP+iZRD+xmqhg6u0oes4iqVrlOxhxfrU1/HvYH5tqBY70q8K1GaW7F7
-         QU2tfM/SHKVZDjBBz0r9YusVGDwACXLU1bCYVNAGidoXju78eb+xAUbeE2VgD2zpqIfb
-         yBDLxS6nFFsQsbfOUo83L8DO4uPPdW9djOvDu0oi1szuCKH2KlxqCk+jCRWDJqmwxcvr
-         78m1MAonXVES7tNbLechb9RFdd55Dh00aS2rycxffXWNAbZDp//pD7nCLeo3IJPjn+wk
-         rSaw8qk9RS+22pcZEz+ee24ZRKw6DO0N6p+m1nqrdzOFbGfCRk938uF18LUKYL9jcdpz
-         dnoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r56c2sC6zamlywNB9189icYDyAGKVdxKEKYyEkkrtbs=;
-        b=o/m21ztVyO/AkF/nmBdH7SFF+R8pmzEA7CdUcKJ/43h5bjG3MAQShq2endrTJ1u/XR
-         OGzryo7e/OlMnVKbyzbFgKWkkoqHYZseE7Dig0OV6grCutaP2jmifnHwe5Z4sHs+T9d+
-         mAWg63dJxlSw3kboStnLrsvKKdwmcSC05dQbiVgM8i9v3ZfZtUL0Lr0KadcEbWgn/+6U
-         vwAFHJ4XTUfEbbAy4Dr0tX4tohO/QIaRKVZIoIulzmw72nTRmFP9DrucElyJ73ls3Irn
-         YcpMTyih/aDU2jCv48AiyOj/H0Md8YTaFQpQzAmL2IVYwiQwBXImB1qVMWqQz1uW4ODU
-         LZJg==
-X-Gm-Message-State: ANhLgQ2vgZ9gIaXyXga+IIomuyw4pu/r9QIP4qadXaku96dcADA7XXOz
-        SfT189UBAv221mcT/4RZoFO/X1g2dhtR6YZRw7U=
-X-Google-Smtp-Source: ADFU+vswMWOI+4/lmZP7NubSfTT4Gc+zjPJx/vu+4CB9gKmAIL7r/Cx3A4SqMr8iKsJ4UneSjQvw0JrHpgMFITL80rY=
-X-Received: by 2002:a02:1683:: with SMTP id a125mr2499634jaa.61.1584747396297;
- Fri, 20 Mar 2020 16:36:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200320110959.2114-1-hqjagain@gmail.com> <2dc8673f-a46d-1438-95a8-cfb455bbea57@gmail.com>
-In-Reply-To: <2dc8673f-a46d-1438-95a8-cfb455bbea57@gmail.com>
-From:   Qiujun Huang <hqjagain@gmail.com>
-Date:   Sat, 21 Mar 2020 07:36:24 +0800
-Message-ID: <CAJRQjoedC4PTycGEpv_pCfbzW9zaA+kz2JTJaTi-EDWxcPUvFA@mail.gmail.com>
-Subject: Re: [PATCH v3] sctp: fix refcount bug in sctp_wfree
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, vyasevich@gmail.com,
-        nhorman@tuxdriver.com, Jakub Kicinski <kuba@kernel.org>,
-        linux-sctp@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, anenbupt@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 20 Mar 2020 19:36:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584747395; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=kWl2oYWfBPVLMLG1p4eJPUX2txbmOHZxIQKSjE0B98E=; b=J6gb8ana4ZhKc8b/D+sV8tv6RBsrgRopPxINkaMBsfHO4uZCWjBqniUK0a+zpglTGzOeO8c/
+ UFmla/66bWmpN+618hRgcnwsxplCETysn6wFyugw7YHZD76ALEVW7vp6DS1JqmpjvRDX2srv
+ xU6W/ZR3jXueSiEOOuvhD7BT7j0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e75537d.7f6bc1a32b58-smtp-out-n02;
+ Fri, 20 Mar 2020 23:36:29 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E6158C4478F; Fri, 20 Mar 2020 23:36:28 +0000 (UTC)
+Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rishabhb)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1F2FDC43637;
+        Fri, 20 Mar 2020 23:36:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1F2FDC43637
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
+From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
+To:     linux-remoteproc-owner@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        mathieu.poirier@linaro.org
+Cc:     psodagud@codeaurora.org, tsoni@codeaurora.org,
+        sidgup@codeaurora.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: [PATCH 2/2] remoteproc: core: Register the character device interface
+Date:   Fri, 20 Mar 2020 16:36:17 -0700
+Message-Id: <1584747377-14824-3-git-send-email-rishabhb@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1584747377-14824-1-git-send-email-rishabhb@codeaurora.org>
+References: <1584747377-14824-1-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 1:10 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
->
->
->
->
-> This does not really solve the issue.
->
-> Even if the particular syzbot repro is now fine.
->
-> Really, having anything _after_ the sock_wfree(skb) is the bug, since the current thread no longer
-> own a reference on a socket.
+Add the character device during rproc_add. This would create
+a character device node at /dev/subsys_<rproc_name>. Userspace
+applications can interact with the remote processor using this
+interface rather than using sysfs node. To distinguish between
+different remote processor nodes the device name has been changed
+to include the rproc name appended to "subsys_" string.
 
-I get it, thanks.
+Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+---
+ drivers/remoteproc/remoteproc_core.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
->
->
->
->
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 097f33e..48a3932 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -1907,6 +1907,12 @@ int rproc_add(struct rproc *rproc)
+ 	struct device *dev = &rproc->dev;
+ 	int ret;
+ 
++	ret = rproc_char_device_add(rproc);
++	if (ret) {
++		pr_err("error while adding character device\n");
++		return ret;
++	}
++
+ 	ret = device_add(dev);
+ 	if (ret < 0)
+ 		return ret;
+@@ -2044,7 +2050,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+ 		return NULL;
+ 	}
+ 
+-	dev_set_name(&rproc->dev, "remoteproc%d", rproc->index);
++	dev_set_name(&rproc->dev, "subsys_%s", rproc->name);
+ 
+ 	atomic_set(&rproc->power, 0);
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
