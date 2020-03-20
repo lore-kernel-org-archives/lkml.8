@@ -2,224 +2,95 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A4CC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3951CC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94D2920724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 170AB20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbgCTQRJ (ORCPT
+        id S1727525AbgCTQR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:17:09 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:35825 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbgCTQRJ (ORCPT
+        Fri, 20 Mar 2020 12:17:56 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:40787 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbgCTQR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:17:09 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1McYTD-1jpkY21Fcb-00d1MX for <linux-kernel@vger.kernel.org>; Fri, 20 Mar
- 2020 17:17:07 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 1E42664F8FB
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 16:17:07 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id YSGKXL9yPROx for <linux-kernel@vger.kernel.org>;
-        Fri, 20 Mar 2020 17:17:06 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id AC46264D448
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 17:17:06 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.8.5.41) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 20 Mar 2020 17:17:06 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id 0F67C804FD; Fri, 20 Mar 2020 17:11:42 +0100 (CET)
-Date:   Fri, 20 Mar 2020 17:11:42 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH v3 01/11] media: adv748x: fix end-of-line terminators in
- diagnostic statements
-Message-ID: <df22a88b6a2006920bae857c53e45c34b31175d6.1584720678.git.alexander.riesen@cetitec.com>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1584720678.git.alexander.riesen@cetitec.com>
+        Fri, 20 Mar 2020 12:17:56 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 02KGGrb5030347, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 02KGGrb5030347
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 21 Mar 2020 00:16:53 +0800
+Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sat, 21 Mar 2020 00:16:53 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sat, 21 Mar 2020 00:16:52 +0800
+Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
+ RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
+ 15.01.1779.005; Sat, 21 Mar 2020 00:16:52 +0800
+From:   =?utf-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>
+To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
+        Marc Zyngier <maz@kernel.org>
+CC:     "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
+Subject: RE: [PATCH v3 8/8] ARM: realtek: Enable RTD1195 arch timer
+Thread-Topic: [PATCH v3 8/8] ARM: realtek: Enable RTD1195 arch timer
+Thread-Index: AQHVnRfphxbe4z/+/k6zznL3djiEj6eOrKMAgABmPQCAARF9gIAA3/EAgMDPpbA=
+Date:   Fri, 20 Mar 2020 16:16:52 +0000
+Message-ID: <bb54e2e716b14ec6bbeb40dafeca56d6@realtek.com>
+References: <20191117072109.20402-1-afaerber@suse.de>
+ <20191117072109.20402-9-afaerber@suse.de> <20191117110214.6b160b2e@why>
+ <7015e4c4-f999-d2e8-fd1f-e15e74a0d092@suse.de>
+ <e99e40d8c95147861ab600c5d5287f8f@www.loen.fr>
+ <4dc05879-f6d9-f754-908e-ad2431d8ff5a@suse.de>
+In-Reply-To: <4dc05879-f6d9-f754-908e-ad2431d8ff5a@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [114.37.136.86]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1584720678.git.alexander.riesen@cetitec.com>
-X-Originating-IP: [10.8.5.41]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A6D7662
-X-Provags-ID: V03:K1:t+H4THRjyOiM8VLg9a6h0zf5jZHbN9nVNWgnGOsq0IUOjiraReM
- 0NolitnFEcpba7F+6N+8QaMTGnuTzNX9WEv+SbwkOR7A4metvJPwjIEOQJSXnvIFqk3UQ2V
- gH6soO5zvU96xy5oriRw+OX69C+MHDd8gAkWSn/bmnPWwLEcEZmE/ugPc4w7pe5std0biHK
- rJ9DsNiHdoe1pYZI0SCbg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:x2/tOROxkCw=:DfwnbEbaSq57js8yMx1h5f
- L6FSkM5D1Vp9vqMkzZpGAjrUxrfruAZNu95loQMa8hkaRsvu9FO/V/DjeHNAa46TRm3WU6uAk
- W+sOgdiwjaS5v0azuKLEukVO3YUgp5bXQ6Cv8IrG+dfXtt68ADDk2sanb81fB0Zsxb+uwRqNH
- b+tehLt8tgoP3VrAHkdGLy9pIZObkF5XUl9TXnMDchaUU/UfTPhA9B9A6etya1GpytBoYvlrA
- g0JLKvcXQC1E+ToisH9l1Lxo+19X6Dxf3Uhdv8B65NzNDKR5EbhBlQsEgK63MdFVVRoX9LCYF
- qTWTKoTpTo3GSHMT91NcjX6vcSiAfer8oGRwlJbufDwk5ldw0m6janBLE1CE727pfsoUDdTep
- Q+QhBNJ2+SWNGCw6GuHpQOTFSjY1BT8h7PB9+pXnKmUg16DIc78VjPV+rGdIPr3EY8+Kfgc5e
- xSnqVbtdzpY0DTO2lATB6K11F2psoQS8LC0iU7Tk3q0QV4SurBaq8D1eKyrD3XOfms+0MXMq+
- z4FHiSwkAbQUbU7TjYF+ckZf49xNYKJK2NrZq+u32UK8usALRBtGf7f3stuRCDkfrjCLIhSpG
- Gr4KuqYjd3tDTrOvNFo7XHouuteUBDiALlm8GzlNLFKuqiw0TkaPLHlcFkgLK0WnBxRhDmkjG
- uU3YRoXivxiV/V7ZSC/8qorJ07bpYCQtDcdmEJKUET1CSuA3Ps0IgoV620hGFLkioylL3XuPG
- 7Dw6ZUs1tV4JhLY43QvQmlS/eBXE8HWsF6yRU3SY8ASiD0lHJskMf+IqyzSgB6mO/L1CRvzla
- VSTwHC1Xg90r2kbiObJ9sZiE1uMYHbsXcCIn6kZ+6cJvCyL9goxSCfZMO84gad5q8YLGXXU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- drivers/media/i2c/adv748x/adv748x-core.c | 24 ++++++++++++------------
- drivers/media/i2c/adv748x/adv748x-csi2.c |  2 +-
- 2 files changed, 13 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-index 23e02ff27b17..c3fb113cef62 100644
---- a/drivers/media/i2c/adv748x/adv748x-core.c
-+++ b/drivers/media/i2c/adv748x/adv748x-core.c
-@@ -623,11 +623,11 @@ static int adv748x_parse_dt(struct adv748x_state *state)
- 
- 	for_each_endpoint_of_node(state->dev->of_node, ep_np) {
- 		of_graph_parse_endpoint(ep_np, &ep);
--		adv_info(state, "Endpoint %pOF on port %d", ep.local_node,
-+		adv_info(state, "Endpoint %pOF on port %d\n", ep.local_node,
- 			 ep.port);
- 
- 		if (ep.port >= ADV748X_PORT_MAX) {
--			adv_err(state, "Invalid endpoint %pOF on port %d",
-+			adv_err(state, "Invalid endpoint %pOF on port %d\n",
- 				ep.local_node, ep.port);
- 
- 			continue;
-@@ -635,7 +635,7 @@ static int adv748x_parse_dt(struct adv748x_state *state)
- 
- 		if (state->endpoints[ep.port]) {
- 			adv_err(state,
--				"Multiple port endpoints are not supported");
-+				"Multiple port endpoints are not supported\n");
- 			continue;
- 		}
- 
-@@ -702,62 +702,62 @@ static int adv748x_probe(struct i2c_client *client)
- 	/* Discover and process ports declared by the Device tree endpoints */
- 	ret = adv748x_parse_dt(state);
- 	if (ret) {
--		adv_err(state, "Failed to parse device tree");
-+		adv_err(state, "Failed to parse device tree\n");
- 		goto err_free_mutex;
- 	}
- 
- 	/* Configure IO Regmap region */
- 	ret = adv748x_configure_regmap(state, ADV748X_PAGE_IO);
- 	if (ret) {
--		adv_err(state, "Error configuring IO regmap region");
-+		adv_err(state, "Error configuring IO regmap region\n");
- 		goto err_cleanup_dt;
- 	}
- 
- 	ret = adv748x_identify_chip(state);
- 	if (ret) {
--		adv_err(state, "Failed to identify chip");
-+		adv_err(state, "Failed to identify chip\n");
- 		goto err_cleanup_dt;
- 	}
- 
- 	/* Configure remaining pages as I2C clients with regmap access */
- 	ret = adv748x_initialise_clients(state);
- 	if (ret) {
--		adv_err(state, "Failed to setup client regmap pages");
-+		adv_err(state, "Failed to setup client regmap pages\n");
- 		goto err_cleanup_clients;
- 	}
- 
- 	/* SW reset ADV748X to its default values */
- 	ret = adv748x_reset(state);
- 	if (ret) {
--		adv_err(state, "Failed to reset hardware");
-+		adv_err(state, "Failed to reset hardware\n");
- 		goto err_cleanup_clients;
- 	}
- 
- 	/* Initialise HDMI */
- 	ret = adv748x_hdmi_init(&state->hdmi);
- 	if (ret) {
--		adv_err(state, "Failed to probe HDMI");
-+		adv_err(state, "Failed to probe HDMI\n");
- 		goto err_cleanup_clients;
- 	}
- 
- 	/* Initialise AFE */
- 	ret = adv748x_afe_init(&state->afe);
- 	if (ret) {
--		adv_err(state, "Failed to probe AFE");
-+		adv_err(state, "Failed to probe AFE\n");
- 		goto err_cleanup_hdmi;
- 	}
- 
- 	/* Initialise TXA */
- 	ret = adv748x_csi2_init(state, &state->txa);
- 	if (ret) {
--		adv_err(state, "Failed to probe TXA");
-+		adv_err(state, "Failed to probe TXA\n");
- 		goto err_cleanup_afe;
- 	}
- 
- 	/* Initialise TXB */
- 	ret = adv748x_csi2_init(state, &state->txb);
- 	if (ret) {
--		adv_err(state, "Failed to probe TXB");
-+		adv_err(state, "Failed to probe TXB\n");
- 		goto err_cleanup_txa;
- 	}
- 
-diff --git a/drivers/media/i2c/adv748x/adv748x-csi2.c b/drivers/media/i2c/adv748x/adv748x-csi2.c
-index 2091cda50935..c43ce5d78723 100644
---- a/drivers/media/i2c/adv748x/adv748x-csi2.c
-+++ b/drivers/media/i2c/adv748x/adv748x-csi2.c
-@@ -72,7 +72,7 @@ static int adv748x_csi2_registered(struct v4l2_subdev *sd)
- 	struct adv748x_state *state = tx->state;
- 	int ret;
- 
--	adv_dbg(state, "Registered %s (%s)", is_txa(tx) ? "TXA":"TXB",
-+	adv_dbg(state, "Registered %s (%s)\n", is_txa(tx) ? "TXA":"TXB",
- 			sd->name);
- 
- 	/*
--- 
-2.25.1.25.g9ecbe7eb18
-
-
+SGkgQW5kcmVhcywNCg0KPiA+Pj4+IMKgV2hhdCBpcyB0aGUgbmFtZSBvZiB0aGUgcmVnaXN0ZXIg
+MHhmZjAxODAwMD8NCj4gPj4+PiDCoElzIDB4MSBhIEJJVCgwKSB3cml0ZSwgb3IgaG93IGFyZSB0
+aGUgcmVnaXN0ZXIgYml0cyBkZWZpbmVkPw0KPiA+Pj4+IMKgSXMgdGhpcyBhIHJlc2V0IG9yIGEg
+Y2xvY2sgZ2F0ZT8gSG93IHNob3VsZCB3ZSBtb2RlbCBpdCBpbiBEVD8NCj4gDQo+IE5vLCBJIHdh
+cyBwb2ludGluZyBvdXQgdGhhdCBJIG15c2VsZiBoYWQgYWxyZWFkeSBhc2tlZCBwcmV0dHkgbXVj
+aCB0aGUgc2FtZQ0KPiBxdWVzdGlvbnMgeW91IGp1c3QgYXNrZWQgbWUuIEhvdyBkaWQgeW91IGV4
+cGVjdCBtZSB0byBoYXZlIGFuc3dlcnMgdG8geW91cg0KPiAiU2hvdWxkbid0IHRoaXMgYmUgYSBy
+ZWFkL21vZGlmeS93cml0ZSBzZXF1ZW5jZT8iIHRoZW4/IEl0IHNlZW1lZCBsaWtlIHlvdQ0KPiBt
+aXNzZWQgbXkgcXVlc3Rpb25zIHVwIHRoZXJlOg0KPiANCj4gV2l0aG91dCBrbm93aW5nIGhvdyB0
+aGUgcmVnaXN0ZXIgaXMgc3RydWN0dXJlZCwgSSBjYW4ndCBpbXBsZW1lbnQgYQ0KPiByZWFkL21v
+ZGlmeS93cml0ZSBzZXF1ZW5jZSAtIGZvciB0aGF0IHdlJ2QgbmVlZCB0byBrbm93IHdoZXRoZXIg
+aXQncyBhIHNpbmdsZQ0KPiBiaXQgd2UgY2FuIGp1c3Qgc2V0IG9yIGEgZmllbGQgdGhhdCB3ZSB3
+b3VsZCBuZWVkIHRvIG1hc2sgZmlyc3QgYmVmb3JlIHdyaXRpbmcNCj4gaW50byBpdC4NCg0KVGhp
+cyByZWdpc3RlciBpcyBjb3VudGVyIGNvbnRyb2wgcmVnaXN0ZXIgb2YgQ29yZVNpZ2h0IHRpbWVz
+dGFtcCBnZW5lcmF0b3IuIFsxXVsyXS4NClRoZSBDUFUgdGltZXIgY291bnQgaW5wdXQgc2lnbmFs
+IGlzIGluaGVyaXRlZCBmcm9tIHRoZSB0aW1lc3RhbXAgZ2VuZXJhdG9yLCBzbyBpdCBtdXN0IGJl
+IGVuYWJsZWQgYmVmb3JlIENQVSB0aW1lciBpbml0aWFsLg0KDQpUaGlzIHJlZ2lzdGVyIHNldHRp
+bmcgY2FuIG1vdmUgaW50byBib290IGNvZGUuDQoNClsxXSBodHRwczovL2RldmVsb3Blci5hcm0u
+Y29tL2RvY3MvMTAwODA2LzAyMDAvOS1wcm9ncmFtbWVycy1tb2RlbC9jc3M2MDBfdHNnZW4vY29u
+dHJvbC1pbnRlcmZhY2UtcmVnaXN0ZXItZGVzY3JpcHRpb25zDQpbMl0gaHR0cHM6Ly9kZXZlbG9w
+ZXIuYXJtLmNvbS9kb2NzLzEwMDgwNi8wMjAwLzUtdGltZXN0YW1wLWNvbXBvbmVudHMtZnVuY3Rp
+b25hbC1kZXNjcmlwdGlvbi90aW1lc3RhbXAtZ2VuZXJhdG9yDQoNCg0KVGhhbmtzLg0KDQpSZWdh
+cmRzLA0KSmFtZXMNCg0KDQo=
