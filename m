@@ -2,80 +2,72 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DCEC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C79C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB1120752
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:31:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584747111;
-	bh=TQcSy/pByrbT1hzG2L6cVJWyJ6MAQEHKZ/tQ1mwysZI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=q+wgZW/VtOsolws6BvoikXhO/zEWEyifjjgGcGE6sjrTU2AWY7c4X71vN60zcvcvZ
-	 LhqfkeIL2cpfgbj7r7HNIDfQZl+sWsnba9yYoUop+KYKM296/QQvQi5Ke66p2AZLww
-	 Z16ALgwCURB2iiKh2zja+4AW89wpwsi+KYGDCUBk=
+	by mail.kernel.org (Postfix) with ESMTP id CA1D420714
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbgCTXbu (ORCPT
+        id S1727666AbgCTXcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 19:31:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43852 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 19:32:16 -0400
+Received: from ms.lwn.net ([45.79.88.28]:44196 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgCTXbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 19:31:49 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+        id S1726738AbgCTXcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 19:32:16 -0400
+Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3605420714;
-        Fri, 20 Mar 2020 23:31:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584747109;
-        bh=TQcSy/pByrbT1hzG2L6cVJWyJ6MAQEHKZ/tQ1mwysZI=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=DUY/692/CW8W4G1zBFfaY7jOUPWM9Dx88cigBgqmqlp/DMWC9hrxr7lTp7Dh3eNik
-         tB3ChVnyYEMoK30Nrwd6W7qKzZeEqaWKJcr51xU0x/2oaSv3GNw2PwfPCjDiC3EeY6
-         mL+jTjymT+OfT4c5soxDOwC61ZKHn2jGnKHeetmo=
-Content-Type: text/plain; charset="utf-8"
+        by ms.lwn.net (Postfix) with ESMTPSA id D79E02D6;
+        Fri, 20 Mar 2020 23:32:15 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 17:32:14 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] MAINTAINERS: adjust to filesystem doc ReST
+ conversion
+Message-ID: <20200320173214.1cca3738@lwn.net>
+In-Reply-To: <20200314175030.10436-1-lukas.bulwahn@gmail.com>
+References: <20200314175030.10436-1-lukas.bulwahn@gmail.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200319053902.3415984-3-bjorn.andersson@linaro.org>
-References: <20200319053902.3415984-1-bjorn.andersson@linaro.org> <20200319053902.3415984-3-bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 2/4] clk: qcom: mmcc-msm8996: Properly describe GPU_GX gdsc
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 20 Mar 2020 16:31:48 -0700
-Message-ID: <158474710844.125146.15515925711513283888@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bjorn Andersson (2020-03-18 22:39:00)
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml b/Doc=
-umentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> index 85518494ce43..65d9aa790581 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> +++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> @@ -67,6 +67,10 @@ properties:
->      description:
->         Protected clock specifier list as per common clock binding
-> =20
-> +  vdd_gfx-supply:
+On Sat, 14 Mar 2020 18:50:30 +0100
+Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
 
-Why not vdd-gfx-supply? What's with the underscore?
+> Mauro's patch series <cover.1581955849.git.mchehab+huawei@kernel.org>
+> ("[PATCH 00/44] Manually convert filesystem FS documents to ReST")
+> converts many Documentation/filesystems/ files to ReST.
+> 
+> Since then, ./scripts/get_maintainer.pl --self-test complains with 27
+> warnings on Documentation/filesystems/ of this kind:
+> 
+>   warning: no file matches F: Documentation/filesystems/...
+> 
+> Adjust MAINTAINERS entries to all files converted from .txt to .rst in the
+> patch series and address the 27 warnings.
+> 
+> Link: https://lore.kernel.org/linux-erofs/cover.1581955849.git.mchehab+huawei@kernel.org
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> ---
+> v1 -> v2:
+> Patch v2 is now based on today's docs-next (now with base-commit below)
+> 
+> Jonathan, pick pick this patch v2 for docs-next.
 
-> +    description:
-> +      Regulator supply for the GPU_GX GDSC
-> +
->  required:
->    - compatible
->    - reg
+I've done that, thanks.
+
+jon
