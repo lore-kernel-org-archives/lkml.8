@@ -2,104 +2,89 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B432C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EADC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB6020773
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82FC2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:38:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UFzo6MVB"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="k1jXwyAu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgCTGey (ORCPT
+        id S1726840AbgCTGiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 02:34:54 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42847 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgCTGex (ORCPT
+        Fri, 20 Mar 2020 02:38:54 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:33632 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbgCTGix (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 02:34:53 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q19so5176347ljp.9
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 23:34:50 -0700 (PDT)
+        Fri, 20 Mar 2020 02:38:53 -0400
+Received: by mail-pj1-f67.google.com with SMTP id dw20so3117549pjb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 23:38:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=EN5kJIjrDw1mgoma/zwe6C2IRFI0DiYfgabsVqUwoBk=;
-        b=UFzo6MVBPLDq6LaahJnJhgqy9QcASg2VsWxFtxxJqOCPPcNxMkH2gdkN/rL88RNMWE
-         lv3Bun7kMu7e/k8R4ULX7rOUxZaCHBZfBMmyC5QBMxRRwKpGUYzOi4GVdsIG0vfJLjHY
-         21lJv4xEP4IehCfnWAe7FW9ICeRSK3cXcvKJIZ+bqM/PpwoRNfTSQLlIxPWHexvEi4w5
-         nF5/tTXgUBIAefZNhp2dfsKIWxBiV4BSyKVFtsq0FddxSe+OIlBHdAR3cI88Sx+Gx9Lg
-         7WmJ4Qv8TFe5hE1V2FbBR6nGMzqac/qyj/GNq5KsZ3hWOm0DxjKrPUY9029XVfDQTjkV
-         nhkA==
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NRVhjjDD7XDl/ETxhVS+N5qQy7f2YR4UjmY+Va7NcIg=;
+        b=k1jXwyAuASqdG4q2GMsWq8R3D3oD+CJtwwbeFsM3NNte3Tjo3tG5Fri927exJdRwAL
+         Ucd1dVzBECsE31JCm+u6WELtE0af5EZDyXmEmwLTV+J2UvBNe47Ww+o2K/eXG6pypM83
+         zkldNrNgDw8wplWNZKixLdMI15c0g/GPxxjyWwa/VxY/rEMRzqFx+fEKjup2+0g0cdYa
+         8M/YadjWpEu5Bm+7PcGkV5I9QiMQUzDkB3KnOscWkQdVF7tQEubXcu4FhtqqjYbEAD2w
+         Ip5tc0+5uOQcFmjwTov/u48CNTFF6npBneeL5Q9fX3HS+qPF82hpVWec7jf+ahf3GXOB
+         6NOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=EN5kJIjrDw1mgoma/zwe6C2IRFI0DiYfgabsVqUwoBk=;
-        b=SlxKD9PZoGt+DLy25BFagD1NL8rwEw8wx/0HeRlqU9DPj5sqWQDjGd+Y4XU1XTeyuk
-         PGJ95OW0BY6T8urQRDGnDd8mCZgVi2JGxQN+SzU7fTwhsDudCiemOWq+mSjKPyACZQOU
-         FFKovdbbqdNS5i089ldYaVOCEElKE5eH1CZNUS/3Ivw/Wb+iaPbTr2LTiL9PZ09Mg+5j
-         PhcIY9VJ7+8FqlrP2YszXcwGxat1FBOwVgnb0IqU9naA1mqwshoH9ViZRYNvlc20+pfR
-         dtuSKdaBjIbwBrGHnmqj0SQ4jGoCEknDM3NcqLoVyXR/cio2gXHQyR/gzb49x/h+DiY+
-         sJVA==
-X-Gm-Message-State: ANhLgQ0rxD+1o4j03zBbyaIMdzUinsF4zoERRz0mr1e4aD+e1aTU6922
-        DI1YKLMKtzk84ywh7DDvQuD5mA==
-X-Google-Smtp-Source: ADFU+vsBf8yKtP2HvAQixVnArfLXpQKief8SGtO73/OQ886ubDAeeOSQpYCwMKdMyAwsibcXp7pgLA==
-X-Received: by 2002:a2e:9897:: with SMTP id b23mr4397938ljj.97.1584686089605;
-        Thu, 19 Mar 2020 23:34:49 -0700 (PDT)
-Received: from jade (81-236-179-152-no272.tbcn.telia.com. [81.236.179.152])
-        by smtp.gmail.com with ESMTPSA id f16sm2732885ljj.34.2020.03.19.23.34.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 23:34:48 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 07:34:46 +0100
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-List-Id: <soc.lore.kernel.org>
-To:     arm@kernel.org, soc@kernel.org
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        tee-dev@lists.linaro.org, Rijo Thomas <Rijo-john.Thomas@amd.com>
-Subject: [GIT PULL] another amdtee driver fix for v5.6
-Message-ID: <20200320063446.GA9892@jade>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NRVhjjDD7XDl/ETxhVS+N5qQy7f2YR4UjmY+Va7NcIg=;
+        b=gmTHkOhVhWM3eFQTDihBWAzFeCe3DCsrC7Ws8t2iQC+6caIdugLiFeJycbR/INAmaz
+         34M1j8VPe0Cxg/1Qp6ey1wZr3lUmpmpxcOXdkUluQgadWgWwQb+gCxz+E6RPX7O/tUMb
+         BGKybMlHjtsnGtADbwbaYcfXPUoD0c1xaxtylxwBN9upI7P5W+suF0+8ashuvDW0ySip
+         M6tNIVRWlrRQ8C/17s7Wh7LuoS0FBYOMzKTYybX1qYuwckBhgATN0k14BMNLvIKrZKVA
+         b0YkDmrGi8UxqXDcsua4iEoU5j7G4DYAFbB2O339qHDSD7cfQbpbJPRi6M2Q2mqfcvAi
+         5FMA==
+X-Gm-Message-State: ANhLgQ1xOajGSLaeXpFWcSwiMp04WUGq7UWVe9pnNbljtTaEq4xfvQFn
+        Q1Byc7R08IIYIHF3iKpwWfnKClhjfgHRKrST
+X-Google-Smtp-Source: ADFU+vuAqL4vQjKPSkB3rW0832Dll8GemgDdGRZ6ZhihE6tUalFcheR5/sWW60aa9pISP4cH2vAnDg==
+X-Received: by 2002:a17:90a:240a:: with SMTP id h10mr7658748pje.123.1584686330284;
+        Thu, 19 Mar 2020 23:38:50 -0700 (PDT)
+Received: from localhost.localdomain (59-127-47-126.HINET-IP.hinet.net. [59.127.47.126])
+        by smtp.gmail.com with ESMTPSA id y3sm4370901pfy.158.2020.03.19.23.38.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Mar 2020 23:38:49 -0700 (PDT)
+From:   Chris Chiu <chiu@endlessm.com>
+To:     Jes.Sorensen@gmail.com, kvalo@codeaurora.org, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com
+Subject: [PATCH v2 0/2] Feed current txrate information for mac80211
+Date:   Fri, 20 Mar 2020 14:38:31 +0800
+Message-Id: <20200320063833.1058-1-chiu@endlessm.com>
+X-Mailer: git-send-email 2.21.1 (Apple Git-122.3)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello arm-soc maintainers,
+This patchset fills the txrate, sgi, bandwidth information
+in the sta_statistics function. Then the nl80211 commands
+such as 'iw link' can show the correct txrate information.
 
-Please pull this AMDTEE driver fix for an out of bounds read in
-find_session()
+v2: make the rtl8xxxu_desc_to_mcsrate() static
 
-Thanks,
-Jens
 
-The following changes since commit 11a48a5a18c63fd7621bb050228cebf13566e4d8:
+Chris Chiu (2):
+  rtl8xxxu: add enumeration for channel bandwidth
+  rtl8xxxu: Feed current txrate information for mac80211
 
-  Linux 5.6-rc2 (2020-02-16 13:16:59 -0800)
+ .../net/wireless/realtek/rtl8xxxu/rtl8xxxu.h  | 21 ++++-
+ .../wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 77 ++++++++++++++++++-
+ 2 files changed, 95 insertions(+), 3 deletions(-)
 
-are available in the Git repository at:
+-- 
+2.20.1
 
-  https://git.linaro.org/people/jens.wiklander/linux-tee.git tags/tee-amdtee-fix2-for-5.6
-
-for you to fetch changes up to 36fa3e50085e3858dd506e4431b9abd1bcb1f542:
-
-  tee: amdtee: out of bounds read in find_session() (2020-03-10 08:12:04 +0100)
-
-----------------------------------------------------------------
-tee: amdtee: out of bounds read in find_session()
-
-----------------------------------------------------------------
-Dan Carpenter (1):
-      tee: amdtee: out of bounds read in find_session()
-
- drivers/tee/amdtee/core.c | 3 +++
- 1 file changed, 3 insertions(+)
