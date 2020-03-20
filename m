@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD565C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587AAC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C3120767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3092020775
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:31:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbgCTVa6 (ORCPT
+        id S1727301AbgCTV2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:30:58 -0400
-Received: from mga03.intel.com ([134.134.136.65]:50326 "EHLO mga03.intel.com"
+        Fri, 20 Mar 2020 17:28:53 -0400
+Received: from mga01.intel.com ([192.55.52.88]:48429 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727315AbgCTV2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:28:54 -0400
-IronPort-SDR: /kuIdTdmHK0W78jbJB/kWpOuVNzEPVCNXQfDUklPbuREYdtK7PspdE//sN34BJWs9L7AiKqACB
- EopBhWxfQBpQ==
+        id S1727192AbgCTV2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 17:28:51 -0400
+IronPort-SDR: JQuG/ElzuO2EPHbOFDu6FnMZ9HxVR1eSjdoOCcvt7IQr7twyz9B0pzaolsMirxQXZPQbh9c5Ja
+ Qt1jdzb2PhTg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:52 -0700
-IronPort-SDR: y6q7PUNENAxs6RaNS+olhJMTwtaovz/vmFxTzZmxVSltJJKLLjBB+KuE2lIfLTe5/Zpm6bvJkr
- cHb9YAxSA6Eg==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:45 -0700
+IronPort-SDR: 72X7pdlMpSoI9nSyIFcS6fqfL4dgVBE08NbX3XJlqooJGUZNM2XIy9X/JfQoUh1Uu7RbGytBfB
+ IJk3l2Wnbv+g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
-   d="scan'208";a="269224459"
+   d="scan'208";a="269224415"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:50 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:45 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v3 15/37] KVM: VMX: Clean up vmx_flush_tlb_gva()
-Date:   Fri, 20 Mar 2020 14:28:11 -0700
-Message-Id: <20200320212833.3507-16-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 06/37] KVM: x86: Consolidate logic for injecting page faults to L1
+Date:   Fri, 20 Mar 2020 14:28:02 -0700
+Message-Id: <20200320212833.3507-7-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200320212833.3507-1-sean.j.christopherson@intel.com>
 References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
@@ -59,42 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactor vmx_flush_tlb_gva() to remove a superfluous local variable and
-clean up its comment, which is oddly located below the code it is
-commenting.
+Move the MMU's inject_page_fault(), which is used to inject page faults
+encountered when walking L1's page tables, to x86.c and use it to handle
+the non-nested path of kvm_inject_emulated_page_fault().  Using a common
+helper will reduce duplicate code in a future patch to sync SPTEs on
+emulated page faults, and also eliminates the rather confusing function
+name "inject_page_fault", which collides with struct kvm_mmu's hook.
 
-No functional change intended.
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 2 ++
+ arch/x86/kvm/mmu/mmu.c          | 6 ------
+ arch/x86/kvm/mmu/paging_tmpl.h  | 2 +-
+ arch/x86/kvm/x86.c              | 8 +++++++-
+ 4 files changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 57c1cee58d18..43c0d4706f9a 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2851,15 +2851,11 @@ static void exit_lmode(struct kvm_vcpu *vcpu)
- 
- static void vmx_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t addr)
- {
--	int vpid = to_vmx(vcpu)->vpid;
--
--	vpid_sync_vcpu_addr(vpid, addr);
--
- 	/*
--	 * If VPIDs are not supported or enabled, then the above is a no-op.
--	 * But we don't really need a TLB flush in that case anyway, because
--	 * each VM entry/exit includes an implicit flush when VPID is 0.
-+	 * vpid_sync_vcpu_addr() is a nop if vmx->vpid==0, see the comment in
-+	 * vmx_flush_tlb_guest() for an explanation of why this is ok.
- 	 */
-+	vpid_sync_vcpu_addr(to_vmx(vcpu)->vpid, addr);
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 328b1765ff76..cdbf822c5c8b 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1447,6 +1447,8 @@ void kvm_queue_exception_e(struct kvm_vcpu *vcpu, unsigned nr, u32 error_code);
+ void kvm_requeue_exception(struct kvm_vcpu *vcpu, unsigned nr);
+ void kvm_requeue_exception_e(struct kvm_vcpu *vcpu, unsigned nr, u32 error_code);
+ void kvm_inject_page_fault(struct kvm_vcpu *vcpu, struct x86_exception *fault);
++void kvm_inject_l1_page_fault(struct kvm_vcpu *vcpu,
++			      struct x86_exception *fault);
+ bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
+ 				    struct x86_exception *fault);
+ int kvm_read_guest_page_mmu(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 560e85ebdf22..5ae620881bbc 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4357,12 +4357,6 @@ static unsigned long get_cr3(struct kvm_vcpu *vcpu)
+ 	return kvm_read_cr3(vcpu);
  }
  
- static void vmx_flush_tlb_guest(struct kvm_vcpu *vcpu)
+-static void inject_page_fault(struct kvm_vcpu *vcpu,
+-			      struct x86_exception *fault)
+-{
+-	vcpu->arch.mmu->inject_page_fault(vcpu, fault);
+-}
+-
+ static bool sync_mmio_spte(struct kvm_vcpu *vcpu, u64 *sptep, gfn_t gfn,
+ 			   unsigned int access, int *nr_present)
+ {
+diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+index 1ddbfff64ccc..ac613f2fae01 100644
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -812,7 +812,7 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
+ 	if (!r) {
+ 		pgprintk("%s: guest page fault\n", __func__);
+ 		if (!prefault)
+-			inject_page_fault(vcpu, &walker.fault);
++			kvm_inject_l1_page_fault(vcpu, &walker.fault);
+ 
+ 		return RET_PF_RETRY;
+ 	}
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 64ed6e6e2b56..fcad522f221e 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -611,6 +611,12 @@ void kvm_inject_page_fault(struct kvm_vcpu *vcpu, struct x86_exception *fault)
+ }
+ EXPORT_SYMBOL_GPL(kvm_inject_page_fault);
+ 
++void kvm_inject_l1_page_fault(struct kvm_vcpu *vcpu,
++			      struct x86_exception *fault)
++{
++	vcpu->arch.mmu->inject_page_fault(vcpu, fault);
++}
++
+ bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
+ 				    struct x86_exception *fault)
+ {
+@@ -619,7 +625,7 @@ bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
+ 	if (mmu_is_nested(vcpu) && !fault->nested_page_fault)
+ 		vcpu->arch.nested_mmu.inject_page_fault(vcpu, fault);
+ 	else
+-		vcpu->arch.mmu->inject_page_fault(vcpu, fault);
++		kvm_inject_l1_page_fault(vcpu, fault);
+ 
+ 	return fault->nested_page_fault;
+ }
 -- 
 2.24.1
 
