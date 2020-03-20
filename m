@@ -2,189 +2,341 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4E7C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAFDC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D189B20774
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9687420739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:00:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D72QvPDx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=adit-jv.com header.i=@adit-jv.com header.b="OmYQv2Rn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgCTH77 (ORCPT
+        id S1726935AbgCTIAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 03:59:59 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:35414 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726527AbgCTH77 (ORCPT
+        Fri, 20 Mar 2020 04:00:23 -0400
+Received: from ma-dnext02.denso.co.jp ([133.192.181.77]:43400 "EHLO
+        ma-dnext02.denso.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgCTIAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 03:59:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584691197;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NCLldPyucn2EtjkD/YGvXmu67T8oQjms+EaHjNLuyLQ=;
-        b=D72QvPDxgZNPrq1/x/jF8QihyTmFn/XiU/SM0xyc+VSmO6Wh+GAADgohEcuN0K3h6K6CvY
-        AjXaWkk3UStGKnaYBWzShcU9fMviP+I8TsU0OayrhH4Plgh6urUtkGX4DcczHejgYbouKM
-        mWIlQC6OitgMLDtI1cW8VfrqoM2r9XE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-145-KENkeixLMkCVD1dP4OHYhg-1; Fri, 20 Mar 2020 03:59:54 -0400
-X-MC-Unique: KENkeixLMkCVD1dP4OHYhg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CBAB8800D53;
-        Fri, 20 Mar 2020 07:59:52 +0000 (UTC)
-Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B2F365C1A5;
-        Fri, 20 Mar 2020 07:59:49 +0000 (UTC)
-Subject: Re: [PATCH v5 20/23] KVM: arm64: GICv4.1: Plumb SGI implementation
- selection in the distributor
-To:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-21-maz@kernel.org>
- <72832f51-bbde-8502-3e03-189ac20a0143@huawei.com>
- <4a06fae9c93e10351276d173747d17f4@kernel.org>
- <49995ec9-3970-1f62-5dfc-118563ca00fc@redhat.com>
- <b98855a1-6300-d323-80f6-82d3b9854290@huawei.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <e60578b5-910c-0355-d231-29322900679d@redhat.com>
-Date:   Fri, 20 Mar 2020 08:59:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 20 Mar 2020 04:00:23 -0400
+Received: from grdma01h.denso.co.jp (unknown [133.192.24.24])
+        by ma-dnext02.denso.co.jp (Postfix) with ESMTP id 57D0E31C1A5;
+        Fri, 20 Mar 2020 17:00:20 +0900 (JST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=adit-jv.com;
+        s=jpadit-jvmail2011; t=1584691220;
+        bh=aGPgxtdffBMByyqdwdFOstjzeRXW/RZbd3ID/wGmoTo=;
+        h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+         MIME-Version:Content-Type;
+        b=OmYQv2Rn1zusEIsAT0p+iVHF551yaxM+mBRJUm0383tgHYEKNdh519EmJcaEguMtu
+         yH3Om6GL/Q5HO4AxqpqG7Fje9gLCrRdt0hzqyMlUeJk638xVdo/6LB82/P+1+7uqw1
+         fCO7AIbIDNYoqXPwtlIWaM6awOLwrCr9kPrnEW2TrnXelKgtK5E0v6o3u3EMFDDrUe
+         IYGkAXVdznW2Lo3xPXDONUeM1Du+mYribXwwGHpu+aNi3qd4jDn2sNE4o2islbZc8/
+         C7YXHjGaYGlCByqHHlAnqAOJph60KtrTYsCNhpo0td3iDLaYDOLQSoin+zXWWGNRtq
+         NQeE99HmiWhjQ==
+Received: by grdma01h.denso.co.jp (Postfix, from userid 0)
+        id 4EFCCC04E00; Fri, 20 Mar 2020 17:00:20 +0900 (JST)
+Received: from smtp1.denso.co.jp [133.192.24.88] 
+         by grdma01h. with ESMTP id TAA17990;
+         Fri, 20 Mar 2020 17:00:20 +0900
+Received: from ky0exch01.adit-jv.com ([10.71.113.8])
+        by smtp01.denso.co.jp (MOS 4.4.7-GA)
+        with ESMTP id FLR84220;
+        Fri, 20 Mar 2020 17:00:18 +0900
+Received: from jp-u0004.adit-jv.com (10.71.112.120) by ky0exch01.adit-jv.com
+ (10.71.113.8) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 20 Mar
+ 2020 17:00:18 +0900
+From:   Suresh Udipi <sudipi@jp.adit-jv.com>
+To:     <niklas.soderlund@ragnatech.se>
+CC:     <akiyama@nds-osk.co.jp>, <efriedrich@de.adit-jv.com>,
+        <erosca@de.adit-jv.com>, <hverkuil-cisco@xs4all.nl>,
+        <jacopo+renesas@jmondi.org>, <laurent.pinchart@ideasonboard.com>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <mrodin@de.adit-jv.com>,
+        <securitycheck@denso.co.jp>, <sudipi@jp.adit-jv.com>
+Subject: [PATCH v3] media: rcar-csi2: Correct the selection of hsfreqrange
+Date:   Fri, 20 Mar 2020 17:00:05 +0900
+Message-ID: <1584691205-3808-1-git-send-email-sudipi@jp.adit-jv.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20200318101936.GA2667161@oden.dyn.berto.se>
+References: <20200318101936.GA2667161@oden.dyn.berto.se>
 MIME-Version: 1.0
-In-Reply-To: <b98855a1-6300-d323-80f6-82d3b9854290@huawei.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.71.112.120]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
+hsfreqrange should be chosen based on the calculated mbps which
+is within the range as per table[1]. But current calculation
+always selects first value which is greater than or equal to the
+calculated mbps which may lead to chosing a wrong range in some cases.
 
-On 3/20/20 4:08 AM, Zenghui Yu wrote:
-> On 2020/3/20 4:38, Auger Eric wrote:
->> Hi Marc,
->> On 3/19/20 1:10 PM, Marc Zyngier wrote:
->>> Hi Zenghui,
->>>
->>> On 2020-03-18 06:34, Zenghui Yu wrote:
->>>> Hi Marc,
->>>>
->>>> On 2020/3/5 4:33, Marc Zyngier wrote:
->>>>> The GICv4.1 architecture gives the hypervisor the option to let
->>>>> the guest choose whether it wants the good old SGIs with an
->>>>> active state, or the new, HW-based ones that do not have one.
->>>>>
->>>>> For this, plumb the configuration of SGIs into the GICv3 MMIO
->>>>> handling, present the GICD_TYPER2.nASSGIcap to the guest,
->>>>> and handle the GICD_CTLR.nASSGIreq setting.
->>>>>
->>>>> In order to be able to deal with the restore of a guest, also
->>>>> apply the GICD_CTLR.nASSGIreq setting at first run so that we
->>>>> can move the restored SGIs to the HW if that's what the guest
->>>>> had selected in a previous life.
->>>>
->>>> I'm okay with the restore path.=A0 But it seems that we still fail t=
-o
->>>> save the pending state of vSGI - software pending_latch of HW-based
->>>> vSGIs will not be updated (and always be false) because we directly
->>>> inject them through ITS, so vgic_v3_uaccess_read_pending() can't
->>>> tell the correct pending state to user-space (the correct one should
->>>> be latched in HW).
->>>>
->>>> It would be good if we can sync the hardware state into pending_latc=
-h
->>>> at an appropriate time (just before save), but not sure if we can...
->>>
->>> The problem is to find the "appropriate time". It would require to
->>> define
->>> a point in the save sequence where we transition the state from HW to
->>> SW. I'm not keen on adding more state than we already have.
->>
->> may be we could use a dedicated device group/attr as we have for the I=
-TS
->> save tables? the user space would choose.
->=20
-> It means that userspace will be aware of some form of GICv4.1 details
-> (e.g., get/set vSGI state at HW level) that KVM has implemented.
-> Is it something that userspace required to know? I'm open to this ;-)
-Not sure we would be obliged to expose fine details. This could be a
-generic save/restore device group/attr whose implementation at KVM level
-could differ depending on the version being implemented, no?
+For example for 360 mbps for H3/M3N
+Existing logic selects
+Calculated value 360Mbps : Default 400Mbps Range [368.125 -433.125 mbps]
 
-Thanks
+This hsfreqrange is out of range.
 
-Eric
->=20
->>
->> Thanks
->>
->> Eric
->>>
->>> But what we can do is to just ask the HW to give us the right state
->>> on userspace access, at all times. How about this:
->>>
->>> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c
->>> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
->>> index 48fd9fc229a2..281fe7216c59 100644
->>> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
->>> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
->>> @@ -305,8 +305,18 @@ static unsigned long
->>> vgic_v3_uaccess_read_pending(struct kvm_vcpu *vcpu,
->>> =A0=A0=A0=A0=A0=A0 */
->>> =A0=A0=A0=A0=A0 for (i =3D 0; i < len * 8; i++) {
->>> =A0=A0=A0=A0=A0=A0=A0=A0=A0 struct vgic_irq *irq =3D vgic_get_irq(vcp=
-u->kvm, vcpu, intid
->>> + i);
->>> +=A0=A0=A0=A0=A0=A0=A0 bool state =3D irq->pending_latch;
->>>
->>> -=A0=A0=A0=A0=A0=A0=A0 if (irq->pending_latch)
->>> +=A0=A0=A0=A0=A0=A0=A0 if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 int err;
->>> +
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 err =3D irq_get_irqchip_state(irq-=
->host_irq,
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0 IRQCHIP_STATE_PENDING,
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0 &state);
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 WARN_ON(err);
->>> +=A0=A0=A0=A0=A0=A0=A0 }
->>> +
->>> +=A0=A0=A0=A0=A0=A0=A0 if (state)
->>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 value |=3D (1U << i);
->>>
->>> =A0=A0=A0=A0=A0=A0=A0=A0=A0 vgic_put_irq(vcpu->kvm, irq);
->=20
-> Anyway this looks good to me and will do the right thing on a userspace
-> save.
->=20
->>>
->>> I can add this to "KVM: arm64: GICv4.1: Add direct injection capabili=
-ty
->>> to SGI registers".
->=20
-> Thanks,
-> Zenghui
->=20
+The logic is changed to select the first hsfreqrange whose max range[1] is
+greater than the calculated bit rate.
+
+Calculated value 360Mbps : max range 380.625 mbps is selected
+ i.e Default 350Mbps  Range [320.625 -380.625 mpbs]
+
+[1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
+
+Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
+
+Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+Signed-off-by: Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
+---
+ Changes in v2:
+  - Added the boundary check for the maximum bit rate.
+  
+  - Simplified the logic by remmoving range check 
+    as only the closest default value covers most 
+    of the use cases.
+
+  - Aligning the commit message based on the above change
+
+
+ Changes in v3:
+    - Added max member from struct rcsi2_mbps_reg.
+      mbps varialbe cannot be removed from rcsi2_mbps_reg, 
+      since this structure is reused for 
+      phtw_mbps_h3_v3h_m3n/phtw_mbps_v3m_e3 where mbps is 
+      used.
+	  
+	
+   -  Update the walk of the array in rcsi2_set_phypll() so that it finds
+      the first entry where the calculated bit rate is less than the max.
+
+   - Support lower bit rates less than 80Mbps like 48Mbps
+     (Raspberry pi camera 640x480 connected to Kingfisher)
+     can also be supported by selecting the lowest default bit rate 80Mbps
+     as done before this fix
+
+   - Alignement of the commit message based on above changes.
+
+ drivers/media/platform/rcar-vin/rcar-csi2.c | 180 ++++++++++++++--------------
+ 1 file changed, 91 insertions(+), 89 deletions(-)
+
+diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
+index faa9fb2..ff375b4 100644
+--- a/drivers/media/platform/rcar-vin/rcar-csi2.c
++++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+@@ -134,6 +134,7 @@ struct phtw_value {
+ struct rcsi2_mbps_reg {
+ 	u16 mbps;
+ 	u16 reg;
++	u16 max;
+ };
+ 
+ static const struct rcsi2_mbps_reg phtw_mbps_h3_v3h_m3n[] = {
+@@ -201,96 +202,96 @@ static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
+ #define PHYPLL_HSFREQRANGE(n)		((n) << 16)
+ 
+ static const struct rcsi2_mbps_reg hsfreqrange_h3_v3h_m3n[] = {
+-	{ .mbps =   80, .reg = 0x00 },
+-	{ .mbps =   90, .reg = 0x10 },
+-	{ .mbps =  100, .reg = 0x20 },
+-	{ .mbps =  110, .reg = 0x30 },
+-	{ .mbps =  120, .reg = 0x01 },
+-	{ .mbps =  130, .reg = 0x11 },
+-	{ .mbps =  140, .reg = 0x21 },
+-	{ .mbps =  150, .reg = 0x31 },
+-	{ .mbps =  160, .reg = 0x02 },
+-	{ .mbps =  170, .reg = 0x12 },
+-	{ .mbps =  180, .reg = 0x22 },
+-	{ .mbps =  190, .reg = 0x32 },
+-	{ .mbps =  205, .reg = 0x03 },
+-	{ .mbps =  220, .reg = 0x13 },
+-	{ .mbps =  235, .reg = 0x23 },
+-	{ .mbps =  250, .reg = 0x33 },
+-	{ .mbps =  275, .reg = 0x04 },
+-	{ .mbps =  300, .reg = 0x14 },
+-	{ .mbps =  325, .reg = 0x25 },
+-	{ .mbps =  350, .reg = 0x35 },
+-	{ .mbps =  400, .reg = 0x05 },
+-	{ .mbps =  450, .reg = 0x16 },
+-	{ .mbps =  500, .reg = 0x26 },
+-	{ .mbps =  550, .reg = 0x37 },
+-	{ .mbps =  600, .reg = 0x07 },
+-	{ .mbps =  650, .reg = 0x18 },
+-	{ .mbps =  700, .reg = 0x28 },
+-	{ .mbps =  750, .reg = 0x39 },
+-	{ .mbps =  800, .reg = 0x09 },
+-	{ .mbps =  850, .reg = 0x19 },
+-	{ .mbps =  900, .reg = 0x29 },
+-	{ .mbps =  950, .reg = 0x3a },
+-	{ .mbps = 1000, .reg = 0x0a },
+-	{ .mbps = 1050, .reg = 0x1a },
+-	{ .mbps = 1100, .reg = 0x2a },
+-	{ .mbps = 1150, .reg = 0x3b },
+-	{ .mbps = 1200, .reg = 0x0b },
+-	{ .mbps = 1250, .reg = 0x1b },
+-	{ .mbps = 1300, .reg = 0x2b },
+-	{ .mbps = 1350, .reg = 0x3c },
+-	{ .mbps = 1400, .reg = 0x0c },
+-	{ .mbps = 1450, .reg = 0x1c },
+-	{ .mbps = 1500, .reg = 0x2c },
++	{ .reg = 0x00, .max =   97 },
++	{ .reg = 0x10, .max =  107 },
++	{ .reg = 0x20, .max =  118 },
++	{ .reg = 0x30, .max =  128 },
++	{ .reg = 0x01, .max =  139 },
++	{ .reg = 0x11, .max =  149 },
++	{ .reg = 0x21, .max =  160 },
++	{ .reg = 0x31, .max =  170 },
++	{ .reg = 0x02, .max =  181 },
++	{ .reg = 0x12, .max =  191 },
++	{ .reg = 0x22, .max =  202 },
++	{ .reg = 0x32, .max =  212 },
++	{ .reg = 0x03, .max =  228 },
++	{ .reg = 0x13, .max =  224 },
++	{ .reg = 0x23, .max =  259 },
++	{ .reg = 0x33, .max =  275 },
++	{ .reg = 0x04, .max =  301 },
++	{ .reg = 0x14, .max =  328 },
++	{ .reg = 0x25, .max =  354 },
++	{ .reg = 0x35, .max =  380 },
++	{ .reg = 0x05, .max =  433 },
++	{ .reg = 0x16, .max =  485 },
++	{ .reg = 0x26, .max =  538 },
++	{ .reg = 0x37, .max =  590 },
++	{ .reg = 0x07, .max =  643 },
++	{ .reg = 0x18, .max =  695 },
++	{ .reg = 0x28, .max =  748 },
++	{ .reg = 0x39, .max =  800 },
++	{ .reg = 0x09, .max =  853 },
++	{ .reg = 0x19, .max =  905 },
++	{ .reg = 0x29, .max =  958 },
++	{ .reg = 0x3a, .max = 1010 },
++	{ .reg = 0x0a, .max = 1063 },
++	{ .reg = 0x1a, .max = 1115 },
++	{ .reg = 0x2a, .max = 1168 },
++	{ .reg = 0x3b, .max = 1220 },
++	{ .reg = 0x0b, .max = 1273 },
++	{ .reg = 0x1b, .max = 1325 },
++	{ .reg = 0x2b, .max = 1378 },
++	{ .reg = 0x3c, .max = 1430 },
++	{ .reg = 0x0c, .max = 1483 },
++	{ .reg = 0x1c, .max = 1500 },
++	{ .reg = 0x2c, .max = 1500 },
+ 	{ /* sentinel */ },
+ };
+ 
+ static const struct rcsi2_mbps_reg hsfreqrange_m3w_h3es1[] = {
+-	{ .mbps =   80,	.reg = 0x00 },
+-	{ .mbps =   90,	.reg = 0x10 },
+-	{ .mbps =  100,	.reg = 0x20 },
+-	{ .mbps =  110,	.reg = 0x30 },
+-	{ .mbps =  120,	.reg = 0x01 },
+-	{ .mbps =  130,	.reg = 0x11 },
+-	{ .mbps =  140,	.reg = 0x21 },
+-	{ .mbps =  150,	.reg = 0x31 },
+-	{ .mbps =  160,	.reg = 0x02 },
+-	{ .mbps =  170,	.reg = 0x12 },
+-	{ .mbps =  180,	.reg = 0x22 },
+-	{ .mbps =  190,	.reg = 0x32 },
+-	{ .mbps =  205,	.reg = 0x03 },
+-	{ .mbps =  220,	.reg = 0x13 },
+-	{ .mbps =  235,	.reg = 0x23 },
+-	{ .mbps =  250,	.reg = 0x33 },
+-	{ .mbps =  275,	.reg = 0x04 },
+-	{ .mbps =  300,	.reg = 0x14 },
+-	{ .mbps =  325,	.reg = 0x05 },
+-	{ .mbps =  350,	.reg = 0x15 },
+-	{ .mbps =  400,	.reg = 0x25 },
+-	{ .mbps =  450,	.reg = 0x06 },
+-	{ .mbps =  500,	.reg = 0x16 },
+-	{ .mbps =  550,	.reg = 0x07 },
+-	{ .mbps =  600,	.reg = 0x17 },
+-	{ .mbps =  650,	.reg = 0x08 },
+-	{ .mbps =  700,	.reg = 0x18 },
+-	{ .mbps =  750,	.reg = 0x09 },
+-	{ .mbps =  800,	.reg = 0x19 },
+-	{ .mbps =  850,	.reg = 0x29 },
+-	{ .mbps =  900,	.reg = 0x39 },
+-	{ .mbps =  950,	.reg = 0x0a },
+-	{ .mbps = 1000,	.reg = 0x1a },
+-	{ .mbps = 1050,	.reg = 0x2a },
+-	{ .mbps = 1100,	.reg = 0x3a },
+-	{ .mbps = 1150,	.reg = 0x0b },
+-	{ .mbps = 1200,	.reg = 0x1b },
+-	{ .mbps = 1250,	.reg = 0x2b },
+-	{ .mbps = 1300,	.reg = 0x3b },
+-	{ .mbps = 1350,	.reg = 0x0c },
+-	{ .mbps = 1400,	.reg = 0x1c },
+-	{ .mbps = 1450,	.reg = 0x2c },
+-	{ .mbps = 1500,	.reg = 0x3c },
++	{ .reg = 0x00, .max =  110 },
++	{ .reg = 0x10, .max =  120 },
++	{ .reg = 0x20, .max =  131 },
++	{ .reg = 0x30, .max =  141 },
++	{ .reg = 0x01, .max =  152 },
++	{ .reg = 0x11, .max =  162 },
++	{ .reg = 0x21, .max =  173 },
++	{ .reg = 0x31, .max =  183 },
++	{ .reg = 0x02, .max =  194 },
++	{ .reg = 0x12, .max =  204 },
++	{ .reg = 0x22, .max =  215 },
++	{ .reg = 0x32, .max =  225 },
++	{ .reg = 0x03, .max =  241 },
++	{ .reg = 0x13, .max =  257 },
++	{ .reg = 0x23, .max =  273 },
++	{ .reg = 0x33, .max =  275 },
++	{ .reg = 0x04, .max =  301 },
++	{ .reg = 0x14, .max =  328 },
++	{ .reg = 0x05, .max =  354 },
++	{ .reg = 0x15, .max =  393 },
++	{ .reg = 0x25, .max =  446 },
++	{ .reg = 0x06, .max =  498 },
++	{ .reg = 0x16, .max =  551 },
++	{ .reg = 0x07, .max =  603 },
++	{ .reg = 0x17, .max =  656 },
++	{ .reg = 0x08, .max =  708 },
++	{ .reg = 0x18, .max =  761 },
++	{ .reg = 0x09, .max =  813 },
++	{ .reg = 0x19, .max =  866 },
++	{ .reg = 0x29, .max =  918 },
++	{ .reg = 0x39, .max =  971 },
++	{ .reg = 0x0a, .max = 1023 },
++	{ .reg = 0x1a, .max = 1076 },
++	{ .reg = 0x2a, .max = 1128 },
++	{ .reg = 0x3a, .max = 1181 },
++	{ .reg = 0x0b, .max = 1233 },
++	{ .reg = 0x1b, .max = 1286 },
++	{ .reg = 0x2b, .max = 1338 },
++	{ .reg = 0x3b, .max = 1391 },
++	{ .reg = 0x0c, .max = 1443 },
++	{ .reg = 0x1c, .max = 1496 },
++	{ .reg = 0x2c, .max = 1500 },
++	{ .reg = 0x3c, .max = 1500 },
+ 	{ /* sentinel */ },
+ };
+ 
+@@ -432,11 +433,12 @@ static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
+ {
+ 	const struct rcsi2_mbps_reg *hsfreq;
+ 
+-	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++)
+-		if (hsfreq->mbps >= mbps)
++	for (hsfreq = priv->info->hsfreqrange; hsfreq->max != 0; hsfreq++) {
++		if (hsfreq->max >= mbps)
+ 			break;
++	}
+ 
+-	if (!hsfreq->mbps) {
++	if (!hsfreq->max) {
+ 		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
+ 		return -ERANGE;
+ 	}
+-- 
+2.7.4
 
