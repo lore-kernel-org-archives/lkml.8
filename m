@@ -2,56 +2,69 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149BAC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20EAC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E324920752
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04FA20740
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:02:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nI5ulvVv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbgCTCBY (ORCPT
+        id S1727417AbgCTCCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 22:01:24 -0400
-Received: from mail-qk1-f181.google.com ([209.85.222.181]:43435 "EHLO
-        mail-qk1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727389AbgCTCAd (ORCPT
+        Thu, 19 Mar 2020 22:02:02 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:40162 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgCTCCC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 22:00:33 -0400
-Received: by mail-qk1-f181.google.com with SMTP id x18so5376578qki.10;
-        Thu, 19 Mar 2020 19:00:31 -0700 (PDT)
+        Thu, 19 Mar 2020 22:02:02 -0400
+Received: by mail-pj1-f67.google.com with SMTP id bo3so1801042pjb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 19:02:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WeyRq0Bbk2RSmZHgEPCvdWM5jbjVDDe5W4E9CInHi0c=;
+        b=nI5ulvVv/nvxRZe2zSkfLXLUG8f5/8rBe9na7G3cgR5oFJNs4hueir+3tAw/CQezO4
+         TJiS593SCUNa0EEGx9K4JeiGyWzQUK4fw+GYXvdwrhjll63fSCq/PZMbdQHm8BEvgC+S
+         wlh+lRcRcu+o+BH2PA/8+NVCdi2a3SrGugkz8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AeGhU+XJtuOPs3cRLNFViNTkzOH17jcA/a34LgeIkSw=;
-        b=aq4OHE/phBWP1IjK3aZCrnawXgjFXaWfTifotFP7BuXGd2TSc3K2gfLzel3p9rN6y8
-         CHjYypIJ3s7MifasLxUVGqOdHnSV9vhzcIPaKyIQOpkPTuORtvUoMqcNanzoYzzwwflk
-         fFFQd0w5w6HgRKHfclgj89U0Axu15OPh/vdrB5jtSkgui2zGmWdC+UDuwb5Bn8Z+775h
-         dDRVOd1Ly8nvbh4IWoy6wOo2/RK52N+g6r+DLxPkedgFjnXToe16EIQphUMPluccd9gG
-         lPrdoux7212Swb4OPiuYd1Q7RXpcoLDsos0HjhrUlaqa7XhFDTuZJpLCmoR4tjXXfOeI
-         Dpqw==
-X-Gm-Message-State: ANhLgQ2ry76fn9D7aFdIPoEam585NgQjHb0+1StlXmYv2LLbomA4cSdL
-        P7d1z+6+pONOTWi6abLuTvs=
-X-Google-Smtp-Source: ADFU+vuYAuraRM34QGCeIGQxO2X9JnyFXoVl2vLu4umGI3M8e/EYAYX6dEjzwMv0Ww/mVra5lFffwQ==
-X-Received: by 2002:a37:7e82:: with SMTP id z124mr5776266qkc.360.1584669630572;
-        Thu, 19 Mar 2020 19:00:30 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id n46sm3342198qtb.48.2020.03.19.19.00.29
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WeyRq0Bbk2RSmZHgEPCvdWM5jbjVDDe5W4E9CInHi0c=;
+        b=aypHyxwHmbc+bsVPhZ5aNAInDn4NRzMzeBpi67QucFqMpg0wWMhmDiTK09hOXdqC5F
+         H08pX8S2o7WHQWOImet/JzQB0VjVXuYVvFvHkLr86HlArD2wT0YBixHepjfGQz9r8aQe
+         8u5TZj5M+hb0DyphPHpznhyF4/oh7vWmlKQw0fTo2eTjyTZEytqqmBdQoG3mcwmuhVdi
+         Jdc3jxCeiTbHioge7NBg1gyLEYkR1wG8I6eBXgLX+szPWzxdiHvswT3fyjqLT9RKHk+x
+         7KzZm1tIp7wSENBI22QH1rPJArmARwU9LnwynQKSmBDvX805QJ+yATSu07wnGNHv7MTh
+         Oa8w==
+X-Gm-Message-State: ANhLgQ2dw+smc8T9PX4sB8fKS/r7PCuBFX8JYT4VDvUJtOaASHkEG7ds
+        NExVXImauFQyep5xNPWdQ3KlNA==
+X-Google-Smtp-Source: ADFU+vtuipaonYkXPOtPWNXbbTxyKTJprONJWA7md1SSm0Equk8vCQ2nX8F/bQllzMXTgTP1I7bGng==
+X-Received: by 2002:a17:90a:e98e:: with SMTP id v14mr6815170pjy.114.1584669721211;
+        Thu, 19 Mar 2020 19:02:01 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id y13sm3475705pfp.88.2020.03.19.19.02.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 19:00:29 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-efi@vger.kernel.org,
+        Thu, 19 Mar 2020 19:02:00 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     marcel@holtmann.org, linux-bluetooth@vger.kernel.org,
+        ulf.hansson@linaro.org
+Cc:     chromeos-bluetooth-upstreaming@chromium.org, mka@chromium.org,
+        dianders@chromium.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 00/14] efi/gop: Refactoring + mode-setting feature
-Date:   Thu, 19 Mar 2020 22:00:14 -0400
-Message-Id: <20200320020028.1936003-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200319192855.29876-1-nivedita@alum.mit.edu>
-References: <20200319192855.29876-1-nivedita@alum.mit.edu>
+Subject: [PATCH 0/1] Bluetooth: btmrvl: Reset SDIO card on hang
+Date:   Thu, 19 Mar 2020 19:01:52 -0700
+Message-Id: <20200320020153.98280-1-abhishekpandit@chromium.org>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,56 +72,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series is against tip:efi/core.
 
-Patches 1-9 are small cleanups and refactoring of the code in
-libstub/gop.c.
+Hi Marcel,
 
-The rest of the patches add the ability to use a command-line option to
-switch the gop's display mode.
+This patch adds an error recovery mechanism to the btmrvl driver. We
+have been using it on ChromeOS on kernel v4.19 and it has been on the
+stable channel release of ChromeOS for a few months now.
 
-The options supported are:
-video=efifb:mode=n
-        Choose a specific mode number
-video=efifb:<xres>x<yres>[-(rgb|bgr|<bpp>)]
-        Specify mode by resolution and optionally color depth
-video=efifb:auto
-        Let the EFI stub choose the highest resolution mode available.
+A side effect of this change is that other functions on the same card
+will be affected by the reset. The necessary patches to support this
+reset have already been added to the mwifiex driver by Ulf:
 
-The mode-setting additions increase code size of gop.o by about 3k on
-x86-64 with EFI_MIXED enabled.
+11239229 New          [v3,1/3] mwifiex: Re-work support for SDIO HW reset
+11239233 New          [v3,2/3] mmc: core: Drop check for mmc_card_is_removable() in mmc_rescan()
+11239237 New          [v3,3/3] mmc: core: Re-work HW reset for SDIO cards
 
-Changes in v2 (HT lkp@intel.com):
-- Fix __efistub_global attribute to be after the variable.
-  (NB: bunch of other places should ideally be fixed, those I guess
-  don't matter as they are scalars?)
-- Silence -Wmaybe-uninitialized warning in set_mode function.
+You can see more information at crbug.com/1004473
 
-Arvind Sankar (14):
-  efi/gop: Remove redundant current_fb_base
-  efi/gop: Move check for framebuffer before con_out
-  efi/gop: Get mode information outside the loop
-  efi/gop: Factor out locating the gop into a function
-  efi/gop: Slightly re-arrange logic of find_gop
-  efi/gop: Move variable declarations into loop block
-  efi/gop: Use helper macros for populating lfb_base
-  efi/gop: Use helper macros for find_bits
-  efi/gop: Remove unreachable code from setup_pixel_info
-  efi/gop: Add prototypes for query_mode and set_mode
-  efi/gop: Allow specifying mode number on command line
-  efi/gop: Allow specifying mode by <xres>x<yres>
-  efi/gop: Allow specifying depth as well as resolution
-  efi/gop: Allow automatically choosing the best mode
-
- Documentation/fb/efifb.rst                    |  33 +-
- arch/x86/include/asm/efi.h                    |   4 +
- .../firmware/efi/libstub/efi-stub-helper.c    |   3 +
- drivers/firmware/efi/libstub/efistub.h        |   8 +-
- drivers/firmware/efi/libstub/gop.c            | 489 ++++++++++++++----
- 5 files changed, 428 insertions(+), 109 deletions(-)
+Thanks
+Abhishek
 
 
-base-commit: d5528d5e91041e68e8eab9792ce627705a0ed273
+
+Matthias Kaehlcke (1):
+  Bluetooth: btmrvl: Detect hangs and force a reset of the SDIO card
+
+ drivers/bluetooth/btmrvl_sdio.c | 24 ++++++++++++++++++++++++
+ drivers/bluetooth/btmrvl_sdio.h |  1 +
+ 2 files changed, 25 insertions(+)
+
 -- 
-2.24.1
+2.25.1.696.g5e7596f4ac-goog
 
