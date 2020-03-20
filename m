@@ -2,78 +2,86 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEC3C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE99C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E64F20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE5E20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:54:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="F0FOPtBw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbgCTNxr (ORCPT
+        id S1727213AbgCTNyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:53:47 -0400
-Received: from mga02.intel.com ([134.134.136.20]:48143 "EHLO mga02.intel.com"
+        Fri, 20 Mar 2020 09:54:32 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:37678 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726778AbgCTNxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:53:47 -0400
-IronPort-SDR: ip6yiPGxMQo+lTkNRk/SbreZheGigzoCJM/BOcwaW7bCkw3SwIJo8sLHgomrQ0AJtfSZe4hAf/
- 0qjQbU4vhyFQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 06:53:46 -0700
-IronPort-SDR: gmdAWcBXmpzaTYcm0AnNoq5+jjZPB3q9980RAUKlGVDhF98GZNtOmdT0sAd9wh/RyG0VLkkdCu
- 30xNVdd5+Dyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,284,1580803200"; 
-   d="scan'208";a="392156602"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga004.jf.intel.com with ESMTP; 20 Mar 2020 06:53:46 -0700
-Date:   Fri, 20 Mar 2020 06:53:46 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Xu <peterx@redhat.com>, Marc Zyngier <maz@kernel.org>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Subject: Re: slab-out-of-bounds due to "KVM: Dynamically size memslot array
- based on number of used slots"
-Message-ID: <20200320135346.GA16533@linux.intel.com>
-References: <8922D835-ED2A-4C48-840A-F568E20B5A7C@lca.pw>
- <20200320043403.GH11305@linux.intel.com>
- <5FF6AF4E-EB99-4111-BBB2-FE09FFBEF5C4@lca.pw>
+        id S1726773AbgCTNyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 09:54:31 -0400
+Received: from zn.tnic (p200300EC2F0A5A004DAD0A631927B72B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:4dad:a63:1927:b72b])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 67BE21EC0CF9;
+        Fri, 20 Mar 2020 14:54:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584712470;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=4kRlOKjHakNgyDMJ+wwWO6fJ9qGChnt/waqHmA/UUGY=;
+        b=F0FOPtBwjQP0paqttkINRGbxEcmOMVhN4oL0yj58aGG1avkm9QONlkR8NBXjqQSmqDIw9L
+        vxUZqNovMOIpqMvYdssliy14K12ktEZxIEt77Wsy46H0CUd3oWK+NCFRLHn2wB6zcdZ5JU
+        D0uVIwOLBo4Llp8mhOb2XsweNN/eGPw=
+Date:   Fri, 20 Mar 2020 14:54:36 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Daniel Drake <drake@endlessm.com>
+Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, x86@kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        Linux Upstreaming Team <linux@endlessm.com>
+Subject: Re: [PATCH] Revert "x86/reboot, efi: Use EFI reboot for Acer
+ TravelMate X514-51T"
+Message-ID: <20200320135436.GA23532@zn.tnic>
+References: <20200312083341.9365-1-jian-hong@endlessm.com>
+ <20200312104643.GA15619@zn.tnic>
+ <CAD8Lp47ndRqeS5VbkCMR_Faq-du9eDW28rHOG4Owxq862t-kGQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5FF6AF4E-EB99-4111-BBB2-FE09FFBEF5C4@lca.pw>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAD8Lp47ndRqeS5VbkCMR_Faq-du9eDW28rHOG4Owxq862t-kGQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 09:49:03AM -0400, Qian Cai wrote:
-> 
-> 
-> > On Mar 20, 2020, at 12:34 AM, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> > 
-> > On Thu, Mar 19, 2020 at 11:59:23PM -0400, Qian Cai wrote:
-> >> Reverted the linux-next commit 36947254e5f98 (“KVM: Dynamically size memslot array based on number of used slots”)
-> >> fixed illegal slab object redzone accesses.
-> >> 
-> >> [6727.939776][ T1818] BUG: KASAN: slab-out-of-bounds in gfn_to_hva+0xc1/0x2b0 [kvm]
-> >> search_memslots at include/linux/kvm_host.h:1035
-> > 
-> > Drat.  I'm guessing lru_slot is out of range after a memslot is deleted.
-> > This should fix the issue, though it may not be the most proper fix, e.g.
-> > it might be better to reset lru_slot when deleting a memslot.  I'll try and
-> > reproduce tomorrow, unless you can confirm this does the trick.
-> 
-> It works fine.
+On Fri, Mar 20, 2020 at 08:37:54PM +0800, Daniel Drake wrote:
+> Based on that I was considering that the patch could be reverted for
+> cleanliness/ At the same time, I do not have strong feelings on this,
+> no issues if the quirk is left in place.
 
-Thanks!  I'll send a proper patch in a bit, tweaking a selftest to try and
-hit this as well.
+Oh, I'd take the revert on cleanliness grounds any day of the week. But
+if that broken fw has snuck out and someone comes and complains that it
+wouldn't reboot properly, then I'd have to revert the revert.
+
+And looking at that reboot_dmi_table[] of who's who of broken BIOSes,
+one entry less ain't gonna make it prettier.
+
+:-)
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
