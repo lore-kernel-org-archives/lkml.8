@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5513C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7501DC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA22921D79
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E70D216FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:04:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbgCTWE3 (ORCPT
+        id S1727546AbgCTWEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:04:29 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37508 "EHLO
+        Fri, 20 Mar 2020 18:04:25 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37496 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727431AbgCTWET (ORCPT
+        with ESMTP id S1727141AbgCTWER (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:04:19 -0400
+        Fri, 20 Mar 2020 18:04:17 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFPk9-0004Tr-J8; Fri, 20 Mar 2020 23:03:53 +0100
+        id 1jFPk2-0004Tb-L5; Fri, 20 Mar 2020 23:03:46 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 9A804104084;
-        Fri, 20 Mar 2020 23:03:47 +0100 (CET)
-Message-Id: <20200320180033.589172314@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 2324A1039FD;
+        Fri, 20 Mar 2020 23:03:46 +0100 (CET)
+Message-Id: <20200320180032.994128577@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 19:00:08 +0100
+Date:   Fri, 20 Mar 2020 19:00:02 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -47,8 +47,7 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [RESEND][patch V3 12/23] context_tracking: Ensure that the critical
- path cannot be instrumented
+Subject: [RESEND][patch V3 06/23] bug: Annotate WARN/BUG/stackfail as noinstr safe
 References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,170 +59,78 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200320180008.CXtHCI1NH9ojfWdKhZ5fp5FwGhqTO0OoFcUo1fpm3UE@z>
+Message-ID: <20200320180002.zP_wHHftYRQ5i_nPzvCDR0StUuWcOvN7iynMREqQ9YY@z>
 
-context tracking lacks a few protection mechanisms against instrumentation:
+Warnings, bugs and stack protection fails from noinstr sections, e.g. low
+level and early entry code, are likely to be fatal.
 
- - While the core functions are marked NOKPROBE they lack protection
-   against function tracing which is required as the function entry/exit
-   points can be utilized by BPF.
-
- - static functions invoked from the protected functions need to be marked
-   as well as they can be instrumented otherwise.
-
- - using plain inline allows the compiler to emit traceable and probable
-   functions.
-
-Fix this by marking the functions noinstr and converting the plain inlines
-to __always_inline.
-
-The NOKPROBE_SYMBOL() annotations are removed as the .noinstr.text section
-is already excluded from being probed.
-
-Cures the following objtool warnings:
-
- vmlinux.o: warning: objtool: enter_from_user_mode()+0x34: call to __context_tracking_exit() leaves .noinstr.text section
- vmlinux.o: warning: objtool: prepare_exit_to_usermode()+0x29: call to __context_tracking_enter() leaves .noinstr.text section
- vmlinux.o: warning: objtool: syscall_return_slowpath()+0x29: call to __context_tracking_enter() leaves .noinstr.text section
- vmlinux.o: warning: objtool: do_syscall_64()+0x7f: call to __context_tracking_enter() leaves .noinstr.text section
- vmlinux.o: warning: objtool: do_int80_syscall_32()+0x3d: call to __context_tracking_enter() leaves .noinstr.text section
- vmlinux.o: warning: objtool: do_fast_syscall_32()+0x9c: call to __context_tracking_enter() leaves .noinstr.text section
-
-and generates new ones...
+Mark them as "safe" to be invoked from noinstr protected code to avoid
+annotating all usage sites. Getting the information out is important.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/context_tracking.h       |    6 +++---
- include/linux/context_tracking_state.h |    6 +++---
- kernel/context_tracking.c              |   14 ++++++++------
- 3 files changed, 14 insertions(+), 12 deletions(-)
+ arch/x86/include/asm/bug.h |    3 +++
+ include/asm-generic/bug.h  |    9 +++++++--
+ kernel/panic.c             |    4 +++-
+ 3 files changed, 13 insertions(+), 3 deletions(-)
 
---- a/include/linux/context_tracking.h
-+++ b/include/linux/context_tracking.h
-@@ -33,13 +33,13 @@ static inline void user_exit(void)
- }
+--- a/arch/x86/include/asm/bug.h
++++ b/arch/x86/include/asm/bug.h
+@@ -70,13 +70,16 @@ do {									\
+ #define HAVE_ARCH_BUG
+ #define BUG()							\
+ do {								\
++	instr_begin();						\
+ 	_BUG_FLAGS(ASM_UD2, 0);					\
+ 	unreachable();						\
+ } while (0)
  
- /* Called with interrupts disabled.  */
--static inline void user_enter_irqoff(void)
-+static __always_inline void user_enter_irqoff(void)
- {
- 	if (context_tracking_enabled())
- 		__context_tracking_enter(CONTEXT_USER);
+ #define __WARN_FLAGS(flags)					\
+ do {								\
++	instr_begin();						\
+ 	_BUG_FLAGS(ASM_UD2, BUGFLAG_WARNING|(flags));		\
++	instr_end();						\
+ 	annotate_reachable();					\
+ } while (0)
  
- }
--static inline void user_exit_irqoff(void)
-+static __always_inline void user_exit_irqoff(void)
- {
- 	if (context_tracking_enabled())
- 		__context_tracking_exit(CONTEXT_USER);
-@@ -75,7 +75,7 @@ static inline void exception_exit(enum c
-  * is enabled.  If context tracking is disabled, returns
-  * CONTEXT_DISABLED.  This should be used primarily for debugging.
+--- a/include/asm-generic/bug.h
++++ b/include/asm-generic/bug.h
+@@ -83,14 +83,19 @@ extern __printf(4, 5)
+ void warn_slowpath_fmt(const char *file, const int line, unsigned taint,
+ 		       const char *fmt, ...);
+ #define __WARN()		__WARN_printf(TAINT_WARN, NULL)
+-#define __WARN_printf(taint, arg...)					\
+-	warn_slowpath_fmt(__FILE__, __LINE__, taint, arg)
++#define __WARN_printf(taint, arg...) do {				\
++	instr_begin();							\
++	warn_slowpath_fmt(__FILE__, __LINE__, taint, arg);		\
++	instr_end();							\
++	while (0)
+ #else
+ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
+ #define __WARN()		__WARN_FLAGS(BUGFLAG_TAINT(TAINT_WARN))
+ #define __WARN_printf(taint, arg...) do {				\
++		instr_begin();						\
+ 		__warn_printk(arg);					\
+ 		__WARN_FLAGS(BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
++		instr_end();						\
+ 	} while (0)
+ #define WARN_ON_ONCE(condition) ({				\
+ 	int __ret_warn_on = !!(condition);			\
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -662,10 +662,12 @@ device_initcall(register_warn_debugfs);
+  * Called when gcc's -fstack-protector feature is used, and
+  * gcc detects corruption of the on-stack canary value
   */
--static inline enum ctx_state ct_state(void)
-+static __always_inline enum ctx_state ct_state(void)
+-__visible void __stack_chk_fail(void)
++__visible noinstr void __stack_chk_fail(void)
  {
- 	return context_tracking_enabled() ?
- 		this_cpu_read(context_tracking.state) : CONTEXT_DISABLED;
---- a/include/linux/context_tracking_state.h
-+++ b/include/linux/context_tracking_state.h
-@@ -26,12 +26,12 @@ struct context_tracking {
- extern struct static_key_false context_tracking_key;
- DECLARE_PER_CPU(struct context_tracking, context_tracking);
- 
--static inline bool context_tracking_enabled(void)
-+static __always_inline bool context_tracking_enabled(void)
- {
- 	return static_branch_unlikely(&context_tracking_key);
++	instr_begin();
+ 	panic("stack-protector: Kernel stack is corrupted in: %pB",
+ 		__builtin_return_address(0));
++	instr_end();
  }
+ EXPORT_SYMBOL(__stack_chk_fail);
  
--static inline bool context_tracking_enabled_cpu(int cpu)
-+static __always_inline bool context_tracking_enabled_cpu(int cpu)
- {
- 	return context_tracking_enabled() && per_cpu(context_tracking.active, cpu);
- }
-@@ -41,7 +41,7 @@ static inline bool context_tracking_enab
- 	return context_tracking_enabled() && __this_cpu_read(context_tracking.active);
- }
- 
--static inline bool context_tracking_in_user(void)
-+static __always_inline bool context_tracking_in_user(void)
- {
- 	return __this_cpu_read(context_tracking.state) == CONTEXT_USER;
- }
---- a/kernel/context_tracking.c
-+++ b/kernel/context_tracking.c
-@@ -31,7 +31,7 @@ EXPORT_SYMBOL_GPL(context_tracking_key);
- DEFINE_PER_CPU(struct context_tracking, context_tracking);
- EXPORT_SYMBOL_GPL(context_tracking);
- 
--static bool context_tracking_recursion_enter(void)
-+static noinstr bool context_tracking_recursion_enter(void)
- {
- 	int recursion;
- 
-@@ -45,7 +45,7 @@ static bool context_tracking_recursion_e
- 	return false;
- }
- 
--static void context_tracking_recursion_exit(void)
-+static __always_inline void context_tracking_recursion_exit(void)
- {
- 	__this_cpu_dec(context_tracking.recursion);
- }
-@@ -59,7 +59,7 @@ static void context_tracking_recursion_e
-  * instructions to execute won't use any RCU read side critical section
-  * because this function sets RCU in extended quiescent state.
-  */
--void __context_tracking_enter(enum ctx_state state)
-+void noinstr __context_tracking_enter(enum ctx_state state)
- {
- 	/* Kernel threads aren't supposed to go to userspace */
- 	WARN_ON_ONCE(!current->mm);
-@@ -77,8 +77,10 @@ void __context_tracking_enter(enum ctx_s
- 			 * on the tick.
- 			 */
- 			if (state == CONTEXT_USER) {
-+				instr_begin();
- 				trace_user_enter(0);
- 				vtime_user_enter(current);
-+				instr_end();
- 			}
- 			rcu_user_enter();
- 		}
-@@ -99,7 +101,6 @@ void __context_tracking_enter(enum ctx_s
- 	}
- 	context_tracking_recursion_exit();
- }
--NOKPROBE_SYMBOL(__context_tracking_enter);
- EXPORT_SYMBOL_GPL(__context_tracking_enter);
- 
- void context_tracking_enter(enum ctx_state state)
-@@ -142,7 +143,7 @@ NOKPROBE_SYMBOL(context_tracking_user_en
-  * This call supports re-entrancy. This way it can be called from any exception
-  * handler without needing to know if we came from userspace or not.
-  */
--void __context_tracking_exit(enum ctx_state state)
-+void noinstr __context_tracking_exit(enum ctx_state state)
- {
- 	if (!context_tracking_recursion_enter())
- 		return;
-@@ -155,15 +156,16 @@ void __context_tracking_exit(enum ctx_st
- 			 */
- 			rcu_user_exit();
- 			if (state == CONTEXT_USER) {
-+				instr_begin();
- 				vtime_user_exit(current);
- 				trace_user_exit(0);
-+				instr_end();
- 			}
- 		}
- 		__this_cpu_write(context_tracking.state, CONTEXT_KERNEL);
- 	}
- 	context_tracking_recursion_exit();
- }
--NOKPROBE_SYMBOL(__context_tracking_exit);
- EXPORT_SYMBOL_GPL(__context_tracking_exit);
- 
- void context_tracking_exit(enum ctx_state state)
 
