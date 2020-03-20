@@ -2,123 +2,318 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4583FC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA70AC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23A042076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A38252070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:49:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584665368;
+	bh=DMURy/8mMyj8NFajkAEY/krQWNvBPMhbmxjPf+eFbe8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Cj3QGx/9VyOGAAkXt3luEoTX7vccXi/ijQjMmWmdmFkNSUNgGWP2zrzni1IdDdoew
+	 ItxB+DF5TIPETwhd3o9xL+e0IjXO/NJxelIxq+F0q3cjlFR7o7hDgrqtp/IKdjcOVF
+	 hjaLUTTazIP1OuuJPiDb1MlI1b/l06gAtg7SNCDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbgCTAtC (ORCPT
+        id S1727364AbgCTAt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 20:49:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCTAtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 20:49:02 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8005620754;
-        Fri, 20 Mar 2020 00:49:00 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 20:48:59 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     ben.hutchings@codethink.co.uk, Chris.Paterson2@renesas.com,
-        bigeasy@linutronix.de, LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Julia Cartwright <julia@ni.com>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Subject: Re: 4.19.106-rt44 -- boot problems with irqwork: push most work
- into softirq context
-Message-ID: <20200319204859.5011a488@gandalf.local.home>
-In-Reply-To: <20200319232225.GA7878@duo.ucw.cz>
-References: <20200228170837.3fe8bb57@gandalf.local.home>
-        <20200319214835.GA29781@duo.ucw.cz>
-        <20200319232225.GA7878@duo.ucw.cz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 19 Mar 2020 20:49:27 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33644 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgCTAt1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 20:49:27 -0400
+Received: by mail-io1-f65.google.com with SMTP id o127so4382370iof.0;
+        Thu, 19 Mar 2020 17:49:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XBAKZaovO7P+c8C9AJ1JuMUFLGjL6HUae79ikakVMCo=;
+        b=b6gzJQyzVcfFurS/wpynrpqOyIVFAVrrQPVtve4FNJcFC2OWWggBvTfrVA2hXV/UEq
+         PZq6j9HCpt7x6kpcp3ffg9aBytcSoySGkpLlI9EB09TWWGQT83N3Mp9QicJYVy3GEdMg
+         7w79ulGxzEZZHqZR3mbuGzzZtx/KxeBaVV+Q6FsUAyhC4b1DuMUsNeJtQDQ0tqyb2pr6
+         dVk9SiY3ES5NtuDBUmvYMKLmuR/hC72MDeOMjuO0HuWyoUxfuOdlaCIrPvDguJzOqxZb
+         98F3k7UzYKeb54kWyzSPSsNBh49u70m40ccw8FLNi7J8XtEPJd5MbA9tOUNjSA+4Np53
+         L8Mg==
+X-Gm-Message-State: ANhLgQ1k0TOQ6nhIKVhgTLTpmtCuqfQvVITvEYTYPUV3QN23ekI3sJX5
+        yU9oWLApAIUSa/VsIwJ8Wg==
+X-Google-Smtp-Source: ADFU+vsSI+UFexKpMVwrhk8QlkYIWGzNIJPImKdeK96fvi4Nf4enbsS90HcpcXS72GkBsc+KD90TOg==
+X-Received: by 2002:a6b:d90c:: with SMTP id r12mr5247454ioc.72.1584665365904;
+        Thu, 19 Mar 2020 17:49:25 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id t83sm1473377ild.42.2020.03.19.17.49.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 17:49:25 -0700 (PDT)
+Received: (nullmailer pid 29909 invoked by uid 1000);
+        Fri, 20 Mar 2020 00:49:22 -0000
+Date:   Thu, 19 Mar 2020 18:49:22 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Alexandru Tachici <alexandru.tachici@analog.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jic23@kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: Re: [PATCH v4 2/2] dt-bindings: iio: dac: Add docs for AD5770R DAC
+Message-ID: <20200320004922.GA3641@bogus>
+References: <20200218121031.27233-1-alexandru.tachici@analog.com>
+ <20200218121031.27233-3-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218121031.27233-3-alexandru.tachici@analog.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Mar 2020 00:22:25 +0100
-Pavel Machek <pavel@denx.de> wrote:
+On Tue, Feb 18, 2020 at 02:10:31PM +0200, Alexandru Tachici wrote:
+> Adding dt-bindings documentation for AD5770R DAC.
 
-> On Thu 2020-03-19 22:48:35, Pavel Machek wrote:
-> > Hi!
+DT list needs to be Cc'ed if you want bindings reviewed.
 
-Hi Pavel!
-
-> >   
-> > > I'm pleased to announce the 4.19.106-rt44 stable release.
-> > > 
-> > > 
-> > > This release is just an update to the new stable 4.19.106 version
-> > > and no RT specific changes have been made.
-> > > 
-> > > 
-> > > You can get this release via the git tree at:
-> > > 
-> > >   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-> > > 
-> > >   branch: v4.19-rt
-> > >   Head SHA1: 0f2960c75dd68d339f0aff2935f51652b5625fbf  
-> > 
-> > This brought some problems for me. de0-nano board now fails to boot in
-> > cca 50% of cases if I move these patches on top of -cip tree.
-> > 
-> > This is example of failed job:
-> > 
-> > https://lava.ciplatform.org/scheduler/job/13037
-> > 
-> > de0-nano is 32-bit arm, should be based on Altera SoCFPGA if I understand
-> > things correctly.
-> > 
-> > "fc9f4631a290 irqwork: push most work into softirq context" touches
-> > area of the panic above. I tried to revert it on top of the full
-> > series, and tests passed twice so far...  
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+> ---
+>  .../bindings/iio/dac/adi,ad5770r.yaml         | 185 ++++++++++++++++++
+>  1 file changed, 185 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
 > 
-> Test passed 7 times now. So yes, reverting this fixes de0-nano
-> boot. Any ideas what might be wrong?
+> diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
+> new file mode 100644
+> index 000000000000..13d6b5ff479d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
+> @@ -0,0 +1,185 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2020 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad5770r.yaml#
+
+Jonathan mentioned 'adc' part, but 'bindings' is also wrong. Should be:
+
+.../schemas/iio/dac/...
+
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD5770R DAC device driver
+> +
+> +maintainers:
+> +  - Mircea Caprioru <mircea.caprioru@analog.com>
+> +
+> +description: |
+> +  Bindings for the Analog Devices AD5770R current DAC device. Datasheet can be
+> +  found here:
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD5770R.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad5770r
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  avdd-supply:
+> +    description:
+> +      AVdd voltage supply. Represents two different supplies in the datasheet
+> +      that are in fact the same.
+> +
+> +  iovdd-supply:
+> +    description:
+> +      Voltage supply for the chip interface.
+> +
+> +  vref-supply:
+> +    description: Specify the voltage of the external reference used.
+> +      Available reference options are 1.25 V or 2.5 V. If no
+> +      external reference declared then the device will use the
+> +      internal reference of 1.25 V.
+> +
+> +  adi,external-resistor:
+> +    description: Specify if an external 2.5k ohm resistor is used. If not
+> +      specified the device will use an internal 2.5k ohm resistor.
+> +      The precision resistor is used for reference current generation.
+> +    type: boolean
+> +
+> +  reset-gpios:
+> +    description: GPIO spec for the RESET pin. If specified, it will be
+> +      asserted during driver probe.
+> +    maxItems: 1
+> +
+> +  channel0:
+
+channel@0 ???
+
+Once you fix that, your example will start failing.
+
+> +    description: Represents an external channel which are
+> +      connected to the DAC. Channel 0 can act both as a current
+> +      source and sink.
+> +    type: object
+> +
+> +    properties:
+> +      num:
+
+Use 'reg' instead.
+
+> +        description: This represents the channel number.
+> +        items:
+
+You can drop items.
+
+> +          const: 0
+> +
+> +      adi,range-microamp:
+> +          description: Output range of the channel.
+> +          oneOf:
+> +            - $ref: /schemas/types.yaml#/definitions/int32-array
+
+*-microamp already has a type, so this should be dropped. However, I 
+believe it's unsigned currently, but we can fix it to be signed.
+
+> +            - items:
+> +                - enum: [0 300000]
+> +                - enum: [-60000 0]
+> +                - enum: [-60000 300000]
+
+Negative values don't yet work until we fix dtc to be able to output 
+negative values. For now, can you just avoid negative numbers in the 
+example.
+
+What's defined here doesn't match the example. You are saying there are 
+3 cells with 2 possible values each. I think you want:
+
+oneOf:
+  - items:
+      - const: 0
+      - const: 300000
+  - items:
+      - const: -60000
+      - const: 0
+  - items:
+      - const: -60000
+      - const: 300000
+      
+
+> +
+> +  channel1:
+> +    description: Represents an external channel which are
+> +      connected to the DAC.
+> +    type: object
+> +
+> +    properties:
+> +      num:
+> +        description: This represents the channel number.
+> +        items:
+> +          const: 1
+> +
+> +      adi,range-microamp:
+> +          description: Output range of the channel.
+> +          oneOf:
+> +            - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +            - items:
+> +                - enum: [0 140000]
+> +                - enum: [0 250000]
+> +
+> +  channel2:
+> +    description: Represents an external channel which are
+> +      connected to the DAC.
+> +    type: object
+> +
+> +    properties:
+> +      num:
+> +        description: This represents the channel number.
+> +        items:
+> +          const: 2
+> +
+> +      adi,range-microamp:
+> +          description: Output range of the channel.
+> +          oneOf:
+> +            - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +            - items:
+> +                - enum: [0 140000]
+> +                - enum: [0 250000]
+> +
+> +patternProperties:
+> +  "^channel@([3-5])$":
+> +    type: object
+> +    description: Represents the external channels which are connected to the DAC.
+> +    properties:
+> +      num:
+> +        description: This represents the channel number.
+> +        items:
+> +          minimum: 3
+> +          maximum: 5
+> +
+> +      adi,range-microamp:
+> +          description: Output range of the channel.
+> +          oneOf:
+> +            - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +            - items:
+> +                - enum: [0 45000]
+> +                - enum: [0 100000]
+> +
+> +required:
+> +- reg
+> +- diff-channels
+> +- channel0
+> +- channel1
+> +- channel2
+> +- channel3
+> +- channel4
+> +- channel5
+> +
+> +examples:
+> +  - |
+> +        spi {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                ad5770r@0 {
+> +                        compatible = "ad5770r";
+> +                        reg = <0>;
+> +                        spi-max-frequency = <1000000>;
+> +                        vref-supply = <&vref>;
+> +                        adi,external-resistor;
+> +                        reset-gpios = <&gpio 22 0>;
+> +
+> +                        channel@0 {
+> +                                num = <0>;
+> +                                adi,range-microamp = <(-60000) 300000>;
+> +                        };
+> +
+> +                        channel@1 {
+> +                                num = <1>;
+> +                                adi,range-microamp = <0 140000>;
+> +                        };
+> +
+> +                        channel@2 {
+> +                                num = <2>;
+> +                                adi,range-microamp = <0 55000>;
+> +                        };
+> +
+> +                        channel@3 {
+> +                                num = <3>;
+> +                                adi,range-microamp = <0 45000>;
+> +                        };
+> +
+> +                        channel@4 {
+> +                                num = <4>;
+> +                                adi,range-microamp = <0 45000>;
+> +                        };
+> +
+> +                        channel@5 {
+> +                                num = <5>;
+> +                                adi,range-microamp = <0 45000>;
+> +                        };
+> +                };
+> +        };
+> +...
+> -- 
+> 2.20.1
 > 
-> I'll be running it few more times.
-> 
-> https://gitlab.com/cip-project/cip-kernel/linux-cip/pipelines/127953471
-> 
-
-Looks like you are running this without PREEMPT_RT enabled.
-
-Does this patch help?
-
--- Steve
-
-
-diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-index 2940622da5b3..0ca75c77536b 100644
---- a/kernel/irq_work.c
-+++ b/kernel/irq_work.c
-@@ -146,8 +146,9 @@ bool irq_work_needs_cpu(void)
- 	raised = this_cpu_ptr(&raised_list);
- 	lazy = this_cpu_ptr(&lazy_list);
- 
--	if (llist_empty(raised) && llist_empty(lazy))
--		return false;
-+	if (llist_empty(raised) || arch_irq_work_has_interrupt())
-+		if (llist_empty(lazy))
-+			return false;
- 
- 	/* All work should have been flushed before going offline */
- 	WARN_ON_ONCE(cpu_is_offline(smp_processor_id()));
