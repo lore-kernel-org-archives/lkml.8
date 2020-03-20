@@ -2,104 +2,121 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE29C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA2CC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 218CF20752
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:36:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J6gb8ana"
+	by mail.kernel.org (Postfix) with ESMTP id A527D20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:43:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbgCTXgi (ORCPT
+        id S1726980AbgCTXn6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 19:36:38 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:26250 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726851AbgCTXgf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 19:36:35 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584747395; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=kWl2oYWfBPVLMLG1p4eJPUX2txbmOHZxIQKSjE0B98E=; b=J6gb8ana4ZhKc8b/D+sV8tv6RBsrgRopPxINkaMBsfHO4uZCWjBqniUK0a+zpglTGzOeO8c/
- UFmla/66bWmpN+618hRgcnwsxplCETysn6wFyugw7YHZD76ALEVW7vp6DS1JqmpjvRDX2srv
- xU6W/ZR3jXueSiEOOuvhD7BT7j0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e75537d.7f6bc1a32b58-smtp-out-n02;
- Fri, 20 Mar 2020 23:36:29 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E6158C4478F; Fri, 20 Mar 2020 23:36:28 +0000 (UTC)
-Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1F2FDC43637;
-        Fri, 20 Mar 2020 23:36:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1F2FDC43637
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
-From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
-To:     linux-remoteproc-owner@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
-        mathieu.poirier@linaro.org
-Cc:     psodagud@codeaurora.org, tsoni@codeaurora.org,
-        sidgup@codeaurora.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: [PATCH 2/2] remoteproc: core: Register the character device interface
-Date:   Fri, 20 Mar 2020 16:36:17 -0700
-Message-Id: <1584747377-14824-3-git-send-email-rishabhb@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1584747377-14824-1-git-send-email-rishabhb@codeaurora.org>
-References: <1584747377-14824-1-git-send-email-rishabhb@codeaurora.org>
+        Fri, 20 Mar 2020 19:43:58 -0400
+Received: from mga04.intel.com ([192.55.52.120]:4270 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbgCTXn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 19:43:58 -0400
+IronPort-SDR: ux2AVVpx+1OHYfT1MTMN4V66Qit4fcmMByOMCj5NUQcXY2nRi/PTpDv/liwK5tohwLN2RNIqY9
+ e4BJHMEhiZnw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 16:43:57 -0700
+IronPort-SDR: TuxU30KvSjaF7//l3pktlwxoaMjzB1UrjLcpQoSS7zZ1pXlvrVUGB3SX70/csEGniNzUMVDh3x
+ pv0GbcnD435Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
+   d="scan'208";a="249032861"
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by orsmga006.jf.intel.com with ESMTP; 20 Mar 2020 16:43:57 -0700
+Received: from orsmsx155.amr.corp.intel.com (10.22.240.21) by
+ ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 20 Mar 2020 16:43:57 -0700
+Received: from orsmsx102.amr.corp.intel.com ([169.254.3.165]) by
+ ORSMSX155.amr.corp.intel.com ([169.254.7.107]) with mapi id 14.03.0439.000;
+ Fri, 20 Mar 2020 16:43:56 -0700
+From:   "Park, Kyung Min" <kyung.min.park@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>
+Subject: RE: [PATCH v2 0/2] x86/delay: Introduce TPAUSE instruction
+Thread-Topic: [PATCH v2 0/2] x86/delay: Introduce TPAUSE instruction
+Thread-Index: AQHV/p370RFgN+BwjkuNNhbDrbt3qKhSJS6g
+Date:   Fri, 20 Mar 2020 23:43:56 +0000
+Message-ID: <3658BA65DD26AF4BA909BEB2C6DF6181A2A622FA@ORSMSX102.amr.corp.intel.com>
+References: <1584677604-32707-1-git-send-email-kyung.min.park@intel.com>
+ <87a74b4ad2.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87a74b4ad2.fsf@nanos.tec.linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the character device during rproc_add. This would create
-a character device node at /dev/subsys_<rproc_name>. Userspace
-applications can interact with the remote processor using this
-interface rather than using sysfs node. To distinguish between
-different remote processor nodes the device name has been changed
-to include the rproc name appended to "subsys_" string.
+Hi Thomas,
 
-Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
----
- drivers/remoteproc/remoteproc_core.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+> -----Original Message-----
+> From: Thomas Gleixner <tglx@linutronix.de>
+> Sent: Friday, March 20, 2020 2:57 AM
+> To: Park, Kyung Min <kyung.min.park@intel.com>; x86@kernel.org; linux-
+> kernel@vger.kernel.org
+> Cc: mingo@redhat.com; hpa@zytor.com; gregkh@linuxfoundation.org;
+> ak@linux.intel.com; Luck, Tony <tony.luck@intel.com>; Raj, Ashok
+> <ashok.raj@intel.com>; Shankar, Ravi V <ravi.v.shankar@intel.com>; Yu,
+> Fenghua <fenghua.yu@intel.com>; Park, Kyung Min
+> <kyung.min.park@intel.com>
+> Subject: Re: [PATCH v2 0/2] x86/delay: Introduce TPAUSE instruction
+> 
+> Hi!
+> 
+> Kyung Min Park <kyung.min.park@intel.com> writes:
+> 
+> > Intel processors that support the WAITPKG feature implement the TPAUSE
+> > instruction that suspends execution in a lower power state until the
+> > TSC (Time Stamp Counter) exceeds a certain value.
+> >
+> > Update the udelay() function to use TPAUSE on systems where it is
+> > available. Note that we hard code the deeper (C0.2) sleep state
+> > because exit latency is small compared to the "microseconds"
+> > that usleep() will delay.
+> >
+> > ChangeLog:
+> > - Change from v1 to v2:
+> >   1. The patchset applies after Thomas's cleanup patch as below:
+> >      https://lkml.org/lkml/diff/2020/3/18/893/1
+> 
+> lkml.org is horrible. Please use lore.kernel.org if at all.
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 097f33e..48a3932 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1907,6 +1907,12 @@ int rproc_add(struct rproc *rproc)
- 	struct device *dev = &rproc->dev;
- 	int ret;
- 
-+	ret = rproc_char_device_add(rproc);
-+	if (ret) {
-+		pr_err("error while adding character device\n");
-+		return ret;
-+	}
-+
- 	ret = device_add(dev);
- 	if (ret < 0)
- 		return ret;
-@@ -2044,7 +2050,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
- 		return NULL;
- 	}
- 
--	dev_set_name(&rproc->dev, "remoteproc%d", rproc->index);
-+	dev_set_name(&rproc->dev, "subsys_%s", rproc->name);
- 
- 	atomic_set(&rproc->power, 0);
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Let me change in the next patch.
+
+> Also please just add the patch to the series when posting so that people don't
+> have to go through loops and hoops to grab that dependency.
+
+Sure, Let me add this patch to the series.
+
+> Thanks,
+> 
+>         tglx
+> 
+
