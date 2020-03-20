@@ -7,90 +7,170 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB03C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BD6C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35BC920732
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AF62076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:09:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qpHxPDQt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IyFklPLw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbgCTLIN (ORCPT
+        id S1727333AbgCTLJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 07:08:13 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43806 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbgCTLIN (ORCPT
+        Fri, 20 Mar 2020 07:09:34 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:60564 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726951AbgCTLJe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 07:08:13 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02KB88I5035120;
-        Fri, 20 Mar 2020 06:08:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584702488;
-        bh=9WUktMUqDa4d61QWvx1cJ9oQzyaLfT2wrs3FrV4yau0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=qpHxPDQtSGCzq7nwtJi21Kj85nQAHGe1Ep4qiyAwoqZmfjavHAXJywIxnw69bkplA
-         ZTJYC0+T5z84AnmxIkPtCG2r8y7TSXz4jwSAhoSDJQc20sDzfVicV3nj3LhaUidYe1
-         B6mzr9v9NYFPL3QGuICcNZT+Fe3rp0n+jWSB8qr4=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02KB88kC047568
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Mar 2020 06:08:08 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
- Mar 2020 06:08:07 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 20 Mar 2020 06:08:07 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02KB84gh053481;
-        Fri, 20 Mar 2020 06:08:05 -0500
-Subject: Re: [PATCH net-next v2 00/10] net: ethernet: ti: cpts: add irq and
- HW_TS_PUSH events
-To:     "David S . Miller" <davem@davemloft.net>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-CC:     Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        netdev <netdev@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200319165802.30898-1-grygorii.strashko@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <6975cb4d-8077-60ac-05b5-27a9aa67bf30@ti.com>
-Date:   Fri, 20 Mar 2020 13:07:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 20 Mar 2020 07:09:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584702573;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FG3rV03ORdL5dZYsmjHuCpupbanGtM2DORWeRbjL06s=;
+        b=IyFklPLwBBNSJnXHPNtrJD0FTAEeClPAFoOPgeElJLuJ3DnWqNZSPTXxSHl+LghT3PdMug
+        5uhJyRoksxAmqAQY7bMWLYtZgzmOHz6NsXhPWurObg0YxZr94X9Gl0bkhgwju0z0LsTZkZ
+        KvMcg0gqwOjx3YL8cZuAeZre0m3dIuo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-368-XhybzQHaNwiNF6Rbkf4nkw-1; Fri, 20 Mar 2020 07:09:29 -0400
+X-MC-Unique: XhybzQHaNwiNF6Rbkf4nkw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4D3D189D6C3;
+        Fri, 20 Mar 2020 11:09:26 +0000 (UTC)
+Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B60AD60C18;
+        Fri, 20 Mar 2020 11:09:22 +0000 (UTC)
+Subject: Re: [PATCH v5 20/23] KVM: arm64: GICv4.1: Plumb SGI implementation
+ selection in the distributor
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>, kvm@vger.kernel.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Robert Richter <rrichter@marvell.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-21-maz@kernel.org>
+ <72832f51-bbde-8502-3e03-189ac20a0143@huawei.com>
+ <4a06fae9c93e10351276d173747d17f4@kernel.org>
+ <49995ec9-3970-1f62-5dfc-118563ca00fc@redhat.com>
+ <b98855a1-6300-d323-80f6-82d3b9854290@huawei.com>
+ <e60578b5-910c-0355-d231-29322900679d@redhat.com>
+ <dfaf8a1b7c7fd8b769a244a8a779d952@kernel.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <02350520-8591-c62c-e7fa-33db30c25b96@redhat.com>
+Date:   Fri, 20 Mar 2020 12:09:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20200319165802.30898-1-grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <dfaf8a1b7c7fd8b769a244a8a779d952@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Marc,
 
+On 3/20/20 10:46 AM, Marc Zyngier wrote:
+> On 2020-03-20 07:59, Auger Eric wrote:
+>> Hi Zenghui,
+>>
+>> On 3/20/20 4:08 AM, Zenghui Yu wrote:
+>>> On 2020/3/20 4:38, Auger Eric wrote:
+>>>> Hi Marc,
+>>>> On 3/19/20 1:10 PM, Marc Zyngier wrote:
+>>>>> Hi Zenghui,
+>>>>>
+>>>>> On 2020-03-18 06:34, Zenghui Yu wrote:
+>>>>>> Hi Marc,
+>>>>>>
+>>>>>> On 2020/3/5 4:33, Marc Zyngier wrote:
+>>>>>>> The GICv4.1 architecture gives the hypervisor the option to let
+>>>>>>> the guest choose whether it wants the good old SGIs with an
+>>>>>>> active state, or the new, HW-based ones that do not have one.
+>>>>>>>
+>>>>>>> For this, plumb the configuration of SGIs into the GICv3 MMIO
+>>>>>>> handling, present the GICD_TYPER2.nASSGIcap to the guest,
+>>>>>>> and handle the GICD_CTLR.nASSGIreq setting.
+>>>>>>>
+>>>>>>> In order to be able to deal with the restore of a guest, also
+>>>>>>> apply the GICD_CTLR.nASSGIreq setting at first run so that we
+>>>>>>> can move the restored SGIs to the HW if that's what the guest
+>>>>>>> had selected in a previous life.
+>>>>>>
+>>>>>> I'm okay with the restore path.=C2=A0 But it seems that we still f=
+ail to
+>>>>>> save the pending state of vSGI - software pending_latch of HW-base=
+d
+>>>>>> vSGIs will not be updated (and always be false) because we directl=
+y
+>>>>>> inject them through ITS, so vgic_v3_uaccess_read_pending() can't
+>>>>>> tell the correct pending state to user-space (the correct one shou=
+ld
+>>>>>> be latched in HW).
+>>>>>>
+>>>>>> It would be good if we can sync the hardware state into pending_la=
+tch
+>>>>>> at an appropriate time (just before save), but not sure if we can.=
+..
+>>>>>
+>>>>> The problem is to find the "appropriate time". It would require to
+>>>>> define
+>>>>> a point in the save sequence where we transition the state from HW =
+to
+>>>>> SW. I'm not keen on adding more state than we already have.
+>>>>
+>>>> may be we could use a dedicated device group/attr as we have for the
+>>>> ITS
+>>>> save tables? the user space would choose.
+>>>
+>>> It means that userspace will be aware of some form of GICv4.1 details
+>>> (e.g., get/set vSGI state at HW level) that KVM has implemented.
+>>> Is it something that userspace required to know? I'm open to this ;-)
+>> Not sure we would be obliged to expose fine details. This could be a
+>> generic save/restore device group/attr whose implementation at KVM lev=
+el
+>> could differ depending on the version being implemented, no?
+>=20
+> What prevents us from hooking this synchronization to the current behav=
+iour
+> of KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES? After all, this is already the
+> point
+> where we synchronize the KVM view of the pending state with userspace.
+> Here, it's just a matter of picking the information from some other pla=
+ce
+> (i.e. the host's virtual pending table).
+agreed
+>=20
+> The thing we need though is the guarantee that the guest isn't going to
+> get more vLPIs at that stage, as they would be lost. This effectively
+> assumes that we can also save/restore the state of the signalling devic=
+es,
+> and I don't know if we're quite there yet.
+On QEMU, when KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES is called, the VM is
+stopped.
+See cddafd8f353d ("hw/intc/arm_gicv3_its: Implement state save/restore")
+So I think it should work, no?
 
-On 19/03/2020 18:57, Grygorii Strashko wrote:
-> Hi Richard, All,
-> 
-> v2: no functional changes.
-> 
-> This is re-spin of patches to add CPSW IRQ and HW_TS_PUSH events support I've
-> sent long time ago [1]. In this series, I've tried to restructure and split changes,
-> and also add few additional optimizations comparing to initial RFC submission [1].
-> 
+Thanks
 
-Pls, ignore this submission. Sent by mistake.
+Eric
 
-Sorry for this.
+>=20
+> Thanks,
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 M.
 
--- 
-Best regards,
-grygorii
