@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E072FC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68B6C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B160E20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7D520724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:29:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbgCTV3E (ORCPT
+        id S1727590AbgCTV3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:29:04 -0400
-Received: from mga02.intel.com ([134.134.136.20]:20437 "EHLO mga02.intel.com"
+        Fri, 20 Mar 2020 17:29:07 -0400
+Received: from mga09.intel.com ([134.134.136.24]:37248 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727340AbgCTV2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:28:55 -0400
-IronPort-SDR: 7kN5YddozvHkzFFKHhKZ8htbPAKT9OJ6zSSMrIQY0GXvq748Kwaz5Fwgzb33nG15FAgsya9qcd
- BZ10e6745b4g==
+        id S1727432AbgCTV26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 17:28:58 -0400
+IronPort-SDR: jGy0ZSASAuFBkGIfmOAoCJO55wVlPG1B/ZJ1K2KkqMxSzIWZ42aWYJyitpaLPHtpDmN1CPbLjT
+ azFiO+7Rc5jQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:54 -0700
-IronPort-SDR: Hwc6bsoIemfaXsaCcitK5YEYlu9gFk8/ZIwyXlgaiFgSNMdqxn65Kuc8Ifd8nGXKJn5OiSnpx6
- FW9XulrafAtQ==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:57 -0700
+IronPort-SDR: vsaU9LhyLxWfWNUNR896JtRsQoDJozwg9IOtnzFiCmpu0aEjh3PsMU8jovp9eJmt9IGeJKtPuU
+ bh02n0Fjlk8w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
-   d="scan'208";a="269224481"
+   d="scan'208";a="269224501"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:53 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:56 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v3 21/37] KVM: SVM: Document the ASID logic in svm_flush_tlb()
-Date:   Fri, 20 Mar 2020 14:28:17 -0700
-Message-Id: <20200320212833.3507-22-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 27/37] KVM: nVMX: Reload APIC access page on nested VM-Exit only if necessary
+Date:   Fri, 20 Mar 2020 14:28:23 -0700
+Message-Id: <20200320212833.3507-28-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200320212833.3507-1-sean.j.christopherson@intel.com>
 References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
@@ -59,33 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a comment in svm_flush_tlb() to document why it flushes only the
-current ASID, even when it is invoked when flushing remote TLBs.
+Defer reloading L1's APIC page by logging the need for a reload and
+processing it during nested VM-Exit instead of unconditionally reloading
+the APIC page on nested VM-Exit.  This eliminates a TLB flush on the
+majority of VM-Exits as the APIC page rarely needs to be reloaded.
 
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/svm.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/kvm/vmx/nested.c |  9 ++++-----
+ arch/x86/kvm/vmx/vmx.c    | 10 +++++++---
+ arch/x86/kvm/vmx/vmx.h    |  1 +
+ 3 files changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index dfa3b53f8437..8c3700b44eb4 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5630,6 +5630,13 @@ static void svm_flush_tlb(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index e630d656b211..06fc0b68ecf3 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -4367,11 +4367,10 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
+ 	kvm_vcpu_unmap(vcpu, &vmx->nested.pi_desc_map, true);
+ 	vmx->nested.pi_desc = NULL;
  
-+	/*
-+	 * Flush only the current ASID even if the TLB flush was invoked via
-+	 * kvm_flush_remote_tlbs().  Although flushing remote TLBs requires all
-+	 * ASIDs to be flushed, KVM uses a single ASID for L1 and L2, and
-+	 * unconditionally does a TLB flush on both nested VM-Enter and nested
-+	 * VM-Exit (via kvm_mmu_reset_context()).
-+	 */
- 	if (static_cpu_has(X86_FEATURE_FLUSHBYASID))
- 		svm->vmcb->control.tlb_ctl = TLB_CONTROL_FLUSH_ASID;
- 	else
+-	/*
+-	 * We are now running in L2, mmu_notifier will force to reload the
+-	 * page's hpa for L2 vmcs. Need to reload it for L1 before entering L1.
+-	 */
+-	kvm_make_request(KVM_REQ_APIC_PAGE_RELOAD, vcpu);
++	if (vmx->nested.reload_vmcs01_apic_access_page) {
++		vmx->nested.reload_vmcs01_apic_access_page = false;
++		kvm_make_request(KVM_REQ_APIC_PAGE_RELOAD, vcpu);
++	}
+ 
+ 	if ((exit_reason != -1) && (enable_shadow_vmcs || vmx->nested.hv_evmcs))
+ 		vmx->nested.need_vmcs12_to_shadow_sync = true;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index ae7279802652..3155329bf844 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6138,10 +6138,14 @@ void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu)
+ 
+ static void vmx_set_apic_access_page_addr(struct kvm_vcpu *vcpu, hpa_t hpa)
+ {
+-	if (!is_guest_mode(vcpu)) {
+-		vmcs_write64(APIC_ACCESS_ADDR, hpa);
+-		vmx_flush_tlb_current(vcpu);
++	/* Defer reload until vmcs01 is the current VMCS. */
++	if (is_guest_mode(vcpu)) {
++		to_vmx(vcpu)->nested.reload_vmcs01_apic_access_page = true;
++		return;
+ 	}
++
++	vmcs_write64(APIC_ACCESS_ADDR, hpa);
++	vmx_flush_tlb_current(vcpu);
+ }
+ 
+ static void vmx_hwapic_isr_update(struct kvm_vcpu *vcpu, int max_isr)
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 571249e18bb6..66cc9f639e4b 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -138,6 +138,7 @@ struct nested_vmx {
+ 	bool vmcs02_initialized;
+ 
+ 	bool change_vmcs01_virtual_apic_mode;
++	bool reload_vmcs01_apic_access_page;
+ 
+ 	/*
+ 	 * Enlightened VMCS has been enabled. It does not mean that L1 has to
 -- 
 2.24.1
 
