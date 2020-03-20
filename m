@@ -2,269 +2,183 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88165C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D447C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560FC20753
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEAF220753
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:51:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="glVrdFVf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CURlHrgu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbgCTJuo (ORCPT
+        id S1727279AbgCTJvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:50:44 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58786 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgCTJuo (ORCPT
+        Fri, 20 Mar 2020 05:51:09 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:31168 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727183AbgCTJvJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:50:44 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id ED398504;
-        Fri, 20 Mar 2020 10:50:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584697842;
-        bh=r+ZfLSu+TWeexYtrgMr79gjYZyHaP7mUn4U5JCOVbpg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=glVrdFVftldTMHAfP2AQgSAChYTcGFHnwVEDrufEuLx5AELReaQmIo3N6YMb3MbYc
-         dSPq7JJ1VYYq6VGR5W9vhcmSku2ntAX97yEM4iO5RiiWL1XyT3BO9bBFNKP0I7NeCz
-         1Uq5lD+uWCkrUQHC2jTmqDC4hk9MEN/rgNmv/Ywo=
-Date:   Fri, 20 Mar 2020 11:50:36 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 1/3] dt-bindings: phy: Add DT bindings for Xilinx
- ZynqMP PSGTR PHY
-Message-ID: <20200320095036.GA5193@pendragon.ideasonboard.com>
-References: <20200311103252.17514-1-laurent.pinchart@ideasonboard.com>
- <20200311103252.17514-2-laurent.pinchart@ideasonboard.com>
- <20200320023520.GA18490@bogus>
+        Fri, 20 Mar 2020 05:51:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584697867;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=ddUFo22UXo+GOZEdJwcyeC0dqcDMYy/jY0wvNHUKJ3c=;
+        b=CURlHrgu/HSFPm4RnaCrXk7uTZD+eqeMci1qB6iv6U64ewH9Iyshysdy3U+0YBYbWV1cEB
+        +4b9VOGvv6x8fsxhlZ3gSiT2D1kDzmM1tSmq7qcBKxhrK6vZnMVWl2z/Jh8rfoRgiaTXRQ
+        Y+M5u28gF3CvnXWgzeSmS8+Cer+jwts=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-269-562JEi6mMQCa80KYo_-Vrw-1; Fri, 20 Mar 2020 05:51:03 -0400
+X-MC-Unique: 562JEi6mMQCa80KYo_-Vrw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D276800D4E;
+        Fri, 20 Mar 2020 09:51:01 +0000 (UTC)
+Received: from [10.36.115.28] (ovpn-115-28.ams2.redhat.com [10.36.115.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6A48B5C219;
+        Fri, 20 Mar 2020 09:50:57 +0000 (UTC)
+Subject: Re: [PATCH v3 3/8] drivers/base/memory: store mapping between MMOP_*
+ and string in an array
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+References: <20200319131221.14044-1-david@redhat.com>
+ <20200319131221.14044-4-david@redhat.com>
+ <20200320073653.GE2987@MiWiFi-R3L-srv>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <166f7f03-eda9-00a8-bd18-128898526313@redhat.com>
+Date:   Fri, 20 Mar 2020 10:50:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200320073653.GE2987@MiWiFi-R3L-srv>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200320023520.GA18490@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-On Thu, Mar 19, 2020 at 08:35:20PM -0600, Rob Herring wrote:
-> On Wed, Mar 11, 2020 at 12:32:50PM +0200, Laurent Pinchart wrote:
-> > From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> > 
-> > Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
-> > Processing System Gigabit Transceiver which provides PHY capabilities to
-> > USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
-> > 
-> > Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > ---
-> > Changes since v5:
-> > 
-> > - Document clocks and clock-names properties
-> > - Document resets and reset-names properties
-> > - Replace subnodes with an additional entry in the PHY cells
-> > - Drop lane frequency PHY cell, replaced by reference clock phandle
-> > - Convert bindings to YAML
-> > - Reword the subject line
-> > - Drop Rob's R-b as the bindings have significantly changed
-> > - Drop resets and reset-names properties
-> > ---
-> >  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 104 ++++++++++++++++++
-> >  include/dt-bindings/phy/phy.h                 |   1 +
-> >  2 files changed, 105 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > new file mode 100644
-> > index 000000000000..9948e4a60e45
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > @@ -0,0 +1,104 @@
-> > +# SPDX-License-Identifier: GPL-2.0
+On 20.03.20 08:36, Baoquan He wrote:
+> On 03/19/20 at 02:12pm, David Hildenbrand wrote:
+>> Let's use a simple array which we can reuse soon. While at it, move the
+>> string->mmop conversion out of the device hotplug lock.
+>>
+>> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+>> Acked-by: Michal Hocko <mhocko@suse.com>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Michal Hocko <mhocko@kernel.org>
+>> Cc: Oscar Salvador <osalvador@suse.de>
+>> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>> Cc: Baoquan He <bhe@redhat.com>
+>> Cc: Wei Yang <richard.weiyang@gmail.com>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>  drivers/base/memory.c | 38 +++++++++++++++++++++++---------------
+>>  1 file changed, 23 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+>> index e7e77cafef80..8a7f29c0bf97 100644
+>> --- a/drivers/base/memory.c
+>> +++ b/drivers/base/memory.c
+>> @@ -28,6 +28,24 @@
+>>  
+>>  #define MEMORY_CLASS_NAME	"memory"
+>>  
+>> +static const char *const online_type_to_str[] = {
+>> +	[MMOP_OFFLINE] = "offline",
+>> +	[MMOP_ONLINE] = "online",
+>> +	[MMOP_ONLINE_KERNEL] = "online_kernel",
+>> +	[MMOP_ONLINE_MOVABLE] = "online_movable",
+>> +};
+>> +
+>> +static int memhp_online_type_from_str(const char *str)
+>> +{
+>> +	int i;
 > 
-> For new bindings:
+> I would change it as: 
 > 
-> (GPL-2.0-only OR BSD-2-Clause)
+> 	for (int i = 0; i < ARRAY_SIZE(online_type_to_str); i++) {
 > 
-> Though I guess Anurag needs to agree.
 
-There's an ongoing similar discussion regarding the DPSUB (DRM/KMS)
-bindings. Hyun is checking with the Xilinx legal department. If they
-agree, I'll change the license here, otherwise I'll keep it as-is.
+That's not allowed by the C90 standard (and -std=gnu89).
 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > +
-> > +description: |
-> > +  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
-> > +  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
-> > +  Ethernet SGMII controllers.
-> > +
-> > +properties:
-> > +  "#phy-cells":
-> > +    const: 4
-> > +    description: |
-> > +      The cells contain the following arguments.
-> > +
-> > +      - description: The GTR lane
-> > +        minimum: 0
-> > +        maximum: 3
-> > +      - description: The PHY type
-> > +        enum:
-> > +          - PHY_TYPE_DP
-> > +          - PHY_TYPE_PCIE
-> > +          - PHY_TYPE_SATA
-> > +          - PHY_TYPE_SGMII
-> > +          - PHY_TYPE_USB
-> > +      - description: The PHY instance
-> > +        minimum: 0
-> > +        maximum: 1 # for DP, SATA or USB
-> > +        maximum: 3 # for PCIE or SGMII
-> > +      - description: The reference clock number
-> > +        minimum: 0
-> > +        maximum: 3
-> 
-> Humm, interesting almost json-schema. I guess it's fine as-is.
-> 
-> I would like to figure out how to apply a schema like this to the 
-> consumer nodes. We'd have to look up the phandle, get that node's 
-> compatible, find the provider's schema, find #.*-cells property, and 
-> extract a schema from it. Actually, doesn't sound too hard.
+$ gcc main.c -std=gnu89
+main.c: In function 'main':
+main.c:3:2: error: 'for' loop initial declarations are only allowed in
+C99 or C11 mode
+    3 |  for (int i = 0; i < 8; i++) {
+      |  ^~~
 
-That would be nice :-)
+One of the reasons why
+	git grep "for (int "
 
-> > +
-> > +  compatible:
-> > +    enum:
-> > +      - xlnx,zynqmp-psgtr-v1.1
-> > +      - xlnx,zynqmp-psgtr
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    maxItems: 4
-> > +    description: |
-> > +      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
-> > +      inputs shall not have an entry.
-> > +
-> > +  clock-names:
-> > +    minItems: 1
-> > +    maxItems: 4
-> > +    items:
-> > +      pattern: "^ref[0-3]$"
-> > +
-> > +  reg:
-> > +    items:
-> > +      - description: SERDES registers block
-> > +      - description: SIOU registers block
-> > +
-> > +  reg-names:
-> > +    items:
-> > +      - const: serdes
-> > +      - const: siou
-> > +
-> > +required:
-> > +  - "#phy-cells"
-> > +  - compatible
-> > +  - reg
-> > +  - reg-names
-> > +
-> > +if:
-> > +  properties:
-> > +    compatible:
-> > +      const: xlnx,zynqmp-psgtr
-> > +
-> > +then:
-> > +  properties:
-> > +    xlnx,tx-termination-fix:
-> > +      description: |
-> > +        Include this for fixing functional issue with the TX termination
-> > +        resistance in GT, which can be out of spec for the XCZU9EG silicon
-> > +        version.
-> > +      type: boolean
-> > +
-> > +additionalProperties: false
-> 
-> This won't work with 'xlnx,tx-termination-fix'. You need to move it to 
-> the main properties section and then do:
-> 
-> if:
->   properties:
->     compatible:
->       const: xlnx,zynqmp-psgtr-v1.1
-
-It doesn't make a big difference as only two compatible values are
-allowed, but is there a way to express the condition the other way
-around, if (compatible != "xlnx,zynqmp-psgtr") ?
-
-> 
-> then:
->   properties:
->     xlnx,tx-termination-fix: false
-
-This works.
-
-> I think this would also work:
-> 
->   not:
->     required:
->       - xlnx,tx-termination-fix
-
-I've tested it and it works, but I'm not sure why, given that the
-property isn't required required in the first place. Could you enlighten
-me ?
-
-> > +
-> > +examples:
-> > +  - |
-> > +    phy: phy@fd400000 {
-> > +      compatible = "xlnx,zynqmp-psgtr-v1.1";
-> > +      reg = <0x0 0xfd400000 0x0 0x40000>,
-> > +            <0x0 0xfd3d0000 0x0 0x1000>;
-> > +      reg-names = "serdes", "siou";
-> > +      clocks = <&refclks 3>, <&refclks 2>, <&refclks 0>;
-> > +      clock-names = "ref1", "ref2", "ref3";
-> > +      #phy-cells = <4>;
-> > +      status = "okay";
-> 
-> Drop status in examples.
-
-OK.
-
-> > +    };
-> > +
-> > +...
-> > diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
-> > index 1f3f866fae7b..f6bc83b66ae9 100644
-> > --- a/include/dt-bindings/phy/phy.h
-> > +++ b/include/dt-bindings/phy/phy.h
-> > @@ -17,5 +17,6 @@
-> >  #define PHY_TYPE_USB3		4
-> >  #define PHY_TYPE_UFS		5
-> >  #define PHY_TYPE_DP		6
-> > +#define PHY_TYPE_SGMII		7
-> >  
-> >  #endif /* _DT_BINDINGS_PHY */
+will result in very little hits (IOW, only 5 in driver code only).
 
 -- 
-Regards,
+Thanks,
 
-Laurent Pinchart
+David / dhildenb
+
