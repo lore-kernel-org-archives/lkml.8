@@ -2,144 +2,137 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E80C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EB4C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0EB2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 247EE2076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbgCTKhD (ORCPT
+        id S1727241AbgCTKiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:37:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35237 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbgCTKhC (ORCPT
+        Fri, 20 Mar 2020 06:38:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12634 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726704AbgCTKiD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:37:02 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFF1L-0001rf-9M; Fri, 20 Mar 2020 11:36:55 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E0D311C229B;
-        Fri, 20 Mar 2020 11:36:54 +0100 (CET)
-Date:   Fri, 20 Mar 2020 10:36:54 -0000
-From:   "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/misc] selftests/x86/vdso: Fix no-vDSO segfaults
-Cc:     kbuild test robot <lkp@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <618ea7b8c55b10d08b1cb139e9a3a957934b8647.1584653439.git.luto@kernel.org>
-References: <618ea7b8c55b10d08b1cb139e9a3a957934b8647.1584653439.git.luto@kernel.org>
+        Fri, 20 Mar 2020 06:38:03 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02KAXQkl010252;
+        Fri, 20 Mar 2020 06:37:57 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yua2d8h0r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Mar 2020 06:37:57 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02KAYuRI015525;
+        Fri, 20 Mar 2020 06:37:57 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yua2d8h0d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Mar 2020 06:37:57 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02KAaAPe029535;
+        Fri, 20 Mar 2020 10:37:56 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma03dal.us.ibm.com with ESMTP id 2yrpw7bbaa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Mar 2020 10:37:56 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02KAbt3t54002126
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Mar 2020 10:37:55 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BB5DFB2066;
+        Fri, 20 Mar 2020 10:37:55 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4ADF0B205F;
+        Fri, 20 Mar 2020 10:37:55 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.85.67.27])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 20 Mar 2020 10:37:55 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 47B522E3408; Fri, 20 Mar 2020 16:07:39 +0530 (IST)
+Date:   Fri, 20 Mar 2020 16:07:39 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>
+Cc:     linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, pratik.r.sampat@gmail.com,
+        ego@linux.vnet.ibm.com, dja@axtens.net
+Subject: Re: [PATCH] cpufreq: powernv: Fix frame-size-overflow in
+ powernv_cpufreq_work_fn
+Message-ID: <20200320103739.GA11219@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <20200316135743.57735-1-psampat@linux.ibm.com>
 MIME-Version: 1.0
-Message-ID: <158470061455.28353.13715473417067109216.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316135743.57735-1-psampat@linux.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-20_02:2020-03-20,2020-03-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 malwarescore=0 suspectscore=0 clxscore=1011 phishscore=0
+ priorityscore=1501 adultscore=0 bulkscore=0 spamscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003200046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/misc branch of tip:
+On Mon, Mar 16, 2020 at 07:27:43PM +0530, Pratik Rajesh Sampat wrote:
+> The patch avoids allocating cpufreq_policy on stack hence fixing frame
+> size overflow in 'powernv_cpufreq_work_fn'
+>
 
-Commit-ID:     07f24dc95daca49b8a2e804edc024dd4e91610ac
-Gitweb:        https://git.kernel.org/tip/07f24dc95daca49b8a2e804edc024dd4e91610ac
-Author:        Andy Lutomirski <luto@kernel.org>
-AuthorDate:    Thu, 19 Mar 2020 14:30:56 -07:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 20 Mar 2020 11:20:04 +01:00
+Thanks for fixing this.
 
-selftests/x86/vdso: Fix no-vDSO segfaults
+> Fixes: 227942809b52 ("cpufreq: powernv: Restore cpu frequency to policy->cur on unthrottling")
+> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
 
-test_vdso would try to call a NULL pointer if the vDSO was missing.
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 
-vdso_restorer_32 hit a genuine failure: trying to use the
-kernel-provided signal restorer doesn't work if the vDSO is missing.
-Skip the test if the vDSO is missing, since the test adds no particular
-value in that case.
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/618ea7b8c55b10d08b1cb139e9a3a957934b8647.1584653439.git.luto@kernel.org
----
- tools/testing/selftests/x86/test_vdso.c     |  5 +++++
- tools/testing/selftests/x86/vdso_restorer.c | 15 +++++++++++++++
- 2 files changed, 20 insertions(+)
-
-diff --git a/tools/testing/selftests/x86/test_vdso.c b/tools/testing/selftests/x86/test_vdso.c
-index 35edd61..42052db 100644
---- a/tools/testing/selftests/x86/test_vdso.c
-+++ b/tools/testing/selftests/x86/test_vdso.c
-@@ -259,6 +259,11 @@ static void test_one_clock_gettime(int clock, const char *name)
- 
- static void test_clock_gettime(void)
- {
-+	if (!vdso_clock_gettime) {
-+		printf("[SKIP]\tNo vDSO, so skipping clock_gettime() tests\n");
-+		return;
-+	}
-+
- 	for (int clock = 0; clock < sizeof(clocknames) / sizeof(clocknames[0]);
- 	     clock++) {
- 		test_one_clock_gettime(clock, clocknames[clock]);
-diff --git a/tools/testing/selftests/x86/vdso_restorer.c b/tools/testing/selftests/x86/vdso_restorer.c
-index 29a5c94..fe99f24 100644
---- a/tools/testing/selftests/x86/vdso_restorer.c
-+++ b/tools/testing/selftests/x86/vdso_restorer.c
-@@ -15,6 +15,7 @@
- 
- #include <err.h>
- #include <stdio.h>
-+#include <dlfcn.h>
- #include <string.h>
- #include <signal.h>
- #include <unistd.h>
-@@ -46,11 +47,23 @@ int main()
- 	int nerrs = 0;
- 	struct real_sigaction sa;
- 
-+	void *vdso = dlopen("linux-vdso.so.1",
-+			    RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
-+	if (!vdso)
-+		vdso = dlopen("linux-gate.so.1",
-+			      RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
-+	if (!vdso) {
-+		printf("[SKIP]\tFailed to find vDSO.  Tests are not expected to work.\n");
-+		return 0;
-+	}
-+
- 	memset(&sa, 0, sizeof(sa));
- 	sa.handler = handler_with_siginfo;
- 	sa.flags = SA_SIGINFO;
- 	sa.restorer = NULL;	/* request kernel-provided restorer */
- 
-+	printf("[RUN]\tRaise a signal, SA_SIGINFO, sa.restorer == NULL\n");
-+
- 	if (syscall(SYS_rt_sigaction, SIGUSR1, &sa, NULL, 8) != 0)
- 		err(1, "raw rt_sigaction syscall");
- 
-@@ -63,6 +76,8 @@ int main()
- 		nerrs++;
- 	}
- 
-+	printf("[RUN]\tRaise a signal, !SA_SIGINFO, sa.restorer == NULL\n");
-+
- 	sa.flags = 0;
- 	sa.handler = handler_without_siginfo;
- 	if (syscall(SYS_sigaction, SIGUSR1, &sa, 0) != 0)
+> ---
+>  drivers/cpufreq/powernv-cpufreq.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
+> index 56f4bc0d209e..20ee0661555a 100644
+> --- a/drivers/cpufreq/powernv-cpufreq.c
+> +++ b/drivers/cpufreq/powernv-cpufreq.c
+> @@ -902,6 +902,7 @@ static struct notifier_block powernv_cpufreq_reboot_nb = {
+>  void powernv_cpufreq_work_fn(struct work_struct *work)
+>  {
+>  	struct chip *chip = container_of(work, struct chip, throttle);
+> +	struct cpufreq_policy *policy;
+>  	unsigned int cpu;
+>  	cpumask_t mask;
+> 
+> @@ -916,12 +917,14 @@ void powernv_cpufreq_work_fn(struct work_struct *work)
+>  	chip->restore = false;
+>  	for_each_cpu(cpu, &mask) {
+>  		int index;
+> -		struct cpufreq_policy policy;
+> 
+> -		cpufreq_get_policy(&policy, cpu);
+> -		index = cpufreq_table_find_index_c(&policy, policy.cur);
+> -		powernv_cpufreq_target_index(&policy, index);
+> -		cpumask_andnot(&mask, &mask, policy.cpus);
+> +		policy = cpufreq_cpu_get(cpu);
+> +		if (!policy)
+> +			continue;
+> +		index = cpufreq_table_find_index_c(policy, policy->cur);
+> +		powernv_cpufreq_target_index(policy, index);
+> +		cpumask_andnot(&mask, &mask, policy->cpus);
+> +		cpufreq_cpu_put(policy);
+>  	}
+>  out:
+>  	put_online_cpus();
+> -- 
+> 2.24.1
+> 
