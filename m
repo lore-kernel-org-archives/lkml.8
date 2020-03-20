@@ -1,138 +1,105 @@
 Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C315CC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B432C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7BF2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB6020773
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:34:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UFzo6MVB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgCTGdN (ORCPT
+        id S1726867AbgCTGey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 02:33:13 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:56895 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbgCTGdN (ORCPT
+        Fri, 20 Mar 2020 02:34:54 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42847 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbgCTGex (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 02:33:13 -0400
-Received: by mail-il1-f198.google.com with SMTP id 191so4108978ilb.23
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 23:33:12 -0700 (PDT)
+        Fri, 20 Mar 2020 02:34:53 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q19so5176347ljp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 23:34:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=EN5kJIjrDw1mgoma/zwe6C2IRFI0DiYfgabsVqUwoBk=;
+        b=UFzo6MVBPLDq6LaahJnJhgqy9QcASg2VsWxFtxxJqOCPPcNxMkH2gdkN/rL88RNMWE
+         lv3Bun7kMu7e/k8R4ULX7rOUxZaCHBZfBMmyC5QBMxRRwKpGUYzOi4GVdsIG0vfJLjHY
+         21lJv4xEP4IehCfnWAe7FW9ICeRSK3cXcvKJIZ+bqM/PpwoRNfTSQLlIxPWHexvEi4w5
+         nF5/tTXgUBIAefZNhp2dfsKIWxBiV4BSyKVFtsq0FddxSe+OIlBHdAR3cI88Sx+Gx9Lg
+         7WmJ4Qv8TFe5hE1V2FbBR6nGMzqac/qyj/GNq5KsZ3hWOm0DxjKrPUY9029XVfDQTjkV
+         nhkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=aIjWOOeVSbMqGFDf1KXbdBDP3+ZOOZ1c61Dtot2dRLk=;
-        b=FqKzTDMZDEpvQPzf9JjRGWn4eFrwvjVS9zHttCTVNFdo37wiTSLi4Zx9IdzDRaJKJa
-         UbebqVj0r2A4EXZPGpaTgnsb13isF00Vu88vzqHIjfy1x30JZFigwEsce5p/Rnrj4bon
-         l1a3EAGhuti43fTCTdn9tbxjbGSpTIl+rBn6CyUJJp8K9jgrFF18bYCKQowGAK/DOBsr
-         Lkns16PZAFb/bX8GQz/kFs7NjUz5mDAdQrlEEfOPvQu5cXSUysXL6l3G1VR/5/ost4GD
-         r5/wYdbjOYHuHgnL6MKrqwKKRiz0WY5/sXwy7cKCQnYe3VLv93gw6w3umOgSKlHJRfvp
-         LUOw==
-X-Gm-Message-State: ANhLgQ36CdZzmInv7HngD4EenJoaBBo91driFinehKi1rf9PUss/UDW8
-        4NqrKPVjLrhjaI9rr6nlg/F9IV3di+5BicIdQu39TSWzYwi7
-X-Google-Smtp-Source: ADFU+vtTq8cIJVuWt0w5KzYYk7j+KyKZMlUfEI2gf6aCXrGEhN2SYodBb+wCExJNrmBYFSZnrAmpUyZX8fMHlb5TGTenb24Q2T1o
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=EN5kJIjrDw1mgoma/zwe6C2IRFI0DiYfgabsVqUwoBk=;
+        b=SlxKD9PZoGt+DLy25BFagD1NL8rwEw8wx/0HeRlqU9DPj5sqWQDjGd+Y4XU1XTeyuk
+         PGJ95OW0BY6T8urQRDGnDd8mCZgVi2JGxQN+SzU7fTwhsDudCiemOWq+mSjKPyACZQOU
+         FFKovdbbqdNS5i089ldYaVOCEElKE5eH1CZNUS/3Ivw/Wb+iaPbTr2LTiL9PZ09Mg+5j
+         PhcIY9VJ7+8FqlrP2YszXcwGxat1FBOwVgnb0IqU9naA1mqwshoH9ViZRYNvlc20+pfR
+         dtuSKdaBjIbwBrGHnmqj0SQ4jGoCEknDM3NcqLoVyXR/cio2gXHQyR/gzb49x/h+DiY+
+         sJVA==
+X-Gm-Message-State: ANhLgQ0rxD+1o4j03zBbyaIMdzUinsF4zoERRz0mr1e4aD+e1aTU6922
+        DI1YKLMKtzk84ywh7DDvQuD5mA==
+X-Google-Smtp-Source: ADFU+vsBf8yKtP2HvAQixVnArfLXpQKief8SGtO73/OQ886ubDAeeOSQpYCwMKdMyAwsibcXp7pgLA==
+X-Received: by 2002:a2e:9897:: with SMTP id b23mr4397938ljj.97.1584686089605;
+        Thu, 19 Mar 2020 23:34:49 -0700 (PDT)
+Received: from jade (81-236-179-152-no272.tbcn.telia.com. [81.236.179.152])
+        by smtp.gmail.com with ESMTPSA id f16sm2732885ljj.34.2020.03.19.23.34.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 23:34:48 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 07:34:46 +0100
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+List-Id: <soc.lore.kernel.org>
+To:     arm@kernel.org, soc@kernel.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        tee-dev@lists.linaro.org, Rijo Thomas <Rijo-john.Thomas@amd.com>
+Subject: [GIT PULL] another amdtee driver fix for v5.6
+Message-ID: <20200320063446.GA9892@jade>
 MIME-Version: 1.0
-X-Received: by 2002:a02:94cb:: with SMTP id x69mr6360372jah.19.1584685991884;
- Thu, 19 Mar 2020 23:33:11 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 23:33:11 -0700
-In-Reply-To: <000000000000e0d794057592192b@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a079b705a1437544@google.com>
-Subject: Re: INFO: rcu detected stall in kvm_vcpu_ioctl
-From:   syzbot <syzbot+e9b1e8f574404b6e4ed3@syzkaller.appspotmail.com>
-To:     hpa@zytor.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, pbonzini@redhat.com, rkrcmar@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+Hello arm-soc maintainers,
 
-HEAD commit:    770fbb32 Add linux-next specific files for 20200228
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1589e139e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=576314276bce4ad5
-dashboard link: https://syzkaller.appspot.com/bug?extid=e9b1e8f574404b6e4ed3
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1576a61de00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=178ef32de00000
+Please pull this AMDTEE driver fix for an out of bounds read in
+find_session()
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e9b1e8f574404b6e4ed3@syzkaller.appspotmail.com
+Thanks,
+Jens
 
-hrtimer: interrupt took 60270 ns
-rcu: INFO: rcu_preempt self-detected stall on CPU
-rcu: 	1-....: (15560 ticks this GP) idle=16a/1/0x4000000000000002 softirq=11581/11583 fqs=5243 
-	(t=10500 jiffies g=8917 q=171)
-NMI backtrace for cpu 1
-CPU: 1 PID: 9821 Comm: syz-executor148 Not tainted 5.6.0-rc3-next-20200228-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x231/0x27e lib/nmi_backtrace.c:62
- trigger_single_cpu_backtrace include/linux/nmi.h:165 [inline]
- rcu_dump_cpu_stacks+0x19e/0x1e8 kernel/rcu/tree_stall.h:254
- print_cpu_stall kernel/rcu/tree_stall.h:475 [inline]
- check_cpu_stall kernel/rcu/tree_stall.h:549 [inline]
- rcu_pending kernel/rcu/tree.c:3237 [inline]
- rcu_sched_clock_irq.cold+0x560/0xcfa kernel/rcu/tree.c:2308
- update_process_times+0x25/0x60 kernel/time/timer.c:1727
- tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:171
- tick_sched_timer+0x4e/0x140 kernel/time/tick-sched.c:1314
- __run_hrtimer kernel/time/hrtimer.c:1517 [inline]
- __hrtimer_run_queues+0x32c/0xdd0 kernel/time/hrtimer.c:1579
- hrtimer_interrupt+0x312/0x770 kernel/time/hrtimer.c:1641
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1119 [inline]
- smp_apic_timer_interrupt+0x15b/0x600 arch/x86/kernel/apic/apic.c:1144
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:lock_acquire+0x1b/0x420 kernel/locking/lockdep.c:4709
-Code: ff 0f 1f 40 00 66 2e 0f 1f 84 00 00 00 00 00 48 b8 00 00 00 00 00 fc ff df 41 57 4d 89 cf 41 56 41 89 ce 41 55 41 89 d5 41 54 <41> 89 f4 55 48 89 fd 65 48 8b 14 25 c0 1e 02 00 48 8d ba 9c 08 00
-RSP: 0018:ffffc90001e575f8 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: dffffc0000000000 RBX: ffff88808ac24140 RCX: 0000000000000001
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88808e54b318
-RBP: ffffffff8821ec40 R08: 0000000000000001 R09: 0000000000000000
-R10: ffffed1011329681 R11: ffff88808994b40b R12: 0000000000000045
-R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000000
- __might_fault mm/memory.c:4780 [inline]
- __might_fault+0x152/0x1d0 mm/memory.c:4765
- __copy_from_user include/linux/uaccess.h:69 [inline]
- __kvm_read_guest_page+0x65/0xc0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2046
- kvm_fetch_guest_virt+0x13d/0x1b0 arch/x86/kvm/x86.c:5473
- __do_insn_fetch_bytes+0x2f9/0x6c0 arch/x86/kvm/emulate.c:907
- x86_decode_insn+0x176c/0x5730 arch/x86/kvm/emulate.c:5179
- x86_emulate_instruction+0x8bc/0x1c20 arch/x86/kvm/x86.c:6787
- kvm_mmu_page_fault+0x37b/0x1660 arch/x86/kvm/mmu/mmu.c:5488
- vmx_handle_exit+0x2b8/0x1710 arch/x86/kvm/vmx/vmx.c:5955
- vcpu_enter_guest+0x33df/0x6120 arch/x86/kvm/x86.c:8447
- vcpu_run arch/x86/kvm/x86.c:8511 [inline]
- kvm_arch_vcpu_ioctl_run+0x41c/0x1790 arch/x86/kvm/x86.c:8733
- kvm_vcpu_ioctl+0x493/0xe60 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2932
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl fs/ioctl.c:770 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
- do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x444349
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 1b 0c fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffc83efaa28 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007ffc83efaa30 RCX: 0000000000444349
-RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 0000000000000006
-RBP: 0000000000000000 R08: 0000000000402070 R09: 0000000000402070
-R10: fffffffffffffffe R11: 0000000000000246 R12: 00000000004053f0
-R13: 0000000000405480 R14: 0000000000000000 R15: 0000000000000000
+The following changes since commit 11a48a5a18c63fd7621bb050228cebf13566e4d8:
 
+  Linux 5.6-rc2 (2020-02-16 13:16:59 -0800)
+
+are available in the Git repository at:
+
+  https://git.linaro.org/people/jens.wiklander/linux-tee.git tags/tee-amdtee-fix2-for-5.6
+
+for you to fetch changes up to 36fa3e50085e3858dd506e4431b9abd1bcb1f542:
+
+  tee: amdtee: out of bounds read in find_session() (2020-03-10 08:12:04 +0100)
+
+----------------------------------------------------------------
+tee: amdtee: out of bounds read in find_session()
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      tee: amdtee: out of bounds read in find_session()
+
+ drivers/tee/amdtee/core.c | 3 +++
+ 1 file changed, 3 insertions(+)
