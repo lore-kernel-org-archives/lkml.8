@@ -2,117 +2,124 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F29C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8A0C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9231820724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:59:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="vnZJZuwA"
+	by mail.kernel.org (Postfix) with ESMTP id 551F020724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:01:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbgCTQ7x (ORCPT
+        id S1727445AbgCTRBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:59:53 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45985 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbgCTQ7x (ORCPT
+        Fri, 20 Mar 2020 13:01:11 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:56023 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727323AbgCTRBK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:59:53 -0400
-Received: by mail-qk1-f194.google.com with SMTP id c145so7519558qke.12
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 09:59:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fy1EKStjgBl7IErqlbsHwxSrZ9X93MqXTOV8yWF9uKI=;
-        b=vnZJZuwAhrkWGHhScUwpwtHGJSwqn5BYJXIRhKTfDelMK24qoC6q7X0LldMJBVRj+r
-         wROnVgB6icc0k829vaBIh2QqIrVP4XgFBAMC5vSNmrsoE6VDugsXWqbJVRD6siDk6VXL
-         p+I//Z7gqcoOReI8+XcCqC7aP7dkgiFYyJMCM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fy1EKStjgBl7IErqlbsHwxSrZ9X93MqXTOV8yWF9uKI=;
-        b=DaSZIs0xj8cRHrnYxW9VjfFMtXI+0ctQJQnAmR/suv3ROOqdcid+QbcCqzHFBMMsIr
-         D0GwIx0I3pKTMtPq5Nzn5DaMBuD0+7VjzUvpargOZSX21iW9SBfoddOr84h4XlCwlBdG
-         pV5wPBXr2G4ZY6wt1t6AaVm2ynZTReKi1UBsGnuj3j1wXOszW/ZLB5xkdgRxj3Z2V85+
-         AhKah4CoiGMNRLZ2JKn/iPUxI/qSd5P8UYhw7neTNydCBxVlsfLtDAi1yvT6cJ5izG4+
-         P6CU8JchfVtqzysOU5uqQ1a594xHu1eIp2cm7GkGfI1xmgn05pZC3cWQ+gXBjOwoHzHo
-         H2dA==
-X-Gm-Message-State: ANhLgQ0ko0ozXwWZ3z+kOlfKHcpUgMa+tHuFUCeJQP2HSRCvNChowV88
-        ICfYt5FwMNA9ZJXlEG8WC7OHbg==
-X-Google-Smtp-Source: ADFU+vtpTXi7ia7zBNQKhkmUrRua//p9mBvFWrsFOpaU3/tF19lLjkU7mw+2GkSxoA8wGqEpA3ISow==
-X-Received: by 2002:a37:6e06:: with SMTP id j6mr8958597qkc.171.1584723590390;
-        Fri, 20 Mar 2020 09:59:50 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id p22sm4340783qki.124.2020.03.20.09.59.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 09:59:49 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 12:59:48 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>, linux-arch@vger.kernel.org,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 2/3] LKMM: Add litmus test for RCU GP guarantee where
- reader stores
-Message-ID: <20200320165948.GB155212@google.com>
-References: <20200320065552.253696-2-joel@joelfernandes.org>
- <Pine.LNX.4.44L0.2003201101060.27303-100000@netrider.rowland.org>
+        Fri, 20 Mar 2020 13:01:10 -0400
+Received: from mail-lf1-f51.google.com ([209.85.167.51]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MX0TX-1imu6v25lJ-00XPP7; Fri, 20 Mar 2020 18:01:08 +0100
+Received: by mail-lf1-f51.google.com with SMTP id c20so5140092lfb.0;
+        Fri, 20 Mar 2020 10:01:08 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1rHK5rlQjWw/XySbV+sZ/2LoVXs1uOeUHnh6FBsZzawPnhnek0
+        iVwoQ2S0bthTqczRidse38AWaJbRiuHsnhnMBSE=
+X-Google-Smtp-Source: ADFU+vs11pX+reUDgLeQDaNz7AxXUjMOz6ru7xtpyHb1hOnhmeTTSEtRFhdxQ1s9xNp2TquEQ7Y9zb6/vWld8Xi/00c=
+X-Received: by 2002:a19:224f:: with SMTP id i76mr775476lfi.123.1584723667933;
+ Fri, 20 Mar 2020 10:01:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.2003201101060.27303-100000@netrider.rowland.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <cover.1584667964.git.gurus@codeaurora.org> <ab7b568b1d287949276b3b1c9efdb1cad1f92004.1584667964.git.gurus@codeaurora.org>
+In-Reply-To: <ab7b568b1d287949276b3b1c9efdb1cad1f92004.1584667964.git.gurus@codeaurora.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 20 Mar 2020 18:00:51 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0XrYGYBQ_hTKF4fVBr7DDZsLnR+8o=09cig_gAje=v3w@mail.gmail.com>
+Message-ID: <CAK8P3a0XrYGYBQ_hTKF4fVBr7DDZsLnR+8o=09cig_gAje=v3w@mail.gmail.com>
+Subject: Re: [PATCH v11 11/12] clk: pwm: Assign u64 divisor to unsigned int
+ before use
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        David Laight <David.Laight@aculab.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:FkWxRtsVpntOKqotl01jYTid96TMvDAWVWKuR5UA91jb0xTVbDb
+ FNkpLE4G+ia2YeYF+6+51lQ9owsRaxLCkfyrXCxDTV7P7EYu/3sbZjx3b9vo1bJkHfd+J1G
+ 4tvsjPQ1dp/nEIkTN9bFVGjfGpGzO5Y/EpmQc43W54XSNPyX4uxqbfX8nLlUFUemSe28piK
+ qcaFY3Y0+Ib2UTw5sB9rw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vfeYetgxPG8=:ADg2pdzcsVuv8wCU6KA12o
+ HQqGWuHott0KDj9TEgeU0SUSpeJDudJuQv6WUrwNlDf1oiV6P+254GiDP8CiQ5AXK7DsYJw2c
+ fkGNf/6cnKFhluvIIF/+La7XP4L8ci8IJmJ9ryQ2edS//jJ7vLW0GkW5L9JZ1CAB5dO5C1chl
+ wxA7eiI/fVRKrM14IqIROOnlwS/xrdMeokZZJlEurZOL0dC3sMpsdGqDPs7JlOi/lqMtXmhvh
+ k/Zy+CV3zJi0EaImSl62sMctDmTSd4RK5wbCWOKCkixJjIL1nL9ZVw1I+4E11ZyYPe1B3CYl4
+ nkNlr8HVgGS3PdoGrMBdb+iT85/kBFGujoItLaNJFeW7nnApeEkY39CPQWl6cXhlsMpLA6dfH
+ iVgSSsG+LLpTbKS7T95mmjvncs4/BF16PAyoNly8dqmpo5Cn9zhbe4koWetgVPayYgzAXTmdo
+ Ee+kjmchKimyjQ5i4u4S/WibTcIy1j+lim/uCKd3lBB1P8KK92jpmpp9LIbYynFEoMoV0gAHL
+ 56odaasQ7PH5NgX7oVFTbLJx/DU8KQBFyE+4d5+AXC2pQ6PpSauRwULLfXdHK4qFZZaIzNxjg
+ 2ze8HztDupH+D4S9ZJ/q+Ck2SaHFgUo9FWuYgBp8X2eyhu7GvR5Jgeza2maUquPzsAbZxeJsA
+ ZILigSq9xL36WtSr/V4oHYcr/6OgpxyWf83bdtTAOiHQrR1calg6Cv9rXM43zrMB+a2aFT9OB
+ FbBcskHOwxiIE1FbyeJp8Ym/5FVEtGypXiN44/7GSMqbuGZLf/IfJ9c4sSlibvOiwVrPuX83H
+ 25BZ/5rbkFV+StU4fQPeMDNzp7DF47R1wrvkNzDrJMlofTZFxs=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 11:03:30AM -0400, Alan Stern wrote:
-> On Fri, 20 Mar 2020, Joel Fernandes (Google) wrote:
-> 
-> > This adds an example for the important RCU grace period guarantee, which
-> > shows an RCU reader can never span a grace period.
-> > 
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > ---
-> >  .../litmus-tests/RCU+sync+read.litmus         | 37 +++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
-> >  create mode 100644 tools/memory-model/litmus-tests/RCU+sync+read.litmus
-> > 
-> > diff --git a/tools/memory-model/litmus-tests/RCU+sync+read.litmus b/tools/memory-model/litmus-tests/RCU+sync+read.litmus
-> > new file mode 100644
-> > index 0000000000000..73557772e2a32
-> > --- /dev/null
-> > +++ b/tools/memory-model/litmus-tests/RCU+sync+read.litmus
-> 
-> Do these new tests really belong here?  I thought we were adding a new 
-> directory under Documentation/ for litmus tests that illustrate parts 
-> of the LKMM or memory-barriers.txt.
-> 
-> By contrast, the tests under tools/memory-model are merely to show 
-> people what litmus tests look like and how they should be written.
+On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
+>
+> Since the PWM framework is switching struct pwm_args.period's datatype
+> to u64, prepare for this transition by assigning the 64-bit divisor to
+> an unsigned int variable to use as the divisor. This is being done
+> because the divisor is a 32-bit constant and the quotient will be zero
+> if the divisor exceeds 2^32.
+>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Cc: David Laight <David.Laight@ACULAB.COM>
+>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> ---
+>  drivers/clk/clk-pwm.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
+> index 87fe0b0e..c0b5da3 100644
+> --- a/drivers/clk/clk-pwm.c
+> +++ b/drivers/clk/clk-pwm.c
+> @@ -72,6 +72,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
+>         struct pwm_device *pwm;
+>         struct pwm_args pargs;
+>         const char *clk_name;
+> +       unsigned int period;
+>         int ret;
+>
+>         clk_pwm = devm_kzalloc(&pdev->dev, sizeof(*clk_pwm), GFP_KERNEL);
+> @@ -88,8 +89,9 @@ static int clk_pwm_probe(struct platform_device *pdev)
+>                 return -EINVAL;
+>         }
+>
+> +       period = pargs.period;
+>         if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
+> -               clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
+> +               clk_pwm->fixed_rate = NSEC_PER_SEC / period;
+>
+>         if (pargs.period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
+>             pargs.period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
 
-I could add it to tools/memory-model/Documentation/ under a new
-'examples' directory there. We could also create an 'rcu' directory in
-tools/memory-model/litmus-tests/ and add these there. Thoughts?
+Doesn't this one need a check for "pargs.period>UINT_MAX" or
+"pargs.period > NSEC_PER_SEC"?
 
-thanks,
+It looks like truncating the 64-bit value to a 32-bit type can result in
+unexpected behavior.
 
- - Joel
-
-
+       Arnd
