@@ -2,125 +2,299 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2456C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB60BC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8C3620773
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B59A720739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="A3NZJngu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="asi82RrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgCTILk (ORCPT
+        id S1727122AbgCTILv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 04:11:40 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:51330 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726814AbgCTILa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 04:11:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=HmIK2NGFOH4BtXBgdzImt8JfFOfa3vebJbRC3dmAtks=; b=A3NZJngupKcZ0ByfhcyQE/rDVH
-        WU4ufi5tYyA/OzG2rykN8nG9/8eIbg4TBX/tkNcnwmQ8MwroPAAjx3a9rPzBJQHj1qVQZjIAdTN1k
-        Sx6syK14WtaDWlUaZH3Cxx7vCPrsKz9oVak5TzEaZ5+m9Ax/41Ry0nyV9vX0yXqkG9aw=;
-Received: from p200300ccff093a00e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff09:3a00:e2ce:c3ff:fe93:fc31] helo=eeepc)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jFCkP-00058j-VB; Fri, 20 Mar 2020 09:11:19 +0100
-Received: from andi by eeepc with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jFCkI-00039Q-7o; Fri, 20 Mar 2020 09:11:10 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
-        phh@phh.me, letux-kernel@openphoenux.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        jic23@kernel.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v7 4/7] mfd: rn5t618: add more subdevices
-Date:   Fri, 20 Mar 2020 09:11:02 +0100
-Message-Id: <20200320081105.12026-5-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200320081105.12026-1-andreas@kemnade.info>
-References: <20200320081105.12026-1-andreas@kemnade.info>
+        Fri, 20 Mar 2020 04:11:51 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:58368 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726907AbgCTILt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 04:11:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584691909;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6VHdEsmEEgE8SwVWsTdpGDee8R02Hql0h9BY1woGGU8=;
+        b=asi82RrR+Yj75bY6fUJZUMxisdbBdNjdeWnvA7twn8QjjEY/LuYLKXKXgJWvi602zDgLJJ
+        1gDDXhDUUhpSIzZEUHkQ0w/vM4VSjTsmCZeSUSnC8yOF0wZp+sx6tXlYwBNi+KKwXW6wQB
+        fXw4k+vY7+xJaj5OsZuwBlPSSUtHrEE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-258-FIDUR_0cOtqXMMLlfsS8ig-1; Fri, 20 Mar 2020 04:11:45 -0400
+X-MC-Unique: FIDUR_0cOtqXMMLlfsS8ig-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F0D0D13EA;
+        Fri, 20 Mar 2020 08:11:42 +0000 (UTC)
+Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A5F299472;
+        Fri, 20 Mar 2020 08:11:39 +0000 (UTC)
+Subject: Re: [PATCH v5 18/23] KVM: arm64: GICv4.1: Add direct injection
+ capability to SGI registers
+To:     Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-19-maz@kernel.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <06705d70-0f99-e719-af52-1a5f778562d8@redhat.com>
+Date:   Fri, 20 Mar 2020 09:11:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200304203330.4967-19-maz@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the RC5T619 has a RTC, use a separate subdevice list for that.
-The ADC should be the same as in the RN5T618, according to drivers
-in the wild, but since it is not tested, the ADC is only added for
-the RC5T619.
+Hi Marc,
+On 3/4/20 9:33 PM, Marc Zyngier wrote:
+> Most of the GICv3 emulation code that deals with SGIs now has to be
+> aware of the v4.1 capabilities in order to benefit from it.
+> 
+> Add such support, keyed on the interrupt having the hw flag set and
+> being a SGI.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  virt/kvm/arm/vgic/vgic-mmio-v3.c | 15 +++++-
+>  virt/kvm/arm/vgic/vgic-mmio.c    | 88 ++++++++++++++++++++++++++++++--
+>  2 files changed, 96 insertions(+), 7 deletions(-)
+> 
+> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> index ebc218840fc2..de89da76a379 100644
+> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/irqchip/arm-gic-v3.h>
+>  #include <linux/kvm.h>
+>  #include <linux/kvm_host.h>
+> +#include <linux/interrupt.h>
+>  #include <kvm/iodev.h>
+>  #include <kvm/arm_vgic.h>
+>  
+> @@ -942,8 +943,18 @@ void vgic_v3_dispatch_sgi(struct kvm_vcpu *vcpu, u64 reg, bool allow_group1)
+>  		 * generate interrupts of either group.
+>  		 */
+>  		if (!irq->group || allow_group1) {
+> -			irq->pending_latch = true;
+> -			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
+> +			if (!irq->hw) {
+> +				irq->pending_latch = true;
+> +				vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
+> +			} else {
+> +				/* HW SGI? Ask the GIC to inject it */
+> +				int err;
+nit: add line
+> +				err = irq_set_irqchip_state(irq->host_irq,
+> +							    IRQCHIP_STATE_PENDING,
+> +							    true);
+> +				WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
+> +				raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+> +			}
+>  		} else {
+>  			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+>  		}
+> diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
+> index 97fb2a40e6ba..2199302597fa 100644
+> --- a/virt/kvm/arm/vgic/vgic-mmio.c
+> +++ b/virt/kvm/arm/vgic/vgic-mmio.c
+> @@ -5,6 +5,8 @@
+>  
+>  #include <linux/bitops.h>
+>  #include <linux/bsearch.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+>  #include <linux/kvm.h>
+>  #include <linux/kvm_host.h>
+>  #include <kvm/iodev.h>
+> @@ -59,6 +61,11 @@ unsigned long vgic_mmio_read_group(struct kvm_vcpu *vcpu,
+>  	return value;
+>  }
+>  
+> +static void vgic_update_vsgi(struct vgic_irq *irq)
+> +{
+> +	WARN_ON(its_prop_update_vsgi(irq->host_irq, irq->priority, irq->group));
+> +}
+> +
+>  void vgic_mmio_write_group(struct kvm_vcpu *vcpu, gpa_t addr,
+>  			   unsigned int len, unsigned long val)
+>  {
+> @@ -71,7 +78,12 @@ void vgic_mmio_write_group(struct kvm_vcpu *vcpu, gpa_t addr,
+>  
+>  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+>  		irq->group = !!(val & BIT(i));
+> -		vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
+> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+> +			vgic_update_vsgi(irq);
+> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+> +		} else {
+> +			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
+> +		}
+>  
+>  		vgic_put_irq(vcpu->kvm, irq);
+>  	}
+> @@ -113,7 +125,21 @@ void vgic_mmio_write_senable(struct kvm_vcpu *vcpu,
+>  		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+>  
+>  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+> -		if (vgic_irq_is_mapped_level(irq)) {
+> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+> +			if (!irq->enabled) {
+> +				struct irq_data *data;
+> +
+> +				irq->enabled = true;
+> +				data = &irq_to_desc(irq->host_irq)->irq_data;
+> +				while (irqd_irq_disabled(data))
+> +					enable_irq(irq->host_irq);
+could you explain me why the while() is requested?
+> +			}
+> +
+> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+> +			vgic_put_irq(vcpu->kvm, irq);
+> +
+> +			continue;
+> +		} else if (vgic_irq_is_mapped_level(irq)) {
+>  			bool was_high = irq->line_level;
+>  
+>  			/*
+> @@ -148,6 +174,8 @@ void vgic_mmio_write_cenable(struct kvm_vcpu *vcpu,
+>  		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+>  
+>  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+> +		if (irq->hw && vgic_irq_is_sgi(irq->intid) && irq->enabled)
+> +			disable_irq_nosync(irq->host_irq);
+>  
+>  		irq->enabled = false;
+>  
+> @@ -167,10 +195,22 @@ unsigned long vgic_mmio_read_pending(struct kvm_vcpu *vcpu,
+>  	for (i = 0; i < len * 8; i++) {
+>  		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+>  		unsigned long flags;
+> +		bool val;
+>  
+>  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+> -		if (irq_is_pending(irq))
+> -			value |= (1U << i);
+> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+> +			int err;
+> +
+> +			val = false;
+> +			err = irq_get_irqchip_state(irq->host_irq,
+> +						    IRQCHIP_STATE_PENDING,
+> +						    &val);
+> +			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
+> +		} else {
+> +			val = irq_is_pending(irq);
+> +		}
+> +
+> +		value |= ((u32)val << i);
+>  		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+>  
+>  		vgic_put_irq(vcpu->kvm, irq);
+> @@ -215,6 +255,21 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
+>  		}
+>  
+>  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+> +
+> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+> +			/* HW SGI? Ask the GIC to inject it */
+> +			int err;
+nit: extra line
+> +			err = irq_set_irqchip_state(irq->host_irq,
+> +						    IRQCHIP_STATE_PENDING,
+> +						    true);
+> +			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
+> +
+> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+> +			vgic_put_irq(vcpu->kvm, irq);
+> +
+> +			continue;
+> +		}
+> +
+>  		if (irq->hw)
+>  			vgic_hw_irq_spending(vcpu, irq, is_uaccess);
+>  		else
+> @@ -269,6 +324,20 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
+>  
+>  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+>  
+> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+> +			/* HW SGI? Ask the GIC to clear its pending bit */
+> +			int err;
+> +			err = irq_set_irqchip_state(irq->host_irq,
+> +						    IRQCHIP_STATE_PENDING,
+> +						    false);
+> +			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
+> +
+> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+> +			vgic_put_irq(vcpu->kvm, irq);
+> +
+> +			continue;
+> +		}
+> +
+>  		if (irq->hw)
+>  			vgic_hw_irq_cpending(vcpu, irq, is_uaccess);
+>  		else
+> @@ -318,8 +387,15 @@ static void vgic_mmio_change_active(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
+>  
+>  	raw_spin_lock_irqsave(&irq->irq_lock, flags);
+>  
+> -	if (irq->hw) {
+> +	if (irq->hw && !vgic_irq_is_sgi(irq->intid)) {
+>  		vgic_hw_irq_change_active(vcpu, irq, active, !requester_vcpu);
+> +	} else if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+> +		/*
+> +		 * GICv4.1 VSGI feature doesn't track an active state,
+> +		 * so let's not kid ourselves, there is nothing we can
+> +		 * do here.
+> +		 */
+> +		irq->active = false;
+>  	} else {
+>  		u32 model = vcpu->kvm->arch.vgic.vgic_model;
+>  		u8 active_source;
+> @@ -493,6 +569,8 @@ void vgic_mmio_write_priority(struct kvm_vcpu *vcpu,
+>  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+>  		/* Narrow the priority range to what we actually support */
+>  		irq->priority = (val >> (i * 8)) & GENMASK(7, 8 - VGIC_PRI_BITS);
+> +		if (irq->hw && vgic_irq_is_sgi(irq->intid))
+> +			vgic_update_vsgi(irq);
+>  		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+>  
+>  		vgic_put_irq(vcpu->kvm, irq);
+> 
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-Changes in v6:
-- squashed with patch from former ADC patchset
+Thanks
 
-Changes in v3:
-- alignment cleanup
- drivers/mfd/rn5t618.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-index 7686cc36e8c0..bc117adede4c 100644
---- a/drivers/mfd/rn5t618.c
-+++ b/drivers/mfd/rn5t618.c
-@@ -14,6 +14,7 @@
- #include <linux/mfd/rn5t618.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
-+#include <linux/platform_device.h>
- #include <linux/reboot.h>
- #include <linux/regmap.h>
- 
-@@ -22,6 +23,13 @@ static const struct mfd_cell rn5t618_cells[] = {
- 	{ .name = "rn5t618-wdt" },
- };
- 
-+static const struct mfd_cell rc5t619_cells[] = {
-+	{ .name = "rn5t618-adc" },
-+	{ .name = "rn5t618-regulator" },
-+	{ .name = "rc5t619-rtc" },
-+	{ .name = "rn5t618-wdt" },
-+};
-+
- static bool rn5t618_volatile_reg(struct device *dev, unsigned int reg)
- {
- 	switch (reg) {
-@@ -167,8 +175,16 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
- 
--	ret = devm_mfd_add_devices(&i2c->dev, -1, rn5t618_cells,
--				   ARRAY_SIZE(rn5t618_cells), NULL, 0, NULL);
-+	if (priv->variant == RC5T619)
-+		ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_NONE,
-+					   rc5t619_cells,
-+					   ARRAY_SIZE(rc5t619_cells),
-+					   NULL, 0, NULL);
-+	else
-+		ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_NONE,
-+					   rn5t618_cells,
-+					   ARRAY_SIZE(rn5t618_cells),
-+					   NULL, 0, NULL);
- 	if (ret) {
- 		dev_err(&i2c->dev, "failed to add sub-devices: %d\n", ret);
- 		return ret;
--- 
-2.20.1
+Eric
 
