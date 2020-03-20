@@ -2,189 +2,240 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DBDC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A27C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42CB120739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E63620776
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:41:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584711680;
+	bh=MgN9pJPsqG2bTCAI23maRrYMK1eh1ghBMd5dfP46JjE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l8vgbvNW1FsZdPsrls3rZJ07f+cXnwwKUEgiAOes7GtkFHdAbx0S/xiOThH4M/lma
+	 /SttqKmmFBSMnUECqvkhvnsdVWAtiFLyKg+xNvZTsCZcY4vuQpHWY+i76B1s9xtiop
+	 aMZ+YCKJwWp2fvgIExU30SRlalbDF3YS+I8I+OB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbgCTNjb (ORCPT
+        id S1727107AbgCTNlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:39:31 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:46300 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgCTNjb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:39:31 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.93)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1jFHrn-00Ax8I-UW; Fri, 20 Mar 2020 14:39:16 +0100
-Message-ID: <ded22d68e623d2663c96a0e1c81d660b9da747bc.camel@sipsolutions.net>
-Subject: Re: [PATCH] UML: add support for KASAN under x86_64
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Patricia Alfonso <trishalfonso@google.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        anton.ivanov@cambridgegreys.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>, linux-um@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Date:   Fri, 20 Mar 2020 14:39:13 +0100
-In-Reply-To: <CACT4Y+bdxmRmr57JO_k0whhnT2BqcSA=Jwa5M6=9wdyOryv6Ug@mail.gmail.com> (sfid-20200311_183506_748492_1435E277)
-References: <20200226004608.8128-1-trishalfonso@google.com>
-         <CAKFsvULd7w21T_nEn8QiofQGMovFBmi94dq2W_-DOjxf5oD-=w@mail.gmail.com>
-         <4b8c1696f658b4c6c393956734d580593b55c4c0.camel@sipsolutions.net>
-         <674ad16d7de34db7b562a08b971bdde179158902.camel@sipsolutions.net>
-         <CACT4Y+bdxmRmr57JO_k0whhnT2BqcSA=Jwa5M6=9wdyOryv6Ug@mail.gmail.com>
-         (sfid-20200311_183506_748492_1435E277)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Fri, 20 Mar 2020 09:41:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726843AbgCTNlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 09:41:18 -0400
+Received: from localhost (unknown [122.167.82.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74E1820739;
+        Fri, 20 Mar 2020 13:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584711677;
+        bh=MgN9pJPsqG2bTCAI23maRrYMK1eh1ghBMd5dfP46JjE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=trRd25v4vy0t3nnZz59a6IOwarik97JjaQJxVmRRqwb1NI5enqJ9nO3bLaULvpL8G
+         9tSHEZzVI7p7RSD7PzlyU7cYrnmh+rYIIXaLQsVNvR/eaypxE9M92TVHRqzPp4iw/f
+         ww8lSjoFGNP457C+SOX5vazL2EnXfljDyIizFpF4=
+Date:   Fri, 20 Mar 2020 19:11:12 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH 3/7] soundwire: intel: add mutex to prevent concurrent
+ access to SHIM registers
+Message-ID: <20200320134112.GC4885@vkoul-mobl>
+References: <20200311221026.18174-1-pierre-louis.bossart@linux.intel.com>
+ <20200311221026.18174-4-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311221026.18174-4-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-11 at 18:34 +0100, Dmitry Vyukov wrote:
-
-> > $ gdb -p ...
-> > (gdb) p/x task_size
-> > $1 = 0x7fc0000000
-> > (gdb) p/x __end_of_fixed_addresses
-> > $2 = 0x0
-> > (gdb) p/x end_iomem
-> > $3 = 0x70000000
-> > (gdb) p/x __va_space
-> > 
-> > #define TASK_SIZE (task_size)
-> > #define FIXADDR_TOP        (TASK_SIZE - 2 * PAGE_SIZE)
-> > 
-> > #define FIXADDR_START      (FIXADDR_TOP - FIXADDR_SIZE)
-> > #define FIXADDR_SIZE       (__end_of_fixed_addresses << PAGE_SHIFT)
-> > 
-> > #define VMALLOC_END       (FIXADDR_START-2*PAGE_SIZE)
-> > 
-> > #define MODULES_VADDR   VMALLOC_START
-> > #define MODULES_END       VMALLOC_END
-> > #define VMALLOC_START ((end_iomem + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1))
-> > #define VMALLOC_OFFSET  (__va_space)
-> > #define __va_space (8*1024*1024)
-> > 
-> > 
-> > So from that, it would look like the UML vmalloc area is from
-> > 0x  70800000 all the way to
-> > 0x7fbfffc000, which obviously clashes with the KASAN_SHADOW_OFFSET being
-> > just 0x7fff8000.
-> > 
-> > 
-> > I'm guessing that basically the module loading overwrote the kasan
-> > shadow then?
+On 11-03-20, 17:10, Pierre-Louis Bossart wrote:
+> Some of the SHIM registers exposed fields that are link specific, and
+> in addition some of the power-related registers (SPA/CPA) take time to
+> be updated. Uncontrolled access leads to timeouts or errors.
 > 
-> Well, ok, this is definitely not going to fly :)
-
-Yeah, not with vmalloc/modules at least, but you can't really prevent
-vmalloc :)
-
-> I don't know if it's easy to move modules to a different location.
-
-We'd have to not just move modules, but also vmalloc space. They're one
-and the same in UML.
-
-> It
-> would be nice because 0x7fbfffc000 is the shadow start that's used in
-> userspace asan and it allows to faster instrumentation (if offset is
-> within first 2 gigs, the instruction encoding is much more compact,
-> for >2gigs it will require several instructions).
-
-Wait ... Now you say 0x7fbfffc000, but that is almost fine? I think you
-confused the values - because I see, on userspace, the following:
-
-|| `[0x10007fff8000, 0x7fffffffffff]` || HighMem    ||
-|| `[0x02008fff7000, 0x10007fff7fff]` || HighShadow ||
-|| `[0x00008fff7000, 0x02008fff6fff]` || ShadowGap  ||
-|| `[0x00007fff8000, 0x00008fff6fff]` || LowShadow  ||
-|| `[0x000000000000, 0x00007fff7fff]` || LowMem     ||
-
-
-Now, I also don't really understand what UML is doing here -
-os_get_top_address() determines some sort of "top address"? But all that
-is only on 32-bit, on 64-bit, that's always 0x7fc0000000.
-
-So basically that means it's just _slightly_ higher than what you
-suggested as the KASAN_SHADOW_OFFSET now (even if erroneously?), and
-shouldn't actually clash (and we can just change the top address value
-to be slightly lower anyway to prevent clashing).
-
-> But if it's not really easy, I guess we go with a large shadow start
-> (at least initially). A slower but working KASAN is better than fast
-> non-working KASAN :)
-
-Indeed, but I can't even get it to work regardless of the offset.
-
-Note that I have lockdep enabled, and at least some crashes appear to be
-because of the stack unwinding code that is called by lockdep in various
-situations...
-
-> > I tried changing it
-> > 
-> >  config KASAN_SHADOW_OFFSET
-> >         hex
-> >         depends on KASAN
-> > -       default 0x7fff8000
-> > +       default 0x8000000000
-> > 
-> > 
-> > and also put a check in like this:
-> > 
-> > +++ b/arch/um/kernel/um_arch.c
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/sched.h>
-> >  #include <linux/sched/task.h>
-> >  #include <linux/kmsg_dump.h>
-> > +#include <linux/kasan.h>
-> > 
-> >  #include <asm/pgtable.h>
-> >  #include <asm/processor.h>
-> > @@ -267,9 +268,11 @@ int __init linux_main(int argc, char **argv)
-> >         /*
-> >          * TASK_SIZE needs to be PGDIR_SIZE aligned or else exit_mmap craps
-> >          * out
-> >          */
-> >         task_size = host_task_size & PGDIR_MASK;
-> > 
-> > +       if (task_size > KASAN_SHADOW_OFFSET)
-> > +               panic("KASAN shadow offset must be bigger than task size");
-> > 
-> > 
-> > but now I just crash accessing the shadow even though it was mapped fine?
+> Add a mutex, shared by all links, so that all accesses to such
+> registers are serialized, and follow a pattern of read-modify-write.
 > 
-> Yes, this is puzzling.
-> I noticed that RIP is the same in both cases and it relates to vmap code.
-> A support for shadow for vmalloced-memory was added to KASAN recently
-> and I suspect it may conflict with UML.
+> The mutex initialization is done at the higher layer since the same
+> mutex is used for all links.
+> 
+> GitHub issue: https://github.com/thesofproject/linux/issues/1555
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/intel.c | 37 +++++++++++++++++++++++++++++++------
+>  drivers/soundwire/intel.h |  2 ++
+>  2 files changed, 33 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+> index 1a3b828b03a1..3c271a8044b8 100644
+> --- a/drivers/soundwire/intel.c
+> +++ b/drivers/soundwire/intel.c
+> @@ -286,6 +286,8 @@ static int intel_link_power_up(struct sdw_intel *sdw)
+>  	int spa_mask, cpa_mask;
+>  	int link_control, ret;
+>  
+> +	mutex_lock(sdw->link_res->shim_lock);
+> +
+>  	/* Link power up sequence */
+>  	link_control = intel_readl(shim, SDW_SHIM_LCTL);
+>  	spa_mask = (SDW_SHIM_LCTL_SPA << link_id);
+> @@ -293,6 +295,8 @@ static int intel_link_power_up(struct sdw_intel *sdw)
+>  	link_control |=  spa_mask;
+>  
+>  	ret = intel_set_bit(shim, SDW_SHIM_LCTL, link_control, cpa_mask);
+> +	mutex_unlock(sdw->link_res->shim_lock);
+> +
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -307,6 +311,8 @@ static int intel_shim_init(struct sdw_intel *sdw)
+>  	int sync_reg, ret;
+>  	u16 ioctl = 0, act = 0;
+>  
+> +	mutex_lock(sdw->link_res->shim_lock);
+> +
+>  	/* Initialize Shim */
+>  	ioctl |= SDW_SHIM_IOCTL_BKE;
+>  	intel_writew(shim, SDW_SHIM_IOCTL(link_id), ioctl);
+> @@ -351,6 +357,8 @@ static int intel_shim_init(struct sdw_intel *sdw)
+>  	sync_reg |= SDW_SHIM_SYNC_SYNCCPU;
+>  	ret = intel_clear_bit(shim, SDW_SHIM_SYNC, sync_reg,
+>  			      SDW_SHIM_SYNC_SYNCCPU);
+> +	mutex_unlock(sdw->link_res->shim_lock);
+> +
+>  	if (ret < 0)
+>  		dev_err(sdw->cdns.dev, "Failed to set sync period: %d\n", ret);
+>  
+> @@ -363,13 +371,15 @@ static void intel_shim_wake(struct sdw_intel *sdw, bool wake_enable)
+>  	unsigned int link_id = sdw->instance;
+>  	u16 wake_en, wake_sts;
+>  
+> +	mutex_lock(sdw->link_res->shim_lock);
+> +	wake_en = intel_readw(shim, SDW_SHIM_WAKEEN);
+> +
+>  	if (wake_enable) {
+>  		/* Enable the wakeup */
+> -		intel_writew(shim, SDW_SHIM_WAKEEN,
+> -			     (SDW_SHIM_WAKEEN_ENABLE << link_id));
+> +		wake_en |= (SDW_SHIM_WAKEEN_ENABLE << link_id);
+> +		intel_writew(shim, SDW_SHIM_WAKEEN, wake_en);
+>  	} else {
+>  		/* Disable the wake up interrupt */
+> -		wake_en = intel_readw(shim, SDW_SHIM_WAKEEN);
+>  		wake_en &= ~(SDW_SHIM_WAKEEN_ENABLE << link_id);
+>  		intel_writew(shim, SDW_SHIM_WAKEEN, wake_en);
+>  
+> @@ -378,6 +388,7 @@ static void intel_shim_wake(struct sdw_intel *sdw, bool wake_enable)
+>  		wake_sts |= (SDW_SHIM_WAKEEN_ENABLE << link_id);
+>  		intel_writew(shim, SDW_SHIM_WAKESTS_STATUS, wake_sts);
+>  	}
+> +	mutex_unlock(sdw->link_res->shim_lock);
+>  }
+>  
+>  static int intel_link_power_down(struct sdw_intel *sdw)
+> @@ -387,6 +398,8 @@ static int intel_link_power_down(struct sdw_intel *sdw)
+>  	void __iomem *shim = sdw->link_res->shim;
+>  	u16 ioctl;
+>  
+> +	mutex_lock(sdw->link_res->shim_lock);
+> +
+>  	/* Glue logic */
+>  	ioctl = intel_readw(shim, SDW_SHIM_IOCTL(link_id));
+>  	ioctl |= SDW_SHIM_IOCTL_BKE;
+> @@ -403,6 +416,8 @@ static int intel_link_power_down(struct sdw_intel *sdw)
+>  	link_control &=  spa_mask;
+>  
+>  	ret = intel_clear_bit(shim, SDW_SHIM_LCTL, link_control, cpa_mask);
+> +	mutex_unlock(sdw->link_res->shim_lock);
+> +
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -630,11 +645,15 @@ static int intel_pre_bank_switch(struct sdw_bus *bus)
+>  	if (!bus->multi_link)
+>  		return 0;
+>  
+> +	mutex_lock(sdw->link_res->shim_lock);
+> +
+>  	/* Read SYNC register */
+>  	sync_reg = intel_readl(shim, SDW_SHIM_SYNC);
+>  	sync_reg |= SDW_SHIM_SYNC_CMDSYNC << sdw->instance;
+>  	intel_writel(shim, SDW_SHIM_SYNC, sync_reg);
+>  
+> +	mutex_unlock(sdw->link_res->shim_lock);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -649,6 +668,8 @@ static int intel_post_bank_switch(struct sdw_bus *bus)
+>  	if (!bus->multi_link)
+>  		return 0;
+>  
+> +	mutex_lock(sdw->link_res->shim_lock);
+> +
+>  	/* Read SYNC register */
+>  	sync_reg = intel_readl(shim, SDW_SHIM_SYNC);
+>  
+> @@ -660,9 +681,10 @@ static int intel_post_bank_switch(struct sdw_bus *bus)
+>  	 *
+>  	 * So, set the SYNCGO bit only if CMDSYNC bit is set for any Master.
+>  	 */
+> -	if (!(sync_reg & SDW_SHIM_SYNC_CMDSYNC_MASK))
+> -		return 0;
+> -
+> +	if (!(sync_reg & SDW_SHIM_SYNC_CMDSYNC_MASK)) {
+> +		ret = 0;
+> +		goto unlock;
+> +	}
+>  	/*
+>  	 * Set SyncGO bit to synchronously trigger a bank switch for
+>  	 * all the masters. A write to SYNCGO bit clears CMDSYNC bit for all
+> @@ -672,6 +694,9 @@ static int intel_post_bank_switch(struct sdw_bus *bus)
+>  
+>  	ret = intel_clear_bit(shim, SDW_SHIM_SYNC, sync_reg,
+>  			      SDW_SHIM_SYNC_SYNCGO);
+> +unlock:
+> +	mutex_unlock(sdw->link_res->shim_lock);
+> +
+>  	if (ret < 0)
+>  		dev_err(sdw->cdns.dev, "Post bank switch failed: %d\n", ret);
+>  
+> diff --git a/drivers/soundwire/intel.h b/drivers/soundwire/intel.h
+> index 38b7c125fb10..568c84a80d79 100644
+> --- a/drivers/soundwire/intel.h
+> +++ b/drivers/soundwire/intel.h
+> @@ -15,6 +15,7 @@
+>   * @irq: Interrupt line
+>   * @ops: Shim callback ops
+>   * @dev: device implementing hw_params and free callbacks
+> + * @shim_lock: mutex to handle access to shared SHIM registers
+>   */
+>  struct sdw_intel_link_res {
+>  	struct platform_device *pdev;
+> @@ -25,6 +26,7 @@ struct sdw_intel_link_res {
+>  	int irq;
+>  	const struct sdw_intel_ops *ops;
+>  	struct device *dev;
+> +	struct mutex *shim_lock; /* protect shared registers */
 
-This can't be it - HAVE_ARCH_KASAN_VMALLOC isn't selected, so
-KASAN_VMALLOC isn't set.
+Where is this mutex initialized? Did you test this...
 
-> What does pte-manipulation code even do under UML?
-
-No idea.
-
-> Looking at the code around, kasan_mem_notifier may be a problem too,
-> or at least excessive and confusing. We already have shadow for
-> everything, we don't need _any_ of dynamic/lazy shadow mapping.
-
-CONFIG_MEMORY_HOTPLUG is also not supported in ARCH=um, or at least not
-used in my config.
-
-johannes
-
+-- 
+~Vinod
