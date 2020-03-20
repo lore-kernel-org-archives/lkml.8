@@ -2,115 +2,129 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1011C54FCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14670C43333
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 716EB2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA84F2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:23:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FXlO3QjX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jKW9GBYs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbgCTOYH (ORCPT
+        id S1727604AbgCTOXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:24:07 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:27768 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727440AbgCTOYE (ORCPT
+        Fri, 20 Mar 2020 10:23:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59856 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727257AbgCTOWe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:24:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584714243;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ChzXaaoXuhc1XP2003YPwEPKXIEY82z0Pz3X4zEVJU0=;
-        b=FXlO3QjXpfgPNZohO+4L6wml4AfNk5ieWhZ0bBTWdGqaVvm2pIT9R5emEVrMDYaZ0/fRgV
-        ykIS/eLlSgUCgx15DRMOfjZXL8BpUCr3/toI9y+5mlFdj6WsoPQtXaHRhT+9ho/Wk46V57
-        DoIHeULMT6ksmZXHXlNVADhpFjauotY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-348-LVVhRZYhMzqVwGVfnSqSUg-1; Fri, 20 Mar 2020 10:23:57 -0400
-X-MC-Unique: LVVhRZYhMzqVwGVfnSqSUg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D7E581005510;
-        Fri, 20 Mar 2020 14:23:54 +0000 (UTC)
-Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 96AF45C1B3;
-        Fri, 20 Mar 2020 14:23:50 +0000 (UTC)
-Subject: Re: [PATCH v5 04/23] irqchip/gic-v4.1: Wait for completion of
- redistributor's INVALL operation
-To:     Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-5-maz@kernel.org>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <60beb328-5249-a79e-eceb-967716a085bc@redhat.com>
-Date:   Fri, 20 Mar 2020 15:23:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 20 Mar 2020 10:22:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=uJQyNXPRyr3MEmX31UTxivj138HeoXLkpB9icmxKmck=; b=jKW9GBYsiK2hYV/J1HH/iXaFkr
+        SK+ZswpZxVS5btEbTMuI/fyBjdqUZdfW7cqNmskOOVmbKHkDzCOs1Gd0LuCHC3VyCUvgLFV0CJcri
+        9zEJxlh6wKrxh8W682yRGhKDla3j3oO/x6Tsx4sLcsz88hxbEonVteSiTykIURj4IoBAyHI2dUa+b
+        TItLnfJRrUJIuciMf2M0XULSJINan0s1HA3/k2MgFOmHvQqvwUraQxA8L9Aql/6bt441I3jnPOKBE
+        Txl7tquXQvU+Ly22dkBWDzCfn0QH/a4VRImFqk8WVxHL8PQ74cPT6SVqcVbuu1f51a+Zm0Coa1k6s
+        SJmAut2w==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jFIXi-0000je-61; Fri, 20 Mar 2020 14:22:34 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        William Kucharski <william.kucharski@oracle.com>
+Subject: [PATCH v9 21/25] ext4: Pass the inode to ext4_mpage_readpages
+Date:   Fri, 20 Mar 2020 07:22:27 -0700
+Message-Id: <20200320142231.2402-22-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200320142231.2402-1-willy@infradead.org>
+References: <20200320142231.2402-1-willy@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200304203330.4967-5-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-On 3/4/20 9:33 PM, Marc Zyngier wrote:
-> From: Zenghui Yu <yuzenghui@huawei.com>
-> 
-> In GICv4.1, we emulate a guest-issued INVALL command by a direct write
-> to GICR_INVALLR.  Before we finish the emulation and go back to guest,
-> let's make sure the physical invalidate operation is actually completed
-> and no stale data will be left in redistributor. Per the specification,
-> this can be achieved by polling the GICR_SYNCR.Busy bit (to zero).
-> 
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Link: https://lore.kernel.org/r/20200302092145.899-1-yuzenghui@huawei.com
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+This function now only uses the mapping argument to look up the inode,
+and both callers already have the inode, so just pass the inode instead
+of the mapping.
 
-Thanks
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+---
+ fs/ext4/ext4.h     | 2 +-
+ fs/ext4/inode.c    | 4 ++--
+ fs/ext4/readpage.c | 3 +--
+ 3 files changed, 4 insertions(+), 5 deletions(-)
 
-Eric
-> ---
->  drivers/irqchip/irq-gic-v3-its.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index 1af713990123..c84370245bea 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -3827,6 +3827,8 @@ static void its_vpe_4_1_invall(struct its_vpe *vpe)
->  	/* Target the redistributor this vPE is currently known on */
->  	rdbase = per_cpu_ptr(gic_rdists->rdist, vpe->col_idx)->rd_base;
->  	gic_write_lpir(val, rdbase + GICR_INVALLR);
-> +
-> +	wait_for_syncr(rdbase);
->  }
->  
->  static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
-> 
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 1570a0b51b73..bc1b34ba6eab 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -3278,7 +3278,7 @@ static inline void ext4_set_de_type(struct super_block *sb,
+ }
+ 
+ /* readpages.c */
+-extern int ext4_mpage_readpages(struct address_space *mapping,
++extern int ext4_mpage_readpages(struct inode *inode,
+ 		struct readahead_control *rac, struct page *page);
+ extern int __init ext4_init_post_read_processing(void);
+ extern void ext4_exit_post_read_processing(void);
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index d674c5f9066c..4f3703c1408d 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -3226,7 +3226,7 @@ static int ext4_readpage(struct file *file, struct page *page)
+ 		ret = ext4_readpage_inline(inode, page);
+ 
+ 	if (ret == -EAGAIN)
+-		return ext4_mpage_readpages(page->mapping, NULL, page);
++		return ext4_mpage_readpages(inode, NULL, page);
+ 
+ 	return ret;
+ }
+@@ -3239,7 +3239,7 @@ static void ext4_readahead(struct readahead_control *rac)
+ 	if (ext4_has_inline_data(inode))
+ 		return;
+ 
+-	ext4_mpage_readpages(rac->mapping, rac, NULL);
++	ext4_mpage_readpages(inode, rac, NULL);
+ }
+ 
+ static void ext4_invalidatepage(struct page *page, unsigned int offset,
+diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
+index 66275f25235d..5761e9961682 100644
+--- a/fs/ext4/readpage.c
++++ b/fs/ext4/readpage.c
+@@ -221,13 +221,12 @@ static inline loff_t ext4_readpage_limit(struct inode *inode)
+ 	return i_size_read(inode);
+ }
+ 
+-int ext4_mpage_readpages(struct address_space *mapping,
++int ext4_mpage_readpages(struct inode *inode,
+ 		struct readahead_control *rac, struct page *page)
+ {
+ 	struct bio *bio = NULL;
+ 	sector_t last_block_in_bio = 0;
+ 
+-	struct inode *inode = mapping->host;
+ 	const unsigned blkbits = inode->i_blkbits;
+ 	const unsigned blocks_per_page = PAGE_SIZE >> blkbits;
+ 	const unsigned blocksize = 1 << blkbits;
+-- 
+2.25.1
 
