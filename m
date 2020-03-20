@@ -2,63 +2,77 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F30C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BD6C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6248C20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5629D20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:22:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgCTERf (ORCPT
+        id S1726876AbgCTEWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 00:17:35 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:46740 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgCTERe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 00:17:34 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A56BD158FADB2;
-        Thu, 19 Mar 2020 21:17:33 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 21:17:33 -0700 (PDT)
-Message-Id: <20200319.211733.294170518187045557.davem@davemloft.net>
-To:     christian.brauner@ubuntu.com
-Cc:     gregkh@linuxfoundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rafael@kernel.org, pavel@ucw.cz,
-        kuba@kernel.org, edumazet@google.com, stephen@networkplumber.org,
-        linux-pm@vger.kernel.org, rdunlap@infradead.org,
-        linux-next@vger.kernel.org, sfr@canb.auug.org.au
-Subject: Re: [PATCH net-next] sysfs: fix static inline declaration of
- sysfs_groups_change_owner()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200319144741.3864191-1-christian.brauner@ubuntu.com>
-References: <20200319142002.7382ed70@canb.auug.org.au>
-        <20200319144741.3864191-1-christian.brauner@ubuntu.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Fri, 20 Mar 2020 00:22:31 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12110 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725446AbgCTEWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 00:22:30 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A24DAE60EF66344F6A94;
+        Fri, 20 Mar 2020 12:22:27 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Fri, 20 Mar 2020
+ 12:22:18 +0800
+Subject: Re: [PATCH v5 19/23] KVM: arm64: GICv4.1: Allow SGIs to switch
+ between HW and SW interrupts
+To:     Marc Zyngier <maz@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        "James Morse" <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-20-maz@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <10847ac8-af94-0a83-73ed-24039840ca74@huawei.com>
+Date:   Fri, 20 Mar 2020 12:22:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
+MIME-Version: 1.0
+In-Reply-To: <20200304203330.4967-20-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 19 Mar 2020 21:17:34 -0700 (PDT)
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian.brauner@ubuntu.com>
-Date: Thu, 19 Mar 2020 15:47:41 +0100
+Hi Marc,
 
-> The CONFIG_SYSFS declaration of sysfs_group_change_owner() is different
-> from the !CONFIG_SYSFS version and thus causes build failurs when
-> !CONFIG_SYSFS is set.
+On 2020/3/5 4:33, Marc Zyngier wrote:
+> In order to let a guest buy in the new, active-less SGIs, we
+> need to be able to switch between the two modes.
 > 
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Fixes: 303a42769c4c ("sysfs: add sysfs_group{s}_change_owner()")
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Handle this by stopping all guest activity, transfer the state
+> from one mode to the other, and resume the guest. Nothing calls
+> this code so far, but a later patch will plug it into the MMIO
+> emulation.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-Applied, thank you.
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+
+
+Thanks
+
