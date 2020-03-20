@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7520CC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E974C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5341B20777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A7D120777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgCTWFW (ORCPT
+        id S1727761AbgCTWFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:05:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37498 "EHLO
+        Fri, 20 Mar 2020 18:05:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37491 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727411AbgCTWEQ (ORCPT
+        with ESMTP id S1727400AbgCTWEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:04:16 -0400
+        Fri, 20 Mar 2020 18:04:15 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFPk1-0004TO-DC; Fri, 20 Mar 2020 23:03:45 +0100
+        id 1jFPk8-0004b5-39; Fri, 20 Mar 2020 23:03:52 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id DCEF61039FC;
-        Fri, 20 Mar 2020 23:03:44 +0100 (CET)
-Message-Id: <20200320180032.523372590@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 59EDD1040C5;
+        Fri, 20 Mar 2020 23:03:48 +0100 (CET)
+Message-Id: <20200320180033.897314494@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 18:59:57 +0100
+Date:   Fri, 20 Mar 2020 19:00:11 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -47,8 +47,8 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [RESEND][patch V3 01/23] rcu: Dont acquire lock in NMI handler in
- rcu_nmi_enter_common()
+Subject: [RESEND][patch V3 15/23] x86/entry/64: Check IF in
+ __preempt_enable_notrace() thunk
 References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,41 +60,111 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200320175957.77sArBn8gC73qZAoGzTvxDE_DE6ATfxvgPOhwGsDh38@z>
+Message-ID: <20200320180011.MKibi6H6u9z6MfNIQEHJputG2kic30e3ftypUL5G1uU@z>
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+The preempt_enable_notrace() ASM thunk is called from tracing, entry code
+RCU and other places which are already in or going to be in the noinstr
+section which protects sensitve code from being instrumented.
 
-The rcu_nmi_enter_common() function can be invoked both in interrupt
-and NMI handlers.  If it is invoked from process context (as opposed
-to userspace or idle context) on a nohz_full CPU, it might acquire the
-CPU's leaf rcu_node structure's ->lock.  Because this lock is held only
-with interrupts disabled, this is safe from an interrupt handler, but
-doing so from an NMI handler can result in self-deadlock.
+Calls out of these sections happen with interrupts disabled, which is
+handled in C code, but the push regs, call, pop regs sequence can be
+completely avoided in this case.
 
-This commit therefore adds "irq" to the "if" condition so as to only
-acquire the ->lock from irq handlers or process context, never from
-an NMI handler.
+This is also a preparatory step for annotating the call from the thunk to
+preempt_enable_notrace() safe from a noinstr section.
 
-Fixes: 5b14557b073c ("rcu: Avoid tick_dep_set_cpu() misordering")
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Link: https://lkml.kernel.org/r/20200313024046.27622-1-paulmck@kernel.org
-
 ---
- kernel/rcu/tree.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+New patch
+---
+ arch/x86/entry/thunk_64.S       |   27 +++++++++++++++++++++++----
+ arch/x86/include/asm/irqflags.h |    3 +--
+ arch/x86/include/asm/paravirt.h |    3 +--
+ 3 files changed, 25 insertions(+), 8 deletions(-)
 
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -816,7 +816,7 @@ static __always_inline void rcu_nmi_ente
- 			rcu_cleanup_after_idle();
+--- a/arch/x86/entry/thunk_64.S
++++ b/arch/x86/entry/thunk_64.S
+@@ -9,10 +9,28 @@
+ #include "calling.h"
+ #include <asm/asm.h>
+ #include <asm/export.h>
++#include <asm/irqflags.h>
++
++.code64
  
- 		incby = 1;
--	} else if (tick_nohz_full_cpu(rdp->cpu) &&
-+	} else if (irq && tick_nohz_full_cpu(rdp->cpu) &&
- 		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
- 		   READ_ONCE(rdp->rcu_urgent_qs) && !rdp->rcu_forced_tick) {
- 		raw_spin_lock_rcu_node(rdp->mynode);
+ 	/* rdi:	arg1 ... normal C conventions. rax is saved/restored. */
+-	.macro THUNK name, func, put_ret_addr_in_rdi=0
++	.macro THUNK name, func, put_ret_addr_in_rdi=0, check_if=0
+ SYM_FUNC_START_NOALIGN(\name)
++
++	.if \check_if
++	/*
++	 * Check for interrupts disabled right here. No point in
++	 * going all the way down
++	 */
++	pushq	%rax
++	SAVE_FLAGS(CLBR_RAX)
++	testl	$X86_EFLAGS_IF, %eax
++	popq	%rax
++	jnz	1f
++	ret
++1:
++	.endif
++
+ 	pushq %rbp
+ 	movq %rsp, %rbp
+ 
+@@ -38,8 +56,8 @@ SYM_FUNC_END(\name)
+ 	.endm
+ 
+ #ifdef CONFIG_TRACE_IRQFLAGS
+-	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller,1
+-	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller,1
++	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller, put_ret_addr_in_rdi=1
++	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller, put_ret_addr_in_rdi=1
+ #endif
+ 
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+@@ -48,8 +66,9 @@ SYM_FUNC_END(\name)
+ 
+ #ifdef CONFIG_PREEMPTION
+ 	THUNK ___preempt_schedule, preempt_schedule
+-	THUNK ___preempt_schedule_notrace, preempt_schedule_notrace
+ 	EXPORT_SYMBOL(___preempt_schedule)
++
++	THUNK ___preempt_schedule_notrace, preempt_schedule_notrace, check_if=1
+ 	EXPORT_SYMBOL(___preempt_schedule_notrace)
+ #endif
+ 
+--- a/arch/x86/include/asm/irqflags.h
++++ b/arch/x86/include/asm/irqflags.h
+@@ -127,9 +127,8 @@ static inline notrace unsigned long arch
+ #define DISABLE_INTERRUPTS(x)	cli
+ 
+ #ifdef CONFIG_X86_64
+-#ifdef CONFIG_DEBUG_ENTRY
++
+ #define SAVE_FLAGS(x)		pushfq; popq %rax
+-#endif
+ 
+ #define SWAPGS	swapgs
+ /*
+--- a/arch/x86/include/asm/paravirt.h
++++ b/arch/x86/include/asm/paravirt.h
+@@ -900,14 +900,13 @@ extern void default_banner(void);
+ 		  ANNOTATE_RETPOLINE_SAFE;				\
+ 		  jmp PARA_INDIRECT(pv_ops+PV_CPU_usergs_sysret64);)
+ 
+-#ifdef CONFIG_DEBUG_ENTRY
+ #define SAVE_FLAGS(clobbers)                                        \
+ 	PARA_SITE(PARA_PATCH(PV_IRQ_save_fl),			    \
+ 		  PV_SAVE_REGS(clobbers | CLBR_CALLEE_SAVE);        \
+ 		  ANNOTATE_RETPOLINE_SAFE;			    \
+ 		  call PARA_INDIRECT(pv_ops+PV_IRQ_save_fl);	    \
+ 		  PV_RESTORE_REGS(clobbers | CLBR_CALLEE_SAVE);)
+-#endif
++
+ #endif /* CONFIG_PARAVIRT_XXL */
+ #endif	/* CONFIG_X86_64 */
+ 
 
