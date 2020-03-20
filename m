@@ -2,206 +2,150 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9DFC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D767C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949AE20781
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:44:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PdXJJcoL"
+	by mail.kernel.org (Postfix) with ESMTP id E718B20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:46:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584733609;
+	bh=cWtAUzd2rzDP9wEzmMrW/qhJoPZ5i4sE8aCtwPlju7w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=KF/NKXsKLSNRNGMbWRefpMbrKANwEzph6y+hNtbVYrFsftStFRNr5+a9svq47+h54
+	 OEGLwOjaWfDXZbLmAjQHhwC5yS8CkmCaBi0EsO1vcqPrfD/1PXdEM7li/wAqhjy+sB
+	 jFL1HJNz9OmpDkAcMoRqSH/F29ozpywKD0WmOIBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbgCTToC (ORCPT
+        id S1726956AbgCTTqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 15:44:02 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35532 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727443AbgCTTn7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 15:43:59 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02KJhtwV087128;
-        Fri, 20 Mar 2020 14:43:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584733435;
-        bh=TxhNK/kZhfoMIijSWn6NMMWmiR8t3zZMCX2pTgEW97k=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=PdXJJcoLOlDZy7025aDaMv276j1uEJckeMm/zcX1otvbJwWWNd35NMZnKD6rpZThu
-         ACRXQrOP8dsCnbmGaVwWbKYfxnQvDlea7TmY3R9xo9UBhTECvJgf522hJf1/V38Agl
-         VtyXfD2nAOx15upg/hez+Yb0QY3JF8g7PyofOuqk=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02KJhtpJ010783;
-        Fri, 20 Mar 2020 14:43:55 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
- Mar 2020 14:43:55 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 20 Mar 2020 14:43:55 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02KJhsl9043509;
-        Fri, 20 Mar 2020 14:43:55 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-CC:     Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        netdev <netdev@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v3 11/11] net: ethernet: ti: cpsw: enable cpts irq
-Date:   Fri, 20 Mar 2020 21:42:44 +0200
-Message-ID: <20200320194244.4703-12-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200320194244.4703-1-grygorii.strashko@ti.com>
-References: <20200320194244.4703-1-grygorii.strashko@ti.com>
+        Fri, 20 Mar 2020 15:46:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726666AbgCTTqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 15:46:47 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3B1520739;
+        Fri, 20 Mar 2020 19:46:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584733607;
+        bh=cWtAUzd2rzDP9wEzmMrW/qhJoPZ5i4sE8aCtwPlju7w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=X3d+L4Jqyb6dAW7q1cPglXf0FktkzS3wWtwooGY+RoSz3BWL3o5F9Z5AN7Kcgt/Gf
+         3wQIAOtzNyVvErjlICDEncCpzpiwUU+kWLR/M5mZqN/nW0QsHfh2fWqvCnWKj+fc5L
+         r2apIhcVhBidEfiS8bIYAaN7+ImQqdNl2BlHCeuM=
+Date:   Fri, 20 Mar 2020 14:46:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Sriram Palanisamy <gpalan@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/12] pcie: qcom: Set PCIE MRRS and MPS to 256B
+Message-ID: <20200320194645.GA251282@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320183455.21311-12-ansuelsmth@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CPSW misc IRQ need be enabled for CPTS event_pend IRQs processing. This
-patch adds corresponding support to CPSW driver.
+On Fri, Mar 20, 2020 at 07:34:54PM +0100, Ansuel Smith wrote:
+> From: Sriram Palanisamy <gpalan@codeaurora.org>
+> 
+> Set Max Read Request Size and Max Payload Size to 256 bytes,
+> per chip team recommendation.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/cpsw.c      | 21 +++++++++++++++++++++
- drivers/net/ethernet/ti/cpsw_new.c  | 20 ++++++++++++++++++++
- drivers/net/ethernet/ti/cpsw_priv.c | 12 ++++++++++++
- drivers/net/ethernet/ti/cpsw_priv.h |  2 ++
- 4 files changed, 55 insertions(+)
+Is this to avoid a device defect or to optimize performance?
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index ce2155394830..ce8151e95443 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -1573,6 +1573,12 @@ static int cpsw_probe(struct platform_device *pdev)
- 		return irq;
- 	cpsw->irqs_table[1] = irq;
- 
-+	/* get misc irq*/
-+	irq = platform_get_irq(pdev, 3);
-+	if (irq <= 0)
-+		return irq;
-+	cpsw->misc_irq = irq;
-+
- 	/*
- 	 * This may be required here for child devices.
- 	 */
-@@ -1707,6 +1713,21 @@ static int cpsw_probe(struct platform_device *pdev)
- 		goto clean_unregister_netdev_ret;
- 	}
- 
-+	if (!cpsw->cpts)
-+		goto skip_cpts;
-+
-+	ret = devm_request_irq(&pdev->dev, cpsw->misc_irq, cpsw_misc_interrupt,
-+			       0, dev_name(&pdev->dev), cpsw);
-+	if (ret < 0) {
-+		dev_err(dev, "error attaching misc irq (%d)\n", ret);
-+		goto clean_unregister_netdev_ret;
-+	}
-+
-+	/* Enable misc CPTS evnt_pend IRQ */
-+	cpts_set_irqpoll(cpsw->cpts, false);
-+	writel(0x10, &cpsw->wr_regs->misc_en);
-+
-+skip_cpts:
- 	cpsw_notice(priv, probe,
- 		    "initialized device (regs %pa, irq %d, pool size %d)\n",
- 		    &ss_res->start, cpsw->irqs_table[0], descs_pool_size);
-diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
-index 8561f0e3b769..5d7c8ea4b5c7 100644
---- a/drivers/net/ethernet/ti/cpsw_new.c
-+++ b/drivers/net/ethernet/ti/cpsw_new.c
-@@ -1901,6 +1901,11 @@ static int cpsw_probe(struct platform_device *pdev)
- 		return irq;
- 	cpsw->irqs_table[1] = irq;
- 
-+	irq = platform_get_irq_byname(pdev, "misc");
-+	if (irq <= 0)
-+		return irq;
-+	cpsw->misc_irq = irq;
-+
- 	platform_set_drvdata(pdev, cpsw);
- 	/* This may be required here for child devices. */
- 	pm_runtime_enable(dev);
-@@ -1980,6 +1985,21 @@ static int cpsw_probe(struct platform_device *pdev)
- 		goto clean_unregister_netdev;
- 	}
- 
-+	if (!cpsw->cpts)
-+		goto skip_cpts;
-+
-+	ret = devm_request_irq(dev, cpsw->misc_irq, cpsw_misc_interrupt,
-+			       0, dev_name(&pdev->dev), cpsw);
-+	if (ret < 0) {
-+		dev_err(dev, "error attaching misc irq (%d)\n", ret);
-+		goto clean_unregister_netdev;
-+	}
-+
-+	/* Enable misc CPTS evnt_pend IRQ */
-+	cpts_set_irqpoll(cpsw->cpts, false);
-+	writel(0x10, &cpsw->wr_regs->misc_en);
-+
-+skip_cpts:
- 	ret = cpsw_register_notifiers(cpsw);
- 	if (ret)
- 		goto clean_unregister_netdev;
-diff --git a/drivers/net/ethernet/ti/cpsw_priv.c b/drivers/net/ethernet/ti/cpsw_priv.c
-index 099208927400..9d098c802c6d 100644
---- a/drivers/net/ethernet/ti/cpsw_priv.c
-+++ b/drivers/net/ethernet/ti/cpsw_priv.c
-@@ -114,6 +114,18 @@ irqreturn_t cpsw_rx_interrupt(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+irqreturn_t cpsw_misc_interrupt(int irq, void *dev_id)
-+{
-+	struct cpsw_common *cpsw = dev_id;
-+
-+	writel(0, &cpsw->wr_regs->misc_en);
-+	cpdma_ctlr_eoi(cpsw->dma, CPDMA_EOI_MISC);
-+	cpts_misc_interrupt(cpsw->cpts);
-+	writel(0x10, &cpsw->wr_regs->misc_en);
-+
-+	return IRQ_HANDLED;
-+}
-+
- int cpsw_tx_mq_poll(struct napi_struct *napi_tx, int budget)
- {
- 	struct cpsw_common	*cpsw = napi_to_cpsw(napi_tx);
-diff --git a/drivers/net/ethernet/ti/cpsw_priv.h b/drivers/net/ethernet/ti/cpsw_priv.h
-index b8d7b924ee3d..bf4e179b4ca4 100644
---- a/drivers/net/ethernet/ti/cpsw_priv.h
-+++ b/drivers/net/ethernet/ti/cpsw_priv.h
-@@ -350,6 +350,7 @@ struct cpsw_common {
- 	bool				rx_irq_disabled;
- 	bool				tx_irq_disabled;
- 	u32 irqs_table[IRQ_NUM];
-+	int misc_irq;
- 	struct cpts			*cpts;
- 	struct devlink *devlink;
- 	int				rx_ch_num, tx_ch_num;
-@@ -442,6 +443,7 @@ int cpsw_run_xdp(struct cpsw_priv *priv, int ch, struct xdp_buff *xdp,
- 		 struct page *page, int port);
- irqreturn_t cpsw_tx_interrupt(int irq, void *dev_id);
- irqreturn_t cpsw_rx_interrupt(int irq, void *dev_id);
-+irqreturn_t cpsw_misc_interrupt(int irq, void *dev_id);
- int cpsw_tx_mq_poll(struct napi_struct *napi_tx, int budget);
- int cpsw_tx_poll(struct napi_struct *napi_tx, int budget);
- int cpsw_rx_mq_poll(struct napi_struct *napi_rx, int budget);
--- 
-2.17.1
+This should not be done in an individual driver for performance
+reasons because these parameters need to be managed at the system
+level.
 
+If this is to work around a device defect, we probably need to think
+about a quirk that changes the device capabilities advertised by this
+bridge and then changes to the PCI core code to take that into
+account.
+
+> Signed-off-by: Gokul Sriram Palanisamy <gpalan@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 37 ++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 03130a3206b4..ad437c6f49a0 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -125,6 +125,14 @@
+>  
+>  #define PCIE20_LNK_CONTROL2_LINK_STATUS2        0xA0
+>  
+> +#define __set(v, a, b)	(((v) << (b)) & GENMASK(a, b))
+> +#define __mask(a, b)	(((1 << ((a) + 1)) - 1) & ~((1 << (b)) - 1))
+> +#define PCIE20_DEV_CAS			0x78
+> +#define PCIE20_MRRS_MASK		__mask(14, 12)
+> +#define PCIE20_MRRS(x)			__set(x, 14, 12)
+> +#define PCIE20_MPS_MASK			__mask(7, 5)
+> +#define PCIE20_MPS(x)			__set(x, 7, 5)
+
+These should all be the generic PCI_EXP_DEVCTL_READRQ and similar
+#defines, since you use them on values from PCI_EXP_DEVCTL.
+
+>  #define DEVICE_TYPE_RC				0x4
+>  
+>  #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
+> @@ -1595,6 +1603,35 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  	return ret;
+>  }
+>  
+> +static void qcom_pcie_fixup_final(struct pci_dev *pcidev)
+> +{
+> +	int cap, err;
+> +	u16 ctl, reg_val;
+> +
+> +	cap = pci_pcie_cap(pcidev);
+> +	if (!cap)
+> +		return;
+> +
+> +	err = pci_read_config_word(pcidev, cap + PCI_EXP_DEVCTL, &ctl);
+> +
+> +	if (err)
+> +		return;
+> +
+> +	reg_val = ctl;
+> +
+> +	if (((reg_val & PCIE20_MRRS_MASK) >> 12) > 1)
+> +		reg_val = (reg_val & ~(PCIE20_MRRS_MASK)) | PCIE20_MRRS(0x1);
+> +
+> +	if (((ctl & PCIE20_MPS_MASK) >> 5) > 1)
+> +		reg_val = (reg_val & ~(PCIE20_MPS_MASK)) | PCIE20_MPS(0x1);
+> +
+> +	err = pci_write_config_word(pcidev, cap + PCI_EXP_DEVCTL, reg_val);
+> +
+> +	if (err)
+> +		dev_err(&pcidev->dev, "pcie config write failed %d\n", err);
+> +}
+> +DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, qcom_pcie_fixup_final);
+> +
+>  static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-apq8084", .data = &ops_1_0_0 },
+>  	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_2_1_0 },
+> -- 
+> 2.25.1
+> 
