@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7BEC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 174FFC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE63E20658
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E048520658
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:30:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727374AbgCTV2z (ORCPT
+        id S1727763AbgCTVaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:28:55 -0400
-Received: from mga04.intel.com ([192.55.52.120]:59216 "EHLO mga04.intel.com"
+        Fri, 20 Mar 2020 17:30:46 -0400
+Received: from mga03.intel.com ([134.134.136.65]:50328 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727244AbgCTV2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:28:51 -0400
-IronPort-SDR: EOaT73eRDy1sK4ctEQBkxpSKKfhpF3z4YjKrzvfqCSwAgIaRxMzOedxbuzd9ESj03+uevdT6rq
- BBUk3BzmmZnA==
+        id S1727192AbgCTV2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 17:28:54 -0400
+IronPort-SDR: O/czNgMX9b6zta+m9SVjPjQL9wjbwTrZwJGfkut6PTvk9WQzwNsxFkwg8du6aVZd5LyzZTa7M+
+ uKXhWhNHafwQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:50 -0700
-IronPort-SDR: BeHl6drpuSOS/sFRJmF2OLc4JiP5ToVWZrrhrZCVA3z209o08s5FOlDreSep6JZFId0pqGr6MX
- aZchLbLuCoGg==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:52 -0700
+IronPort-SDR: gig+uo/mJmrMUOX9Lf4Z0XTFz8WAskDfAPGWCMCMaFOT/JGAZAo9r3Hk67prFLMJ2yyCudfAUn
+ 2A7bTqJ96/aQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
-   d="scan'208";a="269224456"
+   d="scan'208";a="269224462"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:50 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:51 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v3 14/37] KVM: x86: Move "flush guest's TLB" logic to separate kvm_x86_ops hook
-Date:   Fri, 20 Mar 2020 14:28:10 -0700
-Message-Id: <20200320212833.3507-15-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 16/37] KVM: x86: Drop @invalidate_gpa param from kvm_x86_ops' tlb_flush()
+Date:   Fri, 20 Mar 2020 14:28:12 -0700
+Message-Id: <20200320212833.3507-17-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200320212833.3507-1-sean.j.christopherson@intel.com>
 References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
@@ -59,132 +59,211 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a dedicated hook to handle flushing TLB entries on behalf of the
-guest, i.e. for a paravirtualized TLB flush, and use it directly instead
-of bouncing through kvm_vcpu_flush_tlb().
+Drop @invalidate_gpa from ->tlb_flush() and kvm_vcpu_flush_tlb() now
+that all callers pass %true for said param, or ignore the param (SVM has
+an internal call to svm_flush_tlb() in svm_flush_tlb_guest that somewhat
+arbitrarily passes %false).
 
-For VMX, change the effective implementation implementation to never do
-INVEPT and flush only the current context, i.e. to always flush via
-INVVPID(SINGLE_CONTEXT).  The INVEPT performed by __vmx_flush_tlb() when
-@invalidate_gpa=false and enable_vpid=0 is unnecessary, as it will only
-flush guest-physical mappings; linear and combined mappings are flushed
-by VM-Enter when VPID is disabled, and changes in the guest pages tables
-do not affect guest-physical mappings.
+Remove __vmx_flush_tlb() as it is no longer used.
 
-When EPT and VPID are enabled, doing INVVPID is not required (by Intel's
-architecture) to invalidate guest-physical mappings, i.e. TLB entries
-that cache guest-physical mappings can live across INVVPID as the
-mappings are associated with an EPTP, not a VPID.  The intent of
-@invalidate_gpa is to inform vmx_flush_tlb() that it must "invalidate
-gpa mappings", i.e. do INVEPT and not simply INVVPID.  Other than nested
-VPID handling, which now calls vpid_sync_context() directly, the only
-scenario where KVM can safely do INVVPID instead of INVEPT (when EPT is
-enabled) is if KVM is flushing TLB entries from the guest's perspective,
-i.e. is only required to invalidate linear mappings.
-
-For SVM, flushing TLB entries from the guest's perspective can be done
-by flushing the current ASID, as changes to the guest's page tables are
-associated only with the current ASID.
-
-Adding a dedicated ->tlb_flush_guest() paves the way toward removing
-@invalidate_gpa, which is a potentially dangerous control flag as its
-meaning is not exactly crystal clear, even for those who are familiar
-with the subtleties of what mappings Intel CPUs are/aren't allowed to
-keep across various invalidation scenarios.
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h |  6 ++++++
- arch/x86/kvm/svm.c              |  6 ++++++
- arch/x86/kvm/vmx/vmx.c          | 13 +++++++++++++
- arch/x86/kvm/x86.c              |  2 +-
- 4 files changed, 26 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/kvm_host.h |  2 +-
+ arch/x86/kvm/mmu/mmu.c          |  2 +-
+ arch/x86/kvm/svm.c              | 10 ++++----
+ arch/x86/kvm/vmx/vmx.c          |  4 ++--
+ arch/x86/kvm/vmx/vmx.h          | 42 ++++++++++-----------------------
+ arch/x86/kvm/x86.c              |  6 ++---
+ 6 files changed, 24 insertions(+), 42 deletions(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index cdbf822c5c8b..c08f4c0bf4d1 100644
+index c08f4c0bf4d1..a5dfab4642d6 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -1118,6 +1118,12 @@ struct kvm_x86_ops {
- 	 */
- 	void (*tlb_flush_gva)(struct kvm_vcpu *vcpu, gva_t addr);
+@@ -1105,7 +1105,7 @@ struct kvm_x86_ops {
+ 	unsigned long (*get_rflags)(struct kvm_vcpu *vcpu);
+ 	void (*set_rflags)(struct kvm_vcpu *vcpu, unsigned long rflags);
  
-+	/*
-+	 * Flush any TLB entries created by the guest.  Like tlb_flush_gva(),
-+	 * does not need to flush GPA->HPA mappings.
-+	 */
-+	void (*tlb_flush_guest)(struct kvm_vcpu *vcpu);
-+
- 	void (*run)(struct kvm_vcpu *vcpu);
- 	int (*handle_exit)(struct kvm_vcpu *vcpu,
- 		enum exit_fastpath_completion exit_fastpath);
+-	void (*tlb_flush)(struct kvm_vcpu *vcpu, bool invalidate_gpa);
++	void (*tlb_flush)(struct kvm_vcpu *vcpu);
+ 	int  (*tlb_remote_flush)(struct kvm *kvm);
+ 	int  (*tlb_remote_flush_with_range)(struct kvm *kvm,
+ 			struct kvm_tlb_range *range);
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 5ae620881bbc..a87b8f9f3b1f 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -5177,7 +5177,7 @@ int kvm_mmu_load(struct kvm_vcpu *vcpu)
+ 	if (r)
+ 		goto out;
+ 	kvm_mmu_load_pgd(vcpu);
+-	kvm_x86_ops->tlb_flush(vcpu, true);
++	kvm_x86_ops->tlb_flush(vcpu);
+ out:
+ 	return r;
+ }
 diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 08568ae9f7a1..396f42753489 100644
+index 396f42753489..62fa45dcb6a4 100644
 --- a/arch/x86/kvm/svm.c
 +++ b/arch/x86/kvm/svm.c
-@@ -5643,6 +5643,11 @@ static void svm_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t gva)
- 	invlpga(gva, svm->vmcb->control.asid);
+@@ -385,7 +385,7 @@ module_param(dump_invalid_vmcb, bool, 0644);
+ static u8 rsm_ins_bytes[] = "\x0f\xaa";
+ 
+ static void svm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0);
+-static void svm_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa);
++static void svm_flush_tlb(struct kvm_vcpu *vcpu);
+ static void svm_complete_interrupts(struct vcpu_svm *svm);
+ static void svm_toggle_avic_for_irq_window(struct kvm_vcpu *vcpu, bool activate);
+ static inline void avic_post_state_restore(struct kvm_vcpu *vcpu);
+@@ -2692,7 +2692,7 @@ static int svm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+ 		return 1;
+ 
+ 	if (npt_enabled && ((old_cr4 ^ cr4) & X86_CR4_PGE))
+-		svm_flush_tlb(vcpu, true);
++		svm_flush_tlb(vcpu);
+ 
+ 	vcpu->arch.cr4 = cr4;
+ 	if (!npt_enabled)
+@@ -3630,7 +3630,7 @@ static void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+ 	svm->nested.intercept_exceptions = nested_vmcb->control.intercept_exceptions;
+ 	svm->nested.intercept            = nested_vmcb->control.intercept;
+ 
+-	svm_flush_tlb(&svm->vcpu, true);
++	svm_flush_tlb(&svm->vcpu);
+ 	svm->vmcb->control.int_ctl = nested_vmcb->control.int_ctl | V_INTR_MASKING_MASK;
+ 	if (nested_vmcb->control.int_ctl & V_INTR_MASKING_MASK)
+ 		svm->vcpu.arch.hflags |= HF_VINTR_MASK;
+@@ -5626,7 +5626,7 @@ static int svm_set_identity_map_addr(struct kvm *kvm, u64 ident_addr)
+ 	return 0;
  }
  
-+static void svm_flush_tlb_guest(struct kvm_vcpu *vcpu)
-+{
-+	svm_flush_tlb(vcpu, false);
-+}
-+
- static void svm_prepare_guest_switch(struct kvm_vcpu *vcpu)
+-static void svm_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa)
++static void svm_flush_tlb(struct kvm_vcpu *vcpu)
  {
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 
+@@ -5645,7 +5645,7 @@ static void svm_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t gva)
+ 
+ static void svm_flush_tlb_guest(struct kvm_vcpu *vcpu)
+ {
+-	svm_flush_tlb(vcpu, false);
++	svm_flush_tlb(vcpu);
  }
-@@ -7400,6 +7405,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
  
- 	.tlb_flush = svm_flush_tlb,
- 	.tlb_flush_gva = svm_flush_tlb_gva,
-+	.tlb_flush_guest = svm_flush_tlb_guest,
- 
- 	.run = svm_vcpu_run,
- 	.handle_exit = handle_exit,
+ static void svm_prepare_guest_switch(struct kvm_vcpu *vcpu)
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index ba24bbda2c12..57c1cee58d18 100644
+index 43c0d4706f9a..477bdbc52ed0 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2862,6 +2862,18 @@ static void vmx_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t addr)
- 	 */
+@@ -6079,7 +6079,7 @@ void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu)
+ 		if (flexpriority_enabled) {
+ 			sec_exec_control |=
+ 				SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES;
+-			vmx_flush_tlb(vcpu, true);
++			vmx_flush_tlb(vcpu);
+ 		}
+ 		break;
+ 	case LAPIC_MODE_X2APIC:
+@@ -6097,7 +6097,7 @@ static void vmx_set_apic_access_page_addr(struct kvm_vcpu *vcpu, hpa_t hpa)
+ {
+ 	if (!is_guest_mode(vcpu)) {
+ 		vmcs_write64(APIC_ACCESS_ADDR, hpa);
+-		vmx_flush_tlb(vcpu, true);
++		vmx_flush_tlb(vcpu);
+ 	}
  }
  
-+static void vmx_flush_tlb_guest(struct kvm_vcpu *vcpu)
-+{
-+	/*
-+	 * vpid_sync_context() is a nop if vmx->vpid==0, e.g. if enable_vpid==0
-+	 * or a vpid couldn't be allocated for this vCPU.  VM-Enter and VM-Exit
-+	 * are required to flush GVA->{G,H}PA mappings from the TLB if vpid is
-+	 * disabled (VM-Enter with vpid enabled and vpid==0 is disallowed),
-+	 * i.e. no explicit INVVPID is necessary.
-+	 */
-+	vpid_sync_context(to_vmx(vcpu)->vpid);
-+}
-+
- static void vmx_decache_cr0_guest_bits(struct kvm_vcpu *vcpu)
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 3770ae111e6a..bab5d62ad964 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -503,46 +503,28 @@ static inline struct vmcs *alloc_vmcs(bool shadow)
+ 
+ u64 construct_eptp(struct kvm_vcpu *vcpu, unsigned long root_hpa);
+ 
+-static inline void __vmx_flush_tlb(struct kvm_vcpu *vcpu, int vpid,
+-				bool invalidate_gpa)
+-{
+-	if (enable_ept && (invalidate_gpa || !enable_vpid)) {
+-		if (!VALID_PAGE(vcpu->arch.mmu->root_hpa))
+-			return;
+-		ept_sync_context(construct_eptp(vcpu,
+-						vcpu->arch.mmu->root_hpa));
+-	} else {
+-		vpid_sync_context(vpid);
+-	}
+-}
+-
+-static inline void vmx_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa)
++static inline void vmx_flush_tlb(struct kvm_vcpu *vcpu)
  {
- 	ulong cr0_guest_owned_bits = vcpu->arch.cr0_guest_owned_bits;
-@@ -7875,6 +7887,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
  
- 	.tlb_flush = vmx_flush_tlb,
- 	.tlb_flush_gva = vmx_flush_tlb_gva,
-+	.tlb_flush_guest = vmx_flush_tlb_guest,
+ 	/*
+-	 * Flush all EPTP/VPID contexts if the TLB flush _may_ have been
+-	 * invoked via kvm_flush_remote_tlbs(), which always passes %true for
+-	 * @invalidate_gpa.  Flushing remote TLBs requires all contexts to be
+-	 * flushed, not just the active context.
++	 * Flush all EPTP/VPID contexts, as the TLB flush _may_ have been
++	 * invoked via kvm_flush_remote_tlbs().  Flushing remote TLBs requires
++	 * all contexts to be flushed, not just the active context.
+ 	 *
+ 	 * Note, this also ensures a deferred TLB flush with VPID enabled and
+ 	 * EPT disabled invalidates the "correct" VPID, by nuking both L1 and
+ 	 * L2's VPIDs.
+ 	 */
+-	if (invalidate_gpa) {
+-		if (enable_ept) {
+-			ept_sync_global();
+-		} else if (enable_vpid) {
+-			if (cpu_has_vmx_invvpid_global()) {
+-				vpid_sync_vcpu_global();
+-			} else {
+-				vpid_sync_vcpu_single(vmx->vpid);
+-				vpid_sync_vcpu_single(vmx->nested.vpid02);
+-			}
++	if (enable_ept) {
++		ept_sync_global();
++	} else if (enable_vpid) {
++		if (cpu_has_vmx_invvpid_global()) {
++			vpid_sync_vcpu_global();
++		} else {
++			vpid_sync_vcpu_single(vmx->vpid);
++			vpid_sync_vcpu_single(vmx->nested.vpid02);
+ 		}
+-	} else {
+-		__vmx_flush_tlb(vcpu, vmx->vpid, false);
+ 	}
+ }
  
- 	.run = vmx_vcpu_run,
- 	.handle_exit = vmx_handle_exit,
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index f506248d61a1..0b90ec2c93cf 100644
+index 0b90ec2c93cf..84cbd7ca1e18 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -2725,7 +2725,7 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
- 	trace_kvm_pv_tlb_flush(vcpu->vcpu_id,
- 		st->preempted & KVM_VCPU_FLUSH_TLB);
- 	if (xchg(&st->preempted, 0) & KVM_VCPU_FLUSH_TLB)
--		kvm_vcpu_flush_tlb(vcpu, false);
-+		kvm_x86_ops->tlb_flush_guest(vcpu);
+@@ -2696,10 +2696,10 @@ static void kvmclock_reset(struct kvm_vcpu *vcpu)
+ 	vcpu->arch.time = 0;
+ }
  
- 	vcpu->arch.st.preempted = 0;
+-static void kvm_vcpu_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa)
++static void kvm_vcpu_flush_tlb(struct kvm_vcpu *vcpu)
+ {
+ 	++vcpu->stat.tlb_flush;
+-	kvm_x86_ops->tlb_flush(vcpu, invalidate_gpa);
++	kvm_x86_ops->tlb_flush(vcpu);
+ }
  
+ static void record_steal_time(struct kvm_vcpu *vcpu)
+@@ -8223,7 +8223,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		if (kvm_check_request(KVM_REQ_LOAD_MMU_PGD, vcpu))
+ 			kvm_mmu_load_pgd(vcpu);
+ 		if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu))
+-			kvm_vcpu_flush_tlb(vcpu, true);
++			kvm_vcpu_flush_tlb(vcpu);
+ 		if (kvm_check_request(KVM_REQ_REPORT_TPR_ACCESS, vcpu)) {
+ 			vcpu->run->exit_reason = KVM_EXIT_TPR_ACCESS;
+ 			r = 0;
 -- 
 2.24.1
 
