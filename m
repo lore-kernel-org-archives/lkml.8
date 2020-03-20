@@ -2,94 +2,76 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F68FC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D502C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54DE020757
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584742950;
-	bh=xQx1SFX0dJd2b/t9JqFDhLrs7UJjDdBsC91aVq746uw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c2/4oLBmN3cS6Mk8BR3a7lUpbvesQwyvlxMNspYus8dvKABo8QNFQDqDroiHYuWub
-	 nfVd4W2zHHciXmUskuvkF3ohe7qozOjKMJuQPY/Go7X/uRh2u2VK53V9M1BQpRqtJm
-	 VTyLtSE2iM2AuQ1DYQiPw94+CI+JlxNvDguZnYBw=
+	by mail.kernel.org (Postfix) with ESMTP id 18DE020722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:24:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbgCTWW3 (ORCPT
+        id S1727393AbgCTWYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:22:29 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:45194 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbgCTWW3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:22:29 -0400
-Received: by mail-il1-f196.google.com with SMTP id m9so7106092ilq.12;
-        Fri, 20 Mar 2020 15:22:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MEjj65WLp/ofnpLSUkG6r7NzqQWSzo80Si8/3jZK11k=;
-        b=hAs8UXmd7WkpQ6g2M8GcBBtZwdk6EqwecwzoH/SZxMLfEgSZslx7SZH4hriPIj7sfx
-         X6ipC4K4tLk9Uj1X/SpqA+IXyl80Uk395N/LOXD0RBx88jp56Yso5ofUsW0D2ETs7oXP
-         m2vngmQzvXYvmDgTdgj4L880txbW5G9+b80cAO8vpcTtGbxw6/ae8PObbMKotze2KmlW
-         NJ24r1M9e7pGk2uO3PZkV8BUHKyHyDwFGmBVf20s1l3uPBC8miR3TmKbr9IIRVvZmZv6
-         QOXbEh342kAADJM0BqTBWeELp9lPr081hJTTi6qOfO6261rWr1mfcH+KY0YleKrjY5fz
-         QEkg==
-X-Gm-Message-State: ANhLgQ01OQ/udZ79ILQMnTMZrpXYa49iNndPY3l6mA416nV7Hw9ssc6S
-        OESGznsD93RWhlMUMVJKaA==
-X-Google-Smtp-Source: ADFU+vstN8SVzJtlJbqi3jZzdttOAufBDqkBE49quFSFYIc1VxdGyh4IFVXs33rn0zZHsmC39MrC9g==
-X-Received: by 2002:a05:6e02:5a1:: with SMTP id k1mr10973554ils.133.1584742947798;
-        Fri, 20 Mar 2020 15:22:27 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id n18sm2419968ilq.38.2020.03.20.15.22.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 15:22:26 -0700 (PDT)
-Received: (nullmailer pid 32466 invoked by uid 1000);
-        Fri, 20 Mar 2020 22:22:25 -0000
-Date:   Fri, 20 Mar 2020 16:22:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Tobias Schramm <t.schramm@manjaro.org>
-Subject: Re: [PATCH v5 1/3] dt-bindings: Document cellwise vendor-prefix
-Message-ID: <20200320222225.GA32311@bogus>
-References: <20200315191914.118565-1-t.schramm@manjaro.org>
- <20200315191914.118565-2-t.schramm@manjaro.org>
+        Fri, 20 Mar 2020 18:24:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55792 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726666AbgCTWYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 18:24:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 53C68ABC7;
+        Fri, 20 Mar 2020 22:24:30 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 23:24:27 +0100
+From:   Joerg Roedel <jroedel@suse.de>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH 23/70] x86/sev-es: Add support for handling IOIO
+ exceptions
+Message-ID: <20200320222427.GG611@suse.de>
+References: <20200319091407.1481-1-joro@8bytes.org>
+ <20200319091407.1481-24-joro@8bytes.org>
+ <alpine.DEB.2.21.2003201402100.205664@chino.kir.corp.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200315191914.118565-2-t.schramm@manjaro.org>
+In-Reply-To: <alpine.DEB.2.21.2003201402100.205664@chino.kir.corp.google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Mar 2020 20:19:12 +0100, Tobias Schramm wrote:
-> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+On Fri, Mar 20, 2020 at 02:03:17PM -0700, David Rientjes wrote:
+> On Thu, 19 Mar 2020, Joerg Roedel wrote:
+> > +	if (exit_info_1 & IOIO_TYPE_STR) {
+> > +		int df = (regs->flags & X86_EFLAGS_DF) ? -1 : 1;
+> >		[ ... ]
+> > +		if (!(exit_info_1 & IOIO_TYPE_IN)) {
+> > +			ret = vc_insn_string_read(ctxt,
+> > +					       (void *)(es_base + regs->si),
+> > +					       ghcb->shared_buffer, io_bytes,
+> > +					       exit_info_2, df);
 > 
+> The last argument to vc_insn_string_read() is "bool backwards" which in 
+> this case it appears will always be true?
 
-Acked-by: Rob Herring <robh@kernel.org>
+Right, thanks, good catch, I'll fix this. Seems to be a leftover from a
+previous version.
+
+Regards,
+
+	Joerg
+
