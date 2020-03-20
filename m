@@ -2,103 +2,70 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A338AC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF62C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C87F20773
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CCED20773
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:51:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgCTIs1 (ORCPT
+        id S1726935AbgCTIvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 04:48:27 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38642 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgCTIs0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 04:48:26 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k21so5701747oij.5;
-        Fri, 20 Mar 2020 01:48:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=r20INFdy7c88gDnE8p93UG+z/HnHRIMdNoDb/T153Dk=;
-        b=eetNd92+QHCzwMwIExa+dOG89N27YT60kOLduTUztYrJSCAm8zt5TRchD6rC3e0ttK
-         RyVwTzFhVTu5cyFulgFZmd/Hh5mWm8ir338ne0HTv6Sz05wmjmZuSd1RZMj81l4qr4FK
-         ltJhRW5jPB1/8oikJX8RWyVCBFHUIJnAzG3tOPoXeXqQNP9qektmkJhvbf6ORqmACkCH
-         aqiZMqtknATxdkFvN/x9QOjIRjq7ZcXmciSe+jCRkdIg7Zei8/n8PrqtEPSuVz2FK54+
-         oxw9lI+87TTsI4wJ4bIbO0sHbxTQB3onO2QruJh/YKlCGRjeHIgB6xzA694CO+ARGJyl
-         9s7g==
-X-Gm-Message-State: ANhLgQ0V0cSwCqmFxVEDjnvC9jOD89yTH3GKr1PMyZj2qMvlGLgiblZS
-        nJ+khveqdfmubZXHFkQUta8QwPzdDiaZsyejSOXOHA==
-X-Google-Smtp-Source: ADFU+vuodlM7mvUF+rTQ9nef3TgHryKYhBbHdZc1CmVWQ2CDidna4tAYWLd1J2bx8M6xmj0E3O52PNbuj3QsnGbiDSk=
-X-Received: by 2002:aca:4e57:: with SMTP id c84mr5311062oib.148.1584694105840;
- Fri, 20 Mar 2020 01:48:25 -0700 (PDT)
+        Fri, 20 Mar 2020 04:51:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40228 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbgCTIvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 04:51:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9C2B4AEBD;
+        Fri, 20 Mar 2020 08:51:51 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 01:50:46 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [patch V2 00/15] Lock ordering documentation and annotation for
+ lockdep
+Message-ID: <20200320085046.agp5qq6tzxj5utoa@linux-p48b>
+References: <20200318204302.693307984@linutronix.de>
 MIME-Version: 1.0
-References: <cover.1584639664.git.alexander.riesen@cetitec.com>
- <c9ff553f804f178a247dca356306948e971432fb.1584639664.git.alexander.riesen@cetitec.com>
- <20200319180125.GJ14585@pendragon.ideasonboard.com> <20200320084406.GB4344@pflmari>
-In-Reply-To: <20200320084406.GB4344@pflmari>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 20 Mar 2020 09:48:14 +0100
-Message-ID: <CAMuHMdUdVb0LwZDx-MH2FLYYPvgq=uj_3Nrzo9obWAi-Q-2ZnA@mail.gmail.com>
-Subject: Re: [PATCH v2 07/10] dt-bindings: adv748x: add information about
- serial audio interface (I2S/TDM)
-To:     Alex Riesen <alexander.riesen@cetitec.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200318204302.693307984@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On Wed, 18 Mar 2020, Thomas Gleixner wrote:
+>    The PS3 one got converted by Peter Zijlstra to rcu_wait().
 
-On Fri, Mar 20, 2020 at 9:44 AM Alex Riesen
-<alexander.riesen@cetitec.com> wrote:
-> Laurent Pinchart, Thu, Mar 19, 2020 19:01:25 +0100:
-> > On Thu, Mar 19, 2020 at 06:42:36PM +0100, Alex Riesen wrote:
-> > > As the driver has some support for the audio interface of the device,
-> > > the bindings file should mention it.
+While at it, I think it makes sense to finally convert the kvm vcpu swait
+to rcuwait (patch 6/15 starts the necessary api changes). I'm sending
+some patches on top of this patchset.
 
-> > > @@ -16,6 +18,8 @@ Required Properties:
-> > >      slave device on the I2C bus. The main address is mandatory, others are
-> > >      optional and remain at default values if not specified.
-> > >
-> > > +  - #clock-cells: must be <0> if the I2S port is used
-> >
-> > Wouldn't it be simpler to set it to 0 unconditionally ?
->
-> Would it? If the port itself is optional, shouldn't the clock be an option
-> too?
-
-You'd be surprised how many board designers would consider this a cheap
-12.288 MHz clock source, without using the I2S port ;-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Davidlohr
