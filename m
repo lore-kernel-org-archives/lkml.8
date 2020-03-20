@@ -2,134 +2,361 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDE7C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFB7C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87BD520409
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:47:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LwGyZxXU"
+	by mail.kernel.org (Postfix) with ESMTP id 9D29820409
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:48:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584744523;
+	bh=sSQ7zAZi/YRMURlexeZ3HDVuMKzmj7MyXCjUb9J5OLM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d5el5J+oflS2w19j2q+FUEM9secy2yfzRZwc5Mcw2EPvh9PdogswaOQIP4GBZM3zg
+	 Ve9ZGb/GV/Iov6EFnppelw6fw6/Yobi3xcQt/NIX8YbKGTjoQucEeUPlibKra6qtP8
+	 /y9armmV4PK/QCCH/p+5T1ayzk46FsBkIXQHrkMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbgCTWr6 (ORCPT
+        id S1727560AbgCTWsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:47:58 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:51442 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726880AbgCTWr5 (ORCPT
+        Fri, 20 Mar 2020 18:48:42 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44466 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbgCTWsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:47:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584744476;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WUk4FuE693/Ims71nGi8Vyb20vScmj2OBiS6y31l7rg=;
-        b=LwGyZxXUJFpHnW5cjOoc6T55QewWQP3GkMxB7gXZvVyil19/aGkCZURueREfVW8+8C0+p1
-        44g60SCma4gl3su7b1P1+JieV7amFtxfVFdPTJXeXZkdorLTRgX/LWdZtwZ8F4Z+KJcVg9
-        9g4N+No/ShsSuYPONKZR007xBFgfvjg=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-18-44gZuclLOOCc_8oYDoGk6g-1; Fri, 20 Mar 2020 18:47:52 -0400
-X-MC-Unique: 44gZuclLOOCc_8oYDoGk6g-1
-Received: by mail-wr1-f71.google.com with SMTP id v7so3378011wrp.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 15:47:52 -0700 (PDT)
+        Fri, 20 Mar 2020 18:48:42 -0400
+Received: by mail-io1-f66.google.com with SMTP id v3so7669053iot.11;
+        Fri, 20 Mar 2020 15:48:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WUk4FuE693/Ims71nGi8Vyb20vScmj2OBiS6y31l7rg=;
-        b=QEEtNmK07yt9h39EjD11O1Bx9bMK4SwBriVGhJYIw2VhvHnWppfBUU9zvYGaRAs6rm
-         P09wP88KvJVrMKm4EUIzMd48bxzKMVhrsPtU9JDiNTLIuA43vhZ7DJZAA0w9W88xenUW
-         I6Cjrakg9ZE/KPi6xU+tEad8j74ImoUZzPUMsj18DdGNpUgc5voE3Tfhm7bkm3i2YTyr
-         qTd5a+2tAQoK6OySgLHIseoVgNzD9xBIqkOnVedaUm1ugwF9Idz1sSr0lHfDP8wfKBI2
-         vCyITPhphFTHZw6g3c+4eHjB2gZurqc5YZmw3l/CBoMc5YNoHSI2AXk+rOYkCvBe77lv
-         cNIQ==
-X-Gm-Message-State: ANhLgQ1VrsdzhCZvq9hryVWr0bc1f7L++ySxWsdKCnfVgyfg8ZKFwM4y
-        tOtyaAgUNS00wiciFo1xV/ppsT2cKf7gjMVCThactWCB0pVlXhVGmKUANkURc+jpnpceBDW2EDa
-        IenIFh7okPBO8V99unn5sVV93
-X-Received: by 2002:a1c:4642:: with SMTP id t63mr12556352wma.164.1584744471136;
-        Fri, 20 Mar 2020 15:47:51 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vuPybOpKmuJb0qYlCdkGVlgmgPsG4GTfzqG4QJZsauttmA//egJ/jt8Hv5GEno+xQ6dO7QrBg==
-X-Received: by 2002:a1c:4642:: with SMTP id t63mr12556341wma.164.1584744470945;
-        Fri, 20 Mar 2020 15:47:50 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id 61sm11285191wrn.82.2020.03.20.15.47.47
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=A1uslfEoH7vNHdUhQmPCdcU9qvlFI6adpXPxHF0FMnE=;
+        b=dJAuwJpcq7ItCiFo+a+MddeXvQwQAI8LTIo28qFcEWOuRivKSHukqyGzg3kTuI87vo
+         Nr5G7Tl3AhcaCsYltVIxiv36/PDjCe8hVNElwHzmNy1oegqVt9XZAcz/gXRI08t7hPzz
+         ONoyjQ2D1oEUFZH+HjxNM95KrTqsLCCeyaKGXwmLZ4jth/dw/Vki65fdOqywnFcgjJRU
+         f6pGo8+ms8xlxQIUGvw4fUTBRcgISnUulIo96we0NNzTMyuU0wjOo2nCDo188T3d19C4
+         Ni6NVUhRO34Iu30BTIVLu30e1PehX57KSZYNJCUGY/kNrJtrQdl7wqnNTMVj1HUhgHPG
+         Zv6w==
+X-Gm-Message-State: ANhLgQ1yY4o5DW1Z9Hk4iUF8TmDdN69d3mP/daKluKi0HO/JnEnAdLlf
+        0sXtE6mmzCr0lvcQgAjR4A==
+X-Google-Smtp-Source: ADFU+vtwXWnuppwnc14jRb856bQUQFUaxaVhGlFZFR9oFbLMkd2qPfBTmiy1HVaQaH4yTdHNcia0iA==
+X-Received: by 2002:a6b:8b07:: with SMTP id n7mr9777692iod.55.1584744520519;
+        Fri, 20 Mar 2020 15:48:40 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id f2sm2115369ioj.34.2020.03.20.15.48.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 15:47:49 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 18:47:44 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: Re: [PATCH 4/7] KVM: selftests: Add helpers to consolidate open
- coded list operations
-Message-ID: <20200320224744.GG127076@xz-x1>
-References: <20200320205546.2396-1-sean.j.christopherson@intel.com>
- <20200320205546.2396-5-sean.j.christopherson@intel.com>
+        Fri, 20 Mar 2020 15:48:39 -0700 (PDT)
+Received: (nullmailer pid 11861 invoked by uid 1000);
+        Fri, 20 Mar 2020 22:48:36 -0000
+Date:   Fri, 20 Mar 2020 16:48:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v4 5/5] media: dt-bindings: media: i2c: convert ov5645
+ bindings to json-schema
+Message-ID: <20200320224836.GA27024@bogus>
+References: <1584620363-2255-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1584620363-2255-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200319151035.GC14585@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320205546.2396-5-sean.j.christopherson@intel.com>
+In-Reply-To: <20200319151035.GC14585@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 01:55:43PM -0700, Sean Christopherson wrote:
-> Add helpers for the KVM sefltests' variant of a linked list to replace a
-> variety of open coded adds, deletes and iterators.
+On Thu, Mar 19, 2020 at 05:10:35PM +0200, Laurent Pinchart wrote:
+> Hi Prabhakar,
 > 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  tools/testing/selftests/kvm/lib/kvm_util.c | 68 ++++++++++++----------
->  1 file changed, 37 insertions(+), 31 deletions(-)
+> Thank you for the patch.
 > 
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index 9a783c20dd26..d7b74f465570 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -19,6 +19,27 @@
->  #define KVM_UTIL_PGS_PER_HUGEPG 512
->  #define KVM_UTIL_MIN_PFN	2
->  
-> +#define kvm_list_add(head, new)		\
-> +do {					\
-> +	if (head)			\
-> +		head->prev = new;	\
-> +	new->next = head;		\
-> +	head = new;			\
-> +} while (0)
-> +
-> +#define kvm_list_del(head, del)			\
-> +do {						\
-> +	if (del->next)				\
-> +		del->next->prev = del->prev;	\
-> +	if (del->prev)				\
-> +		del->prev->next = del->next;	\
-> +	else					\
-> +		head = del->next;		\
-> +} while (0)
-> +
-> +#define kvm_list_for_each(head, iter)		\
-> +	for (iter = head; iter; iter = iter->next)
-> +
+> On Thu, Mar 19, 2020 at 12:19:23PM +0000, Lad Prabhakar wrote:
+> > Convert ov5645 bindings to json-schema.
+> 
+> \o/
+> 
+> > 
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  .../devicetree/bindings/media/i2c/ov5645.txt  |  54 -------
+> >  .../devicetree/bindings/media/i2c/ov5645.yaml | 140 ++++++++++++++++++
+> >  2 files changed, 140 insertions(+), 54 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > deleted file mode 100644
+> > index 1c85c78ec58c..000000000000
+> > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > +++ /dev/null
+> > @@ -1,54 +0,0 @@
+> > -* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
+> > -
+> > -The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
+> > -an active array size of 2592H x 1944V. It is programmable through a serial I2C
+> > -interface.
+> > -
+> > -Required Properties:
+> > -- compatible: Value should be "ovti,ov5645".
+> > -- clocks: Reference to the xclk clock.
+> > -- clock-names: Should be "xclk".
+> > -- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+> > -  to the hardware pin PWDNB which is physically active low.
+> > -- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+> > -  the hardware pin RESETB.
+> > -- vdddo-supply: Chip digital IO regulator.
+> > -- vdda-supply: Chip analog regulator.
+> > -- vddd-supply: Chip digital core regulator.
+> > -
+> > -The device node must contain one 'port' child node for its digital output
+> > -video port, in accordance with the video interface bindings defined in
+> > -Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > -
+> > -Example:
+> > -
+> > -	&i2c1 {
+> > -		...
+> > -
+> > -		ov5645: ov5645@3c {
+> > -			compatible = "ovti,ov5645";
+> > -			reg = <0x3c>;
+> > -
+> > -			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+> > -			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
+> > -			pinctrl-names = "default";
+> > -			pinctrl-0 = <&camera_rear_default>;
+> > -
+> > -			clocks = <&clks 200>;
+> > -			clock-names = "xclk";
+> > -			assigned-clocks = <&clks 200>;
+> > -			assigned-clock-rates = <24000000>;
+> > -
+> > -			vdddo-supply = <&camera_dovdd_1v8>;
+> > -			vdda-supply = <&camera_avdd_2v8>;
+> > -			vddd-supply = <&camera_dvdd_1v2>;
+> > -
+> > -			port {
+> > -				ov5645_ep: endpoint {
+> > -					clock-lanes = <1>;
+> > -					data-lanes = <0 2>;
+> > -					remote-endpoint = <&csi0_ep>;
+> > -				};
+> > -			};
+> > -		};
+> > -	};
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.yaml b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
+> > new file mode 100644
+> > index 000000000000..4bf58ad210c5
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
+> > @@ -0,0 +1,140 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/media/i2c/ov5645.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
+> 
+> s/Mp/MP/ ?
+> 
+> > +
+> > +maintainers:
+> > +  - Sakari Ailus <sakari.ailus@linux.intel.com>
+> > +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > +
+> > +description: |-
+> > + The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
+> > + an active array size of 2592H x 1944V. It is programmable through a serial I2C
+> > + interface.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: ovti,ov5645
+> > +
+> > +  reg:
+> > +    description: I2C device address
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: xclk
+> > +
+> > +  assigned-clocks:
+> > +    maxItems: 1
+> > +
+> > +  assigned-clock-rates:
+> > +     items:
+> > +     - description: Must be 24MHz (24000000).
+> 
+> These two properties shouldn't be part of the bindings, they're generic.
 
-I'm not sure whether we should start to use a common list, e.g.,
-tools/include/linux/list.h, if we're going to rework them after all...
-Even if this is preferred, maybe move to a header so kvm selftests can
-use it in the future outside "vcpu" struct too and this file only?
+The fact that they have 1 entry is part of this binding.
 
-Thanks,
 
--- 
-Peter Xu
+> > +  enable-gpios:
+> > +    description: |-
+> > +      Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+> > +      to the hardware pin PWDNB which is physically active low.
+> 
+> Specifying that the polarity is GPIO_ACTIVE_HIGH is confusing in my
+> opinion. If there's an inverter on the board, you'll need
+> GPIO_ACTIVE_LOW. We could possibly drop the sentence, as all GPIOs in DT
+> are supposed to be active high, but the fact that the GPIO name
+> corresponds to the opposite of the pin probably has to be documented. I
+> have no better wording to propose now I'm afraid, but it needs to be
+> addressed. Maybe Rob or Maxime could help.
 
+All GPIOs in DT are active high? What? 
+
+Using 'powerdown-gpios' would have made more sense here, but we're stuck 
+with it now. In any case, the description was good enough before and I 
+don't care to re-review it as part of the conversion.
+
+> > +  reset-gpios:
+> > +    description: |-
+> > +      Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+> > +      the hardware pin RESETB.
+> 
+> Here you could just drop the second sentence, or apply the same fix as
+> for enable-gpios.
+
+A description that's specific to this chip seems good to me.
+ 
+> > +
+> > +  vdddo-supply:
+> > +    description:
+> > +      Chip digital IO regulator.
+> 
+> You can move the description on the same line as the "description:" key.
+> Same below.
+> 
+> > +
+> > +  vdda-supply:
+> > +    description:
+> > +      Chip analog regulator.
+> > +
+> > +  vddd-supply:
+> > +    description:
+> > +      Chip digital core regulator.
+> > +
+> > +  # See ../video-interfaces.txt for more details
+> > +  port:
+> > +    type: object
+> > +    properties:
+> > +      endpoint:
+> > +        type: object
+> > +
+> > +        properties:
+> > +          data-lanes:
+> > +            description: |-
+> > +              The sensor supports two-lane operation.
+> > +              For two-lane operation the property must be set to <1 2>.
+> > +            items:
+> > +              - const: 1
+> > +              - const: 2
+> 
+> 
+> What if only one lane is wired, does the sensor support that ?
+> 
+> > +
+> > +          clock-lanes:
+> > +            description:
+> > +              should be set to <0> (clock lane on hardware lane 0).
+> > +            items:
+> > +              - const: 0
+> > +
+> > +          remote-endpoint: true
+> > +
+> > +        required:
+> > +          - data-lanes
+> > +          - clock-lanes
+> > +          - remote-endpoint
+> > +
+> > +        additionalProperties: false
+> > +
+> > +    additionalProperties: false
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - clock-names
+> > +  - assigned-clocks
+> > +  - assigned-clock-rates
+> 
+> Those two properties should be dropped.
+> 
+> > +  - enable-gpios
+> > +  - reset-gpios
+> 
+> Are the GPIOs mandatory ? What if the signals are hardwired on the board
+> ?
+> 
+> > +  - vdddo-supply
+> > +  - vdda-supply
+> > +  - vddd-supply
+> > +  - port
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    i2c1 {
+> 
+> s/i2c1/i2c/
+> 
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        ov5645: sensor@3c {
+> > +            compatible = "ovti,ov5645";
+> > +            reg = <0x3c>;
+> > +            clocks = <&ov5645_cl>;
+> > +            clock-names = "xclk";
+> > +            assigned-clocks = <&ov5645_cl>;
+> > +            assigned-clock-rates = <24000000>;
+> > +            enable-gpios = <&gpio1 6 /* GPIO_ACTIVE_HIGH */>;
+> > +            reset-gpios = <&gpio5 20 /* GPIO_ACTIVE_LOW */>;
+> > +            vdddo-supply = <&camera_dovdd_1v8>;
+> > +            vdda-supply = <&camera_avdd_2v8>;
+> > +            vddd-supply = <&camera_dvdd_1v2>;
+> > +
+> > +            port {
+> > +                ov5645_0: endpoint {
+> > +                    remote-endpoint = <&csi1_ep>;
+> > +                    clock-lanes = <0>;
+> > +                    data-lanes = <1 2>;
+> > +                };
+> > +            };
+> > +        };
+> > +    };
+> > +
+> > +...
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
