@@ -2,116 +2,160 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69433C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF4AC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 420B920757
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FF3620774
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584697426;
-	bh=XgJ6mYaAppCgRYjA/6tqfDP4UMl9ct8CnZlN4qm/aa8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JnJdcQZEpQu+yzD53CU3+5HgIzrs/gnO2R+m9sr6cfKb9WzwYojNiXyNeI3BuHvMT
-	 YJk1Tm7FtvZTSlyCzQ3OHMSyNmccd4W54kz2PDE20fhMElJ2cYW01ruNO9Zop3XIna
-	 QJ7PHQNefaAjwoKOyRrH0FybGADx+n0msf24WI7w=
+	s=default; t=1584697605;
+	bh=sH00fgk3RsESsOzjD0MUh1sZMoSY4NuqAFqEGyvk7e0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hZ38/jgAd//QOV6mV9U6AaTdW/JeZ3j/cJh9B7l1lmsLcdZjws7obqPJteKEgsUAx
+	 QPGYwzsy5Afhqn+eyb4qKqyxZxmzHle12oHfbFemRXVAftLAGIU1PGLp1+y9VUotD8
+	 ScyisJAnh6JMeQ7WNfj4xT1dzDa6NlXVLPPG4Uz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbgCTJnp (ORCPT
+        id S1726925AbgCTJqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:43:45 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46308 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbgCTJno (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:43:44 -0400
-Received: by mail-ed1-f65.google.com with SMTP id ca19so6332829edb.13;
-        Fri, 20 Mar 2020 02:43:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Mk3s5g9LU/2LF49QpiOVlm1YQB1p4hRZiB2SBGyS1Rg=;
-        b=Pbgfx54PPi9NoEhsX4ycbEiDT1W+9FwFAFEZdXPWVtB0Z6RH1uO2sK29izWPzzQHS5
-         AnZ93H6Yn9Hc4pv/8qrlKDEEgGRdOZyzzdrSSnT8oZy1pErYJPsUNdGQIfclD1uMaDtm
-         DGcAZXkUo+J1TqsZfMlYYtvULRvyu1/f8TFFYWc1r6stt4qRDA6GHHhiZE0cxL8WP9vu
-         /BEgEkwYUB7yv1hos18g9LD1ruATAYBOXIbBJiMoSLQptg+YTiKE9oPmf7Me4rSdX/of
-         uc5FigKlJqxkx5ehHhOF5EndLO4hkzqE51nuUhKf/O/6O7URSoxSxC6cecOmf80P9OEI
-         7aIg==
-X-Gm-Message-State: ANhLgQ0KbgVbFbpEzCQXo0g+gUE4SJ1nSk9pSLCifu3RT5dQ2pqwX/An
-        iRQ8L8EP89xImKHtGNxtTzU=
-X-Google-Smtp-Source: ADFU+vvfbrYk4IAPU07kklFqUnr/Dobh6VAeD25kkWfv6Ll1pmLkppDs5xtDBx4Uf6lrXVFxzavLJg==
-X-Received: by 2002:a50:f743:: with SMTP id j3mr6992962edn.22.1584697422721;
-        Fri, 20 Mar 2020 02:43:42 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id b26sm316874eje.18.2020.03.20.02.43.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 20 Mar 2020 02:43:42 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 10:43:39 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
-        Jonas Heinrich <onny@project-insanity.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] ARM: DTS: Add devicetree file for the Galaxy S2
-Message-ID: <20200320094339.GB12976@kozik-lap>
-References: <20200319173411.20607-1-paul@crapouillou.net>
- <20200319173411.20607-2-paul@crapouillou.net>
+        Fri, 20 Mar 2020 05:46:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726527AbgCTJqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 05:46:44 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1465B20722;
+        Fri, 20 Mar 2020 09:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584697603;
+        bh=sH00fgk3RsESsOzjD0MUh1sZMoSY4NuqAFqEGyvk7e0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ItI1QpzyKSVUkFN7wa/i/V45ewgZpp3DClIR0InqIMZkVG+EK7K0pAmfLrqHF4Q8J
+         /SS89IRYjdwgTYFXEFX+noGtt2gjTx+ON+a+YTUI98bq9b3jN92UQezsjndwCXQU+F
+         CQVQp/L7o6zEDC/1uCi6hANuXAqBro9utoN1iB0w=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jFEEj-00ECaQ-Cs; Fri, 20 Mar 2020 09:46:41 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200319173411.20607-2-paul@crapouillou.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 20 Mar 2020 09:46:41 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     Zenghui Yu <yuzenghui@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v5 20/23] KVM: arm64: GICv4.1: Plumb SGI implementation
+ selection in the distributor
+In-Reply-To: <e60578b5-910c-0355-d231-29322900679d@redhat.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-21-maz@kernel.org>
+ <72832f51-bbde-8502-3e03-189ac20a0143@huawei.com>
+ <4a06fae9c93e10351276d173747d17f4@kernel.org>
+ <49995ec9-3970-1f62-5dfc-118563ca00fc@redhat.com>
+ <b98855a1-6300-d323-80f6-82d3b9854290@huawei.com>
+ <e60578b5-910c-0355-d231-29322900679d@redhat.com>
+Message-ID: <dfaf8a1b7c7fd8b769a244a8a779d952@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: eric.auger@redhat.com, yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 06:34:11PM +0100, Paul Cercueil wrote:
-> From: Stenkin Evgeniy <stenkinevgeniy@gmail.com>
+On 2020-03-20 07:59, Auger Eric wrote:
+> Hi Zenghui,
 > 
-> Add devicetree file for the Exynos 4210 based Galaxy S2 (i9100 version).
-> 
-> Signed-off-by: Stenkin Evgeniy <stenkinevgeniy@gmail.com>
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v2: - Change i9100 to GT-I9100
->         - Remove redundant description in header
->     	- Add chosen node with stdout-path
->     	- Rename regulator nodes since there was no regulator-2
->     	- Rename i2c-gpio-3 to i2c-gpio
->     	- Use IRQ_TYPE_EDGE_FALLING instead of hardcoded '2'
->         - Remove spi-cpol, spi-cpha as they glitch the LCD panel
->     	- Make CS gpio active-low
->     	- Update ehci node to add 'phys' instead of ports
->     	- Remove duplicated ehci node
->     	- Reorder nodes to appear in alphabetical order
->     	- Remove useless newlines
->     	- Remove regulator provided to touchscreen node since it does not expect any
->     
->     v3: - Change CPU regulator name to VARM_1.2V_C210 as in the datasheet
->         - Remove unused gpios for the max8997 pmic
->         - Remove redundant interrupts/interrupt-parent for max8997 pmic
-> 
->  arch/arm/boot/dts/Makefile             |   1 +
->  arch/arm/boot/dts/exynos4210-i9100.dts | 768 +++++++++++++++++++++++++
->  2 files changed, 769 insertions(+)
+> On 3/20/20 4:08 AM, Zenghui Yu wrote:
+>> On 2020/3/20 4:38, Auger Eric wrote:
+>>> Hi Marc,
+>>> On 3/19/20 1:10 PM, Marc Zyngier wrote:
+>>>> Hi Zenghui,
+>>>> 
+>>>> On 2020-03-18 06:34, Zenghui Yu wrote:
+>>>>> Hi Marc,
+>>>>> 
+>>>>> On 2020/3/5 4:33, Marc Zyngier wrote:
+>>>>>> The GICv4.1 architecture gives the hypervisor the option to let
+>>>>>> the guest choose whether it wants the good old SGIs with an
+>>>>>> active state, or the new, HW-based ones that do not have one.
+>>>>>> 
+>>>>>> For this, plumb the configuration of SGIs into the GICv3 MMIO
+>>>>>> handling, present the GICD_TYPER2.nASSGIcap to the guest,
+>>>>>> and handle the GICD_CTLR.nASSGIreq setting.
+>>>>>> 
+>>>>>> In order to be able to deal with the restore of a guest, also
+>>>>>> apply the GICD_CTLR.nASSGIreq setting at first run so that we
+>>>>>> can move the restored SGIs to the HW if that's what the guest
+>>>>>> had selected in a previous life.
+>>>>> 
+>>>>> I'm okay with the restore path.  But it seems that we still fail to
+>>>>> save the pending state of vSGI - software pending_latch of HW-based
+>>>>> vSGIs will not be updated (and always be false) because we directly
+>>>>> inject them through ITS, so vgic_v3_uaccess_read_pending() can't
+>>>>> tell the correct pending state to user-space (the correct one 
+>>>>> should
+>>>>> be latched in HW).
+>>>>> 
+>>>>> It would be good if we can sync the hardware state into 
+>>>>> pending_latch
+>>>>> at an appropriate time (just before save), but not sure if we 
+>>>>> can...
+>>>> 
+>>>> The problem is to find the "appropriate time". It would require to
+>>>> define
+>>>> a point in the save sequence where we transition the state from HW 
+>>>> to
+>>>> SW. I'm not keen on adding more state than we already have.
+>>> 
+>>> may be we could use a dedicated device group/attr as we have for the 
+>>> ITS
+>>> save tables? the user space would choose.
+>> 
+>> It means that userspace will be aware of some form of GICv4.1 details
+>> (e.g., get/set vSGI state at HW level) that KVM has implemented.
+>> Is it something that userspace required to know? I'm open to this ;-)
+> Not sure we would be obliged to expose fine details. This could be a
+> generic save/restore device group/attr whose implementation at KVM 
+> level
+> could differ depending on the version being implemented, no?
 
-Thanks, applied to dt-late. I already sent a pull request so this might
-need to wait till next cycle. In such case I will carry this over merge
-window.
+What prevents us from hooking this synchronization to the current 
+behaviour
+of KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES? After all, this is already the 
+point
+where we synchronize the KVM view of the pending state with userspace.
+Here, it's just a matter of picking the information from some other 
+place
+(i.e. the host's virtual pending table).
 
-Best regards,
-Krzysztof
+The thing we need though is the guarantee that the guest isn't going to
+get more vLPIs at that stage, as they would be lost. This effectively
+assumes that we can also save/restore the state of the signalling 
+devices,
+and I don't know if we're quite there yet.
 
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
