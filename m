@@ -2,155 +2,139 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30BBC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C99C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A07B520784
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E186320784
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:23:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ROF8fL4c"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CU06efIQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbgCTSU0 (ORCPT
+        id S1726843AbgCTSX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:20:26 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33443 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbgCTSU0 (ORCPT
+        Fri, 20 Mar 2020 14:23:57 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:48027 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCTSX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:20:26 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g18so2868113plq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 11:20:25 -0700 (PDT)
+        Fri, 20 Mar 2020 14:23:57 -0400
+Received: by mail-pf1-f202.google.com with SMTP id h191so5133016pfe.14
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 11:23:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RVSRfcV+K0pn1zszQCXh+F75MQYeICFTBaMdga96uY8=;
-        b=ROF8fL4cRZOKjexdiQjvRriYL5aMB2v6UG48zv2w65UIZVXk7AuVFSi6y696oOXNgd
-         OvVHFsVQNRrgCH99H9N1yvFIVrPS6ys9mIlNNMSdcv+QWT7LmYHbymhkONJJ4Iind7wU
-         XawwvMxLzn/ahDIsk46CsBzOvZd50S7qX5rI8=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=RMPXYe/vR5ct6qGO4irRpO9ggqjWQLrULMnyekYeYdA=;
+        b=CU06efIQZInxH335XVehXng0U+lS//aZfnaXxvf0I2ImUfFSVaakHLgoP/P2TI4ezk
+         X1bS7ff5J9PuTwD3G3siGmY6So6qmAl7PFskKQTCgPd25wnt769kl8x9l2Apf9BkotnG
+         ShNZxWCskCFjJSirTG4wL/8STJVJPY5LoGahYYkbHz8+vyQrLWtwdGPIgXya4IhGGE8e
+         KCHoyClSc1YOlYFWSOcepT1K/TGGchJFQwAvJrRMehnN4ShkdlSMdsAshg00Ra8p6yWd
+         HWuZS1MnWkF+hmTHh23tcAkJ3fJZLMChDyG1EN1S3cXQLf4P9+j7vNXx4c8oDKRjD07u
+         ucWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RVSRfcV+K0pn1zszQCXh+F75MQYeICFTBaMdga96uY8=;
-        b=NtOlxtQc/aEXKreEovN71zotVw+UPPTu6IlBjdLP5GIq3i4bd7Cx9nK/gqT/VwzwWG
-         LeqX4YnJ1bYqJxruU0ucwlgeooYI/CW6gtJ4PH6btv93V3F/1PrYXardIC0HvzLITf0+
-         yMKOBQDFjtVbsM/EkNlZzQ+eoU/8DaNuqFf73SPUixgJorexcQeoVGidd5uoyjpknu37
-         jzGM8GmKbEf+GL1UUlSEjLNek8GryWhZhbnEWtUVyLy2psk0HXy7PxsPYzE0Q5zXIq0/
-         mSSj/cg1nkweu2ikPkj/VocDUr4GXB1fTj0TDdHF0eocdYtIA3VjxkfQVRS+CaOTOaeN
-         YR0g==
-X-Gm-Message-State: ANhLgQ2Sof79UEPf4o7CUi1uzdhwPyh4RAiGXoreae39yjBxvkDkHuBl
-        lArHRA1PnCYp6pEerj1z5PoBwQ==
-X-Google-Smtp-Source: ADFU+vvh9wNdOc6LXFIlkPM76qeYw8uzvfR7zvmRHA7t4NFIeMW1f7FJ0y8bVnB9QWXKTnZPYdAwPw==
-X-Received: by 2002:a17:902:8348:: with SMTP id z8mr8998254pln.342.1584728424639;
-        Fri, 20 Mar 2020 11:20:24 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g9sm6093642pfi.37.2020.03.20.11.20.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 11:20:23 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 11:20:22 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 01/11] pstore/blk: new support logger for block devices
-Message-ID: <202003201111.BE5EAB9A@keescook>
-References: <1581078355-19647-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1581078355-19647-2-git-send-email-liaoweixiong@allwinnertech.com>
- <202002251626.63FE3E7C6@keescook>
- <5fd540be-6ed9-a1c7-4932-e67194dddca8@allwinnertech.com>
- <202003180944.3B36871@keescook>
- <dab67ab1-c03f-0507-3d56-4a9578e85f6b@allwinnertech.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dab67ab1-c03f-0507-3d56-4a9578e85f6b@allwinnertech.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=RMPXYe/vR5ct6qGO4irRpO9ggqjWQLrULMnyekYeYdA=;
+        b=IHM5+2Yy7tZd+jKrwe6kgMbmfAyURCovf5Bzv8fJVN0k6XFlf/auhcPgrUfNXcY3On
+         wDH3cQnzKrLnDqwlfG72cTtGLU00tqQXco1JLA73NePPpjdMPI1TP4MTEMn8Pn8Ovb0N
+         0knFuIjtaZr6UkPpUXlxuZdi1djmrypRwN6hVg7wL1Y28oSlKOtweV3h+CNqXYTI5mQq
+         jPNtWUIZcOY8eT51nQYLbggkqmT94xOgrMMP00w6m0dv8vb2n40/CeMPXB4g3dTCZcQm
+         JlHCus2m8GOssHbm+a4bO1GKPf4n1gMTIenDiF7lYIrYgZ3yl4MY5nM7Y3zZNTBqH45Y
+         ecpg==
+X-Gm-Message-State: ANhLgQ1jh88TJcOtNl3LErC7QWoZ/tNkgHpnNgg1IWYGd7WW8zVpN8bm
+        5Q/JjH3s7HTo6Mbn8vgYjMgiWSQIh+EO
+X-Google-Smtp-Source: ADFU+vu7Ekr81cC6q+QtWqmhrDj4TMQcXjgygXB8DtY5pc1UlFHaNo/fQ80zM0Suh8w7hOCADMV5UkHFh4f1
+X-Received: by 2002:a17:90a:8c83:: with SMTP id b3mr10818804pjo.1.1584728633692;
+ Fri, 20 Mar 2020 11:23:53 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 11:23:47 -0700
+Message-Id: <20200320182347.87675-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH v2] perf mem2node: avoid double free related to realloc
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 09:50:36AM +0800, WeiXiong Liao wrote:
-> On 2020/3/19 AM 1:23, Kees Cook wrote:
-> > On Thu, Feb 27, 2020 at 04:21:51PM +0800, liaoweixiong wrote:
-> >> On 2020/2/26 AM 8:52, Kees Cook wrote:
-> >>> On Fri, Feb 07, 2020 at 08:25:45PM +0800, WeiXiong Liao wrote:
-> >>>> +obj-$(CONFIG_PSTORE_BLK) += pstore_blk.o
-> >>>> +pstore_blk-y += blkzone.o
-> >>>
-> >>> Why this dance with files? I would just expect:
-> >>>
-> >>> obj-$(CONFIG_PSTORE_BLK)     += blkzone.o
-> >>>
-> >>
-> >> This makes the built module named blkzone.ko rather than
-> >> pstore_blk.ko.
-> > 
-> > You can just do a regular build rule:
-> > 
-> > obj-$(CONFIG_PSTORE_BLK) += blkzone.o
-> > 
-> 
-> I don't get it. If make it as your words, the built module will be
-> blkzone.ko.
-> The module is named pstore/blk, however it built out blkzone.ko. I think
-> it's confusing.
+Realloc of size zero is a free not an error, avoid this causing a double
+free. Caught by clang's address sanitizer:
 
-I mean just pick whatever filename you want it to be named. The Makefile
-case for ramoops was that ramoops got renamed but we wanted to keep the
-old API name.
+==2634==ERROR: AddressSanitizer: attempting double-free on 0x6020000015f0 in thread T0:
+    #0 0x5649659297fd in free llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:123:3
+    #1 0x5649659e9251 in __zfree tools/lib/zalloc.c:13:2
+    #2 0x564965c0f92c in mem2node__exit tools/perf/util/mem2node.c:114:2
+    #3 0x564965a08b4c in perf_c2c__report tools/perf/builtin-c2c.c:2867:2
+    #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
+    #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
+    #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
+    #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
+    #8 0x564965942e41 in main tools/perf/perf.c:538:3
 
-So, if you want it named pstore-blk.ko, just rename blkzone.c to
-pstore-blk.c.
+0x6020000015f0 is located 0 bytes inside of 1-byte region [0x6020000015f0,0x6020000015f1)
+freed by thread T0 here:
+    #0 0x564965929da3 in realloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:164:3
+    #1 0x564965c0f55e in mem2node__init tools/perf/util/mem2node.c:97:16
+    #2 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
+    #3 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
+    #4 0x564965944348 in run_builtin tools/perf/perf.c:312:11
+    #5 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
+    #6 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
+    #7 0x564965942e41 in main tools/perf/perf.c:538:3
 
-> >>> If you're expecting concurrent writers (use of atomic_set(), I would
-> >>> expect the whole write to be locked instead. (i.e. what happens if
-> >>> multiple callers call blkz_zone_write()?)
-> >>>
-> >>
-> >> I don't agree with it. The datalen will be updated everywhere. It's useless
-> >> to lock here.
-> > 
-> > But there could be multiple writers; locking should be needed.
-> > 
-> 
-> All the recorders such as dmesg, pmsg, console and ftrace have been
-> locked on
-> pstore and upper layers. So, a recorder will not write in parallel and
-> different
-> recorders operate privately zone. They don't have any influence on each
-> other.
+previously allocated by thread T0 here:
+    #0 0x564965929c42 in calloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:154:3
+    #1 0x5649659e9220 in zalloc tools/lib/zalloc.c:8:9
+    #2 0x564965c0f32d in mem2node__init tools/perf/util/mem2node.c:61:12
+    #3 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
+    #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
+    #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
+    #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
+    #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
+    #8 0x564965942e41 in main tools/perf/perf.c:538:3
 
-Yes, sorry, I was confusing myself about pmsg, and I forgot it had a
-global lock. Each are locked or split by CPU.
+v2: add a WARN_ON_ONCE when the free condition arises.
 
-> The only parallel case I think is that recorder writes while dirty-flush
-> thread is
-> working. And the dirty-flusher will flush the whole zone rather than
-> part of it, so,
-> it is OK to call in parallel.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/mem2node.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Okay, thanks for clarifying.
-
-> Based on these reasons, I don't think locking should be needed.
-
-Agreed.
-
+diff --git a/tools/perf/util/mem2node.c b/tools/perf/util/mem2node.c
+index 797d86a1ab09..c84f5841c7ab 100644
+--- a/tools/perf/util/mem2node.c
++++ b/tools/perf/util/mem2node.c
+@@ -1,5 +1,6 @@
+ #include <errno.h>
+ #include <inttypes.h>
++#include <asm/bug.h>
+ #include <linux/bitmap.h>
+ #include <linux/kernel.h>
+ #include <linux/zalloc.h>
+@@ -95,7 +96,7 @@ int mem2node__init(struct mem2node *map, struct perf_env *env)
+ 
+ 	/* Cut unused entries, due to merging. */
+ 	tmp_entries = realloc(entries, sizeof(*entries) * j);
+-	if (tmp_entries)
++	if (tmp_entries || WARN_ON_ONCE(j == 0))
+ 		entries = tmp_entries;
+ 
+ 	for (i = 0; i < j; i++) {
 -- 
-Kees Cook
+2.25.1.696.g5e7596f4ac-goog
+
