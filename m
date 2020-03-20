@@ -2,119 +2,104 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E31CC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E073C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5257520709
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:38:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bernat.ch header.i=@bernat.ch header.b="MJ/zE2Tg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Obczzfhi"
+	by mail.kernel.org (Postfix) with ESMTP id 681B220709
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:38:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbgCTQid (ORCPT
+        id S1727602AbgCTQis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:38:33 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:34559 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727414AbgCTQib (ORCPT
+        Fri, 20 Mar 2020 12:38:48 -0400
+Received: from outbound-smtp39.blacknight.com ([46.22.139.222]:56425 "EHLO
+        outbound-smtp39.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727269AbgCTQis (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:38:31 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 448005D0;
-        Fri, 20 Mar 2020 12:38:30 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 20 Mar 2020 12:38:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bernat.ch; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=KZ90kr0wTIc0EZ29kZv5jxqduk
-        iofzhut3YQZokNDi8=; b=MJ/zE2Tg8sQdNCDMw2dpNmCZEnaGhZInPOhYSi9USR
-        H2hdfbplzGcHwREt9GjH4+0KP9c3ZeDP94ieHLMlmSUmFUxD3G+1Lh7Ln05bUJsy
-        lrP+R87vkphn74IcI/qSG04m7J5tg/pqtIF0+mtdnt3zpkRm7SZ9VaOIU3lfEVsY
-        wcLfuhJhhF7g4ic0I6VGuDcVRrfhaRDchsYK9mMky5NMDQRd7kX/a8aKGxCra+2/
-        IgvjhDfI9t+xzetZt2+nOWZoAi87j700xb+JnRBrQvM142ION7KjiMSDaPf89qIg
-        QlXQVlm15KvFH1yodfKOQThlcov5CwWtxj89IdtpJBDg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=KZ90kr0wTIc0EZ29k
-        Zv5jxqdukiofzhut3YQZokNDi8=; b=Obczzfhiupm32q3EmdahoNVGZvZArkBwb
-        hcofYe1UN69auT7BN1XXsqDUReihVow71d32Acrty8zqiZBuQ4OrzGj89KDeMYX+
-        oQgHX4aDg3nE4S3K1YIky5WX83VKlCZ6q5qOzpO87BG58m3CMrg3mmZD86cEVr1O
-        wpZ14ZPdLIH1/JtyxNXDxLpW+KNnyCcM8FXf4N/PWMXipkr4Po1hOYE48jtMI2EL
-        RI0ZD5jCh5XlfLUBzdbVeOHHQH174AdvLxvXVI4QhfrL/guNZpv6OjEycdlNKU7S
-        4iV5E1B44cjOXQTUcd4hd63WLx3QG7lmfgjroXvYIzUKrZHIlYzgg==
-X-ME-Sender: <xms:hfF0XiWh6HKDvmBtPmL9q-fQkicxJepVS9nIQR_YBBbiN7y1zRdjgg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeguddgledtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeggihhntggvnhht
-    uceuvghrnhgrthcuoehvihhntggvnhhtsegsvghrnhgrthdrtghhqeenucfkphepkedvrd
-    duvdegrddvvdefrdekfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpegsvghrnhgrtheslhhufhhfhidrtgig
-X-ME-Proxy: <xmx:hfF0Xh8QkSTa2duUDjB4RzTfX6pjG1sETGr0Bk4ui9uJkc1hefxjGw>
-    <xmx:hfF0XtBM-9kgUayHGhpuzBWtxZCUmaPxaZeq-zmf_sq-5Cn9NfmMLg>
-    <xmx:hfF0XhoEiBDZtfOa7F2u0nbUbrxD3GyUJtPKB4njEMeXHrKJ9zN6HQ>
-    <xmx:hfF0XtZTQkyu-AVcgg3jyFjURB-ez6rJM_CcqV3Q2Jmo1fASxFIoEg>
-Received: from neo.luffy.cx (lfbn-idf1-1-140-83.w82-124.abo.wanadoo.fr [82.124.223.83])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E5B973060FE7;
-        Fri, 20 Mar 2020 12:38:28 -0400 (EDT)
-Received: by neo.luffy.cx (Postfix, from userid 500)
-        id 86D86A91; Fri, 20 Mar 2020 17:38:27 +0100 (CET)
-From:   Vincent Bernat <vincent@bernat.ch>
-To:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Vincent Bernat <vincent@bernat.ch>
-Subject: [PATCH] scripts/gdb: replace "is 0" by "== 0"
-Date:   Fri, 20 Mar 2020 17:38:20 +0100
-Message-Id: <20200320163820.3634106-1-vincent@bernat.ch>
-X-Mailer: git-send-email 2.26.0.rc2
+        Fri, 20 Mar 2020 12:38:48 -0400
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+        by outbound-smtp39.blacknight.com (Postfix) with ESMTPS id 1A1331BBF
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 16:38:46 +0000 (GMT)
+Received: (qmail 5667 invoked from network); 20 Mar 2020 16:38:45 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 20 Mar 2020 16:38:45 -0000
+Date:   Fri, 20 Mar 2020 16:38:43 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Jirka Hladky <jhladky@redhat.com>
+Cc:     Phil Auld <pauld@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+Message-ID: <20200320163843.GD3818@techsingularity.net>
+References: <20200309203625.GU3818@techsingularity.net>
+ <20200312095432.GW3818@techsingularity.net>
+ <CAE4VaGA4q4_qfC5qe3zaLRfiJhvMaSb2WADgOcQeTwmPvNat+A@mail.gmail.com>
+ <20200312155640.GX3818@techsingularity.net>
+ <CAE4VaGD8DUEi6JnKd8vrqUL_8HZXnNyHMoK2D+1-F5wo+5Z53Q@mail.gmail.com>
+ <20200312214736.GA3818@techsingularity.net>
+ <CAE4VaGCfDpu0EuvHNHwDGbR-HNBSAHY=yu3DJ33drKgymMTTOw@mail.gmail.com>
+ <CAE4VaGC09OfU2zXeq2yp_N0zXMbTku5ETz0KEocGi-RSiKXv-w@mail.gmail.com>
+ <20200320152251.GC3818@techsingularity.net>
+ <CAE4VaGBGbTT8dqNyLWAwuiqL8E+3p1_SqP6XTTV71wNZMjc9Zg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <CAE4VaGBGbTT8dqNyLWAwuiqL8E+3p1_SqP6XTTV71wNZMjc9Zg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While for small numbers, using "node is 0" works with CPython, it is
-more portable to use "node == 0". Moreover, with Python 3, this
-triggers a syntax warning:
+On Fri, Mar 20, 2020 at 04:30:08PM +0100, Jirka Hladky wrote:
+> >
+> > MPI or OMP and what is a low thread count? For MPI at least, I saw a 0.4%
+> > gain on an 4-node machine for bt_C and a 3.88% regression on 8-nodes. I
+> > think it must be OMP you are using because I found I had to disable UA
+> > for MPI at some point in the past for reasons I no longer remember.
+> 
+> 
+> Yes, it's indeed OMP.  With low threads count, I mean up to 2x number of
+> NUMA nodes (8 threads on 4 NUMA node servers, 16 threads on 8 NUMA node
+> servers).
+> 
 
-    SyntaxWarning: "is" with a literal. Did you mean "=="?
+Ok, so we know it's within the imbalance threshold where a NUMA node can
+be left idle.
 
-Signed-off-by: Vincent Bernat <vincent@bernat.ch>
----
- scripts/gdb/linux/rbtree.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> One possibility would be to spread wide always at clone time and assume
+> > wake_affine will pull related tasks but it's fragile because it breaks
+> > if the cloned task execs and then allocates memory from a remote node
+> > only to migrate to a local node immediately.
+> 
+> 
+> I think the only way to find out how it performs is to test it. If you
+> could prepare a patch like that, I'm more than happy to give it a try!
+> 
 
-diff --git a/scripts/gdb/linux/rbtree.py b/scripts/gdb/linux/rbtree.py
-index 39db889b874c..87d4738984d2 100644
---- a/scripts/gdb/linux/rbtree.py
-+++ b/scripts/gdb/linux/rbtree.py
-@@ -17,7 +17,7 @@ def rb_first(root):
-         raise gdb.GdbError("Must be struct rb_root not {}".format(root.type))
- 
-     node = root['rb_node']
--    if node is 0:
-+    if node == 0:
-         return None
- 
-     while node['rb_left']:
-@@ -33,7 +33,7 @@ def rb_last(root):
-         raise gdb.GdbError("Must be struct rb_root not {}".format(root.type))
- 
-     node = root['rb_node']
--    if node is 0:
-+    if node == 0:
-         return None
- 
-     while node['rb_right']:
+When the initial spreading was prevented, it was for pipelines mainly --
+even basic shell scripts. In that case it was observed that a shell would
+fork/exec two tasks connected via pipe that started on separate nodes and
+had allocated remote data before being pulled close. The processes were
+typically too short lived for NUMA balancing to fix it up by exec time
+the information on where the fork happened was lost.  See 2c83362734da
+("sched/fair: Consider SD_NUMA when selecting the most idle group to
+schedule on"). Now the logic has probably been partially broken since
+because of how SD_NUMA is now treated but the concern about spreading
+wide prematurely remains.
+
 -- 
-2.26.0.rc2
-
+Mel Gorman
+SUSE Labs
