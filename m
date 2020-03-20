@@ -6,104 +6,93 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A951C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 466CDC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4D2A2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0507720754
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="X/NxKWZe"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="iC9emPAu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbgCTAkw (ORCPT
+        id S1727260AbgCTApY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 20:40:52 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56855 "EHLO ozlabs.org"
+        Thu, 19 Mar 2020 20:45:24 -0400
+Received: from ozlabs.org ([203.11.71.1]:46035 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCTAkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 20:40:52 -0400
+        id S1725787AbgCTApY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 20:45:24 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48k4gy0jfhz9sPF;
-        Fri, 20 Mar 2020 11:40:46 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584664850;
-        bh=kaiv7JfWV9XDlC9+SYuxgC5j8/RZ50es9ayK3qs/2mE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=X/NxKWZemt66UvIxUjXOVw4Ptdq5QHAibdHiX49Zi2JwwzXqL7fZsrvCHK4pc1/HI
-         xmV3fWx9tBjrII4nXI07rqlc2SQ3Ecjg8NugayPwrMz9BbIB6BCilhIeQ8UMY3jgFg
-         wU5pH4MmUKmZVg/yVuNMY3cUOb/pecDC5ddriTNyls2NUVXWwZr2vWxlYtVBZQG2Ec
-         a+MN1HcDFE2aKP4kL8Ri2k85U1v2Epj7nsQo5VEzVUwhBgn6m4BsJCWr0798kGst5C
-         DVdnDHFp9E625KaXfUvOldJNXHVRPfV5D7ARR1reAupt/qv9memPvCIZC6jA/Ykjmu
-         /yIBiPddIy2pw==
-Date:   Fri, 20 Mar 2020 11:40:44 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <seanpaul@chromium.org>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Ilia Mirkin <imirkin@alum.mit.edu>
-Subject: linux-next: manual merge of the drm-msm tree with the drm tree
-Message-ID: <20200320114044.095fbabe@canb.auug.org.au>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48k4n82YYsz9sPF;
+        Fri, 20 Mar 2020 11:45:16 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1584665121;
+        bh=W+Z34vvZKks0HjWcw4Ddw/+LfmZqr1ApEjeY4QXdx4k=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=iC9emPAuS206WtkabWO9eiUH5LztrJbBox0vIOO3kG0SPAnzRJgryz3vVCJbwNVHg
+         ChJHL3XBrOvTGVMVOfltoDKGUtZFjkxVnXFTzQ1TYd6mypfOAF2KMXB3DUTC7uSKTh
+         oF4RTptfsRx2oy1FfM0kULYxXYx8zNnnnAUk08dO+rJphnaXy06EWZx71jVHnDP127
+         l5uCxuHEqQ850rzJ6nQGBNnVW7w5K2Yf8/sIlxW2i0QNGxfOMb5MTgdjv4/CTROVBe
+         Iwn7NXnhB6fPJK4bYVeFjWm2DLK9TZs1BTFTRTJ2s4T76HvHWDDPHqlOiIIkN1syjf
+         /ka3XQZiH7IEA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     linux-usb@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        linux-pci@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-wireless@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Geoff Levand <geoff@infradead.org>
+Subject: Re: [patch V2 07/15] powerpc/ps3: Convert half completion to rcuwait
+In-Reply-To: <20200319102613.hbwax7zrrvgcde4x@linutronix.de>
+References: <20200318204302.693307984@linutronix.de> <20200318204408.102694393@linutronix.de> <20200319100459.GA18506@infradead.org> <20200319102613.hbwax7zrrvgcde4x@linutronix.de>
+Date:   Fri, 20 Mar 2020 11:45:16 +1100
+Message-ID: <87lfnvdfc3.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/nk3CTyDI3Fd+oc.bbR+_9NN";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/nk3CTyDI3Fd+oc.bbR+_9NN
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Sebastian Andrzej Siewior <bigeasy@linutronix.de> writes:
+> On 2020-03-19 03:04:59 [-0700], Christoph Hellwig wrote:
+>> But I wonder how alive the whole PS3 support is to start with..
+>
+> OtherOS can only be used on "old" PS3 which do not have have their
+> firmware upgraded past version 3.21, released April 1, 2010 [0].
+> It was not possible to install OtherOS on PS3-slim and I don't remember
+> if it was a successor or a budget version (but it had lower power
+> consumption as per my memory).
+> *I* remember from back then that a few universities bought quite a few
+> of them and used them as a computation cluster. However, whatever broke
+> over the last 10 years is broken.
+>
+> [0] https://en.wikipedia.org/wiki/OtherOS
 
-Hi all,
+Last time I asked on the list there were still a handful of users.
 
-Today's linux-next merge of the drm-msm tree got conflicts in:
+And I had a patch submitted from a user as recently as last October, so
+it still has some life.
 
-  drivers/gpu/drm/msm/edp/edp.c
-  drivers/gpu/drm/msm/hdmi/hdmi.c
-
-between commit:
-
-  a25b988ff83f ("drm/bridge: Extend bridge API to disable connector creatio=
-n")
-
-from the drm tree and commit:
-
-  c479017faa3a ("drm/msm: avoid double-attaching hdmi/edp bridges")
-
-from the drm-msm tree.
-
-I fixed it up (the latter removed the code updated by the former) and
-can carry the fix as necessary. This is now fixed as far as linux-next
-is concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/nk3CTyDI3Fd+oc.bbR+_9NN
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl50EQwACgkQAVBC80lX
-0Gy4ggf/Um5vg3cQw7/Kf4wCqd36b0TiemhzY/v900X4mUeNOHB5sQx04VwZ52CN
-BjuwJ5xmSEV15OuJPg3Kgg4RTIBP+BkrXSXblVQPynTLk+7uEhRosZ/fqq6/3g/J
-O+dyZWmok+O18ftHXo2MwueP2aNrSOam35uBGMcNd75Ur97CjC3ZiSUjEoeCYEMA
-SbWMKBRLDS6L6nr0iI2+ETqPj7CDLpfn9ZPKjrL63GTTQSazyF1t9Tyvyb7BLidT
-QILfn9Qr0TRFGB6UroyFpRQ5ZX2S+hrQBq2SX8V51D98R/PdTNGldaklTsHIkK74
-0a8F17UrjI5Tqmycyjx7eCvMXFTHgQ==
-=ZJSE
------END PGP SIGNATURE-----
-
---Sig_/nk3CTyDI3Fd+oc.bbR+_9NN--
+cheers
