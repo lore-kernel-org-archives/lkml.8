@@ -2,75 +2,133 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D92C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D61C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC68A20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4AF420777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:22:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584710569;
+	bh=hjJLihgB3nvtxE5EuEWSzg0rcZPRkXtuLZ1+KrdHL8Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0UlrFXSZFjvm1wn5WEAGfdPLR6UScIrXto9UwEEBrZEYdwtnVN4m8HPwihmvD6MJt
+	 a9fTsoFVovfrBk2eI51sufdudE+Z5lXbX0jE4twn5q7m0XP/D/U6dbP1qmaK2fturu
+	 BoG+TbDjfqTuMW161bWl8Tp05xtlmq7j5smOrcMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbgCTNVq (ORCPT
+        id S1727285AbgCTNWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:21:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:48904 "EHLO foss.arm.com"
+        Fri, 20 Mar 2020 09:22:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726971AbgCTNVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:21:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 351367FA;
-        Fri, 20 Mar 2020 06:21:45 -0700 (PDT)
-Received: from e120877-lin.cambridge.arm.com (e120877-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 483593F85E;
-        Fri, 20 Mar 2020 06:21:44 -0700 (PDT)
-From:   vincent.donnefort@arm.com
-To:     mingo@redhat.com, peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
-        valentin.schneider@arm.com,
-        Vincent Donnefort <vincent.donnefort@arm.com>
-Subject: [PATCH] sched: Remove unused last_load_update_tick rq member
-Date:   Fri, 20 Mar 2020 13:21:35 +0000
-Message-Id: <1584710495-308969-1-git-send-email-vincent.donnefort@arm.com>
-X-Mailer: git-send-email 2.7.4
+        id S1727021AbgCTNWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 09:22:47 -0400
+Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21D2F2076E;
+        Fri, 20 Mar 2020 13:22:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584710567;
+        bh=hjJLihgB3nvtxE5EuEWSzg0rcZPRkXtuLZ1+KrdHL8Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=j4RgFdzE3cBPdPHFE4iwAwZXR12WlJZZLPnJd6qUHm2pe2mnDYuoZLIMy5OQR1q/2
+         IPdve/me6HZH5zZWkFc9z3gDGVP1g5MyKUGa0mdM+h8c+DSs1ZdFtnr7OXDIfuLCLj
+         j6qQB4u/bvbEOC4YdjkuDNJu4j9wW4xhL1SnpvUU=
+Date:   Fri, 20 Mar 2020 14:22:43 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Federico Vaga <federico.vaga@vaga.pv.it>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH] docs: conf.py: avoid thousands of duplicate label
+ warning on Sphinx
+Message-ID: <20200320142243.52107842@coco.lan>
+In-Reply-To: <20200320125918.5eb5af04@coco.lan>
+References: <20200320112122.48244ec4@coco.lan>
+        <16f1c270a9077032de379b1cb30dfbb3e3670aee.1584702515.git.mchehab+huawei@kernel.org>
+        <3508337.2CZTLhteCP@harkonnen>
+        <20200320125918.5eb5af04@coco.lan>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Donnefort <vincent.donnefort@arm.com>
+Em Fri, 20 Mar 2020 12:59:18 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
 
-The commit 5e83eafbfd3b ("sched/fair: Remove the rq->cpu_load[] update
-code") eliminated the use case for rq->last_load_update_tick. Removing
-it.
+> Em Fri, 20 Mar 2020 12:24:45 +0100
+> Federico Vaga <federico.vaga@vaga.pv.it> escreveu:
+> 
+> > On Friday, March 20, 2020 12:12:35 PM CET Mauro Carvalho Chehab wrote:
+> > > The autosectionlabel extension is nice, as it allows to refer to
+> > > a section by its name without requiring any extra tag to create
+> > > a reference name.
+> > > 
+> > > However, on its default, it has two serious problems:
+> > > 
+> > > 1) the namespace is global. So, two files with different
+> > >    "introduction" section would create a label with the
+> > >    same name. This is easily solvable by forcing the extension
+> > >    to prepend the file name with:
+> > > 
+> > > 	autosectionlabel_prefix_document = True
+> > > 
+> > > 2) It doesn't work hierarchically. So, if there are two level 1
+> > >    sessions (let's say, one labeled "open" and another one "ioctl")
+> > >    and both have a level 2 "synopsis" label, both section 2 will
+> > >    have the same identical name.
+> > > 
+> > >    Currently, there's no way to tell Sphinx to create an
+> > >    hierarchical reference like:
+> > > 
+> > > 		open / synopsis
+> > > 		ioctl / synopsis
+> > > 
+> > >   This causes around 800 warnings. So, the fix should be to
+> > >   not let autosectionlabel to produce references for anything
+> > >   that it is not at level one, with:
+> > > 
+> > > 	autosectionlabel_maxdepth = 1  
+> > 
+> > So, for level 1 headers is fine to use autosectionlabel, but if we want to 
+> > refer to level 2,3... we have to create labels manually.
+> 
+> Yes.
 
-Signed-off-by: Vincent Donnefort <vincent.donnefort@arm.com>
+Hmm... actually no. maxdepth = 1 will only get the title of each
+document.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 1a9983d..c41ee26 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6685,7 +6685,6 @@ void __init sched_init(void)
- 
- 		rq_attach_root(rq, &def_root_domain);
- #ifdef CONFIG_NO_HZ_COMMON
--		rq->last_load_update_tick = jiffies;
- 		rq->last_blocked_load_update_tick = jiffies;
- 		atomic_set(&rq->nohz_flags, 0);
- #endif
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 9ea6478..6e14fad 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -860,7 +860,6 @@ struct rq {
- #endif
- #ifdef CONFIG_NO_HZ_COMMON
- #ifdef CONFIG_SMP
--	unsigned long		last_load_update_tick;
- 	unsigned long		last_blocked_load_update_tick;
- 	unsigned int		has_blocked_load;
- #endif /* CONFIG_SMP */
--- 
-2.7.4
+It should be at least maxdepth = 2, but this is producing some warnings
+here (part on some new patches I wrote, that aren't upstream yet).
 
+I'll run some tests and send a new version of this patch.
+
+
+> 
+> If we want to use it for other levels, the autosectionlabel extension
+> would need to be modified to work on an hierarchical way, creating an
+> unique label that would contain the entire hierarchy, starting from
+> the filename.
+> 
+> Also, ideally, it should also handle cross-reference locally, searching
+> first for a reference at the same hierarchical level, then at level - 1
+> and so on.
+> 
+> I suspect that, even with that, we may still have some troubles, as
+> right now some files may have explicitly defined a reference like
+> that, but those would likely be easy to fix.
+> 
+> Thanks,
+> Mauro
+
+
+
+Thanks,
+Mauro
