@@ -2,284 +2,268 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1129C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FB8C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD8BF20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:36:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RBujGlAq"
+	by mail.kernel.org (Postfix) with ESMTP id 08A5920724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbgCTDgx (ORCPT
+        id S1727145AbgCTDhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 23:36:53 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:12548 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726975AbgCTDgx (ORCPT
+        Thu, 19 Mar 2020 23:37:42 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:63475 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726614AbgCTDhl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 23:36:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584675412; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=M3t+oAG+0rKLDlYPz2q1I8Jp5bRrYW00ieIVzeM0aqE=; b=RBujGlAqx+1i8j8yaaObOrQFiZVoNi+tF2AD6AHSUX1SdSVRu9kygD266+rslP0IyWGqbULG
- BDqjqfaVPineVv7uCTqyb9jnVhoNSq9KaQ9OSqds+IWGkt07SyeBA7nzWHqncLU+2d8rAYbh
- ZXrygRrLs7rczYTuHszkWhf0IHg=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e743a42.7f6125a1fa78-smtp-out-n03;
- Fri, 20 Mar 2020 03:36:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 51B03C43637; Fri, 20 Mar 2020 03:36:33 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 63388C432C2;
-        Fri, 20 Mar 2020 03:36:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 63388C432C2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     John Stultz <john.stultz@linaro.org>, smasetty@codeaurora.org,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 1/2] dt-bindings: display: msm: Convert GMU bindings to YAML
-Date:   Thu, 19 Mar 2020 21:36:10 -0600
-Message-Id: <20200320033611.7623-2-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200320033611.7623-1-jcrouse@codeaurora.org>
-References: <20200320033611.7623-1-jcrouse@codeaurora.org>
+        Thu, 19 Mar 2020 23:37:41 -0400
+IronPort-SDR: qaV3T4b5SCul8BtOM2bZ2KM0Gqixsh1HcMKDLSGfafdKq/1Ip8kjlxHSP/4leC1xI0y6mpZl+V
+ 06w2IkpOek0+N7cOp1t9RwHQIw1ZRAbIBMpkZv4UIWOYjvfVqZxiJNnORclBiTt8FbHZgzzmCF
+ XrmDmDUpUAMra0bYcGieaYvtgQG1AWUrqT5jcbjeYHUiDJH9bEB/enz517W1ZUpPVZW2pwDLDQ
+ zz0TsDbTweA1z1y7oJ4Xm7y/wYHE9bQCVH/FnhUJLstFEXpdKTmzzqbD4C4CRutRG5QhVR68A5
+ ric=
+X-IronPort-AV: E=Sophos;i="5.72,283,1580803200"; 
+   d="scan'208";a="46924902"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa3.mentor.iphmx.com with ESMTP; 19 Mar 2020 19:37:40 -0800
+IronPort-SDR: ULM96d0CGVZ3Rv6KxkX4zi4MX9lUX6iuCYseznlFFAWG3nRK0ylXEwlrBGHxpdzoNmKxB7cLyQ
+ HVOFcNX5OvzdWMMxtJpJLPNwIZjCmY40f9R/oy7+M74J1JH/XDoDRty/RtTRXJKech0pPNJxEH
+ Ytt0ffAu1v8sv9Uvdnd8nUILMoBLiRF811+7oXfj+q32I9g3I8A3F6hPp/Y34rTrbWoCaFn4hh
+ cBnXgI6kU7UsYKcvUS+L+WvuvgIGQkRE3g+ndQ+45DD+ofFNeTDXb6lr+h8H+TS4Nho9WYury+
+ IWc=
+Subject: Re: [PATCH v7 00/48] atmel_mxt_ts misc
+To:     Dmitry Osipenko <digetx@gmail.com>, <jikos@kernel.org>,
+        <benjamin.tissoires@redhat.com>, <rydberg@bitmath.org>,
+        <dmitry.torokhov@gmail.com>, <nick@shmanahar.org>,
+        <bsz@semihalf.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
+References: <20200212084218.32344-1-jiada_wang@mentor.com>
+ <c583d151-9243-cbde-a04b-bc0389d9be5a@gmail.com>
+From:   "Wang, Jiada" <jiada_wang@mentor.com>
+Message-ID: <89e4bb0b-b2eb-0b67-4307-fb2af914b1c0@mentor.com>
+Date:   Fri, 20 Mar 2020 12:37:25 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <c583d151-9243-cbde-a04b-bc0389d9be5a@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SVR-ORW-MBX-05.mgc.mentorg.com (147.34.90.205) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert display/msm/gmu.txt to display/msm/gmu.yaml and remove the old
-text bindings.  The 'sram' text from the old binding never applied to
-the GMU so it was not converted but all the other properties were correct.
+Hello Dmitry
 
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+I have submitted v8 patch-set to address your comments towards v7 patch-set,
+most of checkpatch warnings and errors have been addressed,
 
- .../devicetree/bindings/display/msm/gmu.txt   |  65 ---------
- .../devicetree/bindings/display/msm/gmu.yaml  | 123 ++++++++++++++++++
- 2 files changed, 123 insertions(+), 65 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
- create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.yaml
+But I didn't update for following two types of warnings
+since I want to keep consistency with legacy code
 
-diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
-deleted file mode 100644
-index 90af5b0a56a9..000000000000
---- a/Documentation/devicetree/bindings/display/msm/gmu.txt
-+++ /dev/null
-@@ -1,65 +0,0 @@
--Qualcomm adreno/snapdragon GMU (Graphics management unit)
--
--The GMU is a programmable power controller for the GPU. the CPU controls the
--GMU which in turn handles power controls for the GPU.
--
--Required properties:
--- compatible: "qcom,adreno-gmu-XYZ.W", "qcom,adreno-gmu"
--    for example: "qcom,adreno-gmu-630.2", "qcom,adreno-gmu"
--  Note that you need to list the less specific "qcom,adreno-gmu"
--  for generic matches and the more specific identifier to identify
--  the specific device.
--- reg: Physical base address and length of the GMU registers.
--- reg-names: Matching names for the register regions
--  * "gmu"
--  * "gmu_pdc"
--  * "gmu_pdc_seg"
--- interrupts: The interrupt signals from the GMU.
--- interrupt-names: Matching names for the interrupts
--  * "hfi"
--  * "gmu"
--- clocks: phandles to the device clocks
--- clock-names: Matching names for the clocks
--   * "gmu"
--   * "cxo"
--   * "axi"
--   * "mnoc"
--- power-domains: should be:
--	<&clock_gpucc GPU_CX_GDSC>
--	<&clock_gpucc GPU_GX_GDSC>
--- power-domain-names: Matching names for the power domains
--- iommus: phandle to the adreno iommu
--- operating-points-v2: phandle to the OPP operating points
--
--Example:
--
--/ {
--	...
--
--	gmu: gmu@506a000 {
--		compatible="qcom,adreno-gmu-630.2", "qcom,adreno-gmu";
--
--		reg = <0x506a000 0x30000>,
--			<0xb280000 0x10000>,
--			<0xb480000 0x10000>;
--		reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
--
--		interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "hfi", "gmu";
--
--		clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
--			<&gpucc GPU_CC_CXO_CLK>,
--			<&gcc GCC_DDRSS_GPU_AXI_CLK>,
--			<&gcc GCC_GPU_MEMNOC_GFX_CLK>;
--		clock-names = "gmu", "cxo", "axi", "memnoc";
--
--		power-domains = <&gpucc GPU_CX_GDSC>,
--				<&gpucc GPU_GX_GDSC>;
--		power-domain-names = "cx", "gx";
--
--		iommus = <&adreno_smmu 5>;
--
--		operating-points-v2 = <&gmu_opp_table>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/msm/gmu.yaml b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-new file mode 100644
-index 000000000000..0b8736a9384e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-@@ -0,0 +1,123 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+# Copyright 2019-2020, The Linux Foundation, All Rights Reserved
-+%YAML 1.2
-+---
-+
-+$id: "http://devicetree.org/schemas/display/msm/gmu.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Devicetree bindings for the GMU attached to certain Adreno GPUs
-+
-+maintainers:
-+  - Rob Clark <robdclark@gmail.com>
-+
-+description: |
-+  These bindings describe the Graphics Management Unit (GMU) that is attached
-+  to members of the Adreno A6xx GPU family. The GMU provides on-device power
-+  management and support to improve power efficiency and reduce the load on
-+  the CPU.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - qcom,adreno-gmu-630.2
-+      - const: qcom,adreno-gmu
-+
-+  reg:
-+    items:
-+      - description: Core GMU registers
-+      - description: GMU PDC registers
-+      - description: GMU PDC sequence registers
-+
-+  reg-names:
-+    items:
-+      - const: gmu
-+      - const: gmu_pdc
-+      - const: gmu_pdc_seq
-+
-+  clocks:
-+    items:
-+     - description: GMU clock
-+     - description: GPU CX clock
-+     - description: GPU AXI clock
-+     - description: GPU MEMNOC clock
-+
-+  clock-names:
-+    items:
-+      - const: gmu
-+      - const: cxo
-+      - const: axi
-+      - const: memnoc
-+
-+  interrupts:
-+    items:
-+     - description: GMU HFI interrupt
-+     - description: GMU interrupt
-+
-+
-+  interrupt-names:
-+    items:
-+      - const: hfi
-+      - const: gmu
-+
-+  power-domains:
-+     items:
-+       - description: CX power domain
-+       - description: GX power domain
-+
-+  power-domain-names:
-+     items:
-+       - const: cx
-+       - const: gx
-+
-+  iommus:
-+    maxItems: 1
-+
-+  operating-points-v2: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - interrupt-names
-+  - power-domains
-+  - power-domain-names
-+  - iommus
-+  - operating-points-v2
-+
-+examples:
-+ - |
-+   #include <dt-bindings/clock/qcom,gpucc-sdm845.h>
-+   #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+   #include <dt-bindings/interrupt-controller/irq.h>
-+   #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+   gmu: gmu@506a000 {
-+        compatible="qcom,adreno-gmu-630.2", "qcom,adreno-gmu";
-+
-+        reg = <0x506a000 0x30000>,
-+              <0xb280000 0x10000>,
-+              <0xb480000 0x10000>;
-+        reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
-+
-+        clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
-+                 <&gpucc GPU_CC_CXO_CLK>,
-+                 <&gcc GCC_DDRSS_GPU_AXI_CLK>,
-+                 <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
-+        clock-names = "gmu", "cxo", "axi", "memnoc";
-+
-+        interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "hfi", "gmu";
-+
-+        power-domains = <&gpucc GPU_CX_GDSC>,
-+                        <&gpucc GPU_GX_GDSC>;
-+        power-domain-names = "cx", "gx";
-+
-+        iommus = <&adreno_smmu 5>;
-+        operating-points-v2 = <&gmu_opp_table>;
-+   };
--- 
-2.17.1
+WARNING: DEVICE_ATTR unusual permissions '0600' used
+#290: FILE: drivers/input/touchscreen/atmel_mxt_ts.c:3761:
++static DEVICE_ATTR(debug_v2_enable, 0600, NULL,
+
+WARNING: Consider renaming function(s) 'mxt_debug_notify_show' to 
+'debug_notify_show'
+#292: FILE: drivers/input/touchscreen/atmel_mxt_ts.c:3763:
++static DEVICE_ATTR(debug_notify, 0444, mxt_debug_notify_show, NULL);
+
+please let me know if you have different view on this
+
+Thanks,
+Jiada
+
+On 2020/03/13 0:21, Dmitry Osipenko wrote:
+> 12.02.2020 11:41, Jiada Wang пишет:
+>> This patch-set forward ports Nick Dyer's work in ndyer/linux github repository
+>> as long as some other features and fixes
+>>
+>> Balasubramani Vivekanandan (2):
+>>    Input: atmel_mxt_ts: Limit the max bytes transferred in an i2c
+>>      transaction
+>>    Input: atmel_mxt_ts: use gpiod_set_value_cansleep for reset pin
+>>
+>> Dean Jenkins (1):
+>>    Input: atmel_mxt_ts: return error from
+>>      mxt_process_messages_until_invalid()
+>>
+>> Deepak Das (6):
+>>    Input: Atmel: improve error handling in mxt_start()
+>>    Input: Atmel: improve error handling in mxt_initialize()
+>>    Input: Atmel: improve error handling in mxt_update_cfg()
+>>    Input: Atmel: Improve error handling in mxt_initialize_input_device()
+>>    Input: Atmel: handle ReportID "0x00" while processing T5 messages
+>>    Input: Atmel: use T44 object to process T5 messages
+>>
+>> George G. Davis (1):
+>>    input: atmel_mxt_ts: export GPIO reset line via sysfs
+>>
+>> Jiada Wang (3):
+>>    Input: introduce input_mt_report_slot_inactive
+>>    Input: atmel_mxt_ts - eliminate data->raw_info_block
+>>    Input: atmel_mxt_ts - Fix compilation warning
+>>
+>> Karl Tsou (1):
+>>    Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msgs
+>>
+>> Kautuk Consul (2):
+>>    Input: atmel_mxt_ts - Change call-points of mxt_free_* functions
+>>    Input: atmel_mxt_ts - rely on calculated_crc rather than file
+>>      config_crc
+>>
+>> Naveen Chakka (2):
+>>    input: touchscreen: atmel_mxt_ts: Added sysfs entry for touchscreen
+>>      status
+>>    input: atmel_mxt_ts: added sysfs interface to update atmel T38 data
+>>
+>> Nick Dyer (26):
+>>    Input: atmel_mxt_ts - rework sysfs init/remove
+>>    Input: atmel_mxt_ts - only read messages in mxt_acquire_irq() when
+>>      necessary
+>>    Input: atmel_mxt_ts - split large i2c transfers into blocks
+>>    Input: atmel_mxt_ts - output status from T48 Noise Supression
+>>    Input: atmel_mxt_ts - output status from T42 Touch Suppression
+>>    Input: atmel_mxt_ts - implement T9 vector/orientation support
+>>    Input: atmel_mxt_ts - implement T15 Key Array support
+>>    Input: atmel_mxt_ts - handle reports from T47 Stylus object
+>>    Input: atmel_mxt_ts - implement support for T107 active stylus
+>>    Input: atmel_mxt_ts - release touch state during suspend
+>>    Input: atmel_mxt_ts - add regulator control support
+>>    Input: atmel_mxt_ts - report failures in suspend/resume
+>>    Input: atmel_mxt_ts - allow specification of firmware file name
+>>    Input: atmel_mxt_ts - handle cfg filename via pdata/sysfs
+>>    Input: atmel_mxt_ts - allow input name to be specified in platform
+>>      data
+>>    Input: atmel_mxt_ts - refactor firmware flash to extract context into
+>>      struct
+>>    Input: atmel_mxt_ts - refactor code to enter bootloader into separate
+>>      func
+>>    Input: atmel_mxt_ts - combine bootloader version query with probe
+>>    Input: atmel_mxt_ts - improve bootloader state machine handling
+>>    Input: atmel_mxt_ts - rename bl_completion to chg_completion
+>>    Input: atmel_mxt_ts - make bootloader interrupt driven
+>>    Input: atmel_mxt_ts - delay enabling IRQ when not using regulators
+>>    Input: atmel_mxt_ts - implement I2C retries
+>>    Input: atmel_mxt_ts - orientation is not present in hover
+>>    Input: atmel_mxt_ts - implement debug output for messages
+>>    Input: atmel_mxt_ts - implement improved debug message interface
+>>
+>> Nikhil Ravindran (1):
+>>    Input: atmel_mxt_ts: Add support for run self-test routine.
+>>
+>> Sanjeev Chugh (1):
+>>    Input: atmel_mxt_ts: Implement synchronization during various
+>>      operation
+>>
+>> karl tsou (1):
+>>    Input: atmel_mxt_ts - add config checksum attribute to sysfs
+>>
+>> keerthikumarp (1):
+>>    input: atmel_mxt_ts: Add Missing Delay for reset handling of Atmel
+>>      touch panel controller in detachable displays.
+>>
+>> ---
+>> v7:
+>> Fix regression found when updating firmware
+>> Following commits have been updated to fix regression found when
+>> updating firmware
+>> Input: atmel_mxt_ts - improve bootloader state machine handling
+>> Input: atmel_mxt_ts - make bootloader interrupt driven
+>> input: touchscreen: atmel_mxt_ts: Added sysfs entry for touchscreen status
+>> Input: atmel_mxt_ts: Implement synchronization during various operation
+>>
+>> v6:
+>> Fix issue in commit ("Input: introduce input_mt_report_slot_inactive")
+>> reported by kernel test robot
+>>
+>> v5:
+>> Following commits have been updated to address warnings & errors
+>> reported by kbuild test robot
+>> Input: atmel_mxt_ts - make bootloader interrupt driven
+>> Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msgs
+>>
+>> Following commit has been updated
+>> Input: introduce input_mt_report_slot_inactive
+>>
+>> v4:
+>> Following commit in v3 patch-set has been removed
+>> Input: switch to use return value of input_mt_report_slot_state
+>>
+>> Following commit has been updated to address checkpatch warning
+>> Input: atmel_mxt_ts: Implement synchronization during various operation
+>>
+>> v3:
+>> Following commits have been updated compared to v2 patchset
+>> Input: atmel_mxt_ts - implement debug output for messages
+>> - added inline comment
+>> Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msg
+>> - changed dev_info() to dev_dbg()
+>>
+>> v2:
+>> Following commit in v1 patchset has been split into two commits
+>> Input: introduce input_mt_report_slot_inactive
+>>
+>> Following commits have been updated compared to v1 patchset
+>> Input: atmel_mxt_ts - split large i2c transfers into blocks
+>> Input: atmel_mxt_ts - output status from T42 Touch Suppression
+>>
+>> Following commits in v1 patchset have been squashed
+>> Input: touchscreen: Atmel: Add device tree support for T15 key array
+>> objects
+>> Input: atmel_mxt_ts - check data->input_dev is not null in
+>> mxt_input_sync()
+>> Input: atmel_mxt_ts - check firmware format before entering bootloader
+>> Input: atmel_mxt_ts: update stale use_retrigen_workaround flag
+>> input: atmel_mxt_ts: move bootloader probe from mxt_initialize()
+>> input: Atmel: limit the max bytes transferred while reading T5 messages
+>> Input: atmel_mxt_ts: Use msecs_to_jiffies() instead of HZ
+>> Input: atmel_mxt_ts: Use complete when in_bootloader true
+>> Input: atmel_mxt_ts: Prevent crash due to freeing of input device
+>> input: atmel_mxt_ts: Add NULL check for sysfs attribute debug_msg_attr
+>>
+>> Following commits in v1 patchset have been dropped:
+>> Input: atmel_mxt_ts - configure and use gpios as real gpios
+>> Input: touchscreen: Atmel: Enable IRQ_DISABLE_UNLAZY flag for interrupt
+>> Input: atmel_mxt_ts - add memory access interface via sysfs
+>> Input: atmel_mxt_ts: Remove sysfs attributes during driver detach
+>> Input: atmel_mxt_ts: Avoid race condition in freeing of input device
+>>
+>>
+>> v1: initial version
+>> ---
+>>   .../bindings/input/atmel,maxtouch.txt         |   14 +
+>>   MAINTAINERS                                   |    1 +
+>>   drivers/hid/hid-alps.c                        |    3 +-
+>>   drivers/hid/hid-multitouch.c                  |    6 +-
+>>   drivers/input/misc/xen-kbdfront.c             |    2 +-
+>>   drivers/input/mouse/elan_i2c_core.c           |    2 +-
+>>   drivers/input/touchscreen/atmel_mxt_ts.c      | 2270 ++++++++++++++---
+>>   drivers/input/touchscreen/cyttsp4_core.c      |    5 +-
+>>   drivers/input/touchscreen/cyttsp_core.c       |    2 +-
+>>   drivers/input/touchscreen/melfas_mip4.c       |    4 +-
+>>   drivers/input/touchscreen/mms114.c            |    2 +-
+>>   drivers/input/touchscreen/raspberrypi-ts.c    |    2 +-
+>>   drivers/input/touchscreen/stmfts.c            |    2 +-
+>>   include/dt-bindings/input/atmel_mxt_ts.h      |   22 +
+>>   include/linux/input/mt.h                      |    5 +
+>>   15 files changed, 1985 insertions(+), 357 deletions(-)
+>>   create mode 100644 include/dt-bindings/input/atmel_mxt_ts.h
+>>
+> 
+> Hello Jiada,
+> 
+> Please run all the patches through `scripts/checkpatch.pl --strict` and
+> fix all the reported problems.
+> 
+> Otherwise this is a very good series, it makes MXT1386 to work because
+> I2C retying is indeed required for that controller.
+> 
