@@ -2,107 +2,75 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D89AC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1217C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2A892072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A08212072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:26:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbgCTPYx (ORCPT
+        id S1727411AbgCTP0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:24:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56370 "EHLO mx2.suse.de"
+        Fri, 20 Mar 2020 11:26:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:51478 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbgCTPYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 11:24:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id AAFFAAD68;
-        Fri, 20 Mar 2020 15:24:50 +0000 (UTC)
-Subject: Re: [PATCH] bcache: optimize barrier usage for Rmw atomic bitops
-To:     Davidlohr Bueso <dave@stgolabs.net>, kent.overstreet@gmail.com
-Cc:     linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dbueso@suse.de>
-References: <20200129180802.24626-1-dave@stgolabs.net>
-From:   Coly Li <colyli@suse.de>
-Organization: SUSE Labs
-Message-ID: <877a5349-3133-404a-86ea-02309080a520@suse.de>
-Date:   Fri, 20 Mar 2020 23:24:45 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
+        id S1726847AbgCTP0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 11:26:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72C421FB;
+        Fri, 20 Mar 2020 08:26:08 -0700 (PDT)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6226F3F792;
+        Fri, 20 Mar 2020 08:26:05 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 15:26:02 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-mips@vger.kernel.org, x86@kernel.org,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>
+Subject: Re: [PATCH v5 18/26] arm64: vdso32: Code clean up
+Message-ID: <20200320152602.GA7448@mbp>
+References: <20200320145351.32292-1-vincenzo.frascino@arm.com>
+ <20200320145351.32292-19-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200129180802.24626-1-dave@stgolabs.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320145351.32292-19-vincenzo.frascino@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/1/30 2:08 上午, Davidlohr Bueso wrote:
-> We can avoid the unnecessary barrier on non LL/SC architectures,
-> such as x86. Instead, use the smp_mb__after_atomic().
+On Fri, Mar 20, 2020 at 02:53:43PM +0000, Vincenzo Frascino wrote:
+> The compat vdso library had some checks that are not anymore relevant.
 > 
-
-Hi Davidlohr,
-
-> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
-
-Sorry for replying late. Indeed we don't need to worry about the extra
-smp_mb() because the code patch gets called every 5 seconds by default,
-which is very infrequent. But I like this more accurate patch, it is in
-my testing already.
-
-And by your inspiration, I also fix some other locations to use
-smp_mb__before/after_atomic().
-
-Thank you.
-
-Coly Li
-
-> ---
->  drivers/md/bcache/writeback.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> Remove the unused code from the compat vDSO library.
 > 
-> diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
-> index 4a40f9eadeaf..284ff10f480f 100644
-> --- a/drivers/md/bcache/writeback.c
-> +++ b/drivers/md/bcache/writeback.c
-> @@ -183,7 +183,7 @@ static void update_writeback_rate(struct work_struct *work)
->  	 */
->  	set_bit(BCACHE_DEV_RATE_DW_RUNNING, &dc->disk.flags);
->  	/* paired with where BCACHE_DEV_RATE_DW_RUNNING is tested */
-> -	smp_mb();
-> +	smp_mb__after_atomic();
->  
->  	/*
->  	 * CACHE_SET_IO_DISABLE might be set via sysfs interface,
-> @@ -193,7 +193,7 @@ static void update_writeback_rate(struct work_struct *work)
->  	    test_bit(CACHE_SET_IO_DISABLE, &c->flags)) {
->  		clear_bit(BCACHE_DEV_RATE_DW_RUNNING, &dc->disk.flags);
->  		/* paired with where BCACHE_DEV_RATE_DW_RUNNING is tested */
-> -		smp_mb();
-> +		smp_mb__after_atomic();
->  		return;
->  	}
->  
-> @@ -229,7 +229,7 @@ static void update_writeback_rate(struct work_struct *work)
->  	 */
->  	clear_bit(BCACHE_DEV_RATE_DW_RUNNING, &dc->disk.flags);
->  	/* paired with where BCACHE_DEV_RATE_DW_RUNNING is tested */
-> -	smp_mb();
-> +	smp_mb__after_atomic();
->  }
->  
->  static unsigned int writeback_delay(struct cached_dev *dc,
+> Note: This patch is preparatory for a future one that will introduce
+> asm/vdso/processor.h on arm64.
 > 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Link: https://lore.kernel.org/lkml/20200317122220.30393-19-vincenzo.frascino@arm.com
 
-
--- 
-
-Coly Li
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
