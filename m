@@ -2,176 +2,233 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C9BC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D65C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4DD520753
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973B620767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:41:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tIwc6+70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbgCTQlA (ORCPT
+        id S1727563AbgCTQlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:41:00 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:57943 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbgCTQlA (ORCPT
+        Fri, 20 Mar 2020 12:41:53 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34658 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727444AbgCTQlw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:41:00 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1N0FE1-1jS2Oc1aYJ-00xJPk for <linux-kernel@vger.kernel.org>; Fri, 20 Mar
- 2020 17:40:57 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 2E9386502D9
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 16:40:57 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MabASmG0uCLe for <linux-kernel@vger.kernel.org>;
-        Fri, 20 Mar 2020 17:40:56 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id C82E564CB8E
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 17:40:56 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.8.5.41) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 20 Mar 2020 17:40:56 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id 33D6A80505; Fri, 20 Mar 2020 17:12:04 +0100 (CET)
-Date:   Fri, 20 Mar 2020 17:12:04 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH v3 08/11] dt-bindings: adv748x: add information about serial
- audio interface (I2S/TDM)
-Message-ID: <5e7da04cd003778cf525eac96d8bacdf4a245a13.1584720678.git.alexander.riesen@cetitec.com>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1584720678.git.alexander.riesen@cetitec.com>
+        Fri, 20 Mar 2020 12:41:52 -0400
+Received: by mail-lj1-f193.google.com with SMTP id s13so7152589ljm.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 09:41:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CaZ0r65X92Oxu7GzVKpyix0zMa0pOHAykHkKw8nV8IU=;
+        b=tIwc6+70CRNkkxf9Bma96+ddMStZ0BSBedkphLIyty/Dmt7yi8/AE9ewVIL8DQLe2G
+         q3bqK8nAKYXMpKYORMB4NnUYDcQaNu9gkP3HQQrNdSw2ys3oIZYjtenv0MotnBX4Eaz4
+         Utl6axkQI963l56bqWYmooCw1vyCeDNn8L0ZJCtJ4nBRNvsxWts5Vnp23EkqRJ7X8hNh
+         XlXcg8IOuxIh2qeBhRATDM8//GMVMAbzHCQJflwblAtv/9U72xdHUuOkQutneSK9TCer
+         m+Zuja8hXxP2UTMg+BUyxrX78Qus960+IyTCDP0XrC1qqhVnMxJANA1wSyAiyQLuYAy7
+         moaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CaZ0r65X92Oxu7GzVKpyix0zMa0pOHAykHkKw8nV8IU=;
+        b=a+1foPffJDRAkz5oRW6cVCvvafcerY8clX2udiC43IPWZoxEjXqcWbCGZkwew+8at0
+         IfMBn1whW0R3Ut/I/7WVYKt2D8+94RoTaJ5UlUQyBM4TrlR1Wnrp2cGFyg2zDa7NUhVU
+         qAZDoq0A9X0ZB/bzX4D72jEixTP6/QwiTUIu5K9F23UYZJnpC0nOrSZfGzgdPewWdwvb
+         DYW/1eauqnMrLX5k38sNANWUppNnW7uVzLKi7lhiVYejKsTU3h+hggJoz6OvbC8tQyXX
+         uAZG/s1U31/J0T9vSviNidLj4z3yjHbZuTr0perCziCY5xcgalOtlIlH6h/kPa4/FAUq
+         vMyw==
+X-Gm-Message-State: ANhLgQ05iqb825O6aqlXm2WfCf9XLNvo8GBws+NrEH1I/TrkTgiz6ueo
+        eqonJQFBfVmEh8+vTMBiFqgw6fzKv3ZrUQbQyCauQA==
+X-Google-Smtp-Source: ADFU+vvXj/1ErVqk4FcUHN8aEU2aBjr/TJ6KGh6YPa4D8H5lLAQ++EhwhU6eKk3SWeXmxyMwGYSzftbNLNrWo2EgxHk=
+X-Received: by 2002:a2e:988d:: with SMTP id b13mr5879420ljj.217.1584722510255;
+ Fri, 20 Mar 2020 09:41:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1584720678.git.alexander.riesen@cetitec.com>
-X-Originating-IP: [10.8.5.41]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A6D7660
-X-Provags-ID: V03:K1:8Y745pdoH28M2HrAV7mYoMeSTsJLObM1DmquN/zMt9LOzW0YSxK
- rpW0Y9VexUPNJ69tbua8nb5ZiMR5wpkE9mdD42+a/AY6nF8qsU94P2sYCiyVU0GLdCAyWXJ
- 2m+4BComffRVAz+nmC46v4oC7jOgYqgQz5ydZ7wqWHKNpJcTTOb58mVIkNOM6576YrJ9biW
- sDGIFv0cbfdHXCZ83xIYQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4RhivKJB2oA=:LVRKJQDRDgDd0lDTEGa6x6
- kGGE52DLP61t8uxKEDHO7QNU+E9VSbDoI4+N5xmhkBCuvisFy6C36Ur4bYHPN95kZ1P54okIr
- XxgVwOmNGg4t236qXC/LF+ezPb9kTVbhRsmgjbWE4XjSZJ9FZR6d9fkeAbPx6F2EvIKaOGEUr
- 6JUy2GkpW8BXaS+jeiEbv8Dx+NCYUY1zcP9VlM+/P+tno/UkXRp3SEdcvING5kBgkpn+qTSs/
- KmDii2dwGZAjmOA1kr08ldFNpYqmuSoLhug/uqs9dsSMYiLmDxA7tnV6QOnh2/ug2Z0+D6sam
- 10y1v0OHuK5KYuDnsCcRBbnX5SnshgM9hfPoFsQguSmkfhQWaMbgQZD9ECCAf4cDJ+M9e+Fnm
- tvnR45IZpRVtyiYZdroIKS57lZ87sjcOUEeR1FpFBgHCPU2B0XTkzRcCI/v/vHuDmdm23R3wQ
- IAkye4J6UAt7/hZDnz1RUj7f+v6XAhiU+dkSxA48ZS/koK/SLshQ8Kp7OSF78BnTD93IDRpG2
- BTZJtQNw0EsGxFbYK4BSQCF3XZX5SSjN1Vu8vaggC/exGzwPVSGN+iX0nFE87OzuwbSFALfn8
- ySv8wpzZpbjy9g/Qqe3xMF+3kEUhGbOojczW7jWvv2u1odSBmk9Z5N3zizyYBweApfP5RVzAP
- Ns+2AOhxFVtFTqee4d/dkR/PyyMxyfyqiT3qYJ+XMSQUbuiUYHW+0oFFVpCO+K/ie1fx4Oeho
- wZ++clooJ1n9Dn4aDrJYY5JYvk2LoY8MkRyqqAVvlkQS9HsnEGfcGLIEPcJmGlNefJjMvXsUj
- VoO8c1cqz0iTPNbbLIOZml0p6OmxqsdYHLXtdwxUEDTV0xQqQ5xr0+OhOjp7Dcsic5UCgHhNH
- Wbm14MTLxYpVxcYCgkWk3iT5vZgF7lCwwfUULdx/p89QTOY0c3b8+nngQEwChVcaIo3t0KL9c
- JbbhXy+RoH9KtGLe0R3M3ZMTaVTli4vc=
+References: <20200319123902.941451241@linuxfoundation.org> <CA+G9fYsDw6JEznSHm2X=Wvq1dysGbGa4-VpXJyzKWZQxLMdagw@mail.gmail.com>
+ <7a8c6a752793f0907662c3e9c197c284fc461550.camel@codethink.co.uk>
+ <20200320080317.GA312074@kroah.com> <20200320081122.GA349027@kroah.com>
+In-Reply-To: <20200320081122.GA349027@kroah.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 20 Mar 2020 22:11:39 +0530
+Message-ID: <CA+G9fYtS0u1onCKCiZApRkZXzLMgW6X54z5OfHBOeE+v1=ApOQ@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/48] 4.19.112-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As the driver has some support for the audio interface of the device,
-the bindings file should mention it.
+On Fri, 20 Mar 2020 at 13:41, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Fri, Mar 20, 2020 at 09:03:17AM +0100, Greg Kroah-Hartman wrote:
+> > On Thu, Mar 19, 2020 at 08:00:32PM +0000, Ben Hutchings wrote:
+> > > On Fri, 2020-03-20 at 01:12 +0530, Naresh Kamboju wrote:
+> > > > On Thu, 19 Mar 2020 at 18:50, Greg Kroah-Hartman
+> > > > <gregkh@linuxfoundation.org> wrote:
+> > > > > This is the start of the stable review cycle for the 4.19.112 rel=
+ease.
+> > > > > There are 48 patches in this series, all will be posted as a resp=
+onse
+> > > > > to this one.  If anyone has any issues with these being applied, =
+please
+> > > > > let me know.
+> > > > >
+> > > > > Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
+> > > > > Anything received after that time might be too late.
+> > > > >
+> > > > > The whole patch series can be found in one patch at:
+> > > > >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-revie=
+w/patch-4.19.112-rc1.gz
+> > > > > or in the git tree and branch at:
+> > > > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linu=
+x-stable-rc.git linux-4.19.y
+> > > > > and the diffstat can be found below.
+> > > > >
+> > > > > thanks,
+> > > > >
+> > > > > greg k-h
+> > > > >
+> > > > > Faiz Abbas <faiz_abbas@ti.com>
+> > > > >     mmc: sdhci-omap: Fix Tuning procedure for temperatures < -20C
+> > > > >
+> > > > > Faiz Abbas <faiz_abbas@ti.com>
+> > > > >     mmc: sdhci-omap: Don't finish_mrq() on a command error during=
+ tuning
+> > > >
+> > > > Results from Linaro=E2=80=99s test farm.
+> > > > No regressions on arm64, arm, x86_64, and i386.
+> > > >
+> > > > NOTE:
+> > > > The arm beagleboard x15 device running stable rc 4.19.112-rc1, 5.4.=
+27-rc1
+> > > > and 5.5.11-rc2 kernel pops up the following messages on console log=
+,
+> > > > Is this a problem ?
+> > > >
+> > > > [   15.737765] mmc1: unspecified timeout for CMD6 - use generic
+> > > > [   16.754248] mmc1: unspecified timeout for CMD6 - use generic
+> > > > [   16.842071] mmc1: unspecified timeout for CMD6 - use generic
+> > > > ...
+> > > > [  977.126652] mmc1: unspecified timeout for CMD6 - use generic
+> > > > [  985.449798] mmc1: unspecified timeout for CMD6 - use generic
+> > > [...]
+> > >
+> > > This warning was introduced by commit 533a6cfe08f9 "mmc: core: Defaul=
+t
+> > > to generic_cmd6_time as timeout in __mmc_switch()".  That should not =
+be
+> > > applied to stable branches; it is not valid without (at least) these
+> > > preparatory changes:
+> > >
+> > > 0c204979c691 mmc: core: Cleanup BKOPS support
+> > > 24ed3bd01d6a mmc: core: Specify timeouts for BKOPS and CACHE_FLUSH fo=
+r eMMC
+> > > ad91619aa9d7 mmc: block: Use generic_cmd6_time when modifying INAND_C=
+MD38_ARG_EXT_CSD
+> >
+> > Ok, I've now dropped that patch, which also required me to drop
+> > 1292e3efb149 ("mmc: core: Allow host controllers to require R1B for
+> > CMD6").  I've done so for 5.5.y, 5.4.y, and 4.19.y.
+>
+> Ugh, I forgot, that broke other things.  I'm going to go rip out a bunch
+> of mmc patches now...
 
-Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+[Am i missing rc2 tag ?]
 
---
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-v3: remove optionality off MCLK clock cell to ensure the description
-    matches the hardware no matter if the line is connected.
-    Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- .../devicetree/bindings/media/i2c/adv748x.txt    | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+Summary
+------------------------------------------------------------------------
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-index 4f91686e54a6..50a753189b81 100644
---- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-@@ -2,7 +2,9 @@
- 
- The ADV7481 and ADV7482 are multi format video decoders with an integrated
- HDMI receiver. They can output CSI-2 on two independent outputs TXA and TXB
--from three input sources HDMI, analog and TTL.
-+from three input sources HDMI, analog and TTL. There is also support for an
-+I2S-compatible interface connected to the audio processor of the HDMI decoder.
-+The interface has TDM capability (8 slots, 32 bits, left or right justified).
- 
- Required Properties:
- 
-@@ -16,6 +18,8 @@ Required Properties:
-     slave device on the I2C bus. The main address is mandatory, others are
-     optional and remain at default values if not specified.
- 
-+  - #clock-cells: must be <0>
-+
- Optional Properties:
- 
-   - interrupt-names: Should specify the interrupts as "intrq1", "intrq2" and/or
-@@ -47,6 +51,7 @@ are numbered as follows.
- 	  TTL		sink		9
- 	  TXA		source		10
- 	  TXB		source		11
-+	  I2S		source		12
- 
- The digital output port nodes, when present, shall contain at least one
- endpoint. Each of those endpoints shall contain the data-lanes property as
-@@ -72,6 +77,7 @@ Example:
- 
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		#clock-cells = <0>;
- 
- 		interrupt-parent = <&gpio6>;
- 		interrupt-names = "intrq1", "intrq2";
-@@ -113,4 +119,12 @@ Example:
- 				remote-endpoint = <&csi20_in>;
- 			};
- 		};
-+
-+		port@c {
-+			reg = <12>;
-+
-+			adv7482_i2s: endpoint {
-+				remote-endpoint = <&i2s_in>;
-+			};
-+		};
- 	};
--- 
-2.25.1.25.g9ecbe7eb18
+kernel: 4.19.112-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: d078cac7a42286ba7c97801a763fc42ad7baf5c1
+git describe: v4.19.109-136-gd078cac7a422
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.109-136-gd078cac7a422
 
 
+No regressions (compared to build v4.19.109)
+
+No fixes (compared to build v4.19.109)
+
+Ran 23963 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- x15
+- x86_64
+- x86-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+
+
+Test Suites
+-----------
+* install-android-platform-tools-r2800
+* linux-log-parser
+* ltp-ipc-tests
+* v4l2-compliance
+* kvm-unit-tests
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
