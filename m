@@ -2,226 +2,104 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289D7C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498B0C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B0720409
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AC23206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 00:07:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="hYLoCoKW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LY7Fc+nl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbgCTAD0 (ORCPT
+        id S1727376AbgCTAHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 20:03:26 -0400
-Received: from gateway21.websitewelcome.com ([192.185.46.113]:28326 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726663AbgCTAD0 (ORCPT
+        Thu, 19 Mar 2020 20:07:33 -0400
+Received: from mail-pg1-f169.google.com ([209.85.215.169]:46704 "EHLO
+        mail-pg1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727252AbgCTAHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 20:03:26 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 48392400D100A
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 19:03:25 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id F58Hj1lO11s2xF58Hjk7s0; Thu, 19 Mar 2020 19:03:25 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=q/oK+fE5axIVj5xcjSkaEhOfkJtwE7NyYKuyIjBrams=; b=hYLoCoKW8JZqJ4I0+bn8fmrVyU
-        7kqHM/Dyx6BLxHN0q8KpCPY9TJ4pdYQK7K2YLhCuSDW3jvYsI4KaKlfQ0xGJDW9K/m2DP8XOgoh67
-        CujTfpt3jeVfYELlz3QF7+mKL741AhSssdNYUjmqhHGPlDUXI75HavC52rgmFBoLwwwUnTcCWRePw
-        Hjd5O9gfZc0IkWa9hX+37rICyPQmcM6xu42umxfJDcldzBjsyaKhRpjM/Nez4uZVon+1WVj2gYeiO
-        hXdNKAfFOAM/gR5S/4EJ+ZqJTCu4lIdqMrcOzlEmCQ6rOgaWJNt9DF/ks3/LXSvZj5igwZfazND4w
-        lp6o6BgA==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:42608 helo=[192.168.0.22])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jF58G-002oVx-Uy; Thu, 19 Mar 2020 19:03:25 -0500
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-References: <20200319230937.GA16648@embeddedor.com>
- <20200319234744.GA1688758@iweiny-DESK2.sc.intel.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- mQINBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
- 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
- tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
- DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
- 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
- YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
- m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
- NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
- qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
- LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABtCxHdXN0YXZvIEEu
- IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPokCPQQTAQgAJwUCWywcDAIbIwUJ
- CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
- l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
- obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
- cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
- ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
- JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
- JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
- PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
- R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
- 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
- e5YnLxF8ctRAp7K4yVlvA7kCDQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
- H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
- DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
- 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
- otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
- l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
- jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
- zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
- I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
- ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
- EQEAAYkCJQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
- UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
- XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
- WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
- imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
- fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
- 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
- ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
- YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
- GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH][next] nvdimm: nd.h: Replace zero-length array with
- flexible-array member
-Message-ID: <e1b07806-04c5-83ca-568b-9edcafada52c@embeddedor.com>
-Date:   Thu, 19 Mar 2020 19:03:22 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 19 Mar 2020 20:07:32 -0400
+Received: by mail-pg1-f169.google.com with SMTP id k191so1001440pgc.13
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 17:07:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kLb0ZW3Gt56un5tXJnGrDhWNvjh5tVVZUmrjKBTkr+I=;
+        b=LY7Fc+nlEVtHs0x3b9ctNL+6CrOSlcR+dUMnjqvjQwijmEnKO6WMGSwm7kxpjqqoOP
+         rQrvu1SMuG56ettv/vRNoQUuSnEvkfcvf9DdCO+i+sU1NuOcoAkGsBA2HbbgokioRHFt
+         OUg11p+DIaNLmdcadaLQASLwXes5a1rc+XT9Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kLb0ZW3Gt56un5tXJnGrDhWNvjh5tVVZUmrjKBTkr+I=;
+        b=N2Fw5Kqfkmidfjewds7OwuAh+s2QM07I89k7KqkTnJ7W64yPWgX/REBP787bpJdp4t
+         mmky9w7wRZalgOLh+1s16j+K8xX/e1cXbciP2EY/NXX4MLTGJEthoYHWuyatcmWdHVkZ
+         MIOeBX4uQh3fYlWKrVjr1K+6jM45nyLi+qHi6opcvtxXbSIf+w2Hd9iarjktEDTvu0f6
+         gHoKyoo3r2nqTRyxP5zaZ7p4qYbewiycnqLEOM4WdCRiJZULWsIXXB7DSZl/BXLTgEPZ
+         m/DxabXkmeyr6ptN2bZJX1UYvZ8wgvqXs0+fO71tBWauw0idYW0lD7QmOnOqz9emaaAW
+         rrkg==
+X-Gm-Message-State: ANhLgQ1BKuV4LF4ksODkdQeRuq+wWMReJig9RUblwwDVEug/hB+tCzdv
+        0rQxNOlKGBb5q6NNJsZLhT9SpQ==
+X-Google-Smtp-Source: ADFU+vu+R8yEHZtvdwQOflPfI/ieY4C1RoRUB74THQ9itVUwbo0VQhUooKemv0uAcyg5F8tYTYvIFQ==
+X-Received: by 2002:a63:c507:: with SMTP id f7mr5766872pgd.278.1584662849286;
+        Thu, 19 Mar 2020 17:07:29 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id m12sm2928292pjf.25.2020.03.19.17.07.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 17:07:28 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     marcel@holtmann.org, linux-bluetooth@vger.kernel.org
+Cc:     chromeos-bluetooth-upstreaming@chromium.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 0/2] Bluetooth: Suspend related bugfixes
+Date:   Thu, 19 Mar 2020 17:07:11 -0700
+Message-Id: <20200320000713.32899-1-abhishekpandit@chromium.org>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
 MIME-Version: 1.0
-In-Reply-To: <20200319234744.GA1688758@iweiny-DESK2.sc.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.218.116.241
-X-Source-L: No
-X-Exim-ID: 1jF58G-002oVx-Uy
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net ([192.168.0.22]) [189.218.116.241]:42608
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Hi Marcel,
 
-On 3/19/20 6:47 PM, Ira Weiny wrote:
-> On Thu, Mar 19, 2020 at 06:09:37PM -0500, Gustavo A. R. Silva wrote:
->> The current codebase makes use of the zero-length array language
->> extension to the C90 standard, but the preferred mechanism to declare
->> variable-length types such as these ones is a flexible array member[1][2],
->> introduced in C99:
->>
->> struct foo {
->>         int stuff;
->>         struct boo array[];
->> };
->>
->> By making use of the mechanism above, we will get a compiler warning
->> in case the flexible array does not occur last in the structure, which
->> will help us prevent some kind of undefined behavior bugs from being
->> inadvertently introduced[3] to the codebase from now on.
->>
->> Also, notice that, dynamic memory allocations won't be affected by
->> this change:
-> 
-> "won't" be affected?
-> 
+After further automated testing of the upstreamed suspend patches,
+I found two issues:
+- A failure in PM_SUSPEND_PREPARE wasn't calling PM_POST_SUSPEND.
+  I misread the docs and thought it would call it for all notifiers
+  already run but it only does so for the ones that returned
+  successfully from PM_SUSPEND_PREPARE.
+- hci_conn_complete_evt wasn't completing on auto-connects (an else
+  block was removed during a refactor incorrectly)
 
-Yep. They won't:
-
-"As a quirk of the original implementation of zero-length arrays, sizeof evaluates to zero."
-
-> My reading of [1] indicates that this change will break the allocation inha
-
-The allocation will remain the same as with *flush_wpg[0]. See this example: https://godbolt.org/z/oohwmB
-
-> nd_region_activate() because sizeof() can no longer be used on the base
-> structure?
-> 
-
-In this case the sizeof operator cannot be applied to flush_wpg, not the base structure, which is
-nd_region_data.
-
-
-> What am I missing?
->
-
-I think you are confusing the base structure with the actual flexible-array member.
+With the following patches, I've run a suspend stress test on a couple
+of Chromebooks for several dozen iterations (each) successfully.
 
 Thanks
---
-Gustavo
+Abhishek
 
-> Ira
-> 
->>
->> "Flexible array members have incomplete type, and so the sizeof operator
->> may not be applied. As a quirk of the original implementation of
->> zero-length arrays, sizeof evaluates to zero."[1]
->>
->> This issue was found with the help of Coccinelle.
->>
->> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
->> [2] https://github.com/KSPP/linux/issues/21
->> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>  drivers/nvdimm/nd.h | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
->> index c4d69c1cce55..85dbb2a322b9 100644
->> --- a/drivers/nvdimm/nd.h
->> +++ b/drivers/nvdimm/nd.h
->> @@ -39,7 +39,7 @@ struct nd_region_data {
->>  	int ns_count;
->>  	int ns_active;
->>  	unsigned int hints_shift;
->> -	void __iomem *flush_wpq[0];
->> +	void __iomem *flush_wpq[];
->>  };
->>  
->>  static inline void __iomem *ndrd_get_flush_wpq(struct nd_region_data *ndrd,
->> @@ -157,7 +157,7 @@ struct nd_region {
->>  	struct nd_interleave_set *nd_set;
->>  	struct nd_percpu_lane __percpu *lane;
->>  	int (*flush)(struct nd_region *nd_region, struct bio *bio);
->> -	struct nd_mapping mapping[0];
->> +	struct nd_mapping mapping[];
->>  };
->>  
->>  struct nd_blk_region {
->> -- 
->> 2.23.0
->>
+
+
+Abhishek Pandit-Subedi (2):
+  Bluetooth: Restore running state if suspend fails
+  Bluetooth: Fix incorrect branch in connection complete
+
+ net/bluetooth/hci_core.c  | 39 ++++++++++++++++++++-------------------
+ net/bluetooth/hci_event.c | 17 +++++++++--------
+ 2 files changed, 29 insertions(+), 27 deletions(-)
+
+-- 
+2.25.1.696.g5e7596f4ac-goog
+
