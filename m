@@ -2,205 +2,121 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6BAC43332
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6890CC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5DD320739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E5BD20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:10:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584681053;
+	bh=bHqz/mmjyWz7y2CbYXKF3rlS2vNGxaJf7CYZ9FIl/Hc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Vx5Mktb34ib7dDR25bhP/QqEYKhlNfOkX8pI/XgGix7GenBcaU3UzVK24ycCFQabU
+	 8zLOQLKoUiQQikU+DP04cFaSLkxOr2gZxGiHb/yZ2ze/Og24AIB0ra1obOvUxm8Eiv
+	 uN/Yy96NyFqgllsxj3SQlkPzm+xdm6e/ERvGNp+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgCTEyr (ORCPT
+        id S1726755AbgCTFKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 00:54:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:44408 "EHLO foss.arm.com"
+        Fri, 20 Mar 2020 01:10:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgCTEyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 00:54:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0289101E;
-        Thu, 19 Mar 2020 21:54:45 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.1.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7AE3D3F52E;
-        Thu, 19 Mar 2020 21:54:38 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        nouveau@lists.freedesktop.org, linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] mm/thp: Rename pmd_mknotpresent() as pmd_mknotvalid()
-Date:   Fri, 20 Mar 2020 10:24:17 +0530
-Message-Id: <1584680057-13753-3-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584680057-13753-1-git-send-email-anshuman.khandual@arm.com>
-References: <1584680057-13753-1-git-send-email-anshuman.khandual@arm.com>
+        id S1725883AbgCTFKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 01:10:52 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05DE12072D;
+        Fri, 20 Mar 2020 05:10:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584681051;
+        bh=bHqz/mmjyWz7y2CbYXKF3rlS2vNGxaJf7CYZ9FIl/Hc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CS+AMu4Ldrf5EQrnN3qqOyzcwytupsd2xi8te7S9EclBM61mvUsK4Ty8Ax7mBMCL4
+         JrRgTSfUZMEg0PH+nsGHFpcp9255sLia17GXV7e0lwLANmIZg5fIe0HcAz1VnEFoNM
+         EZeQ0BASP2vftBfk6DI/UUBTAVFxJ3Wqo5/e0Rkg=
+Date:   Thu, 19 Mar 2020 22:10:49 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Jiri Slaby <jslaby@suse.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        Eric Dumazet <edumazet@google.com>,
+        Nicolas Pitre <nico@fluxnic.net>
+Subject: Re: [PATCH v2 1/2] vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use
+ virtual console
+Message-ID: <20200320051049.GA1315@sol.localdomain>
+References: <20200318222704.GC2334@sol.localdomain>
+ <20200318223810.162440-1-ebiggers@kernel.org>
+ <20200318223810.162440-2-ebiggers@kernel.org>
+ <2f762aee-720b-9bec-620f-61129c724de6@suse.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2f762aee-720b-9bec-620f-61129c724de6@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pmd_present() is expected to test positive after pmdp_mknotpresent() as the
-PMD entry still points to a valid huge page in memory. pmdp_mknotpresent()
-implies that given PMD entry is just invalidated from MMU perspective while
-still holding on to pmd_page() referred valid huge page thus also clearing
-pmd_present() test. This creates the following situation which is counter
-intuitive.
+On Thu, Mar 19, 2020 at 08:36:28AM +0100, Jiri Slaby wrote:
+> On 18. 03. 20, 23:38, Eric Biggers wrote:
+> > --- a/drivers/tty/vt/vt.c
+> > +++ b/drivers/tty/vt/vt.c
+> > @@ -1102,6 +1102,9 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
+> >  	tty_port_init(&vc->port);
+> >  	INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
+> >  
+> > +	/* if this wasn't the case, we'd have to implement port->ops.destruct */
+> > +	BUILD_BUG_ON(offsetof(struct vc_data, port) != 0);
+> > +
+> 
+> This is 3 lines, implementing destruct would be like 4-5 :)? Please
+> implement destruct instead.
+> 
+> Otherwise looks good.
+> 
 
-[pmd_present(pmd_mknotpresent(pmd)) = true]
+Actually implementing destruct would be 12 lines, see below.  Remember there is
+no tty_port_operations defined yet so we'd have to define it just for destruct.
 
-This renames pmd_mknotpresent() as pmd_mknotvalid() reflecting the helper's
-functionality more accurately while changing the above mentioned situation
-as follows. This does not create any functional change.
+Do you still prefer it?
 
-[pmd_present(pmd_mknotvalid(pmd)) = true]
-
-This is not applicable for platforms that define own pmdp_invalidate() via
-__HAVE_ARCH_PMDP_INVALIDATE. Suggestion for renaming came during a previous
-discussion here.
-
-https://patchwork.kernel.org/patch/11019637/
-
-Cc: Vineet Gupta <vgupta@synopsys.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: nouveau@lists.freedesktop.org
-Cc: linux-snps-arc@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mips@vger.kernel.org
-Cc: x86@kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
-
-Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/arc/include/asm/hugepage.h       | 2 +-
- arch/arm/include/asm/pgtable-3level.h | 2 +-
- arch/arm64/include/asm/pgtable.h      | 2 +-
- arch/mips/include/asm/pgtable.h       | 2 +-
- arch/x86/include/asm/pgtable.h        | 2 +-
- arch/x86/mm/kmmio.c                   | 2 +-
- mm/pgtable-generic.c                  | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arc/include/asm/hugepage.h b/arch/arc/include/asm/hugepage.h
-index 30ac40fed2c5..98d56267050f 100644
---- a/arch/arc/include/asm/hugepage.h
-+++ b/arch/arc/include/asm/hugepage.h
-@@ -26,7 +26,7 @@ static inline pmd_t pte_pmd(pte_t pte)
- #define pmd_mkold(pmd)		pte_pmd(pte_mkold(pmd_pte(pmd)))
- #define pmd_mkyoung(pmd)	pte_pmd(pte_mkyoung(pmd_pte(pmd)))
- #define pmd_mkhuge(pmd)		pte_pmd(pte_mkhuge(pmd_pte(pmd)))
--#define pmd_mknotpresent(pmd)	pte_pmd(pte_mknotpresent(pmd_pte(pmd)))
-+#define pmd_mknotvalid(pmd)	pte_pmd(pte_mknotpresent(pmd_pte(pmd)))
- #define pmd_mkclean(pmd)	pte_pmd(pte_mkclean(pmd_pte(pmd)))
- 
- #define pmd_write(pmd)		pte_write(pmd_pte(pmd))
-diff --git a/arch/arm/include/asm/pgtable-3level.h b/arch/arm/include/asm/pgtable-3level.h
-index ad55ab068dbf..2943cdf2828b 100644
---- a/arch/arm/include/asm/pgtable-3level.h
-+++ b/arch/arm/include/asm/pgtable-3level.h
-@@ -241,7 +241,7 @@ PMD_BIT_FUNC(mkyoung,   |= PMD_SECT_AF);
- #define pmdp_establish generic_pmdp_establish
- 
- /* represent a notpresent pmd by faulting entry, this is used by pmdp_invalidate */
--static inline pmd_t pmd_mknotpresent(pmd_t pmd)
-+static inline pmd_t pmd_mknotvalid(pmd_t pmd)
- {
- 	return __pmd(pmd_val(pmd) & ~L_PMD_SECT_VALID);
- }
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 538c85e62f86..28cdd97578a5 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -366,7 +366,7 @@ static inline int pmd_protnone(pmd_t pmd)
- #define pmd_mkclean(pmd)	pte_pmd(pte_mkclean(pmd_pte(pmd)))
- #define pmd_mkdirty(pmd)	pte_pmd(pte_mkdirty(pmd_pte(pmd)))
- #define pmd_mkyoung(pmd)	pte_pmd(pte_mkyoung(pmd_pte(pmd)))
--#define pmd_mknotpresent(pmd)	(__pmd(pmd_val(pmd) & ~PMD_SECT_VALID))
-+#define pmd_mknotvalid(pmd)	(__pmd(pmd_val(pmd) & ~PMD_SECT_VALID))
- 
- #define pmd_thp_or_huge(pmd)	(pmd_huge(pmd) || pmd_trans_huge(pmd))
- 
-diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
-index aef5378f909c..2a66dee3a9b8 100644
---- a/arch/mips/include/asm/pgtable.h
-+++ b/arch/mips/include/asm/pgtable.h
-@@ -615,7 +615,7 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
- 	return pmd;
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index ec34f1f5f3bb5..309a39197be0a 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -1075,6 +1075,17 @@ static void visual_deinit(struct vc_data *vc)
+ 	module_put(vc->vc_sw->owner);
  }
  
--static inline pmd_t pmd_mknotpresent(pmd_t pmd)
-+static inline pmd_t pmd_mknotvalid(pmd_t pmd)
++static void vc_port_destruct(struct tty_port *port)
++{
++	struct vc_data *vc = container_of(port, struct vc_data, port);
++
++	kfree(vc);
++}
++
++static const struct tty_port_operations vc_port_ops = {
++	.destruct = vc_port_destruct,
++};
++
+ int vc_allocate(unsigned int currcons)	/* return 0 on success */
  {
- 	pmd_val(pmd) &= ~(_PAGE_PRESENT | _PAGE_VALID | _PAGE_DIRTY);
+ 	struct vt_notifier_param param;
+@@ -1100,11 +1111,9 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
  
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 7e118660bbd9..6279668d430f 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -589,7 +589,7 @@ static inline pud_t pfn_pud(unsigned long page_nr, pgprot_t pgprot)
- 	return __pud(pfn | check_pgprot(pgprot));
- }
+ 	vc_cons[currcons].d = vc;
+ 	tty_port_init(&vc->port);
++	vc->port.ops = &vc_port_ops;
+ 	INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
  
--static inline pmd_t pmd_mknotpresent(pmd_t pmd)
-+static inline pmd_t pmd_mknotvalid(pmd_t pmd)
- {
- 	return pfn_pmd(pmd_pfn(pmd),
- 		      __pgprot(pmd_flags(pmd) & ~(_PAGE_PRESENT|_PAGE_PROTNONE)));
-diff --git a/arch/x86/mm/kmmio.c b/arch/x86/mm/kmmio.c
-index 49d7814b59a9..f9f61b934475 100644
---- a/arch/x86/mm/kmmio.c
-+++ b/arch/x86/mm/kmmio.c
-@@ -130,7 +130,7 @@ static void clear_pmd_presence(pmd_t *pmd, bool clear, pmdval_t *old)
- 	pmdval_t v = pmd_val(*pmd);
- 	if (clear) {
- 		*old = v;
--		new_pmd = pmd_mknotpresent(*pmd);
-+		new_pmd = pmd_mknotvalid(*pmd);
- 	} else {
- 		/* Presume this has been called with clear==true previously */
- 		new_pmd = __pmd(*old);
-diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
-index 3d7c01e76efc..5b8055ef4120 100644
---- a/mm/pgtable-generic.c
-+++ b/mm/pgtable-generic.c
-@@ -194,7 +194,7 @@ pgtable_t pgtable_trans_huge_withdraw(struct mm_struct *mm, pmd_t *pmdp)
- pmd_t pmdp_invalidate(struct vm_area_struct *vma, unsigned long address,
- 		     pmd_t *pmdp)
- {
--	pmd_t old = pmdp_establish(vma, address, pmdp, pmd_mknotpresent(*pmdp));
-+	pmd_t old = pmdp_establish(vma, address, pmdp, pmd_mknotvalid(*pmdp));
- 	flush_pmd_tlb_range(vma, address, address + HPAGE_PMD_SIZE);
- 	return old;
- }
--- 
-2.20.1
-
+-	/* if this wasn't the case, we'd have to implement port->ops.destruct */
+-	BUILD_BUG_ON(offsetof(struct vc_data, port) != 0);
+-
+ 	visual_init(vc, currcons, 1);
+ 
+ 	if (!*vc->vc_uni_pagedir_loc)
