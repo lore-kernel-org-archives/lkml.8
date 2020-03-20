@@ -2,127 +2,101 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C104AC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A91C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9891B20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:30:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EZIUuPiz"
+	by mail.kernel.org (Postfix) with ESMTP id 7E11720739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 05:38:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgCTFaN (ORCPT
+        id S1726925AbgCTFiN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 01:30:13 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:32837 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgCTFaM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 01:30:12 -0400
-Received: by mail-oi1-f196.google.com with SMTP id r7so5370615oij.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 22:30:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+thAp6yyX7UKE9dtUxDENsQxMtVNf3sefwYHyrkPjH0=;
-        b=EZIUuPizsyWJamEo8OnXltTQLT0zbEnN7i0eoveXQdd8aAXB0sTHgk0h0j2aPv3xdl
-         PvlcmCU9Qqo6UPCU0YGJjPZHZklXi0mnfTFFSMmLJO2+8XQJhgG2+SrUYGqJLbRUs34w
-         MHA/fMaS5ydEyWuSCzaNeVFjEQP3llaZOTs2mjgeihPn7LkbpRz5ycvSOPlzm6gBjn0W
-         OaxQcy9AeArJqrxxJWa3gm8Z8TuZZTaY8qlWeFQ/x5EcXXheQhyOAhxkq6P9XBi6DkuI
-         q84xSlpwp6t9y/DeFQzUxsQx2V8ge6Z5qW1kL9lgqfzvKq4NqI8zeJih0o6Bvzr7ePwC
-         XgPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+thAp6yyX7UKE9dtUxDENsQxMtVNf3sefwYHyrkPjH0=;
-        b=aTIFmyDcBAi3D+I8pfxLxiPxMC3dLYXY9jCIk5e0QEoo7L76kakf1u33lsKF96CzAM
-         vUfS06knQElg71Z6RZM3S66nsIui6LW98cLriXu3fUV0sK3zcvhvroN8sQnR7gy1rDkd
-         RYjfiNWCYL2M2uYCqhcCOIocButouGBK/Ju34zB6mxNJwDq+lAfz3fRc4g7qX7TXLkJL
-         wAONkQ9/jicuMd2CxVbvs4kxHKNELwXpOaibQI7IsbchzfvtPWnW6/YhXlEkrYVYsG3+
-         S3IQNH52ReTDRT6yx3LMjrGLx22wrAM4btqJysya/DfIAYn9P6gkY0MR9LBn2bQYvaH7
-         XRSQ==
-X-Gm-Message-State: ANhLgQ1Hdb3pBLgj30QzHXc/PHrYydrhp9/jHJm82ffX+ABgE8oIlvHJ
-        HyDwj+pJdjBjR+pEPGmQSn/FdilgRWPMedugR7Ahvw==
-X-Google-Smtp-Source: ADFU+vs9ry2XYsgdK4314uO1jxo2AlhedtLaVepDUfyzcjwnRtJPqD/97uig5eK0Wc99bItxHnujbp8fjRWMCAR3xjM=
-X-Received: by 2002:aca:f541:: with SMTP id t62mr5236270oih.172.1584682212108;
- Thu, 19 Mar 2020 22:30:12 -0700 (PDT)
+        Fri, 20 Mar 2020 01:38:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52332 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbgCTFiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 01:38:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3EF15AC42;
+        Fri, 20 Mar 2020 05:38:08 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 22:36:57 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [patch V2 06/15] rcuwait: Add @state argument to
+ rcuwait_wait_event()
+Message-ID: <20200320053657.ggvcqsjtdotmrl7p@linux-p48b>
+References: <20200318204302.693307984@linutronix.de>
+ <20200318204408.010461877@linutronix.de>
 MIME-Version: 1.0
-References: <20200317065452.236670-1-saravanak@google.com> <CAGETcx-uZ3YJHCYqFm3so8-woTvL3SSDY2deNonthTetcE+mXQ@mail.gmail.com>
- <20200319073927.GA3442166@kroah.com>
-In-Reply-To: <20200319073927.GA3442166@kroah.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 19 Mar 2020 22:29:36 -0700
-Message-ID: <CAGETcx-3oeJOvpCYj==RJuBU9HP8F0ZNr0YLvUHGHF52b=F7HA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/6] Fix device links functional breakage in 4.19.99
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     stable <stable@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200318204408.010461877@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 12:39 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Mar 18, 2020 at 12:10:43PM -0700, Saravana Kannan wrote:
-> > On Mon, Mar 16, 2020 at 11:54 PM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > As mentioned in an earlier email thread [1], 4.19.99 broke the ability
-> > > to create stateful and stateless device links between the same set of
-> > > devices when it pulled in a valid bug fix [2]. While the fix was valid,
-> > > it removes a functionality that was present before the bug fix.
-> > >
-> > > This patch series attempts to fix that by pulling in more patches from
-> > > upstream. I've just done compilation testing so far. But wanted to send
-> > > out a v1 to see if this patch list was acceptable before I fixed up the
-> > > commit text format to match what's needed for stable mailing list.
-> > >
-> > > Some of the patches are new functionality, but for a first pass, it was
-> > > easier to pull these in than try and fix the conflicts. If these patches
-> > > are okay to pull into stable, then all I need to do is fix the commit
-> > > text.
-> >
-> > I took a closer look at all the patches. Everyone of them is a bug fix
-> > except Patch 4/6. But Patch 4/6 is a fairly minimal change and I think
-> > it's easier/cleaner to just pick it up too instead of trying to
-> > resolve merge conflicts in the stable branch.
-> >
-> > 1/6 - Fixes what appears to be a memory leak bug in upstream.
-> > 2/6 - Fixes error in initial state of the device link if it's created
-> > under some circumstances.
-> > 3/6 - Fixes a ref count bug in upstream. Looks like it can lead to memory leaks?
-> > 4/6 - Adds a minor feature to kick off a probe attempt of a consumer
-> > 5/6 - Fixes the break in functionality that happened in 4.19.99
-> > 6/6 - Fixes bug in 5/6 (upstream bug)
-> >
-> > Greg
-> >
-> > Do these patches look okay for you to pull into 4.19 stable? If so,
-> > please let me know if you need me to send v2 with commit fix up.
-> >
-> > The only fix up needed is to these patches at this point is changing
-> > "(cherry picked from commit ...)" with "[ Upstream commit ... ]". The
-> > SHAs themselves are the correct SHAs from upstream.
->
-> These all look good to me, now all queued up, thanks.
+On Wed, 18 Mar 2020, Thomas Gleixner wrote:
 
-Awesome, thanks!
+>--- a/include/linux/rcuwait.h
+>+++ b/include/linux/rcuwait.h
+>@@ -3,6 +3,7 @@
+> #define _LINUX_RCUWAIT_H_
+>
+> #include <linux/rcupdate.h>
+>+#include <linux/sched/signal.h>
 
--Saravana
+So this is causing build to fail for me:
+
+  CC      arch/x86/boot/compressed/cmdline.o
+arch/x86/boot/compressed/cmdline.c:5:20: error: conflicting types for ‘set_fs’
+ static inline void set_fs(unsigned long seg)
+                    ^~~~~~
+In file included from ./include/linux/uaccess.h:11:0,
+                 from ./include/linux/sched/task.h:11,
+                 from ./include/linux/sched/signal.h:9,
+                 from ./include/linux/rcuwait.h:6,
+                 from ./include/linux/percpu-rwsem.h:8,
+                 from ./include/linux/fs.h:34,
+                 from ./include/linux/proc_fs.h:9,
+                 from ./include/acpi/acpi_bus.h:83,
+                 from ./include/linux/acpi.h:32,
+                 from arch/x86/boot/compressed/misc.h:28,
+                 from arch/x86/boot/compressed/cmdline.c:2:
+./arch/x86/include/asm/uaccess.h:29:20: note: previous definition of ‘set_fs’ was here
+ static inline void set_fs(mm_segment_t fs)
+                    ^~~~~~
+make[2]: *** [scripts/Makefile.build:268: arch/x86/boot/compressed/cmdline.o] Error 1
+make[1]: *** [arch/x86/boot/Makefile:113: arch/x86/boot/compressed/vmlinux] Error 2
+make: *** [arch/x86/Makefile:285: bzImage] Error 2
+
+Right now I'm not sure what the proper fix should be.
+
+Thanks,
+Davidlohr
