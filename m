@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D74C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAE7C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FDA20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62FA020777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbgCTSiW (ORCPT
+        id S1727453AbgCTSiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:38:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36877 "EHLO
+        Fri, 20 Mar 2020 14:38:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36878 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbgCTSiS (ORCPT
+        with ESMTP id S1727095AbgCTSiT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:38:18 -0400
+        Fri, 20 Mar 2020 14:38:19 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFMXA-00022N-R0
+        id 1jFMXA-00022Z-W8
         for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:17 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 33913104084
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 6F6361039FD
         for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:16 +0100 (CET)
-Message-Id: <20200320180032.994128577@linutronix.de>
+Message-Id: <20200320180033.092520097@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 19:00:02 +0100
+Date:   Fri, 20 Mar 2020 19:00:03 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -48,7 +48,7 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [patch V3 06/23] bug: Annotate WARN/BUG/stackfail as noinstr safe
+Subject: [patch V3 07/23] lockdep: Prepare for noinstr sections
 References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,76 +61,232 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Warnings, bugs and stack protection fails from noinstr sections, e.g. low
-level and early entry code, are likely to be fatal.
+From: Peter Zijlstra <peterz@infradead.org>
 
-Mark them as "safe" to be invoked from noinstr protected code to avoid
-annotating all usage sites. Getting the information out is important.
+Lockdep is invoked after RCU stopped watching or before it restarted
+watching from the low level entry/exit code.
 
+lockdep_hardirqs_on() is part of the irq-state tracking; it is the
+callback that indicates we're about to enable IRQs. But because of
+this, lockdep has co-opted this callback to do lock state updates. All
+(still) held locks will get marked with ENABLED_HARDIRQ, which then
+also looks for cycles connecting to USED_IN_HARDIRQ for IRQ recursion
+deadlocks.
+
+This results in quite a lot of lockdep code getting ran, but worse, it
+will want to do stack-traces for the lock state changes. Stack traces
+require RCU.
+
+Because code that requires RCU must not run after we've shut down RCU,
+and shutting down RCU itself requires locks in some circumstances,
+split this into two parts:
+
+  - lockdep_hardirqs_on_prepare() -- updates the held lock state
+  - lockdep_hardirqs_on() -- does the irq state tracking
+
+This allows running the lock state changes and stack-traces with RCU
+enaabled, while doing the IRQ state change later. Of course, this
+opens a window where the lock stack can change. Therefore
+lockdep_hardirqs_on_prepare() will snapshot the chain_key and
+lockdep_hardirqs_on() will validate it still matches. This ensures
+that, even when interleaved code uses locks, the actual lock state
+didn't change between these two calls.
+
+Signed-off-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/include/asm/bug.h |    3 +++
- include/asm-generic/bug.h  |    9 +++++++--
- kernel/panic.c             |    4 +++-
- 3 files changed, 13 insertions(+), 3 deletions(-)
+ include/linux/irqflags.h        |    2 +
+ include/linux/sched.h           |    1 
+ kernel/locking/lockdep.c        |   66 +++++++++++++++++++++++++++++-----------
+ kernel/trace/trace_preemptirq.c |    2 +
+ lib/debug_locks.c               |    2 -
+ 5 files changed, 55 insertions(+), 18 deletions(-)
 
---- a/arch/x86/include/asm/bug.h
-+++ b/arch/x86/include/asm/bug.h
-@@ -70,13 +70,16 @@ do {									\
- #define HAVE_ARCH_BUG
- #define BUG()							\
- do {								\
-+	instr_begin();						\
- 	_BUG_FLAGS(ASM_UD2, 0);					\
- 	unreachable();						\
- } while (0)
- 
- #define __WARN_FLAGS(flags)					\
- do {								\
-+	instr_begin();						\
- 	_BUG_FLAGS(ASM_UD2, BUGFLAG_WARNING|(flags));		\
-+	instr_end();						\
- 	annotate_reachable();					\
- } while (0)
- 
---- a/include/asm-generic/bug.h
-+++ b/include/asm-generic/bug.h
-@@ -83,14 +83,19 @@ extern __printf(4, 5)
- void warn_slowpath_fmt(const char *file, const int line, unsigned taint,
- 		       const char *fmt, ...);
- #define __WARN()		__WARN_printf(TAINT_WARN, NULL)
--#define __WARN_printf(taint, arg...)					\
--	warn_slowpath_fmt(__FILE__, __LINE__, taint, arg)
-+#define __WARN_printf(taint, arg...) do {				\
-+	instr_begin();							\
-+	warn_slowpath_fmt(__FILE__, __LINE__, taint, arg);		\
-+	instr_end();							\
-+	while (0)
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -19,11 +19,13 @@
+ #ifdef CONFIG_PROVE_LOCKING
+   extern void trace_softirqs_on(unsigned long ip);
+   extern void trace_softirqs_off(unsigned long ip);
++  extern void lockdep_hardirqs_on_prepare(unsigned long ip);
+   extern void lockdep_hardirqs_on(unsigned long ip);
+   extern void lockdep_hardirqs_off(unsigned long ip);
  #else
- extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
- #define __WARN()		__WARN_FLAGS(BUGFLAG_TAINT(TAINT_WARN))
- #define __WARN_printf(taint, arg...) do {				\
-+		instr_begin();						\
- 		__warn_printk(arg);					\
- 		__WARN_FLAGS(BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
-+		instr_end();						\
- 	} while (0)
- #define WARN_ON_ONCE(condition) ({				\
- 	int __ret_warn_on = !!(condition);			\
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -662,10 +662,12 @@ device_initcall(register_warn_debugfs);
-  * Called when gcc's -fstack-protector feature is used, and
-  * gcc detects corruption of the on-stack canary value
-  */
--__visible void __stack_chk_fail(void)
-+__visible noinstr void __stack_chk_fail(void)
+   static inline void trace_softirqs_on(unsigned long ip) { }
+   static inline void trace_softirqs_off(unsigned long ip) { }
++  static inline void lockdep_hardirqs_on_prepare(unsigned long ip) { }
+   static inline void lockdep_hardirqs_on(unsigned long ip) { }
+   static inline void lockdep_hardirqs_off(unsigned long ip) { }
+ #endif
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -976,6 +976,7 @@ struct task_struct {
+ 	unsigned int			hardirq_disable_event;
+ 	int				hardirqs_enabled;
+ 	int				hardirq_context;
++	u64				hardirq_chain_key;
+ 	unsigned long			softirq_disable_ip;
+ 	unsigned long			softirq_enable_ip;
+ 	unsigned int			softirq_disable_event;
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3370,9 +3370,6 @@ static void __trace_hardirqs_on_caller(u
  {
-+	instr_begin();
- 	panic("stack-protector: Kernel stack is corrupted in: %pB",
- 		__builtin_return_address(0));
-+	instr_end();
- }
- EXPORT_SYMBOL(__stack_chk_fail);
+ 	struct task_struct *curr = current;
  
+-	/* we'll do an OFF -> ON transition: */
+-	curr->hardirqs_enabled = 1;
+-
+ 	/*
+ 	 * We are going to turn hardirqs on, so set the
+ 	 * usage bit for all held locks:
+@@ -3384,16 +3381,13 @@ static void __trace_hardirqs_on_caller(u
+ 	 * bit for all held locks. (disabled hardirqs prevented
+ 	 * this bit from being set before)
+ 	 */
+-	if (curr->softirqs_enabled)
++	if (curr->softirqs_enabled) {
+ 		if (!mark_held_locks(curr, LOCK_ENABLED_SOFTIRQ))
+ 			return;
+-
+-	curr->hardirq_enable_ip = ip;
+-	curr->hardirq_enable_event = ++curr->irq_events;
+-	debug_atomic_inc(hardirqs_on_events);
++	}
+ }
+ 
+-void lockdep_hardirqs_on(unsigned long ip)
++void lockdep_hardirqs_on_prepare(unsigned long ip)
+ {
+ 	if (unlikely(!debug_locks || current->lockdep_recursion))
+ 		return;
+@@ -3429,20 +3423,59 @@ void lockdep_hardirqs_on(unsigned long i
+ 	if (DEBUG_LOCKS_WARN_ON(current->hardirq_context))
+ 		return;
+ 
++	current->hardirq_chain_key = current->curr_chain_key;
++
+ 	current->lockdep_recursion = 1;
+ 	__trace_hardirqs_on_caller(ip);
+ 	current->lockdep_recursion = 0;
+ }
+-NOKPROBE_SYMBOL(lockdep_hardirqs_on);
+ 
++void noinstr lockdep_hardirqs_on(unsigned long ip)
++{
++	struct task_struct *curr = current;
++
++	if (unlikely(!debug_locks || curr->lockdep_recursion))
++		return;
++
++	if (curr->hardirqs_enabled) {
++		/*
++		 * Neither irq nor preemption are disabled here
++		 * so this is racy by nature but losing one hit
++		 * in a stat is not a big deal.
++		 */
++		__debug_atomic_inc(redundant_hardirqs_on);
++		return;
++	}
++
++	/*
++	 * We're enabling irqs and according to our state above irqs weren't
++	 * already enabled, yet we find the hardware thinks they are in fact
++	 * enabled.. someone messed up their IRQ state tracing.
++	 */
++	if (DEBUG_LOCKS_WARN_ON(!irqs_disabled()))
++		return;
++
++	/*
++	 * Ensure the lock stack remained unchanged between
++	 * lockdep_hardirqs_on_prepare() and lockdep_hardirqs_on().
++	 */
++	DEBUG_LOCKS_WARN_ON(current->hardirq_chain_key !=
++			    current->curr_chain_key);
++
++	/* we'll do an OFF -> ON transition: */
++	curr->hardirqs_enabled = 1;
++	curr->hardirq_enable_ip = ip;
++	curr->hardirq_enable_event = ++curr->irq_events;
++	debug_atomic_inc(hardirqs_on_events);
++}
+ /*
+  * Hardirqs were disabled:
+  */
+-void lockdep_hardirqs_off(unsigned long ip)
++void noinstr lockdep_hardirqs_off(unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
+ 
+-	if (unlikely(!debug_locks || current->lockdep_recursion))
++	if (unlikely(!debug_locks || curr->lockdep_recursion))
+ 		return;
+ 
+ 	/*
+@@ -3463,7 +3496,6 @@ void lockdep_hardirqs_off(unsigned long
+ 	} else
+ 		debug_atomic_inc(redundant_hardirqs_off);
+ }
+-NOKPROBE_SYMBOL(lockdep_hardirqs_off);
+ 
+ /*
+  * Softirqs will be enabled:
+@@ -4007,8 +4039,8 @@ static void print_unlock_imbalance_bug(s
+ 	dump_stack();
+ }
+ 
+-static int match_held_lock(const struct held_lock *hlock,
+-					const struct lockdep_map *lock)
++static noinstr int match_held_lock(const struct held_lock *hlock,
++				   const struct lockdep_map *lock)
+ {
+ 	if (hlock->instance == lock)
+ 		return 1;
+@@ -4293,7 +4325,7 @@ static int
+ 	return 0;
+ }
+ 
+-static nokprobe_inline
++static __always_inline
+ int __lock_is_held(const struct lockdep_map *lock, int read)
+ {
+ 	struct task_struct *curr = current;
+@@ -4506,7 +4538,7 @@ void lock_release(struct lockdep_map *lo
+ }
+ EXPORT_SYMBOL_GPL(lock_release);
+ 
+-int lock_is_held_type(const struct lockdep_map *lock, int read)
++noinstr int lock_is_held_type(const struct lockdep_map *lock, int read)
+ {
+ 	unsigned long flags;
+ 	int ret = 0;
+--- a/kernel/trace/trace_preemptirq.c
++++ b/kernel/trace/trace_preemptirq.c
+@@ -39,6 +39,7 @@ void trace_hardirqs_on(void)
+ 		this_cpu_write(tracing_irq_cpu, 0);
+ 	}
+ 
++	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
+ 	lockdep_hardirqs_on(CALLER_ADDR0);
+ }
+ EXPORT_SYMBOL(trace_hardirqs_on);
+@@ -79,6 +80,7 @@ NOKPROBE_SYMBOL(trace_hardirqs_off);
+ 		this_cpu_write(tracing_irq_cpu, 0);
+ 	}
+ 
++	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
+ 	lockdep_hardirqs_on(CALLER_ADDR0);
+ }
+ EXPORT_SYMBOL(trace_hardirqs_on_caller);
+--- a/lib/debug_locks.c
++++ b/lib/debug_locks.c
+@@ -36,7 +36,7 @@ EXPORT_SYMBOL_GPL(debug_locks_silent);
+ /*
+  * Generic 'turn off all lock debugging' function:
+  */
+-int debug_locks_off(void)
++noinstr int debug_locks_off(void)
+ {
+ 	if (debug_locks && __debug_locks_off()) {
+ 		if (!debug_locks_silent) {
 
