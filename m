@@ -2,361 +2,111 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFB7C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1469AC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D29820409
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584744523;
-	bh=sSQ7zAZi/YRMURlexeZ3HDVuMKzmj7MyXCjUb9J5OLM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d5el5J+oflS2w19j2q+FUEM9secy2yfzRZwc5Mcw2EPvh9PdogswaOQIP4GBZM3zg
-	 Ve9ZGb/GV/Iov6EFnppelw6fw6/Yobi3xcQt/NIX8YbKGTjoQucEeUPlibKra6qtP8
-	 /y9armmV4PK/QCCH/p+5T1ayzk46FsBkIXQHrkMk=
+	by mail.kernel.org (Postfix) with ESMTP id ECF8D2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:48:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qn7SRGh3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgCTWsm (ORCPT
+        id S1727600AbgCTWsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:48:42 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44466 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgCTWsm (ORCPT
+        Fri, 20 Mar 2020 18:48:52 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46050 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbgCTWsw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:48:42 -0400
-Received: by mail-io1-f66.google.com with SMTP id v3so7669053iot.11;
-        Fri, 20 Mar 2020 15:48:41 -0700 (PDT)
+        Fri, 20 Mar 2020 18:48:52 -0400
+Received: by mail-qk1-f196.google.com with SMTP id c145so8781045qke.12;
+        Fri, 20 Mar 2020 15:48:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nA0qGDHkYHJL6ggJ5t6ci+dqhrMY8bZAxvf3gcxj7rA=;
+        b=Qn7SRGh3ZeclNE2+k3u5g8aAXXD+IX6uG8//2Q4oN2fMvDSG4Eo6Lffy5QqBcuDOZA
+         PL7Pv4ElqdqjOryWVk0qmVvYcqVHzqtQ9ncbZYQcEW3wQLuaAYS0y4f8N8QHNteahC9x
+         a+9zqZIkhkWr3VcXMye1eDSQjXfqhMPtVonZKuQvz2SEGu5WhgLkiG5iGrbOX1ooL/cR
+         Y0t2R3bhMKsTlSubN5kvbLrqOVYBk+LNWdzW49/zw2CnAyuqEh+CDBNSnKFVLb8YiTOU
+         BZ1sjFL5JNHdFtQIyC70CTKYAABRMPEsaZ9J4M1Jxr6qwDtKFNViF4JwYh3L4SzZ3i0M
+         yfCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=A1uslfEoH7vNHdUhQmPCdcU9qvlFI6adpXPxHF0FMnE=;
-        b=dJAuwJpcq7ItCiFo+a+MddeXvQwQAI8LTIo28qFcEWOuRivKSHukqyGzg3kTuI87vo
-         Nr5G7Tl3AhcaCsYltVIxiv36/PDjCe8hVNElwHzmNy1oegqVt9XZAcz/gXRI08t7hPzz
-         ONoyjQ2D1oEUFZH+HjxNM95KrTqsLCCeyaKGXwmLZ4jth/dw/Vki65fdOqywnFcgjJRU
-         f6pGo8+ms8xlxQIUGvw4fUTBRcgISnUulIo96we0NNzTMyuU0wjOo2nCDo188T3d19C4
-         Ni6NVUhRO34Iu30BTIVLu30e1PehX57KSZYNJCUGY/kNrJtrQdl7wqnNTMVj1HUhgHPG
-         Zv6w==
-X-Gm-Message-State: ANhLgQ1yY4o5DW1Z9Hk4iUF8TmDdN69d3mP/daKluKi0HO/JnEnAdLlf
-        0sXtE6mmzCr0lvcQgAjR4A==
-X-Google-Smtp-Source: ADFU+vtwXWnuppwnc14jRb856bQUQFUaxaVhGlFZFR9oFbLMkd2qPfBTmiy1HVaQaH4yTdHNcia0iA==
-X-Received: by 2002:a6b:8b07:: with SMTP id n7mr9777692iod.55.1584744520519;
-        Fri, 20 Mar 2020 15:48:40 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id f2sm2115369ioj.34.2020.03.20.15.48.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 15:48:39 -0700 (PDT)
-Received: (nullmailer pid 11861 invoked by uid 1000);
-        Fri, 20 Mar 2020 22:48:36 -0000
-Date:   Fri, 20 Mar 2020 16:48:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v4 5/5] media: dt-bindings: media: i2c: convert ov5645
- bindings to json-schema
-Message-ID: <20200320224836.GA27024@bogus>
-References: <1584620363-2255-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584620363-2255-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200319151035.GC14585@pendragon.ideasonboard.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nA0qGDHkYHJL6ggJ5t6ci+dqhrMY8bZAxvf3gcxj7rA=;
+        b=CkFDnyOuBBi2QRKNe3EEJHALY/C3u++CjhoFj90ACM6fy3Hzcp7Z2dGG3avEz4HBUX
+         q+eQwm36/R7rvBZ1cl9ZRAep6tiKl+OkntXhHUwUHNQNNCda5XoLxG/kFIZUi9z790Nu
+         OZHaYT5goPIoCRJLAyRQ3hW2VM23FbKdpUUaQ+kfNOFB4A2H4C62WHbWuNh61cPeo+EU
+         W4oMPyDlK5eJrScKKuF4fMTP7dSoL8TAPohIiLP0RUhbYO4C3ARx0Wv9ZDVdIf0sA9nY
+         gTrO0sxvY9QXXj9pt33CPic11X8PVCIl8+b7gUX3nMycWbS0LqLPKu6mGosGpwHJYa45
+         pWUg==
+X-Gm-Message-State: ANhLgQ1DYNklEjpENvtIot4jxfNJZAzuswKe2UE1Al9t0qay7/amvnqQ
+        6x14fbRg1BVquOHqvu00O+zomUaQ39EZvYre4VA=
+X-Google-Smtp-Source: ADFU+vs27RjZFGCDT1+qlCcZOEkDvs33EnnExK72VpM7K+YodsysftecaKQBfisuA1rmrDLo18r2tcWEtrfRRDjrohc=
+X-Received: by 2002:a37:9e8a:: with SMTP id h132mr10192391qke.314.1584744531281;
+ Fri, 20 Mar 2020 15:48:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319151035.GC14585@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200316090021.52148-1-pmalani@chromium.org> <20200316090021.52148-2-pmalani@chromium.org>
+ <CAFqH_50eGjYu7dHFW82CY4-EyDtq+AF+6tHCAjKbaAjW5_7WYA@mail.gmail.com> <20200320223458.GA15213@bogus>
+In-Reply-To: <20200320223458.GA15213@bogus>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Fri, 20 Mar 2020 23:48:39 +0100
+Message-ID: <CAFqH_51Yj4pHoXJPCxTP_Yid9oq0rSTuDFis3nS6qmTYEGufuw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: Add cros-ec Type C port driver
+To:     Rob Herring <robh@kernel.org>
+Cc:     Prashant Malani <pmalani@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 05:10:35PM +0200, Laurent Pinchart wrote:
-> Hi Prabhakar,
-> 
-> Thank you for the patch.
-> 
-> On Thu, Mar 19, 2020 at 12:19:23PM +0000, Lad Prabhakar wrote:
-> > Convert ov5645 bindings to json-schema.
-> 
-> \o/
-> 
-> > 
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  .../devicetree/bindings/media/i2c/ov5645.txt  |  54 -------
-> >  .../devicetree/bindings/media/i2c/ov5645.yaml | 140 ++++++++++++++++++
-> >  2 files changed, 140 insertions(+), 54 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > deleted file mode 100644
-> > index 1c85c78ec58c..000000000000
-> > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > +++ /dev/null
-> > @@ -1,54 +0,0 @@
-> > -* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
-> > -
-> > -The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
-> > -an active array size of 2592H x 1944V. It is programmable through a serial I2C
-> > -interface.
-> > -
-> > -Required Properties:
-> > -- compatible: Value should be "ovti,ov5645".
-> > -- clocks: Reference to the xclk clock.
-> > -- clock-names: Should be "xclk".
-> > -- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> > -  to the hardware pin PWDNB which is physically active low.
-> > -- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> > -  the hardware pin RESETB.
-> > -- vdddo-supply: Chip digital IO regulator.
-> > -- vdda-supply: Chip analog regulator.
-> > -- vddd-supply: Chip digital core regulator.
-> > -
-> > -The device node must contain one 'port' child node for its digital output
-> > -video port, in accordance with the video interface bindings defined in
-> > -Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > -
-> > -Example:
-> > -
-> > -	&i2c1 {
-> > -		...
-> > -
-> > -		ov5645: ov5645@3c {
-> > -			compatible = "ovti,ov5645";
-> > -			reg = <0x3c>;
-> > -
-> > -			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-> > -			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
-> > -			pinctrl-names = "default";
-> > -			pinctrl-0 = <&camera_rear_default>;
-> > -
-> > -			clocks = <&clks 200>;
-> > -			clock-names = "xclk";
-> > -			assigned-clocks = <&clks 200>;
-> > -			assigned-clock-rates = <24000000>;
-> > -
-> > -			vdddo-supply = <&camera_dovdd_1v8>;
-> > -			vdda-supply = <&camera_avdd_2v8>;
-> > -			vddd-supply = <&camera_dvdd_1v2>;
-> > -
-> > -			port {
-> > -				ov5645_ep: endpoint {
-> > -					clock-lanes = <1>;
-> > -					data-lanes = <0 2>;
-> > -					remote-endpoint = <&csi0_ep>;
-> > -				};
-> > -			};
-> > -		};
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.yaml b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-> > new file mode 100644
-> > index 000000000000..4bf58ad210c5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-> > @@ -0,0 +1,140 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/i2c/ov5645.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
-> 
-> s/Mp/MP/ ?
-> 
-> > +
-> > +maintainers:
-> > +  - Sakari Ailus <sakari.ailus@linux.intel.com>
-> > +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > +
-> > +description: |-
-> > + The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
-> > + an active array size of 2592H x 1944V. It is programmable through a serial I2C
-> > + interface.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: ovti,ov5645
-> > +
-> > +  reg:
-> > +    description: I2C device address
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: xclk
-> > +
-> > +  assigned-clocks:
-> > +    maxItems: 1
-> > +
-> > +  assigned-clock-rates:
-> > +     items:
-> > +     - description: Must be 24MHz (24000000).
-> 
-> These two properties shouldn't be part of the bindings, they're generic.
+Hi Rob,
 
-The fact that they have 1 entry is part of this binding.
+Missatge de Rob Herring <robh@kernel.org> del dia dv., 20 de mar=C3=A7 2020
+a les 23:35:
+>
+> On Mon, Mar 16, 2020 at 04:14:13PM +0100, Enric Balletbo Serra wrote:
+> > Hi Prashant,
+> >
+> > Missatge de Prashant Malani <pmalani@chromium.org> del dia dl., 16 de
+> > mar=C3=A7 2020 a les 10:02:
+> > >
+> > > Some Chrome OS devices with Embedded Controllers (EC) can read and
+> > > modify Type C port state.
+> > >
+> > > Add an entry in the DT Bindings documentation that lists out the logi=
+cal
+> > > device and describes the relevant port information, to be used by the
+> > > corresponding driver.
+> > >
+> > > Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> >
+> > After Rob review, it can go together with the other patches through
+> > the chrome-platform tree. From my side:
+>
+> LGTM, but it is dependent on usb-connector.yaml which I picked up.
+> Either I can take this patch or you pull my dt/next branch in.
+>
 
+I'm fine with you picking this patch in your branch.
 
-> > +  enable-gpios:
-> > +    description: |-
-> > +      Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> > +      to the hardware pin PWDNB which is physically active low.
-> 
-> Specifying that the polarity is GPIO_ACTIVE_HIGH is confusing in my
-> opinion. If there's an inverter on the board, you'll need
-> GPIO_ACTIVE_LOW. We could possibly drop the sentence, as all GPIOs in DT
-> are supposed to be active high, but the fact that the GPIO name
-> corresponds to the opposite of the pin probably has to be documented. I
-> have no better wording to propose now I'm afraid, but it needs to be
-> addressed. Maybe Rob or Maxime could help.
+Thanks,
+ Enric
 
-All GPIOs in DT are active high? What? 
-
-Using 'powerdown-gpios' would have made more sense here, but we're stuck 
-with it now. In any case, the description was good enough before and I 
-don't care to re-review it as part of the conversion.
-
-> > +  reset-gpios:
-> > +    description: |-
-> > +      Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> > +      the hardware pin RESETB.
-> 
-> Here you could just drop the second sentence, or apply the same fix as
-> for enable-gpios.
-
-A description that's specific to this chip seems good to me.
- 
-> > +
-> > +  vdddo-supply:
-> > +    description:
-> > +      Chip digital IO regulator.
-> 
-> You can move the description on the same line as the "description:" key.
-> Same below.
-> 
-> > +
-> > +  vdda-supply:
-> > +    description:
-> > +      Chip analog regulator.
-> > +
-> > +  vddd-supply:
-> > +    description:
-> > +      Chip digital core regulator.
-> > +
-> > +  # See ../video-interfaces.txt for more details
-> > +  port:
-> > +    type: object
-> > +    properties:
-> > +      endpoint:
-> > +        type: object
-> > +
-> > +        properties:
-> > +          data-lanes:
-> > +            description: |-
-> > +              The sensor supports two-lane operation.
-> > +              For two-lane operation the property must be set to <1 2>.
-> > +            items:
-> > +              - const: 1
-> > +              - const: 2
-> 
-> 
-> What if only one lane is wired, does the sensor support that ?
-> 
-> > +
-> > +          clock-lanes:
-> > +            description:
-> > +              should be set to <0> (clock lane on hardware lane 0).
-> > +            items:
-> > +              - const: 0
-> > +
-> > +          remote-endpoint: true
-> > +
-> > +        required:
-> > +          - data-lanes
-> > +          - clock-lanes
-> > +          - remote-endpoint
-> > +
-> > +        additionalProperties: false
-> > +
-> > +    additionalProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - assigned-clocks
-> > +  - assigned-clock-rates
-> 
-> Those two properties should be dropped.
-> 
-> > +  - enable-gpios
-> > +  - reset-gpios
-> 
-> Are the GPIOs mandatory ? What if the signals are hardwired on the board
-> ?
-> 
-> > +  - vdddo-supply
-> > +  - vdda-supply
-> > +  - vddd-supply
-> > +  - port
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    i2c1 {
-> 
-> s/i2c1/i2c/
-> 
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        ov5645: sensor@3c {
-> > +            compatible = "ovti,ov5645";
-> > +            reg = <0x3c>;
-> > +            clocks = <&ov5645_cl>;
-> > +            clock-names = "xclk";
-> > +            assigned-clocks = <&ov5645_cl>;
-> > +            assigned-clock-rates = <24000000>;
-> > +            enable-gpios = <&gpio1 6 /* GPIO_ACTIVE_HIGH */>;
-> > +            reset-gpios = <&gpio5 20 /* GPIO_ACTIVE_LOW */>;
-> > +            vdddo-supply = <&camera_dovdd_1v8>;
-> > +            vdda-supply = <&camera_avdd_2v8>;
-> > +            vddd-supply = <&camera_dvdd_1v2>;
-> > +
-> > +            port {
-> > +                ov5645_0: endpoint {
-> > +                    remote-endpoint = <&csi1_ep>;
-> > +                    clock-lanes = <0>;
-> > +                    data-lanes = <1 2>;
-> > +                };
-> > +            };
-> > +        };
-> > +    };
-> > +
-> > +...
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
+> Rob
