@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 597CFC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26105C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB2C20774
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE67520739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:14:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbgCTJO1 (ORCPT
+        id S1727285AbgCTJO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:14:27 -0400
-Received: from 8bytes.org ([81.169.241.247]:54250 "EHLO theia.8bytes.org"
+        Fri, 20 Mar 2020 05:14:28 -0400
+Received: from 8bytes.org ([81.169.241.247]:54298 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727210AbgCTJO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:14:26 -0400
+        id S1727241AbgCTJO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 05:14:27 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 2A1AE451; Fri, 20 Mar 2020 10:14:21 +0100 (CET)
+        id 23A9D46A; Fri, 20 Mar 2020 10:14:22 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     iommu@lists.linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -36,9 +36,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v3 10/15] iommu/arm-smmu: Use accessor functions for iommu private data
-Date:   Fri, 20 Mar 2020 10:14:09 +0100
-Message-Id: <20200320091414.3941-11-joro@8bytes.org>
+Subject: [PATCH v3 13/15] iommu/qcom: Use accessor functions for iommu private data
+Date:   Fri, 20 Mar 2020 10:14:12 +0100
+Message-Id: <20200320091414.3941-14-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200320091414.3941-1-joro@8bytes.org>
 References: <20200320091414.3941-1-joro@8bytes.org>
@@ -49,187 +49,208 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Make use of dev_iommu_priv_set/get() functions and simplify the code
-where possible with this change.
+Make use of dev_iommu_priv_set/get() functions.
 
-Tested-by: Will Deacon <will@kernel.org> # arm-smmu
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/arm-smmu.c | 57 +++++++++++++++++++++-------------------
- 1 file changed, 30 insertions(+), 27 deletions(-)
+ drivers/iommu/qcom_iommu.c | 61 ++++++++++++++++++++++----------------
+ 1 file changed, 36 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 980aae73b45b..7aa36e6c19c0 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -98,12 +98,15 @@ struct arm_smmu_master_cfg {
- 	s16				smendx[];
- };
- #define INVALID_SMENDX			-1
--#define __fwspec_cfg(fw) ((struct arm_smmu_master_cfg *)fw->iommu_priv)
--#define fwspec_smmu(fw)  (__fwspec_cfg(fw)->smmu)
--#define fwspec_smendx(fw, i) \
--	(i >= fw->num_ids ? INVALID_SMENDX : __fwspec_cfg(fw)->smendx[i])
--#define for_each_cfg_sme(fw, i, idx) \
--	for (i = 0; idx = fwspec_smendx(fw, i), i < fw->num_ids; ++i)
-+#define __fwspec_cfg(dev) ((struct arm_smmu_master_cfg *)dev_iommu_priv_get(dev))
-+#define fwspec_smmu(dev)  (__fwspec_cfg(dev)->smmu)
-+#define fwspec_smendx(dev, i)				\
-+	(i >= dev_iommu_fwspec_get(dev)->num_ids ?	\
-+		INVALID_SMENDX :			\
-+		__fwspec_cfg(dev)->smendx[i])
-+#define for_each_cfg_sme(dev, i, idx) \
-+	for (i = 0; idx = fwspec_smendx(dev, i), \
-+	     i < dev_iommu_fwspec_get(dev)->num_ids; ++i)
+diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
+index 4328da0b0a9f..824a9e85fac6 100644
+--- a/drivers/iommu/qcom_iommu.c
++++ b/drivers/iommu/qcom_iommu.c
+@@ -74,16 +74,19 @@ static struct qcom_iommu_domain *to_qcom_iommu_domain(struct iommu_domain *dom)
  
- static bool using_legacy_binding, using_generic_binding;
+ static const struct iommu_ops qcom_iommu_ops;
  
-@@ -1061,7 +1064,7 @@ static bool arm_smmu_free_sme(struct arm_smmu_device *smmu, int idx)
- static int arm_smmu_master_alloc_smes(struct device *dev)
+-static struct qcom_iommu_dev * to_iommu(struct iommu_fwspec *fwspec)
++static struct qcom_iommu_dev * to_iommu(struct device *dev)
  {
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
--	struct arm_smmu_master_cfg *cfg = fwspec->iommu_priv;
-+	struct arm_smmu_master_cfg *cfg = dev_iommu_priv_get(dev);
- 	struct arm_smmu_device *smmu = cfg->smmu;
- 	struct arm_smmu_smr *smrs = smmu->smrs;
- 	struct iommu_group *group;
-@@ -1069,7 +1072,7 @@ static int arm_smmu_master_alloc_smes(struct device *dev)
- 
- 	mutex_lock(&smmu->stream_map_mutex);
- 	/* Figure out a viable stream map entry allocation */
--	for_each_cfg_sme(fwspec, i, idx) {
-+	for_each_cfg_sme(dev, i, idx) {
- 		u16 sid = FIELD_GET(ARM_SMMU_SMR_ID, fwspec->ids[i]);
- 		u16 mask = FIELD_GET(ARM_SMMU_SMR_MASK, fwspec->ids[i]);
- 
-@@ -1100,7 +1103,7 @@ static int arm_smmu_master_alloc_smes(struct device *dev)
- 	iommu_group_put(group);
- 
- 	/* It worked! Now, poke the actual hardware */
--	for_each_cfg_sme(fwspec, i, idx) {
-+	for_each_cfg_sme(dev, i, idx) {
- 		arm_smmu_write_sme(smmu, idx);
- 		smmu->s2crs[idx].group = group;
- 	}
-@@ -1117,14 +1120,14 @@ static int arm_smmu_master_alloc_smes(struct device *dev)
- 	return ret;
++	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
++
+ 	if (!fwspec || fwspec->ops != &qcom_iommu_ops)
+ 		return NULL;
+-	return fwspec->iommu_priv;
++
++	return dev_iommu_priv_get(dev);
  }
  
--static void arm_smmu_master_free_smes(struct iommu_fwspec *fwspec)
-+static void arm_smmu_master_free_smes(struct device *dev)
+-static struct qcom_iommu_ctx * to_ctx(struct iommu_fwspec *fwspec, unsigned asid)
++static struct qcom_iommu_ctx * to_ctx(struct device *dev, unsigned asid)
  {
--	struct arm_smmu_device *smmu = fwspec_smmu(fwspec);
--	struct arm_smmu_master_cfg *cfg = fwspec->iommu_priv;
-+	struct arm_smmu_master_cfg *cfg = dev_iommu_priv_get(dev);
-+	struct arm_smmu_device *smmu = fwspec_smmu(dev);
- 	int i, idx;
+-	struct qcom_iommu_dev *qcom_iommu = to_iommu(fwspec);
++	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev);
+ 	if (!qcom_iommu)
+ 		return NULL;
+ 	return qcom_iommu->ctxs[asid - 1];
+@@ -115,11 +118,14 @@ iommu_readq(struct qcom_iommu_ctx *ctx, unsigned reg)
  
- 	mutex_lock(&smmu->stream_map_mutex);
--	for_each_cfg_sme(fwspec, i, idx) {
-+	for_each_cfg_sme(dev, i, idx) {
- 		if (arm_smmu_free_sme(smmu, idx))
- 			arm_smmu_write_sme(smmu, idx);
- 		cfg->smendx[i] = INVALID_SMENDX;
-@@ -1133,7 +1136,7 @@ static void arm_smmu_master_free_smes(struct iommu_fwspec *fwspec)
- }
- 
- static int arm_smmu_domain_add_master(struct arm_smmu_domain *smmu_domain,
--				      struct iommu_fwspec *fwspec)
-+				      struct device *dev)
+ static void qcom_iommu_tlb_sync(void *cookie)
  {
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
- 	struct arm_smmu_s2cr *s2cr = smmu->s2crs;
-@@ -1146,7 +1149,7 @@ static int arm_smmu_domain_add_master(struct arm_smmu_domain *smmu_domain,
- 	else
- 		type = S2CR_TYPE_TRANS;
+-	struct iommu_fwspec *fwspec = cookie;
++	struct iommu_fwspec *fwspec;
++	struct device *dev = cookie;
+ 	unsigned i;
  
--	for_each_cfg_sme(fwspec, i, idx) {
-+	for_each_cfg_sme(dev, i, idx) {
- 		if (type == s2cr[idx].type && cbndx == s2cr[idx].cbndx)
- 			continue;
++	fwspec = dev_iommu_fwspec_get(dev);
++
+ 	for (i = 0; i < fwspec->num_ids; i++) {
+-		struct qcom_iommu_ctx *ctx = to_ctx(fwspec, fwspec->ids[i]);
++		struct qcom_iommu_ctx *ctx = to_ctx(dev, fwspec->ids[i]);
+ 		unsigned int val, ret;
  
-@@ -1160,10 +1163,10 @@ static int arm_smmu_domain_add_master(struct arm_smmu_domain *smmu_domain,
+ 		iommu_writel(ctx, ARM_SMMU_CB_TLBSYNC, 0);
+@@ -133,11 +139,14 @@ static void qcom_iommu_tlb_sync(void *cookie)
  
- static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+ static void qcom_iommu_tlb_inv_context(void *cookie)
  {
--	int ret;
-+	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
- 	struct arm_smmu_device *smmu;
--	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-+	int ret;
+-	struct iommu_fwspec *fwspec = cookie;
++	struct device *dev = cookie;
++	struct iommu_fwspec *fwspec;
+ 	unsigned i;
  
- 	if (!fwspec || fwspec->ops != &arm_smmu_ops) {
- 		dev_err(dev, "cannot attach to SMMU, is it on the same bus?\n");
-@@ -1177,10 +1180,10 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 	 * domains, just say no (but more politely than by dereferencing NULL).
- 	 * This should be at least a WARN_ON once that's sorted.
- 	 */
--	if (!fwspec->iommu_priv)
-+	if (!dev_iommu_priv_get(dev))
- 		return -ENODEV;
- 
--	smmu = fwspec_smmu(fwspec);
-+	smmu = fwspec_smmu(dev);
- 
- 	ret = arm_smmu_rpm_get(smmu);
- 	if (ret < 0)
-@@ -1204,7 +1207,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
++	fwspec = dev_iommu_fwspec_get(dev);
++
+ 	for (i = 0; i < fwspec->num_ids; i++) {
+-		struct qcom_iommu_ctx *ctx = to_ctx(fwspec, fwspec->ids[i]);
++		struct qcom_iommu_ctx *ctx = to_ctx(dev, fwspec->ids[i]);
+ 		iommu_writel(ctx, ARM_SMMU_CB_S1_TLBIASID, ctx->asid);
  	}
  
- 	/* Looks ok, so add the device to the domain */
--	ret = arm_smmu_domain_add_master(smmu_domain, fwspec);
-+	ret = arm_smmu_domain_add_master(smmu_domain, dev);
+@@ -147,13 +156,16 @@ static void qcom_iommu_tlb_inv_context(void *cookie)
+ static void qcom_iommu_tlb_inv_range_nosync(unsigned long iova, size_t size,
+ 					    size_t granule, bool leaf, void *cookie)
+ {
+-	struct iommu_fwspec *fwspec = cookie;
++	struct device *dev = cookie;
++	struct iommu_fwspec *fwspec;
+ 	unsigned i, reg;
  
- 	/*
- 	 * Setup an autosuspend delay to avoid bouncing runpm state.
-@@ -1429,7 +1432,7 @@ static int arm_smmu_add_device(struct device *dev)
- 		goto out_free;
+ 	reg = leaf ? ARM_SMMU_CB_S1_TLBIVAL : ARM_SMMU_CB_S1_TLBIVA;
  
- 	cfg->smmu = smmu;
--	fwspec->iommu_priv = cfg;
-+	dev_iommu_priv_set(dev, cfg);
- 	while (i--)
- 		cfg->smendx[i] = INVALID_SMENDX;
++	fwspec = dev_iommu_fwspec_get(dev);
++
+ 	for (i = 0; i < fwspec->num_ids; i++) {
+-		struct qcom_iommu_ctx *ctx = to_ctx(fwspec, fwspec->ids[i]);
++		struct qcom_iommu_ctx *ctx = to_ctx(dev, fwspec->ids[i]);
+ 		size_t s = size;
  
-@@ -1467,7 +1470,7 @@ static void arm_smmu_remove_device(struct device *dev)
- 	if (!fwspec || fwspec->ops != &arm_smmu_ops)
- 		return;
+ 		iova = (iova >> 12) << 12;
+@@ -222,9 +234,10 @@ static irqreturn_t qcom_iommu_fault(int irq, void *dev)
  
--	cfg  = fwspec->iommu_priv;
-+	cfg  = dev_iommu_priv_get(dev);
- 	smmu = cfg->smmu;
+ static int qcom_iommu_init_domain(struct iommu_domain *domain,
+ 				  struct qcom_iommu_dev *qcom_iommu,
+-				  struct iommu_fwspec *fwspec)
++				  struct device *dev)
+ {
+ 	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
++	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+ 	struct io_pgtable_ops *pgtbl_ops;
+ 	struct io_pgtable_cfg pgtbl_cfg;
+ 	int i, ret = 0;
+@@ -243,7 +256,7 @@ static int qcom_iommu_init_domain(struct iommu_domain *domain,
+ 	};
  
- 	ret = arm_smmu_rpm_get(smmu);
-@@ -1475,23 +1478,23 @@ static void arm_smmu_remove_device(struct device *dev)
- 		return;
+ 	qcom_domain->iommu = qcom_iommu;
+-	pgtbl_ops = alloc_io_pgtable_ops(ARM_32_LPAE_S1, &pgtbl_cfg, fwspec);
++	pgtbl_ops = alloc_io_pgtable_ops(ARM_32_LPAE_S1, &pgtbl_cfg, dev);
+ 	if (!pgtbl_ops) {
+ 		dev_err(qcom_iommu->dev, "failed to allocate pagetable ops\n");
+ 		ret = -ENOMEM;
+@@ -256,7 +269,7 @@ static int qcom_iommu_init_domain(struct iommu_domain *domain,
+ 	domain->geometry.force_aperture = true;
  
- 	iommu_device_unlink(&smmu->iommu, dev);
--	arm_smmu_master_free_smes(fwspec);
-+	arm_smmu_master_free_smes(dev);
+ 	for (i = 0; i < fwspec->num_ids; i++) {
+-		struct qcom_iommu_ctx *ctx = to_ctx(fwspec, fwspec->ids[i]);
++		struct qcom_iommu_ctx *ctx = to_ctx(dev, fwspec->ids[i]);
  
- 	arm_smmu_rpm_put(smmu);
+ 		if (!ctx->secure_init) {
+ 			ret = qcom_scm_restore_sec_cfg(qcom_iommu->sec_id, ctx->asid);
+@@ -363,8 +376,7 @@ static void qcom_iommu_domain_free(struct iommu_domain *domain)
  
-+	dev_iommu_priv_set(dev, NULL);
- 	iommu_group_remove_device(dev);
--	kfree(fwspec->iommu_priv);
-+	kfree(cfg);
- 	iommu_fwspec_free(dev);
- }
- 
- static struct iommu_group *arm_smmu_device_group(struct device *dev)
+ static int qcom_iommu_attach_dev(struct iommu_domain *domain, struct device *dev)
  {
 -	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
--	struct arm_smmu_device *smmu = fwspec_smmu(fwspec);
-+	struct arm_smmu_device *smmu = fwspec_smmu(dev);
- 	struct iommu_group *group = NULL;
- 	int i, idx;
+-	struct qcom_iommu_dev *qcom_iommu = to_iommu(fwspec);
++	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev);
+ 	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
+ 	int ret;
  
--	for_each_cfg_sme(fwspec, i, idx) {
-+	for_each_cfg_sme(dev, i, idx) {
- 		if (group && smmu->s2crs[idx].group &&
- 		    group != smmu->s2crs[idx].group)
- 			return ERR_PTR(-EINVAL);
+@@ -375,7 +387,7 @@ static int qcom_iommu_attach_dev(struct iommu_domain *domain, struct device *dev
+ 
+ 	/* Ensure that the domain is finalized */
+ 	pm_runtime_get_sync(qcom_iommu->dev);
+-	ret = qcom_iommu_init_domain(domain, qcom_iommu, fwspec);
++	ret = qcom_iommu_init_domain(domain, qcom_iommu, dev);
+ 	pm_runtime_put_sync(qcom_iommu->dev);
+ 	if (ret < 0)
+ 		return ret;
+@@ -397,9 +409,9 @@ static int qcom_iommu_attach_dev(struct iommu_domain *domain, struct device *dev
+ 
+ static void qcom_iommu_detach_dev(struct iommu_domain *domain, struct device *dev)
+ {
+-	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+-	struct qcom_iommu_dev *qcom_iommu = to_iommu(fwspec);
+ 	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
++	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
++	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev);
+ 	unsigned i;
+ 
+ 	if (WARN_ON(!qcom_domain->iommu))
+@@ -407,7 +419,7 @@ static void qcom_iommu_detach_dev(struct iommu_domain *domain, struct device *de
+ 
+ 	pm_runtime_get_sync(qcom_iommu->dev);
+ 	for (i = 0; i < fwspec->num_ids; i++) {
+-		struct qcom_iommu_ctx *ctx = to_ctx(fwspec, fwspec->ids[i]);
++		struct qcom_iommu_ctx *ctx = to_ctx(dev, fwspec->ids[i]);
+ 
+ 		/* Disable the context bank: */
+ 		iommu_writel(ctx, ARM_SMMU_CB_SCTLR, 0);
+@@ -514,7 +526,7 @@ static bool qcom_iommu_capable(enum iommu_cap cap)
+ 
+ static int qcom_iommu_add_device(struct device *dev)
+ {
+-	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev_iommu_fwspec_get(dev));
++	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev);
+ 	struct iommu_group *group;
+ 	struct device_link *link;
+ 
+@@ -545,7 +557,7 @@ static int qcom_iommu_add_device(struct device *dev)
+ 
+ static void qcom_iommu_remove_device(struct device *dev)
+ {
+-	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev_iommu_fwspec_get(dev));
++	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev);
+ 
+ 	if (!qcom_iommu)
+ 		return;
+@@ -557,7 +569,6 @@ static void qcom_iommu_remove_device(struct device *dev)
+ 
+ static int qcom_iommu_of_xlate(struct device *dev, struct of_phandle_args *args)
+ {
+-	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+ 	struct qcom_iommu_dev *qcom_iommu;
+ 	struct platform_device *iommu_pdev;
+ 	unsigned asid = args->args[0];
+@@ -583,14 +594,14 @@ static int qcom_iommu_of_xlate(struct device *dev, struct of_phandle_args *args)
+ 	    WARN_ON(asid > qcom_iommu->num_ctxs))
+ 		return -EINVAL;
+ 
+-	if (!fwspec->iommu_priv) {
+-		fwspec->iommu_priv = qcom_iommu;
++	if (!dev_iommu_priv_get(dev)) {
++		dev_iommu_priv_set(dev, qcom_iommu);
+ 	} else {
+ 		/* make sure devices iommus dt node isn't referring to
+ 		 * multiple different iommu devices.  Multiple context
+ 		 * banks are ok, but multiple devices are not:
+ 		 */
+-		if (WARN_ON(qcom_iommu != fwspec->iommu_priv))
++		if (WARN_ON(qcom_iommu != dev_iommu_priv_get(dev)))
+ 			return -EINVAL;
+ 	}
+ 
 -- 
 2.17.1
 
