@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CEDC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C188FC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7551420775
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93AB820775
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbgCTUzv (ORCPT
+        id S1727324AbgCTUz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 16:55:51 -0400
+        Fri, 20 Mar 2020 16:55:57 -0400
 Received: from mga11.intel.com ([192.55.52.93]:32133 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727239AbgCTUzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 16:55:49 -0400
-IronPort-SDR: ZDqmjQ3WRtqT4fuHqgn3iW7oyRqJZd2zzZaGzyDkP4xR6QxejhCn+E+FDaOXq/ynY62b6JgT/E
- asBb4BAwaadg==
+        id S1727261AbgCTUzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 16:55:50 -0400
+IronPort-SDR: 8BiWnNS+6mXPlf4+gzqOzbZ6athxilkvaY5AY5DwpOuvj/w6Y8GmsdlCo60KzmEpipwuwRN+3u
+ bZ6mD/W67mow==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
   by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 13:55:49 -0700
-IronPort-SDR: HUedZPOcKoeRnrtk/PXMNnf0CuC3dYa4TPb0nwO+slqSjfA/dpGuLYKiCB7vzRBeMqmRxwr5VD
- 4o3IX90/WHOA==
+IronPort-SDR: +0unh8FONmtrG2sfnffBwNWGCe9gpTodDsZWyehaUdctPxUcGfVFDt60dRhTfzLxKOIwlyUizX
+ FJNNMGUF3iLw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,285,1580803200"; 
-   d="scan'208";a="280543330"
+   d="scan'208";a="280543339"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 20 Mar 2020 13:55:48 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 20 Mar 2020 13:55:49 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Christian Borntraeger <borntraeger@de.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>,
@@ -40,9 +40,9 @@ Cc:     David Hildenbrand <david@redhat.com>,
         Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>,
         Peter Xu <peterx@redhat.com>
-Subject: [PATCH 5/7] KVM: selftests: Add util to delete memory region
-Date:   Fri, 20 Mar 2020 13:55:44 -0700
-Message-Id: <20200320205546.2396-6-sean.j.christopherson@intel.com>
+Subject: [PATCH 7/7] KVM: selftests: Add "delete" testcase to set_memory_region_test
+Date:   Fri, 20 Mar 2020 13:55:46 -0700
+Message-Id: <20200320205546.2396-8-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200320205546.2396-1-sean.j.christopherson@intel.com>
 References: <20200320205546.2396-1-sean.j.christopherson@intel.com>
@@ -53,114 +53,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a utility to delete a memory region, it will be used by x86's
-set_memory_region_test.
+Add coverate for running a guest with no memslots, and for deleting
+memslots while the guest is running.  Enhance the test to use, and
+expect, a unique value for MMIO reads, e.g. to verify each stage of
+the test.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- .../testing/selftests/kvm/include/kvm_util.h  |  1 +
- tools/testing/selftests/kvm/lib/kvm_util.c    | 60 ++++++++++++-------
- 2 files changed, 40 insertions(+), 21 deletions(-)
+ .../kvm/x86_64/set_memory_region_test.c       | 122 ++++++++++++++++--
+ 1 file changed, 108 insertions(+), 14 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index a99b875f50d2..0f0e86e188c4 100644
---- a/tools/testing/selftests/kvm/include/kvm_util.h
-+++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -113,6 +113,7 @@ int _vcpu_ioctl(struct kvm_vm *vm, uint32_t vcpuid, unsigned long ioctl,
- void vm_ioctl(struct kvm_vm *vm, unsigned long ioctl, void *arg);
- void vm_mem_region_set_flags(struct kvm_vm *vm, uint32_t slot, uint32_t flags);
- void vm_mem_region_move(struct kvm_vm *vm, uint32_t slot, uint64_t new_gpa);
-+void vm_mem_region_delete(struct kvm_vm *vm, uint32_t slot);
- void vm_vcpu_add(struct kvm_vm *vm, uint32_t vcpuid);
- vm_vaddr_t vm_vaddr_alloc(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min,
- 			  uint32_t data_memslot, uint32_t pgd_memslot);
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index d7b74f465570..f69fa84c9a4c 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -451,36 +451,36 @@ void kvm_vm_release(struct kvm_vm *vmp)
- 		"  vmp->kvm_fd: %i rc: %i errno: %i", vmp->kvm_fd, ret, errno);
- }
+diff --git a/tools/testing/selftests/kvm/x86_64/set_memory_region_test.c b/tools/testing/selftests/kvm/x86_64/set_memory_region_test.c
+index c6691cff4e19..44aed8ac932b 100644
+--- a/tools/testing/selftests/kvm/x86_64/set_memory_region_test.c
++++ b/tools/testing/selftests/kvm/x86_64/set_memory_region_test.c
+@@ -26,42 +26,109 @@
+ #define MEM_REGION_SIZE		0x200000
+ #define MEM_REGION_SLOT		10
  
-+static void __vm_mem_region_delete(struct kvm_vm *vm,
-+				   struct userspace_mem_region *region)
-+{
-+	int ret;
+-static void guest_code(void)
++static const uint64_t MMIO_VAL = 0xbeefull;
 +
-+	kvm_list_del(vm->userspace_mem_region_head, region);
++extern const uint64_t final_rip_start;
++extern const uint64_t final_rip_end;
 +
-+	region->region.memory_size = 0;
-+	ret = ioctl(vm->fd, KVM_SET_USER_MEMORY_REGION, &region->region);
-+	TEST_ASSERT(ret == 0, "KVM_SET_USER_MEMORY_REGION IOCTL failed, "
-+		    "rc: %i errno: %i", ret, errno);
-+
-+	sparsebit_free(&region->unused_phy_pages);
-+	ret = munmap(region->mmap_start, region->mmap_size);
-+	TEST_ASSERT(ret == 0, "munmap failed, rc: %i errno: %i", ret, errno);
-+
-+	free(region);
-+}
-+
- /*
-  * Destroys and frees the VM pointed to by vmp.
-  */
- void kvm_vm_free(struct kvm_vm *vmp)
++static inline uint64_t guest_spin_on_val(uint64_t spin_val)
  {
--	int ret;
--
- 	if (vmp == NULL)
- 		return;
+ 	uint64_t val;
  
- 	/* Free userspace_mem_regions. */
--	while (vmp->userspace_mem_region_head) {
--		struct userspace_mem_region *region
--			= vmp->userspace_mem_region_head;
--
--		kvm_list_del(vmp->userspace_mem_region_head, region);
--
--		region->region.memory_size = 0;
--		ret = ioctl(vmp->fd, KVM_SET_USER_MEMORY_REGION,
--			&region->region);
--		TEST_ASSERT(ret == 0, "KVM_SET_USER_MEMORY_REGION IOCTL failed, "
--			"rc: %i errno: %i", ret, errno);
--
--		sparsebit_free(&region->unused_phy_pages);
--		ret = munmap(region->mmap_start, region->mmap_size);
--		TEST_ASSERT(ret == 0, "munmap failed, rc: %i errno: %i",
--			    ret, errno);
--
--		free(region);
--	}
-+	while (vmp->userspace_mem_region_head)
-+		__vm_mem_region_delete(vmp, vmp->userspace_mem_region_head);
+ 	do {
+ 		val = READ_ONCE(*((uint64_t *)MEM_REGION_GPA));
+-	} while (!val);
++	} while (val == spin_val);
++	return val;
++}
  
- 	/* Free sparsebit arrays. */
- 	sparsebit_free(&vmp->vpages_valid);
-@@ -797,6 +797,24 @@ void vm_mem_region_move(struct kvm_vm *vm, uint32_t slot, uint64_t new_gpa)
- 		    ret, errno, slot, new_gpa);
+-	if (val != 1)
+-		ucall(UCALL_ABORT, 1, val);
++static void guest_code(void)
++{
++	uint64_t val;
+ 
+-	GUEST_DONE();
++	/*
++	 * Spin until the memory region is moved to a misaligned address.  This
++	 * may or may not trigger MMIO, as the window where the memslot is
++	 * invalid is quite small.
++	 */
++	val = guest_spin_on_val(0);
++	GUEST_ASSERT(val == 1 || val == MMIO_VAL);
++
++	/* Spin until the memory region is realigned. */
++	GUEST_ASSERT(guest_spin_on_val(MMIO_VAL) == 1);
++
++	/* Spin until the memory region is deleted. */
++	GUEST_ASSERT(guest_spin_on_val(1) == MMIO_VAL);
++
++	/* Spin until the memory region is recreated. */
++	GUEST_ASSERT(guest_spin_on_val(MMIO_VAL) == 0);
++
++	/* Spin until the memory region is deleted. */
++	GUEST_ASSERT(guest_spin_on_val(0) == MMIO_VAL);
++
++	asm("1:\n\t"
++	    ".pushsection .rodata\n\t"
++	    ".global final_rip_start\n\t"
++	    "final_rip_start: .quad 1b\n\t"
++	    ".popsection");
++
++	/* Spin indefinitely (until the code memslot is deleted). */
++	guest_spin_on_val(MMIO_VAL);
++
++	asm("1:\n\t"
++	    ".pushsection .rodata\n\t"
++	    ".global final_rip_end\n\t"
++	    "final_rip_end: .quad 1b\n\t"
++	    ".popsection");
++
++	GUEST_ASSERT(0);
  }
  
-+/*
-+ * VM Memory Region Delete
-+ *
-+ * Input Args:
-+ *   vm - Virtual Machine
-+ *   slot - Slot of the memory region to delete
-+ *
-+ * Output Args: None
-+ *
-+ * Return: None
-+ *
-+ * Delete a memory region.
-+ */
-+void vm_mem_region_delete(struct kvm_vm *vm, uint32_t slot)
-+{
-+	__vm_mem_region_delete(vm, memslot2region(vm, slot));
-+}
+ static void *vcpu_worker(void *data)
+ {
+ 	struct kvm_vm *vm = data;
++	struct kvm_regs regs;
+ 	struct kvm_run *run;
+ 	struct ucall uc;
+-	uint64_t cmd;
+ 
+ 	/*
+ 	 * Loop until the guest is done.  Re-enter the guest on all MMIO exits,
+-	 * which will occur if the guest attempts to access a memslot while it
+-	 * is being moved.
++	 * which will occur if the guest attempts to access a memslot after it
++	 * has been deleted or while it is being moved .
+ 	 */
+ 	run = vcpu_state(vm, VCPU_ID);
+-	do {
 +
- /*
-  * VCPU mmap Size
-  *
++	memcpy(run->mmio.data, &MMIO_VAL, 8);
++	while (1) {
+ 		vcpu_run(vm, VCPU_ID);
+-	} while (run->exit_reason == KVM_EXIT_MMIO);
++		if (run->exit_reason != KVM_EXIT_MMIO)
++			break;
+ 
+-	TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
++		TEST_ASSERT(!run->mmio.is_write, "Unexpected exit mmio write");
++		TEST_ASSERT(run->mmio.len == 8,
++			    "Unexpected exit mmio size = %u", run->mmio.len);
++
++		TEST_ASSERT(run->mmio.phys_addr == MEM_REGION_GPA,
++			    "Unexpected exit mmio address = 0x%llx",
++			    run->mmio.phys_addr);
++	}
++
++	if (run->exit_reason == KVM_EXIT_IO) {
++		(void)get_ucall(vm, VCPU_ID, &uc);
++		TEST_FAIL("%s at %s:%ld",
++			  (const char *)uc.args[0], __FILE__, uc.args[1]);
++	}
++
++	TEST_ASSERT(run->exit_reason == KVM_EXIT_SHUTDOWN ||
++		    run->exit_reason == KVM_INTERNAL_ERROR_EMULATION,
+ 		    "Unexpected exit reason = %d", run->exit_reason);
+ 
+-	cmd = get_ucall(vm, VCPU_ID, &uc);
+-	TEST_ASSERT(cmd == UCALL_DONE, "Unexpected val in guest = %lu", uc.args[0]);
++	vcpu_regs_get(vm, VCPU_ID, &regs);
++
++	TEST_ASSERT(regs.rip >= final_rip_start &&
++		    regs.rip < final_rip_end,
++		    "Bad rip, expected 0x%lx - 0x%lx, got 0x%llx\n",
++		    final_rip_start, final_rip_end, regs.rip);
++
+ 	return NULL;
+ }
+ 
+@@ -72,6 +139,13 @@ static void test_move_memory_region(void)
+ 	uint64_t *hva;
+ 	uint64_t gpa;
+ 
++	vm = vm_create(VM_MODE_DEFAULT, 0, O_RDWR);
++	vm_vcpu_add(vm, VCPU_ID);
++	/* Fails with ENOSPC because the MMU can't create pages (no slots). */
++	TEST_ASSERT(_vcpu_run(vm, VCPU_ID) == -1 && errno == ENOSPC,
++		    "Unexpected error code = %d", errno);
++	kvm_vm_free(vm);
++
+ 	vm = vm_create_default(VCPU_ID, 0, guest_code);
+ 
+ 	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+@@ -105,7 +179,6 @@ static void test_move_memory_region(void)
+ 	 */
+ 	vm_mem_region_move(vm, MEM_REGION_SLOT, MEM_REGION_GPA - 4096);
+ 	WRITE_ONCE(*hva, 2);
+-
+ 	usleep(100000);
+ 
+ 	/*
+@@ -116,6 +189,27 @@ static void test_move_memory_region(void)
+ 
+ 	/* Restore the original base, the guest should see "1". */
+ 	vm_mem_region_move(vm, MEM_REGION_SLOT, MEM_REGION_GPA);
++	usleep(100000);
++
++	/* Delete the memory region, the guest should not die. */
++	vm_mem_region_delete(vm, MEM_REGION_SLOT);
++	usleep(100000);
++
++	/* Recreate the memory region.  The guest should see "0". */
++	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS_THP,
++				    MEM_REGION_GPA, MEM_REGION_SLOT,
++				    MEM_REGION_SIZE / getpagesize(), 0);
++	usleep(100000);
++
++	/* Delete the region again so that there's only one memslot left. */
++	vm_mem_region_delete(vm, MEM_REGION_SLOT);
++	usleep(100000);
++
++	/*
++	 * Delete the primary memslot.  This should cause an emulation error or
++	 * shutdown due to the page tables getting nuked.
++	 */
++	vm_mem_region_delete(vm, VM_PRIMARY_MEM_SLOT);
+ 
+ 	pthread_join(vcpu_thread, NULL);
+ 
 -- 
 2.24.1
 
