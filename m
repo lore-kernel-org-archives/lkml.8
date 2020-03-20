@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC68FC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BACC43332
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBA120740
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E6D020739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:42:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JoZrZzq9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iUr7LVw9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbgCTBmR (ORCPT
+        id S1727714AbgCTBmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 21:42:17 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:46387 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727415AbgCTBlR (ORCPT
+        Thu, 19 Mar 2020 21:42:24 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33162 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727238AbgCTBlN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 21:41:17 -0400
-Received: by mail-qv1-f67.google.com with SMTP id m2so2166630qvu.13
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 18:41:15 -0700 (PDT)
+        Thu, 19 Mar 2020 21:41:13 -0400
+Received: by mail-qk1-f196.google.com with SMTP id p6so5430936qkm.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 18:41:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Lr1Y7KtiXEwRNt5oEJbHw3xmtSZcUrY6dlEwgFNuRHA=;
-        b=JoZrZzq9MtCdZRY8h1hIczI93UjeYWLiyWcjBPqgqslk4B+dNR7hCtZIo7jyN6xzmt
-         PhtpHWIrRArylYLj/pati/6Okn2ECsDFjNcuTjl/1u2m3eZZvbEsj0JyhcW+Nkf1rQm7
-         7vkn6PlDFIgd/DPxZnqmxR9bm0UaGI9/Y/zVDLEmBBjWQaEm0UPOBRyLUpRpyat/lwQ2
-         tIKTvYGmmrm/4MH5dCshcNMg2rWoiOfaFroCJC9mULyzd/myHd5i8mf8ZWoFDKvWy3R+
-         JmxiYw5Up0VLEHVizPB0QOaKD3/xpnZLsGnlp0Z+8ZFsCkuwJrsbuGlF8/YewmN39dBz
-         pLaA==
+        bh=PMpp9cGV1kolIa23/+eXnHG3jYVNr7iJ09Ptby/dQWg=;
+        b=iUr7LVw9yHWif+ZG2vxEMY0bR1h+bCvJ+y8Af7km3yxODyCKqGeLTuoAa94xgvtgvN
+         9r/pYxzS6JQpcpWm6vPUMohRn6hsM+mnz8L/BY7V9ZuUcOl8gFc/Cl/ONKiXSl2AwYID
+         4DAY+x0Q81jFcJcTVsMUpyGs/ybHm1U4GYKlV8sEh1ON90pbIijtoj5Rx3dlLn/iHT1i
+         Z4A++AavvO8qdTEW/g3j1JcgA/OTnxayZveVOoI8mupFY3geIf3aEqQkt94XG3BVgW67
+         AWJW6g6HffdtQsixG9lBHGPbeENRX/pNWXM5SnyOipO8XPB7/JyA4K085MljAgLQrnOA
+         bWOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Lr1Y7KtiXEwRNt5oEJbHw3xmtSZcUrY6dlEwgFNuRHA=;
-        b=r1MBqZbYxlMpazdjuL3q3JnOBCpGomL4OOJ4C0Ekh2ekrIzF4Et/pufIV8EFLwzjVZ
-         tUorSsRKurr+a0BmHE11z7+JORgDwG8vJmLe8WmWE2WVZOIMRtMhflgY0vFBbSDJU59O
-         Oxui9yz+p/uYmZft6vTg0jIXAfWbxTLif2qClXgAo0BTaSG9VozODIEYfphsNnOEMT58
-         WE7zG1N85KEqsf3zxiu6m6zrHPg3J+IiJw08FXdCykfbUp3P6AaBRBpldBfOZAWTkPaB
-         VuIWjqnXi7nTv2n+JdoDrUgNF2PN1RxJU5LFbr48gY2rzZAMmcQnXC1GPNRhbN1owYaA
-         BaHg==
-X-Gm-Message-State: ANhLgQ2Z2Wm/+HUQ0HQqYvBWf8snlrpCfER0gT/p3rQhpmzq54k0Qhr4
-        NhVjYp09Mrc4PIaRsS0kFRdjhw==
-X-Google-Smtp-Source: ADFU+vvtDmCrjDHyAveZQW2W4i/gOJjiWwSRbwpOR4ID352DOyHj0eK14rldf7txaLpbXuc8IAZf1Q==
-X-Received: by 2002:a05:6214:12c1:: with SMTP id s1mr5757053qvv.150.1584668475089;
-        Thu, 19 Mar 2020 18:41:15 -0700 (PDT)
+        bh=PMpp9cGV1kolIa23/+eXnHG3jYVNr7iJ09Ptby/dQWg=;
+        b=YN4WuckNOdHY8FYlJlPYsT5iIyBuLyncwRPKpwKyQAeKyCWj5nUE7l9xSyVGmUrYJ0
+         VNMFEieghMchWWxKXGLFUfkc8jdoXHQJ3MIrgwjiZk+9q/I2D74u4PdGevuCldo6UhiS
+         eGArzi/EjHGSENGrhW+QOFFzX0jvPqQVtNUY8zfkmUNl0KxsC+CBchlkcKX14BUJAR2F
+         hbJJnibM5KavKI+1hwiD6i7wonOouUk9PFw4rKGgTh/0tANZH3z5LqojYTrNc1H9h87p
+         cs+U8p20puuybsvrqwonaoOvCrkY/BTjnvKyLn5KCUi8ItCS3y9x43fLwmIGhDKuFABT
+         asuA==
+X-Gm-Message-State: ANhLgQ2me4yif1b/LL2FMD4I8FpjsV82qCf9v5ttvJ8sNweQ5sT6C9rE
+        tGMZkkjJAv6Bx4jhDyX9f0Njeg==
+X-Google-Smtp-Source: ADFU+vtZPj94yZXMLwqO8JOCiKMUmJSZBqsuWIHCWksgaTY/SAPuOrMmCfd9rU2kKgjinskLZzoRhw==
+X-Received: by 2002:a37:aa92:: with SMTP id t140mr5385602qke.119.1584668472463;
+        Thu, 19 Mar 2020 18:41:12 -0700 (PDT)
 Received: from pop-os.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id 2sm2706287qtp.33.2020.03.19.18.41.13
+        by smtp.googlemail.com with ESMTPSA id 2sm2706287qtp.33.2020.03.19.18.41.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 18:41:14 -0700 (PDT)
+        Thu, 19 Mar 2020 18:41:11 -0700 (PDT)
 From:   Thara Gopinath <thara.gopinath@linaro.org>
 To:     rui.zhang@intel.com, ulf.hansson@linaro.org,
         daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
@@ -64,9 +64,9 @@ Cc:     amit.kucheria@verdurent.com, mark.rutland@arm.com,
         rjw@rjwysocki.net, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [Patch v5 4/6] soc: qcom: Extend RPMh power controller driver to register warming devices.
-Date:   Thu, 19 Mar 2020 21:41:05 -0400
-Message-Id: <20200320014107.26087-5-thara.gopinath@linaro.org>
+Subject: [Patch v5 2/6] soc: qcom: rpmhpd: Introduce function to retrieve power domain performance state count
+Date:   Thu, 19 Mar 2020 21:41:03 -0400
+Message-Id: <20200320014107.26087-3-thara.gopinath@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200320014107.26087-1-thara.gopinath@linaro.org>
 References: <20200320014107.26087-1-thara.gopinath@linaro.org>
@@ -77,107 +77,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RPMh power control hosts power domains that can be used as
-thermal warming devices. Register these power domains
-with the generic power domain warming device thermal framework.
+Populate .get_performace_state_count in genpd ops to retrieve the count of
+performance states supported by a rpmh power domain.
 
 Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 ---
-
-v3->v4:
-	- Introduce a boolean value is_warming_dev in rpmhpd structure to
-	  indicate if a generic power domain can be used as a warming
-	  device or not.With this change, device tree no longer has to
-	  specify which power domain inside the rpmh power domain provider
-	  is a warming device.
-	- Move registering of warming devices into a late initcall to
-	  ensure that warming devices are registered after thermal
-	  framework is initialized.
-
- drivers/soc/qcom/rpmhpd.c | 37 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
+ drivers/soc/qcom/rpmhpd.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-index 7142409a3b77..4e9c0bbb8826 100644
+index 4d264d0672c4..7142409a3b77 100644
 --- a/drivers/soc/qcom/rpmhpd.c
 +++ b/drivers/soc/qcom/rpmhpd.c
-@@ -11,6 +11,7 @@
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/pm_opp.h>
-+#include <linux/pd_warming.h>
- #include <soc/qcom/cmd-db.h>
- #include <soc/qcom/rpmh.h>
- #include <dt-bindings/power/qcom-rpmpd.h>
-@@ -48,6 +49,7 @@ struct rpmhpd {
- 	bool		enabled;
- 	const char	*res_name;
- 	u32		addr;
-+	bool		is_warming_dev;
- };
- 
- struct rpmhpd_desc {
-@@ -55,6 +57,8 @@ struct rpmhpd_desc {
- 	size_t num_pds;
- };
- 
-+const struct rpmhpd_desc *global_desc;
-+
- static DEFINE_MUTEX(rpmhpd_lock);
- 
- /* SDM845 RPMH powerdomains */
-@@ -89,6 +93,7 @@ static struct rpmhpd sdm845_mx = {
- 	.pd = { .name = "mx", },
- 	.peer = &sdm845_mx_ao,
- 	.res_name = "mx.lvl",
-+	.is_warming_dev = true,
- };
- 
- static struct rpmhpd sdm845_mx_ao = {
-@@ -452,7 +457,14 @@ static int rpmhpd_probe(struct platform_device *pdev)
- 					       &rpmhpds[i]->pd);
- 	}
- 
--	return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
-+	ret = of_genpd_add_provider_onecell(pdev->dev.of_node, data);
-+
-+	if (ret)
-+		return ret;
-+
-+	global_desc = desc;
-+
-+	return 0;
+@@ -341,6 +341,13 @@ static unsigned int rpmhpd_get_performance_state(struct generic_pm_domain *genpd
+ 	return dev_pm_opp_get_level(opp);
  }
  
- static struct platform_driver rpmhpd_driver = {
-@@ -469,3 +481,26 @@ static int __init rpmhpd_init(void)
- 	return platform_driver_register(&rpmhpd_driver);
- }
- core_initcall(rpmhpd_init);
-+
-+static int __init rpmhpd_init_warming_device(void)
++static int rpmhpd_performance_states_count(struct generic_pm_domain *domain)
 +{
-+	size_t num_pds;
-+	struct rpmhpd **rpmhpds;
-+	int i;
++	struct rpmhpd *pd = domain_to_rpmhpd(domain);
 +
-+	if (!global_desc)
-+		return -EINVAL;
-+
-+	rpmhpds = global_desc->rpmhpds;
-+	num_pds = global_desc->num_pds;
-+
-+	if (!of_find_property(rpmhpds[0]->dev->of_node, "#cooling-cells", NULL))
-+		return 0;
-+
-+	for (i = 0; i < num_pds; i++)
-+		if (rpmhpds[i]->is_warming_dev)
-+			of_pd_warming_register(rpmhpds[i]->dev, i);
-+
-+	return 0;
++	return pd->level_count;
 +}
-+late_initcall(rpmhpd_init_warming_device);
++
+ static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
+ {
+ 	int i;
+@@ -429,6 +436,8 @@ static int rpmhpd_probe(struct platform_device *pdev)
+ 		rpmhpds[i]->pd.power_on = rpmhpd_power_on;
+ 		rpmhpds[i]->pd.set_performance_state = rpmhpd_set_performance_state;
+ 		rpmhpds[i]->pd.opp_to_performance_state = rpmhpd_get_performance_state;
++		rpmhpds[i]->pd.get_performance_state_count =
++					rpmhpd_performance_states_count;
+ 		pm_genpd_init(&rpmhpds[i]->pd, NULL, true);
+ 
+ 		data->domains[i] = &rpmhpds[i]->pd;
 -- 
 2.20.1
 
