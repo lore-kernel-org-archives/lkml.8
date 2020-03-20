@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF77CC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB451C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B184920777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6ED920777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgCTWFk (ORCPT
+        id S1727789AbgCTWFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:05:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37487 "EHLO
+        Fri, 20 Mar 2020 18:05:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37490 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgCTWEP (ORCPT
+        with ESMTP id S1727372AbgCTWEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Mar 2020 18:04:15 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFPk7-0004aL-4A; Fri, 20 Mar 2020 23:03:51 +0100
+        id 1jFPk8-0004bo-Q3; Fri, 20 Mar 2020 23:03:52 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 1D5C61039FD;
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 965401040C6;
         Fri, 20 Mar 2020 23:03:48 +0100 (CET)
-Message-Id: <20200320180033.790597451@linutronix.de>
+Message-Id: <20200320180034.003248957@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 19:00:10 +0100
+Date:   Fri, 20 Mar 2020 19:00:12 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -47,8 +47,8 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [RESEND][patch V3 14/23] x86/speculation/mds: Mark
- mds_user_clear_cpu_buffers() __always_inline
+Subject: [RESEND][patch V3 16/23] x86/entry/64: Mark
+ ___preempt_schedule_notrace() thunk noinstr
 References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,35 +60,58 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200320180010.VjPQ9sU22VSqwTuKygIbDmIxEvR-rVCLG-qh_BhxTw4@z>
+Message-ID: <20200320180012._0Gv8ade9q1ZP2qvRN_iDuNLFyAfgkZWH7_EBnSHDTU@z>
 
-Prevent the compiler from uninlining and creating traceable/probable
-functions as this is invoked _after_ context tracking switched to
-CONTEXT_USER and rcu idle.
+Code calling this from noinstr sections, e.g. entry code, has interrupts
+disabled, so the actual call into the scheduler code does not happen.
+
+The objtool section check complains nevertheless, so mark the call "safe".
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/include/asm/nospec-branch.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/entry/thunk_64.S |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -319,7 +319,7 @@ DECLARE_STATIC_KEY_FALSE(mds_idle_clear)
-  * combination with microcode which triggers a CPU buffer flush when the
-  * instruction is executed.
-  */
--static inline void mds_clear_cpu_buffers(void)
-+static __always_inline void mds_clear_cpu_buffers(void)
- {
- 	static const u16 ds = __KERNEL_DS;
+--- a/arch/x86/entry/thunk_64.S
++++ b/arch/x86/entry/thunk_64.S
+@@ -49,7 +49,22 @@ SYM_FUNC_START_NOALIGN(\name)
+ 	movq 8(%rbp), %rdi
+ 	.endif
  
-@@ -340,7 +340,7 @@ static inline void mds_clear_cpu_buffers
-  *
-  * Clear CPU buffers if the corresponding static key is enabled
-  */
--static inline void mds_user_clear_cpu_buffers(void)
-+static __always_inline void mds_user_clear_cpu_buffers(void)
- {
- 	if (static_branch_likely(&mds_user_clear))
- 		mds_clear_cpu_buffers();
++	.if \check_if
++1:
++	.pushsection .discard.instr_begin
++	.long 1b - .
++	.popsection
++
++	call \func
++2:
++	.pushsection .discard.instr_end
++	.long 2b - .
++	.popsection
++
++	.else
+ 	call \func
++	.endif
++
+ 	jmp  .L_restore
+ SYM_FUNC_END(\name)
+ 	_ASM_NOKPROBE(\name)
+@@ -68,13 +83,16 @@ SYM_FUNC_END(\name)
+ 	THUNK ___preempt_schedule, preempt_schedule
+ 	EXPORT_SYMBOL(___preempt_schedule)
+ 
++.pushsection .noinstr.text, "ax"
+ 	THUNK ___preempt_schedule_notrace, preempt_schedule_notrace, check_if=1
++.popsection
+ 	EXPORT_SYMBOL(___preempt_schedule_notrace)
+ #endif
+ 
+ #if defined(CONFIG_TRACE_IRQFLAGS) \
+  || defined(CONFIG_DEBUG_LOCK_ALLOC) \
+  || defined(CONFIG_PREEMPTION)
++.section .noinstr.text, "ax"
+ SYM_CODE_START_LOCAL_NOALIGN(.L_restore)
+ 	popq %r11
+ 	popq %r10
 
