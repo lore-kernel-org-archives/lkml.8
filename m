@@ -2,137 +2,136 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE6DC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F84DC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADAF20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0908B20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:26:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="Oo6Cg13Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgCTHYy (ORCPT
+        id S1726884AbgCTH0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 03:24:54 -0400
-Received: from mga09.intel.com ([134.134.136.24]:41360 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgCTHYx (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 03:24:53 -0400
-IronPort-SDR: QaI/sRnemjGWc82WIbn0P1lW+iUhC9QhaHQBrHX8p5CFxMx4U1mLfGDLC9wSNzrVgqTUdXvMLp
- wxK1Dnl+er5Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 00:24:53 -0700
-IronPort-SDR: FrALrO5lrZ2K4Q+k9Xs98JLD8gAj149aTJGes9ZNPCUBLYne1xQzd52nlbuN8/i2+9mOEGQ9Q0
- 3cDkKB7rlUag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,283,1580803200"; 
-   d="scan'208";a="269004849"
-Received: from kbl.sh.intel.com ([10.239.159.24])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 00:24:50 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH 2/2] perf top: support hotkey to change sort order
-Date:   Fri, 20 Mar 2020 15:24:14 +0800
-Message-Id: <20200320072414.25551-2-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200320072414.25551-1-yao.jin@linux.intel.com>
-References: <20200320072414.25551-1-yao.jin@linux.intel.com>
+        Fri, 20 Mar 2020 03:26:04 -0400
+Received: from mail-eopbgr150128.outbound.protection.outlook.com ([40.107.15.128]:50526
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725802AbgCTH0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 03:26:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dx8ycL/itStokkGyASj50iPolyYDNbvilv4V7tZsNuo79jCijEPco2oPAQiVxTbHGa2qoUmm4B2s4G06qiNVmaQSltDq2qEpE8N0LvTRzUOQaQv0UPhfW8nRk5ftYIZ/ZCFaMIBcPKWlOG/PXCbbXIPmsFh3VmfakBELcG88UJRfJJ8aXUcS6L86Ucqhi/IFc8y6WzCpz70/kV/ixLzpxfaS0x912uc66ISD1TkpwqOUTzikzp49oXJ5Yi9y1loWvi8LaCfV1EY/Do0PWT0iSVOiR83ve6DHXtCpNhuNJXvhTY/kIH4LmXLxcZjlP+sg6mYG8fHyeVKOUUoIs2uDuA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VJCJf6hGOf5Xw8yUxEeqEhjtLrfkDZKMqr9MkjFaDY8=;
+ b=HEWczF7pAhNhKb57cKXB5B/pEJ7m2hu7jHhpnZbSeTYGVH/2sYWCfAssf5762h+eP1ytgI1qcHbUMIWhUpOWlmJPbeF9OQvzFRmmIjmyi9z9EL0S0S5Afob5o0BLkC6jqk6Mkhf9dRlFYU5h2QiNnun7Kg5W1UyeedL2ub1yutveEKg7yx2hez9EWsoZezW1yGeBitzZTVedNLSdZ3SSrgcV8EdcjlknCHTB4iFQyo05g48357IghHEpTakbIDtfFxp2ACmO4sg4SPOuKAn0TwR520f1tXa7wEY3kEoi/Z/IehDc1xaokETtr0oO2oXEthXnjFZwxrLT2onavDJytA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VJCJf6hGOf5Xw8yUxEeqEhjtLrfkDZKMqr9MkjFaDY8=;
+ b=Oo6Cg13QF3RONIZJ3xREekbuOpcM9BqYonEvWCsfWJ8DDuFumugi9CyteyWG0XaaC8uiJ90p0Q3Q9ZrFQoJwIani80B2Z/pfaaW6gq2cF7KR8sBu8y2CTE7/jEDTx/LWsp4OAayL4BAwX5gW2w57gi0A9dE7j2kHggjoe5owxBk=
+Received: from VI1PR05MB6845.eurprd05.prod.outlook.com (10.186.163.80) by
+ VI1PR05MB7039.eurprd05.prod.outlook.com (20.181.33.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.14; Fri, 20 Mar 2020 07:26:00 +0000
+Received: from VI1PR05MB6845.eurprd05.prod.outlook.com
+ ([fe80::c13:1d07:fa02:6eeb]) by VI1PR05MB6845.eurprd05.prod.outlook.com
+ ([fe80::c13:1d07:fa02:6eeb%7]) with mapi id 15.20.2835.017; Fri, 20 Mar 2020
+ 07:26:00 +0000
+From:   Marcel Ziswiler <marcel.ziswiler@toradex.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>,
+        "tharvey@gateworks.com" <tharvey@gateworks.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+CC:     "alison.wang@nxp.com" <alison.wang@nxp.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Igor Opanyuk <igor.opanyuk@toradex.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Subject: Re: [alsa-devel] [EXT] Re: [PATCH] ASoC: sgtl5000: Revert "ASoC:
+ sgtl5000: Fix of unmute outputs on probe"
+Thread-Topic: [alsa-devel] [EXT] Re: [PATCH] ASoC: sgtl5000: Revert "ASoC:
+ sgtl5000: Fix of unmute outputs on probe"
+Thread-Index: AQHVsLyIRDFbzLs7vEuxsFkXl6DgTKe2NokAgAAA1bCAAAyIYIAABwsAgAAETYiAAB0nAICake+AgACxzgA=
+Date:   Fri, 20 Mar 2020 07:26:00 +0000
+Message-ID: <af99c9abd9c2aec6a074fb05310c56b780725ebd.camel@toradex.com>
+References: <20191212071847.45561-1-alison.wang@nxp.com>
+         <CAGgjyvHHzPWjRTqxYmGCmk3qa6=kOezHywVDFomgD6UNj-zwpQ@mail.gmail.com>
+         <VI1PR04MB40627CDD5F0C17D8DCDCFFE2F4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
+         <VI1PR04MB4062C67906888DA8142C17E1F4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
+         <CAGgjyvGAjx1SV=K66AM24DxMTA_sAF2uhhDw5gXCFTGNZi8E7Q@mail.gmail.com>
+         <VI1PR04MB40620DD55D5ED0FDC3E94C2BF4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
+         <20191212122318.GB4310@sirena.org.uk>
+         <CAJ+vNU0xZOb0R2VNkq6k3efdkgQUtO_-cEdNgZ643nt_G=vevQ@mail.gmail.com>
+In-Reply-To: <CAJ+vNU0xZOb0R2VNkq6k3efdkgQUtO_-cEdNgZ643nt_G=vevQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=marcel.ziswiler@toradex.com; 
+x-originating-ip: [2a01:2a8:8501:4d00:ca5b:76ff:fedf:3c49]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bf5555a0-f05a-423f-21b2-08d7cc9ff0db
+x-ms-traffictypediagnostic: VI1PR05MB7039:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB7039D274F30E082628FEBE62FBF50@VI1PR05MB7039.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 03484C0ABF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(376002)(366004)(136003)(39850400004)(199004)(6506007)(6512007)(53546011)(81156014)(478600001)(2616005)(316002)(2906002)(81166006)(186003)(6486002)(110136005)(71200400001)(4326008)(8676002)(66556008)(76116006)(91956017)(66446008)(86362001)(54906003)(64756008)(6636002)(44832011)(66946007)(8936002)(66476007)(5660300002)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB7039;H:VI1PR05MB6845.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 724z4VoXXVWEE3GFsn+gCu0PUdLn1mjqU1ShTDZVMHQtqiLmNvMIg3VU2K9RhKujPO6W0IGzZ4ovVMIh/g22CXbxyieBh8YhffDVdPLLr0AYdTaoJez4chwgMe9ygx7KuxR4sbW4Asv6iIzMm98waJO2tyXqgJDtXPGa6OitJIPAZZjhRAzaio5EbtvVVdUTcxb1Y5K77hvFkjsd4bExr79zfRK4YAUpfhpmJGJot6n640OiMoBv+eD123fZ9BZoqKOk2E6qEYMh0ETdtpCdHGSDpIM2WxMSpKcee/BWWZEHHe0Npbdwq5RvMp8a/+9zXGRFL0uSEuDSYJLmDIzOxDIdkYCDfIOltHr4ssY7RX4kDIZCCUu87Lc3pqv67ZHMDarywhS/5dBuzQTWSZSk/K6iZU04hThWIGwRHMUjBCl1Ef8bJ16ClpfcyY4YsXI1
+x-ms-exchange-antispam-messagedata: rLNWmOdow88jAvwQxQ/0UmcYRImoCP1KDp5lnhfN2ksrLMz79h79BkpzyFAeT+JlExPk1vcPmGsHPCbl8GvY9OPtlJozfVQhNw43e+feR/BNaZVUGUldkktXFaFahya29oHmrA5yuErMyrOMyM+//V1le5epsxpr63YGq+dTrK7EBSLy9j9n+4oIU1MIUxTJHexSwVqRSZX0p8/3E+zmuA==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <877CE7CFF0A2854B8E2A79F30AA4C85F@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf5555a0-f05a-423f-21b2-08d7cc9ff0db
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Mar 2020 07:26:00.7510
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pUJON9UEUUthewPUPf6HI4j/hwyWJhoqKGIh2ZGE/YSa5vS0Besq6Sr+t6A72VJcsnTVtY8x6kRgmrb8t/7NVcfU5xT41Se7ZwIrAuZYjP4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB7039
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It would be nice if we can use a hotkey in perf top browser to
-select a event for sorting.
-
-For example,
-perf top --group -e cycles,instructions,cache-misses
-
-Samples
-                Overhead  Shared Object             Symbol
-  40.03%  45.71%   0.03%  div                       [.] main
-  20.46%  14.67%   0.21%  libc-2.27.so              [.] __random_r
-  20.01%  19.54%   0.02%  libc-2.27.so              [.] __random
-   9.68%  10.68%   0.00%  div                       [.] compute_flag
-   4.32%   4.70%   0.00%  libc-2.27.so              [.] rand
-   3.84%   3.43%   0.00%  div                       [.] rand@plt
-   0.05%   0.05%   2.33%  libc-2.27.so              [.] __strcmp_sse2_unaligned
-   0.04%   0.08%   2.43%  perf                      [.] perf_hpp__is_dynamic_en
-   0.04%   0.02%   6.64%  perf                      [.] rb_next
-   0.04%   0.01%   3.87%  perf                      [.] dso__find_symbol
-   0.04%   0.04%   1.77%  perf                      [.] sort__dso_cmp
-
-When user press hotkey '2' (event index, starting from 0), it indicates
-to sort output by the third event in group (cache-misses).
-
-Samples
-                Overhead  Shared Object               Symbol
-   4.07%   1.28%   6.68%  perf                        [.] rb_next
-   3.57%   3.98%   4.11%  perf                        [.] __hists__insert_output
-   3.67%  11.24%   3.60%  perf                        [.] perf_hpp__is_dynamic_e
-   3.67%   3.20%   3.20%  perf                        [.] hpp__sort_overhead
-   0.81%   0.06%   3.01%  perf                        [.] dso__find_symbol
-   1.62%   5.47%   2.51%  perf                        [.] hists__match
-   2.70%   1.86%   2.47%  libc-2.27.so                [.] _int_malloc
-   0.19%   0.00%   2.29%  [kernel]                    [k] copy_page
-   0.41%   0.32%   1.98%  perf                        [.] hists__decay_entries
-   1.84%   3.67%   1.68%  perf                        [.] sort__dso_cmp
-   0.16%   0.00%   1.63%  [kernel]                    [k] clear_page_erms
-
-Now the output is sorted by cache-misses.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/builtin-top.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 144043637cec..b39f6ffb874e 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -616,6 +616,7 @@ static void *display_thread_tui(void *arg)
- 		.arg		= top,
- 		.refresh	= top->delay_secs,
- 	};
-+	int ret;
- 
- 	/* In order to read symbols from other namespaces perf to  needs to call
- 	 * setns(2).  This isn't permitted if the struct_fs has multiple users.
-@@ -626,6 +627,7 @@ static void *display_thread_tui(void *arg)
- 
- 	prctl(PR_SET_NAME, "perf-top-UI", 0, 0, 0);
- 
-+repeat:
- 	perf_top__sort_new_samples(top);
- 
- 	/*
-@@ -638,13 +640,17 @@ static void *display_thread_tui(void *arg)
- 		hists->uid_filter_str = top->record_opts.target.uid_str;
- 	}
- 
--	perf_evlist__tui_browse_hists(top->evlist, help, &hbt,
-+	ret = perf_evlist__tui_browse_hists(top->evlist, help, &hbt,
- 				      top->min_percent,
- 				      &top->session->header.env,
- 				      !top->record_opts.overwrite,
- 				      &top->annotation_opts);
- 
--	stop_top();
-+	if (ret == K_RELOAD)
-+		goto repeat;
-+	else
-+		stop_top();
-+
- 	return NULL;
- }
- 
--- 
-2.17.1
-
+SGkgVGltDQoNCk9uIFRodSwgMjAyMC0wMy0xOSBhdCAxMzo0OSAtMDcwMCwgVGltIEhhcnZleSB3
+cm90ZToNCj4gT24gVGh1LCBEZWMgMTIsIDIwMTkgYXQgNDoyNCBBTSBNYXJrIEJyb3duIDxicm9v
+bmllQGtlcm5lbC5vcmc+DQo+IHdyb3RlOg0KPiA+IE9uIFRodSwgRGVjIDEyLCAyMDE5IGF0IDEw
+OjQ2OjMxQU0gKzAwMDAsIEFsaXNvbiBXYW5nIHdyb3RlOg0KPiA+IA0KPiA+ID4gV2UgdGVzdGVk
+IHRoaXMgc3RhbmRhcmQgc29sdXRpb24gdXNpbmcgZ3N0cmVhbWVyIGFuZCBzdGFuZGFyZA0KPiA+
+ID4gQUxTQQ0KPiA+ID4gdG9vbHMgbGlrZSBhcGxheSwgYXJlY29yZCBhbmQgYWxsIHRoZXNlIHRv
+b2xzIHVubXV0ZSBuZWVkZWQNCj4gPiA+IGJsb2Nrcw0KPiA+ID4gc3VjY2Vzc2Z1bGx5Lg0KPiA+
+ID4gW0FsaXNvbiBXYW5nXSBJIGFtIHVzaW5nIGFwbGF5LiBEbyB5b3UgbWVhbiBJIG5lZWQgdG8g
+YWRkIHNvbWUNCj4gPiA+IHBhcmFtZXRlcnMgZm9yIGFwbGF5IG9yIG90aGVycyB0byB1bm11dGUg
+dGhlIG91dHB1dHM/DQo+ID4gDQo+ID4gVXNlIGFtaXhlci4NCj4gDQo+IE1hcmMgLyBPbGVrc2Fu
+ZHIsDQo+IA0KPiBJIGNhbid0IHNlZW0gdG8gZmluZCB0aGUgb3JpZ2luYWwgcGF0Y2ggaW4gbXkg
+bWFpbGJveCBmb3IgNjMxYmM4ZjoNCj4gKCdBU29DOiBzZ3RsNTAwMDogRml4IG9mIHVubXV0ZSBv
+dXRwdXRzIG9uIHByb2JlJykNCg0KSSBmb3J3YXJkZWQgeW91IHRoYXQgb25lIGFnYWluLiBPSz8N
+Cg0KPiBob3dldmVyIEkgZmluZCBpdA0KPiBicmVha3Mgc2d0bDUwMDAgYXVkaW8gb3V0cHV0IG9u
+IHRoZSBHYXRld29ya3MgYm9hcmRzIHdoaWNoIGlzIHN0aWxsDQo+IGJyb2tlbiBvbiA1LjYtcmM2
+Lg0KDQpXaGF0IGV4YWN0bHkgZG8geW91IG1lYW4gYnkgImJyZWFrcyI/IElzbid0IGl0IHRoYXQg
+eW91IGp1c3QgbmVlZCB0bw0KdW5tdXRlIHN0dWZmIGUuZy4gdXNpbmcgYW1peGVyIG9yIHVzaW5n
+IGEgcHJvcGVyIHVwZGF0ZWQgYXNvdW5kLnN0YXRlDQpmaWxlIHdpdGggZGVmYXVsdCBzdGF0ZXMg
+Zm9yIHlvdXIgY29udHJvbHM/DQoNCj4gV2FzIHRoZXJlIHNvbWUgZm9sbG93LXVwIHBhdGNoZXMg
+dGhhdCBoYXZlbid0IG1hZGUNCj4gaXQgaW50byBtYWlubGluZSB5ZXQgcmVnYXJkaW5nIHRoaXM/
+DQoNCkkgZG9uJ3QgdGhpbmsgc28uIEl0IGFsbCB3b3JrcyBwZXJmZWN0bHksIG5vdD8NCg0KPiBU
+aGUgcmVzcG9uc2UgYWJvdmUgaW5kaWNhdGVzIG1heWJlIHRoZXJlIHdhcyBhbiBhZGRpdGlvbmFs
+IEFMU0ENCj4gY29udHJvbCBwZXJoYXBzIGFkZGVkIGFzIGEgcmVzb2x1dGlvbiBidXQgSSBkb24n
+dCBzZWUgYW55IGRpZmZlcmVuY2VzDQo+IHRoZXJlLg0KDQpOb3QgdGhhdCBJIGFtIGF3YXJlIG9m
+LCBuby4NCg0KPiBCZXN0IFJlZ2FyZHMsDQo+IA0KPiBUaW0NCg0KQ2hlZXJzDQoNCk1hcmNlbA0K
