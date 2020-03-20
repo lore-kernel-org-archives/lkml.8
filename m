@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A26C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DEDC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8EFB20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B6E2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:26:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="UIXKck/T"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="hALY/Wzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgCTXZS (ORCPT
+        id S1727445AbgCTXZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 19:25:18 -0400
-Received: from gateway21.websitewelcome.com ([192.185.46.113]:47335 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726738AbgCTXZS (ORCPT
+        Fri, 20 Mar 2020 19:25:59 -0400
+Received: from gateway22.websitewelcome.com ([192.185.47.179]:20535 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726738AbgCTXZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 19:25:18 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 302F6400D1FF1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 18:25:17 -0500 (CDT)
+        Fri, 20 Mar 2020 19:25:59 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 1A9003990
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 18:25:58 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id FR0vje2w6EfyqFR0vjdos0; Fri, 20 Mar 2020 18:25:17 -0500
+        id FR1ajmwEiXVkQFR1aj3r1m; Fri, 20 Mar 2020 18:25:58 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,24 +36,28 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=tp+We5q+QfjK/lqlPn+mWwyn+mIaqLI3anJr08yNMA0=; b=UIXKck/TEIYQC4tKigmWFuF3gj
-        8UjwPJlbXjYmCBWPR2iFwvbyigdrAAAeK4eqdWsmOBN/+/S51z8AFg7v0vgQHmy/CZUJlCmmVN0yg
-        DeqqlJanPSpIN0RJrZp3s//jMxJk8dgaqD52kQma73EpsCr6fu7iqq6MhA3U1UxmaHi/pwbPB3+6x
-        b/ldkgHliw2QdF4g2stz07QCXoRj6T6CeAvEiUDcaXFKvShi6ZNPbZLRZEP7x6mh8DrNdPcMrC84z
-        oGAM/wdMhveg12QAbI9zOzXwIfifZEAmwBImCfqFP7Ljj84jI9DMW2C8e6sgXnLN/35zIhH0jwy2g
-        8woQYVlw==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53616 helo=embeddedor)
+        bh=oVBIDiOUACeEBMEExhB0XWqzRyL5CKRO/6X8VGFTGn4=; b=hALY/WzciDDDeEWFVpB2y/q2ON
+        qP3PjjYxkSVl7XQNt2fAJqmA6l5gfpdGSVhs0M5OhSE+Y4xmHJIz3wJuv+Z2MFfk8rp7lllrnNF94
+        H3va7Zo1uS7oDtuhFmuzWJW/78RTyLb+RlosCxZlD4cP6oFYKciX7l6i6Usi2bB5NFkLO0u4TtiSF
+        nmYDtajvpDOxqPT1fXrrVqwyECAbY0DwK7+Px1o1M4tU83iddHbjKQzBKiaChjc6RtDD4jQBtt7El
+        7DMjIv29IrGfrR0qUiv18SjB4PhppIRgecrEdXIfwJ+e00Dai2KbrXTx/h2obe5yzmDTO98ud2hAA
+        RQPRjf7Q==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53620 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1jFR0t-001M8o-Nq; Fri, 20 Mar 2020 18:25:15 -0500
-Date:   Fri, 20 Mar 2020 18:25:15 -0500
+        id 1jFR1Y-001MNY-IF; Fri, 20 Mar 2020 18:25:56 -0500
+Date:   Fri, 20 Mar 2020 18:25:56 -0500
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] spi: spi-fsl-lpspi: Replace zero-length array with
+Subject: [PATCH][next] spi: spi-s3c24xx: Replace zero-length array with
  flexible-array member
-Message-ID: <20200320232515.GA24800@embeddedor.com>
+Message-ID: <20200320232556.GA24989@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -66,13 +70,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.218.116.241
 X-Source-L: No
-X-Exim-ID: 1jFR0t-001M8o-Nq
+X-Exim-ID: 1jFR1Y-001MNY-IF
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53616
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53620
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 24
+X-Email-Count: 32
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -110,22 +114,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/spi/spi-fsl-lpspi.c | 2 +-
+ drivers/spi/spi-s3c24xx.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
-index 298329b781d2..8b41b70f6f5c 100644
---- a/drivers/spi/spi-fsl-lpspi.c
-+++ b/drivers/spi/spi-fsl-lpspi.c
-@@ -123,7 +123,7 @@ struct fsl_lpspi_data {
- 	struct completion dma_rx_completion;
- 	struct completion dma_tx_completion;
- 
--	int chipselect[0];
-+	int chipselect[];
+diff --git a/drivers/spi/spi-s3c24xx.c b/drivers/spi/spi-s3c24xx.c
+index 2d6e37f25e2d..2cb3b611c294 100644
+--- a/drivers/spi/spi-s3c24xx.c
++++ b/drivers/spi/spi-s3c24xx.c
+@@ -227,7 +227,7 @@ static inline unsigned int hw_txbyte(struct s3c24xx_spi *hw, int count)
+ struct spi_fiq_code {
+ 	u32	length;
+ 	u32	ack_offset;
+-	u8	data[0];
++	u8	data[];
  };
  
- static const struct of_device_id fsl_lpspi_dt_ids[] = {
+ extern struct spi_fiq_code s3c24xx_spi_fiq_txrx;
 -- 
 2.23.0
 
