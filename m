@@ -2,78 +2,76 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA31C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DD5C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD4B20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336532072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:02:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584716532;
+	bh=abV8/ZN//3YrBYbpASQEcaHQnh62HmxBKB67ullzIGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y9pA5K/Fl4uFURbLpQZ6HiM7osGO0vXneN5eAaBrSVTFX1J5U9d21PTq1pgRBT/nn
+	 XNBsDBh973CW4Z1QbELiV1eFbuVvDC6WTGIb2hOniS1BEhyoYzqdemIF3lAq0EPQyw
+	 t+bUDTeZHQlDKpEkQ7PgH2LcWYVjjiAizZ6TxtFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbgCTPBs (ORCPT
+        id S1727163AbgCTPCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:01:48 -0400
-Received: from www62.your-server.de ([213.133.104.62]:50940 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCTPBr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 11:01:47 -0400
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jFJ9R-0004Ty-AF; Fri, 20 Mar 2020 16:01:33 +0100
-Received: from [85.7.42.192] (helo=pc-9.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jFJ9Q-000LQU-Ua; Fri, 20 Mar 2020 16:01:32 +0100
-Subject: Re: [PATCH bpf-next 1/2] bpf: tcp: Fix unused function warnings
-To:     Yonghong Song <yhs@fb.com>, YueHaibing <yuehaibing@huawei.com>,
-        lmb@cloudflare.com, jakub@cloudflare.com, john.fastabend@gmail.com
-Cc:     davem@davemloft.net, netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andrii.nakryiko@gmail.com
-References: <20200319124631.58432-1-yuehaibing@huawei.com>
- <20200320023426.60684-1-yuehaibing@huawei.com>
- <20200320023426.60684-2-yuehaibing@huawei.com>
- <d18a19a0-f147-03ad-b8a5-4b502199cd72@fb.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <71161d44-da82-b4ae-ee9e-8291d9d03021@iogearbox.net>
-Date:   Fri, 20 Mar 2020 16:01:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 20 Mar 2020 11:02:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726816AbgCTPCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 11:02:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7F7720714;
+        Fri, 20 Mar 2020 15:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584716530;
+        bh=abV8/ZN//3YrBYbpASQEcaHQnh62HmxBKB67ullzIGY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZzOLV/nbV2X1/L58dQ3IkZlLSycU8DKOQKketOO4IOKdxd2U2/rYT7SkwTah5EjVJ
+         iQx82GFrYHrxhgi6UBGnAO02z0cmJpplNHGbUdy4HeQi3Ds72dU53yoowTfDpIdU5U
+         OPE+lL5UAbxawylQefAwtClInfYGFVljyJcPApTM=
+Date:   Fri, 20 Mar 2020 16:02:08 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linuxppc-dev@lists.ozlabs.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dma-mapping: add a dma_ops_bypass flag to struct
+ device
+Message-ID: <20200320150208.GA761915@kroah.com>
+References: <20200320141640.366360-1-hch@lst.de>
+ <20200320141640.366360-2-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <d18a19a0-f147-03ad-b8a5-4b502199cd72@fb.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25757/Fri Mar 20 14:13:59 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320141640.366360-2-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/20/20 5:21 AM, Yonghong Song wrote:
-> On 3/19/20 7:34 PM, YueHaibing wrote:
->> If BPF_STREAM_PARSER is not set, gcc warns:
->>
->> net/ipv4/tcp_bpf.c:483:12: warning: 'tcp_bpf_sendpage' defined but not used [-Wunused-function]
->> net/ipv4/tcp_bpf.c:395:12: warning: 'tcp_bpf_sendmsg' defined but not used [-Wunused-function]
->> net/ipv4/tcp_bpf.c:13:13: warning: 'tcp_bpf_stream_read' defined but not used [-Wunused-function]
->>
->> Moves the unused functions into the #ifdef
+On Fri, Mar 20, 2020 at 03:16:39PM +0100, Christoph Hellwig wrote:
+> Several IOMMU drivers have a bypass mode where they can use a direct
+> mapping if the devices DMA mask is large enough.  Add generic support
+> to the core dma-mapping code to do that to switch those drivers to
+> a common solution.
 > 
-> Maybe explicit "into the #ifdef CONFIG_BPF_STREAM_PARSER"?
-> 
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Fixes: f747632b608f ("bpf: sockmap: Move generic sockmap hooks from BPF TCP")
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> Reviewed-by: Lorenz Bauer <lmb@cloudflare.com>
->> Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
-> 
-> Acked-by: Yonghong Song <yhs@fb.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  include/linux/device.h      |  6 ++++++
+>  include/linux/dma-mapping.h | 30 ++++++++++++++++++------------
+>  kernel/dma/mapping.c        | 36 +++++++++++++++++++++++++++---------
+>  3 files changed, 51 insertions(+), 21 deletions(-)
 
-Both applied and addressed feedback from Yonghong, thanks!
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
