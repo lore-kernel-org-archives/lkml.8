@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A7CC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DEDC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C48582071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E67F2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgCTENk (ORCPT
+        id S1727120AbgCTENl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 00:13:40 -0400
-Received: from mga17.intel.com ([192.55.52.151]:24678 "EHLO mga17.intel.com"
+        Fri, 20 Mar 2020 00:13:41 -0400
+Received: from mga05.intel.com ([192.55.52.43]:43744 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726030AbgCTENk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726527AbgCTENk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Mar 2020 00:13:40 -0400
-IronPort-SDR: OO6+9lypHaCruljyP9wzfkfo9utR+CweNy43OI1oBhkhwif1gpkYfNBhSUqqynrMtc7DsY8/L+
- Y172kelJ1FmA==
+IronPort-SDR: G/VVYsxLEwlH3GKiBraH/dJaCJYfmcCIHvqGLkRe6PKNDQidtZDbagscLZCEgO/F1X475TJAVY
+ 6M6SXg/Ums8g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 21:13:40 -0700
-IronPort-SDR: zfCQ6rsfjTisTMrOsRO6JR9sAeh+zg76FwUjQb11I/t3FkvxATNIJ5fuTPYL80iHEO8Epdi373
- 8pRofmeJ7puw==
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 21:13:40 -0700
+IronPort-SDR: duLg068Pycwr/dcRMQXfDG4LUB7XIRZ4q2FFRmtS3qlJ9plzMMQZtamexCtLwvMr1na3nvjPqp
+ kPtDS1EUl3Fw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,283,1580803200"; 
-   d="scan'208";a="280306863"
+   d="scan'208";a="280306860"
 Received: from kmp-skylake-client-platform.sc.intel.com ([172.25.112.108])
   by fmsmga002.fm.intel.com with ESMTP; 19 Mar 2020 21:13:38 -0700
 From:   Kyung Min Park <kyung.min.park@intel.com>
@@ -38,9 +38,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
         gregkh@linuxfoundation.org, ak@linux.intel.com,
         tony.luck@intel.com, ashok.raj@intel.com, ravi.v.shankar@intel.com,
         fenghua.yu@intel.com, kyung.min.park@intel.com
-Subject: [PATCH v2 2/2] x86/delay: Introduce TPAUSE delay
-Date:   Thu, 19 Mar 2020 21:13:24 -0700
-Message-Id: <1584677604-32707-3-git-send-email-kyung.min.park@intel.com>
+Subject: [PATCH v2 1/2] x86/delay: Refactor delay_mwaitx() for TPAUSE support
+Date:   Thu, 19 Mar 2020 21:13:23 -0700
+Message-Id: <1584677604-32707-2-git-send-email-kyung.min.park@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1584677604-32707-1-git-send-email-kyung.min.park@intel.com>
 References: <1584677604-32707-1-git-send-email-kyung.min.park@intel.com>
@@ -49,110 +49,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TPAUSE instructs the processor to enter an implementation-dependent
-optimized state. The instruction execution wakes up when the time-stamp
-counter reaches or exceeds the implicit EDX:EAX 64-bit input value.
-The instruction execution also wakes up due to the expiration of
-the operating system time-limit or by an external interrupt
-or exceptions such as a debug exception or a machine check exception.
+Refactor code to make it easier to add a new model specific function to
+delay for a number of cycles.
 
-TPAUSE offers a choice of two lower power states:
- 1. Light-weight power/performance optimized state C0.1
- 2. Improved power/performance optimized state C0.2
-This way, it can save power with low wake-up latency in comparison to
-spinloop based delay. The selection between the two is governed by the
-input register.
-
-TPAUSE is available on processors with X86_FEATURE_WAITPKG.
+No functional change.
 
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 Signed-off-by: Kyung Min Park <kyung.min.park@intel.com>
 ---
- arch/x86/include/asm/mwait.h | 17 +++++++++++++++++
- arch/x86/lib/delay.c         | 27 ++++++++++++++++++++++++++-
- 2 files changed, 43 insertions(+), 1 deletion(-)
+ arch/x86/lib/delay.c | 48 ++++++++++++++++++++++++++++++------------------
+ 1 file changed, 30 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index aaf6643..fd59db0 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -22,6 +22,8 @@
- #define MWAITX_ECX_TIMER_ENABLE		BIT(1)
- #define MWAITX_MAX_WAIT_CYCLES		UINT_MAX
- #define MWAITX_DISABLE_CSTATES		0xf0
-+#define TPAUSE_C01_STATE		1
-+#define TPAUSE_C02_STATE		0
- 
- static inline void __monitor(const void *eax, unsigned long ecx,
- 			     unsigned long edx)
-@@ -120,4 +122,19 @@ static inline void mwait_idle_with_hints(unsigned long eax, unsigned long ecx)
- 	current_clr_polling();
- }
- 
-+/*
-+ * Caller can specify whether to enter C0.1 (low latency, less
-+ * power saving) or C0.2 state (saves more power, but longer wakeup
-+ * latency). This may be overridden by the IA32_UMWAIT_CONTROL MSR
-+ * which can force requests for C0.2 to be downgraded to C0.1.
-+ */
-+static inline void __tpause(unsigned int ecx, unsigned int edx,
-+			    unsigned int eax)
-+{
-+	/* "tpause %ecx, %edx, %eax;" */
-+	asm volatile(".byte 0x66, 0x0f, 0xae, 0xf1\t\n"
-+		     :
-+		     : "c"(ecx), "d"(edx), "a"(eax));
-+}
-+
- #endif /* _ASM_X86_MWAIT_H */
 diff --git a/arch/x86/lib/delay.c b/arch/x86/lib/delay.c
-index e6db855..5f11f0a 100644
+index a6376cc..e6db855 100644
 --- a/arch/x86/lib/delay.c
 +++ b/arch/x86/lib/delay.c
-@@ -97,6 +97,27 @@ static void delay_tsc(u64 cycles)
- }
+@@ -34,6 +34,7 @@ static void delay_loop(u64 __loops);
+  * during boot.
+  */
+ static void (*delay_fn)(u64) __ro_after_init = delay_loop;
++static void (*delay_halt_fn)(u64 start, u64 cycles) __ro_after_init;
  
- /*
-+ * On Intel the TPAUSE instruction waits until any of:
-+ * 1) the TSC counter exceeds the value provided in EAX:EDX
-+ * 2) global timeout in IA32_UMWAIT_CONTROL is exceeded
-+ * 3) an external interrupt occurs
-+ */
-+static void delay_halt_tpause(u64 start, u64 cycles)
-+{
-+	u64 until = start + cycles;
-+	unsigned int eax, edx;
+ /* simple loop based delay: */
+ static void delay_loop(u64 __loops)
+@@ -100,9 +101,33 @@ static void delay_tsc(u64 cycles)
+  * counts with TSC frequency. The input value is the number of TSC cycles
+  * to wait. MWAITX will also exit when the timer expires.
+  */
+-static void delay_mwaitx(u64 cycles)
++static void delay_halt_mwaitx(u64 unused, u64 cycles)
+ {
+-	u64 start, end, delay;
++	u64 delay;
 +
-+	eax = (unsigned int)(until & 0xffffffff);
-+	edx = (unsigned int)(until >> 32);
++	delay = min_t(u64, MWAITX_MAX_WAIT_CYCLES, cycles);
++	/*
++	 * Use cpu_tss_rw as a cacheline-aligned, seldomly accessed per-cpu
++	 * variable as the monitor target.
++	 */
++	 __monitorx(raw_cpu_ptr(&cpu_tss_rw), 0, 0);
 +
 +	/*
-+	 * Hard code the deeper (C0.2) sleep state because exit latency is
-+	 * small compared to the "microseconds" that usleep() will delay.
++	 * AMD, like Intel, supports the EAX hint and EAX=0xf means, do not
++	 * enter any deep C-state and we use it here in delay() to minimize
++	 * wakeup latency.
 +	 */
-+	__tpause(TPAUSE_C02_STATE, edx, eax);
++	__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
 +}
 +
 +/*
-  * On some AMD platforms, MWAITX has a configurable 32-bit timer, that
-  * counts with TSC frequency. The input value is the number of TSC cycles
-  * to wait. MWAITX will also exit when the timer expires.
-@@ -152,8 +173,12 @@ static void delay_halt(u64 __cycles)
++ * Call a vendor specific function to delay for a given amount of time. Because
++ * these functions may return earlier than requested, check for actual elapsed
++ * time and call again until done.
++ */
++static void delay_halt(u64 __cycles)
++{
++	u64 start, end, cycles = __cycles;
  
- void use_tsc_delay(void)
- {
--	if (delay_fn == delay_loop)
-+	if (static_cpu_has(X86_FEATURE_WAITPKG)) {
-+		delay_halt_fn = delay_halt_tpause;
-+		delay_fn = delay_halt;
-+	} else if (delay_fn == delay_loop) {
- 		delay_fn = delay_tsc;
-+	}
- }
+ 	/*
+ 	 * Timer value of 0 causes MWAITX to wait indefinitely, unless there
+@@ -114,21 +139,7 @@ static void delay_mwaitx(u64 cycles)
+ 	start = rdtsc_ordered();
+ 
+ 	for (;;) {
+-		delay = min_t(u64, MWAITX_MAX_WAIT_CYCLES, cycles);
+-
+-		/*
+-		 * Use cpu_tss_rw as a cacheline-aligned, seldomly
+-		 * accessed per-cpu variable as the monitor target.
+-		 */
+-		__monitorx(raw_cpu_ptr(&cpu_tss_rw), 0, 0);
+-
+-		/*
+-		 * AMD, like Intel's MWAIT version, supports the EAX hint and
+-		 * EAX=0xf0 means, do not enter any deep C-state and we use it
+-		 * here in delay() to minimize wakeup latency.
+-		 */
+-		__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
+-
++		delay_halt_fn(start, cycles);
+ 		end = rdtsc_ordered();
+ 
+ 		if (cycles <= end - start)
+@@ -147,7 +158,8 @@ void use_tsc_delay(void)
  
  void use_mwaitx_delay(void)
+ {
+-	delay_fn = delay_mwaitx;
++	delay_halt_fn = delay_halt_mwaitx;
++	delay_fn = delay_halt;
+ }
+ 
+ int read_current_timer(unsigned long *timer_val)
 -- 
 2.7.4
 
