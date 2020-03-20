@@ -2,97 +2,129 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F9CC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A74C43332
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE8E208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:51:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584741084;
-	bh=tnlLUvNFcgfDBUYCx5ccdiQoD4rY41g0BG8LE1O08T0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Kgg1+5SHo7eeGY4C1S2ok2Cx8S989nO08hTdpo1dU2p0p5Cq3HNO2u86zryuj2R+K
-	 Zc9FhES9Qu8n6dSIgCyUr6pg0NMyxl/foK/digy76Z8KgK4YRFOeZIBYIw20B3pkun
-	 abJ7pM33fXPZVKjxyd95IWlwPQNSxFCnCOkRs+tw=
+	by mail.kernel.org (Postfix) with ESMTP id E24F0208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:52:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Skn7flJS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbgCTVvX (ORCPT
+        id S1727272AbgCTVw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:51:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726666AbgCTVvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:51:23 -0400
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12975216FD
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 21:51:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584741082;
-        bh=tnlLUvNFcgfDBUYCx5ccdiQoD4rY41g0BG8LE1O08T0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rtV2LjfqEcp4GQZKXpK8xBMgkmN8RJCAKP7sdu26KDf6+KnrnPcMlJcGj9W+EcoMh
-         5oGm45rao+5CS9GZ3VV69Xut2+aR1XUaEKxQ3QRQjncWAK7+3nNfJxQ1ZzbPUDdRen
-         T8rFvqq3T8s+NuLqNmz3770mcsZemLRRYVQ4DrHc=
-Received: by mail-wr1-f44.google.com with SMTP id w10so9297031wrm.4
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 14:51:21 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1f3P3OYZVArC6njY1AUrXiHuPw80KzbJXHlcIYouGOg+V441f8
-        /We27bUTbk1uWZOxBanfZmXprJEZXi8c3rIeuInLnA==
-X-Google-Smtp-Source: ADFU+vtIy5v5w0nCe+j+Gl9O3RfRQCjnL/4GVlbEZNlcgynrDziiDhg0tdjiQ/8XJhVwqfs9UVTcmz5aIH+zweLwPzI=
-X-Received: by 2002:adf:df8f:: with SMTP id z15mr13377202wrl.184.1584741080378;
- Fri, 20 Mar 2020 14:51:20 -0700 (PDT)
+        Fri, 20 Mar 2020 17:52:58 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46201 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbgCTVw5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 17:52:57 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c19so3965104pfo.13;
+        Fri, 20 Mar 2020 14:52:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a04BEXBq6T16pF8YgWqXF8qeXZZehjOHDxhsKaZX814=;
+        b=Skn7flJSlYGzwEVidWCfP5Sxs1un6UzXQtQz+bWdWoAKNnRM80PqPvhDZwvv2wJKw6
+         Mj81HfQM/zfiGt9ileOkKRRQWiF7jWjG6JhV+9WIbVnMz/dnDuFUHCHtIbQX4/CY7DkK
+         noOtt/A9DKzcRzAlH+RqcMdMCY2dyTdaWE9AE5cShMSjs4HBzANhTM2+7CpxOlPpNBsU
+         9nhE6/1XKN4/0cmtxXDNEwjoXngQLqF8QiIUQVIm1NRPbQReCnfpG/6XbUusceYyN0mz
+         qR1CBCi2y2i3OXLUvaPOWqAKkvUGIR4nJ+prrBs7mnq20vlj/y21DMR6IS0a4SS96qyg
+         vOYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a04BEXBq6T16pF8YgWqXF8qeXZZehjOHDxhsKaZX814=;
+        b=osqubrMHaroAdX2xmT5TcDKYfdmAD2rMkehhh4Gjs6SU9CAVegfxsZ/rvJVGVvKVFz
+         Bp/ePrg74/IzI2RMVmLRIumo6AhN55yNnBupg84Yka97VGX+Ju6Qc+hSuJn3CaeNUmZb
+         NWABF2Df3o+Qu6Om8CCwyr7I/1tp0/Qz0grX/AHAFaS6J1+eL72L8PQ+La7TCzwricRJ
+         tRpnhaEkAG71W9VCt9IZr2oN0wnK4hGC7yhIX6UZyu3QTvZtlRVSClNYoH4zp4ZHbaQe
+         rnoAjskCtXhlg5ee4Wc/mya6JnqCmro/bbfv+OzrnQjdbfEoLD0ATwp3+t3z6HLJmvQB
+         VK1Q==
+X-Gm-Message-State: ANhLgQ0PnxycUN+1pg4nT0yArAW59uWKknhE+IZQ1BEByRakKPx41L48
+        mMNWjfI7jzf2fsAQ425fXk55KAHoHQiix6AltUE=
+X-Google-Smtp-Source: ADFU+vsmV5czmNKtoJg0C7AeN7wX4S5Al3MMjqsDaMzJBp9Kh1vmxFKQ2VcZyX/I27EONEdC3cCFyRbcSUnbF2ixLdU=
+X-Received: by 2002:a05:6a00:2b4:: with SMTP id q20mr178775pfs.36.1584741173473;
+ Fri, 20 Mar 2020 14:52:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <1584677604-32707-1-git-send-email-kyung.min.park@intel.com>
- <1584677604-32707-3-git-send-email-kyung.min.park@intel.com>
- <CALCETrWJ88CaGmij_NNysRjUQ6LPwwbPnMy1YPdKnM-cFDueSw@mail.gmail.com> <877dzf4a8v.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <877dzf4a8v.fsf@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 20 Mar 2020 14:51:08 -0700
-X-Gmail-Original-Message-ID: <CALCETrUxOd6P-Yh78qjmOYnh9jY0ggeb4vB=coVjMjthXMTREg@mail.gmail.com>
-Message-ID: <CALCETrUxOd6P-Yh78qjmOYnh9jY0ggeb4vB=coVjMjthXMTREg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] x86/delay: Introduce TPAUSE delay
+References: <20200320131345.635023594@linutronix.de> <20200320131509.564059710@linutronix.de>
+ <CAHp75VdkvyqOaAsLmz8K2j4bdd0sboPoUpRr6U-zvtkSaQfPRQ@mail.gmail.com> <87eetmpy56.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87eetmpy56.fsf@nanos.tec.linutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 20 Mar 2020 23:52:42 +0200
+Message-ID: <CAHp75VfuU98gEriS+GDJqZX4BV-cZT9hPbrDX-roeo63O8UvYQ@mail.gmail.com>
+Subject: Re: [patch 09/22] cpufreq: Convert to new X86 CPU match macros
 To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Andi Kleen <ak@linux.intel.com>,
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
         Tony Luck <tony.luck@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-edac@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto <linux-crypto@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 3:00 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Fri, Mar 20, 2020 at 10:30 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> Andy Lutomirski <luto@kernel.org> writes:
-> > On Thu, Mar 19, 2020 at 9:13 PM Kyung Min Park <kyung.min.park@intel.com> wrote:
-> >>  void use_tsc_delay(void)
-> >>  {
-> >> -       if (delay_fn == delay_loop)
-> >> +       if (static_cpu_has(X86_FEATURE_WAITPKG)) {
-> >> +               delay_halt_fn = delay_halt_tpause;
-> >> +               delay_fn = delay_halt;
-> >> +       } else if (delay_fn == delay_loop) {
-> >>                 delay_fn = delay_tsc;
-> >> +       }
-> >>  }
+> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+> > On Fri, Mar 20, 2020 at 3:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 > >
-> > This is an odd way to dispatch: you're using static_cpu_has(), but
-> > you're using it once to populate a function pointer.  Why not just put
-> > the static_cpu_has() directly into delay_halt() and open-code the
-> > three variants?
+> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6,  9, X86_FEATURE_EST, NULL),
+> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6, 13, X86_FEATURE_EST, NULL),
+> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  3, X86_FEATURE_EST, NULL),
+> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  4, X86_FEATURE_EST, NULL),
+> >
+> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
+> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
+> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
+> >
+> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
+> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
+> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
+> >
+> > Perhaps use names instead of 6 and 15?
 >
-> Two: mwaitx and tpause.
+> Thought about that and did not come up with anyting useful. FAM6 vs. 6
+> is not really any better
 
-I was imagining there would also be a variant for systems with neither feature.
+Hmm... Do we have family 15 for Intel? Perhaps I missed something...
+Or is it for any family?
+
+-- 
+With Best Regards,
+Andy Shevchenko
