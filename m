@@ -2,115 +2,112 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0509FC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EB6C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D95BB20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E5D20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:55:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbgCTOzH (ORCPT
+        id S1727541AbgCTOzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:55:07 -0400
-Received: from sauhun.de ([88.99.104.3]:49310 "EHLO pokefinder.org"
+        Fri, 20 Mar 2020 10:55:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:50230 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727497AbgCTOzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:55:05 -0400
-Received: from localhost (p54B33339.dip0.t-ipconnect.de [84.179.51.57])
-        by pokefinder.org (Postfix) with ESMTPSA id 0182B2C08E7;
-        Fri, 20 Mar 2020 15:55:03 +0100 (CET)
-Date:   Fri, 20 Mar 2020 15:55:03 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Federico Fuga <fuga@studiofuga.com>
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: mv64xxx: Implement I2C_M_RECV_LEN and
- I2C_FUNC_SMBUS_READ_BLOCK_DATA
-Message-ID: <20200320145503.GC1282@ninjato>
-References: <20200118115820.9080-1-fuga@studiofuga.com>
+        id S1727504AbgCTOzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:55:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1AEE07FA;
+        Fri, 20 Mar 2020 07:55:06 -0700 (PDT)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 06B2F3F792;
+        Fri, 20 Mar 2020 07:55:02 -0700 (PDT)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-mips@vger.kernel.org, x86@kernel.org
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Paul Burton <paulburton@kernel.org>
+Subject: [PATCH v5 07/26] mips: Introduce asm/vdso/clocksource.h
+Date:   Fri, 20 Mar 2020 14:53:32 +0000
+Message-Id: <20200320145351.32292-8-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200320145351.32292-1-vincenzo.frascino@arm.com>
+References: <20200320145351.32292-1-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1ccMZA6j1vT5UqiK"
-Content-Disposition: inline
-In-Reply-To: <20200118115820.9080-1-fuga@studiofuga.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The vDSO library should only include the necessary headers required for
+a userspace library (UAPI and a minimal set of kernel headers). To make
+this possible it is necessary to isolate from the kernel headers the
+common parts that are strictly necessary to build the library.
 
---1ccMZA6j1vT5UqiK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Introduce asm/vdso/clocksource.h to contain all the arm64 specific
+functions that are suitable for vDSO inclusion.
 
+This header will be required by a future patch that will generalize
+vdso/clocksource.h.
 
-> +    /* If we should retrieve the length from the buffer, make sure */
-> +	/* to read enough bytes to avoid sending the */
-> +	/* STOP bit after the read if the first byte */
+Cc: Paul Burton <paulburton@kernel.org>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+---
+ arch/mips/include/asm/clocksource.h      | 4 +---
+ arch/mips/include/asm/vdso/clocksource.h | 9 +++++++++
+ 2 files changed, 10 insertions(+), 3 deletions(-)
+ create mode 100644 arch/mips/include/asm/vdso/clocksource.h
 
-Please stick to Kernel commenting style.
+diff --git a/arch/mips/include/asm/clocksource.h b/arch/mips/include/asm/clocksource.h
+index de659cae0d4e..2f1ebbea3d72 100644
+--- a/arch/mips/include/asm/clocksource.h
++++ b/arch/mips/include/asm/clocksource.h
+@@ -6,8 +6,6 @@
+ #ifndef __ASM_CLOCKSOURCE_H
+ #define __ASM_CLOCKSOURCE_H
+ 
+-#define VDSO_ARCH_CLOCKMODES	\
+-	VDSO_CLOCKMODE_R4K,	\
+-	VDSO_CLOCKMODE_GIC
++#include <asm/vdso/clocksource.h>
+ 
+ #endif /* __ASM_CLOCKSOURCE_H */
+diff --git a/arch/mips/include/asm/vdso/clocksource.h b/arch/mips/include/asm/vdso/clocksource.h
+new file mode 100644
+index 000000000000..510e1671d898
+--- /dev/null
++++ b/arch/mips/include/asm/vdso/clocksource.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef __ASM_VDSOCLOCKSOURCE_H
++#define __ASM_VDSOCLOCKSOURCE_H
++
++#define VDSO_ARCH_CLOCKMODES	\
++	VDSO_CLOCKMODE_R4K,	\
++	VDSO_CLOCKMODE_GIC
++
++#endif /* __ASM_VDSOCLOCKSOURCE_H */
+-- 
+2.25.1
 
-> +		/* length=0 should not be allowed, but is indeed possible.
-> +		 * To avoid locking the chip, we keep reading at least 2 bytes
-> +		 */
-
-Ditto.
-
-> +		drv_data->effective_length = data+1;
-> +		drv_data->bytes_left = data+1;
-> +		drv_data->msg->len = data+1;
-
-Also, checkpatch complains about this if you run it with "--strict'
-
-    CHECKPATCH
-CHECK: spaces preferred around that '+' (ctx:VxV)
-#81: FILE: drivers/i2c/busses/i2c-mv64xxx.c:384:
-+		drv_data->effective_length = data+1;
- 		                                 ^
-
-CHECK: spaces preferred around that '+' (ctx:VxV)
-#82: FILE: drivers/i2c/busses/i2c-mv64xxx.c:385:
-+		drv_data->bytes_left = data+1;
- 		                           ^
-
-CHECK: spaces preferred around that '+' (ctx:VxV)
-#83: FILE: drivers/i2c/busses/i2c-mv64xxx.c:386:
-+		drv_data->msg->len = data+1;
- 		                         ^
-I think the complaints make sense.
-
-> -	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SMBUS_EMUL;
-> +	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR |
-> +		I2C_FUNC_SMBUS_READ_BLOCK_DATA | I2C_FUNC_SMBUS_EMUL;
-
-Likely I2C_FUNC_SMBUS_BLOCK_PROC_CALL will work as well, but I assume
-you can't test it?
-
-Otherwise, looks good.
-
-
---1ccMZA6j1vT5UqiK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl502UcACgkQFA3kzBSg
-KbaKrw//YFJRt+AH2+z/C2YoROOW6kIRbQ4RPamkJh+lUbPcfYhQtP1qyVDgoEf0
-w7Qrqs915hVP5VDL7QaYXLs/Oe1+/UBvXuMCIdmAwvg7VJUN7YavhgAquqKGWgLb
-btrAfjhZncubn/h6k24n+5bcO+EgB4ILmWE+SnUNZI7DiFuzzKHxOlvBglKkgZy/
-kv7gK4aIixneO0KD7As/dsNXkFAoXP9fQ+uug6hL/INZMM3Dbu0sWPiZ0qsPGciI
-/0fMhmRiTirbmS/d05VTKpK6MiV9kOm/VZybl7jjA67oDdEfV5bLJ17V9K86F+1U
-vZ9zLh0nqdScAltK+nNeJzSLMIdnur+kgfnhsd71S+q5bBXtzuCuT4wprhiY4ThD
-wWwkz6bLKWDbI8tkq+NGqQZ7zqLp3CCqaYVw41DN71sEAOu1QGDRBh8+DaYR/66j
-WZS+UfniiG6lk0N78k+p3yi3R1oQtXM4o7MiCTSlz7P7t9muKuGaXzbXlLaBqJIV
-mAHEVvktb+6YqwEk3RueDFVP61cH1MabuSWmMSq0L3WIaptaelKjMCSGdwo1s4A4
-FjwIWUxRDkgRR/vaeKmmu3ZQbPHHC8NlLeRxjN2NIPZ7tBer6dec2Hpbtky7qZLI
-e3T35fk1I2iB9EcxIjRRbRerROPy4EXt1tDOGzi44LUimg/BWI4=
-=NYOi
------END PGP SIGNATURE-----
-
---1ccMZA6j1vT5UqiK--
