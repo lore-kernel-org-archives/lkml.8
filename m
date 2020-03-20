@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7A1C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE81C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6655D20781
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E1420781
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbgCTSjL (ORCPT
+        id S1727562AbgCTSjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:39:11 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36892 "EHLO
+        Fri, 20 Mar 2020 14:39:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36885 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727463AbgCTSiY (ORCPT
+        with ESMTP id S1727394AbgCTSiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:38:24 -0400
+        Fri, 20 Mar 2020 14:38:21 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFMXG-00022m-GI
-        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:22 +0100
+        id 1jFMXD-00023B-O5
+        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:19 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id E5CA81039FC
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:16 +0100 (CET)
-Message-Id: <20200320180033.280833846@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id E10EA1040A1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:17 +0100 (CET)
+Message-Id: <20200320180033.681580918@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 19:00:05 +0100
+Date:   Fri, 20 Mar 2020 19:00:09 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -48,7 +48,7 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [patch V3 09/23] x86/entry/common: Protect against instrumentation
+Subject: [patch V3 13/23] lib/smp_processor_id: Move it into noinstr section
 References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,248 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark the various syscall entries with noinstr to protect them against
-instrumentation and add the noinstr_begin()/end() annotations to mark the
-parts of the functions which are safe to call out into instrumentable code.
+That code is already not traceable. Move it into the noinstr section so the
+objtool section validation does not trigger.
+
+Annotate the warning code as "safe". While it might be not under all
+circumstances, getting the information out is important enough.
+
+Should this ever trigger from the sensitive code which is shielded against
+instrumentation, e.g. low level entry, then the printk is the least of the
+worries.
+
+Addresses the objtool warnings:
+ vmlinux.o: warning: objtool: context_tracking_recursion_enter()+0x7: call to __this_cpu_preempt_check() leaves .noinstr.text section
+ vmlinux.o: warning: objtool: __context_tracking_exit()+0x17: call to __this_cpu_preempt_check() leaves .noinstr.text section
+ vmlinux.o: warning: objtool: __context_tracking_enter()+0x2a: call to __this_cpu_preempt_check() leaves .noinstr.text section
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/common.c |  133 ++++++++++++++++++++++++++++++++----------------
- 1 file changed, 89 insertions(+), 44 deletions(-)
+V3: New patch
+---
+ lib/smp_processor_id.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -42,13 +42,24 @@
- /* Called on entry from user mode with IRQs off. */
- __visible noinstr void enter_from_user_mode(void)
- {
--	CT_WARN_ON(ct_state() != CONTEXT_USER);
-+	enum ctx_state state = ct_state();
-+
- 	user_exit_irqoff();
-+
-+	instr_begin();
-+	CT_WARN_ON(state != CONTEXT_USER);
-+	instr_end();
- }
- #else
- static inline void enter_from_user_mode(void) {}
- #endif
+--- a/lib/smp_processor_id.c
++++ b/lib/smp_processor_id.c
+@@ -8,7 +8,7 @@
+ #include <linux/kprobes.h>
+ #include <linux/sched.h>
  
-+static __always_inline void exit_to_user_mode(void)
-+{
-+	user_enter_irqoff();
-+	mds_user_clear_cpu_buffers();
-+}
-+
- static void do_audit_syscall_entry(struct pt_regs *regs, u32 arch)
+-notrace static nokprobe_inline
++noinstr static
+ unsigned int check_preemption_disabled(const char *what1, const char *what2)
  {
- #ifdef CONFIG_X86_64
-@@ -178,8 +189,7 @@ static void exit_to_usermode_loop(struct
- 	}
- }
- 
--/* Called with IRQs disabled. */
--__visible inline void prepare_exit_to_usermode(struct pt_regs *regs)
-+static void __prepare_exit_to_usermode(struct pt_regs *regs)
- {
- 	struct thread_info *ti = current_thread_info();
- 	u32 cached_flags;
-@@ -218,10 +228,14 @@ static void exit_to_usermode_loop(struct
+ 	int this_cpu = raw_smp_processor_id();
+@@ -37,6 +37,7 @@ unsigned int check_preemption_disabled(c
  	 */
- 	ti->status &= ~(TS_COMPAT|TS_I386_REGS_POKED);
- #endif
-+}
+ 	preempt_disable_notrace();
  
--	user_enter_irqoff();
--
--	mds_user_clear_cpu_buffers();
-+__visible noinstr void prepare_exit_to_usermode(struct pt_regs *regs)
-+{
 +	instr_begin();
-+	__prepare_exit_to_usermode(regs);
+ 	if (!printk_ratelimit())
+ 		goto out_enable;
+ 
+@@ -45,6 +46,7 @@ unsigned int check_preemption_disabled(c
+ 
+ 	printk("caller is %pS\n", __builtin_return_address(0));
+ 	dump_stack();
 +	instr_end();
-+	exit_to_user_mode();
+ 
+ out_enable:
+ 	preempt_enable_no_resched_notrace();
+@@ -52,16 +54,14 @@ unsigned int check_preemption_disabled(c
+ 	return this_cpu;
  }
  
- #define SYSCALL_EXIT_WORK_FLAGS				\
-@@ -250,11 +264,7 @@ static void syscall_slow_exit_work(struc
- 		tracehook_report_syscall_exit(regs, step);
- }
- 
--/*
-- * Called with IRQs on and fully valid regs.  Returns with IRQs off in a
-- * state such that we can immediately switch to user mode.
-- */
--__visible inline void syscall_return_slowpath(struct pt_regs *regs)
-+static void __syscall_return_slowpath(struct pt_regs *regs)
+-notrace unsigned int debug_smp_processor_id(void)
++noinstr unsigned int debug_smp_processor_id(void)
  {
- 	struct thread_info *ti = current_thread_info();
- 	u32 cached_flags = READ_ONCE(ti->flags);
-@@ -275,15 +285,29 @@ static void syscall_slow_exit_work(struc
- 		syscall_slow_exit_work(regs, cached_flags);
- 
- 	local_irq_disable();
--	prepare_exit_to_usermode(regs);
-+	__prepare_exit_to_usermode(regs);
-+}
-+
-+/*
-+ * Called with IRQs on and fully valid regs.  Returns with IRQs off in a
-+ * state such that we can immediately switch to user mode.
-+ */
-+__visible noinstr void syscall_return_slowpath(struct pt_regs *regs)
-+{
-+	instr_begin();
-+	__syscall_return_slowpath(regs);
-+	instr_end();
-+	exit_to_user_mode();
+ 	return check_preemption_disabled("smp_processor_id", "");
  }
+ EXPORT_SYMBOL(debug_smp_processor_id);
+-NOKPROBE_SYMBOL(debug_smp_processor_id);
  
- #ifdef CONFIG_X86_64
--__visible void do_syscall_64(unsigned long nr, struct pt_regs *regs)
-+__visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
+-notrace void __this_cpu_preempt_check(const char *op)
++noinstr void __this_cpu_preempt_check(const char *op)
  {
- 	struct thread_info *ti;
- 
- 	enter_from_user_mode();
-+	instr_begin();
-+
- 	local_irq_enable();
- 	ti = current_thread_info();
- 	if (READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY)
-@@ -300,8 +324,10 @@ static void syscall_slow_exit_work(struc
- 		regs->ax = x32_sys_call_table[nr](regs);
- #endif
- 	}
-+	__syscall_return_slowpath(regs);
- 
--	syscall_return_slowpath(regs);
-+	instr_end();
-+	exit_to_user_mode();
+ 	check_preemption_disabled("__this_cpu_", op);
  }
- #endif
- 
-@@ -309,10 +335,10 @@ static void syscall_slow_exit_work(struc
- /*
-  * Does a 32-bit syscall.  Called with IRQs on in CONTEXT_KERNEL.  Does
-  * all entry and exit work and returns with IRQs off.  This function is
-- * extremely hot in workloads that use it, and it's usually called from
-+ * ex2tremely hot in workloads that use it, and it's usually called from
-  * do_fast_syscall_32, so forcibly inline it to improve performance.
-  */
--static __always_inline void do_syscall_32_irqs_on(struct pt_regs *regs)
-+static void do_syscall_32_irqs_on(struct pt_regs *regs)
- {
- 	struct thread_info *ti = current_thread_info();
- 	unsigned int nr = (unsigned int)regs->orig_ax;
-@@ -349,27 +375,62 @@ static __always_inline void do_syscall_3
- #endif /* CONFIG_IA32_EMULATION */
- 	}
- 
--	syscall_return_slowpath(regs);
-+	__syscall_return_slowpath(regs);
- }
- 
- /* Handles int $0x80 */
--__visible void do_int80_syscall_32(struct pt_regs *regs)
-+__visible noinstr void do_int80_syscall_32(struct pt_regs *regs)
- {
- 	enter_from_user_mode();
-+	instr_begin();
-+
- 	local_irq_enable();
- 	do_syscall_32_irqs_on(regs);
-+
-+	instr_end();
-+	exit_to_user_mode();
-+}
-+
-+static bool __do_fast_syscall_32(struct pt_regs *regs)
-+{
-+	int res;
-+
-+	/* Fetch EBP from where the vDSO stashed it. */
-+	if (IS_ENABLED(CONFIG_X86_64)) {
-+		/*
-+		 * Micro-optimization: the pointer we're following is
-+		 * explicitly 32 bits, so it can't be out of range.
-+		 */
-+		res = __get_user(*(u32 *)&regs->bp,
-+			 (u32 __user __force *)(unsigned long)(u32)regs->sp);
-+	} else {
-+		res = get_user(*(u32 *)&regs->bp,
-+		       (u32 __user __force *)(unsigned long)(u32)regs->sp);
-+	}
-+
-+	if (res) {
-+		/* User code screwed up. */
-+		regs->ax = -EFAULT;
-+		local_irq_disable();
-+		__prepare_exit_to_usermode(regs);
-+		return false;
-+	}
-+
-+	/* Now this is just like a normal syscall. */
-+	do_syscall_32_irqs_on(regs);
-+	return true;
- }
- 
- /* Returns 0 to return using IRET or 1 to return using SYSEXIT/SYSRETL. */
--__visible long do_fast_syscall_32(struct pt_regs *regs)
-+__visible noinstr long do_fast_syscall_32(struct pt_regs *regs)
- {
- 	/*
- 	 * Called using the internal vDSO SYSENTER/SYSCALL32 calling
- 	 * convention.  Adjust regs so it looks like we entered using int80.
- 	 */
--
- 	unsigned long landing_pad = (unsigned long)current->mm->context.vdso +
--		vdso_image_32.sym_int80_landing_pad;
-+					vdso_image_32.sym_int80_landing_pad;
-+	bool success;
- 
- 	/*
- 	 * SYSENTER loses EIP, and even SYSCALL32 needs us to skip forward
-@@ -379,33 +440,17 @@ static __always_inline void do_syscall_3
- 	regs->ip = landing_pad;
- 
- 	enter_from_user_mode();
-+	instr_begin();
- 
- 	local_irq_enable();
-+	success = __do_fast_syscall_32(regs);
- 
--	/* Fetch EBP from where the vDSO stashed it. */
--	if (
--#ifdef CONFIG_X86_64
--		/*
--		 * Micro-optimization: the pointer we're following is explicitly
--		 * 32 bits, so it can't be out of range.
--		 */
--		__get_user(*(u32 *)&regs->bp,
--			    (u32 __user __force *)(unsigned long)(u32)regs->sp)
--#else
--		get_user(*(u32 *)&regs->bp,
--			 (u32 __user __force *)(unsigned long)(u32)regs->sp)
--#endif
--		) {
--
--		/* User code screwed up. */
--		local_irq_disable();
--		regs->ax = -EFAULT;
--		prepare_exit_to_usermode(regs);
--		return 0;	/* Keep it simple: use IRET. */
--	}
-+	instr_end();
-+	exit_to_user_mode();
- 
--	/* Now this is just like a normal syscall. */
--	do_syscall_32_irqs_on(regs);
-+	/* If it failed, keep it simple: use IRET. */
-+	if (!success)
-+		return 0;
- 
- #ifdef CONFIG_X86_64
- 	/*
+ EXPORT_SYMBOL(__this_cpu_preempt_check);
+-NOKPROBE_SYMBOL(__this_cpu_preempt_check);
 
