@@ -2,143 +2,151 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1101C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DCDC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4A4420777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:52:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDqmFhl7"
+	by mail.kernel.org (Postfix) with ESMTP id 8FAD920775
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584730345;
+	bh=AB4UOyZ8oyBskvWThVKVaY0WT/9377ee2YYUA4RUI48=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JyFY8ab0E89iHrChUBBL//Q0/pn9c8iSOAc/ttcF7OVQlhYYO6HeHRyjod5goDbHp
+	 IuXkeywL1kO/mVY1fuQ4AUzFHjujE9LFCr6If7Cl9+7lbiUTRLkF/MdcdC1McvmjBo
+	 8sE8lFB6cI+uJbi8Ne6j+i/+90OSQb46O0/imeks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgCTSwQ (ORCPT
+        id S1727707AbgCTSwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:52:16 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37433 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727669AbgCTSwJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:52:09 -0400
-Received: by mail-qk1-f194.google.com with SMTP id z25so8025206qkj.4;
-        Fri, 20 Mar 2020 11:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=otmorsE/p9yVYit1B4E2Fo3uYEvHK3kalR11YV3EIR0=;
-        b=KDqmFhl7PlI8cqrekS70TdybR/cBo9bP1dcWoWHQ2D9mhZ8kwfyn6ttKk957+cOoBp
-         7Mb9VnBPd8r2lNyo37LwcRn4wd4X3DtoQPvSjFpk6Y63JYUSeMNjK4lw38Y5myCjIX24
-         nm4WbmO6/QBul+eoG126Wn4OQ2Y0yoRxKkqbJ9ubkgOUWMIiOpUFhEYPoR7ncb68T4nc
-         hGQiactjc5+lbTman+80F2+ws32ZzEUIjMKvRtthtDy8a4T5TLUpvScUOfEbk1uGVudb
-         j6FL+Gue3npK4+uGbJa4fja/dCmx2IS9k4R16aIycx1OcMliHlhG13Jg4DCYuiL5t6hQ
-         ikDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=otmorsE/p9yVYit1B4E2Fo3uYEvHK3kalR11YV3EIR0=;
-        b=d91MX2vFYmlDILZFOeEp7J8DNSioG2fS/YaHZAGvlBfNLIS7OfWTkhjoKgxrg88roF
-         KPIWblwewMYivvBhzKihVOtdO73kB6hFGaQTUmLsiwKICy6J7sP5V2DHahV3Ng6GnEug
-         QfZEJ+ANS6BUN5pgGPrR+wirVbRoN+SJO79ZpjE7X6JYXOP97rLcswUkjP3I3aNjB8DK
-         rO8Z2bS7iGOFIiv8ChTJsfu9I4FrWeVTPsm/h79sTRZlxfG6gOa4QxI7aZGWjcvidc2O
-         niIsgxi9tKc/HBnjp1dGJQxtJSkCr/n0RQb+fJfmt1j2oLiZirL2wNOEC31n8dXhmvib
-         ab7g==
-X-Gm-Message-State: ANhLgQ0bV4S7gBL0K5tEFhLNXevBFYK8vGyLDXxymbZiRMm4z2X4ATxo
-        JXTEgYeXu52s7Tok4EJzSeE=
-X-Google-Smtp-Source: ADFU+vsLaMKBQfa91QrFcTCCfGbvag6eFOwipkI3VTsOJqJuGAXiB38uA1I4ak8puiSO6rGub8/nhA==
-X-Received: by 2002:a37:61d0:: with SMTP id v199mr9310307qkb.292.1584730328304;
-        Fri, 20 Mar 2020 11:52:08 -0700 (PDT)
-Received: from localhost.localdomain ([177.220.176.176])
-        by smtp.gmail.com with ESMTPSA id f16sm5543535qtk.61.2020.03.20.11.52.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 11:52:07 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 035FAC215F; Fri, 20 Mar 2020 15:52:04 -0300 (-03)
-Date:   Fri, 20 Mar 2020 15:52:04 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     davem@davemloft.net, vyasevich@gmail.com, nhorman@tuxdriver.com,
-        kuba@kernel.org, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        anenbupt@gmail.com
-Subject: Re: [PATCH v3] sctp: fix refcount bug in sctp_wfree
-Message-ID: <20200320185204.GB3828@localhost.localdomain>
-References: <20200320110959.2114-1-hqjagain@gmail.com>
+        Fri, 20 Mar 2020 14:52:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727337AbgCTSvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 14:51:10 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D148020788;
+        Fri, 20 Mar 2020 18:51:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584730270;
+        bh=AB4UOyZ8oyBskvWThVKVaY0WT/9377ee2YYUA4RUI48=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ztgpg6m4VjCacoZKs9ZM2B4kr9TIgGgdS2xRPwc5sMSchwghyi+PtQI4d1S+/y5gC
+         gu78UNrQ3Hw7NH9MiJSkjo9ZrMvDa/QYLFX6ZSwY3OHLJ0mLCqQDGTOD9zKRQmmh9C
+         unF3M/GywPIRPiiS2CR5FjGSB6nr8d/AfO177sNM=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jFMK2-00EKAx-EW; Fri, 20 Mar 2020 18:24:42 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH v6 12/23] irqchip/gic-v4.1: Plumb set_vcpu_affinity SGI callbacks
+Date:   Fri, 20 Mar 2020 18:23:55 +0000
+Message-Id: <20200320182406.23465-13-maz@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200320182406.23465-1-maz@kernel.org>
+References: <20200320182406.23465-1-maz@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320110959.2114-1-hqjagain@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, tglx@linutronix.de, yuzenghui@huawei.com, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 07:09:59PM +0800, Qiujun Huang wrote:
-> Do accounting for skb's real sk.
-> In some case skb->sk != asoc->base.sk:
-> 
-> for the trouble SKB, it was in outq->transmitted queue
-> 
-> sctp_outq_sack
-> 	sctp_check_transmitted
-> 		SKB was moved to outq->sack
+Just like for vLPIs, there is some configuration information that cannot
+be directly communicated through the normal irqchip API, and we have to
+use our good old friend set_vcpu_affinity as a side-band communication
+mechanism.
 
-There is no outq->sack. You mean outq->sacked, I assume.
+This is used to configure group and priority for a given vSGI.
 
-> 	then throw away the sack queue
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Link: https://lore.kernel.org/r/20200304203330.4967-13-maz@kernel.org
+---
+ drivers/irqchip/irq-gic-v3-its.c   | 18 ++++++++++++++++++
+ include/linux/irqchip/arm-gic-v4.h |  5 +++++
+ 2 files changed, 23 insertions(+)
 
-Where? How?
-If you mean:
-        /* Throw away stuff rotting on the sack queue.  */
-        list_for_each_safe(lchunk, temp, &q->sacked) {
-                tchunk = list_entry(lchunk, struct sctp_chunk,
-                                    transmitted_list);
-                tsn = ntohl(tchunk->subh.data_hdr->tsn);
-                if (TSN_lte(tsn, ctsn)) {
-                        list_del_init(&tchunk->transmitted_list);
-                        if (asoc->peer.prsctp_capable &&
-                            SCTP_PR_PRIO_ENABLED(chunk->sinfo.sinfo_flags))
-                                asoc->sent_cnt_removable--;
-                        sctp_chunk_free(tchunk);
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index ce11cba09d4d..15250faa9ef7 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -4047,6 +4047,23 @@ static int its_sgi_get_irqchip_state(struct irq_data *d,
+ 	return 0;
+ }
+ 
++static int its_sgi_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
++{
++	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
++	struct its_cmd_info *info = vcpu_info;
++
++	switch (info->cmd_type) {
++	case PROP_UPDATE_SGI:
++		vpe->sgi_config[d->hwirq].priority = info->priority;
++		vpe->sgi_config[d->hwirq].group = info->group;
++		its_configure_sgi(d, false);
++		return 0;
++
++	default:
++		return -EINVAL;
++	}
++}
++
+ static struct irq_chip its_sgi_irq_chip = {
+ 	.name			= "GICv4.1-sgi",
+ 	.irq_mask		= its_sgi_mask_irq,
+@@ -4054,6 +4071,7 @@ static struct irq_chip its_sgi_irq_chip = {
+ 	.irq_set_affinity	= its_sgi_set_affinity,
+ 	.irq_set_irqchip_state	= its_sgi_set_irqchip_state,
+ 	.irq_get_irqchip_state	= its_sgi_get_irqchip_state,
++	.irq_set_vcpu_affinity	= its_sgi_set_vcpu_affinity,
+ };
+ 
+ static int its_sgi_irq_domain_alloc(struct irq_domain *domain,
+diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
+index 44e8c19e3d56..b4dbf899460b 100644
+--- a/include/linux/irqchip/arm-gic-v4.h
++++ b/include/linux/irqchip/arm-gic-v4.h
+@@ -103,6 +103,7 @@ enum its_vcpu_info_cmd_type {
+ 	SCHEDULE_VPE,
+ 	DESCHEDULE_VPE,
+ 	INVALL_VPE,
++	PROP_UPDATE_SGI,
+ };
+ 
+ struct its_cmd_info {
+@@ -115,6 +116,10 @@ struct its_cmd_info {
+ 			bool		g0en;
+ 			bool		g1en;
+ 		};
++		struct {
++			u8		priority;
++			bool		group;
++		};
+ 	};
+ };
+ 
+-- 
+2.20.1
 
-Then sctp_chunk_free is supposed to free the datamsg as well for
-chunks that were cumulative-sacked.
-For those not cumulative-sacked, sctp_for_each_tx_datachunk() will
-handle q->sacked queue as well:
-        list_for_each_entry(chunk, &q->sacked, transmitted_list)
-                cb(chunk);
-
-So I don't see how skbs can be overlooked here.
-
-> 		SKB was deleted from outq->sack
-> (but the datamsg held SKB at sctp_datamsg_to_asoc
-
-You mean sctp_datamsg_from_user ? If so, isn't it the other way
-around? sctp_datamsg_assign() will hold the datamsg, not the skb.
-
-> So, sctp_wfree was not called to destroy SKB)
-> 
-> then migrate happened
-> 
-> 	sctp_for_each_tx_datachunk(
-> 	sctp_clear_owner_w);
-> 	sctp_assoc_migrate();
-> 	sctp_for_each_tx_datachunk(
-> 	sctp_set_owner_w);
-> SKB was not in the outq, and was not changed to newsk
-
-The real fix is to fix the migration to the new socket, though the
-situation on which it is happening is still not clear.
-
-The 2nd sendto() call on the reproducer is sending 212992 bytes on a
-single call. That's usually the whole sndbuf size, and will cause
-fragmentation to happen. That means the datamsg will contain several
-skbs. But still, the sacked chunks should be freed if needed while the
-remaining ones will be left on the queues that they are.
-
-Thanks,
-Marcelo
