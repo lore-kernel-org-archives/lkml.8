@@ -2,127 +2,178 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B725BC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE478C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F7062070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:47:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SC8WgbLH"
+	by mail.kernel.org (Postfix) with ESMTP id BFDD72072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:48:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbgCTPrP (ORCPT
+        id S1727337AbgCTPsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:47:15 -0400
-Received: from mail-eopbgr40058.outbound.protection.outlook.com ([40.107.4.58]:63458
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726954AbgCTPrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 11:47:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=StixpbTvvghFQpPvzeVrhTr3mbCU1t+tJvwSfQMR2mmYxOXMUC+epW/0KvifPNbzQnGn3HdWK40CvvxJtaZkSWaZc0BUbJ6xSkS0yKAM/D01lM5RjKP9ojZiibL3oFhDAuYYlOeT3M9NDvHspmiRCXnP13WlTAeNgfvIRGBAnKArTz5ZRCIQCfN3hiHIVmLHyJmrh91p/iDGODWxUMcNtRX6HYRDhLDg94i+SsIzYreQUXsIxoVSxDxgBg+6paDn/YF7mV1/21rlQEOOVxWDGrUvc5xhXnyUlWdmXiIspHc9C3a4iJz7tlrQZMuICQW2Nbl+7vvOXPdalqzO1+Ixeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nNb05hX3tBOltDMogW3TZSrHwp0jrI/v3P12zWSSpto=;
- b=fsGzlUSexKN1Hlm2nNEzRCcCN3IC9plU9xqy5RrF+/uUYTu+PiJPPIFwjeppMSJuLzceVXTIVtRlItRSvODF0R6DUB2tVCft9YW6Wk4LUTsgoFnrPw4jiqaxQ14DeRBAjdbOGtIdLdhDKJ5//s1j/98ZjvKGrjAlCnFFTXuIlKiV8+1DtXveLERiSN16QnU3i3GWzs349fLNt1xu5UnPaNkPSWTlcqhjDSKxZmEAsmbKPUNa3sEci36hhj8gs0QaGSbHjb4oPk1av7/cmyVPBLqtLVDven0wfMWiDK/wg9hkfxueaV5fWCVAgMju+wya3M9s51Aa/wigQQ5c6guiaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nNb05hX3tBOltDMogW3TZSrHwp0jrI/v3P12zWSSpto=;
- b=SC8WgbLHVfQpUiU7S5NhRDLhR3O1BrInaqnNhy0vU8ErASwJuW4vPnJQi24TWFxbrUrpr9ANtSoqRBTxe6zobELLnqaFO+SBO6RXkEwdR8fubNQkitanfvHAOeObyifW5PjyoKaKqD+agzeIYphYdRHysTVbiNoMQ2OKuVJK/bI=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3470.eurprd04.prod.outlook.com (52.134.8.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.18; Fri, 20 Mar 2020 15:47:11 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f%7]) with mapi id 15.20.2814.021; Fri, 20 Mar 2020
- 15:47:11 +0000
-Subject: Re: [PATCH v9 3/9] crypto: caam - drop global context pointer and
- init_done
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        linux-crypto@vger.kernel.org
-Cc:     Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com
-References: <20200319161233.8134-1-andrew.smirnov@gmail.com>
- <20200319161233.8134-4-andrew.smirnov@gmail.com>
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-Message-ID: <09e82dba-2130-b1d7-73af-d03927be5d56@nxp.com>
-Date:   Fri, 20 Mar 2020 17:47:06 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <20200319161233.8134-4-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM3PR05CA0134.eurprd05.prod.outlook.com
- (2603:10a6:207:3::12) To VI1PR0402MB3485.eurprd04.prod.outlook.com
- (2603:10a6:803:7::25)
+        Fri, 20 Mar 2020 11:48:35 -0400
+Received: from mga12.intel.com ([192.55.52.136]:58103 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbgCTPsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 11:48:35 -0400
+IronPort-SDR: UdFXWonmYTSKUWPCM15tMfqt71IV5ryomFt/WCF9/tuELBEKHbeOAQdCOPXEIjMbw8oZmyC417
+ xYRzuqT2bHrA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 08:48:35 -0700
+IronPort-SDR: IM65Mmj0Ap/p+aqvrO7YfQfcDwKOrQI3s/YrbUmx31ZpgRjdkYmjIImq+/Z/44oLOotIL/MFaM
+ P8wJX8VR45nQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,285,1580803200"; 
+   d="scan'208";a="446689727"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 20 Mar 2020 08:48:32 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jFJsu-00058x-5m; Fri, 20 Mar 2020 23:48:32 +0800
+Date:   Fri, 20 Mar 2020 23:48:17 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kbuild-all@lists.01.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
+        pbonzini@redhat.com, jmattson@google.com
+Subject: Re: [PATCH v10 6/8] KVM: X86: Add userspace access interface for CET
+ MSRs
+Message-ID: <202003202309.SvJfslTC%lkp@intel.com>
+References: <20200320034342.26610-7-weijiang.yang@intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM3PR05CA0134.eurprd05.prod.outlook.com (2603:10a6:207:3::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend Transport; Fri, 20 Mar 2020 15:47:09 +0000
-X-Originating-IP: [84.117.251.185]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 818ce772-69a3-42eb-b4a8-08d7cce5f3cb
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB3470:|VI1PR0402MB3470:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB34701D8BB657A6BF3594DBED98F50@VI1PR0402MB3470.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 03484C0ABF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(396003)(136003)(366004)(199004)(53546011)(6666004)(2906002)(54906003)(8936002)(86362001)(16576012)(52116002)(81166006)(31696002)(26005)(2616005)(16526019)(4326008)(186003)(956004)(36756003)(66556008)(66946007)(8676002)(316002)(6486002)(66476007)(5660300002)(31686004)(4744005)(81156014)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3470;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DUY/uiF1kiEOomMmjWsyXdsRo3+kKcFUqTIA42x2OIM6Lp5bowt+EPBX/jhp6ZFYId+wPIOJYdjWM5EVkhDwBPKw5K6zt4qwpofKIlf5HPGPmPzIR1cqADbz5KplDzY27hGtbsNxHHkh+gumhNdsat7+tHg5HBMI7cwLPnHF5Qo8Rkhju+k13gnolg0kj7Qlj6IqMTF0iOjPYNq5JHHZy0QiaQ0mGM6gNRA72GdGTtA1ehIienlxevPMPh+hKdrOsbphwu2TwUINIEF4q7RvahdB+sY9h+n3oSjdYS2E/zdYB09lRPK6XTlZwBz7l/OZfNj/Q6tdsJsbaeDdROWTLV8vqzaoni93/a567GZM+t8noEztNrSvO3La3JB8TJWpYqStpz2TPsl1QiyD5+maL07MvJfROSMOwpu5HzZgKyQZR3lq6tfF8FcSyi+gI5fW
-X-MS-Exchange-AntiSpam-MessageData: 6ECTwcNmEOLzoRmJ4vIVqlnVEEptHmCF3CB59TmH/PcGvLPnc6Uf9IZla+C7ZLDPb9b7hGj3TYVMjZ4B4v9wefeu7/SpEUteKI3c9Srvw7OQe76KQ9L+OTESVZZ5RRiZVGLfvRtMqzfBLY5lMXxQLg==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 818ce772-69a3-42eb-b4a8-08d7cce5f3cb
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2020 15:47:10.9813
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: i7eL2Q1TpkJdK44Ybm4aQRNikILOPCXTVUqM4MDwFrldAem4eKYwha8Q65N+ef90nTgTXXvsgCudyMOlG+Zvjw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3470
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320034342.26610-7-weijiang.yang@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/19/2020 6:13 PM, Andrey Smirnov wrote:
-> Leverage devres to get rid of code storing global context as well as
-> init_done flag.
-> 
-> Original code also has a circular deallocation dependency where
-> unregister_algs() -> caam_rng_exit() -> caam_jr_free() chain would
-> only happen if all of JRs were freed. Fix this by moving
-> caam_rng_exit() outside of unregister_algs() and doing it specifically
-> for JR that instantiated HWRNG.
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Horia Geantă <horia.geanta@nxp.com>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
-> Cc: linux-crypto@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-imx@nxp.com
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+Hi Yang,
 
-Thanks,
-Horia
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on kvm/linux-next]
+[also build test WARNING on next-20200319]
+[cannot apply to vhost/linux-next tip/auto-latest linux/master linus/master v5.6-rc6]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Yang-Weijiang/Introduce-support-for-guest-CET-feature/20200320-155517
+base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git linux-next
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-181-g83789bbc-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+   arch/x86/kvm/x86.c:809:60: sparse: sparse: undefined identifier 'X86_CR4_CET'
+   arch/x86/kvm/x86.c:1233:23: sparse: sparse: undefined identifier 'MSR_IA32_U_CET'
+   arch/x86/kvm/x86.c:1233:39: sparse: sparse: undefined identifier 'MSR_IA32_S_CET'
+   arch/x86/kvm/x86.c:1234:9: sparse: sparse: undefined identifier 'MSR_IA32_PL0_SSP'
+   arch/x86/kvm/x86.c:1234:27: sparse: sparse: undefined identifier 'MSR_IA32_PL1_SSP'
+   arch/x86/kvm/x86.c:1234:45: sparse: sparse: undefined identifier 'MSR_IA32_PL2_SSP'
+   arch/x86/kvm/x86.c:1235:9: sparse: sparse: undefined identifier 'MSR_IA32_PL3_SSP'
+   arch/x86/kvm/x86.c:1235:27: sparse: sparse: undefined identifier 'MSR_IA32_INT_SSP_TAB'
+   arch/x86/kvm/x86.c:1512:14: sparse: sparse: undefined identifier 'MSR_IA32_PL0_SSP'
+   arch/x86/kvm/x86.c:1512:35: sparse: sparse: undefined identifier 'MSR_IA32_PL3_SSP'
+   arch/x86/kvm/x86.c:1513:14: sparse: sparse: undefined identifier 'MSR_IA32_U_CET'
+   arch/x86/kvm/x86.c:1514:14: sparse: sparse: undefined identifier 'MSR_IA32_S_CET'
+   arch/x86/kvm/x86.c:1515:14: sparse: sparse: undefined identifier 'MSR_IA32_INT_SSP_TAB'
+>> arch/x86/kvm/x86.c:1512:14: sparse: sparse: incompatible types for 'case' statement
+   arch/x86/kvm/x86.c:1512:35: sparse: sparse: incompatible types for 'case' statement
+   arch/x86/kvm/x86.c:1513:14: sparse: sparse: incompatible types for 'case' statement
+   arch/x86/kvm/x86.c:1514:14: sparse: sparse: incompatible types for 'case' statement
+   arch/x86/kvm/x86.c:1515:14: sparse: sparse: incompatible types for 'case' statement
+   arch/x86/kvm/x86.c:2646:38: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void const [noderef] <asn:1> * @@    got  const [noderef] <asn:1> * @@
+   arch/x86/kvm/x86.c:2646:38: sparse:    expected void const [noderef] <asn:1> *
+   arch/x86/kvm/x86.c:2646:38: sparse:    got unsigned char [usertype] *
+   arch/x86/kvm/x86.c:3267:25: sparse: sparse: undefined identifier 'MSR_IA32_U_CET'
+   arch/x86/kvm/x86.c:7549:15: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   arch/x86/kvm/x86.c:7549:15: sparse:    struct kvm_apic_map [noderef] <asn:4> *
+   arch/x86/kvm/x86.c:7549:15: sparse:    struct kvm_apic_map *
+   arch/x86/kvm/x86.c:9678:44: sparse: sparse: undefined identifier 'XFEATURE_MASK_CET_USER'
+   arch/x86/kvm/x86.c:9678:44: sparse: sparse: undefined identifier 'XFEATURE_MASK_CET_KERNEL'
+   arch/x86/kvm/x86.c:9912:16: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   arch/x86/kvm/x86.c:9912:16: sparse:    struct kvm_apic_map [noderef] <asn:4> *
+   arch/x86/kvm/x86.c:9912:16: sparse:    struct kvm_apic_map *
+   arch/x86/kvm/x86.c:9913:15: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   arch/x86/kvm/x86.c:9913:15: sparse:    struct kvm_pmu_event_filter [noderef] <asn:4> *
+   arch/x86/kvm/x86.c:9913:15: sparse:    struct kvm_pmu_event_filter *
+   arch/x86/kvm/x86.c:1512:14: sparse: sparse: Expected constant expression in case statement
+   arch/x86/kvm/x86.c:1512:35: sparse: sparse: Expected constant expression in case statement
+   arch/x86/kvm/x86.c:1513:14: sparse: sparse: Expected constant expression in case statement
+   arch/x86/kvm/x86.c:1514:14: sparse: sparse: Expected constant expression in case statement
+   arch/x86/kvm/x86.c:1515:14: sparse: sparse: Expected constant expression in case statement
+
+vim +/case +1512 arch/x86/kvm/x86.c
+
+  1475	
+  1476	/*
+  1477	 * Write @data into the MSR specified by @index.  Select MSR specific fault
+  1478	 * checks are bypassed if @host_initiated is %true.
+  1479	 * Returns 0 on success, non-0 otherwise.
+  1480	 * Assumes vcpu_load() was already called.
+  1481	 */
+  1482	static int __kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data,
+  1483				 bool host_initiated)
+  1484	{
+  1485		struct msr_data msr;
+  1486	
+  1487		switch (index) {
+  1488		case MSR_FS_BASE:
+  1489		case MSR_GS_BASE:
+  1490		case MSR_KERNEL_GS_BASE:
+  1491		case MSR_CSTAR:
+  1492		case MSR_LSTAR:
+  1493			if (is_noncanonical_address(data, vcpu))
+  1494				return 1;
+  1495			break;
+  1496		case MSR_IA32_SYSENTER_EIP:
+  1497		case MSR_IA32_SYSENTER_ESP:
+  1498			/*
+  1499			 * IA32_SYSENTER_ESP and IA32_SYSENTER_EIP cause #GP if
+  1500			 * non-canonical address is written on Intel but not on
+  1501			 * AMD (which ignores the top 32-bits, because it does
+  1502			 * not implement 64-bit SYSENTER).
+  1503			 *
+  1504			 * 64-bit code should hence be able to write a non-canonical
+  1505			 * value on AMD.  Making the address canonical ensures that
+  1506			 * vmentry does not fail on Intel after writing a non-canonical
+  1507			 * value, and that something deterministic happens if the guest
+  1508			 * invokes 64-bit SYSENTER.
+  1509			 */
+  1510			data = get_canonical(data, vcpu_virt_addr_bits(vcpu));
+  1511			break;
+> 1512		case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
+  1513		case MSR_IA32_U_CET:
+  1514		case MSR_IA32_S_CET:
+  1515		case MSR_IA32_INT_SSP_TAB:
+  1516			if (is_noncanonical_address(data, vcpu))
+  1517				return 1;
+  1518		}
+  1519	
+  1520		msr.data = data;
+  1521		msr.index = index;
+  1522		msr.host_initiated = host_initiated;
+  1523	
+  1524		return kvm_x86_ops->set_msr(vcpu, &msr);
+  1525	}
+  1526	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
