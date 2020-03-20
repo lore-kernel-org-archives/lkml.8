@@ -2,179 +2,205 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5135AC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4962C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16FB220754
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:48:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="V9nMsPgz"
+	by mail.kernel.org (Postfix) with ESMTP id 87C9A20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgCTLs6 (ORCPT
+        id S1727021AbgCTLtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 07:48:58 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:55504 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgCTLs6 (ORCPT
+        Fri, 20 Mar 2020 07:49:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35417 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgCTLtX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 07:48:58 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200320114855euoutp01c3a9c89ad48bcbc8dadcb11adc5a2a1c~_AL43U7c60161001610euoutp017
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 11:48:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200320114855euoutp01c3a9c89ad48bcbc8dadcb11adc5a2a1c~_AL43U7c60161001610euoutp017
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1584704935;
-        bh=nLcjzIOGCN900e/OEOUNApcMwCdwdSMIJRGT8aZqxpc=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=V9nMsPgz/ev+yVZOVCLbz2TxfvIpX7jPSkwkgk/hngxFbRMa8HxgM0S56tx0xS94V
-         jl2B3hf94y75/wjuYGiKamqccp/qd23HGK59nbNpFmYgm8JXXJy1d0QCpk3Hnh4kLx
-         CalxfwkKiqd81TPD8e0gOoSFcPPWBmxWJz774MqY=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200320114855eucas1p1f4f46d392692f17471526c7d82771f50~_AL4sk0uM0567705677eucas1p18;
-        Fri, 20 Mar 2020 11:48:55 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id C3.13.60679.7ADA47E5; Fri, 20
-        Mar 2020 11:48:55 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200320114855eucas1p2a0ebaee7b17af54e408d558d9205dfdd~_AL4P_lJP0691306913eucas1p22;
-        Fri, 20 Mar 2020 11:48:55 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200320114855eusmtrp1cc1388611252763c88adef345d5085cd~_AL4PYfrV1196311963eusmtrp1Q;
-        Fri, 20 Mar 2020 11:48:55 +0000 (GMT)
-X-AuditID: cbfec7f4-0cbff7000001ed07-cd-5e74ada7f0a5
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id E5.39.08375.7ADA47E5; Fri, 20
-        Mar 2020 11:48:55 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200320114854eusmtip22f9ca6c7b13e42591a560e2774e1a12c~_AL3929nC0580505805eusmtip2g;
-        Fri, 20 Mar 2020 11:48:54 +0000 (GMT)
-Subject: Re: [PATCH v3] video: fbdev: arcfb: add missed free_irq and fix the
- order of request_irq
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <80493efb-cc29-73e2-da8e-72902c709f1a@samsung.com>
-Date:   Fri, 20 Mar 2020 12:48:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Fri, 20 Mar 2020 07:49:23 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jFG9N-0002wo-Oz; Fri, 20 Mar 2020 12:49:18 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 931B8100375; Fri, 20 Mar 2020 12:49:16 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Singh\, Balbir" <sblbir@amazon.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "keescook\@chromium.org" <keescook@chromium.org>,
+        "Herrenschmidt\, Benjamin" <benh@amazon.com>,
+        "x86\@kernel.org" <x86@kernel.org>
+Subject: Re: [RFC PATCH] arch/x86: Optionally flush L1D on context switch
+In-Reply-To: <97b2bffc16257e70b8aa98ee86622dc4178154c4.camel@amazon.com>
+References: <20200313220415.856-1-sblbir@amazon.com> <87imj19o13.fsf@nanos.tec.linutronix.de> <97b2bffc16257e70b8aa98ee86622dc4178154c4.camel@amazon.com>
+Date:   Fri, 20 Mar 2020 12:49:16 +0100
+Message-ID: <8736a3456r.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200310143050.5154-1-hslester96@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEKsWRmVeSWpSXmKPExsWy7djP87rL15bEGXy5p2px5et7NovZh14y
-        W5zo+8BqcXnXHDYHFo+ds+6ye9zvPs7k8XmTXABzFJdNSmpOZllqkb5dAlfGvav3mAt2CVac
-        XvKBpYHxH28XIyeHhICJxJH2ucxdjFwcQgIrGCWOfT3JDJIQEvjCKHFqTzBE4jOjxIRt/xhh
-        OhYu+ALVsZxR4tv2LYwQzltGiT1NT8DahQWSJd4c+g5miwioS3zetZMdxGYWSJA4vegeC4jN
-        JmAlMbF9FdhUXgE7iRPnrjKB2CwCqhIXZ81mA7FFBSIkPj04zApRIyhxcuYTsF5OAUuJifuf
-        skHMFJe49WQ+E4QtL7H97Ryw6yQE+tkleuctgDrbRWLDoo9MELawxKvjW9ghbBmJ05N7WCAa
-        1jFK/O14AdW9nVFi+eR/bBBV1hJ3zv0CsjmAVmhKrN+lDxF2lOhYtIYFJCwhwCdx460gxBF8
-        EpO2TWeGCPNKdLQJQVSrSWxYtoENZm3XzpXMExiVZiF5bRaSd2YheWcWwt4FjCyrGMVTS4tz
-        01OLjfJSy/WKE3OLS/PS9ZLzczcxAlPK6X/Hv+xg3PUn6RCjAAejEg+vxcqSOCHWxLLiytxD
-        jBIczEoivLrpxXFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeY0XvYwVEkhPLEnNTk0tSC2CyTJx
-        cEo1ME66tL+vpLFi75GkO9IMUd+1THkOx1hOf1eUuKx6xd3URf2dAnlxws9nzONsFtN12hmW
-        9PXrmT+Xp2z03CRwan1A8LOLMX/iOraWSKa2dDT+eJW1U/ahvo3CDx8HTQbzt4tm9+j9iE/Y
-        2bEw9Y7Y5bVeiQsmi9Vfn3dt5Sxt/bNPJ9588jd7f4cSS3FGoqEWc1FxIgAriBQeJQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsVy+t/xe7rL15bEGfQ0sllc+fqezWL2oZfM
-        Fif6PrBaXN41h82BxWPnrLvsHve7jzN5fN4kF8AcpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFn
-        ZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJdx7+o95oJdghWnl3xgaWD8x9vFyMkhIWAisXDB
-        F+YuRi4OIYGljBIf/14HcjiAEjISx9eXQdQIS/y51sUGUfOaUeL0tMVMIAlhgWSJN4e+M4PY
-        IgLqEp937WQH6WUWSJB4Ni8For6HUeLEk08sIDVsAlYSE9tXMYLYvAJ2EifOXQWbwyKgKnFx
-        1mw2EFtUIELi8I5ZUDWCEidnPgHr5RSwlJi4/ylYDTPQrj/zLjFD2OISt57MZ4Kw5SW2v53D
-        PIFRaBaS9llIWmYhaZmFpGUBI8sqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwAjaduzn5h2M
-        lzYGH2IU4GBU4uG1WFkSJ8SaWFZcmXuIUYKDWUmEVze9OE6INyWxsiq1KD++qDQntfgQoynQ
-        cxOZpUST84HRnVcSb2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgVHu
-        uEvytm+LmIM5rSbfeH5ffv01A2uGG7c0r9WWfM2bn538+QvjgrXHlp79U7dPZXqqg77/1dcm
-        RZ7zhbM19jOY/1urcWFur/xPzX3hW19d5dp/iiVljlLbr8pVRi6iXqdkz0cs2TT5Y+i/Jcd/
-        T+H3Fqt2TvHaepu7s3bWVRXBhQLHLP9qzt2nxFKckWioxVxUnAgAOMSXA7YCAAA=
-X-CMS-MailID: 20200320114855eucas1p2a0ebaee7b17af54e408d558d9205dfdd
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200310143100eucas1p241418d286851099f545477b153d3fa0c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200310143100eucas1p241418d286851099f545477b153d3fa0c
-References: <CGME20200310143100eucas1p241418d286851099f545477b153d3fa0c@eucas1p2.samsung.com>
-        <20200310143050.5154-1-hslester96@gmail.com>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Balbir,
 
-On 3/10/20 3:30 PM, Chuhong Yuan wrote:
-> The driver forgets to free irq in remove which is requested in
-> probe.
-> Add the missed call to fix it.
-> Also, the position of request_irq() in probe should be put before
-> register_framebuffer().
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
-> Changes in v3:
->   - Add missed variable par in remove.
-> 
->  drivers/video/fbdev/arcfb.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/arcfb.c b/drivers/video/fbdev/arcfb.c
-> index 314ab82e01c0..9a720c14056c 100644
-> --- a/drivers/video/fbdev/arcfb.c
-> +++ b/drivers/video/fbdev/arcfb.c
-> @@ -544,10 +544,6 @@ static int arcfb_probe(struct platform_device *dev)
->  	par->cslut[1] = 0x06;
->  	info->flags = FBINFO_FLAG_DEFAULT;
->  	spin_lock_init(&par->lock);
-> -	retval = register_framebuffer(info);
-> -	if (retval < 0)
-> -		goto err1;
-> -	platform_set_drvdata(dev, info);
->  	if (irq) {
->  		par->irq = irq;
->  		if (request_irq(par->irq, &arcfb_interrupt, IRQF_SHARED,
-> @@ -558,6 +554,10 @@ static int arcfb_probe(struct platform_device *dev)
->  			goto err1;
->  		}
->  	}
-> +	retval = register_framebuffer(info);
-> +	if (retval < 0)
-> +		goto err1;
-> +	platform_set_drvdata(dev, info);
->  	fb_info(info, "Arc frame buffer device, using %dK of video memory\n",
->  		videomemorysize >> 10);
->  
-> @@ -590,9 +590,12 @@ static int arcfb_probe(struct platform_device *dev)
->  static int arcfb_remove(struct platform_device *dev)
->  {
->  	struct fb_info *info = platform_get_drvdata(dev);
-> +	struct arcfb_par *par = info->par;
+"Singh, Balbir" <sblbir@amazon.com> writes:
+> On Thu, 2020-03-19 at 01:38 +0100, Thomas Gleixner wrote:
+>> What's the point? The attack surface is the L1D content of the scheduled
+>> out task. If the malicious task schedules out, then why would you care?
+>> 
+>> I might be missing something, but AFAICT this is beyond paranoia.
+>> 
+>
+> I think there are two cases
+>
+> 1. Task with important data schedules out
+> 2. Malicious task schedules in
+>
+> These patches address 1, but call out case #2
 
-Please look at the line below, 'info' is checked for being NULL so
-either 'par = info->par' can dereference NULL pointer or the check is
-superfluous and should be removed.
+The point is if the victim task schedules out, then there is no reason
+to flush L1D immediately in context switch. If that just schedules a
+kernel thread and then goes back to the task, then there is no point
+unless you do not even trust the kernel thread.
 
-Also there is no need for 'par' variable (it is used only once),
-why not simply use info->par->irq in free_irq() call below?
+>> > 3. There is a fallback software L1D load, similar to what L1TF does, but
+>> >    we don't prefetch the TLB, is that sufficient?
+>> 
+>> If we go there, then the KVM L1D flush code wants to move into general
+>> x86 code.
+>
+> OK.. we can definitely consider reusing code, but I think the KVM bits require
+> tlb prefetching, IIUC before cache flush to negate any bad translations
+> associated with an L1TF fault, but the code/comments are not clear on the need
+> to do so.
 
->  	if (info) {
->  		unregister_framebuffer(info);
-> +		if (irq)
-> +			free_irq(par->irq, info);
->  		vfree((void __force *)info->screen_base);
->  		framebuffer_release(info);
->  	}
+I forgot the gory details by now, but having two entry points or a
+conditional and share the rest (page allocation etc.) is definitely
+better than two slightly different implementation which basically do the
+same thing.
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+>> > +void enable_l1d_flush_for_task(struct task_struct *tsk)
+>> > +{
+>> > +     struct page *page;
+>> > +
+>> > +     if (static_cpu_has(X86_FEATURE_FLUSH_L1D))
+>> > +             goto done;
+>> > +
+>> > +     mutex_lock(&l1d_flush_mutex);
+>> > +     if (l1d_flush_pages)
+>> > +             goto done;
+>> > +     /*
+>> > +      * These pages are never freed, we use the same
+>> > +      * set of pages across multiple processes/contexts
+>> > +      */
+>> > +     page = alloc_pages(GFP_KERNEL | __GFP_ZERO, L1D_CACHE_ORDER);
+>> > +     if (!page)
+>> > +             return;
+>> > +
+>> > +     l1d_flush_pages = page_address(page);
+>> > +     /* I don't think we need to worry about KSM */
+>> 
+>> Why not? Even if it wouldn't be necessary why would we care as this is a
+>> once per boot operation in fully preemptible code.
+>
+> Not sure I understand your question, I was stating that even if KSM was
+> running, it would not impact us (with dedup), as we'd still be writing out 0s
+> to the cache line in the fallback case.
+
+I probably confused myself vs. the comment in the VMX code, but that
+mentions nested virt. Needs at least some consideration when we reuse
+that code.
+
+>> >  void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+>> >              struct task_struct *tsk)
+>> >  {
+>> > @@ -433,6 +519,8 @@ void switch_mm_irqs_off(struct mm_struct *prev, struct
+>> > mm_struct *next,
+>> >               trace_tlb_flush_rcuidle(TLB_FLUSH_ON_TASK_SWITCH, 0);
+>> >       }
+>> > 
+>> > +     l1d_flush(next, tsk);
+>> 
+>> This is really the wrong place. You want to do that:
+>> 
+>>   1) Just before return to user space
+>>   2) When entering a guest
+>> 
+>> and only when the previously running user space task was the one which
+>> requested this massive protection.
+>> 
+>
+> Cases 1 and 2 are handled via
+>
+> 1. SWAPGS fixes/work arounds (unless I misunderstood your suggestion)
+
+How so? SWAPGS mitigation does not flush L1D. It merily serializes SWAPGS.
+
+> 2. L1TF fault handling
+>
+> This mechanism allows for flushing not restricted to 1 or 2, the idea is to
+> immediately flush L1D for paranoid processes on mm switch.
+
+Why? To protect the victim task against the malicious kernel?
+
+The L1D content of the victim is endangered in the following case:
+
+    victim out -> attacker in
+
+The attacker can either run in user space or in guest mode. So the flush
+is only interesting when the attacker actually goes back to user space
+or reenters the guest.
+
+The following is completely uninteresting:
+
+    victim out -> kernel thread in/out -> victim in
+
+Even this is uninteresting:
+
+    victim in -> attacker in (stays in kernel, e.g. waits for data) ->
+    attacker out -> victim in
+
+So the point where you want to flush conditionally is when the attacker
+leaves kernel space either to user mode or guest mode.
+
+So if the victim schedules out it sets a per cpu request to flush L1D
+on the borders.
+
+And then you have on return to user:
+
+    if (this_cpu_flush_l1d())
+    	flush_l1d()
+
+and in kvm:
+
+    if (this_cpu_flush_l1d() || L1TF_flush_L1D)
+    	flush_l1d()
+
+The request does:
+
+    if (!this_cpu_read(l1d_flush_for_task))
+        this_cpu_write(l1d_flush_for_task, current)
+
+The check does:
+
+    p = this_cpu_read(l1d_flush_for_task);
+    if (p) {
+        this_cpu_write(l1d_flush_for_task, NULL);
+        return p != current;
+    }
+    return false;
+
+Hmm?
+
+Thanks,
+
+        tglx
+
+                
