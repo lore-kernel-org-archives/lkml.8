@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C5FC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4413CC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0775020724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA5F220724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:16:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UadX3z4o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxw7GDQY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbgCTQQZ (ORCPT
+        id S1727471AbgCTQQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:16:25 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37361 "EHLO
+        Fri, 20 Mar 2020 12:16:52 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36178 "EHLO
         mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbgCTQQZ (ORCPT
+        with ESMTP id S1726935AbgCTQQw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:16:25 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w13so7070913oih.4;
-        Fri, 20 Mar 2020 09:16:24 -0700 (PDT)
+        Fri, 20 Mar 2020 12:16:52 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k18so7090742oib.3;
+        Fri, 20 Mar 2020 09:16:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=/osbAj9yRgXz7x55OrrHMgMWdfrPKzhKfeScYMfYMcM=;
-        b=UadX3z4o7dGPWMK4pkr2CpchJ5hhESsQwqLGlh3H0saU0ZCHfxCrh2hRBOq7Apr2YA
-         qy1CmwcpoeFnSHr5np630tvwTBH2QgOB1M7N1gsQwRCiFmjGsQC8MgWY0qIsgmWSmiHq
-         93kLl+SItBzVFhJA1g/YrNp5veICytl2Nfw1zBFVSOXND+s3NnKh7sEF9fKQ/u8lpKV4
-         yqh/Blh3MOpC+/xv74f3m3mG1ogsdB8DxB243JEV4OV20UVOhJpTur4Ue7dRUk9OG7Yp
-         JfCvQzbKkUpHJDZI1iMTTanlmPaj0iXqINR1B5tJv5U+K9GCF+9ueASy+/c0PXPm7WFz
-         uXWQ==
+        bh=FAvANlK1GJbNg5SaAZyxMUPFkGHUx203Xs0vZExBIMY=;
+        b=dxw7GDQYz4EBfZw3gLtRR+TzYhxNiP7FjvAjBBXW0J7sz6ZHFrPDW2zamM+xbu8oSk
+         J46bf3hfAKe9TFBS5Insp2/Mpr8buSvqYhlNa4RpzKs2I6zILyoc9k4GUOYGr2spVJh5
+         99LifhYWiF0+NsdQnP/rUvqJnZ5IGliyj6mWBWv5delzG4pN7/zaVTp1ZYZpO0C64FQT
+         SpvalwlMI+rn5WvMm+2usnIvL8STYlyJ86laBTrxWu/rqA/VC+uc5y1loaM08KGGdNQ+
+         UJ7Q82DkNPpKpS/IiblAUaosrEbsnhkWEUsj2xW8fv9EjVQ7YO5uewcc0H0Q/JZ5xWPF
+         EC1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/osbAj9yRgXz7x55OrrHMgMWdfrPKzhKfeScYMfYMcM=;
-        b=Py2U3gNnAbr4i5HXxfVp/gWd4AYB3n4AHj9dwfUqBrFwtF8l7v8a4rbdn+Y3iboRzs
-         gAMKUZEADxpfinkVdUoR4GVTpX3EaiJFgfXh+k2kLdY8jF+L7TtQ7fcXbr7IzXZXbc4Q
-         R+Mw20KDmAYFYmE2B8w4jj+HDZ0mNWWmZ4PjLkyT8GdG5lv3B6SmPspdXgULL7qvVlBE
-         OoKDu4QNosL9c7dQ8qlTY67qLlyj8qCzEVLo2XqNe9nQnPHpyYvOu+5sUTTqb8AVxxJK
-         auX4j5kSDFICyr1flx7lZbqlwLveb55o96al550bnSSYMLlZjtm5jfCqykRkW4rQaMXR
-         yl9g==
-X-Gm-Message-State: ANhLgQ3ELVtgSPYGeAyIaOviEascoPtdx/I/Ylt50dt0gw2N5WMbE/u6
-        Y03786+PhgYuHL6ibRyADXLolGGW
-X-Google-Smtp-Source: ADFU+vvpMhCy9L2DsBWmBb3tdVIl+Tzo1XnbSViYw4Ow4fYa6a21r1Byi7iEc78sGY+CEvOsaTr9QQ==
-X-Received: by 2002:aca:5191:: with SMTP id f139mr7334753oib.140.1584720983914;
-        Fri, 20 Mar 2020 09:16:23 -0700 (PDT)
+        bh=FAvANlK1GJbNg5SaAZyxMUPFkGHUx203Xs0vZExBIMY=;
+        b=oIdxCvQjaPf/r1b7Rn6Wa3Gs/ne/1AW2hl8FiUoFwriAfTY619UeaPVvVdQQdo/BI5
+         np9iEcjqM90RQbSPEv1eGm9U6BY+7aA9ODyCAzjn7xuMWTLLbRNaijakwSa0M+laIjsC
+         Xh5OGUkVVxOCP7I2B7ciNPKPPHBsVZWRY9uLSGdbxova2huvyifRZbDDPp3onKu4pOAQ
+         CoxN63unVIiSs1HFhtPcMmP41oJWzR3QizDv+O4gqr7QKhIq2FOXeBWNorFlApSUn0pu
+         l1b2qdvpfAxKgaRqWDbn7CzD3oOpI/zAcdvBE8vLCSx7FPN2v7ks9CDV5toSVWQp+0Zc
+         r3YQ==
+X-Gm-Message-State: ANhLgQ1cz91NpZMtbepJav1hDYqRxLoMnviMdYiK2qJTdknKMTLQYAws
+        9J3q6fXHVkJJoHhqGBG3cW4D7yTA
+X-Google-Smtp-Source: ADFU+vv6qfwwCD2V3uPsUFXc5b3GNb1xGe8xI3/yB4sjbY2/DEnSdolgDpoRM+lpMOZoD4z0W5oVyQ==
+X-Received: by 2002:a05:6808:105:: with SMTP id b5mr6902094oie.55.1584721011104;
+        Fri, 20 Mar 2020 09:16:51 -0700 (PDT)
 Received: from raspberrypi (99-189-78-97.lightspeed.austtx.sbcglobal.net. [99.189.78.97])
-        by smtp.gmail.com with ESMTPSA id k185sm2126695oib.5.2020.03.20.09.16.23
+        by smtp.gmail.com with ESMTPSA id c3sm2011027otl.81.2020.03.20.09.16.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 09:16:23 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 11:16:21 -0500
+        Fri, 20 Mar 2020 09:16:50 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 11:16:47 -0500
 From:   Grant Peltier <grantpeltier93@gmail.com>
 To:     linux@roeck-us.net, linux-hwmon@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     adam.vaughn.xh@renesas.com
-Subject: [PATCH v3 1/2] hwmon: (pmbus) add support for 2nd Gen Renesas
- digital multiphase
-Message-ID: <62c000adf0108aeb65d3f275f28eb26b690384aa.1584720563.git.grantpeltier93@gmail.com>
+Subject: [PATCH v3 2/2] docs: hwmon: Update documentation for isl68137 pmbus
+ driver
+Message-ID: <1588e5e89d6a9623464036cf8fbdb9b18785894b.1584720563.git.grantpeltier93@gmail.com>
 References: <cover.1584720563.git.grantpeltier93@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -76,210 +76,595 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend the isl68137 driver to provide support for 2nd generation Renesas
-digital multiphase voltage regulators.
+Update documentation to include reference information for newly
+supported 2nd generation Renesas digital multiphase voltage regulators.
+Also update branding from Intersil to Renesas.
 
 Signed-off-by: Grant Peltier <grantpeltier93@gmail.com>
 ---
- drivers/hwmon/pmbus/Kconfig    |   6 +-
- drivers/hwmon/pmbus/isl68137.c | 110 ++++++++++++++++++++++++++++-----
- 2 files changed, 98 insertions(+), 18 deletions(-)
+ Documentation/hwmon/isl68137.rst | 541 ++++++++++++++++++++++++++++++-
+ 1 file changed, 533 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index a9ea06204767..1e3e5a61ed9c 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -92,10 +92,10 @@ config SENSORS_IRPS5401
- 	  be called irps5401.
+diff --git a/Documentation/hwmon/isl68137.rst b/Documentation/hwmon/isl68137.rst
+index a5a7c8545c9e..cc4b61447b63 100644
+--- a/Documentation/hwmon/isl68137.rst
++++ b/Documentation/hwmon/isl68137.rst
+@@ -3,7 +3,7 @@ Kernel driver isl68137
  
- config SENSORS_ISL68137
--	tristate "Intersil ISL68137"
-+	tristate "Renesas Digital Multiphase Voltage Regulators"
- 	help
--	  If you say yes here you get hardware monitoring support for Intersil
--	  ISL68137.
-+	  If you say yes here you get hardware monitoring support for Renesas
-+	  digital multiphase voltage regulators.
+ Supported chips:
  
- 	  This driver can also be built as a module. If so, the module will
- 	  be called isl68137.
-diff --git a/drivers/hwmon/pmbus/isl68137.c b/drivers/hwmon/pmbus/isl68137.c
-index 515596c92fe1..47f6cce1da58 100644
---- a/drivers/hwmon/pmbus/isl68137.c
-+++ b/drivers/hwmon/pmbus/isl68137.c
-@@ -1,8 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * Hardware monitoring driver for Intersil ISL68137
-+ * Hardware monitoring driver for Renesas Digital Multiphase Voltage Regulators
-  *
-  * Copyright (c) 2017 Google Inc
-+ * Copyright (c) 2020 Renesas Electronics America
-  *
-  */
+-  * Intersil ISL68137
++  * Renesas ISL68137
  
-@@ -14,9 +15,19 @@
- #include <linux/module.h>
- #include <linux/string.h>
- #include <linux/sysfs.h>
+     Prefix: 'isl68137'
+ 
+@@ -11,19 +11,405 @@ Supported chips:
+ 
+     Datasheet:
+ 
+-      Publicly available at the Intersil website
+-      https://www.intersil.com/content/dam/Intersil/documents/isl6/isl68137.pdf
++      Publicly available at the Renesas website
++      https://www.renesas.com/us/en/www/doc/datasheet/isl68137.pdf
 +
- #include "pmbus.h"
- 
- #define ISL68137_VOUT_AVS	0x30
-+#define RAA_DMPVR2_READ_VMON	0xc8
++  * Renesas ISL68220
 +
-+enum versions {
-+	isl68137,
-+	raa_dmpvr2_1rail,
-+	raa_dmpvr2_2rail,
-+	raa_dmpvr2_3rail,
-+	raa_dmpvr2_hv,
-+};
- 
- static ssize_t isl68137_avs_enable_show_page(struct i2c_client *client,
- 					     int page,
-@@ -98,13 +109,30 @@ static const struct attribute_group enable_group = {
- 	.attrs = enable_attrs,
- };
- 
--static const struct attribute_group *attribute_groups[] = {
-+static const struct attribute_group *isl68137_attribute_groups[] = {
- 	&enable_group,
- 	NULL,
- };
- 
--static struct pmbus_driver_info isl68137_info = {
--	.pages = 2,
-+static int raa_dmpvr2_read_word_data(struct i2c_client *client, int page,
-+				     int reg)
-+{
-+	int ret;
++    Prefix: 'raa_dmpvr2_2rail'
 +
-+	switch (reg) {
-+	case PMBUS_VIRT_READ_VMON:
-+		ret = pmbus_read_word_data(client, page, RAA_DMPVR2_READ_VMON);
-+		break;
-+	default:
-+		ret = -ENODATA;
-+		break;
-+	}
++    Addresses scanned: -
 +
-+	return ret;
-+}
++    Datasheet:
 +
-+static struct pmbus_driver_info raa_dmpvr_info = {
-+	.pages = 3,
- 	.format[PSC_VOLTAGE_IN] = direct,
- 	.format[PSC_VOLTAGE_OUT] = direct,
- 	.format[PSC_CURRENT_IN] = direct,
-@@ -113,7 +141,7 @@ static struct pmbus_driver_info isl68137_info = {
- 	.format[PSC_TEMPERATURE] = direct,
- 	.m[PSC_VOLTAGE_IN] = 1,
- 	.b[PSC_VOLTAGE_IN] = 0,
--	.R[PSC_VOLTAGE_IN] = 3,
-+	.R[PSC_VOLTAGE_IN] = 2,
- 	.m[PSC_VOLTAGE_OUT] = 1,
- 	.b[PSC_VOLTAGE_OUT] = 0,
- 	.R[PSC_VOLTAGE_OUT] = 3,
-@@ -133,24 +161,76 @@ static struct pmbus_driver_info isl68137_info = {
- 	    | PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2
- 	    | PMBUS_HAVE_TEMP3 | PMBUS_HAVE_STATUS_TEMP
- 	    | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
--	    | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_POUT,
--	.func[1] = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
--	    | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_POUT,
--	.groups = attribute_groups,
-+	    | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_POUT
-+		| PMBUS_HAVE_VMON,
-+	.func[1] = PMBUS_HAVE_IIN | PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT
-+	    | PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP3 | PMBUS_HAVE_STATUS_TEMP
-+	    | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_IOUT
-+	    | PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_POUT,
-+	.func[2] = PMBUS_HAVE_IIN | PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT
-+	    | PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP3 | PMBUS_HAVE_STATUS_TEMP
-+	    | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_IOUT
-+	    | PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_POUT,
- };
- 
- static int isl68137_probe(struct i2c_client *client,
- 			  const struct i2c_device_id *id)
- {
--	return pmbus_do_probe(client, id, &isl68137_info);
-+	struct pmbus_driver_info *info;
++      Publicly available (after August 2020 launch) at the Renesas website
 +
-+	info = devm_kzalloc(&client->dev, sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+	memcpy(info, &raa_dmpvr_info, sizeof(*info));
++  * Renesas ISL68221
 +
-+	switch (id->driver_data) {
-+	case isl68137:
-+		info->pages = 2;
-+		info->R[PSC_VOLTAGE_IN] = 3;
-+		info->func[0] &= ~PMBUS_HAVE_VMON;
-+		info->func[1] = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
-+		    | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT
-+		    | PMBUS_HAVE_POUT;
-+		info->groups = isl68137_attribute_groups;
-+		break;
-+	case raa_dmpvr2_1rail:
-+		info->pages = 1;
-+		info->read_word_data = raa_dmpvr2_read_word_data;
-+		break;
-+	case raa_dmpvr2_2rail:
-+		info->pages = 2;
-+		info->read_word_data = raa_dmpvr2_read_word_data;
-+		break;
-+	case raa_dmpvr2_3rail:
-+		info->read_word_data = raa_dmpvr2_read_word_data;
-+		break;
-+	case raa_dmpvr2_hv:
-+		info->pages = 1;
-+		info->R[PSC_VOLTAGE_IN] = 1;
-+		info->m[PSC_VOLTAGE_OUT] = 2;
-+		info->R[PSC_VOLTAGE_OUT] = 2;
-+		info->m[PSC_CURRENT_IN] = 2;
-+		info->m[PSC_POWER] = 2;
-+		info->R[PSC_POWER] = -1;
-+		info->read_word_data = raa_dmpvr2_read_word_data;
-+		break;
-+	default:
-+		return -ENODEV;
-+	}
++    Prefix: 'raa_dmpvr2_3rail'
 +
-+	return pmbus_do_probe(client, id, info);
- }
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL68222
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL68223
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL68224
++
++    Prefix: 'raa_dmpvr2_3rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL68225
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL68226
++
++    Prefix: 'raa_dmpvr2_3rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL68227
++
++    Prefix: 'raa_dmpvr2_1rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL68229
++
++    Prefix: 'raa_dmpvr2_3rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL68233
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL68239
++
++    Prefix: 'raa_dmpvr2_3rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69222
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69223
++
++    Prefix: 'raa_dmpvr2_3rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69224
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69225
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69227
++
++    Prefix: 'raa_dmpvr2_3rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69228
++
++    Prefix: 'raa_dmpvr2_3rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69234
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69236
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69239
++
++    Prefix: 'raa_dmpvr2_3rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69242
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69243
++
++    Prefix: 'raa_dmpvr2_1rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69247
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69248
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69254
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69255
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69256
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69259
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69260
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69268
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69269
++
++    Prefix: 'raa_dmpvr2_3rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas ISL69298
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas RAA228000
++
++    Prefix: 'raa_dmpvr2_hv'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas RAA228004
++
++    Prefix: 'raa_dmpvr2_hv'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas RAA228006
++
++    Prefix: 'raa_dmpvr2_hv'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas RAA228228
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas RAA229001
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
++
++  * Renesas RAA229004
++
++    Prefix: 'raa_dmpvr2_2rail'
++
++    Addresses scanned: -
++
++    Datasheet:
++
++      Publicly available (after August 2020 launch) at the Renesas website
  
--static const struct i2c_device_id isl68137_id[] = {
--	{"isl68137", 0},
-+static const struct i2c_device_id raa_dmpvr_id[] = {
-+	{"isl68137", isl68137},
-+	{"raa_dmpvr2_1rail", raa_dmpvr2_1rail},
-+	{"raa_dmpvr2_2rail", raa_dmpvr2_2rail},
-+	{"raa_dmpvr2_3rail", raa_dmpvr2_3rail},
-+	{"raa_dmpvr2_hv", raa_dmpvr2_hv},
- 	{}
- };
+ Authors:
+       - Maxim Sloyko <maxims@google.com>
+       - Robert Lippert <rlippert@google.com>
+       - Patrick Venture <venture@google.com>
++      - Grant Peltier <grant.peltier.jg@renesas.com>
  
--MODULE_DEVICE_TABLE(i2c, isl68137_id);
-+MODULE_DEVICE_TABLE(i2c, raa_dmpvr_id);
+ Description
+ -----------
  
- /* This is the driver that will be inserted */
- static struct i2c_driver isl68137_driver = {
-@@ -159,11 +239,11 @@ static struct i2c_driver isl68137_driver = {
- 		   },
- 	.probe = isl68137_probe,
- 	.remove = pmbus_do_remove,
--	.id_table = isl68137_id,
-+	.id_table = raa_dmpvr_id,
- };
+-Intersil ISL68137 is a digital output 7-phase configurable PWM
+-controller with an AVSBus interface.
++This driver supports the Renesas ISL68137 and all 2nd generation Renesas
++digital multiphase voltage regulators (raa_dmpvr2). The ISL68137 is a digital
++output 7-phase configurable PWM controller with an AVSBus interface. 2nd
++generation devices are grouped into 4 distinct configurations: '1rail' for
++single-rail devices, '2rail' for dual-rail devices, '3rail' for 3-rail devices,
++and 'hv' for high voltage single-rail devices. Consult the individual datasheets
++for more information.
  
- module_i2c_driver(isl68137_driver);
+ Usage Notes
+ -----------
+@@ -33,10 +419,14 @@ devices explicitly.
  
- MODULE_AUTHOR("Maxim Sloyko <maxims@google.com>");
--MODULE_DESCRIPTION("PMBus driver for Intersil ISL68137");
-+MODULE_DESCRIPTION("PMBus driver for Renesas digital multiphase voltage regulators");
- MODULE_LICENSE("GPL");
+ The ISL68137 AVS operation mode must be enabled/disabled at runtime.
+ 
+-Beyond the normal sysfs pmbus attributes, the driver exposes a control attribute.
++Beyond the normal sysfs pmbus attributes, the driver exposes a control attribute
++for the ISL68137.
++
++For 2nd generation Renesas digital multiphase voltage regulators, only the
++normal sysfs pmbus attributes are supported.
+ 
+-Additional Sysfs attributes
+----------------------------
++ISL68137 sysfs attributes
++-------------------------
+ 
+ ======================= ====================================
+ avs(0|1)_enable		Controls the AVS state of each rail.
+@@ -78,3 +468,138 @@ temp[1-3]_crit_alarm	Chip temperature critical high alarm
+ temp[1-3]_max		Maximum temperature
+ temp[1-3]_max_alarm	Chip temperature high alarm
+ ======================= ====================================
++
++raa_dmpvr2_1rail/hv sysfs attributes
++------------------------------------
++
++======================= ==========================================
++curr1_label		"iin"
++curr1_input		Measured input current
++curr1_crit		Critical maximum current
++curr1_crit_alarm	Current critical high alarm
++
++curr2_label		"iout"
++curr2_input		Measured output current
++curr2_crit		Critical maximum current
++curr2_crit_alarm	Current critical high alarm
++
++in1_label		"vin"
++in1_input		Measured input voltage
++in1_lcrit		Critical minimum input voltage
++in1_lcrit_alarm		Input voltage critical low alarm
++in1_crit		Critical maximum input voltage
++in1_crit_alarm		Input voltage critical high alarm
++
++in2_label		"vmon"
++in2_input		Scaled VMON voltage read from the VMON pin
++
++in3_label		"vout"
++in3_input		Measured output voltage
++in3_lcrit		Critical minimum output voltage
++in3_lcrit_alarm         Output voltage critical low alarm
++in3_crit		Critical maximum output voltage
++in3_crit_alarm          Output voltage critical high alarm
++
++power1_label		"pin"
++power1_input		Measured input power
++power1_alarm		Input power high alarm
++
++power2_label	        "pout"
++power2_input	        Measured output power
++
++temp[1-3]_input		Measured temperature
++temp[1-3]_crit		Critical high temperature
++temp[1-3]_crit_alarm	Chip temperature critical high alarm
++temp[1-3]_max		Maximum temperature
++temp[1-3]_max_alarm	Chip temperature high alarm
++======================= ==========================================
++
++raa_dmpvr2_2rail sysfs attributes
++---------------------------------
++
++======================= ==========================================
++curr[1-2]_label		"iin[1-2]"
++curr[1-2]_input		Measured input current
++curr[1-2]_crit		Critical maximum current
++curr[1-2]_crit_alarm	Current critical high alarm
++
++curr[3-4]_label		"iout[1-2]"
++curr[3-4]_input		Measured output current
++curr[3-4]_crit		Critical maximum current
++curr[3-4]_crit_alarm	Current critical high alarm
++
++in1_label		"vin"
++in1_input		Measured input voltage
++in1_lcrit		Critical minimum input voltage
++in1_lcrit_alarm		Input voltage critical low alarm
++in1_crit		Critical maximum input voltage
++in1_crit_alarm		Input voltage critical high alarm
++
++in2_label		"vmon"
++in2_input		Scaled VMON voltage read from the VMON pin
++
++in[3-4]_label		"vout[1-2]"
++in[3-4]_input		Measured output voltage
++in[3-4]_lcrit		Critical minimum output voltage
++in[3-4]_lcrit_alarm	Output voltage critical low alarm
++in[3-4]_crit		Critical maximum output voltage
++in[3-4]_crit_alarm	Output voltage critical high alarm
++
++power[1-2]_label	"pin[1-2]"
++power[1-2]_input	Measured input power
++power[1-2]_alarm	Input power high alarm
++
++power[3-4]_label	"pout[1-2]"
++power[3-4]_input	Measured output power
++
++temp[1-5]_input		Measured temperature
++temp[1-5]_crit		Critical high temperature
++temp[1-5]_crit_alarm	Chip temperature critical high alarm
++temp[1-5]_max		Maximum temperature
++temp[1-5]_max_alarm	Chip temperature high alarm
++======================= ==========================================
++
++raa_dmpvr2_3rail sysfs attributes
++---------------------------------
++
++======================= ==========================================
++curr[1-3]_label		"iin[1-3]"
++curr[1-3]_input		Measured input current
++curr[1-3]_crit		Critical maximum current
++curr[1-3]_crit_alarm	Current critical high alarm
++
++curr[4-6]_label		"iout[1-3]"
++curr[4-6]_input		Measured output current
++curr[4-6]_crit		Critical maximum current
++curr[4-6]_crit_alarm	Current critical high alarm
++
++in1_label		"vin"
++in1_input		Measured input voltage
++in1_lcrit		Critical minimum input voltage
++in1_lcrit_alarm		Input voltage critical low alarm
++in1_crit		Critical maximum input voltage
++in1_crit_alarm		Input voltage critical high alarm
++
++in2_label		"vmon"
++in2_input		Scaled VMON voltage read from the VMON pin
++
++in[3-5]_label		"vout[1-3]"
++in[3-5]_input		Measured output voltage
++in[3-5]_lcrit		Critical minimum output voltage
++in[3-5]_lcrit_alarm	Output voltage critical low alarm
++in[3-5]_crit		Critical maximum output voltage
++in[3-5]_crit_alarm	Output voltage critical high alarm
++
++power[1-3]_label	"pin[1-3]"
++power[1-3]_input	Measured input power
++power[1-3]_alarm	Input power high alarm
++
++power[4-6]_label	"pout[1-3]"
++power[4-6]_input	Measured output power
++
++temp[1-7]_input		Measured temperature
++temp[1-7]_crit		Critical high temperature
++temp[1-7]_crit_alarm	Chip temperature critical high alarm
++temp[1-7]_max		Maximum temperature
++temp[1-7]_max_alarm	Chip temperature high alarm
++======================= ==========================================
 -- 
 2.20.1
 
