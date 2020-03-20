@@ -2,149 +2,132 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA22C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECE9C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C29A2076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 213EC2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:09:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YVr08bjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgCTDI5 (ORCPT
+        id S1726893AbgCTDJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 23:08:57 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12167 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726596AbgCTDI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 23:08:57 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7D6D63D2899F173E72D0;
-        Fri, 20 Mar 2020 11:08:52 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Fri, 20 Mar 2020
- 11:08:42 +0800
-Subject: Re: [PATCH v5 20/23] KVM: arm64: GICv4.1: Plumb SGI implementation
- selection in the distributor
-To:     Auger Eric <eric.auger@redhat.com>, Marc Zyngier <maz@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Robert Richter" <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-21-maz@kernel.org>
- <72832f51-bbde-8502-3e03-189ac20a0143@huawei.com>
- <4a06fae9c93e10351276d173747d17f4@kernel.org>
- <49995ec9-3970-1f62-5dfc-118563ca00fc@redhat.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <b98855a1-6300-d323-80f6-82d3b9854290@huawei.com>
-Date:   Fri, 20 Mar 2020 11:08:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 19 Mar 2020 23:09:42 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:47661 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726614AbgCTDJl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 23:09:41 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id E25955C00D8;
+        Thu, 19 Mar 2020 23:09:40 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 19 Mar 2020 23:09:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:message-id:mime-version:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=jBBs34
+        ifVHQ0aVecQlyYvVN7oUaD2V0VfvCaG76C/2c=; b=YVr08bjp5poGxs01hCJ8iZ
+        Mg8A978WUliOLV6tKVX/QW+nuVYoedFY8bSWcgaOrocmUdIAk7toA7j1IMY26ZMz
+        w5dwqL6RVIo6WVs8J88GGHKZ1BwK7PLqOimQqYYeCAvkSzlM4G09ZxouwQcyt6JY
+        UksDfti7CbwUHpiqopap6bcrDaWVdQhKNdH/AEUM/ST97c1F0+W6rj2WnOX+cwuA
+        cxtoLOrZkkoCGMDr+2VY0U2aW69Fd136cUpdtBeR9UvPqCsoCzgemebsTWXTLuAX
+        oYfxkqkv7SXVe98Yh+nmYIdu5OVBP7QOf4wHiNyurJ20iCoWYSl78ocrX2Sj+zCg
+        ==
+X-ME-Sender: <xms:9DN0XgTb57k-FI1iRGuhtqwsI7bVWb6E_d6Q3Q4d4JyEsVoCWzJc-A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudegtddgheejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffogggtohfgsehtkeertdertdejnecuhfhrohhmpeforghrvghk
+    ucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvh
+    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucfkphepledurdeihedrfeegrdef
+    feenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrg
+    hrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhm
+X-ME-Proxy: <xmx:9DN0XpL3bPRpU4iAoFhcTi8QWn-V6J-GIPuHJdAXN2EA53JLSbwnOg>
+    <xmx:9DN0XnObG_zP_4pClfj_ABVOIQkzcFh7lUFh0MAXDb70Cq8b0PfU1Q>
+    <xmx:9DN0XrzJ2aBuC-BbGGGfSd8ylxR9tSS9UR5TOVEjWVejta6BGZnjbQ>
+    <xmx:9DN0XjWAP_SLFfYETPh6ujhwj2HXbfo2FaKHboWP2_Cx35VpeHCboQ>
+Received: from localhost.localdomain (ip5b412221.dynamic.kabel-deutschland.de [91.65.34.33])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 76E073280059;
+        Thu, 19 Mar 2020 23:09:39 -0400 (EDT)
+From:   =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>
+To:     xen-devel@lists.xenproject.org
+Cc:     =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Simon Gaiser <simon@invisiblethingslab.com>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] xen-pciback: fix INTERRUPT_TYPE_* defines
+Date:   Fri, 20 Mar 2020 04:09:18 +0100
+Message-Id: <20200320030929.24735-1-marmarek@invisiblethingslab.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-In-Reply-To: <49995ec9-3970-1f62-5dfc-118563ca00fc@redhat.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Organization: Invisible Things Lab
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/20 4:38, Auger Eric wrote:
-> Hi Marc,
-> On 3/19/20 1:10 PM, Marc Zyngier wrote:
->> Hi Zenghui,
->>
->> On 2020-03-18 06:34, Zenghui Yu wrote:
->>> Hi Marc,
->>>
->>> On 2020/3/5 4:33, Marc Zyngier wrote:
->>>> The GICv4.1 architecture gives the hypervisor the option to let
->>>> the guest choose whether it wants the good old SGIs with an
->>>> active state, or the new, HW-based ones that do not have one.
->>>>
->>>> For this, plumb the configuration of SGIs into the GICv3 MMIO
->>>> handling, present the GICD_TYPER2.nASSGIcap to the guest,
->>>> and handle the GICD_CTLR.nASSGIreq setting.
->>>>
->>>> In order to be able to deal with the restore of a guest, also
->>>> apply the GICD_CTLR.nASSGIreq setting at first run so that we
->>>> can move the restored SGIs to the HW if that's what the guest
->>>> had selected in a previous life.
->>>
->>> I'm okay with the restore path.  But it seems that we still fail to
->>> save the pending state of vSGI - software pending_latch of HW-based
->>> vSGIs will not be updated (and always be false) because we directly
->>> inject them through ITS, so vgic_v3_uaccess_read_pending() can't
->>> tell the correct pending state to user-space (the correct one should
->>> be latched in HW).
->>>
->>> It would be good if we can sync the hardware state into pending_latch
->>> at an appropriate time (just before save), but not sure if we can...
->>
->> The problem is to find the "appropriate time". It would require to define
->> a point in the save sequence where we transition the state from HW to
->> SW. I'm not keen on adding more state than we already have.
-> 
-> may be we could use a dedicated device group/attr as we have for the ITS
-> save tables? the user space would choose.
+xen_pcibk_get_interrupt_type() assumes INTERRUPT_TYPE_NONE being 0
+(initialize ret to 0 and return as INTERRUPT_TYPE_NONE).
+Fix the definition to make INTERRUPT_TYPE_NONE really 0, and also shift
+other values to not leave holes.
+But also, do not assume INTERRUPT_TYPE_NONE being 0 anymore to avoid
+similar confusions in the future.
 
-It means that userspace will be aware of some form of GICv4.1 details
-(e.g., get/set vSGI state at HW level) that KVM has implemented.
-Is it something that userspace required to know? I'm open to this ;-)
+Fixes: 476878e4b2be ("xen-pciback: optionally allow interrupt enable flag writes")
+Signed-off-by: Marek Marczykowski-GÃ³recki <marmarek@invisiblethingslab.com>
+---
+Changes in v2:
+ - don't depend on INTERRUPT_TYPE_NONE being 0
+---
+ drivers/xen/xen-pciback/conf_space.c | 2 +-
+ drivers/xen/xen-pciback/conf_space.h | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-> 
-> Thanks
-> 
-> Eric
->>
->> But what we can do is to just ask the HW to give us the right state
->> on userspace access, at all times. How about this:
->>
->> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c
->> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
->> index 48fd9fc229a2..281fe7216c59 100644
->> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
->> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
->> @@ -305,8 +305,18 @@ static unsigned long
->> vgic_v3_uaccess_read_pending(struct kvm_vcpu *vcpu,
->>        */
->>       for (i = 0; i < len * 8; i++) {
->>           struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
->> +        bool state = irq->pending_latch;
->>
->> -        if (irq->pending_latch)
->> +        if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
->> +            int err;
->> +
->> +            err = irq_get_irqchip_state(irq->host_irq,
->> +                            IRQCHIP_STATE_PENDING,
->> +                            &state);
->> +            WARN_ON(err);
->> +        }
->> +
->> +        if (state)
->>               value |= (1U << i);
->>
->>           vgic_put_irq(vcpu->kvm, irq);
-
-Anyway this looks good to me and will do the right thing on a userspace
-save.
-
->>
->> I can add this to "KVM: arm64: GICv4.1: Add direct injection capability
->> to SGI registers".
-
-Thanks,
-Zenghui
+diff --git a/drivers/xen/xen-pciback/conf_space.c b/drivers/xen/xen-pciback/conf_space.c
+index b20e43e148ce..da51a5d34e6e 100644
+--- a/drivers/xen/xen-pciback/conf_space.c
++++ b/drivers/xen/xen-pciback/conf_space.c
+@@ -320,7 +320,7 @@ int xen_pcibk_get_interrupt_type(struct pci_dev *dev)
+ 		if (val & PCI_MSIX_FLAGS_ENABLE)
+ 			ret |= INTERRUPT_TYPE_MSIX;
+ 	}
+-	return ret;
++	return ret ?: INTERRUPT_TYPE_NONE;
+ }
+ 
+ void xen_pcibk_config_free_dyn_fields(struct pci_dev *dev)
+diff --git a/drivers/xen/xen-pciback/conf_space.h b/drivers/xen/xen-pciback/conf_space.h
+index 28c45180a12e..5fe431c79f25 100644
+--- a/drivers/xen/xen-pciback/conf_space.h
++++ b/drivers/xen/xen-pciback/conf_space.h
+@@ -65,10 +65,10 @@ struct config_field_entry {
+ 	void *data;
+ };
+ 
+-#define INTERRUPT_TYPE_NONE (1<<0)
+-#define INTERRUPT_TYPE_INTX (1<<1)
+-#define INTERRUPT_TYPE_MSI  (1<<2)
+-#define INTERRUPT_TYPE_MSIX (1<<3)
++#define INTERRUPT_TYPE_NONE (0)
++#define INTERRUPT_TYPE_INTX (1<<0)
++#define INTERRUPT_TYPE_MSI  (1<<1)
++#define INTERRUPT_TYPE_MSIX (1<<2)
+ 
+ extern bool xen_pcibk_permissive;
+ 
+-- 
+2.21.1
 
