@@ -6,39 +6,38 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05E5C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 905D8C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9175320754
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5CC20754
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:16:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbgCTNQn (ORCPT
+        id S1727444AbgCTNQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:16:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35753 "EHLO
+        Fri, 20 Mar 2020 09:16:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35754 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727405AbgCTNQl (ORCPT
+        with ESMTP id S1727422AbgCTNQn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:16:41 -0400
+        Fri, 20 Mar 2020 09:16:43 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFHVs-0004Ar-5Y
-        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 14:16:36 +0100
+        id 1jFHVu-0004AL-JF
+        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 14:16:38 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 2920D1040CC
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 14:16:29 +0100 (CET)
-Message-Id: <20200320131510.793641638@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id B2BA51040CB
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 14:16:28 +0100 (CET)
+Message-Id: <20200320131510.594671507@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 14:14:06 +0100
+Date:   Fri, 20 Mar 2020 14:14:04 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-crypto@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Tony Luck <tony.luck@intel.com>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, Paolo Bonzini <pbonzini@redhat.com>,
         Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
@@ -57,10 +56,11 @@ Cc:     x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         linux-mmc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [patch 21/22] hwrng: via_rng - Convert to new X86 CPU match macros
+        linux-pci@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org
+Subject: [patch 19/22] ASoC: Intel: Convert to new X86 CPU match macros
 References: <20200320131345.635023594@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -75,37 +75,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 The new macro set has a consistent namespace and uses C99 initializers
 instead of the grufty C89 ones.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: linux-crypto@vger.kernel.org
----
- drivers/char/hw_random/via-rng.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Get rid the of the local macro wrappers for consistency.
 
---- a/drivers/char/hw_random/via-rng.c
-+++ b/drivers/char/hw_random/via-rng.c
-@@ -209,20 +209,19 @@ static int __init mod_init(void)
- out:
- 	return err;
- }
-+module_init(mod_init);
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org
+---
+ sound/soc/intel/common/soc-intel-quirks.h |   14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
+
+--- a/sound/soc/intel/common/soc-intel-quirks.h
++++ b/sound/soc/intel/common/soc-intel-quirks.h
+@@ -15,13 +15,11 @@
+ #include <asm/intel-family.h>
+ #include <asm/iosf_mbi.h>
  
- static void __exit mod_exit(void)
- {
- 	hwrng_unregister(&via_rng);
- }
+-#define ICPU(model)	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
 -
--module_init(mod_init);
- module_exit(mod_exit);
+ #define SOC_INTEL_IS_CPU(soc, type)				\
+ static inline bool soc_intel_is_##soc(void)			\
+ {								\
+ 	static const struct x86_cpu_id soc##_cpu_ids[] = {	\
+-		ICPU(type),					\
++		X86_MATCH_INTEL_FAM6_MODEL(type, NULL),		\
+ 		{}						\
+ 	};							\
+ 	const struct x86_cpu_id *id;				\
+@@ -32,11 +30,11 @@ static inline bool soc_intel_is_##soc(vo
+ 	return false;						\
+ }
  
- static struct x86_cpu_id __maybe_unused via_rng_cpu_id[] = {
--	X86_FEATURE_MATCH(X86_FEATURE_XSTORE),
-+	X86_MATCH_FEATURE(X86_FEATURE_XSTORE, NULL),
- 	{}
- };
-+MODULE_DEVICE_TABLE(x86cpu, via_rng_cpu_id);
+-SOC_INTEL_IS_CPU(byt, INTEL_FAM6_ATOM_SILVERMONT);
+-SOC_INTEL_IS_CPU(cht, INTEL_FAM6_ATOM_AIRMONT);
+-SOC_INTEL_IS_CPU(apl, INTEL_FAM6_ATOM_GOLDMONT);
+-SOC_INTEL_IS_CPU(glk, INTEL_FAM6_ATOM_GOLDMONT_PLUS);
+-SOC_INTEL_IS_CPU(cml, INTEL_FAM6_KABYLAKE_L);
++SOC_INTEL_IS_CPU(byt, ATOM_SILVERMONT);
++SOC_INTEL_IS_CPU(cht, ATOM_AIRMONT);
++SOC_INTEL_IS_CPU(apl, ATOM_GOLDMONT);
++SOC_INTEL_IS_CPU(glk, ATOM_GOLDMONT_PLUS);
++SOC_INTEL_IS_CPU(cml, KABYLAKE_L);
  
- MODULE_DESCRIPTION("H/W RNG driver for VIA CPU with PadLock");
- MODULE_LICENSE("GPL");
--MODULE_DEVICE_TABLE(x86cpu, via_rng_cpu_id);
+ static inline bool soc_intel_is_byt_cr(struct platform_device *pdev)
+ {
 
