@@ -2,127 +2,92 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CBFC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E39FCC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07CE720754
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:30:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s09Wp38Y"
+	by mail.kernel.org (Postfix) with ESMTP id BF14A20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:33:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbgCTNal (ORCPT
+        id S1727195AbgCTNdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:30:41 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39236 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgCTNal (ORCPT
+        Fri, 20 Mar 2020 09:33:55 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35852 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbgCTNdz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:30:41 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a9so3277504wmj.4
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 06:30:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=s6NlNBz5JabYM7cmGqE8XzWKbyl9fJfmEfdQ5l/oU3Q=;
-        b=s09Wp38Yl9D/BXm38cmJgGPi0UqMy1rBmBFtHIfPgWs3qOVc4KyCW68gFgC6sqGOlB
-         jz/2CgAIG4Z86LceTEe+1zjlO/Fo1IECFE5A+avANLmx8T9hSj8HpV1PNp0HJ4nkbvr9
-         w/6J0RX5hWBJZHJkXMqtDVmhO7Oi3GPGv8l+Mw9OcKAQNTXnBhNgE65/RtWoz2KBhGCo
-         T6SZZwu/9P54Us9BE+P3EeQ4kpcOe+/TxL5F+jeppKCmwyECfpUfo9D+5HwthNn+XOZQ
-         2/+ahfHQtav6UCiN/qtcm9rOmsdcm1rRpK/30JxrAvC2jNt6WBWPBDuSuypXAshrAOCU
-         j4vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=s6NlNBz5JabYM7cmGqE8XzWKbyl9fJfmEfdQ5l/oU3Q=;
-        b=uaJV2iULPCNIWQLHmYt8zOzy0fK6VcpALhh74IashMR96CMjgl0UopF+O4CskeVgZ5
-         3ul3ss8bI+EPnabtY8PTfdWpG/ZwbCyFSk5+vhMcVamgd6YCS9n05OGIicAb1ePtWOfv
-         opYyxY0y9aJGxNWD9tc5vypS/OQil7WQzr4k18GOh9sOpGNgg6ZYADriD3VVfMwAsfrz
-         q88OwJua8D0eWMXj0MorlOSQkic1OBY9ncXoRGbuuHFv2/yysZpsU/jMuiDHu5bBm5T8
-         kl6T+eu8HDvjoBckOP2MYg12qzTkm0If0/hsH0HRlh5BXCk2bquoJPfVS76W6Ics5GQh
-         3rNA==
-X-Gm-Message-State: ANhLgQ1Y9LitD8QBLlKeFrVrBmLG9o1unsv3LJsrQS8Jf6V09mnhHdvu
-        6j74Iv6X+dtSftSkzWQRGhS6ZQ==
-X-Google-Smtp-Source: ADFU+vvlGfEGMnbI0JopCMtHtW1bL0mgS+eqdDxppBiwUxn2gHI7t8tKpw60msVbIuQpZZ91pK0jiA==
-X-Received: by 2002:a7b:cf03:: with SMTP id l3mr10440117wmg.139.1584711038190;
-        Fri, 20 Mar 2020 06:30:38 -0700 (PDT)
-Received: from dell ([2.27.35.213])
-        by smtp.gmail.com with ESMTPSA id i4sm8758565wrm.32.2020.03.20.06.30.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 06:30:37 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 13:31:23 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v11 10/12] backlight: pwm_bl: Use 64-bit division function
-Message-ID: <20200320133123.GD5477@dell>
-References: <cover.1584667964.git.gurus@codeaurora.org>
- <17fc1dcf8b9b392d1e37dc7e3e67409e3c502840.1584667964.git.gurus@codeaurora.org>
+        Fri, 20 Mar 2020 09:33:55 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jFHmO-0004US-6J; Fri, 20 Mar 2020 14:33:40 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 98800100375; Fri, 20 Mar 2020 14:33:39 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     syzbot <syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com>,
+        bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, rkrcmar@redhat.com,
+        syzkaller-bugs@googlegroups.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, x86@kernel.org
+Subject: Re: WARNING in vcpu_enter_guest
+In-Reply-To: <6686bde5-c1e8-5be5-f27a-61403c419a91@redhat.com>
+References: <000000000000f965b8059877e5e6@google.com> <00000000000081861f05a132b9cd@google.com> <20200319144952.GB11305@linux.intel.com> <20be9560-fce7-1495-3a83-e2b56dbc2389@redhat.com> <20200319173549.GC11305@linux.intel.com> <20200319173927.GD11305@linux.intel.com> <cd32ee6d-f30d-b221-8126-cf995ffca52e@redhat.com> <87k13f516q.fsf@nanos.tec.linutronix.de> <6686bde5-c1e8-5be5-f27a-61403c419a91@redhat.com>
+Date:   Fri, 20 Mar 2020 14:33:39 +0100
+Message-ID: <87tv2j2lsc.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <17fc1dcf8b9b392d1e37dc7e3e67409e3c502840.1584667964.git.gurus@codeaurora.org>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Mar 2020, Guru Das Srinagesh wrote:
+Paolo Bonzini <pbonzini@redhat.com> writes:
+> On 20/03/20 01:18, Thomas Gleixner wrote:
+>>> No, it is possible to do that depending on the clock setup on the live
+>>> migration source.  You could cause the warning anyway by setting the
+>>> clock to a very high (signed) value so that kernel_ns + kvmclock_offset
+>>> overflows.
+>>
+>> If that overflow happens, then the original and the new host have an
+>> uptime difference in the range of >200 hundreds of years. Very realistic
+>> scenario...
+>> 
+>> Of course this can happen if you feed crap into the interface, but do
+>> you really think that forwarding all crap to a guest is the right thing
+>> to do?
+>> 
+>> As we all know the hypervisor orchestration stuff is perfect and would
+>> never feed crap into the kernel which happily proliferates that crap to
+>> the guest...
+>
+> But the point is, is there a sensible way to detect it?  Only allowing
+> >= -2^62 and < 2^62 or something like that is an ad hoc fix for a
+> warning that probably will never trigger outside fuzzing.  I would
+> expect that passing the wrong sign is a more likely mistake than being
+> off by 2^63.
+>
+> This data is available everywhere between strace, kernel tracepoints and
+> QEMU tracepoints or guest checkpoint (live migration) data.  I just
+> don't see much advantage in keeping the warning.
 
-> Since the PWM framework is switching struct pwm_state.period's datatype
-> to u64, prepare for this transition by using div_u64 to handle a 64-bit
-> dividend instead of a straight division operation.
-> 
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> Cc: Jingoo Han <jingoohan1@gmail.com>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Cc: linux-pwm@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-fbdev@vger.kernel.org
-> 
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
->  drivers/video/backlight/pwm_bl.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+The warning is useless. But you want a sanity check in the ioctl and
+return -EMORON if it is out of bounds simply because the guest will
+malfunction if your offset is bogus. Look at the timekeeping and time
+namespace sanity checks.
 
-Can this patch be taken on its own?
+Thanks,
 
-> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> index efb4efc..3e5dbcf 100644
-> --- a/drivers/video/backlight/pwm_bl.c
-> +++ b/drivers/video/backlight/pwm_bl.c
-> @@ -625,7 +625,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
->  		pb->scale = data->max_brightness;
->  	}
->  
-> -	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
-> +	pb->lth_brightness = data->lth_brightness * (div_u64(state.period,
-> +				pb->scale));
->  
->  	props.type = BACKLIGHT_RAW;
->  	props.max_brightness = data->max_brightness;
+        tglx
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
+
