@@ -2,96 +2,89 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDE2C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BD3C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B982020739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C216020773
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:06:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584727569;
+	bh=yp6Fom7/yku8A2ZiuJodg4eNORs8y5P9+1DLpLiuzU8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=G00MAWKorBdAZZVcDH4en0Tfs9LoKOL27IEgpnddrt3DQNwISm/9mId2n+iLK9DdO
+	 LPksJJdmPrq+EOG/lpOOCIorIxyrvBM4SDavl9HwYY1YrRVIX4fN9jbanWQoBUIMF7
+	 SO6yFUe5WV/nopw+THKstQJG5v1EVdHD/Qe1/wWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbgCTSCT (ORCPT
+        id S1726979AbgCTSGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:02:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:55122 "EHLO foss.arm.com"
+        Fri, 20 Mar 2020 14:06:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726666AbgCTSCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:02:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BC5C1FB;
-        Fri, 20 Mar 2020 11:02:19 -0700 (PDT)
-Received: from [10.37.12.158] (unknown [10.37.12.158])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A11EF3F305;
-        Fri, 20 Mar 2020 11:02:17 -0700 (PDT)
-Subject: Re: [PATCH 2/6] arm64/cpufeature: Add DIT and CSV2 feature bits in
- ID_PFR0 register
-To:     anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will@kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com
-References: <1580215149-21492-1-git-send-email-anshuman.khandual@arm.com>
- <1580215149-21492-3-git-send-email-anshuman.khandual@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <fc6a3044-4ca7-8a37-d948-498d0d89a426@arm.com>
-Date:   Fri, 20 Mar 2020 18:07:01 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        id S1725446AbgCTSGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 14:06:08 -0400
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D983E20739;
+        Fri, 20 Mar 2020 18:06:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584727568;
+        bh=yp6Fom7/yku8A2ZiuJodg4eNORs8y5P9+1DLpLiuzU8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0t+YdURE3JanVJ6MrOTl2uJULL3rYmZJFZXo6r3CxueI9GjL9PUT3EkqqU8ut8Ri0
+         3Vdyvk5NYZFw64VfzX6XcP4lzURWmrPoD76h7yB++qk5TGdK2bjuOgU/gAr6guOYN4
+         W0CdiYp7c8ZIWpA071YXlbI/nsTvx5CSM2Uaey+8=
+Received: by mail-qv1-f54.google.com with SMTP id o18so3464812qvf.1;
+        Fri, 20 Mar 2020 11:06:07 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0ud2VlrQrOmmULMXUWYAW8pisBx/e3MtCkm7KcFAXTDWCokWPC
+        wHB7TKMdtIY027JQYQxmb00EzofNFG/fRwaTtg==
+X-Google-Smtp-Source: ADFU+vvYx1xhQtLz6A1KIug0vLHM4f1NO+sqNMOQFA87tKUVNVLKmGv10+EhK/AOJ+8fVdPqLc+hLhLeF/am0yONDGM=
+X-Received: by 2002:a05:6214:a6f:: with SMTP id ef15mr9213953qvb.79.1584727567033;
+ Fri, 20 Mar 2020 11:06:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1580215149-21492-3-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200229160507.31309-1-devik@eaxlabs.cz> <20200229160507.31309-2-devik@eaxlabs.cz>
+ <20200310190054.GA2826@bogus>
+In-Reply-To: <20200310190054.GA2826@bogus>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 20 Mar 2020 12:05:53 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK8+M=Vg0PiDXP2f1LrEp4hSVea6piAASMGu1H=pxme6Q@mail.gmail.com>
+Message-ID: <CAL_JsqK8+M=Vg0PiDXP2f1LrEp4hSVea6piAASMGu1H=pxme6Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: serial: Add st,swap to stm32-usart
+To:     Martin Devera <devik@eaxlabs.cz>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/STM32 ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Mark Rutland
+On Tue, Mar 10, 2020 at 1:00 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Sat, 29 Feb 2020 17:05:07 +0100, Martin Devera wrote:
+> > Add new st,swap property to allow for RX & TX pin swapping.
+> >
+> > Signed-off-by: Martin Devera <devik@eaxlabs.cz>
+> > ---
+> >  Documentation/devicetree/bindings/serial/st,stm32-usart.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-On 01/28/2020 12:39 PM, Anshuman Khandual wrote:
-> Enable DIT and CSV2 feature bits in ID_PFR0 register as per ARM DDI 0487E.a
-> specification. Except RAS and AMU, all other feature bits are now enabled.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+I take this back as there's a 2nd binding (Qcom GENI) doing swapping.
+So can you use 'rx-tx-swap' instead.
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
-> ---
->   arch/arm64/include/asm/sysreg.h | 3 +++
->   arch/arm64/kernel/cpufeature.c  | 2 ++
->   2 files changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> index 054aab7ebf1b..469d61c8fabf 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -718,6 +718,9 @@
->   #define ID_ISAR6_DP_SHIFT		4
->   #define ID_ISAR6_JSCVT_SHIFT		0
->   
-> +#define ID_PFR0_DIT_SHIFT		24
-> +#define ID_PFR0_CSV2_SHIFT		16
-> +
->   #define ID_PFR2_SSBS_SHIFT		4
->   #define ID_PFR2_CSV3_SHIFT		0
->   
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index c1e837fc8f97..9e4dab15c608 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -341,6 +341,8 @@ static const struct arm64_ftr_bits ftr_id_isar6[] = {
->   };
->   
->   static const struct arm64_ftr_bits ftr_id_pfr0[] = {
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_DIT_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_CSV2_SHIFT, 4, 0),
->   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 12, 4, 0),		/* State3 */
->   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 8, 4, 0),		/* State2 */
->   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),		/* State1 */
-> 
-
+Rob
