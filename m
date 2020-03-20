@@ -2,108 +2,216 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713F7C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876F0C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535A120754
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55BD120754
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:37:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nSyzmw4R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgCTLgB (ORCPT
+        id S1727101AbgCTLhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 07:36:01 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48830 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726814AbgCTLgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 07:36:00 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 83C19E8B7FC2A4E3E951;
-        Fri, 20 Mar 2020 19:35:48 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 20 Mar 2020
- 19:35:41 +0800
-Subject: Re: [PATCH v5 23/23] KVM: arm64: GICv4.1: Expose HW-based SGIs in
- debugfs
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Auger Eric <eric.auger@redhat.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        Fri, 20 Mar 2020 07:37:15 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41274 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726976AbgCTLhO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 07:37:14 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02KBb5Xh099445;
+        Fri, 20 Mar 2020 06:37:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584704225;
+        bh=joxAB+O4SqQZwX3n4Af5CO92e1MegnF30hqTdkdbGSg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nSyzmw4RlT/aBrT+NFcgF7HfFhJgenxhVnBG9RvS6CPQtZxQobcpEhWdJSXuI0dVz
+         6zsc5ufVb1CAlIQkFNtr5buQv2uWoaCaIXX1h0XBRIu0ftrAIc6NDXl7vFWa8z3OBx
+         aq5CHeyXHc2FcqnhjxntX3DVdQFRCwcLwaMBV3+A=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02KBb5q5060695
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Mar 2020 06:37:05 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Mar 2020 06:37:05 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Mar 2020 06:37:05 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02KBb2NS099381;
+        Fri, 20 Mar 2020 06:37:03 -0500
+Subject: Re: [PATCH net-next v5 00/11] net: ethernet: ti: add networking
+ support for k3 am65x/j721e soc
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>
+CC:     Murali Karicheri <m-karicheri2@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Robert Richter" <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-24-maz@kernel.org>
- <4cb4c3d4-7b02-bb77-cd7a-c185346b6a2f@redhat.com>
- <45c282bddd43420024633943c1befac3@kernel.org>
- <e1a1e537-9f8e-5cfb-0132-f796e8bf06c9@huawei.com>
- <b63950513f519d9a04f9719f5aa6a2db@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <8d7fdb7f-7a21-da22-52a2-51ee8ac9393f@huawei.com>
-Date:   Fri, 20 Mar 2020 19:35:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200319162806.25705-1-grygorii.strashko@ti.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <4146920e-5ca7-161c-badc-711683aa5a9b@ti.com>
+Date:   Fri, 20 Mar 2020 13:37:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <b63950513f519d9a04f9719f5aa6a2db@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200319162806.25705-1-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Hi Grygorii,
 
-On 2020/3/20 17:09, Marc Zyngier wrote:
-> Hi Zenghui,
+On 19/03/2020 18.27, Grygorii Strashko wrote:
+> Hi
 > 
-> On 2020-03-20 04:38, Zenghui Yu wrote:
->> Hi Marc,
->>
->> On 2020/3/19 23:21, Marc Zyngier wrote:
->>> With GICv4.1, you can introspect the HW state for SGIs. You can also
->>> look at the vLPI state by peeking at the virtual pending table, but
->>> you'd need to unmap the VPE first,
->>
->> Out of curiosity, could you please point me to the "unmap the VPE"
->> requirement in the v4.1 spec? I'd like to have a look.
+> This v5 series adds basic networking support support TI K3 AM654x/J721E SoC which
+> have integrated Gigabit Ethernet MAC (Media Access Controller) into device MCU
+> domain and named MCU_CPSW0 (CPSW2G NUSS).
 > 
-> Sure. See IHI0069F, 5.3.19 (VMAPP GICv4.1), "Caching of virtual LPI data
-> structures", and the bit that says:
+> Formally TRMs refer CPSW2G NUSS as two-port Gigabit Ethernet Switch subsystem
+> with port 0 being the CPPI DMA host port and port 1 being the external Ethernet
+> port, but for 1 external port device it's just Port 0 <-> ALE <-> Port 1 and it's
+> rather device with HW filtering capabilities then actually switching device.
+> It's expected to have similar devices, but with more external ports.
 > 
-> "A VMAPP with {V,Alloc}=={0,1} cleans and invalidates any caching of the
-> Virtual Pending Table and Virtual Configuration Table associated with the
-> vPEID held in the GIC"
+> The new Host port 0 Communications Port Programming Interface (CPPI5) is
+> operating by TI AM654x/J721E NAVSS Unified DMA Peripheral Root Complex (UDMA-P)
+> controller [1].
 > 
-> which is what was crucially missing from the GICv4.0 spec (it doesn't say
-> when the GIC is done writing to memory).
-
-OK. Thanks for the pointer!
-
+> The CPSW2G contains below modules for which existing code is re-used:
+>  - MAC SL: cpsw_sl.c
+>  - Address Lookup Engine (ALE): cpsw_ale.c, basically compatible with K2 66AK2E/G
+>  - Management Data Input/Output interface (MDIO): davinci_mdio.c, fully 
+>    compatible with TI AM3/4/5 devices
 > 
-> Side note: it'd be good to know what the rules are for your own GICv4
-> implementations, so that we can at least make sure the current code is 
-> safe.
+> Basic features supported by CPSW2G NUSS driver:
+>  - VLAN support, 802.1Q compliant, Auto add port VLAN for untagged frames on
+>    ingress, Auto VLAN removal on egress and auto pad to minimum frame size.
+>  - multicast filtering
+>  - promisc mode
+>  - TX multiq support in Round Robin or Fixed priority modes
+>  - RX checksum offload for non-fragmented IPv4/IPv6 TCP/UDP packets
+>  - TX checksum offload support for IPv4/IPv6 TCP/UDP packets (J721E only).
+> 
+> Features under development:
+>  - Support for IEEE 1588 Clock Synchronization. The CPSW2G NUSS includes new
+>    version of Common Platform Time Sync (CPTS)
+>  - tc-mqprio: priority level Quality Of Service (QOS) support (802.1p)
+>  - tc-cbs: Support for Audio/Video Bridging (P802.1Qav/D6.0) HW shapers
+>  - tc-taprio: IEEE 802.1Qbv/D2.2 Enhancements for Scheduled Traffic
+>  - frame preemption: IEEE P902.3br/D2.0 Interspersing Express Traffic, 802.1Qbu
+>  - extended ALE features: classifier/policers, auto-aging
+> 
+> Patches 1-6 are intended for netdev, Patches 7-11 are intended for K3 Platform
+> tree and provided here for testing purposes.
 
-As far as I know, there will be some clean and invalidate operations
-when v4.0 VPENDBASER.Valid gets programmed. But not sure about behaviors
-on VMAPP (unmap), it may be a totally v4.1 stuff. I'll have a talk with
-our SOC team.
+Needed to pick two patches:
+arm64: dts: ti: k3-j721e-mcu: add scm node and phy-gmii-sel nodes
+arm64: dts: ti: k3-am65-mcu: add phy-gmii-sel node
 
-But how can the current code be unsafe? Is anywhere in the current code
-will peek/poke the vpt (whilst GIC continues writing things into it)?
+With those applied, NFS rootfs is working on top of linux-next, pretty cool!
 
+Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-Thanks,
-Zenghui
+> Changes in v5:
+>  - renamed files k3-udma-desc-pool.*  k3-udma-desc-pool to k3-cppi-desc-pool.*,
+>    and API to k3_cppi_desc_pool_* as requested by Peter Ujfalusi <peter.ujfalusi@ti.com>
+>  - fixed copy-paste err in am65_cpsw_nuss_ndo_slave_set_rx_mode() which blocked
+>    recieving of mcast frames.
+>  - added Tested-by: Murali Karicheri <m-karicheri2@ti.com> 
+> 
+> Changes in v4:
+>  - fixed minor comments from Jakub Kicinski <kuba@kernel.org>
+>  - dependencies resolved: required phy-rmii-sel changes [2] queued for merge
+>    except one [3] which is included in this series with Kishon's ask.
+> 
+> Changes in v3:
+>  - add ARM64 defconfig changes for testing purposes
+>  - fixed DT yaml definition
+>  - fixed comments from Jakub Kicinski <kuba@kernel.org>
+> 
+> Changes in v2:
+>  - fixed DT yaml definition
+>  - fixed comments from David Miller
+> 
+> v4: https://patchwork.ozlabs.org/cover/1256092/
+> v3: https://patchwork.ozlabs.org/cover/1254568/
+> v2: https://patchwork.ozlabs.org/cover/1250674/
+> v1: https://lwn.net/Articles/813087/
+> 
+> TRMs:
+>  AM654: http://www.ti.com/lit/ug/spruid7e/spruid7e.pdf
+>  J721E: http://www.ti.com/lit/ug/spruil1a/spruil1a.pdf
+> 
+> Preliminary documentation can be found at:
+>  http://software-dl.ti.com/processor-sdk-linux/esd/docs/latest/linux/Foundational_Components/Kernel/Kernel_Drivers/Network/K3_CPSW2g.html
+> 
+> [1] https://lwn.net/Articles/808030/
+> [2] https://lkml.org/lkml/2020/2/22/100
+> [3] https://lkml.org/lkml/2020/3/3/724
+> Grygorii Strashko (11):
+>   phy: ti: gmii-sel: simplify config dependencies between net drivers
+>     and gmii phy
+>   net: ethernet: ti: ale: fix seeing unreg mcast packets with promisc
+>     and allmulti disabled
+>   net: ethernet: ti: ale: add support for mac-only mode
+>   net: ethernet: ti: ale: am65: add support for default thread cfg
+>   dt-binding: ti: am65x: document mcu cpsw nuss
+>   net: ethernet: ti: introduce am65x/j721e gigabit eth subsystem driver
+>   arm64: dts: ti: k3-am65-mcu: add cpsw nuss node
+>   arm64: dts: k3-am654-base-board: add mcu cpsw nuss pinmux and phy defs
+>   arm64: dts: ti: k3-j721e-mcu: add mcu cpsw nuss node
+>   arm64: dts: ti: k3-j721e-common-proc-board: add mcu cpsw nuss pinmux
+>     and phy defs
+>   arm64: defconfig: ti: k3: enable dma and networking
+> 
+>  .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   |  226 ++
+>  arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |   49 +
+>  arch/arm64/boot/dts/ti/k3-am65.dtsi           |    1 +
+>  .../arm64/boot/dts/ti/k3-am654-base-board.dts |   42 +
+>  .../dts/ti/k3-j721e-common-proc-board.dts     |   43 +
+>  .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |   49 +
+>  arch/arm64/boot/dts/ti/k3-j721e.dtsi          |    1 +
+>  arch/arm64/configs/defconfig                  |    3 +
+>  drivers/net/ethernet/ti/Kconfig               |   20 +-
+>  drivers/net/ethernet/ti/Makefile              |    3 +
+>  drivers/net/ethernet/ti/am65-cpsw-ethtool.c   |  747 +++++++
+>  drivers/net/ethernet/ti/am65-cpsw-nuss.c      | 1965 +++++++++++++++++
+>  drivers/net/ethernet/ti/am65-cpsw-nuss.h      |  142 ++
+>  drivers/net/ethernet/ti/cpsw_ale.c            |   38 +
+>  drivers/net/ethernet/ti/cpsw_ale.h            |    4 +
+>  drivers/net/ethernet/ti/k3-cppi-desc-pool.c   |  126 ++
+>  drivers/net/ethernet/ti/k3-cppi-desc-pool.h   |   30 +
+>  drivers/phy/ti/Kconfig                        |    3 -
+>  18 files changed, 3487 insertions(+), 5 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+>  create mode 100644 drivers/net/ethernet/ti/am65-cpsw-ethtool.c
+>  create mode 100644 drivers/net/ethernet/ti/am65-cpsw-nuss.c
+>  create mode 100644 drivers/net/ethernet/ti/am65-cpsw-nuss.h
+>  create mode 100644 drivers/net/ethernet/ti/k3-cppi-desc-pool.c
+>  create mode 100644 drivers/net/ethernet/ti/k3-cppi-desc-pool.h
+> 
 
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
