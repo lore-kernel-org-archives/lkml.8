@@ -2,164 +2,112 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051E8C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260F5C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6A4F20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:04:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584723883;
-	bh=VH3g1gFndfzl5vdDr5dD8kRr/B9u2LZmudWDxRf8Mf4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Q+wXzI2qX7h13UkCFFkaV/HUsV2GDQGXwjHw9v1tXg/aX5EZvLCtx1yqkwfcucykU
-	 HLFY7T6qXfBvTjW8SAaUvaKNGTnDWn5fTvcA1/tx5bgOYYRgp5L6h8bd/ocxHKNcyu
-	 djKI3NJPqsQcHnA2FjMki4hht+L7cSGAkCeL2aek=
+	by mail.kernel.org (Postfix) with ESMTP id EF16F20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:05:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bernat.ch header.i=@bernat.ch header.b="JaSJ2a1S";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SolwAbVW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgCTREm (ORCPT
+        id S1727444AbgCTRF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:04:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726953AbgCTREm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:04:42 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3B2320724;
-        Fri, 20 Mar 2020 17:04:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584723880;
-        bh=VH3g1gFndfzl5vdDr5dD8kRr/B9u2LZmudWDxRf8Mf4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=chI1eSiJFrdkIi5LJcaLEaVvVxXAWRVGxOpx+q9Swlg9tOrOEmFCuIKtuCujay0Ib
-         KS4zuFbuiDM/Zp+Thlx8qI1R8mAJSGJrG66CF6oV4nBjeOtA5s0r2bHoewD3/OWOuP
-         aTU8IoqrvICaq2AaIFHhxdeJpEAL6/suUFhl0BCo=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 9461635226B4; Fri, 20 Mar 2020 10:04:40 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 10:04:40 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+792dec47d693ccdc05a0@syzkaller.appspotmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: linux-next build error (8)
-Message-ID: <20200320170440.GR3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <000000000000ae2ab305a123f146@google.com>
- <CACT4Y+a_d=5TNZth0dPov0B7tB5T9bAzWXBj1HjhXdn-=0KOOg@mail.gmail.com>
- <20200318214109.GV3199@paulmck-ThinkPad-P72>
- <CACT4Y+ZhP_Qu+WZ4t2dLjd__H+rUKCTRCNoghvW9Uf3QQYRcNg@mail.gmail.com>
- <20200319150414.GD3199@paulmck-ThinkPad-P72>
- <CACT4Y+YHQQWeeW44NYAxX+fFU6RyvFbbmcig1q8NSE7yV0zgjA@mail.gmail.com>
- <20200320162650.GP3199@paulmck-ThinkPad-P72>
- <ef4ec876-8b78-3f4a-a3fb-6dbc038e92df@infradead.org>
+        Fri, 20 Mar 2020 13:05:56 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:34833 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726953AbgCTRF4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 13:05:56 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 38314641;
+        Fri, 20 Mar 2020 13:05:55 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Fri, 20 Mar 2020 13:05:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bernat.ch; h=
+        from:to:cc:subject:references:date:in-reply-to:message-id
+        :mime-version:content-type:content-transfer-encoding; s=fm2; bh=
+        amfe8YKfDyEVVeIYxRxirnjNRunqadNgHmLYG0QZs8I=; b=JaSJ2a1Sj92pLJ+l
+        y+GlM9GoggZQvguJgG89FEGKaKWkVYAdC1DaomM7iT1ypG2ANZ1opY6zKLYnpuGE
+        wlHRGVBlMA25JsQIn9/1+T1xMWyq2QV/XQFSpCDFPBmiUhL0aCQknayuyrjfM3e7
+        LlkCsaOAMvVVNqAQz8jPCvHNm1U+xS2Oxj853XN6imKH8QX43Yp5YpWDjbrWnHWj
+        o2z4elZmU2fHz4h67QqXmpKVtbFdKL7pVq89KJQHoUm8/7BD1Q/5lF20NwnYpzwy
+        2N/5+FtozHqGS9jk4yizF9sXzc+ntLyhu31lqGrWnthI+Y08N7S41lDGXtrQM5yx
+        ggEORA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=amfe8YKfDyEVVeIYxRxirnjNRunqadNgHmLYG0QZs
+        8I=; b=SolwAbVWKyo3/q+nYh8nk1f+klb3XqlF9mF9U1HNmxsFdM6S0NsrKK1/w
+        wCYCaBI/nOJlX5o+xr13OzfAtzHrZZj04lFGfLmvCPTc/trrcNVe8nu3eoC9qivW
+        bGVWM3Jj6q/2v6xv+9PzazmI5U2SiXimICNYaQaUtr6FaVmKAI6cUOahWeh4PgaH
+        Qq8E3WaJ9K6ZOKrdpdrMzeAZ+6Mm8TW6NaKv0GeY/qbYaz5QXlCGjvbEafLdiSMG
+        fEvWoUM7t049gWFk++EdHYz56iFc9rbKscxbcLhfRD9i+MU/uhm+pw4KxoeKBqKA
+        qrQSCLsaKnr4xMRAHWU41UtaooMfQ==
+X-ME-Sender: <xms:8vd0Xs1nRAqI2MuHLyPduPDHZATwbVmvg4bVUCqIxGtzDhw5TooyrA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeguddgleehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufhfffgjkfgfgggtgfesthekredttderjeenucfhrhhomhepgghinhgt
+    vghnthcuuegvrhhnrghtuceovhhinhgtvghnthessggvrhhnrghtrdgthheqnecukfhppe
+    ekvddruddvgedrvddvfedrkeefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
+    pehmrghilhhfrhhomhepvhhinhgtvghnthessggvrhhnrghtrdgthh
+X-ME-Proxy: <xmx:8vd0Xkc4fKe0uEJT-KC4TbOoQiexQy9gLe8Ha7IaM4JuGpBTPidB0Q>
+    <xmx:8vd0XsM36jZVBZHqdyPfwqJHQmJhagg0YXTZ0yR2_6TccEOapyfhlA>
+    <xmx:8vd0XgVZV-Xnl4cvcmmiHK2skDMnX1WnK8DT6cYc-rxUoiI2mTNiLw>
+    <xmx:8vd0XiNd_AxVYBjGx5kWBPevIdoJHiWhgTXiV918UyFbEeTYa3bQDA>
+Received: from neo.luffy.cx (lfbn-idf1-1-140-83.w82-124.abo.wanadoo.fr [82.124.223.83])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0C8043280063;
+        Fri, 20 Mar 2020 13:05:54 -0400 (EDT)
+Received: by neo.luffy.cx (Postfix, from userid 500)
+        id E59C4A91; Fri, 20 Mar 2020 18:05:52 +0100 (CET)
+From:   Vincent Bernat <vincent@bernat.ch>
+To:     Kieran Bingham <kbingham@kernel.org>
+Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scripts/gdb: replace "is 0" by "== 0"
+References: <20200320163820.3634106-1-vincent@bernat.ch>
+        <55dae299-a5a0-6e11-c966-1d8dcb46c452@kernel.org>
+Date:   Fri, 20 Mar 2020 18:05:52 +0100
+In-Reply-To: <55dae299-a5a0-6e11-c966-1d8dcb46c452@kernel.org> (Kieran
+        Bingham's message of "Fri, 20 Mar 2020 16:47:19 +0000")
+Message-ID: <m3wo7f553j.fsf@bernat.ch>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ef4ec876-8b78-3f4a-a3fb-6dbc038e92df@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 09:34:13AM -0700, Randy Dunlap wrote:
-> On 3/20/20 9:26 AM, Paul E. McKenney wrote:
-> > On Fri, Mar 20, 2020 at 04:38:54PM +0100, Dmitry Vyukov wrote:
-> >> On Thu, Mar 19, 2020 at 4:04 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >>>
-> >>> On Thu, Mar 19, 2020 at 08:13:35AM +0100, Dmitry Vyukov wrote:
-> >>>> On Wed, Mar 18, 2020 at 10:41 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >>>>>
-> >>>>> On Wed, Mar 18, 2020 at 09:54:07PM +0100, Dmitry Vyukov wrote:
-> >>>>>> On Wed, Mar 18, 2020 at 5:57 PM syzbot
-> >>>>>> <syzbot+792dec47d693ccdc05a0@syzkaller.appspotmail.com> wrote:
-> >>>>>>>
-> >>>>>>> Hello,
-> >>>>>>>
-> >>>>>>> syzbot found the following crash on:
-> >>>>>>>
-> >>>>>>> HEAD commit:    47780d78 Add linux-next specific files for 20200318
-> >>>>>>> git tree:       linux-next
-> >>>>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=14228745e00000
-> >>>>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=b68b7b89ad96c62a
-> >>>>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=792dec47d693ccdc05a0
-> >>>>>>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >>>>>>>
-> >>>>>>> Unfortunately, I don't have any reproducer for this crash yet.
-> >>>>>>>
-> >>>>>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> >>>>>>> Reported-by: syzbot+792dec47d693ccdc05a0@syzkaller.appspotmail.com
-> >>>>>>>
-> >>>>>>> kernel/rcu/tasks.h:1070:37: error: 'rcu_tasks_rude' undeclared (first use in this function); did you mean 'rcu_tasks_qs'?
-> >>>>>>
-> >>>>>> +rcu maintainers
-> >>>>>
-> >>>>> The kbuild test robot beat you to it, and apologies for the hassle.
-> >>>>> Fixed in -rcu on current "dev" branch.
-> >>>>
-> >>>> If the kernel dev process would only have a way to avoid dups from all
-> >>>> test systems...
-> >>>
-> >>> I do significant testing before pushing to -next, but triggering this
-> >>> one requires a combination of Kconfig options that are incompatible
-> >>> with rcutorture.  :-/
-> >>>
-> >>> I suppose one strategy would be to give kbuild test robot some time before
-> >>> passing to -next, but they seem to sometimes get too far behind for me to
-> >>> be willing to wait that long.  So my current approach is to push my "dev"
-> >>> branch, run moderate rcutorture testing (three hours per scenario other
-> >>> than TREE10, which gets only one hour), and if that passes, push to -next.
-> >>>
-> >>> I suppose that I could push to -next only commits that are at least three
-> >>> days old or some such.  But I get in trouble pushing to -next too slowly
-> >>> as often as I get in trouble pushing too quickly, so I suspect that my
-> >>> current approach is in roughly the right place.
-> >>>
-> >>>> Now we need to spend time and deal with it. What has fixed it?
-> >>>
-> >>> It is fixed by commit c6ef38e4d595 ("rcu-tasks: Add RCU tasks to
-> >>> rcutorture writer stall output") and some of its predecessors.
-> >>>
-> >>> Perhaps more useful to you, this commit is included in next-20200319
-> >>> from the -next tree.  ;-)
-> >>
-> >> Let's tell syzbot about the fix:
-> >>
-> >> #syz fix: rcu-tasks: Add RCU tasks to rcutorture writer stall output
-> >>
-> >> I think what you are doing is the best possible option in the current situation.
-> >> I don't think requiring all human maintainers to do more manual
-> >> repetitive work, which is not well defined and even without a way to
-> >> really require something from them is scalable nor reliable nor the
-> >> right approach.
-> > 
-> > Thank you, and I do greatly appreciate the automation!
-> > 
-> >> We would consume something like LKGR [1] if it existed for the kernel.
-> >> But it would require tighter integration of testing systems with
-> >> kernel dev processes, or of course throwing more manual labor at it to
-> >> track all uncoordinated testing systems and publishing LKGR tags.
-> >>
-> >> [1] https://chromium.googlesource.com/chromiumos/docs/+/master/glossary.md
-> > 
-> > At my end, it is pretty quick and easy to detect duplicate notifications
-> > of the same bug, so the current situation isn't causing me undue distress.
-> 
-> Yeah, I saw the same build error and did-not-report it since it was
-> already reported.  :)
+ ❦ 20 mars 2020 16:47 +00, Kieran Bingham:
 
-Much appreciated!  ;-)
+> Oh, I thought python encouraged the 'is' style.
 
-							Thanx, Paul
+Usually, only for "None", "False" or "True" (but for the latest, this
+doesn't usually make sense).
+
+> Given the nature of the statement, would
+>
+> if not node:
+>     return None
+>
+> be any more appropriate ?
+
+It would be more consistent with the other uses (like the while below
+and the ifs even further). However, I don't fully understand this code
+(notably the "node = node.address.cast(...)" where node is not defined
+yet and node is replaced by the value of "root['rb_node']" just after),
+so can't say for sure node cannot be equal to something eveluating to
+False in some conditions.
+-- 
+Writing is easy; all you do is sit staring at the blank sheet of paper until
+drops of blood form on your forehead.
+		-- Gene Fowler
