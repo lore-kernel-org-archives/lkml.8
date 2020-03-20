@@ -2,231 +2,181 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A05CC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE15CC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 136A82072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC0E2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:34:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hu21JmRQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgCTScN (ORCPT
+        id S1726973AbgCTSd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:32:13 -0400
-Received: from mga18.intel.com ([134.134.136.126]:21792 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726902AbgCTScN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:32:13 -0400
-IronPort-SDR: 9FP6TWyuKszPthQVWsZ2ElBS0KRJJIuFJ/N45K+VHTN5hfm0jkenXFtm6+g5y1FKiO2m342kqQ
- s2fwB+guqdew==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 11:32:11 -0700
-IronPort-SDR: aEaapvH82RGYJiiH8F2Fsu4A9SskE8EGIDv+5czMvQ6zqmfLxsBzJdEvxE9g07GO2Vx8Caxjs1
- 5GmPwFQaAraA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,285,1580803200"; 
-   d="scan'208";a="446737228"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 20 Mar 2020 11:32:09 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jFMRE-0000pc-Ut; Sat, 21 Mar 2020 02:32:08 +0800
-Date:   Sat, 21 Mar 2020 02:31:43 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/misc] BUILD SUCCESS
- 630b99ab60aa972052a4202a1ff96c7e45eb0054
-Message-ID: <5e750c0f.KvulnpHwqX7wvRDr%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Fri, 20 Mar 2020 14:33:59 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:33041 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbgCTSd7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 14:33:59 -0400
+Received: by mail-pj1-f68.google.com with SMTP id dw20so3720952pjb.0;
+        Fri, 20 Mar 2020 11:33:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=S7Fui894R9lUu2xo1vf09TLmig4naq9sdfWsRqwPmJ0=;
+        b=hu21JmRQA0gv0PwiesOLkjyJGbNmheJ8OF1ARDPC13kWSznREiboKE/qbGYpwIQpSB
+         IJodTlinDcyiAkUbd4IrTokwyNJefZHgPEWSnFHPUqXHLWXJyRlQ/QTcCQjbxzn+DKZl
+         EITX/zvsIQyKis61huEbg86FiK7+FReoTKsTnpx4yKQ7nCb9Vawe3DTHA2lecbteAhm0
+         0S5UwBXX6GE6/aGkL41/8jVH2oGpWaFmxxQh6zAuc66jeuibyN+tua3muXEYo2JuECzO
+         mWnqlDc3lqDE/3hV6ctM/dE5sD1IoXyc5y8ujhqT2LCX17C8oq7gQHRuRRNskPahirY3
+         GOsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=S7Fui894R9lUu2xo1vf09TLmig4naq9sdfWsRqwPmJ0=;
+        b=Qd4qnCqtJ3aC76jb2QU0XAL1PLdRTfrOIGLSMykMSiMsVCc2hBXlYPrBxPwZDuEsAM
+         vwjkZfNoL7pcJL9FnBWZ4C6acV8sHtYaN5qhXfN/nvOQNLQJpSiELwCzbbiKEQyx7OqI
+         iozDFmp6O7Fr9Uy8P5YUmcTuJI2jSWZ0VO9eOyJnUsRzO13NwGawFH4TCUfKgrocOek7
+         RJKrMmKdphKB/TObEUqJVT7FKrzga2VbPqIf0SiPk1PzjkzMcL0vAqv3Xazko2ImaTwU
+         fyKc8C70tjiFTSR41SLt5cKjtxBiPdbWiXGGUulkjTGU8KoqWruV43p33xZa/h66Hzj3
+         XbHw==
+X-Gm-Message-State: ANhLgQ3Gu8ARQZd5m9ZOXQimMkqCl0CRTMR+qFzUtjGZ/3VtaFQW3aqU
+        C5omZmy1HW9PbAwS+ohDk48=
+X-Google-Smtp-Source: ADFU+vvUspVXpPWj0jZAAuPx+ygVkmstUOzsVMpCR7zHEhcpsHtwhIEN8zcuSygrsCJPw3ysito5tA==
+X-Received: by 2002:a17:90a:da01:: with SMTP id e1mr11297095pjv.100.1584729237878;
+        Fri, 20 Mar 2020 11:33:57 -0700 (PDT)
+Received: from gmail.com ([2601:600:817f:a132:df3e:521d:99d5:710d])
+        by smtp.gmail.com with ESMTPSA id h11sm6359312pfn.103.2020.03.20.11.33.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 11:33:57 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 11:33:55 -0700
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Adrian Reber <areber@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: clone3: allow creation of time namespace with offset
+Message-ID: <20200320183355.GA118769@gmail.com>
+References: <20200317083043.226593-1-areber@redhat.com>
+ <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
+ <20200319081137.GC223854@dcbz.redhat.com>
+ <CAK8P3a18YySozk6P77JpS58Hbtz=QQmLKw+PrzXbdOwtOQQuJA@mail.gmail.com>
+ <20200319102955.i7slokibkkysz6g6@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=koi8-r
+Content-Disposition: inline
+In-Reply-To: <20200319102955.i7slokibkkysz6g6@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/misc
-branch HEAD: 630b99ab60aa972052a4202a1ff96c7e45eb0054  selftests/x86/ptrace_syscall_32: Fix no-vDSO segfault
+On Thu, Mar 19, 2020 at 11:29:55AM +0100, Christian Brauner wrote:
+> On Thu, Mar 19, 2020 at 09:16:43AM +0100, Arnd Bergmann wrote:
+> > On Thu, Mar 19, 2020 at 9:11 AM Adrian Reber <areber@redhat.com> wrote:
+> > 
+> > > With Arnd's idea of only using nanoseconds, timens_offset would then
+> > > contain something like this:
+> > >
+> > > struct timens_offset {
+> > >         __aligned_s64 monotonic_offset_ns;
+> > >         __aligned_s64 boottime_offset_ns;
+> > > };
+> > >
+> > > I kind of prefer adding boottime and monotonic directly to struct clone_args
+> > >
+> > >         __aligned_u64 tls;
+> > >         __aligned_u64 set_tid;
+> > >         __aligned_u64 set_tid_size;
+> > > +       __aligned_s64 monotonic_offset_ns;
+> > > +       __aligned_s64 boottime_offset_ns;
+> > >  };
+> > 
+> > I would also prefer the second approach using two 64-bit integers
+> > instead of a pointer, as it keeps the interface simpler to implement
+> > and simpler to interpret by other tools.
+> 
+> Why I don't like has two reasons. There's the scenario where we have
+> added new extensions after the new boottime member and then we introduce
+> another offset. Then you'd be looking at:
+> 
+> __aligned_u64 tls;
+> __aligned_u64 set_tid;
+> __aligned_u64 set_tid_size;
+> + __aligned_s64 monotonic_offset_ns;
+> + __aligned_s64 boottime_offset_ns;
+> __aligned_s64 something_1
+> __aligned_s64 anything_2
+> + __aligned_s64 sometime_offset_ns
+> 
+> which bothers me just by looking at it. That's in addition to adding two
+> new members to the struct when most people will never set CLONE_NEWTIME.
+> We'll also likely have more features in the future that will want to
+> pass down more info than we want to directly expose in struct
+> clone_args, e.g. for a long time I have been thinking about adding a
+> struct for CLONE_NEWUSER that allows you to specify the id mappings you
+> want the new user namespace to get. We surely don't want to force all
+> new info into the uppermost struct. So I'm not convinced we should here.
 
-elapsed time: 480m
+I think here we can start thinking about a netlink-like interface.
 
-configs tested: 164
-configs skipped: 14
+struct clone_args {
+	....
+	u64	attrs_offset;
+}
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+struct clone_attr {
+	u16 cla_len;
+	u16 cla_type;
+}
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-s390                             allmodconfig
-i386                                defconfig
-s390                             allyesconfig
-sh                          rsk7269_defconfig
-parisc                generic-32bit_defconfig
-powerpc                           allnoconfig
-riscv                          rv32_defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200320
-x86_64               randconfig-a002-20200320
-x86_64               randconfig-a003-20200320
-i386                 randconfig-a001-20200320
-i386                 randconfig-a002-20200320
-i386                 randconfig-a003-20200320
-alpha                randconfig-a001-20200320
-m68k                 randconfig-a001-20200320
-mips                 randconfig-a001-20200320
-nds32                randconfig-a001-20200320
-parisc               randconfig-a001-20200320
-riscv                randconfig-a001-20200320
-h8300                randconfig-a001-20200320
-microblaze           randconfig-a001-20200320
-nios2                randconfig-a001-20200320
-c6x                  randconfig-a001-20200320
-sparc64              randconfig-a001-20200320
-csky                 randconfig-a001-20200320
-openrisc             randconfig-a001-20200320
-s390                 randconfig-a001-20200320
-sh                   randconfig-a001-20200320
-xtensa               randconfig-a001-20200320
-x86_64               randconfig-b001-20200320
-x86_64               randconfig-b002-20200320
-x86_64               randconfig-b003-20200320
-i386                 randconfig-b001-20200320
-i386                 randconfig-b002-20200320
-i386                 randconfig-b003-20200320
-x86_64               randconfig-c001-20200320
-x86_64               randconfig-c002-20200320
-x86_64               randconfig-c003-20200320
-i386                 randconfig-c001-20200320
-i386                 randconfig-c002-20200320
-i386                 randconfig-c003-20200320
-i386                 randconfig-d001-20200320
-x86_64               randconfig-d002-20200320
-x86_64               randconfig-d001-20200320
-x86_64               randconfig-d003-20200320
-i386                 randconfig-d003-20200320
-i386                 randconfig-d002-20200320
-x86_64               randconfig-e001-20200320
-x86_64               randconfig-e002-20200320
-x86_64               randconfig-e003-20200320
-i386                 randconfig-e001-20200320
-i386                 randconfig-e002-20200320
-i386                 randconfig-e003-20200320
-i386                 randconfig-f001-20200320
-i386                 randconfig-f003-20200320
-i386                 randconfig-f002-20200320
-x86_64               randconfig-f002-20200320
-x86_64               randconfig-f003-20200320
-x86_64               randconfig-f001-20200320
-x86_64               randconfig-g001-20200320
-x86_64               randconfig-g002-20200320
-x86_64               randconfig-g003-20200320
-i386                 randconfig-g001-20200320
-i386                 randconfig-g002-20200320
-i386                 randconfig-g003-20200320
-x86_64               randconfig-h001-20200320
-x86_64               randconfig-h002-20200320
-x86_64               randconfig-h003-20200320
-i386                 randconfig-h001-20200320
-i386                 randconfig-h002-20200320
-i386                 randconfig-h003-20200320
-arc                  randconfig-a001-20200320
-arm                  randconfig-a001-20200320
-arm64                randconfig-a001-20200320
-ia64                 randconfig-a001-20200320
-powerpc              randconfig-a001-20200320
-sparc                randconfig-a001-20200320
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                              allnoconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+....
+
+int parse_clone_attributes(struct kernel_clone_args *kargs, struct clone_args *args, size_t args_size)
+{
+	u64 off = args->attrs_offset;
+
+	while (off < size) {
+		struct clone_attr *attr;
+
+		if (off + sizeof(struct clone_attr) uargs_size)
+			return -EINVAL;
+
+		attr = (struct clone_attr *) ((void *)args + off);
+
+		if (attr->cla_type > CLONE_ATTR_TYPE_MAX)
+			return -ENOSYS;
+
+		kargs->attrs[attr->cla_type] = CLONE_ATTR_DATA(attr);
+		off += CLONE_ATTR_LEN(attr);
+	}
+
+	return 0;
+}
+
+This interface doesn't suffer from problems what you enumerated before:
+
+* clone_args contains only fields which are often used.
+* per-feature attributes can be extended in a future without breaking
+  backward compatibility.
+* unused features don't affect clone3 argument size.
+* seccomp-friendly (I am not 100% sure about this)
+
