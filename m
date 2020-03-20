@@ -2,172 +2,369 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 394A3C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC42BC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0737120709
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:02:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584738167;
-	bh=fLFR8YUhXJwNZZYH7ngeOnxwmZhi+69xDiLb5E3X218=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=St/QyHTK3mkKnOnsh+DHTxQTNw60UI6MOdXoX3M9s30Nxo87O5mixYKAv2GGMEzds
-	 NAR9O1MCzVF52IfMd9NQAMGRvfskEuwLBobVAubeFOHlvHsQmm2i2ge7E8y/xwz0R+
-	 C+iS6TDeC8AzqetHsKeu2ib6Tlp7snFT6rU0s61w=
+	by mail.kernel.org (Postfix) with ESMTP id 81FBE20658
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:03:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pRH0aoVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbgCTVCq (ORCPT
+        id S1727093AbgCTVDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:02:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgCTVCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:02:45 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FA3C20658;
-        Fri, 20 Mar 2020 21:02:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584738164;
-        bh=fLFR8YUhXJwNZZYH7ngeOnxwmZhi+69xDiLb5E3X218=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=BCeAXqXFUuj1hHiVzGhhcgSUUir3NHhdbxKZUoNYcV8LStVDQjfG/eRwyCQXKq8Be
-         IuQ1313Lnf1b5icOH+wFddq7Mb39GH99NqIqxPbuPU2PIooSvheiWkrBcjjmp3yjFc
-         b7TA5EIztlrs4AAazjq0Dl03OXMXgVcpSpgAAgtk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id C94F935226B5; Fri, 20 Mar 2020 14:02:43 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 14:02:43 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Fri, 20 Mar 2020 17:03:21 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:54013 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbgCTVDV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 17:03:21 -0400
+Received: by mail-pj1-f68.google.com with SMTP id l36so3037819pjb.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 14:03:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=WYYlGXUS3P8mSLml0PfuMtkaHgB4uo3FYgrE6c+G15I=;
+        b=pRH0aoVutp+j7/hs6yUmMIiksmihV0r7fS29fJRk1HmOS60I6S8F8Y00otTlC41vDa
+         CDeYyh7d+RGSQ7ltUXsqLP5jY5OqH3GDt0AztZKZ5L9rSImvpoCvYSQFHZ17rpCIEpv6
+         2j4cBbV+yix8EGN6Nm1m0zL/+B9Aube0W5x89jywr7JgvOELYaRZsJgPKvpK1eiqkTgx
+         mauyoC1OMzZ+Xze6gfZy5s1yjQGY7t4bWMpw0QXUf2eESzKSMVF9WsF0/3gYkn6Ncyoa
+         bkc7tUMdml8at3BCMInzRle5HOBXd7Cd+ItHjY883S5tG9FJlwKfGRo1h2U4OPBppcHw
+         +AQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=WYYlGXUS3P8mSLml0PfuMtkaHgB4uo3FYgrE6c+G15I=;
+        b=tsvk9EidqH5e60PZEXjNPH5BwiS6+39Rtq1bFuJApThzlrJhVe3gCD9z5TL7iDRrlB
+         YoevjLQpijR+9PgVbGG7DYcbvkJXB+4SWOyAk9my0huoDV41JLyu+AZK9+Tq4bBNlL8T
+         RoXIeHaTIK0Cb7EGaCRzCnoaAEDI4AdIVo/namqWYibow0xp5aIMZeGXHa70rVY71W+8
+         rzGB8ivjBxmBatjkfp8fFEckwEz8/UiDFhehkn8E9jUamkZ905IV1XYP06zbN4zgWL4h
+         TgYYSz29myllUl/ax+vU8FiHd5wylT4xfK71b1aRmCdMCay5JoZMOqa45y0Qv3/O7cWq
+         tS7w==
+X-Gm-Message-State: ANhLgQ1Ar60JnshmtRIWeakIU0sCaLm+xyNpUcG0cjpfoc9qZpVbJS65
+        V2AD7e1yTsQRMfuxlupv3+OPmA==
+X-Google-Smtp-Source: ADFU+vuuP/36y96S10UPJdwP1UH04V2RRgoGTIhdrclxmmiSIlGSq1DzwE5Ciqko8aYhLbwKgyNcCQ==
+X-Received: by 2002:a17:90a:950b:: with SMTP id t11mr11370990pjo.79.1584738199120;
+        Fri, 20 Mar 2020 14:03:19 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id c83sm6430364pfb.44.2020.03.20.14.03.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 14:03:18 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 14:03:17 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Joerg Roedel <joro@8bytes.org>
+cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting
- documentation
-Message-ID: <20200320210243.GT3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200320160145.GN3199@paulmck-ThinkPad-P72>
- <87mu8apzxr.fsf@nanos.tec.linutronix.de>
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 23/70] x86/sev-es: Add support for handling IOIO
+ exceptions
+In-Reply-To: <20200319091407.1481-24-joro@8bytes.org>
+Message-ID: <alpine.DEB.2.21.2003201402100.205664@chino.kir.corp.google.com>
+References: <20200319091407.1481-1-joro@8bytes.org> <20200319091407.1481-24-joro@8bytes.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87mu8apzxr.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 08:51:44PM +0100, Thomas Gleixner wrote:
-> "Paul E. McKenney" <paulmck@kernel.org> writes:
-> >
-> >  - The soft interrupt related suffix (_bh()) still disables softirq
-> >    handlers.  However, unlike non-PREEMPT_RT kernels (which disable
-> >    preemption to get this effect), PREEMPT_RT kernels use a per-CPU
-> >    lock to exclude softirq handlers.
-> 
-> I've made that:
-> 
->   - The soft interrupt related suffix (_bh()) still disables softirq
->     handlers.
-> 
->     Non-PREEMPT_RT kernels disable preemption to get this effect.
-> 
->     PREEMPT_RT kernels use a per-CPU lock for serialization. The lock
->     disables softirq handlers and prevents reentrancy by a preempting
->     task.
+On Thu, 19 Mar 2020, Joerg Roedel wrote:
 
-That works!  At the end, I would instead say "prevents reentrancy
-due to task preemption", but what you have works.
-
-> On non-RT this is implicit through preemption disable, but it's non
-> obvious for RT as preemption stays enabled.
+> From: Tom Lendacky <thomas.lendacky@amd.com>
 > 
-> > PREEMPT_RT kernels preserve all other spinlock_t semantics:
-> >
-> >  - Tasks holding a spinlock_t do not migrate.  Non-PREEMPT_RT kernels
-> >    avoid migration by disabling preemption.  PREEMPT_RT kernels instead
-> >    disable migration, which ensures that pointers to per-CPU variables
-> >    remain valid even if the task is preempted.
-> >
-> >  - Task state is preserved across spinlock acquisition, ensuring that the
-> >    task-state rules apply to all kernel configurations.  In non-PREEMPT_RT
-> >    kernels leave task state untouched.  However, PREEMPT_RT must change
-> >    task state if the task blocks during acquisition.  Therefore, the
-> >    corresponding lock wakeup restores the task state.  Note that regular
-> >    (not lock related) wakeups do not restore task state.
+> Add support for decoding and handling #VC exceptions for IOIO events.
 > 
->    - Task state is preserved across spinlock acquisition, ensuring that the
->      task-state rules apply to all kernel configurations.  Non-PREEMPT_RT
->      kernels leave task state untouched.  However, PREEMPT_RT must change
->      task state if the task blocks during acquisition.  Therefore, it
->      saves the current task state before blocking and the corresponding
->      lock wakeup restores it. A regular not lock related wakeup sets the
->      task state to RUNNING. If this happens while the task is blocked on
->      a spinlock then the saved task state is changed so that correct
->      state is restored on lock wakeup.
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> [ jroedel@suse.de: Adapted code to #VC handling framework ]
+> Co-developed-by: Joerg Roedel <jroedel@suse.de>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/boot/compressed/sev-es.c |  32 +++++
+>  arch/x86/kernel/sev-es-shared.c   | 202 ++++++++++++++++++++++++++++++
+>  2 files changed, 234 insertions(+)
 > 
-> Hmm?
+> diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
+> index 193c970a3379..ae5fbd371fd9 100644
+> --- a/arch/x86/boot/compressed/sev-es.c
+> +++ b/arch/x86/boot/compressed/sev-es.c
+> @@ -18,6 +18,35 @@
+>  struct ghcb boot_ghcb_page __aligned(PAGE_SIZE);
+>  struct ghcb *boot_ghcb;
+>  
+> +/*
+> + * Copy a version of this function here - insn-eval.c can't be used in
+> + * pre-decompression code.
+> + */
+> +static bool insn_rep_prefix(struct insn *insn)
+> +{
+> +	int i;
+> +
+> +	insn_get_prefixes(insn);
+> +
+> +	for (i = 0; i < insn->prefixes.nbytes; i++) {
+> +		insn_byte_t p = insn->prefixes.bytes[i];
+> +
+> +		if (p == 0xf2 || p == 0xf3)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +/*
+> + * Only a dummy for insn_get_seg_base() - Early boot-code is 64bit only and
+> + * doesn't use segments.
+> + */
+> +static unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx)
+> +{
+> +	return 0UL;
+> +}
+> +
+>  static inline u64 sev_es_rd_ghcb_msr(void)
+>  {
+>  	unsigned long low, high;
+> @@ -117,6 +146,9 @@ void boot_vc_handler(struct pt_regs *regs, unsigned long exit_code)
+>  		goto finish;
+>  
+>  	switch (exit_code) {
+> +	case SVM_EXIT_IOIO:
+> +		result = vc_handle_ioio(boot_ghcb, &ctxt);
+> +		break;
+>  	default:
+>  		result = ES_UNSUPPORTED;
+>  		break;
+> diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+> index f0947ea3c601..46fc5318d1d7 100644
+> --- a/arch/x86/kernel/sev-es-shared.c
+> +++ b/arch/x86/kernel/sev-es-shared.c
+> @@ -205,3 +205,205 @@ static enum es_result vc_insn_string_write(struct es_em_ctxt *ctxt,
+>  
+>  	return ret;
+>  }
+> +
+> +#define IOIO_TYPE_STR  BIT(2)
+> +#define IOIO_TYPE_IN   1
+> +#define IOIO_TYPE_INS  (IOIO_TYPE_IN | IOIO_TYPE_STR)
+> +#define IOIO_TYPE_OUT  0
+> +#define IOIO_TYPE_OUTS (IOIO_TYPE_OUT | IOIO_TYPE_STR)
+> +
+> +#define IOIO_REP       BIT(3)
+> +
+> +#define IOIO_ADDR_64   BIT(9)
+> +#define IOIO_ADDR_32   BIT(8)
+> +#define IOIO_ADDR_16   BIT(7)
+> +
+> +#define IOIO_DATA_32   BIT(6)
+> +#define IOIO_DATA_16   BIT(5)
+> +#define IOIO_DATA_8    BIT(4)
+> +
+> +#define IOIO_SEG_ES    (0 << 10)
+> +#define IOIO_SEG_DS    (3 << 10)
+> +
+> +static enum es_result vc_ioio_exitinfo(struct es_em_ctxt *ctxt, u64 *exitinfo)
+> +{
+> +	struct insn *insn = &ctxt->insn;
+> +	*exitinfo = 0;
+> +
+> +	switch (insn->opcode.bytes[0]) {
+> +	/* INS opcodes */
+> +	case 0x6c:
+> +	case 0x6d:
+> +		*exitinfo |= IOIO_TYPE_INS;
+> +		*exitinfo |= IOIO_SEG_ES;
+> +		*exitinfo |= (ctxt->regs->dx & 0xffff) << 16;
+> +		break;
+> +
+> +	/* OUTS opcodes */
+> +	case 0x6e:
+> +	case 0x6f:
+> +		*exitinfo |= IOIO_TYPE_OUTS;
+> +		*exitinfo |= IOIO_SEG_DS;
+> +		*exitinfo |= (ctxt->regs->dx & 0xffff) << 16;
+> +		break;
+> +
+> +	/* IN immediate opcodes */
+> +	case 0xe4:
+> +	case 0xe5:
+> +		*exitinfo |= IOIO_TYPE_IN;
+> +		*exitinfo |= insn->immediate.value << 16;
+> +		break;
+> +
+> +	/* OUT immediate opcodes */
+> +	case 0xe6:
+> +	case 0xe7:
+> +		*exitinfo |= IOIO_TYPE_OUT;
+> +		*exitinfo |= insn->immediate.value << 16;
+> +		break;
+> +
+> +	/* IN register opcodes */
+> +	case 0xec:
+> +	case 0xed:
+> +		*exitinfo |= IOIO_TYPE_IN;
+> +		*exitinfo |= (ctxt->regs->dx & 0xffff) << 16;
+> +		break;
+> +
+> +	/* OUT register opcodes */
+> +	case 0xee:
+> +	case 0xef:
+> +		*exitinfo |= IOIO_TYPE_OUT;
+> +		*exitinfo |= (ctxt->regs->dx & 0xffff) << 16;
+> +		break;
+> +
+> +	default:
+> +		return ES_DECODE_FAILED;
+> +	}
+> +
+> +	switch (insn->opcode.bytes[0]) {
+> +	case 0x6c:
+> +	case 0x6e:
+> +	case 0xe4:
+> +	case 0xe6:
+> +	case 0xec:
+> +	case 0xee:
+> +		/* Single byte opcodes */
+> +		*exitinfo |= IOIO_DATA_8;
+> +		break;
+> +	default:
+> +		/* Length determined by instruction parsing */
+> +		*exitinfo |= (insn->opnd_bytes == 2) ? IOIO_DATA_16
+> +						     : IOIO_DATA_32;
+> +	}
+> +	switch (insn->addr_bytes) {
+> +	case 2:
+> +		*exitinfo |= IOIO_ADDR_16;
+> +		break;
+> +	case 4:
+> +		*exitinfo |= IOIO_ADDR_32;
+> +		break;
+> +	case 8:
+> +		*exitinfo |= IOIO_ADDR_64;
+> +		break;
+> +	}
+> +
+> +	if (insn_rep_prefix(insn))
+> +		*exitinfo |= IOIO_REP;
+> +
+> +	return ES_OK;
+> +}
+> +
+> +static enum es_result vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+> +{
+> +	struct pt_regs *regs = ctxt->regs;
+> +	u64 exit_info_1, exit_info_2;
+> +	enum es_result ret;
+> +
+> +	ret = vc_ioio_exitinfo(ctxt, &exit_info_1);
+> +	if (ret != ES_OK)
+> +		return ret;
+> +
+> +	if (exit_info_1 & IOIO_TYPE_STR) {
+> +		int df = (regs->flags & X86_EFLAGS_DF) ? -1 : 1;
+> +		unsigned int io_bytes, exit_bytes;
+> +		unsigned int ghcb_count, op_count;
+> +		unsigned long es_base;
+> +		u64 sw_scratch;
+> +
+> +		/*
+> +		 * For the string variants with rep prefix the amount of in/out
+> +		 * operations per #VC exception is limited so that the kernel
+> +		 * has a chance to take interrupts an re-schedule while the
+> +		 * instruction is emulated.
+> +		 */
+> +		io_bytes   = (exit_info_1 >> 4) & 0x7;
+> +		ghcb_count = sizeof(ghcb->shared_buffer) / io_bytes;
+> +
+> +		op_count    = (exit_info_1 & IOIO_REP) ? regs->cx : 1;
+> +		exit_info_2 = min(op_count, ghcb_count);
+> +		exit_bytes  = exit_info_2 * io_bytes;
+> +
+> +		es_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_ES);
+> +
+> +		if (!(exit_info_1 & IOIO_TYPE_IN)) {
+> +			ret = vc_insn_string_read(ctxt,
+> +					       (void *)(es_base + regs->si),
+> +					       ghcb->shared_buffer, io_bytes,
+> +					       exit_info_2, df);
 
-I of course cannot resist editing the last two sentences:
+The last argument to vc_insn_string_read() is "bool backwards" which in 
+this case it appears will always be true?
 
-   ... Other types of wakeups unconditionally set task state to RUNNING.
-   If this happens while a task is blocked while acquiring a spinlock,
-   then the task state is restored to its pre-acquisition value at
-   lock-wakeup time.
-
-> > But this code failes on PREEMPT_RT kernels because the memory allocator
-> > is fully preemptible and therefore cannot be invoked from truly atomic
-> > contexts.  However, it is perfectly fine to invoke the memory allocator
-> > while holding a normal non-raw spinlocks because they do not disable
-> > preemption::
-> >
-> >> +  spin_lock(&lock);
-> >> +  p = kmalloc(sizeof(*p), GFP_ATOMIC);
-> >> +
-> >> +Most places which use GFP_ATOMIC allocations are safe on PREEMPT_RT as the
-> >> +execution is forced into thread context and the lock substitution is
-> >> +ensuring preemptibility.
-> >
-> > Interestingly enough, most uses of GFP_ATOMIC allocations are
-> > actually safe on PREEMPT_RT because the the lock substitution ensures
-> > preemptibility.  Only those GFP_ATOMIC allocations that are invoke
-> > while holding a raw spinlock or with preemption otherwise disabled need
-> > adjustment to work correctly on PREEMPT_RT.
-> >
-> > [ I am not as confident of the above as I would like to be... ]
+> +			if (ret)
+> +				return ret;
+> +		}
+> +
+> +		sw_scratch = __pa(ghcb) + offsetof(struct ghcb, shared_buffer);
+> +		ghcb_set_sw_scratch(ghcb, sw_scratch);
+> +		ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_IOIO,
+> +				   exit_info_1, exit_info_2);
+> +		if (ret != ES_OK)
+> +			return ret;
+> +
+> +		/* Everything went well, write back results */
+> +		if (exit_info_1 & IOIO_TYPE_IN) {
+> +			ret = vc_insn_string_write(ctxt,
+> +						(void *)(es_base + regs->di),
+> +						ghcb->shared_buffer, io_bytes,
+> +						exit_info_2, df);
+> +			if (ret)
+> +				return ret;
+> +
+> +			if (df)
+> +				regs->di -= exit_bytes;
+> +			else
+> +				regs->di += exit_bytes;
+> +		} else {
+> +			if (df)
+> +				regs->si -= exit_bytes;
+> +			else
+> +				regs->si += exit_bytes;
+> +		}
+> +
+> +		if (exit_info_1 & IOIO_REP)
+> +			regs->cx -= exit_info_2;
+> +
+> +		ret = regs->cx ? ES_RETRY : ES_OK;
+> +
+> +	} else {
+> +		int bits = (exit_info_1 & 0x70) >> 1;
+> +		u64 rax = 0;
+> +
+> +		if (!(exit_info_1 & IOIO_TYPE_IN))
+> +			rax = lower_bits(regs->ax, bits);
+> +
+> +		ghcb_set_rax(ghcb, rax);
+> +
+> +		ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_IOIO, exit_info_1, 0);
+> +		if (ret != ES_OK)
+> +			return ret;
+> +
+> +		if (exit_info_1 & IOIO_TYPE_IN) {
+> +			if (!ghcb_is_valid_rax(ghcb))
+> +				return ES_VMM_ERROR;
+> +			regs->ax = lower_bits(ghcb->save.rax, bits);
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> -- 
+> 2.17.1
 > 
-> I'd leave that whole paragraph out. This documents the rules and from
-> the above code examples it's pretty clear what works and what not :)
-
-Works for me!  ;-)
-
-> > And meeting time, will continue later!
 > 
-> Enjoy!
-
-Not bad, actually, as meetings go.
-
-							Thanx, Paul
