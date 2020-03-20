@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4D8C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 341A0C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF22420724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C3B20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:28:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbgCTV2u (ORCPT
+        id S1727414AbgCTV24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:28:50 -0400
-Received: from mga04.intel.com ([192.55.52.120]:59216 "EHLO mga04.intel.com"
+        Fri, 20 Mar 2020 17:28:56 -0400
+Received: from mga04.intel.com ([192.55.52.120]:59221 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727192AbgCTV2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:28:48 -0400
-IronPort-SDR: vAK15cgCXY7e1hHUzluzawN6bMMS/A3oDHaw0FnhQ8ZFtQtRHu4m+vRN+JthSI2R84EpqOXBpP
- YG9bIX0vkpcA==
+        id S1727239AbgCTV2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 17:28:50 -0400
+IronPort-SDR: CmK36EZ2S252m/XyWokHDF0QY7PV2mHUfti8G6GnfJ5hIQt4aLLKMVFV+V3IBIdfm+LK1RvBqk
+ mQsxL7bww1yw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:46 -0700
-IronPort-SDR: OUbuLB80Aoo5u0WS81hdPdTcDyar7PORxjpiI2hF5Bdne4MWqYiu0wn5pGSm5JUyL7YSrj5ZQh
- qR9KexWWTobw==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:49 -0700
+IronPort-SDR: /psYHx1g+8IVYAFsA9iu3enbjuQd/faOFh7s6kwrjyQYOtXQPyXC/T52b5tdM6nIKXsC5sqSLM
+ Loo9dxl+P3ew==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
-   d="scan'208";a="269224421"
+   d="scan'208";a="269224450"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:46 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:49 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v3 08/37] KVM: VMX: Skip global INVVPID fallback if vpid==0 in vpid_sync_context()
-Date:   Fri, 20 Mar 2020 14:28:04 -0700
-Message-Id: <20200320212833.3507-9-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 13/37] KVM: nVMX: Use vpid_sync_vcpu_addr() to emulate INVVPID with address
+Date:   Fri, 20 Mar 2020 14:28:09 -0700
+Message-Id: <20200320212833.3507-14-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200320212833.3507-1-sean.j.christopherson@intel.com>
 References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
@@ -59,31 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Skip the global INVVPID in the unlikely scenario that vpid==0 and the
-SINGLE_CONTEXT variant of INVVPID is unsupported.  If vpid==0, there's
-no need to INVVPID as it's impossible to do VM-Enter with VPID enabled
-and vmcs.VPID==0, i.e. there can't be any TLB entries for the vCPU with
-vpid==0.  The fact that the SINGLE_CONTEXT variant isn't supported is
-irrelevant.
+Use vpid_sync_vcpu_addr() to emulate the "individual address" variant of
+INVVPID now that said function handles the fallback case of the (host)
+CPU not supporting "individual address".
 
+Note, the "vpid == 0" checks in the vpid_sync_*() helpers aren't
+actually redundant with the "!operand.vpid" check in handle_invvpid(),
+as the vpid passed to vpid_sync_vcpu_addr() is a KVM (host) controlled
+value, i.e. vpid02 can be zero even if operand.vpid is non-zero.
+
+No functional change intended.
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/ops.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx/nested.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/ops.h b/arch/x86/kvm/vmx/ops.h
-index 45eaedee2ac0..33645a8e5463 100644
---- a/arch/x86/kvm/vmx/ops.h
-+++ b/arch/x86/kvm/vmx/ops.h
-@@ -285,7 +285,7 @@ static inline void vpid_sync_context(int vpid)
- {
- 	if (cpu_has_vmx_invvpid_single())
- 		vpid_sync_vcpu_single(vpid);
--	else
-+	else if (vpid != 0)
- 		vpid_sync_vcpu_global();
- }
- 
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 81bc4791d704..0c71db6fec5a 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5251,11 +5251,7 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
+ 		    is_noncanonical_address(operand.gla, vcpu))
+ 			return nested_vmx_failValid(vcpu,
+ 				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
+-		if (cpu_has_vmx_invvpid_individual_addr())
+-			__invvpid(VMX_VPID_EXTENT_INDIVIDUAL_ADDR,
+-				vpid02, operand.gla);
+-		else
+-			vpid_sync_context(vpid02);
++		vpid_sync_vcpu_addr(vpid02, operand.gla);
+ 		break;
+ 	case VMX_VPID_EXTENT_SINGLE_CONTEXT:
+ 	case VMX_VPID_EXTENT_SINGLE_NON_GLOBAL:
 -- 
 2.24.1
 
