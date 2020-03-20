@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C207C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD565C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A18020767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C3120767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:31:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbgCTVa7 (ORCPT
+        id S1727684AbgCTVa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:30:59 -0400
-Received: from mga17.intel.com ([192.55.52.151]:42047 "EHLO mga17.intel.com"
+        Fri, 20 Mar 2020 17:30:58 -0400
+Received: from mga03.intel.com ([134.134.136.65]:50326 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727295AbgCTV2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727315AbgCTV2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Mar 2020 17:28:54 -0400
-IronPort-SDR: YUOd+oNyNmuVLsUXJvLU4prUr83pH2VUX7TOh+rSDn+0vl0Eb73eu1JtxFejzA6VDK+PZidFQf
- 7P+bJnMZmZ1A==
+IronPort-SDR: /kuIdTdmHK0W78jbJB/kWpOuVNzEPVCNXQfDUklPbuREYdtK7PspdE//sN34BJWs9L7AiKqACB
+ EopBhWxfQBpQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:52 -0700
-IronPort-SDR: yLF3Aepsotya6U8kBqijwf+H4O0QK5uO2fprqGJiK33akeqny4pb/o19dmy4i1MwCa6/EeXunR
- +eBSSvPrgaDQ==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 14:28:52 -0700
+IronPort-SDR: y6q7PUNENAxs6RaNS+olhJMTwtaovz/vmFxTzZmxVSltJJKLLjBB+KuE2lIfLTe5/Zpm6bvJkr
+ cHb9YAxSA6Eg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
-   d="scan'208";a="269224468"
+   d="scan'208";a="269224459"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:52 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 14:28:50 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         John Haxby <john.haxby@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v3 18/37] KVM: VMX: Move vmx_flush_tlb() to vmx.c
-Date:   Fri, 20 Mar 2020 14:28:14 -0700
-Message-Id: <20200320212833.3507-19-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 15/37] KVM: VMX: Clean up vmx_flush_tlb_gva()
+Date:   Fri, 20 Mar 2020 14:28:11 -0700
+Message-Id: <20200320212833.3507-16-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200320212833.3507-1-sean.j.christopherson@intel.com>
 References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
@@ -59,89 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move vmx_flush_tlb() to vmx.c and make it non-inline static now that all
-its callers live in vmx.c.
+Refactor vmx_flush_tlb_gva() to remove a superfluous local variable and
+clean up its comment, which is oddly located below the code it is
+commenting.
 
 No functional change intended.
 
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 25 +++++++++++++++++++++++++
- arch/x86/kvm/vmx/vmx.h | 25 -------------------------
- 2 files changed, 25 insertions(+), 25 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 477bdbc52ed0..c6affaaef138 100644
+index 57c1cee58d18..43c0d4706f9a 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2849,6 +2849,31 @@ static void exit_lmode(struct kvm_vcpu *vcpu)
+@@ -2851,15 +2851,11 @@ static void exit_lmode(struct kvm_vcpu *vcpu)
  
- #endif
- 
-+static void vmx_flush_tlb(struct kvm_vcpu *vcpu)
-+{
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+
-+	/*
-+	 * Flush all EPTP/VPID contexts, as the TLB flush _may_ have been
-+	 * invoked via kvm_flush_remote_tlbs().  Flushing remote TLBs requires
-+	 * all contexts to be flushed, not just the active context.
-+	 *
-+	 * Note, this also ensures a deferred TLB flush with VPID enabled and
-+	 * EPT disabled invalidates the "correct" VPID, by nuking both L1 and
-+	 * L2's VPIDs.
-+	 */
-+	if (enable_ept) {
-+		ept_sync_global();
-+	} else if (enable_vpid) {
-+		if (cpu_has_vmx_invvpid_global()) {
-+			vpid_sync_vcpu_global();
-+		} else {
-+			vpid_sync_vcpu_single(vmx->vpid);
-+			vpid_sync_vcpu_single(vmx->nested.vpid02);
-+		}
-+	}
-+}
-+
  static void vmx_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t addr)
  {
+-	int vpid = to_vmx(vcpu)->vpid;
+-
+-	vpid_sync_vcpu_addr(vpid, addr);
+-
  	/*
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index bab5d62ad964..571249e18bb6 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -503,31 +503,6 @@ static inline struct vmcs *alloc_vmcs(bool shadow)
+-	 * If VPIDs are not supported or enabled, then the above is a no-op.
+-	 * But we don't really need a TLB flush in that case anyway, because
+-	 * each VM entry/exit includes an implicit flush when VPID is 0.
++	 * vpid_sync_vcpu_addr() is a nop if vmx->vpid==0, see the comment in
++	 * vmx_flush_tlb_guest() for an explanation of why this is ok.
+ 	 */
++	vpid_sync_vcpu_addr(to_vmx(vcpu)->vpid, addr);
+ }
  
- u64 construct_eptp(struct kvm_vcpu *vcpu, unsigned long root_hpa);
- 
--static inline void vmx_flush_tlb(struct kvm_vcpu *vcpu)
--{
--	struct vcpu_vmx *vmx = to_vmx(vcpu);
--
--	/*
--	 * Flush all EPTP/VPID contexts, as the TLB flush _may_ have been
--	 * invoked via kvm_flush_remote_tlbs().  Flushing remote TLBs requires
--	 * all contexts to be flushed, not just the active context.
--	 *
--	 * Note, this also ensures a deferred TLB flush with VPID enabled and
--	 * EPT disabled invalidates the "correct" VPID, by nuking both L1 and
--	 * L2's VPIDs.
--	 */
--	if (enable_ept) {
--		ept_sync_global();
--	} else if (enable_vpid) {
--		if (cpu_has_vmx_invvpid_global()) {
--			vpid_sync_vcpu_global();
--		} else {
--			vpid_sync_vcpu_single(vmx->vpid);
--			vpid_sync_vcpu_single(vmx->nested.vpid02);
--		}
--	}
--}
--
- static inline void decache_tsc_multiplier(struct vcpu_vmx *vmx)
- {
- 	vmx->current_tsc_ratio = vmx->vcpu.arch.tsc_scaling_ratio;
+ static void vmx_flush_tlb_guest(struct kvm_vcpu *vcpu)
 -- 
 2.24.1
 
