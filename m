@@ -6,64 +6,51 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E979BC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64966C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF25A20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C3112072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgCTDsz (ORCPT
+        id S1727061AbgCTDvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 23:48:55 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:33854 "EHLO fornost.hmeau.com"
+        Thu, 19 Mar 2020 23:51:01 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:33890 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbgCTDsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 23:48:55 -0400
+        id S1726847AbgCTDvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 23:51:00 -0400
 Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
         by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jF8eA-0001To-MJ; Fri, 20 Mar 2020 14:48:35 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 20 Mar 2020 14:48:34 +1100
-Date:   Fri, 20 Mar 2020 14:48:34 +1100
+        id 1jF8gC-0001VP-Eg; Fri, 20 Mar 2020 14:50:41 +1100
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 20 Mar 2020 14:50:40 +1100
+Date:   Fri, 20 Mar 2020 14:50:40 +1100
 From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        gregkh@linuxfoundation.org, Emil Renner Berthing <kernel@esmil.dk>,
-        Ard Biesheuvel <ardb@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH URGENT crypto v2] crypto: arm64/chacha - correctly walk
- through blocks
-Message-ID: <20200320034834.GA27372@gondor.apana.org.au>
-References: <CAHmME9otcAe7H4Anan8Tv1KreTZtwt4XXEPMG--x2Ljr0M+o1Q@mail.gmail.com>
- <20200319022732.166085-1-Jason@zx2c4.com>
+To:     Jianhui Zhao <zhaojh329@gmail.com>
+Cc:     davem@davemloft.net, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] crypto: atmel-i2c - Fix wakeup fail
+Message-ID: <20200320035040.GC27372@gondor.apana.org.au>
+References: <20200310122551.27831-1-zhaojh329@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200319022732.166085-1-Jason@zx2c4.com>
+In-Reply-To: <20200310122551.27831-1-zhaojh329@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 08:27:32PM -0600, Jason A. Donenfeld wrote:
-> Prior, passing in chunks of 2, 3, or 4, followed by any additional
-> chunks would result in the chacha state counter getting out of sync,
-> resulting in incorrect encryption/decryption, which is a pretty nasty
-> crypto vuln: "why do images look weird on webpages?" WireGuard users
-> never experienced this prior, because we have always, out of tree, used
-> a different crypto library, until the recent Frankenzinc addition. This
-> commit fixes the issue by advancing the pointers and state counter by
-> the actual size processed. It also fixes up a bug in the (optional,
-> costly) stride test that prevented it from running on arm64.
+On Tue, Mar 10, 2020 at 08:25:51PM +0800, Jianhui Zhao wrote:
+> The wake token cannot be sent without ignoring the nack for the
+> device address
 > 
-> Fixes: b3aad5bad26a ("crypto: arm64/chacha - expose arm64 ChaCha routine as library function")
-> Reported-and-tested-by: Emil Renner Berthing <kernel@esmil.dk>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: stable@vger.kernel.org # v5.5+
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> Signed-off-by: Jianhui Zhao <zhaojh329@gmail.com>
 > ---
->  arch/arm64/crypto/chacha-neon-glue.c   |  8 ++++----
->  lib/crypto/chacha20poly1305-selftest.c | 11 ++++++++---
->  2 files changed, 12 insertions(+), 7 deletions(-)
+>  drivers/crypto/atmel-i2c.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
 Patch applied.  Thanks.
 -- 
