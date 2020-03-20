@@ -6,61 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8F2C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1627DC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B708120781
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D6520781
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584724512;
-	bh=sPeqxLPkY9jSvH+bYEQ4W17WiSseeSfNtqCCKyBEL1Q=;
+	s=default; t=1584724518;
+	bh=lODxS3uudQQhdXOmNALVz/qlf6Z0aEsuFX6lLXlYJNs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=wJ2DZ1ey0S4qcjHOk9RObYIGvCYCg0ChjgON397SgYAfOeOeyqu0QqJLHzxVR6HIb
-	 LcQ+LcOOVzhXYZIO7YXabiVnffAjKzoEHmK1o+nU6g1wWQlh3xMdlVRP0OaqU2c7Wo
-	 0dvTgF4ZXySBS04gqqzF5cLHS/hQ+nWJfibeMUac=
+	b=CdP21ZSurQARYq7YK6tci02pIthVUDl3be2KfQTRpZTs2IVR1QwY6AvgCsxATwbsM
+	 xc483bhYvem68vRVWVsBQzvhl/xx2Nb/L8iB4GimzjNloqWCmKpAAIacRJAj5fUwm/
+	 zHWA1yfcXHY415iL6NXwgrtN/KA0go9B/xvsWTX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbgCTRPL (ORCPT
+        id S1727462AbgCTRPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:15:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46684 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 13:15:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727259AbgCTRPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:15:09 -0400
-Subject: Re: [GIT PULL] USB fixes for 5.6-rc7
+        id S1727295AbgCTRPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 13:15:11 -0400
+Subject: Re: [GIT PULL] arm64 fixes for -rc7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584724509;
-        bh=sPeqxLPkY9jSvH+bYEQ4W17WiSseeSfNtqCCKyBEL1Q=;
+        s=default; t=1584724510;
+        bh=lODxS3uudQQhdXOmNALVz/qlf6Z0aEsuFX6lLXlYJNs=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=KurSclTMfJ+D0SHE+BWwvhLeR83I+tLoJu3FIhhckXDkCoYpLYpilOc2Ol3PTHJpr
-         R++YoSpaS0UpF0wKy1sGcSpNLXM5zm3B5a9IJM3bw+xbRkxmlXiqjSC8b/R7rZk9x5
-         fpn/+SdiuycGdHcIpOIjSkcagT65LdyLZM6fjMms=
+        b=W8hxsSUMgI6mb2uPUZ/F57N0WKV1I7HcLIOzOl8iJtagbfEiXvrMTy+HDaGIzgZBe
+         y8m89VrWtdXxQ/e63tC8zEAWW67m2Gh7ywVHM1BssyNrbnjoMRpci+3MWsMXEXKZDy
+         eabG3PL5Kmf2DRwGP/Rl1lQATK3EHj3keAvGgaP0=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200320142739.GA760409@kroah.com>
-References: <20200320142739.GA760409@kroah.com>
+In-Reply-To: <20200320153508.GA6815@willie-the-truck>
+References: <20200320153508.GA6815@willie-the-truck>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200320142739.GA760409@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.6-rc7
-X-PR-Tracked-Commit-Id: 2866ce8696167de300e27d50d521b5f671bab5d4
+X-PR-Tracked-Message-Id: <20200320153508.GA6815@willie-the-truck>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+ tags/arm64-fixes
+X-PR-Tracked-Commit-Id: 3568b88944fef28db3ee989b957da49ffc627ede
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b07c2e76c419fe7ac8949e5ffea4a29414291b7d
-Message-Id: <158472450912.23492.1461265135513637898.pr-tracker-bot@kernel.org>
-Date:   Fri, 20 Mar 2020 17:15:09 +0000
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+X-PR-Merge-Commit-Id: 5ad0ec0b86525d0c5d3d250d3cfad7f183b00cfa
+Message-Id: <158472451088.23492.17342377231579410811.pr-tracker-bot@kernel.org>
+Date:   Fri, 20 Mar 2020 17:15:10 +0000
+To:     Will Deacon <will@kernel.org>
+Cc:     torvalds@linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, catalin.marinas@arm.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 20 Mar 2020 15:27:39 +0100:
+The pull request you sent on Fri, 20 Mar 2020 15:35:09 +0000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.6-rc7
+> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b07c2e76c419fe7ac8949e5ffea4a29414291b7d
+https://git.kernel.org/torvalds/c/5ad0ec0b86525d0c5d3d250d3cfad7f183b00cfa
 
 Thank you!
 
