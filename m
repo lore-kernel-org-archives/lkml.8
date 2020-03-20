@@ -2,154 +2,112 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2ECC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C03DC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8135220775
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498202080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:35:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A91sMfRk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lg6/6huY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbgCTSfk (ORCPT
+        id S1727608AbgCTSfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:35:40 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44498 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCTSfh (ORCPT
+        Fri, 20 Mar 2020 14:35:42 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:55769 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727594AbgCTSfk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:35:37 -0400
-Received: by mail-ed1-f67.google.com with SMTP id z3so8266993edq.11;
-        Fri, 20 Mar 2020 11:35:35 -0700 (PDT)
+        Fri, 20 Mar 2020 14:35:40 -0400
+Received: by mail-pj1-f68.google.com with SMTP id mj6so2877083pjb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 11:35:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=R1yA09A2jj2GJ7mf6EWjnGj5car0+pFadneU5DRW1E0=;
-        b=A91sMfRkl42TkFSWs9Q9IhP6ewbRQpGP3zvAHs4ixj8O0VAlwGf2XdqjxNkda42p+F
-         rE1DdJYbgM+bE/7PhlMb0i8QNf6tNtciczvIyl6A7MvXq2tplBeeOIREacm5BF8C0Fw7
-         y9sLTfP6+k64lr6KcJIL291+2IO2htWpdYT/FRFBPULP7rUPSY7Xs/lPWCzsVEW5Mlsj
-         yowqy//ObW7xPUz+y9oVin5RzgtlFn/PydNjEYt5Z8Em8x0mS+PiZ8NOY0CpQQH9Cr+W
-         z4WnBLD8zAVDMWGGwLcnVIUyI8ISCr4mR0xjG5JGN4/hmdWAYWZWBu4vEvL2hovawwHJ
-         akjw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=C2S9KcZfRO3g4bCqyBJ1x6LnernhbhoQu1YGXwjigeE=;
+        b=lg6/6huYLirk1oHz4QX7GSjg9GV6zihardksLMc6FOA8Sy6sc2bqpuFKvzGGtMcCnH
+         UDBJCq4y1M+6TbPn0rSkXRtzh80xyvo4xLzvJBirxM15UMl/9ISMoEG/tEeeFcP/jFRl
+         ER5vrSby+4tui/fclDJjj+xToNeTJxb7QoID0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=R1yA09A2jj2GJ7mf6EWjnGj5car0+pFadneU5DRW1E0=;
-        b=U9kpaTOT0dc+MqPSsaRRcXngU1pgfjRXjlPnaOpCFyJ6HrvN+RZ004oNvipAZsFZk8
-         REIluxWus3h7k+hPtYUwyB2BXUlCTvfmBlNefd/+OUP9XaH0NagLhoeDPG8bGXrF5nh0
-         KYyHVzKUe8iYbhLAeLo5rEICQ6CR56WEjScZpHYILavL3sY/6FkOnXJeFRbgzZPawmJJ
-         6+e5TkANcd9QPWvYtVdHoU4DsbmyNMHY/hNfMV0FjKGw4HxVUNGieTBuEwdQCO6on3/0
-         /wvNFZbFaaNjEky5F6tKdfFOpid1o9cTLbpIOyfBw7EqRscBbXGPHYNiv/cPk+TkMmsm
-         QXfg==
-X-Gm-Message-State: ANhLgQ3S0AIrlaJi6aF6H29dbzdW/yxNYJmVrVhgu0hoRYsQRtB6B1A3
-        hc+n2XcJzDi20biyTqbkhYo=
-X-Google-Smtp-Source: ADFU+vtC/hTDKXr5YBXEcAwc7n8EoSk1Q/19B2vYXfusmIsN1j9VwEZgjYrCe4aSdRDu42y4EE82hw==
-X-Received: by 2002:aa7:d9d8:: with SMTP id v24mr3531315eds.386.1584729334422;
-        Fri, 20 Mar 2020 11:35:34 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host203-232-dynamic.53-79-r.retail.telecomitalia.it. [79.53.232.203])
-        by smtp.googlemail.com with ESMTPSA id y13sm172916eje.3.2020.03.20.11.35.32
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=C2S9KcZfRO3g4bCqyBJ1x6LnernhbhoQu1YGXwjigeE=;
+        b=WgaDs63MiVyTD1Sjh2jNbZmcLN4yRXpYWPEpgKZ2At+vVKYhWw5Do+fv8kt3MEp3LG
+         WAwY2UHTKi0l+l2mqBO7n9JSQd33WeR9tEYS9OWufC1dhmNiOZ3oTEgE7W3KJYBpHWBE
+         3Y/KYgW343ZwkJedJ1z4JzL7+LzUaKy6+9yWXZe/1vINgn4OAcF48APylC+5tcD4x6pP
+         dTlsRj8qQMplZSucxDOAGEMvaGoQumwtpj6BtDezqp1/SBnAAlO/dUj+ixPqSblmn9UO
+         BsPTeI9irYR1nxCJRxlZ5F2n6KTIRR0y6uwISeRIAZl+Ehbpgu/fsnVPJuBkrYb6MV48
+         e02A==
+X-Gm-Message-State: ANhLgQ1SEdNF7vOetzIkb5BlL4I51k5MFEyV2Fo6pWLD053tyReC2w46
+        cVRIWOhojDJsBMYudA0t+F6xx4JNutI=
+X-Google-Smtp-Source: ADFU+vuo1bX8k5FNn27x7znpbXtPAwDztmbevA4C+IVKqZXlu1aOcJJE/TkXqQM0ofU+D8g2EOXyfw==
+X-Received: by 2002:a17:902:9a98:: with SMTP id w24mr9918310plp.40.1584729339384;
+        Fri, 20 Mar 2020 11:35:39 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c11sm6356557pfc.216.2020.03.20.11.35.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 11:35:33 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc:     Sriram Palanisamy <gpalan@codeaurora.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 12/12] pcie: qcom: Set PCIE MRRS and MPS to 256B
-Date:   Fri, 20 Mar 2020 19:34:54 +0100
-Message-Id: <20200320183455.21311-12-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200320183455.21311-1-ansuelsmth@gmail.com>
-References: <20200320183455.21311-1-ansuelsmth@gmail.com>
+        Fri, 20 Mar 2020 11:35:38 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 11:35:37 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Tree for Mar 18 (objtool)
+Message-ID: <202003201131.9B688BC@keescook>
+References: <20200318220920.48df2e76@canb.auug.org.au>
+ <d7dc5b4a-9a7e-ccf7-e00e-2e7f0e79a9bc@infradead.org>
+ <20200318182352.2dgwwl4ugbwndi4x@treble>
+ <20200318200542.GK20730@hirez.programming.kicks-ass.net>
+ <20200319173101.wufpymi7obhqgoqd@treble>
+ <20200319173326.oj4qs24x4ly5lrgt@treble>
+ <20200319174028.azzaisoj5gbss7zk@treble>
+ <20200319174550.4wpx4j357nw67nzz@treble>
+ <20200320082613.GA20696@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320082613.GA20696@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sriram Palanisamy <gpalan@codeaurora.org>
+On Fri, Mar 20, 2020 at 09:26:13AM +0100, Peter Zijlstra wrote:
+> On Thu, Mar 19, 2020 at 12:45:50PM -0500, Josh Poimboeuf wrote:
+> > > On Thu, Mar 19, 2020 at 12:33:31PM -0500, Josh Poimboeuf wrote:
+> 
+> > > > Actually I suspect it's the __builtin_unreachable() annotation which is
+> > > > making UBSAN add the __builtin_trap()...  because I don't see any double
+> > > > UD2s for WARNs.
+> 
+> > Actually, removing __builtin_unreachable() *does* make the extra UD2 go
+> > away -- I forgot I had some silly debug code.
+> 
+> LOL, check this:
+> 
+> "Built-in Function: void __builtin_unreachable (void)
+> 
+>     If control flow reaches the point of the __builtin_unreachable, the
+>     program is undefined. It is useful in situations where the compiler
+>     cannot deduce the unreachability of the code. "
+> 
+> Which, I bet, is what makes UBSAN insert that __builtin_trap().
+> 
+> What a friggin mess :/
 
-Set Max Read Request Size and Max Payload Size to 256 bytes,
-per chip team recommendation.
+What I'd like is to be able to specify to UBSAN what function to call
+for the trap. I'd prefer to specify a well-defined exception handler,
+but at present, UBSAN just inserts __builtin_trap().
 
-Signed-off-by: Gokul Sriram Palanisamy <gpalan@codeaurora.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 37 ++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+Can't objtool be told to ignore a ud2 that lacks an execution path to it?
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 03130a3206b4..ad437c6f49a0 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -125,6 +125,14 @@
- 
- #define PCIE20_LNK_CONTROL2_LINK_STATUS2        0xA0
- 
-+#define __set(v, a, b)	(((v) << (b)) & GENMASK(a, b))
-+#define __mask(a, b)	(((1 << ((a) + 1)) - 1) & ~((1 << (b)) - 1))
-+#define PCIE20_DEV_CAS			0x78
-+#define PCIE20_MRRS_MASK		__mask(14, 12)
-+#define PCIE20_MRRS(x)			__set(x, 14, 12)
-+#define PCIE20_MPS_MASK			__mask(7, 5)
-+#define PCIE20_MPS(x)			__set(x, 7, 5)
-+
- #define DEVICE_TYPE_RC				0x4
- 
- #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
-@@ -1595,6 +1603,35 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static void qcom_pcie_fixup_final(struct pci_dev *pcidev)
-+{
-+	int cap, err;
-+	u16 ctl, reg_val;
-+
-+	cap = pci_pcie_cap(pcidev);
-+	if (!cap)
-+		return;
-+
-+	err = pci_read_config_word(pcidev, cap + PCI_EXP_DEVCTL, &ctl);
-+
-+	if (err)
-+		return;
-+
-+	reg_val = ctl;
-+
-+	if (((reg_val & PCIE20_MRRS_MASK) >> 12) > 1)
-+		reg_val = (reg_val & ~(PCIE20_MRRS_MASK)) | PCIE20_MRRS(0x1);
-+
-+	if (((ctl & PCIE20_MPS_MASK) >> 5) > 1)
-+		reg_val = (reg_val & ~(PCIE20_MPS_MASK)) | PCIE20_MPS(0x1);
-+
-+	err = pci_write_config_word(pcidev, cap + PCI_EXP_DEVCTL, reg_val);
-+
-+	if (err)
-+		dev_err(&pcidev->dev, "pcie config write failed %d\n", err);
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, qcom_pcie_fixup_final);
-+
- static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-apq8084", .data = &ops_1_0_0 },
- 	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_2_1_0 },
 -- 
-2.25.1
-
+Kees Cook
