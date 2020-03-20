@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EFDC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 06:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76A8C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 06:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7BF0206F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 06:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 992D020753
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 06:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgCUG6Y (ORCPT
+        id S1728108AbgCUG63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 02:58:24 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:32972 "EHLO huawei.com"
+        Sat, 21 Mar 2020 02:58:29 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:32970 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728010AbgCUG6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 02:58:24 -0400
+        id S1728015AbgCUG62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 02:58:28 -0400
 Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 86C6C5A21D6BF93A4766;
+        by Forcepoint Email with ESMTP id 8AF5B162626F089CF3CF;
         Sat, 21 Mar 2020 14:58:20 +0800 (CST)
 Received: from localhost.localdomain (10.175.34.53) by
  DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 21 Mar 2020 14:57:22 +0800
+ 14.3.487.0; Sat, 21 Mar 2020 14:57:23 +0800
 From:   Luo bin <luobin9@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
         <luoxianjun@huawei.com>, <luobin9@huawei.com>,
         <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
-Subject: [PATCH net 1/5] hinic: fix a bug of waitting for IO stopped
-Date:   Fri, 20 Mar 2020 23:13:16 +0000
-Message-ID: <20200320231320.1001-2-luobin9@huawei.com>
+Subject: [PATCH net 3/5] hinic: fix out-of-order excution in arm cpu
+Date:   Fri, 20 Mar 2020 23:13:18 +0000
+Message-ID: <20200320231320.1001-4-luobin9@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200320231320.1001-1-luobin9@huawei.com>
 References: <20200320231320.1001-1-luobin9@huawei.com>
@@ -46,84 +46,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-it's unreliable for fw to check whether IO is stopped, so driver
-wait for enough time to ensure IO process is done in hw before
-freeing resources
+add read barrier in driver code to keep from reading other fileds
+in dma memory which is writable for hw until we have verified the
+memory is valid for driver
 
 Signed-off-by: Luo bin <luobin9@huawei.com>
 ---
- .../net/ethernet/huawei/hinic/hinic_hw_dev.c  | 51 +------------------
- 1 file changed, 2 insertions(+), 49 deletions(-)
+ drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c | 2 ++
+ drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c  | 2 ++
+ drivers/net/ethernet/huawei/hinic/hinic_rx.c      | 3 +++
+ drivers/net/ethernet/huawei/hinic/hinic_tx.c      | 2 ++
+ 4 files changed, 9 insertions(+)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-index 79b3d53f2fbf..c7c75b772a86 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-@@ -360,50 +360,6 @@ static int wait_for_db_state(struct hinic_hwdev *hwdev)
- 	return -EFAULT;
- }
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c
+index eb53c15b13f3..33f93cc25193 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c
+@@ -623,6 +623,8 @@ static int cmdq_cmd_ceq_handler(struct hinic_cmdq *cmdq, u16 ci,
+ 	if (!CMDQ_WQE_COMPLETED(be32_to_cpu(ctrl->ctrl_info)))
+ 		return -EBUSY;
  
--static int wait_for_io_stopped(struct hinic_hwdev *hwdev)
--{
--	struct hinic_cmd_io_status cmd_io_status;
--	struct hinic_hwif *hwif = hwdev->hwif;
--	struct pci_dev *pdev = hwif->pdev;
--	struct hinic_pfhwdev *pfhwdev;
--	unsigned long end;
--	u16 out_size;
--	int err;
--
--	if (!HINIC_IS_PF(hwif) && !HINIC_IS_PPF(hwif)) {
--		dev_err(&pdev->dev, "Unsupported PCI Function type\n");
--		return -EINVAL;
--	}
--
--	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
--
--	cmd_io_status.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
--
--	end = jiffies + msecs_to_jiffies(IO_STATUS_TIMEOUT);
--	do {
--		err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
--					HINIC_COMM_CMD_IO_STATUS_GET,
--					&cmd_io_status, sizeof(cmd_io_status),
--					&cmd_io_status, &out_size,
--					HINIC_MGMT_MSG_SYNC);
--		if ((err) || (out_size != sizeof(cmd_io_status))) {
--			dev_err(&pdev->dev, "Failed to get IO status, ret = %d\n",
--				err);
--			return err;
--		}
--
--		if (cmd_io_status.status == IO_STOPPED) {
--			dev_info(&pdev->dev, "IO stopped\n");
--			return 0;
--		}
--
--		msleep(20);
--	} while (time_before(jiffies, end));
--
--	dev_err(&pdev->dev, "Wait for IO stopped - Timeout\n");
--	return -ETIMEDOUT;
--}
--
- /**
-  * clear_io_resource - set the IO resources as not active in the NIC
-  * @hwdev: the NIC HW device
-@@ -423,11 +379,8 @@ static int clear_io_resources(struct hinic_hwdev *hwdev)
- 		return -EINVAL;
- 	}
++	dma_rmb();
++
+ 	errcode = CMDQ_WQE_ERRCODE_GET(be32_to_cpu(status->status_info), VAL);
  
--	err = wait_for_io_stopped(hwdev);
--	if (err) {
--		dev_err(&pdev->dev, "IO has not stopped yet\n");
--		return err;
--	}
-+	/* sleep 100ms to wait for firmware stopping I/O */
-+	msleep(100);
+ 	cmdq_sync_cmd_handler(cmdq, ci, errcode);
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
+index 6a723c4757bc..c0b6bcb067cd 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
+@@ -235,6 +235,8 @@ static void aeq_irq_handler(struct hinic_eq *eq)
+ 		if (HINIC_EQ_ELEM_DESC_GET(aeqe_desc, WRAPPED) == eq->wrapped)
+ 			break;
  
- 	cmd_clear_io_res.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
++		dma_rmb();
++
+ 		event = HINIC_EQ_ELEM_DESC_GET(aeqe_desc, TYPE);
+ 		if (event >= HINIC_MAX_AEQ_EVENTS) {
+ 			dev_err(&pdev->dev, "Unknown AEQ Event %d\n", event);
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_rx.c b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
+index 2695ad69fca6..815649e37cb1 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_rx.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
+@@ -350,6 +350,9 @@ static int rxq_recv(struct hinic_rxq *rxq, int budget)
+ 		if (!rq_wqe)
+ 			break;
  
++		/* make sure we read rx_done before packet length */
++		dma_rmb();
++
+ 		cqe = rq->cqe[ci];
+ 		status =  be32_to_cpu(cqe->status);
+ 		hinic_rq_get_sge(rxq->rq, rq_wqe, ci, &sge);
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
+index 3c6762086fff..cabcc9019ee4 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
+@@ -627,6 +627,8 @@ static int free_tx_poll(struct napi_struct *napi, int budget)
+ 	do {
+ 		hw_ci = HW_CONS_IDX(sq) & wq->mask;
+ 
++		dma_rmb();
++
+ 		/* Reading a WQEBB to get real WQE size and consumer index. */
+ 		sq_wqe = hinic_sq_read_wqebb(sq, &skb, &wqe_size, &sw_ci);
+ 		if ((!sq_wqe) ||
 -- 
 2.17.1
 
