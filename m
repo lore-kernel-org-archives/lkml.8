@@ -2,128 +2,299 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC7DC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2973C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3D520722
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:34:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajHebim7"
+	by mail.kernel.org (Postfix) with ESMTP id 90ECB2076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:34:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584704091;
+	bh=UPwroZKi9/+LUrFti0mIWHGNtmYbdba8sjPgSVI8urQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=gEoR2bQnlbLMDKowN7xh2+Yng9f7lkZT235jSUfHBybBHUQCO4q3p9NS7OL0fyiYu
+	 wp4TgLxAes4l+1ZVJVgbG1tB55arf5N3TMcKxHstT5SQumB+1+rlMJ6Z3/yFraS1qp
+	 hur8NBhog6FiIMsDtvMtj4YbgUfABUcg6zZP1lKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgCTLea (ORCPT
+        id S1727056AbgCTLeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 07:34:30 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45063 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726831AbgCTLea (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 07:34:30 -0400
-Received: by mail-pf1-f195.google.com with SMTP id j10so3072374pfi.12;
-        Fri, 20 Mar 2020 04:34:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=w5yCwFFb0Wy5K3PTZwx7bVnKFFcSKBW5tKJtkESs2aw=;
-        b=ajHebim7c8DB+gyphBpDOpQUUg/DWO6XyWR+tC56I/NGTUMIsatgJAWVwOrLG+KiVz
-         JnDOI13m2hwna1rxBav5HzHy3ne7vUJ7JxorKw12YsN3HVdiVY65Hscv7kifbpbnGAIz
-         TPVp47Z0kvxMSheE8J7PFwbhgmi4rFAXsn9q/3Rw2JAgJmrYWUfqev5+XcSb2JznPvk7
-         Zenh06nqJlaUoMsAZe5zVl4nSLMjV2TmmSuHWFpkRhXsF+qbi6UiCoeVLyUhd+lTeVox
-         eE4VMkcywW+I2dBdqrxBKfBOmh7yKJdnYNapGPENPDd1AY+Sde8ENshPP5Uv+LVJb1kC
-         KeHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=w5yCwFFb0Wy5K3PTZwx7bVnKFFcSKBW5tKJtkESs2aw=;
-        b=j9nUBtFM46UpDd6+0cFolO+9bU2vgSKInWMFRF8u6QDMfdqLXc8Fj2iKUvOaTReayH
-         l61kqpTJg6biixV/UqcV9zOzIzvMTrOTCNCGTooQxW4eFKUWAiCvYmbU0nbYeW4kH0W2
-         /K2tbzplAYy6yFpH/vePmlUwmSxbm8YPkLzAnqTh9pfOEQ+O+oJgRt7V2MDiUIeXVzvL
-         j8fa1oUIEvkg3jldXpoKPHFBTsvpBjipLh3T8oUEpTAHJTtM2qxF4ajLlolHbkJfEQHz
-         4gAYtKRZB+tKCSRMTyIW0IiAHO9fxI9Q/XuroA34NNqIijnREYig41N3PanTa8MEPPK5
-         yXqg==
-X-Gm-Message-State: ANhLgQ25RKNDG1eGynNeDSf7j6ps23x8ntMbJO0Y4RHj9SEjqBpGjwye
-        aZzgaxy+g1+tw422HmC/DSAa6Hg7
-X-Google-Smtp-Source: ADFU+vsU/wDasiz6CVWOJuxcRdtMGvdG+9dyAmoR/SXy0i9xfJDdZyWNxGkjymDe87m5hrR5X8oAww==
-X-Received: by 2002:aa7:9aa9:: with SMTP id x9mr9480760pfi.320.1584704068743;
-        Fri, 20 Mar 2020 04:34:28 -0700 (PDT)
-Received: from localhost (216.24.188.11.16clouds.com. [216.24.188.11])
-        by smtp.gmail.com with ESMTPSA id q15sm5142428pgn.68.2020.03.20.04.34.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 20 Mar 2020 04:34:28 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 19:34:24 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        davem@davemloft.net, tglx@linutronix.de, broonie@kernel.org,
-        corbet@lwn.net, mchehab+samsung@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 0/7] introduce read_poll_timeout
-Message-ID: <20200320113424.GA29203@nuc8i5>
-References: <20200319163910.14733-1-zhengdejin5@gmail.com>
- <d1ba5c47-5a8f-f689-6d33-ec927f4268d8@gmail.com>
+        Fri, 20 Mar 2020 07:34:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726814AbgCTLeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 07:34:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6719A20754;
+        Fri, 20 Mar 2020 11:34:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584704088;
+        bh=UPwroZKi9/+LUrFti0mIWHGNtmYbdba8sjPgSVI8urQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XVhvT1gWHhk2s50ws4MzZ0eZxtFq5qNfBSWwFs0qYx4f/ejoktn1U3Mk9r0r9LlPR
+         /La9/Q6zJMgxps626DR9YmFQ7kCQxEbaw/q66ythde82eN5+UmbCXeQzoCGVbKE6rO
+         uilLgh7bBmW+rWNlmFGco5eTC1NhiqGGFN3sj9qs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.4 00/50] 5.4.27-rc3 review
+Date:   Fri, 20 Mar 2020 12:34:45 +0100
+Message-Id: <20200320113334.675365993@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.27-rc3.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.27-rc3
+X-KernelTest-Deadline: 2020-03-22T11:33+00:00
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d1ba5c47-5a8f-f689-6d33-ec927f4268d8@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 09:42:42AM -0700, Florian Fainelli wrote:
-> Le 2020-03-19 à 09:39, Dejin Zheng a écrit :
-> > This patch sets is introduce read_poll_timeout macro, it is an extension
-> > of readx_poll_timeout macro. the accessor function op just supports only
-> > one parameter in the readx_poll_timeout macro, but this macro can
-> > supports multiple variable parameters for it. so functions like
-> > phy_read(struct phy_device *phydev, u32 regnum) and
-> > phy_read_mmd(struct phy_device *phydev, int devad, u32 regnum) can
-> > use this poll timeout framework.
-> > 
-> > the first patch introduce read_poll_timeout macro, and the second patch
-> > redefined readx_poll_timeout macro by read_poll_timeout(), and the other
-> > patches are examples using read_poll_timeout macro.
-> > 
-> > 
-> > Dejin Zheng (7):
-> >   iopoll: introduce read_poll_timeout macro
-> >   iopoll: redefined readx_poll_timeout macro to simplify the code
-> >   net: phy: introduce phy_read_mmd_poll_timeout macro
-> >   net: phy: bcm84881: use phy_read_mmd_poll_timeout() to simplify the
-> >     code
-> >   net: phy: aquantia: use phy_read_mmd_poll_timeout() to simplify the
-> >     code
-> >   net: phy: introduce phy_read_poll_timeout macro
-> >   net: phy: use phy_read_poll_timeout() to simplify the code
-> > 
-> >  drivers/net/phy/aquantia_main.c | 16 +++++++--------
-> >  drivers/net/phy/bcm84881.c      | 24 ++++++----------------
-> >  drivers/net/phy/phy_device.c    | 18 ++++++-----------
-> >  include/linux/iopoll.h          | 36 ++++++++++++++++++++++++++-------
-> >  include/linux/phy.h             |  7 +++++++
-> >  5 files changed, 55 insertions(+), 46 deletions(-)
-> 
-> Your diffstat is positive, so what's the point of doing this? What
-> problem are you trying to solve?
+This is the start of the stable review cycle for the 5.4.27 release.
+There are 50 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-Since I added a lot of code comments(20 lines) in the first patch, so the
-diffstat is positive.
+Responses should be made by Sun, 22 Mar 2020 11:32:39 +0000.
+Anything received after that time might be too late.
 
-this patches just want to fix an issue that people often implement polling
-is wrong. we use a poll core which is known to be good by readx_poll_timeout
-gives us. It can support multiple parameters after extending
-readx_poll_timeout, so phy_read() and phy_read_mmd() also can use this
-poll core. 
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.27-rc3.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+and the diffstat can be found below.
 
-> -- 
-> Florian
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.4.27-rc3
+
+Matteo Croce <mcroce@redhat.com>
+    ipv4: ensure rcu_read_lock() in cipso_v4_error()
+
+Ard Biesheuvel <ardb@kernel.org>
+    ARM: 8961/2: Fix Kbuild issue caused by per-task stack protector GCC plugin
+
+Tony Fischetti <tony.fischetti@gmail.com>
+    HID: add ALWAYS_POLL quirk to lenovo pixart mouse
+
+Chen-Tsung Hsieh <chentsung@chromium.org>
+    HID: google: add moonball USB id
+
+Jann Horn <jannh@google.com>
+    mm: slub: add missing TID bump in kmem_cache_alloc_bulk()
+
+Kees Cook <keescook@chromium.org>
+    ARM: 8958/1: rename missed uaccess .fixup section
+
+Florian Fainelli <f.fainelli@gmail.com>
+    ARM: 8957/1: VDSO: Match ARMv8 timer in cntvct_functional()
+
+Carl Huang <cjhuang@codeaurora.org>
+    net: qrtr: fix len of skb_put_padto in qrtr_node_enqueue
+
+Ming Lei <ming.lei@redhat.com>
+    blk-mq: insert flush request to the front of dispatch queue
+
+Qian Cai <cai@lca.pw>
+    jbd2: fix data races at struct journal_head
+
+Alex Maftei (amaftei) <amaftei@solarflare.com>
+    sfc: fix timestamp reconstruction at 16-bit rollover points
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: fix packet forwarding in rmnet bridge mode
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: fix bridge mode bugs
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: use upper/lower device infrastructure
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: do not allow to change mux id if mux id is duplicated
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: remove rcu_read_lock in rmnet_force_unassociate_device()
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: fix suspicious RCU usage
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: fix NULL pointer dereference in rmnet_changelink()
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: fix NULL pointer dereference in rmnet_newlink()
+
+Luo bin <luobin9@huawei.com>
+    hinic: fix a bug of rss configuration
+
+Luo bin <luobin9@huawei.com>
+    hinic: fix a bug of setting hw_ioctxt
+
+Luo bin <luobin9@huawei.com>
+    hinic: fix a irq affinity bug
+
+Antoine Tenart <antoine.tenart@bootlin.com>
+    net: phy: mscc: fix firmware paths
+
+yangerkun <yangerkun@huawei.com>
+    slip: not call free_netdev before rtnl_unlock in slip_open
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    signal: avoid double atomic counter increments for user accounting
+
+Masahiro Yamada <masahiroy@kernel.org>
+    kbuild: add dt_binding_check to PHONY in a correct place
+
+Masahiro Yamada <masahiroy@kernel.org>
+    kbuild: add dtbs_check to PHONY
+
+Monk Liu <Monk.Liu@amd.com>
+    drm/amdgpu: fix memory leak during TDR test(v2)
+
+Ming Lei <ming.lei@redhat.com>
+    blk-mq: insert passthrough request into hctx->dispatch directly
+
+Esben Haabendal <esben@geanix.com>
+    net: ll_temac: Handle DMA halt condition caused by buffer underrun
+
+Esben Haabendal <esben@geanix.com>
+    net: ll_temac: Fix RX buffer descriptor handling on GFP_ATOMIC pressure
+
+Esben Haabendal <esben@geanix.com>
+    net: ll_temac: Add more error handling of dma_map_single() calls
+
+Esben Haabendal <esben@geanix.com>
+    net: ll_temac: Fix race condition causing TX hang
+
+Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+    mac80211: rx: avoid RCU list traversal under mutex
+
+Marek Vasut <marex@denx.de>
+    net: ks8851-ml: Fix IRQ handling and locking
+
+Daniele Palmas <dnlplm@gmail.com>
+    net: usb: qmi_wwan: restore mtu min/max values after raw_ip switch
+
+Igor Druzhinin <igor.druzhinin@citrix.com>
+    scsi: libfc: free response frame from GPN_ID
+
+Johannes Berg <johannes.berg@intel.com>
+    cfg80211: check reg_rule for NULL in handle_channel_custom()
+
+Tom Zanussi <zanussi@kernel.org>
+    tracing: Fix number printing bug in print_synth_event()
+
+Michael Ellerman <mpe@ellerman.id.au>
+    selftests/rseq: Fix out-of-tree compilation
+
+Hanno Zulla <kontakt@hanno.de>
+    HID: hid-bigbenff: fix race condition for scheduled work during removal
+
+Hanno Zulla <kontakt@hanno.de>
+    HID: hid-bigbenff: call hid_hw_stop() in case of error
+
+Hanno Zulla <kontakt@hanno.de>
+    HID: hid-bigbenff: fix general protection fault caused by double kfree
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    HID: i2c-hid: add Trekstor Surfbook E11B to descriptor override
+
+Mika Westerberg <mika.westerberg@linux.intel.com>
+    ACPI: watchdog: Set default timeout in probe
+
+Mansour Behabadi <mansour@oxplot.com>
+    HID: apple: Add support for recent firmware on Magic Keyboards
+
+Jean Delvare <jdelvare@suse.de>
+    ACPI: watchdog: Allow disabling WDAT at boot
+
+Felix Kuehling <Felix.Kuehling@amd.com>
+    drm/amdgpu: Fix TLB invalidation request when using semaphore
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    netfilter: xt_hashlimit: unregister proc file before releasing mutex
+
+Florian Westphal <fw@strlen.de>
+    netfilter: hashlimit: do not use indirect calls during gc
+
+
+-------------
+
+Diffstat:
+
+ Documentation/admin-guide/kernel-parameters.txt    |   4 +
+ Makefile                                           |   7 +-
+ arch/arm/Makefile                                  |   4 +-
+ arch/arm/boot/compressed/Makefile                  |   4 +-
+ arch/arm/kernel/vdso.c                             |   2 +
+ arch/arm/lib/copy_from_user.S                      |   2 +-
+ block/blk-flush.c                                  |   2 +-
+ block/blk-mq-sched.c                               |  44 ++++-
+ block/blk-mq.c                                     |  18 +-
+ block/blk-mq.h                                     |   3 +-
+ drivers/acpi/acpi_watchdog.c                       |  12 +-
+ drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c             |   5 +-
+ drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c              |   8 +-
+ drivers/gpu/drm/amd/powerplay/smu_v11_0.c          |   6 +-
+ drivers/hid/hid-apple.c                            |   3 +-
+ drivers/hid/hid-bigbenff.c                         |  31 ++-
+ drivers/hid/hid-google-hammer.c                    |   2 +
+ drivers/hid/hid-ids.h                              |   2 +
+ drivers/hid/hid-quirks.c                           |   1 +
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c           |   8 +
+ drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c   |   1 +
+ drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h   |   2 +-
+ drivers/net/ethernet/huawei/hinic/hinic_hw_if.h    |   1 +
+ drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h    |   1 +
+ drivers/net/ethernet/huawei/hinic/hinic_main.c     |   3 +-
+ drivers/net/ethernet/huawei/hinic/hinic_rx.c       |   5 +-
+ drivers/net/ethernet/micrel/ks8851_mll.c           |  14 +-
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c | 186 +++++++++---------
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_config.h |   3 +-
+ .../net/ethernet/qualcomm/rmnet/rmnet_handlers.c   |   7 +-
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c    |   8 -
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.h    |   1 -
+ drivers/net/ethernet/sfc/ptp.c                     |  38 +++-
+ drivers/net/ethernet/xilinx/ll_temac.h             |   4 +
+ drivers/net/ethernet/xilinx/ll_temac_main.c        | 209 +++++++++++++++++----
+ drivers/net/phy/mscc.c                             |   4 +-
+ drivers/net/slip/slip.c                            |   3 +
+ drivers/net/usb/qmi_wwan.c                         |   3 +
+ drivers/scsi/libfc/fc_disc.c                       |   2 +
+ drivers/watchdog/wdat_wdt.c                        |  23 +++
+ fs/jbd2/transaction.c                              |   8 +-
+ kernel/signal.c                                    |  23 ++-
+ kernel/trace/trace_events_hist.c                   |  32 +++-
+ mm/slub.c                                          |   9 +
+ net/ipv4/cipso_ipv4.c                              |   7 +-
+ net/mac80211/rx.c                                  |   2 +-
+ net/netfilter/xt_hashlimit.c                       |  36 +---
+ net/qrtr/qrtr.c                                    |   2 +-
+ net/wireless/reg.c                                 |   2 +-
+ tools/testing/selftests/rseq/Makefile              |   2 +-
+ 50 files changed, 561 insertions(+), 248 deletions(-)
+
+
