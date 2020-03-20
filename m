@@ -2,136 +2,230 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F84DC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E972C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0908B20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:26:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="Oo6Cg13Q"
+	by mail.kernel.org (Postfix) with ESMTP id 2AEE72051A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:31:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgCTH0E (ORCPT
+        id S1726820AbgCTHbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 03:26:04 -0400
-Received: from mail-eopbgr150128.outbound.protection.outlook.com ([40.107.15.128]:50526
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725802AbgCTH0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 03:26:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dx8ycL/itStokkGyASj50iPolyYDNbvilv4V7tZsNuo79jCijEPco2oPAQiVxTbHGa2qoUmm4B2s4G06qiNVmaQSltDq2qEpE8N0LvTRzUOQaQv0UPhfW8nRk5ftYIZ/ZCFaMIBcPKWlOG/PXCbbXIPmsFh3VmfakBELcG88UJRfJJ8aXUcS6L86Ucqhi/IFc8y6WzCpz70/kV/ixLzpxfaS0x912uc66ISD1TkpwqOUTzikzp49oXJ5Yi9y1loWvi8LaCfV1EY/Do0PWT0iSVOiR83ve6DHXtCpNhuNJXvhTY/kIH4LmXLxcZjlP+sg6mYG8fHyeVKOUUoIs2uDuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VJCJf6hGOf5Xw8yUxEeqEhjtLrfkDZKMqr9MkjFaDY8=;
- b=HEWczF7pAhNhKb57cKXB5B/pEJ7m2hu7jHhpnZbSeTYGVH/2sYWCfAssf5762h+eP1ytgI1qcHbUMIWhUpOWlmJPbeF9OQvzFRmmIjmyi9z9EL0S0S5Afob5o0BLkC6jqk6Mkhf9dRlFYU5h2QiNnun7Kg5W1UyeedL2ub1yutveEKg7yx2hez9EWsoZezW1yGeBitzZTVedNLSdZ3SSrgcV8EdcjlknCHTB4iFQyo05g48357IghHEpTakbIDtfFxp2ACmO4sg4SPOuKAn0TwR520f1tXa7wEY3kEoi/Z/IehDc1xaokETtr0oO2oXEthXnjFZwxrLT2onavDJytA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VJCJf6hGOf5Xw8yUxEeqEhjtLrfkDZKMqr9MkjFaDY8=;
- b=Oo6Cg13QF3RONIZJ3xREekbuOpcM9BqYonEvWCsfWJ8DDuFumugi9CyteyWG0XaaC8uiJ90p0Q3Q9ZrFQoJwIani80B2Z/pfaaW6gq2cF7KR8sBu8y2CTE7/jEDTx/LWsp4OAayL4BAwX5gW2w57gi0A9dE7j2kHggjoe5owxBk=
-Received: from VI1PR05MB6845.eurprd05.prod.outlook.com (10.186.163.80) by
- VI1PR05MB7039.eurprd05.prod.outlook.com (20.181.33.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.14; Fri, 20 Mar 2020 07:26:00 +0000
-Received: from VI1PR05MB6845.eurprd05.prod.outlook.com
- ([fe80::c13:1d07:fa02:6eeb]) by VI1PR05MB6845.eurprd05.prod.outlook.com
- ([fe80::c13:1d07:fa02:6eeb%7]) with mapi id 15.20.2835.017; Fri, 20 Mar 2020
- 07:26:00 +0000
-From:   Marcel Ziswiler <marcel.ziswiler@toradex.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>,
-        "tharvey@gateworks.com" <tharvey@gateworks.com>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-CC:     "alison.wang@nxp.com" <alison.wang@nxp.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Igor Opanyuk <igor.opanyuk@toradex.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Subject: Re: [alsa-devel] [EXT] Re: [PATCH] ASoC: sgtl5000: Revert "ASoC:
- sgtl5000: Fix of unmute outputs on probe"
-Thread-Topic: [alsa-devel] [EXT] Re: [PATCH] ASoC: sgtl5000: Revert "ASoC:
- sgtl5000: Fix of unmute outputs on probe"
-Thread-Index: AQHVsLyIRDFbzLs7vEuxsFkXl6DgTKe2NokAgAAA1bCAAAyIYIAABwsAgAAETYiAAB0nAICake+AgACxzgA=
-Date:   Fri, 20 Mar 2020 07:26:00 +0000
-Message-ID: <af99c9abd9c2aec6a074fb05310c56b780725ebd.camel@toradex.com>
-References: <20191212071847.45561-1-alison.wang@nxp.com>
-         <CAGgjyvHHzPWjRTqxYmGCmk3qa6=kOezHywVDFomgD6UNj-zwpQ@mail.gmail.com>
-         <VI1PR04MB40627CDD5F0C17D8DCDCFFE2F4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
-         <VI1PR04MB4062C67906888DA8142C17E1F4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
-         <CAGgjyvGAjx1SV=K66AM24DxMTA_sAF2uhhDw5gXCFTGNZi8E7Q@mail.gmail.com>
-         <VI1PR04MB40620DD55D5ED0FDC3E94C2BF4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
-         <20191212122318.GB4310@sirena.org.uk>
-         <CAJ+vNU0xZOb0R2VNkq6k3efdkgQUtO_-cEdNgZ643nt_G=vevQ@mail.gmail.com>
-In-Reply-To: <CAJ+vNU0xZOb0R2VNkq6k3efdkgQUtO_-cEdNgZ643nt_G=vevQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=marcel.ziswiler@toradex.com; 
-x-originating-ip: [2a01:2a8:8501:4d00:ca5b:76ff:fedf:3c49]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bf5555a0-f05a-423f-21b2-08d7cc9ff0db
-x-ms-traffictypediagnostic: VI1PR05MB7039:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB7039D274F30E082628FEBE62FBF50@VI1PR05MB7039.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 03484C0ABF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(376002)(366004)(136003)(39850400004)(199004)(6506007)(6512007)(53546011)(81156014)(478600001)(2616005)(316002)(2906002)(81166006)(186003)(6486002)(110136005)(71200400001)(4326008)(8676002)(66556008)(76116006)(91956017)(66446008)(86362001)(54906003)(64756008)(6636002)(44832011)(66946007)(8936002)(66476007)(5660300002)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB7039;H:VI1PR05MB6845.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 724z4VoXXVWEE3GFsn+gCu0PUdLn1mjqU1ShTDZVMHQtqiLmNvMIg3VU2K9RhKujPO6W0IGzZ4ovVMIh/g22CXbxyieBh8YhffDVdPLLr0AYdTaoJez4chwgMe9ygx7KuxR4sbW4Asv6iIzMm98waJO2tyXqgJDtXPGa6OitJIPAZZjhRAzaio5EbtvVVdUTcxb1Y5K77hvFkjsd4bExr79zfRK4YAUpfhpmJGJot6n640OiMoBv+eD123fZ9BZoqKOk2E6qEYMh0ETdtpCdHGSDpIM2WxMSpKcee/BWWZEHHe0Npbdwq5RvMp8a/+9zXGRFL0uSEuDSYJLmDIzOxDIdkYCDfIOltHr4ssY7RX4kDIZCCUu87Lc3pqv67ZHMDarywhS/5dBuzQTWSZSk/K6iZU04hThWIGwRHMUjBCl1Ef8bJ16ClpfcyY4YsXI1
-x-ms-exchange-antispam-messagedata: rLNWmOdow88jAvwQxQ/0UmcYRImoCP1KDp5lnhfN2ksrLMz79h79BkpzyFAeT+JlExPk1vcPmGsHPCbl8GvY9OPtlJozfVQhNw43e+feR/BNaZVUGUldkktXFaFahya29oHmrA5yuErMyrOMyM+//V1le5epsxpr63YGq+dTrK7EBSLy9j9n+4oIU1MIUxTJHexSwVqRSZX0p8/3E+zmuA==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <877CE7CFF0A2854B8E2A79F30AA4C85F@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 20 Mar 2020 03:31:17 -0400
+Received: from mga01.intel.com ([192.55.52.88]:44358 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbgCTHbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 03:31:16 -0400
+IronPort-SDR: xyR9PVkL7ORHhatlppD6+IcjC6PpbfO/dobL8BjW/uK/kcyQL1YSk4TISBtbFX9y2WZJVoqI+b
+ wV5I0eUv0xeA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 00:31:15 -0700
+IronPort-SDR: Dv2rHBkMF6Aji8poRBpaGvrfdk8DQm32NBmcjr71Cs+UOz38m+hDhFOkIcOaVfKbADjFH9WQos
+ F0Qxeqd5kD/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,283,1580803200"; 
+   d="scan'208";a="234429344"
+Received: from nntpdsd52-183.inn.intel.com ([10.125.52.183])
+  by orsmga007.jf.intel.com with ESMTP; 20 Mar 2020 00:31:11 -0700
+From:   roman.sudarikov@linux.intel.com
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, eranian@google.com,
+        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com
+Cc:     alexander.antonov@intel.com, roman.sudarikov@linux.intel.com
+Subject: [PATCH v8 0/3] perf x86: Exposing IO stack to IO PMON mapping through sysfs
+Date:   Fri, 20 Mar 2020 10:31:07 +0300
+Message-Id: <20200320073110.4761-1-roman.sudarikov@linux.intel.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf5555a0-f05a-423f-21b2-08d7cc9ff0db
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Mar 2020 07:26:00.7510
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pUJON9UEUUthewPUPf6HI4j/hwyWJhoqKGIh2ZGE/YSa5vS0Besq6Sr+t6A72VJcsnTVtY8x6kRgmrb8t/7NVcfU5xT41Se7ZwIrAuZYjP4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB7039
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgVGltDQoNCk9uIFRodSwgMjAyMC0wMy0xOSBhdCAxMzo0OSAtMDcwMCwgVGltIEhhcnZleSB3
-cm90ZToNCj4gT24gVGh1LCBEZWMgMTIsIDIwMTkgYXQgNDoyNCBBTSBNYXJrIEJyb3duIDxicm9v
-bmllQGtlcm5lbC5vcmc+DQo+IHdyb3RlOg0KPiA+IE9uIFRodSwgRGVjIDEyLCAyMDE5IGF0IDEw
-OjQ2OjMxQU0gKzAwMDAsIEFsaXNvbiBXYW5nIHdyb3RlOg0KPiA+IA0KPiA+ID4gV2UgdGVzdGVk
-IHRoaXMgc3RhbmRhcmQgc29sdXRpb24gdXNpbmcgZ3N0cmVhbWVyIGFuZCBzdGFuZGFyZA0KPiA+
-ID4gQUxTQQ0KPiA+ID4gdG9vbHMgbGlrZSBhcGxheSwgYXJlY29yZCBhbmQgYWxsIHRoZXNlIHRv
-b2xzIHVubXV0ZSBuZWVkZWQNCj4gPiA+IGJsb2Nrcw0KPiA+ID4gc3VjY2Vzc2Z1bGx5Lg0KPiA+
-ID4gW0FsaXNvbiBXYW5nXSBJIGFtIHVzaW5nIGFwbGF5LiBEbyB5b3UgbWVhbiBJIG5lZWQgdG8g
-YWRkIHNvbWUNCj4gPiA+IHBhcmFtZXRlcnMgZm9yIGFwbGF5IG9yIG90aGVycyB0byB1bm11dGUg
-dGhlIG91dHB1dHM/DQo+ID4gDQo+ID4gVXNlIGFtaXhlci4NCj4gDQo+IE1hcmMgLyBPbGVrc2Fu
-ZHIsDQo+IA0KPiBJIGNhbid0IHNlZW0gdG8gZmluZCB0aGUgb3JpZ2luYWwgcGF0Y2ggaW4gbXkg
-bWFpbGJveCBmb3IgNjMxYmM4ZjoNCj4gKCdBU29DOiBzZ3RsNTAwMDogRml4IG9mIHVubXV0ZSBv
-dXRwdXRzIG9uIHByb2JlJykNCg0KSSBmb3J3YXJkZWQgeW91IHRoYXQgb25lIGFnYWluLiBPSz8N
-Cg0KPiBob3dldmVyIEkgZmluZCBpdA0KPiBicmVha3Mgc2d0bDUwMDAgYXVkaW8gb3V0cHV0IG9u
-IHRoZSBHYXRld29ya3MgYm9hcmRzIHdoaWNoIGlzIHN0aWxsDQo+IGJyb2tlbiBvbiA1LjYtcmM2
-Lg0KDQpXaGF0IGV4YWN0bHkgZG8geW91IG1lYW4gYnkgImJyZWFrcyI/IElzbid0IGl0IHRoYXQg
-eW91IGp1c3QgbmVlZCB0bw0KdW5tdXRlIHN0dWZmIGUuZy4gdXNpbmcgYW1peGVyIG9yIHVzaW5n
-IGEgcHJvcGVyIHVwZGF0ZWQgYXNvdW5kLnN0YXRlDQpmaWxlIHdpdGggZGVmYXVsdCBzdGF0ZXMg
-Zm9yIHlvdXIgY29udHJvbHM/DQoNCj4gV2FzIHRoZXJlIHNvbWUgZm9sbG93LXVwIHBhdGNoZXMg
-dGhhdCBoYXZlbid0IG1hZGUNCj4gaXQgaW50byBtYWlubGluZSB5ZXQgcmVnYXJkaW5nIHRoaXM/
-DQoNCkkgZG9uJ3QgdGhpbmsgc28uIEl0IGFsbCB3b3JrcyBwZXJmZWN0bHksIG5vdD8NCg0KPiBU
-aGUgcmVzcG9uc2UgYWJvdmUgaW5kaWNhdGVzIG1heWJlIHRoZXJlIHdhcyBhbiBhZGRpdGlvbmFs
-IEFMU0ENCj4gY29udHJvbCBwZXJoYXBzIGFkZGVkIGFzIGEgcmVzb2x1dGlvbiBidXQgSSBkb24n
-dCBzZWUgYW55IGRpZmZlcmVuY2VzDQo+IHRoZXJlLg0KDQpOb3QgdGhhdCBJIGFtIGF3YXJlIG9m
-LCBuby4NCg0KPiBCZXN0IFJlZ2FyZHMsDQo+IA0KPiBUaW0NCg0KQ2hlZXJzDQoNCk1hcmNlbA0K
+From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+
+The previous version can be found at:
+v7: https://lkml.kernel.org/r/20200303135418.9621-1-roman.sudarikov@linux.intel.com/
+Changes in this revision are:
+v7 -> v8:
+- Addressed comments from Kan Liang:
+  1. Fixed coding style issues (gotos in error path, comments style)
+
+The previous version can be found at:
+v6: https://lkml.kernel.org/r/20200213150148.5627-1-roman.sudarikov@linux.intel.com/
+
+Changes in this revision are:
+v6 -> v7:
+- Addressed comments from Greg Kroah-Hartman:
+  1. Added proper handling of load/unload path
+  2. Simplified the mapping attribute show procedure by using the segment value
+     of the first available root bus for all mapping attributes which is safe
+     due to current implementation supports single segment configuration only
+  3. Fixed coding style issues (extra lines, gotos in error path, macros etc)
+
+The previous version can be found at:
+v5: https://lkml.kernel.org/r/20200211161549.19828-1-roman.sudarikov@linux.intel.com/
+
+Changes in this revision are:
+v5 -> v6:
+  1. Changed the mapping attribute name to "dieX"
+  2. Called sysfs_attr_init() prior to dynamically creating the mapping attrs
+  3. Removed redundant "empty" attribute
+  4. Got an agreement on the mapping attribute format
+
+The previous version can be found at:
+v4: https://lkml.kernel.org/r/20200117133759.5729-1-roman.sudarikov@linux.intel.com/
+
+Changes in this revision are:
+v4 -> v5:
+- Addressed comments from Greg Kroah-Hartman:
+  1. Using the attr_update flow for newly introduced optional attributes
+  2. No subfolder, optional attributes are created the same level as 'cpumask'
+  3. No symlinks, optional attributes are created as files
+  4. Single file for each IIO PMON block to node mapping
+  5. Added Documentation/ABI/sysfs-devices-mapping
+
+The previous version can be found at:
+v3: https://lkml.kernel.org/r/20200113135444.12027-1-roman.sudarikov@linux.intel.com
+
+Changes in this revision are:
+v3 -> v4:
+- Addressed comments from Greg Kroah-Hartman:
+  1. Reworked handling of newly introduced attribute.
+  2. Required Documentation update is expected in the follow up patchset
+
+
+The previous version can be found at:
+v2: https://lkml.kernel.org/r/20191210091451.6054-1-roman.sudarikov@linux.intel.com
+
+Changes in this revision are:
+v2 -> v3:
+  1. Addressed comments from Peter and Kan
+
+The previous version can be found at:
+v1: https://lkml.kernel.org/r/20191126163630.17300-1-roman.sudarikov@linux.intel.com
+
+Changes in this revision are:
+v1 -> v2:
+  1. Fixed process related issues;
+  2. This patch set includes kernel support for IIO stack to PMON mapping;
+  3. Stephane raised concerns regarding output format which may require
+code changes in the user space part of the feature only. We will continue
+output format discussion in the context of user space update.
+
+Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
+significant changes in the integrated I/O (IIO) architecture. The new
+solution introduces IIO stacks which are responsible for managing traffic
+between the PCIe domain and the Mesh domain. Each IIO stack has its own
+PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
+or various built-in accelerators. IIO PMON blocks allow concurrent
+monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
+
+Software is supposed to program required perf counters within each IIO
+stack and gather performance data. The tricky thing here is that IIO PMON
+reports data per IIO stack but users have no idea what IIO stacks are -
+they only know devices which are connected to the platform.
+
+Understanding IIO stack concept to find which IIO stack that particular
+IO device is connected to, or to identify an IIO PMON block to program
+for monitoring specific IIO stack assumes a lot of implicit knowledge
+about given Intel server platform architecture.
+
+This patch set introduces:
+1. An infrastructure for exposing an Uncore unit to Uncore PMON mapping
+   through sysfs-backend;
+2. A new --iiostat mode in perf stat to provide I/O performance metrics
+   per I/O device.
+
+Usage examples:
+
+1. List all devices below IIO stacks
+  ./perf stat --iiostat=show
+
+Sample output w/o libpci:
+
+    S0-RootPort0-uncore_iio_0<00:00.0>
+    S1-RootPort0-uncore_iio_0<81:00.0>
+    S0-RootPort1-uncore_iio_1<18:00.0>
+    S1-RootPort1-uncore_iio_1<86:00.0>
+    S1-RootPort1-uncore_iio_1<88:00.0>
+    S0-RootPort2-uncore_iio_2<3d:00.0>
+    S1-RootPort2-uncore_iio_2<af:00.0>
+    S1-RootPort3-uncore_iio_3<da:00.0>
+
+Sample output with libpci:
+
+    S0-RootPort0-uncore_iio_0<00:00.0 Sky Lake-E DMI3 Registers>
+    S1-RootPort0-uncore_iio_0<81:00.0 Ethernet Controller X710 for 10GbE SFP+>
+    S0-RootPort1-uncore_iio_1<18:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
+    S1-RootPort1-uncore_iio_1<86:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
+    S1-RootPort1-uncore_iio_1<88:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
+    S0-RootPort2-uncore_iio_2<3d:00.0 Ethernet Connection X722 for 10GBASE-T>
+    S1-RootPort2-uncore_iio_2<af:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
+    S1-RootPort3-uncore_iio_3<da:00.0 NVMe Datacenter SSD [Optane]>
+
+2. Collect metrics for all I/O devices below IIO stack
+
+  ./perf stat --iiostat -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
+    357708+0 records in
+    357707+0 records out
+    375083606016 bytes (375 GB, 349 GiB) copied, 215.381 s, 1.7 GB/s
+
+  Performance counter stats for 'system wide':
+
+     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
+    00:00.0                    0                    0                    0                    0
+    81:00.0                    0                    0                    0                    0
+    18:00.0                    0                    0                    0                    0
+    86:00.0                    0                    0                    0                    0
+    88:00.0                    0                    0                    0                    0
+    3b:00.0                    3                    0                    0                    0
+    3c:03.0                    3                    0                    0                    0
+    3d:00.0                    3                    0                    0                    0
+    af:00.0                    0                    0                    0                    0
+    da:00.0               358559                   44                    0                   22
+
+    215.383783574 seconds time elapsed
+
+
+3. Collect metrics for comma separted list of I/O devices
+
+  ./perf stat --iiostat=da:00.0 -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
+    381555+0 records in
+    381554+0 records out
+    400088457216 bytes (400 GB, 373 GiB) copied, 374.044 s, 1.1 GB/s
+
+  Performance counter stats for 'system wide':
+
+     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
+    da:00.0               382462                   47                    0                   23
+
+    374.045775505 seconds time elapsed
+
+Roman Sudarikov (3):
+  perf x86: Infrastructure for exposing an Uncore unit to PMON mapping
+  perf x86: Topology max dies for whole system
+  perf x86: Exposing an Uncore unit to PMON for Intel Xeon® server
+    platform
+
+ .../ABI/testing/sysfs-devices-mapping         |  33 +++
+ arch/x86/events/intel/uncore.c                |  21 +-
+ arch/x86/events/intel/uncore.h                |  18 ++
+ arch/x86/events/intel/uncore_snbep.c          | 191 ++++++++++++++++++
+ 4 files changed, 257 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-mapping
+
+
+base-commit: 6c90b86a745a446717fdf408c4a8a4631a5e8ee3
+-- 
+2.19.1
+
