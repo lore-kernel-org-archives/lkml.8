@@ -2,138 +2,79 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F96C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB68C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC182072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:11:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584717085;
-	bh=qz6nxjt+oHRdtFK5DtUf8W3pt7MtXBjKeLpdYT+SXj4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=b8uM6Q3Il1hHdABsUMWkTMxSTK1O6ftR9KE76wIwizXacpgehHP0ozy0QeMJxGSew
-	 KxqzfsNfnI7o1IUv8DIl6Wtmk+W2UbGlrEuzz0BiDxlghlk1V7xMYr29Dc1xEA85/i
-	 hhLnkcwPABsY27h6qcpJuUiAkS88at9vZNVR1OK8=
+	by mail.kernel.org (Postfix) with ESMTP id B4F4F2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:12:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbgCTPLY (ORCPT
+        id S1727176AbgCTPM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:11:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727400AbgCTPLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 11:11:07 -0400
-Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A35162072D;
-        Fri, 20 Mar 2020 15:11:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584717066;
-        bh=qz6nxjt+oHRdtFK5DtUf8W3pt7MtXBjKeLpdYT+SXj4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jMVdDgVTlPr9q4qgOQX+s+/uNPsSTDhfGiESnAjI2AGmzXCyl3PkU1dSvU2b2I1Vu
-         CGQA+Ezuq0o70vsmAIKPEauiCmAHHE0cYxQfeWLwYuups0vVmKNTcxChn7S4KXSOvq
-         4g6dIhGnq0ArXroR/CxDRUgHb/DLqWbXrZyQEEaQ=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jFJIe-000ukc-Gx; Fri, 20 Mar 2020 16:11:04 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        dmaengine@vger.kernel.org, Matthias Maennich <maennich@google.com>,
-        Harry Wei <harryxiyou@gmail.com>, x86@kernel.org,
-        ecryptfs@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        target-devel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Tyler Hicks <code@tyhicks.com>, Vinod Koul <vkoul@kernel.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-scsi@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org, Borislav Petkov <bp@alien8.de>
-Subject: [PATCH v2 0/2] Don't generate thousands of new warnings when building docs
-Date:   Fri, 20 Mar 2020 16:11:01 +0100
-Message-Id: <cover.1584716446.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 20 Mar 2020 11:12:58 -0400
+Received: from outbound-smtp36.blacknight.com ([46.22.139.219]:55885 "EHLO
+        outbound-smtp36.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726773AbgCTPM6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 11:12:58 -0400
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp36.blacknight.com (Postfix) with ESMTPS id 024EC1B75
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 15:12:57 +0000 (GMT)
+Received: (qmail 28040 invoked from network); 20 Mar 2020 15:12:56 -0000
+Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPA; 20 Mar 2020 15:12:56 -0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: [PATCH 0/4] Throttle select_idle_sibling when a target domain is overloaded
+Date:   Fri, 20 Mar 2020 15:12:41 +0000
+Message-Id: <20200320151245.21152-1-mgorman@techsingularity.net>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This small series address a regression caused by a new patch at
-docs-next (and at linux-next).
+This is a follow-on from the CPU/NUMA load balancer reconcilation
+after I noticed that select_idle_sibling() was doing excessive work. It
+was originally part of a larger series that merged select_idle_core,
+select_idle_sibling and select_idle_cpu as a single pass. Unfortunately,
+fixes have invalidated the tests multiple times so this series covers
+only one part for now as the tests are extremely time-consuming.
 
-Before this patch, when a cross-reference to a chapter within the
-documentation is needed, we had to add a markup like:
+tip/sched/core as of March 13th was used as the baseline with "sched/fair:
+fix condition of avg_load calculation" applied which was just picked up
+by tip at the time of writing.
 
-	.. _foo:
+Patches 1-2 add schedstats to track the efficiency of
+select_idle_sibling(). Ordinarily they are disabled and are only really
+of use to a kernel developer. However, I find them more practical to work
+with than perf.
 
-	foo
-	===
+Patch 3 is a trivial micro-optimisation that avoids clearing part of
+a cpumask if a core has been found.
 
-This behavor is now different after this patch:
+Patch 4 tracks whether a domain appeared to be overloaded during
+select_idle_cpu() so that future scans can abort early if necessary.
+This reduces the number of runqueues that are scanned uselessly when
+a domain is overloaded.
 
-	58ad30cf91f0 ("docs: fix reference to core-api/namespaces.rst")
-
-As a Sphinx extension now creates automatically a reference
-like the above, without requiring any extra markup.
-
-That, however, comes with a price: it is not possible anymore to have
-two sections with the same name within the entire Kernel docs!
-
-This causes thousands of warnings, as we have sections named
-"introduction" on lots of places.
-
-This series solve this regression by doing two changes:
-
-1) The references are now prefixed by the document name. So,
-   a file named "bar" would have the "foo" reference as "bar:foo".
-
-2) It will only use the first two levels. The first one is (usually) the
-   name of the document, and the second one the chapter name.
-
-This solves almost all problems we have. Still, there are a few places
-where we have two chapters at the same document with the
-same name. The first patch addresses this problem.
-
-The second patch limits the escope of the autosectionlabel.
-
-Mauro Carvalho Chehab (2):
-  docs: prevent warnings due to autosectionlabel
-  docs: conf.py: avoid thousands of duplicate label warning on Sphinx
-
- Documentation/conf.py                                 |  4 ++++
- Documentation/driver-api/80211/mac80211-advanced.rst  |  8 ++++----
- Documentation/driver-api/dmaengine/index.rst          |  4 ++--
- Documentation/filesystems/ecryptfs.rst                | 11 +++++------
- Documentation/kernel-hacking/hacking.rst              |  4 ++--
- Documentation/media/kapi/v4l2-controls.rst            |  8 ++++----
- Documentation/networking/snmp_counter.rst             |  4 ++--
- Documentation/powerpc/ultravisor.rst                  |  4 ++--
- Documentation/security/siphash.rst                    |  8 ++++----
- Documentation/target/tcmu-design.rst                  |  6 +++---
- .../translations/zh_CN/process/5.Posting.rst          |  2 +-
- Documentation/x86/intel-iommu.rst                     |  3 ++-
- 12 files changed, 35 insertions(+), 31 deletions(-)
+ include/linux/sched/topology.h |   1 +
+ kernel/sched/debug.c           |   6 +++
+ kernel/sched/fair.c            | 103 +++++++++++++++++++++++++++++++++++------
+ kernel/sched/features.h        |   3 ++
+ kernel/sched/sched.h           |   8 ++++
+ kernel/sched/stats.c           |   9 ++--
+ 6 files changed, 113 insertions(+), 17 deletions(-)
 
 -- 
-2.24.1
-
+2.16.4
 
