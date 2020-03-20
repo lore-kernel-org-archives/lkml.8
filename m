@@ -2,143 +2,122 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25094C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE25C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E76FD20754
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:43:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WCZJHSHq"
+	by mail.kernel.org (Postfix) with ESMTP id 1508120754
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584711784;
+	bh=7RGOPJR25CwJirzAerwKnDLjD3O8PXRhRx7qMiLnguk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SOYSniPsa6gMV29VJqe1ceq1REYAMD1OoYG5Cra+HEaPpk+iDjyHlabIQ0X/9DMyN
+	 44Jb89+jIAyvR2CzgmmN5XJX4yZoO93gYBQOKMFFfMnf93YVmZUPnCV/QCX4gzv5Sx
+	 mscGFY4/WsUwHizMWrSMSPDTHiJWw5evxkry7qK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbgCTNm7 (ORCPT
+        id S1727281AbgCTNnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:42:59 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:57859 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgCTNm7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:42:59 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200320134258euoutp020bd39fb10a417cdb4f87b7b40662d552~_BvdNJmPJ2230922309euoutp02Q
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 13:42:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200320134258euoutp020bd39fb10a417cdb4f87b7b40662d552~_BvdNJmPJ2230922309euoutp02Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1584711778;
-        bh=1E8KASmUM//Nd8NqHvwK4FOzSMpoFO+xYAaKbjX49mw=;
-        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=WCZJHSHqWHn594XC71KgMVPCqV6EJKivjNB/BhdCI5yHL+f+tUZ3xqLfUOBDgTp6D
-         gWFgcC+qjSfDZI0p6JjfE3oc7ylnINlLqrhQNg99vNjb3CKYyvNS/VSgu9vCC5MWZJ
-         AaKya7oNazqtpdgYAH5XyDdTUWXxj0tpbgZL6wNQ=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200320134257eucas1p1fc54702e4d0e5410f63a5fce1b1bc52d~_Bvc8ukTp3232132321eucas1p1H;
-        Fri, 20 Mar 2020 13:42:57 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id CE.53.61286.168C47E5; Fri, 20
-        Mar 2020 13:42:57 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200320134257eucas1p2fd97b3f52ceb23a87fc599c8880bf686~_BvcnYO5k0171701717eucas1p2k;
-        Fri, 20 Mar 2020 13:42:57 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200320134257eusmtrp1be4c8d286d344892ab0244c2cbb206d8~_Bvcmz2Ea2315923159eusmtrp1M;
-        Fri, 20 Mar 2020 13:42:57 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-f9-5e74c861afda
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id DE.E7.07950.168C47E5; Fri, 20
-        Mar 2020 13:42:57 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200320134257eusmtip2daf37f8111c4a49c9fcb137e3efb541f~_BvcPomta1365913659eusmtip2S;
-        Fri, 20 Mar 2020 13:42:57 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: fbdev: fix -Wextra build warnings
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, Antonino Daplas <adaplas@gmail.com>,
-        Florian Tobias Schandinat <FlorianSchandinat@gmx.de>
-Message-ID: <27499b12-9e21-a799-ca9b-0852d1c0de0e@samsung.com>
-Date:   Fri, 20 Mar 2020 14:42:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Fri, 20 Mar 2020 09:43:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727015AbgCTNnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 09:43:01 -0400
+Received: from localhost (unknown [122.167.82.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FE3220739;
+        Fri, 20 Mar 2020 13:42:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584711780;
+        bh=7RGOPJR25CwJirzAerwKnDLjD3O8PXRhRx7qMiLnguk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IK13Wl2SiISx3G3YrNWIFPq1yrUzhqhUSirhjg5S49ODZ5Pf4p+riDnww6UOdd75Y
+         jpGDNpLNPYlthJ0Y+RjRx+A1ks9jCrbf6CfqUEZ8L0pnCxEoeq0iiDOEcVbmkGvQMA
+         cf1LRS3Ms5uw6M3FX/5B2y0BUEHCsJKFcy0xw2uc=
+Date:   Fri, 20 Mar 2020 19:12:57 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH 4/7] soundwire: intel: add definitions for shim_mask
+Message-ID: <20200320134257.GD4885@vkoul-mobl>
+References: <20200311221026.18174-1-pierre-louis.bossart@linux.intel.com>
+ <20200311221026.18174-5-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200315041002.24473-1-rdunlap@infradead.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCKsWRmVeSWpSXmKPExsWy7djP87qJJ0riDC7s1rb42f2FzeLK1/ds
-        Fp0zrzFanOj7wGpxedccNou3d6azOLB57Jx1l93jw8c4j80rtDzudx9n8vi8SS6ANYrLJiU1
-        J7MstUjfLoErY+/+2YwFHzkrJs9awdrAeIi9i5GTQ0LARKJl9iHmLkYuDiGBFYwSC+9dZoJw
-        vjBK3H26mx3C+cwo0dnUxwzT8vrmGrB2IYHljBJN36shit4ySmzpmsICkmATsJKY2L6KsYuR
-        g0NYQE/i4Ep7kLCIgIbE7ytXWEHqmQX2MkrM2L2EDSTBK2An8e7lSbAFLAKqEjd3rGUCsUUF
-        IiQ+PTjMClEjKHFy5hOw+ZwC1hILbi4F62UWEJe49WQ+E4QtL7H97RywfyQENrFLrN+5iQ3i
-        aheJSyeuM0HYwhKvjm+BBoCMxOnJPSwQDesYJf52vIDq3s4osXzyP6hua4k7536xgbzDLKAp
-        sX6XPkTYUWLyhgssIGEJAT6JG28FIY7gk5i0bTozRJhXoqNNCKJaTWLDsg1sMGu7dq5knsCo
-        NAvJa7OQvDMLyTuzEPYuYGRZxSieWlqcm55abJiXWq5XnJhbXJqXrpecn7uJEZh2Tv87/mkH
-        49dLSYcYBTgYlXh4LVaWxAmxJpYVV+YeYpTgYFYS4dVNL44T4k1JrKxKLcqPLyrNSS0+xCjN
-        waIkzmu86GWskEB6YklqdmpqQWoRTJaJg1OqgXFq/CzBs/8kmqWK5aoSmZeeb7RNfrr4jXOb
-        7zuOxt8/pkW/zUpq/FVuZPjJR3Rz/rkXmaxP7jyRnFMUU5yk4zpjPmvlnDca1VlmQc7Rs1Q/
-        spUFm/e7Me0LmsN6auqv30enthvcmbqT/6EHZ7z5JFUOhq3OsR35j8JCXh3/bnzhxF6Oxj1H
-        nyixFGckGmoxFxUnAgDj1jmuNwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKIsWRmVeSWpSXmKPExsVy+t/xe7qJJ0riDCbMl7D42f2FzeLK1/ds
-        Fp0zrzFanOj7wGpxedccNou3d6azOLB57Jx1l93jw8c4j80rtDzudx9n8vi8SS6ANUrPpii/
-        tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEvY+/+2YwFHzkr
-        Js9awdrAeIi9i5GTQ0LAROL1zTVANheHkMBSRom7J3aydjFyACVkJI6vL4OoEZb4c62LDaLm
-        NaNE89kvTCAJNgEriYntqxhB6oUF9CQOrrQHCYsIaEj8vnKFFaSeWWAvo0T3pFlsIAkhgT5G
-        ibd9MSA2r4CdxLuXJ5lBbBYBVYmbO9aCzRQViJA4vGMWI0SNoMTJmU9YQGxOAWuJBTeXgs1h
-        FlCX+DPvEjOELS5x68l8JghbXmL72znMExiFZiFpn4WkZRaSlllIWhYwsqxiFEktLc5Nzy02
-        0itOzC0uzUvXS87P3cQIjLJtx35u2cHY9S74EKMAB6MSD6/FypI4IdbEsuLK3EOMEhzMSiK8
-        uunFcUK8KYmVValF+fFFpTmpxYcYTYGem8gsJZqcD0wAeSXxhqaG5haWhubG5sZmFkrivB0C
-        B2OEBNITS1KzU1MLUotg+pg4OKUaGBW23rlzdMdrPZ4zmzIu6kt3btvxMCVot+9aV/dFt1Zp
-        sik7LV6xMp9Nj6sn/ax+cQsDH+vic8yK31c99W+oe7b4A/ecEK6Z/1Qkf7tOcrCveC74kMfv
-        csTk6aqvfCsCGSsM9kp83r1v5eVr6Q4XNitZXt2ptXPOvI9Vu4rkj8dMujXzp4nCsnNKLMUZ
-        iYZazEXFiQBuNSB+yAIAAA==
-X-CMS-MailID: 20200320134257eucas1p2fd97b3f52ceb23a87fc599c8880bf686
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200315041009eucas1p14e087e86c18ceafe1644589a67de9499
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200315041009eucas1p14e087e86c18ceafe1644589a67de9499
-References: <CGME20200315041009eucas1p14e087e86c18ceafe1644589a67de9499@eucas1p1.samsung.com>
-        <20200315041002.24473-1-rdunlap@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311221026.18174-5-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 3/15/20 5:09 AM, Randy Dunlap wrote:
-> This patch series fixes warnings in fbdev that are found when
-> -Wextra is used. In fixing these, there were a few other build
-> errors discovered (mostly caused by bitrot) and fixed.
+On 11-03-20, 17:10, Pierre-Louis Bossart wrote:
+> We want to make sure SHIM register fields such as SYNCPRD are only
+> programmed once. Since we don't have a controller-level driver, we
+> need master-level drivers to collaborate: the registers will only be
+> programmed when the first link is powered-up.
 > 
-> [PATCH 1/6] fbdev: fbmon: fix -Wextra build warnings
-> [PATCH 2/6] fbdev: aty: fix -Wextra build warning
-> [PATCH 3/6] fbdev: matrox: fix -Wextra build warnings
-> [PATCH 4/6] fbdev: savage: fix -Wextra build warning
-> [PATCH 5/6] fbdev: pm[23]fb.c: fix -Wextra build warnings and errors
-> [PATCH 6/6] fbdev: via: fix -Wextra build warning and format warning
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/intel.h           | 2 ++
+>  include/linux/soundwire/sdw_intel.h | 2 ++
+>  2 files changed, 4 insertions(+)
 > 
->  drivers/video/fbdev/aty/atyfb_base.c       |    2 +-
->  drivers/video/fbdev/core/fbmon.c           |    2 +-
->  drivers/video/fbdev/matrox/matroxfb_base.h |    2 +-
->  drivers/video/fbdev/pm2fb.c                |    2 +-
->  drivers/video/fbdev/pm3fb.c                |    8 ++++----
->  drivers/video/fbdev/savage/savagefb.h      |    2 +-
->  drivers/video/fbdev/via/debug.h            |    6 ++++--
->  drivers/video/fbdev/via/viafbdev.c         |    2 +-
->  8 files changed, 14 insertions(+), 12 deletions(-)
+> diff --git a/drivers/soundwire/intel.h b/drivers/soundwire/intel.h
+> index 568c84a80d79..cfc83120b8f9 100644
+> --- a/drivers/soundwire/intel.h
+> +++ b/drivers/soundwire/intel.h
+> @@ -16,6 +16,7 @@
+>   * @ops: Shim callback ops
+>   * @dev: device implementing hw_params and free callbacks
+>   * @shim_lock: mutex to handle access to shared SHIM registers
+> + * @shim_mask: global pointer to check SHIM register initialization
+>   */
+>  struct sdw_intel_link_res {
+>  	struct platform_device *pdev;
+> @@ -27,6 +28,7 @@ struct sdw_intel_link_res {
+>  	const struct sdw_intel_ops *ops;
+>  	struct device *dev;
+>  	struct mutex *shim_lock; /* protect shared registers */
+> +	u32 *shim_mask;
 
-Patches #1-6 queued for v5.7, thanks!
+You have a pointer, okay where is it initialized
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+>  };
+>  
+>  #endif /* __SDW_INTEL_LOCAL_H */
+> diff --git a/include/linux/soundwire/sdw_intel.h b/include/linux/soundwire/sdw_intel.h
+> index 979b41b5dcb4..120ffddc03d2 100644
+> --- a/include/linux/soundwire/sdw_intel.h
+> +++ b/include/linux/soundwire/sdw_intel.h
+> @@ -115,6 +115,7 @@ struct sdw_intel_slave_id {
+>   * links
+>   * @link_list: list to handle interrupts across all links
+>   * @shim_lock: mutex to handle concurrent rmw access to shared SHIM registers.
+> + * @shim_mask: flags to track initialization of SHIM shared registers
+>   */
+>  struct sdw_intel_ctx {
+>  	int count;
+> @@ -126,6 +127,7 @@ struct sdw_intel_ctx {
+>  	struct sdw_intel_slave_id *ids;
+>  	struct list_head link_list;
+>  	struct mutex shim_lock; /* lock for access to shared SHIM registers */
+> +	u32 shim_mask;
+
+And a integer, question: why do you need pointer and integer, why not
+use only one..?
+
+-- 
+~Vinod
