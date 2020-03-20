@@ -2,148 +2,202 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DECC43332
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6430C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA9520739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:52:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J0tHg/vI"
+	by mail.kernel.org (Postfix) with ESMTP id 7C7FA2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbgCTMwE (ORCPT
+        id S1727022AbgCTMym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 08:52:04 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48628 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgCTMwE (ORCPT
+        Fri, 20 Mar 2020 08:54:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64828 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726814AbgCTMyl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 08:52:04 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02KCpsvZ116690;
-        Fri, 20 Mar 2020 07:51:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584708714;
-        bh=KOUeiPoRHoGPb/5jBL8TKLgULIFGDNl5+M3+te9LDzM=;
-        h=From:To:CC:Subject:Date;
-        b=J0tHg/vI5vvTH3sEYwrAdo8gXp5dqpn60EVb8N02m6iShHCAPtRSdMSDNHW61uvae
-         1xt8Pbu3xT4mdyoKVB7zefMsqr8l1WVbu8857ntSQRkYKcv+bJfFbNY3ne21THfmXB
-         2zGEvyDHaUJDusNFw0mZE2QHojYCLyypu1964BUI=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02KCps3P078768;
-        Fri, 20 Mar 2020 07:51:54 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
- Mar 2020 07:51:53 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 20 Mar 2020 07:51:53 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02KCpoq7074768;
-        Fri, 20 Mar 2020 07:51:51 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <gregkh@linuxfoundation.org>, <vigneshr@ti.com>
-CC:     <nsekhar@ti.com>, <t-kristo@ti.com>, <tomi.valkeinen@ti.com>,
-        <tony@atomide.com>, <linux-serial@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH] serial: 8250_omap: Fix sleeping function called from invalid context during probe
-Date:   Fri, 20 Mar 2020 14:52:00 +0200
-Message-ID: <20200320125200.6772-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 20 Mar 2020 08:54:41 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02KCWQIx080890
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 08:54:40 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yu7aehgsa-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 08:54:40 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kjain@linux.ibm.com>;
+        Fri, 20 Mar 2020 12:54:38 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 20 Mar 2020 12:54:31 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02KCrSXj47710592
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Mar 2020 12:53:28 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 278734C04A;
+        Fri, 20 Mar 2020 12:54:30 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4FDE54C044;
+        Fri, 20 Mar 2020 12:54:24 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.199.35.76])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 20 Mar 2020 12:54:23 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        sukadev@linux.vnet.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
+        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
+        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
+        kan.liang@linux.intel.com, jmario@redhat.com,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
+        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
+        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
+        tglx@linutronix.de, kjain@linux.ibm.com
+Subject: [PATCH v6 00/11] powerpc/perf: Add json file metric support for the hv_24x7 socket/chip level events
+Date:   Fri, 20 Mar 2020 18:23:55 +0530
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-TM-AS-GCONF: 00
+x-cbid: 20032012-0016-0000-0000-000002F47B81
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20032012-0017-0000-0000-000033580A5C
+Message-Id: <20200320125406.30995-1-kjain@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-20_03:2020-03-20,2020-03-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 phishscore=0
+ priorityscore=1501 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ suspectscore=0 clxscore=1015 adultscore=0 spamscore=0 impostorscore=0
+ malwarescore=0 mlxlogscore=641 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003200054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When booting j721e the following bug is printed:
+Patchset fixes the inconsistent results we are getting when
+we run multiple 24x7 events.
 
-[    1.154821] BUG: sleeping function called from invalid context at kernel/sched/completion.c:99
-[    1.154827] in_atomic(): 0, irqs_disabled(): 128, non_block: 0, pid: 12, name: kworker/0:1
-[    1.154832] 3 locks held by kworker/0:1/12:
-[    1.154836]  #0: ffff000840030728 ((wq_completion)events){+.+.}, at: process_one_work+0x1d4/0x6e8
-[    1.154852]  #1: ffff80001214fdd8 (deferred_probe_work){+.+.}, at: process_one_work+0x1d4/0x6e8
-[    1.154860]  #2: ffff00084060b170 (&dev->mutex){....}, at: __device_attach+0x38/0x138
-[    1.154872] irq event stamp: 63096
-[    1.154881] hardirqs last  enabled at (63095): [<ffff800010b74318>] _raw_spin_unlock_irqrestore+0x70/0x78
-[    1.154887] hardirqs last disabled at (63096): [<ffff800010b740d8>] _raw_spin_lock_irqsave+0x28/0x80
-[    1.154893] softirqs last  enabled at (62254): [<ffff800010080c88>] _stext+0x488/0x564
-[    1.154899] softirqs last disabled at (62247): [<ffff8000100fdb3c>] irq_exit+0x114/0x140
-[    1.154906] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.0-rc6-next-20200318-00094-g45e4089b0bd3 #221
-[    1.154911] Hardware name: Texas Instruments K3 J721E SoC (DT)
-[    1.154917] Workqueue: events deferred_probe_work_func
-[    1.154923] Call trace:
-[    1.154928]  dump_backtrace+0x0/0x190
-[    1.154933]  show_stack+0x14/0x20
-[    1.154940]  dump_stack+0xe0/0x148
-[    1.154946]  ___might_sleep+0x150/0x1f0
-[    1.154952]  __might_sleep+0x4c/0x80
-[    1.154957]  wait_for_completion_timeout+0x40/0x140
-[    1.154964]  ti_sci_set_device_state+0xa0/0x158
-[    1.154969]  ti_sci_cmd_get_device_exclusive+0x14/0x20
-[    1.154977]  ti_sci_dev_start+0x34/0x50
-[    1.154984]  genpd_runtime_resume+0x78/0x1f8
-[    1.154991]  __rpm_callback+0x3c/0x140
-[    1.154996]  rpm_callback+0x20/0x80
-[    1.155001]  rpm_resume+0x568/0x758
-[    1.155007]  __pm_runtime_resume+0x44/0xb0
-[    1.155013]  omap8250_probe+0x2b4/0x508
-[    1.155019]  platform_drv_probe+0x50/0xa0
-[    1.155023]  really_probe+0xd4/0x318
-[    1.155028]  driver_probe_device+0x54/0xe8
-[    1.155033]  __device_attach_driver+0x80/0xb8
-[    1.155039]  bus_for_each_drv+0x74/0xc0
-[    1.155044]  __device_attach+0xdc/0x138
-[    1.155049]  device_initial_probe+0x10/0x18
-[    1.155053]  bus_probe_device+0x98/0xa0
-[    1.155058]  deferred_probe_work_func+0x74/0xb0
-[    1.155063]  process_one_work+0x280/0x6e8
-[    1.155068]  worker_thread+0x48/0x430
-[    1.155073]  kthread+0x108/0x138
-[    1.155079]  ret_from_fork+0x10/0x18
+Patchset adds json file metric support for the hv_24x7 socket/chip level
+events. "hv_24x7" pmu interface events needs system dependent parameter
+like socket/chip/core. For example, hv_24x7 chip level events needs
+specific chip-id to which the data is requested should be added as part
+of pmu events.
 
-To fix the bug we need to first call pm_runtime_enable() prior to any
-pm_runtime calls.
+So to enable JSON file support to "hv_24x7" interface, patchset expose
+total number of sockets and chips per-socket details in sysfs
+files (sockets, chips) under "/sys/devices/hv_24x7/interface/".
 
-Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/tty/serial/8250/8250_omap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+To get sockets and number of chips per sockets, patchset adds a rtas call
+with token "PROCESSOR_MODULE_INFO" to get these details. Patchset also
+handles partition migration case to re-init these system depended
+parameters by adding proper calls in post_mobility_fixup() (mobility.c).
 
-diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-index a2e5a4e77000..611e3002d68c 100644
---- a/drivers/tty/serial/8250/8250_omap.c
-+++ b/drivers/tty/serial/8250/8250_omap.c
-@@ -1202,6 +1202,7 @@ static int omap8250_probe(struct platform_device *pdev)
- 	spin_lock_init(&priv->rx_dma_lock);
- 
- 	device_init_wakeup(&pdev->dev, true);
-+	pm_runtime_enable(&pdev->dev);
- 	pm_runtime_use_autosuspend(&pdev->dev);
- 
- 	/*
-@@ -1215,7 +1216,6 @@ static int omap8250_probe(struct platform_device *pdev)
- 		pm_runtime_set_autosuspend_delay(&pdev->dev, -1);
- 
- 	pm_runtime_irq_safe(&pdev->dev);
--	pm_runtime_enable(&pdev->dev);
- 
- 	pm_runtime_get_sync(&pdev->dev);
- 
+Second patch of the patchset adds expr_scanner_ctx object to hold user
+data for the expr scanner, which can be used to hold runtime parameter.
+
+Patch 9 & 11 of the patchset handles perf tool plumbing needed to replace
+the "?" character in the metric expression to proper value and hv_24x7
+json metric file for different Socket/chip resources.
+
+Patch set also enable Hz/hz prinitg for --metric-only option to print
+metric data for bus frequency.
+
+Applied and tested all these patches cleanly on top of jiri's flex changes
+with the changes done by Kan Liang for "Support metric group constraint"
+patchset and made required changes.
+
+Changelog:
+v5 -> v6
+- resolve compilation issue due to rearranging patch series.
+- Rather then adding new function to take careof case for runtime param
+  in metricgroup__add_metric, using metricgroup__add_metric_param itself
+  for that work.
+- Address some optimization suggested like using directly file path
+  rather then adding new macro in header.c
+- Change commit message on patch where we are adding "?" support
+  by adding simple example.
+
+v4 -> v5
+- Using sysfs__read_int instead of sysfs__read_ull while reading
+  parameter value in powerpc/util/header.c file.
+
+- Using asprintf rather then malloc and sprintf 
+  Suggested by Arnaldo Carvalho de Melo
+
+- Break patch 6 from previous version to two patch,
+  - One to add refactor current "metricgroup__add_metric" function
+    and another where actually "?" handling infra added.
+
+- Add expr__runtimeparam as part of 'expr_scanner_ctx' struct
+  rather then making it global variable. Thanks Jiri for
+  adding this structure to hold user data for the expr scanner.
+
+- Add runtime param as agrugement to function 'expr__find_other'
+  and 'expr__parse' and made changes on references accordingly.
+
+v3 -> v4
+- Apply these patch on top of Kan liang changes.
+  As suggested by Jiri.
+
+v2 -> v3
+- Remove setting  event_count to 0 part in function 'h_24x7_event_read'
+  with comment rather then adding 0 to event_count value.
+  Suggested by: Sukadev Bhattiprolu
+
+- Apply tool side changes require to replace "?" on Jiri's flex patch
+  series and made all require changes to make it compatible with added
+  flex change.
+
+v1 -> v2
+- Rename hv-24x7 metric json file as nest_metrics.json
+
+Jiri Olsa (2):
+  perf expr: Add expr_ prefix for parse_ctx and parse_id
+  perf expr: Add expr_scanner_ctx object
+
+Kajol Jain (9):
+  powerpc/perf/hv-24x7: Fix inconsistent output values incase multiple
+    hv-24x7 events run
+  powerpc/hv-24x7: Add rtas call in hv-24x7 driver to get processor
+    details
+  powerpc/hv-24x7: Add sysfs files inside hv-24x7 device to show
+    processor details
+  Documentation/ABI: Add ABI documentation for chips and sockets
+  powerpc/hv-24x7: Update post_mobility_fixup() to handle migration
+  perf/tools: Refactoring metricgroup__add_metric function
+  perf/tools: Enhance JSON/metric infrastructure to handle "?"
+  tools/perf: Enable Hz/hz prinitg for --metric-only option
+  perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric
+    events
+
+ .../sysfs-bus-event_source-devices-hv_24x7    |  14 +++
+ arch/powerpc/perf/hv-24x7.c                   | 104 ++++++++++++++++--
+ arch/powerpc/platforms/pseries/mobility.c     |  12 ++
+ arch/powerpc/platforms/pseries/pseries.h      |   3 +
+ tools/perf/arch/powerpc/util/header.c         |   8 ++
+ .../arch/powerpc/power9/nest_metrics.json     |  19 ++++
+ tools/perf/tests/expr.c                       |  12 +-
+ tools/perf/util/expr.c                        |  25 +++--
+ tools/perf/util/expr.h                        |  19 ++--
+ tools/perf/util/expr.l                        |  37 +++++--
+ tools/perf/util/expr.y                        |   6 +-
+ tools/perf/util/metricgroup.c                 |  88 +++++++++++----
+ tools/perf/util/metricgroup.h                 |   1 +
+ tools/perf/util/stat-display.c                |   2 -
+ tools/perf/util/stat-shadow.c                 |  14 ++-
+ 15 files changed, 287 insertions(+), 77 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.18.1
 
