@@ -2,114 +2,158 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58772C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC13BC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3055B20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:59:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584705565;
-	bh=aoZ7zim27WwTwQgSmmGFXrg6+n7WZ5+GAMCJAf+nuNs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CwbuSBzLmaUj6+fAkVuUAckr3YIPB/dKifauATTzgpDr2uq65UJjlXUMZV2Wyq2Iv
-	 G8wUl0bENTDsNuY6NJpWBIYW5CtyusKdgGZyblL4xSLm1xtk0h14eP+UMRfUW253Pu
-	 30uULVQzHTOZYAtJYPMChHzjDuL61UO9PvhjZ0Q8=
+	by mail.kernel.org (Postfix) with ESMTP id AA94D20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:00:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NrftJe2u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgCTL7Y (ORCPT
+        id S1727035AbgCTMAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 07:59:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726893AbgCTL7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 07:59:23 -0400
-Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        Fri, 20 Mar 2020 08:00:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37050 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgCTMAb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 08:00:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=48pbbTSIt7drl3nclPw/S2svZezo2KqXiudRpg34TKk=; b=NrftJe2uiM/eRbtUm9v31Bp1c2
+        BNCrs3nazjRTflfZ6/FSIdWd1cgQ6c4K4mN/sKq/Reufea786w2Lem8NdWtr6vzANS/u2oumyQQy5
+        nXP178oBVzempQyURC5eaZxQYPoskQGzfJyP/JvtaQEufG6ahC/uIuhsCM1qRBTi5/0VUcsVy/OWv
+        b2susMYOSMXxDflV9pvJZwve7/NB9yh5D9baSAWu9CC8Y3to/IRhuP/7ZviUfm5wtMtVRfJh6sVxi
+        wBhGT3UXBFIYXI2ZsIzjff61HHKZz+u8D49qDFjKCrLR3H8R+omDmhJs1cS2vHigyITcxw/W+4WAh
+        QMNPuaTw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jFGK8-0004CM-62; Fri, 20 Mar 2020 12:00:24 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F0C820722;
-        Fri, 20 Mar 2020 11:59:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584705563;
-        bh=aoZ7zim27WwTwQgSmmGFXrg6+n7WZ5+GAMCJAf+nuNs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=A7OzQWA832eTfXGvXXmBJRl9zuJTstSvzScbIvTe67lko6VAcDy0fbsFHycitqNzm
-         QrIggfVZI/H+JNW/uwmj/cnwBepqUCcD01OpNG0zBf+sQSewFnlZfC61ug2Kqgvg8l
-         ArS13d+oZsTDTBoinUYI0GEKwBXg7oYpUXp93UIY=
-Date:   Fri, 20 Mar 2020 12:59:18 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Federico Vaga <federico.vaga@vaga.pv.it>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH] docs: conf.py: avoid thousands of duplicate label
- warning on Sphinx
-Message-ID: <20200320125918.5eb5af04@coco.lan>
-In-Reply-To: <3508337.2CZTLhteCP@harkonnen>
-References: <20200320112122.48244ec4@coco.lan>
-        <16f1c270a9077032de379b1cb30dfbb3e3670aee.1584702515.git.mchehab+huawei@kernel.org>
-        <3508337.2CZTLhteCP@harkonnen>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CC546305BD3;
+        Fri, 20 Mar 2020 13:00:21 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 83ECC2858D592; Fri, 20 Mar 2020 13:00:21 +0100 (CET)
+Message-Id: <20200320115859.178626842@infradead.org>
+User-Agent: quilt/0.65
+Date:   Fri, 20 Mar 2020 12:56:42 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     tglx@linutronix.de, rostedt@goodmis.org, mingo@kernel.org
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, will@kernel.org, peterz@infradead.org
+Subject: [PATCH 4/4] lockdep: Rename trace_{hard,soft}{irq_context,irqs_enabled}()
+References: <20200320115638.737385408@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 20 Mar 2020 12:24:45 +0100
-Federico Vaga <federico.vaga@vaga.pv.it> escreveu:
+Continue what commit:
 
-> On Friday, March 20, 2020 12:12:35 PM CET Mauro Carvalho Chehab wrote:
-> > The autosectionlabel extension is nice, as it allows to refer to
-> > a section by its name without requiring any extra tag to create
-> > a reference name.
-> > 
-> > However, on its default, it has two serious problems:
-> > 
-> > 1) the namespace is global. So, two files with different
-> >    "introduction" section would create a label with the
-> >    same name. This is easily solvable by forcing the extension
-> >    to prepend the file name with:
-> > 
-> > 	autosectionlabel_prefix_document = True
-> > 
-> > 2) It doesn't work hierarchically. So, if there are two level 1
-> >    sessions (let's say, one labeled "open" and another one "ioctl")
-> >    and both have a level 2 "synopsis" label, both section 2 will
-> >    have the same identical name.
-> > 
-> >    Currently, there's no way to tell Sphinx to create an
-> >    hierarchical reference like:
-> > 
-> > 		open / synopsis
-> > 		ioctl / synopsis
-> > 
-> >   This causes around 800 warnings. So, the fix should be to
-> >   not let autosectionlabel to produce references for anything
-> >   that it is not at level one, with:
-> > 
-> > 	autosectionlabel_maxdepth = 1  
-> 
-> So, for level 1 headers is fine to use autosectionlabel, but if we want to 
-> refer to level 2,3... we have to create labels manually.
+  d820ac4c2fa8 ("locking: rename trace_softirq_[enter|exit] => lockdep_softirq_[enter|exit]")
 
-Yes.
+started, rename these to avoid confusing them with tracepoints.
 
-If we want to use it for other levels, the autosectionlabel extension
-would need to be modified to work on an hierarchical way, creating an
-unique label that would contain the entire hierarchy, starting from
-the filename.
+git grep -l "trace_\(soft\|hard\)\(irq_context\|irqs_enabled\)" | while read file;
+do
+	sed -ie 's/trace_\(soft\|hard\)\(irq_context\|irqs_enabled\)/lockdep_\1\2/g' $file;
+done
 
-Also, ideally, it should also handle cross-reference locally, searching
-first for a reference at the same hierarchical level, then at level - 1
-and so on.
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ include/linux/irqflags.h       |   16 ++++++++--------
+ kernel/locking/lockdep.c       |    8 ++++----
+ kernel/softirq.c               |    2 +-
+ tools/include/linux/irqflags.h |    8 ++++----
+ 4 files changed, 17 insertions(+), 17 deletions(-)
 
-I suspect that, even with that, we may still have some troubles, as
-right now some files may have explicitly defined a reference like
-that, but those would likely be easy to fix.
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -31,10 +31,10 @@
+ #ifdef CONFIG_TRACE_IRQFLAGS
+   extern void trace_hardirqs_on(void);
+   extern void trace_hardirqs_off(void);
+-# define trace_hardirq_context(p)	((p)->hardirq_context)
+-# define trace_softirq_context(p)	((p)->softirq_context)
+-# define trace_hardirqs_enabled(p)	((p)->hardirqs_enabled)
+-# define trace_softirqs_enabled(p)	((p)->softirqs_enabled)
++# define lockdep_hardirq_context(p)	((p)->hardirq_context)
++# define lockdep_softirq_context(p)	((p)->softirq_context)
++# define lockdep_hardirqs_enabled(p)	((p)->hardirqs_enabled)
++# define lockdep_softirqs_enabled(p)	((p)->softirqs_enabled)
+ # define lockdep_hardirq_enter()		\
+ do {						\
+ 	current->hardirq_context++;		\
+@@ -54,10 +54,10 @@ do {						\
+ #else
+ # define trace_hardirqs_on()		do { } while (0)
+ # define trace_hardirqs_off()		do { } while (0)
+-# define trace_hardirq_context(p)	0
+-# define trace_softirq_context(p)	0
+-# define trace_hardirqs_enabled(p)	0
+-# define trace_softirqs_enabled(p)	0
++# define lockdep_hardirq_context(p)	0
++# define lockdep_softirq_context(p)	0
++# define lockdep_hardirqs_enabled(p)	0
++# define lockdep_softirqs_enabled(p)	0
+ # define lockdep_hardirq_enter()	do { } while (0)
+ # define lockdep_hardirq_exit()		do { } while (0)
+ # define lockdep_softirq_enter()	do { } while (0)
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3081,10 +3081,10 @@ print_usage_bug(struct task_struct *curr
+ 
+ 	pr_warn("%s/%d [HC%u[%lu]:SC%u[%lu]:HE%u:SE%u] takes:\n",
+ 		curr->comm, task_pid_nr(curr),
+-		trace_hardirq_context(curr), hardirq_count() >> HARDIRQ_SHIFT,
+-		trace_softirq_context(curr), softirq_count() >> SOFTIRQ_SHIFT,
+-		trace_hardirqs_enabled(curr),
+-		trace_softirqs_enabled(curr));
++		lockdep_hardirq_context(curr), hardirq_count() >> HARDIRQ_SHIFT,
++		lockdep_softirq_context(curr), softirq_count() >> SOFTIRQ_SHIFT,
++		lockdep_hardirqs_enabled(curr),
++		lockdep_softirqs_enabled(curr));
+ 	print_lock(this);
+ 
+ 	pr_warn("{%s} state was registered at:\n", usage_str[prev_bit]);
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -224,7 +224,7 @@ static inline bool lockdep_softirq_start
+ {
+ 	bool in_hardirq = false;
+ 
+-	if (trace_hardirq_context(current)) {
++	if (lockdep_hardirq_context(current)) {
+ 		in_hardirq = true;
+ 		lockdep_hardirq_exit();
+ 	}
+--- a/tools/include/linux/irqflags.h
++++ b/tools/include/linux/irqflags.h
+@@ -2,10 +2,10 @@
+ #ifndef _LIBLOCKDEP_LINUX_TRACE_IRQFLAGS_H_
+ #define _LIBLOCKDEP_LINUX_TRACE_IRQFLAGS_H_
+ 
+-# define trace_hardirq_context(p)	0
+-# define trace_softirq_context(p)	0
+-# define trace_hardirqs_enabled(p)	0
+-# define trace_softirqs_enabled(p)	0
++# define lockdep_hardirq_context(p)	0
++# define lockdep_softirq_context(p)	0
++# define lockdep_hardirqs_enabled(p)	0
++# define lockdep_softirqs_enabled(p)	0
+ # define lockdep_hardirq_enter()	do { } while (0)
+ # define lockdep_hardirq_exit()		do { } while (0)
+ # define lockdep_softirq_enter()	do { } while (0)
 
-Thanks,
-Mauro
+
