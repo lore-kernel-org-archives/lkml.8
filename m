@@ -5,61 +5,62 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5C2C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED12C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7849320775
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5598D20775
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:35:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="apXJslcS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9rdUihT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbgCTSfN (ORCPT
+        id S1727461AbgCTSfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:35:13 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37553 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbgCTSfJ (ORCPT
+        Fri, 20 Mar 2020 14:35:17 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36074 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727411AbgCTSfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:35:09 -0400
-Received: by mail-ed1-f67.google.com with SMTP id b23so8333990edx.4;
-        Fri, 20 Mar 2020 11:35:08 -0700 (PDT)
+        Fri, 20 Mar 2020 14:35:15 -0400
+Received: by mail-ed1-f66.google.com with SMTP id b18so8337646edu.3;
+        Fri, 20 Mar 2020 11:35:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uQ0Q+G5JHB2wM7K4BTcO70sOln2WeIX1gFNwP6RhpGg=;
-        b=apXJslcSv6DC7tOJCgLYYYrV7Uplua56Od4xMZ0ChU3xw5lwqCUcaRvDeMQVJ718nC
-         lIN/rx3MUNJ4VpgfEJlHp8ehGN1L8yIdGbVA57igSjDUsRsevHYfRk4NcwhEpC/qDq7C
-         mUPGo9j8A5mlZaevqvNT3+34ex12nlDlL89Wg/Y8KUb27OwNxAP/VWpk5+i/vhrpx0EP
-         ydt3z/yAqFx96y/MFkcHqQHwoTVTtcxfTNWETO/WAXC4rZX6yMqat78iXAbvheQkgNWh
-         IL1Cgr0omLPpNQSd7K1H9n9n2xc3sJY5d+8Y/0ez0sU6j+smuEfkjYBAQUNuWlp/RJ1z
-         hQ3g==
+        bh=QTJvUrUZh6Asz0TpkI0T8aoHyYL8TgG05bomTjzSOyM=;
+        b=g9rdUihThyk73P8wLgLB9/dtJ7c1YiBnldNvV9so+qC4nsHi9lh0LbppH794U4VT5v
+         hTaDpUpZf8eWS1bzyjnhxG4Z8aWizFPUb3xj0BnO84gyg19I+Wu5oh3Ny9as6sNLgUaA
+         jGe7oqDk6xFKGtOIjkDYvWI8WCT82VCDW4vF0MnQhZiZV8E2WTKgavcar1DtRMaQT4A9
+         Vd/yzR/eXJls2bPqU0kyMYj098DlUf5E1U30qlGAkINvH/L7wj3ygwdpmUlPD8nuLmEU
+         ZckL6BCB8dDIjUH7kIX/oqtrn3c8DYx7bWlmG8yHgRHFFICq86/5TY864wIGyd/l/jzV
+         74YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uQ0Q+G5JHB2wM7K4BTcO70sOln2WeIX1gFNwP6RhpGg=;
-        b=tpkfcge3waxKDXg+PsEEnEKe4ktNUK3WPKKm3zUIuOSlG5ZpiL1R6f9/t+r9WLAahU
-         sbxuupMr8AHJWQDKIN7P82/hoEh89ZMS4/HMxAkmG3Z+SCsnOK5TIrBEoSrTASKe4aam
-         O0vhLVmvSb1FTq5PJtl8RVLn2PuU6qbMfjzOvenPkt1/qelurQEqZ6A+oc+CIrbiO2f0
-         yhljLWso5QOV7V2IvJj9aHFeaOtDpFO4wDJgWPAfr6hNqKMxch967jadKBq4VQkXPQNJ
-         gGQatWpHokO+ICHEzrAsAYLrh97BiXNuqVZ5UQCRLb+XHm07HLdP9kGEss7xOaKFSlZk
-         pi2A==
-X-Gm-Message-State: ANhLgQ2m5XTPhZcgoE78y1GZvLVHnid6dfJ3+Uupq6AqWOdVCUFLgSMh
-        isoDMkZJZHYu87j+vAGrtFA=
-X-Google-Smtp-Source: ADFU+vsaA6XpAhj1+J65GLanwleRzVBh4W3oXm2qIL37/3iCYgGQ2Uue7Q0ibo2tLweZ+0IKexqPKA==
-X-Received: by 2002:a05:6402:2071:: with SMTP id bd17mr9532397edb.160.1584729307682;
-        Fri, 20 Mar 2020 11:35:07 -0700 (PDT)
+        bh=QTJvUrUZh6Asz0TpkI0T8aoHyYL8TgG05bomTjzSOyM=;
+        b=WUB0A8e/DbtHtVMNtpVCgzaJRrwlLmwQt6ZrjR9k1zuTEJ3hrPYjNrOy+71/vS0kE9
+         94mfKSvaxfzLGsRbEqKL7X5Te9JCuPeQ2Q+8U76UR9QDq2Bkon81aT1FUuLuQ+nb2nEL
+         8AO4NhNQeCAP3Frkolvp4KxtET0XqZY205sC+PekM0l5nOxSyhJtrbFZS2RCGDPc4vNW
+         Ll/9i7ZT5ruby89ozT9cYdHLCt2sU6yEUwJLm2V8ze9eyuVQZGDLNi8xl7oQh7SUxq9i
+         nYAX9vqkyolJ6Bhk9NaYsq/OxPHls/HhoQzZmVgf0MR+SQ5b6K/1YN/OjMxftPJ7awS7
+         04Bg==
+X-Gm-Message-State: ANhLgQ0ghMZBDrwYzl6qaCPbrgiefa1+1Q75OuAoet7/6Iu+rCr6YRgQ
+        LQRK1v2vxjbnNGwoKXVsuuM=
+X-Google-Smtp-Source: ADFU+vslcEfYS+a701OQE8C0wc0N89UVXf8ty5raYXpe2pQxadJpErSZ7aVEf2b+Kh2eOVhdLyGMMQ==
+X-Received: by 2002:a05:6402:369:: with SMTP id s9mr9384490edw.349.1584729313054;
+        Fri, 20 Mar 2020 11:35:13 -0700 (PDT)
 Received: from Ansuel-XPS.localdomain (host203-232-dynamic.53-79-r.retail.telecomitalia.it. [79.53.232.203])
-        by smtp.googlemail.com with ESMTPSA id y13sm172916eje.3.2020.03.20.11.35.05
+        by smtp.googlemail.com with ESMTPSA id y13sm172916eje.3.2020.03.20.11.35.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 11:35:06 -0700 (PDT)
+        Fri, 20 Mar 2020 11:35:12 -0700 (PDT)
 From:   Ansuel Smith <ansuelsmth@gmail.com>
 To:     Stanimir Varbanov <svarbanov@mm-sol.com>
 Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Abhishek Sahu <absahu@codeaurora.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -70,9 +71,9 @@ Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/12] devicetree: bindings: pci: add missing clks to qcom,pcie
-Date:   Fri, 20 Mar 2020 19:34:44 +0100
-Message-Id: <20200320183455.21311-2-ansuelsmth@gmail.com>
+Subject: [PATCH 04/12] pcie: qcom: Fixed pcie_phy_clk branch issue
+Date:   Fri, 20 Mar 2020 19:34:46 +0100
+Message-Id: <20200320183455.21311-4-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200320183455.21311-1-ansuelsmth@gmail.com>
 References: <20200320183455.21311-1-ansuelsmth@gmail.com>
@@ -83,39 +84,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document missing clks used in ipq806x soc
+Following backtraces are observed in PCIe deinit operation.
 
+ Hardware name: Qualcomm (Flattened Device Tree)
+ (unwind_backtrace) from [] (show_stack+0x10/0x14)
+ (show_stack) from [] (dump_stack+0x84/0x98)
+ (dump_stack) from [] (warn_slowpath_common+0x9c/0xb8)
+ (warn_slowpath_common) from [] (warn_slowpath_fmt+0x30/0x40)
+ (warn_slowpath_fmt) from [] (clk_branch_wait+0x114/0x120)
+ (clk_branch_wait) from [] (clk_core_disable+0xd0/0x1f4)
+ (clk_core_disable) from [] (clk_disable+0x24/0x30)
+ (clk_disable) from [] (qcom_pcie_deinit_v0+0x6c/0xb8)
+ (qcom_pcie_deinit_v0) from [] (qcom_pcie_host_init+0xe0/0xe8)
+ (qcom_pcie_host_init) from [] (dw_pcie_host_init+0x3b0/0x538)
+ (dw_pcie_host_init) from [] (qcom_pcie_probe+0x20c/0x2e4)
+
+pcie_phy_clk is generated for PCIe controller itself and the
+GCC controls its branch operation. This error is coming since
+the assert operations turn off the parent clock before branch
+clock. Now this patch moves clk_disable_unprepare before assert
+operations.
+
+Similarly, during probe function, the clock branch operation
+should be done after dessert operation. Currently, it does not
+generate any error since bootloader enables the pcie_phy_clk
+but the same error is coming during probe, if bootloader
+disables pcie_phy_clk.
+
+Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie.txt | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-index 981b4de12807..becdbdc0fffa 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-@@ -90,6 +90,8 @@
- 	Definition: Should contain the following entries
- 			- "core"	Clocks the pcie hw block
- 			- "phy"		Clocks the pcie PHY block
-+			- "aux" 	Clocks the pcie AUX block
-+			- "ref" 	Clocks the pcie ref block
- - clock-names:
- 	Usage: required for apq8084/ipq4019
- 	Value type: <stringlist>
-@@ -277,8 +279,10 @@
- 				<0 0 0 4 &intc 0 39 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
- 		clocks = <&gcc PCIE_A_CLK>,
- 			 <&gcc PCIE_H_CLK>,
--			 <&gcc PCIE_PHY_CLK>;
--		clock-names = "core", "iface", "phy";
-+			 <&gcc PCIE_PHY_CLK>,
-+			 <&gcc PCIE_AUX_CLK>,
-+			 <&gcc PCIE_ALT_REF_CLK>;
-+		clock-names = "core", "iface", "phy", "aux", "ref";
- 		resets = <&gcc PCIE_ACLK_RESET>,
- 			 <&gcc PCIE_HCLK_RESET>,
- 			 <&gcc PCIE_POR_RESET>,
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 1fcc7fed8443..596731b54728 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -280,6 +280,7 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+ {
+ 	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+ 
++	clk_disable_unprepare(res->phy_clk);
+ 	reset_control_assert(res->pci_reset);
+ 	reset_control_assert(res->axi_reset);
+ 	reset_control_assert(res->ahb_reset);
+@@ -287,7 +288,6 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+ 	reset_control_assert(res->phy_reset);
+ 	clk_disable_unprepare(res->iface_clk);
+ 	clk_disable_unprepare(res->core_clk);
+-	clk_disable_unprepare(res->phy_clk);
+ 	clk_disable_unprepare(res->aux_clk);
+ 	clk_disable_unprepare(res->ref_clk);
+ 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+@@ -325,12 +325,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 		goto err_clk_core;
+ 	}
+ 
+-	ret = clk_prepare_enable(res->phy_clk);
+-	if (ret) {
+-		dev_err(dev, "cannot prepare/enable phy clock\n");
+-		goto err_clk_phy;
+-	}
+-
+ 	ret = clk_prepare_enable(res->aux_clk);
+ 	if (ret) {
+ 		dev_err(dev, "cannot prepare/enable aux clock\n");
+@@ -383,6 +377,12 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 		return ret;
+ 	}
+ 
++	ret = clk_prepare_enable(res->phy_clk);
++	if (ret) {
++		dev_err(dev, "cannot prepare/enable phy clock\n");
++		goto err_deassert_ahb;
++	}
++
+ 	/* wait for clock acquisition */
+ 	usleep_range(1000, 1500);
+ 
+@@ -400,8 +400,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ err_clk_ref:
+ 	clk_disable_unprepare(res->aux_clk);
+ err_clk_aux:
+-	clk_disable_unprepare(res->phy_clk);
+-err_clk_phy:
+ 	clk_disable_unprepare(res->core_clk);
+ err_clk_core:
+ 	clk_disable_unprepare(res->iface_clk);
 -- 
 2.25.1
 
