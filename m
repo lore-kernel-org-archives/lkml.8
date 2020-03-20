@@ -2,94 +2,230 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C8FC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5134BC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 292E320724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A65820767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 21:16:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="hb8w3WLL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qJm7mQBh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbgCTVQ0 (ORCPT
+        id S1727183AbgCTVQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 17:16:26 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:40192 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgCTVQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:16:25 -0400
-Received: from zn.tnic (p200300EC2F0A5A0095ADC0D452E3E28B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:95ad:c0d4:52e3:e28b])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A0B741EC0664;
-        Fri, 20 Mar 2020 22:16:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584738983;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=6FUnR1+rgqh8bg7YQgyAaQ2EQLlBeDx2vaZ0dVmL6EI=;
-        b=hb8w3WLL9sXj9bDqN+8ilS7w7Iu0KvsDqjfaTE79LwgC3reIMlBV+bekoHrcPLf0vRYpEo
-        CTZxNQFpCzsLD63kbrrzGM9LSi/vKX+o5aoNYnCzMsVk2GpcD517adZjLhvV1kd4/v6OrI
-        FSetEuGJdpVPg5eYKBYVtuclnqumGTU=
-Date:   Fri, 20 Mar 2020 22:16:31 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Alexey Makhalov <amakhalov@vmware.com>
-Cc:     "linux-x86_64@vger.kernel.org" <linux-x86_64@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH 0/5] x86/vmware: Steal time accounting support
-Message-ID: <20200320211631.GI23532@zn.tnic>
-References: <20200320203443.27742-1-amakhalov@vmware.com>
- <20200320205929.GH23532@zn.tnic>
- <A9A30A6C-F5C3-45ED-8225-07EFF4F6E8E4@vmware.com>
+        Fri, 20 Mar 2020 17:16:42 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46549 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbgCTVQm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 17:16:42 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c19so3922592pfo.13
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 14:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=sPNjOMWv5tH+y8DR9zRGwW8VovTIaVhSNxirxK4bRvw=;
+        b=qJm7mQBhow7miniq3pN1Q0zWjYozOumz39ILHSWw5JPNezgYzOMGhNX+L3gKPrP27d
+         JCjmsCPRkVyEbcgRfYDdTRw756dZEeSiZm2bgGoOeHSwclYC/Q1n0YWq2oJIvhrqalQZ
+         iIoxbXPSUZ+4hW1YimFiHj6PW1vVqP4J9uvDihDGDjsAIYnjHjkXGJoVDCNA/5mnRr08
+         2IT4AItr8pVs0MiF6TVuU/mdnwbZrK0lO1TCBzT/eaelPWrdDtLsUKkndAfY5GRdMkTD
+         j9gYnTDx702HAwTyhozUabvs/Zwb/OMoq/7nXZfJc6BeTqYrX0fnwJWqQwZgOhA3KAww
+         5vtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=sPNjOMWv5tH+y8DR9zRGwW8VovTIaVhSNxirxK4bRvw=;
+        b=lqLPwORGRuOJEbCez3spJsriCNVqtyCQC0h/Pyb02M3/VoiJjBxeYwBz6Hcb9PGItv
+         hq8GOKzrIZefUPoXrQxUlHHWzghUdxsy9JeNuY+/SGlp/pnQ21CobIPg53FPhEf8/m4M
+         OLERNZE6R0PMCdbqvjy8mkcDUA91DntCqouTMXV/XSNvyTK+0n4UK3gkKs3I4lfslWSb
+         jyj5oLVma09Cc4PSA1ZZCQ4p7G58sm/sBPa2dpH5n+i9l0dDFI7EGB4P5KZ/nY4eClCK
+         cECCvG4gvnsMt5qQUm/8YXAkouQRckDd5UsORi0JY4YXn2OtepaBaXR4/DdDHmfFwMN3
+         6K9w==
+X-Gm-Message-State: ANhLgQ1fB5CYDBzZ6DKAh3nmaYlsJrMOXsHhwsTtsx3aPmrCpNx9DUqB
+        r0qpvfYM7qHgAyZ0xmCZinHT+Q==
+X-Google-Smtp-Source: ADFU+vt7tmXBZHZs8iTn2PbuBTIF+ft5pzs2V8T7GPerNEV6PCz3cI+0aORiv3PtC3ghNqnqMdZWjg==
+X-Received: by 2002:a63:30c4:: with SMTP id w187mr10906683pgw.239.1584739000823;
+        Fri, 20 Mar 2020 14:16:40 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id g14sm6323165pfb.131.2020.03.20.14.16.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 14:16:39 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 14:16:39 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Joerg Roedel <joro@8bytes.org>, erdemaktas@google.com
+cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 18/70] x86/boot/compressed/64: Add stage1 #VC handler
+In-Reply-To: <20200319091407.1481-19-joro@8bytes.org>
+Message-ID: <alpine.DEB.2.21.2003201413010.205664@chino.kir.corp.google.com>
+References: <20200319091407.1481-1-joro@8bytes.org> <20200319091407.1481-19-joro@8bytes.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <A9A30A6C-F5C3-45ED-8225-07EFF4F6E8E4@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 09:06:57PM +0000, Alexey Makhalov wrote:
-> I didn't receive any response first time. I'm not on the list.
+On Thu, 19 Mar 2020, Joerg Roedel wrote:
 
-The mail was sent to you directly:
+> diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+> new file mode 100644
+> index 000000000000..f524b40aef07
+> --- /dev/null
+> +++ b/arch/x86/include/asm/sev-es.h
+> @@ -0,0 +1,45 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * AMD Encrypted Register State Support
+> + *
+> + * Author: Joerg Roedel <jroedel@suse.de>
+> + */
+> +
+> +#ifndef __ASM_ENCRYPTED_STATE_H
+> +#define __ASM_ENCRYPTED_STATE_H
+> +
+> +#include <linux/types.h>
+> +
+> +#define GHCB_SEV_CPUID_REQ	0x004UL
+> +#define		GHCB_CPUID_REQ_EAX	0
+> +#define		GHCB_CPUID_REQ_EBX	1
+> +#define		GHCB_CPUID_REQ_ECX	2
+> +#define		GHCB_CPUID_REQ_EDX	3
+> +#define		GHCB_CPUID_REQ(fn, reg) (GHCB_SEV_CPUID_REQ | \
+> +					(((unsigned long)reg & 3) << 30) | \
+> +					(((unsigned long)fn) << 32))
+> +
+> +#define GHCB_SEV_CPUID_RESP	0x005UL
+> +#define GHCB_SEV_TERMINATE	0x100UL
+> +
+> +#define	GHCB_SEV_GHCB_RESP_CODE(v)	((v) & 0xfff)
+> +#define	VMGEXIT()			{ asm volatile("rep; vmmcall\n\r"); }
 
-Date: Fri, 13 Mar 2020 14:17:42 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Alexey Makhalov <amakhalov@vmware.com>
-....
+Since preemption and irqs should be disabled before updating the GHCB and 
+its MSR and until the contents have been accessed following VMGEXIT, 
+should there be checks in place to ensure that's always the case?
 
-Perhaps in your spam folder.
-
-Did you, per chance, receive this reply:
-
-https://marc.info/?l=linux-virtualization&m=158403993331603&w=2
-
-?
-
-> Thanks for reporting i386 issue. I'll address it in v2.
-
-Thx.
-
-Btw, please do not top-post.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> +
+> +static inline u64 lower_bits(u64 val, unsigned int bits)
+> +{
+> +	u64 mask = (1ULL << bits) - 1;
+> +
+> +	return (val & mask);
+> +}
+> +
+> +static inline u64 copy_lower_bits(u64 out, u64 in, unsigned int bits)
+> +{
+> +	u64 mask = (1ULL << bits) - 1;
+> +
+> +	out &= ~mask;
+> +	out |= lower_bits(in, bits);
+> +
+> +	return out;
+> +}
+> +
+> +#endif
+> diff --git a/arch/x86/include/asm/trap_defs.h b/arch/x86/include/asm/trap_defs.h
+> index 488f82ac36da..af45d65f0458 100644
+> --- a/arch/x86/include/asm/trap_defs.h
+> +++ b/arch/x86/include/asm/trap_defs.h
+> @@ -24,6 +24,7 @@ enum {
+>  	X86_TRAP_AC,		/* 17, Alignment Check */
+>  	X86_TRAP_MC,		/* 18, Machine Check */
+>  	X86_TRAP_XF,		/* 19, SIMD Floating-Point Exception */
+> +	X86_TRAP_VC = 29,	/* 29, VMM Communication Exception */
+>  	X86_TRAP_IRET = 32,	/* 32, IRET Exception */
+>  };
+>  
+> diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+> new file mode 100644
+> index 000000000000..e963b48d3e86
+> --- /dev/null
+> +++ b/arch/x86/kernel/sev-es-shared.c
+> @@ -0,0 +1,65 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * AMD Encrypted Register State Support
+> + *
+> + * Author: Joerg Roedel <jroedel@suse.de>
+> + *
+> + * This file is not compiled stand-alone. It contains code shared
+> + * between the pre-decompression boot code and the running Linux kernel
+> + * and is included directly into both code-bases.
+> + */
+> +
+> +/*
+> + * Boot VC Handler - This is the first VC handler during boot, there is no GHCB
+> + * page yet, so it only supports the MSR based communication with the
+> + * hypervisor and only the CPUID exit-code.
+> + */
+> +void __init vc_no_ghcb_handler(struct pt_regs *regs, unsigned long exit_code)
+> +{
+> +	unsigned int fn = lower_bits(regs->ax, 32);
+> +	unsigned long val;
+> +
+> +	/* Only CPUID is supported via MSR protocol */
+> +	if (exit_code != SVM_EXIT_CPUID)
+> +		goto fail;
+> +
+> +	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EAX));
+> +	VMGEXIT();
+> +	val = sev_es_rd_ghcb_msr();
+> +	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
+> +		goto fail;
+> +	regs->ax = val >> 32;
+> +
+> +	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EBX));
+> +	VMGEXIT();
+> +	val = sev_es_rd_ghcb_msr();
+> +	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
+> +		goto fail;
+> +	regs->bx = val >> 32;
+> +
+> +	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_ECX));
+> +	VMGEXIT();
+> +	val = sev_es_rd_ghcb_msr();
+> +	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
+> +		goto fail;
+> +	regs->cx = val >> 32;
+> +
+> +	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EDX));
+> +	VMGEXIT();
+> +	val = sev_es_rd_ghcb_msr();
+> +	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
+> +		goto fail;
+> +	regs->dx = val >> 32;
+> +
+> +	regs->ip += 2;
+> +
+> +	return;
+> +
+> +fail:
+> +	sev_es_wr_ghcb_msr(GHCB_SEV_TERMINATE);
+> +	VMGEXIT();
+> +
+> +	/* Shouldn't get here - if we do halt the machine */
+> +	while (true)
+> +		asm volatile("hlt\n");
+> +}
+> -- 
+> 2.17.1
+> 
+> 
