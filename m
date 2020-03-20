@@ -2,121 +2,126 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CE0C43332
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4E3C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 301892076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52DEC2076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:28:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AOugaLk+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nnqJ9jmy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbgCTN1R (ORCPT
+        id S1727240AbgCTN2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:27:17 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:54209 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727145AbgCTN1O (ORCPT
+        Fri, 20 Mar 2020 09:28:15 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53716 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727122AbgCTN2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:27:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584710832;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=POqaw/FzEI0CTYjogTPDNEyESdDoII+GoAasJ6PFXJc=;
-        b=AOugaLk+fvsm+Sh9/dYT7edGGoj/cEp/jrnYM09hLAKYKclgj2+lesXiWuFd38bIWmyN+N
-        n3wrQ+HaKuddTlxbA7cEw1AzWWZiEwrWvyGID07ldVMF/bSdKeIuLLs76zDF5JPjRRzora
-        RxA2EjtfJFTah2IA+lmds30J3AOz/kQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-370-wfUqiJITPG6-L5EefAJGvA-1; Fri, 20 Mar 2020 09:27:10 -0400
-X-MC-Unique: wfUqiJITPG6-L5EefAJGvA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E2697477;
-        Fri, 20 Mar 2020 13:27:07 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-118-190.rdu2.redhat.com [10.10.118.190])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E3F4660BFB;
-        Fri, 20 Mar 2020 13:27:03 +0000 (UTC)
-Subject: Re: [PATCH v5 2/2] KEYS: Avoid false positive ENOMEM error on key
- read
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
-        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>
-References: <20200318221457.1330-1-longman@redhat.com>
- <20200318221457.1330-3-longman@redhat.com>
- <20200319194650.GA24804@linux.intel.com>
- <f22757ad-4d6f-ffd2-eed5-6b9bd1621b10@redhat.com>
- <20200320020717.GC183331@linux.intel.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <7dbc524f-6c16-026a-a372-2e80b40eab30@redhat.com>
-Date:   Fri, 20 Mar 2020 09:27:03 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 20 Mar 2020 09:28:14 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 25so6505751wmk.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 06:28:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=bbJaYLpxU8XXdc8d+5VShL8Kd/qrqFMok7iO4nMhIUA=;
+        b=nnqJ9jmylnpMOjV2SiijEZbC7o669iynhXBc/AO4L1OCw1VTZErJ3AD0WHerUrBi+Z
+         /s4C1ufnrubyuLM1GvaB22RhN0L0my0D4WFzrm6r2xndM5bpX6mSE5dn4AePQTn6hfmB
+         svBJ8fPsL3ZenAbCcQpkTRL1kpKgAWuKsJ1gx+I2vxkzTohXkij5dZQnJb1F2BKpRixx
+         6Ux11ExlA4cnx+f2WZD0TPt4RcRpua+6kicAD06u3j9LFYoIYnN+i56JNUzt6miJ/Y8C
+         9I+KMUIHZuNLug63/94HmbDEXIgWrJhtlEuxAXU0NFOrgCFZqUnx+ZuvGJGHwGZLnOnd
+         vWIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=bbJaYLpxU8XXdc8d+5VShL8Kd/qrqFMok7iO4nMhIUA=;
+        b=LJTZLcKLq+9fTWPvnvYFX1IUFQ/RXB8MiboEZIO+JjmJgCOBTRfQsbpUp6UNBLX8Af
+         lQ/+g5ga/k/rW6gqsz+aLMIog4ULlh4p/mtYofGXf78sebJjJT1m2l8JI41UvJ5HLeQo
+         rwy+3SiNB1ymy0iiadJWAQuSOaHOzBx88Bbfmk/LEEN2FqH3Q4ugM2oarYB3XdyNAEjJ
+         A14fkTQtCEuuD3Gin/APmUTjhWL8KkDz4uEIazs3Oiuj3dApIc6q4nz+5jeIoFU8RZ8J
+         DU4bJjbncdl8Q3zVrl2NxuD0w7wtLigBzpDihS9Ypq4n8OgFx8A7T1vA66qHC4VSc7Fp
+         rIGg==
+X-Gm-Message-State: ANhLgQ1P5RXtzBXjIIssbM0ja0KSKunV7bzZ8BbNMPjFplM1paZTSjfJ
+        X7xtYfqiAbThiw6K4YWzashlRQ==
+X-Google-Smtp-Source: ADFU+vvMwyOeJ1bw+b6fHEvAIEyef46hTkIwvJkawUe8Y1M+n9FzyKHV88aLPaSsWHc1yabEAZvqYA==
+X-Received: by 2002:a7b:c458:: with SMTP id l24mr10063577wmi.120.1584710892462;
+        Fri, 20 Mar 2020 06:28:12 -0700 (PDT)
+Received: from dell ([2.27.35.213])
+        by smtp.gmail.com with ESMTPSA id x24sm7637493wmc.36.2020.03.20.06.28.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 06:28:11 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 13:28:57 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
+Message-ID: <20200320132857.GC5477@dell>
+References: <20200320094233.GA30959@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20200320020717.GC183331@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200320094233.GA30959@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/19/20 10:07 PM, Jarkko Sakkinen wrote:
-> On Thu, Mar 19, 2020 at 08:07:55PM -0400, Waiman Long wrote:
->> On 3/19/20 3:46 PM, Jarkko Sakkinen wrote:
->>> On Wed, Mar 18, 2020 at 06:14:57PM -0400, Waiman Long wrote:
->>>> +			 * It is possible, though unlikely, that the key
->>>> +			 * changes in between the up_read->down_read period.
->>>> +			 * If the key becomes longer, we will have to
->>>> +			 * allocate a larger buffer and redo the key read
->>>> +			 * again.
->>>> +			 */
->>>> +			if (!tmpbuf || unlikely(ret > tmpbuflen)) {
->>> Shouldn't you check that tmpbuflen stays below buflen (why else
->>> you had made copy of buflen otherwise)?
->> The check above this thunk:
->>
->> if ((ret > 0) && (ret <= buflen)) {
->>
->> will make sure that ret will not be larger than buflen. So tmpbuflen
->> will never be bigger than buflen.
-> Ah right, of course, thanks.
->
-> What would go wrong if the condition was instead
-> ((ret > 0) && (ret <= tmpbuflen))?
+On Fri, 20 Mar 2020, Matti Vaittinen wrote:
 
-That if statement is a check to see if the actual key length is longer
-than the user-supplied buffer (buflen). If that is the case, it will
-just return the expected length without storing anything into the user
-buffer. For the case that buflen >= ret > tmpbuflen, the revised check
-above will incorrectly skip the storing step causing the caller to
-incorrectly think the key is there in the buffer.
+> Convert ROHM bd71837 and bd71847 PMIC binding text docs to yaml. Split
+> the binding document to two separate documents (own documents for BD71837
+> and BD71847) as they have different amount of regulators. This way we can
+> better enforce the node name check for regulators. ROHM is also providing
+> BD71850 - which is almost identical to BD71847 - main difference is some
+> initial regulator states. The BD71850 can be driven by same driver and it
+> has same buck/LDO setup as BD71847 - add it to BD71847 binding document and
+> introduce compatible for it.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-by: Mark Brown <broonie@kernel.org>
+> ---
+> 
+> Hello Lee, Do you think you could take this in MFD? Rob and Mark have
+> acked/reviewed this.
+> 
+> This is a resend of a resend of a resend of v2 - no changes other than rebasing.
+> 
+> changes since v1:
+> - constrains to short and long presses.
+> - reworded commit message to shorten a line exceeding 75 chars
+> - added 'additionalProperties: false'
+> - removed 'clock-names' from example node
+> 
+>  .../bindings/mfd/rohm,bd71837-pmic.txt        |  90 -------
+>  .../bindings/mfd/rohm,bd71837-pmic.yaml       | 236 ++++++++++++++++++
+>  .../bindings/mfd/rohm,bd71847-pmic.yaml       | 222 ++++++++++++++++
+>  .../regulator/rohm,bd71837-regulator.txt      | 162 ------------
+>  .../regulator/rohm,bd71837-regulator.yaml     | 103 ++++++++
+>  .../regulator/rohm,bd71847-regulator.yaml     |  97 +++++++
+>  6 files changed, 658 insertions(+), 252 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+>  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
+>  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
 
-Maybe I should clarify that a bit more in the comment.
+Applied, thanks.
 
-Cheers,
-Longman
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
