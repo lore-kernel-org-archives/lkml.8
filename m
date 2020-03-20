@@ -2,125 +2,228 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B9AC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33064C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072BD20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0987F20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbgCTLFd (ORCPT
+        id S1727338AbgCTLFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 07:05:33 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35572 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgCTLFc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 07:05:32 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k8so6080054oik.2;
-        Fri, 20 Mar 2020 04:05:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=qk9ZSy2DLiaTxJZm6e71Gii7NkNOP2X+Pdycr1qsNeg=;
-        b=T+nBHriHh3lIfVReU0GHeHK4HHl7g31JXkRS+J8PxYVNM8aTF8UariRa8t2V040IKG
-         HAUVZBA3nR5ojM6l9uUyzOlWfUJQ/w18Lpmx1jMFdMhdD0xf7OPg6ujRsur2x93NdXxb
-         kzUFprOZaroPEkHbDiLiZr4SyvGue9CQ5F3bTWt4K1HJep0A0fVVoFpCXD87AJUWeG56
-         18srr4cv/SvMlaeFscn9ClWZ0egkOdo1RPZC+2Sdeb0US1HiEiBxtewWqP+gUgx8ml+X
-         hpTPVvuOds4+3p6LlfLknbe7MmP9RrtQ6S5pVQc34qsWUQcsV3/+w+rPzYuizVdMBrtX
-         XcSw==
-X-Gm-Message-State: ANhLgQ0Ye+sRJO/h+vexCU8GmwoApqE6kEOJQQkMVEciUdjYjUQD16wO
-        dwm8g/NhZpYo6egYNWiv4n4ci9SZYrZSMasvF4Xl7w==
-X-Google-Smtp-Source: ADFU+vvZyP9GBWBhMAk5XHXHMbgIrKzVUdFFXha+oMjRGimfx83JH0ySN8kjfcMPKWHrHJ11GggEe2Z4AVFy0DPZVrQ=
-X-Received: by 2002:aca:ad93:: with SMTP id w141mr6113278oie.54.1584702331516;
- Fri, 20 Mar 2020 04:05:31 -0700 (PDT)
+        Fri, 20 Mar 2020 07:05:46 -0400
+Received: from mail.wangsu.com ([123.103.51.198]:38769 "EHLO wangsu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726821AbgCTLFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 07:05:45 -0400
+X-Greylist: delayed 102766 seconds by postgrey-1.27 at vger.kernel.org; Fri, 20 Mar 2020 07:05:43 EDT
+Received: from XMCDN1207038 (unknown [59.61.78.137])
+        by app1 (Coremail) with SMTP id xjNnewB3fgpgo3RejKAaAA--.0S2;
+        Fri, 20 Mar 2020 19:05:05 +0800 (CST)
+From:   "Pengcheng Yang" <yangpc@wangsu.com>
+To:     "'Andrew Morton'" <akpm@linux-foundation.org>
+Cc:     <gregkh@linuxfoundation.org>, <jannh@google.com>,
+        <viro@zeniv.linux.org.uk>, <linux-kernel@vger.kernel.org>
+References: <1579691175-28949-1-git-send-email-yangpc@wangsu.com> <20200123172321.0ef6744e784692585f9843b3@linux-foundation.org>
+In-Reply-To: <20200123172321.0ef6744e784692585f9843b3@linux-foundation.org>
+Subject: Re: [PATCH RESEND] kernel/relay.c: fix read_pos error when multiple readers
+Date:   Fri, 20 Mar 2020 19:04:42 +0800
+Message-ID: <000301d5fea7$5c032080$14096180$@wangsu.com>
 MIME-Version: 1.0
-References: <cover.1584639664.git.alexander.riesen@cetitec.com>
- <252bb433f47b0ccb61bb077abdbd892091abc550.1584639664.git.alexander.riesen@cetitec.com>
- <CAMuHMdXOAQtuxCAfb=sZKodyJWwSrf-GO-pdV3HYkOytQW4ENg@mail.gmail.com> <20200320105846.GG4344@pflmari>
-In-Reply-To: <20200320105846.GG4344@pflmari>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 20 Mar 2020 12:05:20 +0100
-Message-ID: <CAMuHMdVRJZ+RLSxeFdXXPntVxCUMd-Ai+=vizFrvN-CHNW=kjA@mail.gmail.com>
-Subject: Re: [PATCH v2 05/10] media: adv748x: add support for HDMI audio
-To:     Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQGPVR6qrpR+TkJwCkoxrhWdu69gOQGyL5EXqNEJ7fA=
+Content-Language: zh-cn
+X-CM-TRANSID: xjNnewB3fgpgo3RejKAaAA--.0S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCry7tF4fJFyrZrWDCr17KFg_yoWrGw1UpF
+        Z3Cw4Fyr4kWrZ5AFWxAF4vvryfCaykXF47JrWIqa4UJw129rnYyFWfJw4YyrW8GrWF93yj
+        gr4Utwn8JFsrAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyvb7Iv0xC_Zr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
+        cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
+        v20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vE
+        x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzx
+        vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_Gr4l
+        Yx0Ec7CjxVAajcxG14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwCY02Avz4vE14v_Gw4l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8GwCF
+        x2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+        v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+        67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
+        IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+        wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IUb8pnPUUUUU==
+X-CM-SenderInfo: p1dqw1nf6zt0xjvxhudrp/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On Fri, 24 Jan 2020 9:23:26 +0800 Andrew Morton <akpm@linux-foundation.org> wrote:
+> 
+> On Wed, 22 Jan 2020 19:06:15 +0800 Pengcheng Yang <yangpc@wangsu.com> wrote:
+> 
+> > When reading, read_pos should start with bytes_consumed,
+> > not file->f_pos. Because when there is more than one reader,
+> > the read_pos corresponding to file->f_pos may have been consumed,
+> > which will cause the data that has been consumed to be read
+> > and the bytes_consumed update error.
+> 
+> That sounds fairly serious.  Are you able to describe a userspace setup
+> which will trigger this?  Do you have any test code which is able to
+> demonstrate the bug?
+> 
+> We really should have a relay testcase in tools/testing, but relay came
+> along before we became diligent about this.
 
-On Fri, Mar 20, 2020 at 11:58 AM Alex Riesen
-<alexander.riesen@cetitec.com> wrote:
-> Geert Uytterhoeven, Fri, Mar 20, 2020 09:43:29 +0100:
-> > On Thu, Mar 19, 2020 at 6:42 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> > > This adds an implemention of SoC DAI driver which provides access to the
-> > > I2S port of the device.
->
-> I just noticed I don't do clk_prepare_enable anywhere.
-> Shouldn't the clock master enable its clocks somewhere?
 
-Usually the consumer is responsible for doing that.
-Does the rcar-sound driver do that?
+Thanks for following this case!
 
-But in this case, perhaps the clock should be enabled implicitly in response
-to a request from the audio subsystem, like you do below.
+The problem is that Relay uses the file->f_pos associated with 
+the process to read the buffer, and adds the number of bytes read 
+to rchan_buf->bytes_consumed.
 
-Note that you register a fixed-rate clock, which is assumed to be always
-enabled. Perhaps a gateable clock type is more appropriate?
+Here is a simple test case, the kernel module relay_test writes 
+the string "12345678" in module_init through relay_write; 
+the relay_read program uses two processes to alternately 
+read 2 bytes from Relay.
+It shows that process A reads the string "34" that has been 
+consumed by process B, and the string "56" may be skipped next.
 
-> > > diff --git a/drivers/media/i2c/adv748x/adv748x-dai.c b/drivers/media/i2c/adv748x/adv748x-dai.c
-> > > new file mode 100644
-> > > index 000000000000..4775a0c7ed7f
-> > > --- /dev/null
-> > > +++ b/drivers/media/i2c/adv748x/adv748x-dai.c
-> ...
-> > > +static int adv748x_dai_startup(struct snd_pcm_substream *sub, struct snd_soc_dai *dai)
-> > > +{
-> > > +       struct adv748x_state *state = state_of(dai);
-> > > +
-> > > +       if (sub->stream != SNDRV_PCM_STREAM_CAPTURE)
-> > > +               return -EINVAL;
-> > > +       return set_audio_pads_state(state, 1);
-> > > +}
->
-> For example, here, after activation of the lines succeeded?
->
-> > > +static void adv748x_dai_shutdown(struct snd_pcm_substream *sub, struct snd_soc_dai *dai)
-> > > +{
-> > > +       struct adv748x_state *state = state_of(dai);
-> > > +
-> > > +       set_audio_pads_state(state, 0);
-> > > +}
->
-> And clk_disable_unprepare here, before shutting down the pads?
-Gr{oetje,eeting}s,
 
-                        Geert
+========
+Module relay_test:
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+#include <linux/module.h>
+#include <linux/relay.h>
+#include <linux/debugfs.h>
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+static struct rchan *chan = NULL;
+static struct dentry *dir = NULL;
+
+static size_t subbuf_size = 512;
+static int n_subbufs = 32;
+
+static struct dentry *create_buf_file_handler(const char *filename,
+					      struct dentry *parent,
+					      umode_t mode,
+					      struct rchan_buf *buf,
+					      int *is_global)
+{
+	return debugfs_create_file(filename, mode, parent, buf,
+				   &relay_file_operations);
+}
+
+static int remove_buf_file_handler(struct dentry *dentry)
+{
+	debugfs_remove(dentry);
+	return 0;
+}
+
+static struct rchan_callbacks relay_callbacks = {
+	.create_buf_file = create_buf_file_handler,
+	.remove_buf_file = remove_buf_file_handler,
+};
+
+static int relay_init(void)
+{
+	dir = debugfs_create_dir("relay_test", NULL);
+	if (!dir)
+		goto err;
+
+	chan = relay_open("cpu", dir, subbuf_size, n_subbufs, &relay_callbacks, NULL);
+	if (!chan) {
+		debugfs_remove(dir);
+		goto err;
+	}
+	
+	relay_write(chan, "12345678", 9);
+
+	return 0;
+err:
+	return -EFAULT;
+}
+	
+static void relay_exit(void)
+{
+	relay_close(chan);
+	debugfs_remove(dir);
+}
+
+module_init(relay_init);
+module_exit(relay_exit);
+
+
+========
+Program relay_read:
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <unistd.h>  
+#include <sys/types.h>  
+
+int main(void)
+{
+	int pa[2], pb[2];
+	char buf[16], buf_r[16] = {0};
+	pid_t pid;
+
+	if (pipe(pa) || pipe(pb))
+		return -1;
+
+	if ((pid = fork()) < 0) {
+		return -2;
+	} else if (pid > 0) { /* process A */
+		int relay_fd = open("/sys/kernel/debug/relay_test/cpu0", O_RDONLY);
+		if (relay_fd < 0)
+			return -1;
+		close(pa[0]);
+		close(pb[1]);
+
+		/* expect to read "12" */
+		read(relay_fd, buf_r, 2);
+		printf("process A: read from relay %s\n", buf_r);
+
+		write(pa[1], "w", 2); /* wake up process B */
+		read(pb[0], buf, 256); /* wait */
+
+		/* BUG: expect to read "56"
+		 * actually read "34" which is already consumed
+		 */
+		read(relay_fd, buf_r, 2);
+		printf("process A: read from relay %s\n", buf_r);
+
+	} else { /* process B */
+		int relay_fd = open("/sys/kernel/debug/relay_test/cpu0", O_RDONLY);
+		if (relay_fd < 0)
+			return -1;
+		close(pa[1]);
+		close(pb[0]);
+
+		read(pa[0], buf, 256); /* wait */
+
+		/* expect to read "34" */
+		read(relay_fd, buf_r, 2);
+		printf("process B: read from relay %s\n", buf_r);
+
+		write(pb[1], "w", 2); /* wake up process A */
+	}
+
+	return 0;
+}
+
+
+========
+Here is runing the test:
+
+# taskset -c 0 insmod relay_test.ko
+# ./relay_read 
+process A: read from relay 12
+process B: read from relay 34
+process A: read from relay 34
+# cat /sys/kernel/debug/relay_test/cpu0
+78
+
