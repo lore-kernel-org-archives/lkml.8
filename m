@@ -2,93 +2,149 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8F2C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA22C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5A02075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3qa7GWP"
+	by mail.kernel.org (Postfix) with ESMTP id 9C29A2076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 03:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgCTDFs (ORCPT
+        id S1726820AbgCTDI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 23:05:48 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45199 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgCTDFs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 23:05:48 -0400
-Received: by mail-pg1-f194.google.com with SMTP id m15so2331403pgv.12;
-        Thu, 19 Mar 2020 20:05:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AetbBZq6fH3L1TSV0zp8Vgu0DgkKl6UrkrvBBlKDDog=;
-        b=X3qa7GWP7/MLQDcD0kMqRXOybiYDYjsblYHrK1ylLZByadrIGnRFFSW/ZaGPPWrPp4
-         5XelvX8qMVz6c8zezkaMmhsaM/boJmXDTrTsXDGBcycGq68qoCgC2G1qgyyho3xGNkGp
-         +kULm9o47KLudBUhr/7jRf95RCBgWGrgMA9xqDtw6OhNYRpdqiGoODTVHCPlMRwHhRTG
-         X1GQJVnxnIUEt92OwumZojxSKLwFyfssFUbqXLJEjY5ulweas8l8cEwH2IQT8IBHjH41
-         pVMtkz/5DRiSuwFqc8G8CnHkU7fh/eT4gmco3WKFONZUwmvWFeVAhA3xY+zfHKO0zqnt
-         8TCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AetbBZq6fH3L1TSV0zp8Vgu0DgkKl6UrkrvBBlKDDog=;
-        b=q8tShp05SjoeGpWUzPozVZ2aOFCCEAV+A59gBhqrd2uYJdbZfOur5VJwB3VOmuxBpB
-         5voiWv6cm+NrEIMBn8o/efKIbRQPtZEYrtelVSb9rlGIpHY0hPOCTNfC3SG3qGiZg5+3
-         d7w/6hCY3Ao8OFbc2m04u11zYlx5V/uv2YfUbRMVfVUfPDV20ufG+tSD3tXeEXKqErca
-         GStPieEFc9h7c9/qmkFJ9GfI67t+xLN9QxRsB8+MpmUdHNBOCm+Y69d38igqm7jkBilE
-         0MY1GNGFwDy6vqO2gPlV8okJT6r7JvSoH7edvEhH7uuT+pDoNXUYJ31YtDgd4okW5l2C
-         bsCQ==
-X-Gm-Message-State: ANhLgQ2dVwPrD8cADtDA8Hbbhs7U0cYQRRGNuee8rShhOh8vsLAJ14hp
-        MhF5De3tYnsliCdG6qXT8XU=
-X-Google-Smtp-Source: ADFU+vtx5K5X6TOjjrU/pgCvP2+Rz06GRkgR3bOHnCWbJjIq77NHdpFMDTQzO7GETDz0S9Xj1qxKKw==
-X-Received: by 2002:aa7:8f03:: with SMTP id x3mr7538783pfr.40.1584673547029;
-        Thu, 19 Mar 2020 20:05:47 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d23sm3726170pfq.210.2020.03.19.20.05.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 19 Mar 2020 20:05:46 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 20:05:45 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Grant Peltier <grantpeltier93@gmail.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        adam.vaughn.xh@renesas.com
-Subject: Re: [PATCH v2 2/2] docs: hwmon: Update documentation for isl68137
- pmbus driver
-Message-ID: <20200320030545.GA3260@roeck-us.net>
-References: <cover.1584568073.git.grantpeltier93@gmail.com>
- <619d5d430b80fbf33a7e19e9910a0cf049203f59.1584568073.git.grantpeltier93@gmail.com>
+        Thu, 19 Mar 2020 23:08:57 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12167 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726596AbgCTDI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 23:08:57 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7D6D63D2899F173E72D0;
+        Fri, 20 Mar 2020 11:08:52 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Fri, 20 Mar 2020
+ 11:08:42 +0800
+Subject: Re: [PATCH v5 20/23] KVM: arm64: GICv4.1: Plumb SGI implementation
+ selection in the distributor
+To:     Auger Eric <eric.auger@redhat.com>, Marc Zyngier <maz@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        "Robert Richter" <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "James Morse" <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-21-maz@kernel.org>
+ <72832f51-bbde-8502-3e03-189ac20a0143@huawei.com>
+ <4a06fae9c93e10351276d173747d17f4@kernel.org>
+ <49995ec9-3970-1f62-5dfc-118563ca00fc@redhat.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <b98855a1-6300-d323-80f6-82d3b9854290@huawei.com>
+Date:   Fri, 20 Mar 2020 11:08:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <619d5d430b80fbf33a7e19e9910a0cf049203f59.1584568073.git.grantpeltier93@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <49995ec9-3970-1f62-5dfc-118563ca00fc@redhat.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 10:50:18AM -0500, Grant Peltier wrote:
-> Update documentation to include reference information for newly
-> supported 2nd generation Renesas digital multiphase voltage regulators.
-> Also update branding from Intersil to Renesas.
+On 2020/3/20 4:38, Auger Eric wrote:
+> Hi Marc,
+> On 3/19/20 1:10 PM, Marc Zyngier wrote:
+>> Hi Zenghui,
+>>
+>> On 2020-03-18 06:34, Zenghui Yu wrote:
+>>> Hi Marc,
+>>>
+>>> On 2020/3/5 4:33, Marc Zyngier wrote:
+>>>> The GICv4.1 architecture gives the hypervisor the option to let
+>>>> the guest choose whether it wants the good old SGIs with an
+>>>> active state, or the new, HW-based ones that do not have one.
+>>>>
+>>>> For this, plumb the configuration of SGIs into the GICv3 MMIO
+>>>> handling, present the GICD_TYPER2.nASSGIcap to the guest,
+>>>> and handle the GICD_CTLR.nASSGIreq setting.
+>>>>
+>>>> In order to be able to deal with the restore of a guest, also
+>>>> apply the GICD_CTLR.nASSGIreq setting at first run so that we
+>>>> can move the restored SGIs to the HW if that's what the guest
+>>>> had selected in a previous life.
+>>>
+>>> I'm okay with the restore path.  But it seems that we still fail to
+>>> save the pending state of vSGI - software pending_latch of HW-based
+>>> vSGIs will not be updated (and always be false) because we directly
+>>> inject them through ITS, so vgic_v3_uaccess_read_pending() can't
+>>> tell the correct pending state to user-space (the correct one should
+>>> be latched in HW).
+>>>
+>>> It would be good if we can sync the hardware state into pending_latch
+>>> at an appropriate time (just before save), but not sure if we can...
+>>
+>> The problem is to find the "appropriate time". It would require to define
+>> a point in the save sequence where we transition the state from HW to
+>> SW. I'm not keen on adding more state than we already have.
 > 
-> Signed-off-by: Grant Peltier <grantpeltier93@gmail.com>
+> may be we could use a dedicated device group/attr as we have for the ITS
+> save tables? the user space would choose.
 
-Generating htmldocs results in:
+It means that userspace will be aware of some form of GICv4.1 details
+(e.g., get/set vSGI state at HW level) that KVM has implemented.
+Is it something that userspace required to know? I'm open to this ;-)
 
-/home/groeck/src/linux-staging/Documentation/hwmon/isl68137.rst:499: WARNING: Malformed table.
-Text in column margin in table line 25.
+> 
+> Thanks
+> 
+> Eric
+>>
+>> But what we can do is to just ask the HW to give us the right state
+>> on userspace access, at all times. How about this:
+>>
+>> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>> index 48fd9fc229a2..281fe7216c59 100644
+>> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>> @@ -305,8 +305,18 @@ static unsigned long
+>> vgic_v3_uaccess_read_pending(struct kvm_vcpu *vcpu,
+>>        */
+>>       for (i = 0; i < len * 8; i++) {
+>>           struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+>> +        bool state = irq->pending_latch;
+>>
+>> -        if (irq->pending_latch)
+>> +        if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+>> +            int err;
+>> +
+>> +            err = irq_get_irqchip_state(irq->host_irq,
+>> +                            IRQCHIP_STATE_PENDING,
+>> +                            &state);
+>> +            WARN_ON(err);
+>> +        }
+>> +
+>> +        if (state)
+>>               value |= (1U << i);
+>>
+>>           vgic_put_irq(vcpu->kvm, irq);
 
-Please fix and resubmit.
+Anyway this looks good to me and will do the right thing on a userspace
+save.
+
+>>
+>> I can add this to "KVM: arm64: GICv4.1: Add direct injection capability
+>> to SGI registers".
 
 Thanks,
-Guenter
+Zenghui
+
