@@ -2,92 +2,120 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39FCC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF472C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF14A20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B705720776
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:34:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nAxCYBmX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgCTNdz (ORCPT
+        id S1727236AbgCTNej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:33:55 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35852 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgCTNdz (ORCPT
+        Fri, 20 Mar 2020 09:34:39 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45159 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbgCTNej (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:33:55 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFHmO-0004US-6J; Fri, 20 Mar 2020 14:33:40 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 98800100375; Fri, 20 Mar 2020 14:33:39 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     syzbot <syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com>,
-        bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, rkrcmar@redhat.com,
-        syzkaller-bugs@googlegroups.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, x86@kernel.org
-Subject: Re: WARNING in vcpu_enter_guest
-In-Reply-To: <6686bde5-c1e8-5be5-f27a-61403c419a91@redhat.com>
-References: <000000000000f965b8059877e5e6@google.com> <00000000000081861f05a132b9cd@google.com> <20200319144952.GB11305@linux.intel.com> <20be9560-fce7-1495-3a83-e2b56dbc2389@redhat.com> <20200319173549.GC11305@linux.intel.com> <20200319173927.GD11305@linux.intel.com> <cd32ee6d-f30d-b221-8126-cf995ffca52e@redhat.com> <87k13f516q.fsf@nanos.tec.linutronix.de> <6686bde5-c1e8-5be5-f27a-61403c419a91@redhat.com>
-Date:   Fri, 20 Mar 2020 14:33:39 +0100
-Message-ID: <87tv2j2lsc.fsf@nanos.tec.linutronix.de>
+        Fri, 20 Mar 2020 09:34:39 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j10so3222011pfi.12;
+        Fri, 20 Mar 2020 06:34:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Nb2z4/AMhcIMCMakc6EWwO7L/vzjKqviBOdIUyt8ibM=;
+        b=nAxCYBmXrHFobSLiHWdQpRdDmIb332Ku2C4WDhQFAubl6i6RL41O1pYivIfZelYQCs
+         O1fe2ZzNF1QCrZpewjhMAuuTPYmgmss30z9uE6AQl3XHOmmMiYGIu6iuIOlkq/dJV/8A
+         TyExAvPly0Kr1klEktzo9x+BTZVdjoJ6yuD7+oyzWFdStGAKUlj94R9+wie0SoPKUrJ8
+         JXid5QZJ7/29r46Brt5XkjLYiTIUqALASdzfBpVWLZIwyyO6Dgu68PWQ84VCqJdgGLMx
+         8cFTLgpSckw1nBp1tXAluCuCqJdEm0QwiRvnyysy0k5x/65fLP7mOeCoRJIso+vM6duV
+         LtSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Nb2z4/AMhcIMCMakc6EWwO7L/vzjKqviBOdIUyt8ibM=;
+        b=QSRso9nyfReaGuP16phv3ZOgk47wOAn2XR9vbiVCsmvN+YsCtvylBiXsoQ72bVgryA
+         Z6sSKNN4oGEiuKJTYCO3QqmSfLuhbUZlEqNZV0Op9KrElcHihhiDodSLKH8qagrX+Fp0
+         ZwezH871/yZkPZTAkzq7u3IVh2dhwW7jShAUoxKYCVTbrhSUE1gaFck3YezaHO5QWLHv
+         2Z/UWNAquscNbk6UGLEKRPRx1PMp5p5I5jALB7mRDIQr0w2D8tb8V1rw/8bnDV74kaoq
+         lRl83PROase/Vml41fpFgam1IrJzpJ8ujgOLRFrqJCje09SGOSRyAbiN1qcO068/lzFv
+         z54Q==
+X-Gm-Message-State: ANhLgQ1yzCsA6+FOI16L4WOqlWaZ2TViAL85Hpr6rm7mpOyPbiH+gF9p
+        JsidRUWnvDhvf2ZVW7+3L283+oBE
+X-Google-Smtp-Source: ADFU+vsC/nkTLCwfzW90pe6nDleUtkBND2JfvbYWa+fw+1Fk4qyHnpYdzR5KFIrJ5c3CDuObikvW2A==
+X-Received: by 2002:a62:1dd3:: with SMTP id d202mr9761467pfd.47.1584711277858;
+        Fri, 20 Mar 2020 06:34:37 -0700 (PDT)
+Received: from localhost ([216.24.188.11])
+        by smtp.gmail.com with ESMTPSA id q91sm5043241pjb.11.2020.03.20.06.34.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 20 Mar 2020 06:34:37 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, davem@davemloft.net, allison@lohutok.net,
+        corbet@lwn.net, alexios.zavras@intel.com, broonie@kernel.org,
+        tglx@linutronix.de, mchehab+samsung@kernel.org,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH net-next v2 0/7] introduce read_poll_timeout
+Date:   Fri, 20 Mar 2020 21:34:24 +0800
+Message-Id: <20200320133431.9354-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
-> On 20/03/20 01:18, Thomas Gleixner wrote:
->>> No, it is possible to do that depending on the clock setup on the live
->>> migration source.  You could cause the warning anyway by setting the
->>> clock to a very high (signed) value so that kernel_ns + kvmclock_offset
->>> overflows.
->>
->> If that overflow happens, then the original and the new host have an
->> uptime difference in the range of >200 hundreds of years. Very realistic
->> scenario...
->> 
->> Of course this can happen if you feed crap into the interface, but do
->> you really think that forwarding all crap to a guest is the right thing
->> to do?
->> 
->> As we all know the hypervisor orchestration stuff is perfect and would
->> never feed crap into the kernel which happily proliferates that crap to
->> the guest...
->
-> But the point is, is there a sensible way to detect it?  Only allowing
-> >= -2^62 and < 2^62 or something like that is an ad hoc fix for a
-> warning that probably will never trigger outside fuzzing.  I would
-> expect that passing the wrong sign is a more likely mistake than being
-> off by 2^63.
->
-> This data is available everywhere between strace, kernel tracepoints and
-> QEMU tracepoints or guest checkpoint (live migration) data.  I just
-> don't see much advantage in keeping the warning.
+This patch sets is introduce read_poll_timeout macro, it is an extension
+of readx_poll_timeout macro. the accessor function op just supports only
+one parameter in the readx_poll_timeout macro, but this macro can
+supports multiple variable parameters for it. so functions like
+phy_read(struct phy_device *phydev, u32 regnum) and
+phy_read_mmd(struct phy_device *phydev, int devad, u32 regnum) can
+use this poll timeout framework.
 
-The warning is useless. But you want a sanity check in the ioctl and
-return -EMORON if it is out of bounds simply because the guest will
-malfunction if your offset is bogus. Look at the timekeeping and time
-namespace sanity checks.
+the first patch introduce read_poll_timeout macro, and the second patch
+redefined readx_poll_timeout macro by read_poll_timeout(), and the other
+patches are examples using read_poll_timeout macro.
 
-Thanks,
+v1 -> v2:
+	- passed a phydev, device address and a reg to replace args...
+	  parameter in phy_read_mmd_poll_timeout() by Andrew Lunn 's
+	  suggestion in patch 3. Andrew Lunn <andrew@lunn.ch>, Thanks
+	  very much for your help!
+	- also in patch 3, handle phy_read_mmd return an error(the return
+	  value < 0) in phy_read_mmd_poll_timeout(). Thanks Andrew
+	  again.
+	- in patch 6, pass a phydev and a reg to replace args...
+	  parameter in phy_read_poll_timeout(), and also handle the
+	  phy_read() function's return error.
 
-        tglx
+Dejin Zheng (7):
+  iopoll: introduce read_poll_timeout macro
+  iopoll: redefined readx_poll_timeout macro to simplify the code
+  net: phy: introduce phy_read_mmd_poll_timeout macro
+  net: phy: bcm84881: use phy_read_mmd_poll_timeout() to simplify the
+    code
+  net: phy: aquantia: use phy_read_mmd_poll_timeout() to simplify the
+    code
+  net: phy: introduce phy_read_poll_timeout macro
+  net: phy: use phy_read_poll_timeout() to simplify the code
 
+ drivers/net/phy/aquantia_main.c | 13 ++++--------
+ drivers/net/phy/bcm84881.c      | 27 ++++---------------------
+ drivers/net/phy/phy_device.c    | 16 ++++-----------
+ include/linux/iopoll.h          | 36 ++++++++++++++++++++++++++-------
+ include/linux/phy.h             | 27 +++++++++++++++++++++++++
+ 5 files changed, 68 insertions(+), 51 deletions(-)
 
+-- 
+2.25.0
 
