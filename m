@@ -2,165 +2,348 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E5CC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8B4C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E46582072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:51:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="LLM9r0vY"
+	by mail.kernel.org (Postfix) with ESMTP id 586E620714
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:56:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584744964;
+	bh=g9QXZ4dr/Simp2Vdialuzo4v62tVfrLNYQBkUvN7edY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hGeqIiK+ks7dWdYMMG6RkVFHmPN50v+u1Q6IVgh8kj3KuQjdbz2R9Ps87R0SiUy5m
+	 Wjajgzuz9SozxAHg2Gv7oZH48npiC/ZwHOF76Hf7cCxNwvvPCAgMkvEJSEQHF0yTfH
+	 PGL26fC3V1d15aiVa4pSda97MTK2tElfd+s1xBHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbgCTWvT (ORCPT
+        id S1727539AbgCTW4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:51:19 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36312 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgCTWvT (ORCPT
+        Fri, 20 Mar 2020 18:56:03 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:36059 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbgCTW4C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:51:19 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 39so7675073otu.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 15:51:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YJJPMLz7WHfijv4QsdDA8oo6aFkLf4z2pFfe94unjoE=;
-        b=LLM9r0vYyuH2sIU2RS7aUWEyYWOB+2wa4CA44ADRkk14C5XdkRJ7swbzRiTdH39oGB
-         CKtlEYwhcyA2wgT2iF41wWrgZHwNX/dnVTiq6ypc8AQnDP/or7M/HVp++u+U23YsSHC5
-         koTOcuwPKxV7YkhTOmAR/czZBpCmMBKa4x4rZOtACZvhgw8kQ3/vhquFqJGXH71RETDk
-         MQS1ZGkTHPOK/L8uFfuONZGrfcHJUBQH7meA/1Ow4LJc3WVD+X4spdjyKnw8NF49ncTL
-         xFS5xQa39LhiHCFc5bf5RtkatmpayKHE/sjHa9frRGF5OOUG7KjWMvIAUyEsDewnvBjM
-         hNzw==
+        Fri, 20 Mar 2020 18:56:02 -0400
+Received: by mail-il1-f196.google.com with SMTP id h3so7218470ils.3;
+        Fri, 20 Mar 2020 15:56:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YJJPMLz7WHfijv4QsdDA8oo6aFkLf4z2pFfe94unjoE=;
-        b=gFvTMuLevQjvOxMfGgevU/DMWBiQS/ZBiqmTt10FBYOPSB+4Gbfm5VFp8XslFeAQSq
-         SHUsZE0drlLZ9v9uQYXNhEE+xyLTEcsZjMkP+tja+ED3g6piCiJJV0jzKb9z5hCYKMDP
-         eBOBadhXYsNtZfG0Wk0SysDRVdvB10QaIT3eCcukXeTifZeGlzKBd6sNZQaB4qsZJToq
-         WeRqEO8bYDn+dg/gHtMX1ZBwqaSGctYaiyEARLMTTHuafdBpz5STAigKvoOQFIHkuNO3
-         o32FxCQKkFeWoXDgLT3M4jzzZQo2iLoWEEn2qJy0XQ4TysWZPwppq6RsPnGI+G1zsONT
-         5xgA==
-X-Gm-Message-State: ANhLgQ2jS7RFrPbTgaZq/MY71cVh21U8CmAtsAHy3hpJwCuokX8Q6hG/
-        DIK9c+ySDYky0UrjLf9obkFBoflLWtGzfxSlPppjJbjjgN0=
-X-Google-Smtp-Source: ADFU+vsrPVD99WJDPNjK+smBphRsSjzG5wuLh3s4d1fcFl8xjfO2mFAAR+58K5OsCGWDB7pfc44EAJA6of2WZQlPCr8=
-X-Received: by 2002:a9d:20e2:: with SMTP id x89mr8299168ota.252.1584744678589;
- Fri, 20 Mar 2020 15:51:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=16V2PA006Te0JwlEk0mhuUcYVDotlcL0klCaZu/h5A8=;
+        b=ZIlaihbxeF9DPXWKqEkNsdYL2umAWkwGVBa4IA8S4w/kPa4+OVs67ezIG79pcbt9T7
+         Gripk9F8vucKMRm9Qxyr29tQ2l7tbrQJjtDh9PZ8lGt3DUHj0FfHT4s3EXlh17oPttjv
+         ELTcTfUBhFh4bW80CzQq+wvFmlzv1pediT/nKq17EYULngzRQC3tgwinGygR2QsxIdql
+         d/cwDFrtPm1C6cQflaRtvlZEN8oH+DlTSPAm+LCHoVM8q9SGoRC7NPLYuH9VR84lB+QA
+         sSxWc3M5xDj9H2rEcrYZ794nMRm2tC/KCT0+5dufcSQpuwLvlzGPAAXZK1NUvFZLEOmd
+         EhOA==
+X-Gm-Message-State: ANhLgQ0/wFpuh2cuDssQY5oSuodTQDu+2v4QpJoTVSy7NWlsd2KYKk3k
+        LZsSKF0j5UaWyZxTJZI9qr9LEWg=
+X-Google-Smtp-Source: ADFU+vvtRrebZOPJbmnpUIwVYfdBNmdgRTWv+rpWOHXT/pBibD5UObIfTV5Gk7Hqqyt6YoTnNzZJ7w==
+X-Received: by 2002:a92:58d0:: with SMTP id z77mr9859903ilf.67.1584744959682;
+        Fri, 20 Mar 2020 15:55:59 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id g69sm1593099ile.3.2020.03.20.15.55.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 15:55:58 -0700 (PDT)
+Received: (nullmailer pid 23774 invoked by uid 1000);
+        Fri, 20 Mar 2020 22:55:56 -0000
+Date:   Fri, 20 Mar 2020 16:55:56 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        devicetree@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH net-next v5 05/11] dt-binding: ti: am65x: document mcu
+ cpsw nuss
+Message-ID: <20200320225556.GA12084@bogus>
+References: <20200319162806.25705-1-grygorii.strashko@ti.com>
+ <20200319162806.25705-6-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-References: <20191212071847.45561-1-alison.wang@nxp.com> <CAGgjyvHHzPWjRTqxYmGCmk3qa6=kOezHywVDFomgD6UNj-zwpQ@mail.gmail.com>
- <VI1PR04MB40627CDD5F0C17D8DCDCFFE2F4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
- <VI1PR04MB4062C67906888DA8142C17E1F4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
- <CAGgjyvGAjx1SV=K66AM24DxMTA_sAF2uhhDw5gXCFTGNZi8E7Q@mail.gmail.com>
- <VI1PR04MB40620DD55D5ED0FDC3E94C2BF4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
- <20191212122318.GB4310@sirena.org.uk> <CAJ+vNU0xZOb0R2VNkq6k3efdkgQUtO_-cEdNgZ643nt_G=vevQ@mail.gmail.com>
- <af99c9abd9c2aec6a074fb05310c56b780725ebd.camel@toradex.com>
- <CAJ+vNU16ax9JTx2kSMUF8SiVD-+4KGoFO-U07xM5eE=T6Fwjhw@mail.gmail.com> <CAGgjyvFNCbFw7x6QL063oi-fV2UuVQVfL1cv_pQ74HWoJS4Etg@mail.gmail.com>
-In-Reply-To: <CAGgjyvFNCbFw7x6QL063oi-fV2UuVQVfL1cv_pQ74HWoJS4Etg@mail.gmail.com>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Fri, 20 Mar 2020 15:51:05 -0700
-Message-ID: <CAJ+vNU3h1-tJT-KnyaCHj9wvXzdpDyWfvgTSGYLqU8OrzGXv6g@mail.gmail.com>
-Subject: Re: [alsa-devel] [EXT] Re: [PATCH] ASoC: sgtl5000: Revert "ASoC:
- sgtl5000: Fix of unmute outputs on probe"
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alison.wang@nxp.com" <alison.wang@nxp.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Igor Opanyuk <igor.opanyuk@toradex.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319162806.25705-6-grygorii.strashko@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 10:06 AM Oleksandr Suvorov
-<oleksandr.suvorov@toradex.com> wrote:
->
-> On Fri, Mar 20, 2020 at 5:51 PM Tim Harvey <tharvey@gateworks.com> wrote:
-> >
-> > On Fri, Mar 20, 2020 at 12:26 AM Marcel Ziswiler
-> > <marcel.ziswiler@toradex.com> wrote:
-> > >
-> > > Hi Tim
-> > >
-> > > On Thu, 2020-03-19 at 13:49 -0700, Tim Harvey wrote:
-> > > > On Thu, Dec 12, 2019 at 4:24 AM Mark Brown <broonie@kernel.org>
-> > > > wrote:
-> > > > > On Thu, Dec 12, 2019 at 10:46:31AM +0000, Alison Wang wrote:
-> > > > >
-> > > > > > We tested this standard solution using gstreamer and standard
-> > > > > > ALSA
-> > > > > > tools like aplay, arecord and all these tools unmute needed
-> > > > > > blocks
-> > > > > > successfully.
-> > > > > > [Alison Wang] I am using aplay. Do you mean I need to add some
-> > > > > > parameters for aplay or others to unmute the outputs?
-> > > > >
-> > > > > Use amixer.
-> > > >
-> > > > Marc / Oleksandr,
-> > > >
-> > > > I can't seem to find the original patch in my mailbox for 631bc8f:
-> > > > ('ASoC: sgtl5000: Fix of unmute outputs on probe')
-> > >
-> > > I forwarded you that one again. OK?
-> > >
-> > > > however I find it
-> > > > breaks sgtl5000 audio output on the Gateworks boards which is still
-> > > > broken on 5.6-rc6.
-> > >
-> > > What exactly do you mean by "breaks"? Isn't it that you just need to
-> > > unmute stuff e.g. using amixer or using a proper updated asound.state
-> > > file with default states for your controls?
-> >
-> > the audio device is in /proc/asound/cards but when I send audio to it
-> > I 'hear' nothing out the normal line-out output.
-> >
-> > >
-> > > > Was there some follow-up patches that haven't made
-> > > > it into mainline yet regarding this?
-> > >
-> > > I don't think so. It all works perfectly, not?
-> > >
-> > > > The response above indicates maybe there was an additional ALSA
-> > > > control perhaps added as a resolution but I don't see any differences
-> > > > there.
-> > >
-> > > Not that I am aware of, no.
-> > >
-> >
-> > The output of 'amixer' shows nothing different than before this patch
-> > where audio out worked (same controls, same settings on them). I'm
-> > testing this with a buildroot rootfs with no asound.conf (or at least
-> > none that I know of... i'm honestly not clear where all they can be).
->
-> Tim, did you try to unmute the output with amixer?
->
-> Could you provide the output of your amixer with and without this patch?
->
-> Before this patch, the driver unmuted HP, LO, and ADC unconditionally
-> on load (while it just had to set up ZCD bits).
-> Now HP, LO, ADC remain muted until one unmutes them using standard
-> ALSA tools/interfaces.
-> ALSA mute/unmute controls for these outputs have been presenting in
-> the kernel for a long time. Please, just use them.
->
+On Thu, Mar 19, 2020 at 06:28:00PM +0200, Grygorii Strashko wrote:
+> Document device tree bindings for The TI AM654x/J721E SoC Gigabit Ethernet MAC
+> (Media Access Controller - CPSW2G NUSS). The CPSW NUSS provides Ethernet packet
+> communication for the device.
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Tested-by: Murali Karicheri <m-karicheri2@ti.com>
+> ---
+>  .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   | 226 ++++++++++++++++++
+>  1 file changed, 226 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+> new file mode 100644
+> index 000000000000..c28b5c925377
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+> @@ -0,0 +1,226 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/ti,k3-am654-cpsw-nuss.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: The TI AM654x/J721E SoC Gigabit Ethernet MAC (Media Access Controller) Device Tree Bindings
+> +
+> +maintainers:
+> +  - Grygorii Strashko <grygorii.strashko@ti.com>
+> +  - Sekhar Nori <nsekhar@ti.com>
+> +
+> +description:
+> +  The TI AM654x/J721E SoC Gigabit Ethernet MAC (CPSW2G NUSS) has two ports
+> +  (one external) and provides Ethernet packet communication for the device.
+> +  CPSW2G NUSS features - the Reduced Gigabit Media Independent Interface (RGMII),
+> +  Reduced Media Independent Interface (RMII), the Management Data
+> +  Input/Output (MDIO) interface for physical layer device (PHY) management,
+> +  new version of Common Platform Time Sync (CPTS), updated Address Lookup
+> +  Engine (ALE).
+> +  One external Ethernet port (port 1) with selectable RGMII/RMII interfaces and
+> +  an internal Communications Port Programming Interface (CPPI5) (Host port 0).
+> +  Host Port 0 CPPI Packet Streaming Interface interface supports 8 TX channels
+> +  and one RX channels and operating by TI AM654x/J721E NAVSS Unified DMA
+> +  Peripheral Root Complex (UDMA-P) controller.
+> +  The CPSW2G NUSS is integrated into device MCU domain named MCU_CPSW0.
+> +
+> +  Additional features
+> +  priority level Quality Of Service (QOS) support (802.1p)
+> +  Support for Audio/Video Bridging (P802.1Qav/D6.0)
+> +  Support for IEEE 1588 Clock Synchronization (2008 Annex D, Annex E and Annex F)
+> +  Flow Control (802.3x) Support
+> +  Time Sensitive Network Support
+> +  IEEE P902.3br/D2.0 Interspersing Express Traffic
+> +  IEEE 802.1Qbv/D2.2 Enhancements for Scheduled Traffic
+> +  Configurable number of addresses plus VLANs
+> +  Configurable number of classifier/policers
+> +  VLAN support, 802.1Q compliant, Auto add port VLAN for untagged frames on
+> +  ingress, Auto VLAN removal on egress and auto pad to minimum frame size.
+> +  RX/TX csum offload
+> +
+> +  Specifications can be found at
+> +    http://www.ti.com/lit/ug/spruid7e/spruid7e.pdf
+> +    http://www.ti.com/lit/ug/spruil1a/spruil1a.pdf
+> +
+> +properties:
+> +  "#address-cells": true
+> +  "#size-cells": true
+> +
+> +  compatible:
+> +    oneOf:
+> +      - const: ti,am654-cpsw-nuss
+> +      - const: ti,j721e-cpsw-nuss
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description:
+> +       The physical base address and size of full the CPSW2G NUSS IO range
+> +
+> +  reg-names:
+> +    items:
+> +      - const: cpsw_nuss
+> +
+> +  ranges: true
+> +
+> +  dma-coherent: true
+> +
+> +  clocks:
+> +    description: CPSW2G NUSS functional clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: fck
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  dmas:
+> +    minItems: 9
 
-Oleksandr,
+Drop this. maxItems is enough.
 
-When I first bisected to this I must have done something wrong as I
-thought amixer settings showed the same before and after - I see that
-I'm wrong about that. I see the differences now with HP, LO, and ADC
-muted by default. I agree using amixer controls is fine.
+> +    maxItems: 9
+> +
+> +  dma-names:
+> +    items:
+> +      - const: tx0
+> +      - const: tx1
+> +      - const: tx2
+> +      - const: tx3
+> +      - const: tx4
+> +      - const: tx5
+> +      - const: tx6
+> +      - const: tx7
+> +      - const: rx
+> +
+> +  pinctrl-names: true
 
-Sorry for the noise!
+Don't need this. It is implicitly allowed.
 
-Tim
+> +
+> +  ethernet-ports:
+> +    type: object
+> +    properties:
+> +      '#address-cells':
+> +        const: 1
+> +      '#size-cells':
+> +        const: 0
+> +
+> +    patternProperties:
+> +      "^port@[0-9]+$":
+
+reg must be 1, but unit-address can be any number (though it should be 
+hex)?
+
+> +          type: object
+> +          description: CPSW2G NUSS external ports
+> +
+> +          allOf:
+> +            - $ref: ethernet-controller.yaml#
+> +
+> +          properties:
+> +            reg:
+> +              items:
+> +                - const: 1
+> +              description: CPSW port number
+> +
+> +            phys:
+> +              maxItems: 1
+> +              description:  phandle on phy-gmii-sel PHY
+> +
+> +            label:
+> +              description: label associated with this port
+> +
+> +            ti,mac-only:
+> +              $ref: /schemas/types.yaml#definitions/flag
+> +              description:
+> +                Specifies the port works in mac-only mode.
+> +
+> +            ti,syscon-efuse:
+> +              $ref: /schemas/types.yaml#definitions/phandle-array
+> +              description:
+> +                Phandle to the system control device node which provides access
+> +                to efuse IO range with MAC addresses
+> +
+> +          required:
+> +            - reg
+> +            - phys
+
+ethernet-ports needs an 'additionalProperties: false'
+
+> +
+> +  mdio:
+> +    type: object
+> +    allOf:
+> +      - $ref: "ti,davinci-mdio.yaml#"
+> +    description:
+> +      CPSW MDIO bus.
+> +
+> +patternProperties:
+> +  "^pinctrl-[0-9]+$": true
+
+Can drop this.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - ranges
+> +  - clocks
+> +  - clock-names
+> +  - power-domains
+> +  - dmas
+> +  - dma-names
+> +  - '#address-cells'
+> +  - '#size-cells'
+
+Add: 
+
+additionalProperties: false
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/pinctrl/k3.h>
+> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +    #include <dt-bindings/net/ti-dp83867.h>
+> +
+> +    mcu_cpsw: ethernet@46000000 {
+> +        compatible = "ti,am654-cpsw-nuss";
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        reg = <0x0 0x46000000 0x0 0x200000>;
+> +        reg-names = "cpsw_nuss";
+> +        ranges = <0x0 0x0 0x46000000 0x0 0x200000>;
+> +        dma-coherent;
+> +        clocks = <&k3_clks 5 10>;
+> +        clock-names = "fck";
+> +        power-domains = <&k3_pds 5 TI_SCI_PD_EXCLUSIVE>;
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&mcu_cpsw_pins_default &mcu_mdio_pins_default>;
+> +
+> +        dmas = <&mcu_udmap 0xf000>,
+> +               <&mcu_udmap 0xf001>,
+> +               <&mcu_udmap 0xf002>,
+> +               <&mcu_udmap 0xf003>,
+> +               <&mcu_udmap 0xf004>,
+> +               <&mcu_udmap 0xf005>,
+> +               <&mcu_udmap 0xf006>,
+> +               <&mcu_udmap 0xf007>,
+> +               <&mcu_udmap 0x7000>;
+> +        dma-names = "tx0", "tx1", "tx2", "tx3", "tx4", "tx5", "tx6", "tx7",
+> +                    "rx";
+> +
+> +        ethernet-ports {
+> +              #address-cells = <1>;
+> +              #size-cells = <0>;
+> +
+> +              cpsw_port1: port@1 {
+> +                    reg = <1>;
+> +                    ti,mac-only;
+> +                    label = "port1";
+> +                    ti,syscon-efuse = <&mcu_conf 0x200>;
+> +                    phys = <&phy_gmii_sel 1>;
+> +
+> +                    phy-mode = "rgmii-rxid";
+> +                    phy-handle = <&phy0>;
+> +              };
+> +        };
+> +
+> +        davinci_mdio: mdio@f00 {
+> +              compatible = "ti,cpsw-mdio","ti,davinci_mdio";
+> +              reg = <0x0 0xf00 0x0 0x100>;
+> +              #address-cells = <1>;
+> +              #size-cells = <0>;
+> +              clocks = <&k3_clks 5 10>;
+> +              clock-names = "fck";
+> +              bus_freq = <1000000>;
+> +
+> +              phy0: ethernet-phy@0 {
+> +                    reg = <0>;
+> +                    ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
+> +                    ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
+> +              };
+> +        };
+> +    };
+> -- 
+> 2.17.1
+> 
