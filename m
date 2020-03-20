@@ -7,41 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 945A1C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7DAC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74BD620754
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6965420754
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbgCTM6Y (ORCPT
+        id S1727403AbgCTM60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 08:58:24 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35632 "EHLO
+        Fri, 20 Mar 2020 08:58:26 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35649 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbgCTM6M (ORCPT
+        with ESMTP id S1727261AbgCTM6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 08:58:12 -0400
+        Fri, 20 Mar 2020 08:58:16 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFHDv-0003iT-QJ; Fri, 20 Mar 2020 13:58:03 +0100
+        id 1jFHE3-0003kI-JS; Fri, 20 Mar 2020 13:58:11 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 685F31C22BF;
-        Fri, 20 Mar 2020 13:58:03 +0100 (CET)
-Date:   Fri, 20 Mar 2020 12:58:03 -0000
-From:   "tip-bot2 for Qais Yousef" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 06EC61C22C2;
+        Fri, 20 Mar 2020 13:58:06 +0100 (CET)
+Date:   Fri, 20 Mar 2020 12:58:05 -0000
+From:   "tip-bot2 for Johannes Weiner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/rt: cpupri_find: Trigger a full search as fallback
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Qais Yousef <qais.yousef@arm.com>,
+Subject: [tip: sched/core] psi: Fix cpu.pressure for cpu.max and competing cgroups
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200310142219.syxzn5ljpdxqtbgx@e107158-lin.cambridge.arm.com>
-References: <20200310142219.syxzn5ljpdxqtbgx@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20200316191333.115523-2-hannes@cmpxchg.org>
+References: <20200316191333.115523-2-hannes@cmpxchg.org>
 MIME-Version: 1.0
-Message-ID: <158470908311.28353.10090988248383112451.tip-bot2@tip-bot2>
+Message-ID: <158470908574.28353.5889910600117208817.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,103 +56,178 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     e94f80f6c49020008e6fa0f3d4b806b8595d17d8
-Gitweb:        https://git.kernel.org/tip/e94f80f6c49020008e6fa0f3d4b806b8595d17d8
-Author:        Qais Yousef <qais.yousef@arm.com>
-AuthorDate:    Thu, 05 Mar 2020 10:24:50 
+Commit-ID:     b05e75d611380881e73edc58a20fd8c6bb71720b
+Gitweb:        https://git.kernel.org/tip/b05e75d611380881e73edc58a20fd8c6bb71720b
+Author:        Johannes Weiner <hannes@cmpxchg.org>
+AuthorDate:    Mon, 16 Mar 2020 15:13:31 -04:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Fri, 20 Mar 2020 13:06:20 +01:00
+CommitterDate: Fri, 20 Mar 2020 13:06:18 +01:00
 
-sched/rt: cpupri_find: Trigger a full search as fallback
+psi: Fix cpu.pressure for cpu.max and competing cgroups
 
-If we failed to find a fitting CPU, in cpupri_find(), we only fallback
-to the level we found a hit at.
+For simplicity, cpu pressure is defined as having more than one
+runnable task on a given CPU. This works on the system-level, but it
+has limitations in a cgrouped reality: When cpu.max is in use, it
+doesn't capture the time in which a task is not executing on the CPU
+due to throttling. Likewise, it doesn't capture the time in which a
+competing cgroup is occupying the CPU - meaning it only reflects
+cgroup-internal competitive pressure, not outside pressure.
 
-But Steve suggested to fallback to a second full scan instead as this
-could be a better effort.
+Enable tracking of currently executing tasks, and then change the
+definition of cpu pressure in a cgroup from
 
-	https://lore.kernel.org/lkml/20200304135404.146c56eb@gandalf.local.home/
+	NR_RUNNING > 1
 
-We trigger the 2nd search unconditionally since the argument about
-triggering a full search is that the recorded fall back level might have
-become empty by then. Which means storing any data about what happened
-would be meaningless and stale.
+to
 
-I had a humble try at timing it and it seemed okay for the small 6 CPUs
-system I was running on
+	NR_RUNNING > ON_CPU
 
-	https://lore.kernel.org/lkml/20200305124324.42x6ehjxbnjkklnh@e107158-lin.cambridge.arm.com/
+which will capture the effects of cpu.max as well as competition from
+outside the cgroup.
 
-On large system this second full scan could be expensive. But there are
-no users outside capacity awareness for this fitness function at the
-moment. Heterogeneous systems tend to be small with 8cores in total.
+After this patch, a cgroup running `stress -c 1` with a cpu.max
+setting of 5000 10000 shows ~50% continuous CPU pressure.
 
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://lkml.kernel.org/r/20200310142219.syxzn5ljpdxqtbgx@e107158-lin.cambridge.arm.com
+Link: https://lkml.kernel.org/r/20200316191333.115523-2-hannes@cmpxchg.org
 ---
- kernel/sched/cpupri.c | 29 ++++++-----------------------
- 1 file changed, 6 insertions(+), 23 deletions(-)
+ include/linux/psi_types.h | 10 +++++++++-
+ kernel/sched/core.c       |  2 ++
+ kernel/sched/psi.c        | 12 +++++++-----
+ kernel/sched/stats.h      | 28 ++++++++++++++++++++++++++++
+ 4 files changed, 46 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/sched/cpupri.c b/kernel/sched/cpupri.c
-index dd3f16d..0033731 100644
---- a/kernel/sched/cpupri.c
-+++ b/kernel/sched/cpupri.c
-@@ -122,8 +122,7 @@ int cpupri_find_fitness(struct cpupri *cp, struct task_struct *p,
- 		bool (*fitness_fn)(struct task_struct *p, int cpu))
- {
- 	int task_pri = convert_prio(p->prio);
--	int best_unfit_idx = -1;
--	int idx = 0, cpu;
-+	int idx, cpu;
+diff --git a/include/linux/psi_types.h b/include/linux/psi_types.h
+index 07aaf9b..4b72584 100644
+--- a/include/linux/psi_types.h
++++ b/include/linux/psi_types.h
+@@ -14,13 +14,21 @@ enum psi_task_count {
+ 	NR_IOWAIT,
+ 	NR_MEMSTALL,
+ 	NR_RUNNING,
+-	NR_PSI_TASK_COUNTS = 3,
++	/*
++	 * This can't have values other than 0 or 1 and could be
++	 * implemented as a bit flag. But for now we still have room
++	 * in the first cacheline of psi_group_cpu, and this way we
++	 * don't have to special case any state tracking for it.
++	 */
++	NR_ONCPU,
++	NR_PSI_TASK_COUNTS = 4,
+ };
  
- 	BUG_ON(task_pri >= CPUPRI_NR_PRIORITIES);
+ /* Task state bitmasks */
+ #define TSK_IOWAIT	(1 << NR_IOWAIT)
+ #define TSK_MEMSTALL	(1 << NR_MEMSTALL)
+ #define TSK_RUNNING	(1 << NR_RUNNING)
++#define TSK_ONCPU	(1 << NR_ONCPU)
  
-@@ -145,31 +144,15 @@ int cpupri_find_fitness(struct cpupri *cp, struct task_struct *p,
- 		 * If no CPU at the current priority can fit the task
- 		 * continue looking
+ /* Resources that workloads could be stalled on */
+ enum psi_res {
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 014d4f7..c1f923d 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4091,6 +4091,8 @@ static void __sched notrace __schedule(bool preempt)
  		 */
--		if (cpumask_empty(lowest_mask)) {
--			/*
--			 * Store our fallback priority in case we
--			 * didn't find a fitting CPU
--			 */
--			if (best_unfit_idx == -1)
--				best_unfit_idx = idx;
--
-+		if (cpumask_empty(lowest_mask))
+ 		++*switch_count;
+ 
++		psi_sched_switch(prev, next, !task_on_rq_queued(prev));
++
+ 		trace_sched_switch(preempt, prev, next);
+ 
+ 		/* Also unlocks the rq: */
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 0285207..5012829 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -225,7 +225,7 @@ static bool test_state(unsigned int *tasks, enum psi_states state)
+ 	case PSI_MEM_FULL:
+ 		return tasks[NR_MEMSTALL] && !tasks[NR_RUNNING];
+ 	case PSI_CPU_SOME:
+-		return tasks[NR_RUNNING] > 1;
++		return tasks[NR_RUNNING] > tasks[NR_ONCPU];
+ 	case PSI_NONIDLE:
+ 		return tasks[NR_IOWAIT] || tasks[NR_MEMSTALL] ||
+ 			tasks[NR_RUNNING];
+@@ -695,10 +695,10 @@ static u32 psi_group_change(struct psi_group *group, int cpu,
+ 		if (!(m & (1 << t)))
  			continue;
--		}
+ 		if (groupc->tasks[t] == 0 && !psi_bug) {
+-			printk_deferred(KERN_ERR "psi: task underflow! cpu=%d t=%d tasks=[%u %u %u] clear=%x set=%x\n",
++			printk_deferred(KERN_ERR "psi: task underflow! cpu=%d t=%d tasks=[%u %u %u %u] clear=%x set=%x\n",
+ 					cpu, t, groupc->tasks[0],
+ 					groupc->tasks[1], groupc->tasks[2],
+-					clear, set);
++					groupc->tasks[3], clear, set);
+ 			psi_bug = 1;
+ 		}
+ 		groupc->tasks[t]--;
+@@ -916,9 +916,11 @@ void cgroup_move_task(struct task_struct *task, struct css_set *to)
  
- 		return 1;
+ 	rq = task_rq_lock(task, &rf);
+ 
+-	if (task_on_rq_queued(task))
++	if (task_on_rq_queued(task)) {
+ 		task_flags = TSK_RUNNING;
+-	else if (task->in_iowait)
++		if (task_current(rq, task))
++			task_flags |= TSK_ONCPU;
++	} else if (task->in_iowait)
+ 		task_flags = TSK_IOWAIT;
+ 
+ 	if (task->flags & PF_MEMSTALL)
+diff --git a/kernel/sched/stats.h b/kernel/sched/stats.h
+index ba683fe..6ff0ac1 100644
+--- a/kernel/sched/stats.h
++++ b/kernel/sched/stats.h
+@@ -93,6 +93,14 @@ static inline void psi_dequeue(struct task_struct *p, bool sleep)
+ 		if (p->flags & PF_MEMSTALL)
+ 			clear |= TSK_MEMSTALL;
+ 	} else {
++		/*
++		 * When a task sleeps, schedule() dequeues it before
++		 * switching to the next one. Merge the clearing of
++		 * TSK_RUNNING and TSK_ONCPU to save an unnecessary
++		 * psi_task_change() call in psi_sched_switch().
++		 */
++		clear |= TSK_ONCPU;
++
+ 		if (p->in_iowait)
+ 			set |= TSK_IOWAIT;
  	}
- 
- 	/*
--	 * If we failed to find a fitting lowest_mask, make sure we fall back
--	 * to the last known unfitting lowest_mask.
--	 *
--	 * Note that the map of the recorded idx might have changed since then,
--	 * so we must ensure to do the full dance to make sure that level still
--	 * holds a valid lowest_mask.
--	 *
--	 * As per above, the map could have been concurrently emptied while we
--	 * were busy searching for a fitting lowest_mask at the other priority
--	 * levels.
-+	 * If we failed to find a fitting lowest_mask, kick off a new search
-+	 * but without taking into account any fitness criteria this time.
- 	 *
- 	 * This rule favours honouring priority over fitting the task in the
- 	 * correct CPU (Capacity Awareness being the only user now).
-@@ -184,8 +167,8 @@ int cpupri_find_fitness(struct cpupri *cp, struct task_struct *p,
- 	 * must do proper RT planning to avoid overloading the system if they
- 	 * really care.
- 	 */
--	if (best_unfit_idx != -1)
--		return __cpupri_find(cp, p, lowest_mask, best_unfit_idx);
-+	if (fitness_fn)
-+		return cpupri_find(cp, p, lowest_mask);
- 
- 	return 0;
+@@ -126,6 +134,23 @@ static inline void psi_ttwu_dequeue(struct task_struct *p)
+ 	}
  }
+ 
++static inline void psi_sched_switch(struct task_struct *prev,
++				    struct task_struct *next,
++				    bool sleep)
++{
++	if (static_branch_likely(&psi_disabled))
++		return;
++
++	/*
++	 * Clear the TSK_ONCPU state if the task was preempted. If
++	 * it's a voluntary sleep, dequeue will have taken care of it.
++	 */
++	if (!sleep)
++		psi_task_change(prev, TSK_ONCPU, 0);
++
++	psi_task_change(next, 0, TSK_ONCPU);
++}
++
+ static inline void psi_task_tick(struct rq *rq)
+ {
+ 	if (static_branch_likely(&psi_disabled))
+@@ -138,6 +163,9 @@ static inline void psi_task_tick(struct rq *rq)
+ static inline void psi_enqueue(struct task_struct *p, bool wakeup) {}
+ static inline void psi_dequeue(struct task_struct *p, bool sleep) {}
+ static inline void psi_ttwu_dequeue(struct task_struct *p) {}
++static inline void psi_sched_switch(struct task_struct *prev,
++				    struct task_struct *next,
++				    bool sleep) {}
+ static inline void psi_task_tick(struct rq *rq) {}
+ #endif /* CONFIG_PSI */
+ 
