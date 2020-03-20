@@ -2,84 +2,104 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 499ACC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF9BC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8C020732
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D56320776
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:34:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgCTM37 (ORCPT
+        id S1726955AbgCTMes convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 08:29:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:48390 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726893AbgCTM36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 08:29:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E3A131B;
-        Fri, 20 Mar 2020 05:29:58 -0700 (PDT)
-Received: from [10.37.12.155] (unknown [10.37.12.155])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A6343F85E;
-        Fri, 20 Mar 2020 05:29:55 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Subject: Re: [PATCH] arm64: compat: Fix syscall number of compat_clock_getres
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20200319141138.19343-1-vincenzo.frascino@arm.com>
- <20200319181203.GB29214@mbp>
-Message-ID: <d9418e75-0136-4f56-6d82-3d509be0e414@arm.com>
-Date:   Fri, 20 Mar 2020 12:30:24 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 20 Mar 2020 08:34:48 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51681 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgCTMes (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 08:34:48 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jFGrF-0006BR-8f; Fri, 20 Mar 2020 13:34:37 +0100
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jFGr4-0003GR-2A; Fri, 20 Mar 2020 13:34:26 +0100
+Date:   Fri, 20 Mar 2020 13:34:26 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     linux@rempel-privat.de, s.hauer@pengutronix.de,
+        shawnguo@kernel.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/i2c/busses/i2c-imx.c:remove duplicate print
+ after platform_get_irq()
+Message-ID: <20200320123425.blnqxh3qpfzfl6ph@pengutronix.de>
+References: <20200318100748.17540-1-tangbin@cmss.chinamobile.com>
 MIME-Version: 1.0
-In-Reply-To: <20200319181203.GB29214@mbp>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200318100748.17540-1-tangbin@cmss.chinamobile.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 13:31:04 up 126 days,  3:49, 159 users,  load average: 0.03, 0.03,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/19/20 6:12 PM, Catalin Marinas wrote:
-> On Thu, Mar 19, 2020 at 02:11:38PM +0000, Vincenzo Frascino wrote:
->> The syscall number of compat_clock_getres was erroneously set to 247
->> instead of 264. This causes the vDSO fallback of clock_getres to land
->> on the wrong syscall.
->>
->> Address the issue fixing the syscall number of compat_clock_getres.
->>
->> Fixes: 53c489e1dfeb6 ("arm64: compat: Add missing syscall numbers")
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will.deacon@arm.com>
+On Wed, Mar 18, 2020 at 06:07:48PM +0800, Tang Bin wrote:
+> We don't need dev_err() message because when something goes wrong,
+> platform_get_irq() has print an error message itself, so we should
+> remove duplicate dev_err().
 > 
-> Will left ARM about 8 months ago IIRC ;).
->
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
 
-Nice ;) I typed it manually, it came by "instinct" I guess ;) Sorry Will!
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Thank you.
+
+> ---
+>  drivers/i2c/busses/i2c-imx.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+> index a3b61336f..01fd46682 100644
+> --- a/drivers/i2c/busses/i2c-imx.c
+> +++ b/drivers/i2c/busses/i2c-imx.c
+> @@ -1066,10 +1066,8 @@ static int i2c_imx_probe(struct platform_device *pdev)
+>  	dev_dbg(&pdev->dev, "<%s>\n", __func__);
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq < 0) {
+> -		dev_err(&pdev->dev, "can't get irq number\n");
+> +	if (irq < 0)
+>  		return irq;
+> -	}
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	base = devm_ioremap_resource(&pdev->dev, res);
+> -- 
+> 2.20.1.windows.1
 > 
-> I think Will could take this as a fix.
 > 
-> Thanks,
 > 
-> Catalin
 > 
 
 -- 
-Regards,
-Vincenzo
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
