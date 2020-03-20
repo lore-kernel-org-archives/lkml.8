@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD404C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFEDC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3CA220739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1B8D20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:20:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IDu4mDfg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ns6TQQWQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbgCTQUP (ORCPT
+        id S1727681AbgCTQUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:20:15 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:28805 "EHLO
+        Fri, 20 Mar 2020 12:20:18 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:45947 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727563AbgCTQUD (ORCPT
+        by vger.kernel.org with ESMTP id S1727599AbgCTQUR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:20:03 -0400
+        Fri, 20 Mar 2020 12:20:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584721202;
+        s=mimecast20190719; t=1584721216;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=HWsrtV8xi0+PxqqXUFv44KyfDBrCKeGZUGmcPNEwi3s=;
-        b=IDu4mDfgHOExNHY5DCATScNvtBD3Yqxj/tkCnZjrTmADyGZY8WbqCn+zVnr3kwQxc1uuHx
-        OsU4PLt/FGXA4IcJ9Z6VMYmPPtsEhRpuqA5JmIB+PIyx9UX43oux1tMYpI4PHRyo9rdveQ
-        DHU6IPeUYiq6C3RwS77uE6Ujydl6IFA=
+        bh=VAZW6cFIVig3OQ6U+hazCtWFrY3hJC4RyMbwC1s1758=;
+        b=Ns6TQQWQoLMokT9wM3Tk+ZDxsc1CLlat4+fW2s71q2DMbuCLcPT7c8iPWN/G6OJIkY3LkS
+        3qPTaSEdVnKDrEdGaE8S+g8qPhc5UPNYDQTj5UVDn5JN7tuR7Kj4msU2KsU03B5piCQggI
+        NdbC3AENGcQygmkj+mwtXuRzSIbxxws=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-151-4S9-rW7oMim-tephJXjksA-1; Fri, 20 Mar 2020 12:19:57 -0400
-X-MC-Unique: 4S9-rW7oMim-tephJXjksA-1
+ us-mta-97-ei1HOvX7N6KVKGzeiOefbA-1; Fri, 20 Mar 2020 12:20:14 -0400
+X-MC-Unique: ei1HOvX7N6KVKGzeiOefbA-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 818BA107ACCC;
-        Fri, 20 Mar 2020 16:19:36 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A0F88C8EE1;
+        Fri, 20 Mar 2020 16:20:12 +0000 (UTC)
 Received: from laptop.redhat.com (ovpn-113-142.ams2.redhat.com [10.36.113.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BC38260BFB;
-        Fri, 20 Mar 2020 16:19:32 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 757FA60BFB;
+        Fri, 20 Mar 2020 16:19:55 +0000 (UTC)
 From:   Eric Auger <eric.auger@redhat.com>
 To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
@@ -54,9 +54,9 @@ To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
         will.deacon@arm.com, robin.murphy@arm.com
 Cc:     marc.zyngier@arm.com, peter.maydell@linaro.org,
         zhangfei.gao@gmail.com
-Subject: [PATCH v10 02/11] vfio: VFIO_IOMMU_CACHE_INVALIDATE
-Date:   Fri, 20 Mar 2020 17:19:02 +0100
-Message-Id: <20200320161911.27494-3-eric.auger@redhat.com>
+Subject: [PATCH v10 05/11] vfio/pci: Register an iommu fault handler
+Date:   Fri, 20 Mar 2020 17:19:05 +0100
+Message-Id: <20200320161911.27494-6-eric.auger@redhat.com>
 In-Reply-To: <20200320161911.27494-1-eric.auger@redhat.com>
 References: <20200320161911.27494-1-eric.auger@redhat.com>
 MIME-Version: 1.0
@@ -67,148 +67,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Liu, Yi L" <yi.l.liu@linux.intel.com>
+Register an IOMMU fault handler which records faults in
+the DMA FAULT region ring buffer. In a subsequent patch, we
+will add the signaling of a specific eventfd to allow the
+userspace to be notified whenever a new fault as shown up.
 
-When the guest "owns" the stage 1 translation structures,  the host
-IOMMU driver has no knowledge of caching structure updates unless
-the guest invalidation requests are trapped and passed down to the
-host.
-
-This patch adds the VFIO_IOMMU_CACHE_INVALIDATE ioctl with aims
-at propagating guest stage1 IOMMU cache invalidations to the host.
-
-Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
 Signed-off-by: Eric Auger <eric.auger@redhat.com>
 
 ---
 
 v8 -> v9:
-- change the ioctl ID
+- handler now takes an iommu_fault handle
+- eventfd signaling moved to a subsequent patch
+- check the fault type and return an error if !=3D UNRECOV
+- still the fault handler registration can fail. We need to
+  reach an agreement about how to deal with the situation
 
-v6 -> v7:
-- Use iommu_capsule struct
-- renamed vfio_iommu_for_each_dev into vfio_iommu_lookup_dev
-  due to checkpatch error related to for_each_dev suffix
-
-v2 -> v3:
-- introduce vfio_iommu_for_each_dev back in this patch
-
-v1 -> v2:
-- s/TLB/CACHE
-- remove vfio_iommu_task usage
-- commit message rewording
+v3 -> v4:
+- move iommu_unregister_device_fault_handler to vfio_pci_release
 ---
- drivers/vfio/vfio_iommu_type1.c | 55 +++++++++++++++++++++++++++++++++
- include/uapi/linux/vfio.h       | 13 ++++++++
- 2 files changed, 68 insertions(+)
+ drivers/vfio/pci/vfio_pci.c | 42 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_ty=
-pe1.c
-index bfacbd876ee1..04c6625098bb 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -124,6 +124,34 @@ struct vfio_regions {
- #define IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)	\
- 					(!list_empty(&iommu->domain_list))
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 586b89debed5..69595c240baf 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -27,6 +27,7 @@
+ #include <linux/vfio.h>
+ #include <linux/vgaarb.h>
+ #include <linux/nospec.h>
++#include <linux/circ_buf.h>
 =20
-+struct domain_capsule {
-+	struct iommu_domain *domain;
-+	void *data;
-+};
-+
-+/* iommu->lock must be held */
-+static int
-+vfio_iommu_lookup_dev(struct vfio_iommu *iommu,
-+		      int (*fn)(struct device *dev, void *data),
-+		      void *data)
+ #include "vfio_pci_private.h"
+=20
+@@ -283,6 +284,38 @@ static const struct vfio_pci_regops vfio_pci_dma_fau=
+lt_regops =3D {
+ 	.add_capability =3D vfio_pci_dma_fault_add_capability,
+ };
+=20
++int vfio_pci_iommu_dev_fault_handler(struct iommu_fault *fault, void *da=
+ta)
 +{
-+	struct domain_capsule dc =3D {.data =3D data};
-+	struct vfio_domain *d;
-+	struct vfio_group *g;
++	struct vfio_pci_device *vdev =3D (struct vfio_pci_device *)data;
++	struct vfio_region_dma_fault *reg =3D
++		(struct vfio_region_dma_fault *)vdev->fault_pages;
++	struct iommu_fault *new =3D
++		(struct iommu_fault *)(vdev->fault_pages + reg->offset +
++			reg->head * reg->entry_size);
++	int head, tail, size;
 +	int ret =3D 0;
 +
-+	list_for_each_entry(d, &iommu->domain_list, next) {
-+		dc.domain =3D d->domain;
-+		list_for_each_entry(g, &d->group_list, next) {
-+			ret =3D iommu_group_for_each_dev(g->iommu_group,
-+						       &dc, fn);
-+			if (ret)
-+				break;
-+		}
++	if (fault->type !=3D IOMMU_FAULT_DMA_UNRECOV)
++		return -ENOENT;
++
++	mutex_lock(&vdev->fault_queue_lock);
++
++	head =3D reg->head;
++	tail =3D reg->tail;
++	size =3D reg->nb_entries;
++
++	if (CIRC_SPACE(head, tail, size) < 1) {
++		ret =3D -ENOSPC;
++		goto unlock;
 +	}
++
++	*new =3D *fault;
++	reg->head =3D (head + 1) % size;
++unlock:
++	mutex_unlock(&vdev->fault_queue_lock);
 +	return ret;
 +}
 +
- static int put_pfn(unsigned long pfn, int prot);
+ #define DMA_FAULT_RING_LENGTH 512
 =20
- /*
-@@ -2209,6 +2237,15 @@ vfio_attach_pasid_table(struct vfio_iommu *iommu,
- 	return ret;
- }
-=20
-+static int vfio_cache_inv_fn(struct device *dev, void *data)
-+{
-+	struct domain_capsule *dc =3D (struct domain_capsule *)data;
-+	struct vfio_iommu_type1_cache_invalidate *ustruct =3D
-+		(struct vfio_iommu_type1_cache_invalidate *)dc->data;
+ static int vfio_pci_init_dma_fault_region(struct vfio_pci_device *vdev)
+@@ -317,6 +350,13 @@ static int vfio_pci_init_dma_fault_region(struct vfi=
+o_pci_device *vdev)
+ 	header->entry_size =3D sizeof(struct iommu_fault);
+ 	header->nb_entries =3D DMA_FAULT_RING_LENGTH;
+ 	header->offset =3D sizeof(struct vfio_region_dma_fault);
 +
-+	return iommu_cache_invalidate(dc->domain, dev, &ustruct->info);
-+}
++	ret =3D iommu_register_device_fault_handler(&vdev->pdev->dev,
++					vfio_pci_iommu_dev_fault_handler,
++					vdev);
++	if (ret)
++		goto out;
 +
- static long vfio_iommu_type1_ioctl(void *iommu_data,
- 				   unsigned int cmd, unsigned long arg)
- {
-@@ -2332,6 +2369,24 @@ static long vfio_iommu_type1_ioctl(void *iommu_dat=
-a,
- 			return 0;
- 		} else
- 			return -EINVAL;
-+	} else if (cmd =3D=3D VFIO_IOMMU_CACHE_INVALIDATE) {
-+		struct vfio_iommu_type1_cache_invalidate ustruct;
-+		int ret;
-+
-+		minsz =3D offsetofend(struct vfio_iommu_type1_cache_invalidate,
-+				    info);
-+
-+		if (copy_from_user(&ustruct, (void __user *)arg, minsz))
-+			return -EFAULT;
-+
-+		if (ustruct.argsz < minsz || ustruct.flags)
-+			return -EINVAL;
-+
-+		mutex_lock(&iommu->lock);
-+		ret =3D vfio_iommu_lookup_dev(iommu, vfio_cache_inv_fn,
-+					    &ustruct);
-+		mutex_unlock(&iommu->lock);
-+		return ret;
+ 	return 0;
+ out:
+ 	kfree(vdev->fault_pages);
+@@ -542,6 +582,8 @@ static void vfio_pci_release(void *device_data)
+ 	if (!(--vdev->refcnt)) {
+ 		vfio_spapr_pci_eeh_release(vdev->pdev);
+ 		vfio_pci_disable(vdev);
++		/* TODO: Failure problematics */
++		iommu_unregister_device_fault_handler(&vdev->pdev->dev);
  	}
 =20
- 	return -ENOTTY;
-diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index e032a1fe6ed9..98212c1711e7 100644
---- a/include/uapi/linux/vfio.h
-+++ b/include/uapi/linux/vfio.h
-@@ -813,6 +813,19 @@ struct vfio_iommu_type1_set_pasid_table {
-=20
- #define VFIO_IOMMU_SET_PASID_TABLE	_IO(VFIO_TYPE, VFIO_BASE + 22)
-=20
-+/**
-+ * VFIO_IOMMU_CACHE_INVALIDATE - _IOWR(VFIO_TYPE, VFIO_BASE + 23,
-+ *			struct vfio_iommu_type1_cache_invalidate)
-+ *
-+ * Propagate guest IOMMU cache invalidation to the host.
-+ */
-+struct vfio_iommu_type1_cache_invalidate {
-+	__u32   argsz;
-+	__u32   flags;
-+	struct iommu_cache_invalidate_info info;
-+};
-+#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE, VFIO_BASE + 23)
-+
- /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU --------=
- */
-=20
- /*
+ 	mutex_unlock(&vdev->reflck->lock);
 --=20
 2.20.1
 
