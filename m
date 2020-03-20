@@ -3,127 +3,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADABCC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88436C43333
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D79C2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E0020757
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584748638;
-	bh=O8Rg+s96c/nEER146ncnD3qGyWFv1O+qlEviAIesj5A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rdBZIdHX/eWHpgk6jTu3C4MqL3NCBl1k6LfMaCSfM6JrbB23J+HHDV7LpwXq+tpqI
-	 MZ+cTWqfNeYXtsXXoH14Z6wzATGKOPlitg25KvIZ/UhBGAgd2U/F5tq/SPulgXZ5+F
-	 0x3OE9AGF7wHWU9RPB0Azl7GNhos9kvdD4MlCz+E=
+	s=default; t=1584748796;
+	bh=9ypyxU5qWZfYyckFKazKeUGCpDXZ35O6N4eoCQ7bCRQ=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=dh/4RAcYH9PPIm/fgy5fGQ1L0V/TFNQu7m/jWZJlz0+xoQdeoIXsfiZiYA58iVRmf
+	 b6P0NJvHLu1cOA0YDNEvKUhCm6wOjdDem96CqrdTktY6OclNNBA4YAFp1lImH65kqi
+	 Fh6qt0VX3wObge87mDAD7iftxANg4gYQ9H6Ebiec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbgCTX5R (ORCPT
+        id S1727338AbgCTX7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 19:57:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48190 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 19:59:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgCTX5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 19:57:17 -0400
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726738AbgCTX7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 19:59:55 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D14D2076E
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 23:57:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A509F2072D;
+        Fri, 20 Mar 2020 23:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584748636;
-        bh=O8Rg+s96c/nEER146ncnD3qGyWFv1O+qlEviAIesj5A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ttY+s798i38AHS/hfxFjOVrACLR+gxne7OhaOoYjaOpaobC0EEdiRHq8YYXkXTxQ3
-         A5sB17+4c15+L0dneBM/gR9jLUvHXMFOxlFdtckq+11zJC1EsbW5NAIhLlcq2YAsU3
-         7qsuBKDapXaH96rqh3YdEEYU2b//TuIbq30DqQ1E=
-Received: by mail-wr1-f41.google.com with SMTP id 31so3504286wrs.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 16:57:15 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3pkUIvzAUAIGVLH8aXJGZ9GwDPO8+MYoGwz3o9H+XdAlM1fXZe
-        oxFOyTWPwBJxQY6mCtjRbXqUNe8DhJBsaRlf2FBQsA==
-X-Google-Smtp-Source: ADFU+vuPB9t9salOQKO5ZID2LgyhHfito4CfUMkLJm7PoNDnyBs/tXJk0zJQY/gqbFuuXEMIqHmhRxbQYx3JpKMGdEA=
-X-Received: by 2002:adf:df8f:: with SMTP id z15mr13827347wrl.184.1584748634372;
- Fri, 20 Mar 2020 16:57:14 -0700 (PDT)
+        s=default; t=1584748794;
+        bh=9ypyxU5qWZfYyckFKazKeUGCpDXZ35O6N4eoCQ7bCRQ=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=JquCWGuPGqkjoY1/TnuI+qNaSwzYt/5nG/cGiy+uLnK9A0ilk4P3JMClzQyorD0iy
+         aGsK/iUing3IoirY9PB1llxSaKyqJAwjDT+MNWnrw0AZSY2saDkvtBj2UgeXzZoo9J
+         bvWGeR44NcY22huO0bXs/Dsv9IdEQxJhck4NuF6k=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1584677604-32707-1-git-send-email-kyung.min.park@intel.com>
- <1584677604-32707-3-git-send-email-kyung.min.park@intel.com>
- <CALCETrWJ88CaGmij_NNysRjUQ6LPwwbPnMy1YPdKnM-cFDueSw@mail.gmail.com>
- <877dzf4a8v.fsf@nanos.tec.linutronix.de> <CALCETrUxOd6P-Yh78qjmOYnh9jY0ggeb4vB=coVjMjthXMTREg@mail.gmail.com>
- <87zhcaobjt.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87zhcaobjt.fsf@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 20 Mar 2020 16:57:03 -0700
-X-Gmail-Original-Message-ID: <CALCETrU9ucYrXxfDddgkKaP2-NBfmhqrFG51EiC6LWHOu0JaPQ@mail.gmail.com>
-Message-ID: <CALCETrU9ucYrXxfDddgkKaP2-NBfmhqrFG51EiC6LWHOu0JaPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] x86/delay: Introduce TPAUSE delay
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1582100974-129559-4-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1582100974-129559-1-git-send-email-zhouyanjie@wanyeetech.com> <1582100974-129559-4-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: Re: [PATCH 2/4] clk: Ingenic: Add support for TCU of X1000.
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, tglx@linutronix.de, maz@kernel.org,
+        jason@lakedaemon.net, mturquette@baylibre.com,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        daniel.lezcano@linaro.org, paul@crapouillou.net,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        dongsheng.qiu@ingenic.com
+To:     linux-mips@vger.kernel.org, zhouyanjie@wanyeetech.com
+Date:   Fri, 20 Mar 2020 16:59:53 -0700
+Message-ID: <158474879381.125146.13343412789779262447@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 4:23 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Andy Lutomirski <luto@kernel.org> writes:
->
-> > On Fri, Mar 20, 2020 at 3:00 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >>
-> >> Andy Lutomirski <luto@kernel.org> writes:
-> >> > On Thu, Mar 19, 2020 at 9:13 PM Kyung Min Park <kyung.min.park@intel.com> wrote:
-> >> >>  void use_tsc_delay(void)
-> >> >>  {
-> >> >> -       if (delay_fn == delay_loop)
-> >> >> +       if (static_cpu_has(X86_FEATURE_WAITPKG)) {
-> >> >> +               delay_halt_fn = delay_halt_tpause;
-> >> >> +               delay_fn = delay_halt;
-> >> >> +       } else if (delay_fn == delay_loop) {
-> >> >>                 delay_fn = delay_tsc;
-> >> >> +       }
-> >> >>  }
-> >> >
-> >> > This is an odd way to dispatch: you're using static_cpu_has(), but
-> >> > you're using it once to populate a function pointer.  Why not just put
-> >> > the static_cpu_has() directly into delay_halt() and open-code the
-> >> > three variants?
-> >>
-> >> Two: mwaitx and tpause.
-> >
-> > I was imagining there would also be a variant for systems with neither feature.
->
-> Oh I see, you want to get rid of both function pointers. That's tricky.
->
-> The boot time function is delay_loop() which is using the magic (1 << 12)
-> boot time value until calibration in one way or the other happens and
-> something calls use_tsc_delay() or use_mwaitx_delay(). Yes, that's all
-> horrible but X86_FEATURE_TSC is unusable for this.
->
-> Let me think about it.
+Quoting Zhou Yanjie (2020-02-19 00:29:32)
+> X1000 has a different TCU containing OST, since X1000, OST has been
+> independent of TCU. This patch is prepare for later OST driver.
+>=20
 
-This is definitely not worth overoptimizing.  It's a *delay* function
--- the retpoline isn't going to kill us :)
-
->
-> Thanks,
->
->         tglx
->
->
->
->
->
->
->
->
+Acked-by: Stephen Boyd <sboyd@kernel.org>
