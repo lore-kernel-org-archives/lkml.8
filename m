@@ -2,168 +2,96 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81421C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1016C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5312D2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:34:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4uXw8Pf"
+	by mail.kernel.org (Postfix) with ESMTP id 7EE092072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:37:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgCTKez (ORCPT
+        id S1727044AbgCTKhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:34:55 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38290 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbgCTKez (ORCPT
+        Fri, 20 Mar 2020 06:37:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35238 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgCTKhC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:34:55 -0400
-Received: by mail-wm1-f65.google.com with SMTP id l20so5708337wmi.3;
-        Fri, 20 Mar 2020 03:34:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A9LMr0UXcZSEqVnqNAwLyFiSr+kmUdRM1J1fT1cXn5U=;
-        b=Z4uXw8PfRFLJlofHFGW41vrqoGwlAIqRACj+uRDYvGpB8tWq7q1Li9OwTmu9kmT7sS
-         VJ3g8sAmUG2NSBqkCPDsohe7yIgPn3QYHTtZLkdZRYvvKEXiboau8buIhpjAzyNF7evV
-         x8vRSxGYM0NmnHdGYBjFzdCkQW3RfOZeutJgCiimnqdA8Gdqu2ANQvtjli+HGCLBzz+Q
-         v0Iyv/TwBHXbwA0m9jSHsI9Ks5ouiTq8po/U26UqHCZnOeITzTRNSvu2ha6JxopKmf12
-         RFvRFeqsQMqfbXmM1nUgVOsBp1+1zkx3fMIeAvg8fRKJqvRrmtmPrKcw2aY5p9exuglM
-         TKWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A9LMr0UXcZSEqVnqNAwLyFiSr+kmUdRM1J1fT1cXn5U=;
-        b=DEqEfb6zAW0+TDZe3TilMZPW6snb29jO5GeFIPWRU1lsD9zx5eISvt1RWt7raR7wVh
-         4KrIsUumEtGiZY2ROifrW83enC1QT2IrXkGQkPDPecCct8kSsie0s2Jxt7rAwlASqQaG
-         zumWjoQi1KVh1OJZuFtHbZoTrLFt3mW5X+zcOJXps7MZJJuErl/vguONiHM7JcVJ7lMg
-         SAcFOvzQTwkT6XJmYMcOH4HLYcTc6GqYk8daIPXvg6XS+hmogTJt3UXeJKd7a+UGHQ3h
-         h0F1qXr7kIGzS0am8sNHCpnXBHvaylHdq626cSIC2ocDbE1wg+BbYvFcApxFCiYUozH5
-         SBEw==
-X-Gm-Message-State: ANhLgQ0QO8eVj8ICyHdT6Jhao+nhywn1tyRzzi5+pOwEITvgg8d35zbI
-        3V4NK+IBnW22iDqMN7PZhRJytHpTX/1nKiFGMTZWJQ7M
-X-Google-Smtp-Source: ADFU+vvRrvOiPU9AK3wSD6H8a7LzgOUg2SrSTLcnrfXfsiTSvivvRS4XrMnjiu3ESR+V0DJhpgTVgiItLeoY1EdIvVU=
-X-Received: by 2002:a7b:c92a:: with SMTP id h10mr9145899wml.26.1584700492517;
- Fri, 20 Mar 2020 03:34:52 -0700 (PDT)
+        Fri, 20 Mar 2020 06:37:02 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jFF1L-0001re-1t; Fri, 20 Mar 2020 11:36:55 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 725111C0DD3;
+        Fri, 20 Mar 2020 11:36:54 +0100 (CET)
+Date:   Fri, 20 Mar 2020 10:36:54 -0000
+From:   "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/misc] selftests/x86/ptrace_syscall_32: Fix no-vDSO segfault
+Cc:     kbuild test robot <lkp@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <faaf688265a7e1a5b944d6f8bc0f6368158306d3.1584052409.git.luto@kernel.org>
+References: <faaf688265a7e1a5b944d6f8bc0f6368158306d3.1584052409.git.luto@kernel.org>
 MIME-Version: 1.0
-References: <20200304072730.9193-1-zhang.lyra@gmail.com>
-In-Reply-To: <20200304072730.9193-1-zhang.lyra@gmail.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Fri, 20 Mar 2020 18:34:16 +0800
-Message-ID: <CAAfSe-sWv1mrx1GPgO8ZRhSs9vbAy_PY_BA4BkHrE5FghsX7nA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/7] Add clocks for Unisoc's SC9863A
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <158470061410.28353.14485077057273139954.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+The following commit has been merged into the x86/misc branch of tip:
 
-Could you please take this patch-set to your tree if there are no
-further comments.
+Commit-ID:     630b99ab60aa972052a4202a1ff96c7e45eb0054
+Gitweb:        https://git.kernel.org/tip/630b99ab60aa972052a4202a1ff96c7e45eb0054
+Author:        Andy Lutomirski <luto@kernel.org>
+AuthorDate:    Thu, 12 Mar 2020 15:35:51 -07:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Fri, 20 Mar 2020 11:28:47 +01:00
 
-Thanks,
-Chunyan
+selftests/x86/ptrace_syscall_32: Fix no-vDSO segfault
 
-On Wed, 4 Mar 2020 at 15:28, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
->
-> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
->
-> Add SC9863A specific clock driver and devicetree bindings for it,
-> this patch add to support the new way of specifying parents
-> without name strings of clocks.
->
-> Also this patchset added support gate clock for pll which need to
-> wait a certain time for stable after being switched on.
->
-> Changes from v5:
-> * Addressed comments from Rob:
-> - Removed description from "clock-names" and "reg" properties;
-> - Added maxItem to "reg" property.
-> * Modified the descriptions for those clocks which are a child node of
->   a syscon.
->
-> Changes from v4:
-> * Fixed dt_binding_check warnings.
->
-> Changes from v3:
-> * Rebased onto v5.6-rc1.
->
-> Changes from v2:
-> * Addressed comments from Stephen:
-> - Remove ununsed header file from sc9863a-clk.c;
-> - Added comments for clocks which were marked with CLK_IGNORE_UNUSED,
->   and removed some unnecessary CLK_IGNORE_UNUSED;
-> - Added error checking for sprd_clk_regmap_init().
->
-> * Addressed comments from Rob:
-> - Put some clocks under syscon nodes, since these clocks have the same
->   physical address base with the syscon;
-> - Added clocks maxItems and listed out clock-names.
->
-> * Added Rob's reviewed-by on patch 4.
->
-> Changes from v1:
-> * Addressed comments:
-> - Removed redefine things;
-> - Switched DT bindings to yaml schema;
-> - Added macros for the new way of specifying clk parents;
-> - Switched to use the new way of specifying clk parents;
-> - Clean CLK_IGNORE_UNUSED flags for some SC9863A clocks;
-> - Dropped the module alias;
-> - Use device_get_match_data() instead of of_match_node();
->
-> * Added Rob's Acked-by on patch 2.
->
-> Chunyan Zhang (6):
->   dt-bindings: clk: sprd: rename the common file name sprd.txt to SoC
->     specific
->   dt-bindings: clk: sprd: add bindings for sc9863a clock controller
->   clk: sprd: Add dt-bindings include file for SC9863A
->   clk: sprd: Add macros for referencing parents without strings
->   clk: sprd: support to get regmap from parent node
->   clk: sprd: add clocks support for SC9863A
->
-> Xiaolong Zhang (1):
->   clk: sprd: add gate for pll clocks
->
->  .../clock/{sprd.txt => sprd,sc9860-clk.txt}   |    2 +-
->  .../bindings/clock/sprd,sc9863a-clk.yaml      |  105 +
->  drivers/clk/sprd/Kconfig                      |    8 +
->  drivers/clk/sprd/Makefile                     |    1 +
->  drivers/clk/sprd/common.c                     |   10 +-
->  drivers/clk/sprd/composite.h                  |   39 +-
->  drivers/clk/sprd/div.h                        |   20 +-
->  drivers/clk/sprd/gate.c                       |   17 +
->  drivers/clk/sprd/gate.h                       |  120 +-
->  drivers/clk/sprd/mux.h                        |   28 +-
->  drivers/clk/sprd/pll.h                        |   55 +-
->  drivers/clk/sprd/sc9863a-clk.c                | 1772 +++++++++++++++++
->  include/dt-bindings/clock/sprd,sc9863a-clk.h  |  334 ++++
->  13 files changed, 2457 insertions(+), 54 deletions(-)
->  rename Documentation/devicetree/bindings/clock/{sprd.txt => sprd,sc9860-clk.txt} (98%)
->  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
->  create mode 100644 drivers/clk/sprd/sc9863a-clk.c
->  create mode 100644 include/dt-bindings/clock/sprd,sc9863a-clk.h
->
-> --
-> 2.20.1
->
+If AT_SYSINFO is not present, don't try to call a NULL pointer.
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/faaf688265a7e1a5b944d6f8bc0f6368158306d3.1584052409.git.luto@kernel.org
+---
+ tools/testing/selftests/x86/ptrace_syscall.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/tools/testing/selftests/x86/ptrace_syscall.c b/tools/testing/selftests/x86/ptrace_syscall.c
+index 6f22238..12aaa06 100644
+--- a/tools/testing/selftests/x86/ptrace_syscall.c
++++ b/tools/testing/selftests/x86/ptrace_syscall.c
+@@ -414,8 +414,12 @@ int main()
+ 
+ #if defined(__i386__) && (!defined(__GLIBC__) || __GLIBC__ > 2 || __GLIBC_MINOR__ >= 16)
+ 	vsyscall32 = (void *)getauxval(AT_SYSINFO);
+-	printf("[RUN]\tCheck AT_SYSINFO return regs\n");
+-	test_sys32_regs(do_full_vsyscall32);
++	if (vsyscall32) {
++		printf("[RUN]\tCheck AT_SYSINFO return regs\n");
++		test_sys32_regs(do_full_vsyscall32);
++	} else {
++		printf("[SKIP]\tAT_SYSINFO is not available\n");
++	}
+ #endif
+ 
+ 	test_ptrace_syscall_restart();
