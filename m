@@ -2,217 +2,102 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098B4C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8AAC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D409B20781
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46BA72072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbgCTPVy (ORCPT
+        id S1727278AbgCTPW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:21:54 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39970 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgCTPVy (ORCPT
+        Fri, 20 Mar 2020 11:22:56 -0400
+Received: from outbound-smtp44.blacknight.com ([46.22.136.52]:58855 "EHLO
+        outbound-smtp44.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726843AbgCTPWz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 11:21:54 -0400
-Received: from [IPv6:2a02:810a:113f:ad1c:d59e:75b0:dca:337a] (unknown [IPv6:2a02:810a:113f:ad1c:d59e:75b0:dca:337a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: dafna)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9A4662975DA;
-        Fri, 20 Mar 2020 15:21:51 +0000 (GMT)
-Subject: Re: [PATCH] dt-bindings: input: atmel_mxt_ts: convert
- atmel,maxtouch.txt to yaml
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, Nick Dyer <nick@shmanahar.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linux Input <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Collabora Kernel ML <kernel@collabora.com>, dafna3@gmail.com
-References: <20200303172533.30602-1-dafna.hirschfeld@collabora.com>
- <20200310211437.GA18992@bogus>
- <f612396e-e5e2-db76-6297-a108b53e4000@collabora.com>
- <CAL_JsqLTMdG-=_pTPsazspEO3LtDth=xm9s8sqzW+AswWttKJA@mail.gmail.com>
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Message-ID: <496a1e2d-a595-f6a6-0ce5-559453b15702@collabora.com>
-Date:   Fri, 20 Mar 2020 16:21:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 20 Mar 2020 11:22:55 -0400
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp44.blacknight.com (Postfix) with ESMTPS id AE32BF804D
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 15:22:53 +0000 (GMT)
+Received: (qmail 16808 invoked from network); 20 Mar 2020 15:22:53 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 20 Mar 2020 15:22:53 -0000
+Date:   Fri, 20 Mar 2020 15:22:51 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Jirka Hladky <jhladky@redhat.com>
+Cc:     Phil Auld <pauld@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+Message-ID: <20200320152251.GC3818@techsingularity.net>
+References: <20200224095223.13361-1-mgorman@techsingularity.net>
+ <20200309191233.GG10065@pauld.bos.csb>
+ <20200309203625.GU3818@techsingularity.net>
+ <20200312095432.GW3818@techsingularity.net>
+ <CAE4VaGA4q4_qfC5qe3zaLRfiJhvMaSb2WADgOcQeTwmPvNat+A@mail.gmail.com>
+ <20200312155640.GX3818@techsingularity.net>
+ <CAE4VaGD8DUEi6JnKd8vrqUL_8HZXnNyHMoK2D+1-F5wo+5Z53Q@mail.gmail.com>
+ <20200312214736.GA3818@techsingularity.net>
+ <CAE4VaGCfDpu0EuvHNHwDGbR-HNBSAHY=yu3DJ33drKgymMTTOw@mail.gmail.com>
+ <CAE4VaGC09OfU2zXeq2yp_N0zXMbTku5ETz0KEocGi-RSiKXv-w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLTMdG-=_pTPsazspEO3LtDth=xm9s8sqzW+AswWttKJA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <CAE4VaGC09OfU2zXeq2yp_N0zXMbTku5ETz0KEocGi-RSiKXv-w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11.03.20 16:48, Rob Herring wrote:
-> On Wed, Mar 11, 2020 at 10:23 AM Dafna Hirschfeld
-> <dafna.hirschfeld@collabora.com> wrote:
->>
->> Hi,
->> Thanks for the review
->>
->> On 10.03.20 22:14, Rob Herring wrote:
->>> On Tue, Mar 03, 2020 at 07:25:33PM +0200, Dafna Hirschfeld wrote:
->>>> Convert the binding file atmel,maxtouch.txt to yaml format.
->>>> Also change the file name in the MAINTAINERS file.
->>>>
->>>> This was tested and verified on ARM and ARM64 with:
->>>>
->>>> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
->>>> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
->>>>
->>>> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
->>>> ---
->>>>    .../bindings/input/atmel,maxtouch.txt         | 41 ------------
->>>>    .../bindings/input/atmel,maxtouch.yaml        | 64 +++++++++++++++++++
->>>>    MAINTAINERS                                   |  2 +-
->>>>    3 files changed, 65 insertions(+), 42 deletions(-)
->>>>    delete mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->>>>    create mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->>>> deleted file mode 100644
->>>> index c88919480d37..000000000000
->>>> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->>>> +++ /dev/null
->>>> @@ -1,41 +0,0 @@
->>>> -Atmel maXTouch touchscreen/touchpad
->>>> -
->>>> -Required properties:
->>>> -- compatible:
->>>> -    atmel,maxtouch
->>>> -
->>>> -    The following compatibles have been used in various products but are
->>>> -    deprecated:
->>>> -    atmel,qt602240_ts
->>>> -    atmel,atmel_mxt_ts
->>>> -    atmel,atmel_mxt_tp
->>>> -    atmel,mXT224
->>>> -
->>>> -- reg: The I2C address of the device
->>>> -
->>>> -- interrupts: The sink for the touchpad's IRQ output
->>>> -    See ../interrupt-controller/interrupts.txt
->>>> -
->>>> -Optional properties for main touchpad device:
->>>> -
->>>> -- linux,gpio-keymap: When enabled, the SPT_GPIOPWN_T19 object sends messages
->>>> -    on GPIO bit changes. An array of up to 8 entries can be provided
->>>> -    indicating the Linux keycode mapped to each bit of the status byte,
->>>> -    starting at the LSB. Linux keycodes are defined in
->>>> -    <dt-bindings/input/input.h>.
->>>> -
->>>> -    Note: the numbering of the GPIOs and the bit they start at varies between
->>>> -    maXTouch devices. You must either refer to the documentation, or
->>>> -    experiment to determine which bit corresponds to which input. Use
->>>> -    KEY_RESERVED for unused padding values.
->>>> -
->>>> -- reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
->>>> -
->>>> -Example:
->>>> -
->>>> -    touch@4b {
->>>> -            compatible = "atmel,maxtouch";
->>>> -            reg = <0x4b>;
->>>> -            interrupt-parent = <&gpio>;
->>>> -            interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
->>>> -    };
->>>> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
->>>> new file mode 100644
->>>> index 000000000000..024dc4ded4f3
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
->>>> @@ -0,0 +1,64 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/input/atmel,maxtouch.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Atmel maXTouch touchscreen/touchpad
->>>> +
->>>> +maintainers:
->>>> +  - Nick Dyer <nick@shmanahar.org>
->>>> +
->>>> +description: |
->>>> +  Atmel maXTouch touchscreen/touchpad
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    const: atmel,maxtouch
->>>> +
->>>> +  reg:
->>>> +    description: The I2C address of the device
->>>> +    maxItems: 1
->>>> +
->>>> +  interrupts:
->>>> +    description: The sink for the touchpad's IRQ output
->>>
->>> How many? Needs 'maxItems: 1'>
->>> You can drop the description.
->>>
->>>> +
->>>> +  linux,gpio-keymap:
->>>> +    description:
->>>> +      When enabled, the SPT_GPIOPWN_T19 object sends messages
->>>> +      on GPIO bit changes. An array of up to 8 entries can be provided
->>>> +      indicating the Linux keycode mapped to each bit of the status byte,
->>>> +      starting at the LSB. Linux keycodes are defined in
->>>> +      <dt-bindings/input/input.h>.
->>>> +      Note, the numbering of the GPIOs and the bit they start at varies between
->>>> +      maXTouch devices. You must either refer to the documentation, or
->>>> +      experiment to determine which bit corresponds to which input. Use
->>>> +      KEY_RESERVED for unused padding values.
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->>>> +    maxItems: 8
->>>> +
->>>> +  reset-gpios:
->>>> +    description: GPIO specifier for the touchscreen's reset pin (active low)
->>>> +    maxItems: 1
->>>> +
->>>> +required:
->>>> +  - compatible
->>>> +  - reg
->>>> +  - interrupts
->>>> +
->>>> +additionalProperties: true
->>>
->>> That's the default and we generally want this to be 'false'.
->> but many nodes has more properties not described here so I could not
->> set it to false.
+On Fri, Mar 20, 2020 at 03:37:44PM +0100, Jirka Hladky wrote:
+> Hi Mel,
 > 
-> Like touchscreen-* properties? Then you should reference
-> touchscreen.yaml. And add 'unevaluatedProperties: false' here. That
-> doesn't yet do anything, but will when the tools support the lastest
-> json-schema release.
-
-Hi, no it is other properties, these are the warnings:
-arch/arm/boot/dts/s5pv210-goni.dt.yaml: tsp@4a: 'atmel,burst-length', 'atmel,orientation', 'atmel,threshold', 'atmel,x-line', 'atmel,x-size', 'atmel,y-line', 'atmel,y-size', 'vdd-supply' do not match any of the regexes: 'pinctrl-[0-9]+'
-
-arch/arm/boot/dts/omap4-droid4-xt894.dt.yaml: touchscreen@4a: 'interrupt-names', 'wakeup-source' do not match any of the regexes: 'pinctrl-[0-9]+'
-
-arch/arm/boot/dts/exynos5800-peach-pi.dt.yaml: trackpad@4b: 'wakeup-source' does not match any of the regexes: 'pinctrl-[0-9]+'
-
-Dafna
-
+> just a quick update. I have increased the testing coverage and other tests
+> from the NAS shows a big performance drop for the low number of threads as
+> well:
 > 
-> Rob
+> sp_C_x - show still the biggest drop upto 50%
+> bt_C_x - performance drop upto 40%
+> ua_C_x - performance drop upto 30%
 > 
+
+MPI or OMP and what is a low thread count? For MPI at least, I saw a 0.4%
+gain on an 4-node machine for bt_C and a 3.88% regression on 8-nodes. I
+think it must be OMP you are using because I found I had to disable UA
+for MPI at some point in the past for reasons I no longer remember.
+
+> My point is that the performance drop for the low number of threads is more
+> common than we have initially thought.
+> 
+> Let me know what you need more data.
+> 
+
+I just a clarification on the thread count and a confirmation it's OMP. For
+MPI, I did note that some of the other NAS kernels shows a slight dip but
+it was nowhere near as severe as SP and the problem was the same as more --
+two or more tasks stayed on the same node without spreading out because
+there was no pressure to do so. There was enough CPU and memory capacity
+with no obvious pattern that could be used to spread the load wide early.
+
+One possibility would be to spread wide always at clone time and assume
+wake_affine will pull related tasks but it's fragile because it breaks
+if the cloned task execs and then allocates memory from a remote node
+only to migrate to a local node immediately.
+
+-- 
+Mel Gorman
+SUSE Labs
