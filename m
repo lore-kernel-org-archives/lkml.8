@@ -2,74 +2,82 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C2AC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51CFC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D75D20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB0820722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:42:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbgCTEig (ORCPT
+        id S1727056AbgCTEmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 00:38:36 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12112 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725446AbgCTEif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 00:38:35 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B3FB4762D19837EEE285;
-        Fri, 20 Mar 2020 12:38:33 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Fri, 20 Mar 2020
- 12:38:25 +0800
-Subject: Re: [PATCH v5 23/23] KVM: arm64: GICv4.1: Expose HW-based SGIs in
- debugfs
-To:     Marc Zyngier <maz@kernel.org>, Auger Eric <eric.auger@redhat.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Robert Richter" <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-24-maz@kernel.org>
- <4cb4c3d4-7b02-bb77-cd7a-c185346b6a2f@redhat.com>
- <45c282bddd43420024633943c1befac3@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <e1a1e537-9f8e-5cfb-0132-f796e8bf06c9@huawei.com>
-Date:   Fri, 20 Mar 2020 12:38:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Fri, 20 Mar 2020 00:42:05 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:44225 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbgCTEmF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 00:42:05 -0400
+Received: by mail-il1-f199.google.com with SMTP id a14so2698648iln.11
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 21:42:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=+YoOMjO6luwEwwnQleJR7GJujX9qkW3ROR7gWbzVHTc=;
+        b=CyDj89PSpY/ZstjPbUA36J/9/93ST4jEJgKtMR8+JITbzWzuNlFZQ/hhdjW8RDJJ+v
+         nlCc5OhUXq5/Ok7qKXN1FCyFu3o+XZ/H3yHEswje35IMzM0DXZ1tY9wB6OaTa/p1lTel
+         zy72ugtZm3i5ZR7Z6ZaiQu93czIb5OAcOcCfK3HVnW3rJLOrYAKLnYOHYQ50qqX9TjD6
+         6Hs6FrbJddQiqJ0TjeC1BhqQss1NvU9AkWKoSm5sfxxT/J+YBdw1sOayu6KANHKy8KLC
+         ij/ITCNLsK6NtoqYvMyZFKgqry+fgfuempYla8sTCpN0kaWSSzZxcUgEp600sOPdAupj
+         qjSA==
+X-Gm-Message-State: ANhLgQ2Nr/NIuieuIkh7YxEl9zrrPYb/XYfVs8EAEt1/lcTfMFL3JRGI
+        CYTW7gIgwvy22yY8GR5TTqsDQ/pt2p3gaOP0H4V1Zp8MB7jm
+X-Google-Smtp-Source: ADFU+vvvu8NLalP1cGxkvhKVN7qZ92RRR3QEjUcPEZNcU+YjcZP8wQ2QavDecLU7agqtV2mMBHcxyCFp2UUC8Pz/K3pBe5ExZNzs
 MIME-Version: 1.0
-In-Reply-To: <45c282bddd43420024633943c1befac3@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a92:25d6:: with SMTP id l205mr5908567ill.35.1584679324596;
+ Thu, 19 Mar 2020 21:42:04 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 21:42:04 -0700
+In-Reply-To: <0000000000005eaea0059aa1dff6@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000039c12305a141e817@google.com>
+Subject: Re: INFO: task hung in htable_put
+From:   syzbot <syzbot+84936245a918e2cddb32@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, coreteam@netfilter.org,
+        davem@davemloft.net, fw@strlen.de, hannes@cmpxchg.org,
+        kadlec@blackhole.kfki.hu, kadlec@netfilter.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, mhocko@suse.com,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com,
+        torvalds@linux-foundation.org, vbabka@suse.cz,
+        xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+syzbot suspects this bug was fixed by commit:
 
-On 2020/3/19 23:21, Marc Zyngier wrote:
-> With GICv4.1, you can introspect the HW state for SGIs. You can also
-> look at the vLPI state by peeking at the virtual pending table, but
-> you'd need to unmap the VPE first,
+commit 99b79c3900d4627672c85d9f344b5b0f06bc2a4d
+Author: Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Thu Feb 13 06:53:52 2020 +0000
 
-Out of curiosity, could you please point me to the "unmap the VPE"
-requirement in the v4.1 spec? I'd like to have a look.
+    netfilter: xt_hashlimit: unregister proc file before releasing mutex
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17446eb1e00000
+start commit:   f2850dd5 Merge tag 'kbuild-fixes-v5.6' of git://git.kernel..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=735296e4dd620b10
+dashboard link: https://syzkaller.appspot.com/bug?extid=84936245a918e2cddb32
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a96c29e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12fcc65ee00000
 
-Thanks!
-Zenghui
+If the result looks correct, please mark the bug fixed by replying with:
 
+#syz fix: netfilter: xt_hashlimit: unregister proc file before releasing mutex
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
