@@ -2,144 +2,160 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26201C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5D7C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F133F20754
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D4D820787
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:58:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727332AbgCTMzu (ORCPT
+        id S1727066AbgCTM6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 08:55:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8078 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727070AbgCTMzq (ORCPT
+        Fri, 20 Mar 2020 08:58:07 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35575 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726955AbgCTM6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 08:55:46 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02KCXiI3050460
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 08:55:46 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu7dbyx5m-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 08:55:45 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kjain@linux.ibm.com>;
-        Fri, 20 Mar 2020 12:55:44 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 20 Mar 2020 12:55:38 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02KCtboG54722632
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Mar 2020 12:55:37 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 06BA64C04A;
-        Fri, 20 Mar 2020 12:55:37 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 46F994C046;
-        Fri, 20 Mar 2020 12:55:31 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.199.35.76])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 20 Mar 2020 12:55:31 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        sukadev@linux.vnet.ibm.com
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
-        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
-        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
-        kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de, kjain@linux.ibm.com
-Subject: [PATCH v6 11/11] perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric events
-Date:   Fri, 20 Mar 2020 18:24:06 +0530
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200320125406.30995-1-kjain@linux.ibm.com>
-References: <20200320125406.30995-1-kjain@linux.ibm.com>
+        Fri, 20 Mar 2020 08:58:07 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jFHDu-0003hk-P5; Fri, 20 Mar 2020 13:58:02 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5DB991C22BF;
+        Fri, 20 Mar 2020 13:58:02 +0100 (CET)
+Date:   Fri, 20 Mar 2020 12:58:02 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] x86/optprobe: Fix OPTPROBE vs UACCESS
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200305092130.GU2596@hirez.programming.kicks-ass.net>
+References: <20200305092130.GU2596@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20032012-4275-0000-0000-000003AFB9ED
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032012-4276-0000-0000-000038C4EB21
-Message-Id: <20200320125406.30995-12-kjain@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-20_03:2020-03-20,2020-03-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 malwarescore=0
- bulkscore=0 mlxscore=0 suspectscore=0 clxscore=1015 priorityscore=1501
- impostorscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=538
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003200054
+Message-ID: <158470908209.28353.9034754166916134439.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hv_24×7 feature in IBM® POWER9™ processor-based servers provide the
-facility to continuously collect large numbers of hardware performance
-metrics efficiently and accurately.
-This patch adds hv_24x7  metric file for different Socket/chip
-resources.
+The following commit has been merged into the perf/core branch of tip:
 
-Result:
+Commit-ID:     d8a738689794c42c3844284b99ddf165d10a724e
+Gitweb:        https://git.kernel.org/tip/d8a738689794c42c3844284b99ddf165d10a724e
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Thu, 05 Mar 2020 10:21:30 +01:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Fri, 20 Mar 2020 13:06:22 +01:00
 
-power9 platform:
+x86/optprobe: Fix OPTPROBE vs UACCESS
 
-command:# ./perf stat --metric-only -M Memory_RD_BW_Chip -C 0 -I 1000
+While looking at an objtool UACCESS warning, it suddenly occurred to me
+that it is entirely possible to have an OPTPROBE right in the middle of
+an UACCESS region.
 
-     1.000096188                      0.9                      0.3
-     2.000285720                      0.5                      0.1
-     3.000424990                      0.4                      0.1
+In this case we must of course clear FLAGS.AC while running the KPROBE.
+Luckily the trampoline already saves/restores [ER]FLAGS, so all we need
+to do is inject a CLAC. Unfortunately we cannot use ALTERNATIVE() in the
+trampoline text, so we have to frob that manually.
 
-command:# ./perf stat --metric-only -M PowerBUS_Frequency -C 0 -I 1000
-
-     1.000097981                        2.3                        2.3
-     2.000291713                        2.3                        2.3
-     3.000421719                        2.3                        2.3
-     4.000550912                        2.3                        2.3
-
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Fixes: ca0bbc70f147 ("sched/x86_64: Don't save flags on context switch")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Link: https://lkml.kernel.org/r/20200305092130.GU2596@hirez.programming.kicks-ass.net
 ---
- .../arch/powerpc/power9/nest_metrics.json     | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+ arch/x86/include/asm/kprobes.h |  1 +
+ arch/x86/kernel/kprobes/opt.c  | 25 +++++++++++++++++++++++++
+ 2 files changed, 26 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-new file mode 100644
-index 000000000000..ac38f5540ac6
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-@@ -0,0 +1,19 @@
-+[
-+    {
-+        "MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
-+        "MetricName": "Memory_RD_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+    "MetricExpr": "(hv_24x7@PM_MCS01_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_WR_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT23\\,chip\\=?@ )",
-+        "MetricName": "Memory_WR_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+    "MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
-+        "MetricName": "PowerBUS_Frequency",
-+        "ScaleUnit": "2.5e-7GHz"
-+    }
-+]
--- 
-2.18.1
-
+diff --git a/arch/x86/include/asm/kprobes.h b/arch/x86/include/asm/kprobes.h
+index 95b1f05..073eb7a 100644
+--- a/arch/x86/include/asm/kprobes.h
++++ b/arch/x86/include/asm/kprobes.h
+@@ -36,6 +36,7 @@ typedef u8 kprobe_opcode_t;
+ 
+ /* optinsn template addresses */
+ extern __visible kprobe_opcode_t optprobe_template_entry[];
++extern __visible kprobe_opcode_t optprobe_template_clac[];
+ extern __visible kprobe_opcode_t optprobe_template_val[];
+ extern __visible kprobe_opcode_t optprobe_template_call[];
+ extern __visible kprobe_opcode_t optprobe_template_end[];
+diff --git a/arch/x86/kernel/kprobes/opt.c b/arch/x86/kernel/kprobes/opt.c
+index 3f45b5c..ea13f68 100644
+--- a/arch/x86/kernel/kprobes/opt.c
++++ b/arch/x86/kernel/kprobes/opt.c
+@@ -71,6 +71,21 @@ found:
+ 	return (unsigned long)buf;
+ }
+ 
++static void synthesize_clac(kprobe_opcode_t *addr)
++{
++	/*
++	 * Can't be static_cpu_has() due to how objtool treats this feature bit.
++	 * This isn't a fast path anyway.
++	 */
++	if (!boot_cpu_has(X86_FEATURE_SMAP))
++		return;
++
++	/* Replace the NOP3 with CLAC */
++	addr[0] = 0x0f;
++	addr[1] = 0x01;
++	addr[2] = 0xca;
++}
++
+ /* Insert a move instruction which sets a pointer to eax/rdi (1st arg). */
+ static void synthesize_set_arg1(kprobe_opcode_t *addr, unsigned long val)
+ {
+@@ -92,6 +107,9 @@ asm (
+ 			/* We don't bother saving the ss register */
+ 			"	pushq %rsp\n"
+ 			"	pushfq\n"
++			".global optprobe_template_clac\n"
++			"optprobe_template_clac:\n"
++			ASM_NOP3
+ 			SAVE_REGS_STRING
+ 			"	movq %rsp, %rsi\n"
+ 			".global optprobe_template_val\n"
+@@ -111,6 +129,9 @@ asm (
+ #else /* CONFIG_X86_32 */
+ 			"	pushl %esp\n"
+ 			"	pushfl\n"
++			".global optprobe_template_clac\n"
++			"optprobe_template_clac:\n"
++			ASM_NOP3
+ 			SAVE_REGS_STRING
+ 			"	movl %esp, %edx\n"
+ 			".global optprobe_template_val\n"
+@@ -134,6 +155,8 @@ asm (
+ void optprobe_template_func(void);
+ STACK_FRAME_NON_STANDARD(optprobe_template_func);
+ 
++#define TMPL_CLAC_IDX \
++	((long)optprobe_template_clac - (long)optprobe_template_entry)
+ #define TMPL_MOVE_IDX \
+ 	((long)optprobe_template_val - (long)optprobe_template_entry)
+ #define TMPL_CALL_IDX \
+@@ -389,6 +412,8 @@ int arch_prepare_optimized_kprobe(struct optimized_kprobe *op,
+ 	op->optinsn.size = ret;
+ 	len = TMPL_END_IDX + op->optinsn.size;
+ 
++	synthesize_clac(buf + TMPL_CLAC_IDX);
++
+ 	/* Set probe information */
+ 	synthesize_set_arg1(buf + TMPL_MOVE_IDX, (unsigned long)op);
+ 
