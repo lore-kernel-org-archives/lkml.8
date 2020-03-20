@@ -2,117 +2,138 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 221B9C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A976FC43333
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E931A20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:58:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J6/Jt1Y2"
+	by mail.kernel.org (Postfix) with ESMTP id 80F3320777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:02:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584712970;
+	bh=dRU3m+00mM/qn+r/7DmddOrNxDCjsWb2CGdhg6vzeFc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EasYSJS4daJI2fYQLelGMhsvC+LiAZG+saftJsCSNDVv8wfgREnv1rj7CddWfRTb5
+	 7QX/WcSH4w9/8oJVy6z9y9nyaEcw5eM8CETnOQZ5FtsYM/n9yuxRDUCE6bcCIkSiHp
+	 seYiHLDplBfXoP7hSL513/TsrLkwkezB55jGVcyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgCTN6M (ORCPT
+        id S1727044AbgCTOCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:58:12 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36254 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbgCTN6M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:58:12 -0400
-Received: by mail-lj1-f195.google.com with SMTP id g12so6514924ljj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 06:58:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7r1qxHQegnboauCIg3jTRpS+zMkxV7bRKkMIfeKjijk=;
-        b=J6/Jt1Y2epfdGVLsQdjgnnkBP/tUkdHgxZ8WnxTFvNIxfPzElWcaSNYET38cGsTawF
-         TiHN32voBTNIqCfndaBu85e8411XQ2F3c9Ed6kVGcGNTe+5vR3gXLk/LL6TtC5qxQ7Gv
-         cGuXVxl2WY5SERovfF2peuo82Rw521aP4GMPIMLOEbJKsZ+ob3m2H4krAkZ/bjy7zHJR
-         0B0vFFZMtxsJPdidT5G8QHkJ3FvWda78MAJDxRRV7krXlgznFxr+tXS0+8dwu00TFRGe
-         hLNweMhimMzKPgaV4FJ1F2nj4xVUUTFYLA1eVnqjRk0hhbANoCExFXgqZNQeN9b/gyMm
-         OAdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7r1qxHQegnboauCIg3jTRpS+zMkxV7bRKkMIfeKjijk=;
-        b=U/OsXdV/OzIGw1O5AslQJhfBJZ8U4m6mDZPDWDpCmWTYEW9lz4e0I0MLiIXaEispKh
-         7yhGPIecZGc0/9TEbQCgG61vCvDe1w7E/SC6NaO/YXgq310A/yVV8YVfaGkS5/GJJ+FS
-         rre+SH1xS780S/wFR9EE9vQsVwKI8Yym7nrHgSlUk7E2UpzO1+t+a94KidOhoH4O5rYm
-         ZNz8O7+GydZ00bZS8/hYGr6MB005yBFC+l2u5VNBAextYW5MEdKSrIXh9dlOpP+yT5Zp
-         kCDxgqvW03+zBxbbKpC5ohEiYjUAqVzyTGVMQ/BIDKMPpICEx/G9MwxOgaxteSi5svF1
-         P+AA==
-X-Gm-Message-State: ANhLgQ2OsslfW5OmwWOhTo6tDgU8y+mIUjPqF8OyftvQDC2rNZ6jw5ga
-        zSRdSpUfWO+WGD6eGsPKhPlxK6zwBS7e7vOvYBQMBg==
-X-Google-Smtp-Source: ADFU+vsE6Vs5c/V4TTfZzJZBdNnU4Q9miHz5oGEtzI0KxzH/6VfYinOrqfHlbgo2S6Kmj61vIfHg/1lEx1b1lrEuOKw=
-X-Received: by 2002:a2e:8790:: with SMTP id n16mr5470666lji.4.1584712689711;
- Fri, 20 Mar 2020 06:58:09 -0700 (PDT)
+        Fri, 20 Mar 2020 10:02:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726866AbgCTOCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:02:48 -0400
+Received: from localhost (unknown [122.167.82.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53A8320754;
+        Fri, 20 Mar 2020 14:02:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584712968;
+        bh=dRU3m+00mM/qn+r/7DmddOrNxDCjsWb2CGdhg6vzeFc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZnzPTbu1jeHcUFu2Fd0MKrkt+pOutqg0GkJw0/c2dsotJN2IcNxyL4rcnhxyPq/wo
+         +iaUgupnmVaXEp4bRDes7uC3x5WsgHj2+85zFxYppJG5rPSa6/6euur1eFc49JmE5v
+         T5g5zPVh33AH9guBvk7xcMbLJWYij5bebUO7ngxk=
+Date:   Fri, 20 Mar 2020 19:32:43 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     broonie@kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     pierre-louis.bossart@linux.intel.com, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH 2/2] ASoC: wsa881x: mark read_only_wordlength flag
+Message-ID: <20200320140243.GG4885@vkoul-mobl>
+References: <20200311113545.23773-1-srinivas.kandagatla@linaro.org>
+ <20200311113545.23773-3-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-References: <1584710495-308969-1-git-send-email-vincent.donnefort@arm.com> <e400d0b1-173f-bcfd-40c0-2e473e14e7ae@arm.com>
-In-Reply-To: <e400d0b1-173f-bcfd-40c0-2e473e14e7ae@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 20 Mar 2020 14:57:57 +0100
-Message-ID: <CAKfTPtAiFpAd7NnQorNajQZn4FV+Nn01yv_KNJcgd+MFLnH1sw@mail.gmail.com>
-Subject: Re: [PATCH] sched: Remove unused last_load_update_tick rq member
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Vincent Donnefort <vincent.donnefort@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311113545.23773-3-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Mar 2020 at 14:44, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->
-> + Vincent Guittot
+Hi Mark,
 
-Thanks Dietmar
+On 11-03-20, 11:35, Srinivas Kandagatla wrote:
+> WSA881x works in PDM mode so the wordlength is fixed, which also makes
+> the only field "WordLength" in DPN_BlockCtrl1 register a read-only.
+> Writing to this register will throw up errors with Qualcomm Controller.
+> So use ro_blockctrl1_reg flag to mark this field as read-only so that
+> core will not write to this register.
 
->
-> On 20.03.20 14:21, vincent.donnefort@arm.com wrote:
-> > From: Vincent Donnefort <vincent.donnefort@arm.com>
-> >
-> > The commit 5e83eafbfd3b ("sched/fair: Remove the rq->cpu_load[] update
-> > code") eliminated the use case for rq->last_load_update_tick. Removing
-> > it.
-> >
-> > Signed-off-by: Vincent Donnefort <vincent.donnefort@arm.com>
+I have applied the sdw patch. Since this depends on sdw patch, feel free
+to pull the below tag before you apply this
 
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
-> >
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 1a9983d..c41ee26 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -6685,7 +6685,6 @@ void __init sched_init(void)
-> >
-> >               rq_attach_root(rq, &def_root_domain);
-> >  #ifdef CONFIG_NO_HZ_COMMON
-> > -             rq->last_load_update_tick = jiffies;
-> >               rq->last_blocked_load_update_tick = jiffies;
-> >               atomic_set(&rq->nohz_flags, 0);
-> >  #endif
-> > diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> > index 9ea6478..6e14fad 100644
-> > --- a/kernel/sched/sched.h
-> > +++ b/kernel/sched/sched.h
-> > @@ -860,7 +860,6 @@ struct rq {
-> >  #endif
-> >  #ifdef CONFIG_NO_HZ_COMMON
-> >  #ifdef CONFIG_SMP
-> > -     unsigned long           last_load_update_tick;
-> >       unsigned long           last_blocked_load_update_tick;
-> >       unsigned int            has_blocked_load;
-> >  #endif /* CONFIG_SMP */
->
-> Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire.git topic/ro_wordlength
+
+for you to fetch changes up to a9107de4b03604ce0d279315c91b31b8065ee4ea:
+
+  soundwire: stream: Add read_only_wordlength flag to port properties (2020-03-20 19:24:59 +0530)
+
+----------------------------------------------------------------
+Srinivas Kandagatla (1):
+      soundwire: stream: Add read_only_wordlength flag to port properties
+
+ drivers/soundwire/stream.c    | 16 +++++++++-------
+ include/linux/soundwire/sdw.h |  2 ++
+ 2 files changed, 11 insertions(+), 7 deletions(-)
+
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  sound/soc/codecs/wsa881x.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/sound/soc/codecs/wsa881x.c b/sound/soc/codecs/wsa881x.c
+> index b59f1d0e7f84..35b44b297f9e 100644
+> --- a/sound/soc/codecs/wsa881x.c
+> +++ b/sound/soc/codecs/wsa881x.c
+> @@ -394,6 +394,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
+>  		.min_ch = 1,
+>  		.max_ch = 1,
+>  		.simple_ch_prep_sm = true,
+> +		.read_only_wordlength = true,
+>  	}, {
+>  		/* COMP */
+>  		.num = 2,
+> @@ -401,6 +402,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
+>  		.min_ch = 1,
+>  		.max_ch = 1,
+>  		.simple_ch_prep_sm = true,
+> +		.read_only_wordlength = true,
+>  	}, {
+>  		/* BOOST */
+>  		.num = 3,
+> @@ -408,6 +410,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
+>  		.min_ch = 1,
+>  		.max_ch = 1,
+>  		.simple_ch_prep_sm = true,
+> +		.read_only_wordlength = true,
+>  	}, {
+>  		/* VISENSE */
+>  		.num = 4,
+> @@ -415,6 +418,7 @@ static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
+>  		.min_ch = 1,
+>  		.max_ch = 1,
+>  		.simple_ch_prep_sm = true,
+> +		.read_only_wordlength = true,
+>  	}
+>  };
+>  
+> -- 
+> 2.21.0
+
+-- 
+~Vinod
