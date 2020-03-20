@@ -2,101 +2,152 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 641B2C54EEB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D91AC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45BE720739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFFD720739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 20:34:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YprCCeD9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbgCTUdK (ORCPT
+        id S1727241AbgCTUeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 16:33:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37119 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbgCTUdJ (ORCPT
+        Fri, 20 Mar 2020 16:34:14 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:50825 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726855AbgCTUeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 16:33:09 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFOJf-0003W5-B3; Fri, 20 Mar 2020 21:32:27 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id A95431039FC; Fri, 20 Mar 2020 21:32:26 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "maintainer\:X86 ARCHITECTURE \(32-BIT AND 64-BIT\)" <x86@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        linux-edac@vger.kernel.org,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto <linux-crypto@vger.kernel.org>
-Subject: Re: [patch 08/22] ACPI: Convert to new X86 CPU match macros
-In-Reply-To: <CAHp75VcK3tL0YayjF=CSkSkHiOpg2zOV3rdkXQWJmLZ9fmevpg@mail.gmail.com>
-References: <20200320131345.635023594@linutronix.de> <20200320131509.467730627@linutronix.de> <CAHp75VcK3tL0YayjF=CSkSkHiOpg2zOV3rdkXQWJmLZ9fmevpg@mail.gmail.com>
-Date:   Fri, 20 Mar 2020 21:32:26 +0100
-Message-ID: <87bloqpy1x.fsf@nanos.tec.linutronix.de>
+        Fri, 20 Mar 2020 16:34:14 -0400
+Received: by mail-pj1-f68.google.com with SMTP id v13so3013152pjb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 13:34:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=x8zGXsapHuWnqMC8cZSaagYiLOs94TGgifWsiIRGTSM=;
+        b=YprCCeD9Wl+McB6ZRErSXSnfWwEZBH5YThXbWzDhm9ZWAPbyBLeTaZxu4kts8/HVC+
+         7zB1EcA5VN5akzU7Mp+X2R2flpKXTzM62cvzUUWSu8v9W0SkHw3vTIupRKLok16UN10k
+         eAKKs52fMZzRnNJwBb2X+mfGkFNg1bGMItzSxbwHcsoF4ymsUPOqrAzE0c1G4H0qft4E
+         +phE/Ml3hNTb+rO/d1d3qvhJTelnmlyTaa5VczkZDFQjnnQQ1RXPnVruhAtBDbr0JRxk
+         xWzLW2z2FGckcMgPmizse39QL4IeQSnV94UuzyNPINKDxKU+SKeDsK5sP+kG0CHYZHn9
+         8Lsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x8zGXsapHuWnqMC8cZSaagYiLOs94TGgifWsiIRGTSM=;
+        b=tVrD8VNciIHUTMvAVkW2vlmqZyAnnSOV8ahSWsTsemPKQq4nx/Kzh1+7JrO9bTRMFO
+         VEOVQml+xTK23efhxmNOsfxwIzK+I3qx9yiLd5/bITmbE1JbhjGSn/HpZc9mY+luhP/o
+         RbfavrIAu50u/CtyaJkOhFSzaxtb9qTGiipK1oFnTRUr7kBMjS0thVRBGW+BlBJUU7Kx
+         5T4k9bdParnEXLqYH8Elv9QYppiMG+AoPq7udD/51mDCW2NOGdFI+i2Epr1Kjn5GoBPw
+         oFvB8c01Qn5VXXqleihc9ZQKCbYrkHxkz2PE/EO2l5aIcSeScMSFY4PYUhP5uiuAZJYg
+         9QcA==
+X-Gm-Message-State: ANhLgQ1lA8iXOQDsrFzg5dlT/Ky+M4ADKgylV2o/7bNcRKAL3uS6V08E
+        HR24UyE0CVx3C04Z9U2dDsM8Aw==
+X-Google-Smtp-Source: ADFU+vtZlnHDo2zCjA+NB50NqFM3kOSwr9ntQAIkhkaWBh3ON1lfL7OI5PQTvzgPqzaiaFCejv3GZQ==
+X-Received: by 2002:a17:90a:e013:: with SMTP id u19mr11095637pjy.65.1584736452872;
+        Fri, 20 Mar 2020 13:34:12 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id d206sm6174522pfd.160.2020.03.20.13.34.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 13:34:12 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 14:34:09 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Andrew F. Davis" <afd@ti.com>, Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv8 RESEND 03/15] remoteproc/omap: Add a sanity check for
+ DSP boot address alignment
+Message-ID: <20200320203409.GC16145@xps15>
+References: <20200313081718.30612-4-t-kristo@ti.com>
+ <20200314004334.26509-1-s-anna@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200314004334.26509-1-s-anna@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+On Fri, Mar 13, 2020 at 07:43:34PM -0500, Suman Anna wrote:
+> The DSP remote processors on OMAP SoCs require a boot register to
+> be programmed with a boot address, and this boot address needs to
+> be on a 1KB boundary. The current code is simply masking the boot
+> address appropriately without performing any sanity checks before
+> releasing the resets. An unaligned boot address results in an
+> undefined execution behavior and can result in various bus errors
+> like MMU Faults or L3 NoC errors. Such errors are hard to debug and
+> can be easily avoided by adding a sanity check for the alignment
+> before booting a DSP remote processor.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Reviewed-by: Andrew F. Davis <afd@ti.com>
+> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+> v8-Resend: Updated to fix compilation issues against rproc-next
+> 
+>  drivers/remoteproc/omap_remoteproc.c | 20 ++++++++++++++++----
+>  1 file changed, 16 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+> index d47d5ded651a..fe11cb709770 100644
+> --- a/drivers/remoteproc/omap_remoteproc.c
+> +++ b/drivers/remoteproc/omap_remoteproc.c
+> @@ -121,14 +121,23 @@ static void omap_rproc_kick(struct rproc *rproc, int vqid)
+>   * @rproc: handle of a remote processor
+>   *
+>   * Set boot address for a supported DSP remote processor.
+> + *
+> + * Return: 0 on success, or -EINVAL if boot address is not aligned properly
+>   */
+> -static void omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+> +static int omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+>  {
+> +	struct device *dev = rproc->dev.parent;
+>  	struct omap_rproc *oproc = rproc->priv;
+>  	struct omap_rproc_boot_data *bdata = oproc->boot_data;
+>  	u32 offset = bdata->boot_reg;
+>  
+> -	regmap_write(bdata->syscon, offset, rproc->bootaddr);
+> +	if (rproc->bootaddr & (SZ_1K - 1)) {
+> +		dev_err(dev, "invalid boot address 0x%llx, must be aligned on a 1KB boundary\n",
+> +			rproc->bootaddr);
 
-> On Fri, Mar 20, 2020 at 3:19 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->> The new macro set has a consistent namespace and uses C99 initializers
->> instead of the grufty C89 ones.
->>
->> Rename the local macro wrapper to X86_MATCH for consistency. It stays for
->> readability sake.
->
->> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,     NULL),
->> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,        NULL),
->
->> -#define ICPU(model)    { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
->> +#define X86_MATCH(model)       X86_MATCH_INTEL_FAM6_MODEL(model, NULL)
->
-> Maybe we can do a generic macro to avoid all these ', NULL' repetitions?
+Yes it does fix the compilation problem but after that patch 7 doesn't apply
+anymore.
 
-I opted for having the data argument everywhere to keep the macro maze
-small. And we have enough places where data is actually used.
-
-Thanks,
-
-        tglx
+> +		return -EINVAL;
+> +	}
+> +
+> +	return regmap_write(bdata->syscon, offset, rproc->bootaddr);
+>  }
+>  
+>  /*
+> @@ -145,8 +154,11 @@ static int omap_rproc_start(struct rproc *rproc)
+>  	int ret;
+>  	struct mbox_client *client = &oproc->client;
+>  
+> -	if (oproc->boot_data)
+> -		omap_rproc_write_dsp_boot_addr(rproc);
+> +	if (oproc->boot_data) {
+> +		ret = omap_rproc_write_dsp_boot_addr(rproc);
+> +		if (ret)
+> +			return ret;
+> +	}
+>  
+>  	client->dev = dev;
+>  	client->tx_done = NULL;
+> -- 
+> 2.23.0
+> 
