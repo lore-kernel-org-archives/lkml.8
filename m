@@ -2,89 +2,66 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9EDC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D5EC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A49320663
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3871720663
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:58:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgCTR5y (ORCPT
+        id S1727135AbgCTR6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:57:54 -0400
-Received: from mga01.intel.com ([192.55.52.88]:31292 "EHLO mga01.intel.com"
+        Fri, 20 Mar 2020 13:58:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:55068 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgCTR5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:57:54 -0400
-IronPort-SDR: r71geOQEIaSfWMZJ6TeJbS80s1s4UME7czaI12BpC1s26yRlO7uVuXBjy12s3QaWK7/0Uj2sMi
- 625iUw2EwMPA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 10:57:53 -0700
-IronPort-SDR: OmDXVhyTKlU50WoWzpmVCqcLA7WUwVpCf1Ao7u1nBnBGKJ/i2veDk5SXC5PBRgALl8UdNfmn1Z
- JPTfAOqQ1bEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,285,1580803200"; 
-   d="scan'208";a="392225793"
-Received: from manallet-mobl.amr.corp.intel.com (HELO [10.255.34.12]) ([10.255.34.12])
-  by orsmga004.jf.intel.com with ESMTP; 20 Mar 2020 10:57:50 -0700
-Subject: Re: [PATCH 5/5] soundwire: qcom: add sdw_master_device support
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        alsa-devel@alsa-project.org
-Cc:     tiwai@suse.de, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>, vkoul@kernel.org,
-        broonie@kernel.org, Andy Gross <agross@kernel.org>,
-        jank@cadence.com,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-References: <20200320162947.17663-1-pierre-louis.bossart@linux.intel.com>
- <20200320162947.17663-6-pierre-louis.bossart@linux.intel.com>
- <81e2101e-d7ce-d023-5c35-ac6b55ea7166@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <40803069-e7dc-3dd6-ec7b-bec4308f381e@linux.intel.com>
-Date:   Fri, 20 Mar 2020 12:57:50 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726816AbgCTR6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 13:58:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9521C1FB;
+        Fri, 20 Mar 2020 10:58:32 -0700 (PDT)
+Received: from [10.37.12.158] (unknown [10.37.12.158])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B58A3F305;
+        Fri, 20 Mar 2020 10:58:30 -0700 (PDT)
+Subject: Re: [PATCH 1/6] arm64/cpufeature: Introduce ID_PFR2 CPU register
+To:     anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, maz@kernel.org,
+        james.morse@arm.com, mark.rutland@arm.com,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+References: <1580215149-21492-1-git-send-email-anshuman.khandual@arm.com>
+ <1580215149-21492-2-git-send-email-anshuman.khandual@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <f041fcce-31f8-9f02-4661-ea69025fdae4@arm.com>
+Date:   Fri, 20 Mar 2020 18:03:14 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <81e2101e-d7ce-d023-5c35-ac6b55ea7166@linaro.org>
+In-Reply-To: <1580215149-21492-2-git-send-email-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->> Add new device as a child of the platform device, following the
->> following hierarchy:
->>
->> platform_device
->>      sdw_master_device
->>          sdw_slave0
+On 01/28/2020 12:39 PM, Anshuman Khandual wrote:
+> This adds basic building blocks required for ID_PFR2 CPU register which
+> provides information about the AArch32 programmers model which must be
+> interpreted along with ID_PFR0 and ID_PFR1 CPU registers.
 > 
-> Why can't we just remove the platform device layer here and add 
-> sdw_master_device directly?
-> 
-> What is it stopping doing that?
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: kvmarm@lists.cs.columbia.edu
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-The guidance from Greg was "no platform devices, unless you really are 
-on a platform bus (i.e. Device tree.)". We never discussed changing the 
-way the Device Tree parts are handled.
+Sorry for the delay !
 
-The main idea was to leave the parent (be it platform-device or PCI 
-device) alone and not add new attributes or references to it.
-
-The scheme here is similar to I2C/SPI, you have a platform device 
-handled by the Device Tree baseline, and a driver create an 
-i2c_adapter/spi_controller/sdw_master_device.
-
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
