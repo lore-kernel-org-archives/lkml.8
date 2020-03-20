@@ -2,280 +2,270 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6D4C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E16C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 991D42072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3692051A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:14:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SJbaTv5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbgCTPNm (ORCPT
+        id S1727142AbgCTPOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:13:42 -0400
-Received: from outbound-smtp46.blacknight.com ([46.22.136.58]:35955 "EHLO
-        outbound-smtp46.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727142AbgCTPNm (ORCPT
+        Fri, 20 Mar 2020 11:14:41 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:42302 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726801AbgCTPOl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 11:13:42 -0400
-Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp46.blacknight.com (Postfix) with ESMTPS id CA254FA780
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 15:13:38 +0000 (GMT)
-Received: (qmail 31678 invoked from network); 20 Mar 2020 15:13:38 -0000
-Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPA; 20 Mar 2020 15:13:38 -0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 4/4] sched/fair: Track possibly overloaded domains and abort a scan if necessary
-Date:   Fri, 20 Mar 2020 15:12:45 +0000
-Message-Id: <20200320151245.21152-5-mgorman@techsingularity.net>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200320151245.21152-1-mgorman@techsingularity.net>
-References: <20200320151245.21152-1-mgorman@techsingularity.net>
+        Fri, 20 Mar 2020 11:14:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584717279;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=NT3xX5x+CjX4pcqlJWLCY2rQSLIhaPt3fjn8rQbGRss=;
+        b=SJbaTv5QaOdEI8eGnOHXfsYeBAYmBWxyOx65iqJZoJxPz2yPqsNImqVuu4ru0/8zqWFz7P
+        IoIh/02R40dk5n/j7CePuIaZ18YKCbZOmPnrshLpIwMZR/ciRNFMkzLNN8aeQKg71HC1pz
+        Cet6ZPatko0/Yjt+PKRvtU+Gh3f8j4s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-301-0RRoD2XfOCGWa_G0s06Ubw-1; Fri, 20 Mar 2020 11:14:34 -0400
+X-MC-Unique: 0RRoD2XfOCGWa_G0s06Ubw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7409118B642C;
+        Fri, 20 Mar 2020 15:14:12 +0000 (UTC)
+Received: from agerstmayr-thinkpad.redhat.com (unknown [10.40.193.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D853673879;
+        Fri, 20 Mar 2020 15:14:06 +0000 (UTC)
+From:   Andreas Gerstmayr <agerstmayr@redhat.com>
+To:     linux-perf-users@vger.kernel.org
+Cc:     Martin Spier <mspier@netflix.com>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Andreas Gerstmayr <agerstmayr@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] perf script: add flamegraph.py script
+Date:   Fri, 20 Mar 2020 16:13:48 +0100
+Message-Id: <20200320151355.66302-1-agerstmayr@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Once a domain is overloaded, it is very unlikely that a free CPU will
-be found in the short term but there is still potentially a lot of
-scanning. This patch tracks if a domain may be overloaded due to an
-excessive number of running tasks relative to available CPUs.  In the
-event a domain is overloaded, a search is aborted.
+This script works in tandem with d3-flame-graph to generate flame graphs
+from perf. It supports two output formats: JSON and HTML (the default).
+The HTML format will look for a standalone d3-flame-graph template file i=
+n
+/usr/share/d3-flame-graph/d3-flamegraph-base.html and fill in the collect=
+ed
+stacks.
 
-This has a variable impact on performance for hackbench which often
-is overloaded on the test machines used. There was a mix of performance gains
-and losses but there is a substantial impact on search efficiency.
+Usage:
 
-On a 2-socket broadwell machine with 80 cores in total, tbench showed
-small gains and some losses
+    perf record -a -g -F 99 sleep 60
+    perf script report flamegraph
 
-Hmean     1        431.51 (   0.00%)      426.53 *  -1.15%*
-Hmean     2        842.69 (   0.00%)      839.00 *  -0.44%*
-Hmean     4       1631.09 (   0.00%)     1634.81 *   0.23%*
-Hmean     8       3001.08 (   0.00%)     3020.85 *   0.66%*
-Hmean     16      5631.75 (   0.00%)     5655.04 *   0.41%*
-Hmean     32      9736.22 (   0.00%)     9645.68 *  -0.93%*
-Hmean     64     13978.54 (   0.00%)    15215.65 *   8.85%*
-Hmean     128    20093.06 (   0.00%)    19389.45 *  -3.50%*
-Hmean     256    17491.34 (   0.00%)    18616.32 *   6.43%*
-Hmean     320    17423.67 (   0.00%)    17793.38 *   2.12%*
+Combined:
 
-However, the "SIS Domain Search Efficiency" went from 6.03% to 19.61%
-indicating that far fewer CPUs were scanned. The impact of the patch
-is more noticable when sockets have multiple L3 caches. While true for
-EPYC 2nd generation, it's particularly noticable on EPYC 1st generation
+    perf script flamegraph -a -F 99 sleep 60
 
-Hmean     1        325.30 (   0.00%)      324.92 *  -0.12%*
-Hmean     2        630.77 (   0.00%)      621.35 *  -1.49%*
-Hmean     4       1211.41 (   0.00%)     1148.51 *  -5.19%*
-Hmean     8       2017.29 (   0.00%)     1953.57 *  -3.16%*
-Hmean     16      4068.81 (   0.00%)     3514.06 * -13.63%*
-Hmean     32      5588.20 (   0.00%)     6583.58 *  17.81%*
-Hmean     64      8470.14 (   0.00%)    10117.26 *  19.45%*
-Hmean     128    11462.06 (   0.00%)    17207.68 *  50.13%*
-Hmean     256    11433.74 (   0.00%)    13446.93 *  17.61%*
-Hmean     512    12576.88 (   0.00%)    13630.08 *   8.37%*
-
-On this machine, search efficiency goes from 21.04% to 32.66%. There
-is a noticable problem at 16 when there are enough clients for a LLC
-domain to spill over.
-
-With hackbench, the overload problem is a bit more obvious. On the
-2-socket broadwell machine using processes and pipes we see
-
-Amean     1        0.3023 (   0.00%)      0.2893 (   4.30%)
-Amean     4        0.6823 (   0.00%)      0.6930 (  -1.56%)
-Amean     7        1.0293 (   0.00%)      1.0380 (  -0.84%)
-Amean     12       1.6913 (   0.00%)      1.7027 (  -0.67%)
-Amean     21       2.9307 (   0.00%)      2.9297 (   0.03%)
-Amean     30       4.0040 (   0.00%)      4.0270 (  -0.57%)
-Amean     48       6.0703 (   0.00%)      6.1067 (  -0.60%)
-Amean     79       9.0630 (   0.00%)      9.1223 *  -0.65%*
-Amean     110     12.1917 (   0.00%)     12.1693 (   0.18%)
-Amean     141     15.7150 (   0.00%)     15.4187 (   1.89%)
-Amean     172     19.5327 (   0.00%)     18.9937 (   2.76%)
-Amean     203     23.3093 (   0.00%)     22.2497 *   4.55%*
-Amean     234     27.8657 (   0.00%)     25.9627 *   6.83%*
-Amean     265     32.9783 (   0.00%)     29.5240 *  10.47%*
-Amean     296     35.6727 (   0.00%)     32.8260 *   7.98%*
-
-More of the SIS stats are worth looking at in this case
-
-Ops SIS Domain Search       10390526707.00  9822163508.00
-Ops SIS Scanned            223173467577.00 48330226094.00
-Ops SIS Domain Scanned     222820381314.00 47964114165.00
-Ops SIS Failures            10183794873.00  9639912418.00
-Ops SIS Recent Used Hit        22194515.00    22517194.00
-Ops SIS Recent Used Miss     5733847634.00  5500415074.00
-Ops SIS Recent Attempts      5756042149.00  5522932268.00
-Ops SIS Search Efficiency             4.81          21.08
-
-Search efficiency goes from 4.66% to 20.48% but the SIS Domain Scanned
-shows the sheer volume of searching SIS does when prev, target and recent
-CPUs are unavailable.
-
-This could be much more aggressive by also cutting off a search for idle
-cores. However, to make that work properly requires a much more intrusive
-series that is likely to be controversial. This seemed like a reasonable
-tradeoff to tackle the most obvious problem with select_idle_cpu.
-
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
 ---
- include/linux/sched/topology.h |  1 +
- kernel/sched/fair.c            | 65 +++++++++++++++++++++++++++++++++++++++---
- kernel/sched/features.h        |  3 ++
- 3 files changed, 65 insertions(+), 4 deletions(-)
+Package for d3-flame-graph is currently under review, in the meantime you=
+ can=20
+download the template from:
+https://cdn.jsdelivr.net/npm/d3-flame-graph@3.0.2/dist/templates/d3-flame=
+graph-base.html
+and move it to /usr/share/d3-flame-graph/d3-flamegraph-base.html
 
-diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-index af9319e4cfb9..76ec7a54f57b 100644
---- a/include/linux/sched/topology.h
-+++ b/include/linux/sched/topology.h
-@@ -66,6 +66,7 @@ struct sched_domain_shared {
- 	atomic_t	ref;
- 	atomic_t	nr_busy_cpus;
- 	int		has_idle_cores;
-+	int		is_overloaded;
- };
- 
- struct sched_domain {
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 41913fac68de..31e011e627db 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5924,6 +5924,38 @@ static inline int find_idlest_cpu(struct sched_domain *sd, struct task_struct *p
- 	return new_cpu;
- }
- 
-+static inline void
-+set_sd_overloaded(struct sched_domain_shared *sds, int val)
-+{
-+	if (!sds)
-+		return;
+ .../perf/scripts/python/bin/flamegraph-record |   2 +
+ .../perf/scripts/python/bin/flamegraph-report |   3 +
+ tools/perf/scripts/python/flamegraph.py       | 126 ++++++++++++++++++
+ 3 files changed, 131 insertions(+)
+ create mode 100755 tools/perf/scripts/python/bin/flamegraph-record
+ create mode 100755 tools/perf/scripts/python/bin/flamegraph-report
+ create mode 100755 tools/perf/scripts/python/flamegraph.py
+
+diff --git a/tools/perf/scripts/python/bin/flamegraph-record b/tools/perf=
+/scripts/python/bin/flamegraph-record
+new file mode 100755
+index 000000000000..725d66e71570
+--- /dev/null
++++ b/tools/perf/scripts/python/bin/flamegraph-record
+@@ -0,0 +1,2 @@
++#!/usr/bin/sh
++perf record -g "$@"
+diff --git a/tools/perf/scripts/python/bin/flamegraph-report b/tools/perf=
+/scripts/python/bin/flamegraph-report
+new file mode 100755
+index 000000000000..b1a79afd903b
+--- /dev/null
++++ b/tools/perf/scripts/python/bin/flamegraph-report
+@@ -0,0 +1,3 @@
++#!/usr/bin/sh
++# description: create flame graphs
++perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
+diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts=
+/python/flamegraph.py
+new file mode 100755
+index 000000000000..5835d190ca42
+--- /dev/null
++++ b/tools/perf/scripts/python/flamegraph.py
+@@ -0,0 +1,126 @@
++# flamegraph.py - create flame graphs from perf samples
++# SPDX-License-Identifier: GPL-2.0
++#
++# Usage:
++#
++#     perf record -a -g -F 99 sleep 60
++#     perf script report flamegraph
++#
++# Combined:
++#
++#     perf script flamegraph -a -F 99 sleep 60
++#
++# Written by Andreas Gerstmayr <agerstmayr@redhat.com>
++# Flame Graphs invented by Brendan Gregg <bgregg@netflix.com>
++# Works in tandem with d3-flame-graph by Martin Spier <mspier@netflix.co=
+m>
 +
-+	WRITE_ONCE(sds->is_overloaded, val);
-+}
++import sys
++import os
++import argparse
++import json
 +
-+static inline bool test_sd_overloaded(struct sched_domain_shared *sds)
-+{
-+	return READ_ONCE(sds->is_overloaded);
-+}
 +
-+/* Returns true if a previously overloaded domain is likely still overloaded. */
-+static inline bool
-+abort_sd_overloaded(struct sched_domain_shared *sds, int prev, int target)
-+{
-+	if (!sds || !test_sd_overloaded(sds))
-+		return false;
++class Node:
++    def __init__(self, name, libtype=3D""):
++        self.name =3D name
++        self.libtype =3D libtype
++        self.value =3D 0
++        self.children =3D []
 +
-+	/* Are either target or a suitable prev 1 or 0 tasks? */
-+	if (cpu_rq(target)->nr_running <= 1 ||
-+	    (prev != target && cpus_share_cache(prev, target) &&
-+	     cpu_rq(prev)->nr_running <= 1)) {
-+		set_sd_overloaded(sds, 0);
-+		return false;
-+	}
++    def toJSON(self):
++        return {
++            "n": self.name,
++            "l": self.libtype,
++            "v": self.value,
++            "c": self.children
++        }
 +
-+	return true;
-+}
 +
- #ifdef CONFIG_SCHED_SMT
- DEFINE_STATIC_KEY_FALSE(sched_smt_present);
- EXPORT_SYMBOL_GPL(sched_smt_present);
-@@ -6060,15 +6092,18 @@ static inline int select_idle_smt(struct task_struct *p, int target)
-  * comparing the average scan cost (tracked in sd->avg_scan_cost) against the
-  * average idle time for this rq (as found in rq->avg_idle).
-  */
--static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int target)
-+static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd,
-+			   int prev, int target)
- {
- 	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
- 	struct sched_domain *this_sd;
-+	struct sched_domain_shared *sds;
- 	u64 avg_cost, avg_idle;
- 	u64 time, cost;
- 	s64 delta;
- 	int this = smp_processor_id();
- 	int cpu, nr = INT_MAX;
-+	int nr_scanned = 0, nr_running = 0;
- 
- 	this_sd = rcu_dereference(*this_cpu_ptr(&sd_llc));
- 	if (!this_sd)
-@@ -6092,18 +6127,40 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- 			nr = 4;
- 	}
- 
-+	sds = rcu_dereference(per_cpu(sd_llc_shared, target));
-+	if (sched_feat(SIS_OVERLOAD)) {
-+		if (abort_sd_overloaded(sds, prev, target))
-+			return -1;
-+	}
++class FlameGraphCLI:
++    def __init__(self, args):
++        self.args =3D args
++        self.stack =3D Node("root")
 +
- 	time = cpu_clock(this);
- 
- 	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
- 
- 	for_each_cpu_wrap(cpu, cpus, target) {
- 		schedstat_inc(this_rq()->sis_scanned);
--		if (!--nr)
--			return -1;
-+		if (!--nr) {
-+			cpu = -1;
-+			break;
-+		}
- 		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
- 			break;
-+		if (sched_feat(SIS_OVERLOAD)) {
-+			nr_scanned++;
-+			nr_running += cpu_rq(cpu)->nr_running;
-+		}
- 	}
- 
-+	/* Check if domain should be marked overloaded if no cpu was found. */
-+	if (sched_feat(SIS_OVERLOAD) && (signed)cpu >= nr_cpumask_bits &&
-+	    nr_scanned && nr_running > (nr_scanned << 1)) {
-+		set_sd_overloaded(sds, 1);
-+	}
++        if self.args.format =3D=3D "html" and \
++                not os.path.isfile(self.args.template):
++            print(f"Flame Graph template {self.args.template} does not "=
+ +
++                  f"exist. Please install the js-d3-flame-graph (RPM) or=
+ " +
++                  f"libjs-d3-flame-graph (deb) package, specify an " +
++                  f"existing flame graph template (--template PATH) or "=
+ +
++                  f"another output format (--format FORMAT).",
++                  file=3Dsys.stderr)
++            sys.exit(1)
 +
-+	/* Scan cost not accounted for if scan is throttled */
-+	if (!nr)
-+		return -1;
++    def find_or_create_node(self, node, name, dso):
++        libtype =3D "kernel" if dso =3D=3D "[kernel.kallsyms]" else ""
++        if name is None:
++            name =3D "[unknown]"
 +
- 	time = cpu_clock(this) - time;
- 	cost = this_sd->avg_scan_cost;
- 	delta = (s64)(time - cost) / 8;
-@@ -6236,7 +6293,7 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
- 	if ((unsigned)i < nr_cpumask_bits)
- 		return i;
- 
--	i = select_idle_cpu(p, sd, target);
-+	i = select_idle_cpu(p, sd, prev, target);
- 	if ((unsigned)i < nr_cpumask_bits)
- 		return i;
- 
-diff --git a/kernel/sched/features.h b/kernel/sched/features.h
-index 7481cd96f391..c36ae01910e2 100644
---- a/kernel/sched/features.h
-+++ b/kernel/sched/features.h
-@@ -57,6 +57,9 @@ SCHED_FEAT(TTWU_QUEUE, true)
- SCHED_FEAT(SIS_AVG_CPU, false)
- SCHED_FEAT(SIS_PROP, true)
- 
-+/* Limit scans if the domain is likely overloaded */
-+SCHED_FEAT(SIS_OVERLOAD, true)
++        for child in node.children:
++            if child.name =3D=3D name and child.libtype =3D=3D libtype:
++                return child
 +
- /*
-  * Issue a WARN when we do multiple update_rq_clock() calls
-  * in a single rq->lock section. Default disabled because the
--- 
-2.16.4
++        child =3D Node(name, libtype)
++        node.children.append(child)
++        return child
++
++    def process_event(self, event):
++        node =3D self.find_or_create_node(self.stack, event["comm"], Non=
+e)
++        if "callchain" in event:
++            for entry in reversed(event['callchain']):
++                node =3D self.find_or_create_node(
++                    node, entry.get("sym", {}).get("name"), event.get("d=
+so"))
++        else:
++            node =3D self.find_or_create_node(
++                node, entry.get("symbol"), event.get("dso"))
++        node.value +=3D 1
++
++    def trace_end(self):
++        json_str =3D json.dumps(self.stack, default=3Dlambda x: x.toJSON=
+(),
++                              indent=3Dself.args.indent)
++
++        if self.args.format =3D=3D "html":
++            try:
++                with open(self.args.template) as f:
++                    output_str =3D f.read().replace("/** @flamegraph_jso=
+n **/",
++                                                  json_str)
++            except IOError as e:
++                print(f"Error reading template file: {e}", file=3Dsys.st=
+derr)
++                sys.exit(1)
++            output_fn =3D self.args.output or "flamegraph.html"
++        else:
++            output_str =3D json_str
++            output_fn =3D self.args.output or "stacks.json"
++
++        if output_fn =3D=3D "-":
++            sys.stdout.write(output_str)
++        else:
++            print(f"dumping data to {output_fn}")
++            try:
++                with open(output_fn, "w") as out:
++                    out.write(output_str)
++            except IOError as e:
++                print(f"Error writing output file: {e}", file=3Dsys.stde=
+rr)
++                sys.exit(1)
++
++
++if __name__ =3D=3D "__main__":
++    parser =3D argparse.ArgumentParser(description=3D"Create flame graph=
+s.")
++    parser.add_argument("-F", "--format",
++                        default=3D"html", choices=3D["json", "html"],
++                        help=3D"output file format")
++    parser.add_argument("-o", "--output",
++                        help=3D"output file name")
++    parser.add_argument("--indent",
++                        type=3Dint, help=3D"JSON indentation")
++    parser.add_argument("--template",
++                        default=3D"/usr/share/d3-flame-graph/d3-flamegra=
+ph-base.html",
++                        help=3D"path to flamegraph HTML template")
++    parser.add_argument("-i", "--input",
++                        help=3Dargparse.SUPPRESS)
++
++    args =3D parser.parse_args()
++    cli =3D FlameGraphCLI(args)
++
++    process_event =3D cli.process_event
++    trace_end =3D cli.trace_end
+--=20
+2.25.1
 
