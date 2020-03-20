@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB34C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C53B7C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E35B20787
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A665220732
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:17:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbgCTNQa (ORCPT
+        id S1727243AbgCTNQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:16:30 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35720 "EHLO
+        Fri, 20 Mar 2020 09:16:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35714 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbgCTNQ2 (ORCPT
+        with ESMTP id S1727107AbgCTNQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Mar 2020 09:16:28 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFHVi-00048V-Ej
-        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 14:16:26 +0100
+        id 1jFHVh-00048C-PB
+        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 14:16:25 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 9C0D3104084
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 32C771039FD
         for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 14:16:25 +0100 (CET)
-Message-Id: <20200320131509.136884777@linutronix.de>
+Message-Id: <20200320131508.934926587@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 14:13:50 +0100
+Date:   Fri, 20 Mar 2020 14:13:48 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -61,7 +61,7 @@ Cc:     x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
         linux-crypto@vger.kernel.org
-Subject: [patch 05/22] x86/kvm: Convert to new CPU match macros
+Subject: [patch 03/22] x86/cpu/bugs: Convert to new matching macros
 References: <20200320131345.635023594@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -76,33 +76,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 The new macro set has a consistent namespace and uses C99 initializers
 instead of the grufty C89 ones.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/svm.c     |    2 +-
- arch/x86/kvm/vmx/vmx.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+The local wrappers have to stay as they are tailored to tame the hardware
+vulnerability mess.
 
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -60,7 +60,7 @@ MODULE_LICENSE("GPL");
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/kernel/cpu/common.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1008,8 +1008,8 @@ static void identify_cpu_without_cpuid(s
+ #define NO_ITLB_MULTIHIT	BIT(7)
+ #define NO_SPECTRE_V2		BIT(8)
  
- #ifdef MODULE
- static const struct x86_cpu_id svm_cpu_id[] = {
--	X86_FEATURE_MATCH(X86_FEATURE_SVM),
-+	X86_MATCH_FEATURE(X86_FEATURE_SVM, NULL),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, svm_cpu_id);
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -67,7 +67,7 @@ MODULE_LICENSE("GPL");
+-#define VULNWL(_vendor, _family, _model, _whitelist)	\
+-	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
++#define VULNWL(vendor, family, model, whitelist)	\
++	X86_MATCH_VENDOR_FAM_MODEL(vendor, family, model, whitelist)
  
- #ifdef MODULE
- static const struct x86_cpu_id vmx_cpu_id[] = {
--	X86_FEATURE_MATCH(X86_FEATURE_VMX),
-+	X86_MATCH_FEATURE(X86_FEATURE_VMX, NULL),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, vmx_cpu_id);
+ #define VULNWL_INTEL(model, whitelist)		\
+ 	VULNWL(INTEL, 6, INTEL_FAM6_##model, whitelist)
 
