@@ -4,47 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157EBC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486EAC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E826820739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26AE620776
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbgCTM67 (ORCPT
+        id S1727516AbgCTM7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 08:58:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35647 "EHLO
+        Fri, 20 Mar 2020 08:59:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35648 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbgCTM6P (ORCPT
+        with ESMTP id S1727224AbgCTM6O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 08:58:15 -0400
+        Fri, 20 Mar 2020 08:58:14 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFHE0-0003lF-VP; Fri, 20 Mar 2020 13:58:09 +0100
+        id 1jFHE2-0003jO-LW; Fri, 20 Mar 2020 13:58:10 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C87881C22C3;
-        Fri, 20 Mar 2020 13:58:06 +0100 (CET)
-Date:   Fri, 20 Mar 2020 12:58:06 -0000
-From:   "tip-bot2 for Vincent Guittot" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4B3E51C22C1;
+        Fri, 20 Mar 2020 13:58:05 +0100 (CET)
+Date:   Fri, 20 Mar 2020 12:58:04 -0000
+From:   "tip-bot2 for Johannes Weiner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/fair: Fix enqueue_task_fair warning
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
+Subject: [tip: sched/core] MAINTAINERS: Add maintenance information for psi
+Cc:     Ivan Babrou <ivan@cloudflare.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        stable@vger.kernel.org, stable@vger.kernel.org,
-        #v5.1+@tip-bot2.tec.linutronix.de, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200306135257.25044-1-vincent.guittot@linaro.org>
-References: <20200306135257.25044-1-vincent.guittot@linaro.org>
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200316191333.115523-4-hannes@cmpxchg.org>
+References: <20200316191333.115523-4-hannes@cmpxchg.org>
 MIME-Version: 1.0
-Message-ID: <158470908651.28353.12189194857904620285.tip-bot2@tip-bot2>
+Message-ID: <158470908499.28353.9637225580351813709.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,94 +57,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     fe61468b2cbc2b7ce5f8d3bf32ae5001d4c434e9
-Gitweb:        https://git.kernel.org/tip/fe61468b2cbc2b7ce5f8d3bf32ae5001d4c434e9
-Author:        Vincent Guittot <vincent.guittot@linaro.org>
-AuthorDate:    Fri, 06 Mar 2020 14:52:57 +01:00
+Commit-ID:     a0fe6ba69059266ba70ed5d3c4ac80713f6ffde7
+Gitweb:        https://git.kernel.org/tip/a0fe6ba69059266ba70ed5d3c4ac80713f6ffde7
+Author:        Johannes Weiner <hannes@cmpxchg.org>
+AuthorDate:    Mon, 16 Mar 2020 15:13:33 -04:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Fri, 20 Mar 2020 13:06:18 +01:00
+CommitterDate: Fri, 20 Mar 2020 13:06:19 +01:00
 
-sched/fair: Fix enqueue_task_fair warning
+MAINTAINERS: Add maintenance information for psi
 
-When a cfs rq is throttled, the latter and its child are removed from the
-leaf list but their nr_running is not changed which includes staying higher
-than 1. When a task is enqueued in this throttled branch, the cfs rqs must
-be added back in order to ensure correct ordering in the list but this can
-only happens if nr_running == 1.
-When cfs bandwidth is used, we call unconditionnaly list_add_leaf_cfs_rq()
-when enqueuing an entity to make sure that the complete branch will be
-added.
+Add a maintainer section for psi, as it's a user-visible, configurable
+kernel feature.
 
-Similarly unthrottle_cfs_rq() can stop adding cfs in the list when a parent
-is throttled. Iterate the remaining entity to ensure that the complete
-branch will be added in the list.
+The patches are still routed through the scheduler tree due to the
+close integration with that code, but get_maintainers.pl does the
+right thing and makes sure everybody gets CCd:
 
-Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+$ ./scripts/get_maintainer.pl -f kernel/sched/psi.c
+Johannes Weiner <hannes@cmpxchg.org> (maintainer:PRESSURE STALL INFORMATION (PSI))
+Ingo Molnar <mingo@redhat.com> (maintainer:SCHEDULER)
+Peter Zijlstra <peterz@infradead.org> (maintainer:SCHEDULER)
+...
+
+Reported-by: Ivan Babrou <ivan@cloudflare.com>
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: stable@vger.kernel.org
-Cc: stable@vger.kernel.org #v5.1+
-Link: https://lkml.kernel.org/r/20200306135257.25044-1-vincent.guittot@linaro.org
+Link: https://lkml.kernel.org/r/20200316191333.115523-4-hannes@cmpxchg.org
 ---
- kernel/sched/fair.c | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1dea855..c7aaae2 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4136,6 +4136,7 @@ static inline void check_schedstat_required(void)
- #endif
- }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6158a14..5f82a70 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13518,6 +13518,12 @@ F:	net/psample
+ F:	include/net/psample.h
+ F:	include/uapi/linux/psample.h
  
-+static inline bool cfs_bandwidth_used(void);
- 
- /*
-  * MIGRATION
-@@ -4214,10 +4215,16 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
- 		__enqueue_entity(cfs_rq, se);
- 	se->on_rq = 1;
- 
--	if (cfs_rq->nr_running == 1) {
-+	/*
-+	 * When bandwidth control is enabled, cfs might have been removed
-+	 * because of a parent been throttled but cfs->nr_running > 1. Try to
-+	 * add it unconditionnally.
-+	 */
-+	if (cfs_rq->nr_running == 1 || cfs_bandwidth_used())
- 		list_add_leaf_cfs_rq(cfs_rq);
++PRESSURE STALL INFORMATION (PSI)
++M:	Johannes Weiner <hannes@cmpxchg.org>
++S:	Maintained
++F:	kernel/sched/psi.c
++F:	include/linux/psi*
 +
-+	if (cfs_rq->nr_running == 1)
- 		check_enqueue_throttle(cfs_rq);
--	}
- }
- 
- static void __clear_buddies_last(struct sched_entity *se)
-@@ -4808,11 +4815,22 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
- 			break;
- 	}
- 
--	assert_list_leaf_cfs_rq(rq);
--
- 	if (!se)
- 		add_nr_running(rq, task_delta);
- 
-+	/*
-+	 * The cfs_rq_throttled() breaks in the above iteration can result in
-+	 * incomplete leaf list maintenance, resulting in triggering the
-+	 * assertion below.
-+	 */
-+	for_each_sched_entity(se) {
-+		cfs_rq = cfs_rq_of(se);
-+
-+		list_add_leaf_cfs_rq(cfs_rq);
-+	}
-+
-+	assert_list_leaf_cfs_rq(rq);
-+
- 	/* Determine whether we need to wake up potentially idle CPU: */
- 	if (rq->curr == rq->idle && rq->cfs.nr_running)
- 		resched_curr(rq);
+ PSTORE FILESYSTEM
+ M:	Kees Cook <keescook@chromium.org>
+ M:	Anton Vorontsov <anton@enomsg.org>
