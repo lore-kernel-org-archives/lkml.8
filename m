@@ -2,148 +2,326 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2C2C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54B2C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A46E20754
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:51:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584712313;
-	bh=y7qXF+Hq92w8TU6GgEqFOUEr/nQFz4OOWmZ7gzxYsA4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pY+/DPhUm2324sUM/OqkQNOLeC9OWT89C06xzs0/s3tx5AcUpSRxL7bxL+Sj/hb4B
-	 aytMzfyBeTIiIYIp3inKuyPBBkE6BKKqEdWCTwP7Wp5vpEDKD47ZsiATTXeNY+a/qE
-	 nAYAk2wNkFdZLzKX59i0d1Ba/nVe8i4c6ySg0+Ew=
+	by mail.kernel.org (Postfix) with ESMTP id 7BC3020722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:53:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="o9j9B6dv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbgCTNvw (ORCPT
+        id S1727044AbgCTNxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:51:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgCTNvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:51:50 -0400
-Received: from localhost (unknown [122.167.82.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0B9120722;
-        Fri, 20 Mar 2020 13:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584712309;
-        bh=y7qXF+Hq92w8TU6GgEqFOUEr/nQFz4OOWmZ7gzxYsA4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zFMvx0hvqwr72N/dXhAnTJiI/Zoq9SBqCEQoOJk/KLnBuoVrVkMndisdyQLJ5D6y0
-         uvOzDDB0t/BhtmTE3qI8RZrkjTgaJIM+djbmG/o/HH6xwK6wIRcnm4EOpedPZ8fBhw
-         7QxD9h34B1JwaLNnS1n/OIiWLyTA5U80pRBBk/fw=
-Date:   Fri, 20 Mar 2020 19:21:45 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Rander Wang <rander.wang@intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH 5/7] soundwire: intel: follow documentation sequences for
- SHIM registers
-Message-ID: <20200320135145.GE4885@vkoul-mobl>
-References: <20200311221026.18174-1-pierre-louis.bossart@linux.intel.com>
- <20200311221026.18174-6-pierre-louis.bossart@linux.intel.com>
+        Fri, 20 Mar 2020 09:53:39 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:44613 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726666AbgCTNxj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 09:53:39 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02KDcM9I011343;
+        Fri, 20 Mar 2020 14:53:24 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=VaIGmYuPkiMh6uVRSmmnLwttctuZ3vlTDntyezE2A0g=;
+ b=o9j9B6dvBBwMlbcDUiMoE01L6RcV9RTNG39ZfddjX67aO/sAzsL7X6ksO4jR3AtOoAMW
+ nZBGYcpQC+khycQ7eEPhE8q82g4yJJ0RR7WfW3MFMY2IfnMIJnXm6ju/ODhu2X6utr1T
+ h33S9nX0o2RHHJsLhqsIOqZJ2sbydwCBxU12soENHtCSulWDT8Vdg4SW8/nL4MQn2doi
+ ZVjtMkPjjduDBs5KMGO5h3jvyPiYNNL+Pf5f5v7/L4HKsA+SF3aTjCjdPO7zh/aTnaFm
+ JVesJpYko8xPACWQmhdTMG08+2oynGDYDXUqM0fJqmgWKIaUoYGQFomvlYxcSE/171pr /w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yu8etr33c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Mar 2020 14:53:24 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7D9FE100038;
+        Fri, 20 Mar 2020 14:53:20 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4FE952B0D69;
+        Fri, 20 Mar 2020 14:53:17 +0100 (CET)
+Received: from lmecxl0995.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 20 Mar
+ 2020 14:53:16 +0100
+Subject: Re: [PATCH] spi: stm32: Fix comments compilation warnings
+To:     Alain Volmat <alain.volmat@st.com>, <broonie@kernel.org>
+CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+References: <1584711857-9162-1-git-send-email-alain.volmat@st.com>
+From:   Amelie DELAUNAY <amelie.delaunay@st.com>
+Message-ID: <57ccd75c-1dbd-58d4-9f63-c72befe4c79e@st.com>
+Date:   Fri, 20 Mar 2020 14:53:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311221026.18174-6-pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <1584711857-9162-1-git-send-email-alain.volmat@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-20_04:2020-03-20,2020-03-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11-03-20, 17:10, Pierre-Louis Bossart wrote:
-> From: Rander Wang <rander.wang@intel.com>
-> 
-> Somehow the existing code is not aligned with the steps described in
-> the documentation, refactor code and make sure the register
+Hi Alain,
 
-Is the documentation available public space so that we can correct
+On 3/20/20 2:44 PM, Alain Volmat wrote:
+> Fix all functions and structure descriptions to have the driver
+> warning free when built with W=1.
+> 
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
 
-> programming sequences are correct.
-> 
-> This includes making sure SHIM_SYNC is programmed only once, before
-> the first link is powered on.
-> 
-> Note that the SYNCPRD value is tied only to the XTAL value and not the
-> current bus frequency or the frame rate.
-> 
-> Signed-off-by: Rander Wang <rander.wang@intel.com>
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+
+Thanks for the cleaning :)
+
+Reviewed-by: Amelie Delaunay <amelie.delaunay@st.com>
+
 > ---
->  drivers/soundwire/intel.c | 186 ++++++++++++++++++++++++++++----------
->  1 file changed, 139 insertions(+), 47 deletions(-)
+>   drivers/spi/spi-stm32.c | 62 +++++++++++++++++++++++++++++++++++--------------
+>   1 file changed, 45 insertions(+), 17 deletions(-)
 > 
-> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-> index 3c271a8044b8..9c6514fe1284 100644
-> --- a/drivers/soundwire/intel.c
-> +++ b/drivers/soundwire/intel.c
-> @@ -46,7 +46,8 @@
->  #define SDW_SHIM_LCTL_SPA		BIT(0)
->  #define SDW_SHIM_LCTL_CPA		BIT(8)
->  
-> -#define SDW_SHIM_SYNC_SYNCPRD_VAL	0x176F
-> +#define SDW_SHIM_SYNC_SYNCPRD_VAL_24	(24000 / SDW_CADENCE_GSYNC_KHZ - 1)
-> +#define SDW_SHIM_SYNC_SYNCPRD_VAL_38_4	(38400 / SDW_CADENCE_GSYNC_KHZ - 1)
->  #define SDW_SHIM_SYNC_SYNCPRD		GENMASK(14, 0)
->  #define SDW_SHIM_SYNC_SYNCCPU		BIT(15)
->  #define SDW_SHIM_SYNC_CMDSYNC_MASK	GENMASK(19, 16)
-> @@ -283,11 +284,48 @@ static int intel_link_power_up(struct sdw_intel *sdw)
->  {
->  	unsigned int link_id = sdw->instance;
->  	void __iomem *shim = sdw->link_res->shim;
-> +	u32 *shim_mask = sdw->link_res->shim_mask;
-
-this is a local pointer, so the one defined previously is not used.
-
-> +	struct sdw_bus *bus = &sdw->cdns.bus;
-> +	struct sdw_master_prop *prop = &bus->prop;
->  	int spa_mask, cpa_mask;
-> -	int link_control, ret;
-> +	int link_control;
-> +	int ret = 0;
-> +	u32 syncprd;
-> +	u32 sync_reg;
->  
->  	mutex_lock(sdw->link_res->shim_lock);
->  
-> +	/*
-> +	 * The hardware relies on an internal counter,
-> +	 * typically 4kHz, to generate the SoundWire SSP -
-> +	 * which defines a 'safe' synchronization point
-> +	 * between commands and audio transport and allows for
-> +	 * multi link synchronization. The SYNCPRD value is
-> +	 * only dependent on the oscillator clock provided to
-> +	 * the IP, so adjust based on _DSD properties reported
-> +	 * in DSDT tables. The values reported are based on
-> +	 * either 24MHz (CNL/CML) or 38.4 MHz (ICL/TGL+).
-
-Sorry this looks quite bad to read, we have 80 chars, so please use
-like below:
-
-	/*
-         * The hardware relies on an internal counter, typically 4kHz,
-         * to generate the SoundWire SSP - which defines a 'safe'
-         * synchronization point between commands and audio transport
-         * and allows for multi link synchronization. The SYNCPRD value
-         * is only dependent on the oscillator clock provided to
-         * the IP, so adjust based on _DSD properties reported in DSDT
-         * tables. The values reported are based on either 24MHz
-         * (CNL/CML) or 38.4 MHz (ICL/TGL+).
-	 */
-
--- 
-~Vinod
+> diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+> index e041f9c4ec47..44ac6eb3298d 100644
+> --- a/drivers/spi/spi-stm32.c
+> +++ b/drivers/spi/spi-stm32.c
+> @@ -175,7 +175,7 @@
+>   #define SPI_DMA_MIN_BYTES	16
+>   
+>   /**
+> - * stm32_spi_reg - stm32 SPI register & bitfield desc
+> + * struct stm32_spi_reg - stm32 SPI register & bitfield desc
+>    * @reg:		register offset
+>    * @mask:		bitfield mask
+>    * @shift:		left shift
+> @@ -187,16 +187,16 @@ struct stm32_spi_reg {
+>   };
+>   
+>   /**
+> - * stm32_spi_regspec - stm32 registers definition, compatible dependent data
+> - * en: enable register and SPI enable bit
+> - * dma_rx_en: SPI DMA RX enable register end SPI DMA RX enable bit
+> - * dma_tx_en: SPI DMA TX enable register end SPI DMA TX enable bit
+> - * cpol: clock polarity register and polarity bit
+> - * cpha: clock phase register and phase bit
+> - * lsb_first: LSB transmitted first register and bit
+> - * br: baud rate register and bitfields
+> - * rx: SPI RX data register
+> - * tx: SPI TX data register
+> + * struct stm32_spi_regspec - stm32 registers definition, compatible dependent data
+> + * @en: enable register and SPI enable bit
+> + * @dma_rx_en: SPI DMA RX enable register end SPI DMA RX enable bit
+> + * @dma_tx_en: SPI DMA TX enable register end SPI DMA TX enable bit
+> + * @cpol: clock polarity register and polarity bit
+> + * @cpha: clock phase register and phase bit
+> + * @lsb_first: LSB transmitted first register and bit
+> + * @br: baud rate register and bitfields
+> + * @rx: SPI RX data register
+> + * @tx: SPI TX data register
+>    */
+>   struct stm32_spi_regspec {
+>   	const struct stm32_spi_reg en;
+> @@ -213,7 +213,7 @@ struct stm32_spi_regspec {
+>   struct stm32_spi;
+>   
+>   /**
+> - * stm32_spi_cfg - stm32 compatible configuration data
+> + * struct stm32_spi_cfg - stm32 compatible configuration data
+>    * @regs: registers descriptions
+>    * @get_fifo_size: routine to get fifo size
+>    * @get_bpw_mask: routine to get bits per word mask
+> @@ -223,13 +223,13 @@ struct stm32_spi;
+>    * @set_mode: routine to configure registers to desired mode
+>    * @set_data_idleness: optional routine to configure registers to desired idle
+>    * time between frames (if driver has this functionality)
+> - * set_number_of_data: optional routine to configure registers to desired
+> + * @set_number_of_data: optional routine to configure registers to desired
+>    * number of data (if driver has this functionality)
+>    * @can_dma: routine to determine if the transfer is eligible for DMA use
+>    * @transfer_one_dma_start: routine to start transfer a single spi_transfer
+>    * using DMA
+> - * @dma_rx cb: routine to call after DMA RX channel operation is complete
+> - * @dma_tx cb: routine to call after DMA TX channel operation is complete
+> + * @dma_rx_cb: routine to call after DMA RX channel operation is complete
+> + * @dma_tx_cb: routine to call after DMA TX channel operation is complete
+>    * @transfer_one_irq: routine to configure interrupts for driver
+>    * @irq_handler_event: Interrupt handler for SPI controller events
+>    * @irq_handler_thread: thread of interrupt handler for SPI controller
+> @@ -587,6 +587,7 @@ static void stm32f4_spi_read_rx(struct stm32_spi *spi)
+>   /**
+>    * stm32h7_spi_read_rxfifo - Read bytes in Receive Data Register
+>    * @spi: pointer to the spi controller data structure
+> + * @flush: boolean indicating that FIFO should be flushed
+>    *
+>    * Write in rx_buf depends on remaining bytes to avoid to write beyond
+>    * rx_buf end.
+> @@ -756,6 +757,9 @@ static void stm32h7_spi_disable(struct stm32_spi *spi)
+>   
+>   /**
+>    * stm32_spi_can_dma - Determine if the transfer is eligible for DMA use
+> + * @master: controller master interface
+> + * @spi_dev: pointer to the spi device
+> + * @transfer: pointer to spi transfer
+>    *
+>    * If driver has fifo and the current transfer size is greater than fifo size,
+>    * use DMA. Otherwise use DMA for transfer longer than defined DMA min bytes.
+> @@ -974,6 +978,8 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
+>   
+>   /**
+>    * stm32_spi_prepare_msg - set up the controller to transfer a single message
+> + * @master: controller master interface
+> + * @msg: pointer to spi message
+>    */
+>   static int stm32_spi_prepare_msg(struct spi_master *master,
+>   				 struct spi_message *msg)
+> @@ -1026,6 +1032,7 @@ static int stm32_spi_prepare_msg(struct spi_master *master,
+>   
+>   /**
+>    * stm32f4_spi_dma_tx_cb - dma callback
+> + * @data: pointer to the spi controller data structure
+>    *
+>    * DMA callback is called when the transfer is complete for DMA TX channel.
+>    */
+> @@ -1041,6 +1048,7 @@ static void stm32f4_spi_dma_tx_cb(void *data)
+>   
+>   /**
+>    * stm32f4_spi_dma_rx_cb - dma callback
+> + * @data: pointer to the spi controller data structure
+>    *
+>    * DMA callback is called when the transfer is complete for DMA RX channel.
+>    */
+> @@ -1054,6 +1062,7 @@ static void stm32f4_spi_dma_rx_cb(void *data)
+>   
+>   /**
+>    * stm32h7_spi_dma_cb - dma callback
+> + * @data: pointer to the spi controller data structure
+>    *
+>    * DMA callback is called when the transfer is complete or when an error
+>    * occurs. If the transfer is complete, EOT flag is raised.
+> @@ -1079,6 +1088,9 @@ static void stm32h7_spi_dma_cb(void *data)
+>   /**
+>    * stm32_spi_dma_config - configure dma slave channel depending on current
+>    *			  transfer bits_per_word.
+> + * @spi: pointer to the spi controller data structure
+> + * @dma_conf: pointer to the dma_slave_config structure
+> + * @dir: direction of the dma transfer
+>    */
+>   static void stm32_spi_dma_config(struct stm32_spi *spi,
+>   				 struct dma_slave_config *dma_conf,
+> @@ -1126,6 +1138,7 @@ static void stm32_spi_dma_config(struct stm32_spi *spi,
+>   /**
+>    * stm32f4_spi_transfer_one_irq - transfer a single spi_transfer using
+>    *				  interrupts
+> + * @spi: pointer to the spi controller data structure
+>    *
+>    * It must returns 0 if the transfer is finished or 1 if the transfer is still
+>    * in progress.
+> @@ -1166,6 +1179,7 @@ static int stm32f4_spi_transfer_one_irq(struct stm32_spi *spi)
+>   /**
+>    * stm32h7_spi_transfer_one_irq - transfer a single spi_transfer using
+>    *				  interrupts
+> + * @spi: pointer to the spi controller data structure
+>    *
+>    * It must returns 0 if the transfer is finished or 1 if the transfer is still
+>    * in progress.
+> @@ -1207,6 +1221,7 @@ static int stm32h7_spi_transfer_one_irq(struct stm32_spi *spi)
+>   /**
+>    * stm32f4_spi_transfer_one_dma_start - Set SPI driver registers to start
+>    *					transfer using DMA
+> + * @spi: pointer to the spi controller data structure
+>    */
+>   static void stm32f4_spi_transfer_one_dma_start(struct stm32_spi *spi)
+>   {
+> @@ -1227,6 +1242,7 @@ static void stm32f4_spi_transfer_one_dma_start(struct stm32_spi *spi)
+>   /**
+>    * stm32h7_spi_transfer_one_dma_start - Set SPI driver registers to start
+>    *					transfer using DMA
+> + * @spi: pointer to the spi controller data structure
+>    */
+>   static void stm32h7_spi_transfer_one_dma_start(struct stm32_spi *spi)
+>   {
+> @@ -1243,6 +1259,8 @@ static void stm32h7_spi_transfer_one_dma_start(struct stm32_spi *spi)
+>   
+>   /**
+>    * stm32_spi_transfer_one_dma - transfer a single spi_transfer using DMA
+> + * @spi: pointer to the spi controller data structure
+> + * @xfer: pointer to the spi_transfer structure
+>    *
+>    * It must returns 0 if the transfer is finished or 1 if the transfer is still
+>    * in progress.
+> @@ -1405,7 +1423,7 @@ static void stm32_spi_set_mbr(struct stm32_spi *spi, u32 mbrdiv)
+>   /**
+>    * stm32_spi_communication_type - return transfer communication type
+>    * @spi_dev: pointer to the spi device
+> - * transfer: pointer to spi transfer
+> + * @transfer: pointer to spi transfer
+>    */
+>   static unsigned int stm32_spi_communication_type(struct spi_device *spi_dev,
+>   						 struct spi_transfer *transfer)
+> @@ -1522,7 +1540,7 @@ static void stm32h7_spi_data_idleness(struct stm32_spi *spi, u32 len)
+>   /**
+>    * stm32h7_spi_number_of_data - configure number of data at current transfer
+>    * @spi: pointer to the spi controller data structure
+> - * @len: transfer length
+> + * @nb_words: transfer length (in words)
+>    */
+>   static int stm32h7_spi_number_of_data(struct stm32_spi *spi, u32 nb_words)
+>   {
+> @@ -1546,6 +1564,9 @@ static int stm32h7_spi_number_of_data(struct stm32_spi *spi, u32 nb_words)
+>    * stm32_spi_transfer_one_setup - common setup to transfer a single
+>    *				  spi_transfer either using DMA or
+>    *				  interrupts.
+> + * @spi: pointer to the spi controller data structure
+> + * @spi_dev: pointer to the spi device
+> + * @transfer: pointer to spi transfer
+>    */
+>   static int stm32_spi_transfer_one_setup(struct stm32_spi *spi,
+>   					struct spi_device *spi_dev,
+> @@ -1625,6 +1646,9 @@ static int stm32_spi_transfer_one_setup(struct stm32_spi *spi,
+>   
+>   /**
+>    * stm32_spi_transfer_one - transfer a single spi_transfer
+> + * @master: controller master interface
+> + * @spi_dev: pointer to the spi device
+> + * @transfer: pointer to spi transfer
+>    *
+>    * It must return 0 if the transfer is finished or 1 if the transfer is still
+>    * in progress.
+> @@ -1658,6 +1682,8 @@ static int stm32_spi_transfer_one(struct spi_master *master,
+>   
+>   /**
+>    * stm32_spi_unprepare_msg - relax the hardware
+> + * @master: controller master interface
+> + * @msg: pointer to the spi message
+>    */
+>   static int stm32_spi_unprepare_msg(struct spi_master *master,
+>   				   struct spi_message *msg)
+> @@ -1671,6 +1697,7 @@ static int stm32_spi_unprepare_msg(struct spi_master *master,
+>   
+>   /**
+>    * stm32f4_spi_config - Configure SPI controller as SPI master
+> + * @spi: pointer to the spi controller data structure
+>    */
+>   static int stm32f4_spi_config(struct stm32_spi *spi)
+>   {
+> @@ -1701,6 +1728,7 @@ static int stm32f4_spi_config(struct stm32_spi *spi)
+>   
+>   /**
+>    * stm32h7_spi_config - Configure SPI controller as SPI master
+> + * @spi: pointer to the spi controller data structure
+>    */
+>   static int stm32h7_spi_config(struct stm32_spi *spi)
+>   {
+> 
