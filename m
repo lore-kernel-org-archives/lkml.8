@@ -2,85 +2,108 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB16C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F0BC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 212ED2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5482220739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbgCTRMB (ORCPT
+        id S1727385AbgCTRMI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:12:01 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:51599 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbgCTRMB (ORCPT
+        Fri, 20 Mar 2020 13:12:08 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:54637 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726855AbgCTRMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:12:01 -0400
-Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MLi4c-1ixfmK03g8-00Hekv; Fri, 20 Mar 2020 18:12:00 +0100
-Received: by mail-qk1-f177.google.com with SMTP id d11so7635489qko.3;
-        Fri, 20 Mar 2020 10:11:59 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0gyI7RLssROPQbrDBTAn9ptg+hCClBtDDiCaZmiTO95e66qysq
-        poI/UDmbo6ov7h2735uX8Vs1c7MOhGTcbKWXuus=
-X-Google-Smtp-Source: ADFU+vuTYNwVuJguhjzyHCuhUFNGAgsZlJ6L/zCdvZ31pFGtIywmjBS6Hofw9ebST4uDNGjv5IkCOSYkx89n56+FxCA=
-X-Received: by 2002:a37:6455:: with SMTP id y82mr9138019qkb.286.1584724318696;
- Fri, 20 Mar 2020 10:11:58 -0700 (PDT)
+        Fri, 20 Mar 2020 13:12:07 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 6BFE2FF802;
+        Fri, 20 Mar 2020 17:12:00 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 18:11:59 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-mtd@lists.infradead.org, Marek Vasut <marex@denx.de>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mtd: rawnand: denali: add more delays before latching
+ incoming data
+Message-ID: <20200320181159.5004099f@xps13>
+In-Reply-To: <20200316104307.1891-1-yamada.masahiro@socionext.com>
+References: <20200316104307.1891-1-yamada.masahiro@socionext.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <cover.1584667964.git.gurus@codeaurora.org> <3dc95ebc6539066cc58bc44c0e6e53ac979fe9a9.1584667964.git.gurus@codeaurora.org>
-In-Reply-To: <3dc95ebc6539066cc58bc44c0e6e53ac979fe9a9.1584667964.git.gurus@codeaurora.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 20 Mar 2020 18:11:42 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0ueOXLFPd_C4nbqHwEmVOa5eFfSivbsMPKNCmjMiWF1Q@mail.gmail.com>
-Message-ID: <CAK8P3a0ueOXLFPd_C4nbqHwEmVOa5eFfSivbsMPKNCmjMiWF1Q@mail.gmail.com>
-Subject: Re: [PATCH v11 04/12] pwm: clps711x: Cast period to u32 before use as divisor
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexander Shiyan <shc_work@mail.ru>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:0U8GQp3km2ZJiFaPar3epPUHYGwejvDlD6kTLCBx98NAiXNoeZf
- 5+64Xo9SF4PUX0UC5mF0GOo3asD9+3wKCip1dMYtCwoojIMoGgM1AYPfds9y5RocWV6jCK1
- E0l5BO0lBir4269DSljTmbNYMhSSQi67lyEqSwnys8q+BgSziR3ltOfOmd7ybWcP0znpeuU
- Ypn3KezyH/rblgikeSkKg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PrW3MYUJLXk=:gYXvSJ19Gr9XGEU7eaLiST
- fkLaaoeSgiv5BOXPeexHdc+RUdyoQQE/Ivo0DTXfmPV9UjkejlSwUP4kRKJpR5pGERhbLv19R
- S2iZ1CNyCnAs6BhYil0mJkCY9MHBu4gu4F1kLKW+mIViAuB7O3jMT2mHfAB0LBNcect2V3NSl
- rw6+dnwZses8gjz3LujydUgpDbaEp8OczlgTgAbOfcXjkVsHYjgKVDuKTsXtZscBmc6psy1F+
- PgUQfiSutCVdTEPZs5VXO8ywSq7tVZciLvhZSs4UIgnKwjodnQJZ97v6evgYUtSzLnyz3Q/QD
- jTpjuCwbHFQHtYun3YKvEuUlwdpe4ecK/BKdVozn970QsKQRshVCucG03tl/Xm6LqH0Hod/rH
- yMWiWsE8oxGN612f+g5OBX3VvVxETltnjIk2AmftrvvVodC2JQpWk7sreV26L2WT5sOsL7FuF
- 66vhxhTkPas2Y7eoI25HtzDs4l7HZOJGmFnETzbtKbHBj8fgWxqeTCsbjyguUq7arRD9q+rrj
- SzviY+hTDJ3R3HEifp+/NXgGP2OwzOXACC7+A/l8Ef2EVKryix7CGaw9O01RDU451BbpdH7eb
- W0PQCOLcopVleesQY6OyeSftlb+kzyoBvhYDpwyTr4Es5GmzmcnOPhbZH77pOe3d4kUCB1AIk
- Ujsa4+oynU/m2X9A/N0E1exhnf4UbGNdZ8D9ke/cxE9hbJhHW73wgNBPT6I0tQ6rsHd0bfz5+
- 23xBHRoWu2J5mI4wjSpdDGVI4E4it5gv+FsNirTToQGx7kXgBRyRJVck0bLe8g8QwXycReBJX
- fGr3YRbhKddMWbHK2XMb2lRuDekSIzUf7a8ZyN7bLWAzg0N8jM=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 2:41 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
->
-> Since the PWM framework is switching struct pwm_args.period's datatype
-> to u64, prepare for this transition by typecasting it to u32.
->
-> Also, since the dividend is still a 32-bit number, any divisor greater
-> than UINT_MAX will cause the quotient to be zero, so return 0 in that
-> case to efficiently skip the division.
->
-> Cc: Alexander Shiyan <shc_work@mail.ru>
-> Cc: Arnd Bergmann <arnd@arndb.de>
->
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+Hi Marek,
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Mon, 16 Mar
+2020 19:43:07 +0900:
+
+> The Denali IP have several registers to specify how many clock cycles
+> should be waited between falling/rising signals. You can improve the
+> NAND access performance by programming these registers with optimized
+> values.
+> 
+> Because struct nand_sdr_timings represents the device requirement
+> in pico seconds, denali_setup_data_interface() computes the register
+> values by dividing the device timings with the clock period.
+> 
+> Marek Vasut reported this driver in the latest kernel does not work
+> on his SOCFPGA board. (The on-board NAND chip is mode 5)
+> 
+> The suspicious parameter is acc_clks, so this commit relaxes it.
+> 
+> The Denali NAND Flash Memory Controller User's Guide describes this
+> register as follows:
+> 
+>   acc_clks
+>     signifies the number of bus interface clk_x clock cycles,
+>     controller should wait from read enable going low to sending
+>     out a strobe of clk_x for capturing of incoming data.
+> 
+> Currently, acc_clks is calculated only based on tREA, the delay on the
+> chip side. This does not include additional delays that come from the
+> data path on the PCB and in the SoC, load capacity of the pins, etc.
+> 
+> This relatively becomes a big factor on faster timing modes like mode 5.
+> 
+> Before supporting the ->setup_data_interface() hook (e.g. Linux 4.12),
+> the Denali driver hacks acc_clks in a couple of ways [1] [2] to support
+> the timing mode 5.
+> 
+> We would not go back to the hard-coded acc_clks, but we need to include
+> this factor into the delay somehow. Let's say the amount of the additional
+> delay is 10000 pico sec.
+> 
+> In the new calculation, acc_clks is determined by timings->tREA_max +
+> data_setup_on_host.
+> 
+> Also, prolong the RE# low period to make sure the data hold is met.
+> 
+> Finally, re-center the data latch timing for extra safety.
+> 
+> [1] https://github.com/torvalds/linux/blob/v4.12/drivers/mtd/nand/denali.c#L276
+> [2] https://github.com/torvalds/linux/blob/v4.12/drivers/mtd/nand/denali.c#L282
+> 
+> Reported-by: Marek Vasut <marex@denx.de>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+
+Can you please give this patch a try and report the result?
+
+Thanks,
+Miquèl
