@@ -2,142 +2,95 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52422C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 337CBC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A7A720739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:59:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cel4M515"
+	by mail.kernel.org (Postfix) with ESMTP id 0431A20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:59:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584727190;
+	bh=DGeijnOIn12ma/KFVaPMSvVX+s9rvjhEG+Ur0PAtiuI=;
+	h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
+	 List-ID:From;
+	b=vnJ3BEAQzH49TkVpU00RILUb+whVXKlF9IWNDdKxrrklP4JyRsmJsI5VlDQtUIxUV
+	 UaRAWaBHxAOoBC3MVdW3SMzS7p87OEHaZTNmxi8ypJIONN5aLbgW/9KDfcXBvoMeJW
+	 tmbmMcRbxuETNddVEobNVr0I5eTt6qxAxIwzpT3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbgCTR7p (ORCPT
+        id S1727340AbgCTR7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:59:45 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34264 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbgCTR7o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:59:44 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t3so3485106pgn.1;
-        Fri, 20 Mar 2020 10:59:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tT8WVBAGjROehmH8Lz//A/94zt8FktAEWkgYe0x/CrI=;
-        b=Cel4M515gR/+DHzUc9XUZEIvPuqZ9LL8RTkvOzVhWx/9b4Zupy0l2EV5i5WtTimwW0
-         YATO4P4c6PvKZr1IVhdu7AghiBlW/vFHLhitziRzJTRWVWEHFAZnAjsQd/0OCblShuze
-         V7fmLBNuZ49ZfMULKSPbBr8TSEWdY60PAl+fnNMU8iSSkBfKZT8gB/wfJ2IB+lKNfpLg
-         34smVJev/oDbqb8xgdE10xYg2d3vB4IG/p9FhUhvYBPKpX6wjN3dADpju8q8i5B6W0A/
-         hOPTYVg5yp9SYLvS5170ePy1W9qgAYtP+GJTyNAFVvo3iaWJ3mubqTf8/TSRO0kgvqG2
-         0ltg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=tT8WVBAGjROehmH8Lz//A/94zt8FktAEWkgYe0x/CrI=;
-        b=VOumeeN/hIBJClSLfRlSGqK7PUkDZ1Uetf8qexrIx/c2K+qAuXelZZZNI1YcmbjLrA
-         MeHl/HnvtxIwXhP3zZIoYa6xDQqzJKHFQ09A0vsr3EagZSrOHf6jr5bgMNHKrjUERxSy
-         aa5BIM47u+hwkGtFnitQveyKnHIcVzfStExliJVLilXKs8u3+1QT4791UC2jogN7GeZG
-         kBvYAkdSIdCM2ngdgkp3imvHMXBiOlQC0GUHGLsTFHUd3Q0G3YZvRqt7yKYbyT3vYYM8
-         IQ9BOmeSi9KB2e2arzZ/Ry3iiz11W9QxzejOhwCWQlTF67GNX0wBsiNkOj/8krokcIRP
-         ZRnA==
-X-Gm-Message-State: ANhLgQ2zFFhJCinWd2nind+RxGFsoi2keB3rABYZ/9IAmOIrP3oN3ijg
-        Gzh7tcxhMArW73gTJk70F+5TjnNH
-X-Google-Smtp-Source: ADFU+vu6gsyPpAGfdJt2HyayBZ7UcdIKTsQJm1kPPqXh31MhCKIhCX2h/XjyHgBbgy0Hq/7i7Hogig==
-X-Received: by 2002:aa7:8513:: with SMTP id v19mr8678117pfn.241.1584727183453;
-        Fri, 20 Mar 2020 10:59:43 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j126sm6191366pfg.60.2020.03.20.10.59.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Mar 2020 10:59:43 -0700 (PDT)
-Subject: Re: [PATCH 5.4 00/50] 5.4.27-rc3 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200320113334.675365993@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <72f4d4c8-dfe6-5556-811d-fa81b309481d@roeck-us.net>
-Date:   Fri, 20 Mar 2020 10:59:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200320113334.675365993@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 20 Mar 2020 13:59:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57202 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727303AbgCTR7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 13:59:47 -0400
+Received: from localhost (unknown [137.135.114.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B76420773;
+        Fri, 20 Mar 2020 17:59:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584727186;
+        bh=DGeijnOIn12ma/KFVaPMSvVX+s9rvjhEG+Ur0PAtiuI=;
+        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
+        b=ONzJ0ZJ6nw3PrFfrdSoYaE8wT4mwKndSAPADBXc+39M1wul0Y2nVV2/xIgfhFkTno
+         Lxu1FQbP2065765hwrMvNfCwQe3JlFIdcnNio/gpTrJ4BJCTS/lL+PP23IN25vwn3W
+         ZcaqvudhiGxL3xUHgjRv3udAl6zCfims03R+UzHg=
+Date:   Fri, 20 Mar 2020 17:59:45 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Corentin Labbe <clabbe@baylibre.com>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com
+Cc:     linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+Cc:     stable <stable@vger.kernel.org>
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH] rtc: max8907: add missing select REGMAP_IRQ
+In-Reply-To: <1584545209-20433-1-git-send-email-clabbe@baylibre.com>
+References: <1584545209-20433-1-git-send-email-clabbe@baylibre.com>
+Message-Id: <20200320175946.8B76420773@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/20/20 4:34 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.27 release.
-> There are 50 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 22 Mar 2020 11:32:39 +0000.
-> Anything received after that time might be too late.
-> 
+Hi
 
-For v5.4.26-51-ge72abf1:
+[This is an automated email]
 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 427 pass: 427 fail: 0
+This commit has been processed because it contains a "Fixes:" tag
+fixing commit: 94c01ab6d754 ("rtc: add MAX8907 RTC driver").
 
-Guenter
+The bot has tested the following trees: v5.5.10, v5.4.26, v4.19.111, v4.14.173, v4.9.216, v4.4.216.
+
+v5.5.10: Build OK!
+v5.4.26: Build OK!
+v4.19.111: Build OK!
+v4.14.173: Build OK!
+v4.9.216: Failed to apply! Possible dependencies:
+    959df7778bbd ("rtc: Enable compile testing for Maxim and Samsung drivers")
+
+v4.4.216: Failed to apply! Possible dependencies:
+    01ea01b35120 ("rtc: max77686: Use a driver data struct instead hard-coded values")
+    0b4f8b085b5d ("rtc: max77686: fix checkpatch error")
+    5981804b8365 ("rtc: max77686: Use usleep_range() instead of msleep()")
+    69be249ab4bc ("rtc: max77686: use rtc regmap to access RTC registers")
+    726fe738bd5c ("rtc: max77686: Add support for MAX20024/MAX77620 RTC IP")
+    862f9453bd14 ("rtc: max77686: Use ARRAY_SIZE() instead of current array length")
+    90a5698a86ba ("rtc: max77686: Add an indirection level to access RTC registers")
+    959df7778bbd ("rtc: Enable compile testing for Maxim and Samsung drivers")
+    bf035f42344a ("rtc: max77686: Cleanup and reduce dmesg output")
+    f3937549a975 ("rtc: max77686: move initialisation of rtc regmap, irq chip locally")
+    f604c48849a5 ("rtc: max77686: avoid reference of parent device info multiple places")
+    f903129b8607 ("rtc: max77686: Add max77802 support")
+
+
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
+
+-- 
+Thanks
+Sasha
