@@ -2,99 +2,97 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F250AC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F11C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D368E20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C261E2051A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:15:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584706543;
+	bh=7DU4BFEH027DS1xtBiza35jxnRowW4xC2oTqrwQMZWU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bKv1CBS5csvTE4X/hVgHDdg6CDq368CQ0i8BbrwTj/ncb6vf72LssLSchwXTu1q6m
+	 vhGUwKCoLZN1pX63Sse8OmxmMNeqGpZHVzbpmpxluUdi5p+az9pBW9bOwf3dzEM3Wc
+	 l0A8Kii0Ms086bi6ZygHFygtUkYIf6Z5ndCehRcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgCTMJ0 (ORCPT
+        id S1727021AbgCTMPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 08:09:26 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:43746 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726969AbgCTMJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 08:09:26 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 01604CD906C56B9B967F;
-        Fri, 20 Mar 2020 20:09:21 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Fri, 20 Mar 2020
- 20:09:13 +0800
-Subject: Re: [PATCH v5 23/23] KVM: arm64: GICv4.1: Expose HW-based SGIs in
- debugfs
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Auger Eric <eric.auger@redhat.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Robert Richter" <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-24-maz@kernel.org>
- <4cb4c3d4-7b02-bb77-cd7a-c185346b6a2f@redhat.com>
- <45c282bddd43420024633943c1befac3@kernel.org>
- <e1a1e537-9f8e-5cfb-0132-f796e8bf06c9@huawei.com>
- <b63950513f519d9a04f9719f5aa6a2db@kernel.org>
- <8d7fdb7f-7a21-da22-52a2-51ee8ac9393f@huawei.com>
- <40cbdf23c0f8bfc229400c14899ecbe0@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <facb4eb5-57c6-e0d0-003d-ebaa0b83e6f2@huawei.com>
-Date:   Fri, 20 Mar 2020 20:09:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Fri, 20 Mar 2020 08:15:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:48282 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726893AbgCTMPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 08:15:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A50AC31B;
+        Fri, 20 Mar 2020 05:15:41 -0700 (PDT)
+Received: from localhost (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A0E13F85E;
+        Fri, 20 Mar 2020 05:15:41 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 12:15:39 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Alison Wang <alison.wang@nxp.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>
+Subject: Re: [alsa-devel] [EXT] Re: [PATCH] ASoC: sgtl5000: Revert "ASoC:
+ sgtl5000: Fix of unmute outputs on probe"
+Message-ID: <20200320121539.GB3961@sirena.org.uk>
+References: <20191212071847.45561-1-alison.wang@nxp.com>
+ <CAGgjyvHHzPWjRTqxYmGCmk3qa6=kOezHywVDFomgD6UNj-zwpQ@mail.gmail.com>
+ <VI1PR04MB40627CDD5F0C17D8DCDCFFE2F4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
+ <VI1PR04MB4062C67906888DA8142C17E1F4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
+ <CAGgjyvGAjx1SV=K66AM24DxMTA_sAF2uhhDw5gXCFTGNZi8E7Q@mail.gmail.com>
+ <VI1PR04MB40620DD55D5ED0FDC3E94C2BF4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
+ <20191212122318.GB4310@sirena.org.uk>
+ <CAJ+vNU0xZOb0R2VNkq6k3efdkgQUtO_-cEdNgZ643nt_G=vevQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <40cbdf23c0f8bfc229400c14899ecbe0@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9zSXsLTf0vkW971A"
+Content-Disposition: inline
+In-Reply-To: <CAJ+vNU0xZOb0R2VNkq6k3efdkgQUtO_-cEdNgZ643nt_G=vevQ@mail.gmail.com>
+X-Cookie: Laugh when you can
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
 
-On 2020/3/20 19:46, Marc Zyngier wrote:
->>> Side note: it'd be good to know what the rules are for your own GICv4
->>> implementations, so that we can at least make sure the current code 
->>> is safe.
->>
->> As far as I know, there will be some clean and invalidate operations
->> when v4.0 VPENDBASER.Valid gets programmed.
-> 
-> Interesting. The ideal behaviour would be that the VPT is up-to-date and
-> the caches clean when Valid is cleared (and once Dirty flips to 0).
-> 
->> But not sure about behaviors
->> on VMAPP (unmap), it may be a totally v4.1 stuff. I'll have a talk with
->> our SOC team.
-> 
-> The VMAPP stuff is purely v4.1.
-> 
->> But how can the current code be unsafe? Is anywhere in the current code
->> will peek/poke the vpt (whilst GIC continues writing things into it)?
-> 
-> No. But on VM termination, the memory will be freed, and will eventually be
-> reallocated. If the GIC can still write to that memory after it has been
-> freed, you end-up with memory corruption... Which is why I'm curious of
-> what ensures that on your implementation.
+--9zSXsLTf0vkW971A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Ah, I got it. I will check it with HiSilicon people next week and go
-back to you if the code becomes unsafe due to the incomplete GICv4.
+On Thu, Mar 19, 2020 at 01:49:37PM -0700, Tim Harvey wrote:
 
+> The response above indicates maybe there was an additional ALSA
+> control perhaps added as a resolution but I don't see any differences
+> there.
 
-Thanks,
-Zenghui
+The response is talking about existing controls that are already in the
+driver.
 
+--9zSXsLTf0vkW971A
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl50s+sACgkQJNaLcl1U
+h9BQ8wf/bNkc+gfjOgAy8vg35nBok4c9UrW/sr+phlxjxTDNXqHsikV9NU5wVryf
+PPMFtP7SNRjy3sKVlkVzph8IhxbMv5BA1DDp2ejW6L0Gh+atXdN4Wr9Cupiw4+PB
+mf9bOzJ7Ol0cL9nHaaLBZKyBRg8kjw2h9g5T94UDlelR4csnAI7NYlO6crY2xOlR
+CIDGMt06OapXefylEtQFRXc2usw180zscmOlEmafMku73M2qsyAWiXbvJD2O38Dz
+QZ9M/NoQpp62WHkPawJXe19ju6n1KrEuPhIr8hW2EcHRbWligh3stcdBrZupXQfd
+0TV+XAdvYJRrLzbCEu8v4+poN+b6hw==
+=PTUB
+-----END PGP SIGNATURE-----
+
+--9zSXsLTf0vkW971A--
