@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5176DC5518E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97BAC5518F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F08C20753
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A128C2078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:41:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pdylMiGC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bdm7Sshv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbgCTBlS (ORCPT
+        id S1727467AbgCTBlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 21:41:18 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36848 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727391AbgCTBlP (ORCPT
+        Thu, 19 Mar 2020 21:41:20 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:34252 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727431AbgCTBlS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 21:41:15 -0400
-Received: by mail-qt1-f193.google.com with SMTP id m33so3733410qtb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 18:41:14 -0700 (PDT)
+        Thu, 19 Mar 2020 21:41:18 -0400
+Received: by mail-qv1-f68.google.com with SMTP id o18so2198144qvf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 18:41:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+q0Whneakoia71PzXBgxmZbnd+3OHmL7DK4XuhtZbsg=;
-        b=pdylMiGCq/devMh7m0Gj/CfkrdfdovRUED2arwHY3YZmdpuvoVo3Av7s+j6jPkG+86
-         giK4uCy+sHNGWyauJenzGi+z3wGZuAJ8bcKNnnQoJaclnCHVJIaMwGITOZBlWreZunkV
-         6Pwe6IkgjqlmEI/oy3VNeWVWWmF13j3Pu1fg7UqHLcM7/tu3pkFvJRFX04E9hSh9ndGP
-         Huls/g/UqdMz9EVRmzY51A+1AFhjsJ6HvCCXfHx8Y+Nky5il561TTptdGjt7CeNCM/Bc
-         Zv+EOnCfsGEOYxgEht3LDDBdHzZU6a31d6ChNYnfTp9zFedJb+nrl7SG3LTXVdPBQHJK
-         L0rw==
+        bh=BmLDbgrQGRMcKnRjecEwvHf9acIPMdQPCuaUHQoEE9I=;
+        b=bdm7Sshv0U+VOsv1chWTcKaftld2B9J2S6C1Dzd267vnc2TrQbnx7sTDemjcSIdSIl
+         XP4Jb604+7eOnOxLy6k1txkJObvEWQVL6zB4R/+lc0qOj5LVcfgCjoMOpbuTaAS2gGeN
+         Du3KWhzgPiQnWCp8QomaVLBPjo0BzsFzj/4aGNjNpVX0NOLYiJrgukUq8/jecz0tT7+a
+         tVf8wJaYJnhV3eh7b7VAsBnrc2Nw5SmzprjSgV0/WsWcofm++w7V3xbXnGbsCz0ucVRu
+         pZo+pFLfUWafOSW5dPWRiBf/ngetpNfqqg9oEhwfV6SfLtV+lMlZJZZrsf+QpSFazJFS
+         R+mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+q0Whneakoia71PzXBgxmZbnd+3OHmL7DK4XuhtZbsg=;
-        b=H1xTqhjVzsB6Yoxwk9sjC8m/oq2hGFMOtxVZr5SRLjU2/6rzYuJZsPaX6F9Z7za1Xp
-         9NepDMc4sN+zmECckHTeS2VtVBKOuAStFRWiHxHaje8pcSJLoIxKpdK/nXc+Pc9z8pwK
-         L0t7iTomP/lQQxE+qB5CkCI+ib6/y/xATwZcTw3izIcJpBvKVHBS5W0BFhhwnP3ybxEL
-         D519Ll1jUq2e1PwS6av/d2PHgJFKbp9QrZDxxqK+B47wS5+VyeeYGqorB7t65DaNhjIn
-         vynFhwGlj+fDKDmnpmJlGhtayubOPdBwztKrsDIrOsdKrf/tJNGF26DpSSgpiWujrlcn
-         47Wg==
-X-Gm-Message-State: ANhLgQ0E5gohM4RLTzqQrYDv5tbqR105vn1kr8zVQ6G7E73Yo0omuKa+
-        j8IU+MfstU7gyLDMzko+unguWQ==
-X-Google-Smtp-Source: ADFU+vvV3I4YxVq1xAymPLnOWFCy9dHEri/NXuJUV5hlLXACtlePaJg5MOBUPU7k00uY22SlISNjIQ==
-X-Received: by 2002:ac8:3f62:: with SMTP id w31mr5859372qtk.171.1584668473741;
-        Thu, 19 Mar 2020 18:41:13 -0700 (PDT)
+        bh=BmLDbgrQGRMcKnRjecEwvHf9acIPMdQPCuaUHQoEE9I=;
+        b=kQjXithAdssA1MY2Rr3PKLPRz3WFmOfLnSY4IwhZEKYVj7nizLabQqBRJX7cLeXN/n
+         K7lPpLm7wdOcZD20eL/jROB8SFNCb78e314R7Fc3CNAHJyp9TdSVofDuaKJw9g5fjoLA
+         pcXfzkEEP3Zds8NAmWSVhHo7ghn3sgGIxexDkHkM/TX+5gREOKanT09LQM0zeMBFs48V
+         yScCixIzPKJvIbT+dADSCkehyjVrlE+BuXBD3rjQGg9bceHLwR6j2Bol3Iod47YNt/DF
+         u5MDv5kgAAyuPkMVWAPnvrcncnPB/wzhRLNsSvgP1MblZxk7MMV2TWHi/0XnudJRwyfs
+         bToA==
+X-Gm-Message-State: ANhLgQ2o/OmjtCg0NkZi99AlJWUJGU9+plCRWv0iCU/iIkgN4ovbr3Ye
+        9BeNJjFCbgqM6do0PMrMLt3CvA==
+X-Google-Smtp-Source: ADFU+vvLSkOdW7E5U5A5O6CcJJ7ZWJHOi0uG50WCDN6WNaQOvu8Lhdpvt6s/ZGRR/baXJawhCENi5A==
+X-Received: by 2002:a0c:9e41:: with SMTP id z1mr5918351qve.130.1584668476689;
+        Thu, 19 Mar 2020 18:41:16 -0700 (PDT)
 Received: from pop-os.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id 2sm2706287qtp.33.2020.03.19.18.41.12
+        by smtp.googlemail.com with ESMTPSA id 2sm2706287qtp.33.2020.03.19.18.41.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 18:41:13 -0700 (PDT)
+        Thu, 19 Mar 2020 18:41:16 -0700 (PDT)
 From:   Thara Gopinath <thara.gopinath@linaro.org>
 To:     rui.zhang@intel.com, ulf.hansson@linaro.org,
         daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
@@ -64,9 +64,9 @@ Cc:     amit.kucheria@verdurent.com, mark.rutland@arm.com,
         rjw@rjwysocki.net, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [Patch v5 3/6] thermal: Add generic power domain warming device driver.
-Date:   Thu, 19 Mar 2020 21:41:04 -0400
-Message-Id: <20200320014107.26087-4-thara.gopinath@linaro.org>
+Subject: [Patch v5 5/6] dt-bindings: power: Extend RPMh power controller binding to describe thermal warming device
+Date:   Thu, 19 Mar 2020 21:41:06 -0400
+Message-Id: <20200320014107.26087-6-thara.gopinath@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200320014107.26087-1-thara.gopinath@linaro.org>
 References: <20200320014107.26087-1-thara.gopinath@linaro.org>
@@ -77,291 +77,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resources modeled as power domains in linux kernel can  be used to warm the
-SoC(eg. mx power domain on sdm845).  To support this feature, introduce a
-generic power domain warming device driver that can be plugged into the
-thermal framework (The thermal framework itself requires further
-modifiction to support a warming device in place of a cooling device.
-Those extensions are not introduced in this patch series).
+RPMh power controller hosts mx domain that can be used as thermal warming
+device. Add #cooling-cells property to the power domain provider node to
+indicate this.
 
 Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 ---
 
 v3->v4:
-	- Removed late_init hook pd_warming_device_ops.
-	- Use of_genpd_add_device instead of pm_genpd_add_device to attach
-	  device to the generic power domain.
-	- Use thermal_of_cooling_device_parent_register to register the
-	  cooling device so that the device with genpd attached can be
-	  made parent of the cooling device.
-	- With above changes, remove reference to generic_pm_domain in
-	  pd_warming_device.
+	- Removed subnode to indicate that mx power domain is a warming
+	  device. Instead #cooling-cells is used as a power domain
+	  provider property to indicate if the provider hosts a power
+	  domain that can be used as a warming device.
 
 v4->v5:
-	- All the below changes are as per Ulf's review comments.
-	- Renamed pwr_domain_warming.c and pwr_domain_warming.h to
-	  pd_warming.c and pd_warming.h.
-	- Renamed pwr_domain_warming_register API to 
-	  of_pd_warming_register.
-	- Dropped in-param pd_name to of_pd_warming_register.
-	- Introduced ID allocator to uniquely identify each power domain
-	  warming device.
-	- Introduced pd_warming_release to handle device kfree for
-	  pd_warming_device.
-	- Introduced pm_genpd_remove_device in the error exit path
-	  of of_pd_warming_register.
+	Moved the property from .txt format to .yaml format.
 
- drivers/thermal/Kconfig      |  10 +++
- drivers/thermal/Makefile     |   2 +
- drivers/thermal/pd_warming.c | 168 +++++++++++++++++++++++++++++++++++
- include/linux/pd_warming.h   |  29 ++++++
- 4 files changed, 209 insertions(+)
- create mode 100644 drivers/thermal/pd_warming.c
- create mode 100644 include/linux/pd_warming.h
+ Documentation/devicetree/bindings/power/qcom,rpmpd.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 4d6753f2b18f..92522d541d0e 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -206,6 +206,16 @@ config DEVFREQ_THERMAL
+diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+index ba605310abeb..16b713d295c4 100644
+--- a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
++++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+@@ -27,6 +27,9 @@ properties:
+   '#power-domain-cells':
+     const: 1
  
- 	  If you want this support, you should say Y here.
++  '#cooling-cells':
++    const: 2
++
+   operating-points-v2: true
  
-+config PWR_DOMAIN_WARMING_THERMAL
-+	bool "Power Domain based warming device"
-+	depends on PM_GENERIC_DOMAINS_OF
-+	help
-+	  This implements the generic power domain based warming
-+	  mechanism through increasing the performance state of
-+	  a power domain.
-+
-+	  If you want this support, you should say Y here.
-+
- config THERMAL_EMULATION
- 	bool "Thermal emulation mode support"
- 	help
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 8c8ed7b79915..7db87a779126 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -28,6 +28,8 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
- # devfreq cooling
- thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
- 
-+thermal_sys-$(CONFIG_PWR_DOMAIN_WARMING_THERMAL)	+= pd_warming.o
-+
- # platform thermal drivers
- obj-y				+= broadcom/
- obj-$(CONFIG_THERMAL_MMIO)		+= thermal_mmio.o
-diff --git a/drivers/thermal/pd_warming.c b/drivers/thermal/pd_warming.c
-new file mode 100644
-index 000000000000..c0854d2e4b92
---- /dev/null
-+++ b/drivers/thermal/pd_warming.c
-@@ -0,0 +1,168 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019, Linaro Ltd
-+ */
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/slab.h>
-+#include <linux/pd_warming.h>
-+
-+struct pd_warming_device {
-+	struct thermal_cooling_device *cdev;
-+	struct device dev;
-+	int id;
-+	int max_state;
-+	int cur_state;
-+	bool runtime_resumed;
-+};
-+
-+static DEFINE_IDA(pd_ida);
-+
-+static int pd_wdev_get_max_state(struct thermal_cooling_device *cdev,
-+				 unsigned long *state)
-+{
-+	struct pd_warming_device *pd_wdev = cdev->devdata;
-+
-+	*state = pd_wdev->max_state;
-+	return 0;
-+}
-+
-+static int pd_wdev_get_cur_state(struct thermal_cooling_device *cdev,
-+				 unsigned long *state)
-+{
-+	struct pd_warming_device *pd_wdev = cdev->devdata;
-+
-+	*state = dev_pm_genpd_get_performance_state(&pd_wdev->dev);
-+
-+	return 0;
-+}
-+
-+static int pd_wdev_set_cur_state(struct thermal_cooling_device *cdev,
-+				 unsigned long state)
-+{
-+	struct pd_warming_device *pd_wdev = cdev->devdata;
-+	struct device *dev = &pd_wdev->dev;
-+	int ret;
-+
-+	ret = dev_pm_genpd_set_performance_state(dev, state);
-+
-+	if (ret)
-+		return ret;
-+
-+	if (state && !pd_wdev->runtime_resumed) {
-+		ret = pm_runtime_get_sync(dev);
-+		pd_wdev->runtime_resumed = true;
-+	} else if (!state && pd_wdev->runtime_resumed) {
-+		ret = pm_runtime_put(dev);
-+		pd_wdev->runtime_resumed = false;
-+	}
-+
-+	return ret;
-+}
-+
-+static struct thermal_cooling_device_ops pd_warming_device_ops = {
-+	.get_max_state	= pd_wdev_get_max_state,
-+	.get_cur_state	= pd_wdev_get_cur_state,
-+	.set_cur_state	= pd_wdev_set_cur_state,
-+};
-+
-+static void pd_warming_release(struct device *dev)
-+{
-+	kfree(dev);
-+}
-+
-+struct thermal_cooling_device *
-+of_pd_warming_register(struct device *parent, int pd_id)
-+{
-+	struct pd_warming_device *pd_wdev;
-+	struct of_phandle_args pd_args;
-+	char cdev_name[THERMAL_NAME_LENGTH];
-+	int ret;
-+
-+	pd_wdev = kzalloc(sizeof(*pd_wdev), GFP_KERNEL);
-+	if (!pd_wdev)
-+		return ERR_PTR(-ENOMEM);
-+
-+	dev_set_name(&pd_wdev->dev, "%s_%d_warming_dev",
-+		     dev_name(parent), pd_id);
-+	pd_wdev->dev.parent = parent;
-+	pd_wdev->dev.release = pd_warming_release;
-+
-+	ret = device_register(&pd_wdev->dev);
-+	if (ret) {
-+		put_device(&pd_wdev->dev);
-+		goto free_pd_wdev;
-+	}
-+
-+	ret = ida_simple_get(&pd_ida, 0, 0, GFP_KERNEL);
-+	if (ret < 0)
-+		goto unregister_device;
-+
-+	pd_wdev->id = ret;
-+
-+	pd_args.np = parent->of_node;
-+	pd_args.args[0] = pd_id;
-+	pd_args.args_count = 1;
-+
-+	ret = of_genpd_add_device(&pd_args, &pd_wdev->dev);
-+
-+	if (ret)
-+		goto remove_ida;
-+
-+	ret = dev_pm_genpd_performance_state_count(&pd_wdev->dev);
-+	if (ret < 0)
-+		goto out_genpd;
-+
-+	pd_wdev->max_state = ret - 1;
-+	pm_runtime_enable(&pd_wdev->dev);
-+	pd_wdev->runtime_resumed = false;
-+
-+	snprintf(cdev_name, sizeof(cdev_name), "thermal-pd-%d", pd_wdev->id);
-+	pd_wdev->cdev = thermal_of_cooling_device_register
-+					(NULL, cdev_name, pd_wdev,
-+					 &pd_warming_device_ops);
-+	if (IS_ERR(pd_wdev->cdev)) {
-+		pr_err("unable to register %s cooling device\n", cdev_name);
-+		ret = PTR_ERR(pd_wdev->cdev);
-+		goto out_runtime_disable;
-+	}
-+
-+	return pd_wdev->cdev;
-+
-+out_runtime_disable:
-+	pm_runtime_disable(&pd_wdev->dev);
-+out_genpd:
-+	pm_genpd_remove_device(&pd_wdev->dev);
-+remove_ida:
-+	ida_simple_remove(&pd_ida, pd_wdev->id);
-+unregister_device:
-+	device_unregister(&pd_wdev->dev);
-+	pd_warming_release(&pd_wdev->dev);
-+free_pd_wdev:
-+	kfree(pd_wdev);
-+	return ERR_PTR(ret);
-+}
-+EXPORT_SYMBOL_GPL(of_pd_warming_register);
-+
-+void pd_warming_unregister(struct thermal_cooling_device *cdev)
-+{
-+	struct pd_warming_device *pd_wdev = cdev->devdata;
-+	struct device *dev = &pd_wdev->dev;
-+
-+	if (pd_wdev->runtime_resumed) {
-+		dev_pm_genpd_set_performance_state(dev, 0);
-+		pm_runtime_put(dev);
-+		pd_wdev->runtime_resumed = false;
-+	}
-+	pm_runtime_disable(dev);
-+	pm_genpd_remove_device(dev);
-+	ida_simple_remove(&pd_ida, pd_wdev->id);
-+	thermal_cooling_device_unregister(cdev);
-+	kfree(pd_wdev);
-+}
-+EXPORT_SYMBOL_GPL(pd_warming_unregister);
-diff --git a/include/linux/pd_warming.h b/include/linux/pd_warming.h
-new file mode 100644
-index 000000000000..550a5683b56d
---- /dev/null
-+++ b/include/linux/pd_warming.h
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019, Linaro Ltd.
-+ */
-+#ifndef __PWR_DOMAIN_WARMING_H__
-+#define __PWR_DOMAIN_WARMING_H__
-+
-+#include <linux/pm_domain.h>
-+#include <linux/thermal.h>
-+
-+#ifdef CONFIG_PWR_DOMAIN_WARMING_THERMAL
-+struct thermal_cooling_device *
-+of_pd_warming_register(struct device *parent, int pd_id);
-+
-+void pd_warming_unregister(struct thermal_cooling_device *cdev);
-+
-+#else
-+static inline struct thermal_cooling_device *
-+of_pd_warming_register(struct device *parent, int pd_id)
-+{
-+	return ERR_PTR(-ENOSYS);
-+}
-+
-+static inline void
-+pd_warming_unregister(struct thermal_cooling_device *cdev)
-+{
-+}
-+#endif /* CONFIG_PWR_DOMAIN_WARMING_THERMAL */
-+#endif /* __PWR_DOMAIN_WARMING_H__ */
+   opp-table:
 -- 
 2.20.1
 
