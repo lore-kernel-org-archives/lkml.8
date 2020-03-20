@@ -2,198 +2,267 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9055C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43754C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A8B20782
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C4A520782
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:43:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="3wAqClGq"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aleudaF3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbgCTTnT (ORCPT
+        id S1727317AbgCTTnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 15:43:19 -0400
-Received: from mail-bn7nam10on2066.outbound.protection.outlook.com ([40.107.92.66]:25359
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727224AbgCTTnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 15:43:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PlyKYOY4cNtXoI0WiP5arGoLz5htHDnyKr6gRx91YIaHo0Is4CQ3X//XYH0YqgpCDCfVrqicSBXo79lSSAwk5+RBJPzmaRBttvU9b9mvWD+Wk/48yfTSkSmcYV+ry0So6AkzLwN+ip62PzTXDkO8m74jSAv8Tc28Quy5TolK8nis+UOLeb0h5m03Qx80lkzgg1AjjfC1tW2N/1Gqvc7NzwneR4Dph9oW/KCVEmB4URUfFeuUqmUgetRi/efoyW8daJcoOVlxR0cKbtJum6w9JxXQKs84yPCNcuhuUAKD04999TVkTW4V89CsvDcNNv+sxPtXzWe8AinIDaVLM7BPbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Iflgak9kldelJq3W7o0DF/yoynHfDIYLUA2CoYAVIVY=;
- b=IXDpRwxs3ND4sG9DRWM2qMk8599C0mMafQ5svj11hf3VeDIUbSms+BigughBg8MhFfo0Do4eZ7RqCa0smfJ/PF4vSIuy3yEnr6ThreQUkfQ7nuVpl2OIQ530jLNuZF3C/FxsG7BD+KF2e11ZgINO0gD9BJwH4f0I+PFVgwFPbaFGTMOgBsfKbKkzMPgcKbCv+VM+gCcst7FtRYqMvMy8uRP9kWObgJBQM+5h+NE0do0i4IHhX58BvwDZTDlk+NMsrzwUDTYE0dRnQfbgYx1+JIjL02HE6VcagKB0WpaFuqeF4rwMaEjyuVQhFgEbf2MMPlMRdV8Yv982qgLKjUWMhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Iflgak9kldelJq3W7o0DF/yoynHfDIYLUA2CoYAVIVY=;
- b=3wAqClGqWVie+h8IjCnrfdPU3x0+lxDdomeszbYKV4p3MXIPXihu+bkaVlQI8v9rXwB0x4vCe+ayXA2GSEWjGjECgwEvYLTPcXoFoCjjTeOCGkE1E656MEvkOtG6kPlfcloKz/QsiccLuoVwg/fOfcJlbycdL6q4XCNfd+Ef8ZY=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Wei.Huang2@amd.com; 
-Received: from CY4PR12MB1352.namprd12.prod.outlook.com (2603:10b6:903:3a::13)
- by CY4PR12MB1430.namprd12.prod.outlook.com (2603:10b6:903:3e::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.21; Fri, 20 Mar
- 2020 19:43:12 +0000
-Received: from CY4PR12MB1352.namprd12.prod.outlook.com
- ([fe80::5cdb:285d:f962:c2a8]) by CY4PR12MB1352.namprd12.prod.outlook.com
- ([fe80::5cdb:285d:f962:c2a8%12]) with mapi id 15.20.2814.025; Fri, 20 Mar
- 2020 19:43:12 +0000
-From:   Wei Huang <wei.huang2@amd.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     bp@suse.de, tony.luck@intel.com, yazen.ghannam@amd.com,
-        tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        linux-edac@vger.kernel.org, x86@kernel.org,
-        smita.koralahallichannabasappa@amd.com, wei.huang2@amd.com
-Subject: [PATCH V2 1/1] x86/mce/amd: Add PPIN support for AMD MCE
-Date:   Fri, 20 Mar 2020 14:43:05 -0500
-Message-Id: <20200320194305.3532606-1-wei.huang2@amd.com>
-X-Mailer: git-send-email 2.24.1
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-ClientProxiedBy: DM5PR13CA0002.namprd13.prod.outlook.com
- (2603:10b6:3:23::12) To CY4PR12MB1352.namprd12.prod.outlook.com
- (2603:10b6:903:3a::13)
+        Fri, 20 Mar 2020 15:43:23 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:40012 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727257AbgCTTnW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 15:43:22 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02KJhHiw027971;
+        Fri, 20 Mar 2020 14:43:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584733397;
+        bh=OwrvzD0aVDA6B1hUvxViFQH5xN1/WUuimg+JwH5BZPA=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=aleudaF3H54Wy7r4731RDOrlaDJqRuUAWA/+A6oVCouTvtPCKwPmYLI1RNcUCQcc2
+         HTuCZr5YZ0nPoqlZTklv6o3pxFn8R7dm/ln7WH6vxBy4hOszHSxvFZdLAZsPdaw+kL
+         P2Qp/QT8AcE7QCNc8GpZ/eXBoV9ff6mnyddaBVAY=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02KJhH4X010497;
+        Fri, 20 Mar 2020 14:43:17 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Mar 2020 14:43:17 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Mar 2020 14:43:17 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02KJhGVM043117;
+        Fri, 20 Mar 2020 14:43:16 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        netdev <netdev@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next v3 05/11] net: ethernet: ti: cpts: optimize packet to event matching
+Date:   Fri, 20 Mar 2020 21:42:38 +0200
+Message-ID: <20200320194244.4703-6-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200320194244.4703-1-grygorii.strashko@ti.com>
+References: <20200320194244.4703-1-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from weiserver.amd.com (165.204.77.1) by DM5PR13CA0002.namprd13.prod.outlook.com (2603:10b6:3:23::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.11 via Frontend Transport; Fri, 20 Mar 2020 19:43:11 +0000
-X-Mailer: git-send-email 2.24.1
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8e94939a-d523-4a27-fc69-08d7cd06ec99
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1430:|CY4PR12MB1430:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR12MB14309F7D1EDDA4873183358FCFF50@CY4PR12MB1430.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 03484C0ABF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(136003)(346002)(366004)(39860400002)(199004)(478600001)(316002)(6916009)(16526019)(6666004)(66556008)(26005)(2616005)(5660300002)(36756003)(186003)(4326008)(956004)(66946007)(66476007)(8676002)(6486002)(81156014)(81166006)(8936002)(7696005)(1076003)(86362001)(2906002)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1430;H:CY4PR12MB1352.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QWonNj4brPEtTInC5i7T6ziCd6/rKLS4hG26nMZ1eHUNVUZb7rS9ExjkK3jlUBLw7H/Pp6jHwLXb+HtaYDUmjux1V7FTb7BSxvqkTF3TBTE9PVGoKMiiJac6h9Iql3AZTUIF4eUUEvbNRaPJ8z+NXbJHsFv9EqDH6KV5RrqqXy6HbJAMwuVNN1Lhb9KYoiMdN6EfMBMYjzbdWMflNhxxjtaXPfeWFbLLsUBd8vDwRsUPCTZIlbJu6to0DK2Nqsf4FQegjRKbmmyHK6VAYjlEr2oFV9T499CU37Aa8YwihsijP58g0fwxOPChp41kbcADGXysTS2CNGFPYJP3m3qtUCeQICaR693fO9VE5q1SZYUBAeJiuI/CuNRQ2HOymgrCQDhkPpJEOU8f/wTp1sDbiClC5MCCedh8QXEq1hh2aF8Fsh10A/ok8EV3zWE6HYoa
-X-MS-Exchange-AntiSpam-MessageData: b+s32NQhNEoYio4LFsL7X5c6RPHwOiag7rHbWJRICpRXskWmv0EA3K4tbsDPRC3MBaN9lHhFVz2cCbrM+DOoHp03aKjSN4QoU3GolP8xzsAs5nbrhCUc5a2d4V1l4gA5k1TRzoMT0OT1ItbAWGdJgg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e94939a-d523-4a27-fc69-08d7cd06ec99
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2020 19:43:12.2115
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mSkmgfLZZVaqHMoa1QIVICaQPZ4byo3CceJbkICQjFgEPVCM6lNAUKYNAO9ZQBP6
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1430
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Newer AMD CPUs support a feature called protected processor identification
-number (PPIN). This feature can be detected via CPUID_Fn80000008_EBX[23].
-However CPUID alone is not enough to read the processor serial number.
-MSR_AMD_PPIN_CTL also needs to be configured properly. If for any reason
-X86_FEATURE_AMD_PPIN[PPIN_EN] can not be turned on, such as disabled in
-BIOS, we have to clear the CPU capability bit of X86_FEATURE_AMD_PPIN.
+Now the CPTS driver performs packet (skb) parsing every time when it needs
+to match packet to CPTS event (including ptp_classify_raw() calls).
 
-When the X86_FEATURE_AMD_PPIN capability is available, MCE can read the
-serial number to keep track the source of MCE errors.
+This patch optimizes matching process by parsing packet only once upon
+arrival and stores PTP specific data in skb->cb using the same fromat as in
+CPTS HW event. As result, all future matching reduces to comparing two u32
+values.
 
-Co-developed-by: Smita Koralahalli Channabasappa <smita.koralahallichannabasappa@amd.com>
-Signed-off-by: Smita Koralahalli Channabasappa <smita.koralahallichannabasappa@amd.com>
-Signed-off-by: Wei Huang <wei.huang2@amd.com>
-Acked-by: Tony Luck <tony.luck@intel.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: x86-ml <x86@kernel.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- arch/x86/include/asm/cpufeatures.h |  1 +
- arch/x86/kernel/cpu/amd.c          | 26 ++++++++++++++++++++++++++
- arch/x86/kernel/cpu/mce/core.c     |  2 ++
- 3 files changed, 29 insertions(+)
+ drivers/net/ethernet/ti/cpts.c | 91 ++++++++++++++++++++++------------
+ 1 file changed, 58 insertions(+), 33 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index f3327cb56edf..4b263ffb793b 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -299,6 +299,7 @@
- #define X86_FEATURE_AMD_IBRS		(13*32+14) /* "" Indirect Branch Restricted Speculation */
- #define X86_FEATURE_AMD_STIBP		(13*32+15) /* "" Single Thread Indirect Branch Predictors */
- #define X86_FEATURE_AMD_STIBP_ALWAYS_ON	(13*32+17) /* "" Single Thread Indirect Branch Predictors always-on preferred */
-+#define X86_FEATURE_AMD_PPIN		(13*32+23) /* Protected Processor Inventory Number */
- #define X86_FEATURE_AMD_SSBD		(13*32+24) /* "" Speculative Store Bypass Disable */
- #define X86_FEATURE_VIRT_SSBD		(13*32+25) /* Virtualized Speculative Store Bypass Disable */
- #define X86_FEATURE_AMD_SSB_NO		(13*32+26) /* "" Speculative Store Bypass is fixed in hardware. */
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 1f875fbe1384..9176db4be69b 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -394,6 +394,31 @@ static void amd_detect_cmp(struct cpuinfo_x86 *c)
- 	per_cpu(cpu_llc_id, cpu) = c->phys_proc_id;
- }
+diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
+index 7e4c1de0d207..f7ce482ad09c 100644
+--- a/drivers/net/ethernet/ti/cpts.c
++++ b/drivers/net/ethernet/ti/cpts.c
+@@ -23,15 +23,13 @@
+ #define CPTS_SKB_TX_WORK_TIMEOUT 1 /* jiffies */
  
-+static void amd_detect_ppin(struct cpuinfo_x86 *c)
-+{
-+	unsigned long long val;
-+
-+	if (cpu_has(c, X86_FEATURE_AMD_PPIN)) {
-+		/* Turn off now until MSR is properly configured */
-+		clear_cpu_cap(c, X86_FEATURE_AMD_PPIN);
-+
-+		if (rdmsrl_safe(MSR_AMD_PPIN_CTL, &val))
-+			return;
-+
-+		if ((val & 3UL) == 1UL)
-+			return;
-+
-+		if (!(val & 2UL)) {
-+			wrmsrl_safe(MSR_AMD_PPIN_CTL,  val | 2UL);
-+			rdmsrl_safe(MSR_AMD_PPIN_CTL, &val);
-+		}
-+
-+		/* MSR_AMD_PPIN_CTL[PPIN_EN] bit is 1, turn feature back on */
-+		if (val & 2UL)
-+			set_cpu_cap(c, X86_FEATURE_AMD_PPIN);
-+	}
-+}
-+
- u16 amd_get_nb_id(int cpu)
+ struct cpts_skb_cb_data {
++	u32 skb_mtype_seqid;
+ 	unsigned long tmo;
+ };
+ 
+ #define cpts_read32(c, r)	readl_relaxed(&c->reg->r)
+ #define cpts_write32(c, v, r)	writel_relaxed(v, &c->reg->r)
+ 
+-static int cpts_match(struct sk_buff *skb, unsigned int ptp_class,
+-		      u16 ts_seqid, u8 ts_msgtype);
+-
+ static int event_expired(struct cpts_event *event)
  {
- 	return per_cpu(cpu_llc_id, cpu);
-@@ -941,6 +966,7 @@ static void init_amd(struct cpuinfo_x86 *c)
- 	amd_detect_cmp(c);
- 	amd_get_topology(c);
- 	srat_detect_node(c);
-+	amd_detect_ppin(c);
+ 	return time_after(jiffies, event->tmo);
+@@ -97,29 +95,29 @@ static void cpts_purge_txq(struct cpts *cpts)
+ static bool cpts_match_tx_ts(struct cpts *cpts, struct cpts_event *event)
+ {
+ 	struct sk_buff *skb, *tmp;
+-	u16 seqid;
+-	u8 mtype;
+ 	bool found = false;
++	u32 mtype_seqid;
  
- 	init_amd_cacheinfo(c);
+-	mtype = (event->high >> MESSAGE_TYPE_SHIFT) & MESSAGE_TYPE_MASK;
+-	seqid = (event->high >> SEQUENCE_ID_SHIFT) & SEQUENCE_ID_MASK;
++	mtype_seqid = event->high &
++		      ((MESSAGE_TYPE_MASK << MESSAGE_TYPE_SHIFT) |
++		       (SEQUENCE_ID_MASK << SEQUENCE_ID_SHIFT) |
++		       (EVENT_TYPE_MASK << EVENT_TYPE_SHIFT));
  
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 2c4f949611e4..57347e899575 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -142,6 +142,8 @@ void mce_setup(struct mce *m)
+ 	/* no need to grab txq.lock as access is always done under cpts->lock */
+ 	skb_queue_walk_safe(&cpts->txq, skb, tmp) {
+ 		struct skb_shared_hwtstamps ssh;
+-		unsigned int class = ptp_classify_raw(skb);
+ 		struct cpts_skb_cb_data *skb_cb =
+ 					(struct cpts_skb_cb_data *)skb->cb;
  
- 	if (this_cpu_has(X86_FEATURE_INTEL_PPIN))
- 		rdmsrl(MSR_PPIN, m->ppin);
-+	else if (this_cpu_has(X86_FEATURE_AMD_PPIN))
-+		rdmsrl(MSR_AMD_PPIN, m->ppin);
+-		if (cpts_match(skb, class, seqid, mtype)) {
++		if (mtype_seqid == skb_cb->skb_mtype_seqid) {
+ 			memset(&ssh, 0, sizeof(ssh));
+ 			ssh.hwtstamp = ns_to_ktime(event->timestamp);
+ 			skb_tstamp_tx(skb, &ssh);
+ 			found = true;
+ 			__skb_unlink(skb, &cpts->txq);
+ 			dev_consume_skb_any(skb);
+-			dev_dbg(cpts->dev, "match tx timestamp mtype %u seqid %04x\n",
+-				mtype, seqid);
++			dev_dbg(cpts->dev, "match tx timestamp mtype_seqid %08x\n",
++				mtype_seqid);
+ 			break;
+ 		}
  
- 	m->microcode = boot_cpu_data.microcode;
+@@ -338,12 +336,15 @@ static const struct ptp_clock_info cpts_info = {
+ 	.do_aux_work	= cpts_overflow_check,
+ };
+ 
+-static int cpts_match(struct sk_buff *skb, unsigned int ptp_class,
+-		      u16 ts_seqid, u8 ts_msgtype)
++static int cpts_skb_get_mtype_seqid(struct sk_buff *skb, u32 *mtype_seqid)
+ {
+-	u16 *seqid;
+-	unsigned int offset = 0;
++	unsigned int ptp_class = ptp_classify_raw(skb);
+ 	u8 *msgtype, *data = skb->data;
++	unsigned int offset = 0;
++	u16 *seqid;
++
++	if (ptp_class == PTP_CLASS_NONE)
++		return 0;
+ 
+ 	if (ptp_class & PTP_CLASS_VLAN)
+ 		offset += VLAN_HLEN;
+@@ -371,22 +372,20 @@ static int cpts_match(struct sk_buff *skb, unsigned int ptp_class,
+ 		msgtype = data + offset;
+ 
+ 	seqid = (u16 *)(data + offset + OFF_PTP_SEQUENCE_ID);
++	*mtype_seqid = (*msgtype & MESSAGE_TYPE_MASK) << MESSAGE_TYPE_SHIFT;
++	*mtype_seqid |= (ntohs(*seqid) & SEQUENCE_ID_MASK) << SEQUENCE_ID_SHIFT;
+ 
+-	return (ts_msgtype == (*msgtype & 0xf) && ts_seqid == ntohs(*seqid));
++	return 1;
  }
+ 
+-static u64 cpts_find_ts(struct cpts *cpts, struct sk_buff *skb, int ev_type)
++static u64 cpts_find_ts(struct cpts *cpts, struct sk_buff *skb,
++			int ev_type, u32 skb_mtype_seqid)
+ {
+-	u64 ns = 0;
+-	struct cpts_event *event;
+ 	struct list_head *this, *next;
+-	unsigned int class = ptp_classify_raw(skb);
++	struct cpts_event *event;
+ 	unsigned long flags;
+-	u16 seqid;
+-	u8 mtype;
+-
+-	if (class == PTP_CLASS_NONE)
+-		return 0;
++	u32 mtype_seqid;
++	u64 ns = 0;
+ 
+ 	spin_lock_irqsave(&cpts->lock, flags);
+ 	cpts_fifo_read(cpts, -1);
+@@ -397,10 +396,13 @@ static u64 cpts_find_ts(struct cpts *cpts, struct sk_buff *skb, int ev_type)
+ 			list_add(&event->list, &cpts->pool);
+ 			continue;
+ 		}
+-		mtype = (event->high >> MESSAGE_TYPE_SHIFT) & MESSAGE_TYPE_MASK;
+-		seqid = (event->high >> SEQUENCE_ID_SHIFT) & SEQUENCE_ID_MASK;
+-		if (ev_type == event_type(event) &&
+-		    cpts_match(skb, class, seqid, mtype)) {
++
++		mtype_seqid = event->high &
++			      ((MESSAGE_TYPE_MASK << MESSAGE_TYPE_SHIFT) |
++			       (SEQUENCE_ID_MASK << SEQUENCE_ID_SHIFT) |
++			       (EVENT_TYPE_MASK << EVENT_TYPE_SHIFT));
++
++		if (mtype_seqid == skb_mtype_seqid) {
+ 			ns = event->timestamp;
+ 			list_del_init(&event->list);
+ 			list_add(&event->list, &cpts->pool);
+@@ -427,10 +429,21 @@ static u64 cpts_find_ts(struct cpts *cpts, struct sk_buff *skb, int ev_type)
+ 
+ void cpts_rx_timestamp(struct cpts *cpts, struct sk_buff *skb)
+ {
+-	u64 ns;
++	struct cpts_skb_cb_data *skb_cb = (struct cpts_skb_cb_data *)skb->cb;
+ 	struct skb_shared_hwtstamps *ssh;
++	int ret;
++	u64 ns;
++
++	ret = cpts_skb_get_mtype_seqid(skb, &skb_cb->skb_mtype_seqid);
++	if (!ret)
++		return;
++
++	skb_cb->skb_mtype_seqid |= (CPTS_EV_RX << EVENT_TYPE_SHIFT);
+ 
+-	ns = cpts_find_ts(cpts, skb, CPTS_EV_RX);
++	dev_dbg(cpts->dev, "%s mtype seqid %08x\n",
++		__func__, skb_cb->skb_mtype_seqid);
++
++	ns = cpts_find_ts(cpts, skb, CPTS_EV_RX, skb_cb->skb_mtype_seqid);
+ 	if (!ns)
+ 		return;
+ 	ssh = skb_hwtstamps(skb);
+@@ -441,12 +454,24 @@ EXPORT_SYMBOL_GPL(cpts_rx_timestamp);
+ 
+ void cpts_tx_timestamp(struct cpts *cpts, struct sk_buff *skb)
+ {
+-	u64 ns;
++	struct cpts_skb_cb_data *skb_cb = (struct cpts_skb_cb_data *)skb->cb;
+ 	struct skb_shared_hwtstamps ssh;
++	int ret;
++	u64 ns;
+ 
+ 	if (!(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS))
+ 		return;
+-	ns = cpts_find_ts(cpts, skb, CPTS_EV_TX);
++
++	ret = cpts_skb_get_mtype_seqid(skb, &skb_cb->skb_mtype_seqid);
++	if (!ret)
++		return;
++
++	skb_cb->skb_mtype_seqid |= (CPTS_EV_TX << EVENT_TYPE_SHIFT);
++
++	dev_dbg(cpts->dev, "%s mtype seqid %08x\n",
++		__func__, skb_cb->skb_mtype_seqid);
++
++	ns = cpts_find_ts(cpts, skb, CPTS_EV_TX, skb_cb->skb_mtype_seqid);
+ 	if (!ns)
+ 		return;
+ 	memset(&ssh, 0, sizeof(ssh));
 -- 
-2.24.1
+2.17.1
 
