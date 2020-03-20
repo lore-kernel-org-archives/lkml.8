@@ -2,299 +2,596 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB60BC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284BAC43332
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59A720739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE8A20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="asi82RrR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="BkVTGRMK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgCTILv (ORCPT
+        id S1727145AbgCTILx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 04:11:51 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:58368 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726907AbgCTILt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 04:11:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584691909;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6VHdEsmEEgE8SwVWsTdpGDee8R02Hql0h9BY1woGGU8=;
-        b=asi82RrR+Yj75bY6fUJZUMxisdbBdNjdeWnvA7twn8QjjEY/LuYLKXKXgJWvi602zDgLJJ
-        1gDDXhDUUhpSIzZEUHkQ0w/vM4VSjTsmCZeSUSnC8yOF0wZp+sx6tXlYwBNi+KKwXW6wQB
-        fXw4k+vY7+xJaj5OsZuwBlPSSUtHrEE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-258-FIDUR_0cOtqXMMLlfsS8ig-1; Fri, 20 Mar 2020 04:11:45 -0400
-X-MC-Unique: FIDUR_0cOtqXMMLlfsS8ig-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F0D0D13EA;
-        Fri, 20 Mar 2020 08:11:42 +0000 (UTC)
-Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A5F299472;
-        Fri, 20 Mar 2020 08:11:39 +0000 (UTC)
-Subject: Re: [PATCH v5 18/23] KVM: arm64: GICv4.1: Add direct injection
- capability to SGI registers
-To:     Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-19-maz@kernel.org>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <06705d70-0f99-e719-af52-1a5f778562d8@redhat.com>
-Date:   Fri, 20 Mar 2020 09:11:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 20 Mar 2020 04:11:53 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:51334 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726843AbgCTILb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 04:11:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=BWSO0GEnFuwCd56UyPa2qPit9eRUDoC3PkmwZirRPf0=; b=BkVTGRMKo3AJ46eZePO4KUOp7f
+        vlDYPMbFAdLtbCywKEM5AvDOYqbPs0TFXk8ctMuKaN07ndh29kK4JM2XOfRJPsae0yNUlo2UFgNF3
+        4oBu4bWWWbc+s9JqiI6bA8/GWUNiuUpD3tf9o6nNshlJrBYDE5JScE9wyOP8Y14WuGi4=;
+Received: from p200300ccff093a00e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff09:3a00:e2ce:c3ff:fe93:fc31] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jFCkP-00058X-5c; Fri, 20 Mar 2020 09:11:18 +0100
+Received: from andi by eeepc with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jFCkI-00039T-Os; Fri, 20 Mar 2020 09:11:10 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
+        phh@phh.me, letux-kernel@openphoenux.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        jic23@kernel.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v7 5/7] rtc: rc5t619: add Ricoh RC5T619 RTC driver
+Date:   Fri, 20 Mar 2020 09:11:03 +0100
+Message-Id: <20200320081105.12026-6-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200320081105.12026-1-andreas@kemnade.info>
+References: <20200320081105.12026-1-andreas@kemnade.info>
 MIME-Version: 1.0
-In-Reply-To: <20200304203330.4967-19-maz@kernel.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-On 3/4/20 9:33 PM, Marc Zyngier wrote:
-> Most of the GICv3 emulation code that deals with SGIs now has to be
-> aware of the v4.1 capabilities in order to benefit from it.
-> 
-> Add such support, keyed on the interrupt having the hw flag set and
-> being a SGI.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  virt/kvm/arm/vgic/vgic-mmio-v3.c | 15 +++++-
->  virt/kvm/arm/vgic/vgic-mmio.c    | 88 ++++++++++++++++++++++++++++++--
->  2 files changed, 96 insertions(+), 7 deletions(-)
-> 
-> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> index ebc218840fc2..de89da76a379 100644
-> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> @@ -6,6 +6,7 @@
->  #include <linux/irqchip/arm-gic-v3.h>
->  #include <linux/kvm.h>
->  #include <linux/kvm_host.h>
-> +#include <linux/interrupt.h>
->  #include <kvm/iodev.h>
->  #include <kvm/arm_vgic.h>
->  
-> @@ -942,8 +943,18 @@ void vgic_v3_dispatch_sgi(struct kvm_vcpu *vcpu, u64 reg, bool allow_group1)
->  		 * generate interrupts of either group.
->  		 */
->  		if (!irq->group || allow_group1) {
-> -			irq->pending_latch = true;
-> -			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-> +			if (!irq->hw) {
-> +				irq->pending_latch = true;
-> +				vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-> +			} else {
-> +				/* HW SGI? Ask the GIC to inject it */
-> +				int err;
-nit: add line
-> +				err = irq_set_irqchip_state(irq->host_irq,
-> +							    IRQCHIP_STATE_PENDING,
-> +							    true);
-> +				WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-> +				raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-> +			}
->  		} else {
->  			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
->  		}
-> diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
-> index 97fb2a40e6ba..2199302597fa 100644
-> --- a/virt/kvm/arm/vgic/vgic-mmio.c
-> +++ b/virt/kvm/arm/vgic/vgic-mmio.c
-> @@ -5,6 +5,8 @@
->  
->  #include <linux/bitops.h>
->  #include <linux/bsearch.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
->  #include <linux/kvm.h>
->  #include <linux/kvm_host.h>
->  #include <kvm/iodev.h>
-> @@ -59,6 +61,11 @@ unsigned long vgic_mmio_read_group(struct kvm_vcpu *vcpu,
->  	return value;
->  }
->  
-> +static void vgic_update_vsgi(struct vgic_irq *irq)
-> +{
-> +	WARN_ON(its_prop_update_vsgi(irq->host_irq, irq->priority, irq->group));
-> +}
-> +
->  void vgic_mmio_write_group(struct kvm_vcpu *vcpu, gpa_t addr,
->  			   unsigned int len, unsigned long val)
->  {
-> @@ -71,7 +78,12 @@ void vgic_mmio_write_group(struct kvm_vcpu *vcpu, gpa_t addr,
->  
->  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
->  		irq->group = !!(val & BIT(i));
-> -		vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-> +			vgic_update_vsgi(irq);
-> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-> +		} else {
-> +			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-> +		}
->  
->  		vgic_put_irq(vcpu->kvm, irq);
->  	}
-> @@ -113,7 +125,21 @@ void vgic_mmio_write_senable(struct kvm_vcpu *vcpu,
->  		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
->  
->  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-> -		if (vgic_irq_is_mapped_level(irq)) {
-> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-> +			if (!irq->enabled) {
-> +				struct irq_data *data;
-> +
-> +				irq->enabled = true;
-> +				data = &irq_to_desc(irq->host_irq)->irq_data;
-> +				while (irqd_irq_disabled(data))
-> +					enable_irq(irq->host_irq);
-could you explain me why the while() is requested?
-> +			}
-> +
-> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-> +			vgic_put_irq(vcpu->kvm, irq);
-> +
-> +			continue;
-> +		} else if (vgic_irq_is_mapped_level(irq)) {
->  			bool was_high = irq->line_level;
->  
->  			/*
-> @@ -148,6 +174,8 @@ void vgic_mmio_write_cenable(struct kvm_vcpu *vcpu,
->  		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
->  
->  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-> +		if (irq->hw && vgic_irq_is_sgi(irq->intid) && irq->enabled)
-> +			disable_irq_nosync(irq->host_irq);
->  
->  		irq->enabled = false;
->  
-> @@ -167,10 +195,22 @@ unsigned long vgic_mmio_read_pending(struct kvm_vcpu *vcpu,
->  	for (i = 0; i < len * 8; i++) {
->  		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
->  		unsigned long flags;
-> +		bool val;
->  
->  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-> -		if (irq_is_pending(irq))
-> -			value |= (1U << i);
-> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-> +			int err;
-> +
-> +			val = false;
-> +			err = irq_get_irqchip_state(irq->host_irq,
-> +						    IRQCHIP_STATE_PENDING,
-> +						    &val);
-> +			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-> +		} else {
-> +			val = irq_is_pending(irq);
-> +		}
-> +
-> +		value |= ((u32)val << i);
->  		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
->  
->  		vgic_put_irq(vcpu->kvm, irq);
-> @@ -215,6 +255,21 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
->  		}
->  
->  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-> +
-> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-> +			/* HW SGI? Ask the GIC to inject it */
-> +			int err;
-nit: extra line
-> +			err = irq_set_irqchip_state(irq->host_irq,
-> +						    IRQCHIP_STATE_PENDING,
-> +						    true);
-> +			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-> +
-> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-> +			vgic_put_irq(vcpu->kvm, irq);
-> +
-> +			continue;
-> +		}
-> +
->  		if (irq->hw)
->  			vgic_hw_irq_spending(vcpu, irq, is_uaccess);
->  		else
-> @@ -269,6 +324,20 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
->  
->  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
->  
-> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-> +			/* HW SGI? Ask the GIC to clear its pending bit */
-> +			int err;
-> +			err = irq_set_irqchip_state(irq->host_irq,
-> +						    IRQCHIP_STATE_PENDING,
-> +						    false);
-> +			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-> +
-> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-> +			vgic_put_irq(vcpu->kvm, irq);
-> +
-> +			continue;
-> +		}
-> +
->  		if (irq->hw)
->  			vgic_hw_irq_cpending(vcpu, irq, is_uaccess);
->  		else
-> @@ -318,8 +387,15 @@ static void vgic_mmio_change_active(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
->  
->  	raw_spin_lock_irqsave(&irq->irq_lock, flags);
->  
-> -	if (irq->hw) {
-> +	if (irq->hw && !vgic_irq_is_sgi(irq->intid)) {
->  		vgic_hw_irq_change_active(vcpu, irq, active, !requester_vcpu);
-> +	} else if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-> +		/*
-> +		 * GICv4.1 VSGI feature doesn't track an active state,
-> +		 * so let's not kid ourselves, there is nothing we can
-> +		 * do here.
-> +		 */
-> +		irq->active = false;
->  	} else {
->  		u32 model = vcpu->kvm->arch.vgic.vgic_model;
->  		u8 active_source;
-> @@ -493,6 +569,8 @@ void vgic_mmio_write_priority(struct kvm_vcpu *vcpu,
->  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
->  		/* Narrow the priority range to what we actually support */
->  		irq->priority = (val >> (i * 8)) & GENMASK(7, 8 - VGIC_PRI_BITS);
-> +		if (irq->hw && vgic_irq_is_sgi(irq->intid))
-> +			vgic_update_vsgi(irq);
->  		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
->  
->  		vgic_put_irq(vcpu->kvm, irq);
-> 
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Add an RTC driver for the RTC device on Ricoh MFD RC5T619,
+which is implemented as a variant of RN5T618.
 
-Thanks
+rtc-range output:
+Testing 2000-02-28 23:59:59.
+OK
 
-Eric
+Testing 2038-01-19 03:14:07.
+OK
+
+Testing 2069-12-31 23:59:59.
+OK
+
+Testing 2099-12-31 23:59:59.
+KO RTC_RD_TIME returned 22 (line 138)
+
+Testing 2100-02-28 23:59:59.
+KO RTC_SET_TIME returned 34 (line 122)
+
+Testing 2106-02-07 06:28:15.
+KO RTC_SET_TIME returned 34 (line 122)
+
+Testing 2262-04-11 23:47:16.
+KO RTC_SET_TIME returned 34 (line 122)
+
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+Changes in v3:
+- further output cleanup
+- remove useless toggling of alarm flag in rtc probe
+- alignment cleanup
+
+Changes in v2:
+- correct subject line
+- reset pon flag not at probe but later
+- initialize things only on pon
+- 12h handling
+- ranges
+- style cleanup
+- less magic values
+
+ drivers/rtc/Kconfig       |  10 +
+ drivers/rtc/Makefile      |   1 +
+ drivers/rtc/rtc-rc5t619.c | 444 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 455 insertions(+)
+ create mode 100644 drivers/rtc/rtc-rc5t619.c
+
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 34c8b6c7e095..72fed8dc55e8 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -591,6 +591,16 @@ config RTC_DRV_RC5T583
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called rtc-rc5t583.
+ 
++config RTC_DRV_RC5T619
++	tristate "RICOH RC5T619 RTC driver"
++	depends on MFD_RN5T618
++	help
++	  If you say yes here you get support for the RTC on the
++	  RICOH RC5T619 chips.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called rtc-rc5t619.
++
+ config RTC_DRV_S35390A
+ 	tristate "Seiko Instruments S-35390A"
+ 	select BITREVERSE
+diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+index 4ac8f19fb631..7612912cdf00 100644
+--- a/drivers/rtc/Makefile
++++ b/drivers/rtc/Makefile
+@@ -137,6 +137,7 @@ obj-$(CONFIG_RTC_DRV_PXA)	+= rtc-pxa.o
+ obj-$(CONFIG_RTC_DRV_R7301)	+= rtc-r7301.o
+ obj-$(CONFIG_RTC_DRV_R9701)	+= rtc-r9701.o
+ obj-$(CONFIG_RTC_DRV_RC5T583)	+= rtc-rc5t583.o
++obj-$(CONFIG_RTC_DRV_RC5T619)	+= rtc-rc5t619.o
+ obj-$(CONFIG_RTC_DRV_RK808)	+= rtc-rk808.o
+ obj-$(CONFIG_RTC_DRV_RP5C01)	+= rtc-rp5c01.o
+ obj-$(CONFIG_RTC_DRV_RS5C313)	+= rtc-rs5c313.o
+diff --git a/drivers/rtc/rtc-rc5t619.c b/drivers/rtc/rtc-rc5t619.c
+new file mode 100644
+index 000000000000..24e386ecbc7e
+--- /dev/null
++++ b/drivers/rtc/rtc-rc5t619.c
+@@ -0,0 +1,444 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * drivers/rtc/rtc-rc5t619.c
++ *
++ * Real time clock driver for RICOH RC5T619 power management chip.
++ *
++ * Copyright (C) 2019 Andreas Kemnade
++ */
++
++#include <linux/kernel.h>
++#include <linux/device.h>
++#include <linux/errno.h>
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/mfd/rn5t618.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/bcd.h>
++#include <linux/rtc.h>
++#include <linux/slab.h>
++#include <linux/irqdomain.h>
++
++struct rc5t619_rtc {
++	int			irq;
++	struct rtc_device	*rtc;
++	struct rn5t618 *rn5t618;
++};
++
++#define CTRL1_ALARM_ENABLED 0x40
++#define CTRL1_24HR 0x20
++#define CTRL1_PERIODIC_MASK 0xf
++
++#define CTRL2_PON 0x10
++#define CTRL2_ALARM_STATUS 0x80
++#define CTRL2_CTFG 0x4
++#define CTRL2_CTC 0x1
++
++#define MONTH_CENTFLAG 0x80
++#define HOUR_PMFLAG 0x20
++#define MDAY_DAL_EXT 0x80
++
++static uint8_t rtc5t619_12hour_bcd2bin(uint8_t hour)
++{
++	if (hour & HOUR_PMFLAG) {
++		hour = bcd2bin(hour & ~HOUR_PMFLAG);
++		return hour == 12 ? 12 : 12 + hour;
++	}
++
++	hour = bcd2bin(hour);
++	return hour == 12 ? 0 : hour;
++}
++
++static uint8_t rtc5t619_12hour_bin2bcd(uint8_t hour)
++{
++	if (!hour)
++		return 0x12;
++
++	if (hour < 12)
++		return bin2bcd(hour);
++
++	if (hour == 12)
++		return 0x12 | HOUR_PMFLAG;
++
++	return bin2bcd(hour - 12) | HOUR_PMFLAG;
++}
++
++static int rc5t619_rtc_periodic_disable(struct device *dev)
++{
++	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
++	int err;
++
++	/* disable function */
++	err = regmap_update_bits(rtc->rn5t618->regmap,
++				 RN5T618_RTC_CTRL1, CTRL1_PERIODIC_MASK, 0);
++	if (err < 0)
++		return err;
++
++	/* clear alarm flag and CTFG */
++	err = regmap_update_bits(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2,
++				 CTRL2_ALARM_STATUS | CTRL2_CTFG | CTRL2_CTC,
++				 0);
++	if (err < 0)
++		return err;
++
++	return 0;
++}
++
++/* things to be done once after power on */
++static int rc5t619_rtc_pon_setup(struct device *dev)
++{
++	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
++	int err;
++	unsigned int reg_data;
++
++	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, &reg_data);
++	if (err < 0)
++		return err;
++
++	/* clear VDET PON */
++	reg_data &= ~(CTRL2_PON | CTRL2_CTC | 0x4a);	/* 0101-1011 */
++	reg_data |= 0x20;	/* 0010-0000 */
++	err = regmap_write(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, reg_data);
++	if (err < 0)
++		return err;
++
++	/* clearing RTC Adjust register */
++	err = regmap_write(rtc->rn5t618->regmap, RN5T618_RTC_ADJUST, 0);
++	if (err)
++		return err;
++
++	return regmap_update_bits(rtc->rn5t618->regmap,
++					RN5T618_RTC_CTRL1,
++					CTRL1_24HR, CTRL1_24HR);
++}
++
++static int rc5t619_rtc_read_time(struct device *dev, struct rtc_time *tm)
++{
++	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
++	u8 buff[7];
++	int err;
++	int cent_flag;
++	unsigned int ctrl1;
++	unsigned int ctrl2;
++
++	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, &ctrl2);
++	if (err < 0)
++		return err;
++
++	if (ctrl2 & CTRL2_PON)
++		return -EINVAL;
++
++	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &ctrl1);
++	if (err < 0)
++		return err;
++
++	err = regmap_bulk_read(rtc->rn5t618->regmap, RN5T618_RTC_SECONDS,
++			       buff, sizeof(buff));
++	if (err < 0)
++		return err;
++
++	if (buff[5] & MONTH_CENTFLAG)
++		cent_flag = 1;
++	else
++		cent_flag = 0;
++
++	tm->tm_sec  = bcd2bin(buff[0]);
++	tm->tm_min  = bcd2bin(buff[1]);
++
++	if (ctrl1 & CTRL1_24HR)
++		tm->tm_hour = bcd2bin(buff[2]);
++	else
++		tm->tm_hour = rtc5t619_12hour_bcd2bin(buff[2]);
++
++	tm->tm_wday = bcd2bin(buff[3]);
++	tm->tm_mday = bcd2bin(buff[4]);
++	tm->tm_mon  = bcd2bin(buff[5] & 0x1f) - 1; /* back to system 0-11 */
++	tm->tm_year = bcd2bin(buff[6]) + 100 * cent_flag;
++
++	return 0;
++}
++
++static int rc5t619_rtc_set_time(struct device *dev, struct rtc_time *tm)
++{
++	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
++	u8 buff[7];
++	int err;
++	int cent_flag;
++	unsigned int ctrl1;
++	unsigned int ctrl2;
++
++	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, &ctrl2);
++	if (err < 0)
++		return err;
++
++	if (ctrl2 & CTRL2_PON)
++		rc5t619_rtc_pon_setup(dev);
++
++	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &ctrl1);
++	if (err < 0)
++		return err;
++
++	if (tm->tm_year >= 100)
++		cent_flag = 1;
++	else
++		cent_flag = 0;
++
++	buff[0] = bin2bcd(tm->tm_sec);
++	buff[1] = bin2bcd(tm->tm_min);
++
++	if (ctrl1 & CTRL1_24HR)
++		buff[2] = bin2bcd(tm->tm_hour);
++	else
++		buff[2] = rtc5t619_12hour_bin2bcd(tm->tm_hour);
++
++	buff[3] = bin2bcd(tm->tm_wday);
++	buff[4] = bin2bcd(tm->tm_mday);
++	buff[5] = bin2bcd(tm->tm_mon + 1);	/* system set 0-11 */
++	buff[6] = bin2bcd(tm->tm_year - cent_flag * 100);
++
++	if (cent_flag)
++		buff[5] |= MONTH_CENTFLAG;
++
++	err = regmap_bulk_write(rtc->rn5t618->regmap, RN5T618_RTC_SECONDS,
++				buff, sizeof(buff));
++	if (err < 0) {
++		dev_err(dev, "failed to program new time: %d\n", err);
++		return err;
++	}
++
++	return 0;
++}
++
++/* 0-disable, 1-enable */
++static int rc5t619_rtc_alarm_enable(struct device *dev, unsigned int enabled)
++{
++	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
++
++	return regmap_update_bits(rtc->rn5t618->regmap,
++			RN5T618_RTC_CTRL1,
++			CTRL1_ALARM_ENABLED,
++			enabled ? CTRL1_ALARM_ENABLED : 0);
++}
++
++static int rc5t619_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
++{
++	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
++	u8 buff[6];
++	unsigned int buff_cent;
++	int err;
++	int cent_flag;
++	unsigned int ctrl1;
++
++	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &ctrl1);
++	if (err)
++		return err;
++
++	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_MONTH, &buff_cent);
++	if (err < 0) {
++		dev_err(dev, "failed to read time: %d\n", err);
++		return err;
++	}
++
++	if (buff_cent & MONTH_CENTFLAG)
++		cent_flag = 1;
++	else
++		cent_flag = 0;
++
++	err = regmap_bulk_read(rtc->rn5t618->regmap, RN5T618_RTC_ALARM_Y_SEC,
++			       buff, sizeof(buff));
++	if (err)
++		return err;
++
++	buff[3] = buff[3] & 0x3f;
++
++	alrm->time.tm_sec  = bcd2bin(buff[0]);
++	alrm->time.tm_min  = bcd2bin(buff[1]);
++
++	if (ctrl1 & CTRL1_24HR)
++		alrm->time.tm_hour = bcd2bin(buff[2]);
++	else
++		alrm->time.tm_hour = rtc5t619_12hour_bcd2bin(buff[2]);
++
++	alrm->time.tm_mday = bcd2bin(buff[3]);
++	alrm->time.tm_mon  = bcd2bin(buff[4]) - 1;
++	alrm->time.tm_year = bcd2bin(buff[5]) + 100 * cent_flag;
++	alrm->enabled = !!(ctrl1 & CTRL1_ALARM_ENABLED);
++	dev_dbg(dev, "read alarm: %ptR\n", &alrm->time);
++
++	return 0;
++}
++
++static int rc5t619_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
++{
++	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
++	u8 buff[6];
++	int err;
++	int cent_flag;
++	unsigned int ctrl1;
++
++	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL1, &ctrl1);
++	if (err)
++		return err;
++
++	err = rc5t619_rtc_alarm_enable(dev, 0);
++	if (err < 0)
++		return err;
++
++	if (rtc->irq == -1)
++		return -EINVAL;
++
++	if (alrm->enabled == 0)
++		return 0;
++
++	if (alrm->time.tm_year >= 100)
++		cent_flag = 1;
++	else
++		cent_flag = 0;
++
++	alrm->time.tm_mon += 1;
++	buff[0] = bin2bcd(alrm->time.tm_sec);
++	buff[1] = bin2bcd(alrm->time.tm_min);
++
++	if (ctrl1 & CTRL1_24HR)
++		buff[2] = bin2bcd(alrm->time.tm_hour);
++	else
++		buff[2] = rtc5t619_12hour_bin2bcd(alrm->time.tm_hour);
++
++	buff[3] = bin2bcd(alrm->time.tm_mday);
++	buff[4] = bin2bcd(alrm->time.tm_mon);
++	buff[5] = bin2bcd(alrm->time.tm_year - 100 * cent_flag);
++	buff[3] |= MDAY_DAL_EXT;
++
++	err = regmap_bulk_write(rtc->rn5t618->regmap, RN5T618_RTC_ALARM_Y_SEC,
++				buff, sizeof(buff));
++	if (err < 0)
++		return err;
++
++	return rc5t619_rtc_alarm_enable(dev, alrm->enabled);
++}
++
++static const struct rtc_class_ops rc5t619_rtc_ops = {
++	.read_time	= rc5t619_rtc_read_time,
++	.set_time	= rc5t619_rtc_set_time,
++	.set_alarm	= rc5t619_rtc_set_alarm,
++	.read_alarm	= rc5t619_rtc_read_alarm,
++	.alarm_irq_enable = rc5t619_rtc_alarm_enable,
++};
++
++static int rc5t619_rtc_alarm_flag_clr(struct device *dev)
++{
++	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
++
++	/* clear alarm-D status bits.*/
++	return regmap_update_bits(rtc->rn5t618->regmap,
++				RN5T618_RTC_CTRL2,
++				CTRL2_ALARM_STATUS | CTRL2_CTC, 0);
++}
++
++static irqreturn_t rc5t619_rtc_irq(int irq, void *data)
++{
++	struct device *dev = data;
++	struct rc5t619_rtc *rtc = dev_get_drvdata(dev);
++
++	rc5t619_rtc_alarm_flag_clr(dev);
++
++	rtc_update_irq(rtc->rtc, 1, RTC_IRQF | RTC_AF);
++	return IRQ_HANDLED;
++}
++
++static int rc5t619_rtc_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
++	struct rc5t619_rtc *rtc;
++	unsigned int ctrl2;
++	int err;
++
++	rtc = devm_kzalloc(dev, sizeof(*rtc), GFP_KERNEL);
++	if (IS_ERR(rtc)) {
++		err = PTR_ERR(rtc);
++		return -ENOMEM;
++	}
++
++	rtc->rn5t618 = rn5t618;
++
++	dev_set_drvdata(dev, rtc);
++	rtc->irq = -1;
++
++	if (rn5t618->irq_data)
++		rtc->irq = regmap_irq_get_virq(rn5t618->irq_data,
++					       RN5T618_IRQ_RTC);
++
++	if (rtc->irq  < 0)
++		rtc->irq = -1;
++
++	err = regmap_read(rtc->rn5t618->regmap, RN5T618_RTC_CTRL2, &ctrl2);
++	if (err < 0)
++		return err;
++
++	/* disable rtc periodic function */
++	err = rc5t619_rtc_periodic_disable(&pdev->dev);
++	if (err)
++		return err;
++
++	if (ctrl2 & CTRL2_PON) {
++		err = rc5t619_rtc_alarm_flag_clr(&pdev->dev);
++		if (err)
++			return err;
++	}
++
++	rtc->rtc = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(rtc->rtc)) {
++		err = PTR_ERR(rtc->rtc);
++		dev_err(dev, "RTC device register: err %d\n", err);
++		return err;
++	}
++
++	rtc->rtc->ops = &rc5t619_rtc_ops;
++	rtc->rtc->range_min = RTC_TIMESTAMP_BEGIN_1900;
++	rtc->rtc->range_max = RTC_TIMESTAMP_END_2099;
++
++	/* set interrupt and enable it */
++	if (rtc->irq != -1) {
++		err = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
++						rc5t619_rtc_irq,
++						IRQF_ONESHOT,
++						"rtc-rc5t619",
++						&pdev->dev);
++		if (err < 0) {
++			dev_err(&pdev->dev, "request IRQ:%d fail\n", rtc->irq);
++			rtc->irq = -1;
++
++			err = rc5t619_rtc_alarm_enable(&pdev->dev, 0);
++			if (err)
++				return err;
++
++		} else {
++			/* enable wake */
++			device_init_wakeup(&pdev->dev, 1);
++			enable_irq_wake(rtc->irq);
++		}
++	} else {
++		/* system don't want to using alarm interrupt, so close it */
++		err = rc5t619_rtc_alarm_enable(&pdev->dev, 0);
++		if (err)
++			return err;
++
++		dev_warn(&pdev->dev, "rc5t619 interrupt is disabled\n");
++	}
++
++	return rtc_register_device(rtc->rtc);
++}
++
++static struct platform_driver rc5t619_rtc_driver = {
++	.driver	= {
++		.name	= "rc5t619-rtc",
++	},
++	.probe	= rc5t619_rtc_probe,
++};
++
++module_platform_driver(rc5t619_rtc_driver);
++MODULE_ALIAS("platform:rc5t619-rtc");
++MODULE_DESCRIPTION("RICOH RC5T619 RTC driver");
++MODULE_LICENSE("GPL");
+-- 
+2.20.1
 
