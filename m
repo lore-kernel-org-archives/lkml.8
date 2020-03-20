@@ -2,281 +2,133 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68AAC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 762C6C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747D82070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:19:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="asa8WKNM"
+	by mail.kernel.org (Postfix) with ESMTP id 479C22070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbgCTOTM (ORCPT
+        id S1727163AbgCTOWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:19:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56646 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbgCTOTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:19:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=YrgVxrzmHYPrXyoeTJHbxP1u+oy6sSqDdJuYBqnOLUw=; b=asa8WKNM498IZYcLhs08/zLNPc
-        sa5hNsp3CWZcXx0I3FMC7Jz7rdddp6/Qjz9Eb9/0xEmKO1CWMkZw8lTedOp1Oo0913Xep7ce77s1d
-        irLGIlz2YApSXqVSeuWuteFYkTbb1eWcaff6fnKXVoOniK5laVM383+CCMsT1xj0yNuS5QYGRVIut
-        QW6hRJUd/unTjJepe6iefAaYoCOxUz8Gk3DakyMYZCAr4VLiA1Au6cac0UzSSNcWdQfN1prjmUWor
-        zGYqXmEkBtY5xAICBQxZ+X9klbBzq5M1SPusX9WQHw5KINGnDUN6/MnT2spzUl/0ARFiNOV2UBIPl
-        51Spyrhw==;
-Received: from [2001:4bb8:188:30cd:a410:8a7:7f20:5c9c] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jFIUL-0007Fu-7m; Fri, 20 Mar 2020 14:19:05 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     iommu@lists.linux-foundation.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     linuxppc-dev@lists.ozlabs.org, Lu Baolu <baolu.lu@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] powerpc: use the generic dma_ops_bypass mode
-Date:   Fri, 20 Mar 2020 15:16:40 +0100
-Message-Id: <20200320141640.366360-3-hch@lst.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200320141640.366360-1-hch@lst.de>
-References: <20200320141640.366360-1-hch@lst.de>
+        Fri, 20 Mar 2020 10:22:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:49536 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726893AbgCTOWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:22:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 644CD1FB;
+        Fri, 20 Mar 2020 07:22:14 -0700 (PDT)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38BB73F792;
+        Fri, 20 Mar 2020 07:22:11 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 14:22:08 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-mips@vger.kernel.org, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 18/26] arm64: vdso32: Replace TASK_SIZE_32 check in
+ vgettimeofday
+Message-ID: <20200320142208.GC29214@mbp>
+References: <20200317143834.GC632169@arrakis.emea.arm.com>
+ <f03a9493-c8c2-e981-f560-b2f437a208e4@arm.com>
+ <20200317155031.GD632169@arrakis.emea.arm.com>
+ <83aaf9e1-0a8f-4908-577a-23766541b2ba@arm.com>
+ <20200317174806.GE632169@arrakis.emea.arm.com>
+ <93cfe94a-c2a3-1025-bc9c-e7c3fd891100@arm.com>
+ <20200318183603.GF94111@arrakis.emea.arm.com>
+ <1bc25a53-7a59-0f60-ecf2-a3cace46b823@arm.com>
+ <20200319181004.GA29214@mbp>
+ <b937d1eb-c7fd-e903-fa36-b261662bf40b@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b937d1eb-c7fd-e903-fa36-b261662bf40b@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the DMA API bypass mechanism for direct window mappings.  This uses
-common code and speed up the direct mapping case by avoiding indirect
-calls just when not using dma ops at all.  It also fixes a problem where
-the sync_* methods were using the bypass check for DMA allocations, but
-those are part of the streaming ops.
+On Fri, Mar 20, 2020 at 01:05:14PM +0000, Vincenzo Frascino wrote:
+> On 3/19/20 6:10 PM, Catalin Marinas wrote:
+> > On Thu, Mar 19, 2020 at 12:38:42PM +0000, Vincenzo Frascino wrote:
+> >> On 3/18/20 6:36 PM, Catalin Marinas wrote:
+> >>> On Wed, Mar 18, 2020 at 04:14:26PM +0000, Vincenzo Frascino wrote:
+> >>>> On 3/17/20 5:48 PM, Catalin Marinas wrote:
+> >>>>> So clock_gettime() on arm32 always falls back to the syscall?
+> >>>>
+> >>>> This seems not what you asked, and I think I answered accordingly. Anyway, in
+> >>>> the case of arm32 the error code path is handled via syscall fallback.
+> >>>>
+> >>>> Look at the code below as an example (I am using getres because I know this
+> >>>> email will be already too long, and I do not want to add pointless code, but the
+> >>>> concept is the same for gettime and the others):
+> >>>>
+> >>>> static __maybe_unused
+> >>>> int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
+> >>>> {
+> >>>> 	int ret = __cvdso_clock_getres_common(clock, res);
+> >>>>
+> >>>> 	if (unlikely(ret))
+> >>>> 		return clock_getres_fallback(clock, res);
+> >>>> 	return 0;
+> >>>> }
+> >>>>
+> >>>> When the return code of the "vdso" internal function returns an error the system
+> >>>> call is triggered.
+> >>>
+> >>> But when __cvdso_clock_getres_common() does *not* return an error, it
+> >>> means that it handled the clock_getres() call without a fallback to the
+> >>> syscall. I assume this is possible on arm32. When the clock_getres() is
+> >>> handled directly (not as a syscall), why doesn't arm32 need the same
+> >>> (res >= TASK_SIZE) check?
+> >>
+> >> Ok, I see what you mean.
+> > 
+> > I'm not sure.
+> 
+> Thank you for the long chat this morning. As we agreed I am going to repost the
+> patches removing the checks discussed in this thread
 
-Note that this patch loses the DMA_ATTR_WEAK_ORDERING override, which
-has never been well defined, as is only used by a few drivers, which
-IIRC never showed up in the typical Cell blade setups that are affected
-by the ordering workaround.
+Great, thanks.
 
-Fixes: efd176a04bef ("powerpc/pseries/dma: Allow SWIOTLB")
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/powerpc/include/asm/device.h |  5 --
- arch/powerpc/kernel/dma-iommu.c   | 90 ++++---------------------------
- 2 files changed, 9 insertions(+), 86 deletions(-)
+> and we will address the syscall ABI difference subsequently with a
+> different series.
 
-diff --git a/arch/powerpc/include/asm/device.h b/arch/powerpc/include/asm/device.h
-index 266542769e4b..452402215e12 100644
---- a/arch/powerpc/include/asm/device.h
-+++ b/arch/powerpc/include/asm/device.h
-@@ -18,11 +18,6 @@ struct iommu_table;
-  * drivers/macintosh/macio_asic.c
-  */
- struct dev_archdata {
--	/*
--	 * Set to %true if the dma_iommu_ops are requested to use a direct
--	 * window instead of dynamically mapping memory.
--	 */
--	bool			iommu_bypass : 1;
- 	/*
- 	 * These two used to be a union. However, with the hybrid ops we need
- 	 * both so here we store both a DMA offset for direct mappings and
-diff --git a/arch/powerpc/kernel/dma-iommu.c b/arch/powerpc/kernel/dma-iommu.c
-index e486d1d78de2..569fecd7b5b2 100644
---- a/arch/powerpc/kernel/dma-iommu.c
-+++ b/arch/powerpc/kernel/dma-iommu.c
-@@ -14,23 +14,6 @@
-  * Generic iommu implementation
-  */
- 
--/*
-- * The coherent mask may be smaller than the real mask, check if we can
-- * really use a direct window.
-- */
--static inline bool dma_iommu_alloc_bypass(struct device *dev)
--{
--	return dev->archdata.iommu_bypass && !iommu_fixed_is_weak &&
--		dma_direct_supported(dev, dev->coherent_dma_mask);
--}
--
--static inline bool dma_iommu_map_bypass(struct device *dev,
--		unsigned long attrs)
--{
--	return dev->archdata.iommu_bypass &&
--		(!iommu_fixed_is_weak || (attrs & DMA_ATTR_WEAK_ORDERING));
--}
--
- /* Allocates a contiguous real buffer and creates mappings over it.
-  * Returns the virtual address of the buffer and sets dma_handle
-  * to the dma address (mapping) of the first page.
-@@ -39,8 +22,6 @@ static void *dma_iommu_alloc_coherent(struct device *dev, size_t size,
- 				      dma_addr_t *dma_handle, gfp_t flag,
- 				      unsigned long attrs)
- {
--	if (dma_iommu_alloc_bypass(dev))
--		return dma_direct_alloc(dev, size, dma_handle, flag, attrs);
- 	return iommu_alloc_coherent(dev, get_iommu_table_base(dev), size,
- 				    dma_handle, dev->coherent_dma_mask, flag,
- 				    dev_to_node(dev));
-@@ -50,11 +31,7 @@ static void dma_iommu_free_coherent(struct device *dev, size_t size,
- 				    void *vaddr, dma_addr_t dma_handle,
- 				    unsigned long attrs)
- {
--	if (dma_iommu_alloc_bypass(dev))
--		dma_direct_free(dev, size, vaddr, dma_handle, attrs);
--	else
--		iommu_free_coherent(get_iommu_table_base(dev), size, vaddr,
--				dma_handle);
-+	iommu_free_coherent(get_iommu_table_base(dev), size, vaddr, dma_handle);
- }
- 
- /* Creates TCEs for a user provided buffer.  The user buffer must be
-@@ -67,9 +44,6 @@ static dma_addr_t dma_iommu_map_page(struct device *dev, struct page *page,
- 				     enum dma_data_direction direction,
- 				     unsigned long attrs)
- {
--	if (dma_iommu_map_bypass(dev, attrs))
--		return dma_direct_map_page(dev, page, offset, size, direction,
--				attrs);
- 	return iommu_map_page(dev, get_iommu_table_base(dev), page, offset,
- 			      size, dma_get_mask(dev), direction, attrs);
- }
-@@ -79,11 +53,8 @@ static void dma_iommu_unmap_page(struct device *dev, dma_addr_t dma_handle,
- 				 size_t size, enum dma_data_direction direction,
- 				 unsigned long attrs)
- {
--	if (!dma_iommu_map_bypass(dev, attrs))
--		iommu_unmap_page(get_iommu_table_base(dev), dma_handle, size,
--				direction,  attrs);
--	else
--		dma_direct_unmap_page(dev, dma_handle, size, direction, attrs);
-+	iommu_unmap_page(get_iommu_table_base(dev), dma_handle, size, direction,
-+			 attrs);
- }
- 
- 
-@@ -91,8 +62,6 @@ static int dma_iommu_map_sg(struct device *dev, struct scatterlist *sglist,
- 			    int nelems, enum dma_data_direction direction,
- 			    unsigned long attrs)
- {
--	if (dma_iommu_map_bypass(dev, attrs))
--		return dma_direct_map_sg(dev, sglist, nelems, direction, attrs);
- 	return ppc_iommu_map_sg(dev, get_iommu_table_base(dev), sglist, nelems,
- 				dma_get_mask(dev), direction, attrs);
- }
-@@ -101,11 +70,8 @@ static void dma_iommu_unmap_sg(struct device *dev, struct scatterlist *sglist,
- 		int nelems, enum dma_data_direction direction,
- 		unsigned long attrs)
- {
--	if (!dma_iommu_map_bypass(dev, attrs))
--		ppc_iommu_unmap_sg(get_iommu_table_base(dev), sglist, nelems,
-+	ppc_iommu_unmap_sg(get_iommu_table_base(dev), sglist, nelems,
- 			   direction, attrs);
--	else
--		dma_direct_unmap_sg(dev, sglist, nelems, direction, attrs);
- }
- 
- static bool dma_iommu_bypass_supported(struct device *dev, u64 mask)
-@@ -113,8 +79,9 @@ static bool dma_iommu_bypass_supported(struct device *dev, u64 mask)
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct pci_controller *phb = pci_bus_to_host(pdev->bus);
- 
--	return phb->controller_ops.iommu_bypass_supported &&
--		phb->controller_ops.iommu_bypass_supported(pdev, mask);
-+	if (iommu_fixed_is_weak || !phb->controller_ops.iommu_bypass_supported)
-+		return false;
-+	return phb->controller_ops.iommu_bypass_supported(pdev, mask);
- }
- 
- /* We support DMA to/from any memory page via the iommu */
-@@ -123,7 +90,7 @@ int dma_iommu_dma_supported(struct device *dev, u64 mask)
- 	struct iommu_table *tbl = get_iommu_table_base(dev);
- 
- 	if (dev_is_pci(dev) && dma_iommu_bypass_supported(dev, mask)) {
--		dev->archdata.iommu_bypass = true;
-+		dev->dma_ops_bypass = true;
- 		dev_dbg(dev, "iommu: 64-bit OK, using fixed ops\n");
- 		return 1;
- 	}
-@@ -141,7 +108,7 @@ int dma_iommu_dma_supported(struct device *dev, u64 mask)
- 	}
- 
- 	dev_dbg(dev, "iommu: not 64-bit, using default ops\n");
--	dev->archdata.iommu_bypass = false;
-+	dev->dma_ops_bypass = false;
- 	return 1;
- }
- 
-@@ -153,47 +120,12 @@ u64 dma_iommu_get_required_mask(struct device *dev)
- 	if (!tbl)
- 		return 0;
- 
--	if (dev_is_pci(dev)) {
--		u64 bypass_mask = dma_direct_get_required_mask(dev);
--
--		if (dma_iommu_bypass_supported(dev, bypass_mask))
--			return bypass_mask;
--	}
--
- 	mask = 1ULL < (fls_long(tbl->it_offset + tbl->it_size) - 1);
- 	mask += mask - 1;
- 
- 	return mask;
- }
- 
--static void dma_iommu_sync_for_cpu(struct device *dev, dma_addr_t addr,
--		size_t size, enum dma_data_direction dir)
--{
--	if (dma_iommu_alloc_bypass(dev))
--		dma_direct_sync_single_for_cpu(dev, addr, size, dir);
--}
--
--static void dma_iommu_sync_for_device(struct device *dev, dma_addr_t addr,
--		size_t sz, enum dma_data_direction dir)
--{
--	if (dma_iommu_alloc_bypass(dev))
--		dma_direct_sync_single_for_device(dev, addr, sz, dir);
--}
--
--extern void dma_iommu_sync_sg_for_cpu(struct device *dev,
--		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
--{
--	if (dma_iommu_alloc_bypass(dev))
--		dma_direct_sync_sg_for_cpu(dev, sgl, nents, dir);
--}
--
--extern void dma_iommu_sync_sg_for_device(struct device *dev,
--		struct scatterlist *sgl, int nents, enum dma_data_direction dir)
--{
--	if (dma_iommu_alloc_bypass(dev))
--		dma_direct_sync_sg_for_device(dev, sgl, nents, dir);
--}
--
- const struct dma_map_ops dma_iommu_ops = {
- 	.alloc			= dma_iommu_alloc_coherent,
- 	.free			= dma_iommu_free_coherent,
-@@ -203,10 +135,6 @@ const struct dma_map_ops dma_iommu_ops = {
- 	.map_page		= dma_iommu_map_page,
- 	.unmap_page		= dma_iommu_unmap_page,
- 	.get_required_mask	= dma_iommu_get_required_mask,
--	.sync_single_for_cpu	= dma_iommu_sync_for_cpu,
--	.sync_single_for_device	= dma_iommu_sync_for_device,
--	.sync_sg_for_cpu	= dma_iommu_sync_sg_for_cpu,
--	.sync_sg_for_device	= dma_iommu_sync_sg_for_device,
- 	.mmap			= dma_common_mmap,
- 	.get_sgtable		= dma_common_get_sgtable,
- };
+Now I'm even less convinced we need any additional patches. The arm64
+compat syscall would still return -EFAULT for res >= TASK_SIZE_32
+because copy_to_user() will fail. So it would be entirely consistent
+with the arm32 syscall. In the vdso-only case, both arm32 and arm64
+compat would generate a signal.
+
+As Will said, arguably, the syscall semantics may not be applicable to
+the vdso implementation. But if you do want to get down this route (tp =
+UINTPTR_MAX - sizeof(*tp) returning -EFAULT), please do it for all
+architectures, not just arm64 compat. However, I'm not sure anyone
+relies on this functionality, other than the vdsotest, so no real
+application broken.
+
 -- 
-2.25.1
-
+Catalin
