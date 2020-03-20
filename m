@@ -2,150 +2,75 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D767C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9E7C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E718B20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:46:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584733609;
-	bh=cWtAUzd2rzDP9wEzmMrW/qhJoPZ5i4sE8aCtwPlju7w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=KF/NKXsKLSNRNGMbWRefpMbrKANwEzph6y+hNtbVYrFsftStFRNr5+a9svq47+h54
-	 OEGLwOjaWfDXZbLmAjQHhwC5yS8CkmCaBi0EsO1vcqPrfD/1PXdEM7li/wAqhjy+sB
-	 jFL1HJNz9OmpDkAcMoRqSH/F29ozpywKD0WmOIBE=
+	by mail.kernel.org (Postfix) with ESMTP id 5A8DB20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:48:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgCTTqs (ORCPT
+        id S1726979AbgCTTsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 15:46:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37580 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 15:48:53 -0400
+Received: from 8bytes.org ([81.169.241.247]:54648 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726666AbgCTTqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 15:46:47 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3B1520739;
-        Fri, 20 Mar 2020 19:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584733607;
-        bh=cWtAUzd2rzDP9wEzmMrW/qhJoPZ5i4sE8aCtwPlju7w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=X3d+L4Jqyb6dAW7q1cPglXf0FktkzS3wWtwooGY+RoSz3BWL3o5F9Z5AN7Kcgt/Gf
-         3wQIAOtzNyVvErjlICDEncCpzpiwUU+kWLR/M5mZqN/nW0QsHfh2fWqvCnWKj+fc5L
-         r2apIhcVhBidEfiS8bIYAaN7+ImQqdNl2BlHCeuM=
-Date:   Fri, 20 Mar 2020 14:46:45 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Sriram Palanisamy <gpalan@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/12] pcie: qcom: Set PCIE MRRS and MPS to 256B
-Message-ID: <20200320194645.GA251282@google.com>
+        id S1726666AbgCTTsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 15:48:52 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 4F2324CA; Fri, 20 Mar 2020 20:48:51 +0100 (CET)
+Date:   Fri, 20 Mar 2020 20:48:49 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Joerg Roedel <jroedel@suse.de>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH 70/70] x86/sev-es: Add NMI state tracking
+Message-ID: <20200320194849.GJ5122@8bytes.org>
+References: <20200319091407.1481-1-joro@8bytes.org>
+ <20200319091407.1481-71-joro@8bytes.org>
+ <CALCETrUOQneBHjoZkP-7T5PDijb=WOyv7xF7TD0GLR2Aw77vyA@mail.gmail.com>
+ <20200319160749.GC5122@8bytes.org>
+ <CALCETrXY5M87C1Fc3QvTkc6MdbQ_3gAuOPUeWJktAzK4T60QNQ@mail.gmail.com>
+ <20200319192654.GD611@suse.de>
+ <CALCETrXzyUGjPYBR_NDSvTG8TqLuQP2Q+v_mwXPne4O0U-18NA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320183455.21311-12-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CALCETrXzyUGjPYBR_NDSvTG8TqLuQP2Q+v_mwXPne4O0U-18NA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 07:34:54PM +0100, Ansuel Smith wrote:
-> From: Sriram Palanisamy <gpalan@codeaurora.org>
-> 
-> Set Max Read Request Size and Max Payload Size to 256 bytes,
-> per chip team recommendation.
+On Thu, Mar 19, 2020 at 02:27:49PM -0700, Andy Lutomirski wrote:
+> AIUI the shift-ist stuff is because we aren't very good about the way
+> that we handle tracing right now, and that can cause a limited degree
+> of recursion.  #DB uses IST for historical reasons that don't
+> necessarily make sense.  Right now, we need it for only one reason:
+> the MOV SS issue.  IIRC this isn't actually triggerable without
+> debugging enabled -- MOV SS with no breakpoint but TF on doesn't seem
+> to malfunction quite as badly.
 
-Is this to avoid a device defect or to optimize performance?
+I had a look at the shift_ist stuff today and it looks like a good
+solution to the #VC nesting problem when it is turned into a #VC
+handler. The devil is in the details, of course, as 3 or 4 stacks for
+the #VC handler (per cpu) should only be allocated when actually running
+in an SEV-ES guest. Let's see how this works out in practice.
 
-This should not be done in an individual driver for performance
-reasons because these parameters need to be managed at the system
-level.
+Regards,
 
-If this is to work around a device defect, we probably need to think
-about a quirk that changes the device capabilities advertised by this
-bridge and then changes to the PCI core code to take that into
-account.
-
-> Signed-off-by: Gokul Sriram Palanisamy <gpalan@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 37 ++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 03130a3206b4..ad437c6f49a0 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -125,6 +125,14 @@
->  
->  #define PCIE20_LNK_CONTROL2_LINK_STATUS2        0xA0
->  
-> +#define __set(v, a, b)	(((v) << (b)) & GENMASK(a, b))
-> +#define __mask(a, b)	(((1 << ((a) + 1)) - 1) & ~((1 << (b)) - 1))
-> +#define PCIE20_DEV_CAS			0x78
-> +#define PCIE20_MRRS_MASK		__mask(14, 12)
-> +#define PCIE20_MRRS(x)			__set(x, 14, 12)
-> +#define PCIE20_MPS_MASK			__mask(7, 5)
-> +#define PCIE20_MPS(x)			__set(x, 7, 5)
-
-These should all be the generic PCI_EXP_DEVCTL_READRQ and similar
-#defines, since you use them on values from PCI_EXP_DEVCTL.
-
->  #define DEVICE_TYPE_RC				0x4
->  
->  #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
-> @@ -1595,6 +1603,35 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	return ret;
->  }
->  
-> +static void qcom_pcie_fixup_final(struct pci_dev *pcidev)
-> +{
-> +	int cap, err;
-> +	u16 ctl, reg_val;
-> +
-> +	cap = pci_pcie_cap(pcidev);
-> +	if (!cap)
-> +		return;
-> +
-> +	err = pci_read_config_word(pcidev, cap + PCI_EXP_DEVCTL, &ctl);
-> +
-> +	if (err)
-> +		return;
-> +
-> +	reg_val = ctl;
-> +
-> +	if (((reg_val & PCIE20_MRRS_MASK) >> 12) > 1)
-> +		reg_val = (reg_val & ~(PCIE20_MRRS_MASK)) | PCIE20_MRRS(0x1);
-> +
-> +	if (((ctl & PCIE20_MPS_MASK) >> 5) > 1)
-> +		reg_val = (reg_val & ~(PCIE20_MPS_MASK)) | PCIE20_MPS(0x1);
-> +
-> +	err = pci_write_config_word(pcidev, cap + PCI_EXP_DEVCTL, reg_val);
-> +
-> +	if (err)
-> +		dev_err(&pcidev->dev, "pcie config write failed %d\n", err);
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, qcom_pcie_fixup_final);
-> +
->  static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-apq8084", .data = &ops_1_0_0 },
->  	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_2_1_0 },
-> -- 
-> 2.25.1
-> 
+	Joerg
