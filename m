@@ -2,149 +2,168 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09653C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81421C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3202076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5312D2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:34:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4uXw8Pf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbgCTKd6 (ORCPT
+        id S1727183AbgCTKez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:33:58 -0400
-Received: from mga03.intel.com ([134.134.136.65]:1057 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726791AbgCTKd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:33:58 -0400
-IronPort-SDR: tsiJb2PXNe6dG/YOdJo0BY4Xw+EBdz0Eqf3MAUdZD7Kx/etQnH71yUWNjH8n7RknkHKnxj4XqV
- z/8plm6znvoQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 03:33:57 -0700
-IronPort-SDR: dvyOOwpm3ck0vNEcjFg0Ln9rtXpCUZTdZcp6iT/sMJoJaRldBYM8OWYnTUButP6k1/hcmEEsxM
- R4UhrSvV447g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,284,1580803200"; 
-   d="scan'208";a="446612540"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 20 Mar 2020 03:33:50 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jFEyM-00BKoR-Uc; Fri, 20 Mar 2020 12:33:50 +0200
-Date:   Fri, 20 Mar 2020 12:33:50 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Michal Suchanek <msuchanek@suse.de>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v12 8/8] MAINTAINERS: perf: Add pattern that matches ppc
- perf to the perf entry.
-Message-ID: <20200320103350.GV1922688@smile.fi.intel.com>
-References: <20200225173541.1549955-1-npiggin@gmail.com>
- <cover.1584699455.git.msuchanek@suse.de>
- <4b150d01c60bd37705789200d9adee9f1c9b50ce.1584699455.git.msuchanek@suse.de>
+        Fri, 20 Mar 2020 06:34:55 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38290 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbgCTKez (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 06:34:55 -0400
+Received: by mail-wm1-f65.google.com with SMTP id l20so5708337wmi.3;
+        Fri, 20 Mar 2020 03:34:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A9LMr0UXcZSEqVnqNAwLyFiSr+kmUdRM1J1fT1cXn5U=;
+        b=Z4uXw8PfRFLJlofHFGW41vrqoGwlAIqRACj+uRDYvGpB8tWq7q1Li9OwTmu9kmT7sS
+         VJ3g8sAmUG2NSBqkCPDsohe7yIgPn3QYHTtZLkdZRYvvKEXiboau8buIhpjAzyNF7evV
+         x8vRSxGYM0NmnHdGYBjFzdCkQW3RfOZeutJgCiimnqdA8Gdqu2ANQvtjli+HGCLBzz+Q
+         v0Iyv/TwBHXbwA0m9jSHsI9Ks5ouiTq8po/U26UqHCZnOeITzTRNSvu2ha6JxopKmf12
+         RFvRFeqsQMqfbXmM1nUgVOsBp1+1zkx3fMIeAvg8fRKJqvRrmtmPrKcw2aY5p9exuglM
+         TKWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A9LMr0UXcZSEqVnqNAwLyFiSr+kmUdRM1J1fT1cXn5U=;
+        b=DEqEfb6zAW0+TDZe3TilMZPW6snb29jO5GeFIPWRU1lsD9zx5eISvt1RWt7raR7wVh
+         4KrIsUumEtGiZY2ROifrW83enC1QT2IrXkGQkPDPecCct8kSsie0s2Jxt7rAwlASqQaG
+         zumWjoQi1KVh1OJZuFtHbZoTrLFt3mW5X+zcOJXps7MZJJuErl/vguONiHM7JcVJ7lMg
+         SAcFOvzQTwkT6XJmYMcOH4HLYcTc6GqYk8daIPXvg6XS+hmogTJt3UXeJKd7a+UGHQ3h
+         h0F1qXr7kIGzS0am8sNHCpnXBHvaylHdq626cSIC2ocDbE1wg+BbYvFcApxFCiYUozH5
+         SBEw==
+X-Gm-Message-State: ANhLgQ0QO8eVj8ICyHdT6Jhao+nhywn1tyRzzi5+pOwEITvgg8d35zbI
+        3V4NK+IBnW22iDqMN7PZhRJytHpTX/1nKiFGMTZWJQ7M
+X-Google-Smtp-Source: ADFU+vvRrvOiPU9AK3wSD6H8a7LzgOUg2SrSTLcnrfXfsiTSvivvRS4XrMnjiu3ESR+V0DJhpgTVgiItLeoY1EdIvVU=
+X-Received: by 2002:a7b:c92a:: with SMTP id h10mr9145899wml.26.1584700492517;
+ Fri, 20 Mar 2020 03:34:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4b150d01c60bd37705789200d9adee9f1c9b50ce.1584699455.git.msuchanek@suse.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200304072730.9193-1-zhang.lyra@gmail.com>
+In-Reply-To: <20200304072730.9193-1-zhang.lyra@gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Fri, 20 Mar 2020 18:34:16 +0800
+Message-ID: <CAAfSe-sWv1mrx1GPgO8ZRhSs9vbAy_PY_BA4BkHrE5FghsX7nA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/7] Add clocks for Unisoc's SC9863A
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 11:20:19AM +0100, Michal Suchanek wrote:
-> While at it also simplify the existing perf patterns.
-> 
+Hi Stephen,
 
-And still missed fixes from parse-maintainers.pl.
+Could you please take this patch-set to your tree if there are no
+further comments.
 
-I see it like below in the linux-next (after the script)
+Thanks,
+Chunyan
 
-PERFORMANCE EVENTS SUBSYSTEM
-M:      Peter Zijlstra <peterz@infradead.org>
-M:      Ingo Molnar <mingo@redhat.com>
-M:      Arnaldo Carvalho de Melo <acme@kernel.org>
-R:      Mark Rutland <mark.rutland@arm.com>
-R:      Alexander Shishkin <alexander.shishkin@linux.intel.com>
-R:      Jiri Olsa <jolsa@redhat.com>
-R:      Namhyung Kim <namhyung@kernel.org>
-L:      linux-kernel@vger.kernel.org
-S:      Supported
-T:      git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
-F:      arch/*/events/*
-F:      arch/*/events/*/*
-F:      arch/*/include/asm/perf_event.h
-F:      arch/*/kernel/*/*/perf_event*.c
-F:      arch/*/kernel/*/perf_event*.c
-F:      arch/*/kernel/perf_callchain.c
-F:      arch/*/kernel/perf_event*.c
-F:      include/linux/perf_event.h
-F:      include/uapi/linux/perf_event.h
-F:      kernel/events/*
-F:      tools/perf/
-
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13080,7 +13080,7 @@ R:	Namhyung Kim <namhyung@kernel.org>
->  L:	linux-kernel@vger.kernel.org
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
->  S:	Supported
-> -F:	kernel/events/*
-> +F:	kernel/events/
->  F:	include/linux/perf_event.h
->  F:	include/uapi/linux/perf_event.h
->  F:	arch/*/kernel/perf_event*.c
-> @@ -13088,8 +13088,8 @@ F:	arch/*/kernel/*/perf_event*.c
->  F:	arch/*/kernel/*/*/perf_event*.c
->  F:	arch/*/include/asm/perf_event.h
->  F:	arch/*/kernel/perf_callchain.c
-> -F:	arch/*/events/*
-> -F:	arch/*/events/*/*
-> +F:	arch/*/events/
-> +F:	arch/*/perf/
->  F:	tools/perf/
->  
->  PERFORMANCE EVENTS SUBSYSTEM ARM64 PMU EVENTS
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+On Wed, 4 Mar 2020 at 15:28, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+>
+> Add SC9863A specific clock driver and devicetree bindings for it,
+> this patch add to support the new way of specifying parents
+> without name strings of clocks.
+>
+> Also this patchset added support gate clock for pll which need to
+> wait a certain time for stable after being switched on.
+>
+> Changes from v5:
+> * Addressed comments from Rob:
+> - Removed description from "clock-names" and "reg" properties;
+> - Added maxItem to "reg" property.
+> * Modified the descriptions for those clocks which are a child node of
+>   a syscon.
+>
+> Changes from v4:
+> * Fixed dt_binding_check warnings.
+>
+> Changes from v3:
+> * Rebased onto v5.6-rc1.
+>
+> Changes from v2:
+> * Addressed comments from Stephen:
+> - Remove ununsed header file from sc9863a-clk.c;
+> - Added comments for clocks which were marked with CLK_IGNORE_UNUSED,
+>   and removed some unnecessary CLK_IGNORE_UNUSED;
+> - Added error checking for sprd_clk_regmap_init().
+>
+> * Addressed comments from Rob:
+> - Put some clocks under syscon nodes, since these clocks have the same
+>   physical address base with the syscon;
+> - Added clocks maxItems and listed out clock-names.
+>
+> * Added Rob's reviewed-by on patch 4.
+>
+> Changes from v1:
+> * Addressed comments:
+> - Removed redefine things;
+> - Switched DT bindings to yaml schema;
+> - Added macros for the new way of specifying clk parents;
+> - Switched to use the new way of specifying clk parents;
+> - Clean CLK_IGNORE_UNUSED flags for some SC9863A clocks;
+> - Dropped the module alias;
+> - Use device_get_match_data() instead of of_match_node();
+>
+> * Added Rob's Acked-by on patch 2.
+>
+> Chunyan Zhang (6):
+>   dt-bindings: clk: sprd: rename the common file name sprd.txt to SoC
+>     specific
+>   dt-bindings: clk: sprd: add bindings for sc9863a clock controller
+>   clk: sprd: Add dt-bindings include file for SC9863A
+>   clk: sprd: Add macros for referencing parents without strings
+>   clk: sprd: support to get regmap from parent node
+>   clk: sprd: add clocks support for SC9863A
+>
+> Xiaolong Zhang (1):
+>   clk: sprd: add gate for pll clocks
+>
+>  .../clock/{sprd.txt => sprd,sc9860-clk.txt}   |    2 +-
+>  .../bindings/clock/sprd,sc9863a-clk.yaml      |  105 +
+>  drivers/clk/sprd/Kconfig                      |    8 +
+>  drivers/clk/sprd/Makefile                     |    1 +
+>  drivers/clk/sprd/common.c                     |   10 +-
+>  drivers/clk/sprd/composite.h                  |   39 +-
+>  drivers/clk/sprd/div.h                        |   20 +-
+>  drivers/clk/sprd/gate.c                       |   17 +
+>  drivers/clk/sprd/gate.h                       |  120 +-
+>  drivers/clk/sprd/mux.h                        |   28 +-
+>  drivers/clk/sprd/pll.h                        |   55 +-
+>  drivers/clk/sprd/sc9863a-clk.c                | 1772 +++++++++++++++++
+>  include/dt-bindings/clock/sprd,sc9863a-clk.h  |  334 ++++
+>  13 files changed, 2457 insertions(+), 54 deletions(-)
+>  rename Documentation/devicetree/bindings/clock/{sprd.txt => sprd,sc9860-clk.txt} (98%)
+>  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+>  create mode 100644 drivers/clk/sprd/sc9863a-clk.c
+>  create mode 100644 include/dt-bindings/clock/sprd,sc9863a-clk.h
+>
+> --
+> 2.20.1
+>
