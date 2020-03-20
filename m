@@ -2,26 +2,25 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83C9C43333
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F924C43332
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D0F20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5219A20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbgCTJOe (ORCPT
+        id S1727258AbgCTJO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:14:34 -0400
-Received: from 8bytes.org ([81.169.241.247]:54166 "EHLO theia.8bytes.org"
+        Fri, 20 Mar 2020 05:14:26 -0400
+Received: from 8bytes.org ([81.169.241.247]:54146 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbgCTJO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:14:27 -0400
+        id S1727197AbgCTJOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 05:14:25 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 89CDA49B; Fri, 20 Mar 2020 10:14:22 +0100 (CET)
+        id 8CC33385; Fri, 20 Mar 2020 10:14:20 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     iommu@lists.linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -37,9 +36,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v3 15/15] iommu: Move fwspec->iommu_priv to struct dev_iommu
-Date:   Fri, 20 Mar 2020 10:14:14 +0100
-Message-Id: <20200320091414.3941-16-joro@8bytes.org>
+Subject: [PATCH v3 07/15] iommu/arm-smmu: Fix uninitilized variable warning
+Date:   Fri, 20 Mar 2020 10:14:06 +0100
+Message-Id: <20200320091414.3941-8-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200320091414.3941-1-joro@8bytes.org>
 References: <20200320091414.3941-1-joro@8bytes.org>
@@ -50,59 +49,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Move the pointer for iommu private data from struct iommu_fwspec to
-struct dev_iommu.
+Some unrelated changes in the iommu code caused a new warning to
+appear in the arm-smmu driver:
+
+  CC      drivers/iommu/arm-smmu.o
+drivers/iommu/arm-smmu.c: In function 'arm_smmu_add_device':
+drivers/iommu/arm-smmu.c:1441:2: warning: 'smmu' may be used uninitialized in this function [-Wmaybe-uninitialized]
+  arm_smmu_rpm_put(smmu);
+  ^~~~~~~~~~~~~~~~~~~~~~
+
+The warning is a false positive, but initialize the variable to NULL
+to get rid of it.
 
 Tested-by: Will Deacon <will@kernel.org> # arm-smmu
 Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- include/linux/iommu.h | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/iommu/arm-smmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 056900e75758..8c4d45fce042 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -369,6 +369,7 @@ struct iommu_fault_param {
-  *
-  * @fault_param: IOMMU detected device fault reporting data
-  * @fwspec:	 IOMMU fwspec data
-+ * @priv:	 IOMMU Driver private data
-  *
-  * TODO: migrate other per device data pointers under iommu_dev_data, e.g.
-  *	struct iommu_group	*iommu_group;
-@@ -377,6 +378,7 @@ struct dev_iommu {
- 	struct mutex lock;
- 	struct iommu_fault_param	*fault_param;
- 	struct iommu_fwspec		*fwspec;
-+	void				*priv;
- };
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 16c4b87af42b..980aae73b45b 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -1383,7 +1383,7 @@ struct arm_smmu_device *arm_smmu_get_by_fwnode(struct fwnode_handle *fwnode)
  
- int  iommu_device_register(struct iommu_device *iommu);
-@@ -589,7 +591,6 @@ struct iommu_group *fsl_mc_device_group(struct device *dev);
- struct iommu_fwspec {
- 	const struct iommu_ops	*ops;
- 	struct fwnode_handle	*iommu_fwnode;
--	void			*iommu_priv;
- 	u32			flags;
- 	u32			num_pasid_bits;
- 	unsigned int		num_ids;
-@@ -629,12 +630,12 @@ static inline void dev_iommu_fwspec_set(struct device *dev,
- 
- static inline void *dev_iommu_priv_get(struct device *dev)
+ static int arm_smmu_add_device(struct device *dev)
  {
--	return dev->iommu->fwspec->iommu_priv;
-+	return dev->iommu->priv;
- }
- 
- static inline void dev_iommu_priv_set(struct device *dev, void *priv)
- {
--	dev->iommu->fwspec->iommu_priv = priv;
-+	dev->iommu->priv = priv;
- }
- 
- int iommu_probe_device(struct device *dev);
+-	struct arm_smmu_device *smmu;
++	struct arm_smmu_device *smmu = NULL;
+ 	struct arm_smmu_master_cfg *cfg;
+ 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+ 	int i, ret;
 -- 
 2.17.1
 
