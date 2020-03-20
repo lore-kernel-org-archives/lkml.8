@@ -2,111 +2,83 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F7AC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE27FC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD77420757
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:59:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Ohp5TXh1"
+	by mail.kernel.org (Postfix) with ESMTP id 9977120739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:00:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbgCTJ7P (ORCPT
+        id S1727236AbgCTKAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:59:15 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58876 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbgCTJ7P (ORCPT
+        Fri, 20 Mar 2020 06:00:07 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35131 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbgCTKAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:59:15 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CA6A1504;
-        Fri, 20 Mar 2020 10:59:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584698353;
-        bh=ZzexViwT1sNWNVrixfFMMsQEew/KhYKWu3YzN5cmzCI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ohp5TXh1V32/7TUc41A62vGmBmoziycU4oAdYUdLefFdH37z8W96SsCvO+jDYOPci
-         yl56teBS9RGHB2sEtwfPKoIF4R0VFKV7zfs7bEv6wK6b+oVhRBgi9uw+HZ903G71qx
-         CnOC7JOVk/Z9/c2QQky3jfKcRhZ0B5Dqi7Y4FRrw=
-Date:   Fri, 20 Mar 2020 11:59:07 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Alex Riesen <alexander.riesen@cetitec.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v2 07/10] dt-bindings: adv748x: add information about
- serial audio interface (I2S/TDM)
-Message-ID: <20200320095907.GB5193@pendragon.ideasonboard.com>
-References: <cover.1584639664.git.alexander.riesen@cetitec.com>
- <c9ff553f804f178a247dca356306948e971432fb.1584639664.git.alexander.riesen@cetitec.com>
- <20200319180125.GJ14585@pendragon.ideasonboard.com>
- <20200320084406.GB4344@pflmari>
- <CAMuHMdUdVb0LwZDx-MH2FLYYPvgq=uj_3Nrzo9obWAi-Q-2ZnA@mail.gmail.com>
- <20200320090339.GD4344@pflmari>
+        Fri, 20 Mar 2020 06:00:07 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jFERc-0001Fs-Vc; Fri, 20 Mar 2020 11:00:01 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 682AA100375; Fri, 20 Mar 2020 11:00:00 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>,
+        Kyung Min Park <kyung.min.park@intel.com>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Raj\, Ashok" <ashok.raj@intel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: Re: [PATCH v2 2/2] x86/delay: Introduce TPAUSE delay
+In-Reply-To: <CALCETrWJ88CaGmij_NNysRjUQ6LPwwbPnMy1YPdKnM-cFDueSw@mail.gmail.com>
+References: <1584677604-32707-1-git-send-email-kyung.min.park@intel.com> <1584677604-32707-3-git-send-email-kyung.min.park@intel.com> <CALCETrWJ88CaGmij_NNysRjUQ6LPwwbPnMy1YPdKnM-cFDueSw@mail.gmail.com>
+Date:   Fri, 20 Mar 2020 11:00:00 +0100
+Message-ID: <877dzf4a8v.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200320090339.GD4344@pflmari>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+Andy Lutomirski <luto@kernel.org> writes:
+> On Thu, Mar 19, 2020 at 9:13 PM Kyung Min Park <kyung.min.park@intel.com> wrote:
+>>  void use_tsc_delay(void)
+>>  {
+>> -       if (delay_fn == delay_loop)
+>> +       if (static_cpu_has(X86_FEATURE_WAITPKG)) {
+>> +               delay_halt_fn = delay_halt_tpause;
+>> +               delay_fn = delay_halt;
+>> +       } else if (delay_fn == delay_loop) {
+>>                 delay_fn = delay_tsc;
+>> +       }
+>>  }
+>
+> This is an odd way to dispatch: you're using static_cpu_has(), but
+> you're using it once to populate a function pointer.  Why not just put
+> the static_cpu_has() directly into delay_halt() and open-code the
+> three variants?
 
-On Fri, Mar 20, 2020 at 10:03:39AM +0100, Alex Riesen wrote:
-> Geert Uytterhoeven, Fri, Mar 20, 2020 09:48:14 +0100:
-> > On Fri, Mar 20, 2020 at 9:44 AM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> > > Laurent Pinchart, Thu, Mar 19, 2020 19:01:25 +0100:
-> > > > On Thu, Mar 19, 2020 at 06:42:36PM +0100, Alex Riesen wrote:
-> > > > > As the driver has some support for the audio interface of the device,
-> > > > > the bindings file should mention it.
-> > > > >
-> > > > > @@ -16,6 +18,8 @@ Required Properties:
-> > > > >      slave device on the I2C bus. The main address is mandatory, others are
-> > > > >      optional and remain at default values if not specified.
-> > > > >
-> > > > > +  - #clock-cells: must be <0> if the I2S port is used
-> > > >
-> > > > Wouldn't it be simpler to set it to 0 unconditionally ?
-> > >
-> > > Would it? If the port itself is optional, shouldn't the clock be an option
-> > > too?
-> > 
-> > You'd be surprised how many board designers would consider this a cheap
-> > 12.288 MHz clock source, without using the I2S port ;-)
-> 
-> Well, I am :-)
-> 
-> Especially considering that the driver will not switch the MCLK pin aktive
-> (all I2S-related pins are tristate by default).
+Two: mwaitx and tpause.
 
-If the MCLK can't be output without enabling the I2S then I don't mind
-if we make the #clock-cells optional, although, as Geert mentioned,
-someone may still want to use it.
+> That will also make it a lot easier to understand the oddity with
+> start and cycles.
 
-> And how do I require it to be set unconditionally? By just removing the
-> "if ..." part of the statement?
+Indeed. That makes sense. Should have thought about it :)
 
-Yes. For YAML it's easy too, the hard part is making properties
-conditional :-)
+Thanks,
 
--- 
-Regards,
-
-Laurent Pinchart
+        tglx
