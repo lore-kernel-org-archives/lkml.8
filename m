@@ -2,169 +2,107 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905BBC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24847C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6513620724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE93C20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:40:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YLldNI9a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qNh+7ws2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgCTHhJ (ORCPT
+        id S1726834AbgCTHkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 03:37:09 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:31490 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726614AbgCTHhI (ORCPT
+        Fri, 20 Mar 2020 03:40:55 -0400
+Received: from mail-qk1-f176.google.com ([209.85.222.176]:44202 "EHLO
+        mail-qk1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbgCTHkz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 03:37:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584689827;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=W1gum1vAgnk9ohf+zv7pJnapCaZq6wcMIaHYE+lE4nY=;
-        b=YLldNI9aNF6eZYVqh/9elfdrkL+4Tj6O1M6gPUJzcIz44etgLRM/opfCfMW119GRIjEWkP
-        sqqKxgMf/DT9cpkCB88L6Vx8xXWKyaA1r7VjDwE1vjCssPniV4GxaAERACRPXZPLdYEKRj
-        xq+BuYjowsdvNSCj+YwHQCcP77dNt8s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-354-3-PS3H37ND6CvYBdStjOow-1; Fri, 20 Mar 2020 03:37:03 -0400
-X-MC-Unique: 3-PS3H37ND6CvYBdStjOow-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 120D88010D9;
-        Fri, 20 Mar 2020 07:37:00 +0000 (UTC)
-Received: from localhost (ovpn-13-97.pek2.redhat.com [10.72.13.97])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 00D1460BF1;
-        Fri, 20 Mar 2020 07:36:56 +0000 (UTC)
-Date:   Fri, 20 Mar 2020 15:36:53 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v3 3/8] drivers/base/memory: store mapping between MMOP_*
- and string in an array
-Message-ID: <20200320073653.GE2987@MiWiFi-R3L-srv>
-References: <20200319131221.14044-1-david@redhat.com>
- <20200319131221.14044-4-david@redhat.com>
+        Fri, 20 Mar 2020 03:40:55 -0400
+Received: by mail-qk1-f176.google.com with SMTP id j4so5876585qkc.11
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 00:40:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ku7qwHiv4AZSPNdmRrr8awe0lsh/dLBWtOgrxpXV/hU=;
+        b=qNh+7ws2t++iS2hHk3cdNGcZPPGDY08PDxqnE3KcRQITjB+5iOC9lnRWwrFj7gLWKT
+         rIvccmkA/Yr/4J1zI8riwhgz76iftHQtg5kdNIcS5AtWT8YEjPhlRtwtLZ4ksRUpHzA7
+         fZoW3ZTq+Y54sr7zZuiIcsxPBACy1IIla7nBH7nCCWqOksrJRq5th8SuXO+GXPADHpfY
+         ajnCXGQR3oWr35u2FfImbAr9Twfske2do5U28N8WeHD/cxZ8qGH6sv60/mTZrg0X3e4G
+         2VUm8ltaZsPAgI1zAo15vXiWFfha4bqB1vE8vsCuVTHdQszMLQOzYXlKbccFuriujJCT
+         ddBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ku7qwHiv4AZSPNdmRrr8awe0lsh/dLBWtOgrxpXV/hU=;
+        b=kY8IGJ3H8YkiAjDjAyZYmMadoeZbbOVtNFhFokPuwr1nHqV64pkZoYmKUkCiZ48Du4
+         WC0F5/IXCIPThB2A6tBJwoyIjiWWbb2j5d04irVLbCyDDqd18VXdPes43KHzCc0PsRwd
+         5wfpBLaEvTcwuM7jx70WdAz20OrSUDgUYTDev1LA+sddFXIpgeYoKToSBM8/GIBZUtTS
+         y/zD+XRfO5A4DJisxj+M33aXL7XYHKPS28yk9JKfqiOLeoRAozDsL5dEChRbEC5PF7/D
+         DZGVYRjvln1K75YEPNbY4hEZaLSrasCdLegjjxc5rYlJWPViMtPVkSqQcEaWHaTf6ybp
+         x2KQ==
+X-Gm-Message-State: ANhLgQ1usK/C3sJus8/wG4yvCyIjdFgozKEeq/28Bj86xpZeP1QjvoAs
+        Qfa0pcRPVR+pb5H9KFCsqedxWKD+wvwLwzvjSZI=
+X-Google-Smtp-Source: ADFU+vunQpu+yReUVHUdAGT0ff+bFISOLphFku642HYW07MbagUtE2hcI52/EtAB0hFXwQFKScUM/eI4/Gda2TFlbRI=
+X-Received: by 2002:a37:546:: with SMTP id 67mr6436299qkf.272.1584690053832;
+ Fri, 20 Mar 2020 00:40:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319131221.14044-4-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <1584502378-12609-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1584502378-12609-3-git-send-email-iamjoonsoo.kim@lge.com> <99196b17-24fb-8990-2d21-c459d2321747@suse.cz>
+In-Reply-To: <99196b17-24fb-8990-2d21-c459d2321747@suse.cz>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Fri, 20 Mar 2020 16:40:42 +0900
+Message-ID: <CAAmzW4NJd2kh8-81sYLjRR8gcsmLpndhS4s5Jh6kB-FLM-wNKg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] mm/page_alloc: integrate classzone_idx and high_zoneidx
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Ye Xiaolong <xiaolong.ye@intel.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/19/20 at 02:12pm, David Hildenbrand wrote:
-> Let's use a simple array which we can reuse soon. While at it, move the
-> string->mmop conversion out of the device hotplug lock.
-> 
-> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  drivers/base/memory.c | 38 +++++++++++++++++++++++---------------
->  1 file changed, 23 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index e7e77cafef80..8a7f29c0bf97 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -28,6 +28,24 @@
->  
->  #define MEMORY_CLASS_NAME	"memory"
->  
-> +static const char *const online_type_to_str[] = {
-> +	[MMOP_OFFLINE] = "offline",
-> +	[MMOP_ONLINE] = "online",
-> +	[MMOP_ONLINE_KERNEL] = "online_kernel",
-> +	[MMOP_ONLINE_MOVABLE] = "online_movable",
-> +};
-> +
-> +static int memhp_online_type_from_str(const char *str)
-> +{
-> +	int i;
+2020=EB=85=84 3=EC=9B=94 19=EC=9D=BC (=EB=AA=A9) =EC=98=A4=ED=9B=84 9:32, V=
+lastimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On 3/18/20 4:32 AM, js1304@gmail.com wrote:
+> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> >
+> > classzone_idx is just different name for high_zoneidx now.
+> > So, integrate them and add some comment to struct alloc_context
+> > in order to reduce future confusion about the meaning of this variable.
+> >
+> > In addition to integration, this patch also renames high_zoneidx
+> > to highest_zoneidx since it represents more precise meaning.
+>
+> 2 years ago I suggested max_zone_idx.
+> Not insisting, but perhaps max_zoneidx would simply be shorter than
+> highest_zoneidx, while saying the same thing?
 
-I would change it as: 
+I think that highest_zoneidx looks more familiar than max_zoneidx since
+it is previously high_zoneidx. It would cause less confusion.
 
-	for (int i = 0; i < ARRAY_SIZE(online_type_to_str); i++) {
+> Also I wonder if we still need the accessor ac_classzone_idx() (before re=
+name),
+> or just replace it with ac->highest_zoneidx (or whatever the final name i=
+s)
+> instead of renaming it?
 
-> +
-> +	for (i = 0; i < ARRAY_SIZE(online_type_to_str); i++) {
-> +		if (sysfs_streq(str, online_type_to_str[i]))
-> +			return i;
-> +	}
-> +	return -EINVAL;
-> +}
-> +
->  #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
->  
->  static int sections_per_block;
-> @@ -236,26 +254,17 @@ static int memory_subsys_offline(struct device *dev)
->  static ssize_t state_store(struct device *dev, struct device_attribute *attr,
->  			   const char *buf, size_t count)
->  {
-> +	const int online_type = memhp_online_type_from_str(buf);
->  	struct memory_block *mem = to_memory_block(dev);
-> -	int ret, online_type;
-> +	int ret;
-> +
-> +	if (online_type < 0)
-> +		return -EINVAL;
->  
->  	ret = lock_device_hotplug_sysfs();
->  	if (ret)
->  		return ret;
->  
-> -	if (sysfs_streq(buf, "online_kernel"))
-> -		online_type = MMOP_ONLINE_KERNEL;
-> -	else if (sysfs_streq(buf, "online_movable"))
-> -		online_type = MMOP_ONLINE_MOVABLE;
-> -	else if (sysfs_streq(buf, "online"))
-> -		online_type = MMOP_ONLINE;
-> -	else if (sysfs_streq(buf, "offline"))
-> -		online_type = MMOP_OFFLINE;
-> -	else {
-> -		ret = -EINVAL;
-> -		goto err;
-> -	}
-> -
->  	switch (online_type) {
->  	case MMOP_ONLINE_KERNEL:
->  	case MMOP_ONLINE_MOVABLE:
-> @@ -271,7 +280,6 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
->  		ret = -EINVAL; /* should never happen */
->  	}
->  
-> -err:
->  	unlock_device_hotplug();
->  
->  	if (ret < 0)
-> -- 
-> 2.24.1
-> 
+Okay. Looks like we don't need the accessor. I will use open-code.
 
+Thanks.
