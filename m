@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA26C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6DAC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF7B920A8B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A525F21556
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:04:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbgCTWEO (ORCPT
+        id S1727522AbgCTWEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:04:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37479 "EHLO
+        Fri, 20 Mar 2020 18:04:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37495 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727141AbgCTWEN (ORCPT
+        with ESMTP id S1727405AbgCTWEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:04:13 -0400
+        Fri, 20 Mar 2020 18:04:16 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFPk2-0004TV-5V; Fri, 20 Mar 2020 23:03:46 +0100
+        id 1jFPk8-0004Tk-BW; Fri, 20 Mar 2020 23:03:52 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 9E74CFFC8D;
-        Fri, 20 Mar 2020 23:03:45 +0100 (CET)
-Message-Id: <20200320180032.799569116@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id DA32C1039FC;
+        Fri, 20 Mar 2020 23:03:46 +0100 (CET)
+Message-Id: <20200320180033.280833846@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 19:00:00 +0100
+Date:   Fri, 20 Mar 2020 19:00:05 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -47,7 +47,7 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [RESEND][patch V3 04/23] kprobes: Prevent probes in .noinstr.text section
+Subject: [RESEND][patch V3 09/23] x86/entry/common: Protect against instrumentation
 References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,41 +59,250 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200320180000.yPE36zypOEVUzd0NDpyxTLS7XhMHNWPpb-WKVsrDwXA@z>
+Message-ID: <20200320180005.0WKp0OjTCZQhQk_sPsPibHjTyX_3TOvguV8Uj_DI-s0@z>
 
-Instrumentation is forbidden in the .noinstr.text section. Make kprobes
-respect this.
-
-This lacks support for .noinstr.text sections in modules, which is required
-to handle VMX and SVM.
+Mark the various syscall entries with noinstr to protect them against
+instrumentation and add the noinstr_begin()/end() annotations to mark the
+parts of the functions which are safe to call out into instrumentable code.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/kprobes.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/x86/entry/common.c |  133 ++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 89 insertions(+), 44 deletions(-)
 
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1443,10 +1443,21 @@ static bool __within_kprobe_blacklist(un
- 	return false;
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -42,13 +42,24 @@
+ /* Called on entry from user mode with IRQs off. */
+ __visible noinstr void enter_from_user_mode(void)
+ {
+-	CT_WARN_ON(ct_state() != CONTEXT_USER);
++	enum ctx_state state = ct_state();
++
+ 	user_exit_irqoff();
++
++	instr_begin();
++	CT_WARN_ON(state != CONTEXT_USER);
++	instr_end();
  }
+ #else
+ static inline void enter_from_user_mode(void) {}
+ #endif
  
-+/* Functions in .noinstr.text must not be probed */
-+static bool within_noinstr_text(unsigned long addr)
++static __always_inline void exit_to_user_mode(void)
 +{
-+	/* FIXME: Handle module .noinstr.text */
-+	return addr >= (unsigned long)__noinstr_text_start &&
-+	       addr < (unsigned long)__noinstr_text_end;
++	user_enter_irqoff();
++	mds_user_clear_cpu_buffers();
 +}
 +
- bool within_kprobe_blacklist(unsigned long addr)
+ static void do_audit_syscall_entry(struct pt_regs *regs, u32 arch)
  {
- 	char symname[KSYM_NAME_LEN], *p;
+ #ifdef CONFIG_X86_64
+@@ -178,8 +189,7 @@ static void exit_to_usermode_loop(struct
+ 	}
+ }
  
-+	if (within_noinstr_text(addr))
-+		return true;
+-/* Called with IRQs disabled. */
+-__visible inline void prepare_exit_to_usermode(struct pt_regs *regs)
++static void __prepare_exit_to_usermode(struct pt_regs *regs)
+ {
+ 	struct thread_info *ti = current_thread_info();
+ 	u32 cached_flags;
+@@ -218,10 +228,14 @@ static void exit_to_usermode_loop(struct
+ 	 */
+ 	ti->status &= ~(TS_COMPAT|TS_I386_REGS_POKED);
+ #endif
++}
+ 
+-	user_enter_irqoff();
+-
+-	mds_user_clear_cpu_buffers();
++__visible noinstr void prepare_exit_to_usermode(struct pt_regs *regs)
++{
++	instr_begin();
++	__prepare_exit_to_usermode(regs);
++	instr_end();
++	exit_to_user_mode();
+ }
+ 
+ #define SYSCALL_EXIT_WORK_FLAGS				\
+@@ -250,11 +264,7 @@ static void syscall_slow_exit_work(struc
+ 		tracehook_report_syscall_exit(regs, step);
+ }
+ 
+-/*
+- * Called with IRQs on and fully valid regs.  Returns with IRQs off in a
+- * state such that we can immediately switch to user mode.
+- */
+-__visible inline void syscall_return_slowpath(struct pt_regs *regs)
++static void __syscall_return_slowpath(struct pt_regs *regs)
+ {
+ 	struct thread_info *ti = current_thread_info();
+ 	u32 cached_flags = READ_ONCE(ti->flags);
+@@ -275,15 +285,29 @@ static void syscall_slow_exit_work(struc
+ 		syscall_slow_exit_work(regs, cached_flags);
+ 
+ 	local_irq_disable();
+-	prepare_exit_to_usermode(regs);
++	__prepare_exit_to_usermode(regs);
++}
 +
- 	if (__within_kprobe_blacklist(addr))
- 		return true;
++/*
++ * Called with IRQs on and fully valid regs.  Returns with IRQs off in a
++ * state such that we can immediately switch to user mode.
++ */
++__visible noinstr void syscall_return_slowpath(struct pt_regs *regs)
++{
++	instr_begin();
++	__syscall_return_slowpath(regs);
++	instr_end();
++	exit_to_user_mode();
+ }
  
+ #ifdef CONFIG_X86_64
+-__visible void do_syscall_64(unsigned long nr, struct pt_regs *regs)
++__visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
+ {
+ 	struct thread_info *ti;
+ 
+ 	enter_from_user_mode();
++	instr_begin();
++
+ 	local_irq_enable();
+ 	ti = current_thread_info();
+ 	if (READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY)
+@@ -300,8 +324,10 @@ static void syscall_slow_exit_work(struc
+ 		regs->ax = x32_sys_call_table[nr](regs);
+ #endif
+ 	}
++	__syscall_return_slowpath(regs);
+ 
+-	syscall_return_slowpath(regs);
++	instr_end();
++	exit_to_user_mode();
+ }
+ #endif
+ 
+@@ -309,10 +335,10 @@ static void syscall_slow_exit_work(struc
+ /*
+  * Does a 32-bit syscall.  Called with IRQs on in CONTEXT_KERNEL.  Does
+  * all entry and exit work and returns with IRQs off.  This function is
+- * extremely hot in workloads that use it, and it's usually called from
++ * ex2tremely hot in workloads that use it, and it's usually called from
+  * do_fast_syscall_32, so forcibly inline it to improve performance.
+  */
+-static __always_inline void do_syscall_32_irqs_on(struct pt_regs *regs)
++static void do_syscall_32_irqs_on(struct pt_regs *regs)
+ {
+ 	struct thread_info *ti = current_thread_info();
+ 	unsigned int nr = (unsigned int)regs->orig_ax;
+@@ -349,27 +375,62 @@ static __always_inline void do_syscall_3
+ #endif /* CONFIG_IA32_EMULATION */
+ 	}
+ 
+-	syscall_return_slowpath(regs);
++	__syscall_return_slowpath(regs);
+ }
+ 
+ /* Handles int $0x80 */
+-__visible void do_int80_syscall_32(struct pt_regs *regs)
++__visible noinstr void do_int80_syscall_32(struct pt_regs *regs)
+ {
+ 	enter_from_user_mode();
++	instr_begin();
++
+ 	local_irq_enable();
+ 	do_syscall_32_irqs_on(regs);
++
++	instr_end();
++	exit_to_user_mode();
++}
++
++static bool __do_fast_syscall_32(struct pt_regs *regs)
++{
++	int res;
++
++	/* Fetch EBP from where the vDSO stashed it. */
++	if (IS_ENABLED(CONFIG_X86_64)) {
++		/*
++		 * Micro-optimization: the pointer we're following is
++		 * explicitly 32 bits, so it can't be out of range.
++		 */
++		res = __get_user(*(u32 *)&regs->bp,
++			 (u32 __user __force *)(unsigned long)(u32)regs->sp);
++	} else {
++		res = get_user(*(u32 *)&regs->bp,
++		       (u32 __user __force *)(unsigned long)(u32)regs->sp);
++	}
++
++	if (res) {
++		/* User code screwed up. */
++		regs->ax = -EFAULT;
++		local_irq_disable();
++		__prepare_exit_to_usermode(regs);
++		return false;
++	}
++
++	/* Now this is just like a normal syscall. */
++	do_syscall_32_irqs_on(regs);
++	return true;
+ }
+ 
+ /* Returns 0 to return using IRET or 1 to return using SYSEXIT/SYSRETL. */
+-__visible long do_fast_syscall_32(struct pt_regs *regs)
++__visible noinstr long do_fast_syscall_32(struct pt_regs *regs)
+ {
+ 	/*
+ 	 * Called using the internal vDSO SYSENTER/SYSCALL32 calling
+ 	 * convention.  Adjust regs so it looks like we entered using int80.
+ 	 */
+-
+ 	unsigned long landing_pad = (unsigned long)current->mm->context.vdso +
+-		vdso_image_32.sym_int80_landing_pad;
++					vdso_image_32.sym_int80_landing_pad;
++	bool success;
+ 
+ 	/*
+ 	 * SYSENTER loses EIP, and even SYSCALL32 needs us to skip forward
+@@ -379,33 +440,17 @@ static __always_inline void do_syscall_3
+ 	regs->ip = landing_pad;
+ 
+ 	enter_from_user_mode();
++	instr_begin();
+ 
+ 	local_irq_enable();
++	success = __do_fast_syscall_32(regs);
+ 
+-	/* Fetch EBP from where the vDSO stashed it. */
+-	if (
+-#ifdef CONFIG_X86_64
+-		/*
+-		 * Micro-optimization: the pointer we're following is explicitly
+-		 * 32 bits, so it can't be out of range.
+-		 */
+-		__get_user(*(u32 *)&regs->bp,
+-			    (u32 __user __force *)(unsigned long)(u32)regs->sp)
+-#else
+-		get_user(*(u32 *)&regs->bp,
+-			 (u32 __user __force *)(unsigned long)(u32)regs->sp)
+-#endif
+-		) {
+-
+-		/* User code screwed up. */
+-		local_irq_disable();
+-		regs->ax = -EFAULT;
+-		prepare_exit_to_usermode(regs);
+-		return 0;	/* Keep it simple: use IRET. */
+-	}
++	instr_end();
++	exit_to_user_mode();
+ 
+-	/* Now this is just like a normal syscall. */
+-	do_syscall_32_irqs_on(regs);
++	/* If it failed, keep it simple: use IRET. */
++	if (!success)
++		return 0;
+ 
+ #ifdef CONFIG_X86_64
+ 	/*
 
