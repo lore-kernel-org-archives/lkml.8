@@ -2,172 +2,143 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 633C5C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EFFC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 372FE20777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584718424;
-	bh=gPg6Rj9rfVl3kr0MPwORpU97iokmhn0TxIQRvdMirpw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sOA/l2z8v3EpY53c4II+lX2VstQFrwLFpTJ3vfD2S4b2lroj9fzKggvl0jPy8oCn+
-	 4Vh4rtC3gGN+XRM/wjPno0bsbn1ASOYfGlYAfi8GA1Pvxi6MVQ4KAhnQxMp7KK3+up
-	 LferNMbnrEDecrRa8xeOG2Sk3Mm9Cb0XN0LkJCGk=
+	by mail.kernel.org (Postfix) with ESMTP id DDF832070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:34:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SJySvP5t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbgCTPdn (ORCPT
+        id S1727460AbgCTPd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:33:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgCTPdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 11:33:42 -0400
-Received: from localhost (unknown [122.167.82.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD54B2070A;
-        Fri, 20 Mar 2020 15:33:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584718422;
-        bh=gPg6Rj9rfVl3kr0MPwORpU97iokmhn0TxIQRvdMirpw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Gtm7eDZ4ul2aZhkwWfERCf2d8ES2RWgsn5LRSiSAvao2eRzLMh4FUMTqzPLEE+WNO
-         KcMHbqpvZ7Xkc4uQtLVmgOc27GLBd8hZil0/fbdrww95gtU2+X6vXMf96TVJgMpxU4
-         cjT9on1SYCMidYkLDHQFI/gXP9Mj5vE/4sLO3gxI=
-Date:   Fri, 20 Mar 2020 21:03:34 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-Subject: Re: [PATCH 1/8] soundwire: bus_type: add master_device/driver support
-Message-ID: <20200320153334.GJ4885@vkoul-mobl>
-References: <20200305063646.GW4148@vkoul-mobl>
- <eb30ac49-788f-b856-6fcf-84ae580eb3c8@linux.intel.com>
- <20200306050115.GC4148@vkoul-mobl>
- <4fabb135-6fbb-106f-44fd-8155ea716c00@linux.intel.com>
- <20200311063645.GH4885@vkoul-mobl>
- <0fafb567-10e5-a1ea-4a6d-b3c53afb215e@linux.intel.com>
- <20200313115011.GD4885@vkoul-mobl>
- <4cb16467-87d0-ef99-e471-9eafa9e669d2@linux.intel.com>
- <20200314094904.GP4885@vkoul-mobl>
- <3c32830c-cd12-867f-a763-7c3e385cb1e9@linux.intel.com>
+        Fri, 20 Mar 2020 11:33:59 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:21563 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726144AbgCTPd7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 11:33:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584718437;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XeyzAJxgBh+6PUhoAp4SlYW+6ERsTWH0yvGznNw4e58=;
+        b=SJySvP5t7Ke36aysK+gsB4vK3pgSuBO/EbFoP19BDAvXKO6GhkKFlY9maxOtR9NprJHbdx
+        p9l+rFBvz1L/OxeSAUa5n7GXjmMIDLOYKV7ynQwkPuSOoj45x5ZOGrhru8MR7+sSwzF7AG
+        IXDtQALCMlfFoDV9QSMQKISr4epyhlM=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-256-xzBkP3V0NVGssPUd_ueYng-1; Fri, 20 Mar 2020 11:33:55 -0400
+X-MC-Unique: xzBkP3V0NVGssPUd_ueYng-1
+Received: by mail-wm1-f70.google.com with SMTP id f185so2503176wmf.8
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 08:33:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=XeyzAJxgBh+6PUhoAp4SlYW+6ERsTWH0yvGznNw4e58=;
+        b=r+rzIlWjacC5H0Dz1C8D8on2s5hE7pEajjrFCH9EDo7xk8uDXEEZRpaARAZoe8nLOr
+         Oqvb/RXAMaQ/D1xMM9QcOpk2mfDLkosIJpNMy76Igww/Xw35TWvcYFc7uAJMX2LPO5sg
+         Neez5P2Ahla0YxWunPDtmkjblJ1BT6BJ9CJpu97jrfxL8PyMknK9XFl3pwIn4RkzVlu9
+         u5ja1gwZeZxS//HwgL1pc1YXKYUIWv/y3h+Wck0iw3Mr6D72jYfrre5duMtvTzXIXwQM
+         FMJ+D2yFMc9Q2BVuG9cUXI9qgqDg9LeYo8erkxl83NnuCSGzn4zcveaTeXmd6QyTFxgJ
+         WsUA==
+X-Gm-Message-State: ANhLgQ1yqyaBCms4B9hM9TaYSqTaL0WNkDot2JaBaJ+kJfANriE2wsMn
+        P6dIesebbWILKOstvqhkxXRlim8yQojqX7ZDQx3fwP5P8Dj4NTAUsb4i5aNoZSZOOcNrGveUB5m
+        ZwsLHy9htE8ZFVH9B3tFAazwFRl4N64Y8hChD12eP
+X-Received: by 2002:a7b:c40f:: with SMTP id k15mr5696842wmi.144.1584718434412;
+        Fri, 20 Mar 2020 08:33:54 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vuDBST3/7qZQPX/Zppz7rPxOCK13Gbo/YEvu+3q6wsOmXOKe/OICTow4GBaSf+RSlljQr+C0CfYFyEuy0h6EQw=
+X-Received: by 2002:a7b:c40f:: with SMTP id k15mr5696810wmi.144.1584718434072;
+ Fri, 20 Mar 2020 08:33:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3c32830c-cd12-867f-a763-7c3e385cb1e9@linux.intel.com>
+References: <20200224095223.13361-1-mgorman@techsingularity.net>
+ <20200309191233.GG10065@pauld.bos.csb> <20200309203625.GU3818@techsingularity.net>
+ <20200312095432.GW3818@techsingularity.net> <CAE4VaGA4q4_qfC5qe3zaLRfiJhvMaSb2WADgOcQeTwmPvNat+A@mail.gmail.com>
+ <20200312155640.GX3818@techsingularity.net> <CAE4VaGD8DUEi6JnKd8vrqUL_8HZXnNyHMoK2D+1-F5wo+5Z53Q@mail.gmail.com>
+ <20200312214736.GA3818@techsingularity.net> <CAE4VaGCfDpu0EuvHNHwDGbR-HNBSAHY=yu3DJ33drKgymMTTOw@mail.gmail.com>
+ <CAE4VaGC09OfU2zXeq2yp_N0zXMbTku5ETz0KEocGi-RSiKXv-w@mail.gmail.com> <20200320152251.GC3818@techsingularity.net>
+In-Reply-To: <20200320152251.GC3818@techsingularity.net>
+From:   Jirka Hladky <jhladky@redhat.com>
+Date:   Fri, 20 Mar 2020 16:33:43 +0100
+Message-ID: <CAE4VaGA+GOh-wgHBbSsgpRVXgrGtz8egu6dYp143TAH0siL5fA@mail.gmail.com>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-03-20, 14:15, Pierre-Louis Bossart wrote:
-> 
-> 
-> > > It's really down to your objection to the use of 'struct driver'... For ASoC
-> > > support we only need the .name and .pm_ops, so there's really no possible
-> > > path forward otherwise.
-> > 
-> > It means that we cannot have a solution which is Intel specific into
-> > core. If you has a standalone controller you do not need this.
-> 
-> A 'struct driver' is not Intel-specific, sorry.
+> MPI or OMP and what is a low thread count? For MPI at least, I saw a 0.4%
+> gain on an 4-node machine for bt_C and a 3.88% regression on 8-nodes. I
+> think it must be OMP you are using because I found I had to disable UA
+> for MPI at some point in the past for reasons I no longer remember.
 
-We are discussing 'struct sdw_master_driver'. Please be very specific in
-you replies and do not use incorrect terminology which confuses people.
+Yes, it's indeed OMP.  With low threads count, I mean up to 2x number
+of NUMA nodes (8 threads on 4 NUMA node servers, 16 threads on 8 NUMA
+node servers).
 
-Sorry a 'struct sdw_master_driver' IMHO is. As I have said it is not
-needed if you have standalone controller even in Intel case, and rest of
-the world.
+> One possibility would be to spread wide always at clone time and assume
+> wake_affine will pull related tasks but it's fragile because it breaks
+> if the cloned task execs and then allocates memory from a remote node
+> only to migrate to a local node immediately.
 
-> > > Like I said, we have 3 options
-> > 
-> > Repeating the already discussed doesn't help. I have already told you the
-> > constraint to work is not to add Intel specific change into core.
-> > 
-> > I have already said that expect the driver part I dont have objections
-> > to rest of this series and am ready to merge
-> > 
-> > > a) stay with platform devices for now. You will need to have a conversation
-> > > with Greg on this.
-> > > 
-> > > b) use a minimal sdw_master_device with a minimal 'struct driver' use.
-> > > 
-> > > c) use a more elaborate solution suggested in this patchset and yes that
-> > > means the Qualcomm driver would need to change a bit.
-> > > 
-> > > Pick one or suggest something that is implementable. The first version of
-> > > the patches was provided in October, the last RFC was provided on January
-> > > 31, time's up. At the moment you are preventing ASoC integration from moving
-> > > forward.
-> > 
-> > In opensource review we go back and forth and we debate and come to a
-> > common conclusion. Choosing a specific set of solutions and constraining
-> > yourself to pick one does not help.
-> 
-> First off, the ask to move away from platform devices came from Greg. Not
-> me. All I did here was suggest solutions, one reviewed by Greg as 'sane' and
-> 'nice work'. Greg essentially wrote the book on devices/drivers so his
-> review means I am not completely senile just yet.
-> 
-> You pushed back with two proposals that don't account for power management
-> and the driver name required for ASoC. That was on top on another suggestion
-> to use platform devices that was shot down by Greg himself with language I
-> can't quote here.
-> 
-> Please re-read my words: my ask was "Pick one or suggest something that is
-> implementable."
+I think the only way to find out how it performs is to test it. If you
+could prepare a patch like that, I'm more than happy to give it a try!
 
-IMO the path I suggested is implementable..
-> 
-> You don't pick one and don't suggest anything implementable either, so
-> there's really not much I can do, can I? I don't have a solution without a
-> 'struct driver', and you don't want it.
-> 
-> The only short-term path forward I see is to ask Greg to agree to keep the
-> platform devices for now.
-
-And I guess you didn't talk to your Intel colleagues... Please talk to
-them on how they did it.
+Jirka
 
 
-> 
-> > I have only _one_ constraint no platform specific change in core. If that
-> > is satisfied I will go with it. Sorry but this is non-negotiable for me.
-> 
-> How is a 'struct driver' platform specific?
-> 
-> > Ask yourself, do you need this intrusive core change if you had this
-> > exact same controller(s) but only as standalone one...
-> 
-> That would really not change anything. There would be some sort of ID (PCI
-> or something else) for the controller and multiple masters below. The
+On Fri, Mar 20, 2020 at 4:22 PM Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Fri, Mar 20, 2020 at 03:37:44PM +0100, Jirka Hladky wrote:
+> > Hi Mel,
+> >
+> > just a quick update. I have increased the testing coverage and other tests
+> > from the NAS shows a big performance drop for the low number of threads as
+> > well:
+> >
+> > sp_C_x - show still the biggest drop upto 50%
+> > bt_C_x - performance drop upto 40%
+> > ua_C_x - performance drop upto 30%
+> >
+>
+> MPI or OMP and what is a low thread count? For MPI at least, I saw a 0.4%
+> gain on an 4-node machine for bt_C and a 3.88% regression on 8-nodes. I
+> think it must be OMP you are using because I found I had to disable UA
+> for MPI at some point in the past for reasons I no longer remember.
+>
+> > My point is that the performance drop for the low number of threads is more
+> > common than we have initially thought.
+> >
+> > Let me know what you need more data.
+> >
+>
+> I just a clarification on the thread count and a confirmation it's OMP. For
+> MPI, I did note that some of the other NAS kernels shows a slight dip but
+> it was nowhere near as severe as SP and the problem was the same as more --
+> two or more tasks stayed on the same node without spreading out because
+> there was no pressure to do so. There was enough CPU and memory capacity
+> with no obvious pattern that could be used to spread the load wide early.
+>
+> One possibility would be to spread wide always at clone time and assume
+> wake_affine will pull related tasks but it's fragile because it breaks
+> if the cloned task execs and then allocates memory from a remote node
+> only to migrate to a local node immediately.
+>
+> --
+> Mel Gorman
+> SUSE Labs
+>
 
-If it is single master?
-
-If it is multiple master with different ACPI ID for each master?
-
-Would you still need 'struct sdw_master_driver'?
-
-> ACPI/DisCo spec does not account for masters so they would have to be
-> created by hand.
-
-
-> 
-> Again how is a 'struct driver' an 'intrusive change'?
-
-Again do not confuse by using incorrect terminology.
-
-Again 'struct sdw_master_driver' for a specific Intel hw configuration is.
 
 -- 
-~Vinod
+-Jirka
+
