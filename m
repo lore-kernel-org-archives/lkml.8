@@ -2,131 +2,99 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74621C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534FBC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB3020773
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584691888;
-	bh=prDI9bGo4LY3zoAZD0tiC/UjvwdIPGeju68RqI+dVvk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MOszJilvPv7wT/vFVCVTa7fFtO9DmI3Xh/dt9JA/zElvwI878zR2S9SQ+82+nT94Q
-	 XaiSqVGcCEUHGdIpIwtNzisuGoosuNV0g5TniyKCdvpZpz9XPNYzPZOo3kXGVzuUOD
-	 G1NyeTpnKRUeAVZ+0pxDN3x7/PcKyIAi5Yiz1swU=
+	by mail.kernel.org (Postfix) with ESMTP id 2A2CC20775
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:11:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="iVugE2E4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgCTIL1 (ORCPT
+        id S1726971AbgCTILc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 04:11:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50866 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 04:11:32 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:51328 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726631AbgCTIL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 04:11:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5079120739;
-        Fri, 20 Mar 2020 08:11:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584691884;
-        bh=prDI9bGo4LY3zoAZD0tiC/UjvwdIPGeju68RqI+dVvk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Yy+aRtlAwhGkDm6wixmjsXXBtDHZft4nx/u7K/3veiuFQGEsovpep6Ll/sRMiZPqf
-         10zdcScjbRVesZt+NrAiQU0g5sSL49+25LQulxl2EGmnahS+BFJEbNZNOOd96KhSbh
-         RFj1q1vO1upCItLSFsfuOt3OKGRimgapvEXknH9w=
-Date:   Fri, 20 Mar 2020 09:11:22 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: [PATCH 4.19 00/48] 4.19.112-rc1 review
-Message-ID: <20200320081122.GA349027@kroah.com>
-References: <20200319123902.941451241@linuxfoundation.org>
- <CA+G9fYsDw6JEznSHm2X=Wvq1dysGbGa4-VpXJyzKWZQxLMdagw@mail.gmail.com>
- <7a8c6a752793f0907662c3e9c197c284fc461550.camel@codethink.co.uk>
- <20200320080317.GA312074@kroah.com>
+        id S1726820AbgCTILa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 04:11:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=KJSvEB5GYx0NMRbbOsFK/DkUQp3KkBqyuRsPuE4sghw=; b=iVugE2E4+ttkNVH6HGUpu294V3
+        6qb4VJnuUWhi6D332oHfZyHOwwEPHVRGbL1QGSxKJ5u3/ogsVPReoYoBl7qEY0B0+Jr0AprsWYyqM
+        9FMZRM6a3Q6fTNLah6PXKSF8qW0OwsaSNzibEv6IWBeZxpEjhebPinBrXJhTgYYFj278=;
+Received: from p200300ccff093a00e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff09:3a00:e2ce:c3ff:fe93:fc31] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jFCkP-00058U-5Z; Fri, 20 Mar 2020 09:11:17 +0100
+Received: from andi by eeepc with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jFCkG-00039H-Rm; Fri, 20 Mar 2020 09:11:08 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
+        phh@phh.me, letux-kernel@openphoenux.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        jic23@kernel.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v7 1/7] dt-bindings: mfd: rn5t618: Document optional property interrupts
+Date:   Fri, 20 Mar 2020 09:10:59 +0100
+Message-Id: <20200320081105.12026-2-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200320081105.12026-1-andreas@kemnade.info>
+References: <20200320081105.12026-1-andreas@kemnade.info>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200320080317.GA312074@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 09:03:17AM +0100, Greg Kroah-Hartman wrote:
-> On Thu, Mar 19, 2020 at 08:00:32PM +0000, Ben Hutchings wrote:
-> > On Fri, 2020-03-20 at 01:12 +0530, Naresh Kamboju wrote:
-> > > On Thu, 19 Mar 2020 at 18:50, Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > > This is the start of the stable review cycle for the 4.19.112 release.
-> > > > There are 48 patches in this series, all will be posted as a response
-> > > > to this one.  If anyone has any issues with these being applied, please
-> > > > let me know.
-> > > > 
-> > > > Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
-> > > > Anything received after that time might be too late.
-> > > > 
-> > > > The whole patch series can be found in one patch at:
-> > > >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.112-rc1.gz
-> > > > or in the git tree and branch at:
-> > > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> > > > and the diffstat can be found below.
-> > > > 
-> > > > thanks,
-> > > > 
-> > > > greg k-h
-> > > > 
-> > > > Faiz Abbas <faiz_abbas@ti.com>
-> > > >     mmc: sdhci-omap: Fix Tuning procedure for temperatures < -20C
-> > > > 
-> > > > Faiz Abbas <faiz_abbas@ti.com>
-> > > >     mmc: sdhci-omap: Don't finish_mrq() on a command error during tuning
-> > > 
-> > > Results from Linaro’s test farm.
-> > > No regressions on arm64, arm, x86_64, and i386.
-> > > 
-> > > NOTE:
-> > > The arm beagleboard x15 device running stable rc 4.19.112-rc1, 5.4.27-rc1
-> > > and 5.5.11-rc2 kernel pops up the following messages on console log,
-> > > Is this a problem ?
-> > >
-> > > [   15.737765] mmc1: unspecified timeout for CMD6 - use generic
-> > > [   16.754248] mmc1: unspecified timeout for CMD6 - use generic
-> > > [   16.842071] mmc1: unspecified timeout for CMD6 - use generic
-> > > ...
-> > > [  977.126652] mmc1: unspecified timeout for CMD6 - use generic
-> > > [  985.449798] mmc1: unspecified timeout for CMD6 - use generic
-> > [...]
-> > 
-> > This warning was introduced by commit 533a6cfe08f9 "mmc: core: Default
-> > to generic_cmd6_time as timeout in __mmc_switch()".  That should not be
-> > applied to stable branches; it is not valid without (at least) these
-> > preparatory changes:
-> > 
-> > 0c204979c691 mmc: core: Cleanup BKOPS support
-> > 24ed3bd01d6a mmc: core: Specify timeouts for BKOPS and CACHE_FLUSH for eMMC
-> > ad91619aa9d7 mmc: block: Use generic_cmd6_time when modifying INAND_CMD38_ARG_EXT_CSD
-> 
-> Ok, I've now dropped that patch, which also required me to drop
-> 1292e3efb149 ("mmc: core: Allow host controllers to require R1B for
-> CMD6").  I've done so for 5.5.y, 5.4.y, and 4.19.y.
+These chips use interrupts for various things like RTC alarm.
 
-Ugh, I forgot, that broke other things.  I'm going to go rip out a bunch
-of mmc patches now...
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+Changes in v4: add refernce to interrupt binding
+documentation
+ Documentation/devicetree/bindings/mfd/rn5t618.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/rn5t618.txt b/Documentation/devicetree/bindings/mfd/rn5t618.txt
+index b74e5e94d1cb..16778ea00dbc 100644
+--- a/Documentation/devicetree/bindings/mfd/rn5t618.txt
++++ b/Documentation/devicetree/bindings/mfd/rn5t618.txt
+@@ -15,6 +15,8 @@ Required properties:
+  - reg: the I2C slave address of the device
+ 
+ Optional properties:
++ - interrupts: interrupt mapping for IRQ
++   See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+  - system-power-controller:
+    See Documentation/devicetree/bindings/power/power-controller.txt
+ 
+@@ -32,6 +34,8 @@ Example:
+ 	pmic@32 {
+ 		compatible = "ricoh,rn5t618";
+ 		reg = <0x32>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
+ 		system-power-controller;
+ 
+ 		regulators {
+-- 
+2.20.1
 
