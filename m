@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADEBC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BABC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE50620739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70BCD20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:10:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QHC9eW62"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OuwHJrKb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbgCTQKD (ORCPT
+        id S1727539AbgCTQKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:10:03 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:58630 "EHLO
+        Fri, 20 Mar 2020 12:10:15 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:34470 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727457AbgCTQKA (ORCPT
+        by vger.kernel.org with ESMTP id S1727457AbgCTQKO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:10:00 -0400
+        Fri, 20 Mar 2020 12:10:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584720598;
+        s=mimecast20190719; t=1584720613;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=JAARb2bDHN2gV5fR00RfsJLGfx43dK1dtt9u5n9rt+0=;
-        b=QHC9eW627eygHnpjASZcWa9MKsJsbWODWyMlID7xkNSHcjk5acRvtqqrr9LAvJr6NBzLJT
-        aHYKQMYQwk8B6vuA/7SnWo1FE8YoLabW83JozwAqo5/NsLHwvissEYj4lSDo4xylS5qXPP
-        8+3bfkdYzQVVzGWdHJInLTHYKC4xk2E=
+        bh=zc5dOSpxvMWZU+BrXme6a55ApTzuxXuYUv1VDiCsFc0=;
+        b=OuwHJrKb/bnnmmB3KKI/1eX6CeeYFagr3zSghw/OqiB1EgNhvjLT0N6pjpzAdUPEHZoLRB
+        futn3Uhj9r7t36G4d594pkyzoZebFJ1GFQnh/QIClmqVq3zMsyWjoWnreH3U/EeNGJh8IK
+        c+SNsO661spotVJ6C88Nrbuzo9eyHq4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-340-WLd3y5XyNlO4oGuT5jdzkQ-1; Fri, 20 Mar 2020 12:09:53 -0400
-X-MC-Unique: WLd3y5XyNlO4oGuT5jdzkQ-1
+ us-mta-478-p2UsQlYKMza0vdO3B2TNNQ-1; Fri, 20 Mar 2020 12:10:09 -0400
+X-MC-Unique: p2UsQlYKMza0vdO3B2TNNQ-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 62F831137846;
-        Fri, 20 Mar 2020 16:09:50 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 344DD802567;
+        Fri, 20 Mar 2020 16:10:07 +0000 (UTC)
 Received: from laptop.redhat.com (ovpn-113-142.ams2.redhat.com [10.36.113.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D50735C1D8;
-        Fri, 20 Mar 2020 16:09:46 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DCC6A5C3FD;
+        Fri, 20 Mar 2020 16:09:55 +0000 (UTC)
 From:   Eric Auger <eric.auger@redhat.com>
 To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
@@ -54,9 +54,9 @@ To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
         will.deacon@arm.com, robin.murphy@arm.com
 Cc:     marc.zyngier@arm.com, peter.maydell@linaro.org,
         zhangfei.gao@gmail.com
-Subject: [PATCH v10 01/13] iommu: Introduce attach/detach_pasid_table API
-Date:   Fri, 20 Mar 2020 17:09:20 +0100
-Message-Id: <20200320160932.27222-2-eric.auger@redhat.com>
+Subject: [PATCH v10 03/13] iommu/arm-smmu-v3: Maintain a SID->device structure
+Date:   Fri, 20 Mar 2020 17:09:22 +0100
+Message-Id: <20200320160932.27222-4-eric.auger@redhat.com>
 In-Reply-To: <20200320160932.27222-1-eric.auger@redhat.com>
 References: <20200320160932.27222-1-eric.auger@redhat.com>
 MIME-Version: 1.0
@@ -67,187 +67,195 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-In virtualization use case, when a guest is assigned
-a PCI host device, protected by a virtual IOMMU on the guest,
-the physical IOMMU must be programmed to be consistent with
-the guest mappings. If the physical IOMMU supports two
-translation stages it makes sense to program guest mappings
-onto the first stage/level (ARM/Intel terminology) while the host
-owns the stage/level 2.
+When handling faults from the event or PRI queue, we need to find the
+struct device associated to a SID. Add a rb_tree to keep track of SIDs.
 
-In that case, it is mandated to trap on guest configuration
-settings and pass those to the physical iommu driver.
-
-This patch adds a new API to the iommu subsystem that allows
-to set/unset the pasid table information.
-
-A generic iommu_pasid_table_config struct is introduced in
-a new iommu.h uapi header. This is going to be used by the VFIO
-user API.
-
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 Signed-off-by: Eric Auger <eric.auger@redhat.com>
-Reviewed-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 ---
- drivers/iommu/iommu.c      | 19 ++++++++++++++
- include/linux/iommu.h      | 18 ++++++++++++++
- include/uapi/linux/iommu.h | 51 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 88 insertions(+)
+ drivers/iommu/arm-smmu-v3.c | 112 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 111 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 3e3528436e0b..7cfc285bac17 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1723,6 +1723,25 @@ int iommu_sva_unbind_gpasid(struct iommu_domain *d=
-omain, struct device *dev,
- }
- EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index a7222dd5b117..3d726e97934f 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -677,6 +677,16 @@ struct arm_smmu_device {
 =20
-+int iommu_attach_pasid_table(struct iommu_domain *domain,
-+			     struct iommu_pasid_table_config *cfg)
-+{
-+	if (unlikely(!domain->ops->attach_pasid_table))
-+		return -ENODEV;
+ 	/* IOMMU core code handle */
+ 	struct iommu_device		iommu;
 +
-+	return domain->ops->attach_pasid_table(domain, cfg);
-+}
-+EXPORT_SYMBOL_GPL(iommu_attach_pasid_table);
++	struct rb_root			streams;
++	struct mutex			streams_mutex;
 +
-+void iommu_detach_pasid_table(struct iommu_domain *domain)
-+{
-+	if (unlikely(!domain->ops->detach_pasid_table))
-+		return;
++};
 +
-+	domain->ops->detach_pasid_table(domain);
-+}
-+EXPORT_SYMBOL_GPL(iommu_detach_pasid_table);
-+
- static void __iommu_detach_device(struct iommu_domain *domain,
- 				  struct device *dev)
- {
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index d1b5f4d98569..d91c7912ec3d 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -248,6 +248,8 @@ struct iommu_iotlb_gather {
-  * @cache_invalidate: invalidate translation caches
-  * @sva_bind_gpasid: bind guest pasid and mm
-  * @sva_unbind_gpasid: unbind guest pasid and mm
-+ * @attach_pasid_table: attach a pasid table
-+ * @detach_pasid_table: detach the pasid table
-  * @pgsize_bitmap: bitmap of all possible supported page sizes
-  * @owner: Driver module providing these ops
-  */
-@@ -307,6 +309,9 @@ struct iommu_ops {
- 				      void *drvdata);
- 	void (*sva_unbind)(struct iommu_sva *handle);
- 	int (*sva_get_pasid)(struct iommu_sva *handle);
-+	int (*attach_pasid_table)(struct iommu_domain *domain,
-+				  struct iommu_pasid_table_config *cfg);
-+	void (*detach_pasid_table)(struct iommu_domain *domain);
-=20
- 	int (*page_response)(struct device *dev,
- 			     struct iommu_fault_event *evt,
-@@ -443,6 +448,9 @@ extern int iommu_sva_bind_gpasid(struct iommu_domain =
-*domain,
- 		struct device *dev, struct iommu_gpasid_bind_data *data);
- extern int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
- 				struct device *dev, ioasid_t pasid);
-+extern int iommu_attach_pasid_table(struct iommu_domain *domain,
-+				    struct iommu_pasid_table_config *cfg);
-+extern void iommu_detach_pasid_table(struct iommu_domain *domain);
- extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev)=
-;
- extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
- extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
-@@ -1033,6 +1041,16 @@ iommu_aux_get_pasid(struct iommu_domain *domain, s=
-truct device *dev)
- 	return -ENODEV;
- }
-=20
-+static inline
-+int iommu_attach_pasid_table(struct iommu_domain *domain,
-+			     struct iommu_pasid_table_config *cfg)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline
-+void iommu_detach_pasid_table(struct iommu_domain *domain) {}
-+
- static inline struct iommu_sva *
- iommu_sva_bind_device(struct device *dev, struct mm_struct *mm, void *dr=
-vdata)
- {
-diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-index 4ad3496e5c43..8d00be10dc6d 100644
---- a/include/uapi/linux/iommu.h
-+++ b/include/uapi/linux/iommu.h
-@@ -321,4 +321,55 @@ struct iommu_gpasid_bind_data {
- 	};
++struct arm_smmu_stream {
++	u32				id;
++	struct arm_smmu_master		*master;
++	struct rb_node			node;
  };
 =20
-+/**
-+ * struct iommu_pasid_smmuv3 - ARM SMMUv3 Stream Table Entry stage 1 rel=
-ated
-+ *     information
-+ * @version: API version of this structure
-+ * @s1fmt: STE s1fmt (format of the CD table: single CD, linear table
-+ *         or 2-level table)
-+ * @s1dss: STE s1dss (specifies the behavior when @pasid_bits !=3D 0
-+ *         and no PASID is passed along with the incoming transaction)
-+ * @padding: reserved for future use (should be zero)
-+ *
-+ * The PASID table is referred to as the Context Descriptor (CD) table o=
-n ARM
-+ * SMMUv3. Please refer to the ARM SMMU 3.x spec (ARM IHI 0070A) for ful=
-l
-+ * details.
-+ */
-+struct iommu_pasid_smmuv3 {
-+#define PASID_TABLE_SMMUV3_CFG_VERSION_1 1
-+	__u32	version;
-+	__u8	s1fmt;
-+	__u8	s1dss;
-+	__u8	padding[2];
-+};
+ /* SMMU private data for each master */
+@@ -687,6 +697,7 @@ struct arm_smmu_master {
+ 	struct list_head		domain_head;
+ 	u32				*sids;
+ 	unsigned int			num_sids;
++	struct arm_smmu_stream		*streams;
+ 	bool				ats_enabled;
+ 	unsigned int			ssid_bits;
+ };
+@@ -1967,6 +1978,32 @@ static int arm_smmu_init_l2_strtab(struct arm_smmu=
+_device *smmu, u32 sid)
+ 	return 0;
+ }
+=20
++__maybe_unused
++static struct arm_smmu_master *
++arm_smmu_find_master(struct arm_smmu_device *smmu, u32 sid)
++{
++	struct rb_node *node;
++	struct arm_smmu_stream *stream;
++	struct arm_smmu_master *master =3D NULL;
 +
-+/**
-+ * struct iommu_pasid_table_config - PASID table data used to bind guest=
- PASID
-+ *     table to the host IOMMU
-+ * @version: API version to prepare for future extensions
-+ * @format: format of the PASID table
-+ * @base_ptr: guest physical address of the PASID table
-+ * @pasid_bits: number of PASID bits used in the PASID table
-+ * @config: indicates whether the guest translation stage must
-+ *          be translated, bypassed or aborted.
-+ * @padding: reserved for future use (should be zero)
-+ * @smmuv3: table information when @format is %IOMMU_PASID_FORMAT_SMMUV3
-+ */
-+struct iommu_pasid_table_config {
-+#define PASID_TABLE_CFG_VERSION_1 1
-+	__u32	version;
-+#define IOMMU_PASID_FORMAT_SMMUV3	1
-+	__u32	format;
-+	__u64	base_ptr;
-+	__u8	pasid_bits;
-+#define IOMMU_PASID_CONFIG_TRANSLATE	1
-+#define IOMMU_PASID_CONFIG_BYPASS	2
-+#define IOMMU_PASID_CONFIG_ABORT	3
-+	__u8	config;
-+	__u8    padding[6];
-+	union {
-+		struct iommu_pasid_smmuv3 smmuv3;
-+	};
-+};
++	mutex_lock(&smmu->streams_mutex);
++	node =3D smmu->streams.rb_node;
++	while (node) {
++		stream =3D rb_entry(node, struct arm_smmu_stream, node);
++		if (stream->id < sid) {
++			node =3D node->rb_right;
++		} else if (stream->id > sid) {
++			node =3D node->rb_left;
++		} else {
++			master =3D stream->master;
++			break;
++		}
++	}
++	mutex_unlock(&smmu->streams_mutex);
 +
- #endif /* _UAPI_IOMMU_H */
++	return master;
++}
++
+ /* IRQ and event handlers */
+ static irqreturn_t arm_smmu_evtq_thread(int irq, void *dev)
+ {
+@@ -2912,6 +2949,69 @@ static bool arm_smmu_sid_in_range(struct arm_smmu_=
+device *smmu, u32 sid)
+ 	return sid < limit;
+ }
+=20
++static int arm_smmu_insert_master(struct arm_smmu_device *smmu,
++				  struct arm_smmu_master *master)
++{
++	int i;
++	int ret =3D 0;
++	struct arm_smmu_stream *new_stream, *cur_stream;
++	struct rb_node **new_node, *parent_node =3D NULL;
++
++	master->streams =3D kcalloc(master->num_sids,
++				  sizeof(struct arm_smmu_stream), GFP_KERNEL);
++	if (!master->streams)
++		return -ENOMEM;
++
++	mutex_lock(&smmu->streams_mutex);
++	for (i =3D 0; i < master->num_sids && !ret; i++) {
++		new_stream =3D &master->streams[i];
++		new_stream->id =3D master->sids[i];
++		new_stream->master =3D master;
++
++		new_node =3D &(smmu->streams.rb_node);
++		while (*new_node) {
++			cur_stream =3D rb_entry(*new_node, struct arm_smmu_stream,
++					      node);
++			parent_node =3D *new_node;
++			if (cur_stream->id > new_stream->id) {
++				new_node =3D &((*new_node)->rb_left);
++			} else if (cur_stream->id < new_stream->id) {
++				new_node =3D &((*new_node)->rb_right);
++			} else {
++				dev_warn(master->dev,
++					 "stream %u already in tree\n",
++					 cur_stream->id);
++				ret =3D -EINVAL;
++				break;
++			}
++		}
++
++		if (!ret) {
++			rb_link_node(&new_stream->node, parent_node, new_node);
++			rb_insert_color(&new_stream->node, &smmu->streams);
++		}
++	}
++	mutex_unlock(&smmu->streams_mutex);
++
++	return ret;
++}
++
++static void arm_smmu_remove_master(struct arm_smmu_device *smmu,
++				   struct arm_smmu_master *master)
++{
++	int i;
++
++	if (!master->streams)
++		return;
++
++	mutex_lock(&smmu->streams_mutex);
++	for (i =3D 0; i < master->num_sids; i++)
++		rb_erase(&master->streams[i].node, &smmu->streams);
++	mutex_unlock(&smmu->streams_mutex);
++
++	kfree(master->streams);
++}
++
+ static struct iommu_ops arm_smmu_ops;
+=20
+ static int arm_smmu_add_device(struct device *dev)
+@@ -2979,15 +3079,21 @@ static int arm_smmu_add_device(struct device *dev=
+)
+ 	if (ret)
+ 		goto err_disable_pasid;
+=20
++	ret =3D arm_smmu_insert_master(smmu, master);
++	if (ret)
++		goto err_unlink;
++
+ 	group =3D iommu_group_get_for_dev(dev);
+ 	if (IS_ERR(group)) {
+ 		ret =3D PTR_ERR(group);
+-		goto err_unlink;
++		goto err_remove_master;
+ 	}
+=20
+ 	iommu_group_put(group);
+ 	return 0;
+=20
++err_remove_master:
++	arm_smmu_remove_master(smmu, master);
+ err_unlink:
+ 	iommu_device_unlink(&smmu->iommu, dev);
+ err_disable_pasid:
+@@ -3011,6 +3117,7 @@ static void arm_smmu_remove_device(struct device *d=
+ev)
+ 	smmu =3D master->smmu;
+ 	arm_smmu_detach_dev(master);
+ 	iommu_group_remove_device(dev);
++	arm_smmu_remove_master(smmu, master);
+ 	iommu_device_unlink(&smmu->iommu, dev);
+ 	arm_smmu_disable_pasid(master);
+ 	kfree(master);
+@@ -3365,6 +3472,9 @@ static int arm_smmu_init_structures(struct arm_smmu=
+_device *smmu)
+ {
+ 	int ret;
+=20
++	mutex_init(&smmu->streams_mutex);
++	smmu->streams =3D RB_ROOT;
++
+ 	ret =3D arm_smmu_init_queues(smmu);
+ 	if (ret)
+ 		return ret;
 --=20
 2.20.1
 
