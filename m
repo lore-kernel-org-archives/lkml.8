@@ -2,124 +2,182 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0A8C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31E8C43332
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A7320663
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ABA720663
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:28:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EmAYBy9I"
+	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="mlwq4CYA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgCTGY6 (ORCPT
+        id S1726806AbgCTG2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 02:24:58 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35894 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbgCTGY6 (ORCPT
+        Fri, 20 Mar 2020 02:28:23 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:45389 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgCTG2X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 02:24:58 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z72so2571288pgz.3;
-        Thu, 19 Mar 2020 23:24:55 -0700 (PDT)
+        Fri, 20 Mar 2020 02:28:23 -0400
+Received: by mail-il1-f196.google.com with SMTP id m9so4559395ilq.12
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 23:28:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Ea1Gl53lAIVaAGNsB6v6FTznzesNiyM2e4xkz9is1KQ=;
-        b=EmAYBy9IalRpEpvkaxh7LR4ZFW5G306ReU8nu8KZ/FyV0E3MrB4FiSJjrJJa8iGy7d
-         Nq/Gqlt/5OHESCaG6OLhYoDAgiTs1UyXG2cL+Czt0IMveJSTNKsufPoZ2pK+HlKDcN11
-         Vfzl0A/vsT4wrRGwkx3uOP8+6ENZ8rj6Zr3xD8SON9p3KN8RNLnbSKXrmDXXtQ4YzwgQ
-         tn1hU0UY8yDp2taUHNH0M80Cway1uqLo9UVpYV4zl6jBulvaqV7ei0SJIesoxU12iVZ2
-         /138xd7i9KQ/HeZ7IWZ9OrpFnbdRQ6BEyyqy42MhmuoE8J3tjRbvpUcGM+yVQOt4gpHS
-         V0DQ==
+        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=iNXs70iQMmbCeWom+A/Tg16i/IbQyXAZI0Q/ppb6028=;
+        b=mlwq4CYA+23qP9sIb47R10WlCGq2DIeqg0u1nZRI7nIlEwzdaBM16J0diAb1hlohhx
+         6DmTCrAETojeuHxXASGkurUqmDfwjHRaPO4za7UkVii+FhFKjU1p/Uh7mi3KFwpjPhsb
+         iUmifGiws8WLlb2N+d2f8DAIA3I+MwtdSl7QMUdRy6dZmidqOFzKWaoRrSqr4hGVvYFe
+         lxvu2QhZ23+aceqTRPs5AhP4qiprkvMy5v6UfWHtbzwVFjivSqy8raQEj8IKp649aRSz
+         OzRNio30MUjHUatFuFBVrSm+4Q22qFcnN1y399wmFgi4y40WUSo1BlDO9PO4lb7z5YMG
+         C1tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Ea1Gl53lAIVaAGNsB6v6FTznzesNiyM2e4xkz9is1KQ=;
-        b=WfinIzMsRg9KtJ3vbQPPvvgz1b7Si5wxhG/goChoL55d+MelMNBc67kX9MGML8ZDDg
-         KBWwoPZu4tTCWgwKEv/4EYovEPrJvIW6ZpYaqZirjjlo4BCOLJvbOm20KEGcwEIEq0e6
-         UxFzYWnh88X64jV+w2f8dSIERkNC+kORJ6E8FgfWeUM2GnlMvsu+75XMbE0kVsKiLezv
-         4/oiGe8X8QvEjZqcPMbFm8jd0ZLWeO7ZdAFVHB8mkHc9bjUsALZdNTtoUeD2l1W0Kj4v
-         MTq4uH85kV5q89gav8+M8pKY3aExi4m2zyNEJMARpbjlqUiogU5/oYzM4njqG4PTMrRT
-         JD5Q==
-X-Gm-Message-State: ANhLgQ12eRwmMtZZt570K93X1JTbdKtBjfylfC0Pv+RJvLHvRGj1AEfT
-        aBgBTi14SJzT99/aOwSUTYE=
-X-Google-Smtp-Source: ADFU+vv3iEBLKcocZStjA8/MoeoZJUffW564ulxiLWHYN9gLTnsB8Vp7iTvBwa5tq1w6DX7PoyVLwg==
-X-Received: by 2002:a62:27c2:: with SMTP id n185mr7858093pfn.203.1584685495047;
-        Thu, 19 Mar 2020 23:24:55 -0700 (PDT)
-Received: from VM_0_35_centos.localdomain ([150.109.62.251])
-        by smtp.gmail.com with ESMTPSA id m9sm757659pff.93.2020.03.19.23.24.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Mar 2020 23:24:54 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     lorenzo.pieralisi@arm.com, anders.roxell@linaro.org,
-        vidyas@nvidia.com
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        amurray@thegoodpenguin.co.uk, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH v2] PCI: dwc: fix compile err for pcie-tagra194
-Date:   Fri, 20 Mar 2020 14:24:50 +0800
-Message-Id: <1584685490-8170-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=iNXs70iQMmbCeWom+A/Tg16i/IbQyXAZI0Q/ppb6028=;
+        b=BikTlpvFksScp2u/5lVpDLl6Xfrj9WgbTKIesBst/Hn+vVtM1L6Mihdup3ubT745pd
+         JFcQm7WjUzOw/XTUUYgA0Uu948xNRxjlAl5B2rJrKR3M8kzHodzHog86hPIQ+sXaesc9
+         vwBfV2qpBFo0gCKzrvPc+sDdNPlroFCxN53grlbJ+AlIxKjerepmIrpARnPhCcyiCrK5
+         PQH+y7mu780PiKCOCRcrgWzDVYxyGpJyW8k49DdWuogET39BIzHswjdLdoM1MnhV5Fmd
+         AXxlFtvYBaptLNZNLP/V/2UW9uAKfwXmDRXkJvGY/w5y8cgtule4zPvC01XEuzAQfeeZ
+         uK2w==
+X-Gm-Message-State: ANhLgQ1FZ7KP7NRcQVBxUUlDYAIVLSOP6xtdr9hPUaeM9G0hjiBuRnMt
+        LahQkhOLt6b/MEp+d6WuA3Qr5Y6DX7LRMOCoUzh2Uw==
+X-Google-Smtp-Source: ADFU+vu5z05Ntsthh3MN1VmTHwq3rO5otoJoIS27t3cZsZdixT+HOBtJfxy3n0Krurf+ZkaYNXqDSZk62sBvXeLV7BQ=
+X-Received: by 2002:a92:41c7:: with SMTP id o190mr6554977ila.11.1584685701013;
+ Thu, 19 Mar 2020 23:28:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191221150402.13868-1-murphyt7@tcd.ie> <87blrzwcn8.fsf@intel.com>
+ <432d306c-fe9f-75b2-f0f7-27698f1467ad@arm.com> <87o8vzuv4i.fsf@intel.com>
+In-Reply-To: <87o8vzuv4i.fsf@intel.com>
+From:   Tom Murphy <murphyt7@tcd.ie>
+Date:   Thu, 19 Mar 2020 23:28:09 -0700
+Message-ID: <CALQxJuujCe7TsqkbfusPnzef2SApDBNPa7wj=U4ozDJWCoBHOg@mail.gmail.com>
+Subject: Re: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-make allmodconfig
-ERROR: modpost: "dw_pcie_ep_init" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-ERROR: modpost: "dw_pcie_ep_init_notify" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-ERROR: modpost: "dw_pcie_ep_init_complete" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-ERROR: modpost: "dw_pcie_ep_linkup" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-make[2]: *** [__modpost] Error 1
-make[1]: *** [modules] Error 2
-make: *** [sub-make] Error 2
+Any news on this? Is there anyone who wants to try and fix this possible bu=
+g?
 
-need to export the symbols.
-
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 4233c43..1cdcbd1 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -18,6 +18,7 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
- 
- 	pci_epc_linkup(epc);
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
- 
- void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
- {
-@@ -25,6 +26,7 @@ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
- 
- 	pci_epc_init_notify(epc);
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_ep_init_notify);
- 
- static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
- 				   int flags)
-@@ -535,6 +537,7 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
- 
- int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- {
-@@ -629,3 +632,4 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 
- 	return dw_pcie_ep_init_complete(ep);
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_ep_init);
--- 
-1.8.3.1
-
+On Mon, 23 Dec 2019 at 03:41, Jani Nikula <jani.nikula@linux.intel.com> wro=
+te:
+>
+> On Mon, 23 Dec 2019, Robin Murphy <robin.murphy@arm.com> wrote:
+> > On 2019-12-23 10:37 am, Jani Nikula wrote:
+> >> On Sat, 21 Dec 2019, Tom Murphy <murphyt7@tcd.ie> wrote:
+> >>> This patchset converts the intel iommu driver to the dma-iommu api.
+> >>>
+> >>> While converting the driver I exposed a bug in the intel i915 driver
+> >>> which causes a huge amount of artifacts on the screen of my
+> >>> laptop. You can see a picture of it here:
+> >>> https://github.com/pippy360/kernelPatches/blob/master/IMG_20191219_22=
+5922.jpg
+> >>>
+> >>> This issue is most likely in the i915 driver and is most likely cause=
+d
+> >>> by the driver not respecting the return value of the
+> >>> dma_map_ops::map_sg function. You can see the driver ignoring the
+> >>> return value here:
+> >>> https://github.com/torvalds/linux/blob/7e0165b2f1a912a06e381e91f0f4e4=
+95f4ac3736/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c#L51
+> >>>
+> >>> Previously this didn=E2=80=99t cause issues because the intel map_sg =
+always
+> >>> returned the same number of elements as the input scatter gather list
+> >>> but with the change to this dma-iommu api this is no longer the
+> >>> case. I wasn=E2=80=99t able to track the bug down to a specific line =
+of code
+> >>> unfortunately.
+> >>>
+> >>> Could someone from the intel team look at this?
+> >>
+> >> Let me get this straight. There is current API that on success always
+> >> returns the same number of elements as the input scatter gather
+> >> list. You propose to change the API so that this is no longer the case=
+?
+> >
+> > No, the API for dma_map_sg() has always been that it may return fewer
+> > DMA segments than nents - see Documentation/DMA-API.txt (and otherwise,
+> > the return value would surely be a simple success/fail condition).
+> > Relying on a particular implementation behaviour has never been strictl=
+y
+> > correct, even if it does happen to be a very common behaviour.
+> >
+> >> A quick check of various dma_map_sg() calls in the kernel seems to
+> >> indicate checking for 0 for errors and then ignoring the non-zero retu=
+rn
+> >> is a common pattern. Are you sure it's okay to make the change you're
+> >> proposing?
+> >
+> > Various code uses tricks like just iterating the mapped list until the
+> > first segment with zero sg_dma_len(). Others may well simply have bugs.
+>
+> Thanks for the clarification.
+>
+> BR,
+> Jani.
+>
+> >
+> > Robin.
+> >
+> >> Anyway, due to the time of year and all, I'd like to ask you to file a
+> >> bug against i915 at [1] so this is not forgotten, and please let's not
+> >> merge the changes before this is resolved.
+> >>
+> >>
+> >> Thanks,
+> >> Jani.
+> >>
+> >>
+> >> [1] https://gitlab.freedesktop.org/drm/intel/issues/new
+> >>
+> >>
+>
+> --
+> Jani Nikula, Intel Open Source Graphics Center
