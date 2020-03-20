@@ -2,153 +2,190 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C756C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D58BC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A70620739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:13:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oIru/qRU"
+	by mail.kernel.org (Postfix) with ESMTP id 01EAF20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbgCTQN0 (ORCPT
+        id S1727457AbgCTQNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:13:26 -0400
-Received: from mail-am6eur05on2057.outbound.protection.outlook.com ([40.107.22.57]:19488
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727267AbgCTQNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:13:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cSIFerIukDz5JUe7JXObZxR+O/H99hsFr2nyo1PgO/tbPSUWWOIbqiYNQqXMxLtHb4/ba076E3ViMfuFiq3vUulvoyVJmcN50NS7yB1sHVpsVxSLG1KeWw5I01+n3KrTZSX8uEkGlyjHkgAdQBh0wM44pXt35gRdT1VBweCHNI+oqLDnuug8Gl//HozJJn5nA5rEcxozgSypKMUd5WCHNTO5fYCWu7IM4+JZKl4hM40tdGTmwhvyKxu91riOxitmX4B3rFhiAD+oacBhyd7UUK07GztdbAWFIOV/gWd6B4HS7OjjWCSfDTrdPPeary39XWrRmlFlXjPD5X88LbSkoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Jw3SevGjeQAQH9/eUq/xmJqIoPoermGM/N+T/+Lj94k=;
- b=lXiEXTLj+V8aTayDuUO5jxAzpPvR4anwVhr2WVZgcqWyKaYoeiUbasWw7EN3pbKb6sOwP7bmuCsaYDomH86Zw2Qjprxx6r6LxvlXyHWMiTfcq6GIGg8dJGCHTVD4tA0xrxf5CDt6oWV8/4b1UfvqyhAaxkKcxJWArC4pH9KodR9NmRjy5WiiI7T/iWpp/nZQ9D7spizfKVwFMIh3EH89LzPVqJ9uZkZIPQEWnufg2+Ug4kIaUuENklSBPc2bAFIYffzhNg3hRmWAwIHmjl0a5MybHf1XV4xy1ePiszyzUswUPlIth4bHR8udguIRgtbjnEYtYwn9+YhiHwCeRyWFpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Jw3SevGjeQAQH9/eUq/xmJqIoPoermGM/N+T/+Lj94k=;
- b=oIru/qRUxJGwcjjzejJLDKstJt2CVMpNWIYv5kv+Xf1p81g2694vWuNIe/SFBsG98RAqw12YJHQCW9oq9/LiCoIGOwgNnMxbWfgs1zD39vn6xQ6AhdFIND9tySrIdsmXqzmKYeHkyiqSy6HwIZjStlY6FkNhHj5mKlugdDmQnrI=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB2862.eurprd04.prod.outlook.com (10.175.23.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.20; Fri, 20 Mar 2020 16:13:21 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f%7]) with mapi id 15.20.2814.021; Fri, 20 Mar 2020
- 16:13:21 +0000
-Subject: Re: [PATCH v9 0/9] enable CAAM's HWRNG as default
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-crypto@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Andrei Botila <andrei.botila@nxp.com>
-References: <20200319161233.8134-1-andrew.smirnov@gmail.com>
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-Message-ID: <fab6192d-d35b-b26e-5bdc-b52b7d0347b7@nxp.com>
-Date:   Fri, 20 Mar 2020 18:13:18 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <20200319161233.8134-1-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM3PR05CA0089.eurprd05.prod.outlook.com
- (2603:10a6:207:1::15) To VI1PR0402MB3485.eurprd04.prod.outlook.com
- (2603:10a6:803:7::25)
+        Fri, 20 Mar 2020 12:13:48 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:55719 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727148AbgCTQNs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 12:13:48 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MsI0I-1jZSQS0n4E-00tnlB for <linux-kernel@vger.kernel.org>; Fri, 20 Mar
+ 2020 17:13:46 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id EEFE565034C
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 16:13:45 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id xFWzWIPHP471 for <linux-kernel@vger.kernel.org>;
+        Fri, 20 Mar 2020 17:13:45 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 81FA564DA75
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 17:13:45 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.8.5.41) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 20 Mar 2020 17:13:45 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id 37E03804FB; Fri, 20 Mar 2020 17:11:40 +0100 (CET)
+Date:   Fri, 20 Mar 2020 17:11:40 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [PATCH v3 00/11] media: adv748x: add support for HDMI audio
+Message-ID: <cover.1584720678.git.alexander.riesen@cetitec.com>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM3PR05CA0089.eurprd05.prod.outlook.com (2603:10a6:207:1::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20 via Frontend Transport; Fri, 20 Mar 2020 16:13:20 +0000
-X-Originating-IP: [84.117.251.185]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 174c8ecd-7f28-41a7-4d35-08d7cce99be3
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB2862:|VI1PR0402MB2862:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB2862AE8BABF90D8FC83CE81998F50@VI1PR0402MB2862.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 03484C0ABF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(396003)(136003)(366004)(199004)(8936002)(81166006)(8676002)(66556008)(66946007)(66476007)(31696002)(966005)(31686004)(186003)(36756003)(5660300002)(16526019)(26005)(2906002)(81156014)(86362001)(4326008)(53546011)(66574012)(52116002)(2616005)(956004)(6486002)(316002)(54906003)(16576012)(110136005)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2862;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ARujDT7PBjXYLFxQbLa3sncQIh4NbU1OyNJmSiM5pt+Wn+n4y6XAkwsRe8yKhj9vZg/UGSIUOGDGc7Et2zEjvAfhOGMi7LwEPwdB/Y5Ww9xvvv5/GG5phpaq09fpm+gZ3740oGUwo67Rh+SsbnRCc0J8RGutsFZuLQlDUNlSI8AUms7N648u8s5nho8PzmGGWoV5+pI6xKUkmQjK5ClnRiFs5Wc/oCUbidHZsVVG4rpV2OmksLnKFupfP0W7ssHLgcaYbwKRqVPl1X0GdhiEW1vGLZ8x/u8ifmSKly+41/9MO4y+iYIJFFGC93AB7Icfxl+hGGM7OHsc5BIqNoPJq3TKy3e4fWQgaiQb4PXj6fNOhA+lLDATNI92cnmR2ImkP3p9GMswQZcpnfSBzMBMmMbQCqJl3AwN/k/eohLjtKF6lHRm7hMj2mCWNQPgKi/hzI5b3kRstSjfsx9/urdQSQ1i/tCM1/WAVwED2M64KsyldqI/75O3w8AO+TthSDaKeDpkNa3QFuRNWig+45Xt+g==
-X-MS-Exchange-AntiSpam-MessageData: Ol1bAsluEc/VyNGeD+2/jqtK9gu6V5Z3XU1gSsk/14/DdICRgPHg9MHsDkRLSGxgepbWGyUYR5L+AnrtvQoJlpum6NgAfDhd64VfQs4MEhEjn616+GpVghrBFR5PMx6EebZn0QjQlCss8SZonqJx2Q==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 174c8ecd-7f28-41a7-4d35-08d7cce99be3
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2020 16:13:21.5143
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sPvxZcuIH4WrH2T5pVkm1ysdEU4mk/PtS5rbiDaBId1cM1MQpc0QYJ+DVMh+LryP6jfykARDixJUEOoWlR6p+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2862
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-Originating-IP: [10.8.5.41]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A6D7662
+X-Provags-ID: V03:K1:uZfWM6WGh6sN0iqvFbDpkqe8szByJHQPHOu53s4WURenpzEOqQL
+ tsWRM/5Kb2/w6mmngywsfnUMK6//3tYP2BGpCQVApicJ2wKA4jr85fhtuPNSgh5LYFU9Oar
+ 89EVaGIkRGdn6H8HPJobClHzSO3ML6Et9s+XCuT8X9cMRasRZ+GxYIDZGlh5di+1nu61YEr
+ NqZKVzOPMNDXO1SrauN4A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:f5fP+sV15JQ=:mWKTJ/aOpxuyK2Ns9UxdiD
+ WWhYefOAjUAKSAGY5S+aDw2HAPaDp6NysbmOuq7xgMjqdSPQMGt+k5eKVvwtBk4qsrG3k6Ii3
+ AZfjlbWo9fXGs/gGymREt0KuAA4/NDSReWDnuPT2ByNWDMeAphSt44VsFGmoW/JFxM9fQSNKk
+ +KR/2czAYaClqrCs3Wh2/FEUSQDRowYPupW7UQcNZQx/Ps5hIyLcHYHwupbDhZAgTHWccYFDY
+ udn7HiwCvkzRoCY/5QsS8VgU5+SeHYMygH4AeamUBO7rIieCSAgI9r8gnnIq3kSLiwiq/pMc1
+ MUSnQJx70ZTfQ9jxX92K241+X4pEvxUjWjfDfBZOhxkE6fAvUhzFM7zuV8BcIiW14Z6oAwa1R
+ SP3fLV1HUDG222KIYdidUrzesZU3ql4TN3nVihbnjGp9UdOMST8xBG+Ta/+MeJO6Xxbr2MkYB
+ Dh9Vnu3C4bAAGfZxLgq6Jrxtu6iiP53Xlpc5yJSkk2J0WXBZ/LryJ7kyK5qqCOv680wfKQ5RS
+ qVUPstxX+Q66TM15fFoNMzDGpF83pXB6OQK1nX2pNuzeH3xaPFhjKBdSorqG+J4GKKpD2Silr
+ Gu1mYnlOsxtXh2EZEHxbSeqr26HxlH6SQuf7BEa6jEHFEJFv8lqwloX8RlaNW4JRDZxmZrSOn
+ VCSEjpds5K+DgvyPU0H4jrh+uEXQ4lNap0I2+ciR9Gt+hZKqiTq+gI/COjAV5LW84Fj/sBadR
+ 0YUuvr1NwX0hivn+1R/5k9KDPI7pGxeppMsGfS7hMU1sdfNCkuD5oVekZetIornwnkoX3zW3X
+ N89revXnZtA8pj59S68YFliJ4TantRBTnTh/eQNKumW7QU8M0LfJO7/qZorViylJa0BtA3k
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/19/2020 6:12 PM, Andrey Smirnov wrote:
-> Everyone:
-> 
-> This series is a continuation of original [discussion]. I don't know
-> if what's in the series is enough to use CAAMs HWRNG system wide, but
-> I am hoping that with enough iterations and feedback it will be.
-> 
-Andrey, thanks for the effort!
+This adds minimal support for accessing the HDMI audio provided through the
+I2S port available on ADV7481 and ADV7482 decoder devices by ADI.
+The port carries audio signal from the decoded HDMI stream.
 
-Herbert, Greg,
+Currently, the driver only supports I2S in TDM, 8 channels a 24bit at 48kHz.
+Furthermore, only left-justified, 8 slots, 32bit/slot TDM, at 256fs has been
+ever tried.
 
-I hope it's ok to go with the fsl-mc bus dependency
-	"bus: fsl-mc: add api to retrieve mc version"
-	https://patchwork.kernel.org/patch/11447637/
-included in this series through cryptodev-2.6 tree.
+An ADV7482 on the Renesas Salvator-X ES1.1 (R8A77950 SoC) was used during
+development of this code.
 
-It applies cleanly on latest linux-next (next-20200320),
-and it has been Acked-by Laurențiu (one of the fsl-mc bus maintainers).
+Changes since v2:
+  - prepare/enable the clock when it is used, as it seems nothing else does
+    this otherwise
 
-Thank you,
-Horia
+  - give the clock a unique name to ensure it can be registered if there are
+    multiple adv748x devices in the system
 
-[...]
-> 
-> Andrei Botila (1):
->   bus: fsl-mc: add api to retrieve mc version
-> 
-> Andrey Smirnov (8):
->   crypto: caam - allocate RNG instantiation descriptor with GFP_DMA
->   crypto: caam - use struct hwrng's .init for initialization
->   crypto: caam - drop global context pointer and init_done
->   crypto: caam - simplify RNG implementation
->   crypto: caam - check if RNG job failed
->   crypto: caam - invalidate entropy register during RNG initialization
->   crypto: caam - enable prediction resistance in HRWNG
->   crypto: caam - limit single JD RNG output to maximum of 16 bytes
-> 
->  drivers/bus/fsl-mc/fsl-mc-bus.c |  33 +--
->  drivers/crypto/caam/Kconfig     |   1 +
->  drivers/crypto/caam/caamrng.c   | 405 ++++++++++++--------------------
->  drivers/crypto/caam/ctrl.c      |  88 +++++--
->  drivers/crypto/caam/desc.h      |   2 +
->  drivers/crypto/caam/intern.h    |   7 +-
->  drivers/crypto/caam/jr.c        |  13 +-
->  drivers/crypto/caam/regs.h      |   7 +-
->  include/linux/fsl/mc.h          |  16 ++
->  9 files changed, 276 insertions(+), 296 deletions(-)
-> 
+  - remove optionality note from clock cell description to ensure the device
+    description matches the real device (the line is always present, even
+    if not used)
+
+Changes since v1:
+  - Add ssi4_ctrl pin group to the sound pins. The pins are responsible for
+    SCK4 (sample clock) WS4 and (word boundary input), and are required for
+    SSI audio input over I2S.
+    Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+  - Removed the audio clock C from the list of clocks of adv748x,
+    it is exactly the other way around.
+    Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+  - Add an instance of (currently) fixed rate I2S master clock (MCLK),
+    connected to the audio_clk_c line of the R-Car SoC.
+    Explicitly declare the device a clock producer and add it to the
+    list of clocks used by the audio system of the Salvator-X board.
+    Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+  - The implementation of DAI driver has been moved in a separate file
+    and modified to activate audio decoding and I2S streaming using
+    snd_soc_dai_... interfaces. This allows the driver to be used with
+    just ALSA interfaces.
+
+  - The ioctls for selecting audio output and muting have been removed,
+    as not applicable.
+    Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+    I have left implementation of the QUERYCAP in, as it seems to be required
+    by v4l-ctl to support loading of EDID for this node. And setting the EDID
+    is one feature I desperately need: there are devices which plainly refuse
+    to talk to the sink if it does not provide EDID they like.
+
+  - A device tree configuration without audio port will disable the audio code
+    altogether, supporting integrations where the port is not connected.
+
+  - The patches have been re-arranged, starting with the generic changes and
+    changes not related to audio directly. Those will be probably sent as a
+    separate series later.
+
+  - The whole series has been rebased on top of v5.6-rc6
+
+Alex Riesen (11):
+  media: adv748x: fix end-of-line terminators in diagnostic statements
+  media: adv748x: include everything adv748x.h needs into the file
+  media: adv748x: reduce amount of code for bitwise modifications of
+    device registers
+  media: adv748x: add definitions for audio output related registers
+  media: adv748x: add support for HDMI audio
+  media: adv748x: prepare/enable mclk when the audio is used
+  media: adv748x: only activate DAI if it is described in device tree
+  dt-bindings: adv748x: add information about serial audio interface
+    (I2S/TDM)
+  arm64: dts: renesas: salvator: add a connection from adv748x codec
+    (HDMI input) to the R-Car SoC
+  media: adv748x: add support for log_status ioctl
+  media: adv748x: allow the HDMI sub-device to accept EDID
+
+ .../devicetree/bindings/media/i2c/adv748x.txt |  16 +-
+ .../boot/dts/renesas/r8a77950-salvator-x.dts  |   3 +-
+ .../boot/dts/renesas/salvator-common.dtsi     |  47 ++-
+ drivers/media/i2c/adv748x/Makefile            |   3 +-
+ drivers/media/i2c/adv748x/adv748x-afe.c       |   6 +-
+ drivers/media/i2c/adv748x/adv748x-core.c      |  60 ++--
+ drivers/media/i2c/adv748x/adv748x-csi2.c      |   8 +-
+ drivers/media/i2c/adv748x/adv748x-dai.c       | 282 ++++++++++++++++++
+ drivers/media/i2c/adv748x/adv748x-hdmi.c      | 212 ++++++++++++-
+ drivers/media/i2c/adv748x/adv748x.h           |  67 ++++-
+ 10 files changed, 662 insertions(+), 42 deletions(-)
+ create mode 100644 drivers/media/i2c/adv748x/adv748x-dai.c
+
+-- 
+2.25.1.25.g9ecbe7eb18
+
