@@ -2,124 +2,200 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8A0C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB02C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 551F020724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F6BA20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:01:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PbPE1Wyv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbgCTRBL (ORCPT
+        id S1727524AbgCTRB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:01:11 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:56023 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727323AbgCTRBK (ORCPT
+        Fri, 20 Mar 2020 13:01:28 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40686 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727092AbgCTRB1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:01:10 -0400
-Received: from mail-lf1-f51.google.com ([209.85.167.51]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MX0TX-1imu6v25lJ-00XPP7; Fri, 20 Mar 2020 18:01:08 +0100
-Received: by mail-lf1-f51.google.com with SMTP id c20so5140092lfb.0;
-        Fri, 20 Mar 2020 10:01:08 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1rHK5rlQjWw/XySbV+sZ/2LoVXs1uOeUHnh6FBsZzawPnhnek0
-        iVwoQ2S0bthTqczRidse38AWaJbRiuHsnhnMBSE=
-X-Google-Smtp-Source: ADFU+vs11pX+reUDgLeQDaNz7AxXUjMOz6ru7xtpyHb1hOnhmeTTSEtRFhdxQ1s9xNp2TquEQ7Y9zb6/vWld8Xi/00c=
-X-Received: by 2002:a19:224f:: with SMTP id i76mr775476lfi.123.1584723667933;
- Fri, 20 Mar 2020 10:01:07 -0700 (PDT)
+        Fri, 20 Mar 2020 13:01:27 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f3so8380783wrw.7
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 10:01:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WAc5lm/otiSMYlhAZkwpRkCEm3vOHc+J4qVldOzMYLg=;
+        b=PbPE1WyvLko7zML64W4Fy/tWupg+WQH1wKpA3pUay8H3XFuNYdU3nzhD3CPGihnTx7
+         ih+cLHp3N5pEAkHECPGmtZBMzrPaN+y9XHQMkiI7iqEujqP5t7x+2Lt7a1XeJ9QHHLNK
+         nk+1jOvU7HCwNzazBbQWRyev4rktZQY6ByMAnqaVVSxXAQ0Zi9mOB3MGaNTow49biVkr
+         QDmYbFifK5dkrj3HJ6IRqWKpagtMdGr+QqaZl4sZ7+GtG1hNKyCA9NFmiheF4FBlQb9E
+         QJNRHCnlPaej/Y9dapBmKFx6r1AeoUEpVqzdyDEaA6bQBF5ja+41O6bsou1YZFv39a1s
+         +Mgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WAc5lm/otiSMYlhAZkwpRkCEm3vOHc+J4qVldOzMYLg=;
+        b=CCk8zZLqiQ8tMXHjZLIdsf/fFJjoEiIOpJXZBAFnYTieRFh4zI9O3XFuQYAqLcyHXy
+         HrySTrd9Q91U9L94Y3ETmimakJ+lk41FlyNPtAx4NWfGaaPg61HBhwg4ihcXRJnMuyf7
+         pi0ceY31xwSyF7j6SWyKZdqcPwIyMcF9wpiB4BLRP69PMqEahCvyIHQ5Nh02tyZguvNT
+         VH0Fu2YlrLoSjb5k9F6irX3tpzUl00Q47zDs6FEUGdQHWA6Fa2JfwoPMOX4mA7r6SFx/
+         geQZeVglKU/ZRWkfuET3xiL0Q5xGjljJw1iNAZefzN06g2ONixYVQ875FWsL08foCpiC
+         CMKQ==
+X-Gm-Message-State: ANhLgQ0X6Pl6hgNpPzCJMkSYspBxJPAD8DeHYTBL9naQdM95BXgg67Hn
+        +dJkzcnMefBladG46xUuMhzuCQ==
+X-Google-Smtp-Source: ADFU+vv37Lo2CSsXWa5Kztok67Rtq3einqxjkNtW+ODswAo0H7LtIjSk0BpXPmvoHxMYmOyW+uTN6A==
+X-Received: by 2002:a5d:694e:: with SMTP id r14mr11999902wrw.312.1584723683784;
+        Fri, 20 Mar 2020 10:01:23 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id c124sm8695442wma.10.2020.03.20.10.01.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Mar 2020 10:01:23 -0700 (PDT)
+Subject: Re: [PATCH 5/5] soundwire: qcom: add sdw_master_device support
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>
+References: <20200320162947.17663-1-pierre-louis.bossart@linux.intel.com>
+ <20200320162947.17663-6-pierre-louis.bossart@linux.intel.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <81e2101e-d7ce-d023-5c35-ac6b55ea7166@linaro.org>
+Date:   Fri, 20 Mar 2020 17:01:21 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <cover.1584667964.git.gurus@codeaurora.org> <ab7b568b1d287949276b3b1c9efdb1cad1f92004.1584667964.git.gurus@codeaurora.org>
-In-Reply-To: <ab7b568b1d287949276b3b1c9efdb1cad1f92004.1584667964.git.gurus@codeaurora.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 20 Mar 2020 18:00:51 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0XrYGYBQ_hTKF4fVBr7DDZsLnR+8o=09cig_gAje=v3w@mail.gmail.com>
-Message-ID: <CAK8P3a0XrYGYBQ_hTKF4fVBr7DDZsLnR+8o=09cig_gAje=v3w@mail.gmail.com>
-Subject: Re: [PATCH v11 11/12] clk: pwm: Assign u64 divisor to unsigned int
- before use
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        David Laight <David.Laight@aculab.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:FkWxRtsVpntOKqotl01jYTid96TMvDAWVWKuR5UA91jb0xTVbDb
- FNkpLE4G+ia2YeYF+6+51lQ9owsRaxLCkfyrXCxDTV7P7EYu/3sbZjx3b9vo1bJkHfd+J1G
- 4tvsjPQ1dp/nEIkTN9bFVGjfGpGzO5Y/EpmQc43W54XSNPyX4uxqbfX8nLlUFUemSe28piK
- qcaFY3Y0+Ib2UTw5sB9rw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vfeYetgxPG8=:ADg2pdzcsVuv8wCU6KA12o
- HQqGWuHott0KDj9TEgeU0SUSpeJDudJuQv6WUrwNlDf1oiV6P+254GiDP8CiQ5AXK7DsYJw2c
- fkGNf/6cnKFhluvIIF/+La7XP4L8ci8IJmJ9ryQ2edS//jJ7vLW0GkW5L9JZ1CAB5dO5C1chl
- wxA7eiI/fVRKrM14IqIROOnlwS/xrdMeokZZJlEurZOL0dC3sMpsdGqDPs7JlOi/lqMtXmhvh
- k/Zy+CV3zJi0EaImSl62sMctDmTSd4RK5wbCWOKCkixJjIL1nL9ZVw1I+4E11ZyYPe1B3CYl4
- nkNlr8HVgGS3PdoGrMBdb+iT85/kBFGujoItLaNJFeW7nnApeEkY39CPQWl6cXhlsMpLA6dfH
- iVgSSsG+LLpTbKS7T95mmjvncs4/BF16PAyoNly8dqmpo5Cn9zhbe4koWetgVPayYgzAXTmdo
- Ee+kjmchKimyjQ5i4u4S/WibTcIy1j+lim/uCKd3lBB1P8KK92jpmpp9LIbYynFEoMoV0gAHL
- 56odaasQ7PH5NgX7oVFTbLJx/DU8KQBFyE+4d5+AXC2pQ6PpSauRwULLfXdHK4qFZZaIzNxjg
- 2ze8HztDupH+D4S9ZJ/q+Ck2SaHFgUo9FWuYgBp8X2eyhu7GvR5Jgeza2maUquPzsAbZxeJsA
- ZILigSq9xL36WtSr/V4oHYcr/6OgpxyWf83bdtTAOiHQrR1calg6Cv9rXM43zrMB+a2aFT9OB
- FbBcskHOwxiIE1FbyeJp8Ym/5FVEtGypXiN44/7GSMqbuGZLf/IfJ9c4sSlibvOiwVrPuX83H
- 25BZ/5rbkFV+StU4fQPeMDNzp7DF47R1wrvkNzDrJMlofTZFxs=
+In-Reply-To: <20200320162947.17663-6-pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
->
-> Since the PWM framework is switching struct pwm_args.period's datatype
-> to u64, prepare for this transition by assigning the 64-bit divisor to
-> an unsigned int variable to use as the divisor. This is being done
-> because the divisor is a 32-bit constant and the quotient will be zero
-> if the divisor exceeds 2^32.
->
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: David Laight <David.Laight@ACULAB.COM>
->
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+
+
+On 20/03/2020 16:29, Pierre-Louis Bossart wrote:
+> Add new device as a child of the platform device, following the
+> following hierarchy:
+> 
+> platform_device
+>      sdw_master_device
+>          sdw_slave0
+
+Why can't we just remove the platform device layer here and add 
+sdw_master_device directly?
+
+What is it stopping doing that?
+
+--srini
+
+
+> 	...
+> 	sdw_slaveN
+> 
+> For the Qualcomm implementation no sdw_master_driver is registered so
+> the dais have to be registered using the platform_device and likely
+> all power management is handled at the platform device level.
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 > ---
->  drivers/clk/clk-pwm.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
-> index 87fe0b0e..c0b5da3 100644
-> --- a/drivers/clk/clk-pwm.c
-> +++ b/drivers/clk/clk-pwm.c
-> @@ -72,6 +72,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
->         struct pwm_device *pwm;
->         struct pwm_args pargs;
->         const char *clk_name;
-> +       unsigned int period;
->         int ret;
->
->         clk_pwm = devm_kzalloc(&pdev->dev, sizeof(*clk_pwm), GFP_KERNEL);
-> @@ -88,8 +89,9 @@ static int clk_pwm_probe(struct platform_device *pdev)
->                 return -EINVAL;
->         }
->
-> +       period = pargs.period;
->         if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
-> -               clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
-> +               clk_pwm->fixed_rate = NSEC_PER_SEC / period;
->
->         if (pargs.period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
->             pargs.period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
-
-Doesn't this one need a check for "pargs.period>UINT_MAX" or
-"pargs.period > NSEC_PER_SEC"?
-
-It looks like truncating the 64-bit value to a 32-bit type can result in
-unexpected behavior.
-
-       Arnd
+>   drivers/soundwire/qcom.c | 29 +++++++++++++++++++++++++----
+>   1 file changed, 25 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
+> index 77783ae4b71d..86b46415e50b 100644
+> --- a/drivers/soundwire/qcom.c
+> +++ b/drivers/soundwire/qcom.c
+> @@ -89,6 +89,7 @@ struct qcom_swrm_port_config {
+>   struct qcom_swrm_ctrl {
+>   	struct sdw_bus bus;
+>   	struct device *dev;
+> +	struct sdw_master_device *md;
+>   	struct regmap *regmap;
+>   	struct completion *comp;
+>   	struct work_struct slave_work;
+> @@ -775,14 +776,31 @@ static int qcom_swrm_probe(struct platform_device *pdev)
+>   	mutex_init(&ctrl->port_lock);
+>   	INIT_WORK(&ctrl->slave_work, qcom_swrm_slave_wq);
+>   
+> -	ctrl->bus.dev = dev;
+> +	/*
+> +	 * add sdw_master_device.
+> +	 * For the Qualcomm implementation there is no driver.
+> +	 */
+> +	ctrl->md = sdw_master_device_add(NULL,	/* no driver name */
+> +					 dev,	/* platform device is parent */
+> +					 dev->fwnode,
+> +					 0,	/* only one link supported */
+> +					 NULL);	/* no context */
+> +	if (IS_ERR(ctrl->md)) {
+> +		dev_err(dev, "Could not create sdw_master_device\n");
+> +		ret = PTR_ERR(ctrl->md);
+> +		goto err_clk;
+> +	}
+> +
+> +	/* the bus uses the sdw_master_device, not the platform device */
+> +	ctrl->bus.dev = &ctrl->md->dev;
+> +
+>   	ctrl->bus.ops = &qcom_swrm_ops;
+>   	ctrl->bus.port_ops = &qcom_swrm_port_ops;
+>   	ctrl->bus.compute_params = &qcom_swrm_compute_params;
+>   
+>   	ret = qcom_swrm_get_port_config(ctrl);
+>   	if (ret)
+> -		goto err_clk;
+> +		goto err_md;
+>   
+>   	params = &ctrl->bus.params;
+>   	params->max_dr_freq = DEFAULT_CLK_FREQ;
+> @@ -809,14 +827,14 @@ static int qcom_swrm_probe(struct platform_device *pdev)
+>   					"soundwire", ctrl);
+>   	if (ret) {
+>   		dev_err(dev, "Failed to request soundwire irq\n");
+> -		goto err_clk;
+> +		goto err_md;
+>   	}
+>   
+>   	ret = sdw_add_bus_master(&ctrl->bus);
+>   	if (ret) {
+>   		dev_err(dev, "Failed to register Soundwire controller (%d)\n",
+>   			ret);
+> -		goto err_clk;
+> +		goto err_md;
+>   	}
+>   
+>   	qcom_swrm_init(ctrl);
+> @@ -832,6 +850,8 @@ static int qcom_swrm_probe(struct platform_device *pdev)
+>   
+>   err_master_add:
+>   	sdw_delete_bus_master(&ctrl->bus);
+> +err_md:
+> +	device_unregister(&ctrl->md->dev);
+>   err_clk:
+>   	clk_disable_unprepare(ctrl->hclk);
+>   err_init:
+> @@ -843,6 +863,7 @@ static int qcom_swrm_remove(struct platform_device *pdev)
+>   	struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(&pdev->dev);
+>   
+>   	sdw_delete_bus_master(&ctrl->bus);
+> +	device_unregister(&ctrl->md->dev);
+>   	clk_disable_unprepare(ctrl->hclk);
+>   
+>   	return 0;
+> 
