@@ -2,83 +2,108 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BD1C43332
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB19C43333
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17E5920777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:43:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pBExgnhM"
+	by mail.kernel.org (Postfix) with ESMTP id 7F10520767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbgCTRnJ (ORCPT
+        id S1727257AbgCTRnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:43:09 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51170 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgCTRnJ (ORCPT
+        Fri, 20 Mar 2020 13:43:10 -0400
+Received: from outbound-smtp04.blacknight.com ([81.17.249.35]:39483 "EHLO
+        outbound-smtp04.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726974AbgCTRnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Mar 2020 13:43:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=eS+NnV6FJoMlcqmhEEwy7k3fo9pqU7mmrHR91RmppDQ=; b=pBExgnhM5X2ow1Ilj9kYwyBh/J
-        NNIfsJUhE9ZA6Ojr0SwSHLPArB+BoTlzfydGs0jrAMH9gSANItut4woxN3U7I72StR7GZLpOsRrP/
-        XrEY61pVNir/XOZQ75UABnESxtB5Ggrq/UNpLfSbEH+wXCdAWRWPdn4UKQ6+puUmpichYu7HrWZuK
-        J5wBP4YLL0xShOZ+M+cXaim38AbP4GOCPw74x+odpbdKx3ClWtzasWOyTJbR4Qnu3b+e8YSXDSv2g
-        qkOK5hS7apqTnu4u/md+qkgA0Jh33C2M+teQKjicp4721DyT8XLfOR7JUfPMyVsLhIxtI2B80EkGP
-        mRBghRlg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jFLfm-0007Lw-AK; Fri, 20 Mar 2020 17:43:06 +0000
-Subject: Re: linux-next: Tree for Mar 20 (objtool warnings)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20200320201539.3a3a8640@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ca0078e2-89b5-09a7-f61e-7f2906900622@infradead.org>
-Date:   Fri, 20 Mar 2020 10:43:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+        by outbound-smtp04.blacknight.com (Postfix) with ESMTPS id B5E5CBEBC0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 17:43:06 +0000 (GMT)
+Received: (qmail 24761 invoked from network); 20 Mar 2020 17:43:06 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 20 Mar 2020 17:43:06 -0000
+Date:   Fri, 20 Mar 2020 17:43:04 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/4] sched/fair: Track possibly overloaded domains and
+ abort a scan if necessary
+Message-ID: <20200320174304.GF3818@techsingularity.net>
+References: <20200320151245.21152-1-mgorman@techsingularity.net>
+ <20200320151245.21152-5-mgorman@techsingularity.net>
+ <CAKfTPtAUuO1Jp6P73gAiP+g5iLTx16UeBgBjm_5zjFxwiBD9=Q@mail.gmail.com>
+ <20200320164432.GE3818@techsingularity.net>
+ <CAKfTPtBixZKDES_i3Lnsj1eAa_kVi-zHv-0uE8uTsKOBcjmkYg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200320201539.3a3a8640@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtBixZKDES_i3Lnsj1eAa_kVi-zHv-0uE8uTsKOBcjmkYg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/20/20 2:15 AM, Stephen Rothwell wrote:
-> Hi all,
+On Fri, Mar 20, 2020 at 05:54:57PM +0100, Vincent Guittot wrote:
+> On Fri, 20 Mar 2020 at 17:44, Mel Gorman <mgorman@techsingularity.net> wrote:
+> >
+> > On Fri, Mar 20, 2020 at 04:48:39PM +0100, Vincent Guittot wrote:
+> > > > ---
+> > > >  include/linux/sched/topology.h |  1 +
+> > > >  kernel/sched/fair.c            | 65 +++++++++++++++++++++++++++++++++++++++---
+> > > >  kernel/sched/features.h        |  3 ++
+> > > >  3 files changed, 65 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
+> > > > index af9319e4cfb9..76ec7a54f57b 100644
+> > > > --- a/include/linux/sched/topology.h
+> > > > +++ b/include/linux/sched/topology.h
+> > > > @@ -66,6 +66,7 @@ struct sched_domain_shared {
+> > > >         atomic_t        ref;
+> > > >         atomic_t        nr_busy_cpus;
+> > > >         int             has_idle_cores;
+> > > > +       int             is_overloaded;
+> > >
+> > > Can't nr_busy_cpus compared to sd->span_weight give you similar status  ?
+> > >
+> >
+> > It's connected to nohz balancing and I didn't see how I could use that
+> > for detecting overload. Also, I don't think it ever can be larger than
+> > the sd weight and overload is based on the number of running tasks being
+> > greater than the number of available CPUs. Did I miss something obvious?
 > 
-> Changes since 20200319:
+> IIUC you try to estimate if there is a chance to find an idle cpu
+> before starting the loop and scanning the domain and abort early if
+> the possibility is low.
+> 
+> if nr_busy_cpus equals to sd->span_weight it means that there is no
+> free cpu so there is no need to scan
 > 
 
+Ok, I see what you are getting at but I worry there are multiple
+problems there. First, the nr_busy_cpus is decremented only when a CPU
+is entering idle with the tick stopped. If nohz is disabled then this
+breaks, no? Secondly, a CPU can be idle but the tick not stopped if
+__tick_nohz_idle_stop_tick knows there is an event in the near future
+so using busy_cpus, we potentially miss a sibling that was adequate
+for running a task. Finally, the threshold for cutting off the search
+entirely seems low. The patch marks a domain as overloaded if there are
+twice as many running tasks as runqueues scanned. In that scenario, even
+if tasks are rapidly switching between busy/idle, it's still unlikely
+the task will go idle. When cutting off at just the fully-busy mark, we
+could miss a CPU that is going idle, almost idle or is running SCHED_IDLE
+tasks where are acceptable target candidates for select_idle_sibling. I
+think there are too many cases where nr_busy_cpus are problematic to
+make it a good alternative.
 
-Today's linux-next gives these objtool warnings:
-
-arch/x86/entry/vdso/vma.o: warning: objtool: vdso_fault()+0x201: unreachable instruction
-
-drivers/ide/ide-tape.o: warning: objtool: idetape_chrdev_release()+0x109: unreachable instruction
-
-drivers/media/i2c/ir-kbd-i2c.o: warning: objtool: ir_probe()+0xdaa: unreachable instruction
-
-kernel/kcov.o: warning: objtool: __sanitizer_cov_trace_pc()+0x89: call to __ubsan_handle_load_invalid_value() with UACCESS enabled
-
-
-all in (4) separate builds (.configs).
-Do you want all 4 randconfig files?
-
-cheers.
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Mel Gorman
+SUSE Labs
