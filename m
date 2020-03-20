@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7ECC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B96C1C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A61FC20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9327320781
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbgCTSib (ORCPT
+        id S1727351AbgCTSia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:38:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36891 "EHLO
+        Fri, 20 Mar 2020 14:38:30 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36887 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727460AbgCTSiZ (ORCPT
+        with ESMTP id S1727425AbgCTSiX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:38:25 -0400
+        Fri, 20 Mar 2020 14:38:23 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFMXG-00022g-Ea
-        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:22 +0100
+        id 1jFMXF-00023J-AA
+        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:21 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id ABDC6100239
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:16 +0100 (CET)
-Message-Id: <20200320180033.187967761@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 2912C1040C5
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:18 +0100 (CET)
+Message-Id: <20200320180033.790597451@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 19:00:04 +0100
+Date:   Fri, 20 Mar 2020 19:00:10 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -48,7 +48,8 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [patch V3 08/23] x86/entry: Mark enter_from_user_mode() noinstr
+Subject: [patch V3 14/23] x86/speculation/mds: Mark
+ mds_user_clear_cpu_buffers() __always_inline
 References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,35 +62,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both the callers in the low level ASM code and __context_tracking_exit()
-which is invoked from enter_from_user_mode() via user_exit_irqoff() are
-marked NOKPROBE. Allowing enter_from_user_mode() to be probed is
-inconsistent at best.
-
-Aside of that while function tracing per se is safe the function trace
-entry/exit points can be used via BPF as well which is not safe to use
-before context tracking has reached CONTEXT_KERNEL and adjusted RCU.
-
-Mark it noinstr which moves it into the instrumentation protected text
-section and includes notrace.
-
-Note, this needs further fixups in context tracking to ensure that the
-full call chain is protected. Will be addressed in follow up changes.
+Prevent the compiler from uninlining and creating traceable/probable
+functions as this is invoked _after_ context tracking switched to
+CONTEXT_USER and rcu idle.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/common.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/nospec-branch.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -40,7 +40,7 @@
- 
- #ifdef CONFIG_CONTEXT_TRACKING
- /* Called on entry from user mode with IRQs off. */
--__visible inline void enter_from_user_mode(void)
-+__visible noinstr void enter_from_user_mode(void)
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -319,7 +319,7 @@ DECLARE_STATIC_KEY_FALSE(mds_idle_clear)
+  * combination with microcode which triggers a CPU buffer flush when the
+  * instruction is executed.
+  */
+-static inline void mds_clear_cpu_buffers(void)
++static __always_inline void mds_clear_cpu_buffers(void)
  {
- 	CT_WARN_ON(ct_state() != CONTEXT_USER);
- 	user_exit_irqoff();
+ 	static const u16 ds = __KERNEL_DS;
+ 
+@@ -340,7 +340,7 @@ static inline void mds_clear_cpu_buffers
+  *
+  * Clear CPU buffers if the corresponding static key is enabled
+  */
+-static inline void mds_user_clear_cpu_buffers(void)
++static __always_inline void mds_user_clear_cpu_buffers(void)
+ {
+ 	if (static_branch_likely(&mds_user_clear))
+ 		mds_clear_cpu_buffers();
 
