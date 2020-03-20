@@ -5,70 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1669C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1159C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84BEF20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9845920776
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:35:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Db5vCvVX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zzb3Tlo1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgCTNfJ (ORCPT
+        id S1727464AbgCTNfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:35:09 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40959 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727400AbgCTNfG (ORCPT
+        Fri, 20 Mar 2020 09:35:12 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37600 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727439AbgCTNfK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:35:06 -0400
-Received: by mail-wr1-f66.google.com with SMTP id f3so7478591wrw.7;
-        Fri, 20 Mar 2020 06:35:05 -0700 (PDT)
+        Fri, 20 Mar 2020 09:35:10 -0400
+Received: by mail-pj1-f67.google.com with SMTP id ca13so2470433pjb.2;
+        Fri, 20 Mar 2020 06:35:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ADXJiGCDvrv56l+ieUm/SAdymbh3Yub2i9bAMUxwsik=;
-        b=Db5vCvVX3kdDDG4TWQ8K/qx0s58cL0uzjYWQQmQTNfhrKnN21Q7JfcSVcOHBO9DvvT
-         8GtzJL3B98vqCSPLQVyf5XXk/obGzEtkLVgtMrwKgA/o8OK6Gp6gQZ/+zk3VCbj2iPlp
-         WhefUdDx9INTUnwRmkNK/kJjn/aGSszGNZsQPPjbTIbkYgG9LSwKBA+IIwIBkSsDv7oH
-         QmaqGTpi+xyKgha+bxzMQ0QUk78LI3ZX3ogmR1JY7K55sO08YrnWZ2jL8UHo2Z9ESKWe
-         v9j44atOsFMmnz8YgW6rd65wfjQ6Muf9VPLO6KoX0EFa+U3KdtkZC+SpQ75SS3xB1z8m
-         OMIA==
+        bh=MYgs/zkr6hc7o1ozUKVcYW4sWfXlOXbWmqtVG3HO+jw=;
+        b=Zzb3Tlo1M7+SG+C768Whj1+P8aInEwGWMvUEdJV6m+xJC48pQZVusL6kj8Fo8pkSZ8
+         9nmVwdFTYo7CBUJGzVUUhsQP3BsJ76iZ0avpaV/cbRqQmVyTMsrmYIMIsl0mMchGS4XB
+         GbkA+5RwOgjZCdmqDrGXKaV/J6kbBabEo0bbftCmtjki25hdEvVybxQ2wQTQm1ECsz/K
+         AywYmJ4c9ZC0I1dWn9jxqxtKwOvC+9JPWEjtfX4fiR7CRiC+vYBwEF/r/zNxM+cRWHq8
+         pHNa2SpZFWyFPkDfs/Kppv5uacBw2f0u51SeWwxdaVSn6pZzdeE/fU11dnxBS7fJYvpO
+         GNCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ADXJiGCDvrv56l+ieUm/SAdymbh3Yub2i9bAMUxwsik=;
-        b=oXLjnsvLH5069hf+/ZSOUX7KqMlweazw2gIu1k4K+8M1SzuJZwszwGlq59Wfu0PKgT
-         REpu+uXfjuQFh/MYPYqaSdvdRSOzKgqVEcxapORXaYo/yIN27FjKka69F7oPuH/N+ZOH
-         Re2TAB+etnWunIJuiLHl4ktc3kdOl+0szAEEuKS7sLcAAq9fzQC5F9HWLLC8iGFvLOkZ
-         EGYoVJehJV7ZvgSbvQYFqoZ1FkDjGfsNftQGe2qg+BrvcdH9RbTh5I14whtGQSe2NKfT
-         QJD9zpvbl3IqZcTSrS3oehC54yl3TL1G8FpFwwdkijunht5Z2jlDqVawxcxg1c1jOvZI
-         Me0Q==
-X-Gm-Message-State: ANhLgQ2UX3FE9QTmqMwqNMJOqdOzFenF30A9TrFvEHTCkrvdxEBejNqX
-        bKpbWBF4OQUJcEy4T1DqzE0=
-X-Google-Smtp-Source: ADFU+vuqshN9lSmln+18D87rL++S+Fb8k19lx7heUddfv7aKn737EG+IaVZYk9R/pOva1OhAL3A7bw==
-X-Received: by 2002:adf:e98a:: with SMTP id h10mr202766wrm.370.1584711304489;
-        Fri, 20 Mar 2020 06:35:04 -0700 (PDT)
-Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id g14sm7963218wme.32.2020.03.20.06.35.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 06:35:03 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/7] dt-bindings: timer: Add bindings for NVIDIA Tegra186 timers
-Date:   Fri, 20 Mar 2020 14:34:46 +0100
-Message-Id: <20200320133452.3705040-2-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200320133452.3705040-1-thierry.reding@gmail.com>
-References: <20200320133452.3705040-1-thierry.reding@gmail.com>
+        bh=MYgs/zkr6hc7o1ozUKVcYW4sWfXlOXbWmqtVG3HO+jw=;
+        b=ZsqeReb+lSRH6IQYbkaal1QxDD1SunCwXIa89UXjjXkhkaNKyzIRrZKfPLMDG1bFZw
+         s/g5HJglW6gMxq1SSqzMG7cs66w7zaKsj0FJ65Q0RhTCjsdatbprO/vxTZEqUTM4SmO2
+         LqjWQAxXr7l11qtapMTwKWJf85zMFt+kvnbvHXSvAL7p8+M0P7jBNIEsBztKAMrM2ggJ
+         ffaMB6hZ0zj3zZO6cgWvRwpLi4gXtKVr6w6uuC9HSBbVFdQ8GkYorQhgHrm/ogQPGwM+
+         Oi02owRJwqddDfKSr2Olfna2nEv0gHPDoZMYxB4lsk+ixrOxuj4DlRIogEwvA8TYYglu
+         9t9g==
+X-Gm-Message-State: ANhLgQ1uocOb3hRmVVBOy9EuzMRT+6FuLIkKt7YW5ypMB8qRzbvvW78S
+        s7t1WB4zi2fJZfBqPd/Lspg=
+X-Google-Smtp-Source: ADFU+vvB3HdUq5aTm5FSckVkFEvQ/V41S5Axr/NDgBis6ch6qkBSRP77+8q0ZGDnIKJBiLIrtj6j0A==
+X-Received: by 2002:a17:90a:9f96:: with SMTP id o22mr9280844pjp.88.1584711308880;
+        Fri, 20 Mar 2020 06:35:08 -0700 (PDT)
+Received: from localhost (216.24.188.11.16clouds.com. [216.24.188.11])
+        by smtp.gmail.com with ESMTPSA id 11sm5582857pfv.43.2020.03.20.06.35.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 20 Mar 2020 06:35:08 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, davem@davemloft.net, allison@lohutok.net,
+        corbet@lwn.net, alexios.zavras@intel.com, broonie@kernel.org,
+        tglx@linutronix.de, mchehab+samsung@kernel.org,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH net-next v2 6/7] net: phy: introduce phy_read_poll_timeout macro
+Date:   Fri, 20 Mar 2020 21:34:30 +0800
+Message-Id: <20200320133431.9354-7-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200320133431.9354-1-zhengdejin5@gmail.com>
+References: <20200320133431.9354-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,79 +77,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+it is sometimes necessary to poll a phy register by phy_read()
+function until its value satisfies some condition. introduce
+phy_read_poll_timeout() macros that do this.
 
-The NVIDIA Tegra186 SoC contains an IP block that provides a register
-interface for ten timers with a 29-bit counter that can generate one-
-shot, periodic or watchdog interrupts.
-
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 ---
- .../bindings/timer/nvidia,tegra186-timer.yaml | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/nvidia,tegra186-timer.yaml
+v1 -> v2:
+	- pass a phydev and a regnum to replace args... parameter in
+	  the phy_read_poll_timeout(), and also handle the
+	  phy_read() function's return error.
+ 
+ include/linux/phy.h | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/nvidia,tegra186-timer.yaml b/Documentation/devicetree/bindings/timer/nvidia,tegra186-timer.yaml
-new file mode 100644
-index 000000000000..f9b55041a5ca
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/nvidia,tegra186-timer.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/nvidia,tegra186-timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index bb351f8b8769..ecee7e436f89 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -714,6 +714,19 @@ static inline int phy_read(struct phy_device *phydev, u32 regnum)
+ 	return mdiobus_read(phydev->mdio.bus, phydev->mdio.addr, regnum);
+ }
+ 
++#define phy_read_poll_timeout(val, cond, sleep_us, timeout_us, phydev, regnum) \
++({ \
++	int ret = 0; \
++	ret = read_poll_timeout(phy_read, val, cond || val < 0, sleep_us, \
++				timeout_us, phydev, regnum); \
++	if (val <  0) \
++		ret = val; \
++	if (ret) \
++		phydev_err(phydev, "%s failed: %d\n", __func__, ret); \
++	ret; \
++})
 +
-+title: NVIDIA Tegra186 timers
 +
-+maintainers:
-+  - Thierry Reding <thierry.reding@gmail.com>
-+  - Jonathan Hunter <jonathanh@nvidia.com>
-+
-+description: |
-+  The Tegra186 timer provides ten 29-bit timer counters and one 32-bit TSC
-+  (timestamp counter). The timers run at either a fixed 1 MHz clock rate
-+  derived from the oscillator clock. Each timer can be programmed to raise
-+  one-shot, periodic, or watchdog interrupts.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - description: NVIDIA Tegra186
-+        items:
-+          - const: nvidia,tegra186-timer
-+
-+      - description: NVIDIA Tegra194
-+        items:
-+          - const: nvidia,tegra194-timer
-+          - const: nvidia,tegra186-timer
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 10
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    timer@3010000 {
-+        compatible = "nvidia,tegra186-timer";
-+        reg = <0x03010000 0x000e0000>;
-+        interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+        status = "disabled";
-+    };
+ /**
+  * __phy_read - convenience function for reading a given PHY register
+  * @phydev: the phy_device struct
 -- 
-2.24.1
+2.25.0
 
