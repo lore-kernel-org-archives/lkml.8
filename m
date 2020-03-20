@@ -2,135 +2,303 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EED3C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C21C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D14208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B60E20788
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584703483;
+	bh=EXBoA87SJmKiYt+GpQ80kFmJuUquWSW0LEEKMk6iR0g=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=xGGMW5tpmJt3qfL+xdnTG36Il/hFr+73Y5lnSIP5zzv8lvGxlgXZXhFnYDpFYVkkY
+	 3tCWMpncWv220/7813z9xbrL07znPa/HuQ2jceNofkblfz/pEckUwgKtifDNtFXdy1
+	 fVpPhgxCUoHHqIaKTfoIDls7YY9OSV6TPIgKc5xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbgCTLYP (ORCPT
+        id S1727190AbgCTLYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 07:24:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13418 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727209AbgCTLYO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 07:24:14 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02KB3p9m070934
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 07:24:13 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu7dbwa5s-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 07:24:12 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
-        Fri, 20 Mar 2020 11:24:11 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 20 Mar 2020 11:24:08 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02KBN6Vw49217996
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Mar 2020 11:23:06 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5BA3542045;
-        Fri, 20 Mar 2020 11:24:07 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0490042041;
-        Fri, 20 Mar 2020 11:24:06 +0000 (GMT)
-Received: from in.ibm.com (unknown [9.85.95.122])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 20 Mar 2020 11:24:05 +0000 (GMT)
-Date:   Fri, 20 Mar 2020 16:54:03 +0530
-From:   Bharata B Rao <bharata@linux.ibm.com>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH 2/2] KVM: PPC: Book3S HV: H_SVM_INIT_START must call
- UV_RETURN
-Reply-To: bharata@linux.ibm.com
-References: <20200320102643.15516-1-ldufour@linux.ibm.com>
- <20200320102643.15516-3-ldufour@linux.ibm.com>
+        Fri, 20 Mar 2020 07:24:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726820AbgCTLYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 07:24:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A941920784;
+        Fri, 20 Mar 2020 11:24:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584703481;
+        bh=EXBoA87SJmKiYt+GpQ80kFmJuUquWSW0LEEKMk6iR0g=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vYaRXp6xHsItsTLX/MhfLDRWvlmDQG9cJu4eAr3apPPzVcEfrpCbA8SCPkezp3F2U
+         KX4n63BioKtrFeADsB9bGYIxwftAEJrw/HaavumVb7eojjo8XTwDn0G1QM9SdHBEH9
+         t3QgdLdTGrI6jnK8EA7YIZSr4jspwxMiNjfvYWXQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.4 00/51] 5.4.27-rc2 review
+Date:   Fri, 20 Mar 2020 12:24:37 +0100
+Message-Id: <20200320112302.129084446@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320102643.15516-3-ldufour@linux.ibm.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-TM-AS-GCONF: 00
-x-cbid: 20032011-0008-0000-0000-0000036097F3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032011-0009-0000-0000-00004A81F8F6
-Message-Id: <20200320112403.GG26049@in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-20_02:2020-03-20,2020-03-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- mlxscore=0 suspectscore=2 clxscore=1011 priorityscore=1501 impostorscore=0
- adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003200046
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.27-rc2.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.27-rc2
+X-KernelTest-Deadline: 2020-03-22T11:23+00:00
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 11:26:43AM +0100, Laurent Dufour wrote:
-> When the call to UV_REGISTER_MEM_SLOT is failing, for instance because
-> there is not enough free secured memory, the Hypervisor (HV) has to call
-> UV_RETURN to report the error to the Ultravisor (UV). Then the UV will call
-> H_SVM_INIT_ABORT to abort the securing phase and go back to the calling VM.
-> 
-> If the kvm->arch.secure_guest is not set, in the return path rfid is called
-> but there is no valid context to get back to the SVM since the Hcall has
-> been routed by the Ultravisor.
-> 
-> Move the setting of kvm->arch.secure_guest earlier in
-> kvmppc_h_svm_init_start() so in the return path, UV_RETURN will be called
-> instead of rfid.
-> 
-> Cc: Bharata B Rao <bharata@linux.ibm.com>
-> Cc: Paul Mackerras <paulus@ozlabs.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
-> ---
->  arch/powerpc/kvm/book3s_hv_uvmem.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
-> index 79b1202b1c62..68dff151315c 100644
-> --- a/arch/powerpc/kvm/book3s_hv_uvmem.c
-> +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
-> @@ -209,6 +209,8 @@ unsigned long kvmppc_h_svm_init_start(struct kvm *kvm)
->  	int ret = H_SUCCESS;
->  	int srcu_idx;
->  
-> +	kvm->arch.secure_guest = KVMPPC_SECURE_INIT_START;
-> +
->  	if (!kvmppc_uvmem_bitmap)
->  		return H_UNSUPPORTED;
->  
-> @@ -233,7 +235,6 @@ unsigned long kvmppc_h_svm_init_start(struct kvm *kvm)
->  			goto out;
->  		}
->  	}
-> -	kvm->arch.secure_guest |= KVMPPC_SECURE_INIT_START;
+This is the start of the stable review cycle for the 5.4.27 release.
+There are 51 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-There is an assumption that memory slots would have been registered with UV
-if KVMPPC_SECURE_INIT_START has been done. KVM_PPC_SVM_OFF ioctl will skip
-unregistration and other steps during reboot if KVMPPC_SECURE_INIT_START
-hasn't been done.
+Responses should be made by Sun, 22 Mar 2020 11:22:06 +0000.
+Anything received after that time might be too late.
 
-Have you checked if that path isn't affected by this change?
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.27-rc2.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+and the diffstat can be found below.
 
-Regards,
-Bharata.
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.4.27-rc2
+
+Matteo Croce <mcroce@redhat.com>
+    ipv4: ensure rcu_read_lock() in cipso_v4_error()
+
+Ard Biesheuvel <ardb@kernel.org>
+    ARM: 8961/2: Fix Kbuild issue caused by per-task stack protector GCC plugin
+
+Tony Fischetti <tony.fischetti@gmail.com>
+    HID: add ALWAYS_POLL quirk to lenovo pixart mouse
+
+Chen-Tsung Hsieh <chentsung@chromium.org>
+    HID: google: add moonball USB id
+
+Jann Horn <jannh@google.com>
+    mm: slub: add missing TID bump in kmem_cache_alloc_bulk()
+
+Kees Cook <keescook@chromium.org>
+    ARM: 8958/1: rename missed uaccess .fixup section
+
+Florian Fainelli <f.fainelli@gmail.com>
+    ARM: 8957/1: VDSO: Match ARMv8 timer in cntvct_functional()
+
+Carl Huang <cjhuang@codeaurora.org>
+    net: qrtr: fix len of skb_put_padto in qrtr_node_enqueue
+
+Ming Lei <ming.lei@redhat.com>
+    blk-mq: insert flush request to the front of dispatch queue
+
+Qian Cai <cai@lca.pw>
+    jbd2: fix data races at struct journal_head
+
+Alex Maftei (amaftei) <amaftei@solarflare.com>
+    sfc: fix timestamp reconstruction at 16-bit rollover points
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: fix packet forwarding in rmnet bridge mode
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: fix bridge mode bugs
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: use upper/lower device infrastructure
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: do not allow to change mux id if mux id is duplicated
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: remove rcu_read_lock in rmnet_force_unassociate_device()
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: fix suspicious RCU usage
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: fix NULL pointer dereference in rmnet_changelink()
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: fix NULL pointer dereference in rmnet_newlink()
+
+Luo bin <luobin9@huawei.com>
+    hinic: fix a bug of rss configuration
+
+Luo bin <luobin9@huawei.com>
+    hinic: fix a bug of setting hw_ioctxt
+
+Luo bin <luobin9@huawei.com>
+    hinic: fix a irq affinity bug
+
+Antoine Tenart <antoine.tenart@bootlin.com>
+    net: phy: mscc: fix firmware paths
+
+yangerkun <yangerkun@huawei.com>
+    slip: not call free_netdev before rtnl_unlock in slip_open
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    signal: avoid double atomic counter increments for user accounting
+
+Masahiro Yamada <masahiroy@kernel.org>
+    kbuild: add dt_binding_check to PHONY in a correct place
+
+Masahiro Yamada <masahiroy@kernel.org>
+    kbuild: add dtbs_check to PHONY
+
+Monk Liu <Monk.Liu@amd.com>
+    drm/amdgpu: fix memory leak during TDR test(v2)
+
+Ming Lei <ming.lei@redhat.com>
+    blk-mq: insert passthrough request into hctx->dispatch directly
+
+Esben Haabendal <esben@geanix.com>
+    net: ll_temac: Handle DMA halt condition caused by buffer underrun
+
+Esben Haabendal <esben@geanix.com>
+    net: ll_temac: Fix RX buffer descriptor handling on GFP_ATOMIC pressure
+
+Esben Haabendal <esben@geanix.com>
+    net: ll_temac: Add more error handling of dma_map_single() calls
+
+Esben Haabendal <esben@geanix.com>
+    net: ll_temac: Fix race condition causing TX hang
+
+Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+    mac80211: rx: avoid RCU list traversal under mutex
+
+Marek Vasut <marex@denx.de>
+    net: ks8851-ml: Fix IRQ handling and locking
+
+Daniele Palmas <dnlplm@gmail.com>
+    net: usb: qmi_wwan: restore mtu min/max values after raw_ip switch
+
+Igor Druzhinin <igor.druzhinin@citrix.com>
+    scsi: libfc: free response frame from GPN_ID
+
+Johannes Berg <johannes.berg@intel.com>
+    cfg80211: check reg_rule for NULL in handle_channel_custom()
+
+Tom Zanussi <zanussi@kernel.org>
+    tracing: Fix number printing bug in print_synth_event()
+
+Michael Ellerman <mpe@ellerman.id.au>
+    selftests/rseq: Fix out-of-tree compilation
+
+Hanno Zulla <kontakt@hanno.de>
+    HID: hid-bigbenff: fix race condition for scheduled work during removal
+
+Hanno Zulla <kontakt@hanno.de>
+    HID: hid-bigbenff: call hid_hw_stop() in case of error
+
+Hanno Zulla <kontakt@hanno.de>
+    HID: hid-bigbenff: fix general protection fault caused by double kfree
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    HID: i2c-hid: add Trekstor Surfbook E11B to descriptor override
+
+Mika Westerberg <mika.westerberg@linux.intel.com>
+    ACPI: watchdog: Set default timeout in probe
+
+Mansour Behabadi <mansour@oxplot.com>
+    HID: apple: Add support for recent firmware on Magic Keyboards
+
+Jean Delvare <jdelvare@suse.de>
+    ACPI: watchdog: Allow disabling WDAT at boot
+
+Ulf Hansson <ulf.hansson@linaro.org>
+    mmc: sdhci-tegra: Fix busy detection by enabling MMC_CAP_NEED_RSP_BUSY
+
+Felix Kuehling <Felix.Kuehling@amd.com>
+    drm/amdgpu: Fix TLB invalidation request when using semaphore
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    netfilter: xt_hashlimit: unregister proc file before releasing mutex
+
+Florian Westphal <fw@strlen.de>
+    netfilter: hashlimit: do not use indirect calls during gc
+
+
+-------------
+
+Diffstat:
+
+ Documentation/admin-guide/kernel-parameters.txt    |   4 +
+ Makefile                                           |   7 +-
+ arch/arm/Makefile                                  |   4 +-
+ arch/arm/boot/compressed/Makefile                  |   4 +-
+ arch/arm/kernel/vdso.c                             |   2 +
+ arch/arm/lib/copy_from_user.S                      |   2 +-
+ block/blk-flush.c                                  |   2 +-
+ block/blk-mq-sched.c                               |  44 ++++-
+ block/blk-mq.c                                     |  18 +-
+ block/blk-mq.h                                     |   3 +-
+ drivers/acpi/acpi_watchdog.c                       |  12 +-
+ drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c             |   5 +-
+ drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c              |   8 +-
+ drivers/gpu/drm/amd/powerplay/smu_v11_0.c          |   6 +-
+ drivers/hid/hid-apple.c                            |   3 +-
+ drivers/hid/hid-bigbenff.c                         |  31 ++-
+ drivers/hid/hid-google-hammer.c                    |   2 +
+ drivers/hid/hid-ids.h                              |   2 +
+ drivers/hid/hid-quirks.c                           |   1 +
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c           |   8 +
+ drivers/mmc/host/sdhci-tegra.c                     |   3 +
+ drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c   |   1 +
+ drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h   |   2 +-
+ drivers/net/ethernet/huawei/hinic/hinic_hw_if.h    |   1 +
+ drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h    |   1 +
+ drivers/net/ethernet/huawei/hinic/hinic_main.c     |   3 +-
+ drivers/net/ethernet/huawei/hinic/hinic_rx.c       |   5 +-
+ drivers/net/ethernet/micrel/ks8851_mll.c           |  14 +-
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c | 186 +++++++++---------
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_config.h |   3 +-
+ .../net/ethernet/qualcomm/rmnet/rmnet_handlers.c   |   7 +-
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c    |   8 -
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.h    |   1 -
+ drivers/net/ethernet/sfc/ptp.c                     |  38 +++-
+ drivers/net/ethernet/xilinx/ll_temac.h             |   4 +
+ drivers/net/ethernet/xilinx/ll_temac_main.c        | 209 +++++++++++++++++----
+ drivers/net/phy/mscc.c                             |   4 +-
+ drivers/net/slip/slip.c                            |   3 +
+ drivers/net/usb/qmi_wwan.c                         |   3 +
+ drivers/scsi/libfc/fc_disc.c                       |   2 +
+ drivers/watchdog/wdat_wdt.c                        |  23 +++
+ fs/jbd2/transaction.c                              |   8 +-
+ kernel/signal.c                                    |  23 ++-
+ kernel/trace/trace_events_hist.c                   |  32 +++-
+ mm/slub.c                                          |   9 +
+ net/ipv4/cipso_ipv4.c                              |   7 +-
+ net/mac80211/rx.c                                  |   2 +-
+ net/netfilter/xt_hashlimit.c                       |  36 +---
+ net/qrtr/qrtr.c                                    |   2 +-
+ net/wireless/reg.c                                 |   2 +-
+ tools/testing/selftests/rseq/Makefile              |   2 +-
+ 51 files changed, 564 insertions(+), 248 deletions(-)
+
 
