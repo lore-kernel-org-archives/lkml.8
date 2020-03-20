@@ -7,42 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2969C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4BEC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA3B20754
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E2A520776
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:58:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgCTM63 (ORCPT
+        id S1727360AbgCTM6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 08:58:29 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35660 "EHLO
+        Fri, 20 Mar 2020 08:58:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35614 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727365AbgCTM6Y (ORCPT
+        with ESMTP id S1727114AbgCTM6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 08:58:24 -0400
+        Fri, 20 Mar 2020 08:58:11 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFHDw-0003ia-5J; Fri, 20 Mar 2020 13:58:04 +0100
+        id 1jFHDv-0003iS-Hr; Fri, 20 Mar 2020 13:58:03 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C054A1C22BE;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0CD821C22BE;
         Fri, 20 Mar 2020 13:58:03 +0100 (CET)
-Date:   Fri, 20 Mar 2020 12:58:03 -0000
-From:   "tip-bot2 for Liang Chen" <tip-bot2@linutronix.de>
+Date:   Fri, 20 Mar 2020 12:58:02 -0000
+From:   "tip-bot2 for Tao Zhou" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] kthread: Do not preempt current task if it is going
- to call schedule()
-Cc:     Liang Chen <cl@rock-chips.com>,
+Subject: [tip: sched/core] sched/fair: Fix condition of avg_load calculation
+Cc:     Tao Zhou <ouwen210@hotmail.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200306070133.18335-2-cl@rock-chips.com>
-References: <20200306070133.18335-2-cl@rock-chips.com>
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Mel Gorman <mgorman@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158470908349.28353.3855924848715964020.tip-bot2@tip-bot2>
+Message-ID: <158470908271.28353.7933643223235675222.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,79 +56,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     26c7295be0c5e6da3fa45970e9748be983175b1b
-Gitweb:        https://git.kernel.org/tip/26c7295be0c5e6da3fa45970e9748be983175b1b
-Author:        Liang Chen <cl@rock-chips.com>
-AuthorDate:    Fri, 06 Mar 2020 15:01:33 +08:00
+Commit-ID:     6c8116c914b65be5e4d6f66d69c8142eb0648c22
+Gitweb:        https://git.kernel.org/tip/6c8116c914b65be5e4d6f66d69c8142eb0648c22
+Author:        Tao Zhou <ouwen210@hotmail.com>
+AuthorDate:    Thu, 19 Mar 2020 11:39:20 +08:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Fri, 20 Mar 2020 13:06:20 +01:00
 
-kthread: Do not preempt current task if it is going to call schedule()
+sched/fair: Fix condition of avg_load calculation
 
-when we create a kthread with ktrhead_create_on_cpu(),the child thread
-entry is ktread.c:ktrhead() which will be preempted by the parent after
-call complete(done) while schedule() is not called yet,then the parent
-will call wait_task_inactive(child) but the child is still on the runqueue,
-so the parent will schedule_hrtimeout() for 1 jiffy,it will waste a lot of
-time,especially on startup.
+In update_sg_wakeup_stats(), the comment says:
 
-  parent                             child
-ktrhead_create_on_cpu()
-  wait_fo_completion(&done) -----> ktread.c:ktrhead()
-                             |----- complete(done);--wakeup and preempted by parent
- kthread_bind() <------------|  |-> schedule();--dequeue here
-  wait_task_inactive(child)     |
-   schedule_hrtimeout(1 jiffy) -|
+Computing avg_load makes sense only when group is fully
+busy or overloaded.
 
-So we hope the child just wakeup parent but not preempted by parent, and the
-child is going to call schedule() soon,then the parent will not call
-schedule_hrtimeout(1 jiffy) as the child is already dequeue.
+But, the code below this comment does not check like this.
 
-The same issue for ktrhead_park()&&kthread_parkme().
-This patch can save 120ms on rk312x startup with CONFIG_HZ=300.
+>From reading the code about avg_load in other functions, I
+confirm that avg_load should be calculated in fully busy or
+overloaded case. The comment is correct and the checking
+condition is wrong. So, change that condition.
 
-Signed-off-by: Liang Chen <cl@rock-chips.com>
+Fixes: 57abff067a08 ("sched/fair: Rework find_idlest_group()")
+Signed-off-by: Tao Zhou <ouwen210@hotmail.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://lkml.kernel.org/r/20200306070133.18335-2-cl@rock-chips.com
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Acked-by: Mel Gorman <mgorman@suse.de>
+Link: https://lkml.kernel.org/r/Message-ID:
 ---
- kernel/kthread.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ kernel/sched/fair.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index b262f47..bfbfa48 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -199,8 +199,15 @@ static void __kthread_parkme(struct kthread *self)
- 		if (!test_bit(KTHREAD_SHOULD_PARK, &self->flags))
- 			break;
- 
-+		/*
-+		 * Thread is going to call schedule(), do not preempt it,
-+		 * or the caller of kthread_park() may spend more time in
-+		 * wait_task_inactive().
-+		 */
-+		preempt_disable();
- 		complete(&self->parked);
--		schedule();
-+		schedule_preempt_disabled();
-+		preempt_enable();
- 	}
- 	__set_current_state(TASK_RUNNING);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 783356f..d7fb20a 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8631,7 +8631,8 @@ static inline void update_sg_wakeup_stats(struct sched_domain *sd,
+ 	 * Computing avg_load makes sense only when group is fully busy or
+ 	 * overloaded
+ 	 */
+-	if (sgs->group_type < group_fully_busy)
++	if (sgs->group_type == group_fully_busy ||
++		sgs->group_type == group_overloaded)
+ 		sgs->avg_load = (sgs->group_load * SCHED_CAPACITY_SCALE) /
+ 				sgs->group_capacity;
  }
-@@ -245,8 +252,14 @@ static int kthread(void *_create)
- 	/* OK, tell user we're spawned, wait for stop or wakeup */
- 	__set_current_state(TASK_UNINTERRUPTIBLE);
- 	create->result = current;
-+	/*
-+	 * Thread is going to call schedule(), do not preempt it,
-+	 * or the creator may spend more time in wait_task_inactive().
-+	 */
-+	preempt_disable();
- 	complete(done);
--	schedule();
-+	schedule_preempt_disabled();
-+	preempt_enable();
- 
- 	ret = -EINTR;
- 	if (!test_bit(KTHREAD_SHOULD_STOP, &self->flags)) {
