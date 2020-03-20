@@ -2,117 +2,100 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B20CC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DA1C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6715F20775
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:32:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584725538;
-	bh=WsjgjMc5V84hg2ru5hJzn4ARjRe9A0ITrIl/CNrlPLg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YO4mn7i55OMbwQpHOPBCgqc4JkFzHzX4eCVeev+Qjn5jd+/fM677G/fzj1L9fsPs0
-	 z8KJ2ykSWTviJXTh5J2K817yOfE55RVDLqS6G+z2/KE9XHbaMgsDvspjQYL9iDtvqX
-	 WqnPp/x9sIaoZt+GGJUl8wdpjF73RWG1RyG7uCNU=
+	by mail.kernel.org (Postfix) with ESMTP id ED4B020781
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:34:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iyOebHzv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgCTRcR (ORCPT
+        id S1726958AbgCTReJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:32:17 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:46100 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbgCTRcR (ORCPT
+        Fri, 20 Mar 2020 13:34:09 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43849 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgCTReI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:32:17 -0400
-Received: by mail-il1-f193.google.com with SMTP id e8so6291093ilc.13;
-        Fri, 20 Mar 2020 10:32:16 -0700 (PDT)
+        Fri, 20 Mar 2020 13:34:08 -0400
+Received: by mail-lj1-f194.google.com with SMTP id u15so7029722lji.10
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 10:34:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=of48erB0S8cHeslTdzECLL0UR5qKqtxYepkriqnz45s=;
+        b=iyOebHzva1NGNHGpqdCghDoH/dfwvxHleVANO6ewDmxSnY2X1xXz/vCAQiQ1LBCswx
+         NbmnNapPbzh7QzdNPNBfJ2o3N3cXi7QLzBDF80dW7s4lfEbyz6OiDJkCWsOLasaBrXep
+         eGPiHvbsmuITMkJDr9uRLy9Jb/w0+lufqGBTWMC/cDodkdSGU+k7ebakOHP2bzKe6vCv
+         q8Rwp8QAKfCWnkh7Ry+UDUCwXVsuAv+oCK27KoD2K3+XVjWPH2BaImUS6h4y7YSr9b8+
+         yxSJie5c8zBudGonz6RdZsr1DNm5I9S5fCdaw2B3F3Fkwhn66CavGkfS7yC5hoXbEBIt
+         f4bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FXIfsAVUFp8IJFPm+/hNheLawxwEVeZKgbspez8Hy3A=;
-        b=NV3q3F1RHAx2DDPQw5wFD8USkxgiYFTwB5BS3nBhoVdgwYTQRjJbamA1hzpGltxNFf
-         ne2Lpf4uE0E2ot/MYx9OW/HsaTjLjyjsUhAIbXdEx22yXe1YVBhqUQCei6xwH/WZlbXs
-         lsFsli4akYyzSqVyu6Z/FP8CfOUyTapktNXPay9blnkEqIk0hsCucoFagE5y7DIK/O7Z
-         FJCx/XQjYbylHp+f2nxDnvn3j4c8A9B4YNguLfVhYWkonPJPzbLhRO7jWe31+MfxIRbs
-         XT3O3ktDy6SvImTjaUN/FyfYG94n70Yv0u+T9kfn9ZDHoMlfzgVD9np56VBMbQ0aSpcy
-         a03w==
-X-Gm-Message-State: ANhLgQ2R1qWVSWtLIBIKLHRPFqm40Bc4HB1hk5C/6CtkgSFjJ26LqgEb
-        ObDHluqKj6RF3seZ+Pj3sg==
-X-Google-Smtp-Source: ADFU+vvyOEHh52ksLg64oqQQtskIyPgC3Gb9PgcVjz3NdBpqcYEYi8YkzZvcjgp/TY2ZkGE4F1dg5g==
-X-Received: by 2002:a92:d641:: with SMTP id x1mr9850010ilp.223.1584725536379;
-        Fri, 20 Mar 2020 10:32:16 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id j23sm1874792ioa.10.2020.03.20.10.32.14
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=of48erB0S8cHeslTdzECLL0UR5qKqtxYepkriqnz45s=;
+        b=WuKu/dzcwu55U0tuEfLdMIMEQPd7d23LIimaoqMT17WEdp2sV3K1DygdN61KGWM5Z0
+         BDd9EA8A0OfFLiJ/zvPzm4lzNkJJnz3QF0B4kINXAa0GmmQpBBWEfYjFKicQMQa6mTtv
+         aR5vaPYIhcBMZ8u1piAxZRZyYJIokBwZkVtuVwPueyDt3OIlGjJhRZY0/wu8TUgr60xe
+         /somZ6jG4e6tJl9g1OUmHBOQvOcQpgbdS+A6N7E6+ezbUJZwLDtcYHroGZwQ5G7MjQpq
+         NSsIiwEymL/VT0Br/3j24lt5+vLoj1mW8eHaJdA67fLjfefXsKC+cE8Ptz9L8eVcCO5H
+         cu9A==
+X-Gm-Message-State: ANhLgQ3j/DNYVlgZ7m3hboQ223ocXIa5831X0/Z1obGWLMxTKjzy+58l
+        QBxblwmoaNwapSXFq9+dzUEyJmSb
+X-Google-Smtp-Source: ADFU+vtDzPH9ZgT/w73DsnlnfyslYS9eCf56nWJqC/bXo01479mNv2Jg3uh+5x48fZ5RmKoOCeV/bA==
+X-Received: by 2002:a2e:6e13:: with SMTP id j19mr5785456ljc.253.1584725646438;
+        Fri, 20 Mar 2020 10:34:06 -0700 (PDT)
+Received: from localhost.localdomain (188.146.97.196.nat.umts.dynamic.t-mobile.pl. [188.146.97.196])
+        by smtp.gmail.com with ESMTPSA id 24sm279334ljv.105.2020.03.20.10.34.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 10:32:15 -0700 (PDT)
-Received: (nullmailer pid 16573 invoked by uid 1000);
-        Fri, 20 Mar 2020 17:32:13 -0000
-Date:   Fri, 20 Mar 2020 11:32:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>, timur@kernel.org,
-        Xiubo.Lee@gmail.com, festevam@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/7] ASoC: dt-bindings: fsl_asrc: Add new property
- fsl,asrc-format
-Message-ID: <20200320173213.GA9093@bogus>
-References: <cover.1583725533.git.shengjiu.wang@nxp.com>
- <24f69c50925b93afd7a706bd888ee25d27247c78.1583725533.git.shengjiu.wang@nxp.com>
- <20200309211943.GB11333@Asurada-Nvidia.nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200309211943.GB11333@Asurada-Nvidia.nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 20 Mar 2020 10:34:05 -0700 (PDT)
+From:   mateusznosek0@gmail.com
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Mateusz Nosek <mateusznosek0@gmail.com>, akpm@linux-foundation.org
+Subject: [PATCH] mm/dmapool.c: micro-optimisation remove unnecessary branch
+Date:   Fri, 20 Mar 2020 18:33:17 +0100
+Message-Id: <20200320173317.26408-1-mateusznosek0@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 02:19:44PM -0700, Nicolin Chen wrote:
-> On Mon, Mar 09, 2020 at 11:58:28AM +0800, Shengjiu Wang wrote:
-> > In order to support new EASRC and simplify the code structure,
-> > We decide to share the common structure between them. This bring
-> > a problem that EASRC accept format directly from devicetree, but
-> > ASRC accept width from devicetree.
-> > 
-> > In order to align with new ESARC, we add new property fsl,asrc-format.
-> > The fsl,asrc-format can replace the fsl,asrc-width, then driver
-> > can accept format from devicetree, don't need to convert it to
-> > format through width.
-> > 
-> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/sound/fsl,asrc.txt | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-> > index cb9a25165503..780455cf7f71 100644
-> > --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-> > +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-> > @@ -51,6 +51,11 @@ Optional properties:
-> >  			  will be in use as default. Otherwise, the big endian
-> >  			  mode will be in use for all the device registers.
-> >  
-> > +   - fsl,asrc-format	: Defines a mutual sample format used by DPCM Back
-> > +			  Ends, which can replace the fsl,asrc-width.
-> > +			  The value is SNDRV_PCM_FORMAT_S16_LE, or
-> > +			  SNDRV_PCM_FORMAT_S24_LE
-> 
-> I am still holding the concern at the DT binding of this format,
-> as it uses values from ASoC header file instead of a dt-binding
-> header file -- not sure if we can do this. Let's wait for Rob's
-> comments.
+From: Mateusz Nosek <mateusznosek0@gmail.com>
 
-I assume those are an ABI as well, so it's okay to copy them unless we 
-already have some format definitions for DT. But it does need to be copy 
-in a header under include/dt-bindings/.
+Previously there was a check if 'size' is aligned to 'align' and if not
+then it was aligned. This check was expensive as both branch and division
+are expensive instructions in most architectures.
+'ALIGN' function on already aligned value will not change it, and as it is
+cheaper than branch + division it can be executed all the time and
+branch can be removed.
 
-Rob
+Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
+---
+ mm/dmapool.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/mm/dmapool.c b/mm/dmapool.c
+index fe5d33060415..f9fb9bbd733e 100644
+--- a/mm/dmapool.c
++++ b/mm/dmapool.c
+@@ -144,9 +144,7 @@ struct dma_pool *dma_pool_create(const char *name, struct device *dev,
+ 	else if (size < 4)
+ 		size = 4;
+ 
+-	if ((size % align) != 0)
+-		size = ALIGN(size, align);
+-
++	size = ALIGN(size, align);
+ 	allocation = max_t(size_t, size, PAGE_SIZE);
+ 
+ 	if (!boundary)
+-- 
+2.17.1
+
