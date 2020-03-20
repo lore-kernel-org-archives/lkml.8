@@ -2,115 +2,101 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A2CC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A144C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA3E420767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584695378;
-	bh=lKTpTlYWFEgvmkW6XkcldhhG5+woVU4cLcAGikERfqo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AO9vGYMLxSsmSZP1/VpYYufDRSJfFtOn0FRBfjbVN0xQqvIJr7xC9IQYtSyHz6Zgj
-	 JaNKK3b+0IyLX9nvl46X7gNoWCe/oHuiFemqx87QOUmKyBzQILU2qoZFhDTyB6n0q7
-	 PYv5vwlJgSJb9/YuanjGJHkdXpy1eATc4SL6F8c0=
+	by mail.kernel.org (Postfix) with ESMTP id 154B120767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgCTJJi (ORCPT
+        id S1727061AbgCTJKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:09:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726527AbgCTJJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:09:37 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E871A20752;
-        Fri, 20 Mar 2020 09:09:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584695377;
-        bh=lKTpTlYWFEgvmkW6XkcldhhG5+woVU4cLcAGikERfqo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wqxswQOYA6BABIMXoM2nOSVgWJ47cTHAzkq5NO+OYTws4zesQC/Bq4/lMrY5xYdT3
-         LLMxbcIFzNwWU+tjzVGlaWY8W7/DyefzA7Y7u6Z+ryCAs80UEFGKtPql/c5ERxj9ZT
-         Yf7rVSM+Zww6zuKaVgksoCp+gttl1NC23l6B3Fpc=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jFDep-00EBy9-8B; Fri, 20 Mar 2020 09:09:35 +0000
+        Fri, 20 Mar 2020 05:10:47 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42033 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbgCTJKq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 05:10:46 -0400
+Received: by mail-ot1-f67.google.com with SMTP id a2so5258855otq.9;
+        Fri, 20 Mar 2020 02:10:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=Tg5BjS+sqoKmcQ+42q9TxLcAJmVp9TX8V+2Cw9tSbTc=;
+        b=aTcVktbEX8rrXl/LM4BLIEi3AcDdULW8imP+UQd+83ol927lkqqyFhnxPmFXYO7PxW
+         FEy2nLzIk4gIaGzlxosaQ5JYaG+DJAczIxAHBhe9hmUtYP/7wQTo7AQACPMdQvPrffQo
+         s1IovBhLxhO3/IyvayndMiWkXq72qjebMieBhaRUP+1fiMHfals4sZCZLLzOJ13YuCLX
+         Am/S83dgH8ovyRAKTBqjLS05LhxCsYd92+0XQs0ytYmsK/oiAA8aax1PgRXkw4yc+TML
+         IwOw0P6gDPp8kGFdOjEVtrq91Q+z06VMxEDRE/jcog/fxAHjajc3HiqDvq1B9CX2i9rT
+         Ealg==
+X-Gm-Message-State: ANhLgQ0Zc2jfbB5Sn1Rn/8vFxmFYqrDEpDrj19Afnqq5gyMAxtdzm6nu
+        vrodkNfTcy1W4oDkPDF5iXpQlGhT2Htk/V7bQhBzNQ==
+X-Google-Smtp-Source: ADFU+vsUtq7aKxlPk7a6wmuKLwOjxCxHK6YYdo8yUXNmA1Av41cm11S+ggWl9zkA56I5lN+TzJt+7vYyBdanbV3/AIo=
+X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr5844474otk.145.1584695445126;
+ Fri, 20 Mar 2020 02:10:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 20 Mar 2020 09:09:35 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     Auger Eric <eric.auger@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v5 23/23] KVM: arm64: GICv4.1: Expose HW-based SGIs in
- debugfs
-In-Reply-To: <e1a1e537-9f8e-5cfb-0132-f796e8bf06c9@huawei.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-24-maz@kernel.org>
- <4cb4c3d4-7b02-bb77-cd7a-c185346b6a2f@redhat.com>
- <45c282bddd43420024633943c1befac3@kernel.org>
- <e1a1e537-9f8e-5cfb-0132-f796e8bf06c9@huawei.com>
-Message-ID: <b63950513f519d9a04f9719f5aa6a2db@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, eric.auger@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <cover.1584639664.git.alexander.riesen@cetitec.com>
+ <252bb433f47b0ccb61bb077abdbd892091abc550.1584639664.git.alexander.riesen@cetitec.com>
+ <CAMuHMdXOAQtuxCAfb=sZKodyJWwSrf-GO-pdV3HYkOytQW4ENg@mail.gmail.com> <20200320085748.GC4344@pflmari>
+In-Reply-To: <20200320085748.GC4344@pflmari>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 20 Mar 2020 10:10:24 +0100
+Message-ID: <CAMuHMdUvLGx41631HD-jOrpiw7Nyode-iXk0hxDhBHZ9JEqy7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 05/10] media: adv748x: add support for HDMI audio
+To:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
+Hi Alex,
 
-On 2020-03-20 04:38, Zenghui Yu wrote:
-> Hi Marc,
-> 
-> On 2020/3/19 23:21, Marc Zyngier wrote:
->> With GICv4.1, you can introspect the HW state for SGIs. You can also
->> look at the vLPI state by peeking at the virtual pending table, but
->> you'd need to unmap the VPE first,
-> 
-> Out of curiosity, could you please point me to the "unmap the VPE"
-> requirement in the v4.1 spec? I'd like to have a look.
+On Fri, Mar 20, 2020 at 9:58 AM Alex Riesen
+<alexander.riesen@cetitec.com> wrote:
+> Geert Uytterhoeven, Fri, Mar 20, 2020 09:43:29 +0100:
+> > > +int adv748x_dai_init(struct adv748x_dai *dai)
+> > > +{
+> > > +       int ret;
+> > > +       struct adv748x_state *state = adv748x_dai_to_state(dai);
+> > > +
+> > > +       dai->mclk = clk_register_fixed_rate(state->dev,
+> > > +                                           "adv748x-hdmi-i2s-mclk",
+> >
+> > I assume there can be multiple adv748x instances in the system?
+> > Hence the clock name should be unique for each instance.
+>
+> I think that can happen.
+>
+> Is it alright to derive the clock name from the device name? E.g.:
+> adv748x.4-0070-mclk? Where "adv748x.4-0070" is a struct device->name.
 
-Sure. See IHI0069F, 5.3.19 (VMAPP GICv4.1), "Caching of virtual LPI data
-structures", and the bit that says:
+Yes, that's the idea.
 
-"A VMAPP with {V,Alloc}=={0,1} cleans and invalidates any caching of the
-Virtual Pending Table and Virtual Configuration Table associated with 
-the
-vPEID held in the GIC"
+Gr{oetje,eeting}s,
 
-which is what was crucially missing from the GICv4.0 spec (it doesn't 
-say
-when the GIC is done writing to memory).
+                        Geert
 
-Side note: it'd be good to know what the rules are for your own GICv4
-implementations, so that we can at least make sure the current code is 
-safe.
-
-Thanks,
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
