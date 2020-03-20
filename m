@@ -3,41 +3,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106BEC43333
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9493C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C99D120752
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B5720752
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584747230;
-	bh=Dg5xxHZhZvwd4PpSo/Az4o/X+gBJlPIXP/xpvh9yBAg=;
+	s=default; t=1584747283;
+	bh=KlD7C3t6BH2O4UP6R7njnCijifLTsjKPiRnTBJC0TUU=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=JrWiM93C1sZcPggFPYLuDYevnDYRfi4UM6iB8xGtNDXZew9dpjLrEa53Pew6EL04e
-	 9jtba79oHhqz3KjZhIDCNgEYroxHIORnwp0patfFDnXWjz82ZHxQ1/w5mrC/MlGwxR
-	 XXFgxnvqTQWmPUqzKSx6kdRtfDWXZ14DPL71qSKU=
+	b=C4Pc4GUbY/EjPla+Yp3u+owjtXN3WfA+ud1Ah9cuqeZY2N3dzstv4MM18I8EPddWe
+	 fF5Cplmgzl1oh2oqXC+du2CjoDxznKpQXUiCMCMiPe3L1086OOM2+XuQ0qQlBdnKZN
+	 sO2PGHUm5CO3VEswG+kxRVM2m3IHMdatRepxL+CI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgCTXdu (ORCPT
+        id S1727567AbgCTXem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 19:33:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44192 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 19:34:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgCTXdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 19:33:49 -0400
+        id S1726738AbgCTXem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 19:34:42 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2411920714;
-        Fri, 20 Mar 2020 23:33:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99E0220714;
+        Fri, 20 Mar 2020 23:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584747229;
-        bh=Dg5xxHZhZvwd4PpSo/Az4o/X+gBJlPIXP/xpvh9yBAg=;
+        s=default; t=1584747281;
+        bh=KlD7C3t6BH2O4UP6R7njnCijifLTsjKPiRnTBJC0TUU=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=UBt1+4JI0dQfs6NJK9LAZ/EeW4nDhqnMJ/X70zgWaBRx9Q4c5m/06LeoVmjT+WIGd
-         mev9V/HdZz5SoB3XiN6/kOJtSUFCYC9mIUqidFZESO3L7E9QhPWl/jkbOa5SugnOrz
-         CuwNb/tPQxhZoBmGYmerqsI1fd25QBprIiQ1B0wI=
+        b=MMMQSZ5DQwc/CSJKvWD0WRLuljCe26Uu3SstV6VvWn1SCRmvrB585TSDTCrF10Die
+         a9AvfjMhSR9mAxhfQ5S7TT6FpOk5gjZPifXyzMY+rrYoJIJ6YfTSGCvp/jBORQ92Dq
+         6huMW/cEIDLEgsaG96mQe/0o/ApsRQ/Rf0RA/zwU=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -51,8 +51,8 @@ Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
 To:     Wesley Cheng <wcheng@codeaurora.org>, agross@kernel.org,
         bjorn.andersson@linaro.org, mark.rutland@arm.com,
         mturquette@baylibre.com, robh+dt@kernel.org
-Date:   Fri, 20 Mar 2020 16:33:48 -0700
-Message-ID: <158474722840.125146.9426954203327777812@swboyd.mtv.corp.google.com>
+Date:   Fri, 20 Mar 2020 16:34:40 -0700
+Message-ID: <158474728076.125146.11401827374115414324@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,16 +60,18 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Quoting Wesley Cheng (2020-03-17 13:53:31)
-> This adds the USB3 PIPE clock and GDSC structures, so
-> that the USB driver can vote for these resources to be
-> enabled/disabled when required.  Both are needed for SS
-> and HS USB paths to operate properly.  The GDSC will
-> allow the USB system to be brought out of reset, while
-> the PIPE clock is needed for data transactions between
-> the PHY and controller.
->=20
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> ---
+> diff --git a/include/dt-bindings/clock/qcom,gcc-sm8150.h b/include/dt-bin=
+dings/clock/qcom,gcc-sm8150.h
+> index 90d60ef..3e1a918 100644
+> --- a/include/dt-bindings/clock/qcom,gcc-sm8150.h
+> +++ b/include/dt-bindings/clock/qcom,gcc-sm8150.h
+> @@ -240,4 +240,8 @@
+>  #define GCC_USB30_SEC_BCR                                      27
+>  #define GCC_USB_PHY_CFG_AHB2PHY_BCR                            28
+> =20
+> +/* GCC GDSCRs */
+> +#define USB30_PRIM_GDSC                     4
+> +#define USB30_SEC_GDSC                                         5
 
-Applied to clk-next
+BTW, should we expect more GDSCs at 0,1,2,3 here? Why wasn't that done
+initially?
