@@ -2,197 +2,83 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7484DC43332
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BA7C10F29
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F9920767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:03:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584723788;
-	bh=Ji/Pi44Hz/cT413KkdqLBzEhDCLsBNvsODPtaDsWk/c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DQaF5bi6cknZm/TWsabhWqYONFzizdqHg+BSkgWXFk5LaMXJGG8+rp64Kuxz0ZZAS
-	 30DQOKlxO+igdrln5feoG478elqW4smEmsTpFMmIhXcfMoOrvAE1twYvnFj9EkbQTC
-	 y3V+bBu/1kFJAxGpGsFmibFoBt8cpxvOsl4Kbg1E=
+	by mail.kernel.org (Postfix) with ESMTP id 5B99120724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:03:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbgCTRDD (ORCPT
+        id S1727665AbgCTRDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:03:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726953AbgCTRDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:03:02 -0400
-Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C86E20786;
-        Fri, 20 Mar 2020 17:03:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584723781;
-        bh=Ji/Pi44Hz/cT413KkdqLBzEhDCLsBNvsODPtaDsWk/c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K9L7e++rLdFUVQAb87tHh6Tr6pfmDfMHVQh7EM5O+BAUyLdDb06dL4T+JYBZjDkDY
-         HbhKgfWQHwjIVva+BNL3lHCB1sC3mVewS6vjLUu9M5Wg/jYt+0gg7l+dbQf2R/7YoP
-         Fd2pXY1AUSUorV4JIwrl1KqfK3HoRKrfaX0y9vt8=
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     linux-clk@vger.kernel.org
-Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, sboyd@kernel.org,
-        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
-Subject: [PATCH 4/5] dt-bindings: documentation: add clock bindings information for Agilex
-Date:   Fri, 20 Mar 2020 12:02:10 -0500
-Message-Id: <20200320170212.21523-5-dinguyen@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200320170212.21523-1-dinguyen@kernel.org>
-References: <20200320170212.21523-1-dinguyen@kernel.org>
+        Fri, 20 Mar 2020 13:03:10 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:52025 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbgCTRDH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 13:03:07 -0400
+Received: from mail-lf1-f44.google.com ([209.85.167.44]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MAfQe-1j8iHa0k1o-00B0qA; Fri, 20 Mar 2020 18:03:06 +0100
+Received: by mail-lf1-f44.google.com with SMTP id i1so4418254lfo.1;
+        Fri, 20 Mar 2020 10:03:06 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ39zmuHYftErsjSRWWEYfv4e3Y18Djyduf8JnpdTbD6ABxfD164
+        rIEGucIGWlDb7Ywp3SItWZzsVwLRDzubBGNIx5I=
+X-Google-Smtp-Source: ADFU+vtGM1BAWj/ypTGImtaXGVhgdztgWM/eg3xxnSs7xp+2vbgGEFrzZEo8G63MzFh8mtaYi7v6nQ6u9eton4GUQoQ=
+X-Received: by 2002:a05:6512:31d6:: with SMTP id j22mr5942299lfe.173.1584723785648;
+ Fri, 20 Mar 2020 10:03:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1584667964.git.gurus@codeaurora.org> <a1942f735fa4d3eb71546a3f07d9b5e78fd7919a.1584667964.git.gurus@codeaurora.org>
+In-Reply-To: <a1942f735fa4d3eb71546a3f07d9b5e78fd7919a.1584667964.git.gurus@codeaurora.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 20 Mar 2020 18:02:49 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2fdx55uNPqYxbVhUJZS2hBsCcr4u0i9dmoDkrdjVOMeA@mail.gmail.com>
+Message-ID: <CAK8P3a2fdx55uNPqYxbVhUJZS2hBsCcr4u0i9dmoDkrdjVOMeA@mail.gmail.com>
+Subject: Re: [PATCH v11 09/12] pwm: sun4i: Use 64-bit division function
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Nb6zGbGXVPUdXGZzWjYWmcJR/59MVZDu4HG9LMi7gpxV7FvhykF
+ EIig5FCkaFNzfVBBDGlmta8ONjDB5N3X6eHZsXK1YPBzM16+tkapau27BqtXyxhC5bZgx73
+ OxZntrLDjCzYHs0ps6NgwRWRyXQW7sTTkNEwhyMLAdC8CE7O0cEZxqvRadZnXOC2c1aJC10
+ PadC2EOV2YdcPPR8Hz9Yg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:E0uWrkMpb54=:nc5WrO/vT4gO4OFSvUZK36
+ DP9MCrcPUvnQz+ckdsv6FRhFDCB5TnRwM3IBQsKeFQlWXaTQp6JbyFzzoZpPNiUoz4j/jp7xt
+ PbBNxu5r8QbVzJFy+GERCtM5QRUpbcjsJyx9DDwfalv1CJAweapUAAzi+CkJLrxS9d1yV0eHU
+ LmVTBHTa9SRjDuTZAyE/GyyTjI3QlCkgI2ncrUxtpmFw2wdMMZ0wtoGxTpsCRcuvvnpdVPOzV
+ jIrWLt5XlAETXbasomunwH7O3bVqdfOs76DcBLZMVkhpS7HIf3dsUI2d9tTxhwUNFpYo04ODw
+ vUuEepMSEsmw8FAHpGK9BYrvIRphRzX7+Ek4fK0UEONY2m5cED19w0jeBa/5vydW8U+kEcXl5
+ 56WnNAe/kHiiYsil8qubIfnOyrCYI9++mdJZ3dwNiVK+spafWaRR7xutGHIaf2LG9JonwBgHw
+ yvDplf7Eu8QAfqJ+McEk11hIPgdcn+E2lfwkU9JdDJQ5sGYoJpD9vBWeaCbRDpbiygmSvyCsg
+ P7mZqBIolIt5DF6jKZEgUA4XZuC6vZrK2rVtQ1WFWdjqkYHFOM2M9O90nRHFz2pbODSrJE9R/
+ JKAikMbQYUnHamr+kTaly/6vYOcC/t2zRurmru+pIL8WvNVnRdKjN/sXheVmPP+09fSBMgCRI
+ vuW4I2D5sH5uaiYfViKAC4A8ZXrihtGhyq5F4hy8MUC5tkV5fUqxTe0597E8LEyGr2OnifJdI
+ PHKeIt2zBRJWLuNFU4Xthb/t4OLr1uD9kjnVu4Fn2f4rlgIV6azKa7bpiVIJrYU5Q7f6e9AZV
+ fAxEC5VYXxEbGBrL1y6gaOo1+VLiAdeU5D0ItQLMLMWjNYSs+0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the Agilex clock bindings, and add the clock header file. The
-clock header is an enumeration of all the different clocks on the Agilex
-platform.
+On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
+>         sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
+> -               usecs_to_jiffies(cstate.period / 1000 + 1);
+> +               usecs_to_jiffies(div_u64(cstate.period, 1000) + 1);
+>         sun4i_pwm->needs_delay[pwm->hwpwm] = true;
+>
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
-v4: really fix build error(comment formatting was wrong)
-v3: address comments from Stephen Boyd
-    fix build error(tab removed in line 37)
-    renamed to intel,agilex.yaml
-v2: convert original document to YAML
----
- .../bindings/clock/intel,agilex.yaml          | 36 ++++++++++
- include/dt-bindings/clock/agilex-clock.h      | 70 +++++++++++++++++++
- 2 files changed, 106 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
- create mode 100644 include/dt-bindings/clock/agilex-clock.h
+This one looks like it should use nsecs_to_jiffies(cstate.period) to avoid
+having two 64-bit divisions.
 
-diff --git a/Documentation/devicetree/bindings/clock/intel,agilex.yaml b/Documentation/devicetree/bindings/clock/intel,agilex.yaml
-new file mode 100644
-index 000000000000..5cf2ee5d6fcc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/intel,agilex.yaml
-@@ -0,0 +1,36 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/intel,agilex.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel SoCFPGA Agilex platform clock controller binding
-+
-+maintainers:
-+  - Dinh Nguyen <dinguyen@kernel.org>
-+
-+description:
-+  The Intel Agilex Clock controller is an integrated clock controller, which
-+  generates and supplies to all modules.
-+
-+properties:
-+  compatible:
-+    const: intel,agilex-clkmgr
-+
-+  '#clock-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#clock-cells'
-+
-+examples:
-+  # Clock controller node:
-+  - |
-+    clkmgr: clock-controller@ffd10000 {
-+      compatible = "intel,agilex-clkmgr";
-+      reg = <0xffd10000 0x1000>;
-+      #clock-cells = <1>;
-+    };
-+...
-diff --git a/include/dt-bindings/clock/agilex-clock.h b/include/dt-bindings/clock/agilex-clock.h
-new file mode 100644
-index 000000000000..f19cf8ccbdd2
---- /dev/null
-+++ b/include/dt-bindings/clock/agilex-clock.h
-@@ -0,0 +1,70 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2019, Intel Corporation
-+ */
-+
-+#ifndef __AGILEX_CLOCK_H
-+#define __AGILEX_CLOCK_H
-+
-+/* fixed rate clocks */
-+#define AGILEX_OSC1			0
-+#define AGILEX_CB_INTOSC_HS_DIV2_CLK	1
-+#define AGILEX_CB_INTOSC_LS_CLK		2
-+#define AGILEX_L4_SYS_FREE_CLK		3
-+#define AGILEX_F2S_FREE_CLK		4
-+
-+/* PLL clocks */
-+#define AGILEX_MAIN_PLL_CLK		5
-+#define AGILEX_MAIN_PLL_C0_CLK		6
-+#define AGILEX_MAIN_PLL_C1_CLK		7
-+#define AGILEX_MAIN_PLL_C2_CLK		8
-+#define AGILEX_MAIN_PLL_C3_CLK		9
-+#define AGILEX_PERIPH_PLL_CLK		10
-+#define AGILEX_PERIPH_PLL_C0_CLK	11
-+#define AGILEX_PERIPH_PLL_C1_CLK	12
-+#define AGILEX_PERIPH_PLL_C2_CLK	13
-+#define AGILEX_PERIPH_PLL_C3_CLK	14
-+#define AGILEX_MPU_FREE_CLK		15
-+#define AGILEX_MPU_CCU_CLK		16
-+#define AGILEX_BOOT_CLK			17
-+
-+/* fixed factor clocks */
-+#define AGILEX_L3_MAIN_FREE_CLK		18
-+#define AGILEX_NOC_FREE_CLK		19
-+#define AGILEX_S2F_USR0_CLK		20
-+#define AGILEX_NOC_CLK			21
-+#define AGILEX_EMAC_A_FREE_CLK		22
-+#define AGILEX_EMAC_B_FREE_CLK		23
-+#define AGILEX_EMAC_PTP_FREE_CLK	24
-+#define AGILEX_GPIO_DB_FREE_CLK		25
-+#define AGILEX_SDMMC_FREE_CLK		26
-+#define AGILEX_S2F_USER0_FREE_CLK	27
-+#define AGILEX_S2F_USER1_FREE_CLK	28
-+#define AGILEX_PSI_REF_FREE_CLK		29
-+
-+/* Gate clocks */
-+#define AGILEX_MPU_CLK			30
-+#define AGILEX_MPU_L2RAM_CLK		31
-+#define AGILEX_MPU_PERIPH_CLK		32
-+#define AGILEX_L4_MAIN_CLK		33
-+#define AGILEX_L4_MP_CLK		34
-+#define AGILEX_L4_SP_CLK		35
-+#define AGILEX_CS_AT_CLK		36
-+#define AGILEX_CS_TRACE_CLK		37
-+#define AGILEX_CS_PDBG_CLK		38
-+#define AGILEX_CS_TIMER_CLK		39
-+#define AGILEX_S2F_USER0_CLK		40
-+#define AGILEX_EMAC0_CLK		41
-+#define AGILEX_EMAC1_CLK		43
-+#define AGILEX_EMAC2_CLK		44
-+#define AGILEX_EMAC_PTP_CLK		45
-+#define AGILEX_GPIO_DB_CLK		46
-+#define AGILEX_NAND_CLK			47
-+#define AGILEX_PSI_REF_CLK		48
-+#define AGILEX_S2F_USER1_CLK		49
-+#define AGILEX_SDMMC_CLK		50
-+#define AGILEX_SPI_M_CLK		51
-+#define AGILEX_USB_CLK			52
-+#define AGILEX_NUM_CLKS			53
-+
-+#endif	/* __AGILEX_CLOCK_H */
--- 
-2.25.1
-
+       Arnd
