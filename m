@@ -2,129 +2,262 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E670DC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 369FFC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B94FF20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:12:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584691924;
-	bh=lYc2Gm2VkbImFr4gBOIFJvxM7EhVPBHGTcj7FeKzS3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kQr0nFJkBnyufAZG4HtUGwaVRy9zViHwnOALr68EmoJBmZZkgbZxoJPl6GMP/oLfr
-	 ih3GlmyzhtNyyaqqtVg3KYYLaTB3sAQPriA/dKU6fVqWj8l4vtVn+57bJ3ZJr9c97C
-	 0iSWuW1M+BKlx181ECnXHSSESJAC+NlD4rKcej/M=
+	by mail.kernel.org (Postfix) with ESMTP id 0D15A20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="YzsIlOb0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbgCTIMD (ORCPT
+        id S1727221AbgCTIMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 04:12:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51528 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 04:12:09 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:51326 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726843AbgCTIL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 04:11:59 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 468DE20774;
-        Fri, 20 Mar 2020 08:11:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584691918;
-        bh=lYc2Gm2VkbImFr4gBOIFJvxM7EhVPBHGTcj7FeKzS3w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PDdlrKgENirCgu2oVJbm3EfDyiAqIKWPPWznYZ5hjgLwHgatWQH7p6GHldNSPfvKg
-         gqbwJ09k6MWB+cuvPXbAb6dVyg7fB4lnu2iE6zFKlFqO1CUoGqaZaqdCOuoyrlmMd6
-         8JPj3aou7wa+X+ia7atNIsY7WmInYlssSUNs0oVs=
-Date:   Fri, 20 Mar 2020 08:11:54 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Ilie Halip <ilie.halip@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] arm64: alternative: fix build with clang integrated
- assembler
-Message-ID: <20200320081153.GB2549@willie-the-truck>
-References: <20200319214530.2046-1-ilie.halip@gmail.com>
- <CAKwvOdneL8F_ZHBAzyb+VoJ+Z1FZp0VW8asGTu=g39TrouqAgA@mail.gmail.com>
+        id S1726821AbgCTILb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 04:11:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=V7ao2BxZREvse3XwoWf/L44QfzmREzjIcPwYKWepRPE=; b=YzsIlOb0QNyiwbeGx9tQAb1TBr
+        Wc6NNJ7LNAMHfASNsbsSsHHf88CCmqLE47HdufFMjjQBM60lDRs+kwTjCRu86z8W2iWPYJ2qofHo0
+        Zi932bL/DlSHYGdfp5n/1rj7KeDS866+1yQE71wwCfy0NRiKG/Ayt5xhbTPG2CpYzCTs=;
+Received: from p200300ccff093a00e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff09:3a00:e2ce:c3ff:fe93:fc31] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jFCkP-00058W-5O; Fri, 20 Mar 2020 09:11:18 +0100
+Received: from andi by eeepc with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jFCkH-00039K-9N; Fri, 20 Mar 2020 09:11:09 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
+        phh@phh.me, letux-kernel@openphoenux.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        jic23@kernel.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v7 2/7] mfd: rn5t618: add IRQ support
+Date:   Fri, 20 Mar 2020 09:11:00 +0100
+Message-Id: <20200320081105.12026-3-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200320081105.12026-1-andreas@kemnade.info>
+References: <20200320081105.12026-1-andreas@kemnade.info>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdneL8F_ZHBAzyb+VoJ+Z1FZp0VW8asGTu=g39TrouqAgA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 04:43:56PM -0700, Nick Desaulniers wrote:
-> On Thu, Mar 19, 2020 at 2:45 PM Ilie Halip <ilie.halip@gmail.com> wrote:
-> >
-> > Building an arm64 defconfig with clang's integrated assembler, this error
-> > occurs:
-> >     <instantiation>:2:2: error: unrecognized instruction mnemonic
-> >      _ASM_EXTABLE 9999b, 9f
-> >      ^
-> >     arch/arm64/mm/cache.S:50:1: note: while in macro instantiation
-> >     user_alt 9f, "dc cvau, x4", "dc civac, x4", 0
-> >     ^
-> >
-> > While GNU as seems fine with case-sensitive macro instantiations, clang
-> > doesn't, so use the actual macro name (_asm_extable) as in the rest of
-> > the file.
-> >
-> > Also checked that the generated assembly matches the GCC output.
-> >
-> > Fixes: 290622efc76e ("arm64: fix "dc cvau" cache operation on errata-affected core")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/924
-> > Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
-> > ---
-> >  arch/arm64/include/asm/alternative.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
-> > index 324e7d5ab37e..5e5dc05d63a0 100644
-> > --- a/arch/arm64/include/asm/alternative.h
-> > +++ b/arch/arm64/include/asm/alternative.h
-> > @@ -221,7 +221,7 @@ alternative_endif
-> >
-> >  .macro user_alt, label, oldinstr, newinstr, cond
-> >  9999:  alternative_insn "\oldinstr", "\newinstr", \cond
-> > -       _ASM_EXTABLE 9999b, \label
-> > +       _asm_extable 9999b, \label
-> >  .endm
-> 
-> Testing a -next defconfig build, if I apply this, apply fixes for
-> https://github.com/ClangBuiltLinux/linux/issues/913, then disable
-> CONFIG_KVM, I can assemble (with Clang's integrated assembler) and
-> boot an aarch64 kernel.  I think that's a first for Clang.  Wow.
-> 
-> For CONFIG_KVM, I see:
-> arch/arm64/kvm/hyp/entry.S:112:87: error: too many positional arguments
->  alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) |
-> ((!!1) << 8)), 4, 1
-> 
->                ^
-> which also uses `alternative_insn`, but not `user_alt`, so another bug
-> for us to look into, filed:
-> https://github.com/ClangBuiltLinux/linux/issues/939
-> 
-> Looks like `_asm_extable` itself is a macro, defined in
-> arch/arm64/include/asm/assembler.h on line 125.  It's probably easy to
-> fix this in clang, but from a consistency with the rest of the file
-> (arch/arm64/include/asm/alternative.h) this patch should be accepted.
-> 
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+This adds support for IRQ handling in the RC5T619 which is required
+for properly implementing subdevices like RTC.
+For now only definitions for the variant RC5T619 are included.
 
-Thanks, I'll pick this up as a fix.
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+Changes in v7:
+more cleanups in IRQ init
 
-Will
+Changes in v5:
+rn5t618_irq_init static
+
+Changes in v4:
+merge rn5t618-irq.c into rn5t618.c
+use macros for IRQ table
+
+Changes in v3:
+alignment cleanup
+
+Changes in v2:
+- no dead code, did some more testing and thinking for that
+- remove extra empty lines
+ drivers/mfd/Kconfig         |  1 +
+ drivers/mfd/rn5t618.c       | 78 ++++++++++++++++++++++++++++++++++++-
+ include/linux/mfd/rn5t618.h | 15 +++++++
+ 3 files changed, 93 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 2b203290e7b9..a7067888a41e 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1058,6 +1058,7 @@ config MFD_RN5T618
+ 	depends on OF
+ 	select MFD_CORE
+ 	select REGMAP_I2C
++	select REGMAP_IRQ
+ 	help
+ 	  Say yes here to add support for the Ricoh RN5T567,
+ 	  RN5T618, RC5T619 PMIC.
+diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+index ead2e79036a9..b66dc4605d56 100644
+--- a/drivers/mfd/rn5t618.c
++++ b/drivers/mfd/rn5t618.c
+@@ -8,6 +8,8 @@
+ 
+ #include <linux/delay.h>
+ #include <linux/i2c.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
+ #include <linux/mfd/core.h>
+ #include <linux/mfd/rn5t618.h>
+ #include <linux/module.h>
+@@ -46,9 +48,56 @@ static const struct regmap_config rn5t618_regmap_config = {
+ 	.cache_type	= REGCACHE_RBTREE,
+ };
+ 
++static const struct regmap_irq rc5t619_irqs[] = {
++	REGMAP_IRQ_REG(RN5T618_IRQ_SYS, 0, BIT(0)),
++	REGMAP_IRQ_REG(RN5T618_IRQ_DCDC, 0, BIT(1)),
++	REGMAP_IRQ_REG(RN5T618_IRQ_RTC, 0, BIT(2)),
++	REGMAP_IRQ_REG(RN5T618_IRQ_ADC, 0, BIT(3)),
++	REGMAP_IRQ_REG(RN5T618_IRQ_GPIO, 0, BIT(4)),
++	REGMAP_IRQ_REG(RN5T618_IRQ_CHG, 0, BIT(6)),
++};
++
++static const struct regmap_irq_chip rc5t619_irq_chip = {
++	.name = "rc5t619",
++	.irqs = rc5t619_irqs,
++	.num_irqs = ARRAY_SIZE(rc5t619_irqs),
++	.num_regs = 1,
++	.status_base = RN5T618_INTMON,
++	.mask_base = RN5T618_INTEN,
++	.mask_invert = true,
++};
++
+ static struct rn5t618 *rn5t618_pm_power_off;
+ static struct notifier_block rn5t618_restart_handler;
+ 
++static int rn5t618_irq_init(struct rn5t618 *rn5t618)
++{
++	const struct regmap_irq_chip *irq_chip = NULL;
++	int ret;
++
++	if (!rn5t618->irq)
++		return 0;
++
++	switch (rn5t618->variant) {
++	case RC5T619:
++		irq_chip = &rc5t619_irq_chip;
++		break;
++	default:
++		dev_err(rn5t618->dev, "Currently no IRQ support for variant %d\n",
++			(int)rn5t618->variant);
++		return -ENOENT;
++	}
++
++	ret = devm_regmap_add_irq_chip(rn5t618->dev, rn5t618->regmap,
++				       rn5t618->irq,
++				       IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
++				       0, irq_chip, &rn5t618->irq_data);
++	if (ret)
++		dev_err(rn5t618->dev, "Failed to register IRQ chip\n");
++
++	return ret;
++}
++
+ static void rn5t618_trigger_poweroff_sequence(bool repower)
+ {
+ 	/* disable automatic repower-on */
+@@ -106,6 +155,8 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
+ 
+ 	i2c_set_clientdata(i2c, priv);
+ 	priv->variant = (long)of_id->data;
++	priv->irq = i2c->irq;
++	priv->dev = &i2c->dev;
+ 
+ 	priv->regmap = devm_regmap_init_i2c(i2c, &rn5t618_regmap_config);
+ 	if (IS_ERR(priv->regmap)) {
+@@ -138,7 +189,7 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
+ 		return ret;
+ 	}
+ 
+-	return 0;
++	return rn5t618_irq_init(priv);
+ }
+ 
+ static int rn5t618_i2c_remove(struct i2c_client *i2c)
+@@ -155,15 +206,40 @@ static int rn5t618_i2c_remove(struct i2c_client *i2c)
+ 	return 0;
+ }
+ 
++static int __maybe_unused rn5t618_i2c_suspend(struct device *dev)
++{
++	struct rn5t618 *priv = dev_get_drvdata(dev);
++
++	if (priv->irq)
++		disable_irq(priv->irq);
++
++	return 0;
++}
++
++static int __maybe_unused rn5t618_i2c_resume(struct device *dev)
++{
++	struct rn5t618 *priv = dev_get_drvdata(dev);
++
++	if (priv->irq)
++		enable_irq(priv->irq);
++
++	return 0;
++}
++
+ static const struct i2c_device_id rn5t618_i2c_id[] = {
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id);
+ 
++static SIMPLE_DEV_PM_OPS(rn5t618_i2c_dev_pm_ops,
++			rn5t618_i2c_suspend,
++			rn5t618_i2c_resume);
++
+ static struct i2c_driver rn5t618_i2c_driver = {
+ 	.driver = {
+ 		.name = "rn5t618",
+ 		.of_match_table = of_match_ptr(rn5t618_of_match),
++		.pm = &rn5t618_i2c_dev_pm_ops,
+ 	},
+ 	.probe = rn5t618_i2c_probe,
+ 	.remove = rn5t618_i2c_remove,
+diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
+index d62ef48060b5..739571656f2b 100644
+--- a/include/linux/mfd/rn5t618.h
++++ b/include/linux/mfd/rn5t618.h
+@@ -242,9 +242,24 @@ enum {
+ 	RC5T619,
+ };
+ 
++/* RN5T618 IRQ definitions */
++enum {
++	RN5T618_IRQ_SYS = 0,
++	RN5T618_IRQ_DCDC,
++	RN5T618_IRQ_RTC,
++	RN5T618_IRQ_ADC,
++	RN5T618_IRQ_GPIO,
++	RN5T618_IRQ_CHG,
++	RN5T618_NR_IRQS,
++};
++
+ struct rn5t618 {
+ 	struct regmap *regmap;
++	struct device *dev;
+ 	long variant;
++
++	int irq;
++	struct regmap_irq_chip_data *irq_data;
+ };
+ 
+ #endif /* __LINUX_MFD_RN5T618_H */
+-- 
+2.20.1
+
