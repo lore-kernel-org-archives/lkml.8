@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A000EC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA70C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BFEB20752
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9113020752
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:01:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbgCTCBH (ORCPT
+        id S1727380AbgCTCAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 22:01:07 -0400
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:33416 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbgCTCAj (ORCPT
+        Thu, 19 Mar 2020 22:00:37 -0400
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:36570 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727384AbgCTCAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 22:00:39 -0400
-Received: by mail-qv1-f65.google.com with SMTP id cz10so2215565qvb.0;
-        Thu, 19 Mar 2020 19:00:38 -0700 (PDT)
+        Thu, 19 Mar 2020 22:00:35 -0400
+Received: by mail-qv1-f66.google.com with SMTP id z13so2221656qvw.3;
+        Thu, 19 Mar 2020 19:00:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2CiSuKaNodoKyjnGemNKoIzUpiAYvV52BwWj4otjji0=;
-        b=SbujHbbC3l7V0tdYekxluu1+Eqzu+qdK5JusSAPVsLsOUg2Pp9aD090//Pdfjk3bLh
-         GC8O6zMKvevHuBOOCT+VU19Wp+Ns4GkSC8ACmUJFywoZC6tUfGDi+2vJrWp9d+ZFRXbs
-         Kf2uuMfB28cAJUF2lpirdssiiRv2/q+BKnMYKsA9tarmN6gNcVihOtc8rLFYGFmk7n3B
-         WA0ZeiU9KE1X7+pCVjn+n7VW2xcdaDy26ha2UwCeWmKieKegEkWja9Jvnltg7CSaTV5k
-         IjHyIDIlnFCJjbvzrujmlar1/fgcrBEhqay1/PqGlLMaWLsxvRt0r+FoLDC8LiKjABmp
-         LzBQ==
-X-Gm-Message-State: ANhLgQ09ZbOUALqdLHoEFDtd/J5Thn+Xt9gtJ6Dw9yeG7CINyaZdTRwh
-        fVxlMDEsSVUkvPZxVaLgBT/6yKpo
-X-Google-Smtp-Source: ADFU+vu/uLEb0GA1GTjWPEY73nBpCRn3qHfDnHrJbK8Bk1P+o3ZEspfpmWUQhOWyb/K08Ru4EUtaAA==
-X-Received: by 2002:ad4:57b3:: with SMTP id g19mr6057877qvx.87.1584669638524;
-        Thu, 19 Mar 2020 19:00:38 -0700 (PDT)
+        bh=qiFAu6RCpFkDkDQyLqPSk31H4M9LfMJt3s8TsvDnQxY=;
+        b=r03NkPCWvMV9UMIWe/FM4JZ/mJ6WuEeWPP+KwLSYidyB3vXy0X3SkjAUrcLjBUM8pn
+         ohDnkqcvTAu1eytOARDm0UEf2y7vs6hwE1wneYpHLusI00NCVOsCi1jSSL4UbSMoqDVB
+         +ISZJWL6OAemtDXqzbFqmq0MX9fu17vL9hmWdtLr5Afk3Kn+JsNcTP+nEtmcUTofr3QG
+         TgLtbDUq9pv0pN9+S3KMykc3I0p8TxwsG1VjS4yk3pS6hnuH3o3pUtw+qmo+/abbDQb3
+         FMoqrvtKzvb63RxPJJTHU8XLUprimYl7PAUirtcSwGWNKAu5kqu6f479fODqwArarIYj
+         q4eQ==
+X-Gm-Message-State: ANhLgQ32BlEZuy55ICnmwMFbexvFxmxTSKSz4lJCYnKznPQoYB2oM7Vy
+        YK+DRYBpdF7+pJdqMiThcUiSwKMr
+X-Google-Smtp-Source: ADFU+vvjtars2q97nf5gys6HrTmRdaqdQl/jGd8CKzf5xE5Pc+mdawTipvEG+wFgnAcFt6V59qeh/Q==
+X-Received: by 2002:a0c:c60a:: with SMTP id v10mr5971086qvi.140.1584669632957;
+        Thu, 19 Mar 2020 19:00:32 -0700 (PDT)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id n46sm3342198qtb.48.2020.03.19.19.00.37
+        by smtp.gmail.com with ESMTPSA id n46sm3342198qtb.48.2020.03.19.19.00.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 19:00:38 -0700 (PDT)
+        Thu, 19 Mar 2020 19:00:32 -0700 (PDT)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Ard Biesheuvel <ardb@kernel.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>, linux-efi@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 10/14] efi/gop: Add prototypes for query_mode and set_mode
-Date:   Thu, 19 Mar 2020 22:00:24 -0400
-Message-Id: <20200320020028.1936003-11-nivedita@alum.mit.edu>
+Subject: [PATCH v2 03/14] efi/gop: Get mode information outside the loop
+Date:   Thu, 19 Mar 2020 22:00:17 -0400
+Message-Id: <20200320020028.1936003-4-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200319192855.29876-1-nivedita@alum.mit.edu>
 References: <20200319192855.29876-1-nivedita@alum.mit.edu>
@@ -59,47 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add prototypes and argmap for the Graphics Output Protocol's QueryMode
-and SetMode functions.
+Move extraction of the mode information parameters outside the loop to
+find the gop, and eliminate some redundant variables.
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 ---
- arch/x86/include/asm/efi.h             | 4 ++++
- drivers/firmware/efi/libstub/efistub.h | 6 ++++--
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/firmware/efi/libstub/gop.c | 38 +++++++++++-------------------
+ 1 file changed, 14 insertions(+), 24 deletions(-)
 
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index cdcf48d52a12..781170d36f50 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -305,6 +305,10 @@ static inline u32 efi64_convert_status(efi_status_t status)
- #define __efi64_argmap_load_file(protocol, path, policy, bufsize, buf)	\
- 	((protocol), (path), (policy), efi64_zero_upper(bufsize), (buf))
+diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
+index 201b66970b2b..d692b8c65813 100644
+--- a/drivers/firmware/efi/libstub/gop.c
++++ b/drivers/firmware/efi/libstub/gop.c
+@@ -89,12 +89,9 @@ static efi_status_t setup_gop(struct screen_info *si, efi_guid_t *proto,
+ 			      unsigned long size, void **handles)
+ {
+ 	efi_graphics_output_protocol_t *gop, *first_gop;
+-	u16 width, height;
+-	u32 pixels_per_scan_line;
+-	u32 ext_lfb_base;
++	efi_graphics_output_protocol_mode_t *mode;
++	efi_graphics_output_mode_info_t *info = NULL;
+ 	efi_physical_addr_t fb_base;
+-	efi_pixel_bitmask_t pixel_info;
+-	int pixel_format;
+ 	efi_status_t status;
+ 	efi_handle_t h;
+ 	int i;
+@@ -103,8 +100,6 @@ static efi_status_t setup_gop(struct screen_info *si, efi_guid_t *proto,
+ 	gop = NULL;
  
-+/* Graphics Output Protocol */
-+#define __efi64_argmap_query_mode(gop, mode, size, info)		\
-+	((gop), (mode), efi64_zero_upper(size), efi64_zero_upper(info))
+ 	for_each_efi_handle(h, handles, size, i) {
+-		efi_graphics_output_protocol_mode_t *mode;
+-		efi_graphics_output_mode_info_t *info = NULL;
+ 		efi_guid_t conout_proto = EFI_CONSOLE_OUT_DEVICE_GUID;
+ 		bool conout_found = false;
+ 		void *dummy = NULL;
+@@ -129,15 +124,7 @@ static efi_status_t setup_gop(struct screen_info *si, efi_guid_t *proto,
+ 			 * backed by real hardware. The workaround is to search
+ 			 * for a GOP implementing the ConOut protocol, and if
+ 			 * one isn't found, to just fall back to the first GOP.
+-			 */
+-			width = info->horizontal_resolution;
+-			height = info->vertical_resolution;
+-			pixel_format = info->pixel_format;
+-			pixel_info = info->pixel_information;
+-			pixels_per_scan_line = info->pixels_per_scan_line;
+-			fb_base = efi_table_attr(mode, frame_buffer_base);
+-
+-			/*
++			 *
+ 			 * Once we've found a GOP supporting ConOut,
+ 			 * don't bother looking any further.
+ 			 */
+@@ -152,21 +139,24 @@ static efi_status_t setup_gop(struct screen_info *si, efi_guid_t *proto,
+ 		return EFI_NOT_FOUND;
+ 
+ 	/* EFI framebuffer */
++	mode = efi_table_attr(first_gop, mode);
++	info = efi_table_attr(mode, info);
 +
- /*
-  * The macros below handle the plumbing for the argument mapping. To add a
-  * mapping for a specific EFI method, simply define a macro
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index cc90a748bcf0..c400fd88fe38 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -298,8 +298,10 @@ typedef union efi_graphics_output_protocol efi_graphics_output_protocol_t;
+ 	si->orig_video_isVGA = VIDEO_TYPE_EFI;
  
- union efi_graphics_output_protocol {
- 	struct {
--		void *query_mode;
--		void *set_mode;
-+		efi_status_t (__efiapi *query_mode)(efi_graphics_output_protocol_t *,
-+						    u32, unsigned long *,
-+						    efi_graphics_output_mode_info_t **);
-+		efi_status_t (__efiapi *set_mode)  (efi_graphics_output_protocol_t *, u32);
- 		void *blt;
- 		efi_graphics_output_protocol_mode_t *mode;
- 	};
+-	si->lfb_width = width;
+-	si->lfb_height = height;
+-	si->lfb_base = fb_base;
++	si->lfb_width  = info->horizontal_resolution;
++	si->lfb_height = info->vertical_resolution;
+ 
+-	ext_lfb_base = (u64)(unsigned long)fb_base >> 32;
+-	if (ext_lfb_base) {
++	fb_base		 = efi_table_attr(mode, frame_buffer_base);
++	si->lfb_base	 = fb_base;
++	si->ext_lfb_base = (u64)(unsigned long)fb_base >> 32;
++	if (si->ext_lfb_base)
+ 		si->capabilities |= VIDEO_CAPABILITY_64BIT_BASE;
+-		si->ext_lfb_base = ext_lfb_base;
+-	}
+ 
+ 	si->pages = 1;
+ 
+-	setup_pixel_info(si, pixels_per_scan_line, pixel_info, pixel_format);
++	setup_pixel_info(si, info->pixels_per_scan_line,
++			     info->pixel_information, info->pixel_format);
+ 
+ 	si->lfb_size = si->lfb_linelength * si->lfb_height;
+ 
 -- 
 2.24.1
 
