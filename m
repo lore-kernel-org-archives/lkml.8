@@ -2,82 +2,116 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51CFC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7596C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB0820722
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986002072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 04:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgCTEmF (ORCPT
+        id S1726704AbgCTEyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 00:42:05 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:44225 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbgCTEmF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 00:42:05 -0400
-Received: by mail-il1-f199.google.com with SMTP id a14so2698648iln.11
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 21:42:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=+YoOMjO6luwEwwnQleJR7GJujX9qkW3ROR7gWbzVHTc=;
-        b=CyDj89PSpY/ZstjPbUA36J/9/93ST4jEJgKtMR8+JITbzWzuNlFZQ/hhdjW8RDJJ+v
-         nlCc5OhUXq5/Ok7qKXN1FCyFu3o+XZ/H3yHEswje35IMzM0DXZ1tY9wB6OaTa/p1lTel
-         zy72ugtZm3i5ZR7Z6ZaiQu93czIb5OAcOcCfK3HVnW3rJLOrYAKLnYOHYQ50qqX9TjD6
-         6Hs6FrbJddQiqJ0TjeC1BhqQss1NvU9AkWKoSm5sfxxT/J+YBdw1sOayu6KANHKy8KLC
-         ij/ITCNLsK6NtoqYvMyZFKgqry+fgfuempYla8sTCpN0kaWSSzZxcUgEp600sOPdAupj
-         qjSA==
-X-Gm-Message-State: ANhLgQ2Nr/NIuieuIkh7YxEl9zrrPYb/XYfVs8EAEt1/lcTfMFL3JRGI
-        CYTW7gIgwvy22yY8GR5TTqsDQ/pt2p3gaOP0H4V1Zp8MB7jm
-X-Google-Smtp-Source: ADFU+vvvu8NLalP1cGxkvhKVN7qZ92RRR3QEjUcPEZNcU+YjcZP8wQ2QavDecLU7agqtV2mMBHcxyCFp2UUC8Pz/K3pBe5ExZNzs
-MIME-Version: 1.0
-X-Received: by 2002:a92:25d6:: with SMTP id l205mr5908567ill.35.1584679324596;
- Thu, 19 Mar 2020 21:42:04 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 21:42:04 -0700
-In-Reply-To: <0000000000005eaea0059aa1dff6@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000039c12305a141e817@google.com>
-Subject: Re: INFO: task hung in htable_put
-From:   syzbot <syzbot+84936245a918e2cddb32@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, coreteam@netfilter.org,
-        davem@davemloft.net, fw@strlen.de, hannes@cmpxchg.org,
-        kadlec@blackhole.kfki.hu, kadlec@netfilter.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, mhocko@suse.com,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com,
-        torvalds@linux-foundation.org, vbabka@suse.cz,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 20 Mar 2020 00:54:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:44340 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgCTEyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 00:54:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7DDC1FB;
+        Thu, 19 Mar 2020 21:54:34 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 931443F52E;
+        Thu, 19 Mar 2020 21:54:25 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        nouveau@lists.freedesktop.org, linuxppc-dev@lists.ozlabs.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] mm/thp: Rename pmd_mknotpresent() as pmd_mknotvalid()
+Date:   Fri, 20 Mar 2020 10:24:15 +0530
+Message-Id: <1584680057-13753-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+This series renames pmd_mknotpresent() as pmd_mknotvalid(). Before that it
+drops an existing pmd_mknotpresent() definition from powerpc platform which
+was never required as it defines it's pmdp_invalidate() through subscribing
+__HAVE_ARCH_PMDP_INVALIDATE. This does not create any functional change.
 
-commit 99b79c3900d4627672c85d9f344b5b0f06bc2a4d
-Author: Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Thu Feb 13 06:53:52 2020 +0000
+This rename was suggested by Catalin during a previous discussion while we
+were trying to change the THP helpers on arm64 platform for migration.
 
-    netfilter: xt_hashlimit: unregister proc file before releasing mutex
+https://patchwork.kernel.org/patch/11019637/
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17446eb1e00000
-start commit:   f2850dd5 Merge tag 'kbuild-fixes-v5.6' of git://git.kernel..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=735296e4dd620b10
-dashboard link: https://syzkaller.appspot.com/bug?extid=84936245a918e2cddb32
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a96c29e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12fcc65ee00000
+This series is based on v5.6-rc6.
 
-If the result looks correct, please mark the bug fixed by replying with:
+Boot tested on arm64 and x86 platforms.
+Built tested on many other platforms including the ones changed here.
 
-#syz fix: netfilter: xt_hashlimit: unregister proc file before releasing mutex
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: nouveau@lists.freedesktop.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mips@vger.kernel.org
+Cc: x86@kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Anshuman Khandual (2):
+  powerpc/mm: Drop platform defined pmd_mknotpresent()
+  mm/thp: Rename pmd_mknotpresent() as pmd_mknotvalid()
+
+ arch/arc/include/asm/hugepage.h              | 2 +-
+ arch/arm/include/asm/pgtable-3level.h        | 2 +-
+ arch/arm64/include/asm/pgtable.h             | 2 +-
+ arch/mips/include/asm/pgtable.h              | 2 +-
+ arch/powerpc/include/asm/book3s/64/pgtable.h | 4 ----
+ arch/x86/include/asm/pgtable.h               | 2 +-
+ arch/x86/mm/kmmio.c                          | 2 +-
+ mm/pgtable-generic.c                         | 2 +-
+ 8 files changed, 7 insertions(+), 11 deletions(-)
+
+-- 
+2.20.1
+
