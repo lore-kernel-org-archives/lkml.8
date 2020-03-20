@@ -2,129 +2,97 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA752C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D16C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9187D20409
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:39:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="IXvpJ9Qs"
+	by mail.kernel.org (Postfix) with ESMTP id 74ED020757
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584697364;
+	bh=7tFoy/VAjQZPN4VRdJT/bRBm3mCQ/k56NSZkCc37syI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YMh5nbUsfH5RuOFMhcEvLvma6cdUJdGglM3DbJl8ANFnCu4V32nGIhIPUko5+osej
+	 XPdV2y0OgzAGJKyiby53vutV5MoRH3XtsVmIUAWNDo+HslZ/lBxWExAxgETDgAL7X+
+	 90c+90SeqBcVHQzBW5CETx1CWgy6HeJ6OpfzJeog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgCTJjH (ORCPT
+        id S1726902AbgCTJmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:39:07 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:44408 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbgCTJjG (ORCPT
+        Fri, 20 Mar 2020 05:42:43 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46154 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbgCTJmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:39:06 -0400
-Received: by mail-il1-f194.google.com with SMTP id j69so4928674ila.11
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 02:39:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=E88U8nR939B0wRa/2ymgo/wzYZwBbl5Itx+Xn0KyBCo=;
-        b=IXvpJ9QsQUi2SmkShV+mL6C1EHO7bH5LxWIBM1iAg2RbAn8ltjzcw4k8Gzf/04fNE1
-         Uz09MB8Di2p01C9jdQvKGQzPAgFVqEjbrjuWISi/TXKUyaXBfsRCWMGdH55TACtLJl+O
-         +96zxdxSO4CAWHrvEDGVmRiVxp2voypd+cSClwkGZunY3rIDVCZtGqpnWx7L7KohbcFf
-         xZZ9Gy37XGsOCPW3SZuopsdZ+4cCPQiYd8C4hfKP/HCW4kZsKY/E+ReGVxYn5sYxVyWu
-         hzTnyxrceyk0Q1BtwD9bqeybfUslN3EoXiuVUHgq8b67XGEq+P5rnmZjJiAUtmm8lEVE
-         Fb9Q==
+        Fri, 20 Mar 2020 05:42:43 -0400
+Received: by mail-ed1-f65.google.com with SMTP id ca19so6329884edb.13;
+        Fri, 20 Mar 2020 02:42:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=E88U8nR939B0wRa/2ymgo/wzYZwBbl5Itx+Xn0KyBCo=;
-        b=Q1VONpjUx+bYfhNnitzEl/OxExpqnAsMcdkQfbmuNyx9HsPOgV2ME6MPhIAePf0Z4N
-         qKKTRMCWD0TFOwnEayR+x2gvb1NHtCCtXnyqjiLg8iBqNMwA6jE5Qedh3X7o+PAxboBE
-         DbbPv2jLPp8Otx1v/ueIZC/rIjgQEbrWUxRuxl/L5cDaLwTrEJliYzEzos4SGRroasvB
-         UEgxIYJvISby+ojkhePcjgUlTIxoZPraZWrScuvFgxUIiXZg0/lKigj7wlpMiwGE7WSf
-         LPiJZW2hcEAv5HVgHUMrS/oi+oS0ABW025YLUlCQKsQGCPkGvrPQseHHqj+zN7C2qMF2
-         yFzw==
-X-Gm-Message-State: ANhLgQ3wak6bFbIHZHTBDR/4GVoTWDLSuY7HbdXmvUMsDxTj6Y6uH8aV
-        lUOxheRlurH5vxMvND4RsbuVsIwkg7baua77igegig==
-X-Google-Smtp-Source: ADFU+vuJOtM9SWuAoICDi7FUXuv/yqWKoRjPj7ViO11UNp0s8DbPeKyoqfntqFUE6WiJzk8VQzzH4TeWJXiEYV2KR9A=
-X-Received: by 2002:a92:d78c:: with SMTP id d12mr7307430iln.287.1584697145063;
- Fri, 20 Mar 2020 02:39:05 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Uw3wiA4XeWZolh1RPXWdN7r53j8eX1MbrQwMp9+W42I=;
+        b=ddcAflNcaRhRoefO9tYt0CoC0Lp1qdAM0WcRIK+lvP9ThVacFJOebztUQlMFUas1yA
+         ZP69eLlTsWCzbUiDp/u6lhA5WzDDWg0v3NwWuhrnkhfmNypcrGCg17kpW/fJ1QId7/xp
+         KPL9jkNOxSTYSm89/kiF668vn7YjZcj8eDrvW2a3FizrkQkGtwVeIZNID6wORLDMfOXj
+         PzA5U+tOHXlbgyQMU/bZXEG3x3Wvu/3nHxWiJ8dCqXrrafBV3mMb8gmD8hJAk19mG1H5
+         xx/0MYW3tjmOq+d8Ucu+9yFU8dZBX/NadxnFUVnzLQ9M9L3+JO3OhWdBLy9Ln0FoZTkQ
+         /jvQ==
+X-Gm-Message-State: ANhLgQ3Nj+9yk8fDlMVmWVQna8cPB/98WYmu69t0v7flje0Wra+/4OBR
+        m3OBo2GZAY3BNow8942hM+o=
+X-Google-Smtp-Source: ADFU+vvsdpCNQuAuqnydlRyT9uYaTSVC3y6hyyG9AUkhW3Gml3Uvhp0Evu01XfV356gRQDmWS8eRtg==
+X-Received: by 2002:aa7:c9cb:: with SMTP id i11mr7183183edt.320.1584697360968;
+        Fri, 20 Mar 2020 02:42:40 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id p7sm298473ejr.62.2020.03.20.02.42.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 20 Mar 2020 02:42:40 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 10:42:38 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
+        Jonas Heinrich <onny@project-insanity.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm/samsung: Add compatible string
+ for the Galaxy S2
+Message-ID: <20200320094238.GA12976@kozik-lap>
+References: <20200319173411.20607-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20200211131240.15853-1-brgl@bgdev.pl> <20200211131240.15853-4-brgl@bgdev.pl>
- <20200308135117.7c60c881@why> <CAMRc=Me0AE7OgEVjiUfRUNODYoGj+LYy+1zGsGkXKput9AeKrA@mail.gmail.com>
- <CAMRc=MdsQbm=L8sjJhnCcW+kb3UHHneSGqgCbTvWwsenCeMwxw@mail.gmail.com>
-In-Reply-To: <CAMRc=MdsQbm=L8sjJhnCcW+kb3UHHneSGqgCbTvWwsenCeMwxw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 20 Mar 2020 10:38:54 +0100
-Message-ID: <CAMRc=Me2EPpF99ZZL=FAKh+d4+tGxQU7b8bsJmzApAvkwKQ91Q@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] irq/domain: add a new callback to domain ops
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200319173411.20607-1-paul@crapouillou.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 12 mar 2020 o 09:15 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(=
-a):
->
-> niedz., 8 mar 2020 o 18:59 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=
-=82(a):
-> >
-> > niedz., 8 mar 2020 o 14:51 Marc Zyngier <maz@kernel.org> napisa=C5=82(a=
-):
-> > >
-> > > On Tue, 11 Feb 2020 14:12:37 +0100
-> > > Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > >
-> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > >
-> > > > Add the remove() callback to irq_domain_ops which can be used to
-> > > > automatically dispose of any host data associated with the domain w=
-hen
-> > > > irq_domain_remove() is called.
-> > >
-> > > I have a hard time buying this. Whatever data that is associated to t=
-he
-> > > domain is already owned known by whoever created the domain the first
-> > > place.
-> > >
-> > > Since the expected use case is that whoever created the domain also
-> > > destroys it, the caller is already in a position to do its own cleanu=
-p,
-> > > and we don't need any of this.
-> > >
-> > > So please explain what you are trying to achieve here.
-> > >
-> >
-> > I'm mainly trying to remove irq_domain_remove_sim() and make it
-> > possible to destroy the interrupt simulator domain with regular
-> > irq_domain_remove(). If you prefer that we retain this routine as is,
-> > I can limit this series to the first two patches, but I assumed the
-> > fewer functions in the interface, the better. If you have a different
-> > idea on how to do this - please let me know too.
-> >
-> > Bartosz
->
-> While this is being discussed - are the first two patches
-> uncontroversial enough to make it into v5.7?
->
-> Bartosz
+On Thu, Mar 19, 2020 at 06:34:10PM +0100, Paul Cercueil wrote:
+> Add compatible string for the Samsung Galaxy S2 (i9100 version), which
+> is an Exynos 4210 based device.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+> 
+> Notes:
+>     v2: Move compatible string so that the list is sorted in alphabetical order
+>     
+>     v3: No change
+> 
+>  .../devicetree/bindings/arm/samsung/samsung-boards.yaml          | 1 +
 
-Gentle ping after another week.
+Thanks, applied.
 
-Bart
+Best regards,
+Krzysztof
+
