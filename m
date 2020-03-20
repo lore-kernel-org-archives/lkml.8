@@ -2,108 +2,146 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C966CC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF4BC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 988A12076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:13:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UdFlom2r"
+	by mail.kernel.org (Postfix) with ESMTP id EE73320777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:15:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584713736;
+	bh=iY20u/IgUH7ck1uzIJTEsr4J0NsnrcVYd97wLs96ABE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fyBIBLsvIhVqa9O5sZOJKboQJoci81BDIuZkMyhxbGPTLQTCyT9s3f7ZiKwAq275c
+	 icmUp2BHcG05dE1aMqMOeFp1DmBFiQMrnEWW0w1gzEf/kKC+eizJo9r/dFZ3PA2vKj
+	 T+YVtmLTwjpkSIjtmh8MEotIJDcS2/wns1LABMqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgCTONr (ORCPT
+        id S1727141AbgCTOPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:13:47 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:57352 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgCTONr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:13:47 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02KEDND3006881;
-        Fri, 20 Mar 2020 09:13:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584713603;
-        bh=mu+BoT8A50KslgSNWzXNMxybhbiLSSBFgyKQqHAr+dI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=UdFlom2r94evMKBigrj9JDnIXdMv4E1hiw35KrvbD4ZAl9Q6U92wtQ92x2c/+ywJ6
-         0lsQb4McJzrBHzZjNOkpiQndZhMd5kUxCFfZUycS6QeTah6MF6lRYPCVNAoyQ+dIDv
-         I+grZA8L3YQ+Os70OQWHXmXJPPALntgrDtnkn3EY=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02KEDNER025695
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Mar 2020 09:13:23 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
- Mar 2020 09:13:23 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 20 Mar 2020 09:13:23 -0500
-Received: from [10.250.133.193] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02KEDHhH019392;
-        Fri, 20 Mar 2020 09:13:18 -0500
-Subject: Re: [PATCH v1] dt-bindings: phy: cadence-torrent: Fix YAML check
- error
-To:     Yuti Amonkar <yamonkar@cadence.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <maxime@cerno.tech>
-CC:     <jsarha@ti.com>, <tomi.valkeinen@ti.com>, <praneeth@ti.com>,
-        <mparab@cadence.com>, <sjakhade@cadence.com>
-References: <1584712171-27632-1-git-send-email-yamonkar@cadence.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <796a2433-b847-83fc-3fc0-3df090262030@ti.com>
-Date:   Fri, 20 Mar 2020 19:43:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 20 Mar 2020 10:15:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726666AbgCTOPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:15:34 -0400
+Received: from localhost (unknown [122.167.82.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4937220739;
+        Fri, 20 Mar 2020 14:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584713733;
+        bh=iY20u/IgUH7ck1uzIJTEsr4J0NsnrcVYd97wLs96ABE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A6gOnR5ST2SPsthWP2DMt5zLXqGWOTdPzerYXOyXz9HbBgUUWJJuHs5BLT3HuznPe
+         r1jlv6E5Zp6LeBJakOw7eZVupiM/ousyLYqJ1NXfzHVt38I7Z4BUnS75kKQcr2Z5wD
+         tEjKA8VkJyoKcK1a8frGbti8KTYzTLBarbjcAyYc=
+Date:   Fri, 20 Mar 2020 19:45:28 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH] soundwire: stream: only change state if needed
+Message-ID: <20200320141528.GI4885@vkoul-mobl>
+References: <20200317105142.4998-1-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1584712171-27632-1-git-send-email-yamonkar@cadence.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317105142.4998-1-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 17-03-20, 05:51, Pierre-Louis Bossart wrote:
+> In a multi-cpu DAI context, the stream routines may be called from
+> multiple DAI callbacks. Make sure the stream state only changes for
+> the first call, and don't return error messages if the target state is
+> already reached.
 
+For stream-apis we have documented explicitly in Documentation/driver-api/soundwire/stream.rst
 
-On 3/20/2020 7:19 PM, Yuti Amonkar wrote:
-> Fix YAML check error by renaming node name from "phy" to
-> "torrent-phy" as this node is not a phy_provider.
+"Bus implements below API for allocate a stream which needs to be called once
+per stream. From ASoC DPCM framework, this stream state maybe linked to
+.startup() operation.
+
+.. code-block:: c
+
+  int sdw_alloc_stream(char * stream_name); "
+
+This is documented for all stream-apis.
+
+This can be resolved by moving the calling of these APIs from
+master-dais/slave-dais to machine-dais. They are unique in the card.
+
 > 
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 > ---
+>  drivers/soundwire/stream.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
-> This fix patch is in reference to Rob's comment given below:
-> 
-> https://lkml.org/lkml/2020/3/11/1091
+> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+> index 1b43d03c79ea..3319121cd706 100644
+> --- a/drivers/soundwire/stream.c
+> +++ b/drivers/soundwire/stream.c
+> @@ -1572,6 +1572,7 @@ int sdw_prepare_stream(struct sdw_stream_runtime *stream)
+>  	sdw_acquire_bus_lock(stream);
+>  
+>  	if (stream->state == SDW_STREAM_PREPARED) {
+> +		/* nothing to do */
+>  		ret = 0;
+>  		goto state_err;
+>  	}
+> @@ -1661,6 +1662,12 @@ int sdw_enable_stream(struct sdw_stream_runtime *stream)
+>  
+>  	sdw_acquire_bus_lock(stream);
+>  
+> +	if (stream->state == SDW_STREAM_ENABLED) {
+> +		/* nothing to do */
+> +		ret = 0;
+> +		goto state_err;
+> +	}
+> +
+>  	if (stream->state != SDW_STREAM_PREPARED &&
+>  	    stream->state != SDW_STREAM_DISABLED) {
+>  		pr_err("%s: %s: inconsistent state state %d\n",
+> @@ -1744,6 +1751,12 @@ int sdw_disable_stream(struct sdw_stream_runtime *stream)
+>  
+>  	sdw_acquire_bus_lock(stream);
+>  
+> +	if (stream->state == SDW_STREAM_DISABLED) {
+> +		/* nothing to do */
+> +		ret = 0;
+> +		goto state_err;
+> +	}
+> +
+>  	if (stream->state != SDW_STREAM_ENABLED) {
+>  		pr_err("%s: %s: inconsistent state state %d\n",
+>  		       __func__, stream->name, stream->state);
+> @@ -1809,6 +1822,12 @@ int sdw_deprepare_stream(struct sdw_stream_runtime *stream)
+>  
+>  	sdw_acquire_bus_lock(stream);
+>  
+> +	if (stream->state == SDW_STREAM_DEPREPARED) {
+> +		/* nothing to do */
+> +		ret = 0;
+> +		goto state_err;
+> +	}
+> +
+>  	if (stream->state != SDW_STREAM_PREPARED &&
+>  	    stream->state != SDW_STREAM_DISABLED) {
+>  		pr_err("%s: %s: inconsistent state state %d\n",
+> -- 
+> 2.20.1
 
-merged and squashed with the original patch.
-
-Thanks
-Kishon
-> 
->  Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
-> index 9f94be1..c779a3c 100644
-> --- a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
-> +++ b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
-> @@ -120,7 +120,7 @@ additionalProperties: false
->  examples:
->    - |
->      #include <dt-bindings/phy/phy.h>
-> -    torrent_phy: phy@f0fb500000 {
-> +    torrent_phy: torrent-phy@f0fb500000 {
->            compatible = "cdns,torrent-phy";
->            reg = <0xf0 0xfb500000 0x0 0x00100000>,
->                  <0xf0 0xfb030a00 0x0 0x00000040>;
-> 
+-- 
+~Vinod
