@@ -2,369 +2,96 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD3EC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CABB3C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F47D20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F122072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbgCTRIx (ORCPT
+        id S1727178AbgCTRJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:08:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:54462 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727134AbgCTRIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:08:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C3041FB;
-        Fri, 20 Mar 2020 10:08:51 -0700 (PDT)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E69003F305;
-        Fri, 20 Mar 2020 10:08:46 -0700 (PDT)
-Subject: Re: [PATCH V2 1/2] mm/sparsemem: Enable vmem_altmap support in
- vmemmap_populate_basepages()
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Michal Hocko <mhocko@suse.com>, linux-ia64@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-riscv@lists.infradead.org, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-References: <1583331030-7335-1-git-send-email-anshuman.khandual@arm.com>
- <1583331030-7335-2-git-send-email-anshuman.khandual@arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <5e1bad9b-11d7-344c-766f-162f7a779941@arm.com>
-Date:   Fri, 20 Mar 2020 17:08:31 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 20 Mar 2020 13:09:59 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:57535 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbgCTRJ7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 13:09:59 -0400
+Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MwQKr-1jVudM1jCn-00sPyn; Fri, 20 Mar 2020 18:09:57 +0100
+Received: by mail-qk1-f178.google.com with SMTP id h14so7629762qke.5;
+        Fri, 20 Mar 2020 10:09:57 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3AjeCqF4eQedqqGLmc+BY9C1BRfVZznlpS/H8qbeC3Zle6nKq9
+        xjNsm0S3VDZykFS1rqvrzGG38jJwKuXUceWVtFE=
+X-Google-Smtp-Source: ADFU+vtjyO+ehLTD66pkWeXkdjTj4/yy0U6UhFzBOixds9km8+MN7n37hhenmQD129d14NVa+I+huaC/oF0GQuuVinA=
+X-Received: by 2002:a37:a4d6:: with SMTP id n205mr9299331qke.352.1584724196159;
+ Fri, 20 Mar 2020 10:09:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1583331030-7335-2-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <cover.1584667964.git.gurus@codeaurora.org> <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
+In-Reply-To: <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 20 Mar 2020 18:09:39 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
+Message-ID: <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
+Subject: Re: [PATCH v11 06/12] pwm: imx27: Use 64-bit division macro and function
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:NT1QCBoJeAxayaviYjMCvNEQL3IYVL2LhtzFKOtdqS2IV0XjZa3
+ wWW5chAgDpZ3YlZiAEunuXIMrORfU6DGtU3m6f3NpQn8z+7TRq+D5UQ2vxc0k8MvdT7smdY
+ P6JgLiP+NviVJg4iv3gWtF9hMF5qM78kT4G8a2p6hCOBhbmDOAy/YOg86FgCCiHrTAIILiJ
+ v3A65uoScg2fWVlqqgd5g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:OBUSs1wKTYM=:uNmjh1lUYwUMomH/yU/kca
+ y5KrySbLrEVfWmoFzAPv8r6OYcJKLNbEpw8jsnSChMIVM6SlO9MomD4glOZjrlimSW1XdsbSy
+ OdH+GzYXuW/cmSDeB2y7p8Rc8XZ9qHPXcGOa0HlNDIgZ9ZIWgS4mUTHRjwNaihi/c+yoAZFX2
+ HlYxkuqdbv04Lcu+/xQwdFcJ8hiuLkR/zYB2tpfxS7MAmZrTMIpTc44v/GpeHOtf2bIxTnSsS
+ GRy+YNuoj6fMVh8Jhy01mtV1ZkNasY/++aDx0jtpFXP8PM8xU1HchXu8WZ4I41qemS4HcxGfT
+ 0yXXGmlm/5rnHY8zgo46ADAPV4NgS+SJwu/5bCuF3JONkq5oXYLEPuEgWBJZxYs1fX1RnbdUI
+ Lu3O/YIZboJ98fhSx6aRBYlzWaR4/xGgiOenIrAy3evjFJNrsF+jT/Kx6GuAZwR5mTYGnoAPv
+ UG1gEXzdFQWfvlimucx+7TIRqMto3Bi2XhL7TACvifjHLtWCQ5DiGgwJ/hyLVXCYc6XrH5PBk
+ kwRgVtYGB/xpn1CqktxKbWdzbZR4PrG8Q8wLRcpjXg71KIf3AZwMyJqz/w8tWVqgfI3maDZ6R
+ YQ8J1jaWo7SKpwW7uDfWm6Rxj2x74gWhzudY+kkihrVoX9CKN3SXZRj4xemwrQcLk36pTwkj0
+ O6PLhvmvessXcqMLM1kay+eRfxprkC+TpxrO4Vrq5NZ5XgcMJWX4XVXaP1YX642AjyxQSBUmh
+ vh6Wie9lAV+r7XRSH1FXFuH+P/jkGrliM4KHf3Ca4TN+cqKePxXgwVRNrP5CXxl4HSRUxjdWF
+ 70YRjzKWkbaV78eiHWOgrRwd7s35djMxif/rpr7M7DtCK5fRiE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-04 2:10 pm, Anshuman Khandual wrote:
-> vmemmap_populate_basepages() is used across platforms to allocate backing
-> memory for vmemmap mapping. This is used as a standard default choice or
-> as a fallback when intended huge pages allocation fails. This just creates
-> entire vmemmap mapping with base pages (PAGE_SIZE).
-> 
-> On arm64 platforms, vmemmap_populate_basepages() is called instead of the
-> platform specific vmemmap_populate() when ARM64_SWAPPER_USES_SECTION_MAPS
-> is not enabled as in case for ARM64_16K_PAGES and ARM64_64K_PAGES configs.
-> 
-> At present vmemmap_populate_basepages() does not support allocating from
-> driver defined struct vmem_altmap while trying to create vmemmap mapping
-> for a device memory range. It prevents ARM64_16K_PAGES and ARM64_64K_PAGES
-> configs on arm64 from supporting device memory with vmemap_altmap request.
-> 
-> This enables vmem_altmap support in vmemmap_populate_basepages() unlocking
-> device memory allocation for vmemap mapping on arm64 platforms with 16K or
-> 64K base page configs.
-> 
-> Each architecture should evaluate and decide on subscribing device memory
-> based base page allocation through vmemmap_populate_basepages(). Hence lets
-> keep it disabled on all archs in order to preserve the existing semantics.
-> A subsequent patch enables it on arm64.
+On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
 
-I guess buy-in for this change largely depends on whether any other 
-architectures are likely to want to share it. The existing altmap users 
-don't look like they would, so that's probably more a question for the 
-likes of S390 and RISC-V.
+> @@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>
+>         period_cycles /= prescale;
+>         c = (unsigned long long)period_cycles * state->duty_cycle;
+> -       do_div(c, state->period);
+> -       duty_cycles = c;
+> +       duty_cycles = div64_u64(c, state->period);
+>
 
-Failing that, simply decoupling arm64 from vmemmap_populate_basepages() 
-seems viable - I tried hacking up a quick proof-of-concept (attached at 
-the end) and it doesn't come out looking *too* disgusting.
+This change looks fine, but I wonder if the code directly above it
 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Fenghua Yu <fenghua.yu@intel.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-ia64@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: x86@kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Acked-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->   arch/arm64/mm/mmu.c      |  2 +-
->   arch/ia64/mm/discontig.c |  2 +-
->   arch/riscv/mm/init.c     |  2 +-
->   arch/x86/mm/init_64.c    |  6 +++---
->   include/linux/mm.h       |  5 +++--
->   mm/sparse-vmemmap.c      | 16 +++++++++++-----
->   6 files changed, 20 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index 9b08f7c7e6f0..27cb95c471eb 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -1036,7 +1036,7 @@ static void free_empty_tables(unsigned long addr, unsigned long end,
->   int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->   		struct vmem_altmap *altmap)
->   {
-> -	return vmemmap_populate_basepages(start, end, node);
-> +	return vmemmap_populate_basepages(start, end, node, NULL);
->   }
->   #else	/* !ARM64_SWAPPER_USES_SECTION_MAPS */
->   int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
-> diff --git a/arch/ia64/mm/discontig.c b/arch/ia64/mm/discontig.c
-> index 4f33f6e7e206..20409f3afea8 100644
-> --- a/arch/ia64/mm/discontig.c
-> +++ b/arch/ia64/mm/discontig.c
-> @@ -656,7 +656,7 @@ void arch_refresh_nodedata(int update_node, pg_data_t *update_pgdat)
->   int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->   		struct vmem_altmap *altmap)
->   {
-> -	return vmemmap_populate_basepages(start, end, node);
-> +	return vmemmap_populate_basepages(start, end, node, NULL);
->   }
->   
->   void vmemmap_free(unsigned long start, unsigned long end,
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 965a8cf4829c..1d7451c91982 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -501,6 +501,6 @@ void __init paging_init(void)
->   int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->   			       struct vmem_altmap *altmap)
->   {
-> -	return vmemmap_populate_basepages(start, end, node);
-> +	return vmemmap_populate_basepages(start, end, node, NULL);
->   }
->   #endif
-> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-> index abbdecb75fad..3272fe0d844a 100644
-> --- a/arch/x86/mm/init_64.c
-> +++ b/arch/x86/mm/init_64.c
-> @@ -1471,7 +1471,7 @@ static int __meminit vmemmap_populate_hugepages(unsigned long start,
->   			vmemmap_verify((pte_t *)pmd, node, addr, next);
->   			continue;
->   		}
-> -		if (vmemmap_populate_basepages(addr, next, node))
-> +		if (vmemmap_populate_basepages(addr, next, node, NULL))
->   			return -ENOMEM;
->   	}
->   	return 0;
-> @@ -1483,7 +1483,7 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->   	int err;
->   
->   	if (end - start < PAGES_PER_SECTION * sizeof(struct page))
-> -		err = vmemmap_populate_basepages(start, end, node);
-> +		err = vmemmap_populate_basepages(start, end, node, NULL);
->   	else if (boot_cpu_has(X86_FEATURE_PSE))
->   		err = vmemmap_populate_hugepages(start, end, node, altmap);
->   	else if (altmap) {
-> @@ -1491,7 +1491,7 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->   				__func__);
->   		err = -ENOMEM;
->   	} else
-> -		err = vmemmap_populate_basepages(start, end, node);
-> +		err = vmemmap_populate_basepages(start, end, node, NULL);
->   	if (!err)
->   		sync_global_pgds(start, end - 1);
->   	return err;
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 52269e56c514..42f99c8d63c0 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2780,14 +2780,15 @@ pgd_t *vmemmap_pgd_populate(unsigned long addr, int node);
->   p4d_t *vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node);
->   pud_t *vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node);
->   pmd_t *vmemmap_pmd_populate(pud_t *pud, unsigned long addr, int node);
-> -pte_t *vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node);
-> +pte_t *vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node,
-> +			    struct vmem_altmap *altmap);
->   void *vmemmap_alloc_block(unsigned long size, int node);
->   struct vmem_altmap;
->   void *vmemmap_alloc_block_buf(unsigned long size, int node);
->   void *altmap_alloc_block_buf(unsigned long size, struct vmem_altmap *altmap);
->   void vmemmap_verify(pte_t *, int, unsigned long, unsigned long);
->   int vmemmap_populate_basepages(unsigned long start, unsigned long end,
-> -			       int node);
-> +			       int node, struct vmem_altmap *altmap);
->   int vmemmap_populate(unsigned long start, unsigned long end, int node,
->   		struct vmem_altmap *altmap);
->   void vmemmap_populate_print_last(void);
-> diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-> index 200aef686722..a407abc9b46c 100644
-> --- a/mm/sparse-vmemmap.c
-> +++ b/mm/sparse-vmemmap.c
-> @@ -140,12 +140,18 @@ void __meminit vmemmap_verify(pte_t *pte, int node,
->   			start, end - 1);
->   }
->   
-> -pte_t * __meminit vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node)
-> +pte_t * __meminit vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node,
-> +				       struct vmem_altmap *altmap)
->   {
->   	pte_t *pte = pte_offset_kernel(pmd, addr);
->   	if (pte_none(*pte)) {
->   		pte_t entry;
-> -		void *p = vmemmap_alloc_block_buf(PAGE_SIZE, node);
-> +		void *p;
-> +
-> +		if (altmap)
-> +			p = altmap_alloc_block_buf(PAGE_SIZE, altmap);
-> +		else
-> +			p = vmemmap_alloc_block_buf(PAGE_SIZE, node);
+        c = clk_get_rate(imx->clk_per);
+        c *= state->period;
+        do_div(c, 1000000000);
+        period_cycles = c;
 
-This pattern ends up appearing a number of times by the end - if we do 
-go down the generic code route, might it be worth pushing it down into 
-vmmemmap_alloc_block_buf() itself to make it automatic? (possibly even 
-including the powerpc fallback behaviour too?)
+might run into an overflow when both the clock rate and the period
+are large numbers.
 
-Robin.
-
->   		if (!p)
->   			return NULL;
->   		entry = pfn_pte(__pa(p) >> PAGE_SHIFT, PAGE_KERNEL);
-> @@ -213,8 +219,8 @@ pgd_t * __meminit vmemmap_pgd_populate(unsigned long addr, int node)
->   	return pgd;
->   }
->   
-> -int __meminit vmemmap_populate_basepages(unsigned long start,
-> -					 unsigned long end, int node)
-> +int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
-> +					 int node, struct vmem_altmap *altmap)
->   {
->   	unsigned long addr = start;
->   	pgd_t *pgd;
-> @@ -236,7 +242,7 @@ int __meminit vmemmap_populate_basepages(unsigned long start,
->   		pmd = vmemmap_pmd_populate(pud, addr, node);
->   		if (!pmd)
->   			return -ENOMEM;
-> -		pte = vmemmap_pte_populate(pmd, addr, node);
-> +		pte = vmemmap_pte_populate(pmd, addr, node, altmap);
->   		if (!pte)
->   			return -ENOMEM;
->   		vmemmap_verify(pte, node, addr, addr + PAGE_SIZE);
-> 
-
------>8-----
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH] arm64/mm: Consolidate vmemmap_populate()
-
-Since we already have a custom vmemmap_populate() implementation, fold
-the non-section-map case into that as well, so that we can easily add
-altmap support for both cases without having to mess with core code.
-
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
-  arch/arm64/mm/mmu.c | 34 +++++++++++++++++++++-------------
-  1 file changed, 21 insertions(+), 13 deletions(-)
-
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 128f70852bf3..e250fd414b2b 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -725,13 +725,6 @@ int kern_addr_valid(unsigned long addr)
-  	return pfn_valid(pte_pfn(pte));
-  }
-  #ifdef CONFIG_SPARSEMEM_VMEMMAP
--#if !ARM64_SWAPPER_USES_SECTION_MAPS
--int __meminit vmemmap_populate(unsigned long start, unsigned long end, 
-int node,
--		struct vmem_altmap *altmap)
--{
--	return vmemmap_populate_basepages(start, end, node);
--}
--#else	/* !ARM64_SWAPPER_USES_SECTION_MAPS */
-  int __meminit vmemmap_populate(unsigned long start, unsigned long end, 
-int node,
-  		struct vmem_altmap *altmap)
-  {
-@@ -740,6 +733,7 @@ int __meminit vmemmap_populate(unsigned long start, 
-unsigned long end, int node,
-  	pgd_t *pgdp;
-  	pud_t *pudp;
-  	pmd_t *pmdp;
-+	pte_t *ptep;
-
-  	do {
-  		next = pmd_addr_end(addr, end);
-@@ -752,22 +746,36 @@ int __meminit vmemmap_populate(unsigned long 
-start, unsigned long end, int node,
-  		if (!pudp)
-  			return -ENOMEM;
-
-+#if ARM64_SWAPPER_USES_SECTION_MAPS
-  		pmdp = pmd_offset(pudp, addr);
-  		if (pmd_none(READ_ONCE(*pmdp))) {
--			void *p = NULL;
--
--			p = vmemmap_alloc_block_buf(PMD_SIZE, node);
-+			void *p = vmemmap_alloc_block_buf(PMD_SIZE, node);
-  			if (!p)
-  				return -ENOMEM;
-
-  			pmd_set_huge(pmdp, __pa(p), __pgprot(PROT_SECT_NORMAL));
--		} else
--			vmemmap_verify((pte_t *)pmdp, node, addr, next);
-+			continue;
-+		}
-+#else
-+		pmdp = vmemmap_pmd_populate(pmdp, addr, node);
-+		if (!pmdp)
-+			return -ENOMEM;
-+
-+		ptep = pte_offset_kernel(pmdp, addr);
-+		if (pte_none(READ_ONCE(*ptep))) {
-+			void *p = vmemmap_alloc_block_buf(PAGE_SIZE, node);
-+			if (!p)
-+				return -ENOMEM;
-+
-+			set_pte(ptep, pfn_pte(__pa(p) >> PAGE_SHIFT, PAGE_KERNEL));
-+		}
-+#endif
-+		vmemmap_verify((pte_t *)pmdp, node, addr, next);
-  	} while (addr = next, addr != end);
-
-  	return 0;
-  }
--#endif	/* !ARM64_SWAPPER_USES_SECTION_MAPS */
-+
-  void vmemmap_free(unsigned long start, unsigned long end,
-  		struct vmem_altmap *altmap)
-  {
+      Arnd
