@@ -2,118 +2,111 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0327EC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A64C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C375620775
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F7B20739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:14:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="PEvj5kKo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vbec061i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbgCTTNN (ORCPT
+        id S1727264AbgCTTOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 15:13:13 -0400
-Received: from mail-co1nam11on2055.outbound.protection.outlook.com ([40.107.220.55]:6218
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726814AbgCTTNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 15:13:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GC1tTRhlvIYYaYF59hJ4PWVCYP4mo+hRT/pjlA284oYsvCphTX0VcSje5A/bHcAooWJFguD2V3iuMReemNZ4sDGVmqGp7tcCatd7Omhf5gzxI1nwNHkAn8GvQcx2X1G/gqGSTMrIiFwarEaaf6ztTMXvlbfyJmA59l78GzYyjnJDs/roZCRlGmcu81pkwdYajJ0a5Lo/bqjEjtXrzoxsHmjJzXaKsqzView6baN69+crJZMN2cbAxicVquh+nWXjJAlWMwY5ju0uEZB1Kxmdca899pJ0LXQmtAAiocJGi4lQyIwg++6R6KclXq3kgZUTBEh28h/O2Gwt+HN0kFo/KA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Shnng4AvX5lOhmnWKLU9C1Q4b+WEC4dXj3oLRhH8riM=;
- b=DrKM9MDlcgB3M9ToQsI91NgtYqAIHPietPcue+sta9VjQf4SCEeIo7lSWTlUN++SdtNUHS/0TyA5U7NvidvEcXF73WGE0vtBU0yL6eAnrSzTLLFLeHGrmAa2KJEbnxrxzJ8g3PxUSTcWJGTuNQoc170mEigo1YnK6Q3sh21/MIisohkbAqDijaPY6W54vVxdOrtfL9H+Xnmer3ZnTQkWjbQnnK3xAczOaRpqmAomL+blLct/zaMFdIOd3Mkcw/xdk8coGcdW6TuQ383Gj6vuX7KsgNEFB49SsRtOZ2Dx7EmOfNGopVTbAz589o8s3j6BC4fWXH1eX4oyf6hv8tZ5og==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Fri, 20 Mar 2020 15:14:37 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50216 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbgCTTOh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 15:14:37 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d198so1999198wmd.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 12:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Shnng4AvX5lOhmnWKLU9C1Q4b+WEC4dXj3oLRhH8riM=;
- b=PEvj5kKodr+PsLuZWxONSnsk3juv0OUw8+ceO7Jf+6UmUvzbXeUOGy7MYnCWqK953wxGB6ByjzgIvXB7eB/F9PaVQXMialkN/2pRgxLzzpz8pu/KRQkTE05TId35BSH0XMUakJHkk34dL1IwFyfq+pNwyF6S0OjVFZsjLKs8g/E=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=brijesh.singh@amd.com; 
-Received: from CY4PR12MB1926.namprd12.prod.outlook.com (2603:10b6:903:11b::11)
- by CY4PR12MB1525.namprd12.prod.outlook.com (2603:10b6:910:11::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Fri, 20 Mar
- 2020 19:13:09 +0000
-Received: from CY4PR12MB1926.namprd12.prod.outlook.com
- ([fe80::e5ec:63d5:a9a8:74c4]) by CY4PR12MB1926.namprd12.prod.outlook.com
- ([fe80::e5ec:63d5:a9a8:74c4%12]) with mapi id 15.20.2835.017; Fri, 20 Mar
- 2020 19:13:09 +0000
-Cc:     brijesh.singh@amd.com
-Subject: Re: [PATCH] KVM: SVM: document KVM_MEM_ENCRYPT_OP, let userspace
- detect if SEV is available
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20200320174245.5220-1-pbonzini@redhat.com>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <e7a293bf-acbf-b69a-a082-4a2cce9701b0@amd.com>
-Date:   Fri, 20 Mar 2020 14:14:19 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
-In-Reply-To: <20200320174245.5220-1-pbonzini@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: SN4PR0501CA0024.namprd05.prod.outlook.com
- (2603:10b6:803:40::37) To CY4PR12MB1926.namprd12.prod.outlook.com
- (2603:10b6:903:11b::11)
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F3DRIuFvLAn4sQyGNJkixzkoSFpSmglRsC01IEMoyeY=;
+        b=Vbec061iRyMXEkUcEti9RH855qeclgISN6hc+wsL9Pl06Di0rpMbYDCxo4CCcQgdJx
+         lMI78hYGhEK5HhIn8ih40S0xbFJ1Hl3JCnKwIp6+QYrGNhKLbix0cs/H1Bb8TjhXvPCS
+         zKUULGMdgjhstQZLbIwJj4+Y0xGODzbjTr/R9XOIion4qA/vUXjDOXhATwj0dGX7bRnh
+         LLe1/F1vmLeob7aDoEfMAkDJNlkP1340jQ/vedbU05WTe+wdVoctGTRylO4OjKicbtYm
+         7DFPCd/5Vy7iBdj48fTd7P7EPhlbUMITZ/bNI6Gf9zt96tPoYvn2cCFd5wPYMejwza7c
+         F0BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F3DRIuFvLAn4sQyGNJkixzkoSFpSmglRsC01IEMoyeY=;
+        b=Xed5DzyJ+wB47s8e25zxPIzPSGmmUD/umjf59R7tyVqoztRZ4xhCNh/uQfm0bYa5Fb
+         WiJQDJvbCahW3b/ZXryit/WwIff1pD9VcmHIR5bvw6j1iX0uoLL+3+iFqx4pG7/fHDnb
+         aUcConPIN7i8cVrArVgwCUN90MgEiPvaJbOYenJ/CbCgFiG2oMsg3pPxpcZFGzIWTLq2
+         L6wL/sz5KGVYHZ0/tv7OgCSVokLVeUkzf97L/Q1ksQ5s2wDCxsKMg4vtbC5Bw2sz1p2c
+         E7Mz6jS2wlSwwff/XSwpMVHE2WpQ0oP92dcLiFR0amNOIXFH7ribXfgFDDK9QfD73r4g
+         /e3A==
+X-Gm-Message-State: ANhLgQ1SQJ2FIgtXQq3OH/33KylsOb1dkAUiNaE+EATo5cAZsurGpaeL
+        EypAf4O+tOyRCGFbJdoJSCk=
+X-Google-Smtp-Source: ADFU+vs6wRCA+4528+CDV2keByZ63N1T/6GuAeTpM5TJv+nqd6zmZ6bBx+9kkvlM1suNwci6vqAznw==
+X-Received: by 2002:a1c:b60b:: with SMTP id g11mr12499629wmf.175.1584731673433;
+        Fri, 20 Mar 2020 12:14:33 -0700 (PDT)
+Received: from localhost.localdomain (ipservice-092-219-207-020.092.219.pools.vodafone-ip.de. [92.219.207.20])
+        by smtp.gmail.com with ESMTPSA id u7sm8988595wme.43.2020.03.20.12.14.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 12:14:32 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH] staging: rtl8188eu: remove some 5 GHz code
+Date:   Fri, 20 Mar 2020 20:13:05 +0100
+Message-Id: <20200320191305.10425-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from Brijeshs-MacBook-Pro.local (165.204.77.11) by SN4PR0501CA0024.namprd05.prod.outlook.com (2603:10b6:803:40::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.12 via Frontend Transport; Fri, 20 Mar 2020 19:13:08 +0000
-X-Originating-IP: [165.204.77.11]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 7668df3a-f9ee-40d1-9e80-08d7cd02ba11
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1525:|CY4PR12MB1525:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR12MB1525412092667CEDB3CDF5BCE5F50@CY4PR12MB1525.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 03484C0ABF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(366004)(39860400002)(396003)(376002)(199004)(2906002)(36756003)(52116002)(44832011)(5660300002)(478600001)(186003)(8936002)(16526019)(6666004)(4326008)(2616005)(81156014)(31686004)(26005)(956004)(316002)(4744005)(81166006)(31696002)(86362001)(6506007)(8676002)(66946007)(53546011)(6512007)(66556008)(6486002)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1525;H:CY4PR12MB1926.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 88ON0HfLkkNTVm61RWpiKni4qhDLtmPTuW5V6m1ikDYiKDmf+SE9j0j/xf08YTkSW41n905cvr1unnXRWl89HejSdF+rv4KS2FQNFO9o7KCX0LMLIZeADhOMmrxfLbfidv14QLdaV/H0owPu0ZCXnLBwalC5CeC08kYIM3Mv33HcS0TeMSSfCAwRhPnvQhUIgnXAkP9pIspjiKzb1L/0EEVhf7B2l5Xl/OhAg64T1djxZvCM+CiD8NEi57S4kYLnlojaeOdCHiOnCeT3Dm4ynLVWQSqrrTJj7lkFsFd4F75hnw1+jd3gT1agczFWQzzTB1i1WxBj5+b4iyuNvp7xWUekFg0cLskdi1JFdApST1rhDdXA+xIa5umsttMH1PVM4W2az1UQGOl8f9OczK8qWzu9gMY0J7SQXmOQ7ycKq3LHn9quGmBwlzart+owjY1X
-X-MS-Exchange-AntiSpam-MessageData: fGgF5qZof3t5ZFMqP6+yjgNNNbJ0DA2+iqw3pVUEIGW1S0Z8VB0Ky/BWMHPOv44Zj+aandLtwDLhlisW6hybT5ytUyQNqqi0TsQcWzqZ4CHgWEBOaYh61qtym+FZaAxntzywfSD6eIh28VUYpXTLkg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7668df3a-f9ee-40d1-9e80-08d7cd02ba11
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2020 19:13:09.4718
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eb3R7EMRrXnX9rPTNASL+ou24m5eH2TSTmtdxsxaz2xXi1YWV1Apwn1UpTzzsZEXDVJb/KUH9Vc2OriLO2zP4A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1525
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+According to the TODO code valid only for 5 GHz should be removed.
 
-On 3/20/20 12:42 PM, Paolo Bonzini wrote:
-> Userspace has no way to query if SEV has been disabled with the
-> sev module parameter of kvm-amd.ko.  Actually it has one, but it
-> is a hack: do ioctl(KVM_MEM_ENCRYPT_OP, NULL) and check if it
-> returns EFAULT.  Make it a little nicer by returning zero for
-> SEV enabled and NULL argument, and while at it document the
-> ioctl arguments.
->
-> Cc: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+- find and remove remaining code valid only for 5 GHz. Most of the obvious
+  ones have been removed, but things like channel > 14 still exist.
 
-thanks
+Remove if statement that checks for channel > 14 from rtw_ieee80211.c.
 
-Reviewed-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+ drivers/staging/rtl8188eu/core/rtw_ieee80211.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/staging/rtl8188eu/core/rtw_ieee80211.c b/drivers/staging/rtl8188eu/core/rtw_ieee80211.c
+index 29f615443e8f..e186982d5908 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_ieee80211.c
++++ b/drivers/staging/rtl8188eu/core/rtw_ieee80211.c
+@@ -236,14 +236,10 @@ int rtw_generate_ie(struct registry_priv *pregistrypriv)
+ 	ie = rtw_set_ie(ie, _SSID_IE_, pdev_network->ssid.ssid_length, pdev_network->ssid.ssid, &sz);
+ 
+ 	/* supported rates */
+-	if (pregistrypriv->wireless_mode == WIRELESS_11ABGN) {
+-		if (pdev_network->Configuration.DSConfig > 14)
+-			wireless_mode = WIRELESS_11A_5N;
+-		else
+-			wireless_mode = WIRELESS_11BG_24N;
+-	} else {
++	if (pregistrypriv->wireless_mode == WIRELESS_11ABGN)
++		wireless_mode = WIRELESS_11BG_24N;
++	else
+ 		wireless_mode = pregistrypriv->wireless_mode;
+-	}
+ 
+ 	rtw_set_supported_rate(pdev_network->SupportedRates, wireless_mode);
+ 
+-- 
+2.25.1
 
