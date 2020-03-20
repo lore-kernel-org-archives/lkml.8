@@ -2,83 +2,122 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BA7C10F29
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DA9C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B99120724
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E94720767
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:03:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584723795;
+	bh=lc8iQ1odTTopZ4PNqpMctsUDPoPbC3GQ0wUt4ERXAvw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BWU9K2lB4sG+Oy+H04zoTR4MagjStW5ItF4/pPPx+JihJ1SmUand23mbjHFlHnxkM
+	 jgUXKpEJCQ9LD5yn5H6skAnPdElnzeO9d025TAWne2dEeL+oq7TdSKuYQIWC58gA03
+	 5/xF5db8qD3SOuJ0rwDbyV/25O4jloOZ8hv8P0Io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbgCTRDK (ORCPT
+        id S1727698AbgCTRDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:03:10 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:52025 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbgCTRDH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:03:07 -0400
-Received: from mail-lf1-f44.google.com ([209.85.167.44]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MAfQe-1j8iHa0k1o-00B0qA; Fri, 20 Mar 2020 18:03:06 +0100
-Received: by mail-lf1-f44.google.com with SMTP id i1so4418254lfo.1;
-        Fri, 20 Mar 2020 10:03:06 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ39zmuHYftErsjSRWWEYfv4e3Y18Djyduf8JnpdTbD6ABxfD164
-        rIEGucIGWlDb7Ywp3SItWZzsVwLRDzubBGNIx5I=
-X-Google-Smtp-Source: ADFU+vtGM1BAWj/ypTGImtaXGVhgdztgWM/eg3xxnSs7xp+2vbgGEFrzZEo8G63MzFh8mtaYi7v6nQ6u9eton4GUQoQ=
-X-Received: by 2002:a05:6512:31d6:: with SMTP id j22mr5942299lfe.173.1584723785648;
- Fri, 20 Mar 2020 10:03:05 -0700 (PDT)
+        Fri, 20 Mar 2020 13:03:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727560AbgCTRDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 13:03:00 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BE8920781;
+        Fri, 20 Mar 2020 17:02:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584723780;
+        bh=lc8iQ1odTTopZ4PNqpMctsUDPoPbC3GQ0wUt4ERXAvw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qMnoMW615soDW64POvknENNvHGSJDVOVE4bmw2g0JMZESPItD3b0pksLChBn305Jo
+         SC7uXtR/6Dr7Cm426bbftTs9jXrTpEbmM/VnIR4/MO/FMwE+M1zVRs3goTZhOWUJBq
+         zAb7siix0JtpyYSK5Ij7Uu0tCT1V7qxWPH/JjzQU=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-clk@vger.kernel.org
+Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sboyd@kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        Dinh Nguyen <dinh.nguyen@intel.com>
+Subject: [PATCH 3/5] clk: socfpga: add const to _ops data structures
+Date:   Fri, 20 Mar 2020 12:02:09 -0500
+Message-Id: <20200320170212.21523-4-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200320170212.21523-1-dinguyen@kernel.org>
+References: <20200320170212.21523-1-dinguyen@kernel.org>
 MIME-Version: 1.0
-References: <cover.1584667964.git.gurus@codeaurora.org> <a1942f735fa4d3eb71546a3f07d9b5e78fd7919a.1584667964.git.gurus@codeaurora.org>
-In-Reply-To: <a1942f735fa4d3eb71546a3f07d9b5e78fd7919a.1584667964.git.gurus@codeaurora.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 20 Mar 2020 18:02:49 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2fdx55uNPqYxbVhUJZS2hBsCcr4u0i9dmoDkrdjVOMeA@mail.gmail.com>
-Message-ID: <CAK8P3a2fdx55uNPqYxbVhUJZS2hBsCcr4u0i9dmoDkrdjVOMeA@mail.gmail.com>
-Subject: Re: [PATCH v11 09/12] pwm: sun4i: Use 64-bit division function
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Nb6zGbGXVPUdXGZzWjYWmcJR/59MVZDu4HG9LMi7gpxV7FvhykF
- EIig5FCkaFNzfVBBDGlmta8ONjDB5N3X6eHZsXK1YPBzM16+tkapau27BqtXyxhC5bZgx73
- OxZntrLDjCzYHs0ps6NgwRWRyXQW7sTTkNEwhyMLAdC8CE7O0cEZxqvRadZnXOC2c1aJC10
- PadC2EOV2YdcPPR8Hz9Yg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:E0uWrkMpb54=:nc5WrO/vT4gO4OFSvUZK36
- DP9MCrcPUvnQz+ckdsv6FRhFDCB5TnRwM3IBQsKeFQlWXaTQp6JbyFzzoZpPNiUoz4j/jp7xt
- PbBNxu5r8QbVzJFy+GERCtM5QRUpbcjsJyx9DDwfalv1CJAweapUAAzi+CkJLrxS9d1yV0eHU
- LmVTBHTa9SRjDuTZAyE/GyyTjI3QlCkgI2ncrUxtpmFw2wdMMZ0wtoGxTpsCRcuvvnpdVPOzV
- jIrWLt5XlAETXbasomunwH7O3bVqdfOs76DcBLZMVkhpS7HIf3dsUI2d9tTxhwUNFpYo04ODw
- vUuEepMSEsmw8FAHpGK9BYrvIRphRzX7+Ek4fK0UEONY2m5cED19w0jeBa/5vydW8U+kEcXl5
- 56WnNAe/kHiiYsil8qubIfnOyrCYI9++mdJZ3dwNiVK+spafWaRR7xutGHIaf2LG9JonwBgHw
- yvDplf7Eu8QAfqJ+McEk11hIPgdcn+E2lfwkU9JdDJQ5sGYoJpD9vBWeaCbRDpbiygmSvyCsg
- P7mZqBIolIt5DF6jKZEgUA4XZuC6vZrK2rVtQ1WFWdjqkYHFOM2M9O90nRHFz2pbODSrJE9R/
- JKAikMbQYUnHamr+kTaly/6vYOcC/t2zRurmru+pIL8WvNVnRdKjN/sXheVmPP+09fSBMgCRI
- vuW4I2D5sH5uaiYfViKAC4A8ZXrihtGhyq5F4hy8MUC5tkV5fUqxTe0597E8LEyGr2OnifJdI
- PHKeIt2zBRJWLuNFU4Xthb/t4OLr1uD9kjnVu4Fn2f4rlgIV6azKa7bpiVIJrYU5Q7f6e9AZV
- fAxEC5VYXxEbGBrL1y6gaOo1+VLiAdeU5D0ItQLMLMWjNYSs+0=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
->         sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
-> -               usecs_to_jiffies(cstate.period / 1000 + 1);
-> +               usecs_to_jiffies(div_u64(cstate.period, 1000) + 1);
->         sun4i_pwm->needs_delay[pwm->hwpwm] = true;
->
+From: Dinh Nguyen <dinh.nguyen@intel.com>
 
-This one looks like it should use nsecs_to_jiffies(cstate.period) to avoid
-having two 64-bit divisions.
+All the static clk_ops data structure need a const.
 
-       Arnd
+Signed-off-by: Dinh Nguyen <dinh.nguyen@intel.com>
+---
+v4: no change
+v3: introduced
+---
+ drivers/clk/socfpga/clk-pll-a10.c | 2 +-
+ drivers/clk/socfpga/clk-pll-s10.c | 4 ++--
+ drivers/clk/socfpga/clk-pll.c     | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/clk/socfpga/clk-pll-a10.c b/drivers/clk/socfpga/clk-pll-a10.c
+index 6d9395106c0c..db54f7d806a0 100644
+--- a/drivers/clk/socfpga/clk-pll-a10.c
++++ b/drivers/clk/socfpga/clk-pll-a10.c
+@@ -58,7 +58,7 @@ static u8 clk_pll_get_parent(struct clk_hw *hwclk)
+ 		CLK_MGR_PLL_CLK_SRC_MASK;
+ }
+ 
+-static struct clk_ops clk_pll_ops = {
++static const struct clk_ops clk_pll_ops = {
+ 	.recalc_rate = clk_pll_recalc_rate,
+ 	.get_parent = clk_pll_get_parent,
+ };
+diff --git a/drivers/clk/socfpga/clk-pll-s10.c b/drivers/clk/socfpga/clk-pll-s10.c
+index 9faa80ff3b53..5c3e1ee44f6b 100644
+--- a/drivers/clk/socfpga/clk-pll-s10.c
++++ b/drivers/clk/socfpga/clk-pll-s10.c
+@@ -98,13 +98,13 @@ static int clk_pll_prepare(struct clk_hw *hwclk)
+ 	return 0;
+ }
+ 
+-static struct clk_ops clk_pll_ops = {
++static const struct clk_ops clk_pll_ops = {
+ 	.recalc_rate = clk_pll_recalc_rate,
+ 	.get_parent = clk_pll_get_parent,
+ 	.prepare = clk_pll_prepare,
+ };
+ 
+-static struct clk_ops clk_boot_ops = {
++static const struct clk_ops clk_boot_ops = {
+ 	.recalc_rate = clk_boot_clk_recalc_rate,
+ 	.get_parent = clk_boot_get_parent,
+ 	.prepare = clk_pll_prepare,
+diff --git a/drivers/clk/socfpga/clk-pll.c b/drivers/clk/socfpga/clk-pll.c
+index a001641b2f42..e5fb786843f3 100644
+--- a/drivers/clk/socfpga/clk-pll.c
++++ b/drivers/clk/socfpga/clk-pll.c
+@@ -65,7 +65,7 @@ static u8 clk_pll_get_parent(struct clk_hw *hwclk)
+ 			CLK_MGR_PLL_CLK_SRC_MASK;
+ }
+ 
+-static struct clk_ops clk_pll_ops = {
++static const struct clk_ops clk_pll_ops = {
+ 	.recalc_rate = clk_pll_recalc_rate,
+ 	.get_parent = clk_pll_get_parent,
+ };
+-- 
+2.25.1
+
