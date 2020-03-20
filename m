@@ -2,132 +2,116 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A5FC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9F8C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5D4120777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:33:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L9sgbN6w"
+	by mail.kernel.org (Postfix) with ESMTP id ED04720709
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:35:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgCTOdY (ORCPT
+        id S1727432AbgCTOfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:33:24 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:53857 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbgCTOdX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:33:23 -0400
-Received: by mail-pj1-f68.google.com with SMTP id l36so2547933pjb.3;
-        Fri, 20 Mar 2020 07:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y8CL3zZj4yGG4lD3L6yv8lcW+KdsOuZ+KSCgXBMVoeQ=;
-        b=L9sgbN6wN5LoekRNwV3OkrwtTgMc/JlHqiY7y9vO3HDdjEG/orGFjNxp/q2gIpR2HX
-         cU6tHLQns13rsmmNdoEI7Nv2tbx4XbTTK3yI0Ugeb8037dKJAGcbafkBWz5WUYEGvUES
-         mr4CF0f7lD5Ovkymjy0j4fN+23aB2juafQuLbQCUK8eg6CppHfxoO6WNxz5Un1/qDb/7
-         YTbJyV3ooQQlJT7MjAeroDiUw5ja4n/ivZCszT3H/j46hYkIeHWwf6lkmIIjR+oqM69R
-         wGCC9vfLD+DwxaR+M3PBGwaej7BdJmmi7YgWJAUynp/EXPazIGucxui5Wg1SngYwtTf7
-         V5EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y8CL3zZj4yGG4lD3L6yv8lcW+KdsOuZ+KSCgXBMVoeQ=;
-        b=cbkhty0CR0uDCynseRjlBn7ZUVKwi+znClQFrAfuBR6BKbI/eXoMkQcvr4q/ONR01q
-         Ea9FGh70f0762cnnZj7w6uxxlPDXlirFhULxUie0qMGQz9rugVNz6Y5VROZhiObiAM5x
-         M4ePcBMYsCP6sazkyEvoy5Tqp0M9JpEWkN9g6xMQIVMG+yqT3MyQ2B4XlCWDjB6PF3mm
-         FllqcvBKWOPRGhnfGc1h2lBt9I8Qdr2WgXm82BVfvdH2ld2MSOfBqOf+1khFYS/s5dwM
-         i7D9IvlN9nnt+23sLDvB66FD8ye56BWmYf4yfJ9puboriIVjepbl9RZ8s8nBohUD3tT9
-         gZWg==
-X-Gm-Message-State: ANhLgQ317M+AP555oM4VSQZGjw5k1AJWorRRAqm9qcd93xtago9rxSgz
-        yLOGkBVvLy2OEBWP9nIUbgxkWyxWesP12GHZmRk=
-X-Google-Smtp-Source: ADFU+vtfmvNWzKVRIO3O61UeKiXfFAkZ78miDvEyQJ+ZPA+9PqY48/8tdpjDkFa9gmPvQSHovm3oH5zXZ65598V9cJg=
-X-Received: by 2002:a17:902:8d92:: with SMTP id v18mr9079029plo.18.1584714801666;
- Fri, 20 Mar 2020 07:33:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200320131345.635023594@linutronix.de> <20200320131508.736205164@linutronix.de>
-In-Reply-To: <20200320131508.736205164@linutronix.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 20 Mar 2020 16:33:14 +0200
-Message-ID: <CAHp75Vca0j0=EB2qdvGgFOq2s_ohHUEzY4OeNrv-oynLBVYh1w@mail.gmail.com>
-Subject: Re: [patch 01/22] x86/devicetable: Move x86 specific macro out of
- generic code
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        linux-edac@vger.kernel.org,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        Fri, 20 Mar 2020 10:35:53 -0400
+Received: from mga14.intel.com ([192.55.52.115]:18131 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726816AbgCTOfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:35:52 -0400
+IronPort-SDR: plrOdcyM16YER5Wi4TT0AuG6MVbp+zgp9Snz9hwFTVOteH/CCnFQpxc8CGb9cESDoTk8VEzHIW
+ 8uMtNDWB4GNA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 07:35:52 -0700
+IronPort-SDR: 31yy+iEliot0MYaUGlxyywSdC2TYVWie+dTp/EwvWI6d5G7CX6cuWYyjHg4ItAZSCUX2kp0+Ge
+ tp2Cyown55zQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,284,1580803200"; 
+   d="scan'208";a="444986444"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.161])
+  by fmsmga005.fm.intel.com with ESMTP; 20 Mar 2020 07:35:48 -0700
+Date:   Fri, 20 Mar 2020 16:35:47 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>,
-        linux-crypto <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jakub Kicinski <kuba@kernel.org>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: [PATCH v5 2/2] KEYS: Avoid false positive ENOMEM error on key
+ read
+Message-ID: <20200320143547.GB3629@linux.intel.com>
+References: <20200318221457.1330-1-longman@redhat.com>
+ <20200318221457.1330-3-longman@redhat.com>
+ <20200319194650.GA24804@linux.intel.com>
+ <f22757ad-4d6f-ffd2-eed5-6b9bd1621b10@redhat.com>
+ <20200320020717.GC183331@linux.intel.com>
+ <7dbc524f-6c16-026a-a372-2e80b40eab30@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7dbc524f-6c16-026a-a372-2e80b40eab30@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 3:17 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> There is no reason that this gunk is in a generic header file. The wildcard
-> defines need to stay as they are required by file2alias.
->
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  arch/x86/include/asm/cpu_device_id.h   |   13 ++++++++++++-
->  arch/x86/kvm/svm.c                     |    1 +
->  arch/x86/kvm/vmx/vmx.c                 |    1 +
->  drivers/cpufreq/acpi-cpufreq.c         |    1 +
->  drivers/cpufreq/amd_freq_sensitivity.c |    1 +
->  include/linux/mod_devicetable.h        |    4 +---
->  6 files changed, 17 insertions(+), 4 deletions(-)
->
-> --- a/arch/x86/include/asm/cpu_device_id.h
-> +++ b/arch/x86/include/asm/cpu_device_id.h
-> @@ -6,10 +6,21 @@
->   * Declare drivers belonging to specific x86 CPUs
->   * Similar in spirit to pci_device_id and related PCI functions
->   */
+On Fri, Mar 20, 2020 at 09:27:03AM -0400, Waiman Long wrote:
+> On 3/19/20 10:07 PM, Jarkko Sakkinen wrote:
+> > On Thu, Mar 19, 2020 at 08:07:55PM -0400, Waiman Long wrote:
+> >> On 3/19/20 3:46 PM, Jarkko Sakkinen wrote:
+> >>> On Wed, Mar 18, 2020 at 06:14:57PM -0400, Waiman Long wrote:
+> >>>> +			 * It is possible, though unlikely, that the key
+> >>>> +			 * changes in between the up_read->down_read period.
+> >>>> +			 * If the key becomes longer, we will have to
+> >>>> +			 * allocate a larger buffer and redo the key read
+> >>>> +			 * again.
+> >>>> +			 */
+> >>>> +			if (!tmpbuf || unlikely(ret > tmpbuflen)) {
+> >>> Shouldn't you check that tmpbuflen stays below buflen (why else
+> >>> you had made copy of buflen otherwise)?
+> >> The check above this thunk:
+> >>
+> >> if ((ret > 0) && (ret <= buflen)) {
+> >>
+> >> will make sure that ret will not be larger than buflen. So tmpbuflen > >> will never be bigger than buflen.  > > Ah right, of course, thanks.
+> >
+> > What would go wrong if the condition was instead
+> > ((ret > 0) && (ret <= tmpbuflen))?
+> 
+> That if statement is a check to see if the actual key length is longer
+> than the user-supplied buffer (buflen). If that is the case, it will
+> just return the expected length without storing anything into the user
+> buffer. For the case that buflen >= ret > tmpbuflen, the revised check
+> above will incorrectly skip the storing step causing the caller to
+> incorrectly think the key is there in the buffer.
+> 
+> Maybe I should clarify that a bit more in the comment.
 
-> -
+OK, right because it is possible in-between tmpbuflen could be
+larger. Got it.
 
-Seems you are going to remove below anyway in the next patches, so,
-why not to do this also there?
+I think that longish key_data and key_data_len would be better
+names than tmpbuf and tpmbuflen.
 
->  #include <linux/mod_devicetable.h>
+Also the comments are somewat overkill IMHO.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I'd replace them along the lines of
+
+/* Cap the user supplied buffer length to PAGE_SIZE. */
+
+/* Key data can change as we don not hold key->sem. */
+
+/Jarkko
