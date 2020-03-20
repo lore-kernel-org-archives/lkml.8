@@ -2,119 +2,134 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F73C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A35C43332
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 607892070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B5AF2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:58:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eDQwtq1z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbgCTO5v (ORCPT
+        id S1727257AbgCTO6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:57:51 -0400
-Received: from sauhun.de ([88.99.104.3]:49360 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727133AbgCTO5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:57:51 -0400
-Received: from localhost (p54B33339.dip0.t-ipconnect.de [84.179.51.57])
-        by pokefinder.org (Postfix) with ESMTPSA id 9B16E2C2E8F;
-        Fri, 20 Mar 2020 15:57:48 +0100 (CET)
-Date:   Fri, 20 Mar 2020 15:57:48 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Daniel Kurtz <djkurtz@chromium.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzbot <syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Subject: Re: [PATCH] i2c: i801: Fix memory corruption in i801_isr_byte_done()
-Message-ID: <20200320145748.GD1282@ninjato>
-References: <0000000000009586b2059c13c7e1@google.com>
- <20200114073406.qaq3hbrhtx76fkes@kili.mountain>
- <20200222124523.GI1716@kunai>
+        Fri, 20 Mar 2020 10:58:48 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38564 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgCTO6s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:58:48 -0400
+Received: by mail-pj1-f68.google.com with SMTP id m15so2563662pje.3;
+        Fri, 20 Mar 2020 07:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x0CYiHRmjAbhtOwx0x1mf5Pz7QynYzQVMMGgwVVNtoU=;
+        b=eDQwtq1zQtOLd13ST3FOE7Sk2oulpHAzFYSjgwUoCzQ5WXHo9DAhlrJaeQIaykrd+D
+         RplqyKdtZ/hBD2YanBGphKOaQw6ZGvbr0itJPAkcQv55q1L6wgeyumguRo6p+04KrtfS
+         cuICJ881I+mOiFh+XhbFOLVUzh47gmQCawWmusNQ5h3rTXlwTQzV6jyF+TjbqNAuBBh4
+         uOiRkmD2pufS8fD21xLXacQlf3uZ5k7XnWVnqm3MfyCs52uigESXh8xdmxrTEGhKK6nZ
+         tdFZiB/kjTQl6dQHrucJG+0TR0zyhbbEFUdK76SQDWixZFCkUUWBTTTTzYOJdhdCS1D3
+         aweg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x0CYiHRmjAbhtOwx0x1mf5Pz7QynYzQVMMGgwVVNtoU=;
+        b=reG2UAJbZYVr+fAX61hc6JUMV6nO4l4XWNsn5FvCQomTxzQK589//RJ9gU4N+tcgid
+         ThJgvuo3x4WknXD1T715yHf2CdBHoJ4Ma8PXhzXOZLl0ihOPuSYE/E2rD6H8resTqoHT
+         c+uJw+0wSs6HQlcERZl/3wrweUyua3Dta7HRFJ/xBAErWTKiUoAvcS9orpGCC0vjhlhq
+         IhpivcrYrMk6ZLDYQnW4j63Uo3fQOiniAq/8RDf/SJoZiYrKkx/eu/MiJxRX/YO4b90F
+         p4UWKDTO+ECLOdkgFDHr26jNeGljTkkmOql0uOwaNj6lL20xodI1mi2Z7sUVibabBpPh
+         BtRg==
+X-Gm-Message-State: ANhLgQ3he0nB0LArE0DUb6tHd3Ufcy4WgcQUrMppJ7Cqyyhf+LRzAaYc
+        MmfYINoFUXqllgFBMZbSBZVdxCtdxelc+UPqPrY=
+X-Google-Smtp-Source: ADFU+vteYsnR7L5XY9pl14RxIG6UQ4TH7+FGZCql5w8AqUCpZZGK/AtSNu9A6VkE0ZiE9rOAuclYQjce/FWRjxLrLDc=
+X-Received: by 2002:a17:902:54f:: with SMTP id 73mr8686783plf.255.1584716325841;
+ Fri, 20 Mar 2020 07:58:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0/kgSOzhNoDC5T3a"
-Content-Disposition: inline
-In-Reply-To: <20200222124523.GI1716@kunai>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200320131345.635023594@linutronix.de> <20200320131510.594671507@linutronix.de>
+In-Reply-To: <20200320131510.594671507@linutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 20 Mar 2020 16:58:38 +0200
+Message-ID: <CAHp75VdCTCk8OKBWKAapZz27zSvsDm_L6TChhSNpS0U0nS=wCQ@mail.gmail.com>
+Subject: Re: [patch 19/22] ASoC: Intel: Convert to new X86 CPU match macros
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>, Takashi Iwai <tiwai@suse.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        linux-edac@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 20, 2020 at 3:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> The new macro set has a consistent namespace and uses C99 initializers
+> instead of the grufty C89 ones.
+>
+> Get rid the of the local macro wrappers for consistency.
 
---0/kgSOzhNoDC5T3a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> -#define ICPU(model)    { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
+> -
+>  #define SOC_INTEL_IS_CPU(soc, type)                            \
+>  static inline bool soc_intel_is_##soc(void)                    \
+>  {                                                              \
+>         static const struct x86_cpu_id soc##_cpu_ids[] = {      \
+> -               ICPU(type),                                     \
+> +               X86_MATCH_INTEL_FAM6_MODEL(type, NULL),         \
+>                 {}                                              \
+>         };                                                      \
+>         const struct x86_cpu_id *id;                            \
+> @@ -32,11 +30,11 @@ static inline bool soc_intel_is_##soc(vo
+>         return false;                                           \
+>  }
+>
 
-On Sat, Feb 22, 2020 at 01:45:23PM +0100, Wolfram Sang wrote:
-> On Tue, Jan 14, 2020 at 10:34:06AM +0300, Dan Carpenter wrote:
-> > Assigning "priv->data[-1] =3D priv->len;" obviously doesn't make sense.
-> > What it does is it ends up corrupting the last byte of priv->len so
-> > priv->len becomes a very high number.
-> >=20
-> > Reported-by: syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com
-> > Fixes: d3ff6ce40031 ("i2c-i801: Enable IRQ for byte_by_byte transaction=
-s")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > ---
->=20
-> Daniel, Jean: what do you think?
-> Also, adding Jarkko to CC who works a lot with this driver...
+> +SOC_INTEL_IS_CPU(byt, ATOM_SILVERMONT);
+> +SOC_INTEL_IS_CPU(cht, ATOM_AIRMONT);
+> +SOC_INTEL_IS_CPU(apl, ATOM_GOLDMONT);
+> +SOC_INTEL_IS_CPU(glk, ATOM_GOLDMONT_PLUS);
+> +SOC_INTEL_IS_CPU(cml, KABYLAKE_L);
 
-Ping. Adding more people...
+I'm wondering if driver data can be used in one macro to distinguish
+which CPU we are run on.
+Takashi, what do you think?
 
->=20
-> > Untested.
-> >=20
-> >  drivers/i2c/busses/i2c-i801.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> >=20
-> > diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i80=
-1.c
-> > index f5e69fe56532..420d8025901e 100644
-> > --- a/drivers/i2c/busses/i2c-i801.c
-> > +++ b/drivers/i2c/busses/i2c-i801.c
-> > @@ -584,7 +584,6 @@ static void i801_isr_byte_done(struct i801_priv *pr=
-iv)
-> >  					"SMBus block read size is %d\n",
-> >  					priv->len);
-> >  			}
-> > -			priv->data[-1] =3D priv->len;
-> >  		}
-> > =20
-> >  		/* Read next byte */
-> > --=20
-> > 2.11.0
-> >=20
-
-
-
---0/kgSOzhNoDC5T3a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl502ewACgkQFA3kzBSg
-KbaoARAAtfTyKYW9Ul8/37lfwTcF8GkKRTKd3Iasdo5yXbIx2HvPVPkl/fhoNQzO
-Vm6pbplxg27UWwBfqLgxRBS4AHx48ANi4X0BQIqeYKPl3hetOhHvwOzwWrfMwK0F
-AsMBtJsmSqqt9uHkuteOLnYHXxfoF+8ye0Q6QO3vStWP5FBfHlw1VrwiU0uZ3w+E
-90ui9TPeSLp5WTXi4idgEc51blujdoXVceMDUwaSvJ+ZSl3SJIDuiPXOt5I7H4e5
-q0vDW8mCj8l761YTOWExa8wygw+D/qDEblQC9vnj8ooCgL0BWFC8wH62PLCxgHjb
-4tKAy+bWtzr3VzgfEnj0EnlLMMFxZ2oOYm6243SUwSOa+vbZQ4uSt5BDaLJmuaOO
-TZtWS+iNBytaHQNfFcBOfFlx3c9Z852iiSRrV4WLMknTszHOAuBvRJi4MRFoVi6F
-oUeJWi46KeNrpC1D2QwP1TcxlDWJ29DMsOVV3ix/fILvsHwIkcGLP74xjw7ZELxR
-tBbLBHWi3v71Ejs3VV75L5MlcsJgOUDJ/HLuz5E7lOZ69uBSKXCSJqs8e3xKF86S
-qbRGnZ/Tkfu+6PRn1PtN6ULQXa4NBIXPF3bhvdeq2YtF9+xsocjSMWdono83Wp/e
-WWZT2TZmAL+4Wvo5Nt9f2JKWRSmF2afUurkOjiRqmK3PrCKiFF4=
-=sTjl
------END PGP SIGNATURE-----
-
---0/kgSOzhNoDC5T3a--
+-- 
+With Best Regards,
+Andy Shevchenko
