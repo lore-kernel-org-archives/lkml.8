@@ -2,146 +2,108 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE90BC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08934C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A027120777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C4720775
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:40:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584729645;
+	bh=0lySpfIbLYVkl86wERt9XwrjnUjq7J+z8XZeuge/+7s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DVSA4kddBMYtzr3i/l0zCbHaydXMir37LwwP5TlFo+sjY/Wb2vVWHhRygO0idz3ad
+	 W2U0A8982IT3fqaFz3fq6PQ8vaUZasvQ+zABWz2Suo+JQqyGRNeA1YBGosyK3o5/Rj
+	 isz//7yZvFvr/nLA1T/KERllYZQSZ1L+OyynLz14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbgCTSj3 (ORCPT
+        id S1727478AbgCTSko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:39:29 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36865 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgCTSiS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:38:18 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFMX9-00021y-8B
-        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:15 +0100
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id B31A7100239
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:14 +0100 (CET)
-Message-Id: <20200320175956.033706968@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 18:59:56 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [patch V3 00/23] x86/entry: Consolidation part II (syscalls)
-Content-transfer-encoding: 8-bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 20 Mar 2020 14:40:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726773AbgCTSko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 14:40:44 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 275D420739;
+        Fri, 20 Mar 2020 18:40:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584729643;
+        bh=0lySpfIbLYVkl86wERt9XwrjnUjq7J+z8XZeuge/+7s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wi2vuW5Igyu46y5Wx05mkvW8a/VLckiN7s/9GNIOdxM9U7yQM1pyY2njL/QMwkPan
+         KWQEARrCqs16OuxD5B6Kg1R9790qkHmt4v/O/PZizCk3+z+HWCmu6og3Em53508k9B
+         iW3Hml7aQ3jDLnTGNz1ZqdOb+OAH89RjMJ2Qz1nU=
+Date:   Fri, 20 Mar 2020 11:40:41 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-xfs@vger.kernel.org,
+        William Kucharski <william.kucharski@oracle.com>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v9 20/25] ext4: Convert from readpages to readahead
+Message-ID: <20200320184041.GG851@sol.localdomain>
+References: <20200320142231.2402-1-willy@infradead.org>
+ <20200320142231.2402-21-willy@infradead.org>
+ <20200320173734.GD851@sol.localdomain>
+ <20200320174848.GC4971@bombadil.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320174848.GC4971@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Fri, Mar 20, 2020 at 10:48:48AM -0700, Matthew Wilcox wrote:
+> On Fri, Mar 20, 2020 at 10:37:34AM -0700, Eric Biggers wrote:
+> > On Fri, Mar 20, 2020 at 07:22:26AM -0700, Matthew Wilcox wrote:
+> > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > > 
+> > > Use the new readahead operation in ext4
+> > > 
+> > > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> > > Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+> > > ---
+> > >  fs/ext4/ext4.h     |  3 +--
+> > >  fs/ext4/inode.c    | 21 +++++++++------------
+> > >  fs/ext4/readpage.c | 22 ++++++++--------------
+> > >  3 files changed, 18 insertions(+), 28 deletions(-)
+> > > 
+> > 
+> > Reviewed-by: Eric Biggers <ebiggers@google.com>
+> > 
+> > > +		if (rac) {
+> > > +			page = readahead_page(rac);
+> > >  			prefetchw(&page->flags);
+> > > -			list_del(&page->lru);
+> > > -			if (add_to_page_cache_lru(page, mapping, page->index,
+> > > -				  readahead_gfp_mask(mapping)))
+> > > -				goto next_page;
+> > >  		}
+> > 
+> > Maybe the prefetchw(&page->flags) should be included in readahead_page()?
+> > Most of the callers do it.
+> 
+> I did notice that a lot of callers do that.  I wonder whether it (still)
+> helps or whether it's just cargo-cult programming.  It can't possibly
+> have helped before because we did list_del(&page->lru) as the very next
+> instruction after prefetchw(), and they're in the same cacheline.  It'd
+> be interesting to take it out and see what happens to performance.
 
-This is the third version of the syscall entry code consolidation
-series. V2 can be found here:
+Yeah, it does look like the list_del() made the prefetchw() useless, so it
+should just be removed.  The prefetchw() dates all the way back to
+mpage_readpages() being added in 2002, but even then the list_del() was
+immediately afterwards, and 'flags' and 'lru' were in the same cache line in
+'struct page' even then (assuming at least a 32-byte cache line size), so...
 
-  https://lore.kernel.org/r/20200308222359.370649591@linutronix.de
-
-It applies on top of
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
-
-and is also available from git:
-
-    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel entry-v3-part2
-
-The changes vs. V2:
-
- - A massive rework utilizing Peter Zijlstras objtool patches to analyze
-   the new .noinstr.text section:
-
-   https://lore.kernel.org/r/20200317170234.897520633@infradead.org
-
-   Working with this was really helpful as it clearly pin pointed code
-   which calls out of the protected section which is much more efficient
-   and focussed than chasing everything manually.
-
- - Picked up the two RCU patches from Paul for completeness. The bugfix
-   is required anyway and the comments have been really helpful to see
-   where the defense line has to be.
-
- - As the tool flagged KVM as red zone, I looked at the context tracking
-   usage there and it has similar if not worse issues. New set of patches
-   dealing with that.
-
-Please have a close look at the approach and the resulting protected areas.
-
-Known issues:
-
-  - The kprobes '.noinstr.text' exclusion currently works only for built
-    in code. Haven't figured out how to to fix that, but I'm sure that
-    Masami knows :)
-
-  - The various SANitizers if enabled ruin the picture. Peter and I still
-    have no brilliant idea what to do about that.
-
-Thanks,
-
-	tglx
----
- arch/x86/entry/common.c                |  173 ++++++++++++++++++++++++---------
- arch/x86/entry/entry_32.S              |   24 ----
- arch/x86/entry/entry_64.S              |    6 -
- arch/x86/entry/entry_64_compat.S       |   32 ------
- arch/x86/entry/thunk_64.S              |   45 +++++++-
- arch/x86/include/asm/bug.h             |    3 
- arch/x86/include/asm/hardirq.h         |    4 
- arch/x86/include/asm/irqflags.h        |    3 
- arch/x86/include/asm/nospec-branch.h   |    4 
- arch/x86/include/asm/paravirt.h        |    3 
- arch/x86/kvm/svm.c                     |  152 ++++++++++++++++++----------
- arch/x86/kvm/vmx/ops.h                 |    4 
- arch/x86/kvm/vmx/vmenter.S             |    2 
- arch/x86/kvm/vmx/vmx.c                 |   78 +++++++++++---
- arch/x86/kvm/x86.c                     |    4 
- b/include/asm-generic/bug.h            |    9 +
- include/asm-generic/sections.h         |    3 
- include/asm-generic/vmlinux.lds.h      |    4 
- include/linux/compiler.h               |   24 ++++
- include/linux/compiler_types.h         |    4 
- include/linux/context_tracking.h       |   27 +++--
- include/linux/context_tracking_state.h |    6 -
- include/linux/irqflags.h               |    6 +
- include/linux/sched.h                  |    1 
- kernel/context_tracking.c              |   14 +-
- kernel/kprobes.c                       |   11 ++
- kernel/locking/lockdep.c               |   66 +++++++++---
- kernel/panic.c                         |    4 
- kernel/rcu/tree.c                      |   91 +++++++++++------
- kernel/rcu/tree_plugin.h               |    4 
- kernel/rcu/update.c                    |    7 -
- kernel/trace/trace_preemptirq.c        |   25 ++++
- lib/debug_locks.c                      |    2 
- lib/smp_processor_id.c                 |   10 -
- scripts/mod/modpost.c                  |    2 
- 35 files changed, 590 insertions(+), 267 deletions(-)
-
-
+- Eric
