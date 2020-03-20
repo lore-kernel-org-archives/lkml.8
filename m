@@ -2,174 +2,98 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45052C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E505BC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1862A2070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883022072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TKl7Ek9Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JmJ7iATz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgCTOZB (ORCPT
+        id S1727505AbgCTOZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:25:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59728 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727194AbgCTOWd (ORCPT
+        Fri, 20 Mar 2020 10:25:11 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41639 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbgCTOZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:22:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=nvBUEQIRW+oJfT4A2tun4ZxFtt+tUcLBZ6qVvFZPpNk=; b=TKl7Ek9Z+WxWpSP9JKXjm+y3A3
-        LuShn6oxASy88pBdumDq+EjKPZt+b8aC+BKJ3pyOGBRcgmasuwFx8my9YwZ0Y3BQJUSMKQL0HyHi6
-        aw2O4HW7RY9ua6k4AG7nmKJ0nWVF5V5fE0nPFMDR82GGd/s0KEV11FC/NmkRN29Cw2pm4rZwFrgYs
-        EfD1gPlGKqgQtqBOsIjUxiBAcROgGoLiaUqTjpcezki/0MYvoPQMZWIlYMdOSA8VaSUweD3sBOFjn
-        ZpOUX5Y4lkV9HBeMo/+jacCKDytNQJp6DfXugqC3YdsasEHI2BZoL7GksDlMkpK86cfLWSnOBn9au
-        2xzaRN3g==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jFIXh-0000hN-7u; Fri, 20 Mar 2020 14:22:33 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: [PATCH v9 06/25] mm: Use readahead_control to pass arguments
-Date:   Fri, 20 Mar 2020 07:22:12 -0700
-Message-Id: <20200320142231.2402-7-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200320142231.2402-1-willy@infradead.org>
-References: <20200320142231.2402-1-willy@infradead.org>
+        Fri, 20 Mar 2020 10:25:09 -0400
+Received: by mail-lj1-f195.google.com with SMTP id o10so6585467ljc.8;
+        Fri, 20 Mar 2020 07:25:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=T5wfsqz6NA4nBgSyE/y834Ip5hf7e671S0Q1nH1Qsz4=;
+        b=JmJ7iATzKnqammFAuQ9z796W5nzypoWTbGhkE/TubpvYzYTS4aVWgssszGYtYq0jv6
+         ljRG56Ujk4JgnOYdUrbxf3tmTGTUA4hiIONYi/SLmnRb8dnt7Pjtffz3H+CBw59XSJaL
+         JAACc2yqJ21Gwhf9NYjWbNVS6BvKadFjwMneOwk0YlqC05GkOfSuCt9DbLX0kTDB8Moz
+         oh8tKrgmN9OTzk3P9oF2wbXJDTYWZ20Ao8nfuS4Sf74tsPzj5gGi8KJUgpysyYuJSXk6
+         XT1lwOI81as1r78dEBNYq0p3ZcLky42f4FYn9ic1n91Rjbd1XXH6tRpPFO0Gy/SifOQX
+         xFGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=T5wfsqz6NA4nBgSyE/y834Ip5hf7e671S0Q1nH1Qsz4=;
+        b=IyFreTd82NYz7zwsY61xXQCBSTUepyn9QZPyRH5neqBXtMEX4MYAlShx6GSziKqv5Q
+         0AZd/7EQ/5GPJdeO44f+sxKzLgODTDmdp4O/5DEqyBtEpy1qt5m6A6oxFUMlNvHpkp9r
+         B7+RCaa7S0Z+SXsNGb5NapZTnI19T5tbxMSFpxK9disGJKXspeGBZTgpZiJMDvhlvSL9
+         k59QwOe2yfSQgE+IJvDoOcVk6Y6jpeYUURWThM5MNsO7ySBPKkUuxKhN3GXyOaMJRJG2
+         qIozkUmx5eulRanpwHJW2qoCz4Y5dGfoSG+o47yymS6HvWR17RxNDxNwCwHAhnYtodsY
+         3d1g==
+X-Gm-Message-State: ANhLgQ0KES9hoLQWDpnAHylJJs82MkqAn2yXkDfJg0igtPJZ34pm2k0l
+        C68kNF1MCcYNtKLlMU/rUh8b9/lK
+X-Google-Smtp-Source: ADFU+vugH/QD6QmdOmcFHW6Fzz2Le5mDW7RVs1mxnFOgC0mXoPuKWf4SNE2O75XiwQ0sx6lmjSZftg==
+X-Received: by 2002:a2e:99ca:: with SMTP id l10mr5410105ljj.13.1584714306182;
+        Fri, 20 Mar 2020 07:25:06 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id t23sm3102570lfq.90.2020.03.20.07.25.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Mar 2020 07:25:05 -0700 (PDT)
+Subject: Re: [PATCH -next] dmaengine: tegra-apb: mark PM functions as
+ __maybe_unused
+To:     YueHaibing <yuehaibing@huawei.com>, ldewangan@nvidia.com,
+        jonathanh@nvidia.com, dan.j.williams@intel.com, vkoul@kernel.org,
+        thierry.reding@gmail.com, swarren@wwwdotorg.org
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200320071337.59756-1-yuehaibing@huawei.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8d60faa5-2749-0581-7ee5-252f15b0e9cf@gmail.com>
+Date:   Fri, 20 Mar 2020 17:25:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200320071337.59756-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+20.03.2020 10:13, YueHaibing пишет:
+> When CONFIG_PM is disabled, gcc warning this:
+> 
+> drivers/dma/tegra20-apb-dma.c:1587:12: warning: 'tegra_dma_runtime_resume' defined but not used [-Wunused-function]
+> drivers/dma/tegra20-apb-dma.c:1578:12: warning: 'tegra_dma_runtime_suspend' defined but not used [-Wunused-function]
+> 
+> Make it as __maybe_unused to fix the warnings,
+> also remove unneeded function declarations.
+> 
+> Fixes: ec8a1586780c ("dma: tegra: add dmaengine based dma driver")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+...
 
-In this patch, only between __do_page_cache_readahead() and read_pages(),
-but it will be extended in upcoming patches.  The read_pages() function
-becomes aops centric, as this makes the most sense by the end of the
-patchset.
+Looks good, thank you:
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>
----
- mm/readahead.c | 33 +++++++++++++++++++--------------
- 1 file changed, 19 insertions(+), 14 deletions(-)
-
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 9fcd4e32b62d..9d9aa4ffc7d4 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -113,29 +113,32 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
- 
- EXPORT_SYMBOL(read_cache_pages);
- 
--static void read_pages(struct address_space *mapping, struct file *filp,
--		struct list_head *pages, unsigned int nr_pages, gfp_t gfp)
-+static void read_pages(struct readahead_control *rac, struct list_head *pages,
-+		gfp_t gfp)
- {
-+	const struct address_space_operations *aops = rac->mapping->a_ops;
- 	struct blk_plug plug;
- 	unsigned page_idx;
- 
--	if (!nr_pages)
-+	if (!readahead_count(rac))
- 		return;
- 
- 	blk_start_plug(&plug);
- 
--	if (mapping->a_ops->readpages) {
--		mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
-+	if (aops->readpages) {
-+		aops->readpages(rac->file, rac->mapping, pages,
-+				readahead_count(rac));
- 		/* Clean up the remaining pages */
- 		put_pages_list(pages);
- 		goto out;
- 	}
- 
--	for (page_idx = 0; page_idx < nr_pages; page_idx++) {
-+	for (page_idx = 0; page_idx < readahead_count(rac); page_idx++) {
- 		struct page *page = lru_to_page(pages);
- 		list_del(&page->lru);
--		if (!add_to_page_cache_lru(page, mapping, page->index, gfp))
--			mapping->a_ops->readpage(filp, page);
-+		if (!add_to_page_cache_lru(page, rac->mapping, page->index,
-+				gfp))
-+			aops->readpage(rac->file, page);
- 		put_page(page);
- 	}
- 
-@@ -143,6 +146,7 @@ static void read_pages(struct address_space *mapping, struct file *filp,
- 	blk_finish_plug(&plug);
- 
- 	BUG_ON(!list_empty(pages));
-+	rac->_nr_pages = 0;
- }
- 
- /*
-@@ -160,9 +164,12 @@ void __do_page_cache_readahead(struct address_space *mapping,
- 	unsigned long end_index;	/* The last page we want to read */
- 	LIST_HEAD(page_pool);
- 	int page_idx;
--	unsigned int nr_pages = 0;
- 	loff_t isize = i_size_read(inode);
- 	gfp_t gfp_mask = readahead_gfp_mask(mapping);
-+	struct readahead_control rac = {
-+		.mapping = mapping,
-+		.file = filp,
-+	};
- 
- 	if (isize == 0)
- 		return;
-@@ -185,9 +192,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
- 			 * contiguous pages before continuing with the next
- 			 * batch.
- 			 */
--			read_pages(mapping, filp, &page_pool, nr_pages,
--						gfp_mask);
--			nr_pages = 0;
-+			read_pages(&rac, &page_pool, gfp_mask);
- 			continue;
- 		}
- 
-@@ -198,7 +203,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
- 		list_add(&page->lru, &page_pool);
- 		if (page_idx == nr_to_read - lookahead_size)
- 			SetPageReadahead(page);
--		nr_pages++;
-+		rac._nr_pages++;
- 	}
- 
- 	/*
-@@ -206,7 +211,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
- 	 * uptodate then the caller will launch readpage again, and
- 	 * will then handle the error.
- 	 */
--	read_pages(mapping, filp, &page_pool, nr_pages, gfp_mask);
-+	read_pages(&rac, &page_pool, gfp_mask);
- }
- 
- /*
--- 
-2.25.1
-
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
