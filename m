@@ -2,36 +2,36 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B14EC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE90BC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57E2D20777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A027120777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 18:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbgCTSiS (ORCPT
+        id S1727757AbgCTSj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:38:18 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36871 "EHLO
+        Fri, 20 Mar 2020 14:39:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36865 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgCTSiR (ORCPT
+        with ESMTP id S1726738AbgCTSiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:38:17 -0400
+        Fri, 20 Mar 2020 14:38:18 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFMX9-000221-SP
-        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:16 +0100
+        id 1jFMX9-00021y-8B
+        for linux-kernel@vger.kernel.org; Fri, 20 Mar 2020 19:38:15 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 3A4141039FD
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:15 +0100 (CET)
-Message-Id: <20200320180032.614150506@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id B31A7100239
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:38:14 +0100 (CET)
+Message-Id: <20200320175956.033706968@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 18:59:58 +0100
+Date:   Fri, 20 Mar 2020 18:59:56 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -48,11 +48,7 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [patch V3 02/23] rcu: Add comments marking transitions between RCU
- watching and not
-References: <20200320175956.033706968@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [patch V3 00/23] x86/entry: Consolidation part II (syscalls)
 Content-transfer-encoding: 8-bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
@@ -62,130 +58,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+Hi!
 
-It is not as clear as it might be just where in RCU's idle entry/exit
-code RCU stops and starts watching the current CPU.  This commit therefore
-adds comments calling out the transitions.
+This is the third version of the syscall entry code consolidation
+series. V2 can be found here:
 
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200313024046.27622-2-paulmck@kernel.org
+  https://lore.kernel.org/r/20200308222359.370649591@linutronix.de
 
+It applies on top of
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
+
+and is also available from git:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel entry-v3-part2
+
+The changes vs. V2:
+
+ - A massive rework utilizing Peter Zijlstras objtool patches to analyze
+   the new .noinstr.text section:
+
+   https://lore.kernel.org/r/20200317170234.897520633@infradead.org
+
+   Working with this was really helpful as it clearly pin pointed code
+   which calls out of the protected section which is much more efficient
+   and focussed than chasing everything manually.
+
+ - Picked up the two RCU patches from Paul for completeness. The bugfix
+   is required anyway and the comments have been really helpful to see
+   where the defense line has to be.
+
+ - As the tool flagged KVM as red zone, I looked at the context tracking
+   usage there and it has similar if not worse issues. New set of patches
+   dealing with that.
+
+Please have a close look at the approach and the resulting protected areas.
+
+Known issues:
+
+  - The kprobes '.noinstr.text' exclusion currently works only for built
+    in code. Haven't figured out how to to fix that, but I'm sure that
+    Masami knows :)
+
+  - The various SANitizers if enabled ruin the picture. Peter and I still
+    have no brilliant idea what to do about that.
+
+Thanks,
+
+	tglx
 ---
- kernel/rcu/tree.c |   29 +++++++++++++++++++++++++----
- 1 file changed, 25 insertions(+), 4 deletions(-)
+ arch/x86/entry/common.c                |  173 ++++++++++++++++++++++++---------
+ arch/x86/entry/entry_32.S              |   24 ----
+ arch/x86/entry/entry_64.S              |    6 -
+ arch/x86/entry/entry_64_compat.S       |   32 ------
+ arch/x86/entry/thunk_64.S              |   45 +++++++-
+ arch/x86/include/asm/bug.h             |    3 
+ arch/x86/include/asm/hardirq.h         |    4 
+ arch/x86/include/asm/irqflags.h        |    3 
+ arch/x86/include/asm/nospec-branch.h   |    4 
+ arch/x86/include/asm/paravirt.h        |    3 
+ arch/x86/kvm/svm.c                     |  152 ++++++++++++++++++----------
+ arch/x86/kvm/vmx/ops.h                 |    4 
+ arch/x86/kvm/vmx/vmenter.S             |    2 
+ arch/x86/kvm/vmx/vmx.c                 |   78 +++++++++++---
+ arch/x86/kvm/x86.c                     |    4 
+ b/include/asm-generic/bug.h            |    9 +
+ include/asm-generic/sections.h         |    3 
+ include/asm-generic/vmlinux.lds.h      |    4 
+ include/linux/compiler.h               |   24 ++++
+ include/linux/compiler_types.h         |    4 
+ include/linux/context_tracking.h       |   27 +++--
+ include/linux/context_tracking_state.h |    6 -
+ include/linux/irqflags.h               |    6 +
+ include/linux/sched.h                  |    1 
+ kernel/context_tracking.c              |   14 +-
+ kernel/kprobes.c                       |   11 ++
+ kernel/locking/lockdep.c               |   66 +++++++++---
+ kernel/panic.c                         |    4 
+ kernel/rcu/tree.c                      |   91 +++++++++++------
+ kernel/rcu/tree_plugin.h               |    4 
+ kernel/rcu/update.c                    |    7 -
+ kernel/trace/trace_preemptirq.c        |   25 ++++
+ lib/debug_locks.c                      |    2 
+ lib/smp_processor_id.c                 |   10 -
+ scripts/mod/modpost.c                  |    2 
+ 35 files changed, 590 insertions(+), 267 deletions(-)
 
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -224,7 +224,9 @@ void rcu_softirq_qs(void)
- 
- /*
-  * Record entry into an extended quiescent state.  This is only to be
-- * called when not already in an extended quiescent state.
-+ * called when not already in an extended quiescent state, that is,
-+ * RCU is watching prior to the call to this function and is no longer
-+ * watching upon return.
-  */
- static void rcu_dynticks_eqs_enter(void)
- {
-@@ -237,7 +239,7 @@ static void rcu_dynticks_eqs_enter(void)
- 	 * next idle sojourn.
- 	 */
- 	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
--	/* Better be in an extended quiescent state! */
-+	// RCU is no longer watching.  Better be in extended quiescent state!
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
- 		     (seq & RCU_DYNTICK_CTRL_CTR));
- 	/* Better not have special action (TLB flush) pending! */
-@@ -247,7 +249,8 @@ static void rcu_dynticks_eqs_enter(void)
- 
- /*
-  * Record exit from an extended quiescent state.  This is only to be
-- * called from an extended quiescent state.
-+ * called from an extended quiescent state, that is, RCU is not watching
-+ * prior to the call to this function and is watching upon return.
-  */
- static void rcu_dynticks_eqs_exit(void)
- {
-@@ -260,6 +263,7 @@ static void rcu_dynticks_eqs_exit(void)
- 	 * critical section.
- 	 */
- 	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
-+	// RCU is now watching.  Better not be in an extended quiescent state!
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
- 		     !(seq & RCU_DYNTICK_CTRL_CTR));
- 	if (seq & RCU_DYNTICK_CTRL_MASK) {
-@@ -562,6 +566,7 @@ static void rcu_eqs_enter(bool user)
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
- 		     rdp->dynticks_nesting == 0);
- 	if (rdp->dynticks_nesting != 1) {
-+		// RCU will still be watching, so just do accounting and leave.
- 		rdp->dynticks_nesting--;
- 		return;
- 	}
-@@ -574,7 +579,9 @@ static void rcu_eqs_enter(bool user)
- 	rcu_prepare_for_idle();
- 	rcu_preempt_deferred_qs(current);
- 	WRITE_ONCE(rdp->dynticks_nesting, 0); /* Avoid irq-access tearing. */
-+	// RCU is watching here ...
- 	rcu_dynticks_eqs_enter();
-+	// ... but is no longer watching here.
- 	rcu_dynticks_task_enter();
- }
- 
-@@ -654,7 +661,9 @@ static __always_inline void rcu_nmi_exit
- 	if (irq)
- 		rcu_prepare_for_idle();
- 
-+	// RCU is watching here ...
- 	rcu_dynticks_eqs_enter();
-+	// ... but is no longer watching here.
- 
- 	if (irq)
- 		rcu_dynticks_task_enter();
-@@ -729,11 +738,14 @@ static void rcu_eqs_exit(bool user)
- 	oldval = rdp->dynticks_nesting;
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && oldval < 0);
- 	if (oldval) {
-+		// RCU was already watching, so just do accounting and leave.
- 		rdp->dynticks_nesting++;
- 		return;
- 	}
- 	rcu_dynticks_task_exit();
-+	// RCU is not watching here ...
- 	rcu_dynticks_eqs_exit();
-+	// ... but is watching here.
- 	rcu_cleanup_after_idle();
- 	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, atomic_read(&rdp->dynticks));
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
-@@ -810,7 +822,9 @@ static __always_inline void rcu_nmi_ente
- 		if (irq)
- 			rcu_dynticks_task_exit();
- 
-+		// RCU is not watching here ...
- 		rcu_dynticks_eqs_exit();
-+		// ... but is watching here.
- 
- 		if (irq)
- 			rcu_cleanup_after_idle();
-@@ -819,9 +833,16 @@ static __always_inline void rcu_nmi_ente
- 	} else if (irq && tick_nohz_full_cpu(rdp->cpu) &&
- 		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
- 		   READ_ONCE(rdp->rcu_urgent_qs) && !rdp->rcu_forced_tick) {
-+		// We get here only if we had already exited the extended
-+		// quiescent state and this was an interrupt (not an NMI).
-+		// Therefore, (1) RCU is already watching and (2) The fact
-+		// that we are in an interrupt handler and that the rcu_node
-+		// lock is an irq-disabled lock prevents self-deadlock.
-+		// So we can safely recheck under the lock.
- 		raw_spin_lock_rcu_node(rdp->mynode);
--		// Recheck under lock.
- 		if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-+			// A nohz_full CPU is in the kernel and RCU
-+			// needs a quiescent state.  Turn on the tick!
- 			rdp->rcu_forced_tick = true;
- 			tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
- 		}
 
