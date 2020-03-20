@@ -2,319 +2,133 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6BDC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759EBC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F11C820789
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:24:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584703496;
-	bh=6W2w0VEa6BQ1N0A5eyXKWFdNrY2QZqWlRERnC3lbFYY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=CkzF3i1bA7LFF0GK60awBLwZG59my8CJp50IlG1GBSOq/k4QzCmhfLxol4p5jaOwq
-	 RH7vPZMSM1UOn1bwte6CSbwfYuHvAUynFondy4WnZycNguG/EUcE0ckzffTrQum8AY
-	 R/ilNjnMALMcR8a3qc5vjSsQVde6HM7WEBFjWeUQ=
+	by mail.kernel.org (Postfix) with ESMTP id 49CAB20784
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:25:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="FLBfp2e7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbgCTLYy (ORCPT
+        id S1727093AbgCTLZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 07:24:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60176 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 07:25:16 -0400
+Received: from web0081.zxcs.nl ([185.104.29.10]:56898 "EHLO web0081.zxcs.nl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbgCTLYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 07:24:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2328A20786;
-        Fri, 20 Mar 2020 11:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584703492;
-        bh=6W2w0VEa6BQ1N0A5eyXKWFdNrY2QZqWlRERnC3lbFYY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HWjQ79gah10aULTt6tLKweoZx3tO/jppgpAYpVZS9Lj3YRwdeIzTA0bOy2INsoFJ1
-         /dmS8zUveap6nguDweC07bLtguRn5wQ+UguZHwhlJVA6kaL/mG91HR0vBSUAPnUvF/
-         nfFZhr6e3gb+1UzqdmomioNaUOYPm3UUS+xwzQz8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.5 00/55] 5.5.11-rc2 review
-Date:   Fri, 20 Mar 2020 12:24:49 +0100
-Message-Id: <20200320112303.285933194@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
+        id S1726912AbgCTLZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 07:25:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=pascalroeleven.nl; s=x; h=Content-Transfer-Encoding:MIME-Version:References
+        :In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=D4dn5xv1jw6ViZLrXaslqz7DLr1R4Uo+6Hf42tlM8Q4=; b=FLBfp2e7/0Qa/v9Fudx1ORiNXS
+        JV+b8iUSNJpkJrzaIwwkiQopeQZ+qTCveHWN3jx4RM6ab+/t3NQGBbkFlRIRjB8I06dicoCwxg94+
+        Rxip8VdkQ9gwM9dkTnjZfm3c5Kup10Dq9TyzHtlpbSUwQjY7DdnXbcIUtgAH2vo5bFyqx/rToICcM
+        H/QkNaDtbsI9ZgsJc2vKz6wjl2t7/DFcV5PT4JVHpfJRy7yKAxY8ZjHUIHjx0/Gi+/YS0p5dB4n15
+        nWOWUmVJF0qlafkbZgdUtvdLVDlGANH8YIyLGioeIzA2hYZLUt268RZIFCiPlFqDOr51b4r5p+IlT
+        V0bpqgJw==;
+Received: from ip565b1bc7.direct-adsl.nl ([86.91.27.199]:57936 helo=localhost.localdomain)
+        by web0081.zxcs.nl with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92.3)
+        (envelope-from <dev@pascalroeleven.nl>)
+        id 1jFFm3-0011ci-4I; Fri, 20 Mar 2020 12:25:11 +0100
+From:   Pascal Roeleven <dev@pascalroeleven.nl>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Cc:     linux-sunxi@googlegroups.com,
+        Pascal Roeleven <dev@pascalroeleven.nl>
+Subject: [PATCH v2 2/5] drm: panel: Add Starry KR070PE2T
+Date:   Fri, 20 Mar 2020 12:21:33 +0100
+Message-Id: <20200320112205.7100-3-dev@pascalroeleven.nl>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200320112205.7100-1-dev@pascalroeleven.nl>
+References: <20200320112205.7100-1-dev@pascalroeleven.nl>
 MIME-Version: 1.0
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.5.11-rc2.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.5.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.5.11-rc2
-X-KernelTest-Deadline: 2020-03-22T11:23+00:00
 Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: dev@pascalroeleven.nl
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.5.11 release.
-There are 55 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Sun, 22 Mar 2020 11:22:06 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.11-rc2.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.5.11-rc2
-
-Matteo Croce <mcroce@redhat.com>
-    ipv4: ensure rcu_read_lock() in cipso_v4_error()
-
-Ard Biesheuvel <ardb@kernel.org>
-    ARM: 8961/2: Fix Kbuild issue caused by per-task stack protector GCC plugin
-
-Tony Fischetti <tony.fischetti@gmail.com>
-    HID: add ALWAYS_POLL quirk to lenovo pixart mouse
-
-Chen-Tsung Hsieh <chentsung@chromium.org>
-    HID: google: add moonball USB id
-
-Jann Horn <jannh@google.com>
-    mm: slub: add missing TID bump in kmem_cache_alloc_bulk()
-
-Kees Cook <keescook@chromium.org>
-    ARM: 8958/1: rename missed uaccess .fixup section
-
-Florian Fainelli <f.fainelli@gmail.com>
-    ARM: 8957/1: VDSO: Match ARMv8 timer in cntvct_functional()
-
-Ming Lei <ming.lei@redhat.com>
-    blk-mq: insert flush request to the front of dispatch queue
-
-Qian Cai <cai@lca.pw>
-    jbd2: fix data races at struct journal_head
-
-Andrew Lunn <andrew@lunn.ch>
-    net: dsa: mv88e6xxx: Fix masking of egress port
-
-Amit Cohen <amitc@mellanox.com>
-    mlxsw: pci: Wait longer before accessing the device after reset
-
-Alex Maftei (amaftei) <amaftei@solarflare.com>
-    sfc: fix timestamp reconstruction at 16-bit rollover points
-
-Taehee Yoo <ap420073@gmail.com>
-    net: rmnet: fix packet forwarding in rmnet bridge mode
-
-Taehee Yoo <ap420073@gmail.com>
-    net: rmnet: fix bridge mode bugs
-
-Taehee Yoo <ap420073@gmail.com>
-    net: rmnet: use upper/lower device infrastructure
-
-Taehee Yoo <ap420073@gmail.com>
-    net: rmnet: do not allow to change mux id if mux id is duplicated
-
-Taehee Yoo <ap420073@gmail.com>
-    net: rmnet: remove rcu_read_lock in rmnet_force_unassociate_device()
-
-Taehee Yoo <ap420073@gmail.com>
-    net: rmnet: fix suspicious RCU usage
-
-Taehee Yoo <ap420073@gmail.com>
-    net: rmnet: fix NULL pointer dereference in rmnet_changelink()
-
-Taehee Yoo <ap420073@gmail.com>
-    net: rmnet: fix NULL pointer dereference in rmnet_newlink()
-
-Luo bin <luobin9@huawei.com>
-    hinic: fix a bug of rss configuration
-
-Luo bin <luobin9@huawei.com>
-    hinic: fix a bug of setting hw_ioctxt
-
-Luo bin <luobin9@huawei.com>
-    hinic: fix a irq affinity bug
-
-Antoine Tenart <antoine.tenart@bootlin.com>
-    net: phy: mscc: fix firmware paths
-
-yangerkun <yangerkun@huawei.com>
-    slip: not call free_netdev before rtnl_unlock in slip_open
-
-Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-    net: bcmgenet: Clear ID_MODE_DIS in EXT_RGMII_OOB_CTRL when not needed
-
-Linus Torvalds <torvalds@linux-foundation.org>
-    signal: avoid double atomic counter increments for user accounting
-
-Masahiro Yamada <masahiroy@kernel.org>
-    kbuild: add dt_binding_check to PHONY in a correct place
-
-Masahiro Yamada <masahiroy@kernel.org>
-    kbuild: add dtbs_check to PHONY
-
-Jens Axboe <axboe@kernel.dk>
-    io_uring: pick up link work on submit reference drop
-
-Monk Liu <Monk.Liu@amd.com>
-    drm/amdgpu: fix memory leak during TDR test(v2)
-
-Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
-    io_uring: fix poll_list race for SETUP_IOPOLL|SETUP_SQPOLL
-
-Ming Lei <ming.lei@redhat.com>
-    blk-mq: insert passthrough request into hctx->dispatch directly
-
-Esben Haabendal <esben@geanix.com>
-    net: ll_temac: Handle DMA halt condition caused by buffer underrun
-
-Esben Haabendal <esben@geanix.com>
-    net: ll_temac: Fix RX buffer descriptor handling on GFP_ATOMIC pressure
-
-Esben Haabendal <esben@geanix.com>
-    net: ll_temac: Add more error handling of dma_map_single() calls
-
-Esben Haabendal <esben@geanix.com>
-    net: ll_temac: Fix race condition causing TX hang
-
-Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-    mac80211: rx: avoid RCU list traversal under mutex
-
-Marek Vasut <marex@denx.de>
-    net: ks8851-ml: Fix IRQ handling and locking
-
-Daniele Palmas <dnlplm@gmail.com>
-    net: usb: qmi_wwan: restore mtu min/max values after raw_ip switch
-
-Igor Druzhinin <igor.druzhinin@citrix.com>
-    scsi: libfc: free response frame from GPN_ID
-
-Johannes Berg <johannes.berg@intel.com>
-    cfg80211: check reg_rule for NULL in handle_channel_custom()
-
-Tom Zanussi <zanussi@kernel.org>
-    tracing: Fix number printing bug in print_synth_event()
-
-Michael Ellerman <mpe@ellerman.id.au>
-    selftests/rseq: Fix out-of-tree compilation
-
-Heidi Fahim <heidifahim@google.com>
-    kunit: run kunit_tool from any directory
-
-Greentime Hu <greentime.hu@sifive.com>
-    riscv: set pmp configuration if kernel is running in M-mode
-
-Hanno Zulla <kontakt@hanno.de>
-    HID: hid-bigbenff: fix race condition for scheduled work during removal
-
-Hanno Zulla <kontakt@hanno.de>
-    HID: hid-bigbenff: call hid_hw_stop() in case of error
-
-Hanno Zulla <kontakt@hanno.de>
-    HID: hid-bigbenff: fix general protection fault caused by double kfree
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    HID: i2c-hid: add Trekstor Surfbook E11B to descriptor override
-
-Mika Westerberg <mika.westerberg@linux.intel.com>
-    ACPI: watchdog: Set default timeout in probe
-
-Mansour Behabadi <mansour@oxplot.com>
-    HID: apple: Add support for recent firmware on Magic Keyboards
-
-Jean Delvare <jdelvare@suse.de>
-    ACPI: watchdog: Allow disabling WDAT at boot
-
-Ulf Hansson <ulf.hansson@linaro.org>
-    mmc: sdhci-tegra: Fix busy detection by enabling MMC_CAP_NEED_RSP_BUSY
-
-Linus Walleij <linus.walleij@linaro.org>
-    pinctrl: qcom: ssbi-gpio: Fix fwspec parsing bug
-
-
--------------
-
-Diffstat:
-
- Documentation/admin-guide/kernel-parameters.txt    |   4 +
- Makefile                                           |   7 +-
- arch/arm/Makefile                                  |   4 +-
- arch/arm/boot/compressed/Makefile                  |   4 +-
- arch/arm/kernel/vdso.c                             |   2 +
- arch/arm/lib/copy_from_user.S                      |   2 +-
- arch/riscv/include/asm/csr.h                       |  12 ++
- arch/riscv/kernel/head.S                           |   6 +
- block/blk-flush.c                                  |   2 +-
- block/blk-mq-sched.c                               |  44 ++++-
- block/blk-mq.c                                     |  18 +-
- block/blk-mq.h                                     |   3 +-
- drivers/acpi/acpi_watchdog.c                       |  12 +-
- drivers/gpu/drm/amd/powerplay/smu_v11_0.c          |   6 +-
- drivers/hid/hid-apple.c                            |   3 +-
- drivers/hid/hid-bigbenff.c                         |  31 ++-
- drivers/hid/hid-google-hammer.c                    |   2 +
- drivers/hid/hid-ids.h                              |   2 +
- drivers/hid/hid-quirks.c                           |   1 +
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c           |   8 +
- drivers/mmc/host/sdhci-tegra.c                     |   3 +
- drivers/net/dsa/mv88e6xxx/global1.c                |   4 +-
- drivers/net/ethernet/broadcom/genet/bcmmii.c       |   1 +
- drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c   |   1 +
- drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h   |   2 +-
- drivers/net/ethernet/huawei/hinic/hinic_hw_if.h    |   1 +
- drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h    |   1 +
- drivers/net/ethernet/huawei/hinic/hinic_main.c     |   3 +-
- drivers/net/ethernet/huawei/hinic/hinic_rx.c       |   5 +-
- drivers/net/ethernet/mellanox/mlxsw/pci_hw.h       |   2 +-
- drivers/net/ethernet/micrel/ks8851_mll.c           |  14 +-
- drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c | 186 +++++++++---------
- drivers/net/ethernet/qualcomm/rmnet/rmnet_config.h |   3 +-
- .../net/ethernet/qualcomm/rmnet/rmnet_handlers.c   |   7 +-
- drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c    |   8 -
- drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.h    |   1 -
- drivers/net/ethernet/sfc/ptp.c                     |  38 +++-
- drivers/net/ethernet/xilinx/ll_temac.h             |   4 +
- drivers/net/ethernet/xilinx/ll_temac_main.c        | 209 +++++++++++++++++----
- drivers/net/phy/mscc.c                             |   4 +-
- drivers/net/slip/slip.c                            |   3 +
- drivers/net/usb/qmi_wwan.c                         |   3 +
- drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c           |   2 +-
- drivers/scsi/libfc/fc_disc.c                       |   2 +
- drivers/watchdog/wdat_wdt.c                        |  23 +++
- fs/io_uring.c                                      |  67 +++----
- fs/jbd2/transaction.c                              |   8 +-
- kernel/signal.c                                    |  23 ++-
- kernel/trace/trace_events_hist.c                   |  32 +++-
- mm/slub.c                                          |   9 +
- net/ipv4/cipso_ipv4.c                              |   7 +-
- net/mac80211/rx.c                                  |   2 +-
- net/wireless/reg.c                                 |   2 +-
- tools/testing/kunit/kunit.py                       |  12 ++
- tools/testing/selftests/rseq/Makefile              |   2 +-
- 55 files changed, 613 insertions(+), 254 deletions(-)
-
+The KR070PE2T is a 7" panel with a resolution of 800x480.
+
+KR070PE2T is the marking present on the ribbon cable. As this panel is
+probably available under different brands, this marking will catch
+most devices.
+
+As I can't find a datasheet for this panel, the bus_flags are instead
+from trial-and-error. The flags seem to be common for these kind of
+panels as well.
+
+Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
+---
+ drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index e14c14ac6..b3d257257 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2842,6 +2842,32 @@ static const struct panel_desc shelly_sca07010_bfn_lnn = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+ };
+ 
++static const struct drm_display_mode starry_kr070pe2t_mode = {
++	.clock = 33000,
++	.hdisplay = 800,
++	.hsync_start = 800 + 209,
++	.hsync_end = 800 + 209 + 1,
++	.htotal = 800 + 209 + 1 + 45,
++	.vdisplay = 480,
++	.vsync_start = 480 + 22,
++	.vsync_end = 480 + 22 + 1,
++	.vtotal = 480 + 22 + 1 + 22,
++	.vrefresh = 60,
++};
++
++static const struct panel_desc starry_kr070pe2t = {
++	.modes = &starry_kr070pe2t_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 152,
++		.height = 86,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE,
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
++};
++
+ static const struct drm_display_mode starry_kr122ea0sra_mode = {
+ 	.clock = 147000,
+ 	.hdisplay = 1920,
+@@ -3474,6 +3500,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "shelly,sca07010-bfn-lnn",
+ 		.data = &shelly_sca07010_bfn_lnn,
++	}, {
++		.compatible = "starry,kr070pe2t",
++		.data = &starry_kr070pe2t,
+ 	}, {
+ 		.compatible = "starry,kr122ea0sra",
+ 		.data = &starry_kr122ea0sra,
+-- 
+2.20.1
 
