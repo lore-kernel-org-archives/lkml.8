@@ -2,113 +2,132 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B74C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D730CC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED642076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD3520739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:36:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tWGeFwmm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9Ev3VL2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbgCTNfG (ORCPT
+        id S1727261AbgCTNgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:35:06 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39238 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgCTNfE (ORCPT
+        Fri, 20 Mar 2020 09:36:23 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:34876 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgCTNgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:35:04 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a9so3294480wmj.4;
-        Fri, 20 Mar 2020 06:35:03 -0700 (PDT)
+        Fri, 20 Mar 2020 09:36:23 -0400
+Received: by mail-qk1-f196.google.com with SMTP id d8so6817121qka.2;
+        Fri, 20 Mar 2020 06:36:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8JpJJSqOukJOsKyLepaL4D5XEBOAfU/5gRiIWf5kS00=;
-        b=tWGeFwmmIfUGURV+x3JrUHC86CPH3NKeEMGtTBdc1A+DfSPGGiNReYcmajZYH2+ich
-         +5FN4V1HavYjJe7g70Mo0/wQdMFRnYyUqHY3vK4eBDouL6MaUSQ8ILr9kYng6csNvrz/
-         eXoI7v0tVchMsHGPIEYKBYGSHXwi/Q0IcCWts2Cbop+HNb3dqDoFMEXV/onSubem831w
-         60n35DBHpHZ4UCuLnMw5uqJwVHEk3wrZtg/cU3L6DVeBUbYkUOXVzJXCWFWZM2/HPIj7
-         J/v8p+2RsKLur432nfDKmFskUJ669cNO0D4rZNP88PwAknyTXSE87Y109Ba6Weqonkex
-         UHaw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JAaqZAS5QdKHQm7mABpa6xtK7LMiTx17PY74wDx219A=;
+        b=S9Ev3VL26xZdYuEU7ArhabK/4jZdJmdCtHDiDeRYm/0fjrYGaWy8zRErRCXqHiYXdB
+         SRrUhGM+B4JJp9/r3LnCq7bIiaWMW5Hiqdve1mMvN49FfOWA7S8ytrSPVlU4C3jp8cJr
+         fUY4iD32EbEPn26/JpdpN93RD4bNtFsoq9dk/h1I7K2qKdqBJKMKMYjYQPnWb2YxxML6
+         vGbky50bEHxOdgllXdhfM8VpriH1mPXS3dTmr96NRV0gfxpmwQp554hEzsjyGWOHscee
+         GOVE9n1OJpjHQ2RtMR6igSZl/RYvEYDKxZ64fqBCQr//FeVuJiJZQ5Y5/aM28H4ueuGb
+         I6Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8JpJJSqOukJOsKyLepaL4D5XEBOAfU/5gRiIWf5kS00=;
-        b=Yu7vOhCc1aX0GwrexinJUCU8jS+5Nu8n1RhZ+klgdQIiMzzaGRPjh89tvHzK+Drbf1
-         cj5YrDzVJ7yAwEDClTtAsGBjtyr9WB8lhiaNxYzlvd9UyjDeppN1YnGw+KjgZKM540c0
-         +dnYs6BQ5LqMsZMvDhLCDqvfAl8R6yhRr/gkd9FkMn9VrQlBbRwW2oma8lkccwKcs61E
-         ktY4v1s9ZEsN65/HmMeeRVO+Fdd+UFsncGA7rXjNy9of7zajpMQ6mb1grSipSG2AJKNT
-         aDcqeS8yfhz7NuGBnFJ9TgU9A3XVha34ETXY4IqN5Pi2xN6nmGz9/uTWQdTnHGd6ig3X
-         PKYw==
-X-Gm-Message-State: ANhLgQ05Rm+ou6GlzoFo27JTOBPn0IgPO27M+EhEXx0qcIAx1INueu4b
-        tFL7WjP2WGKi3B2qiLRXLuA=
-X-Google-Smtp-Source: ADFU+vvxQI36QYAS6CSxU3UCX1Mn7P2lPSkCX4OJhmBOZ6ftFFU+w5JwEkI1uI+eqtNjWnQmquQ91w==
-X-Received: by 2002:a1c:8193:: with SMTP id c141mr10045018wmd.14.1584711302435;
-        Fri, 20 Mar 2020 06:35:02 -0700 (PDT)
-Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id w11sm8617964wrv.86.2020.03.20.06.35.01
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JAaqZAS5QdKHQm7mABpa6xtK7LMiTx17PY74wDx219A=;
+        b=fwI2XP8TCiEy2t6HTkAT+xeOignFlS1gvTtiesdKaEXfcS6O8biPI6onRZszfbtuye
+         bd7kujhFC/cQtXsQFBn05+RYwB9N9LXkO4XS77NrJEaVcT/Z6VsYiFeGZqGgw8ysWZpU
+         pDSxT/+P2BRUXh5shL6EkZm2eI3gDDkiX29X4Zwb88EmquTtFvwEQR/j5cp0iTW16cSp
+         2z95fCyxhsl9udKf6kKxuSVfyZvCpE5t8r5zLr0kkAUEwG8q3rFb47M0z2Azq/2H1vMn
+         lTeEstQ/m+4zMj3cNbPYtmoSQS6v6lS6g4A+IvlRaoxu7nfkPUaEa08BjwWCQ3URWcqj
+         gPyQ==
+X-Gm-Message-State: ANhLgQ2o1k96zGT8HeJWqwoVVSU2xxVOYca48f/8/cxfGjt5szN9mKnl
+        v9pEV4JERA5qOQgp9MzB1+Y=
+X-Google-Smtp-Source: ADFU+vtAugl+ePC/AUXZBJVeq0uKaR00hPJZ/K3gm/9I4G9cHuFLhjtiG5MwPebWbY/CKyWXdYaqeg==
+X-Received: by 2002:a37:9f8f:: with SMTP id i137mr7850454qke.68.1584711382340;
+        Fri, 20 Mar 2020 06:36:22 -0700 (PDT)
+Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id p126sm4224430qkd.108.2020.03.20.06.36.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 06:35:01 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/7] clocksource: Add NVIDIA Tegra186 timers support
-Date:   Fri, 20 Mar 2020 14:34:45 +0100
-Message-Id: <20200320133452.3705040-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 20 Mar 2020 06:36:19 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 09:36:00 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Syed Nayyar Waris <syednwaris@gmail.com>, jic23@kernel.org
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] MAINTAINERS: Add Syed Nayyar Waris to ACCES
+ 104-QUAD-8 driver
+Message-ID: <20200320133522.GA3223@icarus>
+References: <20200320081257.GA5818@syed.domain.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="PuGuTyElPB9bOcsM"
+Content-Disposition: inline
+In-Reply-To: <20200320081257.GA5818@syed.domain.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
 
-This set of patches adds the device tree bindings and a simplified
-driver for the timers found on Tegra186 and later SoCs. The driver
-itself currently only implements a single watchdog, which in turn
-relies on the counter provided by one of the timers. The timers
-themselves are not used at the moment because the SoC also has an
-architected timer and there's currently no use for the additional
-timers provided by this hardware block.
+--PuGuTyElPB9bOcsM
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I suggest that patches 1 & 2 go through the clocksource tree, while
-I can carry the DTS changes in the Tegra tree for v5.8.
+On Fri, Mar 20, 2020 at 01:42:58PM +0530, Syed Nayyar Waris wrote:
+> Add Syed Nayyar Waris as a co-maintainer for the ACCES 104-QUAD-8
+> counter driver.
+>=20
+> Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
+> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 8fa40c3..55c7794 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -276,6 +276,7 @@ F:	drivers/gpio/gpio-104-idio-16.c
+> =20
+>  ACCES 104-QUAD-8 DRIVER
+>  M:	William Breathitt Gray <vilhelm.gray@gmail.com>
+> +M:	Syed Nayyar Waris <syednwaris@gmail.com>
+>  L:	linux-iio@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+> --=20
+> 2.7.4
 
-Thierry
+The 104-QUAD-8 driver is getting large so having another set of eyes on
+it is much appreciated. Thanks!
 
-Thierry Reding (7):
-  dt-bindings: timer: Add bindings for NVIDIA Tegra186 timers
-  clocksource: Add Tegra186 timers support
-  arm64: tegra: Order nodes by unit-address on Tegra194
-  arm64: tegra: Add native timer support on Tegra186
-  arm64: tegra: Enable native timers on Jetson TX2
-  arm64: tegra: Add native timer support on Tegra194
-  arm64: tegra: Enable native timers on Jetson AGX Xavier
+Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
- .../bindings/timer/nvidia,tegra186-timer.yaml |  55 +++
- .../arm64/boot/dts/nvidia/tegra186-p3310.dtsi |   4 +
- arch/arm64/boot/dts/nvidia/tegra186.dtsi      |  16 +
- .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |   4 +
- arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  81 ++--
- drivers/clocksource/Kconfig                   |   8 +
- drivers/clocksource/Makefile                  |   1 +
- drivers/clocksource/timer-tegra186.c          | 377 ++++++++++++++++++
- 8 files changed, 514 insertions(+), 32 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/timer/nvidia,tegra186-timer.yaml
- create mode 100644 drivers/clocksource/timer-tegra186.c
+--PuGuTyElPB9bOcsM
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-2.24.1
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl50xsAACgkQhvpINdm7
+VJLrVxAAvF8/G83XHAM7Cli5BrA4052ZSapSdiXX2KfmFiTNUrAV1YWkTB1ifjDx
+/vvofJXDQlRhR8N5uKbS7Ga/6jE42zFsfDv6PFC8WJc71pJ/plw75obmxbnExqSt
+tQBVpjP/ITY74c5buBhZ/v/gdBjlm6xZoqVyYzdSGCkFXZZ0nB0N+SEbGaMLPz5O
+Y+G8A7fsVHSaV4GHoQuUsormxJIHcB0T0fpDPqWcwgBwv2r7s8/JcSRiUgzBgP7Z
+xyXU4BYiynKzUnzBH+hiK4Ubgpn5Y9KfHZpBMpVkEuedj9Jx2ZYbETIp2qrAmAM9
+nP7F44nkkNqZ5dtWmf+M6XpGwI5/7iz/UlWuZvoyPL8lks+gX22XXNfAinQTGFhj
+okxV8yREBh+QBQ72NeWkg7VGlSjiT5ktjUDl6Jg+sv1XdT0M2xSNN3/ECEn5vLhi
+vr8PoYA1jpMYWySk0CJJdk1bKhJdRzgJL34GjdsgDIKNTKjuPKbkMwbRBpxRuLNH
+gZubpNmdtIgJCNFWoWKZu0DiKKMkwMNWO0lTNK4HMexAKfeQcd2hSXZDXkrohBIk
+//7mEYpfR8Apuj8QdXR5HJmhWcC5pyt8SV0tyiOzTB4/hdSjf24wlRLoRaumVA5d
+IFyLTQ6oNvOQOl/4aMO3GFdDJg0GOMFUv2qbhBOdCMZqG5B1w8k=
+=/Hg4
+-----END PGP SIGNATURE-----
+
+--PuGuTyElPB9bOcsM--
