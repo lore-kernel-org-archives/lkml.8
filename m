@@ -2,173 +2,145 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B8DC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAB2C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9567E20754
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD37220754
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:21:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n7bPyOtS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbgCTKU7 (ORCPT
+        id S1727487AbgCTKVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:20:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54508 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727297AbgCTKUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:20:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C4E25B308;
-        Fri, 20 Mar 2020 10:20:35 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Michal Suchanek <msuchanek@suse.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v12 4/8] powerpc/perf: consolidate valid_user_sp -> invalid_user_sp
-Date:   Fri, 20 Mar 2020 11:20:15 +0100
-Message-Id: <be8e40fc0737fb28ad08b198552dee7cac1c5ce2.1584699455.git.msuchanek@suse.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1584699455.git.msuchanek@suse.de>
-References: <20200225173541.1549955-1-npiggin@gmail.com> <cover.1584699455.git.msuchanek@suse.de>
+        Fri, 20 Mar 2020 06:21:08 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:39652 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727456AbgCTKVH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 06:21:07 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02KAKwg1024302;
+        Fri, 20 Mar 2020 05:20:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584699658;
+        bh=rn+lqi6S8AMGiEUZ5KYnC/dX2IgyH3wA5+iFbZlmJVU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=n7bPyOtSVxozgzY+7p0JqNOfXGcBqQiwqk6ci2qDVI6/XFXgv3CeqE4Y0o37olaNq
+         OairtZe9Udu4OF4G68Nlg5zBSc8i/HA/TjqyxavwUZcIZuNwo4saorLFhzR7k1DROs
+         JOgGkjtTNb68kxYjrv3HOGC3eCOcyJHariOH6oHc=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02KAKwas088376
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Mar 2020 05:20:58 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Mar 2020 05:20:58 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Mar 2020 05:20:57 -0500
+Received: from [10.250.133.193] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02KAKsKP008091;
+        Fri, 20 Mar 2020 05:20:55 -0500
+Subject: Re: [PATCH] PCI: endpoint: Fix NULL pointer dereference for
+ ->get_features()
+To:     Sriram Dash <sriram.dash@samsung.com>,
+        "'Shradha Todi'" <shradha.t@samsung.com>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <pankaj.dubey@samsung.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <CGME20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132@epcas5p2.samsung.com>
+ <20200311102852.5207-1-shradha.t@samsung.com>
+ <000d01d5fdf3$55d43af0$017cb0d0$@samsung.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <a7a6a295-160a-94d6-09f9-63f783c8b28a@ti.com>
+Date:   Fri, 20 Mar 2020 15:50:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <000d01d5fdf3$55d43af0$017cb0d0$@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merge the 32bit and 64bit version.
+Hi Sriram,
 
-Halve the check constants on 32bit.
+On 3/19/2020 7:06 PM, Sriram Dash wrote:
+>> From: Shradha Todi <shradha.t@samsung.com>
+>> Subject: [PATCH] PCI: endpoint: Fix NULL pointer dereference for -
+>>> get_features()
+>>
+>> get_features ops of pci_epc_ops may return NULL, causing NULL pointer
+>> dereference in pci_epf_test_bind function. Let us add a check for
+>> pci_epc_feature pointer in pci_epf_test_bind before we access it to avoid any
+>> such NULL pointer dereference and return -ENOTSUPP in case pci_epc_feature
+>> is not found.
+>>
+>> Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+>> Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
+>> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+>> ---
+> 
+> Hi Kishon,
+> 
+> Any update on this?
 
-Use STACK_TOP since it is defined.
+Don't we access epc_features only after checking if epc_features is not NULL in
+pci_epf_test_bind() function? However we are accessing epc_features in multiple
+other functions all over pci-epf-test.
 
-Passing is_64 is now redundant since is_32bit_task() is used to
-determine which callchain variant should be used. Use STACK_TOP and
-is_32bit_task() directly.
+So the patch itself is correct though the commit log has to be fixed. You
+should also check if all the endpoint controller drivers existing currently
+provides epc_features.
 
-This removes a page from the valid 32bit area on 64bit:
- #define TASK_SIZE_USER32 (0x0000000100000000UL - (1 * PAGE_SIZE))
- #define STACK_TOP_USER32 TASK_SIZE_USER32
-
-Change return value to bool. It is inverted by users anyway.
-
-Change to invalid_user_sp to avoid inverting the return value twice.
-
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
-v8: new patch
-v11: simplify by using is_32bit_task()
-v12:
- - simplify by precalculating subexpresions
- - change return value to bool
- - remove double inversion
----
- arch/powerpc/perf/callchain.c | 26 ++++++++++----------------
- 1 file changed, 10 insertions(+), 16 deletions(-)
-
-diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-index c9a78c6e4361..001d0473a61f 100644
---- a/arch/powerpc/perf/callchain.c
-+++ b/arch/powerpc/perf/callchain.c
-@@ -102,6 +102,14 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
- 	}
- }
- 
-+static inline bool invalid_user_sp(unsigned long sp)
-+{
-+	unsigned long mask = is_32bit_task() ? 3 : 7;
-+	unsigned long top = STACK_TOP - (is_32bit_task() ? 16 : 32);
-+
-+	return (!sp || (sp & mask) || (sp > top));
-+}
-+
- #ifdef CONFIG_PPC64
- /*
-  * On 64-bit we don't want to invoke hash_page on user addresses from
-@@ -161,13 +169,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
- 	return read_user_stack_slow(ptr, ret, 8);
- }
- 
--static inline int valid_user_sp(unsigned long sp, int is_64)
--{
--	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
--		return 0;
--	return 1;
--}
--
- /*
-  * 64-bit user processes use the same stack frame for RT and non-RT signals.
-  */
-@@ -226,7 +227,7 @@ static void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
- 
- 	while (entry->nr < entry->max_stack) {
- 		fp = (unsigned long __user *) sp;
--		if (!valid_user_sp(sp, 1) || read_user_stack_64(fp, &next_sp))
-+		if (invalid_user_sp(sp) || read_user_stack_64(fp, &next_sp))
- 			return;
- 		if (level > 0 && read_user_stack_64(&fp[2], &next_ip))
- 			return;
-@@ -275,13 +276,6 @@ static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry
- {
- }
- 
--static inline int valid_user_sp(unsigned long sp, int is_64)
--{
--	if (!sp || (sp & 7) || sp > TASK_SIZE - 32)
--		return 0;
--	return 1;
--}
--
- #define __SIGNAL_FRAMESIZE32	__SIGNAL_FRAMESIZE
- #define sigcontext32		sigcontext
- #define mcontext32		mcontext
-@@ -423,7 +417,7 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
- 
- 	while (entry->nr < entry->max_stack) {
- 		fp = (unsigned int __user *) (unsigned long) sp;
--		if (!valid_user_sp(sp, 0) || read_user_stack_32(fp, &next_sp))
-+		if (invalid_user_sp(sp) || read_user_stack_32(fp, &next_sp))
- 			return;
- 		if (level > 0 && read_user_stack_32(&fp[1], &next_ip))
- 			return;
--- 
-2.23.0
-
+Thanks
+Kishon
+> 
+> 
+>>  drivers/pci/endpoint/functions/pci-epf-test.c | 15 +++++++++------
+>>  1 file changed, 9 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c
+>> b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> index c9121b1b9fa9..af4537a487bf 100644
+>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> @@ -510,14 +510,17 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>  		return -EINVAL;
+>>
+>>  	epc_features = pci_epc_get_features(epc, epf->func_no);
+>> -	if (epc_features) {
+>> -		linkup_notifier = epc_features->linkup_notifier;
+>> -		msix_capable = epc_features->msix_capable;
+>> -		msi_capable = epc_features->msi_capable;
+>> -		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+>> -		pci_epf_configure_bar(epf, epc_features);
+>> +	if (!epc_features) {
+>> +		dev_err(dev, "epc_features not implemented\n");
+>> +		return -ENOTSUPP;
+>>  	}
+>>
+>> +	linkup_notifier = epc_features->linkup_notifier;
+>> +	msix_capable = epc_features->msix_capable;
+>> +	msi_capable = epc_features->msi_capable;
+>> +	test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+>> +	pci_epf_configure_bar(epf, epc_features);
+>> +
+>>  	epf_test->test_reg_bar = test_reg_bar;
+>>  	epf_test->epc_features = epc_features;
+>>
+>> --
+>> 2.17.1
+> 
+> 
