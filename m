@@ -2,126 +2,146 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99709C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9ABDC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F03520777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87C6E20777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 15:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wq387MNC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YAGb51Bw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbgCTPXk (ORCPT
+        id S1727525AbgCTPYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:23:40 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35633 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727460AbgCTPXk (ORCPT
+        Fri, 20 Mar 2020 11:24:02 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38125 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbgCTPYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 11:23:40 -0400
-Received: by mail-lj1-f194.google.com with SMTP id u12so6857602ljo.2;
-        Fri, 20 Mar 2020 08:23:38 -0700 (PDT)
+        Fri, 20 Mar 2020 11:24:02 -0400
+Received: by mail-pf1-f195.google.com with SMTP id z5so3393995pfn.5;
+        Fri, 20 Mar 2020 08:24:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VhKccgOguj0tmSH6fBMBTNwniprhbO/QTAsIU+tUQJ4=;
-        b=Wq387MNCHhecuMuRsEWLiVv1BFl0CsqAEduLhMhl2ao5mjEB0BPhwZXRFsQqL5DSqx
-         fpQn3J2stJZoXVwPh+i4XleGz3uIjFcpWHpfCFVVQ4+G/nTKcn5iDfaLl+y3YfsUX2wM
-         gKYWp1XD7O697uH5sNFx+XdrTMiqUdU5oVQENXRIpV8+g9lDCbEKv/3BMwVDJhtPS43w
-         ffm3jXcuypBDD0/M2bHlyvyyUamhr/tOOiv/uR+Q1dp4Nrco1mtgVL6kwtUGpzxSX9Ph
-         TkA6R8Gt4dQg9dX6GvvUDfpACywAxIdkYk+iEIxkAtz7p0p61uQlWZA5W+z3FJ45llRl
-         nMHQ==
+        bh=s6Mo0FFP1u/jmvNK2mj/w2RqZ5Bkfge0hzzPwVp0Las=;
+        b=YAGb51BwWc/Yc+CpI+3qhZqgm0rEkKL36nWAK3gwD+r13+B+a7Y63a905YnGMzEzSR
+         2epk7QRz2RSGVfHlM2wsmF2zP+0D9Ri2XEjnZ+3zy2gmco8GeNqfHJE3UqxZpRL48HKW
+         VRp6ymQhtiQ2/GUmYwmRB/fScxhFXfQmb6v9GQj133DFZ1OqpBl8vS9gnIB9T7KhKmBT
+         kb59mBvHtiEb3OMZSJpXs5/oETdl8JOYHPIbjwkWukUOO3I8N/z8o1/lEslXBBc8H41Z
+         F02WtJHog0ruNiqQI3WW22GVBOGuF+pccENXIdq1ywUJjtPiXRavHMzfhKhbVwFWwokS
+         Znmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=VhKccgOguj0tmSH6fBMBTNwniprhbO/QTAsIU+tUQJ4=;
-        b=kQK93Km8swt8P2iVl5KKvcOrqlO08sC8mJ5a5uZrhGKO54iGDuBdVfQ/MqkPD6t4kc
-         vKpp1yOKhx/eVPUWyDOBY9PAgAABGLz4VNDh7AvaW0rxX8gZJuqAYJH1RillA2bC9CTY
-         BeC910+dP7mCibmgNTtiwljPFi42Hcn5Wj4eQt9jdKOjEkCo+ONfcJQs4phGYjfvXKTh
-         O8lgvakI5Sm5NhbJADSGdN9rNGbTynm0DqgFRziuKCZehWkjJfpRbzlZvHXeIZvHULpo
-         cu/KcarHAMPcVeqAORePubAgZxt585twPpRxx8ZQlPFdpVN8g1I0InhOxihLHJ3JLAUt
-         0j7A==
-X-Gm-Message-State: ANhLgQ2DuCJ7HRibFHQuI29w4Lxq0b7UJzFJjIWR/xAeBXF0Ytq3GXMS
-        qW9DnujKpIyOSD+QRhRmQasq014X
-X-Google-Smtp-Source: ADFU+vuPOnEfIEwilICbKe1X3ON8BwLNa+UsQHd8CUyjAbQDFymDc/KT62U+ae8v9qg+tuhpsQYskQ==
-X-Received: by 2002:a2e:7e0a:: with SMTP id z10mr5631999ljc.42.1584717816993;
-        Fri, 20 Mar 2020 08:23:36 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id k63sm3721513lfk.43.2020.03.20.08.23.35
+        bh=s6Mo0FFP1u/jmvNK2mj/w2RqZ5Bkfge0hzzPwVp0Las=;
+        b=Fg8E0c8mA85g5KZ0h5iqj6RWnI9Px5hr7voes4QjHK51x25maIbWBLVFbaHXIohbAR
+         0oUGjNsN4alWD62bMzcV5jKLjl1VaiicoXY59YXXPT8pJNOIh/uC/1oXNbj0OaV1L48D
+         zRo57wPjQHI+PLjp/nHbPzd8hXCUGMQNYjKYGu0Clj+/NRjjfN6M1tsSAU4TMuwNbqJk
+         fUV9RyK4jNVWVhSB1fTEszHECFT0Om13qqMW1u25w76b2uKLvGExQtVMMui9L4HFaVSZ
+         Ojl1kLafaWI9FE3Du5Z5r9SQ7f3dLB9MLfpGopHBtaU6Bvu4/Mc1dQ/P9hobAqPokYJB
+         JxDQ==
+X-Gm-Message-State: ANhLgQ0mQg6Rzl36VLXhO5F0q5xubFCAqun4BWt4KCvskphRMnBcTItJ
+        jAEgP9QG3C27Rpp6ohzCHHIEGqCM
+X-Google-Smtp-Source: ADFU+vtDBZzR+E1LIguylmsDl/3itA3g0GxqLTjbgZfBSgyOglXJHbuypbTHv5uECriPBjFwQtj8cA==
+X-Received: by 2002:a62:8684:: with SMTP id x126mr10168390pfd.160.1584717840483;
+        Fri, 20 Mar 2020 08:24:00 -0700 (PDT)
+Received: from ?IPv6:2601:282:803:7700:e9f2:4948:e013:782b? ([2601:282:803:7700:e9f2:4948:e013:782b])
+        by smtp.googlemail.com with ESMTPSA id gv7sm5220217pjb.16.2020.03.20.08.23.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Mar 2020 08:23:36 -0700 (PDT)
-Subject: Re: [PATCH 2/7] clocksource: Add Tegra186 timers support
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200320133452.3705040-1-thierry.reding@gmail.com>
- <20200320133452.3705040-3-thierry.reding@gmail.com>
- <df532fef-1533-9da7-d676-f4671746fde3@gmail.com>
- <20200320150406.GA3706404@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <5a559950-0497-b24f-6484-c2513375fe62@gmail.com>
-Date:   Fri, 20 Mar 2020 18:23:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 20 Mar 2020 08:23:59 -0700 (PDT)
+Subject: Re: [PATCH v2] ipv4: fix a RCU-list lock in inet_dump_fib()
+To:     Qian Cai <cai@lca.pw>, davem@davemloft.net
+Cc:     alexander.h.duyck@linux.intel.com, kuznet@ms2.inr.ac.ru,
+        kuba@kernel.org, yoshfuji@linux-ipv6.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200320025421.9216-1-cai@lca.pw>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <a90ddf03-f321-19ef-290a-673663992b33@gmail.com>
+Date:   Fri, 20 Mar 2020 09:23:58 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200320150406.GA3706404@ulmo>
+In-Reply-To: <20200320025421.9216-1-cai@lca.pw>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-20.03.2020 18:04, Thierry Reding пишет:
-> On Fri, Mar 20, 2020 at 05:39:01PM +0300, Dmitry Osipenko wrote:
->> 20.03.2020 16:34, Thierry Reding пишет:
->>> From: Thierry Reding <treding@nvidia.com>
->>>
->>> Currently this only supports a single watchdog, which uses a timer in
->>> the background for countdown. Eventually the timers could be used for
->>> various time-keeping tasks, but by default the architected timer will
->>> already provide that functionality.
->>>
->>> Signed-off-by: Thierry Reding <treding@nvidia.com>
->>> ---
->>>  drivers/clocksource/Kconfig          |   8 +
->>>  drivers/clocksource/Makefile         |   1 +
->>>  drivers/clocksource/timer-tegra186.c | 377 +++++++++++++++++++++++++++
->>>  3 files changed, 386 insertions(+)
->>>  create mode 100644 drivers/clocksource/timer-tegra186.c
->> Hello Thierry,
->>
->> Shouldn't this driver reside in drivers/watchdog/? Like it's done in a
->> case of the T30+ driver.
+On 3/19/20 8:54 PM, Qian Cai wrote:
+> There is a place,
 > 
-> The hardware block that this binds to is primarily a time-keeping block
-> that just so happens to also implement a watchdog. Moving this to
-> drivers/watchdog would put us into an odd situation if we ever added
-> code to also implement the time-keeping bits for this hardware.
+> inet_dump_fib()
+>   fib_table_dump
+>     fn_trie_dump_leaf()
+>       hlist_for_each_entry_rcu()
 > 
-> I also think that the way this is done on Tegra30 was a bad choice. The
-> problem is that we now have two drivers (tegra_wdt.c and tegra-timer.c)
-> that both access the same region of memory. This seems to be relatively
-> safe to do on those chips because there's no overlap between the timer
-> and the watchdog interfaces, but on Tegra186 and later the watchdog is
-> actually using one of the timers, so we'd have to be extra careful how
-> to coordinate between the two. It seems much easier to do that by having
-> everything in the same driver and have that register multiple devices in
-> the system.
+> without rcu_read_lock() will trigger a warning,
+> 
+>  WARNING: suspicious RCU usage
+>  -----------------------------
+>  net/ipv4/fib_trie.c:2216 RCU-list traversed in non-reader section!!
+> 
+>  other info that might help us debug this:
+> 
+>  rcu_scheduler_active = 2, debug_locks = 1
+>  1 lock held by ip/1923:
+>   #0: ffffffff8ce76e40 (rtnl_mutex){+.+.}, at: netlink_dump+0xd6/0x840
+> 
+>  Call Trace:
+>   dump_stack+0xa1/0xea
+>   lockdep_rcu_suspicious+0x103/0x10d
+>   fn_trie_dump_leaf+0x581/0x590
+>   fib_table_dump+0x15f/0x220
+>   inet_dump_fib+0x4ad/0x5d0
+>   netlink_dump+0x350/0x840
+>   __netlink_dump_start+0x315/0x3e0
+>   rtnetlink_rcv_msg+0x4d1/0x720
+>   netlink_rcv_skb+0xf0/0x220
+>   rtnetlink_rcv+0x15/0x20
+>   netlink_unicast+0x306/0x460
+>   netlink_sendmsg+0x44b/0x770
+>   __sys_sendto+0x259/0x270
+>   __x64_sys_sendto+0x80/0xa0
+>   do_syscall_64+0x69/0xf4
+>   entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> 
+> Fixes: 18a8021a7be3 ("net/ipv4: Plumb support for filtering route dumps")
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+> 
+> v2: Call rcu_read_unlock() before returning.
+>     Add a "Fixes" tag per David.
+> 
+>  net/ipv4/fib_frontend.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/net/ipv4/fib_frontend.c b/net/ipv4/fib_frontend.c
+> index 577db1d50a24..213be9c050ad 100644
+> --- a/net/ipv4/fib_frontend.c
+> +++ b/net/ipv4/fib_frontend.c
+> @@ -997,7 +997,9 @@ static int inet_dump_fib(struct sk_buff *skb, struct netlink_callback *cb)
+>  			return -ENOENT;
+>  		}
+>  
+> +		rcu_read_lock();
+>  		err = fib_table_dump(tb, skb, cb, &filter);
+> +		rcu_read_unlock();
+>  		return skb->len ? : err;
+>  	}
+>  
+> 
 
-Sounds like a watchdog on Tegra20, where one of the timer is shared with
-a watchdog function and there are no other free timers. Well, yes, it's
-not nice.
+Reviewed-by: David Ahern <dsahern@gmail.com>
 
-But, will you really ever need an additional clocksource on T186?
