@@ -2,138 +2,261 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816BFC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F5EC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57BAC20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA1320773
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 07:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgCTHKE (ORCPT
+        id S1726896AbgCTHKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 03:10:04 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:35148 "EHLO mail5.wrs.com"
+        Fri, 20 Mar 2020 03:10:08 -0400
+Received: from mga07.intel.com ([134.134.136.100]:30218 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726603AbgCTHKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 03:10:04 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 02K76MJm001145
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
-        Fri, 20 Mar 2020 00:06:32 -0700
-Received: from pek-lpg-core2.corp.ad.wrs.com (128.224.153.41) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 20 Mar 2020 00:06:11 -0700
-From:   <zhe.he@windriver.com>
-To:     <pbonzini@redhat.com>, <sean.j.christopherson@intel.com>,
-        <vkuznets@redhat.com>, <wanpengli@tencent.com>,
-        <jmattson@google.com>, <joro@8bytes.org>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
-        <x86@kernel.org>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bigeasy@linutronix.de>,
-        <linux-rt-users@vger.kernel.org>, <zhe.he@windriver.com>
-Subject: [PATCH] KVM: LAPIC: Mark hrtimer for period or oneshot mode to expire in hard interrupt context
-Date:   Fri, 20 Mar 2020 15:06:07 +0800
-Message-ID: <1584687967-332859-1-git-send-email-zhe.he@windriver.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726603AbgCTHKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 03:10:06 -0400
+IronPort-SDR: 5PruNUfxaInDQHJgWm7V1f3PltwW7SRjqk9TG+B9ro77UCfgMowpgIXFXeiwHq/1OdgDZcvM2j
+ 48Kmr+Leu9dQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 00:10:04 -0700
+IronPort-SDR: aZ5Os1vWbf+fDn0aIEV5ZU68ljdq5QEFikKQ8z2Tm+ZWXdAm8Ap4oUaXcH1lDeOvz2CzHVwso2
+ ojHwOehXBokw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,283,1580803200"; 
+   d="scan'208";a="446570276"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 20 Mar 2020 00:10:03 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jFBn8-0009Eh-Ke; Fri, 20 Mar 2020 15:10:02 +0800
+Date:   Fri, 20 Mar 2020 15:09:29 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:timers/core] BUILD SUCCESS
+ 52da479a9aee630d2cdf37d05edfe5bcfff3e17f
+Message-ID: <5e746c29.f9ukVDYHZzmZQuvs%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: He Zhe <zhe.he@windriver.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  timers/core
+branch HEAD: 52da479a9aee630d2cdf37d05edfe5bcfff3e17f  Revert "tick/common: Make tick_periodic() check for missing ticks"
 
-apic->lapic_timer.timer was initialized with HRTIMER_MODE_ABS_HARD but
-started later with HRTIMER_MODE_ABS, which may cause the following warning
-in PREEMPT_RT kernel.
+elapsed time: 737m
 
-WARNING: CPU: 1 PID: 2957 at kernel/time/hrtimer.c:1129 hrtimer_start_range_ns+0x348/0x3f0
-CPU: 1 PID: 2957 Comm: qemu-system-x86 Not tainted 5.4.23-rt11 #1
-Hardware name: Supermicro SYS-E300-9A-8C/A2SDi-8C-HLN4F, BIOS 1.1a 09/18/2018
-RIP: 0010:hrtimer_start_range_ns+0x348/0x3f0
-Code: 4d b8 0f 94 c1 0f b6 c9 e8 35 f1 ff ff 4c 8b 45
-      b0 e9 3b fd ff ff e8 d7 3f fa ff 48 98 4c 03 34
-      c5 a0 26 bf 93 e9 a1 fd ff ff <0f> 0b e9 fd fc ff
-      ff 65 8b 05 fa b7 90 6d 89 c0 48 0f a3 05 60 91
-RSP: 0018:ffffbc60026ffaf8 EFLAGS: 00010202
-RAX: 0000000000000001 RBX: ffff9d81657d4110 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000006cc7987bcf RDI: ffff9d81657d4110
-RBP: ffffbc60026ffb58 R08: 0000000000000001 R09: 0000000000000010
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000006cc7987bcf
-R13: 0000000000000000 R14: 0000006cc7987bcf R15: ffffbc60026d6a00
-FS: 00007f401daed700(0000) GS:ffff9d81ffa40000(0000) knlGS:0000000000000000
-CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000ffffffff CR3: 0000000fa7574000 CR4: 00000000003426e0
-Call Trace:
-? kvm_release_pfn_clean+0x22/0x60 [kvm]
-start_sw_timer+0x85/0x230 [kvm]
-? vmx_vmexit+0x1b/0x30 [kvm_intel]
-kvm_lapic_switch_to_sw_timer+0x72/0x80 [kvm]
-vmx_pre_block+0x1cb/0x260 [kvm_intel]
-? vmx_vmexit+0xf/0x30 [kvm_intel]
-? vmx_vmexit+0x1b/0x30 [kvm_intel]
-? vmx_vmexit+0xf/0x30 [kvm_intel]
-? vmx_vmexit+0x1b/0x30 [kvm_intel]
-? vmx_vmexit+0xf/0x30 [kvm_intel]
-? vmx_vmexit+0x1b/0x30 [kvm_intel]
-? vmx_vmexit+0xf/0x30 [kvm_intel]
-? vmx_vmexit+0xf/0x30 [kvm_intel]
-? vmx_vmexit+0x1b/0x30 [kvm_intel]
-? vmx_vmexit+0xf/0x30 [kvm_intel]
-? vmx_vmexit+0x1b/0x30 [kvm_intel]
-? vmx_vmexit+0xf/0x30 [kvm_intel]
-? vmx_vmexit+0x1b/0x30 [kvm_intel]
-? vmx_vmexit+0xf/0x30 [kvm_intel]
-? vmx_vmexit+0x1b/0x30 [kvm_intel]
-? vmx_vmexit+0xf/0x30 [kvm_intel]
-? vmx_sync_pir_to_irr+0x9e/0x100 [kvm_intel]
-? kvm_apic_has_interrupt+0x46/0x80 [kvm]
-kvm_arch_vcpu_ioctl_run+0x85b/0x1fa0 [kvm]
-? _raw_spin_unlock_irqrestore+0x18/0x50
-? _copy_to_user+0x2c/0x30
-kvm_vcpu_ioctl+0x235/0x660 [kvm]
-? rt_spin_unlock+0x2c/0x50
-do_vfs_ioctl+0x3e4/0x650
-? __fget+0x7a/0xa0
-ksys_ioctl+0x67/0x90
-__x64_sys_ioctl+0x1a/0x20
-do_syscall_64+0x4d/0x120
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7f4027cc54a7
-Code: 00 00 90 48 8b 05 e9 59 0c 00 64 c7 00 26 00 00
-      00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00
-      00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff
-      73 01 c3 48 8b 0d b9 59 0c 00 f7 d8 64 89 01 48
-RSP: 002b:00007f401dae9858 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00005558bd029690 RCX: 00007f4027cc54a7
-RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 000000000000000d
-RBP: 00007f4028b72000 R08: 00005558bc829ad0 R09: 00000000ffffffff
-R10: 00005558bcf90ca0 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 00005558bce1c840
---[ end trace 0000000000000002 ]--
+configs tested: 194
+configs skipped: 0
 
-Signed-off-by: He Zhe <zhe.he@windriver.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+sh                                allnoconfig
+m68k                       m5475evb_defconfig
+i386                              allnoconfig
+i386                             alldefconfig
+riscv                               defconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200319
+x86_64               randconfig-a002-20200319
+x86_64               randconfig-a003-20200319
+i386                 randconfig-a001-20200319
+i386                 randconfig-a002-20200319
+i386                 randconfig-a003-20200319
+x86_64               randconfig-a001-20200320
+x86_64               randconfig-a002-20200320
+x86_64               randconfig-a003-20200320
+i386                 randconfig-a001-20200320
+i386                 randconfig-a002-20200320
+i386                 randconfig-a003-20200320
+alpha                randconfig-a001-20200319
+m68k                 randconfig-a001-20200319
+mips                 randconfig-a001-20200319
+nds32                randconfig-a001-20200319
+parisc               randconfig-a001-20200319
+riscv                randconfig-a001-20200319
+c6x                  randconfig-a001-20200319
+h8300                randconfig-a001-20200319
+microblaze           randconfig-a001-20200319
+nios2                randconfig-a001-20200319
+sparc64              randconfig-a001-20200319
+csky                 randconfig-a001-20200319
+openrisc             randconfig-a001-20200319
+s390                 randconfig-a001-20200319
+sh                   randconfig-a001-20200319
+xtensa               randconfig-a001-20200319
+x86_64               randconfig-b001-20200319
+x86_64               randconfig-b002-20200319
+x86_64               randconfig-b003-20200319
+i386                 randconfig-b001-20200319
+i386                 randconfig-b002-20200319
+i386                 randconfig-b003-20200319
+x86_64               randconfig-c001-20200319
+x86_64               randconfig-c002-20200319
+x86_64               randconfig-c003-20200319
+i386                 randconfig-c001-20200319
+i386                 randconfig-c002-20200319
+i386                 randconfig-c003-20200319
+x86_64               randconfig-c001-20200320
+x86_64               randconfig-c002-20200320
+x86_64               randconfig-c003-20200320
+i386                 randconfig-c001-20200320
+i386                 randconfig-c002-20200320
+i386                 randconfig-c003-20200320
+x86_64               randconfig-d001-20200319
+x86_64               randconfig-d002-20200319
+x86_64               randconfig-d003-20200319
+i386                 randconfig-d001-20200319
+i386                 randconfig-d002-20200319
+i386                 randconfig-d003-20200319
+x86_64               randconfig-e001-20200319
+x86_64               randconfig-e002-20200319
+x86_64               randconfig-e003-20200319
+i386                 randconfig-e001-20200319
+i386                 randconfig-e002-20200319
+i386                 randconfig-e003-20200319
+x86_64               randconfig-f001-20200320
+x86_64               randconfig-f002-20200320
+x86_64               randconfig-f003-20200320
+i386                 randconfig-f001-20200320
+i386                 randconfig-f002-20200320
+i386                 randconfig-f003-20200320
+x86_64               randconfig-g001-20200320
+x86_64               randconfig-g002-20200320
+x86_64               randconfig-g003-20200320
+i386                 randconfig-g001-20200320
+i386                 randconfig-g002-20200320
+i386                 randconfig-g003-20200320
+x86_64               randconfig-g001-20200319
+x86_64               randconfig-g002-20200319
+x86_64               randconfig-g003-20200319
+i386                 randconfig-g001-20200319
+i386                 randconfig-g002-20200319
+i386                 randconfig-g003-20200319
+x86_64               randconfig-h001-20200319
+x86_64               randconfig-h002-20200319
+x86_64               randconfig-h003-20200319
+i386                 randconfig-h001-20200319
+i386                 randconfig-h002-20200319
+i386                 randconfig-h003-20200319
+x86_64               randconfig-h001-20200320
+x86_64               randconfig-h002-20200320
+x86_64               randconfig-h003-20200320
+i386                 randconfig-h001-20200320
+i386                 randconfig-h002-20200320
+i386                 randconfig-h003-20200320
+arc                  randconfig-a001-20200320
+arm                  randconfig-a001-20200320
+arm64                randconfig-a001-20200320
+ia64                 randconfig-a001-20200320
+powerpc              randconfig-a001-20200320
+sparc                randconfig-a001-20200320
+arc                  randconfig-a001-20200319
+arm                  randconfig-a001-20200319
+arm64                randconfig-a001-20200319
+ia64                 randconfig-a001-20200319
+powerpc              randconfig-a001-20200319
+sparc                randconfig-a001-20200319
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
 ---
- arch/x86/kvm/lapic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index e3099c6..929511e 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1715,7 +1715,7 @@ static void start_sw_period(struct kvm_lapic *apic)
- 
- 	hrtimer_start(&apic->lapic_timer.timer,
- 		apic->lapic_timer.target_expiration,
--		HRTIMER_MODE_ABS);
-+		HRTIMER_MODE_ABS_HARD);
- }
- 
- bool kvm_lapic_hv_timer_in_use(struct kvm_vcpu *vcpu)
--- 
-2.7.4
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
