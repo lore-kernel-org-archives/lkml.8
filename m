@@ -6,149 +6,133 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECA7C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CEFC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 403B32076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C51420754
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 10:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584698617;
-	bh=pGqNxIGp6cHtGudH/wYZxR3mu246wkKamNlD7jv0AJ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h2EFzLOKTtc0vfBx5bAsQT0IIXJdJe3wRTaKBJjDqVq/14AE2PVy9zxGNeB2297nz
-	 t1ZVnAZ1zPBCCU98Rf8TMG61U09FrnJAEKxHH43mDNpakSEi1/iiOWTG9QGgzQrI4M
-	 MOkZ+NGv8oi7ZWoCq0AY7AEa7QZ/azGCeeepHHUY=
+	s=default; t=1584698725;
+	bh=xLCoBe0k1tJ3NSXx1P/PDSVPbSYu5y2TzULMMiyBlTg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=U8Nsf+pDS5rtEWj8tSp+hNZwf2Uhej06qltnbDMGUX+pXQuoJxH7Llj1+6Ys9Cklp
+	 Ti1BFqkvgdfsOFzH4rkvB8duAMWtA7Dr+JSpiDG4UgSGWKgO85IV+s4OkApkJc4hw8
+	 hQ/FQv0xpEyp3HfQVViGAU3dnXKn8W0t3n09feP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbgCTKDg (ORCPT
+        id S1727093AbgCTKFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:03:36 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43285 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbgCTKDf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:03:35 -0400
-Received: by mail-ed1-f67.google.com with SMTP id n25so5498009eds.10;
-        Fri, 20 Mar 2020 03:03:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tSuC6rirFkPp7o5onqQW1YOkCb60MvR5bv8PP1Z/cQg=;
-        b=lp0xIiy6Wn/aibB1fZexd9fa/Fb1OZP9f12DuwFgHgpHk4+Fo4AVv63sPnOhgV3Pm8
-         ymHlowyYOJxbXqTXBVTi+kI01QpIkjIA6hJ7WBNr77I1efQtzTcLA3rhxx0yvt8raaNK
-         N0y+5DDTVDl9pHKeeska8DVMNOVGZWDPDN8SS7GHLkrXFlSDq1tfNC5V1wY2Hf754H9p
-         n2/SRpDUb7caox81eQI9mrgbZPqRD0UHZpKYZOEmg6EaBEr3EG5b/ayK9MpaWfhgKqbw
-         Q3bdYFGLRu8VtyTY88fa7W1pkLIJpod9h0PD6WBVOd+VFeTueK+0Fa7vawXomRfI3IN8
-         puJQ==
-X-Gm-Message-State: ANhLgQ2vEe6t4UEwY4Eg+NtVJ3pYL4XBQLl0GHQq/2IM9p7Oi82x5ngx
-        Nlneq2dEI8p2Zy5dlRVPu3s=
-X-Google-Smtp-Source: ADFU+vugt2YyfL8cQT7+vpLHG9am8cCqBSB7XauUNUkR7U3UGvGj4jp51sCnSueZSIT/VpkoqnmJXA==
-X-Received: by 2002:aa7:c658:: with SMTP id z24mr6922331edr.298.1584698613669;
-        Fri, 20 Mar 2020 03:03:33 -0700 (PDT)
-Received: from pi3 ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id y14sm330361ejc.85.2020.03.20.03.03.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 03:03:32 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 11:03:29 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Paul Barker <pbarker@konsulko.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Andrius =?utf-8?B?xaB0aWtvbmFz?= <andrius@stikonas.eu>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hugh Cole-Baker <sigmaris@gmail.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Kukjin Kim <kgene@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Nick Xie <nick@khadas.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Soeren Moch <smoch@web.de>, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [RFC PATCH 6/7] arm64: dts: pwm: replace polarity constant with
- macro
-Message-ID: <20200320100329.GB16931@pi3>
-References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-7-oleksandr.suvorov@toradex.com>
+        Fri, 20 Mar 2020 06:05:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33696 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726527AbgCTKFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 06:05:24 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0226120739;
+        Fri, 20 Mar 2020 10:05:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584698723;
+        bh=xLCoBe0k1tJ3NSXx1P/PDSVPbSYu5y2TzULMMiyBlTg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fG3/FshLRVkUpD6f8kWzo2ZRvJ1Hf8TYHFGIVvQTGCajdFE86lnw5LcRvB+oaiwhz
+         LIpRK5YowcZKkauW9vpsoRF0N5qgJXofZdNSufOEynagyl2fv09fg4W9jMxYhRQq8k
+         PDi+QMvsd3CnTUcHcBthjBlrGzlCLFculZqkoH7w=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jFEWn-00ECvU-B0; Fri, 20 Mar 2020 10:05:21 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200317123231.2843297-7-oleksandr.suvorov@toradex.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 20 Mar 2020 10:05:21 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v5 18/23] KVM: arm64: GICv4.1: Add direct injection
+ capability to SGI registers
+In-Reply-To: <06705d70-0f99-e719-af52-1a5f778562d8@redhat.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-19-maz@kernel.org>
+ <06705d70-0f99-e719-af52-1a5f778562d8@redhat.com>
+Message-ID: <3f7094ffd77a6615d7179be94dbecc60@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: eric.auger@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, yuzenghui@huawei.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 02:32:30PM +0200, Oleksandr Suvorov wrote:
-> There is the PWM_POLARITY_NORMAL defined and describled in
-> <dt-bindings/pwm/pwm.h> and used by pwm drivers.
-> 
-> This patch converts all '0' constant in pwms parameters into
-> PWM_POLARITY_NORMAL.
-> 
-> Replace with sed regexp:
-> 's/(pwms = <&[a-zA-Z_0-9]+ [0-9]+ [0-9]+) 0>/\1 PWM_POLARITY_NORMAL>/'
-> 
-> Then:
-> - include pwm.h in some dts/dtsi to fix building errors about undefined
->   symbols.
-> - fix the patman warnings about the code format;
-> 
-> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> ---
-> 
->  arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts      | 2 +-
->  arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts       | 2 +-
->  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts             | 3 ++-
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi                 | 1 +
->  arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi          | 1 +
->  arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts          | 5 +++--
->  arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts            | 2 +-
->  arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts         | 5 +++--
->  arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi    | 4 ++--
->  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts       | 4 ++--
->  arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts       | 7 ++++---
->  arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi        | 3 ++-
->  arch/arm64/boot/dts/amlogic/meson-gx.dtsi                  | 1 +
->  arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts       | 3 ++-
->  arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts     | 3 ++-
->  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi           | 3 ++-
->  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi       | 3 ++-
->  arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi          | 3 ++-
->  arch/arm64/boot/dts/amlogic/meson-gxl-s805x-p241.dts       | 3 ++-
->  .../boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts    | 3 ++-
->  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts | 2 +-
->  .../arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts | 3 ++-
->  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi      | 3 ++-
->  arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts      | 5 +++--
->  arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts         | 3 ++-
->  arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi         | 4 +++-
->  arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts     | 2 +-
->  arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts           | 7 ++++---
->  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi      | 3 ++-
+Hi Eric,
 
-For Exynos:
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+On 2020-03-20 08:11, Auger Eric wrote:
+> Hi Marc,
+> On 3/4/20 9:33 PM, Marc Zyngier wrote:
+>> Most of the GICv3 emulation code that deals with SGIs now has to be
+>> aware of the v4.1 capabilities in order to benefit from it.
+>> 
+>> Add such support, keyed on the interrupt having the hw flag set and
+>> being a SGI.
+>> 
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>  virt/kvm/arm/vgic/vgic-mmio-v3.c | 15 +++++-
+>>  virt/kvm/arm/vgic/vgic-mmio.c    | 88 
+>> ++++++++++++++++++++++++++++++--
+>>  2 files changed, 96 insertions(+), 7 deletions(-)
+>> 
 
-Best regards,
-Krzysztof
+[...]
+
+>> @@ -113,7 +125,21 @@ void vgic_mmio_write_senable(struct kvm_vcpu 
+>> *vcpu,
+>>  		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+>> 
+>>  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+>> -		if (vgic_irq_is_mapped_level(irq)) {
+>> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+>> +			if (!irq->enabled) {
+>> +				struct irq_data *data;
+>> +
+>> +				irq->enabled = true;
+>> +				data = &irq_to_desc(irq->host_irq)->irq_data;
+>> +				while (irqd_irq_disabled(data))
+>> +					enable_irq(irq->host_irq);
+> could you explain me why the while() is requested?
+
+Ah, interesting question: disable_irq() (and its variants) can nest. 
+This
+means that if you have done two disable_irq(), you must do two 
+enable_irq()
+to get back to the interrupt being enabled.
+
+The locking should ensure that this nesting doesn't happen, but I'm 
+paranoid
+(see the GICv4.0 doorbell handling). It also makes it easier to reason 
+about
+the initial state.
+
+[...]
+
+> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+
+Thanks!
+
+          M.
+-- 
+Jazz is not dead. It just smells funny...
