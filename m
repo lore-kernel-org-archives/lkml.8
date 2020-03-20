@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30BCC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A20BBC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDAB520777
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8039C20777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:06:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgCTWGC (ORCPT
+        id S1727855AbgCTWGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:06:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37480 "EHLO
+        Fri, 20 Mar 2020 18:06:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37472 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbgCTWEN (ORCPT
+        with ESMTP id S1726666AbgCTWEN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Mar 2020 18:04:13 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFPk1-0004TS-TX; Fri, 20 Mar 2020 23:03:46 +0100
+        id 1jFPk9-0004d8-QA; Fri, 20 Mar 2020 23:03:53 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 62AEC1039FF;
-        Fri, 20 Mar 2020 23:03:45 +0100 (CET)
-Message-Id: <20200320180032.708673769@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 1AAE61040C9;
+        Fri, 20 Mar 2020 23:03:49 +0100 (CET)
+Message-Id: <20200320180034.203489576@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 20 Mar 2020 18:59:59 +0100
+Date:   Fri, 20 Mar 2020 19:00:14 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
@@ -44,11 +44,10 @@ Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
         Brian Gerst <brgerst@gmail.com>,
         Juergen Gross <jgross@suse.com>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [RESEND][patch V3 03/23] vmlinux.lds.h: Create section for protection
- against instrumentation
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [RESEND][patch V3 18/23] x86/kvm: Move context tracking where it belongs
 References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,129 +59,125 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200320175959.cJmUKfkRu8ebp387qX4Bo5PjZeMJ9BzTIqaTcSk2xfs@z>
+Message-ID: <20200320180014.1gpTu48VUwCeXGP9r_jKl0E2_YWovH4uUHiHGK-bEME@z>
 
-Some code pathes, especially the low level entry code, must be protected
-against instrumentation for various reasons:
+The invocation of guest_enter_irqoff() is way before the actual VMENTER
+happens. guest_exit_irqoff() happens way after the VMEXIT.
 
- - Low level entry code can be a fragile beast, especially on x86.
+While the comment in guest_enter_irqoff() says that KVM does not hold
+references to RCU protected data, for the whole call chain before VMENTER
+and after VMEXIT there is no guarantee that no RCU protected data is
+accessed.
 
- - With NO_HZ_FULL RCU state needs to be established before using it.
+There are tracepoints hidden in MSR access functions and there are calls
+into code which takes locks. The latter might cause lockdep to run into RCU
+trouble. As the call chains are hard to follow it's unclear whether there
+might be RCU trouble lurking in some corner cases.
 
-Having a dedicated section for such code allows to validate with tooling
-that no unsafe functions are invoked.
+The VMENTER path after context tracking contains also exit conditions which
+abort the VMENTER. The VMEXIT return path reenables interrupts before
+switching RCU back on which means that the interrupt entry/exit has to
+switch in on and then off again. If tracepoints on local_irq_enable() and
+local_irqdisable() are enabled then two more RCU on/off transitions are
+happening.
 
-Add the .noinstr.text section and the noinstr attribute to mark
-functions. noinstr implies notrace. Kprobes will gain a section check
-later.
-
-Provide also two sets of markers:
-
- - instr_begin()/end()
-
-   This is used to mark code inside in a noinstr function which calls
-   into regular instrumentable text section as safe.
-
- - noinstr_call_begin()/end()
-
-   Same as above but used to mark indirect calls which cannot be tracked by
-   tooling and need to be audited manually.
+Move it down into the VMX/SVM code close to the actual entry/exit. This is
+the first step to bring parts of this code into the .noinstr.text section
+so it can be verified with objtool.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org
 ---
- include/asm-generic/sections.h    |    3 +++
- include/asm-generic/vmlinux.lds.h |    4 ++++
- include/linux/compiler.h          |   24 ++++++++++++++++++++++++
- include/linux/compiler_types.h    |    4 ++++
- scripts/mod/modpost.c             |    2 +-
- 5 files changed, 36 insertions(+), 1 deletion(-)
+ arch/x86/kvm/svm.c     |   18 ++++++++++++++++++
+ arch/x86/kvm/vmx/vmx.c |   10 ++++++++++
+ arch/x86/kvm/x86.c     |    2 --
+ 3 files changed, 28 insertions(+), 2 deletions(-)
 
---- a/include/asm-generic/sections.h
-+++ b/include/asm-generic/sections.h
-@@ -53,6 +53,9 @@ extern char __ctors_start[], __ctors_end
- /* Start and end of .opd section - used for function descriptors. */
- extern char __start_opd[], __end_opd[];
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -5766,6 +5766,15 @@ static void svm_vcpu_run(struct kvm_vcpu
+ 	 */
+ 	x86_spec_ctrl_set_guest(svm->spec_ctrl, svm->virt_spec_ctrl);
  
-+/* Start and end of instrumentation protected text section */
-+extern char __noinstr_text_start[], __noinstr_text_end[];
++	/*
++	 * Tell context tracking that this CPU is about to enter guest
++	 * mode. This has to be after x86_spec_ctrl_set_guest() because
++	 * that can take locks (lockdep needs RCU) and calls into world and
++	 * some more.
++	 */
++	guest_enter_irqoff();
 +
- extern __visible const void __nosave_begin, __nosave_end;
++	/* This is wrong vs. lockdep. Will be fixed in the next step */
+ 	local_irq_enable();
  
- /* Function descriptor handling (if any).  Override in asm/sections.h */
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -550,6 +550,10 @@
- #define TEXT_TEXT							\
- 		ALIGN_FUNCTION();					\
- 		*(.text.hot TEXT_MAIN .text.fixup .text.unlikely)	\
-+		ALIGN_FUNCTION();					\
-+		__noinstr_text_start = .;				\
-+		*(.noinstr.text)					\
-+		__noinstr_text_end = .;					\
- 		*(.text..refcount)					\
- 		*(.ref.text)						\
- 	MEM_KEEP(init.text*)						\
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -120,12 +120,36 @@ void ftrace_likely_update(struct ftrace_
- /* Annotate a C jump table to allow objtool to follow the code flow */
- #define __annotate_jump_table __section(.rodata..c_jump_table)
- 
-+/* Begin/end of an instrumentation safe region */
-+#define instr_begin() ({						\
-+	asm volatile("%c0:\n\t"						\
-+		     ".pushsection .discard.instr_begin\n\t"		\
-+		     ".long %c0b - .\n\t"				\
-+		     ".popsection\n\t" : : "i" (__COUNTER__));		\
-+})
-+
-+#define instr_end() ({							\
-+	asm volatile("%c0:\n\t"						\
-+		     ".pushsection .discard.instr_end\n\t"		\
-+		     ".long %c0b - .\n\t"				\
-+		     ".popsection\n\t" : : "i" (__COUNTER__));		\
-+})
-+
- #else
- #define annotate_reachable()
- #define annotate_unreachable()
- #define __annotate_jump_table
-+#define instr_begin()		do { } while(0)
-+#define instr_end()		do { } while(0)
+ 	asm volatile (
+@@ -5869,6 +5878,14 @@ static void svm_vcpu_run(struct kvm_vcpu
+ 	loadsegment(gs, svm->host.gs);
  #endif
- 
-+/*
-+ * Annotation for audited indirect calls. Distinct from instr_begin() on
-+ * purpose because the called function has to be noinstr as well.
-+ */
-+#define noinstr_call_begin()		instr_begin()
-+#define noinstr_call_end()		instr_end()
-+
- #ifndef ASM_UNREACHABLE
- # define ASM_UNREACHABLE
  #endif
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -118,6 +118,10 @@ struct ftrace_likely_data {
- #define notrace			__attribute__((__no_instrument_function__))
- #endif
++	/*
++	 * Tell context tracking that this CPU is back.
++	 *
++	 * This needs to be done before the below as native_read_msr()
++	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
++	 * into world and some more.
++	 */
++	guest_exit_irqoff();
  
-+/* Section for code which can't be instrumented at all */
-+#define noinstr								\
-+	noinline notrace __attribute((__section__(".noinstr.text")))
+ 	/*
+ 	 * We do not use IBRS in the kernel. If this vCPU has used the
+@@ -5890,6 +5907,7 @@ static void svm_vcpu_run(struct kvm_vcpu
+ 
+ 	reload_tss(vcpu);
+ 
++	/* This is wrong vs. lockdep. Will be fixed in the next step */
+ 	local_irq_disable();
+ 
+ 	x86_spec_ctrl_restore_host(svm->spec_ctrl, svm->virt_spec_ctrl);
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6537,6 +6537,11 @@ static void vmx_vcpu_run(struct kvm_vcpu
+ 	 */
+ 	x86_spec_ctrl_set_guest(vmx->spec_ctrl, 0);
+ 
++	/*
++	 * Tell context tracking that this CPU is about to enter guest mode.
++	 */
++	guest_enter_irqoff();
 +
- /*
-  * it doesn't make sense on ARM (currently the only user of __naked)
-  * to trace naked functions because then mcount is called without
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -953,7 +953,7 @@ static void check_section(const char *mo
+ 	/* L1D Flush includes CPU buffer clear to mitigate MDS */
+ 	if (static_branch_unlikely(&vmx_l1d_should_flush))
+ 		vmx_l1d_flush(vcpu);
+@@ -6552,6 +6557,11 @@ static void vmx_vcpu_run(struct kvm_vcpu
+ 	vcpu->arch.cr2 = read_cr2();
  
- #define DATA_SECTIONS ".data", ".data.rel"
- #define TEXT_SECTIONS ".text", ".text.unlikely", ".sched.text", \
--		".kprobes.text", ".cpuidle.text"
-+		".kprobes.text", ".cpuidle.text", ".noinstr.text"
- #define OTHER_TEXT_SECTIONS ".ref.text", ".head.text", ".spinlock.text", \
- 		".fixup", ".entry.text", ".exception.text", ".text.*", \
- 		".coldtext"
+ 	/*
++	 * Tell context tracking that this CPU is back.
++	 */
++	guest_exit_irqoff();
++
++	/*
+ 	 * We do not use IBRS in the kernel. If this vCPU has used the
+ 	 * SPEC_CTRL MSR it may have left it on; save the value and
+ 	 * turn it off. This is much more efficient than blindly adding
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8350,7 +8350,6 @@ static int vcpu_enter_guest(struct kvm_v
+ 	}
+ 
+ 	trace_kvm_entry(vcpu->vcpu_id);
+-	guest_enter_irqoff();
+ 
+ 	fpregs_assert_state_consistent();
+ 	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+@@ -8413,7 +8412,6 @@ static int vcpu_enter_guest(struct kvm_v
+ 	local_irq_disable();
+ 	kvm_after_interrupt(vcpu);
+ 
+-	guest_exit_irqoff();
+ 	if (lapic_in_kernel(vcpu)) {
+ 		s64 delta = vcpu->arch.apic->lapic_timer.advance_expire_delta;
+ 		if (delta != S64_MIN) {
 
