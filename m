@@ -2,95 +2,182 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD870C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC68FC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9913920740
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EBA120740
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:42:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JoZrZzq9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgCTBmG (ORCPT
+        id S1727707AbgCTBmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 21:42:06 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:61032 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727473AbgCTBl0 (ORCPT
+        Thu, 19 Mar 2020 21:42:17 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:46387 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727415AbgCTBlR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 21:41:26 -0400
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 19 Mar 2020 18:41:25 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 19 Mar 2020 18:41:25 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 7DCC423CD; Thu, 19 Mar 2020 18:41:25 -0700 (PDT)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH v11 01/12] drm/i915: Use 64-bit division macro
-Date:   Thu, 19 Mar 2020 18:41:12 -0700
-Message-Id: <2403a87f9b6443401eac96a3c50d4beca63dcba2.1584667964.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1584667964.git.gurus@codeaurora.org>
-References: <cover.1584667964.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1584667964.git.gurus@codeaurora.org>
-References: <cover.1584667964.git.gurus@codeaurora.org>
+        Thu, 19 Mar 2020 21:41:17 -0400
+Received: by mail-qv1-f67.google.com with SMTP id m2so2166630qvu.13
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 18:41:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Lr1Y7KtiXEwRNt5oEJbHw3xmtSZcUrY6dlEwgFNuRHA=;
+        b=JoZrZzq9MtCdZRY8h1hIczI93UjeYWLiyWcjBPqgqslk4B+dNR7hCtZIo7jyN6xzmt
+         PhtpHWIrRArylYLj/pati/6Okn2ECsDFjNcuTjl/1u2m3eZZvbEsj0JyhcW+Nkf1rQm7
+         7vkn6PlDFIgd/DPxZnqmxR9bm0UaGI9/Y/zVDLEmBBjWQaEm0UPOBRyLUpRpyat/lwQ2
+         tIKTvYGmmrm/4MH5dCshcNMg2rWoiOfaFroCJC9mULyzd/myHd5i8mf8ZWoFDKvWy3R+
+         JmxiYw5Up0VLEHVizPB0QOaKD3/xpnZLsGnlp0Z+8ZFsCkuwJrsbuGlF8/YewmN39dBz
+         pLaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Lr1Y7KtiXEwRNt5oEJbHw3xmtSZcUrY6dlEwgFNuRHA=;
+        b=r1MBqZbYxlMpazdjuL3q3JnOBCpGomL4OOJ4C0Ekh2ekrIzF4Et/pufIV8EFLwzjVZ
+         tUorSsRKurr+a0BmHE11z7+JORgDwG8vJmLe8WmWE2WVZOIMRtMhflgY0vFBbSDJU59O
+         Oxui9yz+p/uYmZft6vTg0jIXAfWbxTLif2qClXgAo0BTaSG9VozODIEYfphsNnOEMT58
+         WE7zG1N85KEqsf3zxiu6m6zrHPg3J+IiJw08FXdCykfbUp3P6AaBRBpldBfOZAWTkPaB
+         VuIWjqnXi7nTv2n+JdoDrUgNF2PN1RxJU5LFbr48gY2rzZAMmcQnXC1GPNRhbN1owYaA
+         BaHg==
+X-Gm-Message-State: ANhLgQ2Z2Wm/+HUQ0HQqYvBWf8snlrpCfER0gT/p3rQhpmzq54k0Qhr4
+        NhVjYp09Mrc4PIaRsS0kFRdjhw==
+X-Google-Smtp-Source: ADFU+vvtDmCrjDHyAveZQW2W4i/gOJjiWwSRbwpOR4ID352DOyHj0eK14rldf7txaLpbXuc8IAZf1Q==
+X-Received: by 2002:a05:6214:12c1:: with SMTP id s1mr5757053qvv.150.1584668475089;
+        Thu, 19 Mar 2020 18:41:15 -0700 (PDT)
+Received: from pop-os.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.googlemail.com with ESMTPSA id 2sm2706287qtp.33.2020.03.19.18.41.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 18:41:14 -0700 (PDT)
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+To:     rui.zhang@intel.com, ulf.hansson@linaro.org,
+        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
+        agross@kernel.org, robh@kernel.org
+Cc:     amit.kucheria@verdurent.com, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [Patch v5 4/6] soc: qcom: Extend RPMh power controller driver to register warming devices.
+Date:   Thu, 19 Mar 2020 21:41:05 -0400
+Message-Id: <20200320014107.26087-5-thara.gopinath@linaro.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200320014107.26087-1-thara.gopinath@linaro.org>
+References: <20200320014107.26087-1-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_state.duty_cycle's
-datatype to u64, prepare for this transition by using DIV_ROUND_UP_ULL
-to handle a 64-bit dividend.
+RPMh power control hosts power domains that can be used as
+thermal warming devices. Register these power domains
+with the generic power domain warming device thermal framework.
 
-Cc: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: "Ville Syrjälä" <ville.syrjala@linux.intel.com>
-Cc: intel-gfx@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org
-
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 ---
- drivers/gpu/drm/i915/display/intel_panel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
-index bc14e9c..843cac1 100644
---- a/drivers/gpu/drm/i915/display/intel_panel.c
-+++ b/drivers/gpu/drm/i915/display/intel_panel.c
-@@ -1868,7 +1868,7 @@ static int pwm_setup_backlight(struct intel_connector *connector,
+v3->v4:
+	- Introduce a boolean value is_warming_dev in rpmhpd structure to
+	  indicate if a generic power domain can be used as a warming
+	  device or not.With this change, device tree no longer has to
+	  specify which power domain inside the rpmh power domain provider
+	  is a warming device.
+	- Move registering of warming devices into a late initcall to
+	  ensure that warming devices are registered after thermal
+	  framework is initialized.
+
+ drivers/soc/qcom/rpmhpd.c | 37 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 36 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+index 7142409a3b77..4e9c0bbb8826 100644
+--- a/drivers/soc/qcom/rpmhpd.c
++++ b/drivers/soc/qcom/rpmhpd.c
+@@ -11,6 +11,7 @@
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_opp.h>
++#include <linux/pd_warming.h>
+ #include <soc/qcom/cmd-db.h>
+ #include <soc/qcom/rpmh.h>
+ #include <dt-bindings/power/qcom-rpmpd.h>
+@@ -48,6 +49,7 @@ struct rpmhpd {
+ 	bool		enabled;
+ 	const char	*res_name;
+ 	u32		addr;
++	bool		is_warming_dev;
+ };
  
- 	panel->backlight.min = 0; /* 0% */
- 	panel->backlight.max = 100; /* 100% */
--	panel->backlight.level = DIV_ROUND_UP(
-+	panel->backlight.level = DIV_ROUND_UP_ULL(
- 				 pwm_get_duty_cycle(panel->backlight.pwm) * 100,
- 				 CRC_PMIC_PWM_PERIOD_NS);
- 	panel->backlight.enabled = panel->backlight.level != 0;
+ struct rpmhpd_desc {
+@@ -55,6 +57,8 @@ struct rpmhpd_desc {
+ 	size_t num_pds;
+ };
+ 
++const struct rpmhpd_desc *global_desc;
++
+ static DEFINE_MUTEX(rpmhpd_lock);
+ 
+ /* SDM845 RPMH powerdomains */
+@@ -89,6 +93,7 @@ static struct rpmhpd sdm845_mx = {
+ 	.pd = { .name = "mx", },
+ 	.peer = &sdm845_mx_ao,
+ 	.res_name = "mx.lvl",
++	.is_warming_dev = true,
+ };
+ 
+ static struct rpmhpd sdm845_mx_ao = {
+@@ -452,7 +457,14 @@ static int rpmhpd_probe(struct platform_device *pdev)
+ 					       &rpmhpds[i]->pd);
+ 	}
+ 
+-	return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
++	ret = of_genpd_add_provider_onecell(pdev->dev.of_node, data);
++
++	if (ret)
++		return ret;
++
++	global_desc = desc;
++
++	return 0;
+ }
+ 
+ static struct platform_driver rpmhpd_driver = {
+@@ -469,3 +481,26 @@ static int __init rpmhpd_init(void)
+ 	return platform_driver_register(&rpmhpd_driver);
+ }
+ core_initcall(rpmhpd_init);
++
++static int __init rpmhpd_init_warming_device(void)
++{
++	size_t num_pds;
++	struct rpmhpd **rpmhpds;
++	int i;
++
++	if (!global_desc)
++		return -EINVAL;
++
++	rpmhpds = global_desc->rpmhpds;
++	num_pds = global_desc->num_pds;
++
++	if (!of_find_property(rpmhpds[0]->dev->of_node, "#cooling-cells", NULL))
++		return 0;
++
++	for (i = 0; i < num_pds; i++)
++		if (rpmhpds[i]->is_warming_dev)
++			of_pd_warming_register(rpmhpds[i]->dev, i);
++
++	return 0;
++}
++late_initcall(rpmhpd_init_warming_device);
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.20.1
 
