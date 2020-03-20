@@ -2,119 +2,100 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3F8C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BA4C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34DB220753
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:00:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YsOglcXF"
+	by mail.kernel.org (Postfix) with ESMTP id 3474420740
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbgCTCAY (ORCPT
+        id S1727414AbgCTCAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 22:00:24 -0400
-Received: from ozlabs.org ([203.11.71.1]:38701 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbgCTCAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 22:00:23 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48k6Rk3DG3z9sRf;
-        Fri, 20 Mar 2020 13:00:18 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584669621;
-        bh=UnT6XT0MYiF55r9HJ3HCBsQ9ZrUxRyyw2v1Npc7EL0c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YsOglcXFdBl+mfv+HSaknS4e0l/veMNO/kzbzb7q0ZVexltnv25UgQrVaadL+y0WD
-         9xb0MZyKff24EP0xKg7HrX8+fKO5/sUtpTdZmQA1avqXEdDLpmxO/Lsj3YSl7u/0wY
-         PT7ISW3ojXOyQLPMy1kRevER+gj7HgFY2qZfCFh15xzKKe/39aYFpsVogYOd7XNqYg
-         DlFwzVADIG8IG0ds2hN+k0dju+0A5u+fT9QGn+5V3hqBCdkw1AVIeGKzmlcZH724p9
-         XNrutal6nwLRWvbzZqKoi34FiBQYzAZQ/K/j+5TPodQpB+gzJScF+3p4TFXvG0VmwG
-         iC7zWLFmiyf0A==
-Date:   Fri, 20 Mar 2020 13:00:17 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: Hard lockups due to "tick/common: Make tick_periodic() check
- for missing ticks"
-Message-ID: <20200320130017.6457a1e8@canb.auug.org.au>
-In-Reply-To: <218eed57-27c8-12c0-6f5f-111874798c21@redhat.com>
-References: <CA9BD318-A8C8-4F22-828A-65C355931A5C@lca.pw>
-        <F95F95DE-77D9-4A1D-AA5C-CAC165F6B4C8@lca.pw>
-        <11BEA1A5-2E93-4E01-A05C-A6BA73A74CEB@lca.pw>
-        <218eed57-27c8-12c0-6f5f-111874798c21@redhat.com>
+        Thu, 19 Mar 2020 22:00:33 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39607 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727049AbgCTCAc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 22:00:32 -0400
+Received: by mail-qk1-f194.google.com with SMTP id t17so5410052qkm.6;
+        Thu, 19 Mar 2020 19:00:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=r6d+yKOCqA+0QeYSPpX1kUL29PTJLI/h9o5LVefuBko=;
+        b=VOqNzflR1EnIfL3EaCQlneEMsPZ6O2tvHP3gzJbHtGW8mu3z1yC3ojOLySZSSKvQHy
+         ZPRusdKF5wLJgo/TOaQ0CvLp8UuKIDTcivBnBQ8UVLO16Zspou3EsAsOAD5dUqLuPHOS
+         VdsQSZLmbLau9FWk2I2pYSJ8IAA/63y3WS4LbWqkgy708Vll20GVNWa+nQok0HDfMwh5
+         qXIm4TPetU6+pJfucvxF8h4fw/mAhA1+wAkMJ3+ihcETfLUOzZ9gDIql+z8/g2n0vRqz
+         Y080gi5I3Q0yM6vtevkkR4z9ud+ax62bFfo0fVnWhdoU4/4JRe559c5XV5kcYjbYaMqs
+         Dh8A==
+X-Gm-Message-State: ANhLgQ1zmJSQ7GUcL0SlUX75xR4rVFyFlfSpIy/KDLMjB8M9kPw8YZyO
+        NQXbM6m2EsA8po8rMEXuBpY=
+X-Google-Smtp-Source: ADFU+vuBTKqMvQou6YVVBTVcXV3EHK+UpOFH9klLr8qB+fkRT++XOzLY4EP1xu3NEm3PABu2//Ul4w==
+X-Received: by 2002:ae9:ed56:: with SMTP id c83mr5533781qkg.200.1584669631270;
+        Thu, 19 Mar 2020 19:00:31 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id n46sm3342198qtb.48.2020.03.19.19.00.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 19:00:30 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 01/14] efi/gop: Remove redundant current_fb_base
+Date:   Thu, 19 Mar 2020 22:00:15 -0400
+Message-Id: <20200320020028.1936003-2-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200319192855.29876-1-nivedita@alum.mit.edu>
+References: <20200319192855.29876-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/200+A/5+J7anyPW8F._3h2Y";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/200+A/5+J7anyPW8F._3h2Y
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+current_fb_base isn't used for anything except assigning to fb_base if
+we locate a suitable gop.
 
-Hi all,
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+---
+ drivers/firmware/efi/libstub/gop.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-On Thu, 19 Mar 2020 15:00:35 -0400 Waiman Long <longman@redhat.com> wrote:
->
-> On 3/19/20 9:58 AM, Qian Cai wrote:
-> > =20
-> >> On Mar 6, 2020, at 10:33 PM, Qian Cai <cai@lca.pw> wrote:
-> >>
-> >>
-> >> =20
-> >>> On Mar 5, 2020, at 11:06 PM, Qian Cai <cai@lca.pw> wrote:
-> >>> =20
-> >> Using this config,
-> >> =20
-> >>> https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config =
-=20
-> >> Reverted the linux-next commit d441dceb5dce (=E2=80=9Ctick/common: Mak=
-e tick_periodic() check for missing ticks=E2=80=9D)
-> >> fixed the lockup that could easily happen during boot. =20
-> >
-> > Thomas or Stephen, can you back out this patch from linux-next while Wa=
-iman is getting to the bottom of it?
-> > I can still reproduce it as today. =20
->=20
-> I am fine for reverting the patch for now. I am still having some
-> trouble reproducing it and I have other tasks to work on right now. I
-> will get to the bottom of it and resubmit a new patch later on.
+diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
+index 55e6b3f286fe..f40d535dccb8 100644
+--- a/drivers/firmware/efi/libstub/gop.c
++++ b/drivers/firmware/efi/libstub/gop.c
+@@ -108,7 +108,6 @@ static efi_status_t setup_gop(struct screen_info *si, efi_guid_t *proto,
+ 		efi_guid_t conout_proto = EFI_CONSOLE_OUT_DEVICE_GUID;
+ 		bool conout_found = false;
+ 		void *dummy = NULL;
+-		efi_physical_addr_t current_fb_base;
+ 
+ 		status = efi_bs_call(handle_protocol, h, proto, (void **)&gop);
+ 		if (status != EFI_SUCCESS)
+@@ -120,7 +119,6 @@ static efi_status_t setup_gop(struct screen_info *si, efi_guid_t *proto,
+ 
+ 		mode = efi_table_attr(gop, mode);
+ 		info = efi_table_attr(mode, info);
+-		current_fb_base = efi_table_attr(mode, frame_buffer_base);
+ 
+ 		if ((!first_gop || conout_found) &&
+ 		    info->pixel_format != PIXEL_BLT_ONLY) {
+@@ -136,7 +134,7 @@ static efi_status_t setup_gop(struct screen_info *si, efi_guid_t *proto,
+ 			pixel_format = info->pixel_format;
+ 			pixel_info = info->pixel_information;
+ 			pixels_per_scan_line = info->pixels_per_scan_line;
+-			fb_base = current_fb_base;
++			fb_base = efi_table_attr(mode, frame_buffer_base);
+ 
+ 			/*
+ 			 * Once we've found a GOP supporting ConOut,
+-- 
+2.24.1
 
-I have reverted that commit from linux-next today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/200+A/5+J7anyPW8F._3h2Y
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl50I7EACgkQAVBC80lX
-0Gwcpgf9GrNX0tgR+8h70/3dJK9k3j3brlFdojIdgsIoGvZLrAWhWM8U4l+MUhyz
-rzZjPYh5wkODl5WslcB98b6psjQv0i+RnbaQVSiKJVqcALwmveJ0YjAAVO0SrVQ5
-Ydn33ybWtrnzgnCHrp4HyrqxyEkd9LvFsZwpcxyRPNitrlTyEM1xlNNEl7TIweU2
-Pr+cPbX12MX+iZFid3j2n3Jya9ldTwiUtGjaGv0X+R/jUlMUdJJ9CCAG3jFPgoK4
-RdwWpJZDkbR2n9T+L41Aaf4eWiALVG+YnBbXwRNXiWuGL8MgjVHALVxtD/gTYMnc
-PXT0kDNSrU63uKm9f6g4WpQnPaX57Q==
-=hKZY
------END PGP SIGNATURE-----
-
---Sig_/200+A/5+J7anyPW8F._3h2Y--
