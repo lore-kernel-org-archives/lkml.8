@@ -2,157 +2,131 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DCDC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3E4C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C266220709
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E37872070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:36:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="L1ws6ajq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbgCTOgP (ORCPT
+        id S1727521AbgCTOgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:36:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18142 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726816AbgCTOgP (ORCPT
+        Fri, 20 Mar 2020 10:36:19 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51192 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726816AbgCTOgS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:36:15 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02KEWNEm139847
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 10:36:14 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu71cc072-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 10:36:14 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Fri, 20 Mar 2020 14:36:11 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 20 Mar 2020 14:36:08 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02KEZ6H634996734
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Mar 2020 14:35:06 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 88622AE05D;
-        Fri, 20 Mar 2020 14:36:07 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 14320AE051;
-        Fri, 20 Mar 2020 14:36:07 +0000 (GMT)
-Received: from pomme.local (unknown [9.145.63.10])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 20 Mar 2020 14:36:06 +0000 (GMT)
-Subject: Re: [PATCH 2/2] KVM: PPC: Book3S HV: H_SVM_INIT_START must call
- UV_RETURN
-To:     bharata@linux.ibm.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <20200320102643.15516-1-ldufour@linux.ibm.com>
- <20200320102643.15516-3-ldufour@linux.ibm.com>
- <20200320112403.GG26049@in.ibm.com>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Date:   Fri, 20 Mar 2020 15:36:05 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
+        Fri, 20 Mar 2020 10:36:18 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02KEABLR153355;
+        Fri, 20 Mar 2020 14:36:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2020-01-29; bh=orcSXTvzl+Xu3zdH1yJK4rv6NFxMx65lBs568wzS5cc=;
+ b=L1ws6ajqJmerUTtgHKCsRAAz6Ed5ByQzYW62x2XEOxwWRTAJSSt6dsOon4aBaxv1uqXB
+ uZtW1a7TGTEXgTjFsu3BYBzq8ifMVaWyXi0AEaCZv6ahn9Zv+JQIM0TAJ9wRWmrcSGC8
+ esx220mjmLD8uPn40KQhaYMtzE1tMRAB2xanb6KATyllv1vH2CKwBUQSVmh/GwroPLbM
+ y0d532BuyRGp5zbCaxNL4wWFDxaP8rRkDFLOpSks1gjUysIGlVUEWdpK4HVqomRACEbF
+ CU0ly/JUrha3EQrfpPgwcsDHS9W12UXreuinXPjLu5bKLETgJ4Fban4LKHdQGsYZrofp MA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2yub27dvab-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Mar 2020 14:36:13 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02KEJrXN193827;
+        Fri, 20 Mar 2020 14:36:13 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2ys92qnrj3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Mar 2020 14:36:12 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02KEaBtj022504;
+        Fri, 20 Mar 2020 14:36:11 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 20 Mar 2020 07:36:10 -0700
+Date:   Fri, 20 Mar 2020 17:36:04 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     kbuild@lists.01.org, Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     kbuild-all@lists.01.org, Ard Biesheuvel <ardb@kernel.org>,
+        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/14] efi/gop: Allow specifying mode number on command
+ line
+Message-ID: <20200320143526.GI4650@kadam>
 MIME-Version: 1.0
-In-Reply-To: <20200320112403.GG26049@in.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20032014-0012-0000-0000-000003948596
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032014-0013-0000-0000-000021D16F34
-Message-Id: <f6a71da6-6363-8cba-8215-78b23a046443@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-20_04:2020-03-20,2020-03-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 malwarescore=0 impostorscore=0 mlxscore=0 phishscore=0
- priorityscore=1501 adultscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999
- suspectscore=3 classifier=spam adjust=0 reason=mlx scancount=1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319192855.29876-12-nivedita@alum.mit.edu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9565 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ mlxscore=0 spamscore=0 bulkscore=0 adultscore=0 suspectscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003200059
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9565 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 impostorscore=0
+ mlxlogscore=999 mlxscore=0 phishscore=0 adultscore=0 suspectscore=0
+ clxscore=1011 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2003200059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 20/03/2020 à 12:24, Bharata B Rao a écrit :
-> On Fri, Mar 20, 2020 at 11:26:43AM +0100, Laurent Dufour wrote:
->> When the call to UV_REGISTER_MEM_SLOT is failing, for instance because
->> there is not enough free secured memory, the Hypervisor (HV) has to call
->> UV_RETURN to report the error to the Ultravisor (UV). Then the UV will call
->> H_SVM_INIT_ABORT to abort the securing phase and go back to the calling VM.
->>
->> If the kvm->arch.secure_guest is not set, in the return path rfid is called
->> but there is no valid context to get back to the SVM since the Hcall has
->> been routed by the Ultravisor.
->>
->> Move the setting of kvm->arch.secure_guest earlier in
->> kvmppc_h_svm_init_start() so in the return path, UV_RETURN will be called
->> instead of rfid.
->>
->> Cc: Bharata B Rao <bharata@linux.ibm.com>
->> Cc: Paul Mackerras <paulus@ozlabs.org>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
->> ---
->>   arch/powerpc/kvm/book3s_hv_uvmem.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
->> index 79b1202b1c62..68dff151315c 100644
->> --- a/arch/powerpc/kvm/book3s_hv_uvmem.c
->> +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
->> @@ -209,6 +209,8 @@ unsigned long kvmppc_h_svm_init_start(struct kvm *kvm)
->>   	int ret = H_SUCCESS;
->>   	int srcu_idx;
->>   
->> +	kvm->arch.secure_guest = KVMPPC_SECURE_INIT_START;
->> +
->>   	if (!kvmppc_uvmem_bitmap)
->>   		return H_UNSUPPORTED;
->>   
->> @@ -233,7 +235,6 @@ unsigned long kvmppc_h_svm_init_start(struct kvm *kvm)
->>   			goto out;
->>   		}
->>   	}
->> -	kvm->arch.secure_guest |= KVMPPC_SECURE_INIT_START;
-> 
-> There is an assumption that memory slots would have been registered with UV
-> if KVMPPC_SECURE_INIT_START has been done. KVM_PPC_SVM_OFF ioctl will skip
-> unregistration and other steps during reboot if KVMPPC_SECURE_INIT_START
-> hasn't been done.
-> 
-> Have you checked if that path isn't affected by this change?
+Hi Arvind,
 
-I checked that and didn't find any issue there.
+Thank you for the patch! Perhaps something to improve:
 
-My only concern was that block:
-	kvm_for_each_vcpu(i, vcpu, kvm) {
-		spin_lock(&vcpu->arch.vpa_update_lock);
-		unpin_vpa_reset(kvm, &vcpu->arch.dtl);
-		unpin_vpa_reset(kvm, &vcpu->arch.slb_shadow);
-		unpin_vpa_reset(kvm, &vcpu->arch.vpa);
-		spin_unlock(&vcpu->arch.vpa_update_lock);
-	}
+url:    https://github.com/0day-ci/linux/commits/Arvind-Sankar/efi-gop-Refactoring-mode-setting-feature/20200320-044605
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git next
 
-But that seems to be safe.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-However I'm not a familiar with the KVM's code, do you think an additional 
-KVMPPC_SECURE_INIT_* value needed here?
+New smatch warnings:
+drivers/firmware/efi/libstub/gop.c:113 set_mode() error: uninitialized symbol 'new_mode'.
 
-Thanks,
-Laurent.
+# https://github.com/0day-ci/linux/commit/af85e496c9f577df9743784171b1cda94220dd8f
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout af85e496c9f577df9743784171b1cda94220dd8f
+vim +/info +85 drivers/firmware/efi/libstub/gop.c
 
+af85e496c9f577 Arvind Sankar 2020-03-19   97  static void set_mode(efi_graphics_output_protocol_t *gop)
+af85e496c9f577 Arvind Sankar 2020-03-19   98  {
+af85e496c9f577 Arvind Sankar 2020-03-19   99  	efi_graphics_output_protocol_mode_t *mode;
+af85e496c9f577 Arvind Sankar 2020-03-19  100  	u32 cur_mode, new_mode;
+af85e496c9f577 Arvind Sankar 2020-03-19  101  
+af85e496c9f577 Arvind Sankar 2020-03-19  102  	switch (cmdline.option) {
+af85e496c9f577 Arvind Sankar 2020-03-19  103  	case EFI_CMDLINE_NONE:
+af85e496c9f577 Arvind Sankar 2020-03-19  104  		return;
+af85e496c9f577 Arvind Sankar 2020-03-19  105  	case EFI_CMDLINE_MODE_NUM:
+af85e496c9f577 Arvind Sankar 2020-03-19  106  		new_mode = choose_mode_modenum(gop);
+af85e496c9f577 Arvind Sankar 2020-03-19  107  		break;
 
+No default case?
 
+af85e496c9f577 Arvind Sankar 2020-03-19  108  	}
+af85e496c9f577 Arvind Sankar 2020-03-19  109  
+af85e496c9f577 Arvind Sankar 2020-03-19  110  	mode = efi_table_attr(gop, mode);
+af85e496c9f577 Arvind Sankar 2020-03-19  111  	cur_mode = efi_table_attr(mode, mode);
+af85e496c9f577 Arvind Sankar 2020-03-19  112  
+af85e496c9f577 Arvind Sankar 2020-03-19 @113  	if (new_mode == cur_mode)
+af85e496c9f577 Arvind Sankar 2020-03-19  114  		return;
+af85e496c9f577 Arvind Sankar 2020-03-19  115  
+af85e496c9f577 Arvind Sankar 2020-03-19  116  	if (efi_call_proto(gop, set_mode, new_mode) != EFI_SUCCESS)
+af85e496c9f577 Arvind Sankar 2020-03-19  117  		efi_printk("Failed to set requested mode\n");
+af85e496c9f577 Arvind Sankar 2020-03-19  118  }
 
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
