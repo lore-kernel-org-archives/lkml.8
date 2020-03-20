@@ -2,132 +2,98 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B62C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961C6C43332
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78DF720752
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:03:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kLlN+Nnm"
+	by mail.kernel.org (Postfix) with ESMTP id 6BE8220752
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:04:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584666279;
+	bh=WBVJxUkyMG39O9bERsyKy1MDzmUe4i57hlRhXu1Pqqs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kKnQLrRZPUKjqHuD14a1NFwKybJP9lPzNJ6QipM1mSNdWPRlPQ9pwxkG7EIF8A/nd
+	 Xtlt32yUHTJx9zHYan/3ajSDS3NSN+1gwujEZcJ2/zU9E9CIUl0WtVRUpCv//H/bsb
+	 FYozBlunD8YcBZ0qF5TibOtAtBRNShLULLYRwq+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbgCTBDi (ORCPT
+        id S1727376AbgCTBEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 21:03:38 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41106 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCTBDi (ORCPT
+        Thu, 19 Mar 2020 21:04:38 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:35752 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgCTBEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 21:03:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=Ys84MSFThr+iceWVOVJ1ydyxTrqVWchEPrhB/TlXSx4=; b=kLlN+Nnmx9HvogqnfJbpvfqQI8
-        +MkKfXUUVy3e9kgGREXRcrq0vebzEsqrATfd/gUCaIn5TL4QIvw+g5oDaG3faiFTZwjmwW0lntlDY
-        yJe18b9P/M7QPu7WPTull9l52/9WPB4Fq8pD3VXQzrBwTvwdS56asp6YVQRo+TzRYlDqsMjQiKacn
-        ISf+sYy/t02OJjuS+Of2UZWkKujLE14J9guIWcgdpuqZu5khzDAcJfhDW5zfQh1VJl3Y7Wrql4Uv8
-        cqYW+KvV9y+dEH0qEy5OhjjmgKkjqpsYb8UDF/uTiOJyUdSqn/YXDxD9phBCoYC3xKKi3YDu3GPNQ
-        9ZKo9I4g==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jF64X-0003Lf-B9; Fri, 20 Mar 2020 01:03:37 +0000
-Subject: Re: [PATCH -next] mm/hugetlb.c: fix printk format warning for 32-bit
- phys_addr_t
-To:     Joe Perches <joe@perches.com>, Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <b74dcb60-ef35-f06e-de2d-b165ed38036a@infradead.org>
- <f4f8090c1be1a5a5ca663345751fb39893c89814.camel@perches.com>
- <ff8cc527-e02e-4f4b-56cd-a94ac5e527a3@infradead.org>
- <be55765b11f925f15f338152399923e169a20f53.camel@perches.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <58454a65-5022-7517-df65-7bf504cd1432@infradead.org>
-Date:   Thu, 19 Mar 2020 18:03:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 19 Mar 2020 21:04:38 -0400
+Received: by mail-il1-f196.google.com with SMTP id o16so1522008ilm.2;
+        Thu, 19 Mar 2020 18:04:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UGCAb9wVeglaPfbrAhPUQDDVEQ1klnV38624n1QkmF0=;
+        b=aMLW+xSh5GQWE77JUbvhLyi4VGwx03gpx1tk2OnjrFoXyuTh48RZa544oIZAdTd8Yb
+         vNDYEN9lseERtpJpYpZDxrNy7MfBwJel4QCtYeupXxxnb8zQ1kh3FP4nMpL0Y9zbiiCR
+         FY2kSIkzBjc64lUjvofEOdrVBPes0W7p89tvfyAKRkD2s3fyxORxBmdWi6khPRoNP3M7
+         uPQnRuFCy9n646t3iIEm5TGzY9BIwZNzlf+V8RkSQgcjyFXhmVeYWld2fPieAOtuHkQo
+         4bbPAsfvKaRYAh/cTIM0Oh6LnJFdBf+WyuDCpzQPKDo8fH9NpwAkeFbV88HDZIpAr48o
+         wD8w==
+X-Gm-Message-State: ANhLgQ18i4FNm6Lfm60qNar3iN8TEUrkVqBSkQfWX5caYc38dqqeL4hw
+        TQ2LF0kp7YDyYf3Q11NK/Q==
+X-Google-Smtp-Source: ADFU+vvlv+TFuLos9es6ZMHJJts1Of92KuSp8Lj8FMdYp0zS7O9szteFdC1O/KDhibPp0NlG1HYhAQ==
+X-Received: by 2002:a92:a192:: with SMTP id b18mr5903577ill.199.1584666277084;
+        Thu, 19 Mar 2020 18:04:37 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id j18sm1497075ila.56.2020.03.19.18.04.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 18:04:36 -0700 (PDT)
+Received: (nullmailer pid 23247 invoked by uid 1000);
+        Fri, 20 Mar 2020 01:04:34 -0000
+Date:   Thu, 19 Mar 2020 19:04:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?iso-8859-1?Q?=A0?= 
+        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v7 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
+ MSS clock bindings
+Message-ID: <20200320010434.GA23155@bogus>
+References: <1584596131-22741-1-git-send-email-tdas@codeaurora.org>
+ <1584596131-22741-2-git-send-email-tdas@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <be55765b11f925f15f338152399923e169a20f53.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584596131-22741-2-git-send-email-tdas@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/18/20 7:37 PM, Joe Perches wrote:
-> On Wed, 2020-03-18 at 19:11 -0700, Randy Dunlap wrote:
->> On 3/18/20 7:04 PM, Joe Perches wrote:
->>> On Wed, 2020-03-18 at 14:33 -0700, Randy Dunlap wrote:
->>>> From: Randy Dunlap <rdunlap@infradead.org>
->>>>
->>>> Fix printk format warnings when phys_addr_t is 32 bits, i.e.,
->>>> CONFIG_PHYS_ADDR_T_64BIT is not set/enabled.
->>> []
->>>> ../mm/hugetlb.c:5472:73: note: format string is defined here
->>>>     pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%llu, %llu)",
->>>>                                                                       ~~~^
->>> []
->>>> --- linux-next-20200318.orig/mm/hugetlb.c
->>>> +++ linux-next-20200318/mm/hugetlb.c
->>>> @@ -5469,8 +5469,10 @@ void __init hugetlb_cma_reserve(int orde
->>>>  					     0, false,
->>>>  					     "hugetlb", &hugetlb_cma[nid]);
->>>>  		if (res) {
->>>> -			pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%llu, %llu)",
->>>> -				res, nid, PFN_PHYS(min_pfn), PFN_PHYS(max_pfn));
->>>> +			phys_addr_t begpa = PFN_PHYS(min_pfn);
->>>> +			phys_addr_t endpa = PFN_PHYS(max_pfn);
->>>> +			pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%pap, %pap)",
->>>> +				res, nid, &begpa, &endpa);
->>>
->>> You might correct the odd use of an open bracket
->>> then close parenthesis and add a new line too
->>
->> Definitely needs a newline char.
->>
->> I'm fairly sure that the [begin, end) notation is done on purpose, meaning
->> <begin> is included in the range and <end> is not included in the range.
+On Thu, 19 Mar 2020 11:05:29 +0530, Taniya Das wrote:
+> The Modem Subsystem clock provider have a bunch of generic properties
+> that are needed in a device tree. Add a YAML schemas for those.
 > 
-> OK, that seems a pretty obscure and not obvious use of
-> interval notation, at least to me. (18 uses treewide ?)
+> Add clock ids for GCC MSS and MSS clocks which are required to bring
+> the modem out of reset.
 > 
-> Maybe it could be documented somewhere?
-
-I thought about where to put that and came up empty.
-
-> It's an odd pattern to grep.  Maybe I missed some.
-
-It's probably not used much more than this.
-
-> $ git grep -P '".*[\[\{]\s*%\d*[ldux]+\s*[/:,\.\-]?\s*%\d*[ldux]+\).*"'
-> arch/x86/kernel/alternative.c:  DUMP_BYTES(instr, a->instrlen, "%px: [%d:%d) optimized NOPs: ",
-> drivers/clk/qcom/clk-alpha-pll.c:               pr_err("%s: Rounded rate %lu not within range [%lu, %lu)\n",
-> fs/ext4/extents_status.c:               printk(KERN_DEBUG " [%u/%u) %llu %x",
-> fs/ext4/extents_status.c:                       es_debug("%u cached by [%u/%u) %llu %x\n",
-> fs/ext4/extents_status.c:       es_debug("add [%u/%u) %llu %x to extent status tree of inode %lu\n",
-> fs/ext4/extents_status.c:                       es_debug("%u cached by [%u/%u)\n",
-> fs/ext4/extents_status.c:       es_debug("remove [%u/%u) from extent status tree of inode %lu\n",
-> fs/nilfs2/cpfile.c:                       "cannot delete checkpoints: invalid range [%llu, %llu)",
-> fs/nilfs2/dat.c:                          "%s: invalid vblocknr = %llu, [%llu, %llu)",
-> include/trace/events/ext4.h:    TP_printk("dev %d,%d ino %lu es [%u/%u) mapped %llu status %s",
-> include/trace/events/ext4.h:    TP_printk("dev %d,%d ino %lu es [%lld/%lld)",
-> include/trace/events/ext4.h:    TP_printk("dev %d,%d ino %lu es [%u/%u) mapped %llu status %s",
-> include/trace/events/ext4.h:    TP_printk("dev %d,%d ino %lu found %d [%u/%u) %llu %s",
-> include/trace/events/ext4.h:    TP_printk("dev %d,%d ino %lu es [%u/%u) mapped %llu status %s "
-> mm/hugetlb.c:                   pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%llu, %llu)",
-> mm/kasan/report.c:              pr_err(" [%lu, %lu) '%s'", offset, offset + size, token);
-> mm/page_alloc.c:                pr_info_ratelimited("%s: [%lx, %lx) PFNs busy\n",
-> tools/testing/selftests/kvm/demand_paging_test.c:               PER_VCPU_DEBUG("Added VCPU %d with test mem gpa [%lx, %lx)\n",
-> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,sc7180-mss.yaml | 62 ++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-sc7180.h        |  7 ++-
+>  include/dt-bindings/clock/qcom,mss-sc7180.h        | 12 +++++
+>  3 files changed, 80 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
+>  create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
 > 
 
-thanks.
-
--- 
-~Randy
-
+Reviewed-by: Rob Herring <robh@kernel.org>
