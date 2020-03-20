@@ -2,93 +2,179 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656E9C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91479C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3802520722
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E7E20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SlIGit1n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="byT7XxKq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbgCTNuM (ORCPT
+        id S1726816AbgCTNvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:50:12 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45869 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgCTNuL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:50:11 -0400
-Received: by mail-pg1-f193.google.com with SMTP id m15so3095966pgv.12;
-        Fri, 20 Mar 2020 06:50:10 -0700 (PDT)
+        Fri, 20 Mar 2020 09:51:12 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:44664 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCTNvL (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 09:51:11 -0400
+Received: by mail-qv1-f68.google.com with SMTP id w5so2939055qvp.11
+        for <Linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 06:51:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+Fx6oA7jCuDE18WfPJWcAtH6HJ8W48kIoWQ2M4dnYLQ=;
-        b=SlIGit1n78vpYqCHXLeA58VBwdG1O5hZ+ob/HwUbL1XWsBANhUm4T55Rnn//EWSRhB
-         bCYj2Qngr+qsVkBWDL9J4Hw69j/5rlL2b3fr+YTt/g0s9CjgB3CTvcGARPF6pq7L+3WH
-         ABpgBrgzZiqP0k9Rh/n8+UqG/52JZvHatBjhg5vfWHbA8EbMqULMgweoS+Y1QcklQ2O2
-         fIDfPCrFgM9NHVVcDFmuM48NQ/5L3GfCeiBqq9WMt/E8hdZMYbopwHmyCLcW93RR4bTh
-         0IPtF3Yz2bqmOhC9YXoyM+MOdrdHYQ/7MoJey0CD9rfqXV7vYpqKDgh9fYvfXB/PgmlI
-         pmaw==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ItqKl2HqUVxhA/7rGjJzyOrjGNTdaJc0YGesSQo74jk=;
+        b=byT7XxKqtR8U6GsRjXRwu68jPsv6iJACodJj3YgA0hz+ugu6Aym8AMBG+mrBuNysM6
+         Brn5YdfRpQLbJzEYpOi6QePA/znwm37dNLPxBlWzLCxPSaeVC+gMNNW3OyU4fEkZZCzR
+         AbH1etPO3JZ5yTK+H6jyA1YFtODJXveVHs2t/hBacgx6/udl/CyU3qBnX1fTLT1m5FLk
+         JYKhXgGUwPcKfKG4jo0aJmENqPDykVEXL+/NPNrFMwKZVAbkHD2iu+OKT75xr5iloC5L
+         zNkwulBEA6Il6CwtXILtpob+PIZ8tFqpisIynk+U41pYQ2rdu+U4WOEiMO/54ZqSHMMc
+         bmbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+Fx6oA7jCuDE18WfPJWcAtH6HJ8W48kIoWQ2M4dnYLQ=;
-        b=GYqw2q0lsmqr/8V/Y8w4oJsLk2yYSEHssVCpYifVf+BQLG9tNBvBXLx7bCB+JiKzwV
-         zValQThrZfWwrtIrSFU3cFVYwwFBQ8RJ+iiSKr8FUyvbNFSniCXVpnBsbqSP7T3mWCWU
-         UaP6nn3EY8wWN2y47DSUUOkMqbGwgdvy7HgATPlWoPFKYz8IkmnYXE6HhRFgXbq85vua
-         wQCYk0iqcH2Id8wRc3NiqLASO3LpOP1DG8GBSitcanLyDlPWe0vyX3dkGpccuSmO/V+g
-         kzchzaNyP1PswRN2aJzp1zltHPQupWfvY7a4WQMeGGkOF3m4dP+RjMR93MPveyCG0c7F
-         suqQ==
-X-Gm-Message-State: ANhLgQ1bNQuJ1NrlUauxPeAR4tLpQxVF8Vq4t9w9pyG2ioKpDU0sPxp2
-        OKl8Ii5l0lvifPvzz5u6EDnGiwDSJ7b3lpqLRdA=
-X-Google-Smtp-Source: ADFU+vtAuiXSoY2iyX+5K/WkTZaYgCh0XETfaCT5+G4xqs+Nt3AjoJI+569URseqadDHO9HVE53hrN86ctUVAJ08lAw=
-X-Received: by 2002:aa7:8149:: with SMTP id d9mr9566637pfn.170.1584712210268;
- Fri, 20 Mar 2020 06:50:10 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ItqKl2HqUVxhA/7rGjJzyOrjGNTdaJc0YGesSQo74jk=;
+        b=PJynDbr2KATAozdhxzNpVj+lhBq00C+RRmXRMUJzzjp3DDlvx2eupk1KnL+PLzDp7p
+         9g26qts1zvaUvnICCDZbod/shKw6YgcTnbSUuoY8S66VumvbiwVUqwIuFZ6Qekqk6ai8
+         YYvTbhY+DURBe1iJrESTynUBD1wnFFbTLA8IxCqabKsSgQ9X3Lxp9SF3hXPIEAuGWlVJ
+         GoK0iyTR0c9RwlyTcRJ0Muq1R3gpEsS5tfIqnwBR3fg51TycaSyBdYCWHDoqGZaqp+mZ
+         0XKmhgsTfwLqiG0wN/eQvpRtx+MI+cHtNZTQQ/HrjjUXCtdaedHZ+r/0e7MB7m5cJ2k8
+         A12g==
+X-Gm-Message-State: ANhLgQ3hrHU3Layu6EcCGHzS/lIbIIuLfEVnQKbJr+e/SuFUTm7E//75
+        b7fG6lPVotldeQTa+dz2H6UCRNnM
+X-Google-Smtp-Source: ADFU+vvcTHM0e8XimwggD4ctJkhpmVqrhjndIGp6bnM7Smw/sno/cAyrOzN+HoYH8fWwTGfwRslM8g==
+X-Received: by 2002:a0c:a181:: with SMTP id e1mr3175081qva.19.1584712268833;
+        Fri, 20 Mar 2020 06:51:08 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id x5sm4519459qti.5.2020.03.20.06.51.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 06:51:08 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 32E5240F77; Fri, 20 Mar 2020 10:51:06 -0300 (-03)
+Date:   Fri, 20 Mar 2020 10:51:06 -0300
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH 2/2] perf top: support hotkey to change sort order
+Message-ID: <20200320135106.GB29833@kernel.org>
+References: <20200320072414.25551-1-yao.jin@linux.intel.com>
+ <20200320072414.25551-2-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-References: <cover.1583093898.git.gayatri.kammela@intel.com>
- <20200302125427.GV1224808@smile.fi.intel.com> <BYAPR11MB362421570806431752364CD3F2E70@BYAPR11MB3624.namprd11.prod.outlook.com>
- <BYAPR11MB3624F3CB24817BB8C5AE6C10F2F40@BYAPR11MB3624.namprd11.prod.outlook.com>
- <20200319180618.GN1922688@smile.fi.intel.com> <BYAPR11MB3624FFB1B25DD743F473AFFEF2F40@BYAPR11MB3624.namprd11.prod.outlook.com>
-In-Reply-To: <BYAPR11MB3624FFB1B25DD743F473AFFEF2F40@BYAPR11MB3624.namprd11.prod.outlook.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 20 Mar 2020 15:50:03 +0200
-Message-ID: <CAHp75VcnE11pTyB2wPPe596+vRf_B1monV8NDHF_TBuGv9h64Q@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug fixes or code
-To:     "Kammela, Gayatri" <gayatri.kammela@intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>,
-        "dvhart@infradead.org" <dvhart@infradead.org>,
-        "Westerberg, Mika" <mika.westerberg@intel.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
-        Chen Zhou <chenzhou10@huawei.com>,
-        "Box, David E" <david.e.box@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320072414.25551-2-yao.jin@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 8:16 PM Kammela, Gayatri
-<gayatri.kammela@intel.com> wrote:
->
-> > Is it in my review and testing queue?
->
-> I think it is archived and superseded https://patchwork.kernel.org/patch/11414379/
+Em Fri, Mar 20, 2020 at 03:24:14PM +0800, Jin Yao escreveu:
+> It would be nice if we can use a hotkey in perf top browser to
+> select a event for sorting.
+> 
+> For example,
+> perf top --group -e cycles,instructions,cache-misses
+> 
+> Samples
+>                 Overhead  Shared Object             Symbol
+>   40.03%  45.71%   0.03%  div                       [.] main
+>   20.46%  14.67%   0.21%  libc-2.27.so              [.] __random_r
+>   20.01%  19.54%   0.02%  libc-2.27.so              [.] __random
+>    9.68%  10.68%   0.00%  div                       [.] compute_flag
+>    4.32%   4.70%   0.00%  libc-2.27.so              [.] rand
+>    3.84%   3.43%   0.00%  div                       [.] rand@plt
+>    0.05%   0.05%   2.33%  libc-2.27.so              [.] __strcmp_sse2_unaligned
+>    0.04%   0.08%   2.43%  perf                      [.] perf_hpp__is_dynamic_en
+>    0.04%   0.02%   6.64%  perf                      [.] rb_next
+>    0.04%   0.01%   3.87%  perf                      [.] dso__find_symbol
+>    0.04%   0.04%   1.77%  perf                      [.] sort__dso_cmp
+> 
+> When user press hotkey '2' (event index, starting from 0), it indicates
+> to sort output by the third event in group (cache-misses).
+> 
+> Samples
+>                 Overhead  Shared Object               Symbol
+>    4.07%   1.28%   6.68%  perf                        [.] rb_next
+>    3.57%   3.98%   4.11%  perf                        [.] __hists__insert_output
+>    3.67%  11.24%   3.60%  perf                        [.] perf_hpp__is_dynamic_e
+>    3.67%   3.20%   3.20%  perf                        [.] hpp__sort_overhead
+>    0.81%   0.06%   3.01%  perf                        [.] dso__find_symbol
+>    1.62%   5.47%   2.51%  perf                        [.] hists__match
+>    2.70%   1.86%   2.47%  libc-2.27.so                [.] _int_malloc
+>    0.19%   0.00%   2.29%  [kernel]                    [k] copy_page
+>    0.41%   0.32%   1.98%  perf                        [.] hists__decay_entries
+>    1.84%   3.67%   1.68%  perf                        [.] sort__dso_cmp
+>    0.16%   0.00%   1.63%  [kernel]                    [k] clear_page_erms
+> 
+> Now the output is sorted by cache-misses.
+> 
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> ---
+>  tools/perf/builtin-top.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index 144043637cec..b39f6ffb874e 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -616,6 +616,7 @@ static void *display_thread_tui(void *arg)
+>  		.arg		= top,
+>  		.refresh	= top->delay_secs,
+>  	};
+> +	int ret;
+>  
+>  	/* In order to read symbols from other namespaces perf to  needs to call
+>  	 * setns(2).  This isn't permitted if the struct_fs has multiple users.
+> @@ -626,6 +627,7 @@ static void *display_thread_tui(void *arg)
+>  
+>  	prctl(PR_SET_NAME, "perf-top-UI", 0, 0, 0);
+>  
+> +repeat:
+>  	perf_top__sort_new_samples(top);
+>  
+>  	/*
+> @@ -638,13 +640,17 @@ static void *display_thread_tui(void *arg)
+>  		hists->uid_filter_str = top->record_opts.target.uid_str;
+>  	}
+>  
+> -	perf_evlist__tui_browse_hists(top->evlist, help, &hbt,
+> +	ret = perf_evlist__tui_browse_hists(top->evlist, help, &hbt,
+>  				      top->min_percent,
+>  				      &top->session->header.env,
+>  				      !top->record_opts.overwrite,
+>  				      &top->annotation_opts);
+>  
+> -	stop_top();
+> +	if (ret == K_RELOAD)
+> +		goto repeat;
+> +	else
+> +		stop_top();
+> +
 
-Now everything in for-next, check if something is missed and resend.
+That is really nice and small, but shouldn't we flush all the histograms
+that were in place, sorted by the previous key? I think we have a 'z'
+for zeroing samples that may be what we need, take a look, please,
+
+- Arnaldo
+
+>  	return NULL;
+>  }
+>  
+> -- 
+> 2.17.1
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+
+- Arnaldo
