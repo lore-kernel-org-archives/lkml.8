@@ -2,79 +2,217 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2417C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABD1C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF172072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5CB2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbgCTWT0 (ORCPT
+        id S1727450AbgCTWT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:19:26 -0400
-Received: from 8bytes.org ([81.169.241.247]:54714 "EHLO theia.8bytes.org"
+        Fri, 20 Mar 2020 18:19:29 -0400
+Received: from mga06.intel.com ([134.134.136.31]:53498 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726666AbgCTWT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:19:26 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 87BB24CA; Fri, 20 Mar 2020 23:19:24 +0100 (CET)
-Date:   Fri, 20 Mar 2020 23:19:23 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     erdemaktas@google.com, x86@kernel.org, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 18/70] x86/boot/compressed/64: Add stage1 #VC handler
-Message-ID: <20200320221923.GL5122@8bytes.org>
-References: <20200319091407.1481-1-joro@8bytes.org>
- <20200319091407.1481-19-joro@8bytes.org>
- <alpine.DEB.2.21.2003201413010.205664@chino.kir.corp.google.com>
+        id S1726666AbgCTWT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 18:19:28 -0400
+IronPort-SDR: si/LD4a8Aji0385SJt2eZFB9gaiUkKaL/g1KETSGRFQYr+2S1YaQOoiKU4w90/VMwhjYZEhEP/
+ 1V3hPDf2eYLQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 15:19:27 -0700
+IronPort-SDR: IPRpLBa7WdI+MvkLQla232xaQRnNsQS2sfWzk6Kjfj4cTeVvuvAdu9x/YLVx9WxSnLs9J2vFiy
+ a6AI4GaxQzzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
+   d="scan'208";a="269236493"
+Received: from mnyman-mobl.ger.corp.intel.com (HELO localhost) ([10.249.32.33])
+  by fmsmga004.fm.intel.com with ESMTP; 20 Mar 2020 15:19:19 -0700
+Date:   Sat, 21 Mar 2020 00:19:18 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: [PATCH v6 2/2] KEYS: Avoid false positive ENOMEM error on key
+ read
+Message-ID: <20200320221918.GA5284@linux.intel.com>
+References: <20200320191903.19494-1-longman@redhat.com>
+ <20200320191903.19494-3-longman@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2003201413010.205664@chino.kir.corp.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200320191903.19494-3-longman@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 02:16:39PM -0700, David Rientjes wrote:
-> On Thu, 19 Mar 2020, Joerg Roedel wrote:
-> > +#define	GHCB_SEV_GHCB_RESP_CODE(v)	((v) & 0xfff)
-> > +#define	VMGEXIT()			{ asm volatile("rep; vmmcall\n\r"); }
+On Fri, Mar 20, 2020 at 03:19:03PM -0400, Waiman Long wrote:
+> By allocating a kernel buffer with a user-supplied buffer length, it
+> is possible that a false positive ENOMEM error may be returned because
+> the user-supplied length is just too large even if the system do have
+> enough memory to hold the actual key data.
 > 
-> Since preemption and irqs should be disabled before updating the GHCB and 
-> its MSR and until the contents have been accessed following VMGEXIT, 
-> should there be checks in place to ensure that's always the case?
+> Moreover, if the buffer length is larger than the maximum amount of
+> memory that can be returned by kmalloc() (2^(MAX_ORDER-1) number of
+> pages), a warning message will also be printed.
+> 
+> To reduce this possibility, we set a threshold (page size) over which we
+> do check the actual key length first before allocating a buffer of the
+> right size to hold it. The threshold is arbitrary, it is just used to
+> trigger a buffer length check. It does not limit the actual key length
+> as long as there is enough memory to satisfy the memory request.
+> 
+> To further avoid large buffer allocation failure due to page
+> fragmentation, kvmalloc() is used to allocate the buffer so that vmapped
+> pages can be used when there is not a large enough contiguous set of
+> pages available for allocation.
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  security/keys/internal.h | 12 ++++++++++++
+>  security/keys/keyctl.c   | 39 +++++++++++++++++++++++++++++++--------
+>  2 files changed, 43 insertions(+), 8 deletions(-)
+> 
+> diff --git a/security/keys/internal.h b/security/keys/internal.h
+> index ba3e2da14cef..6d0ca48ae9a5 100644
+> --- a/security/keys/internal.h
+> +++ b/security/keys/internal.h
+> @@ -16,6 +16,8 @@
+>  #include <linux/keyctl.h>
+>  #include <linux/refcount.h>
+>  #include <linux/compat.h>
+> +#include <linux/mm.h>
+> +#include <linux/vmalloc.h>
+>  
+>  struct iovec;
+>  
+> @@ -349,4 +351,14 @@ static inline void key_check(const struct key *key)
+>  
+>  #endif
+>  
+> +/*
+> + * Helper function to clear and free a kvmalloc'ed memory object.
+> + */
+> +static inline void __kvzfree(const void *addr, size_t len)
+> +{
+> +	if (addr) {
+> +		memset((void *)addr, 0, len);
+> +		kvfree(addr);
+> +	}
+> +}
+>  #endif /* _INTERNAL_H */
+> diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
+> index 5a0794cb8815..ded69108db0d 100644
+> --- a/security/keys/keyctl.c
+> +++ b/security/keys/keyctl.c
+> @@ -339,7 +339,7 @@ long keyctl_update_key(key_serial_t id,
+>  	payload = NULL;
+>  	if (plen) {
+>  		ret = -ENOMEM;
+> -		payload = kmalloc(plen, GFP_KERNEL);
+> +		payload = kvmalloc(plen, GFP_KERNEL);
+>  		if (!payload)
+>  			goto error;
+>  
+> @@ -360,7 +360,7 @@ long keyctl_update_key(key_serial_t id,
+>  
+>  	key_ref_put(key_ref);
+>  error2:
+> -	kzfree(payload);
+> +	__kvzfree(payload, plen);
+>  error:
+>  	return ret;
+>  }
+> @@ -877,13 +877,23 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
+>  		 * transferring them to user buffer to avoid potential
+>  		 * deadlock involving page fault and mmap_sem.
+>  		 */
+> -		char *key_data = kmalloc(buflen, GFP_KERNEL);
+> +		char *key_data = NULL;
+> +		size_t key_data_len = buflen;
+>  
+> -		if (!key_data) {
+> -			ret = -ENOMEM;
+> -			goto error2;
+> +		/*
+> +		 * When the user-supplied key length is larger than
+> +		 * PAGE_SIZE, we get the actual key length first before
+> +		 * allocating a right-sized key data buffer.
+> +		 */
+> +		if (buflen <= PAGE_SIZE) {
+> +allocbuf:
 
-Good point, some checking is certainly helpful. Currently it is the
-case, because the GHCB is accessed and used only:
+Would move this label before condition instead of jumping inside the
+nested block since it will always evaluate correctly.
 
-	1) At boot when only the boot CPU is running
-
-	2) In the #VC handler, which does not enable interrupts
-
-	3) In the NMI handler, which is also not preemptible
-
-I can also add code to sev_es_get/put_ghcb to make sure these conditions
-are met. All this does not prevent the preemption by NMIs, which could
-cause another nested #VC exception, but that is handled separatly.
+To this version haven't really gotten why you don't use a legit loop
+construct but instead jump from one random nested location to another
+random nested location? This construct will be somewhat nasty to
+maintain. The construct is weird enough that you should have rather
+good explanation in the long description why such a mess.
 
 
-Regards,
+> +			key_data = kvmalloc(key_data_len, GFP_KERNEL);
+> +			if (!key_data) {
+> +				ret = -ENOMEM;
+> +				goto error2;
+> +			}
+>  		}
+> -		ret = __keyctl_read_key(key, key_data, buflen);
+> +		ret = __keyctl_read_key(key, key_data, key_data_len);
+>  
+>  		/*
+>  		 * Read methods will just return the required length
+> @@ -891,10 +901,23 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
+>  		 * enough.
+>  		 */
+>  		if (ret > 0 && ret <= buflen) {
+> +			/*
+> +			 * The key may change (unlikely) in between 2
+> +			 * consecutive __keyctl_read_key() calls. We will
+> +			 * need to allocate a larger buffer and redo the key
+> +			 * read when key_data_len < ret <= buflen.
+> +			 */
+> +			if (!key_data || unlikely(ret > key_data_len)) {
+> +				if (unlikely(key_data))
+> +					__kvzfree(key_data, key_data_len);
+> +				key_data_len = ret;
+> +				goto allocbuf;
+> +			}
+> +
+>  			if (copy_to_user(buffer, key_data, ret))
+>  				ret = -EFAULT;
+>  		}
+> -		kzfree(key_data);
+> +		__kvzfree(key_data, key_data_len);
+>  	}
+>  
+>  error2:
+> -- 
+> 2.18.1
+> 
 
-	Joerg
+Doesn't this go to infinite loop if actual key size is at least
+PAGE_SIZE + 1? Where is the guarantee that this cannot happen?
+
+/Jarkko
+
+
