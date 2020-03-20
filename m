@@ -2,97 +2,114 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4266C4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2CAC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB85B20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 439F120732
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:05:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aPld3xt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbgCTLEe (ORCPT
+        id S1727305AbgCTLFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 07:04:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:47438 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbgCTLEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 07:04:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E08431B;
-        Fri, 20 Mar 2020 04:04:34 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 53BF53F85E;
-        Fri, 20 Mar 2020 04:04:33 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 11:04:31 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v3 04/15] arm: Don't use disable_nonboot_cpus()
-Message-ID: <20200320110430.jozfyrqqx272266u@e107158-lin.cambridge.arm.com>
-References: <20200223192942.18420-1-qais.yousef@arm.com>
- <20200223192942.18420-5-qais.yousef@arm.com>
+        Fri, 20 Mar 2020 07:05:11 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:51204 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbgCTLFL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 07:05:11 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02KAqoZr172799;
+        Fri, 20 Mar 2020 11:05:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=o4Vz3fMAmZkMeyHbxS+8hpupOxZL84r2sZTkvZwv2TA=;
+ b=aPld3xt5QB1tpf0S/l/XsymqRbglqGjRO/SKdGikGwgD8wITajZ4PXrRdOJjhpOzS7JS
+ 1NU6Bva/U6V1XS4SETE8zju1M/4muLci4WAp5CZpTZq32thu/0xQKErY1z+FGr7lzjFz
+ 0NQ5z64Dv0FrYeTaXwRBfFdcJlKaeaKrZmBiib0Qd8yVDZ9ccuolQGe+K0MQGlXxDE0Q
+ 68UzIXJimCctD5OS+il9KKCNbvq3zZVW/c0T5lnnqiSG37K0Q+n/+BOkAB0eZRyZxOSJ
+ de/bkYlpndGjHTbvFDr/cq08GT68SynL9Xka6qiymek7TLHBn6FDedXvkntHRUbCIPP8 Tw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2yrq7mcxyw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Mar 2020 11:05:03 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02KAq1A7150692;
+        Fri, 20 Mar 2020 11:05:02 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2ys92q5hdn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Mar 2020 11:05:02 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02KB51rl025349;
+        Fri, 20 Mar 2020 11:05:01 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 20 Mar 2020 04:05:00 -0700
+Date:   Fri, 20 Mar 2020 14:04:53 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Camylla Cantanheide <c.cantanheide@gmail.com>
+Cc:     Joe Perches <joe@perches.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
+        lkcamp@lists.libreplanetbr.org
+Subject: Re: [PATCH 2/2] staging: rtl8192u: Corrects 'Avoid CamelCase' for
+ variables
+Message-ID: <20200320110453.GA4672@kadam>
+References: <20200317085130.21213-1-c.cantanheide@gmail.com>
+ <20200317085130.21213-2-c.cantanheide@gmail.com>
+ <20200317134329.GC4650@kadam>
+ <ee182711405229e85b5b5a44c683d5a2609b5ba3.camel@perches.com>
+ <CAG3pEr+9tuSYw==qgp3J8r--SdAd8DBMNQqSHCZQc-mkVVuE6w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200223192942.18420-5-qais.yousef@arm.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <CAG3pEr+9tuSYw==qgp3J8r--SdAd8DBMNQqSHCZQc-mkVVuE6w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9565 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ mlxscore=0 spamscore=0 bulkscore=0 adultscore=0 suspectscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003200048
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9565 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
+ adultscore=0 bulkscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
+ malwarescore=0 mlxscore=0 phishscore=0 impostorscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003200048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/23/20 19:29, Qais Yousef wrote:
-> disable_nonboot_cpus() is not safe to use when doing machine_down(),
-> because it relies on freeze_secondary_cpus() which in turn is
-> a suspend/resume related freeze and could abort if the logic detects any
-> pending activities that can prevent finishing the offlining process.
+On Wed, Mar 18, 2020 at 02:31:27PM -0300, Camylla Cantanheide wrote:
+> Dear Dan Carpenter and Joe Perches,
 > 
-> Beside disable_nonboot_cpus() is dependent on CONFIG_PM_SLEEP_SMP which
-> is an othogonal config to rely on to ensure this function works
-> correctly.
+> Thank you very much for the suggestions, I found the evaluation of both
+> very significant. Now, I have another perspective on variables.
 > 
-> Use `reboot_cpu` variable instead of hardcoding 0 as the reboot cpu.
+> I solved the problem for the *setKey *function, however, when executing the
+> checkpatch, more *Checks* of the same type appeared.
+
+If your changed introduces more warnings then you should fix them.  Like
+say you rename variables and now the line goes over 80 characters, then
+fix the new 80 character warning.  But if it was already over 80
+characters then ignore the warning.
+
 > 
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> CC: Russell King <linux@armlinux.org.uk>
-> CC: linux-arm-kernel@lists.infradead.org
-> CC: linux-kernel@vger.kernel.org
-> ---
+> Should I send the second version of the patch, only to the *setKey*
+> function or do I resolve all *Checks* for the entire file?
 
-Hi Russel
+We want patches which are easy to review.  If you change everything in
+the file, it will probably be too complicated for me to review.  So I
+guess ignore those warnings.
 
-Does the updated version look good to you now?
+regards,
+dan carpenter
 
-Thanks
-
---
-Qais Yousef
-
->  arch/arm/kernel/reboot.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/kernel/reboot.c b/arch/arm/kernel/reboot.c
-> index bb18ed0539f4..0ce388f15422 100644
-> --- a/arch/arm/kernel/reboot.c
-> +++ b/arch/arm/kernel/reboot.c
-> @@ -88,11 +88,11 @@ void soft_restart(unsigned long addr)
->   * to execute e.g. a RAM-based pin loop is not sufficient. This allows the
->   * kexec'd kernel to use any and all RAM as it sees fit, without having to
->   * avoid any code or data used by any SW CPU pin loop. The CPU hotplug
-> - * functionality embodied in disable_nonboot_cpus() to achieve this.
-> + * functionality embodied in smp_shutdown_nonboot_cpus() to achieve this.
->   */
->  void machine_shutdown(void)
->  {
-> -	disable_nonboot_cpus();
-> +	smp_shutdown_nonboot_cpus(reboot_cpu);
->  }
->  
->  /*
-> -- 
-> 2.17.1
-> 
