@@ -2,122 +2,87 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B7BC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C8FC4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17D292051A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0076320753
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 02:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584672115;
+	bh=VaOaDt5Ar0V7JbMhnQVSEdqQlneMYlnyedn/NWqYcWs=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=to+rpojtuqamOneUkTOl8uYlBPJy1KqHMz2hQqBZ/3SaA7SFER/7nf0MFrUb3tBCD
+	 9yvSgBq8VAEiSDmNecwfl+1gpbZ4cDSl9sERQDNhKsNukvTK6t0OAxMWrfhMDUS+pp
+	 cjsw9WTRHz5mtB4PzO6n/5Z2yrNrht0o4B1O9fdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgCTCis (ORCPT
+        id S1726774AbgCTCly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 22:38:48 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40522 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726867AbgCTCiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 22:38:46 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0B8B4BE8674E10677D2D;
-        Fri, 20 Mar 2020 10:38:39 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Fri, 20 Mar 2020
- 10:38:28 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <lmb@cloudflare.com>, <daniel@iogearbox.net>,
-        <jakub@cloudflare.com>, <john.fastabend@gmail.com>
-CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <andrii.nakryiko@gmail.com>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH bpf-next 1/2] bpf: tcp: Fix unused function warnings
-Date:   Fri, 20 Mar 2020 10:34:25 +0800
-Message-ID: <20200320023426.60684-2-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20200320023426.60684-1-yuehaibing@huawei.com>
-References: <20200319124631.58432-1-yuehaibing@huawei.com>
- <20200320023426.60684-1-yuehaibing@huawei.com>
+        Thu, 19 Mar 2020 22:41:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbgCTClx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 22:41:53 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A316206D7;
+        Fri, 20 Mar 2020 02:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584672113;
+        bh=VaOaDt5Ar0V7JbMhnQVSEdqQlneMYlnyedn/NWqYcWs=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=xteT3owz/emReDP4O3F7ndguFft5jjMAIb3GMNfc4G5m/jsNl4bjFnjRV2z2x4CW/
+         Dv8ryhEPcFjqfQAMTxSKRr5WcX+myTI4RkMZ+6AydU++Ab7LEhkEh0WNVU+mGMhq6E
+         MjYAGIXU7/hrqjSVZvybcQrmEWTAdSetImVgfVlA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 04F7835226B9; Thu, 19 Mar 2020 19:41:53 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 19:41:53 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, dhowells@redhat.com,
+        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
+        joel@joelfernandes.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: Re: [PATCH RFC v2 tip/core/rcu 14/22] rcu-tasks: Add an RCU Tasks
+ Trace to simplify protection of tracing hooks
+Message-ID: <20200320024152.GM3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
+ <20200319001100.24917-14-paulmck@kernel.org>
+ <20200319154239.6d67877d@gandalf.local.home>
+ <20200320002813.GL3199@paulmck-ThinkPad-P72>
+ <20200319204838.1f78152a@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319204838.1f78152a@gandalf.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If BPF_STREAM_PARSER is not set, gcc warns:
+On Thu, Mar 19, 2020 at 08:48:38PM -0400, Steven Rostedt wrote:
+> On Thu, 19 Mar 2020 17:28:13 -0700
+> "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> 
+> > Good point.  If interrupts are disabled, it will need to use some
+> > other mechanism.  One approach is irqwork.  Another is a timer.
+> > 
+> > Suggestions?
+> 
+> Ftrace and perf use irq_work, I would think that should work here too.
 
-net/ipv4/tcp_bpf.c:483:12: warning: 'tcp_bpf_sendpage' defined but not used [-Wunused-function]
-net/ipv4/tcp_bpf.c:395:12: warning: 'tcp_bpf_sendmsg' defined but not used [-Wunused-function]
-net/ipv4/tcp_bpf.c:13:13: warning: 'tcp_bpf_stream_read' defined but not used [-Wunused-function]
+Sounds good, will give it a go!  And thank you for catching this!
 
-Moves the unused functions into the #ifdef
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: f747632b608f ("bpf: sockmap: Move generic sockmap hooks from BPF TCP")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Lorenz Bauer <lmb@cloudflare.com>
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
----
- net/ipv4/tcp_bpf.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index fe7b4fbc31c1..37c91f25cae3 100644
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -10,19 +10,6 @@
- #include <net/inet_common.h>
- #include <net/tls.h>
- 
--static bool tcp_bpf_stream_read(const struct sock *sk)
--{
--	struct sk_psock *psock;
--	bool empty = true;
--
--	rcu_read_lock();
--	psock = sk_psock(sk);
--	if (likely(psock))
--		empty = list_empty(&psock->ingress_msg);
--	rcu_read_unlock();
--	return !empty;
--}
--
- static int tcp_bpf_wait_data(struct sock *sk, struct sk_psock *psock,
- 			     int flags, long timeo, int *err)
- {
-@@ -298,6 +285,20 @@ int tcp_bpf_sendmsg_redir(struct sock *sk, struct sk_msg *msg,
- }
- EXPORT_SYMBOL_GPL(tcp_bpf_sendmsg_redir);
- 
-+#ifdef CONFIG_BPF_STREAM_PARSER
-+static bool tcp_bpf_stream_read(const struct sock *sk)
-+{
-+	struct sk_psock *psock;
-+	bool empty = true;
-+
-+	rcu_read_lock();
-+	psock = sk_psock(sk);
-+	if (likely(psock))
-+		empty = list_empty(&psock->ingress_msg);
-+	rcu_read_unlock();
-+	return !empty;
-+}
-+
- static int tcp_bpf_send_verdict(struct sock *sk, struct sk_psock *psock,
- 				struct sk_msg *msg, int *copied, int flags)
- {
-@@ -528,7 +529,6 @@ static int tcp_bpf_sendpage(struct sock *sk, struct page *page, int offset,
- 	return copied ? copied : err;
- }
- 
--#ifdef CONFIG_BPF_STREAM_PARSER
- enum {
- 	TCP_BPF_IPV4,
- 	TCP_BPF_IPV6,
--- 
-2.17.1
-
-
+							Thans, Paul
