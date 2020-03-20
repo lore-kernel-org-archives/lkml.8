@@ -2,190 +2,143 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA8BC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25094C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E4820739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76FD20754
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:43:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WCZJHSHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbgCTNmQ (ORCPT
+        id S1727262AbgCTNm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:42:16 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41822 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgCTNmQ (ORCPT
+        Fri, 20 Mar 2020 09:42:59 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:57859 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbgCTNm7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:42:16 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h9so7505869wrc.8;
-        Fri, 20 Mar 2020 06:42:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=l39RGTWmCTQ0nArlZpVEItjnuVVmdA+cHGh/nCmDAnU=;
-        b=pITh0mooz1UFeEF1FT6TXJL+BxCCBCb6+dPBTv4mNpnmP37dG5WWmuNMnroxQeCplv
-         NdoIUyZGGPQByRCpjRcyFY7ldUcjglThaEfNZs6olvDTHtBOWa1jElGL5Jh105YFItlC
-         who3FMNXVZ9VJrPj0QzVsiL0/a1hYzs6LkB+QQdTsq12BLzJJKfQtVSf1kLNLvXmtHMD
-         qAt8f2k+8Wx6Qi3jQYZWhV6uRO3ikSCpZyapmRs3DH9FYsxerXriq4D4MUk9fVmpADx2
-         0KRVqMfzT8MYUxQJOtzt25Fqo7+/ecNgOqE1JDpZD4dNSFfr0LtCGTql1+0Gd9rJlTng
-         d5gQ==
-X-Gm-Message-State: ANhLgQ0fKrHkpbzNsFns4cr3WQw7QXR3xLmuXOwKV7ZAouBTpDS0Y6V3
-        PEYp4KJo1eCC9MzyC0N6SlE=
-X-Google-Smtp-Source: ADFU+vvC73lIz0uDz36WBP+Pu9RBYjrcK+roem3mnydhCkdhR9Lwk1exa0RBOqZ2zktLm9f1II4ksA==
-X-Received: by 2002:a05:6000:d1:: with SMTP id q17mr11358216wrx.409.1584711734282;
-        Fri, 20 Mar 2020 06:42:14 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id c2sm7797629wma.39.2020.03.20.06.42.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Mar 2020 06:42:13 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] vt: vt_ioctl: fix use-after-free in vt_in_use()
-To:     Eric Biggers <ebiggers@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        Eric Dumazet <edumazet@google.com>,
-        Nicolas Pitre <nico@fluxnic.net>
-References: <20200318222704.GC2334@sol.localdomain>
- <20200318223810.162440-1-ebiggers@kernel.org>
- <20200318223810.162440-3-ebiggers@kernel.org>
-From:   Jiri Slaby <jslaby@suse.com>
-Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e2846610-ae0b-8e50-0fc4-c2cad6b23e9a@suse.com>
-Date:   Fri, 20 Mar 2020 14:42:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 20 Mar 2020 09:42:59 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200320134258euoutp020bd39fb10a417cdb4f87b7b40662d552~_BvdNJmPJ2230922309euoutp02Q
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 13:42:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200320134258euoutp020bd39fb10a417cdb4f87b7b40662d552~_BvdNJmPJ2230922309euoutp02Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1584711778;
+        bh=1E8KASmUM//Nd8NqHvwK4FOzSMpoFO+xYAaKbjX49mw=;
+        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
+        b=WCZJHSHqWHn594XC71KgMVPCqV6EJKivjNB/BhdCI5yHL+f+tUZ3xqLfUOBDgTp6D
+         gWFgcC+qjSfDZI0p6JjfE3oc7ylnINlLqrhQNg99vNjb3CKYyvNS/VSgu9vCC5MWZJ
+         AaKya7oNazqtpdgYAH5XyDdTUWXxj0tpbgZL6wNQ=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200320134257eucas1p1fc54702e4d0e5410f63a5fce1b1bc52d~_Bvc8ukTp3232132321eucas1p1H;
+        Fri, 20 Mar 2020 13:42:57 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id CE.53.61286.168C47E5; Fri, 20
+        Mar 2020 13:42:57 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200320134257eucas1p2fd97b3f52ceb23a87fc599c8880bf686~_BvcnYO5k0171701717eucas1p2k;
+        Fri, 20 Mar 2020 13:42:57 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200320134257eusmtrp1be4c8d286d344892ab0244c2cbb206d8~_Bvcmz2Ea2315923159eusmtrp1M;
+        Fri, 20 Mar 2020 13:42:57 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-f9-5e74c861afda
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id DE.E7.07950.168C47E5; Fri, 20
+        Mar 2020 13:42:57 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200320134257eusmtip2daf37f8111c4a49c9fcb137e3efb541f~_BvcPomta1365913659eusmtip2S;
+        Fri, 20 Mar 2020 13:42:57 +0000 (GMT)
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: fbdev: fix -Wextra build warnings
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, Antonino Daplas <adaplas@gmail.com>,
+        Florian Tobias Schandinat <FlorianSchandinat@gmx.de>
+Message-ID: <27499b12-9e21-a799-ca9b-0852d1c0de0e@samsung.com>
+Date:   Fri, 20 Mar 2020 14:42:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200318223810.162440-3-ebiggers@kernel.org>
-Content-Type: text/plain; charset=iso-8859-2
+In-Reply-To: <20200315041002.24473-1-rdunlap@infradead.org>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCKsWRmVeSWpSXmKPExsWy7djP87qJJ0riDC7s1rb42f2FzeLK1/ds
+        Fp0zrzFanOj7wGpxedccNou3d6azOLB57Jx1l93jw8c4j80rtDzudx9n8vi8SS6ANYrLJiU1
+        J7MstUjfLoErY+/+2YwFHzkrJs9awdrAeIi9i5GTQ0LARKJl9iHmLkYuDiGBFYwSC+9dZoJw
+        vjBK3H26mx3C+cwo0dnUxwzT8vrmGrB2IYHljBJN36shit4ySmzpmsICkmATsJKY2L6KsYuR
+        g0NYQE/i4Ep7kLCIgIbE7ytXWEHqmQX2MkrM2L2EDSTBK2An8e7lSbAFLAKqEjd3rGUCsUUF
+        IiQ+PTjMClEjKHFy5hOw+ZwC1hILbi4F62UWEJe49WQ+E4QtL7H97RywfyQENrFLrN+5iQ3i
+        aheJSyeuM0HYwhKvjm+BBoCMxOnJPSwQDesYJf52vIDq3s4osXzyP6hua4k7536xgbzDLKAp
+        sX6XPkTYUWLyhgssIGEJAT6JG28FIY7gk5i0bTozRJhXoqNNCKJaTWLDsg1sMGu7dq5knsCo
+        NAvJa7OQvDMLyTuzEPYuYGRZxSieWlqcm55abJiXWq5XnJhbXJqXrpecn7uJEZh2Tv87/mkH
+        49dLSYcYBTgYlXh4LVaWxAmxJpYVV+YeYpTgYFYS4dVNL44T4k1JrKxKLcqPLyrNSS0+xCjN
+        waIkzmu86GWskEB6YklqdmpqQWoRTJaJg1OqgXFq/CzBs/8kmqWK5aoSmZeeb7RNfrr4jXOb
+        7zuOxt8/pkW/zUpq/FVuZPjJR3Rz/rkXmaxP7jyRnFMUU5yk4zpjPmvlnDca1VlmQc7Rs1Q/
+        spUFm/e7Me0LmsN6auqv30enthvcmbqT/6EHZ7z5JFUOhq3OsR35j8JCXh3/bnzhxF6Oxj1H
+        nyixFGckGmoxFxUnAgDj1jmuNwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKIsWRmVeSWpSXmKPExsVy+t/xe7qJJ0riDCbMl7D42f2FzeLK1/ds
+        Fp0zrzFanOj7wGpxedccNou3d6azOLB57Jx1l93jw8c4j80rtDzudx9n8vi8SS6ANUrPpii/
+        tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEvY+/+2YwFHzkr
+        Js9awdrAeIi9i5GTQ0LAROL1zTVANheHkMBSRom7J3aydjFyACVkJI6vL4OoEZb4c62LDaLm
+        NaNE89kvTCAJNgEriYntqxhB6oUF9CQOrrQHCYsIaEj8vnKFFaSeWWAvo0T3pFlsIAkhgT5G
+        ibd9MSA2r4CdxLuXJ5lBbBYBVYmbO9aCzRQViJA4vGMWI0SNoMTJmU9YQGxOAWuJBTeXgs1h
+        FlCX+DPvEjOELS5x68l8JghbXmL72znMExiFZiFpn4WkZRaSlllIWhYwsqxiFEktLc5Nzy02
+        0itOzC0uzUvXS87P3cQIjLJtx35u2cHY9S74EKMAB6MSD6/FypI4IdbEsuLK3EOMEhzMSiK8
+        uunFcUK8KYmVValF+fFFpTmpxYcYTYGem8gsJZqcD0wAeSXxhqaG5haWhubG5sZmFkrivB0C
+        B2OEBNITS1KzU1MLUotg+pg4OKUaGBW23rlzdMdrPZ4zmzIu6kt3btvxMCVot+9aV/dFt1Zp
+        sik7LV6xMp9Nj6sn/ax+cQsDH+vic8yK31c99W+oe7b4A/ecEK6Z/1Qkf7tOcrCveC74kMfv
+        csTk6aqvfCsCGSsM9kp83r1v5eVr6Q4XNitZXt2ptXPOvI9Vu4rkj8dMujXzp4nCsnNKLMUZ
+        iYZazEXFiQBuNSB+yAIAAA==
+X-CMS-MailID: 20200320134257eucas1p2fd97b3f52ceb23a87fc599c8880bf686
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200315041009eucas1p14e087e86c18ceafe1644589a67de9499
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200315041009eucas1p14e087e86c18ceafe1644589a67de9499
+References: <CGME20200315041009eucas1p14e087e86c18ceafe1644589a67de9499@eucas1p1.samsung.com>
+        <20200315041002.24473-1-rdunlap@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18. 03. 20, 23:38, Eric Biggers wrote:
-> --- a/drivers/tty/vt/vt_ioctl.c
-> +++ b/drivers/tty/vt/vt_ioctl.c
-> @@ -43,9 +43,11 @@ bool vt_dont_switch;
->  
->  static inline bool vt_in_use(unsigned int i)
->  {
-> -	extern struct tty_driver *console_driver;
-> +	const struct vc_data *vc = vc_cons[i].d;
->  
-> -	return console_driver->ttys[i] && console_driver->ttys[i]->count;
-> +	WARN_CONSOLE_UNLOCKED();
-> +
-> +	return vc && kref_read(&vc->port.kref) > 1;
->  }
->  
->  static inline bool vt_busy(int i)
-> @@ -643,15 +645,16 @@ int vt_ioctl(struct tty_struct *tty,
->  		struct vt_stat __user *vtstat = up;
->  		unsigned short state, mask;
->  
-> -		/* Review: FIXME: Console lock ? */
->  		if (put_user(fg_console + 1, &vtstat->v_active))
->  			ret = -EFAULT;
->  		else {
->  			state = 1;	/* /dev/tty0 is always open */
-> +			console_lock();
 
-Could you comment on this one and the lock below why you added it here?
-
-To me, it seems, we should rather introduce a vt alloc/dealloc lock
-protecting cases like this, not console lock. But not now, some time
-later. So a comment would help when/once we/I get into it...
-
-The interface (ie. the ioctls) also look weird and racy. Both of them.
-Like the "OK, I give you this number, but it might not be correct by
-now." kind of thing.
-
-This let me think, who could use this? The answer is many 8-/. openpt,
-systemd, sysvinit, didn't check others.
-
-Perhaps we should provide openvt -- analogy of openpty and deprecate
-VT_OPENQRY?
-
-With VT_GETSTATE, the situation is more complicated:
-sysvinit uses VT_GETSTATE only if TIOCGDEV is not available, so
-VT_GETSTATE is actually unneeded there.
-
-systemd uses it to find the current console (vtstat->v_active) and
-systemd-logind uses it for spawning autovt on free consoles. That sort
-of makes sense...
-
->  			for (i = 0, mask = 2; i < MAX_NR_CONSOLES && mask;
->  							++i, mask <<= 1)
->  				if (vt_in_use(i))
->  					state |= mask;
-> +			console_unlock();
->  			ret = put_user(state, &vtstat->v_state);
->  		}
->  		break;
-> @@ -661,10 +664,11 @@ int vt_ioctl(struct tty_struct *tty,
->  	 * Returns the first available (non-opened) console.
->  	 */
->  	case VT_OPENQRY:
-> -		/* FIXME: locking ? - but then this is a stupid API */
-> +		console_lock();
->  		for (i = 0; i < MAX_NR_CONSOLES; ++i)
->  			if (!vt_in_use(i))
->  				break;
-> +		console_unlock();
->  		uival = i < MAX_NR_CONSOLES ? (i+1) : -1;
->  		goto setint;		 
->  
+On 3/15/20 5:09 AM, Randy Dunlap wrote:
+> This patch series fixes warnings in fbdev that are found when
+> -Wextra is used. In fixing these, there were a few other build
+> errors discovered (mostly caused by bitrot) and fixed.
 > 
+> [PATCH 1/6] fbdev: fbmon: fix -Wextra build warnings
+> [PATCH 2/6] fbdev: aty: fix -Wextra build warning
+> [PATCH 3/6] fbdev: matrox: fix -Wextra build warnings
+> [PATCH 4/6] fbdev: savage: fix -Wextra build warning
+> [PATCH 5/6] fbdev: pm[23]fb.c: fix -Wextra build warnings and errors
+> [PATCH 6/6] fbdev: via: fix -Wextra build warning and format warning
+> 
+>  drivers/video/fbdev/aty/atyfb_base.c       |    2 +-
+>  drivers/video/fbdev/core/fbmon.c           |    2 +-
+>  drivers/video/fbdev/matrox/matroxfb_base.h |    2 +-
+>  drivers/video/fbdev/pm2fb.c                |    2 +-
+>  drivers/video/fbdev/pm3fb.c                |    8 ++++----
+>  drivers/video/fbdev/savage/savagefb.h      |    2 +-
+>  drivers/video/fbdev/via/debug.h            |    6 ++++--
+>  drivers/video/fbdev/via/viafbdev.c         |    2 +-
+>  8 files changed, 14 insertions(+), 12 deletions(-)
 
-thanks,
--- 
-js
-suse labs
+Patches #1-6 queued for v5.7, thanks!
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
