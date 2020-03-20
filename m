@@ -2,112 +2,122 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C575BC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A43D3C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9745320739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7760320739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 19:52:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Tel2JQH6"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="aV5+AQ5H";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="D3dkUm3e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgCTTuF (ORCPT
+        id S1726935AbgCTTw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 15:50:05 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14131 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgCTTuF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 15:50:05 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e751e090004>; Fri, 20 Mar 2020 12:48:25 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 20 Mar 2020 12:50:04 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 20 Mar 2020 12:50:04 -0700
-Received: from [10.2.57.131] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Mar
- 2020 19:50:04 +0000
-Subject: Re: [PATCH] x86/mm: Make pud_present() check _PAGE_PROTNONE and
- _PAGE_PSE as well
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-CC:     <linux-mm@kvack.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <1584507679-11976-1-git-send-email-anshuman.khandual@arm.com>
- <c03165c8-6d44-49c2-2dad-a85759200718@arm.com>
- <20200320114741.c62iolt2yzltnscf@box>
- <2e7a04cf-80cb-58c1-7344-2f8422ed7d31@arm.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <082aae4a-b190-7b54-eda9-0bbc28c8a6b3@nvidia.com>
-Date:   Fri, 20 Mar 2020 12:50:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 20 Mar 2020 15:52:29 -0400
+Received: from mail.z3ntu.xyz ([128.199.32.197]:52360 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbgCTTw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 15:52:29 -0400
+Received: by mail.z3ntu.xyz (Postfix, from userid 182)
+        id E1E16C43CD; Fri, 20 Mar 2020 19:52:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1584733946; bh=MDnzSJT+llofSXN9pFcQrkcAec3ckxZl7QrMwV659OU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=aV5+AQ5HFMQtjamOGfq2RPgVngbnXZM/kr1CKeliXJGmCvn29OoiLOtA6k1WRlax7
+         ppDPVYf6XCWEK9PcBUBVZ1Xni7o+4PhcPo24OtDDVKzAeMh6FFkVJUUdehwdS4CHkD
+         yWwVP/6VCUwDibK8MTf/YgWud5NfbK1AkV6/wBT0=
+Received: from g550jk.localnet (80-110-124-168.cgn.dynamic.surfer.at [80.110.124.168])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 7BB74C43BA;
+        Fri, 20 Mar 2020 19:52:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1584733942; bh=MDnzSJT+llofSXN9pFcQrkcAec3ckxZl7QrMwV659OU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=D3dkUm3eV3UFiDyYuYr9T3nrTLJiA18jxrZ26rNJ/7pLpyiLXTm1wf6cEuMUKeMhc
+         PDTdZxAD0QrTDo0qFjaXiqDhT3hLDf4SME6700HUqDMR8nbCvYuR4j7xFjEiURtWh1
+         TORTze3yF0dIb1duzBBDNGWr81ua4lgRGNUpmH7E=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
+        shawnguo@kernel.org, olof@lixom.net, maxime@cerno.tech,
+        Anson.Huang@nxp.com, dinguyen@kernel.org, leonard.crestez@nxp.com,
+        marcin.juszkiewicz@linaro.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Robert Foss <robert.foss@linaro.org>
+Cc:     Robert Foss <robert.foss@linaro.org>
+Subject: Re: [v2 6/6] arm64: defconfig: Enable QCOM CAMCC, CAMSS and CCI drivers
+Date:   Fri, 20 Mar 2020 20:52:20 +0100
+Message-ID: <2523204.mvXUDI8C0e@g550jk>
+In-Reply-To: <20200317135740.19412-7-robert.foss@linaro.org>
+References: <20200317135740.19412-1-robert.foss@linaro.org> <20200317135740.19412-7-robert.foss@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <2e7a04cf-80cb-58c1-7344-2f8422ed7d31@arm.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584733705; bh=eMx7zJHblAy5+YXR6qnBGnBggweRnlFVeODh2DtisrU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Tel2JQH66ScF35HhrWYTgNQPP1AMRuVM4bvqwSSCBmgG15W1HzJ865N1Qi6NhkqsQ
-         woGCQZujdfF6ZIip99vvJBaU5dDWbVtk8VH6TrI7rQ9NbZef+wNBXpkIRTVF22NV5O
-         DdiyvOMXxmjF10pBRS25AJ0le5iUdr8U4HqAZQ1+mEp9OAH/lpnYZm8jqp0jtIKX8y
-         31/DhZyGPocZEe/XRi/zCkNQvP208imeKhlFzHwR1bTNk6xXX8xx/6zjJgtBRpjYV3
-         +um0XPIw+9MhAznV0GwYZZG9146hF/ek7V/WsEFcK+FNqBWLrJ3hk7tFHVapD37Wd0
-         NJivdmuFNik6Q==
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/20/20 6:22 AM, Anshuman Khandual wrote:
-...
->>> +Cc: Kirill A. Shutemov <kirill@shutemov.name>
->>> +Cc: Dan Williams <dan.j.williams@intel.com>
->>
->> Or we can just drop the pud_mknotpresent(). There's no users AFAICS and
->> only x86 provides it.
+Hi Robert,
 
-+1
+On Dienstag, 17. M=E4rz 2020 14:57:40 CET Robert Foss wrote:
+> Build camera clock, isp and controller drivers as modules.
+>=20
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  arch/arm64/configs/defconfig | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 4db223dbc549..7cb6989249ab 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -376,6 +376,7 @@ CONFIG_I2C_MESON=3Dy
+>  CONFIG_I2C_MV64XXX=3Dy
+>  CONFIG_I2C_OWL=3Dy
+>  CONFIG_I2C_PXA=3Dy
+> +CONFIG_I2C_QCOM_CCI=3Dm
+>  CONFIG_I2C_QCOM_GENI=3Dm
+>  CONFIG_I2C_QUP=3Dy
+>  CONFIG_I2C_RK3X=3Dy
+> @@ -530,6 +531,7 @@ CONFIG_VIDEO_SAMSUNG_S5P_MFC=3Dm
+>  CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=3Dm
+>  CONFIG_VIDEO_RENESAS_FCP=3Dm
+>  CONFIG_VIDEO_RENESAS_VSP1=3Dm
+> +CONFIG_VIDEO_QCOM_CAMSS=3Dm
+>  CONFIG_DRM=3Dm
+>  CONFIG_DRM_I2C_NXP_TDA998X=3Dm
+>  CONFIG_DRM_NOUVEAU=3Dm
+> @@ -732,6 +734,7 @@ CONFIG_MSM_GCC_8994=3Dy
+>  CONFIG_MSM_MMCC_8996=3Dy
+>  CONFIG_MSM_GCC_8998=3Dy
+>  CONFIG_QCS_GCC_404=3Dy
+> +CONFIG_SDM_CAMCC_845=3Dm
 
-> 
-> Yes that will be an option but IMHO fixing pud_present() here might be
-> a better choice because,
-> 
-> (1) pud_mknotpresent() with fixed pud_present() might be required later
+You seem to have this option twice in this patch.
+
+>  CONFIG_SDM_GCC_845=3Dy
+>  CONFIG_SM_GCC_8150=3Dy
+>  CONFIG_QCOM_HFPLL=3Dy
+> @@ -762,6 +765,7 @@ CONFIG_QCOM_COMMAND_DB=3Dy
+>  CONFIG_QCOM_GENI_SE=3Dy
+>  CONFIG_QCOM_GLINK_SSR=3Dm
+>  CONFIG_QCOM_RMTFS_MEM=3Dm
+> +CONFIG_SDM_CAMCC_845=3Dm
+
+^
+
+>  CONFIG_QCOM_RPMH=3Dy
+>  CONFIG_QCOM_RPMHPD=3Dy
+>  CONFIG_QCOM_SMEM=3Dy
+
+Regards
+Luca
 
 
-It might. Or it might not. Let's wait until it's actually used, and see.
-Dead code is an avoidable expense (adds size, space on the screen, email
-traffic and other wasted time), so let's avoid it here.
-
-
-> (2) PMD & PUD will be exact same (THP is supported on either level)
-> 
-> Nonetheless, I am happy to go either way.
-> 
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
