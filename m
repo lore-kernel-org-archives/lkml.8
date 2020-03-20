@@ -2,341 +2,132 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAFDC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF6CC43332
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9687420739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2FE120739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 08:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=adit-jv.com header.i=@adit-jv.com header.b="OmYQv2Rn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ygxm+18K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgCTIAX (ORCPT
+        id S1726973AbgCTIBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 04:00:23 -0400
-Received: from ma-dnext02.denso.co.jp ([133.192.181.77]:43400 "EHLO
-        ma-dnext02.denso.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgCTIAX (ORCPT
+        Fri, 20 Mar 2020 04:01:25 -0400
+Received: from mail-pl1-f170.google.com ([209.85.214.170]:42867 "EHLO
+        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbgCTIBZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 04:00:23 -0400
-Received: from grdma01h.denso.co.jp (unknown [133.192.24.24])
-        by ma-dnext02.denso.co.jp (Postfix) with ESMTP id 57D0E31C1A5;
-        Fri, 20 Mar 2020 17:00:20 +0900 (JST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=adit-jv.com;
-        s=jpadit-jvmail2011; t=1584691220;
-        bh=aGPgxtdffBMByyqdwdFOstjzeRXW/RZbd3ID/wGmoTo=;
-        h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-         MIME-Version:Content-Type;
-        b=OmYQv2Rn1zusEIsAT0p+iVHF551yaxM+mBRJUm0383tgHYEKNdh519EmJcaEguMtu
-         yH3Om6GL/Q5HO4AxqpqG7Fje9gLCrRdt0hzqyMlUeJk638xVdo/6LB82/P+1+7uqw1
-         fCO7AIbIDNYoqXPwtlIWaM6awOLwrCr9kPrnEW2TrnXelKgtK5E0v6o3u3EMFDDrUe
-         IYGkAXVdznW2Lo3xPXDONUeM1Du+mYribXwwGHpu+aNi3qd4jDn2sNE4o2islbZc8/
-         C7YXHjGaYGlCByqHHlAnqAOJph60KtrTYsCNhpo0td3iDLaYDOLQSoin+zXWWGNRtq
-         NQeE99HmiWhjQ==
-Received: by grdma01h.denso.co.jp (Postfix, from userid 0)
-        id 4EFCCC04E00; Fri, 20 Mar 2020 17:00:20 +0900 (JST)
-Received: from smtp1.denso.co.jp [133.192.24.88] 
-         by grdma01h. with ESMTP id TAA17990;
-         Fri, 20 Mar 2020 17:00:20 +0900
-Received: from ky0exch01.adit-jv.com ([10.71.113.8])
-        by smtp01.denso.co.jp (MOS 4.4.7-GA)
-        with ESMTP id FLR84220;
-        Fri, 20 Mar 2020 17:00:18 +0900
-Received: from jp-u0004.adit-jv.com (10.71.112.120) by ky0exch01.adit-jv.com
- (10.71.113.8) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 20 Mar
- 2020 17:00:18 +0900
-From:   Suresh Udipi <sudipi@jp.adit-jv.com>
-To:     <niklas.soderlund@ragnatech.se>
-CC:     <akiyama@nds-osk.co.jp>, <efriedrich@de.adit-jv.com>,
-        <erosca@de.adit-jv.com>, <hverkuil-cisco@xs4all.nl>,
-        <jacopo+renesas@jmondi.org>, <laurent.pinchart@ideasonboard.com>,
-        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <mrodin@de.adit-jv.com>,
-        <securitycheck@denso.co.jp>, <sudipi@jp.adit-jv.com>
-Subject: [PATCH v3] media: rcar-csi2: Correct the selection of hsfreqrange
-Date:   Fri, 20 Mar 2020 17:00:05 +0900
-Message-ID: <1584691205-3808-1-git-send-email-sudipi@jp.adit-jv.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <20200318101936.GA2667161@oden.dyn.berto.se>
-References: <20200318101936.GA2667161@oden.dyn.berto.se>
+        Fri, 20 Mar 2020 04:01:25 -0400
+Received: by mail-pl1-f170.google.com with SMTP id t3so2163052plz.9
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 01:01:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=F4z4DhLVGvbna7aIcuhJEG+lKoXYnQgbcpPqw2ITAKU=;
+        b=Ygxm+18KOXZTFbzvkGg+Tf7RqavXc344b9FQ2nlvHUhRyxiLwNSVZZzOH4mFW/b2RH
+         LJhABONmxCTa+PLt5Tu7POF1qsT8W4TE/ODvrLFy0CuQPCmjym4SToq6doAWMB11DSxd
+         Qar6z2Y3XBEf4v/OJ+QpNzrR9HiEBwUA+wQ+g3GXu4fMFziYPlhtt0njTouf6ExMH0Ro
+         pMPfS9RoHlMQ8ijIOcX1HAAWFwoZHgnhc8sEQyaHf1KHLhHiLgBaenncmhJvMPm4r7po
+         U2n/elBRNUUOMppW5/2Sw8Ks6whUl9OOigfw8icHCwZXxRsq2PF7H5xZFEGmrVnOo0c0
+         Yqig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=F4z4DhLVGvbna7aIcuhJEG+lKoXYnQgbcpPqw2ITAKU=;
+        b=oXhqkJtEjn8ynf4zZcp8O5ZE+nCn3PpXlHV7qTGreyeI7ymlHshYfb/TVjwwSHEjpz
+         Ulp07ovaxxLTdQzEgSVyr4NzdQtaCr+MMO5g4gpXwuChUdxYOOkgT2r0Mk9k9ShCrOPp
+         vyzZK9rsm8i5hAJ7+E7Nl7ylYOWyAm5pJ+y44JiEQ/oxsYXjpIBHBwSoSZA0wt7esOT6
+         e8aNARPrGf2eI1kV/xwUGyt3FEqYAsj5ZEby7/pnC+JPMZOQNwCQfWGNfJ9V+S9Ep8wc
+         HnLKMrPtplEQtW29SP+ikzkyED7eyRZARkZAAXLf9GcKtVQgEQN53swKKit/xBBF1VML
+         Gk8w==
+X-Gm-Message-State: ANhLgQ369ZKjptWm1sitobLkZQ9mKsAc/4YKLAtOmGBM4hOp9UcK4Lro
+        nAaRGTzXkoi1SubY522jSyzUrw==
+X-Google-Smtp-Source: ADFU+vuiOBTrlaYtXDptNfRvUosd7l5Aa1+h2LxNOdqrM0CsGlfVE5Q6aFN1jDdM00w5TC2vObqltg==
+X-Received: by 2002:a17:902:aa49:: with SMTP id c9mr7501332plr.145.1584691282393;
+        Fri, 20 Mar 2020 01:01:22 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id g7sm3825789pjl.17.2020.03.20.01.01.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Mar 2020 01:01:21 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 13:31:19 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Sibi Sankar <sibis@codeaurora.org>, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+Message-ID: <20200320080119.gztifbmenwpi6rrp@vireshk-i7>
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+ <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
+ <20200318034243.o2metmggzuah6cqw@vireshk-i7>
+ <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
+ <ea4265f3f4b5a439d70d3c80bcc77b7f@codeaurora.org>
+ <20200319102411.oivesngrk7gy7vtw@vireshk-i7>
+ <78d92969-0219-d140-d788-d1b14e643e90@codeaurora.org>
+ <20200319110805.glmuc2qvgcei3mon@vireshk-i7>
+ <53065b03-22d5-fb78-aa6f-e4711b8ffd3b@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.71.112.120]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <53065b03-22d5-fb78-aa6f-e4711b8ffd3b@codeaurora.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hsfreqrange should be chosen based on the calculated mbps which
-is within the range as per table[1]. But current calculation
-always selects first value which is greater than or equal to the
-calculated mbps which may lead to chosing a wrong range in some cases.
+On 19-03-20, 17:03, Rajendra Nayak wrote:
+> sure, I understand there is a dependency, however refusing to review the approach
+> (to add multiple OPPS tables per device) that this series is taking because of an outstanding
+> question which, if I read it right is "We can not add multiple OPP tables for a single device right now"
+> seems odd.
+> 
+> Its fine if you are not happy with the approach taken here and you can propose something else,
+> but it looks inevitable that we would need something like this to be supported (multiple OPP tables per device)
+> and hence the request to review the patches.
 
-For example for 360 mbps for H3/M3N
-Existing logic selects
-Calculated value 360Mbps : Default 400Mbps Range [368.125 -433.125 mbps]
+I understand the frustration you have right now, but honestly most of
+the delay is not from my part. I normally try to be very quick in
+giving reviews or even accepting material for next cycle. Still, I am
+part of the chain which has blocked this series and I am really sorry
+for that.
 
-This hsfreqrange is out of range.
+Coming back to reviews. I never liked the idea of keeping separate OPP
+tables just for the relation that a peripheral share with the
+interconnect, i.e. the b/w tables getting discussed right now.
 
-The logic is changed to select the first hsfreqrange whose max range[1] is
-greater than the calculated bit rate.
+And I am not at all sure if such tables should be added as device
+tables anyway, it was present in cover letter of Saravana for sometime
+but not in the real patches and so I missed it until the time Sibi
+asked me something on IRC.
 
-Calculated value 360Mbps : max range 380.625 mbps is selected
- i.e Default 350Mbps  Range [320.625 -380.625 mpbs]
+To be clear, I don't think we will allow multiple active OPP tables
+for a device for now, unless we have a very good reason to do that. It
+just doesn't make sense to me to have one table for keeping
+frequency/voltage thing, and another set of tables for b/w
+requirements from interconnect.
 
-[1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
+So, the changes proposed by this patchset even doesn't matter as I am
+not agreeing on the binding itself. And we need a binding change for
+that, which Saravana never sent, i.e. to have multiple active tables
+for a device.
 
-Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
+Yes, we need a solution for this and a quick one. I am fine to discuss
+this all on a hangout session (anyway, everyone is working from home
+now anyways) anytime next week with the interested parties. I think
+/me and Vincent can join it.
 
-Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-Signed-off-by: Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
----
- Changes in v2:
-  - Added the boundary check for the maximum bit rate.
-  
-  - Simplified the logic by remmoving range check 
-    as only the closest default value covers most 
-    of the use cases.
-
-  - Aligning the commit message based on the above change
-
-
- Changes in v3:
-    - Added max member from struct rcsi2_mbps_reg.
-      mbps varialbe cannot be removed from rcsi2_mbps_reg, 
-      since this structure is reused for 
-      phtw_mbps_h3_v3h_m3n/phtw_mbps_v3m_e3 where mbps is 
-      used.
-	  
-	
-   -  Update the walk of the array in rcsi2_set_phypll() so that it finds
-      the first entry where the calculated bit rate is less than the max.
-
-   - Support lower bit rates less than 80Mbps like 48Mbps
-     (Raspberry pi camera 640x480 connected to Kingfisher)
-     can also be supported by selecting the lowest default bit rate 80Mbps
-     as done before this fix
-
-   - Alignement of the commit message based on above changes.
-
- drivers/media/platform/rcar-vin/rcar-csi2.c | 180 ++++++++++++++--------------
- 1 file changed, 91 insertions(+), 89 deletions(-)
-
-diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-index faa9fb2..ff375b4 100644
---- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-+++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-@@ -134,6 +134,7 @@ struct phtw_value {
- struct rcsi2_mbps_reg {
- 	u16 mbps;
- 	u16 reg;
-+	u16 max;
- };
- 
- static const struct rcsi2_mbps_reg phtw_mbps_h3_v3h_m3n[] = {
-@@ -201,96 +202,96 @@ static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
- #define PHYPLL_HSFREQRANGE(n)		((n) << 16)
- 
- static const struct rcsi2_mbps_reg hsfreqrange_h3_v3h_m3n[] = {
--	{ .mbps =   80, .reg = 0x00 },
--	{ .mbps =   90, .reg = 0x10 },
--	{ .mbps =  100, .reg = 0x20 },
--	{ .mbps =  110, .reg = 0x30 },
--	{ .mbps =  120, .reg = 0x01 },
--	{ .mbps =  130, .reg = 0x11 },
--	{ .mbps =  140, .reg = 0x21 },
--	{ .mbps =  150, .reg = 0x31 },
--	{ .mbps =  160, .reg = 0x02 },
--	{ .mbps =  170, .reg = 0x12 },
--	{ .mbps =  180, .reg = 0x22 },
--	{ .mbps =  190, .reg = 0x32 },
--	{ .mbps =  205, .reg = 0x03 },
--	{ .mbps =  220, .reg = 0x13 },
--	{ .mbps =  235, .reg = 0x23 },
--	{ .mbps =  250, .reg = 0x33 },
--	{ .mbps =  275, .reg = 0x04 },
--	{ .mbps =  300, .reg = 0x14 },
--	{ .mbps =  325, .reg = 0x25 },
--	{ .mbps =  350, .reg = 0x35 },
--	{ .mbps =  400, .reg = 0x05 },
--	{ .mbps =  450, .reg = 0x16 },
--	{ .mbps =  500, .reg = 0x26 },
--	{ .mbps =  550, .reg = 0x37 },
--	{ .mbps =  600, .reg = 0x07 },
--	{ .mbps =  650, .reg = 0x18 },
--	{ .mbps =  700, .reg = 0x28 },
--	{ .mbps =  750, .reg = 0x39 },
--	{ .mbps =  800, .reg = 0x09 },
--	{ .mbps =  850, .reg = 0x19 },
--	{ .mbps =  900, .reg = 0x29 },
--	{ .mbps =  950, .reg = 0x3a },
--	{ .mbps = 1000, .reg = 0x0a },
--	{ .mbps = 1050, .reg = 0x1a },
--	{ .mbps = 1100, .reg = 0x2a },
--	{ .mbps = 1150, .reg = 0x3b },
--	{ .mbps = 1200, .reg = 0x0b },
--	{ .mbps = 1250, .reg = 0x1b },
--	{ .mbps = 1300, .reg = 0x2b },
--	{ .mbps = 1350, .reg = 0x3c },
--	{ .mbps = 1400, .reg = 0x0c },
--	{ .mbps = 1450, .reg = 0x1c },
--	{ .mbps = 1500, .reg = 0x2c },
-+	{ .reg = 0x00, .max =   97 },
-+	{ .reg = 0x10, .max =  107 },
-+	{ .reg = 0x20, .max =  118 },
-+	{ .reg = 0x30, .max =  128 },
-+	{ .reg = 0x01, .max =  139 },
-+	{ .reg = 0x11, .max =  149 },
-+	{ .reg = 0x21, .max =  160 },
-+	{ .reg = 0x31, .max =  170 },
-+	{ .reg = 0x02, .max =  181 },
-+	{ .reg = 0x12, .max =  191 },
-+	{ .reg = 0x22, .max =  202 },
-+	{ .reg = 0x32, .max =  212 },
-+	{ .reg = 0x03, .max =  228 },
-+	{ .reg = 0x13, .max =  224 },
-+	{ .reg = 0x23, .max =  259 },
-+	{ .reg = 0x33, .max =  275 },
-+	{ .reg = 0x04, .max =  301 },
-+	{ .reg = 0x14, .max =  328 },
-+	{ .reg = 0x25, .max =  354 },
-+	{ .reg = 0x35, .max =  380 },
-+	{ .reg = 0x05, .max =  433 },
-+	{ .reg = 0x16, .max =  485 },
-+	{ .reg = 0x26, .max =  538 },
-+	{ .reg = 0x37, .max =  590 },
-+	{ .reg = 0x07, .max =  643 },
-+	{ .reg = 0x18, .max =  695 },
-+	{ .reg = 0x28, .max =  748 },
-+	{ .reg = 0x39, .max =  800 },
-+	{ .reg = 0x09, .max =  853 },
-+	{ .reg = 0x19, .max =  905 },
-+	{ .reg = 0x29, .max =  958 },
-+	{ .reg = 0x3a, .max = 1010 },
-+	{ .reg = 0x0a, .max = 1063 },
-+	{ .reg = 0x1a, .max = 1115 },
-+	{ .reg = 0x2a, .max = 1168 },
-+	{ .reg = 0x3b, .max = 1220 },
-+	{ .reg = 0x0b, .max = 1273 },
-+	{ .reg = 0x1b, .max = 1325 },
-+	{ .reg = 0x2b, .max = 1378 },
-+	{ .reg = 0x3c, .max = 1430 },
-+	{ .reg = 0x0c, .max = 1483 },
-+	{ .reg = 0x1c, .max = 1500 },
-+	{ .reg = 0x2c, .max = 1500 },
- 	{ /* sentinel */ },
- };
- 
- static const struct rcsi2_mbps_reg hsfreqrange_m3w_h3es1[] = {
--	{ .mbps =   80,	.reg = 0x00 },
--	{ .mbps =   90,	.reg = 0x10 },
--	{ .mbps =  100,	.reg = 0x20 },
--	{ .mbps =  110,	.reg = 0x30 },
--	{ .mbps =  120,	.reg = 0x01 },
--	{ .mbps =  130,	.reg = 0x11 },
--	{ .mbps =  140,	.reg = 0x21 },
--	{ .mbps =  150,	.reg = 0x31 },
--	{ .mbps =  160,	.reg = 0x02 },
--	{ .mbps =  170,	.reg = 0x12 },
--	{ .mbps =  180,	.reg = 0x22 },
--	{ .mbps =  190,	.reg = 0x32 },
--	{ .mbps =  205,	.reg = 0x03 },
--	{ .mbps =  220,	.reg = 0x13 },
--	{ .mbps =  235,	.reg = 0x23 },
--	{ .mbps =  250,	.reg = 0x33 },
--	{ .mbps =  275,	.reg = 0x04 },
--	{ .mbps =  300,	.reg = 0x14 },
--	{ .mbps =  325,	.reg = 0x05 },
--	{ .mbps =  350,	.reg = 0x15 },
--	{ .mbps =  400,	.reg = 0x25 },
--	{ .mbps =  450,	.reg = 0x06 },
--	{ .mbps =  500,	.reg = 0x16 },
--	{ .mbps =  550,	.reg = 0x07 },
--	{ .mbps =  600,	.reg = 0x17 },
--	{ .mbps =  650,	.reg = 0x08 },
--	{ .mbps =  700,	.reg = 0x18 },
--	{ .mbps =  750,	.reg = 0x09 },
--	{ .mbps =  800,	.reg = 0x19 },
--	{ .mbps =  850,	.reg = 0x29 },
--	{ .mbps =  900,	.reg = 0x39 },
--	{ .mbps =  950,	.reg = 0x0a },
--	{ .mbps = 1000,	.reg = 0x1a },
--	{ .mbps = 1050,	.reg = 0x2a },
--	{ .mbps = 1100,	.reg = 0x3a },
--	{ .mbps = 1150,	.reg = 0x0b },
--	{ .mbps = 1200,	.reg = 0x1b },
--	{ .mbps = 1250,	.reg = 0x2b },
--	{ .mbps = 1300,	.reg = 0x3b },
--	{ .mbps = 1350,	.reg = 0x0c },
--	{ .mbps = 1400,	.reg = 0x1c },
--	{ .mbps = 1450,	.reg = 0x2c },
--	{ .mbps = 1500,	.reg = 0x3c },
-+	{ .reg = 0x00, .max =  110 },
-+	{ .reg = 0x10, .max =  120 },
-+	{ .reg = 0x20, .max =  131 },
-+	{ .reg = 0x30, .max =  141 },
-+	{ .reg = 0x01, .max =  152 },
-+	{ .reg = 0x11, .max =  162 },
-+	{ .reg = 0x21, .max =  173 },
-+	{ .reg = 0x31, .max =  183 },
-+	{ .reg = 0x02, .max =  194 },
-+	{ .reg = 0x12, .max =  204 },
-+	{ .reg = 0x22, .max =  215 },
-+	{ .reg = 0x32, .max =  225 },
-+	{ .reg = 0x03, .max =  241 },
-+	{ .reg = 0x13, .max =  257 },
-+	{ .reg = 0x23, .max =  273 },
-+	{ .reg = 0x33, .max =  275 },
-+	{ .reg = 0x04, .max =  301 },
-+	{ .reg = 0x14, .max =  328 },
-+	{ .reg = 0x05, .max =  354 },
-+	{ .reg = 0x15, .max =  393 },
-+	{ .reg = 0x25, .max =  446 },
-+	{ .reg = 0x06, .max =  498 },
-+	{ .reg = 0x16, .max =  551 },
-+	{ .reg = 0x07, .max =  603 },
-+	{ .reg = 0x17, .max =  656 },
-+	{ .reg = 0x08, .max =  708 },
-+	{ .reg = 0x18, .max =  761 },
-+	{ .reg = 0x09, .max =  813 },
-+	{ .reg = 0x19, .max =  866 },
-+	{ .reg = 0x29, .max =  918 },
-+	{ .reg = 0x39, .max =  971 },
-+	{ .reg = 0x0a, .max = 1023 },
-+	{ .reg = 0x1a, .max = 1076 },
-+	{ .reg = 0x2a, .max = 1128 },
-+	{ .reg = 0x3a, .max = 1181 },
-+	{ .reg = 0x0b, .max = 1233 },
-+	{ .reg = 0x1b, .max = 1286 },
-+	{ .reg = 0x2b, .max = 1338 },
-+	{ .reg = 0x3b, .max = 1391 },
-+	{ .reg = 0x0c, .max = 1443 },
-+	{ .reg = 0x1c, .max = 1496 },
-+	{ .reg = 0x2c, .max = 1500 },
-+	{ .reg = 0x3c, .max = 1500 },
- 	{ /* sentinel */ },
- };
- 
-@@ -432,11 +433,12 @@ static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
- {
- 	const struct rcsi2_mbps_reg *hsfreq;
- 
--	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++)
--		if (hsfreq->mbps >= mbps)
-+	for (hsfreq = priv->info->hsfreqrange; hsfreq->max != 0; hsfreq++) {
-+		if (hsfreq->max >= mbps)
- 			break;
-+	}
- 
--	if (!hsfreq->mbps) {
-+	if (!hsfreq->max) {
- 		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
- 		return -ERANGE;
- 	}
 -- 
-2.7.4
-
+viresh
