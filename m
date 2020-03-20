@@ -2,168 +2,94 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3782DC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A42BC43332
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1395220773
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF8420663
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584726826;
-	bh=nLU7I+khHU23Hk7rDSRLXrFUGdrxJwXe3bmc7di73/g=;
+	s=default; t=1584726908;
+	bh=OxR18V3t5m/wCaxN1bGGSKFzCm9QOdFy5PULrMJR0F4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=urnypW6M3EYWen4kGk+Ni2kORDWFSoNtFHXhX1/VY+bilJGXajQlYjdVhIFYLg5hu
-	 EkKuyifNEN2W35788yEFro4OLKDF4MtDziNX9a/SL05Jfi9A9OC6p1WYXUj9U6dHbD
-	 YqcVHvm6NTBAlX3zoZs7ZG8eajFLTQVgfIiG3ptc=
+	b=Qis7wGkFLhXN6z/rXTBtPOcaimmtQIpybOO1QjI/UVmPHHEcRySPBTqjpMHuCtKEd
+	 ta5kzq47bts9UTx1pC+RWRi0btnOeUehgwVig6fy3RiR4ONwNSvBYye9Lqazq9/Ipm
+	 NbT4fAwUgRNLd0q+v6E5/GsdzgV1bJcbKWzIfYoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgCTRxp (ORCPT
+        id S1727158AbgCTRzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:53:45 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:35077 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbgCTRxo (ORCPT
+        Fri, 20 Mar 2020 13:55:07 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35127 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbgCTRzG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:53:44 -0400
-Received: by mail-il1-f193.google.com with SMTP id o16so3808125ilm.2;
-        Fri, 20 Mar 2020 10:53:44 -0700 (PDT)
+        Fri, 20 Mar 2020 13:55:06 -0400
+Received: by mail-io1-f66.google.com with SMTP id h8so6889664iob.2;
+        Fri, 20 Mar 2020 10:55:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LhB293HQjykdpFMkVYZkXztlpDsUi5BcHgzQ1QDOWa8=;
-        b=IsFU5JWIfqe3otbAsRF8oj6oQb4fk/FXGxHM60fa/iJpVQ6LbhXKAu+40fptJa4T4B
-         1dCX63DGed7QW1ewT2K8yDCbJzR1qdbckTnuUiGrchTl4tVnjXZXpDPCSbsqZkUidCTY
-         18/AhLK533mQE9QXDTjptM7qTyD2UzgU140pYW0Di3XZseiSuNmGNWMEGM8sbxnqlHtD
-         rO9OdAVB5CiQVgh/ZNkOx9kpoeEBm3KXs/1EMpCtAqEk/fciUV2Vp9G+6SjifBoKClIz
-         GQd/6t/VaoCj4Snsmc5GuOec7bOgt/pTFtfAvS3qJtcPQoZbfNpVDGe9/ifgd0kWUpXZ
-         zzsg==
-X-Gm-Message-State: ANhLgQ2Ud/KXy/sJb2BSmOxlMYkut52f2ydch/g7xqZgDNslMEuH5p84
-        K7bOn9KMNM1Z7IAKWp0Wrg==
-X-Google-Smtp-Source: ADFU+vsUCM8kq3aVkV1fztHvKh0xPIyxaYIKw+n73UMjSIdvQY91wgcqhbhDJ42CO+ued3HzkO9sPQ==
-X-Received: by 2002:a92:6c0e:: with SMTP id h14mr9996526ilc.81.1584726823697;
-        Fri, 20 Mar 2020 10:53:43 -0700 (PDT)
+        bh=xEFFch4ode9uAdt5LKTVjGKh0d9AyJMR356v0HY7PA0=;
+        b=jCP2icBdLTH3Me57hTF69RqzQAwvgggs7PKb2g+5dTFR3IDPQietGreQ6kRTMgx+15
+         Wzs74x6TrqwfjrxzhwvKn/tl25CTcoYh2FkwORzBQFWVoKoW+QQwqWD3OaNPYMYPqKx7
+         HtGzG4UTGqnIVj6tk11p3h21OL1P06P86fvTDw1Y4s1MtbJ+iFwOcR5+in+83omoyqoF
+         q/wPRRcrBO5Pr4Npn1YyNCGISEh0RfS9alsD7AZghEee4VdOsyanz9B7TUIsC55o98ZI
+         X4uRhg7vopXSK7c5NyfMETlp+YC1GJgTbH/ptjG15ttiF9syyaZojaFg/IH7TU8EhWsB
+         0M+w==
+X-Gm-Message-State: ANhLgQ232VKJBT44XJJe3dNRGbbKJljHTZXUyCDxZznxkoT2HGe8Frhi
+        fRhEQc3l7Db4CM2srJgNtA==
+X-Google-Smtp-Source: ADFU+vt+SEWH2J2f6vDId7XVkseA5PcLUfTD98uIFaOMgOqhsiMul3OH4W1i7vh0gcMGuNy6AqJdZA==
+X-Received: by 2002:a5d:9708:: with SMTP id h8mr8522503iol.141.1584726905725;
+        Fri, 20 Mar 2020 10:55:05 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id 10sm2259019ilb.45.2020.03.20.10.53.40
+        by smtp.gmail.com with ESMTPSA id c87sm2258351ilg.2.2020.03.20.10.55.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 10:53:42 -0700 (PDT)
-Received: (nullmailer pid 28110 invoked by uid 1000);
-        Fri, 20 Mar 2020 17:53:39 -0000
-Date:   Fri, 20 Mar 2020 11:53:39 -0600
+        Fri, 20 Mar 2020 10:55:05 -0700 (PDT)
+Received: (nullmailer pid 30722 invoked by uid 1000);
+        Fri, 20 Mar 2020 17:55:03 -0000
+Date:   Fri, 20 Mar 2020 11:55:03 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Alexandru Ardelean <ardeleanalex@gmail.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jic23@kernel.org,
-        Laszlo.Nagy@analog.com, Andrei.Grozav@analog.com,
-        Michael.Hennerich@analog.com, Istvan.Csomortani@analog.com,
-        Adrian.Costina@analog.com, Dragos.Bogdan@analog.com,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: Re: [PATCH v10 6/8] dt-bindings: iio: adc: add bindings doc for AXI
- ADC driver
-Message-ID: <20200320175339.GA24239@bogus>
-References: <20200316155035.25500-1-alexandru.ardelean@analog.com>
- <20200316155035.25500-7-alexandru.ardelean@analog.com>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: Re: [PATCH v5 2/9] dt-bindings: phy: qcom,qusb2: Add compatibles for
+ QUSB2 V2 phy and SC7180
+Message-ID: <20200320175503.GA30684@bogus>
+References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
+ <1583747589-17267-3-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200316155035.25500-7-alexandru.ardelean@analog.com>
+In-Reply-To: <1583747589-17267-3-git-send-email-sanm@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 05:50:33PM +0200, Alexandru Ardelean wrote:
-> This change adds the bindings documentation for the AXI ADC driver.
+On Mon,  9 Mar 2020 15:23:02 +0530, Sandeep Maheswaram wrote:
+> Add compatibles for generic QUSB2 V2 phy which can be used for
+> sdm845 and sc7180.
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-
-Your author and S-o-b emails don't match.
-
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  .../bindings/iio/adc/adi,axi-adc.yaml         | 63 +++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+>  Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
-> new file mode 100644
-> index 000000000000..6bd80e241f40
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
-> @@ -0,0 +1,63 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,axi-adc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AXI ADC IP core
-> +
-> +maintainers:
-> +  - Michael Hennerich <michael.hennerich@analog.com>
-> +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-> +
-> +description: |
-> +  Analog Devices Generic AXI ADC IP core for interfacing an ADC device
-> +  with a high speed serial (JESD204B/C) or source synchronous parallel
-> +  interface (LVDS/CMOS).
-> +  Usually, some other interface type (i.e SPI) is used as a control
-> +  interface for the actual ADC, while this IP core will interface
-> +  to the data-lines of the ADC and handle the streaming of data into
-> +  memory via DMA.
-> +
-> +  https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,axi-adc-10.0.a
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    maxItems: 1
-> +
-> +  dma-names:
-> +    maxItems: 1
-
-Drop this. Implied by 'items' length.
-
-With those 2 things fixed,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +    items:
-> +      - const: rx
-> +
-> +  adi,adc-dev:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      A reference to a the actual ADC to which this FPGA ADC interfaces to.
-> +
-> +required:
-> +  - compatible
-> +  - dmas
-> +  - reg
-> +  - adi,adc-dev
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    axi-adc@44a00000 {
-> +          compatible = "adi,axi-adc-10.0.a";
-> +          reg = <0x44a00000 0x10000>;
-> +          dmas = <&rx_dma 0>;
-> +          dma-names = "rx";
-> +
-> +          adi,adc-dev = <&spi_adc>;
-> +    };
-> +...
-> -- 
-> 2.20.1
-> 
