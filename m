@@ -2,133 +2,173 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 759EBC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20909C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CAB20784
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:25:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="FLBfp2e7"
+	by mail.kernel.org (Postfix) with ESMTP id EFBC720784
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 11:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgCTLZQ (ORCPT
+        id S1727303AbgCTLZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 07:25:16 -0400
-Received: from web0081.zxcs.nl ([185.104.29.10]:56898 "EHLO web0081.zxcs.nl"
+        Fri, 20 Mar 2020 07:25:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:47686 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbgCTLZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 07:25:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=pascalroeleven.nl; s=x; h=Content-Transfer-Encoding:MIME-Version:References
-        :In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=D4dn5xv1jw6ViZLrXaslqz7DLr1R4Uo+6Hf42tlM8Q4=; b=FLBfp2e7/0Qa/v9Fudx1ORiNXS
-        JV+b8iUSNJpkJrzaIwwkiQopeQZ+qTCveHWN3jx4RM6ab+/t3NQGBbkFlRIRjB8I06dicoCwxg94+
-        Rxip8VdkQ9gwM9dkTnjZfm3c5Kup10Dq9TyzHtlpbSUwQjY7DdnXbcIUtgAH2vo5bFyqx/rToICcM
-        H/QkNaDtbsI9ZgsJc2vKz6wjl2t7/DFcV5PT4JVHpfJRy7yKAxY8ZjHUIHjx0/Gi+/YS0p5dB4n15
-        nWOWUmVJF0qlafkbZgdUtvdLVDlGANH8YIyLGioeIzA2hYZLUt268RZIFCiPlFqDOr51b4r5p+IlT
-        V0bpqgJw==;
-Received: from ip565b1bc7.direct-adsl.nl ([86.91.27.199]:57936 helo=localhost.localdomain)
-        by web0081.zxcs.nl with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92.3)
-        (envelope-from <dev@pascalroeleven.nl>)
-        id 1jFFm3-0011ci-4I; Fri, 20 Mar 2020 12:25:11 +0100
-From:   Pascal Roeleven <dev@pascalroeleven.nl>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Cc:     linux-sunxi@googlegroups.com,
-        Pascal Roeleven <dev@pascalroeleven.nl>
-Subject: [PATCH v2 2/5] drm: panel: Add Starry KR070PE2T
-Date:   Fri, 20 Mar 2020 12:21:33 +0100
-Message-Id: <20200320112205.7100-3-dev@pascalroeleven.nl>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200320112205.7100-1-dev@pascalroeleven.nl>
-References: <20200320112205.7100-1-dev@pascalroeleven.nl>
+        id S1727280AbgCTLZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 07:25:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F046231B;
+        Fri, 20 Mar 2020 04:25:45 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E2EE3F85E;
+        Fri, 20 Mar 2020 04:25:44 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 11:25:38 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Tuan Phan <tuanphan@amperemail.onmicrosoft.com>
+Cc:     Tuan Phan <tuanphan@os.amperecomputing.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] driver/perf: Add PMU driver for the ARM DMC-620 memory
+ controller.
+Message-ID: <20200320105315.GA35932@C02TD0UTHF1T.local>
+References: <1584491381-31492-1-git-send-email-tuanphan@os.amperecomputing.com>
+ <20200319151646.GC4876@lakrids.cambridge.arm.com>
+ <23AD5E45-15E3-4487-9B0D-0D9554DD9DE8@amperemail.onmicrosoft.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Authenticated-Id: dev@pascalroeleven.nl
+In-Reply-To: <23AD5E45-15E3-4487-9B0D-0D9554DD9DE8@amperemail.onmicrosoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The KR070PE2T is a 7" panel with a resolution of 800x480.
+On Thu, Mar 19, 2020 at 12:03:43PM -0700, Tuan Phan wrote:
+> Hi Mark,
+> Please find my comments below.
 
-KR070PE2T is the marking present on the ribbon cable. As this panel is
-probably available under different brands, this marking will catch
-most devices.
+Hi Tuan,
 
-As I can't find a datasheet for this panel, the bus_flags are instead
-from trial-and-error. The flags seem to be common for these kind of
-panels as well.
+As Will said, *please* set up a more usual mail clinet configuration if
+you can. The reply style (with lines starting with '=>') is unusual and
+very painful to spot.
 
-Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
----
- drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+> > On Mar 19, 2020, at 8:16 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > 
+> > Hi Tuan,
+> > 
+> > On Tue, Mar 17, 2020 at 05:29:38PM -0700, Tuan Phan wrote:
+> >> DMC-620 PMU supports total 10 counters which each is
+> >> independently programmable to different events and can
+> >> be started and stopped individually.
+> > 
+> > Looking at the TRM for DMC-620, the PMU registers are not in a separate
+> > frame from the other DMC control registers, and start at offset 0xA00
+> > (AKA 2560). I would generally expect that access to the DMC control
+> > registers was restricted to the secure world; is that not the case on
+> > your platform?
+> > 
+> > I ask because if those are not restricted, the Normal world could
+> > potentially undermine the Secure world through this (e.g. playing with
+> > training settings, messing with the physical memory map, injecting RAS
+> > errors). Have you considered this?
+> => Only PMU registers can be accessed within normal world. I only pass
+> PMU registers (offset 0xA00) to kernel so shouldn’t be problem.
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index e14c14ac6..b3d257257 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2842,6 +2842,32 @@ static const struct panel_desc shelly_sca07010_bfn_lnn = {
- 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
- };
- 
-+static const struct drm_display_mode starry_kr070pe2t_mode = {
-+	.clock = 33000,
-+	.hdisplay = 800,
-+	.hsync_start = 800 + 209,
-+	.hsync_end = 800 + 209 + 1,
-+	.htotal = 800 + 209 + 1 + 45,
-+	.vdisplay = 480,
-+	.vsync_start = 480 + 22,
-+	.vsync_end = 480 + 22 + 1,
-+	.vtotal = 480 + 22 + 1 + 22,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc starry_kr070pe2t = {
-+	.modes = &starry_kr070pe2t_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 152,
-+		.height = 86,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE,
-+	.connector_type = DRM_MODE_CONNECTOR_LVDS,
-+};
-+
- static const struct drm_display_mode starry_kr122ea0sra_mode = {
- 	.clock = 147000,
- 	.hdisplay = 1920,
-@@ -3474,6 +3500,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "shelly,sca07010-bfn-lnn",
- 		.data = &shelly_sca07010_bfn_lnn,
-+	}, {
-+		.compatible = "starry,kr070pe2t",
-+		.data = &starry_kr070pe2t,
- 	}, {
- 		.compatible = "starry,kr122ea0sra",
- 		.data = &starry_kr122ea0sra,
--- 
-2.20.1
+Sure, you only *describe* that in the ACPI tables, but I can't see how
+that's access control is enforced in the hardware, because these
+registers fall in the same 4K page as other control registers, and
+AFAICT the IP doesn't distinguish S/NS accesses.
 
+If the Secure world on your part uses DRAM (including the secure
+portions of IPs like SMMUs), you *must* ensure that the Normal world
+cannot access those other control registers, or it can corrupt Secure
+world state and escalate privilege.
+
+Is that not a concern here?
+
+> >> DMC-620 PMU devices are named as arm_dmc620_<uid> where
+> >> <uid> is the UID of DMC-620 PMU ACPI node. Currently, it only
+> >> supports ACPI. Other platforms feel free to test and add
+> >> support for device tree.
+> >> 
+> >> Usage example:
+> >>  #perf stat -e arm_dmc620_0/clk_cycle_count/ -C 0
+> >>  Get perf event for clk_cycle_count counter.
+> >> 
+> >>  #perf stat -e arm_dmc620_0/clkdiv2_allocate,mask=0x1f,match=0x2f,
+> >>  incr=2,invert=1/ -C 0
+> >>  The above example shows how to specify mask, match, incr,
+> >>  invert parameters for clkdiv2_allocate event.
+> > 
+> > [...]
+> > 
+> >> +#define DMC620_CNT_MAX_PERIOD				0xffffffff
+> >> +#define DMC620_PMU_CLKDIV2_MAX_COUNTERS			8
+> >> +#define DMC620_PMU_CLK_MAX_COUNTERS			2
+> >> +#define DMC620_PMU_MAX_COUNTERS				\
+> >> +	(DMC620_PMU_CLKDIV2_MAX_COUNTERS + DMC620_PMU_CLK_MAX_COUNTERS)
+> >> +
+> >> +#define DMC620_PMU_OVERFLOW_STATUS_CLKDIV2_OFFSET	8
+> > 
+> > This appears to be relative to 0xA00. What exactly does your ACPI
+> > description provide? The whole set of DMC registers, or just the PMU
+> > registers?
+> => Just PMU registers from 0xA00 to 0xBFF.
+
+I don't believe that is correct; see below w.r.t. the ACPI binding.
+
+> >> +static int arm_dmc620_pmu_dev_init(struct arm_dmc620_pmu *dmc620_pmu)
+> >> +{
+> >> +	struct platform_device *pdev = dmc620_pmu->pdev;
+> >> +	int ret;
+> >> +
+> >> +	ret = devm_request_irq(&pdev->dev, dmc620_pmu->irq,
+> >> +				arm_dmc620_pmu_handle_irq,
+> >> +				IRQF_SHARED,
+> >> +				dev_name(&pdev->dev), dmc620_pmu);
+> > 
+> > This should have IRQF_NOBALANCING | IRQF_NO_THREAD. I don't think we
+> > should have IRQF_SHARED.
+> => I agree on having IRQF_NOBALANCING and IRQF_NO_THREAD. But
+> IRQF_SHARED is needed. In our platform all DMC620s share same IRQs and
+> any cpus can access the pmu registers.
+
+Linux needs to ensure that the same instance is concistently accessed
+from the same CPU, and needs to migrate the IRQ to handle that. Given we
+do that on a per-instance basis, we cannot share the IRQ with another
+instance.
+
+Please feed back to you HW designers that muxing IRQs like this causes
+significant problems for software.
+
+> > 
+> > [...]
+> > 
+> >> +static const struct acpi_device_id arm_dmc620_acpi_match[] = {
+> >> +	{ "ARMHD620", 0},
+> >> +	{},
+> >> +};
+> > 
+> > Just to check, was this ID allocated by Arm, or have you allocated it?
+> => ID was allocated by ARM. Please refer to 
+> https://static.docs.arm.com/den0093/a/DEN0093_ACPI_Arm_Components_1.0.pdf <https://static.docs.arm.com/den0093/a/DEN0093_ACPI_Arm_Components_1.0.pdf>
+
+Thanks for the link! For this _HID, the document says the _CRS contains
+a QWordMemory Base address, which the full description is:
+
+| Base Address of the DMC620 in the system address map
+
+... which would presumably mean the *entire* set of MMIO registers, not
+just the PMU portion. The example firmly hints that it is the entire set
+of MMIO registers:
+
+| In this example, the DMC620 register space is mapped to a 64K range
+| that begins at offset 0x80CAFE0000 in the system address space
+
+Thanks,
+Mark.
