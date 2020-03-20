@@ -2,157 +2,124 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4049DC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0A8C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB3C20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A7320663
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:24:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EmAYBy9I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgCTGTq (ORCPT
+        id S1726778AbgCTGY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 02:19:46 -0400
-Received: from mga06.intel.com ([134.134.136.31]:48078 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726657AbgCTGTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 02:19:45 -0400
-IronPort-SDR: rWBzyDUYlohINPA9rbMjTcR2ZklqNVEIvYWmbMekHcyQ+N3Lv+0pK5XDeYQNr8/oSw9nP7xIBZ
- fXMkdWeeLTLQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 23:19:45 -0700
-IronPort-SDR: Rki1mw11JqeNDFWHxo4Zf/8q35aPR2PshLEnA5kL3XoJiC45euiZkKKZv93+S/dNZ45BJlof8c
- P6N/1746zoWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,283,1580803200"; 
-   d="scan'208";a="280330807"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 19 Mar 2020 23:19:44 -0700
-Received: from [10.215.171.97] (unknown [10.215.171.97])
-        by linux.intel.com (Postfix) with ESMTP id A3196580297;
-        Thu, 19 Mar 2020 23:19:38 -0700 (PDT)
-Subject: Re: [PATCH v12 1/4] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        broonie@kernel.org, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, boris.brezillon@free-electrons.com,
-        simon.k.r.goldschmidt@gmail.com, dinguyen@kernel.org,
-        tien.fong.chee@intel.com, marex@denx.de,
-        linux-mtd@lists.infradead.org, dwmw2@infradead.org, richard@nod.at,
-        computersforpeace@gmail.com, cyrille.pitchen@atmel.com,
-        david.oberhollenzer@sigma-star.at, miquel.raynal@bootlin.com,
-        tudor.ambarus@gmail.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-References: <20200310015213.1734-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200310015213.1734-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <c2ad909e-9042-6ba0-7213-83346c6b9908@ti.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <13a92ddd-b7dd-0465-d747-cda9bca21dbf@linux.intel.com>
-Date:   Fri, 20 Mar 2020 14:19:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <c2ad909e-9042-6ba0-7213-83346c6b9908@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Fri, 20 Mar 2020 02:24:58 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35894 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbgCTGY6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 02:24:58 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z72so2571288pgz.3;
+        Thu, 19 Mar 2020 23:24:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Ea1Gl53lAIVaAGNsB6v6FTznzesNiyM2e4xkz9is1KQ=;
+        b=EmAYBy9IalRpEpvkaxh7LR4ZFW5G306ReU8nu8KZ/FyV0E3MrB4FiSJjrJJa8iGy7d
+         Nq/Gqlt/5OHESCaG6OLhYoDAgiTs1UyXG2cL+Czt0IMveJSTNKsufPoZ2pK+HlKDcN11
+         Vfzl0A/vsT4wrRGwkx3uOP8+6ENZ8rj6Zr3xD8SON9p3KN8RNLnbSKXrmDXXtQ4YzwgQ
+         tn1hU0UY8yDp2taUHNH0M80Cway1uqLo9UVpYV4zl6jBulvaqV7ei0SJIesoxU12iVZ2
+         /138xd7i9KQ/HeZ7IWZ9OrpFnbdRQ6BEyyqy42MhmuoE8J3tjRbvpUcGM+yVQOt4gpHS
+         V0DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ea1Gl53lAIVaAGNsB6v6FTznzesNiyM2e4xkz9is1KQ=;
+        b=WfinIzMsRg9KtJ3vbQPPvvgz1b7Si5wxhG/goChoL55d+MelMNBc67kX9MGML8ZDDg
+         KBWwoPZu4tTCWgwKEv/4EYovEPrJvIW6ZpYaqZirjjlo4BCOLJvbOm20KEGcwEIEq0e6
+         UxFzYWnh88X64jV+w2f8dSIERkNC+kORJ6E8FgfWeUM2GnlMvsu+75XMbE0kVsKiLezv
+         4/oiGe8X8QvEjZqcPMbFm8jd0ZLWeO7ZdAFVHB8mkHc9bjUsALZdNTtoUeD2l1W0Kj4v
+         MTq4uH85kV5q89gav8+M8pKY3aExi4m2zyNEJMARpbjlqUiogU5/oYzM4njqG4PTMrRT
+         JD5Q==
+X-Gm-Message-State: ANhLgQ12eRwmMtZZt570K93X1JTbdKtBjfylfC0Pv+RJvLHvRGj1AEfT
+        aBgBTi14SJzT99/aOwSUTYE=
+X-Google-Smtp-Source: ADFU+vv3iEBLKcocZStjA8/MoeoZJUffW564ulxiLWHYN9gLTnsB8Vp7iTvBwa5tq1w6DX7PoyVLwg==
+X-Received: by 2002:a62:27c2:: with SMTP id n185mr7858093pfn.203.1584685495047;
+        Thu, 19 Mar 2020 23:24:55 -0700 (PDT)
+Received: from VM_0_35_centos.localdomain ([150.109.62.251])
+        by smtp.gmail.com with ESMTPSA id m9sm757659pff.93.2020.03.19.23.24.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Mar 2020 23:24:54 -0700 (PDT)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     lorenzo.pieralisi@arm.com, anders.roxell@linaro.org,
+        vidyas@nvidia.com
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        amurray@thegoodpenguin.co.uk, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH v2] PCI: dwc: fix compile err for pcie-tagra194
+Date:   Fri, 20 Mar 2020 14:24:50 +0800
+Message-Id: <1584685490-8170-1-git-send-email-hqjagain@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+make allmodconfig
+ERROR: modpost: "dw_pcie_ep_init" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+ERROR: modpost: "dw_pcie_ep_init_notify" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+ERROR: modpost: "dw_pcie_ep_init_complete" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+ERROR: modpost: "dw_pcie_ep_linkup" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+make[2]: *** [__modpost] Error 1
+make[1]: *** [modules] Error 2
+make: *** [sub-make] Error 2
 
-On 20/3/2020 2:05 pm, Vignesh Raghavendra wrote:
->
-> On 10/03/20 7:22 am, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add dt-bindings documentation for Cadence-QSPI controller to support
->> spi based flash memories.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
->>   .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 127 +++++++++++++++++++++
->>   2 files changed, 127 insertions(+), 67 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->>   create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
->>
-> [...]
->
->> +
->> +# subnode's properties
->> +patternProperties:
->> +  "^.*@[0-9a-fA-F]+$":
->> +    type: object
->> +    description:
->> +      flash device uses the subnodes below defined properties.
->> +
->> +  cdns,read-delay:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      Delay in 4 microseconds, read capture logic, in clock cycles.
->
-> Not its not... See the old binding description please:
->
-> -- cdns,read-delay : Delay for read capture logic, in clock cycles
->
-> There is no mention of 4us. Range is 0x0 - 0xF
-Sure, will update as you have suggested.
->> +
->> +  cdns,tshsl-ns:
->> +    description: |
->> +      Delay in 50 nanoseconds, for the length that the master mode chip select
->> +      outputs are de-asserted between transactions.
-> Again see the description in old binding file:
->
->   cdns,tshsl-ns : Delay in nanoseconds for the length that the master
->                    mode chip select outputs are de-asserted between
-> 	  	transactions.
->
-> Need not be 50ns or its multiple
-Sure, will update as you have suggested.
->> +
->> +  cdns,tsd2d-ns:
->> +    description: |
->> +      Delay in 50 nanoseconds, between one chip select being de-activated
->> +      and the activation of another.
->> +
-> same here
->
->> +  cdns,tchsh-ns:
->> +    description: |
->> +      Delay in 4 nanoseconds, between last bit of current transaction and
->> +      deasserting the device chip select (qspi_n_ss_out).
->> +
-> Same here... Need not be 4ns...
->
->> +  cdns,tslch-ns:
->> +    description: |
->> +      Delay in 4 nanoseconds, between setting qspi_n_ss_out low and
->> +      first bit transfer.
->
-> Same here...
->
-> Above four values ( cdns,*-ns) come directly from the flash datasheets.
->
-> These values are converted appropriate number of cycles depending upon
-> the QSPI ref_clk frequency. So, there is no easy way to express the
-> constraint (or range) in DT schema. I would recommend to just stick with
-> the description that is there in the old binding file without any
-> modifications.
+need to export the symbols.
 
-Noted, will update.
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Regards
-Vadivel
->
-> Regards
-> Vignesh
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 4233c43..1cdcbd1 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -18,6 +18,7 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+ 
+ 	pci_epc_linkup(epc);
+ }
++EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
+ 
+ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
+ {
+@@ -25,6 +26,7 @@ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
+ 
+ 	pci_epc_init_notify(epc);
+ }
++EXPORT_SYMBOL_GPL(dw_pcie_ep_init_notify);
+ 
+ static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
+ 				   int flags)
+@@ -535,6 +537,7 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
+ 
+ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ {
+@@ -629,3 +632,4 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 
+ 	return dw_pcie_ep_init_complete(ep);
+ }
++EXPORT_SYMBOL_GPL(dw_pcie_ep_init);
+-- 
+1.8.3.1
+
