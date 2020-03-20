@@ -2,178 +2,117 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A12C4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCA8C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A1D20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:39:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qNBIADHA"
+	by mail.kernel.org (Postfix) with ESMTP id AA8BD20777
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 14:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbgCTOj0 (ORCPT
+        id S1727362AbgCTOle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:39:26 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:55402 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgCTOjZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 10:39:25 -0400
-Received: by mail-pj1-f68.google.com with SMTP id mj6so2548711pjb.5;
-        Fri, 20 Mar 2020 07:39:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a54IW0oB44nJzFv1TQssWnIGDqT1Lq9rUj5K2IpDqwI=;
-        b=qNBIADHAq6ehPS/ovZWHrsu7MGd/UxDlnzD+zweINjMHVHnMtBB6FOCc8mZ4AK2sn+
-         0jf8BXHyflIAVz+hE0NX3UYbiaCl06w8BZxkazyhDNur8jMHzNsTQkS/jbggtOTtNowT
-         abxarJPlIPxtpGpCYE1GeC+BvrILbtVOFTMLCHOuHtnuAT321KZ6Vp8xTeoVRAuqnnII
-         Jalcy7DC+PP0+sC6IxYTuGSL5qsSGRtQsmKX6oTK8VYKu5/Uc580sGHivzbxojUFrSa0
-         tGef9gFQWBsjqWIyKiY7khPTi39m+Xc80oV4jD0C4fVyEBhyhfePUTBSh/KTrfeWNzWs
-         FoTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a54IW0oB44nJzFv1TQssWnIGDqT1Lq9rUj5K2IpDqwI=;
-        b=lGdYQsS1lMTFL2f3HE/C4uGOLhdeyOQyBbf2ng39wLcOX3LJnWU5RbpCq79QzX1yaK
-         FyVWtHLDapbzRC38FCge9lXbKSlnZuAprcoAlyC+Nwx1yNux303YpcfOL4brxHjWXB5k
-         V9TaiyJaG0t+kFB7V9JjvL6y+36Q0l9JhRjlarCl6bSKGvIPUBu07B8j+qOmBYFcPCT/
-         uIs9EB3YVVxNRPhmi65WqKDZJCQ+qRPfBIa2IO9kSK2QLhXY4licGdQ2xxMDBwGGQ5/i
-         H1EMWC6b/po99zYdhQuNXtxY4eTRxG8YmedMsBEh7hXz94sYFiP4b9iHAeZKMkewMKj0
-         eTEQ==
-X-Gm-Message-State: ANhLgQ0QWljoUU8vHe2lFNJ2rioNk8B0ayuxDxM/6voAPljVvgx9NkpL
-        0z+REK/k/x0V2IRmjXeGhEXu+n5SZF+HD/zKvFg=
-X-Google-Smtp-Source: ADFU+vvvaVCkXdplje1O4GxrsGz4U6GUkJ3qUTDhDx4G7N8RLK5zRd1Pc/WBHOoPDY8ll979CQXu9IGQKSDD2UQAADM=
-X-Received: by 2002:a17:90a:fb49:: with SMTP id iq9mr9739946pjb.143.1584715163452;
- Fri, 20 Mar 2020 07:39:23 -0700 (PDT)
+        Fri, 20 Mar 2020 10:41:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:49790 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726970AbgCTOld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:41:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7D161FB;
+        Fri, 20 Mar 2020 07:41:32 -0700 (PDT)
+Received: from [10.37.12.155] (unknown [10.37.12.155])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2EFB3F792;
+        Fri, 20 Mar 2020 07:41:27 -0700 (PDT)
+Subject: Re: [PATCH v4 18/26] arm64: vdso32: Replace TASK_SIZE_32 check in
+ vgettimeofday
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-mips@vger.kernel.org, Will Deacon <will@kernel.org>,
+        linux-arch@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        x86@kernel.org, Russell King <linux@armlinux.org.uk>,
+        clang-built-linux@googlegroups.com, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Collingbourne <pcc@google.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Andrei Vagin <avagin@openvz.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, Mark Salyzyn <salyzyn@android.com>,
+        Paul Burton <paul.burton@mips.com>
+References: <20200317143834.GC632169@arrakis.emea.arm.com>
+ <f03a9493-c8c2-e981-f560-b2f437a208e4@arm.com>
+ <20200317155031.GD632169@arrakis.emea.arm.com>
+ <83aaf9e1-0a8f-4908-577a-23766541b2ba@arm.com>
+ <20200317174806.GE632169@arrakis.emea.arm.com>
+ <93cfe94a-c2a3-1025-bc9c-e7c3fd891100@arm.com>
+ <20200318183603.GF94111@arrakis.emea.arm.com>
+ <1bc25a53-7a59-0f60-ecf2-a3cace46b823@arm.com> <20200319181004.GA29214@mbp>
+ <b937d1eb-c7fd-e903-fa36-b261662bf40b@arm.com> <20200320142208.GC29214@mbp>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <46add8e3-dd04-9194-4196-4d8e5cd4c70f@arm.com>
+Date:   Fri, 20 Mar 2020 14:41:57 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200320131345.635023594@linutronix.de> <20200320131508.826011988@linutronix.de>
-In-Reply-To: <20200320131508.826011988@linutronix.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 20 Mar 2020 16:39:16 +0200
-Message-ID: <CAHp75VdKavBD=yTR6Mz4iaGKQVP__xCsf-fWdy1MMJJywhDd-Q@mail.gmail.com>
-Subject: Re: [patch 02/22] x86/cpu: Add conistent CPU match macros
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        linux-edac@vger.kernel.org,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200320142208.GC29214@mbp>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 3:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Finding all places which build x86_cpu_id match tables is tedious and the
-> logic is hidden in lots of differently named macro wrappers.
->
-> Most of these initializer macros use plain C89 initializers which rely on
-> the ordering of the struct members. So new members could only be added at
-> the end of the struct, but that's ugly as hell and C99 initializers are
-> really the right thing to use.
->
-> Provide a set of macros which:
->
->   - Have a proper naming scheme, starting with X86_MATCH_
->
->   - Use C99 initializers
->
-> The set of provided macros are all subsets of the base macro
->
->     X86_MATCH_VENDOR_FAM_MODEL_FEATURE()
->
-> which allows to supply all possible selection criteria:
->
->       vendor, family, model, feature
->
-> The other macros shorten this to avoid typing all arguments when they are
-> not needed and would require one of the _ANY constants. They have been
-> created due to the requirements of the existing usage sites.
->
+Hi Catalin,
 
-> Also a add a few model constants for Centaur CPUs and QUARK.
+On 3/20/20 2:22 PM, Catalin Marinas wrote:
+> On Fri, Mar 20, 2020 at 01:05:14PM +0000, Vincenzo Frascino wrote:
+>> On 3/19/20 6:10 PM, Catalin Marinas wrote:
+>>> On Thu, Mar 19, 2020 at 12:38:42PM +0000, Vincenzo Frascino wrote:
+>>>> On 3/18/20 6:36 PM, Catalin Marinas wrote:
+>>>>> On Wed, Mar 18, 2020 at 04:14:26PM +0000, Vincenzo Frascino wrote:
+>>>>>> On 3/17/20 5:48 PM, Catalin Marinas wrote:
+[...]
 
-I would perhaps made this as a separate change(s).
+>>
+>> Thank you for the long chat this morning. As we agreed I am going to repost the
+>> patches removing the checks discussed in this thread
+> 
+> Great, thanks.
+> 
+>> and we will address the syscall ABI difference subsequently with a
+>> different series.
+> 
+> Now I'm even less convinced we need any additional patches. The arm64
+> compat syscall would still return -EFAULT for res >= TASK_SIZE_32
+> because copy_to_user() will fail. So it would be entirely consistent
+> with the arm32 syscall. In the vdso-only case, both arm32 and arm64
+> compat would generate a signal.
+> 
+> As Will said, arguably, the syscall semantics may not be applicable to
+> the vdso implementation. But if you do want to get down this route (tp =
+> UINTPTR_MAX - sizeof(*tp) returning -EFAULT), please do it for all
+> architectures, not just arm64 compat. However, I'm not sure anyone
+> relies on this functionality, other than the vdsotest, so no real
+> application broken.
+> 
 
-...
+It is ok, we will discuss the topic once we cross that bridge. I am already
+happy that I managed to explain finally my reasons ;)
 
-> +#define X86_MATCH_VENDOR_FAM_MODEL_FEATURE(_vendor, _family, _model,   \
-> +                                          _feature, _data) {           \
-
-I would leave it on one line despite the length, but it's up to you.
-
-> +       .vendor         = X86_VENDOR_##_vendor,                         \
-> +       .family         = _family,                                      \
-> +       .model          = _model,                                       \
-> +       .feature        = _feature,                                     \
-
-> +       .driver_data    = (unsigned long) _data                         \
-
-For sake of consistency shouldn't be this kernel_ulong_t ?
-Or we are going to get rid of that type?
-
->  }
-
-...
-
-> +#define X86_MATCH_VENDOR_FAM_FEATURE(vendor, family, feature, data)    \
-
-> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(vendor, family,              \
-> +                                          X86_MODEL_ANY, feature, data)
-
-I would leave it on one line despite the length, but it's up to you.
-
-...
-
-> +#define X86_MATCH_VENDOR_FAM_MODEL(vendor, family, model, data)                \
-> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(vendor, family, model,       \
-> +                                          X86_FEATURE_ANY, data)
-
-Ditto.
-
-...
-
-> + * X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6, INTEL_FAM6_BROADWELL,
-> + *                                   X86_FEATURE_ANY, NULL);
-
-Perhaps one line?
+Anyway, I think that if there is an application that relies on this behavior (or
+similar) and uses compat we will discover it as soon as these patches will be
+out in the wild. For this reason I am putting a link to this discussion in the
+commit message of the relevant patch so that we can take it from there.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards,
+Vincenzo
