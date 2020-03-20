@@ -2,132 +2,232 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DEDC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AD8C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC38208FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:02:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LS23U3Z2"
+	by mail.kernel.org (Postfix) with ESMTP id D7B4A20409
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 22:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbgCTWCX (ORCPT
+        id S1727351AbgCTWEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:02:23 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45348 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgCTWCV (ORCPT
+        Fri, 20 Mar 2020 18:04:13 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37466 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgCTWEM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:02:21 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y17so8082078ljk.12;
-        Fri, 20 Mar 2020 15:02:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=j+Zpm7nv3KnXyXL/VwriXYdIco1W4Hfuzxxyjd9h2fs=;
-        b=LS23U3Z2Mkkr/5FwWW3HzaKo/z4My76CU26gDQtzHZJEnhJSUg/GDsffGAd2GyqgMy
-         /ALOaz7gGtJT/f66DMtS9HR0LJHnbWoOsYTZXzE0dm6SGgfWD9y8tYlppiKXpnPkXYFn
-         SoQfdqmzzjFcD5bFuM4v/79ZGKNJ66GVNw9hN+vAdCZEcLD8b1YW1PbTzQ4YTxFAjVh0
-         yoG7/fATCQ7+7pLOkbGXbKmq68ejNOpWfxXcksqpBzN/mq69iYf0dQkkn03yp7MTFpID
-         w2MPo6pgI26ayky5Pz72YUdEyN0GfHbxji3yM+Yh7c5FngLa+/uuvEno5pZIQqG8/j3K
-         qb8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=j+Zpm7nv3KnXyXL/VwriXYdIco1W4Hfuzxxyjd9h2fs=;
-        b=CbAurxoXDTtI0HFMPn8p7r0A4//0J3DQE/oO9JeA0dlSoZv9WbB1IXQoTezuDAMwaq
-         UfUq+7i16Wjq/fm6dtHLM0VVb5bcKmIoXwyj+0fpmmorEArZfhKDLfWOgooKuE3KMCC0
-         D9i8R9agW8aLNVJx2Qzf+NnZttDVEMKHtnbLTuGXVH074FD6QmpCf3rE4Macq1F0hYxQ
-         0bvCD2NToMOjHzA0CXLTlWWctD2nQl64EsNv/sqRp3uJgKPjWncschrRRX9XSArwjBUR
-         yTTx/hygqIbcrhTuOCCqGMnurmykpCyGhgE2IspAEkgusYFGKg9OWKP+9uzjmzWdKCeo
-         bcuw==
-X-Gm-Message-State: ANhLgQ3/n4kDSsE0jgW4IDnh+g4rV8MTlmk3B7DKnH9MFISLXVSvMtE1
-        FuAgsC9+VmQX/T6gCREybaQ=
-X-Google-Smtp-Source: ADFU+vvZxRjv8GWZ+M9ELg7WqLbW0kQbslk4JVDN+5DcpyRTtSgwK+mCqXqUZUyq8NDPeSA6Q2U+1w==
-X-Received: by 2002:a05:651c:106:: with SMTP id a6mr6875085ljb.143.1584741739314;
-        Fri, 20 Mar 2020 15:02:19 -0700 (PDT)
-Received: from localhost.localdomain ([185.188.71.122])
-        by smtp.gmail.com with ESMTPSA id j21sm3992416lji.93.2020.03.20.15.02.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 15:02:18 -0700 (PDT)
-From:   Pawel Dembicki <paweldembicki@gmail.com>
-Cc:     Pawel Dembicki <paweldembicki@gmail.com>,
-        Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] USB: serial: option: add Wistron Neweb D19Q1
-Date:   Fri, 20 Mar 2020 23:01:54 +0100
-Message-Id: <20200320220155.5609-3-paweldembicki@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200320220155.5609-1-paweldembicki@gmail.com>
-References: <20200320220155.5609-1-paweldembicki@gmail.com>
+        Fri, 20 Mar 2020 18:04:12 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jFPk5-0004To-0y; Fri, 20 Mar 2020 23:03:49 +0100
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 5EF5E1039FF;
+        Fri, 20 Mar 2020 23:03:47 +0100 (CET)
+Message-Id: <20200320180033.481570410@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Fri, 20 Mar 2020 19:00:07 +0100
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: [RESEND][patch V3 11/23] x86/entry: Move irq flags tracing to
+ prepare_exit_to_usermode()
+References: <20200320175956.033706968@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200320180007.T0nu_bwF7-QdDta0x4hQGKPqSznsqL6abSpNNFuNEEc@z>
 
-This modem is embedded on dlink dwr-960 router.
-The oem configuration states:
+This is another step towards more C-code and less convoluted ASM.
 
-T: Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 2 Spd=480 MxCh= 0
-D: Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs= 1
-P: Vendor=1435 ProdID=d191 Rev=ff.ff
-S: Manufacturer=Android
-S: Product=Android
-S: SerialNumber=0123456789ABCDEF
-C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-E: Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
-E: Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-E: Ad=84(I) Atr=03(Int.) MxPS= 10 Ivl=32ms
-E: Ad=83(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-E: Ad=86(I) Atr=03(Int.) MxPS= 10 Ivl=32ms
-E: Ad=85(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-E: Ad=88(I) Atr=03(Int.) MxPS= 8 Ivl=32ms
-E: Ad=87(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
-E: Ad=89(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
+Similar to the entry path.
 
-Tested on openwrt distribution
+ 1) invoke the tracer and the preparatory lockdep step
+ 2) invoke context tracking which might turn off RCU
+ 3) invoke the final lockdep step
 
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+Annotate the code sections in exit_to_user_mode() accordingly so objtool
+won't complain about the tracer and lockdep invocation.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- drivers/usb/serial/option.c | 2 ++
- 1 file changed, 2 insertions(+)
+V3: Convert it to noinstr
 
-diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
-index 49313a55e1f3..abc717b99204 100644
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -2022,6 +2022,8 @@ static const struct usb_device_id option_ids[] = {
- 	  .driver_info = RSVD(6) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x1690, 0x7588, 0xff),			/* ASKEY WWHC050 */
- 	  .driver_info = RSVD(1) | RSVD(4) },
-+	{ USB_DEVICE_INTERFACE_CLASS(0x1435, 0xd191, 0xff),			/* Wistron Neweb D19Q1 */
-+	  .driver_info = RSVD(1) | RSVD(4) },
- 	{ } /* Terminating entry */
- };
- MODULE_DEVICE_TABLE(usb, option_ids);
--- 
-2.20.1
+V2: New patch simplifying the conversion and addressing Alex' review
+    comment of redundant tracing.
+---
+ arch/x86/entry/common.c          |   17 +++++++++++++++++
+ arch/x86/entry/entry_32.S        |   12 ++++--------
+ arch/x86/entry/entry_64.S        |    4 ----
+ arch/x86/entry/entry_64_compat.S |   14 +++++---------
+ 4 files changed, 26 insertions(+), 21 deletions(-)
+
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -71,10 +71,27 @@ static __always_inline void enter_from_u
+ }
+ #endif
+ 
++/**
++ * exit_to_user_mode - Fixup state when exiting to user mode
++ *
++ * Syscall exit enables interrupts, but the kernel state is interrupts
++ * disabled when this is invoked. Also tell RCU about it.
++ *
++ * 1) Trace interrupts on state
++ * 2) Invoke context tracking if enabled to adjust RCU state
++ * 3) Clear CPU buffers if CPU is affected by MDS and the migitation is on.
++ * 4) Tell lockdep that interrupts are enabled
++ */
+ static __always_inline void exit_to_user_mode(void)
+ {
++	instr_begin();
++	__trace_hardirqs_on();
++	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
++	instr_end();
++
+ 	user_enter_irqoff();
+ 	mds_user_clear_cpu_buffers();
++	lockdep_hardirqs_on(CALLER_ADDR0);
+ }
+ 
+ static void do_audit_syscall_entry(struct pt_regs *regs, u32 arch)
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -811,8 +811,7 @@ SYM_CODE_START(ret_from_fork)
+ 	/* When we fork, we trace the syscall return in the child, too. */
+ 	movl    %esp, %eax
+ 	call    syscall_return_slowpath
+-	STACKLEAK_ERASE
+-	jmp     restore_all
++	jmp     .Lsyscall_32_done
+ 
+ 	/* kernel thread */
+ 1:	movl	%edi, %eax
+@@ -855,7 +854,7 @@ SYM_CODE_START_LOCAL(ret_from_exception)
+ 	TRACE_IRQS_OFF
+ 	movl	%esp, %eax
+ 	call	prepare_exit_to_usermode
+-	jmp	restore_all
++	jmp	restore_all_switch_stack
+ SYM_CODE_END(ret_from_exception)
+ 
+ SYM_ENTRY(__begin_SYSENTER_singlestep_region, SYM_L_GLOBAL, SYM_A_NONE)
+@@ -968,8 +967,7 @@ SYM_FUNC_START(entry_SYSENTER_32)
+ 
+ 	STACKLEAK_ERASE
+ 
+-/* Opportunistic SYSEXIT */
+-	TRACE_IRQS_ON			/* User mode traces as IRQs on. */
++	/* Opportunistic SYSEXIT */
+ 
+ 	/*
+ 	 * Setup entry stack - we keep the pointer in %eax and do the
+@@ -1072,11 +1070,9 @@ SYM_FUNC_START(entry_INT80_32)
+ 	movl	%esp, %eax
+ 	call	do_int80_syscall_32
+ .Lsyscall_32_done:
+-
+ 	STACKLEAK_ERASE
+ 
+-restore_all:
+-	TRACE_IRQS_ON
++restore_all_switch_stack:
+ 	SWITCH_TO_ENTRY_STACK
+ 	CHECK_AND_APPLY_ESPFIX
+ 
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -172,8 +172,6 @@ SYM_INNER_LABEL(entry_SYSCALL_64_after_h
+ 	movq	%rsp, %rsi
+ 	call	do_syscall_64		/* returns with IRQs disabled */
+ 
+-	TRACE_IRQS_ON			/* return enables interrupts */
+-
+ 	/*
+ 	 * Try to use SYSRET instead of IRET if we're returning to
+ 	 * a completely clean 64-bit userspace context.  If we're not,
+@@ -340,7 +338,6 @@ SYM_CODE_START(ret_from_fork)
+ 	UNWIND_HINT_REGS
+ 	movq	%rsp, %rdi
+ 	call	syscall_return_slowpath	/* returns with IRQs disabled */
+-	TRACE_IRQS_ON			/* user mode is traced as IRQS on */
+ 	jmp	swapgs_restore_regs_and_return_to_usermode
+ 
+ 1:
+@@ -617,7 +614,6 @@ SYM_CODE_START_LOCAL(common_interrupt)
+ .Lretint_user:
+ 	mov	%rsp,%rdi
+ 	call	prepare_exit_to_usermode
+-	TRACE_IRQS_ON
+ 
+ SYM_INNER_LABEL(swapgs_restore_regs_and_return_to_usermode, SYM_L_GLOBAL)
+ #ifdef CONFIG_DEBUG_ENTRY
+--- a/arch/x86/entry/entry_64_compat.S
++++ b/arch/x86/entry/entry_64_compat.S
+@@ -132,8 +132,8 @@ SYM_FUNC_START(entry_SYSENTER_compat)
+ 	movq	%rsp, %rdi
+ 	call	do_fast_syscall_32
+ 	/* XEN PV guests always use IRET path */
+-	ALTERNATIVE "testl %eax, %eax; jz .Lsyscall_32_done", \
+-		    "jmp .Lsyscall_32_done", X86_FEATURE_XENPV
++	ALTERNATIVE "testl %eax, %eax; jz swapgs_restore_regs_and_return_to_usermode", \
++		    "jmp swapgs_restore_regs_and_return_to_usermode", X86_FEATURE_XENPV
+ 	jmp	sysret32_from_system_call
+ 
+ .Lsysenter_fix_flags:
+@@ -244,8 +244,8 @@ SYM_INNER_LABEL(entry_SYSCALL_compat_aft
+ 	movq	%rsp, %rdi
+ 	call	do_fast_syscall_32
+ 	/* XEN PV guests always use IRET path */
+-	ALTERNATIVE "testl %eax, %eax; jz .Lsyscall_32_done", \
+-		    "jmp .Lsyscall_32_done", X86_FEATURE_XENPV
++	ALTERNATIVE "testl %eax, %eax; jz swapgs_restore_regs_and_return_to_usermode", \
++		    "jmp swapgs_restore_regs_and_return_to_usermode", X86_FEATURE_XENPV
+ 
+ 	/* Opportunistic SYSRET */
+ sysret32_from_system_call:
+@@ -254,7 +254,7 @@ SYM_INNER_LABEL(entry_SYSCALL_compat_aft
+ 	 * stack. So let's erase the thread stack right now.
+ 	 */
+ 	STACKLEAK_ERASE
+-	TRACE_IRQS_ON			/* User mode traces as IRQs on. */
++
+ 	movq	RBX(%rsp), %rbx		/* pt_regs->rbx */
+ 	movq	RBP(%rsp), %rbp		/* pt_regs->rbp */
+ 	movq	EFLAGS(%rsp), %r11	/* pt_regs->flags (in r11) */
+@@ -393,9 +393,5 @@ SYM_CODE_START(entry_INT80_compat)
+ 
+ 	movq	%rsp, %rdi
+ 	call	do_int80_syscall_32
+-.Lsyscall_32_done:
+-
+-	/* Go back to user mode. */
+-	TRACE_IRQS_ON
+ 	jmp	swapgs_restore_regs_and_return_to_usermode
+ SYM_CODE_END(entry_INT80_compat)
 
