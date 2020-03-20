@@ -2,190 +2,145 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2392FC4332E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5119DC4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC0B920732
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:01:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="n09kAoxK"
+	by mail.kernel.org (Postfix) with ESMTP id 3265520732
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 12:04:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbgCTMBN (ORCPT
+        id S1727016AbgCTMES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 08:01:13 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:59454 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727194AbgCTMBM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 08:01:12 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200320120110euoutp0122e78286f86280de300ddb4fb04b3843~_AWlRZ3Gf1151111511euoutp01-
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 12:01:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200320120110euoutp0122e78286f86280de300ddb4fb04b3843~_AWlRZ3Gf1151111511euoutp01-
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1584705670;
-        bh=H5bIZM9FzsaYL+dKBsNczZHBf7ddrKgF+qY2s6ZJp6s=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=n09kAoxK2GITAsZKOI4DZ/3lyoyPYE7173+ozuzSmSZ/1OKVId9CpnghqFqCEA3qY
-         oQD+84U+C/3u3uNt0/xITIpdCetvhiWgtjPqXCc8VT/RRQQ67Z2ksQWi6JhEZcCx41
-         4jmeixgB8eKnb/z0NNiYD0JcKJY/fcUZjhXBdkSM=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200320120110eucas1p238eff09c5daf836e85cd083ba25ef65e~_AWlJuLme0892208922eucas1p2_;
-        Fri, 20 Mar 2020 12:01:10 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id EA.57.60698.680B47E5; Fri, 20
-        Mar 2020 12:01:10 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200320120110eucas1p22ef61d6b7aee78fb98cd5627063b9fc8~_AWk6r0hk2318323183eucas1p2e;
-        Fri, 20 Mar 2020 12:01:10 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200320120110eusmtrp177ee177fdeac01f36cb840b62f66e686~_AWk6E7ln2035020350eusmtrp1t;
-        Fri, 20 Mar 2020 12:01:10 +0000 (GMT)
-X-AuditID: cbfec7f5-a29ff7000001ed1a-30-5e74b08660e4
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 91.99.07950.680B47E5; Fri, 20
-        Mar 2020 12:01:10 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200320120110eusmtip278b4906f4b5f5bcd5c5215b1ede21a48~_AWkrXjf11795917959eusmtip27;
-        Fri, 20 Mar 2020 12:01:10 +0000 (GMT)
-Subject: Re: [PATCH v3] video: fbdev: vesafb: add missed release_region
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <1f5e6f52-c638-f73e-cf9d-88eb641a010d@samsung.com>
-Date:   Fri, 20 Mar 2020 13:01:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Fri, 20 Mar 2020 08:04:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:48142 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726893AbgCTMER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 08:04:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7670131B;
+        Fri, 20 Mar 2020 05:04:17 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 340313F85E;
+        Fri, 20 Mar 2020 05:04:15 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 12:04:12 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Elliot Berman <eberman@codeaurora.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Trilok Soni <tsoni@codeaurora.org>,
+        Prasad Sodagudi <psodagud@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] firmware: psci: Add support for dt-supplied
+ SYSTEM_RESET2 type
+Message-ID: <20200320120412.GB36658@C02TD0UTHF1T.local>
+References: <1583435129-31356-1-git-send-email-eberman@codeaurora.org>
+ <1583435129-31356-3-git-send-email-eberman@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200310023536.13622-1-hslester96@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEKsWRmVeSWpSXmKPExsWy7djPc7ptG0riDLoalCyufH3PZjH70Etm
-        ixN9H1gtLu+aw+bA4rFz1l12j/vdx5k8Pm+SC2CO4rJJSc3JLEst0rdL4Mp4cuYSa8E14Ypt
-        39tZGhh38HcxcnBICJhIvDxh1MXIxSEksIJRYsu+LlYI5wujxKtXa9ggnM+MEmsuzGTsYuQE
-        67jbuJMFIrGcUeLP0VfsEM5bRoknc76AVQkLuEvMmjyZDcQWEVCX+LxrJzuIzSyQIHF60T0W
-        EJtNwEpiYvsqsHpeATuJv++OgtksAqoSfV/bmUBsUYEIiU8PDrNC1AhKnJz5BKyXE6h3wplW
-        FoiZ4hK3nsxngrDlJba/ncMMcpCEQDe7xNW/H6DOdpE4c20llC0s8er4FnYIW0bi9OQeFoiG
-        dYwSfzteQHVvZ5RYPvkfG0SVtcSdc7/YQEHGLKApsX6XPkTYUWLPrMvskJDkk7jxVhDiCD6J
-        SdumM0OEeSU62oQgqtUkNizbwAaztmvnSuYJjEqzkLw2C8k7s5C8Mwth7wJGllWM4qmlxbnp
-        qcXGeanlesWJucWleel6yfm5mxiBKeX0v+NfdzDu+5N0iFGAg1GJh9diZUmcEGtiWXFl7iFG
-        CQ5mJRFe3fTiOCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8xotexgoJpCeWpGanphakFsFkmTg4
-        pRoYeZtKhR6FXDAsu3FkllrZF75Q5zcnvH4FyuvV2nve+HxB9oJ6RNjq8Igb152+31n+ltf9
-        coi8L1fd/sccKvPln0UtObvtWM+aXwr1pxPn7tqR6Hp/rsX2FIGv8nNeqH9wNnkT5W6+K+vA
-        +5b++F38kjmrFs+UYtJgUYr98E11mcS5oIq0IJ51SizFGYmGWsxFxYkAn7HChyUDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsVy+t/xe7ptG0riDHbvE7a48vU9m8XsQy+Z
-        LU70fWC1uLxrDpsDi8fOWXfZPe53H2fy+LxJLoA5Ss+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLP
-        yMRSz9DYPNbKyFRJ384mJTUnsyy1SN8uQS/jyZlLrAXXhCu2fW9naWDcwd/FyMkhIWAicbdx
-        J0sXIxeHkMBSRolH99cydjFyACVkJI6vL4OoEZb4c62LDaLmNaPE9U+/mUASwgLuErMmT2YD
-        sUUE1CU+79rJDtLLLJAg8WxeCkR9L6NE+87/LCA1bAJWEhPbVzGC2LwCdhJ/3x0Fs1kEVCX6
-        vraDzRQViJA4vGMWVI2gxMmZT8B6OYF6J5xpBbOZgXb9mXeJGcIWl7j1ZD4ThC0vsf3tHOYJ
-        jEKzkLTPQtIyC0nLLCQtCxhZVjGKpJYW56bnFhvpFSfmFpfmpesl5+duYgRG0LZjP7fsYOx6
-        F3yIUYCDUYmH12JlSZwQa2JZcWXuIUYJDmYlEV7d9OI4Id6UxMqq1KL8+KLSnNTiQ4ymQM9N
-        ZJYSTc4HRndeSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQbG3XqK
-        k32VUi5WrbC0Mmnxm1wfz5ay0lTmwsxZF8r9dzXZlzc9FM6sf7zTpkdN2efb6YQ+/WJ1i2jW
-        4xfmaxWl2Jywvz1l3xe+Ht72/sbm/1Y6h2e45Xcn/b2cHO0eeP3pCZtXyks+vPVo2cR4/lJJ
-        j6ikxYN3vP8iOmMXR0yJiCzT11C/8kOJpTgj0VCLuag4EQDr2C68tgIAAA==
-X-CMS-MailID: 20200320120110eucas1p22ef61d6b7aee78fb98cd5627063b9fc8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200310023550eucas1p10797f834d7dc16f634cf644011462393
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200310023550eucas1p10797f834d7dc16f634cf644011462393
-References: <CGME20200310023550eucas1p10797f834d7dc16f634cf644011462393@eucas1p1.samsung.com>
-        <20200310023536.13622-1-hslester96@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583435129-31356-3-git-send-email-eberman@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 3/10/20 3:35 AM, Chuhong Yuan wrote:
-> The driver forgets to free the I/O region in remove and probe
-> failure.
-> Add the missed calls to fix it.
+On Thu, Mar 05, 2020 at 11:05:28AM -0800, Elliot Berman wrote:
+> Some implementors of PSCI may wish to use a different reset type than
+> SYSTEM_WARM_RESET. For instance, Qualcomm SoCs support an alternate
+> reset_type which may be used in more warm reboot scenarios than
+> SYSTEM_WARM_RESET permits (e.g. to reboot into recovery mode).
 > 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
+
+I think we need to discuss the expected semantics on patch 1, and as
+things stand, I do not want to take this patch until we understand and
+agree to how things should behave.
+
+Thanks,
+Mark.
+
 > ---
-> Changes in v3:
->   - Revise the commit message.
->   - Add an error handler to suit the "goto error" before request_region().
->   - Revise the order of operations in remove.
->   
->  drivers/video/fbdev/vesafb.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+>  drivers/firmware/psci/psci.c | 21 +++++++++++++++++----
+>  include/uapi/linux/psci.h    |  5 +++++
+>  2 files changed, 22 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/video/fbdev/vesafb.c b/drivers/video/fbdev/vesafb.c
-> index a1fe24ea869b..c7bc9ace47d4 100644
-> --- a/drivers/video/fbdev/vesafb.c
-> +++ b/drivers/video/fbdev/vesafb.c
-> @@ -439,7 +439,7 @@ static int vesafb_probe(struct platform_device *dev)
->  		       "vesafb: abort, cannot ioremap video memory 0x%x @ 0x%lx\n",
->  			vesafb_fix.smem_len, vesafb_fix.smem_start);
->  		err = -EIO;
-> -		goto err;
-> +		goto err_release_region;
+> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+> index 2937d44..43fe3af 100644
+> --- a/drivers/firmware/psci/psci.c
+> +++ b/drivers/firmware/psci/psci.c
+> @@ -90,6 +90,8 @@ static u32 psci_function_id[PSCI_FN_MAX];
+>  
+>  static u32 psci_cpu_suspend_feature;
+>  static bool psci_system_reset2_supported;
+> +static u32 psci_sys_reset2_reset_param =
+> +	PSCI_1_1_SYSTEM_RESET2_SYSTEM_WARM_RESET;
+>  
+>  static inline bool psci_has_ext_power_state(void)
+>  {
+> @@ -272,11 +274,10 @@ static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
+>  	if ((reboot_mode == REBOOT_WARM || reboot_mode == REBOOT_SOFT) &&
+>  	    psci_system_reset2_supported) {
+>  		/*
+> -		 * reset_type[31] = 0 (architectural)
+> -		 * reset_type[30:0] = 0 (SYSTEM_WARM_RESET)
+>  		 * cookie = 0 (ignored by the implementation)
+>  		 */
+> -		invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2), 0, 0, 0);
+> +		invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2),
+> +			       psci_sys_reset2_reset_param, 0, 0);
+>  	} else {
+>  		invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
 >  	}
+> @@ -493,6 +494,7 @@ typedef int (*psci_initcall_t)(const struct device_node *);
+>  static int __init psci_0_2_init(struct device_node *np)
+>  {
+>  	int err;
+> +	u32 param;
 >  
->  	printk(KERN_INFO "vesafb: framebuffer at 0x%lx, mapped to 0x%p, "
-> @@ -458,15 +458,17 @@ static int vesafb_probe(struct platform_device *dev)
+>  	err = get_set_conduit_method(np);
+>  	if (err)
+> @@ -505,7 +507,18 @@ static int __init psci_0_2_init(struct device_node *np)
+>  	 * can be carried out according to the specific version reported
+>  	 * by firmware
+>  	 */
+> -	return psci_probe();
+> +	err = psci_probe();
+> +	if (err)
+> +		return err;
+> +
+> +	if (psci_system_reset2_supported &&
+> +	    !of_property_read_u32(np, "arm,psci-sys-reset2-vendor-param", &param)) {
+> +		psci_sys_reset2_reset_param = param |
+> +			(PSCI_1_1_SYSTEM_RESET2_OWNER_VENDOR <<
+> +			 PSCI_1_1_SYSTEM_RESET2_OWNER_SHIFT);
+> +	}
+> +
+> +	return 0;
+>  }
 >  
->  	if (fb_alloc_cmap(&info->cmap, 256, 0) < 0) {
->  		err = -ENOMEM;
-> -		goto err;
-> +		goto err_release_region;
->  	}
->  	if (register_framebuffer(info)<0) {
->  		err = -EINVAL;
->  		fb_dealloc_cmap(&info->cmap);
-> -		goto err;
-> +		goto err_release_region;
->  	}
->  	fb_info(info, "%s frame buffer device\n", info->fix.id);
->  	return 0;
-> +err_release_region:
-> +	release_region(0x3c0, 32);
-
-This is incorrect.
-
-The cleanup order should be the reverse of the probing order.
-
-Also request_region() return value is not checked by the driver
-(there is a comment that it can fail and is optional):
-
-        /* request failure does not faze us, as vgacon probably has this
-         * region already (FIXME) */
-        request_region(0x3c0, 32, "vesafb");
-
-so what would happen in such case? It seems that unconditionally
-doing the release will result in freeing the I/O region owned by
-the other driver (vgacon)..
-
->  err:
->  	arch_phys_wc_del(par->wc_cookie);
->  	if (info->screen_base)
-> @@ -481,6 +483,7 @@ static int vesafb_remove(struct platform_device *pdev)
->  	struct fb_info *info = platform_get_drvdata(pdev);
+>  /*
+> diff --git a/include/uapi/linux/psci.h b/include/uapi/linux/psci.h
+> index 2fcad1d..0829175 100644
+> --- a/include/uapi/linux/psci.h
+> +++ b/include/uapi/linux/psci.h
+> @@ -55,6 +55,11 @@
+>  #define PSCI_1_0_FN64_SYSTEM_SUSPEND		PSCI_0_2_FN64(14)
+>  #define PSCI_1_1_FN64_SYSTEM_RESET2		PSCI_0_2_FN64(18)
 >  
->  	unregister_framebuffer(info);
-> +	release_region(0x3c0, 32);
->  	framebuffer_release(info);
->  
->  	return 0;
-> 
- 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+> +#define PSCI_1_1_SYSTEM_RESET2_OWNER_SHIFT		31
+> +#define PSCI_1_1_SYSTEM_RESET2_OWNER_ARCH		0
+> +#define PSCI_1_1_SYSTEM_RESET2_OWNER_VENDOR		1
+> +#define PSCI_1_1_SYSTEM_RESET2_SYSTEM_WARM_RESET	0
+> +
+>  /* PSCI v0.2 power state encoding for CPU_SUSPEND function */
+>  #define PSCI_0_2_POWER_STATE_ID_MASK		0xffff
+>  #define PSCI_0_2_POWER_STATE_ID_SHIFT		0
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
