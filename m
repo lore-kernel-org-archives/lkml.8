@@ -2,236 +2,170 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6EFC4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECC9C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0FBA20739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB9DF2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 01:41:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="frfFIjdm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ch9QVTq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbgCTBiO (ORCPT
+        id S1727345AbgCTBlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 21:38:14 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:16791 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgCTBiO (ORCPT
+        Thu, 19 Mar 2020 21:41:11 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34643 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727238AbgCTBlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 21:38:14 -0400
+        Thu, 19 Mar 2020 21:41:11 -0400
+Received: by mail-qk1-f194.google.com with SMTP id f3so5438746qkh.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 18:41:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1584668294; x=1616204294;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=5SKYiVY59+RJal/KRyqynYgw4RU6qFZiK5dC3+eXKc0=;
-  b=frfFIjdmD4fTG4iMgoOQZxms4dBZ4WAKLyoZ0zF/e59NtAYbTP+dkcjz
-   86JpnnqZB4EhOVyjjK6rTL+M8b2346d0Nw+Sz3Z1oTHdZTPZHjZBCGqSK
-   ToSv+EzAO5/Tc+EACzSZ+j2XXU/3pJfZU4TY8gc5+QKXSMpVoRjaYqCsT
-   o=;
-IronPort-SDR: 8hrVBkMqxJ8VU9Fqc2A7xgsNwcLdBA3ld1mU9FpiLhadRCEnt5vFrGUPF1r/VtEVq5kT6+3M7x
- 0wU5N/vaPBqA==
-X-IronPort-AV: E=Sophos;i="5.72,573,1580774400"; 
-   d="scan'208";a="22293735"
-Subject: Re: [RFC PATCH] arch/x86: Optionally flush L1D on context switch
-Thread-Topic: [RFC PATCH] arch/x86: Optionally flush L1D on context switch
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-69849ee2.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 20 Mar 2020 01:38:01 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-69849ee2.us-west-2.amazon.com (Postfix) with ESMTPS id C7749A1C4D;
-        Fri, 20 Mar 2020 01:37:59 +0000 (UTC)
-Received: from EX13D21UWB002.ant.amazon.com (10.43.161.177) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 20 Mar 2020 01:37:59 +0000
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13D21UWB002.ant.amazon.com (10.43.161.177) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 20 Mar 2020 01:37:59 +0000
-Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
- EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
- Fri, 20 Mar 2020 01:37:59 +0000
-From:   "Singh, Balbir" <sblbir@amazon.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "keescook@chromium.org" <keescook@chromium.org>,
-        "Herrenschmidt, Benjamin" <benh@amazon.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Thread-Index: AQHV+YNfBeR2nut5dUuur/1Y5KcywKhPGnoAgAFvAYA=
-Date:   Fri, 20 Mar 2020 01:37:58 +0000
-Message-ID: <97b2bffc16257e70b8aa98ee86622dc4178154c4.camel@amazon.com>
-References: <20200313220415.856-1-sblbir@amazon.com>
-         <87imj19o13.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87imj19o13.fsf@nanos.tec.linutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.161.71]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <76041E864F91224E902D6F067A130DC3@amazon.com>
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eZP0u8ITunLiIIRvSTm1UDhFa2x+FOEr9rW1o7749xQ=;
+        b=ch9QVTq4I67QoriwHaevg8GW7hXScd11/w/CBbCQ7WxRxps1cAMVtSS6fHp9gCncIZ
+         S78U66ED8dfSrlv95xnu/Eyg5Z1Mnlg1sOfTgqTrxCmMGsPf3W9IGy1vAKNiIgXXbA0d
+         BOSCBXlTGB66Kt8TKlqT4G9y43hVCO20Q8pvNBDnbJ/D3tbRjTlGGxl1CsWfy4+gj/kJ
+         /ozhlhuSfH2+lcIEEdWAeQ+NDIBRv6Oks/lBViT0vCDcqDj1P4UZuev0K9cK5pMdvkIO
+         wTO66o7+GMiKoRws/uakv1R3YiPY+SK0oZRTwUToFigy5QhCfpAASMlt2MywZ3943Avs
+         TJ9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eZP0u8ITunLiIIRvSTm1UDhFa2x+FOEr9rW1o7749xQ=;
+        b=Ht+q+3Yrp4OmEYQIn6X9XqUaG4cFRLUnm3OaAxFO6V6/U+HgP0EKnMfQ7WQsYDHv2T
+         ErN62LvPB93qPqI1x2hDV7gskBqFi86esJKnYRu5xyONsgQxLcLtTpkW9EhzCo7rugDe
+         jZnfSNvEG5dpXtkHkmJvtlwqHZetn88KsAkC796+aXs1VjwaRjVG3rbsc48BFxURYNZM
+         L40+v8sfvD11uRtxZgJIVaR+jQxedS4z/qAbz6EUxT+rR3LDRajfOCgJX/MyZOKQT0aL
+         D+dnBF3386uytnqOdnh0yarqsE2H4n5hjd+OTt4dym88DNv/AtavyQIANOE4BMP0pApe
+         Hbug==
+X-Gm-Message-State: ANhLgQ0/Yp6r22RSK/UW7ai+mDHNZFJkzXT21xNgcIfOzxdXzw8EdyV9
+        SV7RE3msc/OxMqvwlIkJFDoeYA==
+X-Google-Smtp-Source: ADFU+vtHoEjmxDMNZ3DTXsUDWYUwN7WHrNIVQU4FEmg3Vg32kJaDK07DIpk0aYZpGhtYL0mspWm+WA==
+X-Received: by 2002:a37:4bd1:: with SMTP id y200mr4044290qka.205.1584668469530;
+        Thu, 19 Mar 2020 18:41:09 -0700 (PDT)
+Received: from pop-os.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.googlemail.com with ESMTPSA id 2sm2706287qtp.33.2020.03.19.18.41.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 18:41:08 -0700 (PDT)
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+To:     rui.zhang@intel.com, ulf.hansson@linaro.org,
+        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
+        agross@kernel.org, robh@kernel.org
+Cc:     amit.kucheria@verdurent.com, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [Patch v5 0/6] Introduce Power domain based warming device driver
+Date:   Thu, 19 Mar 2020 21:41:01 -0400
+Message-Id: <20200320014107.26087-1-thara.gopinath@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAzLTE5IGF0IDAxOjM4ICswMTAwLCBUaG9tYXMgR2xlaXhuZXIgd3JvdGU6
-DQo+IENBVVRJT046IFRoaXMgZW1haWwgb3JpZ2luYXRlZCBmcm9tIG91dHNpZGUgb2YgdGhlIG9y
-Z2FuaXphdGlvbi4gRG8gbm90DQo+IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5s
-ZXNzIHlvdSBjYW4gY29uZmlybSB0aGUgc2VuZGVyIGFuZCBrbm93DQo+IHRoZSBjb250ZW50IGlz
-IHNhZmUuDQo+IA0KPiANCj4gDQo+IEJhbGJpciwNCj4gDQo+IEJhbGJpciBTaW5naCA8c2JsYmly
-QGFtYXpvbi5jb20+IHdyaXRlczoNCj4gPiBUaGlzIHBhdGNoIGlzIGFuIFJGQy9Qb0MgdG8gc3Rh
-cnQgdGhlIGRpc2N1c3Npb24gb24gb3B0aW9uYWxseSBmbHVzaGluZw0KPiA+IEwxRCBjYWNoZS4g
-IFRoZSBnb2FsIGlzIHRvIGFsbG93IHRhc2tzIHRoYXQgYXJlIHBhcmFub2lkIGR1ZSB0byB0aGUg
-cmVjZW50DQo+ID4gc25vb3AgYXNzaXN0ZWQgZGF0YSBzYW1wbGluZyB2dWxuZXJhYmlsaXRlcywg
-dG8gZmx1c2ggdGhlaXIgTDFEIG9uIGJlaW5nDQo+ID4gc3dpdGNoZWQgb3V0LiAgVGhpcyBwcm90
-ZWN0cyB0aGVpciBkYXRhIGZyb20gYmVpbmcgc25vb3BlZCBvciBsZWFrZWQgdmlhDQo+ID4gc2lk
-ZSBjaGFubmVscyBhZnRlciB0aGUgdGFzayBoYXMgY29udGV4dCBzd2l0Y2hlZCBvdXQuDQo+IA0K
-PiBXaGF0IHlvdSBtZWFuIGlzIHRoYXQgTDFEIGlzIGZsdXNoZWQgYmVmb3JlIGFub3RoZXIgdGFz
-ayB3aGljaCBkb2VzIG5vdA0KPiBiZWxvbmcgdG8gdGhlIHNhbWUgdHJ1c3Qgem9uZSByZXR1cm5z
-IHRvIHVzZXIgc3BhY2Ugb3IgZW50ZXJzIGd1ZXN0DQo+IG1vZGUuDQo+IA0KPiA+IFRoZXJlIGFy
-ZSB0d28gc2NlbmFyaW9zIHdlIG1pZ2h0IHdhbnQgdG8gcHJvdGVjdCBhZ2FpbnN0LCBhIHRhc2sg
-bGVhdmluZw0KPiA+IHRoZSBDUFUgd2l0aCBkYXRhIHN0aWxsIGluIEwxRCAod2hpY2ggaXMgdGhl
-IG1haW4gY29uY2VybiBvZiB0aGlzDQo+ID4gcGF0Y2gpLCB0aGUgc2Vjb25kIHNjZW5hcmlvIGlz
-IGEgbWFsaWNpb3VzIHRhc2sgY29taW5nIGluIChub3Qgc28gd2VsbA0KPiA+IHRydXN0ZWQpIGZv
-ciB3aGljaCB3ZSB3YW50IHRvIGNsZWFuIHVwIHRoZSBjYWNoZSBiZWZvcmUgaXQgc3RhcnRzDQo+
-ID4gZXhlY3V0aW9uLiBUaGUgbGF0dGVyIHdhcyBwcm9wb3NlZCBieSBiZW5oIGFuZCBpcyBub3Qg
-Y3VycmVudGx5DQo+ID4gYWRkcmVzc2VkIGJ5IHRoaXMgcGF0Y2gsIGJ1dCBjYW4gYmUgZWFzaWx5
-IGFjY29tbW9kYXRlZCBieSB0aGUgc2FtZQ0KPiA+IG1lY2hhbmlzbS4NCj4gDQo+IFdoYXQncyB0
-aGUgcG9pbnQ/IFRoZSBhdHRhY2sgc3VyZmFjZSBpcyB0aGUgTDFEIGNvbnRlbnQgb2YgdGhlIHNj
-aGVkdWxlZA0KPiBvdXQgdGFzay4gSWYgdGhlIG1hbGljaW91cyB0YXNrIHNjaGVkdWxlcyBvdXQs
-IHRoZW4gd2h5IHdvdWxkIHlvdSBjYXJlPw0KPiANCj4gSSBtaWdodCBiZSBtaXNzaW5nIHNvbWV0
-aGluZywgYnV0IEFGQUlDVCB0aGlzIGlzIGJleW9uZCBwYXJhbm9pYS4NCj4gDQoNCkkgdGhpbmsg
-dGhlcmUgYXJlIHR3byBjYXNlcw0KDQoxLiBUYXNrIHdpdGggaW1wb3J0YW50IGRhdGEgc2NoZWR1
-bGVzIG91dA0KMi4gTWFsaWNpb3VzIHRhc2sgc2NoZWR1bGVzIGluDQoNClRoZXNlIHBhdGNoZXMg
-YWRkcmVzcyAxLCBidXQgY2FsbCBvdXQgY2FzZSAjMg0KDQoNCj4gPiBUaGUgcG9pbnRzIG9mIGRp
-c2N1c3Npb24vcmV2aWV3IGFyZToNCj4gPiANCj4gPiAxLiBEaXNjdXNzIHRoZSB1c2UgY2FzZSBh
-bmQgdGhlIHJpZ2h0IGFwcHJvYWNoIHRvIGFkZHJlc3MgdGhpcw0KPiANCj4gSXQgbWlnaHQgYmUg
-dGhlIHF1aWNrIGZpeCBmb3IgdGhlIG5leHQgbm90IHlldCBrbm93biB2YXJpYW50IG9mIEwxRA0K
-PiBiYXNlZCBob3Jyb3JzLCBzbyB5ZXMgaXQncyBhdCBsZWFzdCB3b3J0aCB0byBkaXNjdXNzIGl0
-Lg0KPiANCg0KWWVzLCB0aGF0IGlzIHRoZSBicm9hZGVyIHRoaW5raW5nLCB0aGVyZSBtaWdodCBi
-ZSB5ZXQgdG8gYmUgZGlzY292ZXJlZCBhdHRhY2sNCnZlY3RvcnMgYW5kIGhhdmluZyBzb21ldGhp
-bmcgbGlrZSB0aGlzIHByb3ZpZGVzIGEgZ29vZCB3b3JrYXJvdW5kDQoNCj4gPiAyLiBEb2VzIGFu
-IGFyY2ggcHJjdGwgYWxsb3dpbmcgZm9yIG9wdC1pbiBmbHVzaGluZyBtYWtlIHNlbnNlLCB3b3Vs
-ZCBvdGhlcg0KPiA+ICAgIGFyY2hlcyBjYXJlIGFib3V0IHNvbWV0aGluZyBzaW1pbGFyPw0KPiAN
-Cj4gTm8gaWRlYSwgYnV0IEkgYXNzdW1lIGluIHRoZSBsaWdodCBvZiBMMUQgYmFzZWQgaXNzdWVz
-IHRoYXQgbWlnaHQgYmUgdGhlDQo+IGNhc2UuIFRob3VnaCB0aGF0IHN0aWxsIGlzIHBlciBhcmNo
-aXRlY3R1cmUgYXMgdGhlIEwxRCBmbHVzaCBtZWNoYW5pc21zDQo+IGFyZSBhcmNoaXRlY3R1cmUg
-c3BlY2lmaWMuIEFzaWRlIG9mIHRoYXQgSSBkb24ndCB0aGluayB0aGF0IG1vcmUgdGhhbiBhDQo+
-IGZldyB3aWxsIGVuYWJsZSAvIHN1cHBvcnQgaXQuDQo+IA0KDQpGYWlyIGVub3VnaA0KDQo+ID4g
-My4gVGhlcmUgaXMgYSBmYWxsYmFjayBzb2Z0d2FyZSBMMUQgbG9hZCwgc2ltaWxhciB0byB3aGF0
-IEwxVEYgZG9lcywgYnV0DQo+ID4gICAgd2UgZG9uJ3QgcHJlZmV0Y2ggdGhlIFRMQiwgaXMgdGhh
-dCBzdWZmaWNpZW50Pw0KPiANCj4gSWYgd2UgZ28gdGhlcmUsIHRoZW4gdGhlIEtWTSBMMUQgZmx1
-c2ggY29kZSB3YW50cyB0byBtb3ZlIGludG8gZ2VuZXJhbA0KPiB4ODYgY29kZS4NCg0KT0suLiB3
-ZSBjYW4gZGVmaW5pdGVseSBjb25zaWRlciByZXVzaW5nIGNvZGUsIGJ1dCBJIHRoaW5rIHRoZSBL
-Vk0gYml0cyByZXF1aXJlDQp0bGIgcHJlZmV0Y2hpbmcsIElJVUMgYmVmb3JlIGNhY2hlIGZsdXNo
-IHRvIG5lZ2F0ZSBhbnkgYmFkIHRyYW5zbGF0aW9ucw0KYXNzb2NpYXRlZCB3aXRoIGFuIEwxVEYg
-ZmF1bHQsIGJ1dCB0aGUgY29kZS9jb21tZW50cyBhcmUgbm90IGNsZWFyIG9uIHRoZSBuZWVkDQp0
-byBkbyBzby4NCg0KPiANCj4gPiA0LiBUaGUgYXRvbWljcyBjYW4gYmUgaW1wcm92ZWQgYW5kIHdl
-IGNvdWxkIHVzZSBhIHN0YXRpYyBrZXkgbGlrZSBpYnBiDQo+ID4gICAgZG9lcyB0byBvcHRpbWl6
-ZSB0aGUgY29kZSBwYXRoDQo+IA0KPiBZZXMgdG8gc3RhdGljIGtleS4NCg0KU3VyZSwgd2lsbCBk
-bw0KDQo+IA0KPiA+IDUuIFRoZSBjb2RlIHdvcmtzIHdpdGggYSBzcGVjaWFsIGhhY2sgZm9yIDY0
-IGJpdCBzeXN0ZW1zIChUSUZfTDFEX0ZMVVNIDQo+ID4gICAgaXMgYml0IDMyKSwgd2UgY291bGQg
-Z2VuZXJhbGl6ZSBpdCB3aXRoIHNvbWUgZWZmb3J0DQo+IA0KPiBXaHkgc28/IFRoZXJlIGFyZSBn
-YXBzIGluIHRoZSBUSUYgZmxhZ3MgKDE4LCAyMywgMjYpLiBXaHkgZG8geW91IHdhbnQgdG8NCj4g
-cHVzaCB0aGF0IHRvIDMyPw0KDQpJIG1pZ2h0IGhhdmUgbWlzc2VkIHRoZSBob2xlcywgSSBjYW4g
-bW92ZSB0byB1c2luZyBvbmUgb2YgdGhlbSwgdGhhbmtzLg0KDQo+IA0KPiA+IDYuIFNob3VsZCB3
-ZSBjb25zaWRlciBjbGVhbmluZyB1cCB0aGUgTDFEIG9uIGFycml2YWwgb2YgdGFza3M/DQo+IA0K
-PiBUaGF0J3MgdGhlIEJlbiBpZGVhLCByaWdodD8gSWYgc28gc2VlIGFib3ZlLg0KDQpZZXMNCg0K
-PiANCj4gPiArI2RlZmluZSBMMURfQ0FDSEVfT1JERVIgNA0KPiA+ICtzdGF0aWMgdm9pZCAqbDFk
-X2ZsdXNoX3BhZ2VzOw0KPiA+ICtzdGF0aWMgREVGSU5FX01VVEVYKGwxZF9mbHVzaF9tdXRleCk7
-DQo+ID4gKw0KPiA+ICt2b2lkIGVuYWJsZV9sMWRfZmx1c2hfZm9yX3Rhc2soc3RydWN0IHRhc2tf
-c3RydWN0ICp0c2spDQo+ID4gK3sNCj4gPiArICAgICBzdHJ1Y3QgcGFnZSAqcGFnZTsNCj4gPiAr
-DQo+ID4gKyAgICAgaWYgKHN0YXRpY19jcHVfaGFzKFg4Nl9GRUFUVVJFX0ZMVVNIX0wxRCkpDQo+
-ID4gKyAgICAgICAgICAgICBnb3RvIGRvbmU7DQo+ID4gKw0KPiA+ICsgICAgIG11dGV4X2xvY2so
-JmwxZF9mbHVzaF9tdXRleCk7DQo+ID4gKyAgICAgaWYgKGwxZF9mbHVzaF9wYWdlcykNCj4gPiAr
-ICAgICAgICAgICAgIGdvdG8gZG9uZTsNCj4gPiArICAgICAvKg0KPiA+ICsgICAgICAqIFRoZXNl
-IHBhZ2VzIGFyZSBuZXZlciBmcmVlZCwgd2UgdXNlIHRoZSBzYW1lDQo+ID4gKyAgICAgICogc2V0
-IG9mIHBhZ2VzIGFjcm9zcyBtdWx0aXBsZSBwcm9jZXNzZXMvY29udGV4dHMNCj4gPiArICAgICAg
-Ki8NCj4gPiArICAgICBwYWdlID0gYWxsb2NfcGFnZXMoR0ZQX0tFUk5FTCB8IF9fR0ZQX1pFUk8s
-IEwxRF9DQUNIRV9PUkRFUik7DQo+ID4gKyAgICAgaWYgKCFwYWdlKQ0KPiA+ICsgICAgICAgICAg
-ICAgcmV0dXJuOw0KPiA+ICsNCj4gPiArICAgICBsMWRfZmx1c2hfcGFnZXMgPSBwYWdlX2FkZHJl
-c3MocGFnZSk7DQo+ID4gKyAgICAgLyogSSBkb24ndCB0aGluayB3ZSBuZWVkIHRvIHdvcnJ5IGFi
-b3V0IEtTTSAqLw0KPiANCj4gV2h5IG5vdD8gRXZlbiBpZiBpdCB3b3VsZG4ndCBiZSBuZWNlc3Nh
-cnkgd2h5IHdvdWxkIHdlIGNhcmUgYXMgdGhpcyBpcyBhDQo+IG9uY2UgcGVyIGJvb3Qgb3BlcmF0
-aW9uIGluIGZ1bGx5IHByZWVtcHRpYmxlIGNvZGUuDQoNCk5vdCBzdXJlIEkgdW5kZXJzdGFuZCB5
-b3VyIHF1ZXN0aW9uLCBJIHdhcyBzdGF0aW5nIHRoYXQgZXZlbiBpZiBLU00gd2FzDQpydW5uaW5n
-LCBpdCB3b3VsZCBub3QgaW1wYWN0IHVzICh3aXRoIGRlZHVwKSwgYXMgd2UnZCBzdGlsbCBiZSB3
-cml0aW5nIG91dCAwcw0KdG8gdGhlIGNhY2hlIGxpbmUgaW4gdGhlIGZhbGxiYWNrIGNhc2UuDQoN
-Cj4gDQo+IEFzaWRlIG9mIHRoYXQgd2h5IGRvIHdlIG5lZWQgYW5vdGhlciBwb2ludGxlc3NseSBk
-aWZmZXJlbnQgY29weSBvZiB3aGF0DQo+IHdlIGhhdmUgaW4gdGhlIFZNWCBjb2RlPw0KPiANCj4g
-PiArZG9uZToNCj4gPiArICAgICBzZXRfdGlfdGhyZWFkX2ZsYWcoJnRzay0+dGhyZWFkX2luZm8s
-IFRJRl9MMURfRkxVU0gpOw0KPiA+ICsgICAgIG11dGV4X3VubG9jaygmbDFkX2ZsdXNoX211dGV4
-KTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArdm9pZCBkaXNhYmxlX2wxZF9mbHVzaF9mb3JfdGFzayhz
-dHJ1Y3QgdGFza19zdHJ1Y3QgKnRzaykNCj4gPiArew0KPiA+ICsgICAgIGNsZWFyX3RpX3RocmVh
-ZF9mbGFnKCZ0c2stPnRocmVhZF9pbmZvLCBUSUZfTDFEX0ZMVVNIKTsNCj4gPiArICAgICBzbXBf
-bWJfX2FmdGVyX2F0b21pYygpOw0KPiANCj4gTGFja3MgYW4gZXhwbGFuYXRpb24gLyBjb21tZW50
-IHdoYXQgdGhpcyBzbXBfbWIgaXMgZm9yIGFuZCB3aGVyZSB0aGUNCj4gY291bnRlcnBhcnQgbGl2
-ZXMuDQo+IA0KPiBBc2lkZSBvZiB0aGF0LCB0aGlzIGlzIHBvaW50bGVzcyBBRkFJQ1QuIERpc2Fi
-bGUvZW5hYmxlIGlzIHJlYWxseSBub3QgYQ0KPiBjb25jZXJuIG9mIGJlaW5nIHBlcmZlY3QuIElm
-IHlvdSB3YW50IHBlcmZlY3QgcHJvdGVjdGlvbiwgc2ltcGx5IHN3aXRjaA0KPiBvZmYgeW91ciBj
-b21wdXRlci4NCg0KWWVzLCB0aGUgY291bnRlciBwYXJ0IHdhcyBpbiB0aGUgbDFkX2ZsdXNoKCks
-IHdoaWNoIGRpZCBhbiBzbXBfcm1iKCksIGJ1dCB0aGUNCmNvbW1lbnQgZG9lcyBwb2ludCBvdXQg
-dGhhdCBpdCBjYW4gYW5kIHdpbGwgYmUgbGF6eSwgc28gd2UgY2FuIHNhZmVseSByZW1vdmUNCnRo
-aXMgYml0IGlmIG5lZWRlZC4NCg0KPiANCj4gPiArLyoNCj4gPiArICogRmx1c2ggdGhlIEwxRCBj
-YWNoZSBmb3IgdGhpcyBDUFUuIFdlIHdhbnQgdG8gdGhpcyBhdCBzd2l0Y2ggbW0gdGltZSwNCj4g
-PiArICogdGhpcyBpcyBhIHBlc3NpbWlzdGljIHNlY3VyaXR5IG1lYXN1cmUgYW5kIGFuIG9wdC1p
-biBmb3IgdGhvc2UgdGFza3MNCj4gPiArICogdGhhdCBob3N0IHNlbnNpdGl2ZSBpbmZvcm1hdGlv
-biBhbmQgdGhlcmUgYXJlIGNvbmNlcm5zIGFib3V0IHNwaWxscw0KPiA+ICsgKiBmcm9tIGZpbGwg
-YnVmZmVycy4NCj4gPiArICovDQo+ID4gK3N0YXRpYyB2b2lkIGwxZF9mbHVzaChzdHJ1Y3QgbW1f
-c3RydWN0ICpuZXh0LCBzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRzaykNCj4gPiArew0KPiA+ICsgICAg
-IHN0cnVjdCBtbV9zdHJ1Y3QgKnJlYWxfcHJldiA9IHRoaXNfY3B1X3JlYWQoY3B1X3RsYnN0YXRl
-LmxvYWRlZF9tbSk7DQo+ID4gKyAgICAgaW50IHNpemUgPSBQQUdFX1NJWkUgPDwgTDFEX0NBQ0hF
-X09SREVSOw0KPiA+ICsNCj4gPiArICAgICBpZiAodGhpc19jcHVfcmVhZChjcHVfdGxic3RhdGUu
-bGFzdF91c2VyX21tX2wxZF9mbHVzaCkgPT0gMCkNCj4gPiArICAgICAgICAgICAgIGdvdG8gY2hl
-Y2tfbmV4dDsNCj4gPiArDQo+ID4gKyAgICAgaWYgKHJlYWxfcHJldiA9PSBuZXh0KQ0KPiA+ICsg
-ICAgICAgICAgICAgcmV0dXJuOw0KPiA+ICsNCj4gPiArICAgICBpZiAoc3RhdGljX2NwdV9oYXMo
-WDg2X0ZFQVRVUkVfRkxVU0hfTDFEKSkgew0KPiA+ICsgICAgICAgICAgICAgd3Jtc3JsKE1TUl9J
-QTMyX0ZMVVNIX0NNRCwgTDFEX0ZMVVNIKTsNCj4gPiArICAgICAgICAgICAgIGdvdG8gZG9uZTsN
-Cj4gPiArICAgICB9DQo+ID4gKw0KPiA+ICsgICAgIGFzbSB2b2xhdGlsZSgNCj4gPiArICAgICAg
-ICAgICAgIC8qIEZpbGwgdGhlIGNhY2hlICovDQo+ID4gKyAgICAgICAgICAgICAieG9ybCAgICUl
-ZWF4LCAlJWVheFxuIg0KPiA+ICsgICAgICAgICAgICAgIi5MZmlsbF9jYWNoZTpcbiINCj4gPiAr
-ICAgICAgICAgICAgICJtb3Z6YmwgKCVbZmx1c2hfcGFnZXNdLCAlJSIgX0FTTV9BWCAiKSwgJSVl
-Y3hcblx0Ig0KPiA+ICsgICAgICAgICAgICAgImFkZGwgICAkNjQsICUlZWF4XG5cdCINCj4gPiAr
-ICAgICAgICAgICAgICJjbXBsICAgJSVlYXgsICVbc2l6ZV1cblx0Ig0KPiA+ICsgICAgICAgICAg
-ICAgImpuZSAgICAuTGZpbGxfY2FjaGVcblx0Ig0KPiA+ICsgICAgICAgICAgICAgImxmZW5jZVxu
-Ig0KPiA+ICsgICAgICAgICAgICAgOjogW2ZsdXNoX3BhZ2VzXSAiciIgKGwxZF9mbHVzaF9wYWdl
-cyksDQo+ID4gKyAgICAgICAgICAgICAgICAgW3NpemVdICJyIiAoc2l6ZSkNCj4gPiArICAgICAg
-ICAgICAgIDogImVheCIsICJlY3giKTsNCj4gDQo+IFlldCBtb2FyIGNvcGllZCBjb2RlIHNsaWdo
-bHR5IGRpZmZlcmVudCBmb3Igbm8gcmVhc29uLg0KPiANCg0KRGlmZmVyZW50IGJlY2F1c2Ugb2Yg
-dGhlIG5lZWQgdG8gbm90IHByZWZldGNoIHRoZSBUTEINCg0KPiA+ICsNCj4gPiArZG9uZToNCj4g
-PiArICAgICB0aGlzX2NwdV93cml0ZShjcHVfdGxic3RhdGUubGFzdF91c2VyX21tX2wxZF9mbHVz
-aCwgMCk7DQo+ID4gKyAgICAgLyogTWFrZSBzdXJlIHdlIGNsZWFyIHRoZSB2YWx1ZXMgYmVmb3Jl
-IHdlIHNldCBpdCBhZ2FpbiAqLw0KPiA+ICsgICAgIGJhcnJpZXIoKTsNCj4gPiArY2hlY2tfbmV4
-dDoNCj4gPiArICAgICBpZiAodHNrID09IE5VTEwpDQo+ID4gKyAgICAgICAgICAgICByZXR1cm47
-DQo+ID4gKw0KPiA+ICsgICAgIC8qIE1hdGNoIHRoZSBzZXQvY2xlYXJfYml0IGJhcnJpZXJzICov
-DQo+ID4gKyAgICAgc21wX3JtYigpOw0KPiANCj4gV2hhdCBmb3IgYWdhaW4/DQoNClllcywgbm90
-IG5lZWRlZCAodGhlIGNvbW1lbnQgYmVsb3cgc29ydCBvZiBzYXlzIHRoYXQpLCBJIGNhbiByZW1v
-dmUgdGhpcw0KDQo+IA0KPiA+ICsgICAgIC8qIFdlIGRvbid0IG5lZWQgc3RyaW5nZW50IGNoZWNr
-cyBhcyB3ZSBvcHQtaW4vb3B0LW91dCAqLw0KPiA+ICsgICAgIGlmICh0ZXN0X3RpX3RocmVhZF9m
-bGFnKCZ0c2stPnRocmVhZF9pbmZvLCBUSUZfTDFEX0ZMVVNIKSkNCj4gPiArICAgICAgICAgICAg
-IHRoaXNfY3B1X3dyaXRlKGNwdV90bGJzdGF0ZS5sYXN0X3VzZXJfbW1fbDFkX2ZsdXNoLCAxKTsN
-Cj4gPiArfQ0KPiA+ICsNCj4gPiAgdm9pZCBzd2l0Y2hfbW0oc3RydWN0IG1tX3N0cnVjdCAqcHJl
-diwgc3RydWN0IG1tX3N0cnVjdCAqbmV4dCwNCj4gPiAgICAgICAgICAgICAgc3RydWN0IHRhc2tf
-c3RydWN0ICp0c2spDQo+ID4gIHsNCj4gPiBAQCAtNDMzLDYgKzUxOSw4IEBAIHZvaWQgc3dpdGNo
-X21tX2lycXNfb2ZmKHN0cnVjdCBtbV9zdHJ1Y3QgKnByZXYsIHN0cnVjdA0KPiA+IG1tX3N0cnVj
-dCAqbmV4dCwNCj4gPiAgICAgICAgICAgICAgIHRyYWNlX3RsYl9mbHVzaF9yY3VpZGxlKFRMQl9G
-TFVTSF9PTl9UQVNLX1NXSVRDSCwgMCk7DQo+ID4gICAgICAgfQ0KPiA+IA0KPiA+ICsgICAgIGwx
-ZF9mbHVzaChuZXh0LCB0c2spOw0KPiANCj4gVGhpcyBpcyByZWFsbHkgdGhlIHdyb25nIHBsYWNl
-LiBZb3Ugd2FudCB0byBkbyB0aGF0Og0KPiANCj4gICAxKSBKdXN0IGJlZm9yZSByZXR1cm4gdG8g
-dXNlciBzcGFjZQ0KPiAgIDIpIFdoZW4gZW50ZXJpbmcgYSBndWVzdA0KPiANCj4gYW5kIG9ubHkg
-d2hlbiB0aGUgcHJldmlvdXNseSBydW5uaW5nIHVzZXIgc3BhY2UgdGFzayB3YXMgdGhlIG9uZSB3
-aGljaA0KPiByZXF1ZXN0ZWQgdGhpcyBtYXNzaXZlIHByb3RlY3Rpb24uDQo+IA0KDQpDYXNlcyAx
-IGFuZCAyIGFyZSBoYW5kbGVkIHZpYQ0KDQoxLiBTV0FQR1MgZml4ZXMvd29yayBhcm91bmRzICh1
-bmxlc3MgSSBtaXN1bmRlcnN0b29kIHlvdXIgc3VnZ2VzdGlvbikNCjIuIEwxVEYgZmF1bHQgaGFu
-ZGxpbmcNCg0KVGhpcyBtZWNoYW5pc20gYWxsb3dzIGZvciBmbHVzaGluZyBub3QgcmVzdHJpY3Rl
-ZCB0byAxIG9yIDIsIHRoZSBpZGVhIGlzIHRvDQppbW1lZGlhdGVseSBmbHVzaCBMMUQgZm9yIHBh
-cmFub2lkIHByb2Nlc3NlcyBvbiBtbSBzd2l0Y2guDQoNCj4gPiANCg0KPiBXaGlsZSBpdCdzIHdv
-cnRoIHRvIGRpc2N1c3MsIEknbSBub3QgeWV0IGNvbnZpbmNlZCB0aGF0IHRoaXMgaXMgd29ydGgN
-Cj4gdGhlIHRyb3VibGUuDQo+IA0KDQpBcmUgeW91IHN1Z2dlc3RpbmcgdGhlIG1lY2hhbmlzbSBp
-cyBub3Qgd29ydGggYnVpbGRpbmc/DQoNCkJhbGJpciBTaW5naC4NCg==
+Certain resources modeled as a generic power domain in linux kernel can be
+used to warm up the SoC (mx power domain on sdm845) if the temperature
+falls below certain threshold. These power domains can be considered as
+thermal warming devices.  (opposite of thermal cooling devices).
+
+In kernel, these warming devices can be modeled as a thermal cooling
+device. Since linux kernel today has no instance of a resource modeled as
+a power domain acting as a thermal warming device, a generic power domain
+based thermal warming device driver that can be used pan-Socs is the
+approach taken in this patch series. Since thermal warming devices can be
+thought of as the mirror opposite of thermal cooling devices, this patch
+series re-uses thermal cooling device framework. To use these power
+domains as warming devices require further tweaks in the thermal framework
+which are out of scope of this patch series. These tweaks have been posted
+as a separate series[1].
+
+The first patch in this series extends the genpd framework to export out
+the performance states of a power domain so that when a power domain is
+modeled as a cooling device, the number of possible states and current
+state of the cooling device can be retrieved from the genpd framework.
+
+The second patch implements the newly added genpd callback for Qualcomm
+RPMH power domain driver which hosts the mx power domain.
+
+The third patch introduces a new cooling device register API that allows
+a parent to be specified for the cooling device.
+
+The fourth patch introduces the generic power domain warming device
+driver.
+
+The fifth patch extends Qualcomm RPMh power controller driver to register
+mx power domain as a thermal warming device in the kernel.
+
+The sixth patch describes the dt binding extensions for mx power domain to
+be a thermal warming device.
+
+The seventh patch introduces the DT entreis for sdm845 to register mx
+power domain as a thermal warming device.
+
+v1->v2:
+	- Rename the patch series from "qcom: Model RPMH power domains as
+	  thermal cooling devices" to "Introduce Power domain based
+	  thermal warming devices" as it is more appropriate.
+	- Introduce a new patch(patch 3) describing the dt-bindings for
+	  generic power domain warming device.
+	- Patch specific changes mentioned in respective patches.
+
+v2->v3:
+	- Changed power domain warming device from a virtual device node
+	  entry in DT to being a subnode of power domain controller
+	  binding following Rob's review comments.
+	- Implemented Ulf's review comments.
+	- The changes above introduced two new patches (patch 3 and 4)
+v3->v4:
+	- Dropped late_init hook in cooling device ops. Instead introduced
+	  a new cooling device register API that allows to define a parent
+	  for the cooling device.
+	- Patch specific changes mentioned in respective patches. 
+
+v4->v5:
+	- Dropped the patch that introduced the cooling device register
+	  API with parent as per review comments from Ulf. 
+	- Patch specific changes mentioned in respective patches.
+
+1. https://lkml.org/lkml/2019/9/18/1180
+
+Thara Gopinath (6):
+  PM/Domains: Add support for retrieving genpd performance states
+    information
+  soc: qcom: rpmhpd: Introduce function to retrieve power domain
+    performance state count
+  thermal: Add generic power domain warming device driver.
+  soc: qcom: Extend RPMh power controller driver to register warming
+    devices.
+  dt-bindings: power: Extend RPMh power controller binding to describe
+    thermal warming device
+  arm64: dts: qcom: Indicate rpmhpd hosts a power domain that can be
+    used as a warming device.
+
+ .../devicetree/bindings/power/qcom,rpmpd.yaml |   3 +
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   1 +
+ drivers/base/power/domain.c                   |  37 ++++
+ drivers/soc/qcom/rpmhpd.c                     |  46 ++++-
+ drivers/thermal/Kconfig                       |  10 ++
+ drivers/thermal/Makefile                      |   2 +
+ drivers/thermal/pd_warming.c                  | 168 ++++++++++++++++++
+ include/linux/pd_warming.h                    |  29 +++
+ include/linux/pm_domain.h                     |  13 ++
+ 9 files changed, 308 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/thermal/pd_warming.c
+ create mode 100644 include/linux/pd_warming.h
+
+-- 
+2.20.1
+
