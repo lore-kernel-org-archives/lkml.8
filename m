@@ -4,23 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42400C43333
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B89F3C4332E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219D120774
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A344420774
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:15:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbgCTJPK (ORCPT
+        id S1727176AbgCTJOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:15:10 -0400
-Received: from 8bytes.org ([81.169.241.247]:54166 "EHLO theia.8bytes.org"
+        Fri, 20 Mar 2020 05:14:23 -0400
+Received: from 8bytes.org ([81.169.241.247]:54110 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727148AbgCTJOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:14:24 -0400
+        id S1726602AbgCTJOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 05:14:21 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 13723352; Fri, 20 Mar 2020 10:14:20 +0100 (CET)
+        id 76B7957; Fri, 20 Mar 2020 10:14:19 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     iommu@lists.linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -36,9 +36,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v3 04/15] iommu/tegra-gart: Remove direct access of dev->iommu_fwspec
-Date:   Fri, 20 Mar 2020 10:14:03 +0100
-Message-Id: <20200320091414.3941-5-joro@8bytes.org>
+Subject: [PATCH v3 01/15] iommu: Define dev_iommu_fwspec_get() for !CONFIG_IOMMU_API
+Date:   Fri, 20 Mar 2020 10:14:00 +0100
+Message-Id: <20200320091414.3941-2-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200320091414.3941-1-joro@8bytes.org>
 References: <20200320091414.3941-1-joro@8bytes.org>
@@ -49,28 +49,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Use the accessor functions instead of directly dereferencing
-dev->iommu_fwspec.
+There are users outside of the IOMMU code that need to call that
+function. Define it for !CONFIG_IOMMU_API too so that compilation does
+not break.
 
+Reported-by: kbuild test robot <lkp@intel.com>
 Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/tegra-gart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/iommu.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/iommu/tegra-gart.c b/drivers/iommu/tegra-gart.c
-index 3fb7ba72507d..db6559e8336f 100644
---- a/drivers/iommu/tegra-gart.c
-+++ b/drivers/iommu/tegra-gart.c
-@@ -247,7 +247,7 @@ static int gart_iommu_add_device(struct device *dev)
- {
- 	struct iommu_group *group;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index d1b5f4d98569..3c4ca041d7a2 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -1073,6 +1073,10 @@ static inline int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
+ 	return -ENODEV;
+ }
  
--	if (!dev->iommu_fwspec)
-+	if (!dev_iommu_fwspec_get(dev))
- 		return -ENODEV;
++static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device *dev)
++{
++	return NULL;
++}
+ #endif /* CONFIG_IOMMU_API */
  
- 	group = iommu_group_get_for_dev(dev);
+ #ifdef CONFIG_IOMMU_DEBUGFS
 -- 
 2.17.1
 
