@@ -2,264 +2,294 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB252C43332
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D10C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEFC820773
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:42:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vdqILdi3"
+	by mail.kernel.org (Postfix) with ESMTP id 4351220774
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 06:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgCTGm5 (ORCPT
+        id S1726829AbgCTGpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 02:42:57 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:36114 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbgCTGm5 (ORCPT
+        Fri, 20 Mar 2020 02:45:52 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54868 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726603AbgCTGpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 02:42:57 -0400
-Received: by mail-il1-f194.google.com with SMTP id h3so4633123ils.3;
-        Thu, 19 Mar 2020 23:42:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=06zGBj/ssS7PvnHG1KI/b5iGxZdt6EvTjuawiNHIYq4=;
-        b=vdqILdi3RNjmq0KpeuSIapBq2fVmztThPONxiwnjJcjko8rcMRz8SQMlpdUCMzwZ4w
-         JR8qOfBgDzz5a8YrmPdkBZQfsC3M4OJYhOs14w8/BL7A3Ln/tpeHkHC74ji23ZB4QvEc
-         OVG/h0fkQEeWh9RawyDPM0TYP7P0X3fvBhq67MWIHuV+G6PdRv6Ax2S5qv8yE+g0LAtJ
-         YV8/jKOZ8w9zu00EwMa9M768bM7pTxy0W4oytC7o3Mc312jJHtUyh4pL3kJd1TkGA9Fn
-         ApbPkzdhDkf8ajBO+19LlKfNuoQ6tMg3sNw7u7cpyS2A9i/Wd2UIfY/ALFmIYkk4k2Ka
-         zJng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=06zGBj/ssS7PvnHG1KI/b5iGxZdt6EvTjuawiNHIYq4=;
-        b=fM704rdkqptXT+47a3xMLnC8nt/60yC2bNr1zqY0TQSaeFPsCtKfVA2MkwuaBPUWII
-         zW9E73CnK3BsrxyRvx1ibtDbDBqcozwr7m2gQ/ORKAP28cJwALgEh0LbOe0KCxGUpici
-         ZhYnu6lbJQmlKCEiQ3DPPAJm/hq4zyZDF+jNC9++7b/332iVCIcLs5CRO0tRyXT41bt7
-         IxMyTs/jdX93GVofFZh9NiPwa5SusmMsRZq7Pr/8Zp7oDNrH5pIWowXLFUPgY2DiVyaj
-         bj5rzC5a7zNWLtzGxVMkP25AQzFjmbAAMvEGpxv7MDobutzEkKKxUGvDxXZR2FAJRCYk
-         otlQ==
-X-Gm-Message-State: ANhLgQ2dM4Zw5X3dpZrTd5Fpc3S72TB/jGxcj+d8SmVyOP5tH7U6tRus
-        1f517NR2rjeQ3NcpRgZmfkBBvB7yL3VopybZBY4=
-X-Google-Smtp-Source: ADFU+vstvv6BY/bMlQ65uNn29myG7Af6LLODAPzrr62gDuWVPyo+vryjRqUrwyygLTJdrUYAmZ/8qDhhoqmRqbBluPg=
-X-Received: by 2002:a92:d843:: with SMTP id h3mr6469852ilq.246.1584686575330;
- Thu, 19 Mar 2020 23:42:55 -0700 (PDT)
+        Fri, 20 Mar 2020 02:45:51 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02K6Y6ri108467;
+        Fri, 20 Mar 2020 02:44:43 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yu7ftvnu4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Mar 2020 02:44:43 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02K6YAX4108968;
+        Fri, 20 Mar 2020 02:44:42 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yu7ftvnty-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Mar 2020 02:44:42 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02K6ZB9j014696;
+        Fri, 20 Mar 2020 06:44:42 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01dal.us.ibm.com with ESMTP id 2yrpw7hysa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Mar 2020 06:44:42 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02K6if9K40829294
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Mar 2020 06:44:41 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 23390B2064;
+        Fri, 20 Mar 2020 06:44:41 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 826D0B205F;
+        Fri, 20 Mar 2020 06:44:37 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.36.41])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 20 Mar 2020 06:44:37 +0000 (GMT)
+Subject: Re: [PATCH v6] tools/perf/metricgroup: Fix printing event names of
+ metric group with multiple events incase of overlapping events
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200221101121.28920-1-kjain@linux.ibm.com>
+ <20200318192856.GQ11531@kernel.org>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <caf17575-423a-b3f3-8fd5-e2e9925bb3bd@linux.ibm.com>
+Date:   Fri, 20 Mar 2020 12:14:36 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20200302125310.742-1-linux.amoon@gmail.com> <20200302125310.742-3-linux.amoon@gmail.com>
- <7hlfoir8rj.fsf@baylibre.com> <CAFBinCB2WXZNRg4wdFD0RJ5k4hHqcfAOCHemvHzZE42-Mo5vzA@mail.gmail.com>
-In-Reply-To: <CAFBinCB2WXZNRg4wdFD0RJ5k4hHqcfAOCHemvHzZE42-Mo5vzA@mail.gmail.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Fri, 20 Mar 2020 12:12:43 +0530
-Message-ID: <CANAwSgSefoxPqDcFG5jhW2iGbwUDkZ0bo4ebo63oKA73KKdn_w@mail.gmail.com>
-Subject: Re: [PATCHv2 2/2] clk: meson: g12a: set cpub_clk flags to CLK_IS_CRITICAL
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="00000000000067518905a14398c7"
+In-Reply-To: <20200318192856.GQ11531@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-20_01:2020-03-19,2020-03-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ mlxlogscore=999 suspectscore=0 bulkscore=0 phishscore=0 malwarescore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003200025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---00000000000067518905a14398c7
-Content-Type: text/plain; charset="UTF-8"
 
-Hi Martin / Kevin,
 
-On Fri, 20 Mar 2020 at 05:09, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Kevin,
->
-> On Mon, Mar 2, 2020 at 6:01 PM Kevin Hilman <khilman@baylibre.com> wrote:
-> [...]
-> > > updating flags to CLK_IS_CRITICAL which help enable all the parent for
-> > > cpub_clk.
-> >
-> > With current mainline, I've tested DVFS using CPUfreq on both clusters
-> > on odroid-n2, and both clusters are booting, so I don't understand the
-> > need for this patch.
-> I *think* there is a race condition at kernel boot between cpufreq and
-> disabling orphaned clocks
-> I'm not sure I fully understand it though and I don't have any G12B
-> board to verify it
->
-> my understanding is that u-boot runs Linux off CPU0 which is clocked by cpub_clk
-> this means we need to keep cpub_clk enabled as long as Linux wants the
-> CPU0 processor to be enabled (on 32-bit ARM platforms that would be
-> smp_operations.cpu_{kill,die})
-> cpufreq does not call clk_prepare_enable on the CPU clocks so this
-> means that the orphaned clock cleanup mechanism can disable it "at any
-> time", killing everything running on CPU0 and CPU1 (which are both
-> clocked by cpub_clk)
->
-> I have no explanation why this depends on booting from SD or eMMC.
->
-> for the 32-bit SoCs we have CLK_IS_CRITICAL on the CPU clock as well
-> since commit 0dad1ec65bc30a
-> on G12A we have CLK_IS_CRITICAL on the sys_pll clocks, however my
-> understanding is that cpub_clk could also be fed by one of the
-> fixed_pll derived clocks (which have a gate as well, which may or may
-> not be turned off by the orphaned clock cleanup - that is pure
-> speculation from my side though).
->
->
-> Martin
+On 3/19/20 12:58 AM, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Feb 21, 2020 at 03:41:21PM +0530, Kajol Jain escreveu:
+>> Commit f01642e4912b ("perf metricgroup: Support multiple
+>> events for metricgroup") introduced support for multiple events
+>> in a metric group. But with the current upstream, metric events
+>> names are not printed properly incase we try to run multiple
+>> metric groups with overlapping event.
+>>
+>> With current upstream version, incase of overlapping metric events
+>> issue is, we always start our comparision logic from start.
+>> So, the events which already matched with some metric group also
+>> take part in comparision logic. Because of that when we have overlapping
+>> events, we end up matching current metric group event with already matched
+>> one.
+>>
+>> For example, in skylake machine we have metric event CoreIPC and
+>> Instructions. Both of them need 'inst_retired.any' event value.
+>> As events in Instructions is subset of events in CoreIPC, they
+>> endup in pointing to same 'inst_retired.any' value.
+>>
+>> In skylake platform:
+>>
+>> command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
+>>
+>>  Performance counter stats for 'CPU(s) 0':
+>>
+>>      1,254,992,790      inst_retired.any          # 1254992790.0
+>>                                                     Instructions
+>>                                                   #      1.3 CoreIPC
+>>        977,172,805      cycles
+>>      1,254,992,756      inst_retired.any
+>>
+>>        1.000802596 seconds time elapsed
+>>
+>> command:# sudo ./perf stat -M UPI,IPC sleep 1
+>>
+>>    Performance counter stats for 'sleep 1':
+>>            948,650      uops_retired.retire_slots
+>>            866,182      inst_retired.any          #      0.7 IPC
+>>            866,182      inst_retired.any
+>>          1,175,671      cpu_clk_unhalted.thread
+>>
+>> Patch fixes the issue by adding a new bool pointer 'evlist_used' to keep
+>> track of events which already matched with some group by setting it true.
+>> So, we skip all used events in list when we start comparision logic.
+>> Patch also make some changes in comparision logic, incase we get a match
+>> miss, we discard the whole match and start again with first event id in
+>> metric event.
+>>
+>> With this patch:
+>> In skylake platform:
+>>
+>> command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
+>>
+>>  Performance counter stats for 'CPU(s) 0':
+>>
+>>          3,348,415      inst_retired.any          #      0.3 CoreIPC
+>>         11,779,026      cycles
+>>          3,348,381      inst_retired.any          # 3348381.0
+>>                                                     Instructions
+>>
+>>        1.001649056 seconds time elapsed
+>>
+>> command:# ./perf stat -M UPI,IPC sleep 1
+>>
+>>  Performance counter stats for 'sleep 1':
+>>
+>>          1,023,148      uops_retired.retire_slots #      1.1 UPI
+>>            924,976      inst_retired.any
+>>            924,976      inst_retired.any          #      0.6 IPC
+>>          1,489,414      cpu_clk_unhalted.thread
+>>
+>>        1.003064672 seconds time elapsed
+>>
+>> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+>> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> This is an area I think needs some improvement, look how it ends up
+> setting up the inst_retired.any multiple times:
+> 
+> [root@seventh ~]# perf stat -vv -M CoreIPC,Instructions  -C 0 sleep 1
+> Using CPUID GenuineIntel-6-9E-9
+> metric expr inst_retired.any / cycles for CoreIPC
+> found event inst_retired.any
+> found event cycles
+> metric expr inst_retired.any for Instructions
+> found event inst_retired.any
+> adding {inst_retired.any,cycles}:W,{inst_retired.any}:W
+> intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
+> inst_retired.any -> cpu/event=0xc0,(null)=0x1e8483/
+> inst_retired.any -> cpu/event=0xc0,(null)=0x1e8483/
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             4
+>   size                             120
+>   config                           0xc0
+>   sample_type                      IDENTIFIER
+>   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+>   disabled                         1
+>   inherit                          1
+>   exclude_guest                    1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 3
+> ------------------------------------------------------------
+> perf_event_attr:
+>   size                             120
+>   sample_type                      IDENTIFIER
+>   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
+>   inherit                          1
+>   exclude_guest                    1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid -1  cpu 0  group_fd 3  flags 0x8 = 4
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             4
+>   size                             120
+>   config                           0xc0
+>   sample_type                      IDENTIFIER
+>   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>   disabled                         1
+>   inherit                          1
+>   exclude_guest                    1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+> inst_retired.any: 0: 507070 1000948076 1000948076
+> cycles: 0: 1250258 1000948076 1000948076
+> inst_retired.any: 0: 507038 1000953052 1000953052
+> inst_retired.any: 507070 1000948076 1000948076
+> cycles: 1250258 1000948076 1000948076
+> inst_retired.any: 507038 1000953052 1000953052
+> 
+>  Performance counter stats for 'CPU(s) 0':
+> 
+>            507,070      inst_retired.any          #      0.4 CoreIPC
+>          1,250,258      cycles
+>            507,038      inst_retired.any          # 507038.0 Instructions
+> 
+>        1.000964961 seconds time elapsed
+> 
+> [root@seventh ~]#
+> 
+> And it ends up printing the "inst_retired.any" multiple times, with
+> different values, as after all two events were allocated, can't we
+> notice this and set just one inst_retired.any and then when calculating
+> the metrics just do something like:
+> 
+>   # perf stat -M CoreIPC,Instructions -C 0 sleep 1
+> 
+>  Performance counter stats for 'CPU(s) 0':
+> 
+>            507,070      inst_retired.any          #      0.4 CoreIPC,
+> 						  #  507,070 Instructions
+>          1,250,258      cycles
+> 
+>        1.000964961 seconds time elapsed
+> #
+> 
+> ?
+> 
+> Ditto for:
+> 
+>     command:# perf stat -M UPI,IPC sleep 1
+> 
+>      Performance counter stats for 'sleep 1':
+> 
+>              1,023,148      uops_retired.retire_slots #      1.1 UPI
+>                924,976      inst_retired.any
+>                924,976      inst_retired.any          #      0.6 IPC
+>              1,489,414      cpu_clk_unhalted.thread
+> 
+>            1.003064672 seconds time elapsed
+> 
+> Wouldn't this be better as:
+> 
+>     command:# perf stat -M UPI,IPC sleep 1
+> 
+>      Performance counter stats for 'sleep 1':
+> 
+>              1,023,148      uops_retired.retire_slots #      1.1 UPI
+>                924,976      inst_retired.any
+>              1,489,414      cpu_clk_unhalted.thread   #      0.6 IPC
+> 
+>            1.003064672 seconds time elapsed
+> 
+> This should help to look at many metrics at the same time by requiring
+> less counters to be allocated, etc, or am I missing something here?
 
-Thanks for this new input I will carefully check these details once again.
+Hi Arnaldo,
+	Yes that will be better. I will look into it from my end.
 
-I am attaching small scripts on how I build the image with mainline
-u-boot and mainline kernel.
-So I am able to reproduce this issue on SD card.
-Hoping some body could reproduce this issue at their end and share the feedback.
-If their is some issue from my side please let me know.
+Thanks,
+Kajol
 
--Anand
-
---00000000000067518905a14398c7
-Content-Type: text/plain; charset="US-ASCII"; name="build_odroidn2.txt"
-Content-Disposition: attachment; filename="build_odroidn2.txt"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k7zscmr70>
-X-Attachment-Id: f_k7zscmr70
-
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KU3RlcCAxIDogU2NyaXB0IHRvIGJ1aWxkIHRo
-ZSBwcmVwYXJlIHRoZSBpbWFnZS4NCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIyEvYmlu
-L2Jhc2ggK3gNCg0Kd2dldCBodHRwOi8vb3MuYXJjaGxpbnV4YXJtLm9yZy9vcy9BcmNoTGludXhB
-Uk0tYWFyY2g2NC1sYXRlc3QudGFyLmd6DQoNCkZJTEU9L2Rldi9tbWNibGswcDENCmlmIFsgLWIg
-IiRGSUxFIiBdOyB0aGVuDQogICAgICAgIGV4cG9ydCBESVNLPS9kZXYvbW1jYmxrMA0KICAgICAg
-ICBzdWRvIHN1ZG8gd2lwZWZzIC1hICR7RElTS31wMQ0KICAgICAgICBzdWRvIGRkIGlmPS9kZXYv
-emVybyBvZj0ke0RJU0t9IGJzPTFNIGNvdW50PTUxMg0KDQogICAgICAgIHN1ZG8gc2ZkaXNrICR7
-RElTS30gPDwtX19FT0ZfXw0KICAgICAgICAxNk0sLEwsKg0KICAgICAgICBfX0VPRl9fDQoNCiAg
-ICAgICAgc3VkbyBta2ZzLmV4dDQgJHtESVNLfXAxDQogICAgICAgIHN5bmMNCg0KICAgICAgICBz
-dWRvIG1vdW50ICR7RElTS31wMSByb290DQogICAgICAgIHN5bmMNCiAgICAgICAgc3VkbyBic2R0
-YXIgLXhwZiBBcmNoTGludXhBUk0tYWFyY2g2NC1sYXRlc3QudGFyLmd6IC1DIHJvb3QNCiAgICAg
-ICAgc3luYw0KDQogICAgICAgICMgY3JlYXRlIGN1c3RvbSBib290LnNjcg0KICAgICAgICBta2lt
-YWdlIC1BIGFybSAtTyBsaW51eCAtVCBzY3JpcHQgLUMgbm9uZSAtbiAiQXJjaCBVLUJvb3QgYm9v
-dCBzY3JpcHQgT2Ryb2lkIE4yIiAtZCBib290LW9kcm9pZG4yLnR4dCBib290LnNjcg0KICAgICAg
-ICBzdWRvIGNwIC12IGJvb3Quc2NyICAgICByb290L2Jvb3QvDQogICAgICAgIHN5bmMNCiAgICAg
-ICAgc3VkbyB1bW91bnQgcm9vdA0KZWxzZQ0KICAgICAgICBlY2hvICIkRklMRSBkb2VzIG5vdCBl
-eGlzdCINCmZpDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCm15IGJvb3Qtb2Ryb2lkbjIudHh0
-IGNvbnZlcnRlZCB0byBib290LnNjcg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIyBBZnRlciBt
-b2RpZnlpbmcsIHJ1biAuL21rc2NyDQoNCnRlc3QgLW4gIiR7ZGlzdHJvX2Jvb3RwYXJ0fSIgfHwg
-c2V0ZW52IGRpc3Ryb19ib290cGFydCAxDQpwYXJ0IHV1aWQgJHtkZXZ0eXBlfSAke2Rldm51bX06
-JHtkaXN0cm9fYm9vdHBhcnR9IHV1aWQNCnNldGVudiBib290YXJncyAiY29uc29sZT10dHlBTUww
-LDExNTIwMG44IHJvb3Q9UEFSVFVVSUQ9JHt1dWlkfSBydyByb290d2FpdCBlYXJseWNvbiBub19j
-b25zb2xlX3N1c3BlbmQiDQoNCmlmIGxvYWQgJHtkZXZ0eXBlfSAke2Rldm51bX06JHtkaXN0cm9f
-Ym9vdHBhcnR9ICR7a2VybmVsX2FkZHJfcn0gL2Jvb3QvSW1hZ2U7IHRoZW4NCiAgaWYgbG9hZCAk
-e2RldnR5cGV9ICR7ZGV2bnVtfToke2Rpc3Ryb19ib290cGFydH0gJHtmZHRfYWRkcl9yfSAvYm9v
-dC9kdGJzLyR7ZmR0ZmlsZX07IHRoZW4NCiAgICBpZiBsb2FkICR7ZGV2dHlwZX0gJHtkZXZudW19
-OiR7ZGlzdHJvX2Jvb3RwYXJ0fSAke3JhbWRpc2tfYWRkcl9yfSAvYm9vdC9pbml0cmFtZnMtbGlu
-dXguaW1nOyB0aGVuDQogICAgICBib290aSAke2tlcm5lbF9hZGRyX3J9ICR7cmFtZGlza19hZGRy
-X3J9OiR7ZmlsZXNpemV9ICR7ZmR0X2FkZHJfcn07DQogICAgZWxzZQ0KICAgICAgYm9vdGkgJHtr
-ZXJuZWxfYWRkcl9yfSAtICR7ZmR0X2FkZHJfcn07DQogICAgZmk7DQogIGZpOw0KZmkNCg0KLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpTdGVwIDI6IEJ1aWxkIGFuZCBmbGFzaCB0aGUgbWFpbmxp
-bmUgdS1ib290IHRvIHRoZSBzZGNhcmQgLyBlTU1DLg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-DQojIS9iaW4vYmFzaA0Kc2V0ICt4DQoNCiMgVS1Cb290IGZvciBPRFJPSUQtTjINCnJtIHUtYm9v
-dC1uMi9maXAvdS1ib290LmJpbi5zZC5iaW4NCg0KZ2l0IGNsb25lIGh0dHBzOi8vZ2l0bGFiLmRl
-bnguZGUvdS1ib290L3UtYm9vdC5naXQgdS1ib290LW4yDQpjZCB1LWJvb3QtbjINCg0KIyB1LWJv
-b3QgY29tcGlsYXRpb24NCiMgPT09PT09PT09PT09PT09PT09DQoNCmdpdCBwdWxsIG9yaWdpbiBt
-YXN0ZXINCmV4cG9ydCBBUkNIPWFybTY0DQpleHBvcnQgQ1JPU1NfQ09NUElMRT1hYXJjaDY0LWxp
-bnV4LWdudS0NCm1ha2UgZGlzdGNsZWFuDQptYWtlIG9kcm9pZC1uMl9kZWZjb25maWcgYWxsDQoN
-CiMgPT09PT09PT09PT09PT0NCmNkIC4uDQp3Z2V0IGh0dHBzOi8vcmVsZWFzZXMubGluYXJvLm9y
-Zy9hcmNoaXZlLzEzLjExL2NvbXBvbmVudHMvdG9vbGNoYWluL2JpbmFyaWVzL2djYy1saW5hcm8t
-YWFyY2g2NC1ub25lLWVsZi00LjgtMjAxMy4xMV9saW51eC50YXIueHoNCndnZXQgaHR0cHM6Ly9y
-ZWxlYXNlcy5saW5hcm8ub3JnL2FyY2hpdmUvMTMuMTEvY29tcG9uZW50cy90b29sY2hhaW4vYmlu
-YXJpZXMvZ2NjLWxpbmFyby1hcm0tbm9uZS1lYWJpLTQuOC0yMDEzLjExX2xpbnV4LnRhci54eg0K
-dGFyIHh2ZkogZ2NjLWxpbmFyby1hYXJjaDY0LW5vbmUtZWxmLTQuOC0yMDEzLjExX2xpbnV4LnRh
-ci54eg0KdGFyIHh2ZkogZ2NjLWxpbmFyby1hcm0tbm9uZS1lYWJpLTQuOC0yMDEzLjExX2xpbnV4
-LnRhci54eg0KZXhwb3J0IFBBVEg9JFBXRC9nY2MtbGluYXJvLWFhcmNoNjQtbm9uZS1lbGYtNC44
-LTIwMTMuMTFfbGludXgvYmluOiRQV0QvZ2NjLWxpbmFyby1hcm0tbm9uZS1lYWJpLTQuOC0yMDEz
-LjExX2xpbnV4L2JpbjokUEFUSA0KDQpESVI9b2Ryb2lkLW4yDQpnaXQgY2xvbmUgLS1kZXB0aCAx
-IFwNCiAgICBodHRwczovL2dpdGh1Yi5jb20vaGFyZGtlcm5lbC91LWJvb3QuZ2l0IC1iIG9kcm9p
-ZG4yLXYyMDE1LjAxIFwNCiAgICAkRElSDQoNCmNkIG9kcm9pZC1uMg0KZ2l0IHB1bGwgb3JpZ2lu
-IG1hc3Rlcg0KbWFrZSBkaXN0Y2xlYW4NCm1ha2Ugb2Ryb2lkbjJfZGVmY29uZmlnDQptYWtlDQpl
-eHBvcnQgVUJPT1RESVI9JFBXRA0KDQojIEdvIGJhY2sgdG8gbWFpbmxpbmUgVS1Cb290IHNvdXJj
-ZSB0cmVlIHRoZW4gOg0KY2QgLi4vdS1ib290LW4yDQpta2RpciBmaXANCg0Kd2dldCBodHRwczov
-L2dpdGh1Yi5jb20vQmF5TGlicmUvdS1ib290L3JlbGVhc2VzL2Rvd25sb2FkL3YyMDE3LjExLWxp
-YnJldGVjaC1jYy9ibHhfZml4X2cxMmEuc2ggLU8gZmlwL2JseF9maXguc2gNCmNwIC12ICRVQk9P
-VERJUi9idWlsZC9zY3BfdGFzay9ibDMwMS5iaW4gZmlwLw0KY3AgLXYgJFVCT09URElSL2J1aWxk
-L2JvYXJkL2hhcmRrZXJuZWwvb2Ryb2lkbjIvZmlybXdhcmUvYWNzLmJpbiBmaXAvDQpjcCAtdiAk
-VUJPT1RESVIvZmlwL2cxMmIvYmwyLmJpbiBmaXAvDQpjcCAtdiAkVUJPT1RESVIvZmlwL2cxMmIv
-YmwzMC5iaW4gZmlwLw0KY3AgLXYgJFVCT09URElSL2ZpcC9nMTJiL2JsMzEuaW1nIGZpcC8NCmNw
-IC12ICRVQk9PVERJUi9maXAvZzEyYi9kZHIzXzFkLmZ3IGZpcC8NCmNwIC12ICRVQk9PVERJUi9m
-aXAvZzEyYi9kZHI0XzFkLmZ3IGZpcC8NCmNwIC12ICRVQk9PVERJUi9maXAvZzEyYi9kZHI0XzJk
-LmZ3IGZpcC8NCmNwIC12ICRVQk9PVERJUi9maXAvZzEyYi9kaWFnX2xwZGRyNC5mdyBmaXAvDQpj
-cCAtdiAkVUJPT1RESVIvZmlwL2cxMmIvbHBkZHI0XzFkLmZ3IGZpcC8NCmNwIC12ICRVQk9PVERJ
-Ui9maXAvZzEyYi9scGRkcjRfMmQuZncgZmlwLw0KY3AgLXYgJFVCT09URElSL2ZpcC9nMTJiL3Bp
-ZWkuZncgZmlwLw0KY3AgLXYgJFVCT09URElSL2ZpcC9nMTJiL2FtbF9kZHIuZncgZmlwLw0KY3Ag
-LXYgdS1ib290LmJpbiBmaXAvYmwzMy5iaW4NCg0KYmFzaCBmaXAvYmx4X2ZpeC5zaCBcDQogICAg
-IGZpcC9ibDMwLmJpbiBcDQogICAgIGZpcC96ZXJvX3RtcCBcDQogICAgIGZpcC9ibDMwX3plcm8u
-YmluIFwNCiAgICAgZmlwL2JsMzAxLmJpbiBcDQogICAgIGZpcC9ibDMwMV96ZXJvLmJpbiBcDQog
-ICAgIGZpcC9ibDMwX25ldy5iaW4gXA0KICAgICBibDMwDQoNCmJhc2ggZmlwL2JseF9maXguc2gg
-XA0KICAgICBmaXAvYmwyLmJpbiBcDQogICAgIGZpcC96ZXJvX3RtcCBcDQogICAgIGZpcC9ibDJf
-emVyby5iaW4gXA0KICAgICBmaXAvYWNzLmJpbiBcDQogICAgIGZpcC9ibDIxX3plcm8uYmluIFwN
-CiAgICAgZmlwL2JsMl9uZXcuYmluIFwNCiAgICAgYmwyDQoNCiRVQk9PVERJUi9maXAvZzEyYi9h
-bWxfZW5jcnlwdF9nMTJiIC0tYmwzMHNpZyAtLWlucHV0IGZpcC9ibDMwX25ldy5iaW4gXA0KICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLW91dHB1dCBmaXAvYmwzMF9uZXcuYmluLmcx
-MmEuZW5jIFwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS1sZXZlbCB2Mw0KJFVC
-T09URElSL2ZpcC9nMTJiL2FtbF9lbmNyeXB0X2cxMmIgLS1ibDNzaWcgLS1pbnB1dCBmaXAvYmwz
-MF9uZXcuYmluLmcxMmEuZW5jIFwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS1v
-dXRwdXQgZmlwL2JsMzBfbmV3LmJpbi5lbmMgXA0KICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAtLWxldmVsIHYzIC0tdHlwZSBibDMwDQokVUJPT1RESVIvZmlwL2cxMmIvYW1sX2VuY3J5
-cHRfZzEyYiAtLWJsM3NpZyAtLWlucHV0IGZpcC9ibDMxLmltZyBcDQogICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIC0tb3V0cHV0IGZpcC9ibDMxLmltZy5lbmMgXA0KICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAtLWxldmVsIHYzIC0tdHlwZSBibDMxDQokVUJPT1RESVIvZmlw
-L2cxMmIvYW1sX2VuY3J5cHRfZzEyYiAtLWJsM3NpZyAtLWlucHV0IGZpcC9ibDMzLmJpbiAtLWNv
-bXByZXNzIGx6NCBcDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tb3V0cHV0IGZp
-cC9ibDMzLmJpbi5lbmMgXA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLWxldmVs
-IHYzIC0tdHlwZSBibDMzIC0tY29tcHJlc3MgbHo0DQokVUJPT1RESVIvZmlwL2cxMmIvYW1sX2Vu
-Y3J5cHRfZzEyYiAtLWJsMnNpZyAtLWlucHV0IGZpcC9ibDJfbmV3LmJpbiBcDQogICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIC0tb3V0cHV0IGZpcC9ibDIubi5iaW4uc2lnDQokVUJPT1RE
-SVIvZmlwL2cxMmIvYW1sX2VuY3J5cHRfZzEyYiAtLWJvb3RtayBcDQogICAgICAgIC0tb3V0cHV0
-IGZpcC91LWJvb3QuYmluIFwNCiAgICAgICAgLS1ibDIgZmlwL2JsMi5uLmJpbi5zaWcgXA0KICAg
-ICAgICAtLWJsMzAgZmlwL2JsMzBfbmV3LmJpbi5lbmMgXA0KICAgICAgICAtLWJsMzEgZmlwL2Js
-MzEuaW1nLmVuYyBcDQogICAgICAgIC0tYmwzMyBmaXAvYmwzMy5iaW4uZW5jIFwNCiAgICAgICAg
-LS1kZHJmdzEgZmlwL2RkcjRfMWQuZncgXA0KICAgICAgICAtLWRkcmZ3MiBmaXAvZGRyNF8yZC5m
-dyBcDQogICAgICAgIC0tZGRyZnczIGZpcC9kZHIzXzFkLmZ3IFwNCiAgICAgICAgLS1kZHJmdzQg
-ZmlwL3BpZWkuZncgXA0KICAgICAgICAtLWRkcmZ3NSBmaXAvbHBkZHI0XzFkLmZ3IFwNCiAgICAg
-ICAgLS1kZHJmdzYgZmlwL2xwZGRyNF8yZC5mdyBcDQogICAgICAgIC0tZGRyZnc3IGZpcC9kaWFn
-X2xwZGRyNC5mdyBcDQogICAgICAgIC0tZGRyZnc4IGZpcC9hbWxfZGRyLmZ3IFwNCiAgICAgICAg
-LS1sZXZlbCB2Mw0KDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpTdGVw
-IDM6IEZsYXNoIHRoZSB1LWJvb3QgaW1hZ2UNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tDQpGSUxFPS9kZXYvbW1jYmxrMA0KaWYgWyAtYiAiJEZJTEUiIF07IHRoZW4NCiAgICAg
-ICAgREVWPS9kZXYvbW1jYmxrMA0KICAgICAgICBzdWRvIGRkIGlmPWZpcC91LWJvb3QuYmluLnNk
-LmJpbiBvZj0kREVWIGNvbnY9ZnN5bmMsbm90cnVuYyBicz01MTIgc2tpcD0xIHNlZWs9MQ0KICAg
-ICAgICBzdWRvIGRkIGlmPWZpcC91LWJvb3QuYmluLnNkLmJpbiBvZj0kREVWIGNvbnY9ZnN5bmMs
-bm90cnVuYyBicz0xIGNvdW50PTQ0NA0KZWxzZQ0KICAgICAgIGVjaG8gIiRGSUxFIGRvZXMgbm90
-IGV4aXN0Ig0KZmkNCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpXaXRoIHRo
-aXMgc3RlcCB5b3Ugd2lsbCBoYXZlIHdvcmtpbmcgYnVpbGQgaW1hZ2UgdG8gYm9vdCB0aGUga2Vy
-bmVsLg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQoNCi0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpTdGVwIDQ6IEZvciBjbG9zcyBjb21waWxlIGFuZCBi
-dWlsZCB0aGUga2VybmVsDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
-DQpleHBvcnQgR0NDX0NPTE9SUz1hdXRvDQoNCm1ha2UgQVJDSD1hcm02NCBtcnByb3Blcg0KbWFr
-ZSBBUkNIPWFybTY0IENST1NTX0NPTVBJTEU9YWFyY2g2NC1saW51eC1nbnUtIGRlZmNvbmZpZw0K
-bWFrZSBBUkNIPWFybTY0IENST1NTX0NPTVBJTEU9YWFyY2g2NC1saW51eC1nbnUtIC1qJChucHJv
-YykgZHRicyBJbWFnZSBtb2R1bGVzDQoNCm1rZGlyIC1wIG1lZGlhDQpzdWRvIG1vdW50IC9kZXYv
-bW1jYmxrMHAxIC4vbWVkaWENCnN1ZG8gY3AgLXYgYXJjaC9hcm02NC9ib290L0ltYWdlIC4vbWVk
-aWEvYm9vdC8NCnN1ZG8gY3AgLXYgYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4
-YmItb2Ryb2lkYzIuZHRiIC4vbWVkaWEvYm9vdC9kdGJzL2FtbG9naWMvbWVzb24tZ3hiYi1vZHJv
-aWRjMi5kdGINCnN1ZG8gY3AgLXYgYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWcx
-MmItb2Ryb2lkLW4yLmR0YiAuL21lZGlhL2Jvb3QvZHRicy9hbWxvZ2ljL21lc29uLWcxMmItb2Ry
-b2lkLW4yLmR0Yg0Kc3VkbyBtYWtlIEFSQ0g9YXJtNjQgTE9DQUxWRVJTSU9OPS14bWx0IG1vZHVs
-ZXNfaW5zdGFsbCBJTlNUQUxMX01PRF9QQVRIPS4vbWVkaWEgJiYgc3luYyAmJiBzdWRvIHVtb3Vu
-dCAuL21lZGlhICYmIHN1ZG8gcm0gLXJmIC4vbWVkaWENCg==
---00000000000067518905a14398c7--
+> 
+> Since this went thru multiple versions and Jiri is satisfied with it,
+> I'm applying the patch, but please consider this suggestion.
+> 
+> - Arnaldo
+> 
