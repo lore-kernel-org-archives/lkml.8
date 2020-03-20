@@ -2,122 +2,133 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE3AC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CECC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EECE42070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34FA52070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 13:07:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="C10XJss4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbgCTNEu (ORCPT
+        id S1727128AbgCTNHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:04:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:48652 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727015AbgCTNEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:04:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9AB21FB;
-        Fri, 20 Mar 2020 06:04:48 -0700 (PDT)
-Received: from [10.37.12.155] (unknown [10.37.12.155])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1B3F3F85E;
-        Fri, 20 Mar 2020 06:04:44 -0700 (PDT)
-Subject: Re: [PATCH v4 18/26] arm64: vdso32: Replace TASK_SIZE_32 check in
- vgettimeofday
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-mips@vger.kernel.org, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-References: <20200317122220.30393-1-vincenzo.frascino@arm.com>
- <20200317122220.30393-19-vincenzo.frascino@arm.com>
- <20200317143834.GC632169@arrakis.emea.arm.com>
- <f03a9493-c8c2-e981-f560-b2f437a208e4@arm.com>
- <20200317155031.GD632169@arrakis.emea.arm.com>
- <83aaf9e1-0a8f-4908-577a-23766541b2ba@arm.com>
- <20200317174806.GE632169@arrakis.emea.arm.com>
- <93cfe94a-c2a3-1025-bc9c-e7c3fd891100@arm.com>
- <20200318183603.GF94111@arrakis.emea.arm.com>
- <1bc25a53-7a59-0f60-ecf2-a3cace46b823@arm.com> <20200319181004.GA29214@mbp>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <b937d1eb-c7fd-e903-fa36-b261662bf40b@arm.com>
-Date:   Fri, 20 Mar 2020 13:05:14 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 20 Mar 2020 09:07:13 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:60966 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbgCTNHN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 09:07:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=UruEh+QPWdIyoj6UKAjvgmG3F1nB4TGGozNiE2Ak4pc=; b=C10XJss4RLdfq+4z3wT/a+fgR
+        tObaHD6QoI3lh7aLZROqwKhC1Sqv97jd+JrGbdu3hcTcd+VgxgM2Iw+yCyyKnY+GSUy8G4UrkQhLE
+        TV8fYLln/wpBktD5R+BWmmH7epdgvg4qrOeKps6QyAhmflVmx/9s5iNflLUnNgUiIdgRC3vMcediF
+        QfLm0zI7iVFx0DXiV6pdfmkrJUtb7CYJkf8Q+/XJ3ADVQI9O6ffdbKQ0MqSGUrot7qyQJDB1qeyiR
+        ijaOXbXNBH2f67DwMeVtqSP26LdG+lii9zV5J7b/ncmKurxaVcnUOAKHfb62xCrIpYHTwK3XhJgda
+        9yCQuLFHw==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:34882)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jFHMc-0008Pq-U1; Fri, 20 Mar 2020 13:07:03 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jFHMb-0005ni-1d; Fri, 20 Mar 2020 13:07:01 +0000
+Date:   Fri, 20 Mar 2020 13:07:01 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v3 04/15] arm: Don't use disable_nonboot_cpus()
+Message-ID: <20200320130700.GR25745@shell.armlinux.org.uk>
+References: <20200223192942.18420-1-qais.yousef@arm.com>
+ <20200223192942.18420-5-qais.yousef@arm.com>
+ <20200320110430.jozfyrqqx272266u@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200319181004.GA29214@mbp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320110430.jozfyrqqx272266u@e107158-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Catalin,
+On Fri, Mar 20, 2020 at 11:04:31AM +0000, Qais Yousef wrote:
+> On 02/23/20 19:29, Qais Yousef wrote:
+> > disable_nonboot_cpus() is not safe to use when doing machine_down(),
+> > because it relies on freeze_secondary_cpus() which in turn is
+> > a suspend/resume related freeze and could abort if the logic detects any
+> > pending activities that can prevent finishing the offlining process.
+> > 
+> > Beside disable_nonboot_cpus() is dependent on CONFIG_PM_SLEEP_SMP which
+> > is an othogonal config to rely on to ensure this function works
+> > correctly.
+> > 
+> > Use `reboot_cpu` variable instead of hardcoding 0 as the reboot cpu.
 
-On 3/19/20 6:10 PM, Catalin Marinas wrote:
-> Hi Vincenzo,
+I think that should be a separate change - you have two separate
+changes in this patch:
+
+1. to switch to using the new helper.
+2. to change the CPU that we potentially use for the final steps of
+   shutdown
+
+These should be two seperate changes, so if (2) causes a regression
+it can be reverted independently of (1).
+
+> > 
+> > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> > CC: Russell King <linux@armlinux.org.uk>
+> > CC: linux-arm-kernel@lists.infradead.org
+> > CC: linux-kernel@vger.kernel.org
+> > ---
 > 
-> On Thu, Mar 19, 2020 at 12:38:42PM +0000, Vincenzo Frascino wrote:
->> On 3/18/20 6:36 PM, Catalin Marinas wrote:
->>> On Wed, Mar 18, 2020 at 04:14:26PM +0000, Vincenzo Frascino wrote:
->>>> On 3/17/20 5:48 PM, Catalin Marinas wrote:
->>>>> So clock_gettime() on arm32 always falls back to the syscall?
->>>>
->>>> This seems not what you asked, and I think I answered accordingly. Anyway, in
->>>> the case of arm32 the error code path is handled via syscall fallback.
->>>>
->>>> Look at the code below as an example (I am using getres because I know this
->>>> email will be already too long, and I do not want to add pointless code, but the
->>>> concept is the same for gettime and the others):
->>>>
->>>> static __maybe_unused
->>>> int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
->>>> {
->>>> 	int ret = __cvdso_clock_getres_common(clock, res);
->>>>
->>>> 	if (unlikely(ret))
->>>> 		return clock_getres_fallback(clock, res);
->>>> 	return 0;
->>>> }
->>>>
->>>> When the return code of the "vdso" internal function returns an error the system
->>>> call is triggered.
->>>
->>> But when __cvdso_clock_getres_common() does *not* return an error, it
->>> means that it handled the clock_getres() call without a fallback to the
->>> syscall. I assume this is possible on arm32. When the clock_getres() is
->>> handled directly (not as a syscall), why doesn't arm32 need the same
->>> (res >= TASK_SIZE) check?
->>
->> Ok, I see what you mean.
+> Hi Russel
 > 
-> I'm not sure.
+> Does the updated version look good to you now?
 > 
-Thank you for the long chat this morning. As we agreed I am going to repost the
-patches removing the checks discussed in this thread and we will address the
-syscall ABI difference subsequently with a different series.
+> Thanks
+> 
+> --
+> Qais Yousef
+> 
+> >  arch/arm/kernel/reboot.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm/kernel/reboot.c b/arch/arm/kernel/reboot.c
+> > index bb18ed0539f4..0ce388f15422 100644
+> > --- a/arch/arm/kernel/reboot.c
+> > +++ b/arch/arm/kernel/reboot.c
+> > @@ -88,11 +88,11 @@ void soft_restart(unsigned long addr)
+> >   * to execute e.g. a RAM-based pin loop is not sufficient. This allows the
+> >   * kexec'd kernel to use any and all RAM as it sees fit, without having to
+> >   * avoid any code or data used by any SW CPU pin loop. The CPU hotplug
+> > - * functionality embodied in disable_nonboot_cpus() to achieve this.
+> > + * functionality embodied in smp_shutdown_nonboot_cpus() to achieve this.
+> >   */
+> >  void machine_shutdown(void)
+> >  {
+> > -	disable_nonboot_cpus();
+> > +	smp_shutdown_nonboot_cpus(reboot_cpu);
+> >  }
+> >  
+> >  /*
+> > -- 
+> > 2.17.1
+> > 
+> 
 
 -- 
-Regards,
-Vincenzo
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
