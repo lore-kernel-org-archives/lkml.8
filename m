@@ -2,130 +2,142 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F15C43332
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66CDC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CACB120739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DCD920739
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 09:21:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cq5MnfQU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="cbDXi+Ep"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgCTJUp (ORCPT
+        id S1726907AbgCTJVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:20:45 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:33289 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbgCTJUo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 05:20:44 -0400
-Received: by mail-vs1-f65.google.com with SMTP id y138so3586903vsy.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 02:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tysNXQSXEegrfkbWuhGVsTTREcDkE4Z0pfyJN3lEVqE=;
-        b=Cq5MnfQUF/eClcnJqhe0dc3QbsSBmHYDIrVAoczrT9JBt0XOopRtxqAu7nM6Q9VsaA
-         6Jkw5CKSMnID70kn+d/MPNouPA1i8lU+g3fpgR8mr+nmHcVFG+czuLWOpMwgJV2m2W6n
-         aCGTJ/1P8oaVU5/mbzdG9BV89zpy11p33E5hGOxrWa44KLhPbZEwN1a80AA9AZin1s5N
-         V12KqiapGWqPJzrwrbzl1S7SbySGvzfYVyCqs/lZIZRN8HrF6g6OgKAEZS/KX9/yw84c
-         dfaX03v0SG/GkuIzOqH/TzsDfyXbpkCnS+tcYgvAZhoNhxyStEXhfsyx/uzKwEMIYsIq
-         pKSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tysNXQSXEegrfkbWuhGVsTTREcDkE4Z0pfyJN3lEVqE=;
-        b=V0OwiL0iv7UYVeqkd5R2WjLINW2gEQGgumtr8r0q+FLhqnWK3/BOoINMX/rgT5xkWS
-         4RyHrojC2osqxIhX4ALpLCuO31ThsS0QVElncxxlb733Op/YNAzY7IWQuG2knAOOYSUH
-         bN/JjfAbJr32Elq8UCClJzGJrkzvdsM+9EOq1KLcjns79MW85lxlLVKvgMcNNkG5OFlX
-         FboQKIpVDV6X38Lrnl/ZnvY1NhL3m0iPx9RVDNzmBwcTKtGNR7qW/z9D5Qvro8mQynG4
-         I8Y7RZcHn3h8MCppot1FclPOT1CFrhwLGXyJvKvD6Xg4+Rrb5nbjnAK77lTH0DiLZGhq
-         dShg==
-X-Gm-Message-State: ANhLgQ3N4u0PsGdexe86o4MOjPutjDyfIrS7XFddGYFFGaH1t0O0Bm3S
-        5hmDIjrwR6FjNSnipSvzK7R+DYq8I/g5umlxSSNR9w==
-X-Google-Smtp-Source: ADFU+vuri1vRZK9FSAJUMr5b0/R4hhZYiB8vilrBtMV4l1LgVmapVFCJ8ZQb/uJFaC3d94Lj8r9aSYpqPp3je7q7lvM=
-X-Received: by 2002:a67:646:: with SMTP id 67mr5128706vsg.34.1584696040606;
- Fri, 20 Mar 2020 02:20:40 -0700 (PDT)
+        Fri, 20 Mar 2020 05:21:52 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:50625 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726602AbgCTJVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 05:21:52 -0400
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id A343A4D036;
+        Fri, 20 Mar 2020 09:21:48 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 17:21:43 +0800
+In-Reply-To: <CACRpkdbeLAyhhkx115zAV0tdC7KJ4T0UoQ2QeDwTVN+btxp=Jw@mail.gmail.com>
+References: <20200316133503.144650-1-icenowy@aosc.io> <20200316133503.144650-3-icenowy@aosc.io> <CACRpkdaVrfd1p+WyACy-gq-3BPsXJ_CZwi2OZe+=csseBcvcaA@mail.gmail.com> <491ADD02-5511-404B-88A8-5725EF061EAC@aosc.io> <CACRpkdbeLAyhhkx115zAV0tdC7KJ4T0UoQ2QeDwTVN+btxp=Jw@mail.gmail.com>
 MIME-Version: 1.0
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <757853cf-987e-f6b6-9259-b4560a031692@nvidia.com> <d12fe142-7e72-ab58-33ab-17817e35096f@nvidia.com>
- <c216f131-6f83-c9c9-9d17-8d44ec06972d@nvidia.com> <87ad7586-9569-4276-044a-adb64e84ca15@nvidia.com>
- <a0962e0b-0f1d-9f32-f6e9-92f69f93167f@nvidia.com> <57ddddc2-3ee8-d867-bba0-0dd9929ba37d@nvidia.com>
- <CAPDyKFqZSd9E3+16yFsmpee2JsbRJ-DGThxx7NJHu6UE00Xi1Q@mail.gmail.com>
- <26ee7225-9483-4664-c2d7-b5cefeadcd4b@nvidia.com> <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
- <0301bbd5-8d4d-4a77-42c7-8a1391c2d60a@nvidia.com> <CAPDyKFp93H0=ttazofW9NMBtL5VnjB4PdkwN0FDCtWR0pMHrPA@mail.gmail.com>
- <f01b5533-124a-d978-a90a-9c9c6235fb65@nvidia.com> <CAPDyKFqJjsuHect-azQKO8cCoq5JJQrZ=eShsdLHq97NXgXnuQ@mail.gmail.com>
- <227d9f08-582e-fd79-e1dc-7695bddd162d@nvidia.com> <2456654f-2724-0b6d-8936-afa05f345344@nvidia.com>
- <df939962-2cb4-1c36-0baf-d82e3527d05a@nvidia.com> <41348c8f-6bc7-a5a3-e1ed-9143f60cbdae@nvidia.com>
- <CAPDyKFqWRGK6LCevwXQoZnRqfMkUDWNUMqbGqnqv+OopmhvBeg@mail.gmail.com> <CA+G9fYv+bhdmq9O5rmnOkigCossK5WX9AMr76AF57f8KKydV9g@mail.gmail.com>
-In-Reply-To: <CA+G9fYv+bhdmq9O5rmnOkigCossK5WX9AMr76AF57f8KKydV9g@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 20 Mar 2020 10:20:04 +0100
-Message-ID: <CAPDyKFr_WjRA9Cr3htSAd+LqcZLorY6AwvS2KZ0_89H1pJfLLg@mail.gmail.com>
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Kishon <kishon@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/5] dt-bindings: panel: add binding for Xingbangda XBD599 panel
+To:     linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jagan Teki <jagan@amarulasolutions.com>
+CC:     Ondrej Jirman <megous@megous.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Chen-Yu Tsai <wens@csie.org>, Sam Ravnborg <sam@ravnborg.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+From:   Icenowy Zheng <icenowy@aosc.io>
+Message-ID: <7BA1F742-0403-47E3-8E91-738947EB4809@aosc.io>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=dkim;
+        t=1584696109;
+        h=from:subject:date:message-id:to:cc:mime-version:content-type:content-transfer-encoding:in-reply-to:references;
+        bh=lyI5nTAxlpI3YgUaSp33pj/yy+1x1RPrFPLEcSJxVcM=;
+        b=cbDXi+EpOG5NSTFJo99k2SiBcR6aPtIoHvmuqhtKqGPOJLBqN+Xcb6lh+lQlNaRxsW1w40
+        kMAphAv/W6+0Y8pPo53QMQ//grkWEtYOWMa/kPOnFNJ8Qdqbs7onGp5omHzkXWqVFt0m54
+        WgnGaY86aOx+VuMBKQJQupX7ZcPuVck=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Mar 2020 at 20:12, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> FYI,
->
-> The arm device x15 running stable rc 4.19.112-rc1, 5.4.27-rc1 and 5.5.11-rc2
-> kernel pops up the following messages on console log,
-> Is this a problem ?
->
-> [ 0.000000] Linux version 4.19.112-rc1 (oe-user@oe-host) (gcc version
-> 7.3.0 (GCC)) #1 SMP Thu Mar 19 12:55:45 UTC 2020
->
-> [   15.737765] mmc1: unspecified timeout for CMD6 - use generic
-> [   16.754248] mmc1: unspecified timeout for CMD6 - use generic
-> [   16.842071] mmc1: unspecified timeout for CMD6 - use generic
-> ...
-> [   20.580541] mmc1: unspecified timeout for CMD6 - use generic
-> [   20.588216] mmc1: unspecified timeout for CMD6 - use generic
-> [   20.604011] mmc1: unspecified timeout for CMD6 - use generic
->
-> ref:
-> https://lkft.validation.linaro.org/scheduler/job/1298207#L4037
-> https://lkft.validation.linaro.org/scheduler/job/1298945#L4132
-> https://lkft.validation.linaro.org/scheduler/job/1299973#L4232
 
-The commit below is the problem, it shouldn't be applied for stable.
 
-commit 533a6cfe08f96a7b5c65e06d20916d552c11b256
-Author: Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed Jan 22 15:27:47 2020 +0100
-mmc: core: Default to generic_cmd6_time as timeout in __mmc_switch()
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=885=
+:11:22, Linus Walleij <linus=2Ewalleij@linaro=2Eorg> =E5=86=99=E5=88=B0:
+>On Fri, Mar 20, 2020 at 9:07 AM Icenowy Zheng <icenowy@aosc=2Eio> wrote:
+>> =E4=BA=8E 2020=E5=B9=B43=E6=9C=8819=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
+=8810:14:27, Linus Walleij
+><linus=2Ewalleij@linaro=2Eorg> =E5=86=99=E5=88=B0:
+>> >On Mon, Mar 16, 2020 at 2:37 PM Icenowy Zheng <icenowy@aosc=2Eio>
+>wrote:
+>
+>> >As noticed in the review of the driver, this display is very close
+>to
+>> >himax,hx8363=2E
+>> >
+>> >I think the best is to determin what actual display controller it
+>is,
+>> >I think it is some kind of Ilitek controller since Ilitek ili9342 is
+>> >clearly very similar=2E
+>>
+>> It's Sitronix ST7703, same as the Librem 5 panel=2E
+>
+>Heh, I wonder how it comes that it is so similar to Ilitek=2E
+>I guess I will never understand how the silicon ecosystem works
+>in asia (I did read a lot of Bunnie Huang's articles and hardware
+>hacking book to try to understand=2E=2E=2E)
+>
+>This file should be named sitronix,st7703=2Eyaml then=2E
+>
+>According to the code in the Librem 5:
+>https://source=2Epuri=2Esm/Librem5/linux-next/blob/imx8-current-librem5/d=
+rivers/gpu/drm/panel/panel-sitronix-st7701=2Ec
+>The actual name of the display is Techstar ts8550b=2E
 
-Let me sort it out with Greg/Sasha. I will keep you in the loop,
-thanks for reporting!
+Sorry, for Librem 5 panel, I mean Rocktech JH057N00900 here=2E
 
-Kind regards
-Uffe
+This is also the code that my patchset based on=2E
+
+>And the display controller is st7701, so maybe we should
+>actually name it sitronix,st770x=2Eyaml if there are some
+>sub-variants of st770x?
+>
+>> >properties:
+>> >  compatible:
+>> >    items:
+>> >      - const: xingbangda,xbd599
+>> >      - const: ilitek,ili9342
+>> >
+>> >Possibly use oneOf and add support for the himax,hx8363
+>> >already while you're at it=2E
+>
+>This should at least be:
+>
+>compatible:
+>   items:
+>     - enum:
+>       - xingbangda,xbd599
+>       - himax,hx8363
+>       - techstar,ts8550b
+>     - enum:
+>       - sitronix,st7701
+>       - sitronix,st7703
+>
+>So panel nodes using this panel become
+>compatible =3D "xingbangda,sbd599", "sitronix,st7703"
+>etc=2E
+>
+>This way it is straight-forward for drivers to identify the panel
+>vendor and display controller=2E
+>
+>Yours,
+>Linus Walleij
+>
+>_______________________________________________
+>linux-arm-kernel mailing list
+>linux-arm-kernel@lists=2Einfradead=2Eorg
+>http://lists=2Einfradead=2Eorg/mailman/listinfo/linux-arm-kernel
+
+--=20
+=E4=BD=BF=E7=94=A8 K-9 Mail =E5=8F=91=E9=80=81=E8=87=AA=E6=88=91=E7=9A=84A=
+ndroid=E8=AE=BE=E5=A4=87=E3=80=82
