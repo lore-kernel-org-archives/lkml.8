@@ -2,87 +2,128 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE761C4332B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADABCC4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB68020752
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:55:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QT+7S1ek"
+	by mail.kernel.org (Postfix) with ESMTP id 6D79C2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 23:57:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584748638;
+	bh=O8Rg+s96c/nEER146ncnD3qGyWFv1O+qlEviAIesj5A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rdBZIdHX/eWHpgk6jTu3C4MqL3NCBl1k6LfMaCSfM6JrbB23J+HHDV7LpwXq+tpqI
+	 MZ+cTWqfNeYXtsXXoH14Z6wzATGKOPlitg25KvIZ/UhBGAgd2U/F5tq/SPulgXZ5+F
+	 0x3OE9AGF7wHWU9RPB0Azl7GNhos9kvdD4MlCz+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbgCTXz1 (ORCPT
+        id S1727264AbgCTX5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 19:55:27 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:54496 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727264AbgCTXz0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 19:55:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584748525;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YMUkk0ARH4QnFA1QZkDjLSOJImmLVHTfhOfgY4nYzeY=;
-        b=QT+7S1eksyex7pF4Vp4Q04/Z8nyQaQfAJ9sS4zWFWM897gs1Y9TakRIY52v0jnFk3kb4DJ
-        jYWu4geoEic+aRA/euVRKeZsyojYLff5nPJP8dJjamCrv/+7nw/xgWZWqL9qaKI8OY7aYc
-        DzCdGNMHQ+ICTA1MwjzD3jPTv4NvAzo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-276-J6Id791BNzebo-XDbrltLA-1; Fri, 20 Mar 2020 19:55:22 -0400
-X-MC-Unique: J6Id791BNzebo-XDbrltLA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 20 Mar 2020 19:57:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbgCTX5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 19:57:17 -0400
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C87AB8017CC;
-        Fri, 20 Mar 2020 23:55:19 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 46CB660BF1;
-        Fri, 20 Mar 2020 23:55:11 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200320143547.GB3629@linux.intel.com>
-References: <20200320143547.GB3629@linux.intel.com> <20200318221457.1330-1-longman@redhat.com> <20200318221457.1330-3-longman@redhat.com> <20200319194650.GA24804@linux.intel.com> <f22757ad-4d6f-ffd2-eed5-6b9bd1621b10@redhat.com> <20200320020717.GC183331@linux.intel.com> <7dbc524f-6c16-026a-a372-2e80b40eab30@redhat.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     dhowells@redhat.com, Waiman Long <longman@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
-        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>
-Subject: Re: [PATCH v5 2/2] KEYS: Avoid false positive ENOMEM error on key read
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D14D2076E
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 23:57:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584748636;
+        bh=O8Rg+s96c/nEER146ncnD3qGyWFv1O+qlEviAIesj5A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ttY+s798i38AHS/hfxFjOVrACLR+gxne7OhaOoYjaOpaobC0EEdiRHq8YYXkXTxQ3
+         A5sB17+4c15+L0dneBM/gR9jLUvHXMFOxlFdtckq+11zJC1EsbW5NAIhLlcq2YAsU3
+         7qsuBKDapXaH96rqh3YdEEYU2b//TuIbq30DqQ1E=
+Received: by mail-wr1-f41.google.com with SMTP id 31so3504286wrs.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 16:57:15 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3pkUIvzAUAIGVLH8aXJGZ9GwDPO8+MYoGwz3o9H+XdAlM1fXZe
+        oxFOyTWPwBJxQY6mCtjRbXqUNe8DhJBsaRlf2FBQsA==
+X-Google-Smtp-Source: ADFU+vuPB9t9salOQKO5ZID2LgyhHfito4CfUMkLJm7PoNDnyBs/tXJk0zJQY/gqbFuuXEMIqHmhRxbQYx3JpKMGdEA=
+X-Received: by 2002:adf:df8f:: with SMTP id z15mr13827347wrl.184.1584748634372;
+ Fri, 20 Mar 2020 16:57:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3984028.1584748510.1@warthog.procyon.org.uk>
-Date:   Fri, 20 Mar 2020 23:55:10 +0000
-Message-ID: <3984029.1584748510@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <1584677604-32707-1-git-send-email-kyung.min.park@intel.com>
+ <1584677604-32707-3-git-send-email-kyung.min.park@intel.com>
+ <CALCETrWJ88CaGmij_NNysRjUQ6LPwwbPnMy1YPdKnM-cFDueSw@mail.gmail.com>
+ <877dzf4a8v.fsf@nanos.tec.linutronix.de> <CALCETrUxOd6P-Yh78qjmOYnh9jY0ggeb4vB=coVjMjthXMTREg@mail.gmail.com>
+ <87zhcaobjt.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87zhcaobjt.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 20 Mar 2020 16:57:03 -0700
+X-Gmail-Original-Message-ID: <CALCETrU9ucYrXxfDddgkKaP2-NBfmhqrFG51EiC6LWHOu0JaPQ@mail.gmail.com>
+Message-ID: <CALCETrU9ucYrXxfDddgkKaP2-NBfmhqrFG51EiC6LWHOu0JaPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] x86/delay: Introduce TPAUSE delay
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+On Fri, Mar 20, 2020 at 4:23 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Andy Lutomirski <luto@kernel.org> writes:
+>
+> > On Fri, Mar 20, 2020 at 3:00 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >>
+> >> Andy Lutomirski <luto@kernel.org> writes:
+> >> > On Thu, Mar 19, 2020 at 9:13 PM Kyung Min Park <kyung.min.park@intel.com> wrote:
+> >> >>  void use_tsc_delay(void)
+> >> >>  {
+> >> >> -       if (delay_fn == delay_loop)
+> >> >> +       if (static_cpu_has(X86_FEATURE_WAITPKG)) {
+> >> >> +               delay_halt_fn = delay_halt_tpause;
+> >> >> +               delay_fn = delay_halt;
+> >> >> +       } else if (delay_fn == delay_loop) {
+> >> >>                 delay_fn = delay_tsc;
+> >> >> +       }
+> >> >>  }
+> >> >
+> >> > This is an odd way to dispatch: you're using static_cpu_has(), but
+> >> > you're using it once to populate a function pointer.  Why not just put
+> >> > the static_cpu_has() directly into delay_halt() and open-code the
+> >> > three variants?
+> >>
+> >> Two: mwaitx and tpause.
+> >
+> > I was imagining there would also be a variant for systems with neither feature.
+>
+> Oh I see, you want to get rid of both function pointers. That's tricky.
+>
+> The boot time function is delay_loop() which is using the magic (1 << 12)
+> boot time value until calibration in one way or the other happens and
+> something calls use_tsc_delay() or use_mwaitx_delay(). Yes, that's all
+> horrible but X86_FEATURE_TSC is unusable for this.
+>
+> Let me think about it.
 
-> /* Key data can change as we don not hold key->sem. */
+This is definitely not worth overoptimizing.  It's a *delay* function
+-- the retpoline isn't going to kill us :)
 
-I think you mean "we don't".
-
-David
-
+>
+> Thanks,
+>
+>         tglx
+>
+>
+>
+>
+>
+>
+>
+>
