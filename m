@@ -6,63 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7661DC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8F2C4332B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508A22078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B708120781
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 17:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584724509;
-	bh=G5yoDx1A9wxFe1FITEE9mipC9mYOKfihV2JJP7Q0iho=;
+	s=default; t=1584724512;
+	bh=sPeqxLPkY9jSvH+bYEQ4W17WiSseeSfNtqCCKyBEL1Q=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=fFiRpfXobtPa0iCSxXRHbEVwEquRdjpIZoYYRRkZoSQNhfY0IFQe9IWH7UoXU9lN4
-	 Ns9JnHmtckyHSYTryNFXBoiqUpk76dQzjk8YwzygpEdL95phXxqPt4U6UWOSs3f55I
-	 VXpWycsPknoMIP9+duvt4h+I45N8KyJoDxFud+6E=
+	b=wJ2DZ1ey0S4qcjHOk9RObYIGvCYCg0ChjgON397SgYAfOeOeyqu0QqJLHzxVR6HIb
+	 LcQ+LcOOVzhXYZIO7YXabiVnffAjKzoEHmK1o+nU6g1wWQlh3xMdlVRP0OaqU2c7Wo
+	 0dvTgF4ZXySBS04gqqzF5cLHS/hQ+nWJfibeMUac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbgCTRPI (ORCPT
+        id S1727323AbgCTRPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:15:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46588 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 13:15:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727148AbgCTRPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:15:07 -0400
-Subject: Re: [git pull drm fixes for 5.6-rc7
+        id S1727259AbgCTRPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 13:15:09 -0400
+Subject: Re: [GIT PULL] USB fixes for 5.6-rc7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584724507;
-        bh=G5yoDx1A9wxFe1FITEE9mipC9mYOKfihV2JJP7Q0iho=;
+        s=default; t=1584724509;
+        bh=sPeqxLPkY9jSvH+bYEQ4W17WiSseeSfNtqCCKyBEL1Q=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=YxE4UumjtW0hygEqHQodDfIyAaoesPbgtxvj/6uJL0G1bY+eJy4iaWuUeU48DYqXf
-         twQnnMLIAfV4ttIr1h1zhegaV3X2xXOaogKWx8G1wKpm4XX4A5zi/jdHe0Jqs0pAsC
-         8rKNA2hEaYuXJGKz5qc3TtUmjEc2otCnXIV+Huog=
+        b=KurSclTMfJ+D0SHE+BWwvhLeR83I+tLoJu3FIhhckXDkCoYpLYpilOc2Ol3PTHJpr
+         R++YoSpaS0UpF0wKy1sGcSpNLXM5zm3B5a9IJM3bw+xbRkxmlXiqjSC8b/R7rZk9x5
+         fpn/+SdiuycGdHcIpOIjSkcagT65LdyLZM6fjMms=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAPM=9tziNvC7VozK1C3yd+wqspVGF7d0eToOANwV4Euwy4LMkQ@mail.gmail.com>
-References: <CAPM=9tziNvC7VozK1C3yd+wqspVGF7d0eToOANwV4Euwy4LMkQ@mail.gmail.com>
+In-Reply-To: <20200320142739.GA760409@kroah.com>
+References: <20200320142739.GA760409@kroah.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAPM=9tziNvC7VozK1C3yd+wqspVGF7d0eToOANwV4Euwy4LMkQ@mail.gmail.com>
-X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
- tags/drm-fixes-2020-03-20
-X-PR-Tracked-Commit-Id: 5366b96b1997745d903c697a32e0ed27b66fd158
+X-PR-Tracked-Message-Id: <20200320142739.GA760409@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.6-rc7
+X-PR-Tracked-Commit-Id: 2866ce8696167de300e27d50d521b5f671bab5d4
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 69d3e5a5a66bb59c39f36dcb9cf4e9a4239aa8cd
-Message-Id: <158472450732.23492.59820200078010578.pr-tracker-bot@kernel.org>
-Date:   Fri, 20 Mar 2020 17:15:07 +0000
-To:     Dave Airlie <airlied@gmail.com>
+X-PR-Merge-Commit-Id: b07c2e76c419fe7ac8949e5ffea4a29414291b7d
+Message-Id: <158472450912.23492.1461265135513637898.pr-tracker-bot@kernel.org>
+Date:   Fri, 20 Mar 2020 17:15:09 +0000
+To:     Greg KH <gregkh@linuxfoundation.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 20 Mar 2020 13:01:44 +1000:
+The pull request you sent on Fri, 20 Mar 2020 15:27:39 +0100:
 
-> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-03-20
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.6-rc7
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/69d3e5a5a66bb59c39f36dcb9cf4e9a4239aa8cd
+https://git.kernel.org/torvalds/c/b07c2e76c419fe7ac8949e5ffea4a29414291b7d
 
 Thank you!
 
