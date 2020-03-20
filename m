@@ -2,147 +2,177 @@ Return-Path: <SRS0=Xzqw=5F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91AAC4332D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79516C4332D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B54320739
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:23:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584721382;
-	bh=lv5dc5lyvfZeoMUgtuTZ8bzmyZe5g6+qYJhcqv6T9H4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=foDbvIs2Ia1A4Qj3A1lJCIolG7E9pJ0ZbFMvwWyJtYKMb75f7lD/6OrzZP64QZSLm
-	 KoYwn4vpyLE6UX4cw0eQGMkb9aok6jTC1Vls1dIBbbE9Y7Do0Mg3NOzeiTaWMJu2oT
-	 aWxnKCq8DcJvkkFtWsdWQAoB/7qgbRPRPFJ3Wipo=
+	by mail.kernel.org (Postfix) with ESMTP id 4E24D20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Mar 2020 16:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbgCTQXB (ORCPT
+        id S1727394AbgCTQX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:23:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727232AbgCTQXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:23:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FEC620724;
-        Fri, 20 Mar 2020 16:23:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584721380;
-        bh=lv5dc5lyvfZeoMUgtuTZ8bzmyZe5g6+qYJhcqv6T9H4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XfRCgcWXuedy3Bn5EMaQ6y0SROMPmy3X3wmAmPLiGGByiiErxDcrSTbAmY3zZa11u
-         AoJUJiP98hoo7XRqTS+oFm9IM31dcUfEOuACdITsJtOgO78KwrFbOefVfDdS8U7vpt
-         OVJ91PgYCMQ9i+zWola632ATrMbJXHzucMJMPBuc=
-Date:   Fri, 20 Mar 2020 17:22:58 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maciej =?utf-8?Q?=C5=BBenczykowski?= <maze@google.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alistair Delva <adelva@google.com>
-Subject: [PATCH] bpf: explicitly memset some bpf info structures declared on
- the stack
-Message-ID: <20200320162258.GA794295@kroah.com>
-References: <20200320094813.GA421650@kroah.com>
- <3bcf52da-0930-a27f-60f9-28a40e639949@iogearbox.net>
- <20200320154518.GA765793@kroah.com>
- <d55983b3-0f94-cc7f-2055-a0b4ab8075ed@iogearbox.net>
- <20200320161515.GA778529@kroah.com>
+        Fri, 20 Mar 2020 12:23:57 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:42389 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbgCTQX5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 12:23:57 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MAfpQ-1j8gbb1Rma-00B7jU for <linux-kernel@vger.kernel.org>; Fri, 20 Mar
+ 2020 17:23:55 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id 2847E650374
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 16:23:55 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9s7jkSY0cOXX for <linux-kernel@vger.kernel.org>;
+        Fri, 20 Mar 2020 17:23:54 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id BF14C64F9D2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 17:23:54 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.8.5.41) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 20 Mar 2020 17:23:54 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id 2255B80500; Fri, 20 Mar 2020 17:11:46 +0100 (CET)
+Date:   Fri, 20 Mar 2020 17:11:46 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [PATCH v3 03/11] media: adv748x: reduce amount of code for bitwise
+ modifications of device registers
+Message-ID: <88950969b1d16ff5fcd1b3458356c4cf5a9e6cff.1584720678.git.alexander.riesen@cetitec.com>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1584720678.git.alexander.riesen@cetitec.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200320161515.GA778529@kroah.com>
+In-Reply-To: <cover.1584720678.git.alexander.riesen@cetitec.com>
+X-Originating-IP: [10.8.5.41]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A6D7662
+X-Provags-ID: V03:K1:ICWOq73QjzJJPYKLAkxROtwaU+CssEQhOxvaEKwGULnHCJi2455
+ +v6QdiZCsslmG+ByBoYgXfQTKrOeFc4EMDQBrZ02cIpZBHDkULROrKUZOuldGSwoxUZc+H1
+ 8tI6msOzlioWS6+37x3JdKK8xZPRyhZC0+W8m/lzp0Yy6C2z9oYAjORG2hQkGfG/WL3/POJ
+ mkbCLa5ULUg3byjQASSDA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:SVZ2eVQIBH0=:g+KMbwTs4+nqsAbq/ls8vG
+ /QfPBMnl0pZNHZLWAqk7wdFv5K2Y4FVxW76doTlvmaPxj4XEJo4wJiALrEiv8mwKZNYpu0PSl
+ 19TOdqP+Sft5z7q4EQlkpLGOBtWmiQtq0/g3vOEZzxjbd1CDgYMy0VyuRwQeknSGfIr6YBVVU
+ EWaFlO31KFB253jvuiEa6JAvslPMaX73CNUYdZzkvKNgNfauVS7my9hV1nnuNF+5tr+HRxjDr
+ 5T/Iz8vs1xW2ykZawUPA2tcsKIF3npuHQKp0sy0JIlK/NSdh3AxVB5ECnwnoSD2cjvSbLcvzy
+ h46M+KM1nDpYDb2jkBHTQ8/dcs/qOWJ5I9rNFiED+4m6rjSQa+P31gmQtk5BFXrU07xq1uM7Q
+ /tNE9NojFb+mWw7K1RsPFaB8H220DoUbmyVUCGqHyPLuRVDMuuDKa9tvWaJX0Wzt+omAc4aGn
+ /hE4FVPoZzMZsRJuIS+w9Iqjixc01e/clnQNlKBKL7uukvrPYagRor9MtO+Wwp5ksiwI0yecu
+ P3T5JDjyBpD7CmRSTzkEFUpiVwD2VcpIUR/106FVzZ3NvqCO/LnHQl7PoZoz246CyJ7MUqB1m
+ gdOAHpqsuSjm5QLipc9LMVe23RrmqlvlGeKL1hdm12ve54qHoOnJfBzK1pL6CqXK/8g9jEP/g
+ RCM/ksYd+j0sKB1AUZqONo40beKcYdQj8QxqZrf3cfYoouk2m4Yy5SdILLEpH2e0dRE8GkDRE
+ VuVuE09GDArXx5uuQmhrRCLC4xNp0S8egziGlU8e0WeClsKREjYpIIuHF5YGzamopPGCTT2nm
+ yhweNjYHrzTVWSN2npsdJGTC40AYh44PBu2aL2Buc1ZpdlRuoI06hkDCa7njWbrQMfNYcdF
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trying to initialize a structure with "= {};" will not always clean out
-all padding locations in a structure.  So be explicit and call memset to
-initialize everything for a number of bpf information structures that
-are then copied from userspace, sometimes from smaller memory locations
-than the size of the structure.
+The regmap provides a convenient utility for this.
+The hdmi_* and dpll_* register modification macros added for symmetry
+with the existing operations (io_*, sdp_*).
 
-Reported-by: Daniel Borkmann <daniel@iogearbox.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+--
+v3: remove _update name in favor of existing _clrset
 ---
+ drivers/media/i2c/adv748x/adv748x-core.c |  6 ++++++
+ drivers/media/i2c/adv748x/adv748x.h      | 14 +++++++++++---
+ 2 files changed, 17 insertions(+), 3 deletions(-)
 
-Note, this is separate from my previous patch, both are needed.
-
- kernel/bpf/btf.c     | 3 ++-
- kernel/bpf/syscall.c | 6 ++++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index 787140095e58..2fc945fcf952 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -4564,7 +4564,7 @@ int btf_get_info_by_fd(const struct btf *btf,
- 		       union bpf_attr __user *uattr)
- {
- 	struct bpf_btf_info __user *uinfo;
--	struct bpf_btf_info info = {};
-+	struct bpf_btf_info info;
- 	u32 info_copy, btf_copy;
- 	void __user *ubtf;
- 	u32 uinfo_len;
-@@ -4573,6 +4573,7 @@ int btf_get_info_by_fd(const struct btf *btf,
- 	uinfo_len = attr->info.info_len;
+diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
+index 5c59aad319d1..8580e6624276 100644
+--- a/drivers/media/i2c/adv748x/adv748x-core.c
++++ b/drivers/media/i2c/adv748x/adv748x-core.c
+@@ -133,6 +133,12 @@ static int adv748x_write_check(struct adv748x_state *state, u8 page, u8 reg,
+ 	return *error;
+ }
  
- 	info_copy = min_t(u32, uinfo_len, sizeof(info));
-+	memset(&info, 0, sizeof(info));
- 	if (copy_from_user(&info, uinfo, info_copy))
- 		return -EFAULT;
++int adv748x_update_bits(struct adv748x_state *state, u8 page, u8 reg, u8 mask,
++			u8 value)
++{
++	return regmap_update_bits(state->regmap[page], reg, mask, value);
++}
++
+ /* adv748x_write_block(): Write raw data with a maximum of I2C_SMBUS_BLOCK_MAX
+  * size to one or more registers.
+  *
+diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
+index 09aab4138c3f..0a9d78c2870b 100644
+--- a/drivers/media/i2c/adv748x/adv748x.h
++++ b/drivers/media/i2c/adv748x/adv748x.h
+@@ -393,25 +393,33 @@ int adv748x_write(struct adv748x_state *state, u8 page, u8 reg, u8 value);
+ int adv748x_write_block(struct adv748x_state *state, int client_page,
+ 			unsigned int init_reg, const void *val,
+ 			size_t val_len);
++int adv748x_update_bits(struct adv748x_state *state, u8 page, u8 reg,
++			u8 mask, u8 value);
  
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index a4b1de8ea409..84213cc5d016 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -2787,7 +2787,7 @@ static int bpf_prog_get_info_by_fd(struct bpf_prog *prog,
- 				   union bpf_attr __user *uattr)
- {
- 	struct bpf_prog_info __user *uinfo = u64_to_user_ptr(attr->info.info);
--	struct bpf_prog_info info = {};
-+	struct bpf_prog_info info;
- 	u32 info_len = attr->info.info_len;
- 	struct bpf_prog_stats stats;
- 	char __user *uinsns;
-@@ -2799,6 +2799,7 @@ static int bpf_prog_get_info_by_fd(struct bpf_prog *prog,
- 		return err;
- 	info_len = min_t(u32, sizeof(info), info_len);
+ #define io_read(s, r) adv748x_read(s, ADV748X_PAGE_IO, r)
+ #define io_write(s, r, v) adv748x_write(s, ADV748X_PAGE_IO, r, v)
+-#define io_clrset(s, r, m, v) io_write(s, r, (io_read(s, r) & ~(m)) | (v))
++#define io_clrset(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_IO, r, m, v)
  
-+	memset(&info, 0, sizeof(info));
- 	if (copy_from_user(&info, uinfo, info_len))
- 		return -EFAULT;
+ #define hdmi_read(s, r) adv748x_read(s, ADV748X_PAGE_HDMI, r)
+ #define hdmi_read16(s, r, m) (((hdmi_read(s, r) << 8) | hdmi_read(s, (r)+1)) & (m))
+ #define hdmi_write(s, r, v) adv748x_write(s, ADV748X_PAGE_HDMI, r, v)
++#define hdmi_clrset(s, r, m, v) \
++	adv748x_update_bits(s, ADV748X_PAGE_HDMI, r, m, v)
++
++#define dpll_read(s, r) adv748x_read(s, ADV748X_PAGE_DPLL, r)
++#define dpll_clrset(s, r, m, v) \
++	adv748x_update_bits(s, ADV748X_PAGE_DPLL, r, m, v)
  
-@@ -3062,7 +3063,7 @@ static int bpf_map_get_info_by_fd(struct bpf_map *map,
- 				  union bpf_attr __user *uattr)
- {
- 	struct bpf_map_info __user *uinfo = u64_to_user_ptr(attr->info.info);
--	struct bpf_map_info info = {};
-+	struct bpf_map_info info;
- 	u32 info_len = attr->info.info_len;
- 	int err;
+ #define repeater_read(s, r) adv748x_read(s, ADV748X_PAGE_REPEATER, r)
+ #define repeater_write(s, r, v) adv748x_write(s, ADV748X_PAGE_REPEATER, r, v)
  
-@@ -3071,6 +3072,7 @@ static int bpf_map_get_info_by_fd(struct bpf_map *map,
- 		return err;
- 	info_len = min_t(u32, sizeof(info), info_len);
+ #define sdp_read(s, r) adv748x_read(s, ADV748X_PAGE_SDP, r)
+ #define sdp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_SDP, r, v)
+-#define sdp_clrset(s, r, m, v) sdp_write(s, r, (sdp_read(s, r) & ~(m)) | (v))
++#define sdp_clrset(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_SDP, r, m, v)
  
-+	memset(&info, 0, sizeof(info));
- 	info.type = map->map_type;
- 	info.id = map->id;
- 	info.key_size = map->key_size;
+ #define cp_read(s, r) adv748x_read(s, ADV748X_PAGE_CP, r)
+ #define cp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_CP, r, v)
+-#define cp_clrset(s, r, m, v) cp_write(s, r, (cp_read(s, r) & ~(m)) | (v))
++#define cp_clrset(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_CP, r, m, v)
+ 
+ #define tx_read(t, r) adv748x_read(t->state, t->page, r)
+ #define tx_write(t, r, v) adv748x_write(t->state, t->page, r, v)
 -- 
-2.25.2
+2.25.1.25.g9ecbe7eb18
+
 
