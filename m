@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 450E2C54EEB
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECCDC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B81520724
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD0A120724
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584811277;
-	bh=ZnSAqtrhUAG+X7F2ZLoeV+FolVsaUPM8D6kykK+Je5E=;
+	s=default; t=1584811344;
+	bh=yaW/gg43wAtQnOV5I1zhn71sAt0VN6CiG0CiFTKcQVc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=z03MXfIoVBdFeDeodFX2KYyh0cWj858ddvKvY3a9X4b7YrF/hTKyaalpMIW/+bESU
-	 nyvTRwoUPVAYcuJfuo8OgaEtHIF60VF7jgR3EMcIC6F+EUjWrWhP98oNekLk5OKVyd
-	 P5fpRFpkPFoaAt41aaPKRx+YYH2WuigcgXqwNJF4=
+	b=fJeiyjxxSdT0Br/E1EKrVuMNn2ac4mFvjpbnPJdkBqZ1UhCwz9ROxADPL0lmvxuvw
+	 AwvBOralnHcgc5p1OIbVZBbq01znITmrztR4hAGxBehMvreOj7qEixTVa8AAxUHpO6
+	 RTgG9YosCnyfP1YHyq4nwlp9S2dHrwtKXcvCx8Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgCURVQ (ORCPT
+        id S1727836AbgCURWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 13:21:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50622 "EHLO mail.kernel.org"
+        Sat, 21 Mar 2020 13:22:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726961AbgCURVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 13:21:15 -0400
+        id S1727262AbgCURWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 13:22:23 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C4C120724;
-        Sat, 21 Mar 2020 17:21:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA9D320724;
+        Sat, 21 Mar 2020 17:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584811275;
-        bh=ZnSAqtrhUAG+X7F2ZLoeV+FolVsaUPM8D6kykK+Je5E=;
+        s=default; t=1584811342;
+        bh=yaW/gg43wAtQnOV5I1zhn71sAt0VN6CiG0CiFTKcQVc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=P0/qkk5h1z7SkuAlp0OHDUa/VRxaURrpwKxtm39+a3g1IFEYGUHcag+VvZ8qkOfak
-         6TccdLohdAEUtrdRPbG92tHECiTRT76ArUaT/UbDiYLpSaPKVETvwge0tqlSzfgsjt
-         irmVTuFp3dsTxawbSWS3FimFvgVn51S2MCyFmW4E=
-Date:   Sat, 21 Mar 2020 17:21:10 +0000
+        b=HJuURLcDsWe6Tbz7fU0WNtL7i64hDDfaFjkJrhvlLfUsnan9Yg0NmQYqCj3E5nywT
+         widDiee+AFv7LkJGsAc8RTDzIwGqxdagSoSKhJnxgkZQJWgzgc5B0QvQSwPIJtRLpf
+         3YgnRm4laz5/RQp4dFvgyioK32eVWWhqmYRqoq/g=
+Date:   Sat, 21 Mar 2020 17:22:17 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
 Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -47,12 +47,12 @@ Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <Laszlo.Nagy@analog.com>, <Andrei.Grozav@analog.com>,
         <Michael.Hennerich@analog.com>, <Istvan.Csomortani@analog.com>,
         <Adrian.Costina@analog.com>, <Dragos.Bogdan@analog.com>
-Subject: Re: [PATCH v11 2/8] include: fpga: adi-axi-common.h: add version
- helper macros
-Message-ID: <20200321172110.03524338@archlinux>
-In-Reply-To: <20200321085315.11030-3-alexandru.ardelean@analog.com>
+Subject: Re: [PATCH v11 3/8] iio: buffer-dmaengine: use %zu specifier for
+ sprintf(align)
+Message-ID: <20200321172217.18d9e01b@archlinux>
+In-Reply-To: <20200321085315.11030-4-alexandru.ardelean@analog.com>
 References: <20200321085315.11030-1-alexandru.ardelean@analog.com>
-        <20200321085315.11030-3-alexandru.ardelean@analog.com>
+        <20200321085315.11030-4-alexandru.ardelean@analog.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -62,37 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 21 Mar 2020 10:53:09 +0200
+On Sat, 21 Mar 2020 10:53:10 +0200
 Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-> The format for all ADI AXI IP cores is the same.
-> i.e. 'major.minor.patch'.
+> The 'size_t' type behaves differently on 64-bit architectures, and causes
+> compiler a warning of the sort "format '%u' expects argument of type
+> 'unsigned int', but argument 3 has type 'size_t {aka long unsigned int}'".
 > 
-> This patch adds the helper macros to be re-used in ADI AXI drivers.
+> This change adds the correct specifier for the 'align' field.
 > 
-> Acked-by: Moritz Fischer <mdf@kernel.org>
+> Fixes: 4538c18568099 ("iio: buffer-dmaengine: Report buffer length requirements")
+> Reported-by: kbuild test robot <lkp@intel.com>
 > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Applied,
+Applied thanks.
 
-Thanks,
+Given lack of users of this infrastructure, I'm not that fussed
+about marking this for stable or similar.  However, I don't
+mind someone requesting a backport if it is useful to them.
 
 Jonathan
 
 > ---
->  include/linux/fpga/adi-axi-common.h | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/iio/buffer/industrialio-buffer-dmaengine.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/fpga/adi-axi-common.h
-> index ebd4e07ae3d8..141ac3f251e6 100644
-> --- a/include/linux/fpga/adi-axi-common.h
-> +++ b/include/linux/fpga/adi-axi-common.h
-> @@ -16,4 +16,8 @@
->  #define ADI_AXI_PCORE_VER(major, minor, patch)	\
->  	(((major) << 16) | ((minor) << 8) | (patch))
+> diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
+> index b129693af0fd..94da3b1ca3a2 100644
+> --- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
+> +++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
+> @@ -134,7 +134,7 @@ static ssize_t iio_dmaengine_buffer_get_length_align(struct device *dev,
+>  	struct dmaengine_buffer *dmaengine_buffer =
+>  		iio_buffer_to_dmaengine_buffer(indio_dev->buffer);
 >  
-> +#define ADI_AXI_PCORE_VER_MAJOR(version)	(((version) >> 16) & 0xff)
-> +#define ADI_AXI_PCORE_VER_MINOR(version)	(((version) >> 8) & 0xff)
-> +#define ADI_AXI_PCORE_VER_PATCH(version)	((version) & 0xff)
-> +
->  #endif /* ADI_AXI_COMMON_H_ */
+> -	return sprintf(buf, "%u\n", dmaengine_buffer->align);
+> +	return sprintf(buf, "%zu\n", dmaengine_buffer->align);
+>  }
+>  
+>  static IIO_DEVICE_ATTR(length_align_bytes, 0444,
 
