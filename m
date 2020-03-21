@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5E0C4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0791C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E147020870
+	by mail.kernel.org (Postfix) with ESMTP id C289620786
 	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:33:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbgCUOdb (ORCPT
+        id S1727463AbgCUOd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 10:33:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38695 "EHLO
+        Sat, 21 Mar 2020 10:33:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38684 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727385AbgCUOda (ORCPT
+        with ESMTP id S1726997AbgCUOd2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 10:33:30 -0400
+        Sat, 21 Mar 2020 10:33:28 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFfBm-00045Q-1f; Sat, 21 Mar 2020 15:33:26 +0100
+        id 1jFfBl-000455-Kl; Sat, 21 Mar 2020 15:33:25 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A57A61C22DA;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 479541C22BC;
         Sat, 21 Mar 2020 15:33:25 +0100 (CET)
-Date:   Sat, 21 Mar 2020 14:33:25 -0000
+Date:   Sat, 21 Mar 2020 14:33:24 -0000
 From:   "tip-bot2 for Vincenzo Frascino" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] arm64: vdso32: Include common headers in the vdso library
+Subject: [tip: timers/core] mips: vdso: Enable mips to use common headers
 Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, x86 <x86@kernel.org>,
+        Paul Burton <paulburton@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200320145351.32292-22-vincenzo.frascino@arm.com>
-References: <20200320145351.32292-22-vincenzo.frascino@arm.com>
+In-Reply-To: <20200320145351.32292-23-vincenzo.frascino@arm.com>
+References: <20200320145351.32292-23-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-Message-ID: <158480120536.28353.7718322208789745754.tip-bot2@tip-bot2>
+Message-ID: <158480120493.28353.16624453777499675820.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,56 +57,111 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     5340e873576ee04186eca3c70844c576d714cc6a
-Gitweb:        https://git.kernel.org/tip/5340e873576ee04186eca3c70844c576d714cc6a
+Commit-ID:     c135fc875ce363ff8405a8e64408bca0aa2a865b
+Gitweb:        https://git.kernel.org/tip/c135fc875ce363ff8405a8e64408bca0aa2a865b
 Author:        Vincenzo Frascino <vincenzo.frascino@arm.com>
-AuthorDate:    Fri, 20 Mar 2020 14:53:46 
+AuthorDate:    Fri, 20 Mar 2020 14:53:47 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Sat, 21 Mar 2020 15:24:02 +01:00
 
-arm64: vdso32: Include common headers in the vdso library
+mips: vdso: Enable mips to use common headers
 
-The vDSO library should only include the necessary headers required for
-a userspace library (UAPI and a minimal set of kernel headers). To make
-this possible it is necessary to isolate from the kernel headers the
-common parts that are strictly necessary to build the library.
-
-Refactor the vdso32 implementation to include common headers.
+Enable mips to use only the common headers in the implementation of
+the vDSO library.
 
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Link: https://lkml.kernel.org/r/20200320145351.32292-22-vincenzo.frascino@arm.com
+Cc: Paul Burton <paulburton@kernel.org>
+Link: https://lkml.kernel.org/r/20200320145351.32292-23-vincenzo.frascino@arm.com
 
 ---
- arch/arm64/include/asm/vdso/compat_gettimeofday.h | 2 +-
- arch/arm64/kernel/vdso32/vgettimeofday.c          | 2 --
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ arch/mips/include/asm/processor.h         | 16 +-------------
+ arch/mips/include/asm/vdso/gettimeofday.h |  4 +---
+ arch/mips/include/asm/vdso/processor.h    | 27 ++++++++++++++++++++++-
+ 3 files changed, 28 insertions(+), 19 deletions(-)
+ create mode 100644 arch/mips/include/asm/vdso/processor.h
 
-diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-index 401df2b..b6907ae 100644
---- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-@@ -8,7 +8,7 @@
+diff --git a/arch/mips/include/asm/processor.h b/arch/mips/include/asm/processor.h
+index 7619ad3..4c9cc66 100644
+--- a/arch/mips/include/asm/processor.h
++++ b/arch/mips/include/asm/processor.h
+@@ -22,6 +22,7 @@
+ #include <asm/dsemul.h>
+ #include <asm/mipsregs.h>
+ #include <asm/prefetch.h>
++#include <asm/vdso/processor.h>
+ 
+ /*
+  * System setup and hardware flags..
+@@ -385,21 +386,6 @@ unsigned long get_wchan(struct task_struct *p);
+ #define KSTK_ESP(tsk) (task_pt_regs(tsk)->regs[29])
+ #define KSTK_STATUS(tsk) (task_pt_regs(tsk)->cp0_status)
+ 
+-#ifdef CONFIG_CPU_LOONGSON64
+-/*
+- * Loongson-3's SFB (Store-Fill-Buffer) may buffer writes indefinitely when a
+- * tight read loop is executed, because reads take priority over writes & the
+- * hardware (incorrectly) doesn't ensure that writes will eventually occur.
+- *
+- * Since spin loops of any kind should have a cpu_relax() in them, force an SFB
+- * flush from cpu_relax() such that any pending writes will become visible as
+- * expected.
+- */
+-#define cpu_relax()	smp_mb()
+-#else
+-#define cpu_relax()	barrier()
+-#endif
+-
+ /*
+  * Return_address is a replacement for __builtin_return_address(count)
+  * which on certain architectures cannot reasonably be implemented in GCC
+diff --git a/arch/mips/include/asm/vdso/gettimeofday.h b/arch/mips/include/asm/vdso/gettimeofday.h
+index 88c3de1..c63ddca 100644
+--- a/arch/mips/include/asm/vdso/gettimeofday.h
++++ b/arch/mips/include/asm/vdso/gettimeofday.h
+@@ -13,12 +13,8 @@
+ 
  #ifndef __ASSEMBLY__
  
- #include <asm/unistd.h>
--#include <uapi/linux/time.h>
-+#include <asm/errno.h>
- 
- #include <asm/vdso/compat_barrier.h>
- 
-diff --git a/arch/arm64/kernel/vdso32/vgettimeofday.c b/arch/arm64/kernel/vdso32/vgettimeofday.c
-index ddbad47..5acff29 100644
---- a/arch/arm64/kernel/vdso32/vgettimeofday.c
-+++ b/arch/arm64/kernel/vdso32/vgettimeofday.c
-@@ -5,8 +5,6 @@
-  * Copyright (C) 2018 ARM Limited
-  *
-  */
+-#include <linux/compiler.h>
 -#include <linux/time.h>
--#include <linux/types.h>
+-
+ #include <asm/vdso/vdso.h>
+ #include <asm/clocksource.h>
+-#include <asm/io.h>
+ #include <asm/unistd.h>
+ #include <asm/vdso.h>
  
- int __vdso_clock_gettime(clockid_t clock,
- 			 struct old_timespec32 *ts)
+diff --git a/arch/mips/include/asm/vdso/processor.h b/arch/mips/include/asm/vdso/processor.h
+new file mode 100644
+index 0000000..511c95d
+--- /dev/null
++++ b/arch/mips/include/asm/vdso/processor.h
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2020 ARM Ltd.
++ */
++#ifndef __ASM_VDSO_PROCESSOR_H
++#define __ASM_VDSO_PROCESSOR_H
++
++#ifndef __ASSEMBLY__
++
++#ifdef CONFIG_CPU_LOONGSON64
++/*
++ * Loongson-3's SFB (Store-Fill-Buffer) may buffer writes indefinitely when a
++ * tight read loop is executed, because reads take priority over writes & the
++ * hardware (incorrectly) doesn't ensure that writes will eventually occur.
++ *
++ * Since spin loops of any kind should have a cpu_relax() in them, force an SFB
++ * flush from cpu_relax() such that any pending writes will become visible as
++ * expected.
++ */
++#define cpu_relax()	smp_mb()
++#else
++#define cpu_relax()	barrier()
++#endif
++
++#endif /* __ASSEMBLY__ */
++
++#endif /* __ASM_VDSO_PROCESSOR_H */
