@@ -2,110 +2,85 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4715DC4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A73C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF1F20724
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:05:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i9zi7vf2"
+	by mail.kernel.org (Postfix) with ESMTP id E26AD20724
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:06:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbgCUMFa (ORCPT
+        id S1727192AbgCUMGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 08:05:30 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41300 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbgCUMFa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 08:05:30 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h9so10621777wrc.8;
-        Sat, 21 Mar 2020 05:05:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=EfodRmW2l478YoUF/NEMb3epOdAHJYA9K519pesBxmk=;
-        b=i9zi7vf2mSwVRJeZGA7d3dFGu2uoE6XGrfBngyYBxngyzvwSCZKgcH7gd8W8uH9YPa
-         fUGjBd1Z92kvMPBYwVqcuIQPlYYg/fa8ASYL89cDISg0HiXxxi7NAR8nXLubPl0A57vT
-         h/Ws/GRLKAT120f8/62vnRzasDbb3528SspE8a6pyOCQsqgemnnAGJKfFAXeE1Do/Knu
-         VIl3dcRdH4zxaw3fXIifN4LEOzIO8YVycMxLLW7ILxMsz4HV/xnwC/j/YW517O6TeZmO
-         v8Zzog4st9TkZN3RQczcPto+8RKQeKgNzEjt4jMxJT3GC8bsr6AqRNSpe2kpxwFQgg4H
-         XqRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=EfodRmW2l478YoUF/NEMb3epOdAHJYA9K519pesBxmk=;
-        b=MXzUijT/WUjV5uStyCS6aKRy2DbraPJ5EHU2za3TYvxU6jCOAefbFedi9SQNGRpyW0
-         QTF8BvjifRDoMBwjNAggmIQM6Vf1Xm7/QTXk7QGGL8gmAcI3x/CMalNb8DpW2WCDQcWF
-         5+yZ3HGmP/qeLS5N60HT1KMfxVAM48YyqwFYcSDWkWpfGXdM61sipg9flhl1n0lM9K4H
-         DVt7lzLqPfuNtrQLzIZj05z32SKjACe40huhdecO832FSX85B4FZgqeGFgA2gdj0ICfZ
-         v7XmI02BqTN+3f/QcVAZ6BVCPmCAdBATLtWX/MoZG5Qne14NcuEgudzd55Y1CPSeZGH1
-         6pkw==
-X-Gm-Message-State: ANhLgQ1sMMOmTG8n9TxeWUP10JXdlvdNr9+xcmqT1JQQqJou5Rs0KHyi
-        GzfR1e4UZOD70EBoROlDXDk=
-X-Google-Smtp-Source: ADFU+vsKwO+JvuQBHLV7YV3cVJhZb0IeN24HEx0xAO/6OxzgxPpmQRlsCvam2SAHP0OnLpdk86PP7g==
-X-Received: by 2002:a5d:52d0:: with SMTP id r16mr16496453wrv.379.1584792326004;
-        Sat, 21 Mar 2020 05:05:26 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2d49:b100:e503:a7c7:f4c6:1aab])
-        by smtp.gmail.com with ESMTPSA id c4sm12246120wml.7.2020.03.21.05.05.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2020 05:05:25 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Shannon Nelson <snelson@pensando.io>, netdev@vger.kernel.org
-Cc:     linux-spdx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] ionic: make spdxcheck.py happy
-Date:   Sat, 21 Mar 2020 13:05:14 +0100
-Message-Id: <20200321120514.10464-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 21 Mar 2020 08:06:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:34740 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726192AbgCUMGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 08:06:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 134EC31B;
+        Sat, 21 Mar 2020 05:06:42 -0700 (PDT)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 026A33F52E;
+        Sat, 21 Mar 2020 05:06:38 -0700 (PDT)
+Date:   Sat, 21 Mar 2020 12:06:36 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, x86@kernel.org,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>
+Subject: Re: [PATCH v5 18/26] arm64: vdso32: Code clean up
+Message-ID: <20200321120635.GA3052@mbp>
+References: <20200320145351.32292-1-vincenzo.frascino@arm.com>
+ <20200320145351.32292-19-vincenzo.frascino@arm.com>
+ <158474646622.125146.3263940499372231797@swboyd.mtv.corp.google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158474646622.125146.3263940499372231797@swboyd.mtv.corp.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Headers ionic_if.h and ionic_regs.h are licensed under three alternative
-licenses and the used SPDX-License-Identifier expression makes
-./scripts/spdxcheck.py complain:
+On Fri, Mar 20, 2020 at 04:21:06PM -0700, Stephen Boyd wrote:
+> Quoting Vincenzo Frascino (2020-03-20 07:53:43)
+> > The compat vdso library had some checks that are not anymore relevant.
+> 
+> Can we get the information on why they aren't relevant anymore in the
+> commit text? I'd rather not find this commit three years from now and
+> have no idea why it was applied.
 
-drivers/net/ethernet/pensando/ionic/ionic_if.h: 1:52 Syntax error: OR
-drivers/net/ethernet/pensando/ionic/ionic_regs.h: 1:52 Syntax error: OR
+Good point. But I'd rather say that the original reason for adding them
+was bogus (ABI compatibility between arm64 compat and arm32, when arm32
+vdso never got them).
 
-As OR is associative, it is irrelevant if the parentheses are put around
-the first or the second OR-expression.
+There may be some (very hard to justify) reason to add them if we want
+compatibility between vdso and syscall fallback on addresses greater
+than TASK_SIZE. The vdso code generates a SIGSEGV or SIGBUS while the
+syscall returns -EFAULT. However, you'd have similar mismatch on
+unmapped addresses below TASK_SIZE which cannot be handled by the vdso
+(not a simple comparison).
 
-Simply add parentheses to make spdxcheck.py happy.
+I think the vdsotest code should be adjusted accordingly.
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
- drivers/net/ethernet/pensando/ionic/ionic_if.h   | 2 +-
- drivers/net/ethernet/pensando/ionic/ionic_regs.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_if.h b/drivers/net/ethernet/pensando/ionic/ionic_if.h
-index 54547d53b0f2..51adf5059834 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_if.h
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_if.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB OR BSD-2-Clause */
-+/* SPDX-License-Identifier: (GPL-2.0 OR Linux-OpenIB) OR BSD-2-Clause */
- /* Copyright (c) 2017-2019 Pensando Systems, Inc.  All rights reserved. */
- 
- #ifndef _IONIC_IF_H_
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_regs.h b/drivers/net/ethernet/pensando/ionic/ionic_regs.h
-index 03ee5a36472b..2e174f45c030 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_regs.h
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_regs.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB OR BSD-2-Clause */
-+/* SPDX-License-Identifier: (GPL-2.0 OR Linux-OpenIB) OR BSD-2-Clause */
- /* Copyright (c) 2018-2019 Pensando Systems, Inc.  All rights reserved. */
- 
- #ifndef IONIC_REGS_H
 -- 
-2.17.1
-
+Catalin
