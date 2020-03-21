@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED22AC4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5986BC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3352070A
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B9F02070A
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:42:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rbNQphdT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WVLI0Tbr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgCUAmR (ORCPT
+        id S1727883AbgCUAmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 20:42:17 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46140 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbgCUAmO (ORCPT
+        Fri, 20 Mar 2020 20:42:22 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39696 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727319AbgCUAmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 20:42:14 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j17so6166712wru.13;
-        Fri, 20 Mar 2020 17:42:12 -0700 (PDT)
+        Fri, 20 Mar 2020 20:42:13 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a9so5212176wmj.4;
+        Fri, 20 Mar 2020 17:42:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8kENzX2qY4mZrQ14zzMWI8e74GFu+6EPUczTM1fAv88=;
-        b=rbNQphdThKy7HQ69Js3pr52IfpuUD46jq8qMAdEy74tzazzyCfwXVuCmOo8PEaA8fx
-         3C8nAHZHqk+HpJgHD/9MA736EWot8VxbiBpCzdYCDn8HI1cbSKSMoKT+RrmJkQrNQWW8
-         97QHEe+fahFnOqANtA0FuFJbtub+Bs2SodWLuexgYPOGJZaxl4vys5qVCUpcwEA8naew
-         7ZIug5iZT0pZK2WwMkz3wcGg95BXZlz10XbzpiqpWNSLkOW+freQPum228Lhs4jaCS3v
-         4dVpObH8aaHB1ccYPiBmYxhyz4gZRuRIktl3rA8RDIBpBHW6xmh1g3n2lRzW5JxNBoEY
-         SoVw==
+        bh=lVP2XNgIJeklriVWAYTHlxvdjCHLV2eQDDvuhSH0R3k=;
+        b=WVLI0TbrFE42mo/7bRpATDTpoUWPChiIkpdu6uOObz5FzHBnWHnTocEEfQWUQjgctF
+         hqKX20yqWo0V7MxaatQ2hX43xjwJ/FPBs439K+oqwxuR9uELkOquF74/Zr5fUvvUyhkc
+         y3L21dYD9CSHkO3oa1SIdBPUwuevEKjITJdRS8EA00Cu+7NziuKcmBr2sFhixxu+6vEY
+         KAHkwrReWr43rh/5zmtqBtf1x3SQfQ5rAq8Sx+UQm7gG3jTL9hRZHUlJ2td0Y4GYHx3q
+         wddvHIpdd80XHgUBQIMLDNN54tgzqsHVLtYRin6eJTRA1nLeBZhlMh7KmACmoD2jiCFL
+         v5Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=8kENzX2qY4mZrQ14zzMWI8e74GFu+6EPUczTM1fAv88=;
-        b=iIVhZLR/ULLT2lQakOdWEnBJQfsFA/0Qd8Yg++gOt+2wdZ5g8kfd4mjiNBIh9VxqeK
-         P7Hgeh6frN6pgOEKHMJIjEmAwU+J2ph67eJM+CtABHZSPEE1sAT4caAwpFEN/aL2eznM
-         mNEtqrkRZWlGHTh4QDyLtqL8+AajtAoxG+U6gNXBtTp632qxD75AEAH1YFanCGwGVyWL
-         oDUVGBaDmicp00GdLoXx7azs2kKxRYis6LcOT2OAVf64s3Tfl7Ifxi1j1jX5wRAq5CUM
-         eqBvaD5x+rUK4ZZsRN1xKws49eMF+o85zlRgWQ7qAFbAt86PNAY8LtTRio8TlmqNEPB+
-         DnwQ==
-X-Gm-Message-State: ANhLgQ1DhknJma+QtIXmn8SGsi9A4UJ62Iax8AxevkbKgD4QUaME8PpL
-        TFmOHN4qs7qrIAN5WkWrBbK8XuHI
-X-Google-Smtp-Source: ADFU+vtMQDLJAsxI5Q9cENeC2RS3km7cK8I77idkbKRhoJbtAIzLro2jF52kdzpgKDWcsjciYJaLzw==
-X-Received: by 2002:adf:ee42:: with SMTP id w2mr6848641wro.168.1584751332307;
-        Fri, 20 Mar 2020 17:42:12 -0700 (PDT)
-Received: from localhost.localdomain (ip5f5bee49.dynamic.kabel-deutschland.de. [95.91.238.73])
-        by smtp.gmail.com with ESMTPSA id j6sm8194982wrb.4.2020.03.20.17.42.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=lVP2XNgIJeklriVWAYTHlxvdjCHLV2eQDDvuhSH0R3k=;
+        b=dvlGMJi3roCO2p52fG3MiZiAckHulr3pcTS3g6QcxeJs6zBFiyqdSpaw99BldoT1mp
+         IhQyfnQk9BhHH3GSnndePW7AfNu77m/TcJucB6cqgUk/NN0ntRv5OQgcKiAACjRtgYdf
+         aP6hiypTj4KVFo9yruxHZYl9bCGtqCYwQKcBA0nCMsY+8W0i1vS9jRjbNWXO1OZb6B85
+         X2ybfHnWmHDAOCJs2NqhjtfwbcOpTNsHjwXTiecl8KAuz1s1E9d6s+zrL8UmZ3MAhmW9
+         F9APdC2Qm+7HHSfX76j0KHpYN5RhRtlbNpv4HbR5k2nvq3tvxGHi6TYleELZairTFldx
+         lsqg==
+X-Gm-Message-State: ANhLgQ2bCJL33ss2VXQn+xaF3Byd1hOmhbNOPIITVCiLZT3Uu+2YguPh
+        CaLtAdXCCHsK6os3yl6gmDQ=
+X-Google-Smtp-Source: ADFU+vvud2KuqkqZJeCp/1DyGzpd4IcD3pRwmenHWdnkopxhmGTIWxVipAVEg6eJCQOtrqiOUoGLPw==
+X-Received: by 2002:a1c:9693:: with SMTP id y141mr12870089wmd.23.1584751331082;
         Fri, 20 Mar 2020 17:42:11 -0700 (PDT)
+Received: from localhost.localdomain (ip5f5bee49.dynamic.kabel-deutschland.de. [95.91.238.73])
+        by smtp.gmail.com with ESMTPSA id j6sm8194982wrb.4.2020.03.20.17.42.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 17:42:10 -0700 (PDT)
 From:   huobean@gmail.com
 X-Google-Original-From: beanhuo@micron.com
 To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
@@ -65,9 +65,9 @@ To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
         cang@codeaurora.org
 Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
         ymhungry.lee@samsung.com, j-young.choi@samsung.com
-Subject: [PATCH v1 4/5] scsi: ufs: add unit and geometry parameters for HPB
-Date:   Sat, 21 Mar 2020 01:41:55 +0100
-Message-Id: <20200321004156.23364-5-beanhuo@micron.com>
+Subject: [PATCH v1 3/5] scsi: ufs: add ufs_features parameter in structure ufs_dev_info
+Date:   Sat, 21 Mar 2020 01:41:54 +0100
+Message-Id: <20200321004156.23364-4-beanhuo@micron.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200321004156.23364-1-beanhuo@micron.com>
 References: <20200321004156.23364-1-beanhuo@micron.com>
@@ -78,39 +78,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bean Huo <beanhuo@micron.com>
 
-Add HPB related parameters introduced in Unit Descriptor and
-Geometry Descriptor.
+Make a copy of bUFSFeaturesSupport, name it ufs_features, add it
+to structure ufs_dev_info.
 
 Signed-off-by: Bean Huo <beanhuo@micron.com>
 ---
- drivers/scsi/ufs/ufs.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/scsi/ufs/ufs.h    | 2 ++
+ drivers/scsi/ufs/ufshcd.c | 2 ++
+ 2 files changed, 4 insertions(+)
 
 diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index 1a0053133a04..1617d000a60e 100644
+index 31011d86610b..1a0053133a04 100644
 --- a/drivers/scsi/ufs/ufs.h
 +++ b/drivers/scsi/ufs/ufs.h
-@@ -219,6 +219,9 @@ enum unit_desc_param {
- 	UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT	= 0x18,
- 	UNIT_DESC_PARAM_CTX_CAPABILITIES	= 0x20,
- 	UNIT_DESC_PARAM_LARGE_UNIT_SIZE_M1	= 0x22,
-+	UNIT_DESC_PARAM_HPB_MAX_ACTIVE_REGIONS	= 0x23,
-+	UNIT_DESC_PARAM_HPB_PIN_REGION_START_OFFSET	= 0x25,
-+	UNIT_DESC_PARAM_HPB_NUM_PIN_REGIONS             = 0x27,
+@@ -547,6 +547,8 @@ struct ufs_dev_info {
+ 	u16 hpb_ver;
+ 	/* bHPBControl */
+ 	u8 hpb_control_mode;
++	/* bUFSFeaturesSupport */
++	u8 ufs_features;
  };
  
- /* Device descriptor parameters offsets in bytes*/
-@@ -308,6 +311,10 @@ enum geometry_desc_param {
- 	GEOMETRY_DESC_PARAM_ENM4_MAX_NUM_UNITS	= 0x3E,
- 	GEOMETRY_DESC_PARAM_ENM4_CAP_ADJ_FCTR	= 0x42,
- 	GEOMETRY_DESC_PARAM_OPT_LOG_BLK_SIZE	= 0x44,
-+	GEOMETRY_DESC_PARAM_HPB_REGION_SIZE	= 0x48,
-+	GEOMETRY_DESC_PARAM_HPB_NUMBER_LU	= 0x49,
-+	GEOMETRY_DESC_PARAM_HPB_SUBREGION_SIZE  = 0x4A,
-+	GEOMETRY_DESC_PARAM_HPB_MAX_ACTIVE_REGIONS = 0x4B,
- };
+ /**
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index a40023ad1336..8c7a89c73188 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -6557,6 +6557,8 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
+ 		goto out;
+ 	}
  
- /* Health descriptor parameters offsets in bytes*/
++	dev_info->ufs_features = desc_buf[DEVICE_DESC_PARAM_UFS_FEAT];
++
+ 	if (desc_buf[DEVICE_DESC_PARAM_UFS_FEAT] & 0x80) {
+ 		hba->dev_info.hpb_control_mode =
+ 			desc_buf[DEVICE_DESC_PARAM_HPB_CTRL_MODE];
 -- 
 2.17.1
 
