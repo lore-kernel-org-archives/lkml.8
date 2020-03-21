@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AB0C54FCA
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC31AC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 303C120777
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB84020775
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:26:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgCUU0M (ORCPT
+        id S1728219AbgCUU0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 16:26:12 -0400
+        Sat, 21 Mar 2020 16:26:16 -0400
 Received: from mga03.intel.com ([134.134.136.65]:8930 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728075AbgCUU0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 16:26:09 -0400
-IronPort-SDR: jsyyZ4an+U30rfUzxZStxjeevoSiLGqN6SsHwHTRjhGPWGkei9oj/wmJycxTdj82cla06FnITR
- LzfnZlg71aXw==
+        id S1728109AbgCUU0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 16:26:10 -0400
+IronPort-SDR: aB/7pdtqFYguBDt92csv9YmovG8A5hupLefV/bgioYAJijy4fOL3N0KmDSSWcSUB6fJ+TltA0y
+ wmcDngCsW8Hw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 13:26:08 -0700
-IronPort-SDR: C6h7LJAXXbxHDomfxCRqgNzOi+Nt8KHcxW9uzsthbxs6Sm3EbqrVlN5B394T+e9EmphuUAlUSt
- vJ4yoS4uDL/g==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 13:26:10 -0700
+IronPort-SDR: lXMkEY9xo56j4cQMjQVwFmxvwg7eysaGy+A3cbErMcUU1iffZb5y1sPbq1r7o0u35UmYKVj0sR
+ xiUbTxnrd+nw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,289,1580803200"; 
-   d="scan'208";a="280773550"
+   d="scan'208";a="280773565"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Mar 2020 13:26:07 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 21 Mar 2020 13:26:09 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Paul Mackerras <paulus@ozlabs.org>,
@@ -50,9 +50,9 @@ Cc:     Paul Mackerras <paulus@ozlabs.org>,
         linux-mips@vger.kernel.org, kvm@vger.kernel.org,
         kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/9] KVM: x86: Set kvm_x86_ops only after ->hardware_setup() completes
-Date:   Sat, 21 Mar 2020 13:25:59 -0700
-Message-Id: <20200321202603.19355-6-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 8/9] KVM: VMX: Annotate vmx_x86_ops as __initdata
+Date:   Sat, 21 Mar 2020 13:26:02 -0700
+Message-Id: <20200321202603.19355-9-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200321202603.19355-1-sean.j.christopherson@intel.com>
 References: <20200321202603.19355-1-sean.j.christopherson@intel.com>
@@ -63,46 +63,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set kvm_x86_ops with the vendor's ops only after ->hardware_setup()
-completes to "prevent" using kvm_x86_ops before they are ready, i.e. to
-generate a null pointer fault instead of silently consuming unconfigured
-state.
-
-An alternative implementation would be to have ->hardware_setup()
-return the vendor's ops, but that would require non-trivial refactoring,
-and would arguably result in less readable code, e.g. ->hardware_setup()
-would need to use ERR_PTR() in multiple locations, and each vendor's
-declaration of the runtime ops would be less obvious.
-
-No functional change intended.
+Tag vmx_x86_ops with __initdata now the the struct is copied by value to
+a common x86 instance of kvm_x86_ops as part of kvm_init().
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/x86.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 20f989d1bba8..eb1976214ada 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7354,8 +7354,6 @@ int kvm_arch_init(void *opaque)
- 	if (r)
- 		goto out_free_percpu;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index fac22e316417..eae90379d0d1 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7668,7 +7668,7 @@ static bool vmx_check_apicv_inhibit_reasons(ulong bit)
+ 	return supported & BIT(bit);
+ }
  
--	kvm_x86_ops = ops->runtime_ops;
--
- 	kvm_mmu_set_mask_ptes(PT_USER_MASK, PT_ACCESSED_MASK,
- 			PT_DIRTY_MASK, PT64_NX_MASK, 0,
- 			PT_PRESENT_MASK, 0, sme_me_mask);
-@@ -9635,6 +9633,8 @@ int kvm_arch_hardware_setup(void *opaque)
- 	if (r != 0)
- 		return r;
+-static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
++static struct kvm_x86_ops vmx_x86_ops __initdata = {
+ 	.hardware_unsetup = hardware_unsetup,
  
-+	kvm_x86_ops = ops->runtime_ops;
-+
- 	if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
- 		supported_xss = 0;
- 
+ 	.hardware_enable = hardware_enable,
 -- 
 2.24.1
 
