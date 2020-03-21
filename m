@@ -2,46 +2,46 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98980C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74147C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68AE821655
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D7B620757
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgCUPbf (ORCPT
+        id S1728108AbgCUPbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:31:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38888 "EHLO
+        Sat, 21 Mar 2020 11:31:43 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38890 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727550AbgCUPai (ORCPT
+        with ESMTP id S1727560AbgCUPah (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:30:38 -0400
+        Sat, 21 Mar 2020 11:30:37 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFg52-0004y1-Vb; Sat, 21 Mar 2020 16:30:33 +0100
+        id 1jFg53-0004yz-RM; Sat, 21 Mar 2020 16:30:33 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7991D1C22E4;
-        Sat, 21 Mar 2020 16:30:32 +0100 (CET)
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5CAD61C22E4;
+        Sat, 21 Mar 2020 16:30:33 +0100 (CET)
 Date:   Sat, 21 Mar 2020 15:30:32 -0000
 From:   "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/entry/32: Enable pt_regs based syscalls
+Subject: [tip: x86/entry] x86/entry/32: Rename 32-bit specific syscalls
 Cc:     Brian Gerst <brgerst@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Dominik Brodowski <linux@dominikbrodowski.net>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200313195144.164260-17-brgerst@gmail.com>
-References: <20200313195144.164260-17-brgerst@gmail.com>
+In-Reply-To: <20200313195144.164260-15-brgerst@gmail.com>
+References: <20200313195144.164260-15-brgerst@gmail.com>
 MIME-Version: 1.0
-Message-ID: <158480463205.28353.795563055304704323.tip-bot2@tip-bot2>
+Message-ID: <158480463295.28353.9888208178801887073.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,329 +57,264 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     25c619e59b395a8c970d339f9c714302738e350e
-Gitweb:        https://git.kernel.org/tip/25c619e59b395a8c970d339f9c714302738e350e
+Commit-ID:     866128a996647097d599c6b91deb340d4da593a8
+Gitweb:        https://git.kernel.org/tip/866128a996647097d599c6b91deb340d4da593a8
 Author:        Brian Gerst <brgerst@gmail.com>
-AuthorDate:    Fri, 13 Mar 2020 15:51:42 -04:00
+AuthorDate:    Fri, 13 Mar 2020 15:51:40 -04:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 21 Mar 2020 16:03:24 +01:00
+CommitterDate: Sat, 21 Mar 2020 16:03:23 +01:00
 
-x86/entry/32: Enable pt_regs based syscalls
+x86/entry/32: Rename 32-bit specific syscalls
 
-Enable pt_regs based syscalls for 32-bit.  This makes the 32-bit native
-kernel consistent with the 64-bit kernel, and improves the syscall
-interface by not needing to push all 6 potential arguments onto the stack.
+Rename the syscalls that only exist for 32-bit from x86_* to ia32_* to make it
+clear they are for 32-bit only.  Also rename the functions to match the syscall
+name.
 
 Signed-off-by: Brian Gerst <brgerst@gmail.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Dominik Brodowski <linux@dominikbrodowski.net>
-Link: https://lkml.kernel.org/r/20200313195144.164260-17-brgerst@gmail.com
+Link: https://lkml.kernel.org/r/20200313195144.164260-15-brgerst@gmail.com
 
 ---
- arch/x86/Kconfig                       |   2 +-
- arch/x86/entry/common.c                |  15 +---
- arch/x86/entry/syscall_32.c            |  15 +---
- arch/x86/include/asm/syscall.h         |   6 +-
- arch/x86/include/asm/syscall_wrapper.h | 111 +++++++++++++-----------
- arch/x86/include/asm/syscalls.h        |  29 +------
- 6 files changed, 64 insertions(+), 114 deletions(-)
+ arch/x86/entry/syscalls/syscall_32.tbl | 30 ++++++++++++-------------
+ arch/x86/ia32/sys_ia32.c               | 30 ++++++++++++-------------
+ 2 files changed, 30 insertions(+), 30 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index beea770..9df07b2 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -30,7 +30,6 @@ config X86_64
- 	select MODULES_USE_ELF_RELA
- 	select NEED_DMA_MAP_STATE
- 	select SWIOTLB
--	select ARCH_HAS_SYSCALL_WRAPPER
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index b0712cd..0b8e24c 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -101,7 +101,7 @@
+ 87	i386	swapon			sys_swapon
+ 88	i386	reboot			sys_reboot
+ 89	i386	readdir			sys_old_readdir			compat_sys_old_readdir
+-90	i386	mmap			sys_old_mmap			compat_sys_x86_mmap
++90	i386	mmap			sys_old_mmap			compat_sys_ia32_mmap
+ 91	i386	munmap			sys_munmap
+ 92	i386	truncate		sys_truncate			compat_sys_truncate
+ 93	i386	ftruncate		sys_ftruncate			compat_sys_ftruncate
+@@ -131,7 +131,7 @@
+ 117	i386	ipc			sys_ipc				compat_sys_ipc
+ 118	i386	fsync			sys_fsync
+ 119	i386	sigreturn		sys_sigreturn			compat_sys_sigreturn
+-120	i386	clone			sys_clone			compat_sys_x86_clone
++120	i386	clone			sys_clone			compat_sys_ia32_clone
+ 121	i386	setdomainname		sys_setdomainname
+ 122	i386	uname			sys_newuname
+ 123	i386	modify_ldt		sys_modify_ldt
+@@ -191,8 +191,8 @@
+ 177	i386	rt_sigtimedwait		sys_rt_sigtimedwait_time32	compat_sys_rt_sigtimedwait_time32
+ 178	i386	rt_sigqueueinfo		sys_rt_sigqueueinfo		compat_sys_rt_sigqueueinfo
+ 179	i386	rt_sigsuspend		sys_rt_sigsuspend		compat_sys_rt_sigsuspend
+-180	i386	pread64			sys_pread64			compat_sys_x86_pread
+-181	i386	pwrite64		sys_pwrite64			compat_sys_x86_pwrite
++180	i386	pread64			sys_pread64			compat_sys_ia32_pread64
++181	i386	pwrite64		sys_pwrite64			compat_sys_ia32_pwrite64
+ 182	i386	chown			sys_chown16
+ 183	i386	getcwd			sys_getcwd
+ 184	i386	capget			sys_capget
+@@ -204,11 +204,11 @@
+ 190	i386	vfork			sys_vfork
+ 191	i386	ugetrlimit		sys_getrlimit			compat_sys_getrlimit
+ 192	i386	mmap2			sys_mmap_pgoff
+-193	i386	truncate64		sys_truncate64			compat_sys_x86_truncate64
+-194	i386	ftruncate64		sys_ftruncate64			compat_sys_x86_ftruncate64
+-195	i386	stat64			sys_stat64			compat_sys_x86_stat64
+-196	i386	lstat64			sys_lstat64			compat_sys_x86_lstat64
+-197	i386	fstat64			sys_fstat64			compat_sys_x86_fstat64
++193	i386	truncate64		sys_truncate64			compat_sys_ia32_truncate64
++194	i386	ftruncate64		sys_ftruncate64			compat_sys_ia32_ftruncate64
++195	i386	stat64			sys_stat64			compat_sys_ia32_stat64
++196	i386	lstat64			sys_lstat64			compat_sys_ia32_lstat64
++197	i386	fstat64			sys_fstat64			compat_sys_ia32_fstat64
+ 198	i386	lchown32		sys_lchown
+ 199	i386	getuid32		sys_getuid
+ 200	i386	getgid32		sys_getgid
+@@ -236,7 +236,7 @@
+ # 222 is unused
+ # 223 is unused
+ 224	i386	gettid			sys_gettid
+-225	i386	readahead		sys_readahead			compat_sys_x86_readahead
++225	i386	readahead		sys_readahead			compat_sys_ia32_readahead
+ 226	i386	setxattr		sys_setxattr
+ 227	i386	lsetxattr		sys_lsetxattr
+ 228	i386	fsetxattr		sys_fsetxattr
+@@ -261,7 +261,7 @@
+ 247	i386	io_getevents		sys_io_getevents_time32
+ 248	i386	io_submit		sys_io_submit			compat_sys_io_submit
+ 249	i386	io_cancel		sys_io_cancel
+-250	i386	fadvise64		sys_fadvise64			compat_sys_x86_fadvise64
++250	i386	fadvise64		sys_fadvise64			compat_sys_ia32_fadvise64
+ # 251 is available for reuse (was briefly sys_set_zone_reclaim)
+ 252	i386	exit_group		sys_exit_group
+ 253	i386	lookup_dcookie		sys_lookup_dcookie		compat_sys_lookup_dcookie
+@@ -283,7 +283,7 @@
+ 269	i386	fstatfs64		sys_fstatfs64			compat_sys_fstatfs64
+ 270	i386	tgkill			sys_tgkill
+ 271	i386	utimes			sys_utimes_time32
+-272	i386	fadvise64_64		sys_fadvise64_64		compat_sys_x86_fadvise64_64
++272	i386	fadvise64_64		sys_fadvise64_64		compat_sys_ia32_fadvise64_64
+ 273	i386	vserver
+ 274	i386	mbind			sys_mbind
+ 275	i386	get_mempolicy		sys_get_mempolicy		compat_sys_get_mempolicy
+@@ -311,7 +311,7 @@
+ 297	i386	mknodat			sys_mknodat
+ 298	i386	fchownat		sys_fchownat
+ 299	i386	futimesat		sys_futimesat_time32
+-300	i386	fstatat64		sys_fstatat64			compat_sys_x86_fstatat
++300	i386	fstatat64		sys_fstatat64			compat_sys_ia32_fstatat64
+ 301	i386	unlinkat		sys_unlinkat
+ 302	i386	renameat		sys_renameat
+ 303	i386	linkat			sys_linkat
+@@ -325,7 +325,7 @@
+ 311	i386	set_robust_list		sys_set_robust_list		compat_sys_set_robust_list
+ 312	i386	get_robust_list		sys_get_robust_list		compat_sys_get_robust_list
+ 313	i386	splice			sys_splice
+-314	i386	sync_file_range		sys_sync_file_range		compat_sys_x86_sync_file_range
++314	i386	sync_file_range		sys_sync_file_range		compat_sys_ia32_sync_file_range
+ 315	i386	tee			sys_tee
+ 316	i386	vmsplice		sys_vmsplice			compat_sys_vmsplice
+ 317	i386	move_pages		sys_move_pages			compat_sys_move_pages
+@@ -335,7 +335,7 @@
+ 321	i386	signalfd		sys_signalfd			compat_sys_signalfd
+ 322	i386	timerfd_create		sys_timerfd_create
+ 323	i386	eventfd			sys_eventfd
+-324	i386	fallocate		sys_fallocate			compat_sys_x86_fallocate
++324	i386	fallocate		sys_fallocate			compat_sys_ia32_fallocate
+ 325	i386	timerfd_settime		sys_timerfd_settime32
+ 326	i386	timerfd_gettime		sys_timerfd_gettime32
+ 327	i386	signalfd4		sys_signalfd4			compat_sys_signalfd4
+diff --git a/arch/x86/ia32/sys_ia32.c b/arch/x86/ia32/sys_ia32.c
+index 2179030..a189dc6 100644
+--- a/arch/x86/ia32/sys_ia32.c
++++ b/arch/x86/ia32/sys_ia32.c
+@@ -52,14 +52,14 @@
+ #define AA(__x)		((unsigned long)(__x))
  
- config FORCE_DYNAMIC_FTRACE
- 	def_bool y
-@@ -80,6 +79,7 @@ config X86
- 	select ARCH_HAS_STRICT_KERNEL_RWX
- 	select ARCH_HAS_STRICT_MODULE_RWX
- 	select ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
-+	select ARCH_HAS_SYSCALL_WRAPPER
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
- 	select ARCH_MIGHT_HAVE_ACPI_PDC		if ACPI
-diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index 149bf54..6062e8e 100644
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -333,20 +333,7 @@ static __always_inline void do_syscall_32_irqs_on(struct pt_regs *regs)
  
- 	if (likely(nr < IA32_NR_syscalls)) {
- 		nr = array_index_nospec(nr, IA32_NR_syscalls);
--#ifdef CONFIG_IA32_EMULATION
- 		regs->ax = ia32_sys_call_table[nr](regs);
--#else
--		/*
--		 * It's possible that a 32-bit syscall implementation
--		 * takes a 64-bit parameter but nonetheless assumes that
--		 * the high bits are zero.  Make sure we zero-extend all
--		 * of the args.
--		 */
--		regs->ax = ia32_sys_call_table[nr](
--			(unsigned int)regs->bx, (unsigned int)regs->cx,
--			(unsigned int)regs->dx, (unsigned int)regs->si,
--			(unsigned int)regs->di, (unsigned int)regs->bp);
--#endif /* CONFIG_IA32_EMULATION */
- 	}
- 
- 	syscall_return_slowpath(regs);
-@@ -439,9 +426,7 @@ __visible long do_fast_syscall_32(struct pt_regs *regs)
- }
- #endif
- 
--#ifdef CONFIG_X86_64
- SYSCALL_DEFINE0(ni_syscall)
+-COMPAT_SYSCALL_DEFINE3(x86_truncate64, const char __user *, filename,
++COMPAT_SYSCALL_DEFINE3(ia32_truncate64, const char __user *, filename,
+ 		       unsigned long, offset_low, unsigned long, offset_high)
  {
- 	return -ENOSYS;
+ 	return ksys_truncate(filename,
+ 			    ((loff_t) offset_high << 32) | offset_low);
  }
--#endif
-diff --git a/arch/x86/entry/syscall_32.c b/arch/x86/entry/syscall_32.c
-index 41ec9c6..097413c 100644
---- a/arch/x86/entry/syscall_32.c
-+++ b/arch/x86/entry/syscall_32.c
-@@ -4,33 +4,22 @@
- #include <linux/linkage.h>
- #include <linux/sys.h>
- #include <linux/cache.h>
-+#include <linux/syscalls.h>
- #include <asm/unistd.h>
- #include <asm/syscall.h>
  
--#ifdef CONFIG_IA32_EMULATION
--/* On X86_64, we use struct pt_regs * to pass parameters to syscalls */
- #define __SYSCALL_I386(nr, sym) extern asmlinkage long __ia32_##sym(const struct pt_regs *);
--#define __sys_ni_syscall __ia32_sys_ni_syscall
--#else /* CONFIG_IA32_EMULATION */
--#define __SYSCALL_I386(nr, sym) extern asmlinkage long sym(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long);
--extern asmlinkage long sys_ni_syscall(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long);
--#define __sys_ni_syscall sys_ni_syscall
--#endif /* CONFIG_IA32_EMULATION */
+-COMPAT_SYSCALL_DEFINE3(x86_ftruncate64, unsigned int, fd,
++COMPAT_SYSCALL_DEFINE3(ia32_ftruncate64, unsigned int, fd,
+ 		       unsigned long, offset_low, unsigned long, offset_high)
+ {
+ 	return ksys_ftruncate(fd, ((loff_t) offset_high << 32) | offset_low);
+@@ -97,7 +97,7 @@ static int cp_stat64(struct stat64 __user *ubuf, struct kstat *stat)
+ 	return 0;
+ }
  
- #include <asm/syscalls_32.h>
- #undef __SYSCALL_I386
+-COMPAT_SYSCALL_DEFINE2(x86_stat64, const char __user *, filename,
++COMPAT_SYSCALL_DEFINE2(ia32_stat64, const char __user *, filename,
+ 		       struct stat64 __user *, statbuf)
+ {
+ 	struct kstat stat;
+@@ -108,7 +108,7 @@ COMPAT_SYSCALL_DEFINE2(x86_stat64, const char __user *, filename,
+ 	return ret;
+ }
  
--#ifdef CONFIG_IA32_EMULATION
- #define __SYSCALL_I386(nr, sym) [nr] = __ia32_##sym,
--#else /* CONFIG_IA32_EMULATION */
--#define __SYSCALL_I386(nr, sym) [nr] = sym,
--#endif /* CONFIG_IA32_EMULATION */
+-COMPAT_SYSCALL_DEFINE2(x86_lstat64, const char __user *, filename,
++COMPAT_SYSCALL_DEFINE2(ia32_lstat64, const char __user *, filename,
+ 		       struct stat64 __user *, statbuf)
+ {
+ 	struct kstat stat;
+@@ -118,7 +118,7 @@ COMPAT_SYSCALL_DEFINE2(x86_lstat64, const char __user *, filename,
+ 	return ret;
+ }
  
- __visible const sys_call_ptr_t ia32_sys_call_table[__NR_ia32_syscall_max+1] = {
- 	/*
- 	 * Smells like a compiler bug -- it doesn't work
- 	 * when the & below is removed.
- 	 */
--	[0 ... __NR_ia32_syscall_max] = &__sys_ni_syscall,
-+	[0 ... __NR_ia32_syscall_max] = &__ia32_sys_ni_syscall,
- #include <asm/syscalls_32.h>
+-COMPAT_SYSCALL_DEFINE2(x86_fstat64, unsigned int, fd,
++COMPAT_SYSCALL_DEFINE2(ia32_fstat64, unsigned int, fd,
+ 		       struct stat64 __user *, statbuf)
+ {
+ 	struct kstat stat;
+@@ -128,7 +128,7 @@ COMPAT_SYSCALL_DEFINE2(x86_fstat64, unsigned int, fd,
+ 	return ret;
+ }
+ 
+-COMPAT_SYSCALL_DEFINE4(x86_fstatat, unsigned int, dfd,
++COMPAT_SYSCALL_DEFINE4(ia32_fstatat64, unsigned int, dfd,
+ 		       const char __user *, filename,
+ 		       struct stat64 __user *, statbuf, int, flag)
+ {
+@@ -156,7 +156,7 @@ struct mmap_arg_struct32 {
+ 	unsigned int offset;
  };
-diff --git a/arch/x86/include/asm/syscall.h b/arch/x86/include/asm/syscall.h
-index 1ef8d7b..e413c83 100644
---- a/arch/x86/include/asm/syscall.h
-+++ b/arch/x86/include/asm/syscall.h
-@@ -16,13 +16,7 @@
- #include <asm/thread_info.h>	/* for TS_COMPAT */
- #include <asm/unistd.h>
  
--#ifdef CONFIG_X86_64
- typedef asmlinkage long (*sys_call_ptr_t)(const struct pt_regs *);
--#else
--typedef asmlinkage long (*sys_call_ptr_t)(unsigned long, unsigned long,
--					  unsigned long, unsigned long,
--					  unsigned long, unsigned long);
--#endif /* CONFIG_X86_64 */
- extern const sys_call_ptr_t sys_call_table[];
+-COMPAT_SYSCALL_DEFINE1(x86_mmap, struct mmap_arg_struct32 __user *, arg)
++COMPAT_SYSCALL_DEFINE1(ia32_mmap, struct mmap_arg_struct32 __user *, arg)
+ {
+ 	struct mmap_arg_struct32 a;
  
- #if defined(CONFIG_X86_32)
-diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
-index 0f126e4..5e13e2c 100644
---- a/arch/x86/include/asm/syscall_wrapper.h
-+++ b/arch/x86/include/asm/syscall_wrapper.h
-@@ -11,6 +11,47 @@ struct pt_regs;
- extern asmlinkage long __x64_sys_ni_syscall(const struct pt_regs *regs);
- extern asmlinkage long __ia32_sys_ni_syscall(const struct pt_regs *regs);
+@@ -171,14 +171,14 @@ COMPAT_SYSCALL_DEFINE1(x86_mmap, struct mmap_arg_struct32 __user *, arg)
+ }
  
-+/*
-+ * Instead of the generic __SYSCALL_DEFINEx() definition, the x86 version takes
-+ * struct pt_regs *regs as the only argument of the syscall stub(s) named as:
-+ * __x64_sys_*()         - 64-bit native syscall
-+ * __ia32_sys_*()        - 32-bit native syscall or common compat syscall
-+ * __ia32_compat_sys_*() - 32-bit compat syscall
-+ * __x32_compat_sys_*()  - 64-bit X32 compat syscall
-+ *
-+ * The registers are decoded according to the ABI:
-+ * 64-bit: RDI, RSI, RDX, R10, R8, R9
-+ * 32-bit: EBX, ECX, EDX, ESI, EDI, EBP
-+ *
-+ * The stub then passes the decoded arguments to the __se_sys_*() wrapper to
-+ * perform sign-extension (omitted for zero-argument syscalls).  Finally the
-+ * arguments are passed to the __do_sys_*() function which is the actual
-+ * syscall.  These wrappers are marked as inline so the compiler can optimize
-+ * the functions where appropriate.
-+ *
-+ * Example assembly (slightly re-ordered for better readability):
-+ *
-+ * <__x64_sys_recv>:		<-- syscall with 4 parameters
-+ *	callq	<__fentry__>
-+ *
-+ *	mov	0x70(%rdi),%rdi	<-- decode regs->di
-+ *	mov	0x68(%rdi),%rsi	<-- decode regs->si
-+ *	mov	0x60(%rdi),%rdx	<-- decode regs->dx
-+ *	mov	0x38(%rdi),%rcx	<-- decode regs->r10
-+ *
-+ *	xor	%r9d,%r9d	<-- clear %r9
-+ *	xor	%r8d,%r8d	<-- clear %r8
-+ *
-+ *	callq	__sys_recvfrom	<-- do the actual work in __sys_recvfrom()
-+ *				    which takes 6 arguments
-+ *
-+ *	cltq			<-- extend return value to 64-bit
-+ *	retq			<-- return
-+ *
-+ * This approach avoids leaking random user-provided register content down
-+ * the call chain.
-+ */
-+
- /* Mapping of registers to parameters for syscalls on x86-64 and x32 */
- #define SC_X86_64_REGS_TO_ARGS(x, ...)					\
- 	__MAP(x,__SC_ARGS						\
-@@ -68,6 +109,26 @@ extern asmlinkage long __ia32_sys_ni_syscall(const struct pt_regs *regs);
- #define __X64_SYS_NI(name)
- #endif /* CONFIG_X86_64 */
+ /* warning: next two assume little endian */
+-COMPAT_SYSCALL_DEFINE5(x86_pread, unsigned int, fd, char __user *, ubuf,
++COMPAT_SYSCALL_DEFINE5(ia32_pread64, unsigned int, fd, char __user *, ubuf,
+ 		       u32, count, u32, poslo, u32, poshi)
+ {
+ 	return ksys_pread64(fd, ubuf, count,
+ 			    ((loff_t)AA(poshi) << 32) | AA(poslo));
+ }
  
-+#if defined(CONFIG_X86_32) || defined(CONFIG_IA32_EMULATION)
-+#define __IA32_SYS_STUB0(name)						\
-+	__SYS_STUB0(ia32, sys_##name)
-+
-+#define __IA32_SYS_STUBx(x, name, ...)					\
-+	__SYS_STUBx(ia32, sys##name,					\
-+		    SC_IA32_REGS_TO_ARGS(x, __VA_ARGS__))
-+
-+#define __IA32_COND_SYSCALL(name)					\
-+	__COND_SYSCALL(ia32, sys_##name)
-+
-+#define __IA32_SYS_NI(name)						\
-+	__SYS_NI(ia32, sys_##name)
-+#else /* CONFIG_X86_32 || CONFIG_IA32_EMULATION */
-+#define __IA32_SYS_STUB0(name)
-+#define __IA32_SYS_STUBx(x, name, ...)
-+#define __IA32_COND_SYSCALL(name)
-+#define __IA32_SYS_NI(name)
-+#endif /* CONFIG_X86_32 || CONFIG_IA32_EMULATION */
-+
- #ifdef CONFIG_IA32_EMULATION
+-COMPAT_SYSCALL_DEFINE5(x86_pwrite, unsigned int, fd, const char __user *, ubuf,
++COMPAT_SYSCALL_DEFINE5(ia32_pwrite64, unsigned int, fd, const char __user *, ubuf,
+ 		       u32, count, u32, poslo, u32, poshi)
+ {
+ 	return ksys_pwrite64(fd, ubuf, count,
+@@ -190,7 +190,7 @@ COMPAT_SYSCALL_DEFINE5(x86_pwrite, unsigned int, fd, const char __user *, ubuf,
+  * Some system calls that need sign extended arguments. This could be
+  * done by a generic wrapper.
+  */
+-COMPAT_SYSCALL_DEFINE6(x86_fadvise64_64, int, fd, __u32, offset_low,
++COMPAT_SYSCALL_DEFINE6(ia32_fadvise64_64, int, fd, __u32, offset_low,
+ 		       __u32, offset_high, __u32, len_low, __u32, len_high,
+ 		       int, advice)
+ {
+@@ -200,13 +200,13 @@ COMPAT_SYSCALL_DEFINE6(x86_fadvise64_64, int, fd, __u32, offset_low,
+ 				 advice);
+ }
+ 
+-COMPAT_SYSCALL_DEFINE4(x86_readahead, int, fd, unsigned int, off_lo,
++COMPAT_SYSCALL_DEFINE4(ia32_readahead, int, fd, unsigned int, off_lo,
+ 		       unsigned int, off_hi, size_t, count)
+ {
+ 	return ksys_readahead(fd, ((u64)off_hi << 32) | off_lo, count);
+ }
+ 
+-COMPAT_SYSCALL_DEFINE6(x86_sync_file_range, int, fd, unsigned int, off_low,
++COMPAT_SYSCALL_DEFINE6(ia32_sync_file_range, int, fd, unsigned int, off_low,
+ 		       unsigned int, off_hi, unsigned int, n_low,
+ 		       unsigned int, n_hi, int, flags)
+ {
+@@ -215,14 +215,14 @@ COMPAT_SYSCALL_DEFINE6(x86_sync_file_range, int, fd, unsigned int, off_low,
+ 				    ((u64)n_hi << 32) | n_low, flags);
+ }
+ 
+-COMPAT_SYSCALL_DEFINE5(x86_fadvise64, int, fd, unsigned int, offset_lo,
++COMPAT_SYSCALL_DEFINE5(ia32_fadvise64, int, fd, unsigned int, offset_lo,
+ 		       unsigned int, offset_hi, size_t, len, int, advice)
+ {
+ 	return ksys_fadvise64_64(fd, ((u64)offset_hi << 32) | offset_lo,
+ 				 len, advice);
+ }
+ 
+-COMPAT_SYSCALL_DEFINE6(x86_fallocate, int, fd, int, mode,
++COMPAT_SYSCALL_DEFINE6(ia32_fallocate, int, fd, int, mode,
+ 		       unsigned int, offset_lo, unsigned int, offset_hi,
+ 		       unsigned int, len_lo, unsigned int, len_hi)
+ {
+@@ -233,7 +233,7 @@ COMPAT_SYSCALL_DEFINE6(x86_fallocate, int, fd, int, mode,
  /*
-  * For IA32 emulation, we need to handle "compat" syscalls *and* create
-@@ -90,27 +151,11 @@ extern asmlinkage long __ia32_sys_ni_syscall(const struct pt_regs *regs);
- #define __IA32_COMPAT_SYS_NI(name)					\
- 	__SYS_NI(ia32, compat_sys_##name)
- 
--#define __IA32_SYS_STUB0(name)						\
--	__SYS_STUB0(ia32, sys_##name)
--
--#define __IA32_SYS_STUBx(x, name, ...)					\
--	__SYS_STUBx(ia32, sys##name,					\
--		    SC_IA32_REGS_TO_ARGS(x, __VA_ARGS__))
--
--#define __IA32_COND_SYSCALL(name)					\
--	__COND_SYSCALL(ia32, sys_##name)
--
--#define __IA32_SYS_NI(name)						\
--	__SYS_NI(ia32, sys_##name)
- #else /* CONFIG_IA32_EMULATION */
- #define __IA32_COMPAT_SYS_STUB0(name)
- #define __IA32_COMPAT_SYS_STUBx(x, name, ...)
- #define __IA32_COMPAT_COND_SYSCALL(name)
- #define __IA32_COMPAT_SYS_NI(name)
--#define __IA32_SYS_STUB0(name)
--#define __IA32_SYS_STUBx(x, name, ...)
--#define __IA32_COND_SYSCALL(name)
--#define __IA32_SYS_NI(name)
- #endif /* CONFIG_IA32_EMULATION */
- 
- 
-@@ -180,40 +225,6 @@ extern asmlinkage long __ia32_sys_ni_syscall(const struct pt_regs *regs);
- 
- #endif /* CONFIG_COMPAT */
- 
--
--/*
-- * Instead of the generic __SYSCALL_DEFINEx() definition, this macro takes
-- * struct pt_regs *regs as the only argument of the syscall stub named
-- * __x64_sys_*(). It decodes just the registers it needs and passes them on to
-- * the __se_sys_*() wrapper performing sign extension and then to the
-- * __do_sys_*() function doing the actual job. These wrappers and functions
-- * are inlined (at least in very most cases), meaning that the assembly looks
-- * as follows (slightly re-ordered for better readability):
-- *
-- * <__x64_sys_recv>:		<-- syscall with 4 parameters
-- *	callq	<__fentry__>
-- *
-- *	mov	0x70(%rdi),%rdi	<-- decode regs->di
-- *	mov	0x68(%rdi),%rsi	<-- decode regs->si
-- *	mov	0x60(%rdi),%rdx	<-- decode regs->dx
-- *	mov	0x38(%rdi),%rcx	<-- decode regs->r10
-- *
-- *	xor	%r9d,%r9d	<-- clear %r9
-- *	xor	%r8d,%r8d	<-- clear %r8
-- *
-- *	callq	__sys_recvfrom	<-- do the actual work in __sys_recvfrom()
-- *				    which takes 6 arguments
-- *
-- *	cltq			<-- extend return value to 64-bit
-- *	retq			<-- return
-- *
-- * This approach avoids leaking random user-provided register content down
-- * the call chain.
-- *
-- * If IA32_EMULATION is enabled, this macro generates an additional wrapper
-- * named __ia32_sys_*() which decodes the struct pt_regs *regs according
-- * to the i386 calling convention (bx, cx, dx, si, di, bp).
-- */
- #define __SYSCALL_DEFINEx(x, name, ...)					\
- 	static long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__));	\
- 	static inline long __do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__));\
-diff --git a/arch/x86/include/asm/syscalls.h b/arch/x86/include/asm/syscalls.h
-index 91b7b6e..06cbdca 100644
---- a/arch/x86/include/asm/syscalls.h
-+++ b/arch/x86/include/asm/syscalls.h
-@@ -17,33 +17,4 @@
- /* kernel/ioport.c */
- long ksys_ioperm(unsigned long from, unsigned long num, int turn_on);
- 
--#ifdef CONFIG_X86_32
--/*
-- * These definitions are only valid on pure 32-bit systems; x86-64 uses a
-- * different syscall calling convention
-- */
--asmlinkage long sys_ioperm(unsigned long, unsigned long, int);
--asmlinkage long sys_iopl(unsigned int);
--
--/* kernel/ldt.c */
--asmlinkage long sys_modify_ldt(int, void __user *, unsigned long);
--
--/* kernel/signal.c */
--asmlinkage long sys_rt_sigreturn(void);
--
--/* kernel/tls.c */
--asmlinkage long sys_set_thread_area(struct user_desc __user *);
--asmlinkage long sys_get_thread_area(struct user_desc __user *);
--
--/* X86_32 only */
--
--/* kernel/signal.c */
--asmlinkage long sys_sigreturn(void);
--
--/* kernel/vm86_32.c */
--struct vm86_struct;
--asmlinkage long sys_vm86old(struct vm86_struct __user *);
--asmlinkage long sys_vm86(unsigned long, unsigned long);
--
--#endif /* CONFIG_X86_32 */
- #endif /* _ASM_X86_SYSCALLS_H */
+  * The 32-bit clone ABI is CONFIG_CLONE_BACKWARDS
+  */
+-COMPAT_SYSCALL_DEFINE5(x86_clone, unsigned long, clone_flags,
++COMPAT_SYSCALL_DEFINE5(ia32_clone, unsigned long, clone_flags,
+ 		       unsigned long, newsp, int __user *, parent_tidptr,
+ 		       unsigned long, tls_val, int __user *, child_tidptr)
+ {
