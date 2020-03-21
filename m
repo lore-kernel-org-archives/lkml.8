@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCB0C4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316C9C43333
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8615C20842
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12AC220786
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgCUPx4 convert rfc822-to-8bit (ORCPT
+        id S1727835AbgCUPx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:53:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39012 "EHLO
+        Sat, 21 Mar 2020 11:53:59 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39045 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727128AbgCUPxy (ORCPT
+        with ESMTP id S1727757AbgCUPx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:53:54 -0400
+        Sat, 21 Mar 2020 11:53:57 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFgRW-0005Qn-Pl; Sat, 21 Mar 2020 16:53:46 +0100
+        id 1jFgRa-0005Tm-PF; Sat, 21 Mar 2020 16:53:50 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6A4E61C22EF;
-        Sat, 21 Mar 2020 16:53:46 +0100 (CET)
-Date:   Sat, 21 Mar 2020 15:53:46 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 565D41C22EF;
+        Sat, 21 Mar 2020 16:53:50 +0100 (CET)
+Date:   Sat, 21 Mar 2020 15:53:49 -0000
+From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] lockdep: Introduce wait-type checks
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+Subject: [tip: locking/core] hexagon: Remove mm.h from asm/uaccess.h
+Cc:     kbuild test robot <lkp@intel.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200321113242.427089655@linutronix.de>
-References: <20200321113242.427089655@linutronix.de>
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200321113241.531525286@linutronix.de>
+References: <20200321113241.531525286@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158480602608.28353.12590215180885693376.tip-bot2@tip-bot2>
+Message-ID: <158480602999.28353.9128065090343405172.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -57,777 +58,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     de8f5e4f2dc1f032b46afda0a78cab5456974f89
-Gitweb:        https://git.kernel.org/tip/de8f5e4f2dc1f032b46afda0a78cab5456974f89
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Sat, 21 Mar 2020 12:26:01 +01:00
+Commit-ID:     3f332aa0a7659789984f05f691a18df23b961fee
+Gitweb:        https://git.kernel.org/tip/3f332aa0a7659789984f05f691a18df23b961fee
+Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate:    Sat, 21 Mar 2020 12:25:52 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Sat, 21 Mar 2020 16:00:24 +01:00
+CommitterDate: Sat, 21 Mar 2020 16:00:21 +01:00
 
-lockdep: Introduce wait-type checks
+hexagon: Remove mm.h from asm/uaccess.h
 
-Extend lockdep to validate lock wait-type context.
+The defconfig compiles without linux/mm.h. With mm.h included the
+include chain leands to:
+|   CC      kernel/locking/percpu-rwsem.o
+| In file included from include/linux/huge_mm.h:8,
+|                  from include/linux/mm.h:567,
+|                  from arch/hexagon/include/asm/uaccess.h:,
+|                  from include/linux/uaccess.h:11,
+|                  from include/linux/sched/task.h:11,
+|                  from include/linux/sched/signal.h:9,
+|                  from include/linux/rcuwait.h:6,
+|                  from include/linux/percpu-rwsem.h:8,
+|                  from kernel/locking/percpu-rwsem.c:6:
+| include/linux/fs.h:1422:29: error: array type has incomplete element type 'struct percpu_rw_semaphore'
+|  1422 |  struct percpu_rw_semaphore rw_sem[SB_FREEZE_LEVELS];
 
-The current wait-types are:
+once rcuwait.h includes linux/sched/signal.h.
 
-	LD_WAIT_FREE,		/* wait free, rcu etc.. */
-	LD_WAIT_SPIN,		/* spin loops, raw_spinlock_t etc.. */
-	LD_WAIT_CONFIG,		/* CONFIG_PREEMPT_LOCK, spinlock_t etc.. */
-	LD_WAIT_SLEEP,		/* sleeping locks, mutex_t etc.. */
+Remove the linux/mm.h include.
 
-Where lockdep validates that the current lock (the one being acquired)
-fits in the current wait-context (as generated by the held stack).
-
-This ensures that there is no attempt to acquire mutexes while holding
-spinlocks, to acquire spinlocks while holding raw_spinlocks and so on. In
-other words, its a more fancy might_sleep().
-
-Obviously RCU made the entire ordeal more complex than a simple single
-value test because RCU can be acquired in (pretty much) any context and
-while it presents a context to nested locks it is not the same as it
-got acquired in.
-
-Therefore its necessary to split the wait_type into two values, one
-representing the acquire (outer) and one representing the nested context
-(inner). For most 'normal' locks these two are the same.
-
-[ To make static initialization easier we have the rule that:
-  .outer == INV means .outer == .inner; because INV == 0. ]
-
-It further means that its required to find the minimal .inner of the held
-stack to compare against the outer of the new lock; because while 'normal'
-RCU presents a CONFIG type to nested locks, if it is taken while already
-holding a SPIN type it obviously doesn't relax the rules.
-
-Below is an example output generated by the trivial test code:
-
-  raw_spin_lock(&foo);
-  spin_lock(&bar);
-  spin_unlock(&bar);
-  raw_spin_unlock(&foo);
-
- [ BUG: Invalid wait context ]
- -----------------------------
- swapper/0/1 is trying to lock:
- ffffc90000013f20 (&bar){....}-{3:3}, at: kernel_init+0xdb/0x187
- other info that might help us debug this:
- 1 lock held by swapper/0/1:
-  #0: ffffc90000013ee0 (&foo){+.+.}-{2:2}, at: kernel_init+0xd1/0x187
-
-The way to read it is to look at the new -{n,m} part in the lock
-description; -{3:3} for the attempted lock, and try and match that up to
-the held locks, which in this case is the one: -{2,2}.
-
-This tells that the acquiring lock requires a more relaxed environment than
-presented by the lock stack.
-
-Currently only the normal locks and RCU are converted, the rest of the
-lockdep users defaults to .inner = INV which is ignored. More conversions
-can be done when desired.
-
-The check for spinlock_t nesting is not enabled by default. It's a separate
-config option for now as there are known problems which are currently
-addressed. The config option allows to identify these problems and to
-verify that the solutions found are indeed solving them.
-
-The config switch will be removed and the checks will permanently enabled
-once the vast majority of issues has been addressed.
-
-[ bigeasy: Move LD_WAIT_FREE,… out of CONFIG_LOCKDEP to avoid compile
-	   failure with CONFIG_DEBUG_SPINLOCK + !CONFIG_LOCKDEP]
-[ tglx: Add the config option ]
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200321113242.427089655@linutronix.de
+Link: https://lkml.kernel.org/r/20200321113241.531525286@linutronix.de
 ---
- include/linux/irqflags.h        |   8 +-
- include/linux/lockdep.h         |  71 +++++++++++++---
- include/linux/mutex.h           |   7 +-
- include/linux/rwlock_types.h    |   6 +-
- include/linux/rwsem.h           |   6 +-
- include/linux/sched.h           |   1 +-
- include/linux/spinlock.h        |  35 +++++---
- include/linux/spinlock_types.h  |  24 ++++-
- kernel/irq/handle.c             |   7 ++-
- kernel/locking/lockdep.c        | 138 +++++++++++++++++++++++++++++--
- kernel/locking/mutex-debug.c    |   2 +-
- kernel/locking/rwsem.c          |   2 +-
- kernel/locking/spinlock_debug.c |   6 +-
- kernel/rcu/update.c             |  24 +++--
- lib/Kconfig.debug               |  17 ++++-
- 15 files changed, 307 insertions(+), 47 deletions(-)
+ arch/hexagon/include/asm/uaccess.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
-index 21619c9..fdaf286 100644
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -37,7 +37,12 @@
- # define trace_softirqs_enabled(p)	((p)->softirqs_enabled)
- # define trace_hardirq_enter()			\
- do {						\
--	current->hardirq_context++;		\
-+	if (!current->hardirq_context++)	\
-+		current->hardirq_threaded = 0;	\
-+} while (0)
-+# define trace_hardirq_threaded()		\
-+do {						\
-+	current->hardirq_threaded = 1;		\
- } while (0)
- # define trace_hardirq_exit()			\
- do {						\
-@@ -59,6 +64,7 @@ do {						\
- # define trace_hardirqs_enabled(p)	0
- # define trace_softirqs_enabled(p)	0
- # define trace_hardirq_enter()		do { } while (0)
-+# define trace_hardirq_threaded()	do { } while (0)
- # define trace_hardirq_exit()		do { } while (0)
- # define lockdep_softirq_enter()	do { } while (0)
- # define lockdep_softirq_exit()		do { } while (0)
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 664f52c..425b4ce 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -21,6 +21,22 @@ extern int lock_stat;
- 
- #include <linux/types.h>
- 
-+enum lockdep_wait_type {
-+	LD_WAIT_INV = 0,	/* not checked, catch all */
-+
-+	LD_WAIT_FREE,		/* wait free, rcu etc.. */
-+	LD_WAIT_SPIN,		/* spin loops, raw_spinlock_t etc.. */
-+
-+#ifdef CONFIG_PROVE_RAW_LOCK_NESTING
-+	LD_WAIT_CONFIG,		/* CONFIG_PREEMPT_LOCK, spinlock_t etc.. */
-+#else
-+	LD_WAIT_CONFIG = LD_WAIT_SPIN,
-+#endif
-+	LD_WAIT_SLEEP,		/* sleeping locks, mutex_t etc.. */
-+
-+	LD_WAIT_MAX,		/* must be last */
-+};
-+
- #ifdef CONFIG_LOCKDEP
- 
- #include <linux/linkage.h>
-@@ -111,6 +127,9 @@ struct lock_class {
- 	int				name_version;
- 	const char			*name;
- 
-+	short				wait_type_inner;
-+	short				wait_type_outer;
-+
- #ifdef CONFIG_LOCK_STAT
- 	unsigned long			contention_point[LOCKSTAT_POINTS];
- 	unsigned long			contending_point[LOCKSTAT_POINTS];
-@@ -158,6 +177,8 @@ struct lockdep_map {
- 	struct lock_class_key		*key;
- 	struct lock_class		*class_cache[NR_LOCKDEP_CACHING_CLASSES];
- 	const char			*name;
-+	short				wait_type_outer; /* can be taken in this context */
-+	short				wait_type_inner; /* presents this context */
- #ifdef CONFIG_LOCK_STAT
- 	int				cpu;
- 	unsigned long			ip;
-@@ -299,8 +320,21 @@ extern void lockdep_unregister_key(struct lock_class_key *key);
-  * to lockdep:
+diff --git a/arch/hexagon/include/asm/uaccess.h b/arch/hexagon/include/asm/uaccess.h
+index 00cb38f..c1019a7 100644
+--- a/arch/hexagon/include/asm/uaccess.h
++++ b/arch/hexagon/include/asm/uaccess.h
+@@ -10,7 +10,6 @@
+ /*
+  * User space memory access functions
   */
- 
--extern void lockdep_init_map(struct lockdep_map *lock, const char *name,
--			     struct lock_class_key *key, int subclass);
-+extern void lockdep_init_map_waits(struct lockdep_map *lock, const char *name,
-+	struct lock_class_key *key, int subclass, short inner, short outer);
-+
-+static inline void
-+lockdep_init_map_wait(struct lockdep_map *lock, const char *name,
-+		      struct lock_class_key *key, int subclass, short inner)
-+{
-+	lockdep_init_map_waits(lock, name, key, subclass, inner, LD_WAIT_INV);
-+}
-+
-+static inline void lockdep_init_map(struct lockdep_map *lock, const char *name,
-+			     struct lock_class_key *key, int subclass)
-+{
-+	lockdep_init_map_wait(lock, name, key, subclass, LD_WAIT_INV);
-+}
+-#include <linux/mm.h>
+ #include <asm/sections.h>
  
  /*
-  * Reinitialize a lock key - for cases where there is special locking or
-@@ -308,18 +342,29 @@ extern void lockdep_init_map(struct lockdep_map *lock, const char *name,
-  * of dependencies wrong: they are either too broad (they need a class-split)
-  * or they are too narrow (they suffer from a false class-split):
-  */
--#define lockdep_set_class(lock, key) \
--		lockdep_init_map(&(lock)->dep_map, #key, key, 0)
--#define lockdep_set_class_and_name(lock, key, name) \
--		lockdep_init_map(&(lock)->dep_map, name, key, 0)
--#define lockdep_set_class_and_subclass(lock, key, sub) \
--		lockdep_init_map(&(lock)->dep_map, #key, key, sub)
--#define lockdep_set_subclass(lock, sub)	\
--		lockdep_init_map(&(lock)->dep_map, #lock, \
--				 (lock)->dep_map.key, sub)
-+#define lockdep_set_class(lock, key)				\
-+	lockdep_init_map_waits(&(lock)->dep_map, #key, key, 0,	\
-+			       (lock)->dep_map.wait_type_inner,	\
-+			       (lock)->dep_map.wait_type_outer)
-+
-+#define lockdep_set_class_and_name(lock, key, name)		\
-+	lockdep_init_map_waits(&(lock)->dep_map, name, key, 0,	\
-+			       (lock)->dep_map.wait_type_inner,	\
-+			       (lock)->dep_map.wait_type_outer)
-+
-+#define lockdep_set_class_and_subclass(lock, key, sub)		\
-+	lockdep_init_map_waits(&(lock)->dep_map, #key, key, sub,\
-+			       (lock)->dep_map.wait_type_inner,	\
-+			       (lock)->dep_map.wait_type_outer)
-+
-+#define lockdep_set_subclass(lock, sub)					\
-+	lockdep_init_map_waits(&(lock)->dep_map, #lock, (lock)->dep_map.key, sub,\
-+			       (lock)->dep_map.wait_type_inner,		\
-+			       (lock)->dep_map.wait_type_outer)
- 
- #define lockdep_set_novalidate_class(lock) \
- 	lockdep_set_class_and_name(lock, &__lockdep_no_validate__, #lock)
-+
- /*
-  * Compare locking classes
-  */
-@@ -432,6 +477,10 @@ static inline void lockdep_set_selftest_task(struct task_struct *task)
- # define lock_set_class(l, n, k, s, i)		do { } while (0)
- # define lock_set_subclass(l, s, i)		do { } while (0)
- # define lockdep_init()				do { } while (0)
-+# define lockdep_init_map_waits(lock, name, key, sub, inner, outer) \
-+		do { (void)(name); (void)(key); } while (0)
-+# define lockdep_init_map_wait(lock, name, key, sub, inner) \
-+		do { (void)(name); (void)(key); } while (0)
- # define lockdep_init_map(lock, name, key, sub) \
- 		do { (void)(name); (void)(key); } while (0)
- # define lockdep_set_class(lock, key)		do { (void)(key); } while (0)
-diff --git a/include/linux/mutex.h b/include/linux/mutex.h
-index aca8f36..ae197cc 100644
---- a/include/linux/mutex.h
-+++ b/include/linux/mutex.h
-@@ -109,8 +109,11 @@ do {									\
- } while (0)
- 
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
--# define __DEP_MAP_MUTEX_INITIALIZER(lockname) \
--		, .dep_map = { .name = #lockname }
-+# define __DEP_MAP_MUTEX_INITIALIZER(lockname)			\
-+		, .dep_map = {					\
-+			.name = #lockname,			\
-+			.wait_type_inner = LD_WAIT_SLEEP,	\
-+		}
- #else
- # define __DEP_MAP_MUTEX_INITIALIZER(lockname)
- #endif
-diff --git a/include/linux/rwlock_types.h b/include/linux/rwlock_types.h
-index 857a72c..3bd03e1 100644
---- a/include/linux/rwlock_types.h
-+++ b/include/linux/rwlock_types.h
-@@ -22,7 +22,11 @@ typedef struct {
- #define RWLOCK_MAGIC		0xdeaf1eed
- 
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
--# define RW_DEP_MAP_INIT(lockname)	.dep_map = { .name = #lockname }
-+# define RW_DEP_MAP_INIT(lockname)					\
-+	.dep_map = {							\
-+		.name = #lockname,					\
-+		.wait_type_inner = LD_WAIT_CONFIG,			\
-+	}
- #else
- # define RW_DEP_MAP_INIT(lockname)
- #endif
-diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
-index 8a418d9..7e5b2a4 100644
---- a/include/linux/rwsem.h
-+++ b/include/linux/rwsem.h
-@@ -65,7 +65,11 @@ static inline int rwsem_is_locked(struct rw_semaphore *sem)
- /* Common initializer macros and functions */
- 
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
--# define __RWSEM_DEP_MAP_INIT(lockname) , .dep_map = { .name = #lockname }
-+# define __RWSEM_DEP_MAP_INIT(lockname)			\
-+	, .dep_map = {					\
-+		.name = #lockname,			\
-+		.wait_type_inner = LD_WAIT_SLEEP,	\
-+	}
- #else
- # define __RWSEM_DEP_MAP_INIT(lockname)
- #endif
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 0427849..4d3b9ec 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -970,6 +970,7 @@ struct task_struct {
- 
- #ifdef CONFIG_TRACE_IRQFLAGS
- 	unsigned int			irq_events;
-+	unsigned int			hardirq_threaded;
- 	unsigned long			hardirq_enable_ip;
- 	unsigned long			hardirq_disable_ip;
- 	unsigned int			hardirq_enable_event;
-diff --git a/include/linux/spinlock.h b/include/linux/spinlock.h
-index 031ce86..d3770b3 100644
---- a/include/linux/spinlock.h
-+++ b/include/linux/spinlock.h
-@@ -93,12 +93,13 @@
- 
- #ifdef CONFIG_DEBUG_SPINLOCK
-   extern void __raw_spin_lock_init(raw_spinlock_t *lock, const char *name,
--				   struct lock_class_key *key);
--# define raw_spin_lock_init(lock)				\
--do {								\
--	static struct lock_class_key __key;			\
--								\
--	__raw_spin_lock_init((lock), #lock, &__key);		\
-+				   struct lock_class_key *key, short inner);
-+
-+# define raw_spin_lock_init(lock)					\
-+do {									\
-+	static struct lock_class_key __key;				\
-+									\
-+	__raw_spin_lock_init((lock), #lock, &__key, LD_WAIT_SPIN);	\
- } while (0)
- 
- #else
-@@ -327,12 +328,26 @@ static __always_inline raw_spinlock_t *spinlock_check(spinlock_t *lock)
- 	return &lock->rlock;
- }
- 
--#define spin_lock_init(_lock)				\
--do {							\
--	spinlock_check(_lock);				\
--	raw_spin_lock_init(&(_lock)->rlock);		\
-+#ifdef CONFIG_DEBUG_SPINLOCK
-+
-+# define spin_lock_init(lock)					\
-+do {								\
-+	static struct lock_class_key __key;			\
-+								\
-+	__raw_spin_lock_init(spinlock_check(lock),		\
-+			     #lock, &__key, LD_WAIT_CONFIG);	\
-+} while (0)
-+
-+#else
-+
-+# define spin_lock_init(_lock)			\
-+do {						\
-+	spinlock_check(_lock);			\
-+	*(_lock) = __SPIN_LOCK_UNLOCKED(_lock);	\
- } while (0)
- 
-+#endif
-+
- static __always_inline void spin_lock(spinlock_t *lock)
- {
- 	raw_spin_lock(&lock->rlock);
-diff --git a/include/linux/spinlock_types.h b/include/linux/spinlock_types.h
-index 24b4e6f..6102e6b 100644
---- a/include/linux/spinlock_types.h
-+++ b/include/linux/spinlock_types.h
-@@ -33,8 +33,18 @@ typedef struct raw_spinlock {
- #define SPINLOCK_OWNER_INIT	((void *)-1L)
- 
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
--# define SPIN_DEP_MAP_INIT(lockname)	.dep_map = { .name = #lockname }
-+# define RAW_SPIN_DEP_MAP_INIT(lockname)		\
-+	.dep_map = {					\
-+		.name = #lockname,			\
-+		.wait_type_inner = LD_WAIT_SPIN,	\
-+	}
-+# define SPIN_DEP_MAP_INIT(lockname)			\
-+	.dep_map = {					\
-+		.name = #lockname,			\
-+		.wait_type_inner = LD_WAIT_CONFIG,	\
-+	}
- #else
-+# define RAW_SPIN_DEP_MAP_INIT(lockname)
- # define SPIN_DEP_MAP_INIT(lockname)
- #endif
- 
-@@ -51,7 +61,7 @@ typedef struct raw_spinlock {
- 	{					\
- 	.raw_lock = __ARCH_SPIN_LOCK_UNLOCKED,	\
- 	SPIN_DEBUG_INIT(lockname)		\
--	SPIN_DEP_MAP_INIT(lockname) }
-+	RAW_SPIN_DEP_MAP_INIT(lockname) }
- 
- #define __RAW_SPIN_LOCK_UNLOCKED(lockname)	\
- 	(raw_spinlock_t) __RAW_SPIN_LOCK_INITIALIZER(lockname)
-@@ -72,11 +82,17 @@ typedef struct spinlock {
- 	};
- } spinlock_t;
- 
-+#define ___SPIN_LOCK_INITIALIZER(lockname)	\
-+	{					\
-+	.raw_lock = __ARCH_SPIN_LOCK_UNLOCKED,	\
-+	SPIN_DEBUG_INIT(lockname)		\
-+	SPIN_DEP_MAP_INIT(lockname) }
-+
- #define __SPIN_LOCK_INITIALIZER(lockname) \
--	{ { .rlock = __RAW_SPIN_LOCK_INITIALIZER(lockname) } }
-+	{ { .rlock = ___SPIN_LOCK_INITIALIZER(lockname) } }
- 
- #define __SPIN_LOCK_UNLOCKED(lockname) \
--	(spinlock_t ) __SPIN_LOCK_INITIALIZER(lockname)
-+	(spinlock_t) __SPIN_LOCK_INITIALIZER(lockname)
- 
- #define DEFINE_SPINLOCK(x)	spinlock_t x = __SPIN_LOCK_UNLOCKED(x)
- 
-diff --git a/kernel/irq/handle.c b/kernel/irq/handle.c
-index a4ace61..16ee716 100644
---- a/kernel/irq/handle.c
-+++ b/kernel/irq/handle.c
-@@ -145,6 +145,13 @@ irqreturn_t __handle_irq_event_percpu(struct irq_desc *desc, unsigned int *flags
- 	for_each_action_of_desc(desc, action) {
- 		irqreturn_t res;
- 
-+		/*
-+		 * If this IRQ would be threaded under force_irqthreads, mark it so.
-+		 */
-+		if (irq_settings_can_thread(desc) &&
-+		    !(action->flags & (IRQF_NO_THREAD | IRQF_PERCPU | IRQF_ONESHOT)))
-+			trace_hardirq_threaded();
-+
- 		trace_irq_handler_entry(irq, action);
- 		res = action->handler(irq, action->dev_id);
- 		trace_irq_handler_exit(irq, action, res);
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 4c3b1cc..6b9f9f3 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -683,7 +683,9 @@ static void print_lock_name(struct lock_class *class)
- 
- 	printk(KERN_CONT " (");
- 	__print_lock_name(class);
--	printk(KERN_CONT "){%s}", usage);
-+	printk(KERN_CONT "){%s}-{%hd:%hd}", usage,
-+			class->wait_type_outer ?: class->wait_type_inner,
-+			class->wait_type_inner);
- }
- 
- static void print_lockdep_cache(struct lockdep_map *lock)
-@@ -1264,6 +1266,8 @@ register_lock_class(struct lockdep_map *lock, unsigned int subclass, int force)
- 	WARN_ON_ONCE(!list_empty(&class->locks_before));
- 	WARN_ON_ONCE(!list_empty(&class->locks_after));
- 	class->name_version = count_matching_names(class);
-+	class->wait_type_inner = lock->wait_type_inner;
-+	class->wait_type_outer = lock->wait_type_outer;
- 	/*
- 	 * We use RCU's safe list-add method to make
- 	 * parallel walking of the hash-list safe:
-@@ -3948,6 +3952,113 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
- 	return ret;
- }
- 
-+static int
-+print_lock_invalid_wait_context(struct task_struct *curr,
-+				struct held_lock *hlock)
-+{
-+	if (!debug_locks_off())
-+		return 0;
-+	if (debug_locks_silent)
-+		return 0;
-+
-+	pr_warn("\n");
-+	pr_warn("=============================\n");
-+	pr_warn("[ BUG: Invalid wait context ]\n");
-+	print_kernel_ident();
-+	pr_warn("-----------------------------\n");
-+
-+	pr_warn("%s/%d is trying to lock:\n", curr->comm, task_pid_nr(curr));
-+	print_lock(hlock);
-+
-+	pr_warn("other info that might help us debug this:\n");
-+	lockdep_print_held_locks(curr);
-+
-+	pr_warn("stack backtrace:\n");
-+	dump_stack();
-+
-+	return 0;
-+}
-+
-+/*
-+ * Verify the wait_type context.
-+ *
-+ * This check validates we takes locks in the right wait-type order; that is it
-+ * ensures that we do not take mutexes inside spinlocks and do not attempt to
-+ * acquire spinlocks inside raw_spinlocks and the sort.
-+ *
-+ * The entire thing is slightly more complex because of RCU, RCU is a lock that
-+ * can be taken from (pretty much) any context but also has constraints.
-+ * However when taken in a stricter environment the RCU lock does not loosen
-+ * the constraints.
-+ *
-+ * Therefore we must look for the strictest environment in the lock stack and
-+ * compare that to the lock we're trying to acquire.
-+ */
-+static int check_wait_context(struct task_struct *curr, struct held_lock *next)
-+{
-+	short next_inner = hlock_class(next)->wait_type_inner;
-+	short next_outer = hlock_class(next)->wait_type_outer;
-+	short curr_inner;
-+	int depth;
-+
-+	if (!curr->lockdep_depth || !next_inner || next->trylock)
-+		return 0;
-+
-+	if (!next_outer)
-+		next_outer = next_inner;
-+
-+	/*
-+	 * Find start of current irq_context..
-+	 */
-+	for (depth = curr->lockdep_depth - 1; depth >= 0; depth--) {
-+		struct held_lock *prev = curr->held_locks + depth;
-+		if (prev->irq_context != next->irq_context)
-+			break;
-+	}
-+	depth++;
-+
-+	/*
-+	 * Set appropriate wait type for the context; for IRQs we have to take
-+	 * into account force_irqthread as that is implied by PREEMPT_RT.
-+	 */
-+	if (curr->hardirq_context) {
-+		/*
-+		 * Check if force_irqthreads will run us threaded.
-+		 */
-+		if (curr->hardirq_threaded)
-+			curr_inner = LD_WAIT_CONFIG;
-+		else
-+			curr_inner = LD_WAIT_SPIN;
-+	} else if (curr->softirq_context) {
-+		/*
-+		 * Softirqs are always threaded.
-+		 */
-+		curr_inner = LD_WAIT_CONFIG;
-+	} else {
-+		curr_inner = LD_WAIT_MAX;
-+	}
-+
-+	for (; depth < curr->lockdep_depth; depth++) {
-+		struct held_lock *prev = curr->held_locks + depth;
-+		short prev_inner = hlock_class(prev)->wait_type_inner;
-+
-+		if (prev_inner) {
-+			/*
-+			 * We can have a bigger inner than a previous one
-+			 * when outer is smaller than inner, as with RCU.
-+			 *
-+			 * Also due to trylocks.
-+			 */
-+			curr_inner = min(curr_inner, prev_inner);
-+		}
-+	}
-+
-+	if (next_outer > curr_inner)
-+		return print_lock_invalid_wait_context(curr, next);
-+
-+	return 0;
-+}
-+
- #else /* CONFIG_PROVE_LOCKING */
- 
- static inline int
-@@ -3967,13 +4078,20 @@ static inline int separate_irq_context(struct task_struct *curr,
- 	return 0;
- }
- 
-+static inline int check_wait_context(struct task_struct *curr,
-+				     struct held_lock *next)
-+{
-+	return 0;
-+}
-+
- #endif /* CONFIG_PROVE_LOCKING */
- 
- /*
-  * Initialize a lock instance's lock-class mapping info:
-  */
--void lockdep_init_map(struct lockdep_map *lock, const char *name,
--		      struct lock_class_key *key, int subclass)
-+void lockdep_init_map_waits(struct lockdep_map *lock, const char *name,
-+			    struct lock_class_key *key, int subclass,
-+			    short inner, short outer)
- {
- 	int i;
- 
-@@ -3994,6 +4112,9 @@ void lockdep_init_map(struct lockdep_map *lock, const char *name,
- 
- 	lock->name = name;
- 
-+	lock->wait_type_outer = outer;
-+	lock->wait_type_inner = inner;
-+
- 	/*
- 	 * No key, no joy, we need to hash something.
- 	 */
-@@ -4027,7 +4148,7 @@ void lockdep_init_map(struct lockdep_map *lock, const char *name,
- 		raw_local_irq_restore(flags);
- 	}
- }
--EXPORT_SYMBOL_GPL(lockdep_init_map);
-+EXPORT_SYMBOL_GPL(lockdep_init_map_waits);
- 
- struct lock_class_key __lockdep_no_validate__;
- EXPORT_SYMBOL_GPL(__lockdep_no_validate__);
-@@ -4128,7 +4249,7 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
- 
- 	class_idx = class - lock_classes;
- 
--	if (depth) {
-+	if (depth) { /* we're holding locks */
- 		hlock = curr->held_locks + depth - 1;
- 		if (hlock->class_idx == class_idx && nest_lock) {
- 			if (!references)
-@@ -4170,6 +4291,9 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
- #endif
- 	hlock->pin_count = pin_count;
- 
-+	if (check_wait_context(curr, hlock))
-+		return 0;
-+
- 	/* Initialize the lock usage bit */
- 	if (!mark_usage(curr, hlock, check))
- 		return 0;
-@@ -4405,7 +4529,9 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
- 		return 0;
- 	}
- 
--	lockdep_init_map(lock, name, key, 0);
-+	lockdep_init_map_waits(lock, name, key, 0,
-+			       lock->wait_type_inner,
-+			       lock->wait_type_outer);
- 	class = register_lock_class(lock, subclass, 0);
- 	hlock->class_idx = class - lock_classes;
- 
-diff --git a/kernel/locking/mutex-debug.c b/kernel/locking/mutex-debug.c
-index 771d4ca..a7276aa 100644
---- a/kernel/locking/mutex-debug.c
-+++ b/kernel/locking/mutex-debug.c
-@@ -85,7 +85,7 @@ void debug_mutex_init(struct mutex *lock, const char *name,
- 	 * Make sure we are not reinitializing a held lock:
- 	 */
- 	debug_check_no_locks_freed((void *)lock, sizeof(*lock));
--	lockdep_init_map(&lock->dep_map, name, key, 0);
-+	lockdep_init_map_wait(&lock->dep_map, name, key, 0, LD_WAIT_SLEEP);
- #endif
- 	lock->magic = lock;
- }
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index e6f437b..f11b9bd 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -328,7 +328,7 @@ void __init_rwsem(struct rw_semaphore *sem, const char *name,
- 	 * Make sure we are not reinitializing a held semaphore:
- 	 */
- 	debug_check_no_locks_freed((void *)sem, sizeof(*sem));
--	lockdep_init_map(&sem->dep_map, name, key, 0);
-+	lockdep_init_map_wait(&sem->dep_map, name, key, 0, LD_WAIT_SLEEP);
- #endif
- #ifdef CONFIG_DEBUG_RWSEMS
- 	sem->magic = sem;
-diff --git a/kernel/locking/spinlock_debug.c b/kernel/locking/spinlock_debug.c
-index 472dd46..b9d9308 100644
---- a/kernel/locking/spinlock_debug.c
-+++ b/kernel/locking/spinlock_debug.c
-@@ -14,14 +14,14 @@
- #include <linux/export.h>
- 
- void __raw_spin_lock_init(raw_spinlock_t *lock, const char *name,
--			  struct lock_class_key *key)
-+			  struct lock_class_key *key, short inner)
- {
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- 	/*
- 	 * Make sure we are not reinitializing a held lock:
- 	 */
- 	debug_check_no_locks_freed((void *)lock, sizeof(*lock));
--	lockdep_init_map(&lock->dep_map, name, key, 0);
-+	lockdep_init_map_wait(&lock->dep_map, name, key, 0, inner);
- #endif
- 	lock->raw_lock = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
- 	lock->magic = SPINLOCK_MAGIC;
-@@ -39,7 +39,7 @@ void __rwlock_init(rwlock_t *lock, const char *name,
- 	 * Make sure we are not reinitializing a held lock:
- 	 */
- 	debug_check_no_locks_freed((void *)lock, sizeof(*lock));
--	lockdep_init_map(&lock->dep_map, name, key, 0);
-+	lockdep_init_map_wait(&lock->dep_map, name, key, 0, LD_WAIT_CONFIG);
- #endif
- 	lock->raw_lock = (arch_rwlock_t) __ARCH_RW_LOCK_UNLOCKED;
- 	lock->magic = RWLOCK_MAGIC;
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index 6c4b862..8d3eb2f 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -227,18 +227,30 @@ core_initcall(rcu_set_runtime_mode);
- 
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- static struct lock_class_key rcu_lock_key;
--struct lockdep_map rcu_lock_map =
--	STATIC_LOCKDEP_MAP_INIT("rcu_read_lock", &rcu_lock_key);
-+struct lockdep_map rcu_lock_map = {
-+	.name = "rcu_read_lock",
-+	.key = &rcu_lock_key,
-+	.wait_type_outer = LD_WAIT_FREE,
-+	.wait_type_inner = LD_WAIT_CONFIG, /* XXX PREEMPT_RCU ? */
-+};
- EXPORT_SYMBOL_GPL(rcu_lock_map);
- 
- static struct lock_class_key rcu_bh_lock_key;
--struct lockdep_map rcu_bh_lock_map =
--	STATIC_LOCKDEP_MAP_INIT("rcu_read_lock_bh", &rcu_bh_lock_key);
-+struct lockdep_map rcu_bh_lock_map = {
-+	.name = "rcu_read_lock_bh",
-+	.key = &rcu_bh_lock_key,
-+	.wait_type_outer = LD_WAIT_FREE,
-+	.wait_type_inner = LD_WAIT_CONFIG, /* PREEMPT_LOCK also makes BH preemptible */
-+};
- EXPORT_SYMBOL_GPL(rcu_bh_lock_map);
- 
- static struct lock_class_key rcu_sched_lock_key;
--struct lockdep_map rcu_sched_lock_map =
--	STATIC_LOCKDEP_MAP_INIT("rcu_read_lock_sched", &rcu_sched_lock_key);
-+struct lockdep_map rcu_sched_lock_map = {
-+	.name = "rcu_read_lock_sched",
-+	.key = &rcu_sched_lock_key,
-+	.wait_type_outer = LD_WAIT_FREE,
-+	.wait_type_inner = LD_WAIT_SPIN,
-+};
- EXPORT_SYMBOL_GPL(rcu_sched_lock_map);
- 
- static struct lock_class_key rcu_callback_key;
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 69def4a..70813e3 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1086,6 +1086,23 @@ config PROVE_LOCKING
- 
- 	 For more details, see Documentation/locking/lockdep-design.rst.
- 
-+config PROVE_RAW_LOCK_NESTING
-+	bool "Enable raw_spinlock - spinlock nesting checks"
-+	depends on PROVE_LOCKING
-+	default n
-+	help
-+	 Enable the raw_spinlock vs. spinlock nesting checks which ensure
-+	 that the lock nesting rules for PREEMPT_RT enabled kernels are
-+	 not violated.
-+
-+	 NOTE: There are known nesting problems. So if you enable this
-+	 option expect lockdep splats until these problems have been fully
-+	 addressed which is work in progress. This config switch allows to
-+	 identify and analyze these problems. It will be removed and the
-+	 check permanentely enabled once the main issues have been fixed.
-+
-+	 If unsure, select N.
-+
- config LOCK_STAT
- 	bool "Lock usage statistics"
- 	depends on DEBUG_KERNEL && LOCK_DEBUGGING_SUPPORT
