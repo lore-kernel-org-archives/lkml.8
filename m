@@ -2,111 +2,70 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28549C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090A3C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0732072C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:24:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hhhGA9UW"
+	by mail.kernel.org (Postfix) with ESMTP id CF07720752
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:27:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584757643;
+	bh=nedsngbYpt8dRlE8ouzYmyDgZyehrotze/Me3F8MSxY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=v+DvlVfUwz/4kJs1Oo5ZwoOskYsTrvjiQmq4glaPInSILXiYCg8wNDgpSpuhT71X6
+	 d+phAaNeyXzhuHHQqE/3YW2QvP5YcLEFLIoK5uPpfksv1WxqpR2Jv+0MjkQx5Y8Tkq
+	 Wy75xccnpakCc7SYV589w+8rSjdK+r4G1oir0hyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgCUCY4 (ORCPT
+        id S1727915AbgCUC1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 22:24:56 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:41046 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgCUCYz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 22:24:55 -0400
-Received: by mail-yb1-f193.google.com with SMTP id d5so3559984ybs.8
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:24:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+sWKQj4Uyupgpe20upDE1CDsAGcVde2eq3FfcxBSqtw=;
-        b=hhhGA9UWT/3U3ety3Si0Pz+2VxrteiTL1w2fW4bALSSesaU013GbJx65VYFnvA9xJi
-         PHkjaaMIK1gC+VuQmx5FfVzqBzHHafuApDFLj/NgqQB+EoNfoNIzUgxtIkO1Mg1mloJ2
-         D/prA/1Ki/1Rb2avhc0bglsFnNcxG3gyjTL19zKhKI1/QZ8+Lqt6LoCMRNj4lhDXsSiC
-         V72m7zm3JPzTDQ8cdjCEHc3Dac7+ANXd0DVY10LnduPwCBMiq7A6XWBA5DIn9ikouIdA
-         jiKsmCS3x81Y8qJhMF2qdqc0zhxLcOZqh7IjVEorKM9fMXARKBDU1KGmMfiCmSJJzyDF
-         eu2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+sWKQj4Uyupgpe20upDE1CDsAGcVde2eq3FfcxBSqtw=;
-        b=D0tvyjcyZ5AP1amyMwXsvIQvXveXf7IBnQFaFaCj29tIl7y/iM0djApfJ+0Yuw66LI
-         cFej2kK6tqfhjmDefMlm9xvGq21joGpN2tY9v+Jr13JCIY3FWYJA/CzxF0EY88WDocvw
-         v+ELfx1I+6gQ+FmWIhpWVP2gEFwrrAEtu9ePefRJt7lmmL6B9mK2qcAeimslMwbaQe9Q
-         XApc05Nl7WF5pu8AcolZLjhAKhJIDWtGAlLF8iX4lwlhhgkEuvZJBMyWFl3Rw+WAZihy
-         6Vj070DIghuCIlJcxHxRAX9kzUqm3RrAZ2FVguxjpVZQ3OlrujqqfvFRntxmArYymGkQ
-         j27g==
-X-Gm-Message-State: ANhLgQ2HIUxk88Wjzgel67mPbsDrt5SPKdUPzJz2erTqiuRsH3MGKaZ4
-        kDM3aCByVQkBD1e1BNe6FoLx/+EXdfFxfyHgU6Y6yA==
-X-Google-Smtp-Source: ADFU+vvpQCpgtKO5Wxl1XzXEkIWs1WgNh8zCu/SCP6QXwgMX5OdlFp1qeFH3leT5seMN72TsRh1BZFIidMBUuBQIMgA=
-X-Received: by 2002:a25:9787:: with SMTP id i7mr17042865ybo.383.1584757492441;
- Fri, 20 Mar 2020 19:24:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200312105637.GA8960@mwanda> <20200313122725.GZ12561@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200313122725.GZ12561@hirez.programming.kicks-ass.net>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 20 Mar 2020 19:24:41 -0700
-Message-ID: <CAP-5=fU060AZxi6gC7Z4exUqy8VBT08AuE1AZV6F2qDmTKLPwg@mail.gmail.com>
-Subject: Re: [PATCH] perf/core: Fix reversed NULL check in perf_event_groups_less()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 20 Mar 2020 22:27:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726851AbgCUC1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 22:27:19 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99DE02072C;
+        Sat, 21 Mar 2020 02:27:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584757639;
+        bh=nedsngbYpt8dRlE8ouzYmyDgZyehrotze/Me3F8MSxY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=go602f2yZ+DooJtVk+Z8ceGqEnFv6+Q1dDI32gMsHchm6raqwPb3zgYHfOc69hz0S
+         JgQ6t/LF+8/CHjBumR0jCmOJWkgfmZT87OghXteMXK8GGIGZdX/ckubokV/Wb8mE+v
+         NklVAeAm1mhl4z/jTvM+IS6JEPprZa+LnYZ1deJI=
+Date:   Fri, 20 Mar 2020 19:27:18 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        NeilBrown <neilb@suse.com>
+Subject: Re: [PATCH v4 0/5] module autoloading fixes and cleanups
+Message-Id: <20200320192718.6d90a5a10476626f0e39b166@linux-foundation.org>
+In-Reply-To: <20200320052819.GB1315@sol.localdomain>
+References: <20200318230515.171692-1-ebiggers@kernel.org>
+        <20200320052819.GB1315@sol.localdomain>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 5:27 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Mar 12, 2020 at 01:56:37PM +0300, Dan Carpenter wrote:
-> > This NULL check is reversed so it leads to a Smatch warning and
-> > presumably a NULL dereference.
-> >
-> >     kernel/events/core.c:1598 perf_event_groups_less()
-> >     error: we previously assumed 'right->cgrp->css.cgroup' could be null
-> >       (see line 1590)
-> >
-> > Fixes: 95ed6c707f26 ("perf/cgroup: Order events in RB tree by cgroup id")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > ---
-> >  kernel/events/core.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 6a47c3e54fe9..607c04ec7cfa 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -1587,7 +1587,7 @@ perf_event_groups_less(struct perf_event *left, struct perf_event *right)
-> >                        */
-> >                       return true;
-> >               }
-> > -             if (!right->cgrp || right->cgrp->css.cgroup) {
-> > +             if (!right->cgrp || !right->cgrp->css.cgroup) {
-> >                       /*
-> >                        * Right has no cgroup but left does, no cgroups come
-> >                        * first.
->
-> Thanks!
+On Thu, 19 Mar 2020 22:28:19 -0700 Eric Biggers <ebiggers@kernel.org> wrote:
 
-Also much thanks!
+> It seems that people are relatively happy with this patch series now.
+> Andrew, will you be taking it through -mm?  I don't see any better place.
 
-Ian
+Yup.
