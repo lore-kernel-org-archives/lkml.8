@@ -2,89 +2,98 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F16C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A60C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC3520757
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E24D20757
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:04:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="skHcS7F3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbgCUOC0 (ORCPT
+        id S1727262AbgCUOEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 10:02:26 -0400
-Received: from m142-177.yeah.net ([123.58.177.142]:34918 "EHLO
-        m142-177.yeah.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbgCUOCZ (ORCPT
+        Sat, 21 Mar 2020 10:04:39 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40794 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbgCUOEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 10:02:25 -0400
-X-Greylist: delayed 475 seconds by postgrey-1.27 at vger.kernel.org; Sat, 21 Mar 2020 10:01:24 EDT
-Received: from vivo.com (localhost [127.0.0.1])
-        by m142-177.yeah.net (Hmail) with ESMTP id 1800464028F;
-        Sat, 21 Mar 2020 21:53:08 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <APsA6wCSCFeR0a0D5S3qs4rY.3.1584798788078.Hmail.hankecai@vivo.com>
-To:     "alexandre.belloni" <alexandre.belloni@bootlin.com>
-Cc:     "a.zummo" <a.zummo@towertech.it>,
-        linux-rtc <linux-rtc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        trivial <trivial@kernel.org>, kernel <kernel@vivo.com>
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gcnRjOiBwbTh4eHg6IGNsZWFyIGFsYXJtIHJlZ2lzdGVyIHdoZW4gYWxhcm0gaXMgbm90IGVuYWJsZWQ=?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.227
-In-Reply-To: <20200321132125.GV5504@piout.net>
+        Sat, 21 Mar 2020 10:04:38 -0400
+Received: by mail-pl1-f194.google.com with SMTP id h11so3736462plk.7
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 07:04:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=J9eGr1XRuuMVhT4BB0OXqzh8ZUNEQwk5lWfXIehE4RU=;
+        b=skHcS7F3YJWvMX4rRiycVWZ7L8rACzYJkh6R1+nulg0+KzXQS2OcNPrqfQjZgnJGVX
+         +O1jF/a7lmk/2Uqx76M+eoKLfgwz2chvOz0q68gUN3liu3cBVVSKVgSSCX8scFOxnzhB
+         im1AMBM/pu+fA1VJbHiqLkgAnLuurIahr8G/2YOAUeZg32wzUuFpofhTcffvbDRBhMMH
+         Lyb/7HhK1tsbzfAraKZ+jmap7FQCec8AI7vfPZF84S1hr1fKn9JmguxcTK+YOfCM+Rou
+         HFBedKFyAGEapSfaHZsKonbU4NdBwAw1T5GQfkgyXvwWqT2dh3J4Yfpfj9IYRYb6EZIx
+         0qIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=J9eGr1XRuuMVhT4BB0OXqzh8ZUNEQwk5lWfXIehE4RU=;
+        b=SI3VrcvpOsnRd3dYQwxbAdxGgXozzNiICj/ScMem3lfXQT5RvXxnJR4ld2GaBbvZSa
+         cHCfXZcunyQqRHE3S+DXGIDPaaMIxz43xzh3tdL8IWa/HEN7yKSZZSIHyE25UJVHzS/W
+         GFo0VjApdQV4S50IU8K8sq5koM4yQeRNdtBe3PtkEdHfR0NpSjdXRGj3JOzgzp9mSRcn
+         bEfjXPOrmmt3XalZEIUMrbtL5v2nvcJ4Ls4tdBBAh1jJMV/fyO9I8w23GMNJbe6a/vf4
+         N5tzdjjxwKd7Wvdq4f1xtxJ5Acr+zeZt3jHQfgLfick42aKXTDxhIuxlKTgg5oy7Y1PA
+         XZBw==
+X-Gm-Message-State: ANhLgQ39ul3d1HYAVhAchD0Y9olKt0QD+o4aJc/Ycm38PdHSdANSW7/F
+        GWu58kThBevo4sqJ/f7vuC6f+krbzLQ=
+X-Google-Smtp-Source: ADFU+vtB7XAaobJC3/csU7xutUniWUS8W0WcjIp6L3ZMJMv3TV0R1Sw+EZWDGWdeo36fv9M/W0cQCg==
+X-Received: by 2002:a17:902:7b87:: with SMTP id w7mr14025772pll.214.1584799476391;
+        Sat, 21 Mar 2020 07:04:36 -0700 (PDT)
+Received: from simran-Inspiron-5558 ([14.139.82.6])
+        by smtp.gmail.com with ESMTPSA id g2sm1257540pfh.193.2020.03.21.07.04.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Mar 2020 07:04:35 -0700 (PDT)
+Date:   Sat, 21 Mar 2020 19:34:31 +0530
+From:   Simran Singhal <singhalsimran0@gmail.com>
+To:     gregkh@linuxfoundation.org, jeremy@azazel.net,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        outreachy-kernel@googlegroups.com
+Subject: [PATCH] staging: kpc2000: Removing multiple blank lines
+Message-ID: <20200321140430.GA18933@simran-Inspiron-5558>
 MIME-Version: 1.0
-Received: from hankecai@vivo.com( [58.251.74.227) ] by ajax-webmail ( [127.0.0.1] ) ; Sat, 21 Mar 2020 21:53:08 +0800 (GMT+08:00)
-From:   =?UTF-8?B?6Z+p56eR5omN?= <hankecai@vivo.com>
-Date:   Sat, 21 Mar 2020 21:53:08 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVJQkxCQkJDTkNDTk1JWVdZKFlBSE
-        83V1ktWUFJV1kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhNQ0tITU1CSUNLN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6Kwg6TQw4KDg9HilLGks*TihICghPCSJVSFVKTkNPTEJDTEJISk5NVTMWGhIXVRMaFRAeGBoS
-        Ow0SDRRVGBQWRVlXWRILWUFZTkNVSU5KVUxPVUlJTFlXWQgBWUFPTEhKNwY+
-X-HM-Tid: 0a70fd5e6a096473kurs1800464028f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksCkl0J3MgdGhlIHNhbWUgYXMgaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8x
-MjU3MzgxLywgc28gYm90aCBjb21taXQgaXMgZmluZS4KCnRoYW5rcwoKCuWPkeS7tuS6uu+8mkFs
-ZXhhbmRyZSBCZWxsb25pIDxhbGV4YW5kcmUuYmVsbG9uaUBib290bGluLmNvbT4K5Y+R6YCB5pel
-5pyf77yaMjAyMC0wMy0yMSAyMToyMToyNQrmlLbku7bkurrvvJoi6Z+p56eR5omNIiA8aGFua2Vj
-YWlAdml2by5jb20+CuaKhOmAgeS6uu+8mmEuenVtbW9AdG93ZXJ0ZWNoLml0LGxpbnV4LXJ0Y0B2
-Z2VyLmtlcm5lbC5vcmcsbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyx0cml2aWFsQGtlcm5l
-bC5vcmcsa2VybmVsQHZpdm8uY29tCuS4u+mimO+8mlJlOiBbUEFUQ0hdIHJ0YzogcG04eHh4OiBj
-bGVhciBhbGFybSByZWdpc3RlciB3aGVuIGFsYXJtIGlzIG5vdCBlbmFibGVkPkhpLAo+Cj5Jc24n
-dCB0aGF0IHRoZSBzYW1lIGFzOgo+aHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8x
-MjU3MzgxLyA/Cj4KPk9uIDIxLzAzLzIwMjAgMTk6NTA6MTcrMDgwMCwg6Z+p56eR5omNIHdyb3Rl
-Ogo+PiBDbGVhciBhbGFybSByZWdpc3RlciB3aGVuIGFsYXJtIGlzIG5vdCBlbmFibGVkIG90aGVy
-d2lzZSB0aGUgY29uc3VtZXIKPj4gbWF5IHN0aWxsIHN0YXJ0IGFsYXJtIHRpbWVyIGlmIGl0IGZp
-bmQgdGhlIGFsYXJtIHJlZ2lzdGVyIGlzIG5vdCB6ZXJvLgo+PiAKPj4gU2lnbmVkLW9mZi1ieTog
-aGFua2VjYWkgPGhhbmtlY2FpQHZpdm8uY29tPgo+PiAtLS0KPj4gIGRyaXZlcnMvcnRjL3J0Yy1w
-bTh4eHguYyB8IDExICsrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMTEgaW5zZXJ0aW9u
-cygrKQo+PiAKPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcnRjL3J0Yy1wbTh4eHguYyBiL2RyaXZl
-cnMvcnRjL3J0Yy1wbTh4eHguYwo+PiBpbmRleCAwN2VhMWJlM2FiYjkuLjNmYTU0MTZhZDkwZCAx
-MDA2NDQKPj4gLS0tIGEvZHJpdmVycy9ydGMvcnRjLXBtOHh4eC5jCj4+ICsrKyBiL2RyaXZlcnMv
-cnRjL3J0Yy1wbTh4eHguYwo+PiBAQCAtMzAxLDYgKzMwMSw3IEBAIHN0YXRpYyBpbnQgcG04eHh4
-X3J0Y19hbGFybV9pcnFfZW5hYmxlKHN0cnVjdCBkZXZpY2UgKmRldiwgdW5zaWduZWQgaW50IGVu
-YWJsZSkKPj4gIAlzdHJ1Y3QgcG04eHh4X3J0YyAqcnRjX2RkID0gZGV2X2dldF9kcnZkYXRhKGRl
-dik7Cj4+ICAJY29uc3Qgc3RydWN0IHBtOHh4eF9ydGNfcmVncyAqcmVncyA9IHJ0Y19kZC0+cmVn
-czsKPj4gIAl1bnNpZ25lZCBpbnQgY3RybF9yZWc7Cj4+ICsJdTggdmFsdWVbTlVNXzhfQklUX1JU
-Q19SRUdTXSA9IHswfTsKPj4gIAo+PiAgCXNwaW5fbG9ja19pcnFzYXZlKCZydGNfZGQtPmN0cmxf
-cmVnX2xvY2ssIGlycV9mbGFncyk7Cj4+ICAKPj4gQEAgLTMxOSw2ICszMjAsMTYgQEAgc3RhdGlj
-IGludCBwbTh4eHhfcnRjX2FsYXJtX2lycV9lbmFibGUoc3RydWN0IGRldmljZSAqZGV2LCB1bnNp
-Z25lZCBpbnQgZW5hYmxlKQo+PiAgCQlnb3RvIHJ0Y19yd19mYWlsOwo+PiAgCX0KPj4gIAo+PiAr
-CS8qIENsZWFyIEFsYXJtIHJlZ2lzdGVyICovCj4+ICsJaWYgKCFlbmFibGUpIHsKPj4gKwkJcmMg
-PSByZWdtYXBfYnVsa193cml0ZShydGNfZGQtPnJlZ21hcCwgcmVncy0+YWxhcm1fcncsIHZhbHVl
-LAo+PiArCQkJCXNpemVvZih2YWx1ZSkpOwo+PiArCQlpZiAocmMpIHsKPj4gKwkJCWRldl9lcnIo
-ZGV2LCAiQ2xlYXIgUlRDIEFMQVJNIHJlZ2lzdGVyIGZhaWxlZFxuIik7Cj4+ICsJCQlnb3RvIHJ0
-Y19yd19mYWlsOwo+PiArCQl9Cj4+ICsJfQo+PiArCj4+ICBydGNfcndfZmFpbDoKPj4gIAlzcGlu
-X3VubG9ja19pcnFyZXN0b3JlKCZydGNfZGQtPmN0cmxfcmVnX2xvY2ssIGlycV9mbGFncyk7Cj4+
-ICAJcmV0dXJuIHJjOwo+PiAtLSAKPj4gMi4yMS4wCj4+IAo+PiAKPj4gCj4KPi0tIAo+QWxleGFu
-ZHJlIEJlbGxvbmksIEJvb3RsaW4KPkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJp
-bmcKPmh0dHBzOi8vYm9vdGxpbi5jb20KDQoNCg==
+This patch fixes the checkpatch warning by removing multiple blank
+lines.
+CHECK: Please don't use multiple blank lines
+
+Signed-off-by: Simran Singhal <singhalsimran0@gmail.com>
+---
+ drivers/staging/kpc2000/kpc2000/pcie.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/staging/kpc2000/kpc2000/pcie.h b/drivers/staging/kpc2000/kpc2000/pcie.h
+index cb815c30faa4..f1fc91b4c704 100644
+--- a/drivers/staging/kpc2000/kpc2000/pcie.h
++++ b/drivers/staging/kpc2000/kpc2000/pcie.h
+@@ -6,7 +6,6 @@
+ #include "../kpc.h"
+ #include "dma_common_defs.h"
+ 
+-
+ /*      System Register Map (BAR 1, Start Addr 0)
+  *
+  *  BAR Size:
+-- 
+2.17.1
+
