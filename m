@@ -2,68 +2,64 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DF6C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E5EC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B87A20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8295320781
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584803762;
-	bh=nTORZWwffPqetOv8pvzuDI1pb7sJ67jOClPTg5U2TDI=;
+	s=default; t=1584803993;
+	bh=jZtJHLZB1pDxnL6IF+FqpIr8sXqSqFX3e9z1z/qGEpA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ahoutlMOuZVCchA43q9u067i97nAFm55OakiMq98fpBoqphKb733wZEE7PguP7T/y
-	 m+UrXPFkfGur1MxmKMjvmRRkmGJ7bq6GBPxqVcYHOuypRSgDLZyPO4DSgmCMQ93fqM
-	 3fqAN7wZc9bgv6rxBdcXYSCIcGpajSL14KyPzTcU=
+	b=lEhofPtdtwdQkyoJ2B7IWdJZCkZjUR2UZ0we0YQi+xv8t0sOFV8N2SBuqtmbUVM81
+	 l/yrG993v0GSlm2nOndrCniLHfQxi7/Fl1iS52sYb9Y27ovQq2mVD6MZSBMLzQLlur
+	 jN7ebrsEoAdvRxjHuifzgX6DwC8bzu0niGUaun0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbgCUPQB (ORCPT
+        id S1727369AbgCUPTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:16:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50300 "EHLO mail.kernel.org"
+        Sat, 21 Mar 2020 11:19:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727267AbgCUPQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:16:00 -0400
+        id S1727015AbgCUPTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 11:19:52 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47D1620409;
-        Sat, 21 Mar 2020 15:16:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D45320780;
+        Sat, 21 Mar 2020 15:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584803760;
-        bh=nTORZWwffPqetOv8pvzuDI1pb7sJ67jOClPTg5U2TDI=;
+        s=default; t=1584803991;
+        bh=jZtJHLZB1pDxnL6IF+FqpIr8sXqSqFX3e9z1z/qGEpA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wc9LTc6Q3vh80MYGwf2uIg4HN31GZ2zQa8pIExy3X8nvEuyon/KHzTpGRgACJDxDi
-         uIzLo2aYmqvGeAqecKBLUid2Ys33VvmUKbKae9rFRqgXek+XjH9wPy4HgiTeExyD0H
-         zALIa3yWmM/aMA/moqV/dtvipiy6VITlRp7n5nIU=
+        b=NhHAlKpphg6HwxhPg4uucsbgLQtioiK/rC7iftdYFB06dpshXZwNtmmMSGKGq/QgM
+         4ICYHgqTDBIL3SFrKO+PeK7SVTfO3r2AQA12VpROa0ECncL941QSHElqLn7Wc4HiGT
+         /EmFFAgAIf2k/c/am1ZKLkGOMd49Ex3jECDzvk2I=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1jFfqw-00EWHi-Im; Sat, 21 Mar 2020 15:15:58 +0000
-Date:   Sat, 21 Mar 2020 15:15:57 +0000
-Message-ID: <86pnd5zqky.wl-maz@kernel.org>
+        id 1jFfuf-00EWJM-IB; Sat, 21 Mar 2020 15:19:49 +0000
+Date:   Sat, 21 Mar 2020 15:19:48 +0000
+Message-ID: <86o8spzqej.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
-To:     =?UTF-8?B?IuWRqOeQsOadsCAoWmhvdSBZYW5qaWUpIg==?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, paul@crapouillou.net,
-        dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: Re: [PATCH v2] irqchip: Ingenic: Add support for TCU of X1000.
-In-Reply-To: <1584456160-40060-3-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1584456160-40060-1-git-send-email-zhouyanjie@wanyeetech.com>
-        <1584456160-40060-3-git-send-email-zhouyanjie@wanyeetech.com>
+To:     Mubin Usman Sayyed <mubin.usman.sayyed@xilinx.com>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net, michals@xilinx.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        sivadur@xilinx.com, anirudh@xilinx.com
+Subject: Re: [PATCH v5 0/4]  irqchip: xilinx: Add support for multiple instances
+In-Reply-To: <20200317125600.15913-1-mubin.usman.sayyed@xilinx.com>
+References: <20200317125600.15913-1-mubin.usman.sayyed@xilinx.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
  (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: zhouyanjie@wanyeetech.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, paul@crapouillou.net, dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com, sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+X-SA-Exim-Rcpt-To: mubin.usman.sayyed@xilinx.com, tglx@linutronix.de, jason@lakedaemon.net, michals@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sivadur@xilinx.com, anirudh@xilinx.com
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,31 +67,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Mar 2020 14:42:40 +0000,
-"=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)" <zhouyanjie@wanyeetech.com> wro=
-te:
->=20
-> Enable TCU support for Ingenic X1000, which can be supported by
-> the existing driver.
->=20
-> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech.com>
-> Acked-by: Marc Zyngier <maz@kernel.org>
-> ---
->=20
-> Notes:
->     v1->v2:
->     Rewrite the commit message as Marc's suggestion.
->=20
->  drivers/irqchip/irq-ingenic-tcu.c | 1 +
->  1 file changed, 1 insertion(+)
+On Tue, 17 Mar 2020 12:55:56 +0000,
+Mubin Usman Sayyed <mubin.usman.sayyed@xilinx.com> wrote:
+> 
+> Created series by rebasing inter-dependent patches
+> from Michal (https://lkml.org/lkml/2020/3/8/164) on top
+> of v3 (https://lkml.org/lkml/2020/2/14/2680)
+> 
+> Changes for v5:
+>         - Fixed review comments from Marc - fixed intc_dev
+>           related handling in 1/4 and added 4/4 to remove
+>           unnecessary call to irq_set_default_host()
+> Changes for v4:
+>         - Fixed review comments from Thomas - updated commit
+>           message, variable declarations changed to reverse
+>           fir tree and cleaned up some code.
+>         - Added inter-dependendent patches 2/3 and 3/3 from Michal
+>           https://lkml.org/lkml/2020/3/8/164
+> 
+> Changes for v3:
+>         - Modified prototype of xintc_write/xintc_read
+>         - Fixed review comments regarding indentation/variable
+>           names, used BIT
+>         - Modified xintc_get_irq_local to return 0
+>           in case of failure/no pending interrupts
+>         - Fixed return type of xintc_read
+>         - Reverted changes related to device name and
+>           kept intc_dev as static
+> 
+> Changes for v2:
+>         - Removed write_fn/read_fn hooks, used xintc_write/
+>           xintc_read directly
+>         - Moved primary_intc declaration after xintc_irq_chip
+> 
+> 
+> 
+> Michal Simek (2):
+>   irqchip: xilinx: Fill error code when irq domain registration fails
+>   irqchip: xilinx: Enable generic irq multi handler
+> 
+> Mubin Sayyed (2):
+>   irqchip: xilinx: Add support for multiple instances
+>   irqchip: xilinx:  Do not call irq_set_default_host()
+> 
+>  arch/microblaze/Kconfig           |   2 +
+>  arch/microblaze/include/asm/irq.h |   3 -
+>  arch/microblaze/kernel/irq.c      |  21 +----
+>  drivers/irqchip/irq-xilinx-intc.c | 123 ++++++++++++++++++------------
+>  4 files changed, 77 insertions(+), 72 deletions(-)
 
-Since this is now a standalone patch without any reliance on other
-patches, I've queued it for 5.7.
+Queued for 5.7.
 
 Thanks,
 
 	M.
 
---=20
+-- 
 Jazz is not dead, it just smells funny.
