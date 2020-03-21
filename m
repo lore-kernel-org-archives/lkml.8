@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16E9C4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B9DC4332E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0AA20739
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB70B20754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:09:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbgCUJI4 (ORCPT
+        id S1728317AbgCUJI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 05:08:56 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:27284 "EHLO
+        Sat, 21 Mar 2020 05:08:59 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:28884 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728040AbgCUJIv (ORCPT
+        by vger.kernel.org with ESMTP id S1728256AbgCUJIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 05:08:51 -0400
+        Sat, 21 Mar 2020 05:08:54 -0400
 Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02L97Ee4020975;
-        Sat, 21 Mar 2020 05:08:35 -0400
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02L97MV1021067;
+        Sat, 21 Mar 2020 05:08:42 -0400
 Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ywfu501fx-1
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ywfu501gb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 21 Mar 2020 05:08:34 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 02L98Xal009387
+        Sat, 21 Mar 2020 05:08:42 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 02L98esD009419
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Sat, 21 Mar 2020 05:08:33 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+        Sat, 21 Mar 2020 05:08:41 -0400
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Sat, 21 Mar
- 2020 05:08:32 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Sat, 21 Mar 2020 05:08:32 -0400
+ 2020 02:08:39 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Sat, 21 Mar 2020 02:08:39 -0700
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02L98VkS010119;
-        Sat, 21 Mar 2020 05:08:31 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02L98VkW010119;
+        Sat, 21 Mar 2020 05:08:36 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     <jic23@kernel.org>, <lars@metafoo.de>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 1/5] iio: adc: ad7780: define/use own IIO channel macros
-Date:   Sat, 21 Mar 2020 11:07:58 +0200
-Message-ID: <20200321090802.11537-1-alexandru.ardelean@analog.com>
+Subject: [PATCH v2 5/5] iio: adc: ad7793: use read_avail iio hook for scale available
+Date:   Sat, 21 Mar 2020 11:08:02 +0200
+Message-ID: <20200321090802.11537-5-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200321090802.11537-1-alexandru.ardelean@analog.com>
+References: <20200321090802.11537-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-ADIRoutedOnPrem: True
@@ -64,61 +66,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change gets rid of the AD_SD_*_CHANNEL macros in favor of defining
-it's own. The ad7780 is quite simpler than it's other Sigma-Delta brothers.
+This change uses the read_avail and '.info_mask_shared_by_type_available'
+modifier to set the available scale.
+Essentially, nothing changes to the driver's ABI.
 
-It turned out that centralizing the AD_SD_*_CHANNEL macros doesn't scale
-too well, especially with some more complicated drivers. Some of the
-variations in the more complicated drivers require new macros, and that way
-things can become harder to maintain.
+The main idea for this patch is to remove the AD7793 driver from
+checkpatch's radar. There have been about ~3 attempts to fix/break the
+'in_voltage-voltage_scale_available' attribute, because checkpatch assumed
+it to be an arithmetic operation and people were trying to change that.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
+ drivers/iio/adc/ad7793.c | 53 +++++++++++++++++++++++++++-------------
+ 1 file changed, 36 insertions(+), 17 deletions(-)
 
-Changelog v1 -> v2:
-* re-send + change author @analog.com; GMail messed it up
-
- drivers/iio/adc/ad7780.c | 27 +++++++++++++++++++++++----
- 1 file changed, 23 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/iio/adc/ad7780.c b/drivers/iio/adc/ad7780.c
-index 291c1a898129..f47606ebbbbe 100644
---- a/drivers/iio/adc/ad7780.c
-+++ b/drivers/iio/adc/ad7780.c
-@@ -206,10 +206,29 @@ static const struct ad_sigma_delta_info ad7780_sigma_delta_info = {
- 	.irq_flags = IRQF_TRIGGER_LOW,
+diff --git a/drivers/iio/adc/ad7793.c b/drivers/iio/adc/ad7793.c
+index 5592ae573e6b..fad98f1801db 100644
+--- a/drivers/iio/adc/ad7793.c
++++ b/drivers/iio/adc/ad7793.c
+@@ -354,29 +354,28 @@ static IIO_CONST_ATTR_SAMP_FREQ_AVAIL(
+ static IIO_CONST_ATTR_NAMED(sampling_frequency_available_ad7797,
+ 	sampling_frequency_available, "123 62 50 33 17 16 12 10 8 6 4");
+ 
+-static ssize_t ad7793_show_scale_available(struct device *dev,
+-			struct device_attribute *attr, char *buf)
++static int ad7793_read_avail(struct iio_dev *indio_dev,
++			     struct iio_chan_spec const *chan,
++			     const int **vals, int *type, int *length,
++			     long mask)
+ {
+-	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+ 	struct ad7793_state *st = iio_priv(indio_dev);
+-	int i, len = 0;
+ 
+-	for (i = 0; i < ARRAY_SIZE(st->scale_avail); i++)
+-		len += sprintf(buf + len, "%d.%09u ", st->scale_avail[i][0],
+-			       st->scale_avail[i][1]);
++	switch (mask) {
++	case IIO_CHAN_INFO_SCALE:
++		*vals = (int *)st->scale_avail;
++		*type = IIO_VAL_INT_PLUS_NANO;
++		/* Values are stored in a 2D matrix  */
++		*length = ARRAY_SIZE(st->scale_avail) * 2;
+ 
+-	len += sprintf(buf + len, "\n");
++		return IIO_AVAIL_LIST;
++	}
+ 
+-	return len;
++	return -EINVAL;
+ }
+ 
+-static IIO_DEVICE_ATTR_NAMED(in_m_in_scale_available,
+-		in_voltage-voltage_scale_available, S_IRUGO,
+-		ad7793_show_scale_available, NULL, 0);
+-
+ static struct attribute *ad7793_attributes[] = {
+ 	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
+-	&iio_dev_attr_in_m_in_scale_available.dev_attr.attr,
+ 	NULL
  };
  
--#define AD7780_CHANNEL(bits, wordsize) \
--	AD_SD_CHANNEL(1, 0, 0, bits, 32, (wordsize) - (bits))
--#define AD7170_CHANNEL(bits, wordsize) \
--	AD_SD_CHANNEL_NO_SAMP_FREQ(1, 0, 0, bits, 32, (wordsize) - (bits))
-+#define _AD7780_CHANNEL(_bits, _wordsize, _mask_all)		\
-+{								\
-+	.type = IIO_VOLTAGE,					\
-+	.indexed = 1,						\
-+	.channel = 0,						\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |		\
-+		BIT(IIO_CHAN_INFO_OFFSET),			\
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-+	.info_mask_shared_by_all = _mask_all,			\
-+	.scan_index = 1,					\
-+	.scan_type = {						\
-+		.sign = 'u',					\
-+		.realbits = (_bits),				\
-+		.storagebits = 32,				\
-+		.shift = (_wordsize) - (_bits),			\
-+		.endianness = IIO_BE,				\
-+	},							\
-+}
-+
-+#define AD7780_CHANNEL(_bits, _wordsize)	\
-+	_AD7780_CHANNEL(_bits, _wordsize, BIT(IIO_CHAN_INFO_SAMP_FREQ))
-+#define AD7170_CHANNEL(_bits, _wordsize)	\
-+	_AD7780_CHANNEL(_bits, _wordsize, 0)
+@@ -534,6 +533,7 @@ static const struct iio_info ad7793_info = {
+ 	.read_raw = &ad7793_read_raw,
+ 	.write_raw = &ad7793_write_raw,
+ 	.write_raw_get_fmt = &ad7793_write_raw_get_fmt,
++	.read_avail = ad7793_read_avail,
+ 	.attrs = &ad7793_attribute_group,
+ 	.validate_trigger = ad_sd_validate_trigger,
+ };
+@@ -547,7 +547,7 @@ static const struct iio_info ad7797_info = {
+ };
  
- static const struct ad7780_chip_info ad7780_chip_info_tbl[] = {
- 	[ID_AD7170] = {
+ #define __AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
+-	_storagebits, _shift, _extend_name, _type, _mask_all) \
++	_storagebits, _shift, _extend_name, _type, _mask_type_av, _mask_all) \
+ 	{ \
+ 		.type = (_type), \
+ 		.differential = (_channel2 == -1 ? 0 : 1), \
+@@ -559,6 +559,7 @@ static const struct iio_info ad7797_info = {
+ 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | \
+ 			BIT(IIO_CHAN_INFO_OFFSET), \
+ 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
++		.info_mask_shared_by_type_available = (_mask_type_av), \
+ 		.info_mask_shared_by_all = _mask_all, \
+ 		.scan_index = (_si), \
+ 		.scan_type = { \
+@@ -574,23 +575,41 @@ static const struct iio_info ad7797_info = {
+ 	_storagebits, _shift) \
+ 	__AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
+ 		_storagebits, _shift, NULL, IIO_VOLTAGE, \
++		BIT(IIO_CHAN_INFO_SCALE), \
+ 		BIT(IIO_CHAN_INFO_SAMP_FREQ))
+ 
+ #define AD7793_SHORTED_CHANNEL(_si, _channel, _address, _bits, \
+ 	_storagebits, _shift) \
+ 	__AD7793_CHANNEL(_si, _channel, _channel, _address, _bits, \
+ 		_storagebits, _shift, "shorted", IIO_VOLTAGE, \
++		BIT(IIO_CHAN_INFO_SCALE), \
+ 		BIT(IIO_CHAN_INFO_SAMP_FREQ))
+ 
+ #define AD7793_TEMP_CHANNEL(_si, _address, _bits, _storagebits, _shift) \
+ 	__AD7793_CHANNEL(_si, 0, -1, _address, _bits, \
+ 		_storagebits, _shift, NULL, IIO_TEMP, \
++		0, \
+ 		BIT(IIO_CHAN_INFO_SAMP_FREQ))
+ 
+ #define AD7793_SUPPLY_CHANNEL(_si, _channel, _address, _bits, _storagebits, \
+ 	_shift) \
+ 	__AD7793_CHANNEL(_si, _channel, -1, _address, _bits, \
+ 		_storagebits, _shift, "supply", IIO_VOLTAGE, \
++		0, \
++		BIT(IIO_CHAN_INFO_SAMP_FREQ))
++
++#define AD7797_DIFF_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
++	_storagebits, _shift) \
++	__AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
++		_storagebits, _shift, NULL, IIO_VOLTAGE, \
++		0, \
++		BIT(IIO_CHAN_INFO_SAMP_FREQ))
++
++#define AD7797_SHORTED_CHANNEL(_si, _channel, _address, _bits, \
++	_storagebits, _shift) \
++	__AD7793_CHANNEL(_si, _channel, _channel, _address, _bits, \
++		_storagebits, _shift, "shorted", IIO_VOLTAGE, \
++		0, \
+ 		BIT(IIO_CHAN_INFO_SAMP_FREQ))
+ 
+ #define DECLARE_AD7793_CHANNELS(_name, _b, _sb, _s) \
+@@ -620,8 +639,8 @@ const struct iio_chan_spec _name##_channels[] = { \
+ 
+ #define DECLARE_AD7797_CHANNELS(_name, _b, _sb) \
+ const struct iio_chan_spec _name##_channels[] = { \
+-	AD7793_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
+-	AD7793_SHORTED_CHANNEL(1, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
++	AD7797_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
++	AD7797_SHORTED_CHANNEL(1, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
+ 	AD7793_TEMP_CHANNEL(2, AD7793_CH_TEMP, (_b), (_sb), 0), \
+ 	AD7793_SUPPLY_CHANNEL(3, 3, AD7793_CH_AVDD_MONITOR, (_b), (_sb), 0), \
+ 	IIO_CHAN_SOFT_TIMESTAMP(4), \
 -- 
 2.17.1
 
