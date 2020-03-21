@@ -2,171 +2,111 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C821C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28549C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B98A920722
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0732072C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:24:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WDBYDUXC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hhhGA9UW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbgCUCFK (ORCPT
+        id S1727891AbgCUCY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 22:05:10 -0400
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:34620 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbgCUCFK (ORCPT
+        Fri, 20 Mar 2020 22:24:56 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:41046 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbgCUCYz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 22:05:10 -0400
-Received: by mail-qv1-f65.google.com with SMTP id o18so4176803qvf.1;
-        Fri, 20 Mar 2020 19:05:09 -0700 (PDT)
+        Fri, 20 Mar 2020 22:24:55 -0400
+Received: by mail-yb1-f193.google.com with SMTP id d5so3559984ybs.8
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 19:24:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GqEPVEoRdujNeFvEZNFf0K2LnjjxzBACdE/GEwgTyq8=;
-        b=WDBYDUXCK+1lMxLHrnuS6uf0lXjiRANYqCWKcTMIfO6V3o+Oc2yGZvl5In+Qr+dXIV
-         HNtdC83n5ayc8+Q6YdiEHxxI7cUKyR2lSohl01YK94+6ThXeq0cwU855n3sj7iG/7lFV
-         5UOQiECJhSP9FTfkJ0KWVd37tWwkFIRcP7aUUhDGycWeGPntMPwY0k8IoP27sfjWNMon
-         QcMb6DM3PZGkZjn2P4cnI1u/4LA8pdpqmWBnQgS8h3yU2/VvZS0tVcSWVnkDCmh7ag6H
-         TizLfo7mEHx6H3i5I6WR3edra/dJQPzRCESwqQtlqbSrTP69Ud81kDahzcBqptsY8LQf
-         D3gw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+sWKQj4Uyupgpe20upDE1CDsAGcVde2eq3FfcxBSqtw=;
+        b=hhhGA9UWT/3U3ety3Si0Pz+2VxrteiTL1w2fW4bALSSesaU013GbJx65VYFnvA9xJi
+         PHkjaaMIK1gC+VuQmx5FfVzqBzHHafuApDFLj/NgqQB+EoNfoNIzUgxtIkO1Mg1mloJ2
+         D/prA/1Ki/1Rb2avhc0bglsFnNcxG3gyjTL19zKhKI1/QZ8+Lqt6LoCMRNj4lhDXsSiC
+         V72m7zm3JPzTDQ8cdjCEHc3Dac7+ANXd0DVY10LnduPwCBMiq7A6XWBA5DIn9ikouIdA
+         jiKsmCS3x81Y8qJhMF2qdqc0zhxLcOZqh7IjVEorKM9fMXARKBDU1KGmMfiCmSJJzyDF
+         eu2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GqEPVEoRdujNeFvEZNFf0K2LnjjxzBACdE/GEwgTyq8=;
-        b=PvlcGc5ikjUOaxz66AE8dAcwoho2LbpdppPbybBr2CCYKGamI9qYyVGTyqadbONrHm
-         R7DtsKn8MhEitUc1rRlAdAjurhml9OHdacH0JzWdf3kyuNwQUXBPWnWMBQRCsi3Lql3s
-         5LO24c94lymwyNxXqnmtO5lnC/nMghkOS0P4DGUGLM7gNjDcsLcT3c8RcYMF2EpYk+Sq
-         vXPhQ0Y727I2k9H+156NeAfMc6kHjSlr8xTafZfpKCMXI5iLbrLTHLrlQoaLROH5M3cE
-         sof4IfkuzLza5fdFd51gNxLfYuai3T3Ro/aYh2BNG0d+/vOxusrP9GOU2UQMdaVPFagJ
-         nfdA==
-X-Gm-Message-State: ANhLgQ1OhEyjV64QtUFKmJ0oyARuvGN8JM3YplVbD0TVag+CEQlHCosj
-        ohLZnAC7Er9oj2t2qM0T+K8=
-X-Google-Smtp-Source: ADFU+vsp9j0kc5FQVKZ7/33nHlYdtFh1uju+hCOgUj/rYWoUd/WdTaOQRe7tNWMyrwuHQjXbtlBRQA==
-X-Received: by 2002:ad4:4c12:: with SMTP id bz18mr11370560qvb.17.1584756308536;
-        Fri, 20 Mar 2020 19:05:08 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id n6sm5660317qkh.70.2020.03.20.19.05.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Mar 2020 19:05:07 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id AF45A27C0054;
-        Fri, 20 Mar 2020 22:05:06 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Fri, 20 Mar 2020 22:05:06 -0400
-X-ME-Sender: <xms:T3Z1XtSmmSLKsgAuuJX7R-ns3aNuJ6uPB1C0NtUL2aPRs8MHg72yXw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudegvddgfeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuffhomhgrih
-    hnpehtgihtrdgshidpmhgrrhgtrdhinhhfohenucfkphephedvrdduheehrdduuddurdej
-    udenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
-    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
-    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
-    gvrdhnrghmvg
-X-ME-Proxy: <xmx:T3Z1XtQfLNBv9PoNmITJJrWJY-DaEWhapkxQOq0pSXFXnT6OaYwhLQ>
-    <xmx:T3Z1Xg0QvA-PQEm4p2o-QohgmN6xSlOcHmRzihoc7wfgHyQUxP-25Q>
-    <xmx:T3Z1XnzPJMkTvVvcXion7Zw86pyzHhJ8rDyazdQ40YHgW61Sk01skQ>
-    <xmx:UnZ1Xg4ckfDIexzkUuxQxhhjLuyZoatIpjfk1TO3hw7tMAZbdvjQDnnJf1Y>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3A2F5328005D;
-        Fri, 20 Mar 2020 22:05:03 -0400 (EDT)
-Date:   Sat, 21 Mar 2020 10:05:01 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>, linux-arch@vger.kernel.org,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 2/3] LKMM: Add litmus test for RCU GP guarantee where
- reader stores
-Message-ID: <20200321020501.GF105953@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200320165948.GB155212@google.com>
- <Pine.LNX.4.44L0.2003201643370.31761-100000@netrider.rowland.org>
- <20200320214432.GB129293@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+sWKQj4Uyupgpe20upDE1CDsAGcVde2eq3FfcxBSqtw=;
+        b=D0tvyjcyZ5AP1amyMwXsvIQvXveXf7IBnQFaFaCj29tIl7y/iM0djApfJ+0Yuw66LI
+         cFej2kK6tqfhjmDefMlm9xvGq21joGpN2tY9v+Jr13JCIY3FWYJA/CzxF0EY88WDocvw
+         v+ELfx1I+6gQ+FmWIhpWVP2gEFwrrAEtu9ePefRJt7lmmL6B9mK2qcAeimslMwbaQe9Q
+         XApc05Nl7WF5pu8AcolZLjhAKhJIDWtGAlLF8iX4lwlhhgkEuvZJBMyWFl3Rw+WAZihy
+         6Vj070DIghuCIlJcxHxRAX9kzUqm3RrAZ2FVguxjpVZQ3OlrujqqfvFRntxmArYymGkQ
+         j27g==
+X-Gm-Message-State: ANhLgQ2HIUxk88Wjzgel67mPbsDrt5SPKdUPzJz2erTqiuRsH3MGKaZ4
+        kDM3aCByVQkBD1e1BNe6FoLx/+EXdfFxfyHgU6Y6yA==
+X-Google-Smtp-Source: ADFU+vvpQCpgtKO5Wxl1XzXEkIWs1WgNh8zCu/SCP6QXwgMX5OdlFp1qeFH3leT5seMN72TsRh1BZFIidMBUuBQIMgA=
+X-Received: by 2002:a25:9787:: with SMTP id i7mr17042865ybo.383.1584757492441;
+ Fri, 20 Mar 2020 19:24:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320214432.GB129293@google.com>
+References: <20200312105637.GA8960@mwanda> <20200313122725.GZ12561@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200313122725.GZ12561@hirez.programming.kicks-ass.net>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 20 Mar 2020 19:24:41 -0700
+Message-ID: <CAP-5=fU060AZxi6gC7Z4exUqy8VBT08AuE1AZV6F2qDmTKLPwg@mail.gmail.com>
+Subject: Re: [PATCH] perf/core: Fix reversed NULL check in perf_event_groups_less()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 05:44:32PM -0400, Joel Fernandes wrote:
-> On Fri, Mar 20, 2020 at 04:56:59PM -0400, Alan Stern wrote:
-> > On Fri, 20 Mar 2020, Joel Fernandes wrote:
-> > 
-> > > On Fri, Mar 20, 2020 at 11:03:30AM -0400, Alan Stern wrote:
-> > > > On Fri, 20 Mar 2020, Joel Fernandes (Google) wrote:
-> > > > 
-> > > > > This adds an example for the important RCU grace period guarantee, which
-> > > > > shows an RCU reader can never span a grace period.
-> > > > > 
-> > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > > ---
-> > > > >  .../litmus-tests/RCU+sync+read.litmus         | 37 +++++++++++++++++++
-> > > > >  1 file changed, 37 insertions(+)
-> > > > >  create mode 100644 tools/memory-model/litmus-tests/RCU+sync+read.litmus
-> > > > > 
-> > > > > diff --git a/tools/memory-model/litmus-tests/RCU+sync+read.litmus b/tools/memory-model/litmus-tests/RCU+sync+read.litmus
-> > > > > new file mode 100644
-> > > > > index 0000000000000..73557772e2a32
-> > > > > --- /dev/null
-> > > > > +++ b/tools/memory-model/litmus-tests/RCU+sync+read.litmus
-> > > > 
-> > > > Do these new tests really belong here?  I thought we were adding a new 
-> > > > directory under Documentation/ for litmus tests that illustrate parts 
-> > > > of the LKMM or memory-barriers.txt.
-> > > > 
-> > > > By contrast, the tests under tools/memory-model are merely to show 
-> > > > people what litmus tests look like and how they should be written.
-> > > 
-> > > I could add it to tools/memory-model/Documentation/ under a new
-> > > 'examples' directory there. We could also create an 'rcu' directory in
-> > > tools/memory-model/litmus-tests/ and add these there. Thoughts?
-> > 
-> > What happened was that about a month ago, Boqun Feng added
-> > Documentation/atomic-tests for litmus tests related to handling of
-> > atomic_t types (see
-> > <https://marc.info/?l=linux-kernel&m=158276408609029&w=2>.)  Should we
-> > interpose an extra directory level, making it
-> > Documentation/litmus-tests/atomic?  Or
-> > Documentation/LKMM-litmus-tests/atomic?
-> > 
-> > Then the new tests added here could go into
-> > Documentation/litmus-tests/rcu, or whatever.
-> 
-> That's fine with me. Unless anyone objects, I will add to
-> Documentation/litmus-tests/rcu and resend.
-> 
+On Fri, Mar 13, 2020 at 5:27 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Mar 12, 2020 at 01:56:37PM +0300, Dan Carpenter wrote:
+> > This NULL check is reversed so it leads to a Smatch warning and
+> > presumably a NULL dereference.
+> >
+> >     kernel/events/core.c:1598 perf_event_groups_less()
+> >     error: we previously assumed 'right->cgrp->css.cgroup' could be null
+> >       (see line 1590)
+> >
+> > Fixes: 95ed6c707f26 ("perf/cgroup: Order events in RB tree by cgroup id")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > ---
+> >  kernel/events/core.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > index 6a47c3e54fe9..607c04ec7cfa 100644
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -1587,7 +1587,7 @@ perf_event_groups_less(struct perf_event *left, struct perf_event *right)
+> >                        */
+> >                       return true;
+> >               }
+> > -             if (!right->cgrp || right->cgrp->css.cgroup) {
+> > +             if (!right->cgrp || !right->cgrp->css.cgroup) {
+> >                       /*
+> >                        * Right has no cgroup but left does, no cgroups come
+> >                        * first.
+>
+> Thanks!
 
-Seems good to me, I will resend my patchset with the new directory. And
-I assume in your patchset you will include the MAINTAINERS part for
-adding Documentation/litmus-tests/ as a diretory watched by LKMM group?
-In that case, I won't need to add any change to MAINTAINERS file in mine
-and we won't have any conflict. ;-)
+Also much thanks!
 
-Regards,
-Boqun
-
-
-> thanks,
-> 
->  - Joel
-> 
+Ian
