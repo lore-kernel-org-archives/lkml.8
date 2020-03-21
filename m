@@ -2,117 +2,72 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10956C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 16:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079BAC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 16:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48F020732
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 16:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C36C820753
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 16:50:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ERZjmKG6"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xYMSxw9E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbgCUQry (ORCPT
+        id S1727718AbgCUQu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 12:47:54 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:34537 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgCUQry (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 12:47:54 -0400
-Received: by mail-yb1-f196.google.com with SMTP id d186so4390356ybh.1
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 09:47:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=caR8ypCPoxXX4yuH6qr9XpwXLn7NOQ5LxC4q9t4T6FQ=;
-        b=ERZjmKG61TtxLhsjVIwmq/JgPbngacYJoih9nOpdKS4sfVs5j2gWt3CWj+IPyESnu8
-         iQV+v2A4LMKca9iWHBTdOBeARcSmPi7dENOSYuQQsIqTpllEzaIegJqzngHc/5nNPGk3
-         t5pTLOVF2DTcDwwbs+AgA0GsJkRFQaoWrvzYw5e/2X5Wh9Dama7HZ3UHDJ2KYdREP/ty
-         B4JjP1zGhd7PTrdhFKos6JGghhnWBFEm36nYbhWymI+0eaU9fpFz2x5aDM1gN//GFWJW
-         8dPGh/KxNNsx1izrTRNMylwoHZz4AtjXFV1IiWZ1UOXq1EYepItT1q03ow/AvzypPcAL
-         MGsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=caR8ypCPoxXX4yuH6qr9XpwXLn7NOQ5LxC4q9t4T6FQ=;
-        b=cO5Ok5Vu+ihX5T94drn2YxuyvVU0zurd9KSyQRqEZ/LGejV49rOS/exWNXWwRCmWR7
-         pTgqH5IaHB7wiaTYNXjn9hnS+kwSnRIERuib1cxrZ+sFyCqqHPX9Dr8THwk3x2ynalP2
-         A6tHfPEcWy/jptuGqlLw5PlHk4i+CMi5Kt08pXf6r0nbn71cceySh6V1nuH/Za4jlX14
-         jbHIaAiFfjloRNMZHBgjWXxOZmQMdOVe77F8VvLi8HlPBblPcI8nDQX1m0XZVEb5zPY5
-         QuFAUZUqqZyrRKbkLlRzZPbSHBYFVMR17Bqxkx/gU9GEZb7JfKRpTxGb6SYptVYUdt24
-         JurA==
-X-Gm-Message-State: ANhLgQ2Wme1R2QiUrakcXZ2fVfbt25rh/AdBdytd3JPmIkC5nMDPdFP2
-        k95psXWB6Q9mOEZv4BKymi44clbkvnj6Gfqd9Gf9qg==
-X-Google-Smtp-Source: ADFU+vuLMcWXavrptWunHMwpSG8KpX2IyKVZjMJlBeROiAfWoQMAaiF/GoP/xNADvn2bT/uQs7P5MfSVLpMszCAldZA=
-X-Received: by 2002:a25:b105:: with SMTP id g5mr2380673ybj.41.1584809273134;
- Sat, 21 Mar 2020 09:47:53 -0700 (PDT)
+        Sat, 21 Mar 2020 12:50:27 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49180 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726961AbgCUQu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 12:50:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=3i4jtKDijIiewr8m+uZlezeua+B1nFKyeJkRAfB/8Pc=; b=xYMSxw9EWu/wZUn2D9nhCftCKA
+        xXCLQWc3ubM+Zh4uqpCBW2QL/Qk6QjFq04QkN/LRK6eYTWBGa8qAWPRkhb0fmbScv0ZaoPrXGIbFe
+        JcaQ2wojs5bQdD3Xr2+tQHZXA0KVhaYdCezVQlt8Qf7/yq741ZXmBS6L6TzU9hyEwZRI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jFhKA-00069T-Gg; Sat, 21 Mar 2020 17:50:14 +0100
+Date:   Sat, 21 Mar 2020 17:50:14 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        davem@davemloft.net, allison@lohutok.net, corbet@lwn.net,
+        alexios.zavras@intel.com, broonie@kernel.org, tglx@linutronix.de,
+        mchehab+samsung@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 0/7] introduce read_poll_timeout
+Message-ID: <20200321165014.GD22639@lunn.ch>
+References: <20200320133431.9354-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-References: <20200321013839.197114-1-irogers@google.com> <20200321132515.GI20696@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200321132515.GI20696@hirez.programming.kicks-ass.net>
-From:   Ian Rogers <irogers@google.com>
-Date:   Sat, 21 Mar 2020 09:47:41 -0700
-Message-ID: <CAP-5=fVa=cv54h3=zmqkGBJp2ygoCiYceC_7jiZyG+BDt2azMA@mail.gmail.com>
-Subject: Re: [PATCH] perf/cgroup: correct indirection in perf_less_group_idx
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320133431.9354-1-zhengdejin5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 6:25 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Mar 20, 2020 at 06:38:39PM -0700, Ian Rogers wrote:
-> > The void* in perf_less_group_idx is to a cell in the array which points
-> > at a perf_event*, as such it is a perf_event**.
-> >
-> > Fixes: 6eef8a7116de ("perf/core: Use min_heap in visit_groups_merge()")
-> > Author: John Sperbeck <jsperbeck@google.com>
->
-> That doesn't make sense, did he write the patch? Then there needs to be
-> a From: him and a SoB: him, If he reported the issue, it should be
-> Reported-by: him.
+On Fri, Mar 20, 2020 at 09:34:24PM +0800, Dejin Zheng wrote:
+> This patch sets is introduce read_poll_timeout macro, it is an extension
+> of readx_poll_timeout macro. the accessor function op just supports only
+> one parameter in the readx_poll_timeout macro, but this macro can
+> supports multiple variable parameters for it. so functions like
+> phy_read(struct phy_device *phydev, u32 regnum) and
+> phy_read_mmd(struct phy_device *phydev, int devad, u32 regnum) can
+> use this poll timeout framework.
+> 
+> the first patch introduce read_poll_timeout macro, and the second patch
+> redefined readx_poll_timeout macro by read_poll_timeout(), and the other
+> patches are examples using read_poll_timeout macro.
 
-Done.
-https://lkml.org/lkml/2020/3/21/295
+You missed lan87xx_read_status(), tja11xx_check(), and mv3310_reset().
 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  kernel/events/core.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index d22e4ba59dfa..a758c2311c53 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -3503,7 +3503,8 @@ static void cpu_ctx_sched_out(struct perf_cpu_context *cpuctx,
-> >
-> >  static bool perf_less_group_idx(const void *l, const void *r)
-> >  {
-> > -     const struct perf_event *le = l, *re = r;
-> > +     const struct perf_event *le = *(const struct perf_event **)l;
-> > +     const struct perf_event *re = *(const struct perf_event **)r;
->
-> How did this not insta explode?
+If you convert all these, your diffstat might look better.
 
-Agreed, a cgroup depth of at least 3 is needed for a heap allocation
-and we saw this with kasan. CONFIG_KASAN_STACK should have been able
-to catch this in the normal case.
-
-Thanks,
-Ian
+   Andrew
