@@ -2,122 +2,208 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A8FC43332
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EFDC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 776A220724
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFDDF20732
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:37:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ADtH6hTJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oSa6hTuh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbgCUR1y (ORCPT
+        id S1727330AbgCURhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 13:27:54 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6985 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726955AbgCUR1y (ORCPT
+        Sat, 21 Mar 2020 13:37:15 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:47560 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbgCURhP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 13:27:54 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e764e8b0000>; Sat, 21 Mar 2020 10:27:39 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 21 Mar 2020 10:27:53 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 21 Mar 2020 10:27:53 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 21 Mar
- 2020 17:27:48 +0000
-Subject: Re: [PATCH v8 0/3] mm/hmm/test: add self tests for HMM
-To:     Leon Romanovsky <leon@kernel.org>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>
-References: <20200321003108.22941-1-rcampbell@nvidia.com>
- <20200321090047.GM514123@unreal>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <396f0c30-4a49-6a18-ff02-a73ee1a09883@nvidia.com>
-Date:   Sat, 21 Mar 2020 10:27:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200321090047.GM514123@unreal>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584811660; bh=/DSBHwyqYkRHjLOEXuJkMZ6XsqdF4P5P+Hml+UY0jbg=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ADtH6hTJaFiVP+qIFursdXvMgoEMVUuNg/Qj5iyEokUzNxFt5TQrset5Kc6E95StJ
-         f5HfCCZ0tOpaxI1Y3mFFa8znrLbMsW4cvYu45Z1QA1Li3VCb+fvlJHz01DzqdQQ9kn
-         Q3CzNCrA8oi/PIhowzAx89VoWqMjphwyesWvSTCb0jOKfDfBpXc4IGjSk1Ff4A6pcq
-         0pLiOyj2aGyfeGTFJqhZbXhoDZOnBw/ktSZmuAGJSNFLcykx9w5Nsf6W5Bwi6jH1+T
-         X03OASIJqTSimUR4j6DEfKDGZIfpNLNRyvzCNTaatP9znFvaHRnn0eOW1vveTHTfLJ
-         Qmob+VmGQJ1OA==
+        Sat, 21 Mar 2020 13:37:15 -0400
+Received: by mail-pf1-f202.google.com with SMTP id h191so7387346pfe.14
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 10:37:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=zu/ko19fJEk23AdhKpVKxqyVrywVf5s+LZW2dHQxgwo=;
+        b=oSa6hTuhGeyvB3LzN6n2WmpWTgkpR6yuhl2R9IXaXngXuc0zDFqQb3fpqDjh5Aq2iv
+         q5Qv7uzezEwUXxlyQbGsdJEV6PkW3OGml6U6kk55lpn4LFbV5r7WmCWBhBEWDiy+SXER
+         l98x+P8GZ5kJNfsoSPiLvsLZ49T7OJ85s+aZUewSvQbWH6rEJvpYAgC+XpQ34Hq3LFIJ
+         tArZFOJX6wm9ujGuPntEf7l2n9jkLQk5SOzaX9ppIpS7BMSvhftrL9TaytItW2UGgNoR
+         0ZuTUdfBFl7hRizfvX8U5TMlo06+XI4Z/CdevKh/cnxsDwmqv8E8iEbuzZ+9GXO9ccX1
+         fGFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=zu/ko19fJEk23AdhKpVKxqyVrywVf5s+LZW2dHQxgwo=;
+        b=CfZcNmBJYmzeF8rII9Q9TYwMNVj1JCXuqHqJdM1ALixDV+nFI+/MZt9PzVwGX4q9xa
+         jC9keb5hq9LIpTvK6xvWQYW+q/tFVHsTVfVLYj5CgtQCDMgE2nnz1fNREbFjJNrsakh6
+         GdyPsqlODcMAn+N+82ZsXnBvY7eJfc7ZICGyCnecR3VhXBhJE77JmhpfzhiXpTG4smnq
+         GDvMrHzi0TB+R732ao+vuMaXBZ1ivsyY/ECD2Otd7d6ATGCSekV46+9EygJdF1UziDY8
+         GPwDMNF2x2qvnTIf90AnkQaaSJ96mDrf1erdF4SJbF3YZ3aflhpCx8rU/jI71NByYN/9
+         8XeA==
+X-Gm-Message-State: ANhLgQ2UwwA2kcNyGErCeqA2bb2lID4o1WCQ4Yh9QDP8Ge43Pubv2CXJ
+        gWb9MFjImmDyoh3EmeRi8obCVk/n9Dkv
+X-Google-Smtp-Source: ADFU+vsgySIbS/6+H9RR7Eph/+CPM2208gC3IwDF9z7V7zyHOM8601MvFUQ1r9EKYAlDyrQNxwIy1+6st69r
+X-Received: by 2002:a17:90a:cf95:: with SMTP id i21mr14642507pju.97.1584812234644;
+ Sat, 21 Mar 2020 10:37:14 -0700 (PDT)
+Date:   Sat, 21 Mar 2020 10:37:10 -0700
+Message-Id: <20200321173710.127770-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH v2] perf test x86: address multiplexing in rdpmc test
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Counters may be being used for pinned or other events which inhibit the
+instruction counter in the test from being scheduled - time_enabled > 0
+but time_running == 0. This causes the test to fail with division by 0.
+Make time_running an out parameter of mmap_read_self and add a sleep loop
+to ensure that the counter is running before computing the delta.
 
-On 3/21/20 2:00 AM, Leon Romanovsky wrote:
-> On Fri, Mar 20, 2020 at 05:31:05PM -0700, Ralph Campbell wrote:
->> This series adds basic self tests for HMM and are intended for Jason
->> Gunthorpe's rdma tree which has a number of HMM patches applied.
->>
->> Changes v7 -> v8:
->> Rebased to Jason's rdma/hmm tree, plus Jason's 6 patch series
->>    "Small hmm_range_fault() cleanups".
->> Applied a number of changes from Jason's comments.
->>
->> Changes v6 -> v7:
->> Rebased to linux-5.6.0-rc6
->> Reverted back to just using mmu_interval_notifier_insert() and making
->>    this series only introduce HMM self tests.
->>
->> Changes v5 -> v6:
->> Rebased to linux-5.5.0-rc6
->> Refactored mmu interval notifier patches
->> Converted nouveau to use the new mmu interval notifier API
->>
->> Changes v4 -> v5:
->> Added mmu interval notifier insert/remove/update callable from the
->>    invalidate() callback
->> Updated HMM tests to use the new core interval notifier API
->>
->> Changes v1 -> v4:
->> https://lore.kernel.org/linux-mm/20191104222141.5173-1-rcampbell@nvidia.com
->>
->> Ralph Campbell (3):
->>    mm/hmm/test: add selftest driver for HMM
->>    mm/hmm/test: add selftests for HMM
->>    MAINTAINERS: add HMM selftests
->>
->>   MAINTAINERS                            |    3 +
->>   include/uapi/linux/test_hmm.h          |   59 ++
-> 
-> Isn't UAPI folder supposed to be for user-visible interfaces that follow
-> the rule of non-breaking user space and not for selftests?
-> 
-> Thanks
-> 
+v2. Address review feedback from Peter Zijlstra.
 
-Most of the other kernel module tests seem to invoke the test as part of the
-module load/init. I'm open to moving it if there is a more appropriate location.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/arch/x86/tests/rdpmc.c | 57 +++++++++++++++++++++++--------
+ 1 file changed, 42 insertions(+), 15 deletions(-)
+
+diff --git a/tools/perf/arch/x86/tests/rdpmc.c b/tools/perf/arch/x86/tests/rdpmc.c
+index 1ea916656a2d..64145d4e3d4d 100644
+--- a/tools/perf/arch/x86/tests/rdpmc.c
++++ b/tools/perf/arch/x86/tests/rdpmc.c
+@@ -34,20 +34,33 @@ static u64 rdtsc(void)
+ 	return low | ((u64)high) << 32;
+ }
+ 
+-static u64 mmap_read_self(void *addr)
++/*
++ * Return a user rdpmc result. The kernel may be multiplexing events and so the
++ * result is scaled to the period of time the counter was enabled. The
++ * time_running out parameter is set to the amount of time the counter has been
++ * running. The result will be zero if time_running is zero.
++ */
++static u64 mmap_read_self(void *addr, u64 *running)
+ {
+ 	struct perf_event_mmap_page *pc = addr;
+ 	u32 seq, idx, time_mult = 0, time_shift = 0;
+-	u64 count, cyc = 0, time_offset = 0, enabled, running, delta;
++	u64 count, cyc = 0, time_offset = 0, enabled, delta;
+ 
+ 	do {
+ 		seq = pc->lock;
+ 		barrier();
+ 
+ 		enabled = pc->time_enabled;
+-		running = pc->time_running;
+-
+-		if (enabled != running) {
++		*running = pc->time_running;
++
++		if (*running == 0) {
++			/*
++			 * Counter won't have a value as due to multiplexing the
++			 * event wasn't scheduled.
++			 */
++			return 0;
++		}
++		if (enabled != *running) {
+ 			cyc = rdtsc();
+ 			time_mult = pc->time_mult;
+ 			time_shift = pc->time_shift;
+@@ -62,7 +75,7 @@ static u64 mmap_read_self(void *addr)
+ 		barrier();
+ 	} while (pc->lock != seq);
+ 
+-	if (enabled != running) {
++	if (enabled != *running) {
+ 		u64 quot, rem;
+ 
+ 		quot = (cyc >> time_shift);
+@@ -72,11 +85,11 @@ static u64 mmap_read_self(void *addr)
+ 
+ 		enabled += delta;
+ 		if (idx)
+-			running += delta;
++			*running += delta;
+ 
+-		quot = count / running;
+-		rem = count % running;
+-		count = quot * enabled + (rem * enabled) / running;
++		quot = count / *running;
++		rem = count % *running;
++		count = quot * enabled + (rem * enabled) / *running;
+ 	}
+ 
+ 	return count;
+@@ -104,7 +117,7 @@ static int __test__rdpmc(void)
+ 		.config = PERF_COUNT_HW_INSTRUCTIONS,
+ 		.exclude_kernel = 1,
+ 	};
+-	u64 delta_sum = 0;
++	u64 delta_sum = 0, sleep_count = 0;
+         struct sigaction sa;
+ 	char sbuf[STRERR_BUFSIZE];
+ 
+@@ -130,14 +143,23 @@ static int __test__rdpmc(void)
+ 	}
+ 
+ 	for (n = 0; n < 6; n++) {
+-		u64 stamp, now, delta;
+-
+-		stamp = mmap_read_self(addr);
++		u64 stamp, now, delta, running;
++
++		for (;;) {
++			stamp = mmap_read_self(addr, &running);
++			if (running != 0)
++				break;
++			/* Try to wait for event to be running. */
++			sleep_count++;
++			if (sleep_count > 60)
++				goto out_never_run;
++			sleep(1);
++		}
+ 
+ 		for (i = 0; i < loops; i++)
+ 			tmp++;
+ 
+-		now = mmap_read_self(addr);
++		now = mmap_read_self(addr, &running);
+ 		loops *= 10;
+ 
+ 		delta = now - stamp;
+@@ -155,6 +177,11 @@ static int __test__rdpmc(void)
+ 		return -1;
+ 
+ 	return 0;
++
++out_never_run:
++	close(fd);
++	pr_err("Event counter failed to multiplexed in. Are higher priority counters being sampled by a different process?\n");
++	return -1;
+ }
+ 
+ int test__rdpmc(struct test *test __maybe_unused, int subtest __maybe_unused)
+-- 
+2.25.1.696.g5e7596f4ac-goog
+
