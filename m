@@ -2,111 +2,114 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A09E9C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6AFC43332
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B7020663
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 817C520775
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgCUTWN (ORCPT
+        id S1727869AbgCUT3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 15:22:13 -0400
-Received: from mga14.intel.com ([192.55.52.115]:12555 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727264AbgCUTWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 15:22:12 -0400
-IronPort-SDR: e+ChXGDpA1IZeCpQ2VQHW5Rh7z/AdkhAwsz7gfb3OaExjlJ20UwHOfVBtCz2RZ16Mym6iR/o1n
- oyJLJ48jIoYw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 12:22:12 -0700
-IronPort-SDR: 1ttO8Z2Ex+gtmDa7auMx+hMHFIl5rqjxJJfevaQ+xyAwTzjW0chX2llwSX+7R+kG/+t5Ml1dfT
- JLH1icf/5yjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,289,1580803200"; 
-   d="scan'208";a="419065127"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 21 Mar 2020 12:22:12 -0700
-Date:   Sat, 21 Mar 2020 12:22:11 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v7 03/14] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20200321192211.GC13851@linux.intel.com>
-References: <20200318163720.93929-1-peterx@redhat.com>
- <20200318163720.93929-4-peterx@redhat.com>
+        Sat, 21 Mar 2020 15:29:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39274 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbgCUT3B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 15:29:01 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jFjnY-0008Uo-OD; Sat, 21 Mar 2020 20:28:44 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 1657D1040D4; Sat, 21 Mar 2020 20:28:43 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     kbuild test robot <lkp@intel.com>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Greg Ungerer <gerg@linux-m68k.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: Re: [tip:locking/core 19/28] include/linux/fs.h:1422:29: error: array type has incomplete element type 'struct percpu_rw_semaphore'
+In-Reply-To: <202003220209.CjthuGEA%lkp@intel.com>
+References: <202003220209.CjthuGEA%lkp@intel.com>
+Date:   Sat, 21 Mar 2020 20:28:43 +0100
+Message-ID: <87fte1qzh0.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318163720.93929-4-peterx@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 12:37:09PM -0400, Peter Xu wrote:
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index e54c6ad628a8..a5123a0aa7d6 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -9786,7 +9786,34 @@ void kvm_arch_sync_events(struct kvm *kvm)
->  	kvm_free_pit(kvm);
->  }
->  
-> -int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
-> +#define  ERR_PTR_USR(e)  ((void __user *)ERR_PTR(e))
-> +
-> +/**
-> + * __x86_set_memory_region: Setup KVM internal memory slot
-> + *
-> + * @kvm: the kvm pointer to the VM.
-> + * @id: the slot ID to setup.
-> + * @gpa: the GPA to install the slot (unused when @size == 0).
-> + * @size: the size of the slot. Set to zero to uninstall a slot.
-> + *
-> + * This function helps to setup a KVM internal memory slot.  Specify
-> + * @size > 0 to install a new slot, while @size == 0 to uninstall a
-> + * slot.  The return code can be one of the following:
-> + *
-> + *   HVA:           on success (uninstall will return a bogus HVA)
-> + *   -errno:        on error
-> + *
-> + * The caller should always use IS_ERR() to check the return value
-> + * before use.  NOTE: KVM internal memory slots are guaranteed and
+kbuild test robot <lkp@intel.com> writes:
+> All errors (new ones prefixed by >>):
+>
+>    In file included from include/linux/huge_mm.h:8,
+>                     from include/linux/mm.h:567,
+>                     from arch/m68k/include/asm/uaccess_no.h:8,
+>                     from arch/m68k/include/asm/uaccess.h:3,
+>                     from include/linux/uaccess.h:11,
+>                     from include/linux/sched/task.h:11,
+>                     from include/linux/sched/signal.h:9,
+>                     from include/linux/rcuwait.h:6,
+>                     from include/linux/percpu-rwsem.h:7,
+>                     from kernel/locking/percpu-rwsem.c:6:
+>>> include/linux/fs.h:1422:29: error: array type has incomplete element type 'struct percpu_rw_semaphore'
+>     1422 |  struct percpu_rw_semaphore rw_sem[SB_FREEZE_LEVELS];
+>          |                             ^~~~~~
 
-"are guaranteed" to ...
+Same problem as in the other architectures and same cure.
 
-> + * won't change until the VM is destroyed. This is also true to the
-> + * returned HVA when installing a new memory slot.  The HVA can be
-> + * invalidated by either an errornous userspace program or a VM under
-> + * destruction, however as long as we use __copy_{to|from}_user()
-> + * properly upon the HVAs and handle the failure paths always then
-> + * we're safe.
+Thanks,
 
-Regarding the HVA, it's a bit confusing saying that it's guaranteed to be
-valid, and then contradicting that in the second clause.  Maybe something
-like this to explain the GPA->HVA is guaranteed to be valid, but the
-HVA->HPA is not.
+        tglx
+---
+Subject: m68knommu: Remove mm.h include from uaccess_no.h
+From: Thomas Gleixner <tglx@linutronix.de>
+Date: Sat, 21 Mar 2020 20:22:10 +0100
+
+In file included
+  from include/linux/huge_mm.h:8,
+  from include/linux/mm.h:567,
+  from arch/m68k/include/asm/uaccess_no.h:8,
+  from arch/m68k/include/asm/uaccess.h:3,
+  from include/linux/uaccess.h:11,
+  from include/linux/sched/task.h:11,
+  from include/linux/sched/signal.h:9,
+  from include/linux/rcuwait.h:6,
+  from include/linux/percpu-rwsem.h:7,
+  from kernel/locking/percpu-rwsem.c:6:
+ include/linux/fs.h:1422:29: error: array type has incomplete element type 'struct percpu_rw_semaphore'
+    1422 |  struct percpu_rw_semaphore rw_sem[SB_FREEZE_LEVELS];
+
+Removing the include of linux/mm.h from the uaccess header solves the problem
+and various build tests of nommu configurations still work.
+
+Fixes: 80fbaf1c3f29 ("rcuwait: Add @state argument to rcuwait_wait_event()")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Greg Ungerer <gerg@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-m68k@lists.linux-m68k.org
+---
+ arch/m68k/include/asm/uaccess_no.h |    1 -
+ 1 file changed, 1 deletion(-)
+
+--- a/arch/m68k/include/asm/uaccess_no.h
++++ b/arch/m68k/include/asm/uaccess_no.h
+@@ -5,7 +5,6 @@
+ /*
+  * User space memory access functions
+  */
+-#include <linux/mm.h>
+ #include <linux/string.h>
  
-/*
- * before use.  Note, KVM internal memory slots are guaranteed to remain valid
- * and unchanged until the VM is destroyed, i.e. the GPA->HVA translation will
- * not change.  However, the HVA is a user address, i.e. its accessibility is
- * not guaranteed, and must be accessed via __copy_{to,from}_user().
- */
+ #include <asm/segment.h>
