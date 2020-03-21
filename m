@@ -2,177 +2,101 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71E8C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B48DC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF1F2078C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F7A920722
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:38:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODKjjbxz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t1jCgyWI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgCUBdX (ORCPT
+        id S1727782AbgCUBiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 21:33:23 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35943 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgCUBdW (ORCPT
+        Fri, 20 Mar 2020 21:38:46 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:56147 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgCUBip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 21:33:22 -0400
-Received: by mail-qk1-f195.google.com with SMTP id d11so9226632qko.3;
-        Fri, 20 Mar 2020 18:33:21 -0700 (PDT)
+        Fri, 20 Mar 2020 21:38:45 -0400
+Received: by mail-pf1-f201.google.com with SMTP id 78so6029818pfy.22
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 18:38:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nWwxA1w2Gatv80CNv5vvgq55JU/X2LGJD7QRCwC8gwI=;
-        b=ODKjjbxzI8SNz+b/0IuuUCfMJejDoMhqo4S5/Se9pve6CE5nc6PSWIOf9dQVKhaG5O
-         qwBek0oPpvBkEMzaZYKP06cc7rd3PvUcrYxARQ8Ovh/z8r8ATxtSajk+oF1hXIp0ukLy
-         NKWUx/63Eosw1W7ALEWbzc2PduE1Zoj9WFHkHezKtpOzMoy2xBa5TtC1pufFlid+ubpd
-         Sxyij2fCCqosZLM/h7wWF1Gk7nApgxhj1cuJyikRW1wpGm3tjveG5Coj8kKlRUcroPqy
-         DYmwdBstNr3tGmk9n32wNhMIVSpxEytCJufe9BfsmS0XuC6J6Hkj5nx01QaTEoeZNtFO
-         tlng==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=koG0x0fUodpWtpVj+CIcSN6Y0DoNADEjEEo1rGt6J6c=;
+        b=t1jCgyWI+GeRNmWoqxppM8hkRNxpnZf92QAkhqysrSZGlmQ2f3tm5PJ9IStzODgmb5
+         rG0nNnKWThtpXjCVCDFoENvtg4n+zOIiFv+keHQ3MOaxH+WcmId7leb00wlau70rvQYl
+         FLtPnFVx+8I2FDNe9ESwUCvO4m03FHY+iA6eJfWqvNDyADCuEoKTJ0q/iQgPnLBIL+DC
+         2aItwjI32ExzivkgQCsAAB+4lDnEN6MPRdBLYdBgb7XU9GoqsYzqayWSdjoaChAPBsgi
+         nVtgf/4PjDzFFTPREYsEt02IY9oT1zeKhCovK4/j4W0PW5yUhqZhKsUUJzV1tdJn30b7
+         fP4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nWwxA1w2Gatv80CNv5vvgq55JU/X2LGJD7QRCwC8gwI=;
-        b=ZZG98/lghIqfS6X9Eg+WLekmwMfGcjclc5VjF0iqpc6iCyclm45hnZfqOINn2aCSUh
-         Qve2RYDuEMrQpLbqi9r/QnvEspBKWzGGFf4AlstwIgGlFtWVU65dYIi6fkFWWkH6Z4Kg
-         dC0gMCPOwDmF2u4i28JzLmJYQu0t9Ej75EPpZrRPgJMyfTtOyxMoGWQq23PYmU7+4J+9
-         2d8siqDNCcQkv6z+IQFLCGWPcz+ZPVbbCBPSQuwR5BFtCc0kdTOqbOh5pdOjyYwIUGVW
-         M+X9GFyyZEHvACzuqxZ+PXWRDvTX+WNKop7BiIVjCiezw0SL7EDra+POK0CJM4qdE6ge
-         p/GQ==
-X-Gm-Message-State: ANhLgQ3XJuv/uf7WKmk0zanVLEd6mXX7GoxmnwghLil6HB/aTp9EElDy
-        /3gy2tcmYrDhqcxs5lJZ1O6gQiPEsA8=
-X-Google-Smtp-Source: ADFU+vvqQolRXIQc2exeSbFG1CBzPB/poNUc/fxuZJ8RBP83GZQ6ro++PzlJfM04BVJ8Xo6SBI+nlQ==
-X-Received: by 2002:a37:e47:: with SMTP id 68mr10646046qko.17.1584754400994;
-        Fri, 20 Mar 2020 18:33:20 -0700 (PDT)
-Received: from localhost.localdomain ([177.220.176.176])
-        by smtp.gmail.com with ESMTPSA id w18sm5582324qkw.130.2020.03.20.18.33.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 18:33:20 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id DFC88C3145; Fri, 20 Mar 2020 22:33:17 -0300 (-03)
-Date:   Fri, 20 Mar 2020 22:33:17 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, vyasevich@gmail.com,
-        nhorman@tuxdriver.com, Jakub Kicinski <kuba@kernel.org>,
-        linux-sctp@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, anenbupt@gmail.com
-Subject: Re: [PATCH v3] sctp: fix refcount bug in sctp_wfree
-Message-ID: <20200321013317.GF3756@localhost.localdomain>
-References: <20200320110959.2114-1-hqjagain@gmail.com>
- <20200320185204.GB3828@localhost.localdomain>
- <CAJRQjoc-U_K-2THbmBOj2TOWDTfP9yr5Vec-WjhTjS8sj19fHA@mail.gmail.com>
- <20200321010246.GC3828@localhost.localdomain>
- <CAJRQjofnZ5Oz-0PNMY6ojddg3MZc4v5UC5AJwi2CxLByDGaZhQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJRQjofnZ5Oz-0PNMY6ojddg3MZc4v5UC5AJwi2CxLByDGaZhQ@mail.gmail.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=koG0x0fUodpWtpVj+CIcSN6Y0DoNADEjEEo1rGt6J6c=;
+        b=gM8iNhlLavlBNQW8HTKzfnRSwiZK2/JAkiWRZzHaFVfhZgYcNujO6Y7Q0eFDtzsLQI
+         PrkiT4iCqFuOVtTdbaKRMiPNpWvD9HTANuRXnVMYaXElp7BL9kjHYnMvD+d6255iBPJv
+         hGBYImTa3Gn04SzFelRd+t4ZxtRu165nMa+92MOLecP2Feh3Qcw1fCRl9Ls2O4qlQ6t1
+         mVPXeF2HuS5rU1+aEx2Cl0Os27ipw/bBzK+wSO7nwMAUvpsisrrwk+6vfO6cHSluH6sj
+         CdzlxTW/lAy3xo7dp13PQC199vj4+dfAwVpX6HVVynpMbOAfYgCVifxoHZjQuV+kR6My
+         iCyw==
+X-Gm-Message-State: ANhLgQ0LuRSa8spj+yhfc4cjPy0UGMuKu+6ppIVVDArFThZFflsCVttR
+        gmuN41pfOAMp2ayk1l6PhRiMb2pbsEaM
+X-Google-Smtp-Source: ADFU+vuwIMZptgHXT0FLXLX5idQ25AxRfo2MVJZUWccTr9MY3v3Vmq8oYY6o2qUeVecfq2H45wm4ns73FBxZ
+X-Received: by 2002:a63:7159:: with SMTP id b25mr2333688pgn.72.1584754724059;
+ Fri, 20 Mar 2020 18:38:44 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 18:38:39 -0700
+Message-Id: <20200321013839.197114-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH] perf/cgroup: correct indirection in perf_less_group_idx
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 09:23:54AM +0800, Qiujun Huang wrote:
-> On Sat, Mar 21, 2020 at 9:02 AM Marcelo Ricardo Leitner
-> <marcelo.leitner@gmail.com> wrote:
-> >
-> > On Sat, Mar 21, 2020 at 07:53:29AM +0800, Qiujun Huang wrote:
-> > ...
-> > > > > So, sctp_wfree was not called to destroy SKB)
-> > > > >
-> > > > > then migrate happened
-> > > > >
-> > > > >       sctp_for_each_tx_datachunk(
-> > > > >       sctp_clear_owner_w);
-> > > > >       sctp_assoc_migrate();
-> > > > >       sctp_for_each_tx_datachunk(
-> > > > >       sctp_set_owner_w);
-> > > > > SKB was not in the outq, and was not changed to newsk
-> > > >
-> > > > The real fix is to fix the migration to the new socket, though the
-> > > > situation on which it is happening is still not clear.
-> > > >
-> > > > The 2nd sendto() call on the reproducer is sending 212992 bytes on a
-> > > > single call. That's usually the whole sndbuf size, and will cause
-> > > > fragmentation to happen. That means the datamsg will contain several
-> > > > skbs. But still, the sacked chunks should be freed if needed while the
-> > > > remaining ones will be left on the queues that they are.
-> > >
-> > > in sctp_sendmsg_to_asoc
-> > > datamsg holds his chunk result in that the sacked chunks can't be freed
-> >
-> > Right! Now I see it, thanks.
-> > In the end, it's not a locking race condition. It's just not iterating
-> > on the lists properly.
-> >
-> > >
-> > > list_for_each_entry(chunk, &datamsg->chunks, frag_list) {
-> > > sctp_chunk_hold(chunk);
-> > > sctp_set_owner_w(chunk);
-> > > chunk->transport = transport;
-> > > }
-> > >
-> > > any ideas to handle it?
-> >
-> > sctp_for_each_tx_datachunk() needs to be aware of this situation.
-> > Instead of iterating directly/only over the chunk list, it should
-> > iterate over the datamsgs instead. Something like the below (just
-> > compile tested).
-> >
-> > Then, the old socket will be free to die regardless of the new one.
-> > Otherwise, if this association gets stuck on retransmissions or so,
-> > the old socket would not be freed till then.
-> >
-> > diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-> > index fed26a1e9518..85c742310d26 100644
-> > --- a/net/sctp/socket.c
-> > +++ b/net/sctp/socket.c
-> > @@ -151,9 +151,10 @@ static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
-> >                                        void (*cb)(struct sctp_chunk *))
-> >
-> >  {
-> > +       struct sctp_datamsg *msg, *prev_msg = NULL;
-> >         struct sctp_outq *q = &asoc->outqueue;
-> >         struct sctp_transport *t;
-> > -       struct sctp_chunk *chunk;
-> > +       struct sctp_chunk *chunk, *c;
+The void* in perf_less_group_idx is to a cell in the array which points
+at a perf_event*, as such it is a perf_event**.
 
-I missed to swap some lines here, for reverse christmass-tree style,
-btw.
+Fixes: 6eef8a7116de ("perf/core: Use min_heap in visit_groups_merge()")
+Author: John Sperbeck <jsperbeck@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ kernel/events/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> >
-> >         list_for_each_entry(t, &asoc->peer.transport_addr_list, transports)
-> >                 list_for_each_entry(chunk, &t->transmitted, transmitted_list)
-> > @@ -162,8 +163,14 @@ static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
-> >         list_for_each_entry(chunk, &q->retransmit, transmitted_list)
-> >                 cb(chunk);
-> >
-> > -       list_for_each_entry(chunk, &q->sacked, transmitted_list)
-> > -               cb(chunk);
-> > +       list_for_each_entry(chunk, &q->sacked, transmitted_list) {
-> > +               msg = chunk->msg;
-> > +               if (msg == prev_msg)
-> > +                       continue;
-> > +               list_for_each_entry(c, &msg->chunks, frag_list)
-> > +                       cb(c);
-> > +               prev_msg = msg;
-> > +       }
-> 
-> great. I'll trigger a syzbot test. Thanks.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index d22e4ba59dfa..a758c2311c53 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3503,7 +3503,8 @@ static void cpu_ctx_sched_out(struct perf_cpu_context *cpuctx,
+ 
+ static bool perf_less_group_idx(const void *l, const void *r)
+ {
+-	const struct perf_event *le = l, *re = r;
++	const struct perf_event *le = *(const struct perf_event **)l;
++	const struct perf_event *re = *(const struct perf_event **)r;
+ 
+ 	return le->group_index < re->group_index;
+ }
+-- 
+2.25.1.696.g5e7596f4ac-goog
 
-Mind that it may need to handled on the other lists as well. I didn't
-check them :]
-
-> 
-> >
-> >         list_for_each_entry(chunk, &q->abandoned, transmitted_list)
-> >                 cb(chunk);
