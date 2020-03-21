@@ -2,85 +2,93 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE12C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF5AC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B975520754
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E703620754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:13:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584789196;
+	bh=a1T1kUTtXXh65fZGIdIjzMnTDBaIQmx8eQK3Hn8fGQ8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YZLaH584XikAH3LLGfbT1IIE3D879VrM5kG94zeOpb3mvGMbodb6RzDUzalaobzBT
+	 zhu6lZfHXYG5VOXDsLXx+WKT7YRqKRseEHcGOU1B/TNyxa0XfQhCiCAI1+Y8g/s0aL
+	 ILWBv1Gx8JiXCIMbfHAgm3Y9tg5AToxCRUecOvD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgCULLo convert rfc822-to-8bit (ORCPT
+        id S1728356AbgCULNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 07:11:44 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:42076 "EHLO unicorn.mansr.com"
+        Sat, 21 Mar 2020 07:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbgCULLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 07:11:44 -0400
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 9E2B015605; Sat, 21 Mar 2020 11:11:41 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 07/10] ARM: dts: tango4: Make /serial compatible with ns16550a
-References: <20200320174107.29406-1-lkundrak@v3.sk>
-        <20200320174107.29406-8-lkundrak@v3.sk>
-Date:   Sat, 21 Mar 2020 11:11:41 +0000
-In-Reply-To: <20200320174107.29406-8-lkundrak@v3.sk> (Lubomir Rintel's message
-        of "Fri, 20 Mar 2020 18:41:04 +0100")
-Message-ID: <yw1xd096hsia.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        id S1726192AbgCULNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 07:13:14 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFBE920732;
+        Sat, 21 Mar 2020 11:13:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584789194;
+        bh=a1T1kUTtXXh65fZGIdIjzMnTDBaIQmx8eQK3Hn8fGQ8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=yLWxhgb5eSNb5eHUULfT7r5z1ZOKXMOgN2eZehnC4e6X9m52F8r8KpV72Qvlai3w6
+         vlF35uNx1FfThv+r2hP9REvIrMTbq7MQRy7v6z4g6DLnl6IF9FUsHOG7zaO74BzCUa
+         A97LMbTBXB5q9oP1Yx7ked45pWBsEQqezPyB2dgk=
+Date:   Sat, 21 Mar 2020 11:13:09 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Nishant Malpani <nish.malpani25@gmail.com>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] iio: light: tsl2563: Rename macro to fix typo
+Message-ID: <20200321111309.28d96975@archlinux>
+In-Reply-To: <0793346ea429cc0c932a5857678c802ad7421d80.1584518000.git.nish.malpani25@gmail.com>
+References: <cover.1584518000.git.nish.malpani25@gmail.com>
+        <0793346ea429cc0c932a5857678c802ad7421d80.1584518000.git.nish.malpani25@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lubomir Rintel <lkundrak@v3.sk> writes:
+On Wed, 18 Mar 2020 13:33:11 +0530
+Nishant Malpani <nish.malpani25@gmail.com> wrote:
 
-> ralink,rt2880-uart is compatible with ns16550a and all other
-> instances of RT2880 UART nodes include it in the compatible property.
-> Add it also here, to make the binding schema simpler.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> This patch renames macro to fix the following warning generated by
+> checkpatch.pl:
+> 
+> WARNING: 'DISBLED' may be misspelled - perhaps 'DISABLED'?
+> 
+> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
 
-Acked-by: Mans Rullgard <mans@mansr.com>
+Applied.
+
+Thanks,
+
+Jonathan
 
 > ---
->  arch/arm/boot/dts/tango4-common.dtsi | 2 +-
+>  drivers/iio/light/tsl2563.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/tango4-common.dtsi b/arch/arm/boot/dts/tango4-common.dtsi
-> index ff72a8efb73d0..54fd522badfc9 100644
-> --- a/arch/arm/boot/dts/tango4-common.dtsi
-> +++ b/arch/arm/boot/dts/tango4-common.dtsi
-> @@ -85,7 +85,7 @@ tick-counter@10048 {
->  		};
->
->  		uart: serial@10700 {
-> -			compatible = "ralink,rt2880-uart";
-> +			compatible = "ralink,rt2880-uart", "ns16550a";
->  			reg = <0x10700 0x30>;
->  			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
->  			clock-frequency = <7372800>;
-> -- 
-> 2.25.1
->
+> 
+> diff --git a/drivers/iio/light/tsl2563.c b/drivers/iio/light/tsl2563.c
+> index 260b38ee81f7..356f4927cc46 100644
+> --- a/drivers/iio/light/tsl2563.c
+> +++ b/drivers/iio/light/tsl2563.c
+> @@ -69,7 +69,7 @@
+>  #define TSL2563_TIMING_GAIN16	0x10
+>  #define TSL2563_TIMING_GAIN1	0x00
+>  
+> -#define TSL2563_INT_DISBLED	0x00
+> +#define TSL2563_INT_DISABLED	0x00
+>  #define TSL2563_INT_LEVEL	0x10
+>  #define TSL2563_INT_PERSIST(n)	((n) & 0x0F)
+>  
 
--- 
-Måns Rullgård
