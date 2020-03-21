@@ -2,110 +2,148 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CACCC43333
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 216C0C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033B020409
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:44:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="bjtYPXj+"
+	by mail.kernel.org (Postfix) with ESMTP id EF04F207FC
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgCUOn7 (ORCPT
+        id S1727354AbgCUOqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 10:43:59 -0400
-Received: from mail-eopbgr150048.outbound.protection.outlook.com ([40.107.15.48]:58543
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726961AbgCUOn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 10:43:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CvzPcWw4mzJIU7/WWvwqx4dg3cqz6NkRiBShPucNxokCU4pIcLjDYypqvvHDomO7ISu26u/O0UINmTaB9Twnme0T/pWwzc9qrIkC8RPGFiM6PhVk7N/G+PfY7Ikke0+ZGHDv6gUX3a8BeXd2oTIOxeTnrUdrMOZvYIgOBXoKF8E7PBeE6ZvlA2RzncoYNOjBrx0T5CneBQjMsmb3QGCKCB0AFissBYDv2hrbbAPPsRNZXLffIbCm/+vTnk6uEjtUkcAQOAYQY2Te0ski105klmYU7h2rJ52qIr13cOBMRR70JmhZMp1bt8ITOmtf6L3E7a4ieyz1uFP4TU96vDJYeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zsIr2ekW0R51VS/6AHX5yRVGYfFXg13LZwAZJbk24U4=;
- b=dfaljEf5npx8EhIllL3FbXhXQ4uWE8IyOhtmacPKcrt57MTsC9hBD2m+aYgc6525x7K3HxNATPX92LipSx/rEMK5vqtE8bBNLSW8NaUlUul96lOqpk3z3tPPhJIV3Wlb2EA3Gi6AGZtqJZKytdP9mCX7Y6DAbl6hk0mmTHY0TcFnXfJp8vpJmGUG343MpZXVuNeSlD5g+c40S+jz+OuZ2NtmLAwW7+IciS+MLI6scu5McK+5DtxOp8vXHn0QntH0FQfCCBzYDdSBdj80XyX5iXUCmYbhEFbINxZuJxCHeq+5NlXX6CD989hFzEKbzoj3AsllE3WWIjJ5Cj24qevDQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zsIr2ekW0R51VS/6AHX5yRVGYfFXg13LZwAZJbk24U4=;
- b=bjtYPXj+bAXpTj6icuBELVod4s2bHCP02hAToW2K9h8GVUaJD8zHSJfYGh4q6m2gYQ4I+E3VdOFmBkGv3T8BUFmj6pCQ95tByO8fcXYoN8hMVMWFvTn6/GMWQpSyOejjtbR1lHo1nPOaPsNGI1HCsDSU4iUUMrTomeyZCJE9hmQ=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB6445.eurprd05.prod.outlook.com (20.179.27.79) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.22; Sat, 21 Mar 2020 14:43:55 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::18d2:a9ea:519:add3]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::18d2:a9ea:519:add3%7]) with mapi id 15.20.2814.025; Sat, 21 Mar 2020
- 14:43:55 +0000
-Date:   Sat, 21 Mar 2020 11:43:50 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>,
-        Shuah Khan <shuah@kernel.org>
-Cc:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-rdma@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v8 0/3] mm/hmm/test: add self tests for HMM
-Message-ID: <20200321144350.GQ13183@mellanox.com>
-References: <20200321003108.22941-1-rcampbell@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200321003108.22941-1-rcampbell@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR14CA0008.namprd14.prod.outlook.com
- (2603:10b6:208:23e::13) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Sat, 21 Mar 2020 10:46:36 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38824 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbgCUOqg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 10:46:36 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jFfOQ-0004Ys-C2; Sat, 21 Mar 2020 15:46:30 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id A798FFFC8D; Sat, 21 Mar 2020 15:46:29 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andi Kleen <andi@firstfloor.org>, x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>
+Subject: Re: [PATCH] x86/speculation: Allow overriding seccomp speculation disable
+In-Reply-To: <20200312231222.81861-1-andi@firstfloor.org>
+References: <20200312231222.81861-1-andi@firstfloor.org>
+Date:   Sat, 21 Mar 2020 15:46:29 +0100
+Message-ID: <87sgi1rcje.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR14CA0008.namprd14.prod.outlook.com (2603:10b6:208:23e::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.21 via Frontend Transport; Sat, 21 Mar 2020 14:43:54 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jFfLq-000165-H1; Sat, 21 Mar 2020 11:43:50 -0300
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 6c084b2c-be47-4303-8fe1-08d7cda6476c
-X-MS-TrafficTypeDiagnostic: VI1PR05MB6445:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB64450885217BB0E68AA5F6CECFF20@VI1PR05MB6445.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-Forefront-PRVS: 034902F5BC
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(39850400004)(136003)(376002)(199004)(4744005)(33656002)(478600001)(7416002)(86362001)(81166006)(36756003)(4326008)(2906002)(8676002)(186003)(81156014)(66946007)(54906003)(2616005)(52116002)(1076003)(66556008)(66476007)(316002)(5660300002)(110136005)(9786002)(9746002)(8936002)(26005)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6445;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: W9EYXBASJV2HuEOs6wy1qdOGqRMK/E+B9EHQpwR2E3UVisuf18osV3F+Q6DU59UpU0PoUpzL+oQzOaKDMgwumXb4aQCzTdbKgr5Y+umdRwHSbQhD5u1B1lwA5OWPDlgU+qRNGiCp8TshGn71thJVaom4s0+YCGIjtPkJbNXNjgKyp5+5rREeaqHsMSkfMXUp0x/dDyTfsBTny4stB6OzA9F8b4/3fl2BUwMn1jFJXmo7eyBHN3RkVatm1BfL2THdUiTQ13hFfS9zNQxcE9eEC18P1TUS4jMDaOtBQvseiSlV/ci0h3vZMdxn/vayCAnK5bItXS7+RaICXVbo/uHich49JKkjm/RS2FyYaVIVBNyVK01mrdulBZpTee0937H0gKmxi7cS8QcAFE4t9f4RHkAcyBJoIGh5MLesXdZsXFeK0uJxp6zUhwUGDjt7erLdwDBBqRq78X2fmt+KBORS+71tzYF6Nnjcd+B4yi3QuhuhKTAZfBewdnNLcXXLzsKG
-X-MS-Exchange-AntiSpam-MessageData: MrSUyNwbvrFZdCUrXZdzivE4VVaWdkhRvcigtIOzQ2+PEP/EtH9hxCQl8PuwoKuFxglz1qN+cGKdZYzbi9Kh+iWIq0+oNF9n+Z5jVmRkI5WzMx+L8CCbSHIihrm6RxoVZwObRYL9Tiq/heiYK019gg==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c084b2c-be47-4303-8fe1-08d7cda6476c
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2020 14:43:54.9692
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nXA3FfXXFJX0osuojluQcStV0beeW/P8ALaRJTPqcLpdaxa5miBMtJDxhpxXfaBaSCWVu76faR4uT/b2xU1w8w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6445
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 05:31:05PM -0700, Ralph Campbell wrote:
-> This series adds basic self tests for HMM and are intended for Jason
-> Gunthorpe's rdma tree which has a number of HMM patches applied.
+Andi Kleen <andi@firstfloor.org> writes:
 
-We are at v8 of this series and noboy from the selftests land has
-commented, can someone help?
+Cc+: Seccomp maintainers ....
 
-Jason
+> From: Andi Kleen <ak@linux.intel.com>
+>
+> seccomp currently force enables the SSBD and IB mitigations,
+> which disable certain features in the CPU to avoid speculation
+> attacks at a performance penalty.
+>
+> This is a heuristic to detect applications that may run untrusted code
+> (such as web browsers) and provide mitigation for them.
+>
+> At least for SSBD the mitigation is really only for side channel
+> leaks inside processes.
+>
+> There are two cases when the heuristic has problems:
+>
+> - The seccomp user has a superior mitigation and doesn't need the
+> CPU level disables. For example for a Web Browser this is using
+> site isolation, which separates different sites in different
+> processes, so side channel leaks inside a process are not
+> of a concern.
+>
+> - Another case are seccomp users who don't run untrusted code,
+> such as sshd, and don't really benefit from SSBD
+>
+> As currently implemented seccomp force enables the mitigation
+> so it's not possible for processes to opt-in that they don't
+> need mitigations (such as when they already use site isolation).
+>
+> In some cases we're seeing significant performance penalties
+> of enabling the SSBD mitigation on web workloads.
+>
+> This patch changes the seccomp code to not force enable,
+
+I'm sure I asked you to do
+
+git grep "This patch" Documentation/process/
+
+before.
+
+> but merely enable, the SSBD and IB mitigations.
+>
+> This allows processes to use the PR_SET_SPECULATION prctl
+> after running seccomp and reenable SSBD and/or IB
+> if they don't need any extra mitigation.
+>
+> The effective default has not changed, it just allows
+> processes to opt-out of the default.
+>
+> It's not clear to me what the use case for the force
+> disable is anyways. Certainly if someone controls the process,
+> and can run prctl(), they can leak data in all kinds of
+> ways anyways, or just read the whole memory map.
+>
+> Longer term we probably need to discuss if the seccomp heuristic
+> is still warranted and should be perhaps changed. It seemed
+> like a good idea when these vulnerabilities were new, and
+> no web browsers supported site isolation. But with site isolation
+> widely deployed -- Chrome has it on by default, and as I understand
+> it, Firefox is going to enable it by default soon. And other seccomp
+> users (like sshd or systemd) probably don't really need it.
+> Given that it's not clear the default heuristic is still a good
+> idea.
+>
+> But anyways this patch doesn't change any defaults, just
+> let's applications override it.
+
+It changes the enforcement and I really want the seccomp people to have
+a say here.
+
+Thanks,
+
+        tglx
+
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> ---
+>  arch/x86/kernel/cpu/bugs.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+> index ed54b3b21c39..f15ae9bfd7ad 100644
+> --- a/arch/x86/kernel/cpu/bugs.c
+> +++ b/arch/x86/kernel/cpu/bugs.c
+> @@ -1215,9 +1215,9 @@ int arch_prctl_spec_ctrl_set(struct task_struct *task, unsigned long which,
+>  void arch_seccomp_spec_mitigate(struct task_struct *task)
+>  {
+>  	if (ssb_mode == SPEC_STORE_BYPASS_SECCOMP)
+> -		ssb_prctl_set(task, PR_SPEC_FORCE_DISABLE);
+> +		ssb_prctl_set(task, PR_SPEC_DISABLE);
+>  	if (spectre_v2_user == SPECTRE_V2_USER_SECCOMP)
+> -		ib_prctl_set(task, PR_SPEC_FORCE_DISABLE);
+> +		ib_prctl_set(task, PR_SPEC_DISABLE);
+>  }
+>  #endif
+>  
+> -- 
+> 2.24.1
