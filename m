@@ -2,246 +2,117 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF05DC4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 23:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9257C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 23:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B650520776
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 23:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D5B20776
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 23:48:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584834539;
+	bh=sWExtjn8sa4U+VoWjZDvGtP+9AcpWaq/4Mq2vl0qPTw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1xkz1L3xC+KETvRLMlpKi1khEoCjn01RFPmeLnUsNKT6QYbXPkeY/hJB5sCPNGUO6
+	 OWtzdKAFrJwK1R9Ttw+e0FQsRnx8nWEWPAS0NLf86ArWa/4aE4EEyeZCyZYYQWuYG7
+	 u9BgdBEW7SUV+BjRQ5G5YwO1avFeY+6UGVb0Os7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbgCUXrS (ORCPT
+        id S1728212AbgCUXs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 19:47:18 -0400
-Received: from mga01.intel.com ([192.55.52.88]:21323 "EHLO mga01.intel.com"
+        Sat, 21 Mar 2020 19:48:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728056AbgCUXrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 19:47:18 -0400
-IronPort-SDR: WlWhxEPTCapzPrh2aOpdjWYYrJh6gLlWsDALufYM1DauGw07zXTFfrCBTBCXlqf6hI+5x/Zn2K
- flsDZFHAzpiw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 16:47:17 -0700
-IronPort-SDR: z1cmzunEaLZfbGD3ERnII7SghYQEPI6lxFyEXYozFIRpAgCCzpAmMvZHYefARbLBtmvpRNjBw5
- 5+mk0v3rxZrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,290,1580803200"; 
-   d="scan'208";a="445389467"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 21 Mar 2020 16:47:16 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jFnpk-0009dj-3X; Sun, 22 Mar 2020 07:47:16 +0800
-Date:   Sun, 22 Mar 2020 07:46:16 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/entry] BUILD SUCCESS
- ef996916e78e03d25e56c2d372e5e21fdb471882
-Message-ID: <5e76a748.qPz09VHhOyIjz2Cc%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        id S1726997AbgCUXs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 19:48:58 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FCB520776;
+        Sat, 21 Mar 2020 23:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584834537;
+        bh=sWExtjn8sa4U+VoWjZDvGtP+9AcpWaq/4Mq2vl0qPTw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=d9Tdc1/r7NUzkOgvOakY6hhP+Dr5lXeCZPcNa0FEny4Ue+fx23XzfbRoN+isjFRnt
+         WVm/r9s1cCwT0VQyt9izelOraD9hU3NuEm0IdL2tY8gLS03kTOSi229WjhiHuyR6M1
+         gOLnRyzVaXknbwTTlZRYopw6g6oS0JHKbRsjUeb4=
+Date:   Sat, 21 Mar 2020 16:48:56 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        <stable@vger.kernel.org>
+Subject: Re: [PATCH] mm: fork: fix kernel_stack memcg stats for various
+ stack implementations
+Message-Id: <20200321164856.be68344b7fac84b759e23727@linux-foundation.org>
+In-Reply-To: <20200303233550.251375-1-guro@fb.com>
+References: <20200303233550.251375-1-guro@fb.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/entry
-branch HEAD: ef996916e78e03d25e56c2d372e5e21fdb471882  lockdep: Rename trace_{hard,soft}{irq_context,irqs_enabled}()
+On Tue, 3 Mar 2020 15:35:50 -0800 Roman Gushchin <guro@fb.com> wrote:
 
-elapsed time: 498m
+> Depending on CONFIG_VMAP_STACK and the THREAD_SIZE / PAGE_SIZE ratio
+> the space for task stacks can be allocated using __vmalloc_node_range(),
+> alloc_pages_node() and kmem_cache_alloc_node(). In the first and the
+> second cases page->mem_cgroup pointer is set, but in the third it's
+> not: memcg membership of a slab page should be determined using the
+> memcg_from_slab_page() function, which looks at
+> page->slab_cache->memcg_params.memcg . In this case, using
+> mod_memcg_page_state() (as in account_kernel_stack()) is incorrect:
+> page->mem_cgroup pointer is NULL even for pages charged to a non-root
+> memory cgroup.
+> 
+> It can lead to kernel_stack per-memcg counters permanently showing 0
+> on some architectures (depending on the configuration).
+> 
+> In order to fix it, let's introduce a mod_memcg_obj_state() helper,
+> which takes a pointer to a kernel object as a first argument, uses
+> mem_cgroup_from_obj() to get a RCU-protected memcg pointer and
+> calls mod_memcg_state(). It allows to handle all possible
+> configurations (CONFIG_VMAP_STACK and various THREAD_SIZE/PAGE_SIZE
+> values) without spilling any memcg/kmem specifics into fork.c .
+> 
+> Note: this patch has been first posted as a part of the new slab
+> controller patchset. This is a slightly updated version: the fixes
+> tag has been added and the commit log was extended by the advice
+> of Johannes Weiner. Because it's a fix that makes sense by itself,
+> I'm re-posting it as a standalone patch.
 
-configs tested: 179
-configs skipped: 0
+Actually, it isn't a standalone patch.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -776,6 +776,17 @@ void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val)
+>  	rcu_read_unlock();
+>  }
+>  
+> +void mod_memcg_obj_state(void *p, int idx, int val)
+> +{
+> +	struct mem_cgroup *memcg;
+> +
+> +	rcu_read_lock();
+> +	memcg = mem_cgroup_from_obj(p);
+> +	if (memcg)
+> +		mod_memcg_state(memcg, idx, val);
+> +	rcu_read_unlock();
+> +}
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-m68k                          multi_defconfig
-s390                                defconfig
-parisc                            allnoconfig
-powerpc                       ppc64_defconfig
-arm                              allmodconfig
-nds32                             allnoconfig
-nios2                         3c120_defconfig
-ia64                                defconfig
-powerpc                             defconfig
-um                                  defconfig
-sh                               allmodconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-arm64                            allmodconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-x86_64               randconfig-a001-20200322
-x86_64               randconfig-a002-20200322
-x86_64               randconfig-a003-20200322
-i386                 randconfig-a001-20200322
-i386                 randconfig-a002-20200322
-i386                 randconfig-a003-20200322
-alpha                randconfig-a001-20200322
-m68k                 randconfig-a001-20200322
-mips                 randconfig-a001-20200322
-nds32                randconfig-a001-20200322
-parisc               randconfig-a001-20200322
-riscv                randconfig-a001-20200322
-alpha                randconfig-a001-20200321
-m68k                 randconfig-a001-20200321
-mips                 randconfig-a001-20200321
-nds32                randconfig-a001-20200321
-parisc               randconfig-a001-20200321
-c6x                  randconfig-a001-20200321
-h8300                randconfig-a001-20200321
-microblaze           randconfig-a001-20200321
-nios2                randconfig-a001-20200321
-sparc64              randconfig-a001-20200321
-h8300                randconfig-a001-20200322
-microblaze           randconfig-a001-20200322
-nios2                randconfig-a001-20200322
-c6x                  randconfig-a001-20200322
-sparc64              randconfig-a001-20200322
-csky                 randconfig-a001-20200322
-openrisc             randconfig-a001-20200322
-s390                 randconfig-a001-20200322
-sh                   randconfig-a001-20200322
-xtensa               randconfig-a001-20200322
-s390                 randconfig-a001-20200321
-xtensa               randconfig-a001-20200321
-csky                 randconfig-a001-20200321
-openrisc             randconfig-a001-20200321
-sh                   randconfig-a001-20200321
-x86_64               randconfig-c001-20200322
-x86_64               randconfig-c002-20200322
-x86_64               randconfig-c003-20200322
-i386                 randconfig-c001-20200322
-i386                 randconfig-c002-20200322
-i386                 randconfig-c003-20200322
-i386                 randconfig-d003-20200321
-i386                 randconfig-d001-20200321
-x86_64               randconfig-d002-20200321
-i386                 randconfig-d002-20200321
-x86_64               randconfig-d001-20200321
-x86_64               randconfig-d003-20200321
-x86_64               randconfig-d001-20200322
-x86_64               randconfig-d002-20200322
-x86_64               randconfig-d003-20200322
-i386                 randconfig-d001-20200322
-i386                 randconfig-d002-20200322
-i386                 randconfig-d003-20200322
-x86_64               randconfig-e001-20200322
-x86_64               randconfig-e002-20200322
-x86_64               randconfig-e003-20200322
-i386                 randconfig-e001-20200322
-i386                 randconfig-e002-20200322
-i386                 randconfig-e003-20200322
-x86_64               randconfig-f001-20200322
-x86_64               randconfig-f002-20200322
-x86_64               randconfig-f003-20200322
-i386                 randconfig-f001-20200322
-i386                 randconfig-f002-20200322
-i386                 randconfig-f003-20200322
-x86_64               randconfig-h001-20200322
-x86_64               randconfig-h002-20200322
-x86_64               randconfig-h003-20200322
-i386                 randconfig-h001-20200322
-i386                 randconfig-h002-20200322
-i386                 randconfig-h003-20200322
-arm                  randconfig-a001-20200321
-arm64                randconfig-a001-20200321
-ia64                 randconfig-a001-20200321
-powerpc              randconfig-a001-20200321
-sparc                randconfig-a001-20200321
-arc                  randconfig-a001-20200321
-arc                  randconfig-a001-20200322
-arm                  randconfig-a001-20200322
-arm64                randconfig-a001-20200322
-ia64                 randconfig-a001-20200322
-powerpc              randconfig-a001-20200322
-sparc                randconfig-a001-20200322
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                       zfcpdump_defconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+mem_cgroup_from_obj() is later added by
+http://lkml.kernel.org/r/20200117203609.3146239-1-guro@fb.com
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+We could merge both mm-memcg-slab-introduce-mem_cgroup_from_obj.patch
+and this patch, but that's a whole lot of stuff to backport into
+-stable.
+
+Are you able to come up with a simpler suitable-for-stable fix?
