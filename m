@@ -2,61 +2,93 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CF7C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841C2C43332
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1533120739
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:34:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=comcast.net header.i=@comcast.net header.b="hqGQo+ws"
+	by mail.kernel.org (Postfix) with ESMTP id 6795620753
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:37:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgCUTei (ORCPT
+        id S1727913AbgCUTh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 15:34:38 -0400
-Received: from resqmta-ch2-08v.sys.comcast.net ([69.252.207.40]:59918 "EHLO
-        resqmta-ch2-08v.sys.comcast.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727296AbgCUTei (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 15:34:38 -0400
-X-Greylist: delayed 488 seconds by postgrey-1.27 at vger.kernel.org; Sat, 21 Mar 2020 15:34:38 EDT
-Received: from resomta-ch2-10v.sys.comcast.net ([69.252.207.106])
-        by resqmta-ch2-08v.sys.comcast.net with ESMTP
-        id FibGj0dG8LoTbFjlNjhP7v; Sat, 21 Mar 2020 19:26:29 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=comcast.net;
-        s=20190202a; t=1584818789;
-        bh=vaeBmkVNINKx94yWt69KnTdaPQ9Bgw6KKAykYDGyWSU=;
-        h=Received:Received:To:From:Subject:Message-ID:Date:MIME-Version:
-         Content-Type;
-        b=hqGQo+wsIovdnAjC/CgAmjkF+/OUpwgGCec3gB3ugjWoZuP5q6DmlekF2ux3fOc+d
-         449zJn4+CJp+nYWoGXFiplkH8qryT9dVfvN6bwrlZbXayKCrRVj8vuDJoye3UnKfvx
-         OKyJNSeXNNAMDk9Co0fkBozVo78p8y4zbVbTqi9ji19JoxD/2dFtJPNFeAVtzvi9k+
-         3hUJFiYxrDdiQkrDCr0LARhr7ttL12xzgLHo1CD/wMSlqKUifpKIm0IwdNCAYMPG9E
-         5uJAb7eWbmhpa5yO40nEiRc7SKbknGaO/jir7ZLHKYDSBdJLwY2A0cYLsuWo+IVRkS
-         fnftduycFR6yw==
-Received: from [IPv6:2601:500:8303:76a0:eef4:bbff:fe36:426]
- ([IPv6:2601:500:8303:76a0:eef4:bbff:fe36:426])
-        by resomta-ch2-10v.sys.comcast.net with ESMTPA
-        id FjlLjUytkg6zoFjlNjOO5O; Sat, 21 Mar 2020 19:26:29 +0000
-X-Xfinity-VMeta: sc=0.00;st=legit
-To:     linux-kernel@vger.kernel.org
-From:   don fisher <hdf3@comcast.net>
-Subject: help
-Message-ID: <5cebdf24-9094-2291-61a9-edf1190e40e7@comcast.net>
-Date:   Sat, 21 Mar 2020 12:26:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Sat, 21 Mar 2020 15:37:28 -0400
+Received: from mga04.intel.com ([192.55.52.120]:47180 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727028AbgCUTh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 15:37:27 -0400
+IronPort-SDR: NIo1oz9mA2LI5NiCllfdKBTjwws206u46zyC+aPYDPQL6Lj7SKLxVfZUordfTaoQYwn60O+QpF
+ vVYSBrqzuVpw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 12:37:26 -0700
+IronPort-SDR: kd/2ebf5UTBnT6mnDo5GgSAINDTkqfh47lhY8cjKzgUsVh+mdnRuMu+rKC3T+lUIxQg4BjI52T
+ OhjM5Hyz7nqg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,289,1580803200"; 
+   d="scan'208";a="234831917"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 21 Mar 2020 12:37:24 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jFjvy-00BnrV-OU; Sat, 21 Mar 2020 21:37:26 +0200
+Date:   Sat, 21 Mar 2020 21:37:26 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jic23@kernel.org, lars@metafoo.de
+Subject: Re: [PATCH v2 5/5] iio: adc: ad7793: use read_avail iio hook for
+ scale available
+Message-ID: <20200321193726.GA2813151@smile.fi.intel.com>
+References: <20200321090802.11537-1-alexandru.ardelean@analog.com>
+ <20200321090802.11537-5-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200321090802.11537-5-alexandru.ardelean@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I want to change my subscription. How do I do it?
+On Sat, Mar 21, 2020 at 11:08:02AM +0200, Alexandru Ardelean wrote:
+> This change uses the read_avail and '.info_mask_shared_by_type_available'
+> modifier to set the available scale.
+> Essentially, nothing changes to the driver's ABI.
+> 
+> The main idea for this patch is to remove the AD7793 driver from
+> checkpatch's radar. There have been about ~3 attempts to fix/break the
+> 'in_voltage-voltage_scale_available' attribute, because checkpatch assumed
+> it to be an arithmetic operation and people were trying to change that.
+
+> +static int ad7793_read_avail(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     const int **vals, int *type, int *length,
+> +			     long mask)
+>  {
+>  	struct ad7793_state *st = iio_priv(indio_dev);
+>  
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*vals = (int *)st->scale_avail;
+> +		*type = IIO_VAL_INT_PLUS_NANO;
+> +		/* Values are stored in a 2D matrix  */
+> +		*length = ARRAY_SIZE(st->scale_avail) * 2;
+>  
+> +		return IIO_AVAIL_LIST;
+> +	}
+>  
+
+> +	return -EINVAL;
+
+Wouldn't be better move this under default case?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
