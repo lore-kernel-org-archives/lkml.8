@@ -2,69 +2,91 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1A6C4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 10:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BF8C4332E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 10:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2D1020754
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 10:39:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584787194;
-	bh=bCp40qIqmUuQz7X5ywaAdzCex0ePugSTNMhM578biFQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TNmq/mrRFSL6EXG1e7hshTM1/AFRCnHrc3fhM/u2Ou4+VJZlWiIy69EsnHfjcVLmE
-	 O2rh9VDd9iU8PMrQBLwlqpTWTNJrWGJsnKZWTMf55yKs4TviazeUvPRXquBEFP7Nlx
-	 4nA38J5sbYofk0pCwzHW69IObIBZ7HlYnjmaEWtA=
+	by mail.kernel.org (Postfix) with ESMTP id D3CDB2072C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 10:42:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgCUKjx (ORCPT
+        id S1728456AbgCUKmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 06:39:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726607AbgCUKjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 06:39:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60BC32072C;
-        Sat, 21 Mar 2020 10:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584787192;
-        bh=bCp40qIqmUuQz7X5ywaAdzCex0ePugSTNMhM578biFQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EsrzvWE8dE7hDvPPNIiAkPHo8QI8KmjxF0FWVVX/K/sW6xsVA8yWyHi+nXekf9DXC
-         2HsEBNN7jqOR/bIrFVU932u4a0u0Jblfn4+JIDIyUV+w1BqgMSFX6HK1FRwi0FiGdS
-         kklLxMsdWm07eJUaT97n0CCvwwt61JrnKZBaNGdI=
-Date:   Sat, 21 Mar 2020 11:39:50 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     mike.leach@linaro.org, suzuki.poulose@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 00/12] coresight: next v5.6-rc6
-Message-ID: <20200321103950.GA1063010@kroah.com>
-References: <20200320165303.13681-1-mathieu.poirier@linaro.org>
+        Sat, 21 Mar 2020 06:42:15 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37993 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726607AbgCUKmP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 06:42:15 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jFbZX-0001a5-00; Sat, 21 Mar 2020 11:41:43 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 5D7DDFFC8D; Sat, 21 Mar 2020 11:41:42 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-pci@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        netdev@vger.kernel.org, Joel Fernandes <joel@joelfernandes.org>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [patch V2 07/15] powerpc/ps3: Convert half completion to rcuwait
+In-Reply-To: <20200319100459.GA18506@infradead.org>
+References: <20200318204302.693307984@linutronix.de> <20200318204408.102694393@linutronix.de> <20200319100459.GA18506@infradead.org>
+Date:   Sat, 21 Mar 2020 11:41:42 +0100
+Message-ID: <8736a2rnvd.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320165303.13681-1-mathieu.poirier@linaro.org>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 10:52:51AM -0600, Mathieu Poirier wrote:
-> Hi Greg,
-> 
-> As requested here is another respin - the only thing that changed is
-> the replacement of scnprintf() and all sysfs output are now singular,
-> i.e don't need any parsing.  That triggered some modification to
-> sysfs entries, which have been taken into account in the documentation.
-> 
-> Applies and compile cleanly on your char-misc-next branch.
+Christoph Hellwig <hch@infradead.org> writes:
 
-Much nicer, thanks for these, all now queued up.
+> On Wed, Mar 18, 2020 at 09:43:09PM +0100, Thomas Gleixner wrote:
+>> The PS3 notification interrupt and kthread use a hacked up completion to
+>> communicate. Since we're wanting to change the completion implementation and
+>> this is abuse anyway, replace it with a simple rcuwait since there is only ever
+>> the one waiter.
+>> 
+>> AFAICT the kthread uses TASK_INTERRUPTIBLE to not increase loadavg, kthreads
+>> cannot receive signals by default and this one doesn't look different. Use
+>> TASK_IDLE instead.
+>
+> I think the right fix here is to jut convert the thing to a threaded
+> interrupt handler and kill off the stupid kthread.
 
-greg k-h
+That'd be a major surgery.
+
+> But I wonder how alive the whole PS3 support is to start with..
+
+There seem to be a few enthusiast left which have a Other-OS capable PS3
+
+Thanks,
+
+        tglx
+
