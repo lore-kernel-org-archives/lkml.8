@@ -2,42 +2,40 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7225C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62B4C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C9B20663
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A713F20757
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbgCUPn4 (ORCPT
+        id S1727405AbgCUPqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:43:56 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:55988 "EHLO
+        Sat, 21 Mar 2020 11:46:24 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:56340 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbgCUPnz (ORCPT
+        with ESMTP id S1726652AbgCUPqY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:43:55 -0400
+        Sat, 21 Mar 2020 11:46:24 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 22EA01C031D; Sat, 21 Mar 2020 16:43:54 +0100 (CET)
-Date:   Sat, 21 Mar 2020 16:43:53 +0100
+        id 134041C032C; Sat, 21 Mar 2020 16:46:22 +0100 (CET)
+Date:   Sat, 21 Mar 2020 16:46:21 +0100
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Lubomir Rintel <lkundrak@v3.sk>
+To:     Colin King <colin.king@canonical.com>
 Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: Re: [PATCH] leds: ariel: Add driver for status LEDs on Dell Wyse 3020
-Message-ID: <20200321154353.GF8386@duo.ucw.cz>
-References: <20200314105652.351708-1-lkundrak@v3.sk>
- <20200315084230.GA1996@amd>
- <20200318094314.GA5052@furthur.local>
+        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] leds: lm3532: make bitfield 'enabled' unsigned
+Message-ID: <20200321154621.GG8386@duo.ucw.cz>
+References: <20200313171937.220884-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="GLp9dJVi+aaipsRk"
+        protocol="application/pgp-signature"; boundary="GUPx2O/K0ibUojHx"
 Content-Disposition: inline
-In-Reply-To: <20200318094314.GA5052@furthur.local>
+In-Reply-To: <20200313171937.220884-1-colin.king@canonical.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -45,85 +43,33 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---GLp9dJVi+aaipsRk
+--GUPx2O/K0ibUojHx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Fri 2020-03-13 17:19:37, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>=20
+> The bitfield 'enabled' should bit unsigned, so make it unsigned.
+>=20
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-> > > +static int ariel_led_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct device *dev =3D &pdev->dev;
-> > > +	struct ariel_led *leds;
-> > > +	struct regmap *ec_ram;
-> > > +	int ret;
-> > > +
-> > > +	leds =3D devm_kcalloc(dev, 3, sizeof(*leds), GFP_KERNEL);
-> > > +	if (!leds)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	ec_ram =3D dev_get_regmap(dev->parent, "ec_ram");
-> > > +	if (!ec_ram)
-> > > +		return -ENODEV;
-> > > +
-> > > +	leds[0].ec_ram =3D ec_ram;
-> > > +	leds[0].ec_index =3D EC_BLUE_LED;
-> > > +	leds[0].led_cdev.name =3D "ariel:blue:power",
-> > > +	leds[0].led_cdev.brightness_get =3D ariel_led_get;
-> > > +	leds[0].led_cdev.brightness_set =3D ariel_led_set;
-> > > +	leds[0].led_cdev.blink_set =3D ariel_blink_set;
-> > > +	leds[0].led_cdev.default_trigger =3D "default-on";
-> >=20
-> > Move common settings to a loop?
-> >=20
-> > Definitely delete "ariel:" prefix.
-> >=20
-> > > +	leds[1].led_cdev.name =3D "ariel:amber:status",
-> > > +	leds[2].led_cdev.name =3D "ariel:green:status",
-> >=20
-> > Do the LEDs have some label, or some kind of common function? Calling
-> > it ":status" is not too useful...
->=20
-> No label there. This is what it looks like:
-> https://people.freedesktop.org/~lkundrak/ariel-leds.jpeg
->=20
-> The green and amber, despite being packaged separately, can be
-> controlled independently (they are not connected to the same inputs in
-> reverse).
->=20
-> What does the machine do with stock firmware & ThinOS:
-> * On power on, EC lights up the Amber one & Blue one
-> * As soon as the firmware takes control, it turns off Amber and turns on
->   Green
-> * Just before passing control to the OS, firmware turns the Green LED to
->   blinking
-> * As soon as OS initializes, it turns Green back to always-on
->=20
-> Therefore the functionality generally is as follows:
-> * Amber is always off (only on for a short time between CPU on and
->   firmware running)
-> - Green blinking means "loading OS", otherwise always on when CPU is on
-> - Blue is always on when the CPU is on
-
-Ok, I guess your naming makes sense (without the ariel prefix).
-
-Thank you,
+Thanks, applied.
 									Pavel
-
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---GLp9dJVi+aaipsRk
+--GUPx2O/K0ibUojHx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXnY2OQAKCRAw5/Bqldv6
-8o81AJwLoeCBhDrCb+XuZsjflUb7e93M9wCfQBq2tJDnsG6iHGJy6uwxno/pm1o=
-=TBXn
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXnY2zQAKCRAw5/Bqldv6
+8mk4AJ9gp0fhjV3eJslDQl+7vsTyWVpkFACgttrxg5o1SM8dFpFCBKlNFhfbsLY=
+=kzCS
 -----END PGP SIGNATURE-----
 
---GLp9dJVi+aaipsRk--
+--GUPx2O/K0ibUojHx--
