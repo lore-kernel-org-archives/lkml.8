@@ -2,134 +2,106 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C26C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1547DC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D5420714
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BB020714
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbgCUS3t (ORCPT
+        id S1727558AbgCUSc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 14:29:49 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:55247 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727015AbgCUS3t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 14:29:49 -0400
-Received: from methusalix.internal.home.lespocky.de ([109.250.103.118]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1N3KgE-1jO4nw26K2-010MvO; Sat, 21 Mar 2020 19:29:14 +0100
-Received: from lemmy.internal.home.lespocky.de ([192.168.243.175] helo=lemmy.home.lespocky.de)
-        by methusalix.internal.home.lespocky.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <alex@home.lespocky.de>)
-        id 1jFirv-0001nE-5w; Sat, 21 Mar 2020 19:29:12 +0100
-Received: (nullmailer pid 2075 invoked by uid 2001);
-        Sat, 21 Mar 2020 18:29:10 -0000
-From:   Alexander Dahl <post@lespocky.de>
-To:     x86@kernel.org
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Alan Jenkins <alan.christopher.jenkins@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Alexander Dahl <post@lespocky.de>
-Subject: [PATCH v2] dma: Fix max PFN arithmetic overflow on 32 bit systems
-Date:   Sat, 21 Mar 2020 19:28:23 +0100
-Message-Id: <20200321182823.1912-1-post@lespocky.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200319153154.usbqsk6uspegw5pr@falbala.internal.home.lespocky.de>
-References: <20200319153154.usbqsk6uspegw5pr@falbala.internal.home.lespocky.de>
+        Sat, 21 Mar 2020 14:32:57 -0400
+Received: from sauhun.de ([88.99.104.3]:38052 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727015AbgCUSc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 14:32:56 -0400
+Received: from localhost (p54B33C59.dip0.t-ipconnect.de [84.179.60.89])
+        by pokefinder.org (Postfix) with ESMTPSA id 4C6E52C1ECA;
+        Sat, 21 Mar 2020 19:32:54 +0100 (CET)
+Date:   Sat, 21 Mar 2020 19:32:53 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] i2c: designware: Detect the FIFO size in the common
+ code
+Message-ID: <20200321183253.GA5632@ninjato>
+References: <20200306131955.12806-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306132151.2ABC38030786@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scan-Signature: 2e89b8130284c79aa2484230574bb425
-X-Provags-ID: V03:K1:BwocxLOhIIXx/bGnuVJFUi7zAE50Mb5DLFLlyuLG5Ay844jcgwI
- LQmCr8a3NyIY70JC5hnQ/5YRx7Zm3RKsrlAPyyXV2/6EUM31EZdZnbqYpbZZOFqiYV3fpzq
- PLEL8udppjzIByLsmu9NcHIS0o7vE9vl/d0mg0e8xLeky46vfdORyXdl3P5g6TIKHqv3SJT
- 6yRaH1Iw2QZ/X/SnVBxhg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:dmeT3XHEs7M=:2/5OPJDlT0razmHb6Xylsw
- Qw5t6oz4xwqNi13QsjhqSLhuPw5FsDeogLiMe7+tXP82d80tn0gNX05wFxZksNoOzuGc3rPGo
- x4YOjGTuhtgXnoE8FmZhiOGUoFer4yfB9+U64sxyWmYK4nnhG5Dd+mhTqNqaCN291RwzrccMB
- /8HtB8G8qYIRg+9HRA8ovq4cqkKBPzKAB3sUWTBI3rEgcI2J/V/FUi/v/BylQygUFlSbY+p32
- iRUIFTopteboi3CO6ar4Lvkd8sMAAQZvLmJmwRHVU/YaKrNaW5vckRVZCsPB4MENpyquq+xV0
- aqo5WC4ETbg3UZYM9/rZU5of29NS4mLE9xl0HOb1HeTC7z+1OYhuHjpdP1WKlxP1ztm5icRPc
- mzS292sFD0ao5tUYHP75zARgE5FBf+LCBdFNCmUi6i6lOfmgwM9SJO9RZRG8z1Qf5CrUBokfc
- HnR1Cl8hJ03lPOiMRZhOQ3PHNzY85OTohzWLqt1wvwRmb/ey69a837x1rXsGOR0mhkKmdmEHK
- FbSPp0lSMumvLTqaaVlotW4iq1clfHjM6B+tSHfIHNSqqHitz8hb00sj6IfaVRcKHqgX871s+
- yLkiR/M+wNecaazkQrzHGJL64ki3K2gDf5dqgHcLgWnzpIIiORPE6zTvYY0neBYc4A4glkJLg
- Uqq0RJizwlaJBtGHswNEhqcUbXVBER4FFNRA/MaKoo36f/nyTpzBo/5FPmgGHFVQYSup+pmOK
- +rwOqP+QXnW5b00VKgiALPW4qv9Npsffv1DPmVjGSTR8VyL5FXtnQhzTiYVkXoGFGjrTbONDV
- DkXxOyAIicJikQg0Z0iJWuopKLO+CSMdecpKYgMbFMwFfyAz+4KaZWGfszalTxAZRUOS0yi
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tKW2IUtsqtDRztdT"
+Content-Disposition: inline
+In-Reply-To: <20200306132151.2ABC38030786@mail.baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For ARCH=x86 (32 bit) when you set CONFIG_IOMMU_INTEL since c5a5dc4cbbf4
-("iommu/vt-d: Don't switch off swiotlb if bounce page is used") there's
-a dependency on CONFIG_SWIOTLB, which was not necessarily active before.
 
-The init code for swiotlb in 'pci_swiotlb_detect_4gb()' compares
-something against MAX_DMA32_PFN to decide if it should be active.
-However that define suffers from an arithmetic overflow since
-1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too") when it was
-first made visible to x86_32.
+--tKW2IUtsqtDRztdT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The effect is at boot time 64 MiB (default size) were allocated for
-bounce buffers now, which is a noticeable amount of memory on small
-systems. We noticed this effect on the fli4l Linux distribution when
-migrating from kernel v4.19 (LTS) to v5.4 (LTS) on boards like pcengines
-ALIX 2D3 with 256 MiB memory for example:
+On Fri, Mar 06, 2020 at 04:19:54PM +0300, Sergey.Semin@baikalelectronics.ru=
+ wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+>=20
+> The problem with detecting the FIFO depth in the platform driver
+> is that in order to implement this we have to access the controller
+> IC_COMP_PARAM_1 register. Currently it's done before the
+> i2c_dw_set_reg_access() method execution, which is errors prone since
+> the method determines the registers endianness and access mode and we
+> can't use dw_readl/dw_writel accessors before this information is
+> retrieved. We also can't move the i2c_dw_set_reg_access() function
+> invocation to after the master/slave probe functions call (when endianness
+> and access mode are determined), since the FIFO depth information is used
+> by them for initializations. So in order to fix the problem we have no
+> choice but to move the FIFO size detection methods to the common code and
+> call it at the probe stage.
+>=20
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: linux-i2c@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
 
-  Linux version 5.4.22 (buildroot@buildroot) (gcc version 7.3.0 (Buildroot 2018.02.8)) #1 SMP Mon Nov 26 23:40:00 CET 2018
-  …
-  Memory: 183484K/261756K available (4594K kernel code, 393K rwdata, 1660K rodata, 536K init, 456K bss , 78272K reserved, 0K cma-reserved, 0K highmem)
-  …
-  PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
-  software IO TLB: mapped [mem 0x0bb78000-0x0fb78000] (64MB)
+Applied to for-next, thanks!
 
-The initial analysis and the suggested fix was done by user 'sourcejedi'
-at stackoverflow and explicitly marked as GPLv2 for inclusion in the
-Linux kernel:
 
-  https://unix.stackexchange.com/a/520525/50007
+--tKW2IUtsqtDRztdT
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The actual calculation however is the same as for arch/mips now as
-suggested by Robin Murphy.
+-----BEGIN PGP SIGNATURE-----
 
-Fixes: https://web.nettworks.org/bugs/browse/FFL-2560
-Fixes: https://unix.stackexchange.com/q/520065/50007
-Reported-by: Alan Jenkins <alan.christopher.jenkins@gmail.com>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Alexander Dahl <post@lespocky.de>
----
+iQIyBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl52XdEACgkQFA3kzBSg
+KbbDHw/4rF8enKtmpvMYhWXPtAfQWQsbh/LKy56ASKgJzHsDgaDP6k95R819zoxx
+mNtD3nvIotGgl9YO3SeaVZZnBf0KTAgN53qLY8/h920wuwzGxnB4tGc2+1dE3e/x
+Iix4Z5aXXMSgRL5LHvbng18IYtt4xPlrpZ+YLelZsTSKzO+GDpDGnAOmFp843xS7
+kwh9tJqsEuSO8fzyS/tAOix6GZvxlTu+06sMX831S6rFdgC5tfXQBTgzq5vchlHL
+tK/MJfXeJ/lF1lqr/4n88cBYyWyvyps79B2fsYcVBOQ67AHHCZWqu9m8ojYOKArC
+tLCAgOnleezVIGlWAilysd4a46lmFbp/bJR4d4ooV2m/m9n1M03tN0nFcA90ScwS
+OPT2sZxqCRsUYtZ7D6p30S7v6Hc9DOVUpzvVRtHgxDxFFAhqFzSwmkn2q/OtpT4J
+0yy+TakopOAQWWlJP5EHhLZKWFO1rhg2x4Cge4L/+Ixx4BNw5+Olfg6WaIq66iJT
+QJ/NvjH9Kq+pXtEYV39e/QRQyNn7TkPrUKsl/YtdKT/s+W9izlF2o6EjZROXhzwt
+lrMRE5ZZ0ipzNkEQ2e4kN1Imo5aK1MlaZe3H7WN6CDV536/X7+jHYyTT4uWxJhYf
+/7j7odybyP0cXny85bjsTNm4eqhDEOFZUcdF+TpZ/D3XX6Hp3w==
+=DD9j
+-----END PGP SIGNATURE-----
 
-Notes:
-    v1 -> v2:
-      - use the same calculation as with arch/mips (Robin Murphy)
-
- arch/x86/include/asm/dma.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/dma.h b/arch/x86/include/asm/dma.h
-index 00f7cf45e699..8e95aa4b0d17 100644
---- a/arch/x86/include/asm/dma.h
-+++ b/arch/x86/include/asm/dma.h
-@@ -74,7 +74,7 @@
- #define MAX_DMA_PFN   ((16UL * 1024 * 1024) >> PAGE_SHIFT)
- 
- /* 4GB broken PCI/AGP hardware bus master zone */
--#define MAX_DMA32_PFN ((4UL * 1024 * 1024 * 1024) >> PAGE_SHIFT)
-+#define MAX_DMA32_PFN (1UL << (32 - PAGE_SHIFT))
- 
- #ifdef CONFIG_X86_32
- /* The maximum address that we can perform a DMA transfer to on this platform */
--- 
-2.20.1
-
+--tKW2IUtsqtDRztdT--
