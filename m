@@ -2,112 +2,218 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99278C43332
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 22:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85179C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 22:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69AC420754
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 22:30:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="MzX9gd+Y"
+	by mail.kernel.org (Postfix) with ESMTP id 5717520754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 22:36:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgCUWaV (ORCPT
+        id S1728080AbgCUWgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 18:30:21 -0400
-Received: from forward105p.mail.yandex.net ([77.88.28.108]:40704 "EHLO
-        forward105p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727700AbgCUWaV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 18:30:21 -0400
-X-Greylist: delayed 371 seconds by postgrey-1.27 at vger.kernel.org; Sat, 21 Mar 2020 18:30:19 EDT
-Received: from forward101q.mail.yandex.net (forward101q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb98])
-        by forward105p.mail.yandex.net (Yandex) with ESMTP id 73E9F4D40E7E;
-        Sun, 22 Mar 2020 01:24:06 +0300 (MSK)
-Received: from mxback4q.mail.yandex.net (mxback4q.mail.yandex.net [IPv6:2a02:6b8:c0e:6d:0:640:ed15:d2bd])
-        by forward101q.mail.yandex.net (Yandex) with ESMTP id 6E823CF40002;
-        Sun, 22 Mar 2020 01:24:06 +0300 (MSK)
-Received: from vla1-bdd5685c3f79.qloud-c.yandex.net (vla1-bdd5685c3f79.qloud-c.yandex.net [2a02:6b8:c0d:4201:0:640:bdd5:685c])
-        by mxback4q.mail.yandex.net (mxback/Yandex) with ESMTP id ZeWZYb8O5m-O6lCQIpf;
-        Sun, 22 Mar 2020 01:24:06 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1584829446;
-        bh=C2xVe2PIuH9rWg0p608J2xRKb7GLPXXF9rWS1X8kHYY=;
-        h=In-Reply-To:From:To:Subject:Cc:Date:References:Message-ID;
-        b=MzX9gd+YqAQxkBQWUUL9nx3q3XoD2h7840na5Re8WrlP89axDxjDOqe8CdXoPpsiH
-         ZDr+VAzt3lNIE2c4U21oLmmWgxzoxkdAzPksxNwdJ9g+y1NrQAcHva0EU1CX27GnP5
-         F4cz8MZzyONRSVBJFgwxYlQmNGssQPQzoUrY8xwY=
-Authentication-Results: mxback4q.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by vla1-bdd5685c3f79.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id DqRcswWVlk-O5ZmaB9I;
-        Sun, 22 Mar 2020 01:24:05 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [RFC][possible bug] when should SS_AUTODISARM have effect?
-To:     Andy Lutomirski <luto@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200319021629.GC23230@ZenIV.linux.org.uk>
- <CALCETrULZc+T6MeRwfcf=JGoh0xE0YEsTFeLiB5=zdH8AX+3bg@mail.gmail.com>
-From:   stsp <stsp2@yandex.ru>
-Message-ID: <4b34bac5-9c1e-c1bb-c033-cd373efc1745@yandex.ru>
-Date:   Sun, 22 Mar 2020 01:24:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sat, 21 Mar 2020 18:36:04 -0400
+Received: from mga14.intel.com ([192.55.52.115]:24400 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727700AbgCUWgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 18:36:04 -0400
+IronPort-SDR: PXiJJSF//F/T3WIu6N8/KlqBRcCtojxlu3WgMMLEi0jd8b1eCUWA2JfTNCTiz6KkenyK40OWcS
+ K2/8jAxJORWA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 15:36:03 -0700
+IronPort-SDR: fLbsV9ZoZl0vrc+e2jeAa5myvZlbP4xkDJWjcQF/1p7HktXHopy/X9+o1fRlgWptFyS2h0budz
+ Vc9HREL2pP8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,290,1580803200"; 
+   d="scan'208";a="419091643"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 21 Mar 2020 15:36:01 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jFmin-000FQw-0l; Sun, 22 Mar 2020 06:36:01 +0800
+Date:   Sun, 22 Mar 2020 06:35:34 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:timers/core] BUILD SUCCESS
+ a5d442f50a41d7c5a6a97b19c49d8a1ee0cf128b
+Message-ID: <5e7696b6.HNp093qrM39vO08N%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <CALCETrULZc+T6MeRwfcf=JGoh0xE0YEsTFeLiB5=zdH8AX+3bg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-21.03.2020 20:59, Andy Lutomirski пишет:
-> On Wed, Mar 18, 2020 at 7:16 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->>          Consider the following scenario:  SIGPIPE has SA_ONSTACK
->> handler, SIGSEGV - non-SA_ONSTACK one.  SIGPIPE is delivered
->> and we fail halfway through setting a sigframe for it.
->> OK, we get SIGSEGV forced in, which gets handled not on altstack.
->> But what should happen if we fail *after* having saved the
->> altstack settings into the sigframe that got abandoned?
->>
->>          AFAICS, we get them reset and the original setting
->> entirely lost.  Shouldn't that thing be applied only after
->> we have succeeded in building the frame?  In signal_delivered(),
->> perhaps...
->>
->>          I realize that this is out of scope for POSIX, so it's
->> not a matter of standard compliance, but it looks like a bit
->> of a QoI issue...
-> I suspect that the number of real programs that usefully handle
-> SIGSEGV due to signal delivery failure is extremely low.  And the
-> number of real programs that use SA_ONSTACK and expect to survive when
-> the alternate stack is bad may well be zero.
->
-> Honestly, if we actually want to make any of this useful, I think a
-> better design would be to use an entirely separate signal specifically
-> for signal delivery failure.  So we'd have SIGBADSIG, and signal
-> delivery failure tries to deliver SIGBADSIG.  The current design is
-> like if x86 handled exception failure by sending #PF.  The results
-> would be nonsensical.
->
-> But adding a feature like this would be silly unless someone actually
-> wanted to use it.
-> .
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  timers/core
+branch HEAD: a5d442f50a41d7c5a6a97b19c49d8a1ee0cf128b  arm64: vdso32: Enable Clang Compilation
 
-IMHO the signal delivery failure should
-either call do_exit(), or be quite close to
-sigreturn() failure, which is a SIGSEGV
-with special si_code IIRC. If you ask me
-(as probably the only user of SS_AUTODISARM,
-special si_code and all that), I'd say that
-I can live well without yet another notification
-method. :) And you can always invent new
-si_code rather than new signum, in case
-the new method is really needed.
+elapsed time: 483m
 
+configs tested: 151
+configs skipped: 0
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+nds32                             allnoconfig
+nios2                         3c120_defconfig
+sh                          rsk7269_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+arm                              allmodconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+mips                 randconfig-a001-20200321
+nds32                randconfig-a001-20200321
+m68k                 randconfig-a001-20200321
+parisc               randconfig-a001-20200321
+alpha                randconfig-a001-20200321
+riscv                randconfig-a001-20200321
+h8300                randconfig-a001-20200322
+microblaze           randconfig-a001-20200322
+nios2                randconfig-a001-20200322
+c6x                  randconfig-a001-20200322
+sparc64              randconfig-a001-20200322
+h8300                randconfig-a001-20200321
+microblaze           randconfig-a001-20200321
+nios2                randconfig-a001-20200321
+c6x                  randconfig-a001-20200321
+sparc64              randconfig-a001-20200321
+s390                 randconfig-a001-20200321
+xtensa               randconfig-a001-20200321
+csky                 randconfig-a001-20200321
+openrisc             randconfig-a001-20200321
+sh                   randconfig-a001-20200321
+i386                 randconfig-b003-20200322
+i386                 randconfig-b001-20200322
+x86_64               randconfig-b003-20200322
+i386                 randconfig-b002-20200322
+x86_64               randconfig-b002-20200322
+x86_64               randconfig-c003-20200321
+i386                 randconfig-c002-20200321
+x86_64               randconfig-c001-20200321
+x86_64               randconfig-c002-20200321
+i386                 randconfig-c003-20200321
+i386                 randconfig-c001-20200321
+i386                 randconfig-d003-20200322
+i386                 randconfig-d001-20200322
+i386                 randconfig-d002-20200322
+x86_64               randconfig-d001-20200322
+x86_64               randconfig-d003-20200322
+i386                 randconfig-d003-20200321
+i386                 randconfig-d001-20200321
+x86_64               randconfig-d002-20200321
+i386                 randconfig-d002-20200321
+x86_64               randconfig-d001-20200321
+x86_64               randconfig-d003-20200321
+x86_64               randconfig-e001-20200321
+i386                 randconfig-e002-20200321
+x86_64               randconfig-e003-20200321
+i386                 randconfig-e003-20200321
+x86_64               randconfig-e002-20200321
+i386                 randconfig-e001-20200321
+arm                  randconfig-a001-20200321
+arm64                randconfig-a001-20200321
+ia64                 randconfig-a001-20200321
+sparc                randconfig-a001-20200321
+arc                  randconfig-a001-20200321
+powerpc              randconfig-a001-20200322
+ia64                 randconfig-a001-20200322
+arc                  randconfig-a001-20200322
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
