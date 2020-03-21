@@ -2,133 +2,107 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1AEC4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 16:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5848DC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 16:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9046D20757
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 16:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E1720714
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 16:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584807232;
-	bh=A+1+Tw9EBpjdZ/uFAuuXCRuEgRPqpdGHTjk403RuarA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xU1UZZVLwXBp38wtdow7nmFNIbNNUeHu63iS/1tDqHCMwnHBh8D7kqh6foPGNx834
-	 /JeJ2m8QOjvuF1MlYNAJk+ZQfRhqD5gXX1ggrJgmmRZkO4o4PKRTOQo9t3Z/aQeaOB
-	 fNA1PNitHL+ObScV3kUQ5we5InwJptuC4sTOtUEc=
+	s=default; t=1584808002;
+	bh=Dddj/iuye2K669+w5wOKN7H3IReWtuBcPH/1btZ76M0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K8MKDGOlWPaOhfSYrtGlRM1XyJOhchl1rFmXrxZj+U7OpWQn9cRI23R2Y085dWrdK
+	 T7SjSrygf05Gn+5BTYlTXleUd1l8b2saw/ZiY8HehBoiouF1oXvF/6nGJANmsrkGgw
+	 Rx+kpfqlx3pLdbOCBb+zY/GvabtNgbUoKGef1hak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgCUQNv (ORCPT
+        id S1727403AbgCUQ0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 12:13:51 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34866 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727232AbgCUQNu (ORCPT
+        Sat, 21 Mar 2020 12:26:34 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35961 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbgCUQ0e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 12:13:50 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a20so10914749edj.2;
-        Sat, 21 Mar 2020 09:13:49 -0700 (PDT)
+        Sat, 21 Mar 2020 12:26:34 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g62so9764732wme.1;
+        Sat, 21 Mar 2020 09:26:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zjfqHm0ZTbjA1O22i1eTN10C6pr74+8t2h9HGWUzsps=;
-        b=q+eQU/JSGtGnIanZm2xEotxC/67QJR70WeJ8ugDC4C+qocYTT0aB1JJJWENh3OtJRG
-         JfnsyAowkl3wVDSfHFWWguUDre4H+lWF3VwZTPHbWOzAVUMeFend7qICSiIG8vBXcT1J
-         tsySkqdSRkW7ej021xNt+evLChfhuXDZMQiGsTMe2+L7EeCRow/H6v/Pi9wuX2zvOd1L
-         iLXwfQvBkb0UD1FVknsyxrcbzmAuvt/DNvK0fBHleYSEHuNahry7Z5r11INwILR3aTbC
-         SmT7pmCiFmqJNN0m7eaWUUu9PfAbGZoWuF3UJ6VZsDD+YcC0/f70TrIvEFrJPNA4mPQ4
-         14Yw==
-X-Gm-Message-State: ANhLgQ0BEaImAtSyfTxPuSE21AuFmCc9aJ+BtQNj98b3uj/W6+Q6GxYz
-        maipk0n01Mt1XrOOv6cHayQoUO1j9CZ8n08SwNOkM4Mu
-X-Google-Smtp-Source: ADFU+vtRATptTAYawyn0YQboewjMnQzU+F+RjaWQZft3agTaWcr2wB3ik8HG3Gjq82ZuAY/7LnsiU3vxdThfv+kSFHw=
-X-Received: by 2002:aa7:dbc1:: with SMTP id v1mr13429578edt.177.1584807228989;
- Sat, 21 Mar 2020 09:13:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GuIqERTR3t0coAsUD7Xv8E642UJWezc6SO06+7Y9t9o=;
+        b=kBYU9f2G3g2T05In+0I+Te8Q0+FaYib/Z08p4nUB7pLQD+R+0st1OFUW3ONUq837X0
+         +M18jnFYJwAPgS7tz9OReKH8iZQ9D+4zv+a/xZ7DvZZVkdFNZzyVd9o3bAVftqY+Hvvc
+         AXjyLVS6zN6E7otr4vMwBe+cyrBRpVckcKcOMA8RZf302ypED0xOCpbzhk/oyOI7rPrX
+         A6jX3O5OTvwKCudfiHn0DYJgaMJmBwuuvZ8fn2QEiGvi2/MJPoqkecK+P0jpvJVtACQ+
+         9Bcs88zVsSzRfwpdb4OHYLHOGV/H8bFAPvfviRaZnLr+aFRcON4VcA/C6S38UlgosqPL
+         hdnw==
+X-Gm-Message-State: ANhLgQ1J0i0hqtMvNj//zMRuftg1g9nQ8Jwtu4R4AXCt9H7zys/u7yLy
+        +eji8kfv/g/e+AGSfov6c/g=
+X-Google-Smtp-Source: ADFU+vs81+eZkmrFoTsfi0dcYyhe3fjahZ2bTDKZ83PS6zZ/DARksABcXdX7c3rjONYB7NFJpllvRQ==
+X-Received: by 2002:a1c:5604:: with SMTP id k4mr16262801wmb.57.1584807991960;
+        Sat, 21 Mar 2020 09:26:31 -0700 (PDT)
+Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
+        by smtp.gmail.com with ESMTPSA id g14sm13584389wme.32.2020.03.21.09.26.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Mar 2020 09:26:31 -0700 (PDT)
+Date:   Sat, 21 Mar 2020 16:26:29 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] hv: hyperv_vmbus.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200321162629.xjlpnw2oxx6r4yzg@debian>
+References: <20200319213226.GA9536@embeddedor.com>
 MIME-Version: 1.0
-References: <cf8b3db3-6daa-0da1-c3bb-1c0de029af7d@molgen.mpg.de>
-In-Reply-To: <cf8b3db3-6daa-0da1-c3bb-1c0de029af7d@molgen.mpg.de>
-From:   Len Brown <lenb@kernel.org>
-Date:   Sat, 21 Mar 2020 12:13:37 -0400
-Message-ID: <CAJvTdKkTrZyJc15oNQ1OSmX0_GSb3Z5bzqt=gbdHERjRCMN1MQ@mail.gmail.com>
-Subject: Re: turbostat: Display all C-states on AMD Ryzen processor
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319213226.GA9536@embeddedor.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
-Thanks for the note.
-This devices is exposing two C-states to the OS, via ACPI tables:
+On Thu, Mar 19, 2020 at 04:32:26PM -0500, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-cpu7: C1: ACPI HLT
-cpu7: C2: ACPI IOPORT 0x414
+Queued, thanks.
 
-And turbostat is showing the kernel's count of requests into those
-states, and %residency in those states.
-
-So far, this is similar to what would be seen on most Intel parts,
-except Intel usually expose a couple more states to the OS, often via
-a native intel_idle driver, rather than the ACPI BIOS.
-
-That part that is really missing from AMD is hardware residency
-counters.  I don't know if there are any or not.  If somebody knows of
-any that are publicly documented and is willing to test patches to
-show them to the user, I'd be happy to cut patches.
-
-cheers,
--Len
-
-On Tue, Feb 11, 2020 at 6:18 AM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
->
-> Dear Len,
->
->
-> Running `turbostat` on an AMD Ryzen 5 PRO 1500, I do not see all C-states.
->
-> ```
-> $ git describe
-> v5.6-rc1
-> $ sudo ./turbostat
-> turbostat version 19.08.31 - Len Brown <lenb@kernel.org>
-> CPUID(0): AuthenticAMD 0xd CPUID levels; 0x8000001f xlevels; family:model:stepping 0x17:1:1 (23:1:1)
-> CPUID(1): SSE3 MONITOR - - - TSC MSR - HT -
-> CPUID(6): APERF, No-TURBO, No-DTS, No-PTM, No-HWP, No-HWPnotify, No-HWPwindow, No-HWPepp, No-HWPpkg, No-EPB
-> CPUID(7): No-SGX
-> RAPL: 262 sec. Joule Counter Range, at 250 Watts
-> cpu7: POLL: CPUIDLE CORE POLL IDLE
-> cpu7: C1: ACPI HLT
-> cpu7: C2: ACPI IOPORT 0x414
-> cpu7: cpufreq driver: acpi-cpufreq
-> cpu7: cpufreq governor: performance
-> cpufreq boost: 1
-> cpu0: MSR_RAPL_PWR_UNIT: 0x000a1003 (0.125000 Watts, 0.000015 Joules, 0.000977 sec.)
-> Core    CPU     Avg_MHz Busy%   Bzy_MHz TSC_MHz IRQ     POLL    C1      C2      POLL%   C1%     C2%     CorWatt PkgWatt
-> -       -       2       0.07    2973    3493    943     0       201     737     0.00    0.37    99.57   0.12    12.42
-> 0       0       2       0.08    3005    3493    122     0       7       116     0.00    0.12    99.81   0.03    12.42
-> 0       1       0       0.01    2998    3493    21      0       6       14      0.00    0.10    99.89
-> 1       2       0       0.01    3036    3493    25      0       13      11      0.00    0.21    99.78   0.04
-> 1       3       5       0.17    2960    3493    429     0       102     324     0.00    1.41    98.45
-> 4       4       2       0.05    3015    3493    74      0       24      50      0.00    0.32    99.64   0.03
-> 4       5       3       0.09    2921    3493    125     0       15      110     0.00    0.28    99.63
-> 5       6       2       0.07    2978    3493    124     0       26      97      0.00    0.39    99.54   0.03
-> 5       7       1       0.02    3012    3493    23      0       8       15      0.00    0.13    99.84
-> ```
->
-> On an Intel processor more C-states are shown. Is support just lacking
-> on AMD, or should a different tool be used?
->
->
-> Kind regards,
->
-> Paul
->
-
-
--- 
-Len Brown, Intel Open Source Technology Center
+Wei.
