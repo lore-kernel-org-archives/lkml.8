@@ -2,98 +2,69 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB056C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A445EC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE51320724
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E35D20663
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584818109;
+	bh=IO2i0/00/xFwOWpckKq9Z7PxZLEcx28qFa/jIX2OlKc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=1Sow9u1S2fkqibXHlNQZubvsR9pcRwLFkzKj1MIjFjlmnS8oZxkw78gr6snM/Svfr
+	 s7hy4Dhf/Hgj4Jb1t4p4Q3GQu6S4nNBPXiJ2bBV8iMvqVozGDhp7f2nR4VR+7geTK3
+	 aFguZ1ASx0MWaOmPh8eR3LxqSUQK8+Raiz1geAd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgCUTOF convert rfc822-to-8bit (ORCPT
+        id S1727943AbgCUTPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 15:14:05 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:48853 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727428AbgCUTOE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 15:14:04 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-258-5dLg6k9dMdWiOUfVgdYHTg-1; Sat, 21 Mar 2020 19:13:59 +0000
-X-MC-Unique: 5dLg6k9dMdWiOUfVgdYHTg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Sat, 21 Mar 2020 19:13:51 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Sat, 21 Mar 2020 19:13:51 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Steven Rostedt' <rostedt@goodmis.org>,
+        Sat, 21 Mar 2020 15:15:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39202 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727533AbgCUTPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 15:15:06 -0400
+Subject: Re: [GIT PULL] io_uring fixes for 5.6-rc
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584818106;
+        bh=IO2i0/00/xFwOWpckKq9Z7PxZLEcx28qFa/jIX2OlKc=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=oXUWLzGSwIA8ZOMZnHdKcuvmxQGuKQRI4cuANRw5MrNQG7u4owjoFWMy132Pb+hso
+         cTtq7P31PB4+klA+2hSDIyvudCb9PDGYcZXrVf3LzYsOyFL62T/hvOaLMc7Eq7z0UD
+         amtWlLhaYuKagPrShLwfzA+Fq5i2OXA8W27B5c8I=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <51feabdd-c2e2-e24f-92af-edf4b2b0f54d@kernel.dk>
+References: <51feabdd-c2e2-e24f-92af-edf4b2b0f54d@kernel.dk>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <51feabdd-c2e2-e24f-92af-edf4b2b0f54d@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git
+ tags/io_uring-5.6-20200320
+X-PR-Tracked-Commit-Id: 09952e3e7826119ddd4357c453d54bcc7ef25156
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 1ab7ea1f83d16489142bcfa1b7670ac7ca86cd81
+Message-Id: <158481810637.2095.13875868456940201136.pr-tracker-bot@kernel.org>
+Date:   Sat, 21 Mar 2020 19:15:06 +0000
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        io-uring <io-uring@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Shuah Khan <shuahkhan@gmail.com>, bpf <bpf@vger.kernel.org>
-Subject: RE: [PATCH 00/12 v2] ring-buffer/tracing: Remove disabling of ring
- buffer while reading trace file
-Thread-Topic: [PATCH 00/12 v2] ring-buffer/tracing: Remove disabling of ring
- buffer while reading trace file
-Thread-Index: AQHV/kYCQIwPxRMFlk+UdEERk+KYoKhTa8kQ
-Date:   Sat, 21 Mar 2020 19:13:51 +0000
-Message-ID: <2a7f96545945457cade216aa3c736bcc@AcuMS.aculab.com>
-References: <20200319232219.446480829@goodmis.org>
-In-Reply-To: <20200319232219.446480829@goodmis.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt
-> Sent: 19 March 2020 23:22
-...
-> 
-> This patch series attempts to satisfy that request, by creating a
-> temporary buffer in each of the per cpu iterators to place the
-> read event into, such that it can be passed to users without worrying
-> about a writer to corrupt the event while it was being written out.
-> It also uses the fact that the ring buffer is broken up into pages,
-> where each page has its own timestamp that gets updated when a
-> writer crosses over to it. By copying it to the temp buffer, and
-> doing a "before and after" test of the time stamp with memory barriers,
-> can allow the events to be saved.
+The pull request you sent on Sat, 21 Mar 2020 12:38:34 -0600:
 
-Does this mean the you will no longer be able to look at a snapshot
-of the trace by running 'less trace' (and typically going to the end
-to get info for all cpus).
+> git://git.kernel.dk/linux-block.git tags/io_uring-5.6-20200320
 
-A lot of the time trace is being written far too fast for it to make
-any sense to try to read it continuously.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/1ab7ea1f83d16489142bcfa1b7670ac7ca86cd81
 
-Also, if BPF start using ftrace, no one will be able to use it for
-'normal debugging' on such systems.
+Thank you!
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
