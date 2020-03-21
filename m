@@ -2,69 +2,73 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74371C43332
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C22C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3412076F
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7BF20739
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:45:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="shBtMQX3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xIzznXjB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgCUJpN (ORCPT
+        id S1728423AbgCUJpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 05:45:13 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37354 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgCUJpN (ORCPT
+        Sat, 21 Mar 2020 05:45:18 -0400
+Received: from mail-wm1-f43.google.com ([209.85.128.43]:38438 "EHLO
+        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728369AbgCUJpR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 05:45:13 -0400
-Received: by mail-wm1-f67.google.com with SMTP id d1so8907250wmb.2
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 02:45:12 -0700 (PDT)
+        Sat, 21 Mar 2020 05:45:17 -0400
+Received: by mail-wm1-f43.google.com with SMTP id l20so8918399wmi.3
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 02:45:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zIxeWZSEoR5mYWjeyLRGn2yStyMPlpi+EFGqSgqgCYA=;
-        b=shBtMQX3VrXGFYrmvkYj02IPnuOfoLJECFQuk+qyH0RjPjzQuKQlBXE8zgEZtKFago
-         BUDC4yPxjTahxPIZI26mgaXzYBlcRXmdSl9Q39mXxlM/WV5aDVESL+FSKoiX8YiGGVxv
-         Sp5yULxyFVGhYAbahEI29euRnygKsmM3k9mjkpfDgObL/maT73WpyMJve7g69EzY73em
-         zUyvHryk7+WNpVTHp6Z11nuKVJnqt73sUgqpfs1PXzfozLIRMkuJpKsj/G5j6aHo4M5H
-         dv9qF3KJyI8Rpac452PAq3Oam2idJWI+IXQVvyGFaM3dDJyqefy0CMX6JLOCs+Y0Uas2
-         D9aA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CI7HoertAKDvDZptslfp0+rHp2j/ODCsoGqu9t32OVA=;
+        b=xIzznXjBpVqlsSgITTHirE1Sy4Fs9Eq0jjeti/9RQ34hINQMBNDK45QbyL71xMp1Ga
+         UdQJfcu3yepa89j8aNhVmA/ptVz0hvsnsEGrSx0LeM0tqygBQOcefDXfkCwFTIPyuIq6
+         1J5OoJIF2Em+DVvFEDxdDMPbJvAYcYylVLqqo+QyHKQ1qcjfW4KpIeY+qsippp4ia7jN
+         HQHq+uviEZynA1ENrrotZ0+cD6kCTNrK1hfVZecnnd0yXnlbdxfzVhbmxXtUIPSLCxma
+         7utrhXJ70hzBOWNmvB0JF2mR1Daro2EzT3y2esVTTPLC/3idnISqZHMjTtVkhGNx7P1I
+         Dhtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zIxeWZSEoR5mYWjeyLRGn2yStyMPlpi+EFGqSgqgCYA=;
-        b=JsDuVxkh0nf6oY7y+T7fjslMI9Mx1PgnLh0Gsdx91K2+F3Ph79Uhz+8AdHJhf8Hx77
-         lM48wdvxg0A6B/4oSK1M3/BgHRoyVaWcIjQCaZugmMdFrzJsiA3WK3TVFWAEGE0fDiIk
-         bLOrH28sSTv0GPnLz2dVYtl7Qpw0lKM4UFxgVP3fCiIxiqbVK+yZ2aUXKf8AKBfO48rq
-         Q553V1wXN5/+gs6nixRvhKws6ei5MneefcEH+04AkpGplMDdLUdKIDV65ruPqX7Y2nBe
-         0r30iVtKHX66HlseFSGLpUcv6vQacUFXrDsbRluk0jUKblgT3aun3eGwrpo/o9ObVOK3
-         og2Q==
-X-Gm-Message-State: ANhLgQ2rQPuBxeMYqUbQU1DoRnUPH66xgumjnBFlBFyg59FlvldSDhoV
-        AHDndnww74kan6260Mxq0GMdQA==
-X-Google-Smtp-Source: ADFU+vtPhn4ISbrT1E+hpEtrUmnBVC5uWrCqkZZe4YUVdPySgJB9vhVnEWbiueAjeuWtpF2oXCqIJA==
-X-Received: by 2002:a1c:a714:: with SMTP id q20mr15203754wme.148.1584783911597;
-        Sat, 21 Mar 2020 02:45:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CI7HoertAKDvDZptslfp0+rHp2j/ODCsoGqu9t32OVA=;
+        b=b6p6cbuoqYXTUGq1B7/v7rIP1EFreu2LYOQ/9bVq1CG4kN2+7tXV4JnWP7FvKhKJwo
+         FKVbXdNMGdrdVHem+r2H1L3YIJQj+MFmzK49qiVvIVxmwY6+DiWQLBPbOCRWuRU45thB
+         khgEKqLcNkpm65X2ELXvS83nepoqIjiLsZl3mniuNtV5xJlYLvODfG0xsF/AO4xKjzkf
+         3UQJHfuQIknMziZx7MywjGg7Rkk+LEvdfFYtdTEdQxqnJ+0HMru7tt1ZRl8V5KnlSQXH
+         Pla70mI1cBhYH31jLYDuHF0aZvbZvgJRuPJWf6sXeYlCsZvcbtHCbPyYGRA7rJjoexni
+         9FIg==
+X-Gm-Message-State: ANhLgQ0azXDvr8k3Gb4g7kiBJ7AGC9VJ/Lh0uxQXFkVuiBEM3aSgii7F
+        m/wcgauqDE1fnn/D61Wm8Ty8xg==
+X-Google-Smtp-Source: ADFU+vv6bvYY4jRRrfXkVi6gsEcDn8amDvUoHr2R0oWUCp2iV/CPK3ppMwEW4FRSSww4KLKpWABAnQ==
+X-Received: by 2002:a1c:f607:: with SMTP id w7mr911618wmc.162.1584783914934;
+        Sat, 21 Mar 2020 02:45:14 -0700 (PDT)
 Received: from localhost.localdomain ([84.33.129.193])
-        by smtp.gmail.com with ESMTPSA id z203sm5396378wmg.12.2020.03.21.02.45.09
+        by smtp.gmail.com with ESMTPSA id z203sm5396378wmg.12.2020.03.21.02.45.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 21 Mar 2020 02:45:10 -0700 (PDT)
+        Sat, 21 Mar 2020 02:45:14 -0700 (PDT)
 From:   Paolo Valente <paolo.valente@linaro.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
         rasibley@redhat.com, vkabatov@redhat.com, xzhou@redhat.com,
-        jstancek@redhat.com, Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH BUGFIX 0/4] block, bfq: series of cgroups-related fix
-Date:   Sat, 21 Mar 2020 10:45:17 +0100
-Message-Id: <20200321094521.85986-1-paolo.valente@linaro.org>
+        jstancek@redhat.com, Paolo Valente <paolo.valente@linaro.org>,
+        cki-project@redhat.com
+Subject: [PATCH BUGFIX 2/4] block, bfq: turn put_queue into release_process_ref in __bfq_bic_change_cgroup
+Date:   Sat, 21 Mar 2020 10:45:19 +0100
+Message-Id: <20200321094521.85986-3-paolo.valente@linaro.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200321094521.85986-1-paolo.valente@linaro.org>
+References: <20200321094521.85986-1-paolo.valente@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,29 +76,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-this is a series of four fixes. The first patch fixes the issue
-reported in [1], while the following patches fix a few extra issues
-found while testing the first fix.
+A bfq_put_queue() may be invoked in __bfq_bic_change_cgroup(). The
+goal of this put is to release a process reference to a bfq_queue. But
+process-reference releases may trigger also some extra operation, and,
+to this goal, are handled through bfq_release_process_ref(). So, turn
+the invocation of bfq_put_queue() into an invocation of
+bfq_release_process_ref().
 
-Thanks,
-Paolo
+Tested-by: cki-project@redhat.com
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+---
+ block/bfq-cgroup.c  | 5 +----
+ block/bfq-iosched.c | 2 --
+ block/bfq-iosched.h | 1 +
+ 3 files changed, 2 insertions(+), 6 deletions(-)
 
-[1] https://www.spinics.net/lists/linux-block/msg50629.html
-
-Paolo Valente (4):
-  block, bfq: move forward the getting of an extra ref in bfq_bfqq_move
-  block, bfq: turn put_queue into release_process_ref in
-    __bfq_bic_change_cgroup
-  block, bfq: make reparent_leaf_entity actually work only on leaf
-    entities
-  block, bfq: invoke flush_idle_tree after reparent_active_queues in
-    pd_offline
-
- block/bfq-cgroup.c  | 87 +++++++++++++++++++++++++++------------------
- block/bfq-iosched.c |  2 --
- block/bfq-iosched.h |  1 +
- 3 files changed, 53 insertions(+), 37 deletions(-)
-
---
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index 9d963ed518d1..72c6151ace96 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -714,10 +714,7 @@ static struct bfq_group *__bfq_bic_change_cgroup(struct bfq_data *bfqd,
+ 
+ 		if (entity->sched_data != &bfqg->sched_data) {
+ 			bic_set_bfqq(bic, NULL, 0);
+-			bfq_log_bfqq(bfqd, async_bfqq,
+-				     "bic_change_group: %p %d",
+-				     async_bfqq, async_bfqq->ref);
+-			bfq_put_queue(async_bfqq);
++			bfq_release_process_ref(bfqd, async_bfqq);
+ 		}
+ 	}
+ 
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 8c436abfaf14..d9c1899cf05b 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -2716,8 +2716,6 @@ static void bfq_bfqq_save_state(struct bfq_queue *bfqq)
+ 	}
+ }
+ 
+-
+-static
+ void bfq_release_process_ref(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+ {
+ 	/*
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index d1233af9c684..cd224aaf9f52 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -955,6 +955,7 @@ void bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 		     bool compensate, enum bfqq_expiration reason);
+ void bfq_put_queue(struct bfq_queue *bfqq);
+ void bfq_end_wr_async_queues(struct bfq_data *bfqd, struct bfq_group *bfqg);
++void bfq_release_process_ref(struct bfq_data *bfqd, struct bfq_queue *bfqq);
+ void bfq_schedule_dispatch(struct bfq_data *bfqd);
+ void bfq_put_async_queues(struct bfq_data *bfqd, struct bfq_group *bfqg);
+ 
+-- 
 2.20.1
+
