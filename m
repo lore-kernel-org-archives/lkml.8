@@ -2,80 +2,135 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA04C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 04:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0B6C4332E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 04:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD4020663
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 04:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1E0620732
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 04:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgCUEtE (ORCPT
+        id S1727980AbgCUEun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 00:49:04 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:40401 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgCUEtE (ORCPT
+        Sat, 21 Mar 2020 00:50:43 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:57445 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgCUEun (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 00:49:04 -0400
-Received: by mail-il1-f197.google.com with SMTP id g79so7092376ild.7
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 21:49:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=rvmUPiw7rPSJlg92ogk4urICD4aqXpL+uX1Y0EwFPbo=;
-        b=qP3Dpxw76/pSykSNEIcShQc3QTBmwmwp/4/eZGYBNwGtQa752JvIzxvksvTOE6Re3e
-         xnHHlSc45vsUlRnzdb5Nhbj6OUg2spI3TWRKza6BJmA5m6D76mmTEYt8gJdtDMdLtgo6
-         fHB9Gy7V3sSkEPC3YYhmQ+khMqzSaPe/phGDp7tzIxVipnRWIWZrQVslJVEQ9iy/Hxxn
-         +J+K/Sk8CS0NURegEmkbNzsIZ4mdEYn+vuKP3Ctw0X+/Qs6ijnt2MQKaN3gsnJbh1+YM
-         OlKr3PBEzQBsZ7TM3MlA9LC9RMubUZ0l2NlbBrMJHJliZH1KXfBruRHKbg48WK9gD60H
-         AldA==
-X-Gm-Message-State: ANhLgQ3TjG+/7FlTwWtsH6cXD6aL4F+nSGM6veC5vE8FeINLmmkCunMj
-        G3LYglEUvd7fJPff2kTOAaBcpLlzMmFfg2xAQoR30e91rIoV
-X-Google-Smtp-Source: ADFU+vsIyP0VfZ6xrFZPZ16PlF2rSDU5ykaROKu09kcDvjHT5c2GSBuKPcaP+zOXNNI4Vxujqx9weHYXl9pOs/D5HzZ36C8tFWMC
+        Sat, 21 Mar 2020 00:50:43 -0400
+Received: from fsav102.sakura.ne.jp (fsav102.sakura.ne.jp [27.133.134.229])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 02L4nUum016014;
+        Sat, 21 Mar 2020 13:49:30 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav102.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav102.sakura.ne.jp);
+ Sat, 21 Mar 2020 13:49:30 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav102.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 02L4nP9d015877
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Sat, 21 Mar 2020 13:49:30 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH v2] Add kernel config option for fuzz testing.
+To:     Dmitry Vyukov <dvyukov@google.com>, Jiri Slaby <jslaby@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200307135822.3894-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <6f2e27de-c820-7de3-447d-cd9f7c650add@suse.com>
+ <20200308065258.GE3983392@kroah.com>
+ <3e9f47f7-a6c1-7cec-a84f-e621ae5426be@suse.com>
+ <CACT4Y+a6KExbggs4mg8pvoD554PcDqQNW4sM15X-tc=YONCzYw@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <7728c978-d359-227f-0f3e-f975c45ca218@i-love.sakura.ne.jp>
+Date:   Sat, 21 Mar 2020 13:49:21 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-Received: by 2002:a6b:7407:: with SMTP id s7mr10534502iog.11.1584766143328;
- Fri, 20 Mar 2020 21:49:03 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 21:49:03 -0700
-In-Reply-To: <000000000000b380de059f5ff6aa@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000006777805a1561fa3@google.com>
-Subject: Re: WARNING: ODEBUG bug in tcindex_destroy_work (3)
-From:   syzbot <syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com>
-To:     adam.zerella@gmail.com, davem@davemloft.net,
-        gregkh@linuxfoundation.org, hdanton@sina.com, jhs@mojatatu.com,
-        jiri@resnulli.us, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux@dominikbrodowski.net, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACT4Y+a6KExbggs4mg8pvoD554PcDqQNW4sM15X-tc=YONCzYw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On 2020/03/10 15:30, Dmitry Vyukov wrote:
+> Re making it a single config vs a set of fine-grained configs. I think
+> making it fine-grained is a proper way to do it, but the point Tetsuo
+> raised is very real and painful as well -- when a kernel developer
+> adds another option, they will not go and update configs on all
+> external testing systems. This problem is also common for "enable all
+> boot tests that can run on this kernel", or "configure a 'standard'
+> debug build". Currently doing these things require all of expertise,
+> sacred knowledge, checking all configs one-by-one as well as checking
+> every new kernel patch and that needs to be done by everybody doing
+> any kernel testing.
+> I wonder if this can be solved by doing fine-grained configs, but also
+> adding some umbrella uber-config that will select all of the
+> individual options. Config system allows this, right? With "select" or
+> "default if" clauses. What would be better: have the umbrella option
+> select all individual, or all individual default to y if umbrella is
+> selected?
 
-commit 836e9494f4485127a5b505ae57e4387bea8b53c4
-Author: Adam Zerella <adam.zerella@gmail.com>
-Date:   Sun Aug 25 05:35:10 2019 +0000
+So, we have three questions.
 
-    pcmcia/i82092: Refactored dprintk macro for dev_dbg().
+Q1: Can we agree with adding build-time branching (i.e. kernel config options) ?
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=175cffe3e00000
-start commit:   74522e7b net: sched: set the hw_stats_type in pedit loop
-git tree:       net-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=14dcffe3e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=10dcffe3e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b5acf5ac38a50651
-dashboard link: https://syzkaller.appspot.com/bug?extid=46f513c3033d592409d2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17bfff65e00000
+    I fear bugs (e.g. unexpectedly overwrting flag variables) in run-time
+    branching mechanisms. Build-time branching mechanisms cannot have such bugs.
 
-Reported-by: syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com
-Fixes: 836e9494f448 ("pcmcia/i82092: Refactored dprintk macro for dev_dbg().")
+Q2: If we can agree with kernel config options, can we start with single (or
+    fewer) kernel config option (e.g. CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING=y) ?
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Q3: If we can agree with kernel config options but we can't start with single
+    (or fewer) kernel config option, can we agree with adding another kernel
+    config option which selects all options (e.g.
+
+      config KERNEL_BUILT_FOR_FUZZ_TESTING
+             bool "Build kernel for fuzz testing"
+      
+      config KERNEL_BUILT_FOR_FUZZ_TESTING_SELECT_ALL
+             bool "Select all options for Build kernel for fuzz testing"
+             depends on KERNEL_BUILT_FOR_FUZZ_TESTING
+             select KERNEL_DISABLE_FOO1
+             select KERNEL_DISABLE_BAR1
+             select KERNEL_DISABLE_BUZ1
+             select KERNEL_CHANGE_FOO2
+             select KERNEL_ENABLE_BAR2
+      
+      config KERNEL_DISABLE_FOO1
+             bool "Disable foo1"
+             depends on KERNEL_BUILT_FOR_FUZZ_TESTING
+      
+      config KERNEL_DISABLE_BAR1
+             bool "Disable bar1"
+             depends on KERNEL_BUILT_FOR_FUZZ_TESTING
+      
+      config KERNEL_DISABLE_BUZ1
+             bool "Disable buz1"
+             depends on KERNEL_BUILT_FOR_FUZZ_TESTING
+      
+      config KERNEL_CHANGE_FOO2
+             bool "Change foo2"
+             depends on KERNEL_BUILT_FOR_FUZZ_TESTING
+      
+      config KERNEL_ENABLE_BAR2
+             bool "Enable bar2"
+             depends on KERNEL_BUILT_FOR_FUZZ_TESTING
+
+    ) ?
+
