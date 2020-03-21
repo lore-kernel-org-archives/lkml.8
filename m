@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F30E4C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E5BC43332
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C94E42072C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED1FE2072C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:37:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IttaYxyj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIyxJthK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbgCUUgv (ORCPT
+        id S1727851AbgCUUht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 16:36:51 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44304 "EHLO
+        Sat, 21 Mar 2020 16:37:49 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39264 "EHLO
         mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgCUUgu (ORCPT
+        with ESMTP id S1726366AbgCUUhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 16:36:50 -0400
-Received: by mail-ed1-f65.google.com with SMTP id z3so11519143edq.11
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 13:36:48 -0700 (PDT)
+        Sat, 21 Mar 2020 16:37:48 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a43so11573774edf.6
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 13:37:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=ZZ8vMEMrPzAmCCEBSbU8aR5UX0QpU9PFQ1YG0DRV08Y=;
-        b=IttaYxyjD1JYhBBOqIdM+9UpYtHnFoKk0/PzLFAQvrnz1/GlrqsgArmSJ9zmLkoNHl
-         le8t7zck7thQKq+I30w2OlvuVkPshfI8avRRtZOSw+ddn4jWuCIBkl1s97bXBa+CQBVE
-         ly/Lxh+N/wFaFtPYpv3Ag/QXfRMVrR/tUqXYH9vy3u7cKliybR6MHGPrzH7RnPdrI0CI
-         HKhYdDYg4YhiWY3YRZlq5ldLK7+f7dnwl3EQNV41eGg/w5HScKZ6iq1AKIop2XAtb9Cw
-         IVud8nbkuDvbjvZfn669sQMyxPkbQZZavuiYtBnxcB57F3G+SxyBJ0xM9rmTEE6DSW+m
-         UINA==
+        bh=MAv9nYA+EA8sQl+oTebsnJpHm15vlJ946YYDhPPH8Ag=;
+        b=PIyxJthK+hKVhHkV7DNb9tnBekj1Mm8kPvfdZQZygyJR7pBcGLrIK6iN18cvt7CQYv
+         TJIpET5h3dTZSjkraa5sQpn2lt0qus/fFspnU3UEim8fc9/mChTzZ8pt0VyhGBUn4lv9
+         Sy3DZOEIRmaa/3Wbh3eTm8arhmxhrqyHDx2svwv/kXFQwJnKwm4IOzVJBRaySFaBKny3
+         SeuVUnAaYC0KPsVBsVMkfexM9/qoM1N728SI6sfwgr6K0O4bIsa/twWw0swZSo15d3g6
+         4Uyn7Gdzx3JPNFzS2n6c7ohoJ90tXiE38yonPC/Q1QdiDWNnPyUiWecJmg+Vtu9CsXOP
+         7y3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition;
-        bh=ZZ8vMEMrPzAmCCEBSbU8aR5UX0QpU9PFQ1YG0DRV08Y=;
-        b=PMlqOe3x64d1jwyDEX18LUawIAfpNeaUy263eRYo6RJaJJxl92SCmrgWeFXBumPWVJ
-         e7UO8buvLX/VFusKu98IRXzY3xWvPCotVeshsEyBmYBiAFyUHBNhyLsJZFrwfL91oQqN
-         kYgOrloL8rWvPg+50Krw+0yAFbMXTepGMcMpdEVNfPMWXpySMaC5I2d8v1dMPvJ5bNtR
-         R297EeSCtq9/rhJEBO/dwwqFgwiVoiZmpIhd9pOtBpIG9xIIuqj+YxkakjKRdyRHVG0D
-         NJ5qt3ZRG71qIAtlFyrBg5oHpRTyBTd40A92GOaOS6AWwuqQ9XYUGHMoEYVwxwOhqzho
-         IfSA==
-X-Gm-Message-State: ANhLgQ0UO6kRA1DOsYTscgDW3m1iWn/1v4E16U5VgW3kRxlXA9NRlm+d
-        ML8P7a88D++SSYidZNExqG4=
-X-Google-Smtp-Source: ADFU+vukBYjeON5F6ElcikyjD2ci8Wh81K5f1NPZQSPa4qKB245eQEJz/JeGy420N6MHU+jzMww35Q==
-X-Received: by 2002:a17:906:34db:: with SMTP id h27mr13452108ejb.111.1584823008214;
-        Sat, 21 Mar 2020 13:36:48 -0700 (PDT)
+        bh=MAv9nYA+EA8sQl+oTebsnJpHm15vlJ946YYDhPPH8Ag=;
+        b=fp5CL4X7v7c3KT1rlAPNnhzP8yMRKXYiNSMZ36yXc8b7B3CnI/L2HCvzI8ExbsIncA
+         BlpFg2oAISd+Ht+eR1fEDmtXXH3OE/wFBRHxvlvnwCqOYdoSD6uUwKWGAg/tKRwm9HxP
+         frPHtxkfEe+/4E7ckwGiMa2bHOfBRQiPDADqQZXSXhtXkb7BTk9XUsAgxdCD/Ebhj4p3
+         yDLIXhBwm2wUy7tyKgGcPtoec1oYlusy4W+zcbi0MJIPp9qQLLF8jrypvzeuiEMa2eiz
+         BI8qtYCazcBZMh4Xzmhul8gFwhMIT50Iqx+uczT55uNn1WixrDRgpQRnXYMNfnlAZIMJ
+         qlPw==
+X-Gm-Message-State: ANhLgQ0NhgZ9b/3suXGwsmidXPMev4TeL38rr4UNn8m6nfvzzsQ2/R5o
+        B6Rcr/znApG1P4WRtTD8kLQ=
+X-Google-Smtp-Source: ADFU+vuYvDjWH4U0N7xvR70zyMG7JDP3kL/4N/gFVXeM6Sx2ajf8vISRp+9ESGYjiQs41fFi3HFCeA==
+X-Received: by 2002:a17:906:a28d:: with SMTP id i13mr1872058ejz.166.1584823067347;
+        Sat, 21 Mar 2020 13:37:47 -0700 (PDT)
 Received: from smtp.gmail.com ([2001:818:e238:a000:51c6:2c09:a768:9c37])
-        by smtp.gmail.com with ESMTPSA id ca12sm683498edb.47.2020.03.21.13.36.46
+        by smtp.gmail.com with ESMTPSA id t19sm634333ejc.55.2020.03.21.13.37.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2020 13:36:47 -0700 (PDT)
-Date:   Sat, 21 Mar 2020 17:36:40 -0300
+        Sat, 21 Mar 2020 13:37:46 -0700 (PDT)
+Date:   Sat, 21 Mar 2020 17:37:40 -0300
 From:   Melissa Wen <melissa.srw@gmail.com>
 To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
         Haneen Mohammed <hamohammed.sa@gmail.com>,
         Daniel Vetter <daniel@ffwll.ch>,
         David Airlie <airlied@linux.ie>, Rodrigo.Siqueira@amd.com
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/vkms: use bitfield op to get xrgb on compute crc
-Message-ID: <20200321203640.dwyk25jvnn2rffpw@smtp.gmail.com>
+Subject: [PATCH] drm/vkms: enable cursor by default
+Message-ID: <20200321203740.pg3r7f4vybruowox@smtp.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -72,57 +72,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The previous memset operation was not correctly setting zero on the
-alpha channel to compute the crc, and as a result, the
-pipe-A-cursor-alpha-transparent subtest of the IGT test kms_cursor_crc
-was crashing. To avoid errors of misinterpretation related to
-endianness, this solution uses a bitfield operation to extract the RGB
-values from each pixel and ignores the alpha channel as expected.
+This patch proposes a change in the behavior of the cursor to enable it as
+soon as the vkms module is added. Enabling the cursor by default appears
+to be an expected and more friendly behavior, especially when running IGT
+tests.
 
 Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
 ---
- drivers/gpu/drm/vkms/vkms_composer.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vkms/vkms_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index 4af2f19480f4..8c1c005bb717 100644
---- a/drivers/gpu/drm/vkms/vkms_composer.c
-+++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0+
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+index 860de052e820..6e6feecf7f20 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.c
++++ b/drivers/gpu/drm/vkms/vkms_drv.c
+@@ -34,7 +34,7 @@
  
- #include <linux/crc32.h>
-+#include <linux/bitfield.h>
+ static struct vkms_device *vkms_device;
  
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
-@@ -9,6 +10,8 @@
+-bool enable_cursor;
++bool enable_cursor = true;
+ module_param_named(enable_cursor, enable_cursor, bool, 0444);
+ MODULE_PARM_DESC(enable_cursor, "Enable/Disable cursor support");
  
- #include "vkms_drv.h"
- 
-+#define XRGB_MSK GENMASK(23, 0)
-+
- /**
-  * compute_crc - Compute CRC value on output frame
-  *
-@@ -26,6 +29,7 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
- 	int h_src = drm_rect_height(&composer->src) >> 16;
- 	int w_src = drm_rect_width(&composer->src) >> 16;
- 	u32 crc = 0;
-+	u32 *pixel;
- 
- 	for (i = y_src; i < y_src + h_src; ++i) {
- 		for (j = x_src; j < x_src + w_src; ++j) {
-@@ -33,7 +37,8 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
- 				     + (i * composer->pitch)
- 				     + (j * composer->cpp);
- 			/* XRGB format ignores Alpha channel */
--			memset(vaddr_out + src_offset + 24, 0,  8);
-+			pixel = vaddr_out + src_offset;
-+			*pixel = FIELD_GET(XRGB_MSK, *(u32 *)pixel);
- 			crc = crc32_le(crc, vaddr_out + src_offset,
- 				       sizeof(u32));
- 		}
 -- 
 2.25.1
 
