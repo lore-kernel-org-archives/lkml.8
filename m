@@ -2,160 +2,167 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DB3C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8283CC43333
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9940F20722
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497DB215A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:03:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FbpWCcpd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gUKXJIQa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbgCUBCv (ORCPT
+        id S1727834AbgCUBDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 21:02:51 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45047 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgCUBCv (ORCPT
+        Fri, 20 Mar 2020 21:03:05 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:53871 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727693AbgCUBDE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 21:02:51 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y24so6717992qtv.11;
-        Fri, 20 Mar 2020 18:02:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SP3el1IeHgtMqeYCx0AVkkm40OqwUzAvF5os8GiwOs4=;
-        b=FbpWCcpd9LHTnS+akC3+GX290aj4hoKE1FHNJTLvRfGWp2aAO4zV3soqt/F1TyWbG+
-         d0w14Z6LJbIOPFEseKssJXRbbXYpxsHVU7Jtu7P7C89hJRKjT7JGvDPbmS7XY2ZX9B2t
-         qGjSGjQ2py8tLMTGl8rkbbbIxZTl2kVAXtKFoWhu0tlVfj6J7jHrzuLyuxgSXzDMO7/J
-         1h4nMWJ64vlB/BuDLAXjtG1sELPDefhYwQ4Gyvt+9ZFPpQrrwAKQy1vLDDdm822U9XkY
-         yAG/6t1f6iD9ytDrgjJHfwBfnN90LJV+SxKIV3bCv1iKtzbuJ6lW/ZmYHbtVm9Kptfgv
-         1NjA==
+        Fri, 20 Mar 2020 21:03:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584752583;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=AjQuPaCjd7Ig4gpbwFISut+nUjzFUAzjw+os+HFJBP8=;
+        b=gUKXJIQaM+2nvr74Y65YzDph9UpV/V/vcf1GbZpiP4TzwUxuBsVJv/Tu5zVbOmImeIY0O3
+        JG9WfQzGZLelAVOAlNG0QpEo7/iAT6wR1Dmq2ZuVeDdYsTQks4PXOk4/aDNqoItPzrrt8O
+        h8UR+QE2S2nlYmjy0gFO4eHrPLgSNk4=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-65-J6rnopdwPoKhZLzNW0a9JQ-1; Fri, 20 Mar 2020 21:03:01 -0400
+X-MC-Unique: J6rnopdwPoKhZLzNW0a9JQ-1
+Received: by mail-qk1-f200.google.com with SMTP id l27so7029920qkl.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 18:03:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SP3el1IeHgtMqeYCx0AVkkm40OqwUzAvF5os8GiwOs4=;
-        b=YXGpAnaNbNrehZEEavJbrHDHkUGuODkVzRGIDwgRpgFeok0UIv1VOJ1f5zVRnDALcs
-         M0uLmdzwxKp5uiAsAwwNsAS7a5bW0kJacyveKvdcuBfiKoolu4N8BIdWfJoRLIsQN2Z1
-         NnlSijQ5yGczAvXkp0xDr/us3/27Sb1pZ4UTdonBp5GmXz4NttLITJE43R2msp9YCs+9
-         pOPxeXWcqV8k3XxbcIlYw4apB2m7Sc+R9PwCzSQYtiRBexjibzajQX+2THGViStB5miz
-         Xq0ga/+iWBFLk6B+9AwZrZwygZyGiZ74w2AYB4MAtuY0YWSlXTkVChnsyOO6DFP6ksFr
-         5KBw==
-X-Gm-Message-State: ANhLgQ0kOD9v9F/m+94Z77gC6D5bSA4pA+a5TYLkolzmuooe7AqlZuX+
-        VfW47ppVb47DJiwnqIA4cCQ=
-X-Google-Smtp-Source: ADFU+vvUa38Dl8xOfFFceaFo9zzCvGfi2g+6hz8m955ErR/mjUAKA+BmWKI6y9S3WU2IgFOxPY7WaQ==
-X-Received: by 2002:ac8:5653:: with SMTP id 19mr11114357qtt.385.1584752570069;
-        Fri, 20 Mar 2020 18:02:50 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1284:f028:3cb2:8072:4dfa:fd1:eb22])
-        by smtp.gmail.com with ESMTPSA id 85sm3986672qke.128.2020.03.20.18.02.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 18:02:48 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 7F110C3145; Fri, 20 Mar 2020 22:02:46 -0300 (-03)
-Date:   Fri, 20 Mar 2020 22:02:46 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, vyasevich@gmail.com,
-        nhorman@tuxdriver.com, Jakub Kicinski <kuba@kernel.org>,
-        linux-sctp@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, anenbupt@gmail.com
-Subject: Re: [PATCH v3] sctp: fix refcount bug in sctp_wfree
-Message-ID: <20200321010246.GC3828@localhost.localdomain>
-References: <20200320110959.2114-1-hqjagain@gmail.com>
- <20200320185204.GB3828@localhost.localdomain>
- <CAJRQjoc-U_K-2THbmBOj2TOWDTfP9yr5Vec-WjhTjS8sj19fHA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AjQuPaCjd7Ig4gpbwFISut+nUjzFUAzjw+os+HFJBP8=;
+        b=CdHf0e9Cc7piremt7tZhyDaD/ODu0JOmeLFTqxCq9AOpwVY7OdIJbtxA9ilDUqreJn
+         2t4e/J6t3F6QeO3LZT7hucjTE1twUowDn0LH8PcwRgClsSKr5la6U49WF4HWsG9ELX4N
+         LUR2q2pObNSnLHRTD8ZSDzGIPh8hrUt4P/Cmw/x+A40N0lTWiMce2BLJYv/SlS1nBCRN
+         +INCecySghK/dqlf0xTjYYfyib7ffnC8j++7NnsKZeAVac0wJK4t8SBLaK4TVhXZ8+b2
+         bM2WsRh3n3/bNNz9chzIEdLFyffj1uMIWulspBLP9Vs/QDSd0MS1Zw8xjx+0de/yIz4h
+         9UHA==
+X-Gm-Message-State: ANhLgQ33OUoX0T23hSpHtwdMUOkj1ZgzC5Vr/naJqtqxHuzsvdVDL/M0
+        GRvNQ1CKSHD/IlJNQRJtiypyr+1NVdbjdsDWURRbcqpnEk0VmpVxEeLPhSDwVmR0d+PmpnGa+/K
+        p8B+CZzn6L6C52DOzIutMtGzUM2oThrreHPZ/0nL9
+X-Received: by 2002:a37:9f42:: with SMTP id i63mr11208509qke.192.1584752581297;
+        Fri, 20 Mar 2020 18:03:01 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtCh2wJtD/g8xto3BH0cPBIK4C3l4y4LBkjZ5hI622fvjzhRRZrgbDgis1CB+9R05hCeHqJZDHrFD188Ry1ESA=
+X-Received: by 2002:a37:9f42:: with SMTP id i63mr11208481qke.192.1584752580926;
+ Fri, 20 Mar 2020 18:03:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJRQjoc-U_K-2THbmBOj2TOWDTfP9yr5Vec-WjhTjS8sj19fHA@mail.gmail.com>
+References: <20200310192627.437947-1-kherbst@redhat.com> <20200320221931.GA23783@google.com>
+In-Reply-To: <20200320221931.GA23783@google.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Sat, 21 Mar 2020 02:02:22 +0100
+Message-ID: <CACO55tsamLG5WE16U=psJpRWfz=7Fy5K8haGKHnhic1h0WAmqA@mail.gmail.com>
+Subject: Re: [PATCH v7] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 07:53:29AM +0800, Qiujun Huang wrote:
-...
-> > > So, sctp_wfree was not called to destroy SKB)
-> > >
-> > > then migrate happened
-> > >
-> > >       sctp_for_each_tx_datachunk(
-> > >       sctp_clear_owner_w);
-> > >       sctp_assoc_migrate();
-> > >       sctp_for_each_tx_datachunk(
-> > >       sctp_set_owner_w);
-> > > SKB was not in the outq, and was not changed to newsk
+On Fri, Mar 20, 2020 at 11:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Tue, Mar 10, 2020 at 08:26:27PM +0100, Karol Herbst wrote:
+> > Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
+> > Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
 > >
-> > The real fix is to fix the migration to the new socket, though the
-> > situation on which it is happening is still not clear.
+> > Depending on the used kernel there might be messages like those in demsg:
 > >
-> > The 2nd sendto() call on the reproducer is sending 212992 bytes on a
-> > single call. That's usually the whole sndbuf size, and will cause
-> > fragmentation to happen. That means the datamsg will contain several
-> > skbs. But still, the sacked chunks should be freed if needed while the
-> > remaining ones will be left on the queues that they are.
-> 
-> in sctp_sendmsg_to_asoc
-> datamsg holds his chunk result in that the sacked chunks can't be freed
+> > "nouveau 0000:01:00.0: Refused to change power state, currently in D3"
+> > "nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
+> > space inaccessible)"
+> > followed by backtraces of kernel crashes or timeouts within nouveau.
+> >
+> > It's still unkown why this issue exists, but this is a reliable workaround
+> > and solves a very annoying issue for user having to choose between a
+> > crashing kernel or higher power consumption of their Laptops.
+>
+> Thanks for the bugzilla link.  The bugzilla mentions lots of mailing
+> list discussion.  Can you include links to some of that?
+>
+> IIUC this basically just turns off PCI power management for the GPU.
+> Can you do that with something like the following?  I don't know
+> anything about DRM, so I don't know where you could save the pm_cap,
+> but I'm sure the driver could keep it somewhere.
+>
 
-Right! Now I see it, thanks.
-In the end, it's not a locking race condition. It's just not iterating
-on the lists properly.
+Sure this would work? From a quick look over the pci code, it looks
+like a of code would be skipped we really need, like the platform code
+to turn off the GPU via ACPI. But I could also remember incorrectly on
+how all of that worked again. I can of course try and see what the
+effect of this patch would be. And would the parent bus even go into
+D3hot if it knows one of its children is still at D0? Because that's
+what the result of that would be as well, no? And I know that if the
+bus stays in D0, that it has a negative impact on power consumption.
 
-> 
-> list_for_each_entry(chunk, &datamsg->chunks, frag_list) {
-> sctp_chunk_hold(chunk);
-> sctp_set_owner_w(chunk);
-> chunk->transport = transport;
-> }
-> 
-> any ideas to handle it?
+Anyway, I will try that out, I am just not seeing how that would help.
 
-sctp_for_each_tx_datachunk() needs to be aware of this situation.
-Instead of iterating directly/only over the chunk list, it should
-iterate over the datamsgs instead. Something like the below (just
-compile tested).
+>
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+> index b65ae817eabf..2ad825e8891c 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_drm.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+> @@ -618,6 +618,23 @@ nouveau_drm_device_fini(struct drm_device *dev)
+>         kfree(drm);
+>  }
+>
+> +static void quirk_broken_nv_runpm(struct drm_device *drm_dev)
+> +{
+> +       struct pci_dev *pdev = drm_dev->pdev;
+> +       struct pci_dev *bridge = pci_upstream_bridge(pdev);
+> +
+> +       if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
+> +               return;
+> +
+> +       switch (bridge->device) {
+> +       case 0x1901:
+> +               STASH->pm_cap = pdev->pm_cap;
+> +               pdev->pm_cap = 0;
+> +               NV_INFO(drm_dev, "Disabling PCI power management to avoid bug\n");
+> +               break;
+> +       }
+> +}
+> +
+>  static int nouveau_drm_probe(struct pci_dev *pdev,
+>                              const struct pci_device_id *pent)
+>  {
+> @@ -699,6 +716,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
+>         if (ret)
+>                 goto fail_drm_dev_init;
+>
+> +       quirk_broken_nv_runpm(drm_dev);
+>         return 0;
+>
+>  fail_drm_dev_init:
+> @@ -735,6 +753,9 @@ nouveau_drm_remove(struct pci_dev *pdev)
+>  {
+>         struct drm_device *dev = pci_get_drvdata(pdev);
+>
+> +       /* If we disabled PCI power management, restore it */
+> +       if (STASH->pm_cap)
+> +               pdev->pm_cap = STASH->pm_cap;
+>         nouveau_drm_device_remove(dev);
+>         pci_disable_device(pdev);
+>  }
+>
 
-Then, the old socket will be free to die regardless of the new one.
-Otherwise, if this association gets stuck on retransmissions or so,
-the old socket would not be freed till then.
-
-diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-index fed26a1e9518..85c742310d26 100644
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -151,9 +151,10 @@ static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
- 				       void (*cb)(struct sctp_chunk *))
- 
- {
-+	struct sctp_datamsg *msg, *prev_msg = NULL;
- 	struct sctp_outq *q = &asoc->outqueue;
- 	struct sctp_transport *t;
--	struct sctp_chunk *chunk;
-+	struct sctp_chunk *chunk, *c;
- 
- 	list_for_each_entry(t, &asoc->peer.transport_addr_list, transports)
- 		list_for_each_entry(chunk, &t->transmitted, transmitted_list)
-@@ -162,8 +163,14 @@ static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
- 	list_for_each_entry(chunk, &q->retransmit, transmitted_list)
- 		cb(chunk);
- 
--	list_for_each_entry(chunk, &q->sacked, transmitted_list)
--		cb(chunk);
-+	list_for_each_entry(chunk, &q->sacked, transmitted_list) {
-+		msg = chunk->msg;
-+		if (msg == prev_msg)
-+			continue;
-+		list_for_each_entry(c, &msg->chunks, frag_list)
-+			cb(c);
-+		prev_msg = msg;
-+	}
- 
- 	list_for_each_entry(chunk, &q->abandoned, transmitted_list)
- 		cb(chunk);
