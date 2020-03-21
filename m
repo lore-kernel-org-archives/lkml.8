@@ -2,91 +2,171 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 380B0C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C821C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0671620752
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:58:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584755916;
-	bh=YEVYwaejFBzGEXNFaWiuLbxaJ4BGLIC5QyGZnjM/uo0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zGO7NHjtQSDtneYBJwNtwv4y4p0Ob/GXbUzxnaKVE7RwYPZ+oqwPqZmSKoDnjr5fp
-	 wXn/FUnFRqYx3fntPDclbPALnnIVhC7Zl0qZWOZBZGI7KpTYsKZ0lFXLdSssG4gTvg
-	 erxU2/0KtHmP+oUNJfYHoj+kD4/sSA0iL94hg5G0=
+	by mail.kernel.org (Postfix) with ESMTP id B98A920722
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:05:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WDBYDUXC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbgCUB6b (ORCPT
+        id S1727832AbgCUCFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 21:58:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726801AbgCUB6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 21:58:31 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 230C120732;
-        Sat, 21 Mar 2020 01:58:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584755910;
-        bh=YEVYwaejFBzGEXNFaWiuLbxaJ4BGLIC5QyGZnjM/uo0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RZBrwTSPlNUeboMWDgxFW9/pgAyKTv7Gm65/9TZYqo4ptZco9VEBv8l6Zy+4cM+Pz
-         +uW9uwS1Fw99/2H+5V1rLO1p1+Gx2g9+vL3832F6xKwF/XI58HVnn4IrgpwkQ6CGrq
-         r4Ytpzf2jx53HjebxJSlXnwiE12m7WCG5ocoakYA=
-Date:   Fri, 20 Mar 2020 18:58:29 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Thomas =?ISO-8859-1?Q?Hellstr=F6m?= (VMware) 
-        <thomas_os@shipmail.org>
-Cc:     linux-mm@kvack.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>, pv-drivers@vmware.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        linux-graphics-maintainer@vmware.com,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: Ack to merge through DRM? WAS [PATCH v6 0/9] Huge page-table
- entries for TTM
-Message-Id: <20200320185829.2e4fc07db5610999e7b32d7e@linux-foundation.org>
-In-Reply-To: <5054bb71-b5b4-11a9-1c4e-487a7adf3177@shipmail.org>
-References: <20200304102840.2801-1-thomas_os@shipmail.org>
-        <9eb1acd3-cded-65f0-ed75-10173dc3a41c@shipmail.org>
-        <20200318162721.9b8a4d0ef7036ad93261f859@linux-foundation.org>
-        <5054bb71-b5b4-11a9-1c4e-487a7adf3177@shipmail.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+        Fri, 20 Mar 2020 22:05:10 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:34620 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbgCUCFK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 22:05:10 -0400
+Received: by mail-qv1-f65.google.com with SMTP id o18so4176803qvf.1;
+        Fri, 20 Mar 2020 19:05:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GqEPVEoRdujNeFvEZNFf0K2LnjjxzBACdE/GEwgTyq8=;
+        b=WDBYDUXCK+1lMxLHrnuS6uf0lXjiRANYqCWKcTMIfO6V3o+Oc2yGZvl5In+Qr+dXIV
+         HNtdC83n5ayc8+Q6YdiEHxxI7cUKyR2lSohl01YK94+6ThXeq0cwU855n3sj7iG/7lFV
+         5UOQiECJhSP9FTfkJ0KWVd37tWwkFIRcP7aUUhDGycWeGPntMPwY0k8IoP27sfjWNMon
+         QcMb6DM3PZGkZjn2P4cnI1u/4LA8pdpqmWBnQgS8h3yU2/VvZS0tVcSWVnkDCmh7ag6H
+         TizLfo7mEHx6H3i5I6WR3edra/dJQPzRCESwqQtlqbSrTP69Ud81kDahzcBqptsY8LQf
+         D3gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GqEPVEoRdujNeFvEZNFf0K2LnjjxzBACdE/GEwgTyq8=;
+        b=PvlcGc5ikjUOaxz66AE8dAcwoho2LbpdppPbybBr2CCYKGamI9qYyVGTyqadbONrHm
+         R7DtsKn8MhEitUc1rRlAdAjurhml9OHdacH0JzWdf3kyuNwQUXBPWnWMBQRCsi3Lql3s
+         5LO24c94lymwyNxXqnmtO5lnC/nMghkOS0P4DGUGLM7gNjDcsLcT3c8RcYMF2EpYk+Sq
+         vXPhQ0Y727I2k9H+156NeAfMc6kHjSlr8xTafZfpKCMXI5iLbrLTHLrlQoaLROH5M3cE
+         sof4IfkuzLza5fdFd51gNxLfYuai3T3Ro/aYh2BNG0d+/vOxusrP9GOU2UQMdaVPFagJ
+         nfdA==
+X-Gm-Message-State: ANhLgQ1OhEyjV64QtUFKmJ0oyARuvGN8JM3YplVbD0TVag+CEQlHCosj
+        ohLZnAC7Er9oj2t2qM0T+K8=
+X-Google-Smtp-Source: ADFU+vsp9j0kc5FQVKZ7/33nHlYdtFh1uju+hCOgUj/rYWoUd/WdTaOQRe7tNWMyrwuHQjXbtlBRQA==
+X-Received: by 2002:ad4:4c12:: with SMTP id bz18mr11370560qvb.17.1584756308536;
+        Fri, 20 Mar 2020 19:05:08 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id n6sm5660317qkh.70.2020.03.20.19.05.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Mar 2020 19:05:07 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id AF45A27C0054;
+        Fri, 20 Mar 2020 22:05:06 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 20 Mar 2020 22:05:06 -0400
+X-ME-Sender: <xms:T3Z1XtSmmSLKsgAuuJX7R-ns3aNuJ6uPB1C0NtUL2aPRs8MHg72yXw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudegvddgfeelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuffhomhgrih
+    hnpehtgihtrdgshidpmhgrrhgtrdhinhhfohenucfkphephedvrdduheehrdduuddurdej
+    udenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
+    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
+    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
+    gvrdhnrghmvg
+X-ME-Proxy: <xmx:T3Z1XtQfLNBv9PoNmITJJrWJY-DaEWhapkxQOq0pSXFXnT6OaYwhLQ>
+    <xmx:T3Z1Xg0QvA-PQEm4p2o-QohgmN6xSlOcHmRzihoc7wfgHyQUxP-25Q>
+    <xmx:T3Z1XnzPJMkTvVvcXion7Zw86pyzHhJ8rDyazdQ40YHgW61Sk01skQ>
+    <xmx:UnZ1Xg4ckfDIexzkUuxQxhhjLuyZoatIpjfk1TO3hw7tMAZbdvjQDnnJf1Y>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3A2F5328005D;
+        Fri, 20 Mar 2020 22:05:03 -0400 (EDT)
+Date:   Sat, 21 Mar 2020 10:05:01 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>, linux-arch@vger.kernel.org,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 2/3] LKMM: Add litmus test for RCU GP guarantee where
+ reader stores
+Message-ID: <20200321020501.GF105953@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200320165948.GB155212@google.com>
+ <Pine.LNX.4.44L0.2003201643370.31761-100000@netrider.rowland.org>
+ <20200320214432.GB129293@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320214432.GB129293@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Mar 2020 11:20:44 +0100 Thomas Hellstr=F6m (VMware) <thomas_os@s=
-hipmail.org> wrote:
+On Fri, Mar 20, 2020 at 05:44:32PM -0400, Joel Fernandes wrote:
+> On Fri, Mar 20, 2020 at 04:56:59PM -0400, Alan Stern wrote:
+> > On Fri, 20 Mar 2020, Joel Fernandes wrote:
+> > 
+> > > On Fri, Mar 20, 2020 at 11:03:30AM -0400, Alan Stern wrote:
+> > > > On Fri, 20 Mar 2020, Joel Fernandes (Google) wrote:
+> > > > 
+> > > > > This adds an example for the important RCU grace period guarantee, which
+> > > > > shows an RCU reader can never span a grace period.
+> > > > > 
+> > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > > > ---
+> > > > >  .../litmus-tests/RCU+sync+read.litmus         | 37 +++++++++++++++++++
+> > > > >  1 file changed, 37 insertions(+)
+> > > > >  create mode 100644 tools/memory-model/litmus-tests/RCU+sync+read.litmus
+> > > > > 
+> > > > > diff --git a/tools/memory-model/litmus-tests/RCU+sync+read.litmus b/tools/memory-model/litmus-tests/RCU+sync+read.litmus
+> > > > > new file mode 100644
+> > > > > index 0000000000000..73557772e2a32
+> > > > > --- /dev/null
+> > > > > +++ b/tools/memory-model/litmus-tests/RCU+sync+read.litmus
+> > > > 
+> > > > Do these new tests really belong here?  I thought we were adding a new 
+> > > > directory under Documentation/ for litmus tests that illustrate parts 
+> > > > of the LKMM or memory-barriers.txt.
+> > > > 
+> > > > By contrast, the tests under tools/memory-model are merely to show 
+> > > > people what litmus tests look like and how they should be written.
+> > > 
+> > > I could add it to tools/memory-model/Documentation/ under a new
+> > > 'examples' directory there. We could also create an 'rcu' directory in
+> > > tools/memory-model/litmus-tests/ and add these there. Thoughts?
+> > 
+> > What happened was that about a month ago, Boqun Feng added
+> > Documentation/atomic-tests for litmus tests related to handling of
+> > atomic_t types (see
+> > <https://marc.info/?l=linux-kernel&m=158276408609029&w=2>.)  Should we
+> > interpose an extra directory level, making it
+> > Documentation/litmus-tests/atomic?  Or
+> > Documentation/LKMM-litmus-tests/atomic?
+> > 
+> > Then the new tests added here could go into
+> > Documentation/litmus-tests/rcu, or whatever.
+> 
+> That's fine with me. Unless anyone objects, I will add to
+> Documentation/litmus-tests/rcu and resend.
+> 
 
-> On 3/19/20 12:27 AM, Andrew Morton wrote:
-> > On Mon, 16 Mar 2020 13:32:08 +0100 Thomas Hellstr=F6m (VMware) <thomas_=
-os@shipmail.org> wrote:
-> >
-> >>> _______________________________________________
-> >>> dri-devel mailing list
-> >>> dri-devel@lists.freedesktop.org
-> >>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> >> Andrew, would it be possible to have an ack for merge using a DRM tree
-> >> for the -mm patches?
-> > Yes, please do.  It's all pretty straightforward addition of new
-> > functionality which won't affect existing code.
->=20
-> Thanks Andrew. Can I add your Acked-by: To the mm patches for Linus'=20
-> reference?
->=20
+Seems good to me, I will resend my patchset with the new directory. And
+I assume in your patchset you will include the MAINTAINERS part for
+adding Documentation/litmus-tests/ as a diretory watched by LKMM group?
+In that case, I won't need to add any change to MAINTAINERS file in mine
+and we won't have any conflict. ;-)
 
-Please do.
+Regards,
+Boqun
+
+
+> thanks,
+> 
+>  - Joel
+> 
