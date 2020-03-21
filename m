@@ -2,85 +2,313 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35386C43332
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 07:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2605C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 07:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0252120754
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 07:13:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584774795;
-	bh=9NdQQHrfKdW++wRnCqGWLoyQpz5EEicMjB+3yJ/YsG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OfPHN91uWPD7LL+8SgDReNIG7kXShktTBtADybXUf/L33gfbEk/UatNKMtKRkkxpW
-	 YiopiqUct9RAEIwDVkuSHp3ExeQFnr5FR35DbbzOwEn+rtBmwC1oPv6yjHXYoZpeng
-	 IzPrIaTtHD5Qx6Ig6GuZ46G3Axh4MeNCldA/OJ5Y=
+	by mail.kernel.org (Postfix) with ESMTP id 6DACB20754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 07:15:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rEz8pcxA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgCUHNO (ORCPT
+        id S1728128AbgCUHPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 03:13:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728015AbgCUHNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 03:13:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B60B220739;
-        Sat, 21 Mar 2020 07:13:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584774793;
-        bh=9NdQQHrfKdW++wRnCqGWLoyQpz5EEicMjB+3yJ/YsG0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o4kGFv9rP9umkRC6xmoFzK5smoL43muSbEVc3JvMNGRx3aannvRA5MKjXfBnqGdya
-         wemrkWp2uVNhB+Q3DC/ra6rc33KtbU9yF/I7VHFDqwtpTOkeWSXhlbhPtSMiiPZnLX
-         /hbb+fjmprx41HKWDhzqJnWE19pY3aGw4kTMH73I=
-Date:   Sat, 21 Mar 2020 08:13:10 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Chris Paterson <Chris.Paterson2@renesas.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 4.19 00/48] 4.19.112-rc1 review
-Message-ID: <20200321071310.GG850676@kroah.com>
-References: <20200319123902.941451241@linuxfoundation.org>
- <TYAPR01MB22854A4356027767654C9723B7F50@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+        Sat, 21 Mar 2020 03:15:45 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35626 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728039AbgCUHPp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 03:15:45 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d8so9705539qka.2
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 00:15:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wFLyCcbMHtgLvt40DJJ2uQa9RLOkww+bHxdrRh/zvZ0=;
+        b=rEz8pcxAS/Qcdq7Ca+miKFPxx/BUTksSrm8mo6/7/nloz9+K/0OjNRib1qZ33uGMC9
+         c27uuDERD3SVuO2caywuob4h0HCPhEGOP3IIPgptciivI4EdbnAySE7yv9em3E4lRFr6
+         vFpv+zuJmB6JyVorjk5WnsY0DkVzYbUgSK625t9YG501189eTw3Yjm2wTc96RfiJ8Nq9
+         6OD37CejZE+feFtox9GpVi5sOajawedPtHF1r2nFm0UKR/hSPCm+uQA6eOd0DWzAH10u
+         d44iQkjgCMZ3Aq54AXDtbItMkNmwaMPnlP0lSaWUJF5ZAjaQG4ep8PSAS6bUD+4jwDvj
+         P4fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wFLyCcbMHtgLvt40DJJ2uQa9RLOkww+bHxdrRh/zvZ0=;
+        b=JWfT5VtgthcYxUlOFuUNV+rwk6EV8ghX8iA1dvOcuZ/J3mFyjVr8AiUMovi+4e2UvZ
+         1EOOqlOo2lyITka52iQQawHb4rWf4ZROZJzePezEJ30oqeZjDwar2IgTibXJbTbTkN8H
+         aeZSXWXS5Q+Twde0OVhBpW2d4x453eReztZzAmpsUlT9da8nFjIxCoLJ3hdpL3g9Fupj
+         wwkmV9lqPywwnG+96iD9ARvpMtOnVnjchqIwBzYN2BwjPgqMh+RrIttLNWvC64uyA9tR
+         GJC2RTviUbgD3dvOBMJ0AcdmhoFS4IdFf/nE+GSs0oemnQuXh0Qeikkt/tYuXXb5lmp2
+         4YEQ==
+X-Gm-Message-State: ANhLgQ057PFjgE+uN+7cuWOYOi/JFtwuhMoj/m2r1n5boZi9E1DcQKOP
+        Ruo5oK+zObQvRKX78WXxE0/EvaoGBUmJlZIlVhvpBg==
+X-Google-Smtp-Source: ADFU+vsXLo8HLVgqQmG2EbR8mc/WFsJEdsoIV9M51ZLxhyZ6LOIv4t/7J1CXV9CUrFnFgSzXrsFVCsnY34RcDNpeLpQ=
+X-Received: by 2002:a05:620a:1654:: with SMTP id c20mr219563qko.250.1584774943333;
+ Sat, 21 Mar 2020 00:15:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TYAPR01MB22854A4356027767654C9723B7F50@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+References: <0000000000000bec9805a1581f05@google.com>
+In-Reply-To: <0000000000000bec9805a1581f05@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Sat, 21 Mar 2020 08:15:31 +0100
+Message-ID: <CACT4Y+Z_ZuQmDqq=0kKZuKAe=Dme=UsOnES6h9Y8vRmw2v3WmA@mail.gmail.com>
+Subject: Re: INFO: task hung in blk_trace_remove
+To:     syzbot <syzbot+c07afbbb410e9f712273@syzkaller.appspotmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 09:01:22PM +0000, Chris Paterson wrote:
-> Hello Greg,
-> 
-> > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
-> > Behalf Of Greg Kroah-Hartman
-> > Sent: 19 March 2020 13:04
-> > 
-> > This is the start of the stable review cycle for the 4.19.112 release.
-> > There are 48 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> 
-> No build/test issues seen for CIP configs for Linux 4.19.112-rc1 (d078cac7a422).
-> 
-> Build/test pipeline/logs: https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/pipelines/128111695
-> GitLab CI pipeline: https://gitlab.com/cip-project/cip-testing/linux-cip-pipelines/-/blob/master/trees/linux-4.19.y.yml
+On Sat, Mar 21, 2020 at 8:12 AM syzbot
+<syzbot+c07afbbb410e9f712273@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    fb33c651 Linux 5.6-rc6
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=140688d3e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9f894bd92023de02
+> dashboard link: https://syzkaller.appspot.com/bug?extid=c07afbbb410e9f712273
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>
+> Unfortunately, I don't have any reproducer for this crash yet.
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+c07afbbb410e9f712273@syzkaller.appspotmail.com
 
-Great, thanks for testing two of these and letting me know.
++ashmem maintainers
 
-greg k-h
+From the log, ashmem spews an infinite sequence of some errors which
+probably stall the machine:
+
+[ 1094.685541][ T9460] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641097791
+[ 1094.701750][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641383141
+[ 1094.708003][ T9576] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641233534
+[ 1094.723597][ T1876] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641083174
+[ 1094.730025][ T9460] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641098111
+[ 1094.745592][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641383221
+[ 1094.753153][ T9576] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641233534
+[ 1094.767903][ T1876] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641084454
+[ 1094.819845][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641526579
+[ 1094.830116][ T9460] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641098111
+[ 1094.845813][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641527219
+[ 1094.852188][ T9460] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641098751
+[ 1094.871456][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641527219
+[ 1094.874256][ T9460] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641098751
+[ 1094.890195][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641528499
+[ 1094.895999][ T1876] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641087014
+[ 1094.912931][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641528499
+[ 1094.918797][ T9460] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641100031
+[ 1094.936636][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641531059
+[ 1094.941391][ T1876] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641081897
+[ 1094.957463][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641531059
+[ 1094.963568][ T9460] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641100031
+[ 1094.980233][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641536179
+[ 1094.985311][ T1876] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641081899
+[ 1095.001393][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641536179
+[ 1095.008146][ T9460] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641102591
+[ 1095.024425][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641525942
+[ 1095.029644][ T1876] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641081904
+[ 1095.046399][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641525942
+[ 1095.052377][ T9460] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641102591
+[ 1095.068000][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641525944
+[ 1095.073934][ T1876] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641081914
+[ 1095.091076][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641525944
+[ 1095.096925][ T9460] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641107711
+[ 1095.112305][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641525949
+[ 1095.118570][ T1876] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641081934
+[ 1095.135413][ T7239] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641525949
+[ 1095.141206][ T9460] vmscan: shrink_slab:
+ashmem_shrink_scan+0x0/0x500 negative objects to delete
+nr=-6917529027641107711
+
+
+
+> INFO: task syz-executor.4:7237 blocked for more than 143 seconds.
+>       Not tainted 5.6.0-rc6-syzkaller #0
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> syz-executor.4  D26576  7237   9609 0x00004004
+> Call Trace:
+>  schedule+0xd0/0x2a0 kernel/sched/core.c:4154
+>  schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4213
+>  __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
+>  __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
+>  blk_trace_remove+0x1e/0x40 kernel/trace/blktrace.c:361
+>  sg_ioctl_common+0x221/0x2710 drivers/scsi/sg.c:1125
+>  sg_ioctl+0x8f/0x120 drivers/scsi/sg.c:1159
+>  vfs_ioctl fs/ioctl.c:47 [inline]
+>  ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+>  __do_sys_ioctl fs/ioctl.c:772 [inline]
+>  __se_sys_ioctl fs/ioctl.c:770 [inline]
+>  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+>  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x45c849
+> Code: Bad RIP value.
+> RSP: 002b:00007f5ba5a3bc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 00007f5ba5a3c6d4 RCX: 000000000045c849
+> RDX: 0000000000000000 RSI: 0000000000001276 RDI: 0000000000000003
+> RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+> R13: 000000000000022b R14: 00000000004c4526 R15: 000000000076bf0c
+> INFO: task syz-executor.4:7266 blocked for more than 146 seconds.
+>       Not tainted 5.6.0-rc6-syzkaller #0
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> syz-executor.4  D27752  7266   9609 0x00004004
+> Call Trace:
+>  schedule+0xd0/0x2a0 kernel/sched/core.c:4154
+>  schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4213
+>  __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
+>  __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
+>  blk_trace_setup+0x2f/0x60 kernel/trace/blktrace.c:588
+>  sg_ioctl_common+0x2f2/0x2710 drivers/scsi/sg.c:1116
+>  sg_ioctl+0x8f/0x120 drivers/scsi/sg.c:1159
+>  vfs_ioctl fs/ioctl.c:47 [inline]
+>  ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+>  __do_sys_ioctl fs/ioctl.c:772 [inline]
+>  __se_sys_ioctl fs/ioctl.c:770 [inline]
+>  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+>  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x45c849
+> Code: Bad RIP value.
+> RSP: 002b:00007f5ba5a1ac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 00007f5ba5a1b6d4 RCX: 000000000045c849
+> RDX: 0000000020000080 RSI: 00000000c0481273 RDI: 0000000000000008
+> RBP: 000000000076bfa0 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+> R13: 0000000000000228 R14: 00000000004c44eb R15: 000000000076bfac
+> INFO: task syz-executor.5:7265 blocked for more than 149 seconds.
+>       Not tainted 5.6.0-rc6-syzkaller #0
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> syz-executor.5  D26736  7265   9613 0x00004004
+> Call Trace:
+>  schedule+0xd0/0x2a0 kernel/sched/core.c:4154
+>  schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4213
+>  __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
+>  __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
+>  blk_trace_setup+0x2f/0x60 kernel/trace/blktrace.c:588
+>  sg_ioctl_common+0x2f2/0x2710 drivers/scsi/sg.c:1116
+>  sg_ioctl+0x8f/0x120 drivers/scsi/sg.c:1159
+>  vfs_ioctl fs/ioctl.c:47 [inline]
+>  ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+>  __do_sys_ioctl fs/ioctl.c:772 [inline]
+>  __se_sys_ioctl fs/ioctl.c:770 [inline]
+>  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+>  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x45c849
+> Code: Bad RIP value.
+> RSP: 002b:00007f576f48ac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 00007f576f48b6d4 RCX: 000000000045c849
+> RDX: 0000000020000080 RSI: 00000000c0481273 RDI: 0000000000000006
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000000bec9805a1581f05%40google.com.
