@@ -7,41 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A29C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 046F5C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975A420409
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33C820409
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:34:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbgCUOe1 (ORCPT
+        id S1728002AbgCUOec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 10:34:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38745 "EHLO
+        Sat, 21 Mar 2020 10:34:32 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38719 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727644AbgCUOdi (ORCPT
+        with ESMTP id S1727578AbgCUOde (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 10:33:38 -0400
+        Sat, 21 Mar 2020 10:33:34 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFfBu-0004AV-Ao; Sat, 21 Mar 2020 15:33:34 +0100
+        id 1jFfBr-00049A-Aw; Sat, 21 Mar 2020 15:33:31 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3EFDF1C22DA;
-        Sat, 21 Mar 2020 15:33:31 +0100 (CET)
-Date:   Sat, 21 Mar 2020 14:33:30 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A945C1C22DB;
+        Sat, 21 Mar 2020 15:33:29 +0100 (CET)
+Date:   Sat, 21 Mar 2020 14:33:29 -0000
 From:   "tip-bot2 for Vincenzo Frascino" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] mips: Introduce asm/vdso/clocksource.h
+Subject: [tip: timers/core] linux/time32.h: Extract common header for vDSO
 Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Burton <paulburton@kernel.org>, x86 <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200320145351.32292-8-vincenzo.frascino@arm.com>
-References: <20200320145351.32292-8-vincenzo.frascino@arm.com>
+In-Reply-To: <20200320145351.32292-12-vincenzo.frascino@arm.com>
+References: <20200320145351.32292-12-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-Message-ID: <158480121095.28353.14019997278600648111.tip-bot2@tip-bot2>
+Message-ID: <158480120937.28353.83498983294006410.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,63 +56,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     17e46656a82fc4645324043241b3294f6db9a6ce
-Gitweb:        https://git.kernel.org/tip/17e46656a82fc4645324043241b3294f6db9a6ce
+Commit-ID:     9a4162316965818ea73701b611915deca97afece
+Gitweb:        https://git.kernel.org/tip/9a4162316965818ea73701b611915deca97afece
 Author:        Vincenzo Frascino <vincenzo.frascino@arm.com>
-AuthorDate:    Fri, 20 Mar 2020 14:53:32 
+AuthorDate:    Fri, 20 Mar 2020 14:53:36 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 21 Mar 2020 15:23:55 +01:00
+CommitterDate: Sat, 21 Mar 2020 15:23:57 +01:00
 
-mips: Introduce asm/vdso/clocksource.h
+linux/time32.h: Extract common header for vDSO
 
 The vDSO library should only include the necessary headers required for
 a userspace library (UAPI and a minimal set of kernel headers). To make
 this possible it is necessary to isolate from the kernel headers the
 common parts that are strictly necessary to build the library.
 
-Introduce asm/vdso/clocksource.h to contain all the arm64 specific
-functions that are suitable for vDSO inclusion.
-
-This header will be required by a future patch that will generalize
-vdso/clocksource.h.
+Split time32.h into linux and common headers to make the latter suitable
+for inclusion in the vDSO library.
 
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Link: https://lkml.kernel.org/r/20200320145351.32292-8-vincenzo.frascino@arm.com
+Link: https://lkml.kernel.org/r/20200320145351.32292-12-vincenzo.frascino@arm.com
 
 ---
- arch/mips/include/asm/clocksource.h      |  4 +---
- arch/mips/include/asm/vdso/clocksource.h |  9 +++++++++
- 2 files changed, 10 insertions(+), 3 deletions(-)
- create mode 100644 arch/mips/include/asm/vdso/clocksource.h
+ include/linux/time32.h | 14 ++------------
+ include/vdso/time32.h  | 17 +++++++++++++++++
+ 2 files changed, 19 insertions(+), 12 deletions(-)
+ create mode 100644 include/vdso/time32.h
 
-diff --git a/arch/mips/include/asm/clocksource.h b/arch/mips/include/asm/clocksource.h
-index de659ca..2f1ebbe 100644
---- a/arch/mips/include/asm/clocksource.h
-+++ b/arch/mips/include/asm/clocksource.h
-@@ -6,8 +6,6 @@
- #ifndef __ASM_CLOCKSOURCE_H
- #define __ASM_CLOCKSOURCE_H
+diff --git a/include/linux/time32.h b/include/linux/time32.h
+index cad4c31..0933f28 100644
+--- a/include/linux/time32.h
++++ b/include/linux/time32.h
+@@ -12,19 +12,9 @@
+ #include <linux/time64.h>
+ #include <linux/timex.h>
  
--#define VDSO_ARCH_CLOCKMODES	\
--	VDSO_CLOCKMODE_R4K,	\
--	VDSO_CLOCKMODE_GIC
-+#include <asm/vdso/clocksource.h>
+-#define TIME_T_MAX	(__kernel_old_time_t)((1UL << ((sizeof(__kernel_old_time_t) << 3) - 1)) - 1)
+-
+-typedef s32		old_time32_t;
+-
+-struct old_timespec32 {
+-	old_time32_t	tv_sec;
+-	s32		tv_nsec;
+-};
++#include <vdso/time32.h>
  
- #endif /* __ASM_CLOCKSOURCE_H */
-diff --git a/arch/mips/include/asm/vdso/clocksource.h b/arch/mips/include/asm/vdso/clocksource.h
+-struct old_timeval32 {
+-	old_time32_t	tv_sec;
+-	s32		tv_usec;
+-};
++#define TIME_T_MAX	(__kernel_old_time_t)((1UL << ((sizeof(__kernel_old_time_t) << 3) - 1)) - 1)
+ 
+ struct old_itimerspec32 {
+ 	struct old_timespec32 it_interval;
+diff --git a/include/vdso/time32.h b/include/vdso/time32.h
 new file mode 100644
-index 0000000..510e167
+index 0000000..fdf56f9
 --- /dev/null
-+++ b/arch/mips/include/asm/vdso/clocksource.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef __ASM_VDSOCLOCKSOURCE_H
-+#define __ASM_VDSOCLOCKSOURCE_H
++++ b/include/vdso/time32.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __VDSO_TIME32_H
++#define __VDSO_TIME32_H
 +
-+#define VDSO_ARCH_CLOCKMODES	\
-+	VDSO_CLOCKMODE_R4K,	\
-+	VDSO_CLOCKMODE_GIC
++typedef s32		old_time32_t;
 +
-+#endif /* __ASM_VDSOCLOCKSOURCE_H */
++struct old_timespec32 {
++	old_time32_t	tv_sec;
++	s32		tv_nsec;
++};
++
++struct old_timeval32 {
++	old_time32_t	tv_sec;
++	s32		tv_usec;
++};
++
++#endif /* __VDSO_TIME32_H */
