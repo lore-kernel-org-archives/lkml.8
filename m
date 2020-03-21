@@ -2,104 +2,72 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AC0C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F59BC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6432070A
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50EF120732
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbgCUAk5 (ORCPT
+        id S1727778AbgCUAlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 20:40:57 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36338 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726867AbgCUAk5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 20:40:57 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02L0XE0K080013
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 20:40:56 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yvq66ptd2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 20:40:56 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
-        Sat, 21 Mar 2020 00:40:54 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 21 Mar 2020 00:40:50 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02L0emlp43516332
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 21 Mar 2020 00:40:48 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C2D794203F;
-        Sat, 21 Mar 2020 00:40:48 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6136C42042;
-        Sat, 21 Mar 2020 00:40:47 +0000 (GMT)
-Received: from oc0525413822.ibm.com (unknown [9.85.223.94])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat, 21 Mar 2020 00:40:47 +0000 (GMT)
-Date:   Fri, 20 Mar 2020 17:40:44 -0700
-From:   Ram Pai <linuxram@us.ibm.com>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, Bharata B Rao <bharata@linux.ibm.com>
-Reply-To: Ram Pai <linuxram@us.ibm.com>
-References: <20200320102643.15516-1-ldufour@linux.ibm.com>
- <20200320102643.15516-2-ldufour@linux.ibm.com>
+        Fri, 20 Mar 2020 20:41:39 -0400
+Received: from mga03.intel.com ([134.134.136.65]:63180 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727158AbgCUAli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 20:41:38 -0400
+IronPort-SDR: Y2ye6VjE444HkSZMbpR9mwwMjDx7B5shVzm56Po6XAOybT/nCffHPGiqas/fgn42iCEmGpCwOZ
+ cAoqPekV/DLg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 17:41:38 -0700
+IronPort-SDR: GtHqOl1CLkUFPLL9+/s66gcXWnZbAOy+zcIkwxIs/Kuqt9JpT1yJkTfJZB8oHPWAlSMXg5meeN
+ JyabIa/GvHXg==
+X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
+   d="scan'208";a="325031742"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 17:41:37 -0700
+Date:   Fri, 20 Mar 2020 17:41:36 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v5 1/9] x86/split_lock: Rework the initialization flow of
+ split lock detection
+Message-ID: <20200321004136.GA6578@agluck-desk2.amr.corp.intel.com>
+References: <20200315050517.127446-1-xiaoyao.li@intel.com>
+ <20200315050517.127446-2-xiaoyao.li@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320102643.15516-2-ldufour@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 20032100-0012-0000-0000-00000394C5B1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032100-0013-0000-0000-000021D1B0B5
-Message-Id: <20200321004044.GA5243@oc0525413822.ibm.com>
-Subject: Re:  [PATCH 1/2] KVM: PPC: Book3S HV: check caller of H_SVM_* Hcalls
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-20_08:2020-03-20,2020-03-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 mlxlogscore=999 impostorscore=0 spamscore=0
- phishscore=0 clxscore=1011 malwarescore=0 suspectscore=0 bulkscore=0
- mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003210001
+In-Reply-To: <20200315050517.127446-2-xiaoyao.li@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 11:26:42AM +0100, Laurent Dufour wrote:
-> The Hcall named H_SVM_* are reserved to the Ultravisor. However, nothing
-> prevent a malicious VM or SVM to call them. This could lead to weird result
-> and should be filtered out.
-> 
-> Checking the Secure bit of the calling MSR ensure that the call is coming
-> from either the Ultravisor or a SVM. But any system call made from a SVM
-> are going through the Ultravisor, and the Ultravisor should filter out
-> these malicious call. This way, only the Ultravisor is able to make such a
-> Hcall.
-> 
-> Cc: Bharata B Rao <bharata@linux.ibm.com>
-> Cc: Paul Mackerras <paulus@ozlabs.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+On Sun, Mar 15, 2020 at 01:05:09PM +0800, Xiaoyao Li wrote:
+> To solve these issues, introducing a new sld_state, "sld_not_exist", as
+> the default value. It will be switched to other value if CORE_CAPABILITIES
+> or FMS enumerate split lock detection.
 
-Reviewed-by: Ram Pai <linuxram@us.ibnm.com>
+Is a better name for this state "sld_uninitialized?
 
-> ---
->  arch/powerpc/kvm/book3s_hv.c | 32 +++++++++++++++++++++-----------
->  1 file changed, 21 insertions(+), 11 deletions(-)
-> 
+Otherwise looks good.
 
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+
+-Tony
