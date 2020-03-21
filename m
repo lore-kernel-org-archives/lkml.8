@@ -2,108 +2,97 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5944C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 13:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF00C4332E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 13:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F7F320754
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 13:17:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qBE3lA1E"
+	by mail.kernel.org (Postfix) with ESMTP id 1F1C920754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 13:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbgCUNRh (ORCPT
+        id S1727267AbgCUNV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 09:17:37 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54206 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbgCUNRh (ORCPT
+        Sat, 21 Mar 2020 09:21:28 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:44125 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbgCUNV2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 09:17:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=PK/VmxcGeKFBjdt5UuClaNyaFMRmhddz5q967bbSnbs=; b=qBE3lA1ErCdZydq9Lr+5wIewWb
-        pqe8Pe1djK5LkG/FvkG1QhEl7t4AeyNHc5KJPqI9yHtq4MtgphTvfGKj0ubRUyD6LXruyjdkxl8rs
-        NPQu+ZrcefJm+rJQxXXfRsFNFO1400bo7Yxt4iH1Gj0bLH5gTcCTLTtZexJ0nYXQHj0aZqnGlduTA
-        HfBoNUR+VXrEMKVqWGhSHIWhX3Jj0znYpJNb+j35LrOFEZUaNdoaDe0MC1IXppjr6jV15YiqR524P
-        aH9eV3uFHY/w57WSgiHgeAgFq0AThBgxSs8CDTmrY821MrnBPlRK+uMVJdD/XmqeUcIWcFKfQslUA
-        96QSJUpg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jFe06-0005uT-SX; Sat, 21 Mar 2020 13:17:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D211230018B;
-        Sat, 21 Mar 2020 14:17:15 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B38D028B4E0D4; Sat, 21 Mar 2020 14:17:15 +0100 (CET)
-Date:   Sat, 21 Mar 2020 14:17:15 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v3 01/17] notifier: Fix broken error handling pattern
-Message-ID: <20200321131715.GH20696@hirez.programming.kicks-ass.net>
-References: <20200320213844.817147179@infradead.org>
- <20200320215942.500789386@infradead.org>
- <20200321122419.GD17494@zn.tnic>
+        Sat, 21 Mar 2020 09:21:28 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 01069200003;
+        Sat, 21 Mar 2020 13:21:25 +0000 (UTC)
+Date:   Sat, 21 Mar 2020 14:21:25 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     =?utf-8?B?6Z+p56eR5omN?= <hankecai@vivo.com>
+Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, trivial@kernel.org, kernel@vivo.com
+Subject: Re: [PATCH] rtc: pm8xxx: clear alarm register when alarm is not
+ enabled
+Message-ID: <20200321132125.GV5504@piout.net>
+References: <APoAZgAaCEiRpKG6PlzreaqE.1.1584791417367.Hmail.hankecai@vivo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200321122419.GD17494@zn.tnic>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <APoAZgAaCEiRpKG6PlzreaqE.1.1584791417367.Hmail.hankecai@vivo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 01:24:19PM +0100, Borislav Petkov wrote:
-> On Fri, Mar 20, 2020 at 10:38:45PM +0100, Peter Zijlstra wrote:
-> > The current notifiers have the following error handling pattern all
-> > over the place:
-> > 
-> > 	int err, nr;
-> > 
-> > 	err = __foo_notifier_call_chain(&chain, val_up, v, -1, &nr);
-> > 	if (err & NOTIFIER_STOP_MASK)
-> > 		__foo_notifier_call_chain(&chain, val_down, v, nr-1, NULL)
-> > 
-> > And aside from the endless repetition thereof, it is broken. Consider
-> > blocking notifiers; both calls take and drop the rwsem, this means
-> > that the notifier list can change in between the two calls, making @nr
-> > meaningless.
-> > 
-> > Fix this by replacing all the __foo_notifier_call_chain() functions
-> > with foo_notifier_call_chain_robust() that embeds the above pattern,
-> > but ensures it is inside a single lock region.
+Hi,
+
+Isn't that the same as:
+https://patchwork.ozlabs.org/patch/1257381/ ?
+
+On 21/03/2020 19:50:17+0800, 韩科才 wrote:
+> Clear alarm register when alarm is not enabled otherwise the consumer
+> may still start alarm timer if it find the alarm register is not zero.
 > 
-> "robust" huh? Sure reads funny :)
-
-This has been around the bike-shed a few times already.
-
-> So if the "normal" notifier_call_chain() usage is buggy, how about we
-> prepend its name with "__" and call the new one with the rollback,
-> notifier_call_chain() ?
+> Signed-off-by: hankecai <hankecai@vivo.com>
+> ---
+>  drivers/rtc/rtc-pm8xxx.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> Instead of adding the "robust" set of interfaces?
+> diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
+> index 07ea1be3abb9..3fa5416ad90d 100644
+> --- a/drivers/rtc/rtc-pm8xxx.c
+> +++ b/drivers/rtc/rtc-pm8xxx.c
+> @@ -301,6 +301,7 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
+>  	struct pm8xxx_rtc *rtc_dd = dev_get_drvdata(dev);
+>  	const struct pm8xxx_rtc_regs *regs = rtc_dd->regs;
+>  	unsigned int ctrl_reg;
+> +	u8 value[NUM_8_BIT_RTC_REGS] = {0};
+>  
+>  	spin_lock_irqsave(&rtc_dd->ctrl_reg_lock, irq_flags);
+>  
+> @@ -319,6 +320,16 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
+>  		goto rtc_rw_fail;
+>  	}
+>  
+> +	/* Clear Alarm register */
+> +	if (!enable) {
+> +		rc = regmap_bulk_write(rtc_dd->regmap, regs->alarm_rw, value,
+> +				sizeof(value));
+> +		if (rc) {
+> +			dev_err(dev, "Clear RTC ALARM register failed\n");
+> +			goto rtc_rw_fail;
+> +		}
+> +	}
+> +
+>  rtc_rw_fail:
+>  	spin_unlock_irqrestore(&rtc_dd->ctrl_reg_lock, irq_flags);
+>  	return rc;
+> -- 
+> 2.21.0
+> 
+> 
+> 
 
-Well, it depends on the usecase. The robust one can deal with failure,
-the other ones are fine (and preferred) if failure is not an option.
-
-This robust variant ensures that all the notifiers that succeeded prior
-to the one that failed get a second callback with another state. Some
-notifier chains don't care, but a few clearly did and did it utterly
-broken.
-
-> Btw, the indentation in that notifier.* files is yuck.
-
-Yeha, wasn't going to fix that.
-
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
