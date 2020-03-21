@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4530C4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E99FC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A52F20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF5320780
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584803454;
-	bh=U4Hf1hmpj4n70a3/9ZoGhX0jHOItFAm1K5F9LLLQG5Y=;
+	s=default; t=1584803487;
+	bh=sqtFIiuw+foYNIRZkn8e14inXBaKxQxbQYNR3dL6QPQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PzUh7duZWvyeDNYybb2wdKc8y+8MrQMefQPGtfNXE2wOrOZkt5kiHPMySxtxL5D/J
-	 MXXJKAVWvvPR8dEX01HhB4WzqFOjsudP9w5BqH3Bv+vhbE+3FmxxgVgpfZZkXoLTpd
-	 K33Wngb71JovtoVaB0CZknlGvYkx5RpfXCtmn6ps=
+	b=y8tl/vVRe2UGQifpIyaB56k6YOYMpAHjygHrAPA+KF7IYnnxzLLsk6YgOuZtmY3xU
+	 7sLf2rvL1O6e/dh1MupncIZzBH6xHUS0WLAyhASuZpOyqTsdH7jKs/tIWzECldmMWl
+	 UvhtGur2UWU26VcISYIKgibjyWKZU+siccEnjkHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbgCUPKx (ORCPT
+        id S1727479AbgCUPL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:10:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49280 "EHLO mail.kernel.org"
+        Sat, 21 Mar 2020 11:11:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727052AbgCUPKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:10:53 -0400
+        id S1727267AbgCUPLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 11:11:25 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E6AD20722;
-        Sat, 21 Mar 2020 15:10:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F255B20722;
+        Sat, 21 Mar 2020 15:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584803452;
-        bh=U4Hf1hmpj4n70a3/9ZoGhX0jHOItFAm1K5F9LLLQG5Y=;
+        s=default; t=1584803485;
+        bh=sqtFIiuw+foYNIRZkn8e14inXBaKxQxbQYNR3dL6QPQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AHeNcRU1kT/BqNbgah+oGx9/cwnhFBsv12DaB8F752VK/mbJkQzDvkQRAo/h0N33b
-         +mwZOJC8veSw39sK5C3en+B4E2fGL/s8ZhAFNK20SWoWWDATbWVYGJ3YXvTwho0noE
-         vy0Mljle2Tz1+OPfwfapthNvZdYMsYzrNmqyVqxc=
+        b=OrJtGO7XFGzt80SFgaib00V/JakHrnxSMLQ4zpUdV6UAPyVDrCEpMwVMP2zYZmKfX
+         4FXPp08/IHw22WmnJhfxzknC4EmTfjlED02geF/isbHcmLAMFIYB22jEASRVWEfPk8
+         TxoP+Er87tq5dP0jbs0Jcg2YEuWBedHKYYJXnYlE=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1jFfly-00EWFF-9R; Sat, 21 Mar 2020 15:10:50 +0000
-Date:   Sat, 21 Mar 2020 15:10:48 +0000
-Message-ID: <86sgi1zqtj.wl-maz@kernel.org>
+        id 1jFfmV-00EWFa-9C; Sat, 21 Mar 2020 15:11:23 +0000
+Date:   Sat, 21 Mar 2020 15:11:21 +0000
+Message-ID: <86r1xlzqsm.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
 To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
-        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] irqchip: irq-bcm7038-l1: Replace zero-length array with flexible-array member
-In-Reply-To: <20200319214438.GA21123@embeddedor.com>
-References: <20200319214438.GA21123@embeddedor.com>
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] irqchip: qcom-irq-combiner: Replace zero-length array with flexible-array member
+In-Reply-To: <20200319214531.GA21326@embeddedor.com>
+References: <20200319214531.GA21326@embeddedor.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
  (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
 X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: gustavo@embeddedor.com, f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Rcpt-To: gustavo@embeddedor.com, agross@kernel.org, bjorn.andersson@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,7 +70,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Mar 2020 21:44:38 +0000,
+On Thu, 19 Mar 2020 21:45:31 +0000,
 "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 > 
 > The current codebase makes use of the zero-length array language
@@ -103,7 +103,7 @@ On Thu, 19 Mar 2020 21:44:38 +0000,
 > 
 > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->  drivers/irqchip/irq-bcm7038-l1.c | 2 +-
+>  drivers/irqchip/qcom-irq-combiner.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Queued for 5.7.
