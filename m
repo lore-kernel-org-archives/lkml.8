@@ -2,71 +2,87 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D983C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A301AC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E053E2072C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3FD20722
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:59:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WHlMxUIW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgCUTtA (ORCPT
+        id S1727944AbgCUT7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 15:49:00 -0400
-Received: from mga01.intel.com ([192.55.52.88]:7383 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727028AbgCUTtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 15:49:00 -0400
-IronPort-SDR: 6i/rPGYNnbWGOGjb/ps1c62OgdgruvcTYdV9xY7rnruR62shtOzmgvuWTaw4qKlGJZXjuoCkfe
- YO0mKDcYbCxg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 12:48:58 -0700
-IronPort-SDR: 58PRJpKjg/S7hTESavS/0HL1iKGKThJ41VGrdxbxJiDlhzAFI2V2UTUGnvHVKCiDXIXCFnB/mj
- S0P6/JW4DcZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,289,1580803200"; 
-   d="scan'208";a="237566218"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Mar 2020 12:48:56 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jFk79-00Bo2H-1O; Sat, 21 Mar 2020 21:48:59 +0200
-Date:   Sat, 21 Mar 2020 21:48:59 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Alexandru Ardelean <ardeleanalex@gmail.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        jic23@kernel.org,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Michael Hennerich <michael.hennerich@analog.com>
-Subject: Re: [PATCH] MAINTAINERS: remove Stefan Popa's email
-Message-ID: <20200321194859.GA2813896@smile.fi.intel.com>
-References: <20200317143336.6098-1-alexandru.ardelean@analog.com>
+        Sat, 21 Mar 2020 15:59:33 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39929 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbgCUT7d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 15:59:33 -0400
+Received: by mail-pg1-f196.google.com with SMTP id b22so4911200pgb.6;
+        Sat, 21 Mar 2020 12:59:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+GB8B3hXvLrixG0/eEEGrzhPFDoA164EX4PeTwfvh/Y=;
+        b=WHlMxUIWt9GFOsul4SxdZbzfHh7zYlKO1SB5cQFO+UCJW5tM48KITFHyXRnEJR6WGp
+         qRJ5J7T0/97zyveV1vQvtf2z4mUROQUwu+PfdN4NnWKRjCYL9sfFrgYQPVFJ5mBgHAoR
+         PtE2fZBxkn008CSzKZUAugr5qPfe07C7cvSgZffLyTroB+hSwXfNjpyNqV36v2Otya7S
+         v0hFf/iyIHM2yhD/f5Eu+OvauwgcRqnJd99deiHPoNAAR7q6Ejc6z38JyqTkWdAQBVwh
+         6ts7OlC9KXHIGVXHQoaIzL1qdIwqIvL2nfT/h45BJXF9LRy5NNjxsvyVDnhuxcW10UvG
+         buJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+GB8B3hXvLrixG0/eEEGrzhPFDoA164EX4PeTwfvh/Y=;
+        b=W0NH3phaVB/zO7SWryzMBOwnFW1pkRp+teNKnA0oTKkzI0lE7i8kzoQvNQ/1UE3NGK
+         Q0s7sukF1WauqDb/XubphjRa6V5Jkjybz9s/MZs4pZ7ZuOuoofCqtvEyn/HVpLFjW6NK
+         SeZCLhn6I8Bhc0d8yQn7ufJow4XMHVMiwhIPRMcSWugtRr/56ZY/13GLyiQ17ft5ueGp
+         3Af7Jg9Dpy2IPbNEDALlmSn4EgSdabJH8zaJfKdZTWO48qQhfYm8M/EkXt0GfI7VLiXM
+         Z322+cnZsuPE5nfp9TAACgDR1Oke90ZfelIWru6zeQNJUQMsiEDVjoj/Pop7UqTXIN5d
+         B2ig==
+X-Gm-Message-State: ANhLgQ2h6Zf7g9l6Qx8YNRaeU4nDpLQQIsuy5CjfShGomZ5/3zOnIKWG
+        HTGL8rxLdJxO3zCGkM1O+ZXX+pk2V7vbKJ/beQc=
+X-Google-Smtp-Source: ADFU+vsqaKrYFn2wQ+0rxTXNK55h2zW7WiYm1hvNa4ptmNMMRytvTCef0I/UszdLw5xbAbNUqC6OIUeBi0WzfoiiN38=
+X-Received: by 2002:aa7:958f:: with SMTP id z15mr16030512pfj.130.1584820771967;
+ Sat, 21 Mar 2020 12:59:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317143336.6098-1-alexandru.ardelean@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200320081257.GA5818@syed.domain.name> <20200320133522.GA3223@icarus>
+ <20200321182312.57a93f88@archlinux>
+In-Reply-To: <20200321182312.57a93f88@archlinux>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 21 Mar 2020 21:59:20 +0200
+Message-ID: <CAHp75VdO_aA79i-4ZcyasqSwFq8fyEQPnOAhEH=oM8qRFScn-Q@mail.gmail.com>
+Subject: Re: [PATCH v1] MAINTAINERS: Add Syed Nayyar Waris to ACCES 104-QUAD-8 driver
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Syed Nayyar Waris <syednwaris@gmail.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 04:33:36PM +0200, Alexandru Ardelean wrote:
-> The email is no longer active. This change removes Stefan's email from the
-> MAINTAINERS list and replaces it with Michael Hennerich's.
-> 
+On Sat, Mar 21, 2020 at 8:23 PM Jonathan Cameron <jic23@kernel.org> wrote:
+> On Fri, 20 Mar 2020 09:36:00 -0400
+> William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+> > On Fri, Mar 20, 2020 at 01:42:58PM +0530, Syed Nayyar Waris wrote:
 
-Are you planning to fix entries as parse-maintainers.pl does?
-(Maybe in a separate change, but also why not here)
+> Applied.
 
+Jonathan, JFYI: we have parse-maintainers.pl which would be nice to
+run when changes to MAINTAINERS happen.
+
+P.S. This change is probably okay, but for the future.
 
 -- 
 With Best Regards,
 Andy Shevchenko
-
-
