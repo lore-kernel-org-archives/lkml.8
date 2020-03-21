@@ -2,247 +2,162 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD38C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBACC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DFF620753
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E955F2072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:46:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgCUCdS (ORCPT
+        id S1727943AbgCUCqW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 22:33:18 -0400
-Received: from mga02.intel.com ([134.134.136.20]:41588 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727046AbgCUCdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 22:33:17 -0400
-IronPort-SDR: DltsOJ2iGIbfJX+TlIohR0nk3aFt1p7suprr34BWibkBrep+9sOv0nKHauT3fS+2nsdNk1Jnuh
- qF2RGmI1VQMQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 19:33:17 -0700
-IronPort-SDR: Hs+yxtVMUt6FrSR0Tp9Es+w0IZzm+8V/2buDL+Me6ND8jopJ+vEhfZH7QZ5mdugUkDeERF+To1
- 8QHfM9mV5a8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
-   d="scan'208";a="292078137"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Mar 2020 19:33:15 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jFTwo-0000iY-UB; Sat, 21 Mar 2020 10:33:14 +0800
-Date:   Sat, 21 Mar 2020 10:32:21 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.03.18a] BUILD SUCCESS
- a068dafb411657fba5595088ff0609642bafb0d1
-Message-ID: <5e757cb5.9pL77QMRaPDT76kN%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Fri, 20 Mar 2020 22:46:22 -0400
+Received: from mail-vi1eur05olkn2102.outbound.protection.outlook.com ([40.92.90.102]:55660
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726840AbgCUCqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 22:46:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BTQO02L4eWhiVfYRp7z0Rb5rZdxmYRjxBVh5QdZOecdF4GFyQq8xGXP2TxwzeU3/vdLmok6UUR7q9H5im4WR6KNNHeSxdJsZoVdBSJyJ4hTBgH1MTnkgfFR5qKZRAHn5yv1CtOrbDwTWxJpprGInsrQMBapGXGBtbh96Fq5ecBNvmNwRXdJ9i/S+s3r49wHKk7i6mHGylKPNmvkzsdOB8/4L/Mu7SNUakw08IXa74PiayHyqI/Pq31XwU2lSgL/WEmIHlBV07gJ6TRfEm+tX4O2typdTQjhUDRtAYt7wWk2AExEkUwgRYkWbYpIqklDR3X/o158PRTGz9Hx/V9vOcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XOrvyCqZl0QwMnQO7rJ9qA1uZ5mwF8Ne/TzuiMX9Z9k=;
+ b=c5UIgXFhL9a2Cy9hnSLdxtV51KewBd9+QyJUcCdYwNkyEc0Qg0p1ovYxy4XFUqgn6qS1u5tbyI6pYOM6zmITz9he0p18KIJwIatwge3ff7xN9SoPix/LLy4AU6UO6q4vM9duq7RZi6p2ziiTWjwala5geyZbc23VyWmifwT/jm6fciu0cm38FNs7YDc8c3OEnYn60iyeeLXqIPTf7fbE79dU2LBCo5LXmAr6rtAk+iKeZ6epY83bqXe2rt4Hz5sOWXrUHPWKaRMbxI1018AbabolE31KgrQlI9HFon2UV077I1zMTU89YLkkUlksqsvjhSiwP4IpGPJAJuGwAv8LOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from VI1EUR05FT062.eop-eur05.prod.protection.outlook.com
+ (2a01:111:e400:fc12::35) by
+ VI1EUR05HT254.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc12::409)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.13; Sat, 21 Mar
+ 2020 02:46:16 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.233.242.53) by
+ VI1EUR05FT062.mail.protection.outlook.com (10.233.243.189) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.13 via Frontend Transport; Sat, 21 Mar 2020 02:46:16 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2835.017; Sat, 21 Mar 2020
+ 02:46:16 +0000
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        "jannh@google.com" <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "avagin@gmail.com" <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "duyuyang@gmail.com" <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "christian@kellner.me" <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: [PATCH v6 14/16] pidfd: Use new infrastructure to fix deadlocks in
+ execve
+Thread-Topic: [PATCH v6 14/16] pidfd: Use new infrastructure to fix deadlocks
+ in execve
+Thread-Index: AQHV/vUHXWYWYQ5hnEuyHEhgn9TLyA==
+Date:   Sat, 21 Mar 2020 02:46:16 +0000
+Message-ID: <e2ae1c06-b205-a053-d36c-045be27b3138@hotmail.de>
+References: <077b63b7-6f5e-aa8e-bf96-a586b481cc46@hotmail.de>
+In-Reply-To: <077b63b7-6f5e-aa8e-bf96-a586b481cc46@hotmail.de>
+Accept-Language: en-US, en-GB, de-DE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-imapappendstamp: AM6PR03MB5170.eurprd03.prod.outlook.com
+ (15.20.2835.016)
+x-incomingtopheadermarker: OriginalChecksum:C350A3DD288F03D7E4EE0C9B2F2316BC317C0C9FE32F71DBC82A82E3D2661FCE;UpperCasedChecksum:8494EA4B495FE7D135DDA62C5FA7BC4374C89A31B284D2E61A54A8FBB144B473;SizeAsReceived:8518;Count:46
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [xtOr6vwBQQ76ygj0oAZ4m8Z+6FOurKN0]
+x-ms-publictraffictype: Email
+x-incomingheadercount: 46
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: d0733873-8032-4877-bbe0-08d7cd4206fe
+x-ms-traffictypediagnostic: VI1EUR05HT254:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 43KCDLvNfF/dpVhgiZPLo5I1KQLzwSZnPzcsMdq2dKHugT0RZ72R9Bfd68nI7FyPk4I+Q70oLVesRE4wz+mUoKm6aPHIqwP6iQEuvpgAjATV5ZWD1wnecasZct04IIyI02GRU4WzzLYKKqw/SJVNsxYOaykf5pg8V1WcE2/7DcAZE7qsk2dDM4O+6kzmbkfJ
+x-ms-exchange-antispam-messagedata: //suOCtiyn+4HKlh/wAoTfnTJAVfuby+RZn/BoUrRBuKGhKDZoGBXkWPa+ByGsWlU3m03PGTeUpj4WdGLNELkXgQJgjANJGvSocEqr9pPWrEdQbA+FxjQFXOg3B6pGfqQQDsmZEejm0yesQ89b944A==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <2594756E531D2443AE21F664F138337B@sct-15-20-2387-20-msonline-outlook-45755.templateTenant>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0733873-8032-4877-bbe0-08d7cd4206fe
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2020 02:46:16.1339
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1EUR05HT254
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.03.18a
-branch HEAD: a068dafb411657fba5595088ff0609642bafb0d1  squash! rcu-tasks: Add an RCU Tasks Trace to simplify protection of tracing hooks
+This changes __pidfd_fget to use the new exec_update_mutex
+instead of cred_guard_mutex.
 
-elapsed time: 481m
+This should be safe, as the credentials do not change
+before exec_update_mutex is locked.  Therefore whatever
+file access is possible with holding the cred_guard_mutex
+here is also possbile with the exec_update_mutex.
 
-configs tested: 180
-configs skipped: 0
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-xtensa                          iss_defconfig
-openrisc                 simple_smp_defconfig
-sparc64                          allmodconfig
-riscv                               defconfig
-i386                              allnoconfig
-i386                                defconfig
-ia64                             alldefconfig
-sh                          rsk7269_defconfig
-powerpc                       ppc64_defconfig
-i386                             alldefconfig
-i386                             allyesconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-xtensa                       common_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200321
-x86_64               randconfig-a002-20200321
-x86_64               randconfig-a003-20200321
-i386                 randconfig-a001-20200321
-i386                 randconfig-a002-20200321
-i386                 randconfig-a003-20200321
-x86_64               randconfig-a001-20200320
-x86_64               randconfig-a002-20200320
-x86_64               randconfig-a003-20200320
-i386                 randconfig-a001-20200320
-i386                 randconfig-a002-20200320
-i386                 randconfig-a003-20200320
-alpha                randconfig-a001-20200321
-m68k                 randconfig-a001-20200321
-mips                 randconfig-a001-20200321
-nds32                randconfig-a001-20200321
-parisc               randconfig-a001-20200321
-riscv                randconfig-a001-20200321
-alpha                randconfig-a001-20200320
-m68k                 randconfig-a001-20200320
-mips                 randconfig-a001-20200320
-nds32                randconfig-a001-20200320
-parisc               randconfig-a001-20200320
-riscv                randconfig-a001-20200320
-c6x                  randconfig-a001-20200320
-h8300                randconfig-a001-20200320
-microblaze           randconfig-a001-20200320
-nios2                randconfig-a001-20200320
-sparc64              randconfig-a001-20200320
-csky                 randconfig-a001-20200320
-openrisc             randconfig-a001-20200320
-s390                 randconfig-a001-20200320
-sh                   randconfig-a001-20200320
-xtensa               randconfig-a001-20200320
-x86_64               randconfig-b001-20200320
-x86_64               randconfig-b002-20200320
-x86_64               randconfig-b003-20200320
-i386                 randconfig-b001-20200320
-i386                 randconfig-b002-20200320
-i386                 randconfig-b003-20200320
-x86_64               randconfig-c001-20200320
-x86_64               randconfig-c002-20200320
-x86_64               randconfig-c003-20200320
-i386                 randconfig-c001-20200320
-i386                 randconfig-c002-20200320
-i386                 randconfig-c003-20200320
-x86_64               randconfig-c001-20200321
-x86_64               randconfig-c002-20200321
-x86_64               randconfig-c003-20200321
-i386                 randconfig-c001-20200321
-i386                 randconfig-c002-20200321
-i386                 randconfig-c003-20200321
-x86_64               randconfig-d001-20200320
-x86_64               randconfig-d002-20200320
-x86_64               randconfig-d003-20200320
-i386                 randconfig-d001-20200320
-i386                 randconfig-d002-20200320
-i386                 randconfig-d003-20200320
-x86_64               randconfig-e001-20200321
-x86_64               randconfig-e002-20200321
-x86_64               randconfig-e003-20200321
-i386                 randconfig-e001-20200321
-i386                 randconfig-e002-20200321
-i386                 randconfig-e003-20200321
-x86_64               randconfig-g001-20200320
-x86_64               randconfig-g002-20200320
-x86_64               randconfig-g003-20200320
-i386                 randconfig-g001-20200320
-i386                 randconfig-g002-20200320
-i386                 randconfig-g003-20200320
-x86_64               randconfig-h001-20200320
-x86_64               randconfig-h002-20200320
-x86_64               randconfig-h003-20200320
-i386                 randconfig-h001-20200320
-i386                 randconfig-h002-20200320
-i386                 randconfig-h003-20200320
-arc                  randconfig-a001-20200320
-arm                  randconfig-a001-20200320
-arm64                randconfig-a001-20200320
-ia64                 randconfig-a001-20200320
-powerpc              randconfig-a001-20200320
-sparc                randconfig-a001-20200320
-arm                  randconfig-a001-20200321
-arm64                randconfig-a001-20200321
-ia64                 randconfig-a001-20200321
-powerpc              randconfig-a001-20200321
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-
+Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ kernel/pid.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 0f4ecb5..04821f4 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -584,7 +584,7 @@ static struct file *__pidfd_fget(struct task_struct *task, int fd)
+ 	struct file *file;
+ 	int ret;
+ 
+-	ret = mutex_lock_killable(&task->signal->cred_guard_mutex);
++	ret = mutex_lock_killable(&task->signal->exec_update_mutex);
+ 	if (ret)
+ 		return ERR_PTR(ret);
+ 
+@@ -593,7 +593,7 @@ static struct file *__pidfd_fget(struct task_struct *task, int fd)
+ 	else
+ 		file = ERR_PTR(-EPERM);
+ 
+-	mutex_unlock(&task->signal->cred_guard_mutex);
++	mutex_unlock(&task->signal->exec_update_mutex);
+ 
+ 	return file ?: ERR_PTR(-EBADF);
+ }
+-- 
+1.9.1
