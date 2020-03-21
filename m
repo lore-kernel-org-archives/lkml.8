@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E96C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D7BC54FCF
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFA120658
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 921AA20658
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:35:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgCULf3 (ORCPT
+        id S1728671AbgCULfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 07:35:29 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38513 "EHLO
+        Sat, 21 Mar 2020 07:35:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38471 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728617AbgCULfD (ORCPT
+        with ESMTP id S1727071AbgCULe4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 07:35:03 -0400
+        Sat, 21 Mar 2020 07:34:56 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFcOa-0002G3-Hx; Sat, 21 Mar 2020 12:34:28 +0100
+        id 1jFcOQ-0001zH-Br; Sat, 21 Mar 2020 12:34:18 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 5E7261040C7;
-        Sat, 21 Mar 2020 12:34:21 +0100 (CET)
-Message-Id: <20200321113242.317954042@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id AC6861039FD;
+        Sat, 21 Mar 2020 12:34:17 +0100 (CET)
+Message-Id: <20200321113240.936097534@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sat, 21 Mar 2020 12:26:00 +0100
+Date:   Sat, 21 Mar 2020 12:25:46 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -40,13 +40,13 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Joel Fernandes <joel@joelfernandes.org>,
         Oleg Nesterov <oleg@redhat.com>,
         Davidlohr Bueso <dave@stgolabs.net>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Logan Gunthorpe <logang@deltatee.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        linux-pci@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
-        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
+        Kalle Valo <kvalo@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         Darren Hart <dvhart@infradead.org>,
@@ -70,8 +70,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         linuxppc-dev@lists.ozlabs.org,
         "Paul E . McKenney" <paulmck@kernel.org>,
         Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [patch V3 16/20] completion: Use simple wait queues
+        Randy Dunlap <rdunlap@infradead.org>,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: [patch V3 02/20] pci/switchtec: Replace completion wait queue usage for poll
 References: <20200321112544.878032781@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -84,212 +85,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-completion uses a wait_queue_head_t to enqueue waiters.
+The poll callback is using the completion wait queue and sticks it into
+poll_wait() to wake up pollers after a command has completed.
 
-wait_queue_head_t contains a spinlock_t to protect the list of waiters
-which excludes it from being used in truly atomic context on a PREEMPT_RT
-enabled kernel.
+This works to some extent, but cannot provide EPOLLEXCLUSIVE support
+because the waker side uses complete_all() which unconditionally wakes up
+all waiters. complete_all() is required because completions internally use
+exclusive wait and complete() only wakes up one waiter by default.
 
-The spinlock in the wait queue head cannot be replaced by a raw_spinlock
-because:
+This mixes conceptually different mechanisms and relies on internal
+implementation details of completions, which in turn puts contraints on
+changing the internal implementation of completions.
 
-  - wait queues can have custom wakeup callbacks, which acquire other
-    spinlock_t locks and have potentially long execution times
+Replace it with a regular wait queue and store the state in struct
+switchtec_user.
 
-  - wake_up() walks an unbounded number of list entries during the wake up
-    and may wake an unbounded number of waiters.
-
-For simplicity and performance reasons complete() should be usable on
-PREEMPT_RT enabled kernels.
-
-completions do not use custom wakeup callbacks and are usually single
-waiter, except for a few corner cases.
-
-Replace the wait queue in the completion with a simple wait queue (swait),
-which uses a raw_spinlock_t for protecting the waiter list and therefore is
-safe to use inside truly atomic regions on PREEMPT_RT.
-
-There is no semantical or functional change:
-
-  - completions use the exclusive wait mode which is what swait provides
-
-  - complete() wakes one exclusive waiter
-
-  - complete_all() wakes all waiters while holding the lock which protects
-    the wait queue against newly incoming waiters. The conversion to swait
-    preserves this behaviour.
-
-complete_all() might cause unbound latencies with a large number of waiters
-being woken at once, but most complete_all() usage sites are either in
-testing or initialization code or have only a really small number of
-concurrent waiters which for now does not cause a latency problem. Keep it
-simple for now.
-
-The fixup of the warning check in the USB gadget driver is just a straight
-forward conversion of the lockless waiter check from one waitqueue type to
-the other.
-
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
+Cc: linux-pci@vger.kernel.org
 ---
-V2: Split out the orinoco and usb gadget parts and amended change log
+V2: Reworded changelog.
 ---
- drivers/usb/gadget/function/f_fs.c |    2 +-
- include/linux/completion.h         |    8 ++++----
- kernel/sched/completion.c          |   36 +++++++++++++++++++-----------------
- 3 files changed, 24 insertions(+), 22 deletions(-)
+ drivers/pci/switch/switchtec.c |   22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1703,7 +1703,7 @@ static void ffs_data_put(struct ffs_data
- 		pr_info("%s(): freeing\n", __func__);
- 		ffs_data_clear(ffs);
- 		BUG_ON(waitqueue_active(&ffs->ev.waitq) ||
--		       waitqueue_active(&ffs->ep0req_completion.wait) ||
-+		       swait_active(&ffs->ep0req_completion.wait) ||
- 		       waitqueue_active(&ffs->wait));
- 		destroy_workqueue(ffs->io_completion_wq);
- 		kfree(ffs->dev_name);
---- a/include/linux/completion.h
-+++ b/include/linux/completion.h
-@@ -9,7 +9,7 @@
-  * See kernel/sched/completion.c for details.
-  */
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -52,10 +52,11 @@ struct switchtec_user {
  
--#include <linux/wait.h>
-+#include <linux/swait.h>
+ 	enum mrpc_state state;
  
- /*
-  * struct completion - structure used to maintain state for a "completion"
-@@ -25,7 +25,7 @@
-  */
- struct completion {
- 	unsigned int done;
--	wait_queue_head_t wait;
-+	struct swait_queue_head wait;
- };
+-	struct completion comp;
++	wait_queue_head_t cmd_comp;
+ 	struct kref kref;
+ 	struct list_head list;
  
- #define init_completion_map(x, m) __init_completion(x)
-@@ -34,7 +34,7 @@ static inline void complete_acquire(stru
- static inline void complete_release(struct completion *x) {}
++	bool cmd_done;
+ 	u32 cmd;
+ 	u32 status;
+ 	u32 return_code;
+@@ -77,7 +78,7 @@ static struct switchtec_user *stuser_cre
+ 	stuser->stdev = stdev;
+ 	kref_init(&stuser->kref);
+ 	INIT_LIST_HEAD(&stuser->list);
+-	init_completion(&stuser->comp);
++	init_waitqueue_head(&stuser->cmd_comp);
+ 	stuser->event_cnt = atomic_read(&stdev->event_cnt);
  
- #define COMPLETION_INITIALIZER(work) \
--	{ 0, __WAIT_QUEUE_HEAD_INITIALIZER((work).wait) }
-+	{ 0, __SWAIT_QUEUE_HEAD_INITIALIZER((work).wait) }
+ 	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
+@@ -175,7 +176,7 @@ static int mrpc_queue_cmd(struct switcht
+ 	kref_get(&stuser->kref);
+ 	stuser->read_len = sizeof(stuser->data);
+ 	stuser_set_state(stuser, MRPC_QUEUED);
+-	reinit_completion(&stuser->comp);
++	stuser->cmd_done = false;
+ 	list_add_tail(&stuser->list, &stdev->mrpc_queue);
  
- #define COMPLETION_INITIALIZER_ONSTACK_MAP(work, map) \
- 	(*({ init_completion_map(&(work), &(map)); &(work); }))
-@@ -85,7 +85,7 @@ static inline void complete_release(stru
- static inline void __init_completion(struct completion *x)
- {
- 	x->done = 0;
--	init_waitqueue_head(&x->wait);
-+	init_swait_queue_head(&x->wait);
- }
+ 	mrpc_cmd_submit(stdev);
+@@ -222,7 +223,8 @@ static void mrpc_complete_cmd(struct swi
+ 		memcpy_fromio(stuser->data, &stdev->mmio_mrpc->output_data,
+ 			      stuser->read_len);
+ out:
+-	complete_all(&stuser->comp);
++	stuser->cmd_done = true;
++	wake_up_interruptible(&stuser->cmd_comp);
+ 	list_del_init(&stuser->list);
+ 	stuser_put(stuser);
+ 	stdev->mrpc_busy = 0;
+@@ -529,10 +531,11 @@ static ssize_t switchtec_dev_read(struct
+ 	mutex_unlock(&stdev->mrpc_mutex);
  
- /**
---- a/kernel/sched/completion.c
-+++ b/kernel/sched/completion.c
-@@ -29,12 +29,12 @@ void complete(struct completion *x)
- {
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&x->wait.lock, flags);
-+	raw_spin_lock_irqsave(&x->wait.lock, flags);
- 
- 	if (x->done != UINT_MAX)
- 		x->done++;
--	__wake_up_locked(&x->wait, TASK_NORMAL, 1);
--	spin_unlock_irqrestore(&x->wait.lock, flags);
-+	swake_up_locked(&x->wait);
-+	raw_spin_unlock_irqrestore(&x->wait.lock, flags);
- }
- EXPORT_SYMBOL(complete);
- 
-@@ -58,10 +58,12 @@ void complete_all(struct completion *x)
- {
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&x->wait.lock, flags);
-+	WARN_ON(irqs_disabled());
-+
-+	raw_spin_lock_irqsave(&x->wait.lock, flags);
- 	x->done = UINT_MAX;
--	__wake_up_locked(&x->wait, TASK_NORMAL, 0);
--	spin_unlock_irqrestore(&x->wait.lock, flags);
-+	swake_up_all_locked(&x->wait);
-+	raw_spin_unlock_irqrestore(&x->wait.lock, flags);
- }
- EXPORT_SYMBOL(complete_all);
- 
-@@ -70,20 +72,20 @@ do_wait_for_common(struct completion *x,
- 		   long (*action)(long), long timeout, int state)
- {
- 	if (!x->done) {
--		DECLARE_WAITQUEUE(wait, current);
-+		DECLARE_SWAITQUEUE(wait);
- 
--		__add_wait_queue_entry_tail_exclusive(&x->wait, &wait);
- 		do {
- 			if (signal_pending_state(state, current)) {
- 				timeout = -ERESTARTSYS;
- 				break;
- 			}
-+			__prepare_to_swait(&x->wait, &wait);
- 			__set_current_state(state);
--			spin_unlock_irq(&x->wait.lock);
-+			raw_spin_unlock_irq(&x->wait.lock);
- 			timeout = action(timeout);
--			spin_lock_irq(&x->wait.lock);
-+			raw_spin_lock_irq(&x->wait.lock);
- 		} while (!x->done && timeout);
--		__remove_wait_queue(&x->wait, &wait);
-+		__finish_swait(&x->wait, &wait);
- 		if (!x->done)
- 			return timeout;
+ 	if (filp->f_flags & O_NONBLOCK) {
+-		if (!try_wait_for_completion(&stuser->comp))
++		if (!stuser->cmd_done)
+ 			return -EAGAIN;
+ 	} else {
+-		rc = wait_for_completion_interruptible(&stuser->comp);
++		rc = wait_event_interruptible(stuser->cmd_comp,
++					      stuser->cmd_done);
+ 		if (rc < 0)
+ 			return rc;
  	}
-@@ -100,9 +102,9 @@ static inline long __sched
+@@ -580,7 +583,7 @@ static __poll_t switchtec_dev_poll(struc
+ 	struct switchtec_dev *stdev = stuser->stdev;
+ 	__poll_t ret = 0;
  
- 	complete_acquire(x);
+-	poll_wait(filp, &stuser->comp.wait, wait);
++	poll_wait(filp, &stuser->cmd_comp, wait);
+ 	poll_wait(filp, &stdev->event_wq, wait);
  
--	spin_lock_irq(&x->wait.lock);
-+	raw_spin_lock_irq(&x->wait.lock);
- 	timeout = do_wait_for_common(x, action, timeout, state);
--	spin_unlock_irq(&x->wait.lock);
-+	raw_spin_unlock_irq(&x->wait.lock);
+ 	if (lock_mutex_and_test_alive(stdev))
+@@ -588,7 +591,7 @@ static __poll_t switchtec_dev_poll(struc
  
- 	complete_release(x);
+ 	mutex_unlock(&stdev->mrpc_mutex);
  
-@@ -291,12 +293,12 @@ bool try_wait_for_completion(struct comp
- 	if (!READ_ONCE(x->done))
- 		return false;
+-	if (try_wait_for_completion(&stuser->comp))
++	if (stuser->cmd_done)
+ 		ret |= EPOLLIN | EPOLLRDNORM;
  
--	spin_lock_irqsave(&x->wait.lock, flags);
-+	raw_spin_lock_irqsave(&x->wait.lock, flags);
- 	if (!x->done)
- 		ret = false;
- 	else if (x->done != UINT_MAX)
- 		x->done--;
--	spin_unlock_irqrestore(&x->wait.lock, flags);
-+	raw_spin_unlock_irqrestore(&x->wait.lock, flags);
- 	return ret;
- }
- EXPORT_SYMBOL(try_wait_for_completion);
-@@ -322,8 +324,8 @@ bool completion_done(struct completion *
- 	 * otherwise we can end up freeing the completion before complete()
- 	 * is done referencing it.
- 	 */
--	spin_lock_irqsave(&x->wait.lock, flags);
--	spin_unlock_irqrestore(&x->wait.lock, flags);
-+	raw_spin_lock_irqsave(&x->wait.lock, flags);
-+	raw_spin_unlock_irqrestore(&x->wait.lock, flags);
- 	return true;
- }
- EXPORT_SYMBOL(completion_done);
+ 	if (stuser->event_cnt != atomic_read(&stdev->event_cnt))
+@@ -1272,7 +1275,8 @@ static void stdev_kill(struct switchtec_
+ 
+ 	/* Wake up and kill any users waiting on an MRPC request */
+ 	list_for_each_entry_safe(stuser, tmpuser, &stdev->mrpc_queue, list) {
+-		complete_all(&stuser->comp);
++		stuser->cmd_done = true;
++		wake_up_interruptible(&stuser->cmd_comp);
+ 		list_del_init(&stuser->list);
+ 		stuser_put(stuser);
+ 	}
 
 
