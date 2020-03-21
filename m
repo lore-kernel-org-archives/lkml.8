@@ -2,74 +2,57 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A06AC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA9CC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB5D20409
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37FC420409
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:39:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cIcG4ZRm"
+	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="sAR5y0fA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbgCUOih (ORCPT
+        id S1727446AbgCUOjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 10:38:37 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46414 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgCUOig (ORCPT
+        Sat, 21 Mar 2020 10:39:48 -0400
+Received: from mout-u-204.mailbox.org ([91.198.250.253]:44590 "EHLO
+        mout-u-204.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727244AbgCUOjr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 10:38:36 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j17so7582067wru.13;
-        Sat, 21 Mar 2020 07:38:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KHezbaonDObNhrnITsOBJjiiKzk30bQA9Nv61l1omqk=;
-        b=cIcG4ZRm5PgmhKA92ygSxLPrxu7LZhPesEZxIfgPAfNuVpC7YynZsD5a/+MzA5EpaG
-         ArirO23mGiHwzZYi/B/SyqQPJCqOCb73+L4OJo+pfY61/k43+TIAY4q2LUuU+rYsFd0j
-         6KAWqV0zF3TRV7jnt+t+368F/ULon3DMD54hukiqnZ2huZsCrFoU2PopNmc6Apap92ZQ
-         vS4AzOXyyvxnGKgRLMGkMfOFyOR0697PVql8GAy97analmoW7YVKNNG6C0IR1YBfh3Na
-         wKI4PXD9KuA8QMHDrh0rBnyP21DFlRrmmhV++5JKSQXxrOi7dQSVafzDtkGo45gw/HnP
-         5SHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=KHezbaonDObNhrnITsOBJjiiKzk30bQA9Nv61l1omqk=;
-        b=tbQE8FSjRGmsLM1DHUEfu6Un4ZoRKPGHPi4lh6ZvsDUBAtlSGucZAP/4sE55zfmNwB
-         8/Oi2UE57JNS6r7jOENTgh16tTRCM4cAe2BYPyhTB/0G3h9mJIQNW3baWJ4sbSTARAbL
-         XYMFV1B31FMP85el3TAhHRAy1bUbQOgvEGYL1cBiGFYYGSghYRTHiaH6bjSfL9b9kHPD
-         DpLJKjrGPp5OJZ1jX5S3/f+UBYJWvbK2rTTUYSrvTTHaK2k9ofdYfZ4yGIUZxtNtEoqz
-         ru26oLomqSot2tDL16X8nXJxXhP+YCgd0lI4APX5ccs4kLRPcjOJy1TaC08DfmDVIdeG
-         S1bA==
-X-Gm-Message-State: ANhLgQ0xPrSa2+SdvOpKWkvbw9vUGxSgtzxu3pBCGuD4HEKPhw9TXY7v
-        PNmZVWGLLu56C4bjsi/NFFzLw6W7
-X-Google-Smtp-Source: ADFU+vvpJtD699uzrYrAyKDY3EnPQVf/SKIbwRg3zTVmGJ/b93WqeNNUlBpkc62TVccvt/eOjXNkHg==
-X-Received: by 2002:adf:9b96:: with SMTP id d22mr19058977wrc.249.1584801514210;
-        Sat, 21 Mar 2020 07:38:34 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4262:1ab:c:b4be:c5ec:d5f1:2a7f])
-        by smtp.gmail.com with ESMTPSA id w204sm13499569wma.1.2020.03.21.07.38.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2020 07:38:33 -0700 (PDT)
-From:   Emil Renner Berthing <kernel@esmil.dk>
-To:     netdev@vger.kernel.org
-Cc:     David Wu <david.wu@rock-chips.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Emil Renner Berthing <kernel@esmil.dk>
-Subject: [PATCH] net: stmmac: dwmac-rk: fix error path in rk_gmac_probe
-Date:   Sat, 21 Mar 2020 15:36:19 +0100
-Message-Id: <20200321143619.91533-1-kernel@esmil.dk>
-X-Mailer: git-send-email 2.25.2
+        Sat, 21 Mar 2020 10:39:47 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-u-204.mailbox.org (Postfix) with ESMTPS id 48l3FY4BMnzQkJl;
+        Sat, 21 Mar 2020 15:39:45 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
+        t=1584801583;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Tkpjw41OSQS6g4mnJ1HdI3U2kVush6jX6zP98pED8vo=;
+        b=sAR5y0fAccgXVWrnYlH9HkSy0j/qIMg3EXITWYl9lGkPa/KR5mp/m083mpcbKwXhx/vgch
+        dS+1bufCW+lKOHUIZJ3hV65QTD1avsJWu0gExWdtuCBfjE3lPVwSwYC+iXhUFITurtJy7h
+        +kx1fhSA9yS9T7EsV5pCv9lEIayFNiwDXWJNiGDTmKI7x2Hcia1O5woQovtAscEk0oT84L
+        w9JrJTwDre073BVtsIF+EiOqmhm3R+Rc9spSXNRpFkVrFuEIBXTjn5YMIJZwSF1IdmVkzh
+        FXxuQh9dhs1Df5CLq21/vxXa3PHki1sA3VdvSLF+dwGlKpk+XAaodJh3JFk9Cw==
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id exzjPqbLDL-R; Sat, 21 Mar 2020 15:39:42 +0100 (CET)
+From:   Sungbo Eo <mans0n@gorani.run>
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-oxnas@groups.io,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Sungbo Eo <mans0n@gorani.run>
+Subject: [PATCH] ARM: dts: oxnas: Fix clear-mask property
+Date:   Sat, 21 Mar 2020 23:36:53 +0900
+Message-Id: <20200321143653.2412823-1-mans0n@gorani.run>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,38 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure we clean up devicetree related configuration
-also when clock init fails.
+Disable all rps-irq interrupts during driver initialization to prevent
+an accidental interrupt on GIC.
 
-Fixes: fecd4d7eef8b ("net: stmmac: dwmac-rk: Add integrated PHY support")
-Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+Fixes: 84316f4ef141 ("ARM: boot: dts: Add Oxford Semiconductor OX810SE dtsi")
+Fixes: 38d4a53733f5 ("ARM: dts: Add support for OX820 and Pogoplug V3")
+Signed-off-by: Sungbo Eo <mans0n@gorani.run>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/ox810se.dtsi | 4 ++--
+ arch/arm/boot/dts/ox820.dtsi   | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-index dc50ba13a746..2d5573b3dee1 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -1406,17 +1406,17 @@ static int rk_gmac_probe(struct platform_device *pdev)
- 	plat_dat->bsp_priv = rk_gmac_setup(pdev, plat_dat, data);
- 	if (IS_ERR(plat_dat->bsp_priv)) {
- 		ret = PTR_ERR(plat_dat->bsp_priv);
- 		goto err_remove_config_dt;
- 	}
+diff --git a/arch/arm/boot/dts/ox810se.dtsi b/arch/arm/boot/dts/ox810se.dtsi
+index 9f6c2b660ed3..0755e5864c4a 100644
+--- a/arch/arm/boot/dts/ox810se.dtsi
++++ b/arch/arm/boot/dts/ox810se.dtsi
+@@ -323,8 +323,8 @@ intc: interrupt-controller@0 {
+ 					interrupt-controller;
+ 					reg = <0 0x200>;
+ 					#interrupt-cells = <1>;
+-					valid-mask = <0xFFFFFFFF>;
+-					clear-mask = <0>;
++					valid-mask = <0xffffffff>;
++					clear-mask = <0xffffffff>;
+ 				};
  
- 	ret = rk_gmac_clk_init(plat_dat);
- 	if (ret)
--		return ret;
-+		goto err_remove_config_dt;
+ 				timer0: timer@200 {
+diff --git a/arch/arm/boot/dts/ox820.dtsi b/arch/arm/boot/dts/ox820.dtsi
+index c9b327732063..90846a7655b4 100644
+--- a/arch/arm/boot/dts/ox820.dtsi
++++ b/arch/arm/boot/dts/ox820.dtsi
+@@ -240,8 +240,8 @@ intc: interrupt-controller@0 {
+ 					reg = <0 0x200>;
+ 					interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+ 					#interrupt-cells = <1>;
+-					valid-mask = <0xFFFFFFFF>;
+-					clear-mask = <0>;
++					valid-mask = <0xffffffff>;
++					clear-mask = <0xffffffff>;
+ 				};
  
- 	ret = rk_gmac_powerup(plat_dat->bsp_priv);
- 	if (ret)
- 		goto err_remove_config_dt;
- 
- 	ret = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
- 	if (ret)
- 		goto err_gmac_powerdown;
+ 				timer0: timer@200 {
 -- 
 2.25.2
 
