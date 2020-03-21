@@ -2,158 +2,68 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE41C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B53C43333
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7076220732
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:24:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QFJxoFrT"
+	by mail.kernel.org (Postfix) with ESMTP id B7EC820753
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:24:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584753872;
+	bh=b2JbIbLu1vzPlTM1xcky55IFGUKce44Xpwaq1wYIoPg=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=L6S3UUeIp+jVzkFByVLwHtqSc6oQ2J3chKxciE8zRDPbWPR3ZjfzLV7N7O/PikAzs
+	 5C2zS4pofpCLFoe/FnfuEccgvIoNkuqLSvQDErDKuLciAAMjZfQJgG//glUNhnHR9N
+	 2Vz3hSmaCqTiR1uOf0fbe60ktmQBABu40qseD72c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbgCUBYI (ORCPT
+        id S1727835AbgCUBYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 21:24:08 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36048 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgCUBYH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 21:24:07 -0400
-Received: by mail-io1-f66.google.com with SMTP id d15so8166534iog.3;
-        Fri, 20 Mar 2020 18:24:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tsTgHKC2wYoTFHmjkv7F8EKYqReM1aRB2f2l4RqbkyI=;
-        b=QFJxoFrTkHzwa4kMCy+p1Gjqrf8Tf/lujHcwNY5QvyokfkbkDjIhAOmf8x9gBlj2sE
-         MDVcQ4lIN+nBB8JKY/QP++Qj+KCU+WHzIcCwjL2L0jKBqsuyNflP9n25Nq4F6Lj9ojEv
-         MesF75DYWmonpTQ2kw/lYLq6rPxdLgPDC4tOL2Y4ba+ldzFmudobZwImz/LVRzG7QK76
-         IUUa0AYImWYcsgfETe9kFdDHzhl0zIObMJvQK2TLguxdlb7i2I+z9KvDGNvmoTYxWtxC
-         ugR4Ifhkh31lI96hV8dEfBpkZ9BXur2ndlT/GT8PQk7mmyG2wJXmDmgH0cx6Gf2mmvCZ
-         DOQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tsTgHKC2wYoTFHmjkv7F8EKYqReM1aRB2f2l4RqbkyI=;
-        b=XWsnTKRPek39muXmsLydbM3i10Z7CPtnwe7JKyiuz063G+VroE57Zezo5hG7DcA8fx
-         UkZ/0lnC6Alcn81GPDSX73pSBSQ1hR9P+SUvDc4tzEOMqfYYpBZW6ffh7clUkvoVCaMG
-         t3sQRaamirpcFQD97iujohDpqwpd4hsrhYpyFXC526BwpVdhwmCJpRA+kTH1ibw2dtiH
-         KAwG6o7REVDlvSrNd4QX9DqtNw2hXkrXm1tkaS4+GVfucd1AV2EHPya4DBJfFM7WVbz1
-         yB9cacZh/7J7SBPB4VdrSlLlpZKrSmNWBfteZQ23gOnrzlkx4piRnd/ZcRH1Jh4ENxT4
-         XmAA==
-X-Gm-Message-State: ANhLgQ2k5W/eUrp3si30gQm87diNUqmWeuXXLcQPaeOjvS9GfjJoE7bK
-        9zQ+hWwsVKzIt4r1zOvOO04FuEWHI07sOUdXp34=
-X-Google-Smtp-Source: ADFU+vvrDO/DJk5i3pV1nZAMX9yJMYkZDh7MJqQ3FsuLkP0hhEkby+CEe1HwTg0YyufaOPhx10310aWYm66g/mK2jwo=
-X-Received: by 2002:a02:cd8a:: with SMTP id l10mr9722945jap.106.1584753846777;
- Fri, 20 Mar 2020 18:24:06 -0700 (PDT)
+        Fri, 20 Mar 2020 21:24:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727763AbgCUBYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 21:24:31 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D26B220732;
+        Sat, 21 Mar 2020 01:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584753870;
+        bh=b2JbIbLu1vzPlTM1xcky55IFGUKce44Xpwaq1wYIoPg=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=as16LPAWLiq2GGQWpg88bWepte1CiqKsdWHlK5e56VYNpk/5EEiZY8+EoaXHpEWl3
+         xirLPIPJhFkTfIbKiHpYNbxQQDwwD3LQdjF0yUwj1CIcokGrATXDV+bkAgeJq5pZDk
+         cdtCFPpud0JTtxdYphuWZczKaSO2/mBMAzkDQG9Q=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200320110959.2114-1-hqjagain@gmail.com> <20200320185204.GB3828@localhost.localdomain>
- <CAJRQjoc-U_K-2THbmBOj2TOWDTfP9yr5Vec-WjhTjS8sj19fHA@mail.gmail.com> <20200321010246.GC3828@localhost.localdomain>
-In-Reply-To: <20200321010246.GC3828@localhost.localdomain>
-From:   Qiujun Huang <hqjagain@gmail.com>
-Date:   Sat, 21 Mar 2020 09:23:54 +0800
-Message-ID: <CAJRQjofnZ5Oz-0PNMY6ojddg3MZc4v5UC5AJwi2CxLByDGaZhQ@mail.gmail.com>
-Subject: Re: [PATCH v3] sctp: fix refcount bug in sctp_wfree
-To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, vyasevich@gmail.com,
-        nhorman@tuxdriver.com, Jakub Kicinski <kuba@kernel.org>,
-        linux-sctp@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, anenbupt@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200309194254.29009-2-lkundrak@v3.sk>
+References: <20200309194254.29009-1-lkundrak@v3.sk> <20200309194254.29009-2-lkundrak@v3.sk>
+Subject: Re: [PATCH v2 01/17] clk: mmp2: Remove a unused prototype
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Date:   Fri, 20 Mar 2020 18:24:30 -0700
+Message-ID: <158475387003.125146.14218245508304103071@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 9:02 AM Marcelo Ricardo Leitner
-<marcelo.leitner@gmail.com> wrote:
->
-> On Sat, Mar 21, 2020 at 07:53:29AM +0800, Qiujun Huang wrote:
-> ...
-> > > > So, sctp_wfree was not called to destroy SKB)
-> > > >
-> > > > then migrate happened
-> > > >
-> > > >       sctp_for_each_tx_datachunk(
-> > > >       sctp_clear_owner_w);
-> > > >       sctp_assoc_migrate();
-> > > >       sctp_for_each_tx_datachunk(
-> > > >       sctp_set_owner_w);
-> > > > SKB was not in the outq, and was not changed to newsk
-> > >
-> > > The real fix is to fix the migration to the new socket, though the
-> > > situation on which it is happening is still not clear.
-> > >
-> > > The 2nd sendto() call on the reproducer is sending 212992 bytes on a
-> > > single call. That's usually the whole sndbuf size, and will cause
-> > > fragmentation to happen. That means the datamsg will contain several
-> > > skbs. But still, the sacked chunks should be freed if needed while the
-> > > remaining ones will be left on the queues that they are.
-> >
-> > in sctp_sendmsg_to_asoc
-> > datamsg holds his chunk result in that the sacked chunks can't be freed
->
-> Right! Now I see it, thanks.
-> In the end, it's not a locking race condition. It's just not iterating
-> on the lists properly.
->
-> >
-> > list_for_each_entry(chunk, &datamsg->chunks, frag_list) {
-> > sctp_chunk_hold(chunk);
-> > sctp_set_owner_w(chunk);
-> > chunk->transport = transport;
-> > }
-> >
-> > any ideas to handle it?
->
-> sctp_for_each_tx_datachunk() needs to be aware of this situation.
-> Instead of iterating directly/only over the chunk list, it should
-> iterate over the datamsgs instead. Something like the below (just
-> compile tested).
->
-> Then, the old socket will be free to die regardless of the new one.
-> Otherwise, if this association gets stuck on retransmissions or so,
-> the old socket would not be freed till then.
->
-> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-> index fed26a1e9518..85c742310d26 100644
-> --- a/net/sctp/socket.c
-> +++ b/net/sctp/socket.c
-> @@ -151,9 +151,10 @@ static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
->                                        void (*cb)(struct sctp_chunk *))
->
->  {
-> +       struct sctp_datamsg *msg, *prev_msg = NULL;
->         struct sctp_outq *q = &asoc->outqueue;
->         struct sctp_transport *t;
-> -       struct sctp_chunk *chunk;
-> +       struct sctp_chunk *chunk, *c;
->
->         list_for_each_entry(t, &asoc->peer.transport_addr_list, transports)
->                 list_for_each_entry(chunk, &t->transmitted, transmitted_list)
-> @@ -162,8 +163,14 @@ static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
->         list_for_each_entry(chunk, &q->retransmit, transmitted_list)
->                 cb(chunk);
->
-> -       list_for_each_entry(chunk, &q->sacked, transmitted_list)
-> -               cb(chunk);
-> +       list_for_each_entry(chunk, &q->sacked, transmitted_list) {
-> +               msg = chunk->msg;
-> +               if (msg == prev_msg)
-> +                       continue;
-> +               list_for_each_entry(c, &msg->chunks, frag_list)
-> +                       cb(c);
-> +               prev_msg = msg;
-> +       }
+Quoting Lubomir Rintel (2020-03-09 12:42:38)
+> There is no mmp_clk_register_pll2() routine.
+>=20
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
 
-great. I'll trigger a syzbot test. Thanks.
-
->
->         list_for_each_entry(chunk, &q->abandoned, transmitted_list)
->                 cb(chunk);
+Applied to clk-next
