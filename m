@@ -2,105 +2,101 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FA0C4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F31F7C54EEB
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9320020739
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C2320754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:00:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584781253;
+	bh=vLSdl/mc3zsd4nCLy4M6ojbC+JVBPuYFqgT7LG6glCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r73EnloFcShJKoLXadlkyuEo6XeeKQYro3Gb7+iOyWb2flgwKVZmGYyV6aJKamZ12
+	 JZvtC3Ye3RGnHXaCyASHyVyHyDXbhESGqJqaq2h3tyxxpbSzUl2UDLynFsGqi520jd
+	 8ZTKvpxMdWWCtsu86VIkpFhfE3tUZiIKmhHaKyZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgCUJAd (ORCPT
+        id S1728264AbgCUJAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 05:00:33 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:42956 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728008AbgCUJAd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 05:00:33 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02L8st3n014731;
-        Sat, 21 Mar 2020 05:00:19 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ywcs5rdqx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 21 Mar 2020 05:00:19 -0400
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 02L90HpF049901
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Sat, 21 Mar 2020 05:00:17 -0400
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sat, 21 Mar 2020 02:00:16 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Sat, 21 Mar 2020 02:00:15 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02L90CUH009329;
-        Sat, 21 Mar 2020 05:00:12 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <lars@metafoo.de>, <andriy.shevchenko@linux.intel.com>,
-        <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2] iio: buffer: re-introduce bitmap_zalloc() for trialmask
-Date:   Sat, 21 Mar 2020 10:59:56 +0200
-Message-ID: <20200321085956.11213-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200317123621.27722-1-alexandru.ardelean@analog.com>
-References: <20200317123621.27722-1-alexandru.ardelean@analog.com>
+        Sat, 21 Mar 2020 05:00:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728008AbgCUJAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 05:00:52 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C226820739;
+        Sat, 21 Mar 2020 09:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584781251;
+        bh=vLSdl/mc3zsd4nCLy4M6ojbC+JVBPuYFqgT7LG6glCU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UwTpCNY6QD6ZmwiZ0j/0OyrLMcyYsNlxtW9evMU0dfJuWr105KcFFdZQoDZHHivtx
+         ewk+EGzRSsBaeIVmLnYBZflBWSnznK+5hLsYWBoneOQOqW/dH5iXqRxgzqCFpCuXLp
+         shPA/gsNpFOGWSdygU3CVrjfg2Z1BoDoqVhgNO1A=
+Date:   Sat, 21 Mar 2020 11:00:47 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v8 0/3] mm/hmm/test: add self tests for HMM
+Message-ID: <20200321090047.GM514123@unreal>
+References: <20200321003108.22941-1-rcampbell@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-21_02:2020-03-20,2020-03-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- malwarescore=0 clxscore=1015 suspectscore=0 spamscore=0 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003210051
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200321003108.22941-1-rcampbell@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 3862828a903d3 ("iio: buffer: Switch to bitmap_zalloc()") introduced
-bitmap_alloc(), but commit 20ea39ef9f2f9 ("iio: Fix scan mask selection")
-reverted it.
+On Fri, Mar 20, 2020 at 05:31:05PM -0700, Ralph Campbell wrote:
+> This series adds basic self tests for HMM and are intended for Jason
+> Gunthorpe's rdma tree which has a number of HMM patches applied.
+>
+> Changes v7 -> v8:
+> Rebased to Jason's rdma/hmm tree, plus Jason's 6 patch series
+>   "Small hmm_range_fault() cleanups".
+> Applied a number of changes from Jason's comments.
+>
+> Changes v6 -> v7:
+> Rebased to linux-5.6.0-rc6
+> Reverted back to just using mmu_interval_notifier_insert() and making
+>   this series only introduce HMM self tests.
+>
+> Changes v5 -> v6:
+> Rebased to linux-5.5.0-rc6
+> Refactored mmu interval notifier patches
+> Converted nouveau to use the new mmu interval notifier API
+>
+> Changes v4 -> v5:
+> Added mmu interval notifier insert/remove/update callable from the
+>   invalidate() callback
+> Updated HMM tests to use the new core interval notifier API
+>
+> Changes v1 -> v4:
+> https://lore.kernel.org/linux-mm/20191104222141.5173-1-rcampbell@nvidia.com
+>
+> Ralph Campbell (3):
+>   mm/hmm/test: add selftest driver for HMM
+>   mm/hmm/test: add selftests for HMM
+>   MAINTAINERS: add HMM selftests
+>
+>  MAINTAINERS                            |    3 +
+>  include/uapi/linux/test_hmm.h          |   59 ++
 
-This change adds it back. The only difference is that it's adding
-bitmap_zalloc(). There might be some changes later that would require
-initializing it to zero. In any case, now it's already zero-ing the
-trialmask.
+Isn't UAPI folder supposed to be for user-visible interfaces that follow
+the rule of non-breaking user space and not for selftests?
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
-
-Changelog v1 -> v2:
-* add 'Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>' 
-* re-send from an Analog server; GMail changed the author to @gmail.com
-
- drivers/iio/industrialio-buffer.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-index 4ada5592aa2b..5ff34ce8b6a2 100644
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -316,8 +316,7 @@ static int iio_scan_mask_set(struct iio_dev *indio_dev,
- 	const unsigned long *mask;
- 	unsigned long *trialmask;
- 
--	trialmask = kcalloc(BITS_TO_LONGS(indio_dev->masklength),
--			    sizeof(*trialmask), GFP_KERNEL);
-+	trialmask = bitmap_zalloc(indio_dev->masklength, GFP_KERNEL);
- 	if (trialmask == NULL)
- 		return -ENOMEM;
- 	if (!indio_dev->masklength) {
--- 
-2.17.1
-
+Thanks
