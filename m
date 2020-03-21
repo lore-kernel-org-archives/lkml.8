@@ -2,135 +2,133 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0B6C4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 04:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F61C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 04:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E0620732
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 04:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB9520732
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 04:55:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vLSzIN02"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgCUEun (ORCPT
+        id S1727950AbgCUEzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 00:50:43 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:57445 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbgCUEun (ORCPT
+        Sat, 21 Mar 2020 00:55:05 -0400
+Received: from mail-pj1-f73.google.com ([209.85.216.73]:36599 "EHLO
+        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgCUEzE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 00:50:43 -0400
-Received: from fsav102.sakura.ne.jp (fsav102.sakura.ne.jp [27.133.134.229])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 02L4nUum016014;
-        Sat, 21 Mar 2020 13:49:30 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav102.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav102.sakura.ne.jp);
- Sat, 21 Mar 2020 13:49:30 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav102.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 02L4nP9d015877
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Sat, 21 Mar 2020 13:49:30 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH v2] Add kernel config option for fuzz testing.
-To:     Dmitry Vyukov <dvyukov@google.com>, Jiri Slaby <jslaby@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200307135822.3894-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <6f2e27de-c820-7de3-447d-cd9f7c650add@suse.com>
- <20200308065258.GE3983392@kroah.com>
- <3e9f47f7-a6c1-7cec-a84f-e621ae5426be@suse.com>
- <CACT4Y+a6KExbggs4mg8pvoD554PcDqQNW4sM15X-tc=YONCzYw@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <7728c978-d359-227f-0f3e-f975c45ca218@i-love.sakura.ne.jp>
-Date:   Sat, 21 Mar 2020 13:49:21 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <CACT4Y+a6KExbggs4mg8pvoD554PcDqQNW4sM15X-tc=YONCzYw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sat, 21 Mar 2020 00:55:04 -0400
+Received: by mail-pj1-f73.google.com with SMTP id np18so5470321pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 21:55:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Qappvw96EUepcQDh6rIB1HdJ+KdBA/yaiDSOL4qur/U=;
+        b=vLSzIN02yZjlPwTzcU400/3gSovfu2ga7/eNWJIeBZzTVfaVsG950ptH+WJiESq+Fh
+         nGeqeA3Al1dQKSlP8NBDdCNyOKDTUfiZc/QafzHmTsEZTe+6jNY4tKch/UQFkUxyfUi0
+         u5vPufQvl5T/ITXwHMxxnZryYCvWvqrBeJAKwI3CD0xeuBlZVp4QnXMZxHVrGY6vmOxa
+         MtDeqSzNtyyKcb0HkDkU0NpKk0ZpvifAqnZgdbHDq4hPeLoPY+lC4fEfRzovlFWhhFOj
+         Kjxg4vKKszbmZGs4JPz4kHcu4kPmGNlCnJ55LRwbsL6rPNcTxNVdjjdntzTt4XqjvUs4
+         JxdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Qappvw96EUepcQDh6rIB1HdJ+KdBA/yaiDSOL4qur/U=;
+        b=fSNkTNJAKNjftfye1FkirY+bk4fsM37G5jOwfM9eCxCwxYGmtbie7Pb712VkGdilhh
+         5bztbv+6v5bO+/L+7whv6dPJnBoFxv4VZ/BbR16oijOBC0ptGFZi5hU3LNv6DPpSe+cZ
+         /dm6FHh5c5CNSVVDp/SJXlJlETLqtAEfqXkPoMsJJG+cPGI/smFxkx2P1T/uofDVfZsc
+         g0DEqnrvNpPOcCT31pqYm208hyCGjDTtKYQIC0DXezRbHBAkZvNyKwt5rCzc84o0/J35
+         KwvoziYpY49s5GSwnEAAiNEvTyKZhzOYoI0A1WjeqC9hDWnJbyUI6Ldom3AGynH2btRX
+         nHBA==
+X-Gm-Message-State: ANhLgQ1/Ots2iNY/ONPC2Fu9zcokKGHofwLoU27sTFmT11eX7gjR/ycI
+        CmQBN7yDhaItn8x2gnXJ9udUaS6Jj4XNgkM=
+X-Google-Smtp-Source: ADFU+vun9pvzN/AClZJ+4rDwIUBdbwrf+xnL/lNVKSDppW/XcQpJXplkwUGkMQ1IHdrPzOcLixdg9C1hrXqN4V8=
+X-Received: by 2002:a17:90b:f0e:: with SMTP id br14mr13526925pjb.21.1584766501664;
+ Fri, 20 Mar 2020 21:55:01 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 21:54:48 -0700
+Message-Id: <20200321045448.15192-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH v1] driver core: Add device links from fwnode only for the
+ primary device
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        kernel-team@android.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/03/10 15:30, Dmitry Vyukov wrote:
-> Re making it a single config vs a set of fine-grained configs. I think
-> making it fine-grained is a proper way to do it, but the point Tetsuo
-> raised is very real and painful as well -- when a kernel developer
-> adds another option, they will not go and update configs on all
-> external testing systems. This problem is also common for "enable all
-> boot tests that can run on this kernel", or "configure a 'standard'
-> debug build". Currently doing these things require all of expertise,
-> sacred knowledge, checking all configs one-by-one as well as checking
-> every new kernel patch and that needs to be done by everybody doing
-> any kernel testing.
-> I wonder if this can be solved by doing fine-grained configs, but also
-> adding some umbrella uber-config that will select all of the
-> individual options. Config system allows this, right? With "select" or
-> "default if" clauses. What would be better: have the umbrella option
-> select all individual, or all individual default to y if umbrella is
-> selected?
+Sometimes, more than one (generally two) device can point to the same
+fwnode.  However, only one device is set as the fwnode's device
+(fwnode->dev) and can be looked up from the fwnode.
 
-So, we have three questions.
+Typically, only one of these devices actually have a driver and actually
+probe. If we create device links for all these devices, then the
+suppliers' of these devices (with the same fwnode) will never get a
+sync_state() call because one of their consumer devices will never probe
+(because they don't have a driver).
 
-Q1: Can we agree with adding build-time branching (i.e. kernel config options) ?
+So, create device links only for the device that is considered as the
+fwnode's device.
 
-    I fear bugs (e.g. unexpectedly overwrting flag variables) in run-time
-    branching mechanisms. Build-time branching mechanisms cannot have such bugs.
+One such example of this is the PCI bridge platform_device and the
+corresponding pci_bus device. Both these devices will have the same
+fwnode. It's the platform_device that is registered first and is set as
+the fwnode's device. Also the platform_device is the one that actually
+probes. Without this patch none of the suppliers of a PCI bridge
+platform_device would get a sync_state() callback.
 
-Q2: If we can agree with kernel config options, can we start with single (or
-    fewer) kernel config option (e.g. CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING=y) ?
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/base/core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Q3: If we can agree with kernel config options but we can't start with single
-    (or fewer) kernel config option, can we agree with adding another kernel
-    config option which selects all options (e.g.
-
-      config KERNEL_BUILT_FOR_FUZZ_TESTING
-             bool "Build kernel for fuzz testing"
-      
-      config KERNEL_BUILT_FOR_FUZZ_TESTING_SELECT_ALL
-             bool "Select all options for Build kernel for fuzz testing"
-             depends on KERNEL_BUILT_FOR_FUZZ_TESTING
-             select KERNEL_DISABLE_FOO1
-             select KERNEL_DISABLE_BAR1
-             select KERNEL_DISABLE_BUZ1
-             select KERNEL_CHANGE_FOO2
-             select KERNEL_ENABLE_BAR2
-      
-      config KERNEL_DISABLE_FOO1
-             bool "Disable foo1"
-             depends on KERNEL_BUILT_FOR_FUZZ_TESTING
-      
-      config KERNEL_DISABLE_BAR1
-             bool "Disable bar1"
-             depends on KERNEL_BUILT_FOR_FUZZ_TESTING
-      
-      config KERNEL_DISABLE_BUZ1
-             bool "Disable buz1"
-             depends on KERNEL_BUILT_FOR_FUZZ_TESTING
-      
-      config KERNEL_CHANGE_FOO2
-             bool "Change foo2"
-             depends on KERNEL_BUILT_FOR_FUZZ_TESTING
-      
-      config KERNEL_ENABLE_BAR2
-             bool "Enable bar2"
-             depends on KERNEL_BUILT_FOR_FUZZ_TESTING
-
-    ) ?
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index fc6a60998cd6..5e3cc1651c78 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -2404,6 +2404,7 @@ int device_add(struct device *dev)
+ 	struct class_interface *class_intf;
+ 	int error = -EINVAL, fw_ret;
+ 	struct kobject *glue_dir = NULL;
++	bool is_fwnode_dev = false;
+ 
+ 	dev = get_device(dev);
+ 	if (!dev)
+@@ -2501,8 +2502,10 @@ int device_add(struct device *dev)
+ 
+ 	kobject_uevent(&dev->kobj, KOBJ_ADD);
+ 
+-	if (dev->fwnode && !dev->fwnode->dev)
++	if (dev->fwnode && !dev->fwnode->dev) {
+ 		dev->fwnode->dev = dev;
++		is_fwnode_dev = true;
++	}
+ 
+ 	/*
+ 	 * Check if any of the other devices (consumers) have been waiting for
+@@ -2518,7 +2521,8 @@ int device_add(struct device *dev)
+ 	 */
+ 	device_link_add_missing_supplier_links();
+ 
+-	if (fw_devlink_flags && fwnode_has_op(dev->fwnode, add_links)) {
++	if (fw_devlink_flags && is_fwnode_dev &&
++	    fwnode_has_op(dev->fwnode, add_links)) {
+ 		fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
+ 		if (fw_ret == -ENODEV)
+ 			device_link_wait_for_mandatory_supplier(dev);
+-- 
+2.25.1.696.g5e7596f4ac-goog
 
