@@ -2,103 +2,107 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8A1C4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 13:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7E5C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 13:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CAB920780
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 13:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46CAE20780
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 13:40:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="Wp7XIFjG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727416AbgCUNkR (ORCPT
+        id S1727479AbgCUNkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 09:40:17 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:43688 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbgCUNkR (ORCPT
+        Sat, 21 Mar 2020 09:40:39 -0400
+Received: from mout-u-107.mailbox.org ([91.198.250.252]:25472 "EHLO
+        mout-u-107.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbgCUNki (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 09:40:17 -0400
-Received: by mail-il1-f198.google.com with SMTP id o9so4083489ila.10
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 06:40:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=pyMoj2Ao5xrYueRmpo2CDvoKtmm7H1d6XHU2eunTcBs=;
-        b=HI/iDTrTPnPjBSeR5vCSFEsXFm0/AXaOhRTrwqU5/TJsiDYVlHVzbrxKAOEWt1YEPN
-         S/nqHRFw/FXgTQ+rt/hMcmGUcIGgWdryO/g4JCArd/teCZHVfJWCfl0oX1gdlHx9sNsb
-         qorgREUrLbhRfBKxB3+ycjhbsGL8aL/EWZyFLx6/rXyp0Ev4XWrSRdbtyfEuJtqeUL4W
-         e6UPkJdpHQ8VmEe2IGZ3Mt6UiCqEFNXUH7OFL9oLDuTdwD3KoNONiMymu9YErQLILpPE
-         dQS9gRKx9oq7K66kX/CIYkxqaqtSr8/stsCZRWvOtYO9Fbsq9HGSwItk4m3dhnpEWa/G
-         dDhQ==
-X-Gm-Message-State: ANhLgQ2Mj6qqP00/pbLK/wfEGw6W45Qoyoi6haZh245h889R0UCrAr8X
-        CVKxoP1OCigMRLk1dhdfVt6568U1zAgquVgNaFUrHDwizecg
-X-Google-Smtp-Source: ADFU+vsuPK95kr3EfZG0nV0RC/z5+OfOuDJQiDqIdZLlH1alFFTQmOA7fA8/R9We5nWodEngkn6TZ1bMbCR1u0bDCecZovj1wGUe
+        Sat, 21 Mar 2020 09:40:38 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 48l1xJ4ySSzKpBh;
+        Sat, 21 Mar 2020 14:40:36 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
+        t=1584798035;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6gUTnyBd+wF4DcNE7R2+NzsCS2Cnj7qei4GbwrUoBsU=;
+        b=Wp7XIFjG6vsHM2RFsi/R75ByN0PxJkmTChTRZvcA+95nlBCKmnP4g7OSuMA+ZS2VpR+ISZ
+        7Atuz113Kb5RaHrkzhR61DmpN+ggZqWjOdqQZdgV7ChSvSJCaao6aWwFLXWBSQLt5WL9yX
+        gBV+5eHxP880JVPNiKZqrJ05hmDGThEySDr/3gRb9RQABUoqYt9FMZB5uneBp//M2o5SUg
+        OGI+qnmtISB7gtviyrw37VajKO7QRZgjsf2e7TkOv0zsfphv4E/+4HGsW7rvenPcSqIbg8
+        iEffaHuAVBQMe6o7j+iDeT5+PcvCKryZAAOEvSY1YxqFy9j+btbl7H1FzQjrNQ==
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id Gpg7pxJw-UWe; Sat, 21 Mar 2020 14:40:33 +0100 (CET)
+From:   Sungbo Eo <mans0n@gorani.run>
+To:     linux-oxnas@groups.io, Linus Walleij <linus.walleij@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Sungbo Eo <mans0n@gorani.run>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Daniel Golle <daniel@makrotopia.org>
+Subject: [PATCH] irqchip/versatile-fpga: Apply clear-mask earlier
+Date:   Sat, 21 Mar 2020 22:38:42 +0900
+Message-Id: <20200321133842.2408823-1-mans0n@gorani.run>
 MIME-Version: 1.0
-X-Received: by 2002:a92:890b:: with SMTP id n11mr12898208ild.54.1584798016082;
- Sat, 21 Mar 2020 06:40:16 -0700 (PDT)
-Date:   Sat, 21 Mar 2020 06:40:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ca19c205a15d8aca@google.com>
-Subject: KASAN: slab-out-of-bounds Read in garmin_read_process
-From:   syzbot <syzbot+d29e9263e13ce0b9f4fd@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        johan@kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Clear its own IRQs before the parent IRQ get enabled, so that the
+remaining IRQs do not accidentally interrupt the parent IRQ controller.
 
-syzbot found the following crash on:
+This patch also fixes a reboot bug on OX820 SoC, where the remaining
+rps-timer IRQ raises a GIC interrupt that is left pending. After that,
+the rps-timer IRQ is cleared during driver initialization, and there's
+no IRQ left in rps-irq when local_irq_enable() is called, which evokes
+an error message "unexpected IRQ trap".
 
-HEAD commit:    e17994d1 usb: core: kcov: collect coverage from usb comple..
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=16255ce5e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5d64370c438bc60
-dashboard link: https://syzkaller.appspot.com/bug?extid=d29e9263e13ce0b9f4fd
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1376a3f9e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14c65fe3e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d29e9263e13ce0b9f4fd@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in __le32_to_cpup include/uapi/linux/byteorder/little_endian.h:58 [inline]
-BUG: KASAN: slab-out-of-bounds in getLayerId drivers/usb/serial/garmin_gps.c:208 [inline]
-BUG: KASAN: slab-out-of-bounds in garmin_read_process+0x1b0/0x2e0 drivers/usb/serial/garmin_gps.c:1142
-Read of size 4 at addr ffff8881ca74abe8 by task swapper/1/0
-
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xef/0x16e lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
- __kasan_report.cold+0x37/0x77 mm/kasan/report.c:506
- kasan_report+0xe/0x20 mm/kasan/common.c:641
- __le32_to_cpup include/uapi/linux/byteorder/little_endian.h:58 [inline]
- getLayerId drivers/usb/serial/garmin_gps.c:208 [inline]
- garmin_read_process+0x1b0/0x2e0 drivers/usb/serial/garmin_gps.c:1142
- garmin_read_int_callback+0x19f/0x746 drivers/usb/serial/garmin_gps.c:1279
- __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
- usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
- dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-
-
+Fixes: bdd272cbb97a ("irqchip: versatile FPGA: support cascaded interrupts from DT")
+Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Daniel Golle <daniel@makrotopia.org>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/irqchip/irq-versatile-fpga.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
+index 70e2cfff8175..f1386733d3bc 100644
+--- a/drivers/irqchip/irq-versatile-fpga.c
++++ b/drivers/irqchip/irq-versatile-fpga.c
+@@ -212,6 +212,9 @@ int __init fpga_irq_of_init(struct device_node *node,
+ 	if (of_property_read_u32(node, "valid-mask", &valid_mask))
+ 		valid_mask = 0;
+ 
++	writel(clear_mask, base + IRQ_ENABLE_CLEAR);
++	writel(clear_mask, base + FIQ_ENABLE_CLEAR);
++
+ 	/* Some chips are cascaded from a parent IRQ */
+ 	parent_irq = irq_of_parse_and_map(node, 0);
+ 	if (!parent_irq) {
+@@ -221,9 +224,6 @@ int __init fpga_irq_of_init(struct device_node *node,
+ 
+ 	fpga_irq_init(base, node->name, 0, parent_irq, valid_mask, node);
+ 
+-	writel(clear_mask, base + IRQ_ENABLE_CLEAR);
+-	writel(clear_mask, base + FIQ_ENABLE_CLEAR);
+-
+ 	/*
+ 	 * On Versatile AB/PB, some secondary interrupts have a direct
+ 	 * pass-thru to the primary controller for IRQs 20 and 22-31 which need
+-- 
+2.25.2
+
