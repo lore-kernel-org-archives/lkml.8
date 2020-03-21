@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1EEC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 08:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 744E9C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 08:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5411F20753
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 08:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49FCE2076F
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 08:16:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="Vl//KZYC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="OsLdVg/A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbgCUIQC (ORCPT
+        id S1728245AbgCUIQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 04:16:02 -0400
-Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:35341 "EHLO
-        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728040AbgCUIQA (ORCPT
+        Sat, 21 Mar 2020 04:16:06 -0400
+Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:12449 "EHLO
+        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727961AbgCUIQB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 04:16:00 -0400
+        Sat, 21 Mar 2020 04:16:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1584778559; x=1616314559;
+  t=1584778560; x=1616314560;
   h=from:to:cc:subject:date:message-id:references:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=KperK5pY8kDhUqv+XcVZUo8pjHw5XqETzsLRKfvjUgc=;
-  b=Vl//KZYCLa8h86kj8J8zm0YoffLodTeYvkedYcBq2hf9m1pvGCyd71NA
-   cA04Jyp/uyMGNtXPNBreTbbhAZI1xDcncTD1OavccQAN2QHODk7o773pY
-   Iss8ldl/PgHtbkTkVAxZehr7MraYRDGMETdqkZCeie4e9HFdpyfCfxUgD
-   fEYWHQegSad1LzlkfXyMHhQtPqai/oZoDpDTo2S/B5XNgg+eP8588K43Y
-   oMm709ZHTfn7poVBvhRlaipOKoyN7L7Cc1vj6Z4BaCJ+/tQuK8CxiF+uo
-   JOVZ7yd+li8LPr77jcuWSmryAyu0VW5TWg2VV/4VrRwvGzPZWrnGwfhoH
-   w==;
-IronPort-SDR: QIVQuVDqT7ODlWyKM+cZVX3U80JAGzto8mXohnvsz+/Gl3mdTBGLzoId1Hnq8UieJQbkaC/5I1
- bXovyx8RG8GQ==
+  bh=Z2uB7z28QOCO6ZHYTC0YmbiAxXblaUq/Ne32486EdG0=;
+  b=OsLdVg/AKLVzAZTKxy9FChMNhTCd6BW4ie0+RQM2n2uZcvuoZcGyp7sX
+   6rGA1xwpse4kH+FaJVNph0VX/UdzxpuBhij+4H33lu3Isb6yfGrbNepj7
+   iDT8PfUBtrWzYRlT1N9Zx+9lrTSyfGf0NfVg7MP1u9Yf78gX8RVJ0juxw
+   RENDQenZr06Z/W2f7AZF9HEhPjr+aGdGM6VKwrHUdonetvoV/IBbE58FX
+   IprxzC/hDXJRQACj30lzlkE0ktjBuzfoexIF8QksaJojI9xiai0uILCTv
+   /9srQyBSOE3v3jYOUq2SFeBkUwq0C4uGCpyq52jOVvTcGHcjz54t1HfQA
+   g==;
+IronPort-SDR: JGlCynbsOKWT0iqKYADU4jDJnWhu18yo24qSseS7HqPzLPQTZZLjAibyoBXUf5MD+vAe4wIU5X
+ AwX/fhac/Wkw==
 From:   Denis Osterland-Heim <denis.osterland@diehl.com>
 To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
         "mark.rutland@arm.com" <mark.rutland@arm.com>,
@@ -47,11 +47,13 @@ CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "Denis Osterland-Heim" <denis.osterland@diehl.com>,
         "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: [PATCH v4 2/5] leds: pwm: remove useless pwm_period_ns
-Thread-Topic: [PATCH v4 2/5] leds: pwm: remove useless pwm_period_ns
-Thread-Index: AQHV/1jw0S0BPC/2zkeJqXSW2+rxlw==
-Date:   Sat, 21 Mar 2020 08:15:53 +0000
-Message-ID: <20200321081321.15614-3-Denis.Osterland@diehl.com>
+Subject: [PATCH v4 4/5] leds: pwm: add support for default-state device
+ property
+Thread-Topic: [PATCH v4 4/5] leds: pwm: add support for default-state device
+ property
+Thread-Index: AQHV/1jxcfu5++mTukas+V/Yy7sQpw==
+Date:   Sat, 21 Mar 2020 08:15:55 +0000
+Message-ID: <20200321081321.15614-5-Denis.Osterland@diehl.com>
 References: <20200321081321.15614-1-Denis.Osterland@diehl.com>
 In-Reply-To: <20200321081321.15614-1-Denis.Osterland@diehl.com>
 Accept-Language: de-DE, en-US
@@ -64,43 +66,125 @@ Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-TrailerSkip: 1
-X-GBS-PROC: 415AWy8o668fDtCxszluz3Qkyqh7rcy46kDTEvbxZbX6ZbOs5H4UIh8DDIXSwv9+
+X-GBS-PROC: 415AWy8o668fDtCxszluz3Qkyqh7rcy46kDTEvbxZbU7iORrjmTYQnM0XIpmHs+x
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This member seems to was a way to pass PWM period to the LED.
-Since there is no header anymore, this is useless.
+This patch adds support for =22default-state=22 devicetree property, whic=
+h
+allows to defer pwm init to first use of led.
+
+This allows to configure the PWM early in bootloader to let the LED
+blink until an application in Linux userspace sets something different.
 
 Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
 ---
- drivers/leds/leds-pwm.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/leds/leds-pwm.c | 54 ++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 48 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index e1848e80aeb4..6caf8bea8cd5 100644
+index 07eab2d8b7c7..73d36d5fb427 100644
 --- a/drivers/leds/leds-pwm.c
 +++ b/drivers/leds/leds-pwm.c
-@@ -23,7 +23,6 @@ struct led_pwm {
+@@ -18,10 +18,15 @@
+ #include <linux/pwm.h>
+ #include <linux/slab.h>
+=20
++#define LEDS_PWM_DEFSTATE_OFF	0
++#define LEDS_PWM_DEFSTATE_ON	1
++#define LEDS_PWM_DEFSTATE_KEEP	2
++
+ struct led_pwm {
+ 	const char	*name;
  	const char	*default_trigger;
  	u8		active_low;
++	u8		default_state;
  	unsigned int	max_brightness;
--	unsigned int	pwm_period_ns;
  };
 =20
- struct led_pwm_platform_data {
-@@ -91,9 +90,6 @@ static int led_pwm_add(struct device *dev, struct led_p=
-wm_priv *priv,
+@@ -88,7 +93,30 @@ static int led_pwm_add(struct device *dev, struct led_=
+pwm_priv *priv,
 =20
- 	pwm_init_state(led_data->pwm, &led_data->pwmstate);
+ 	led_data->cdev.brightness_set_blocking =3D led_pwm_set;
 =20
--	if (!led_data->pwmstate.period)
--		led_data->pwmstate.period =3D led->pwm_period_ns;
--
+-	pwm_init_state(led_data->pwm, &led_data->pwmstate);
++	/* init PWM state */
++	if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_KEEP) {
++		pwm_get_state(led_data->pwm, &led_data->pwmstate);
++		if (!led_data->pwmstate.period) {
++			led->default_state =3D LEDS_PWM_DEFSTATE_OFF;
++			dev_warn(dev,
++				=22failed to read period for %s, default to off=22,
++				led->name);
++		}
++	}
++	if (led->default_state !=3D LEDS_PWM_DEFSTATE_KEEP)
++		pwm_init_state(led_data->pwm, &led_data->pwmstate);
++
++	/* set brightness */
++	if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_ON)
++		led_data->cdev.brightness =3D led->max_brightness;
++	else if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_KEEP) {
++		uint64_t brightness;
++
++		brightness =3D led->max_brightness;
++		brightness *=3D led_data->pwmstate.duty_cycle;
++		do_div(brightness, led_data->pwmstate.period);
++		led_data->cdev.brightness =3D brightness;
++	}
+=20
  	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
- 	if (ret =3D=3D 0) {
- 		priv->num_leds++;
+ 	if (ret) {
+@@ -97,11 +125,13 @@ static int led_pwm_add(struct device *dev, struct le=
+d_pwm_priv *priv,
+ 		return ret;
+ 	}
+=20
+-	ret =3D led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
+-	if (ret) {
+-		dev_err(dev, =22failed to set led PWM value for %s: %d=22,
+-			led->name, ret);
+-		return ret;
++	if (led->default_state !=3D LEDS_PWM_DEFSTATE_KEEP) {
++		ret =3D led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
++		if (ret) {
++			dev_err(dev, =22failed to set led PWM value for %s: %d=22,
++				led->name, ret);
++			return ret;
++		}
+ 	}
+=20
+ 	priv->num_leds++;
+@@ -117,6 +147,8 @@ static int led_pwm_create_fwnode(struct device *dev, =
+struct led_pwm_priv *priv)
+ 	memset(&led, 0, sizeof(led));
+=20
+ 	device_for_each_child_node(dev, fwnode) {
++		const char *state =3D NULL;
++
+ 		ret =3D fwnode_property_read_string(fwnode, =22label=22, &led.name);
+ 		if (ret && is_of_node(fwnode))
+ 			led.name =3D to_of_node(fwnode)->name;
+@@ -134,6 +166,16 @@ static int led_pwm_create_fwnode(struct device *dev,=
+ struct led_pwm_priv *priv)
+ 		fwnode_property_read_u32(fwnode, =22max-brightness=22,
+ 					 &led.max_brightness);
+=20
++		if (!fwnode_property_read_string(fwnode, =22default-state=22,
++						 &state)) {
++			if (!strcmp(state, =22keep=22))
++				led.default_state =3D LEDS_PWM_DEFSTATE_KEEP;
++			else if (!strcmp(state, =22on=22))
++				led.default_state =3D LEDS_PWM_DEFSTATE_ON;
++			else
++				led.default_state =3D LEDS_PWM_DEFSTATE_OFF;
++		}
++
+ 		ret =3D led_pwm_add(dev, priv, &led, fwnode);
+ 		if (ret) {
+ 			fwnode_handle_put(fwnode);
 --=20
 2.25.1
 
