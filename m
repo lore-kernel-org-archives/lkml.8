@@ -2,91 +2,145 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8572FC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 07:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25361C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 07:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D76A20739
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 07:02:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="ay1CXFxF"
+	by mail.kernel.org (Postfix) with ESMTP id EC70E20753
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 07:08:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584774533;
+	bh=BoY9Lkm9Sb7/2s7TfYJxRYALGz4V0nIfs9XpKWkcWa8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=koBZs2kMHeUcRBXIhUeqvwW2DZEi2jMj8TrQAsribjdj193GmkS1Cm6Vl5vXb3HS1
+	 MhAOMVzMWSynaUTew3B4n5+JhQcbd75TbCp6iU/VVI0hzHaQPb9vgh14bQbm+aCpf1
+	 y6YTxzyaIXy+okY6lCMsp4WzymAvyJGh2ICnllWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgCUHCM (ORCPT
+        id S1728078AbgCUHIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 03:02:12 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33022 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728005AbgCUHCM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 03:02:12 -0400
-Received: by mail-io1-f66.google.com with SMTP id o127so8661587iof.0
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 00:02:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SXnfnJdxwyP4iXFKwBQ2Uuna7kuUgG8tOJJOGAbD0FA=;
-        b=ay1CXFxFI2kqh1GC/SM7jIVOfPTUieW0GKf6rU36wlUW9H+EFkPbv4WFL6rXrnC6+m
-         pxAGtKx/myQRAMfSfo8qH1L72jii+b4kDuYiEsnlIbT0ymKDTP+gPYxFY769W8HgOXWD
-         +3YYcVOkYwlaPjrEZxo6h7yjLoq5o2jnK4uEA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SXnfnJdxwyP4iXFKwBQ2Uuna7kuUgG8tOJJOGAbD0FA=;
-        b=ZJg7bMJcFrrWIdfWCA8CId+rnJJvcpmB4xqj7lxn27IA/hnci8w4lso/wbO/Ctn3cm
-         +QfVHQMDGN/PVEkDVi7tFvpKhm7f+4Q/l/xYTA89zfHFM4ZGHJLRmFb1/qiHV5R8/wSm
-         HfstaX5Awjv26epY2CmZMi/1pDxCWICTKcG+SJvrYfo114kWqTaN7Z6EwOWWb+w3orvl
-         oTQ09jpPZGRGnmggKudLuYE8cd/Zmi/h1+/Qfz0djbHDpdNmPQXyr5xmhmF9+X2wQovA
-         QAsotfjOAviJw/45FZKOuC+1cj/r1o7COBLKvzFDanVwGkj0qUvkx+zq/UcQRlVs4DxP
-         z7gg==
-X-Gm-Message-State: ANhLgQ3y03KQDbUtmVpYZyzj67j15vkSimFlklqhLyLNvnSd0V5CSqQC
-        l6N1/6KimFYFxVIQF5Qhh1qpPs4jCXle3gzQCuxQTA==
-X-Google-Smtp-Source: ADFU+vs+FKm069H/iVNq87gZm09sSiRcson512o9Fb2ivFkX/UaD9JOQI0sPTk8hsofSeCEP18qA6mjwclmsC/f6KY0=
-X-Received: by 2002:a05:6638:319:: with SMTP id w25mr660446jap.26.1584774131021;
- Sat, 21 Mar 2020 00:02:11 -0700 (PDT)
+        Sat, 21 Mar 2020 03:08:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727963AbgCUHIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 03:08:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A036820739;
+        Sat, 21 Mar 2020 07:08:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584774526;
+        bh=BoY9Lkm9Sb7/2s7TfYJxRYALGz4V0nIfs9XpKWkcWa8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bNTouncF91xGQHHVHoQZolS/Oj/FnQdKzKQtZkZZt5Yo9Ee7STK5MkqMH0N1xSmwr
+         sf9wcTacsx9YJ2cOhTVuoswU7Az99e1b7bkpfKQVzAOT2Iya7nv30G41DMgdQ1yJT9
+         L7nnJc7B30iToVQWzzN+UOOIyViN050ca+uvmvmw=
+Date:   Sat, 21 Mar 2020 08:08:43 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: [PATCH 4.19 00/48] 4.19.112-rc1 review
+Message-ID: <20200321070843.GA850676@kroah.com>
+References: <20200319123902.941451241@linuxfoundation.org>
+ <CA+G9fYsDw6JEznSHm2X=Wvq1dysGbGa4-VpXJyzKWZQxLMdagw@mail.gmail.com>
+ <7a8c6a752793f0907662c3e9c197c284fc461550.camel@codethink.co.uk>
+ <20200320080317.GA312074@kroah.com>
+ <20200320081122.GA349027@kroah.com>
+ <04164e5e-8cec-54cd-c4bd-f72bba86b5da@roeck-us.net>
 MIME-Version: 1.0
-References: <20200320201539.3a3a8640@canb.auug.org.au> <ada1cf22-b135-d84c-b75b-62ff2b4f1945@infradead.org>
-In-Reply-To: <ada1cf22-b135-d84c-b75b-62ff2b4f1945@infradead.org>
-From:   Matt Ranostay <matt.ranostay@konsulko.com>
-Date:   Sat, 21 Mar 2020 00:02:00 -0700
-Message-ID: <CAJCx=gkbP9=G_kvO954=psTwfqCG8ws0DT47mKJ0D0VfPR832w@mail.gmail.com>
-Subject: Re: linux-next: Tree for Mar 20 (drivers/media/i2c/video-i2c.o)
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <04164e5e-8cec-54cd-c4bd-f72bba86b5da@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 9:11 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 3/20/20 2:15 AM, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > Changes since 20200319:
-> >
->
-> on i386 or x86_64:
->
-> ld: drivers/media/i2c/video-i2c.o: in function `amg88xx_hwmon_init':
-> video-i2c.c:(.text+0x2e1): undefined reference to `devm_hwmon_device_register_with_info'
->
->
-> Full randconfig file is attached.
+On Fri, Mar 20, 2020 at 10:58:43AM -0700, Guenter Roeck wrote:
+> On 3/20/20 1:11 AM, Greg Kroah-Hartman wrote:
+> > On Fri, Mar 20, 2020 at 09:03:17AM +0100, Greg Kroah-Hartman wrote:
+> >> On Thu, Mar 19, 2020 at 08:00:32PM +0000, Ben Hutchings wrote:
+> >>> On Fri, 2020-03-20 at 01:12 +0530, Naresh Kamboju wrote:
+> >>>> On Thu, 19 Mar 2020 at 18:50, Greg Kroah-Hartman
+> >>>> <gregkh@linuxfoundation.org> wrote:
+> >>>>> This is the start of the stable review cycle for the 4.19.112 release.
+> >>>>> There are 48 patches in this series, all will be posted as a response
+> >>>>> to this one.  If anyone has any issues with these being applied, please
+> >>>>> let me know.
+> >>>>>
+> >>>>> Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
+> >>>>> Anything received after that time might be too late.
+> >>>>>
+> >>>>> The whole patch series can be found in one patch at:
+> >>>>>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.112-rc1.gz
+> >>>>> or in the git tree and branch at:
+> >>>>>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> >>>>> and the diffstat can be found below.
+> >>>>>
+> >>>>> thanks,
+> >>>>>
+> >>>>> greg k-h
+> >>>>>
+> >>>>> Faiz Abbas <faiz_abbas@ti.com>
+> >>>>>     mmc: sdhci-omap: Fix Tuning procedure for temperatures < -20C
+> >>>>>
+> >>>>> Faiz Abbas <faiz_abbas@ti.com>
+> >>>>>     mmc: sdhci-omap: Don't finish_mrq() on a command error during tuning
+> >>>>
+> >>>> Results from Linaro’s test farm.
+> >>>> No regressions on arm64, arm, x86_64, and i386.
+> >>>>
+> >>>> NOTE:
+> >>>> The arm beagleboard x15 device running stable rc 4.19.112-rc1, 5.4.27-rc1
+> >>>> and 5.5.11-rc2 kernel pops up the following messages on console log,
+> >>>> Is this a problem ?
+> >>>>
+> >>>> [   15.737765] mmc1: unspecified timeout for CMD6 - use generic
+> >>>> [   16.754248] mmc1: unspecified timeout for CMD6 - use generic
+> >>>> [   16.842071] mmc1: unspecified timeout for CMD6 - use generic
+> >>>> ...
+> >>>> [  977.126652] mmc1: unspecified timeout for CMD6 - use generic
+> >>>> [  985.449798] mmc1: unspecified timeout for CMD6 - use generic
+> >>> [...]
+> >>>
+> >>> This warning was introduced by commit 533a6cfe08f9 "mmc: core: Default
+> >>> to generic_cmd6_time as timeout in __mmc_switch()".  That should not be
+> >>> applied to stable branches; it is not valid without (at least) these
+> >>> preparatory changes:
+> >>>
+> >>> 0c204979c691 mmc: core: Cleanup BKOPS support
+> >>> 24ed3bd01d6a mmc: core: Specify timeouts for BKOPS and CACHE_FLUSH for eMMC
+> >>> ad91619aa9d7 mmc: block: Use generic_cmd6_time when modifying INAND_CMD38_ARG_EXT_CSD
+> >>
+> >> Ok, I've now dropped that patch, which also required me to drop
+> >> 1292e3efb149 ("mmc: core: Allow host controllers to require R1B for
+> >> CMD6").  I've done so for 5.5.y, 5.4.y, and 4.19.y.
+> > 
+> > Ugh, I forgot, that broke other things.  I'm going to go rip out a bunch
+> > of mmc patches now...
+> > 
+> For v4.19.111-44-gd078cac:
+> 
+> Build results:
+> 	total: 156 pass: 156 fail: 0
+> Qemu test results:
+> 	total: 418 pass: 418 fail: 0
 
-Odd since there is a "imply HWMON" for the driver.
+Wonderful, thanks for testing.
 
-- Matt
-
->
-> --
-> ~Randy
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+greg k-h
