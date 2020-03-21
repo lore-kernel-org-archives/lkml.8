@@ -7,42 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BF5C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5420C4332E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85784207FC
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8407920781
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgCUPyI (ORCPT
+        id S1727958AbgCUPyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:54:08 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39054 "EHLO
+        Sat, 21 Mar 2020 11:54:12 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39055 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727128AbgCUPx6 (ORCPT
+        with ESMTP id S1727779AbgCUPx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:53:58 -0400
+        Sat, 21 Mar 2020 11:53:59 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFgRd-0005VN-UF; Sat, 21 Mar 2020 16:53:54 +0100
+        id 1jFgRe-0005TF-Ck; Sat, 21 Mar 2020 16:53:54 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 296C41C22EF;
-        Sat, 21 Mar 2020 16:53:52 +0100 (CET)
-Date:   Sat, 21 Mar 2020 15:53:51 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DFEEE1C22EE;
+        Sat, 21 Mar 2020 16:53:48 +0100 (CET)
+Date:   Sat, 21 Mar 2020 15:53:48 -0000
+From:   "tip-bot2 for Peter Zijlstra (Intel)" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] orinoco_usb: Use the regular completion interfaces
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200321113241.150783464@linutronix.de>
-References: <20200321113241.150783464@linutronix.de>
+Subject: [tip: locking/core] rcuwait: Add @state argument to rcuwait_wait_event()
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200321113241.824030968@linutronix.de>
+References: <20200321113241.824030968@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158480603181.28353.15012270806617085954.tip-bot2@tip-bot2>
+Message-ID: <158480602856.28353.10692996135466470181.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,97 +56,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     9fe114ce0371223d2a0490f0aa52b8f108d92f37
-Gitweb:        https://git.kernel.org/tip/9fe114ce0371223d2a0490f0aa52b8f108d92f37
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Sat, 21 Mar 2020 12:25:48 +01:00
+Commit-ID:     80fbaf1c3f2926c834f8ca915441dfe27ce5487e
+Gitweb:        https://git.kernel.org/tip/80fbaf1c3f2926c834f8ca915441dfe27ce5487e
+Author:        Peter Zijlstra (Intel) <peterz@infradead.org>
+AuthorDate:    Sat, 21 Mar 2020 12:25:55 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Sat, 21 Mar 2020 16:00:20 +01:00
+CommitterDate: Sat, 21 Mar 2020 16:00:22 +01:00
 
-orinoco_usb: Use the regular completion interfaces
+rcuwait: Add @state argument to rcuwait_wait_event()
 
-The completion usage in this driver is interesting:
+Extend rcuwait_wait_event() with a state variable so that it is not
+restricted to UNINTERRUPTIBLE waits.
 
-  - it uses a magic complete function which according to the comment was
-    implemented by invoking complete() four times in a row because
-    complete_all() was not exported at that time.
-
-  - it uses an open coded wait/poll which checks completion:done. Only one wait
-    side (device removal) uses the regular wait_for_completion() interface.
-
-The rationale behind this is to prevent that wait_for_completion() consumes
-completion::done which would prevent that all waiters are woken. This is not
-necessary with complete_all() as that sets completion::done to UINT_MAX which
-is left unmodified by the woken waiters.
-
-Replace the magic complete function with complete_all() and convert the
-open coded wait/poll to regular completion interfaces.
-
-This changes the wait to exclusive wait mode. But that does not make any
-difference because the wakers use complete_all() which ignores the
-exclusive mode.
-
-Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://lkml.kernel.org/r/20200321113241.150783464@linutronix.de
+Link: https://lkml.kernel.org/r/20200321113241.824030968@linutronix.de
 ---
- drivers/net/wireless/intersil/orinoco/orinoco_usb.c | 21 ++----------
- 1 file changed, 5 insertions(+), 16 deletions(-)
+ include/linux/rcuwait.h       | 12 ++++++++++--
+ kernel/locking/percpu-rwsem.c |  2 +-
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-index e753f43..0e42de2 100644
---- a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-+++ b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-@@ -365,17 +365,6 @@ static struct request_context *ezusb_alloc_ctx(struct ezusb_priv *upriv,
- 	return ctx;
+diff --git a/include/linux/rcuwait.h b/include/linux/rcuwait.h
+index 75c97e4..2ffe1ee 100644
+--- a/include/linux/rcuwait.h
++++ b/include/linux/rcuwait.h
+@@ -3,6 +3,7 @@
+ #define _LINUX_RCUWAIT_H_
+ 
+ #include <linux/rcupdate.h>
++#include <linux/sched/signal.h>
+ 
+ /*
+  * rcuwait provides a way of blocking and waking up a single
+@@ -30,23 +31,30 @@ extern void rcuwait_wake_up(struct rcuwait *w);
+  * The caller is responsible for locking around rcuwait_wait_event(),
+  * such that writes to @task are properly serialized.
+  */
+-#define rcuwait_wait_event(w, condition)				\
++#define rcuwait_wait_event(w, condition, state)				\
+ ({									\
++	int __ret = 0;							\
+ 	rcu_assign_pointer((w)->task, current);				\
+ 	for (;;) {							\
+ 		/*							\
+ 		 * Implicit barrier (A) pairs with (B) in		\
+ 		 * rcuwait_wake_up().					\
+ 		 */							\
+-		set_current_state(TASK_UNINTERRUPTIBLE);		\
++		set_current_state(state);				\
+ 		if (condition)						\
+ 			break;						\
+ 									\
++		if (signal_pending_state(state, current)) {		\
++			__ret = -EINTR;					\
++			break;						\
++		}							\
++									\
+ 		schedule();						\
+ 	}								\
+ 									\
+ 	WRITE_ONCE((w)->task, NULL);					\
+ 	__set_current_state(TASK_RUNNING);				\
++	__ret;								\
+ })
+ 
+ #endif /* _LINUX_RCUWAIT_H_ */
+diff --git a/kernel/locking/percpu-rwsem.c b/kernel/locking/percpu-rwsem.c
+index 183a3aa..a008a1b 100644
+--- a/kernel/locking/percpu-rwsem.c
++++ b/kernel/locking/percpu-rwsem.c
+@@ -234,7 +234,7 @@ void percpu_down_write(struct percpu_rw_semaphore *sem)
+ 	 */
+ 
+ 	/* Wait for all active readers to complete. */
+-	rcuwait_wait_event(&sem->writer, readers_active_check(sem));
++	rcuwait_wait_event(&sem->writer, readers_active_check(sem), TASK_UNINTERRUPTIBLE);
  }
+ EXPORT_SYMBOL_GPL(percpu_down_write);
  
--
--/* Hopefully the real complete_all will soon be exported, in the mean
-- * while this should work. */
--static inline void ezusb_complete_all(struct completion *comp)
--{
--	complete(comp);
--	complete(comp);
--	complete(comp);
--	complete(comp);
--}
--
- static void ezusb_ctx_complete(struct request_context *ctx)
- {
- 	struct ezusb_priv *upriv = ctx->upriv;
-@@ -409,7 +398,7 @@ static void ezusb_ctx_complete(struct request_context *ctx)
- 
- 			netif_wake_queue(dev);
- 		}
--		ezusb_complete_all(&ctx->done);
-+		complete_all(&ctx->done);
- 		ezusb_request_context_put(ctx);
- 		break;
- 
-@@ -419,7 +408,7 @@ static void ezusb_ctx_complete(struct request_context *ctx)
- 			/* This is normal, as all request contexts get flushed
- 			 * when the device is disconnected */
- 			err("Called, CTX not terminating, but device gone");
--			ezusb_complete_all(&ctx->done);
-+			complete_all(&ctx->done);
- 			ezusb_request_context_put(ctx);
- 			break;
- 		}
-@@ -690,11 +679,11 @@ static void ezusb_req_ctx_wait(struct ezusb_priv *upriv,
- 			 * get the chance to run themselves. So we make sure
- 			 * that we don't sleep for ever */
- 			int msecs = DEF_TIMEOUT * (1000 / HZ);
--			while (!ctx->done.done && msecs--)
-+
-+			while (!try_wait_for_completion(&ctx->done) && msecs--)
- 				udelay(1000);
- 		} else {
--			wait_event_interruptible(ctx->done.wait,
--						 ctx->done.done);
-+			wait_for_completion(&ctx->done);
- 		}
- 		break;
- 	default:
