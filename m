@@ -2,122 +2,104 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C41CC4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42231C43332
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04C7B20777
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:10:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584821443;
-	bh=hdzW9xcZ6wT6XzrxrS5QYgNxzT3lMppjkol0wlZ6M4o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lvcHw4uRp93onGoSmujOFmOiLBD22sCQCwV5657gZ6GD4dNYVJB3RYlEqLCLh8h6f
-	 gkY2xzlkWtMdjnIy7CNu6QwhbzJXXVkHGfxPyNwnyu4RMzpD6KnZVxgqBIVETkPnX5
-	 xx/690mcJ4uJFbz6SlNpVQ8LLoTxUFikArSD9umA=
+	by mail.kernel.org (Postfix) with ESMTP id 23C9F20775
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgCUUKm (ORCPT
+        id S1728066AbgCUULC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 16:10:42 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41886 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbgCUUKl (ORCPT
+        Sat, 21 Mar 2020 16:11:02 -0400
+Received: from smtprelay0159.hostedemail.com ([216.40.44.159]:40818 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726777AbgCUULB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 16:10:41 -0400
-Received: by mail-pf1-f195.google.com with SMTP id z65so5228377pfz.8;
-        Sat, 21 Mar 2020 13:10:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0Jh1bnx0UpgYqbuOdXhZ1LNPb9nZTunrQ7Ptqpk4UuQ=;
-        b=QuUhz+R9BgkWnWHsjj3/KJP3CuGrfLalpxr3Cv+76lQZGVXhQxrBx4tExuFf4lwQld
-         IozwyyENF9kXn0mnQdI/cGfQ5+Hj+beV5Mc2IEd7eWIkuZ3Gcatv7YjT6swOZ233efSB
-         6rk9lcqjFjSliEWGrV/+rUv4rh7Y811zaLj49Dmxi65Q6hYb84N+lxKSlK4YkKVRthOY
-         wcTq8KM5/U2JwR665sQS3HMBC4D6UbhZJ2fHx6a3J12t14ilc8L+bI2XeU7wRBq258Xl
-         flleJzx3imJuKcFVJR/Bb88mAUwDZoC7JYwFoK+7JVxO/NJHQHRM4yNZc6m4UiLBPBmR
-         R2dw==
-X-Gm-Message-State: ANhLgQ3RaQ6eum5D2opDDf65FXHTV0DabHT4Dko7wDqBorqQkWNdWnCH
-        bksxmP29TttkvK+8OObuDtlfVmDnkfI=
-X-Google-Smtp-Source: ADFU+vudVcare/m1HhBNr6YwiYi0XYVWc7IYalBtWImJhH4KvjiGeCh0eX3w4h7Z23fYoj1S+6BaxQ==
-X-Received: by 2002:a63:b34d:: with SMTP id x13mr14895365pgt.317.1584821439202;
-        Sat, 21 Mar 2020 13:10:39 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:710:c2fa:3aa3:193c:db86])
-        by smtp.gmail.com with ESMTPSA id w4sm8137562pgg.2.2020.03.21.13.10.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2020 13:10:38 -0700 (PDT)
-Date:   Sat, 21 Mar 2020 13:10:37 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Wu Hao <hao.wu@intel.com>, Moritz Fischer <mdf@kernel.org>,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] fpga: dfl.h: Replace zero-length array with
- flexible-array member
-Message-ID: <20200321201037.GA7238@epycbox.lan>
-References: <20200319212153.GA5093@embeddedor.com>
+        Sat, 21 Mar 2020 16:11:01 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 357BB837F24A;
+        Sat, 21 Mar 2020 20:11:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: chess81_42bd387190014
+X-Filterd-Recvd-Size: 3099
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 21 Mar 2020 20:10:58 +0000 (UTC)
+Message-ID: <c026dcc85e8454a1ea191c20ba03ce2072271af9.camel@perches.com>
+Subject: Re: [PATCH] MAINTAINERS: remove Stefan Popa's email
+From:   Joe Perches <joe@perches.com>
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Alexandru Ardelean <ardeleanalex@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        jic23@kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Michael Hennerich <michael.hennerich@analog.com>
+Date:   Sat, 21 Mar 2020 13:09:10 -0700
+In-Reply-To: <20200321194859.GA2813896@smile.fi.intel.com>
+References: <20200317143336.6098-1-alexandru.ardelean@analog.com>
+         <20200321194859.GA2813896@smile.fi.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319212153.GA5093@embeddedor.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 04:21:53PM -0500, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+On Sat, 2020-03-21 at 21:48 +0200, Andy Shevchenko wrote:
+> On Tue, Mar 17, 2020 at 04:33:36PM +0200, Alexandru Ardelean wrote:
+> > The email is no longer active. This change removes Stefan's email from the
+> > MAINTAINERS list and replaces it with Michael Hennerich's.
+> > 
 > 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/fpga/dfl.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-> index 4a9a33cd9979..74784d3cfe7c 100644
-> --- a/drivers/fpga/dfl.h
-> +++ b/drivers/fpga/dfl.h
-> @@ -235,7 +235,7 @@ struct dfl_feature_platform_data {
->  	int open_count;
->  	void *private;
->  	int num;
-> -	struct dfl_feature features[0];
-> +	struct dfl_feature features[];
->  };
->  
->  static inline
-> -- 
-> 2.23.0
-> 
-Applied to for-next,
+> Are you planning to fix entries as parse-maintainers.pl does?
+> (Maybe in a separate change, but also why not here)
 
-Thanks
+I think perhaps you should not ask people to use parse-maintainers
+on specific sections anymore as it's rather confusing to use and
+it's best done as a one-shot by Linus one day.  I hope soon.
+
+Linus, are you going to apply this patch to parse-maintainers
+and one day run and commit the large change to MAINTAINERS?
+
+https://lore.kernel.org/lkml/4d5291fa3fb4962b1fa55e8fd9ef421ef0c1b1e5.camel@perches.com/
+
+$ ./scripts/parse-maintainers.pl --input=MAINTAINERS --output=MAINTAINERS
+
+Current diffstat for -next would be:
+
+$ git diff --shortstat MAINTAINERS
+ 1 file changed, 2749 insertions(+), 2749 deletions(-)
+
+btw: your current tree is still missing this patch from
+-next to fix a broken pattern in 'TI VPE/CAL DRIVERS'
+
+commit d44535cb14c981dea66e565edf1df1df4b9e823b
+Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Tue Jan 28 11:58:28 2020 -0300
+
+    media: MAINTAINERS: Sort entries in database for TI VPE/CAL
+    
+    Run parse-maintainers.pl and choose TI VPE/CAL record. Fix it accordingly.
+    
+    Note, this is urgent fix, without which parse-maintainers.pl throws
+    an exception:
+    
+    Odd non-pattern line '  Documentation/devicetree/bindings/media/ti,cal.yaml
+    ' for 'TI VPE/CAL DRIVERS' at scripts/parse-maintainers.pl line 147, <$file> line 16770.
+    
+    Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    Acked-by: Benoit Parrot <bparrot@ti.com>
+    Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+
+
