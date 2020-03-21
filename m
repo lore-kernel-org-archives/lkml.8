@@ -2,149 +2,177 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CE6C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A71E8C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2F6D20752
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF1F2078C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:33:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODKjjbxz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgCUBct (ORCPT
+        id S1727923AbgCUBdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 21:32:49 -0400
-Received: from mga11.intel.com ([192.55.52.93]:51726 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbgCUBct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 21:32:49 -0400
-IronPort-SDR: KAvBP2651Is0hWWXfmUPbPwswqY7XL0J8M7lMfwx6ZHujFFjNDRBjWZ21Awwwiz8QsGYYwOcH6
- wI2NVL6P7IoA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 18:32:48 -0700
-IronPort-SDR: bXMDXjJLJZodiuHPyhNhLQnhRC3EAGO3pLsdO9Vn0wH5EGRPtbOjHaj5g71r+Uft+ETIZad4+i
- hYzFwvRA5JCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
-   d="scan'208";a="249051243"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.211.188]) ([10.254.211.188])
-  by orsmga006.jf.intel.com with ESMTP; 20 Mar 2020 18:32:45 -0700
-Cc:     baolu.lu@linux.intel.com, LKML <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH 1/3] iommu/vt-d: Remove redundant IOTLB flush
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-References: <1584678751-43169-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1584678751-43169-2-git-send-email-jacob.jun.pan@linux.intel.com>
- <26ab1917-f087-aafa-e861-6a2478000a6f@linux.intel.com>
- <20200320092047.4a4cf551@jacob-builder>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <06c9751a-417d-3c32-65af-0788593f811a@linux.intel.com>
-Date:   Sat, 21 Mar 2020 09:32:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 20 Mar 2020 21:33:23 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35943 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgCUBdW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 21:33:22 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d11so9226632qko.3;
+        Fri, 20 Mar 2020 18:33:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nWwxA1w2Gatv80CNv5vvgq55JU/X2LGJD7QRCwC8gwI=;
+        b=ODKjjbxzI8SNz+b/0IuuUCfMJejDoMhqo4S5/Se9pve6CE5nc6PSWIOf9dQVKhaG5O
+         qwBek0oPpvBkEMzaZYKP06cc7rd3PvUcrYxARQ8Ovh/z8r8ATxtSajk+oF1hXIp0ukLy
+         NKWUx/63Eosw1W7ALEWbzc2PduE1Zoj9WFHkHezKtpOzMoy2xBa5TtC1pufFlid+ubpd
+         Sxyij2fCCqosZLM/h7wWF1Gk7nApgxhj1cuJyikRW1wpGm3tjveG5Coj8kKlRUcroPqy
+         DYmwdBstNr3tGmk9n32wNhMIVSpxEytCJufe9BfsmS0XuC6J6Hkj5nx01QaTEoeZNtFO
+         tlng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nWwxA1w2Gatv80CNv5vvgq55JU/X2LGJD7QRCwC8gwI=;
+        b=ZZG98/lghIqfS6X9Eg+WLekmwMfGcjclc5VjF0iqpc6iCyclm45hnZfqOINn2aCSUh
+         Qve2RYDuEMrQpLbqi9r/QnvEspBKWzGGFf4AlstwIgGlFtWVU65dYIi6fkFWWkH6Z4Kg
+         dC0gMCPOwDmF2u4i28JzLmJYQu0t9Ej75EPpZrRPgJMyfTtOyxMoGWQq23PYmU7+4J+9
+         2d8siqDNCcQkv6z+IQFLCGWPcz+ZPVbbCBPSQuwR5BFtCc0kdTOqbOh5pdOjyYwIUGVW
+         M+X9GFyyZEHvACzuqxZ+PXWRDvTX+WNKop7BiIVjCiezw0SL7EDra+POK0CJM4qdE6ge
+         p/GQ==
+X-Gm-Message-State: ANhLgQ3XJuv/uf7WKmk0zanVLEd6mXX7GoxmnwghLil6HB/aTp9EElDy
+        /3gy2tcmYrDhqcxs5lJZ1O6gQiPEsA8=
+X-Google-Smtp-Source: ADFU+vvqQolRXIQc2exeSbFG1CBzPB/poNUc/fxuZJ8RBP83GZQ6ro++PzlJfM04BVJ8Xo6SBI+nlQ==
+X-Received: by 2002:a37:e47:: with SMTP id 68mr10646046qko.17.1584754400994;
+        Fri, 20 Mar 2020 18:33:20 -0700 (PDT)
+Received: from localhost.localdomain ([177.220.176.176])
+        by smtp.gmail.com with ESMTPSA id w18sm5582324qkw.130.2020.03.20.18.33.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 18:33:20 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id DFC88C3145; Fri, 20 Mar 2020 22:33:17 -0300 (-03)
+Date:   Fri, 20 Mar 2020 22:33:17 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Qiujun Huang <hqjagain@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, vyasevich@gmail.com,
+        nhorman@tuxdriver.com, Jakub Kicinski <kuba@kernel.org>,
+        linux-sctp@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, anenbupt@gmail.com
+Subject: Re: [PATCH v3] sctp: fix refcount bug in sctp_wfree
+Message-ID: <20200321013317.GF3756@localhost.localdomain>
+References: <20200320110959.2114-1-hqjagain@gmail.com>
+ <20200320185204.GB3828@localhost.localdomain>
+ <CAJRQjoc-U_K-2THbmBOj2TOWDTfP9yr5Vec-WjhTjS8sj19fHA@mail.gmail.com>
+ <20200321010246.GC3828@localhost.localdomain>
+ <CAJRQjofnZ5Oz-0PNMY6ojddg3MZc4v5UC5AJwi2CxLByDGaZhQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200320092047.4a4cf551@jacob-builder>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJRQjofnZ5Oz-0PNMY6ojddg3MZc4v5UC5AJwi2CxLByDGaZhQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/21 0:20, Jacob Pan wrote:
-> On Fri, 20 Mar 2020 21:45:26 +0800
-> Lu Baolu <baolu.lu@linux.intel.com> wrote:
+On Sat, Mar 21, 2020 at 09:23:54AM +0800, Qiujun Huang wrote:
+> On Sat, Mar 21, 2020 at 9:02 AM Marcelo Ricardo Leitner
+> <marcelo.leitner@gmail.com> wrote:
+> >
+> > On Sat, Mar 21, 2020 at 07:53:29AM +0800, Qiujun Huang wrote:
+> > ...
+> > > > > So, sctp_wfree was not called to destroy SKB)
+> > > > >
+> > > > > then migrate happened
+> > > > >
+> > > > >       sctp_for_each_tx_datachunk(
+> > > > >       sctp_clear_owner_w);
+> > > > >       sctp_assoc_migrate();
+> > > > >       sctp_for_each_tx_datachunk(
+> > > > >       sctp_set_owner_w);
+> > > > > SKB was not in the outq, and was not changed to newsk
+> > > >
+> > > > The real fix is to fix the migration to the new socket, though the
+> > > > situation on which it is happening is still not clear.
+> > > >
+> > > > The 2nd sendto() call on the reproducer is sending 212992 bytes on a
+> > > > single call. That's usually the whole sndbuf size, and will cause
+> > > > fragmentation to happen. That means the datamsg will contain several
+> > > > skbs. But still, the sacked chunks should be freed if needed while the
+> > > > remaining ones will be left on the queues that they are.
+> > >
+> > > in sctp_sendmsg_to_asoc
+> > > datamsg holds his chunk result in that the sacked chunks can't be freed
+> >
+> > Right! Now I see it, thanks.
+> > In the end, it's not a locking race condition. It's just not iterating
+> > on the lists properly.
+> >
+> > >
+> > > list_for_each_entry(chunk, &datamsg->chunks, frag_list) {
+> > > sctp_chunk_hold(chunk);
+> > > sctp_set_owner_w(chunk);
+> > > chunk->transport = transport;
+> > > }
+> > >
+> > > any ideas to handle it?
+> >
+> > sctp_for_each_tx_datachunk() needs to be aware of this situation.
+> > Instead of iterating directly/only over the chunk list, it should
+> > iterate over the datamsgs instead. Something like the below (just
+> > compile tested).
+> >
+> > Then, the old socket will be free to die regardless of the new one.
+> > Otherwise, if this association gets stuck on retransmissions or so,
+> > the old socket would not be freed till then.
+> >
+> > diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+> > index fed26a1e9518..85c742310d26 100644
+> > --- a/net/sctp/socket.c
+> > +++ b/net/sctp/socket.c
+> > @@ -151,9 +151,10 @@ static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
+> >                                        void (*cb)(struct sctp_chunk *))
+> >
+> >  {
+> > +       struct sctp_datamsg *msg, *prev_msg = NULL;
+> >         struct sctp_outq *q = &asoc->outqueue;
+> >         struct sctp_transport *t;
+> > -       struct sctp_chunk *chunk;
+> > +       struct sctp_chunk *chunk, *c;
+
+I missed to swap some lines here, for reverse christmass-tree style,
+btw.
+
+> >
+> >         list_for_each_entry(t, &asoc->peer.transport_addr_list, transports)
+> >                 list_for_each_entry(chunk, &t->transmitted, transmitted_list)
+> > @@ -162,8 +163,14 @@ static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
+> >         list_for_each_entry(chunk, &q->retransmit, transmitted_list)
+> >                 cb(chunk);
+> >
+> > -       list_for_each_entry(chunk, &q->sacked, transmitted_list)
+> > -               cb(chunk);
+> > +       list_for_each_entry(chunk, &q->sacked, transmitted_list) {
+> > +               msg = chunk->msg;
+> > +               if (msg == prev_msg)
+> > +                       continue;
+> > +               list_for_each_entry(c, &msg->chunks, frag_list)
+> > +                       cb(c);
+> > +               prev_msg = msg;
+> > +       }
 > 
->> On 2020/3/20 12:32, Jacob Pan wrote:
->>> IOTLB flush already included in the PASID tear down process. There
->>> is no need to flush again.
->>
->> It seems that intel_pasid_tear_down_entry() doesn't flush the pasid
->> based device TLB?
->>
-> I saw this code in intel_pasid_tear_down_entry(). Isn't the last line
-> flush the devtlb? Not in guest of course since the passdown tlb flush
-> is inclusive.
+> great. I'll trigger a syzbot test. Thanks.
+
+Mind that it may need to handled on the other lists as well. I didn't
+check them :]
+
 > 
-> 	pasid_cache_invalidation_with_pasid(iommu, did, pasid);
-> 	iotlb_invalidation_with_pasid(iommu, did, pasid);
-> 
-> 	/* Device IOTLB doesn't need to be flushed in caching mode. */
-> 	if (!cap_caching_mode(iommu->cap))
-> 		devtlb_invalidation_with_pasid(iommu, dev, pasid);
-> 
-
-But devtlb_invalidation_with_pasid() doesn't do the right thing, it
-flushes the device tlb, instead of pasid-based device tlb.
-
-static void
-devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
-                                struct device *dev, int pasid)
-{
-         struct device_domain_info *info;
-         u16 sid, qdep, pfsid;
-
-         info = dev->archdata.iommu;
-         if (!info || !info->ats_enabled)
-                 return;
-
-         sid = info->bus << 8 | info->devfn;
-         qdep = info->ats_qdep;
-         pfsid = info->pfsid;
-
-         qi_flush_dev_iotlb(iommu, sid, pfsid, qdep, 0, 64 - 
-VTD_PAGE_SHIFT);
-}
-
-Best regards,
-baolu
-
->> Best regards,
->> baolu
->>
->>>
->>> Cc: Lu Baolu <baolu.lu@linux.intel.com>
->>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->>> ---
->>>    drivers/iommu/intel-svm.c | 6 ++----
->>>    1 file changed, 2 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
->>> index 8f42d717d8d7..1483f1845762 100644
->>> --- a/drivers/iommu/intel-svm.c
->>> +++ b/drivers/iommu/intel-svm.c
->>> @@ -268,10 +268,9 @@ static void intel_mm_release(struct
->>> mmu_notifier *mn, struct mm_struct *mm)
->>>    	 * *has* to handle gracefully without affecting other
->>> processes. */
->>>    	rcu_read_lock();
->>> -	list_for_each_entry_rcu(sdev, &svm->devs, list) {
->>> +	list_for_each_entry_rcu(sdev, &svm->devs, list)
->>>    		intel_pasid_tear_down_entry(svm->iommu,
->>> sdev->dev, svm->pasid);
->>> -		intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
->>> -	}
->>> +
->>>    	rcu_read_unlock();
->>>    
->>>    }
->>> @@ -731,7 +730,6 @@ int intel_svm_unbind_mm(struct device *dev, int
->>> pasid)
->>>    			 * large and has to be physically
->>> contiguous. So it's
->>>    			 * hard to be as defensive as we might
->>> like. */ intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
->>> -			intel_flush_svm_range_dev(svm, sdev, 0,
->>> -1, 0); kfree_rcu(sdev, rcu);
->>>    
->>>    			if (list_empty(&svm->devs)) {
->>>    
-> 
-> [Jacob Pan]
-> 
+> >
+> >         list_for_each_entry(chunk, &q->abandoned, transmitted_list)
+> >                 cb(chunk);
