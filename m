@@ -2,98 +2,228 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5260C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F48C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82A482077D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:19:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cUv2WbX/"
+	by mail.kernel.org (Postfix) with ESMTP id B00E720754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:19:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584789566;
+	bh=/4Tg/7Vu94FAj6F1UEbjVB8URukEL7viIow25tsliJ4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RTqxEBIghKBIgw6qHBWToFAMDUxIrkPstYSRmd6IofNeTrhgb1MBeENT7lC3aH+Hj
+	 RnGoQ28/RAD1hnooly842YlfdgQMlBWn302LNbWYMTwqjXAnI9fjOiGUre0cSqE8ka
+	 yBl3lGhK8oP9NPATzGWbkNrlbPan1JdhRkn2EcjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgCULTW (ORCPT
+        id S1728471AbgCULTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 07:19:22 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44885 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgCULTW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 07:19:22 -0400
-Received: by mail-wr1-f66.google.com with SMTP id m17so1548606wrw.11;
-        Sat, 21 Mar 2020 04:19:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=4DHh+FncC3jqVGC7ZZ0jqP/hNLUiPdG5Ott4j1JBTPE=;
-        b=cUv2WbX/FdmKXUyKTkr9rFaUCQceo2Lv1WDeH00AId4csYJnmXX79PxLy2cNOYq2oy
-         25LseCFbvcLhvJCJi/rzaE6TLq6oP/fcf4bHXf0WqVuFtd0AwRmCOR3gmT7kJNt+3WTR
-         uLNVOeP8sQ9zx+DaeSw5D22riM1lCWG8U3EzLr1HT3G/z93pKBaquiNRscuLlYkqY4kG
-         ZdO9OybuWyuDjgG1a1EcEN8kWQvdRyj0eT2WtgBjiHJaT0YY6tAPEow/lX8rzqnQeZXQ
-         7fEnGyhWAqEXXxVQWU4QHEZo8D/S/HBYcFtkRiRPU1Wvj22HzHzXpPl2tMasalhNEtRn
-         C9KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4DHh+FncC3jqVGC7ZZ0jqP/hNLUiPdG5Ott4j1JBTPE=;
-        b=jHrAhnuW139ISpVFOqyO6F71FAILWG2Wpv663DyhLHvsU15yildCgN1cJg068/Qtw9
-         rHu/1UPjvxZla/1d3BhAcKIOG1aidER4nQo5ViY0m53OoJDV/Cp49VfEu58mPhgFsy3f
-         +QqPgNfzScDg40Kw+yyuU4vW0en0CmD8ElJSz71tVqKuQ7FS3Tjbsv0Q5pYoJMt5dcB/
-         xhuhgPFzonttQiV5MkszDrssBjOCR4IjOKDOThYSuoR5nx6pR25/OCgvxeNylH1Nhwx9
-         nltC2zWFtfBAxunUsFq/xFq0Kc8jDUl7kWcRTM9RMIo/7/gy9PpNSJwusCQy2OwoaRha
-         XWCg==
-X-Gm-Message-State: ANhLgQ2ZDDybJthEho2S+AICwxD8PBoDmrz65kqPzpDP19uIsXwdWQKi
-        88MnW+zk+SyndbNkQxWyi/k=
-X-Google-Smtp-Source: ADFU+vv7cKC4LRCcSjn+qvMZADkhv0rZaKnuw0JfyQkwg8vZTuHyRV7kQQtY4q5EcLt1Sd/2OWO8bg==
-X-Received: by 2002:adf:e78e:: with SMTP id n14mr17861476wrm.363.1584789559971;
-        Sat, 21 Mar 2020 04:19:19 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2d49:b100:e503:a7c7:f4c6:1aab])
-        by smtp.gmail.com with ESMTPSA id n1sm13023191wrj.77.2020.03.21.04.19.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2020 04:19:19 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org
-Cc:     linux-spdx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] io_uring: make spdxcheck.py happy
-Date:   Sat, 21 Mar 2020 12:19:07 +0100
-Message-Id: <20200321111907.6917-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 21 Mar 2020 07:19:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726192AbgCULTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 07:19:23 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C76620732;
+        Sat, 21 Mar 2020 11:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584789562;
+        bh=/4Tg/7Vu94FAj6F1UEbjVB8URukEL7viIow25tsliJ4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WHRiXzdGrKN3Jxn9uznM6mC+5pmjd4E07ffiO/Z3aAcKoNKh448RTiMgq0EodUc//
+         +31DgIXYa1lbgF82RfR1icQKr3We/m33o7IOtK786qKhLooE1naq7Ws9tIveRc/Fcf
+         ve0cpVwVvmlSzrkgsZlY7DdTOmr+Ad9gUBVg/PYY=
+Date:   Sat, 21 Mar 2020 11:19:16 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Nishant Malpani <nish.malpani25@gmail.com>
+Cc:     robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, mark.rutland@arm.com, sre@kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: iio: tsl2563: convert bindings to YAML
+Message-ID: <20200321111916.4fe23b3e@archlinux>
+In-Reply-To: <1cfe5e97-1c0d-8ffe-88f3-90db77e0f03b@gmail.com>
+References: <20200314134237.12187-1-nish.malpani25@gmail.com>
+        <20200315105834.7a5f4475@archlinux>
+        <1cfe5e97-1c0d-8ffe-88f3-90db77e0f03b@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit bbbdeb4720a0 ("io_uring: dual license io_uring.h uapi header")
-uses a nested SPDX-License-Identifier to dual license the header.
+On Wed, 18 Mar 2020 11:57:20 +0530
+Nishant Malpani <nish.malpani25@gmail.com> wrote:
 
-Since then, ./scripts/spdxcheck.py complains:
+> A v3 PATCH [1] was generated taking care of the reviews which can be 
+> found inline.
+> 
+> [1] https://marc.info/?l=linux-iio&m=158451158827441&w=2
+> 
+> On 15/03/20 4:28 pm, Jonathan Cameron wrote:
+> > On Sat, 14 Mar 2020 19:12:37 +0530
+> > Nishant Malpani <nish.malpani25@gmail.com> wrote:
+> >   
+> >> Convert the TSL2563 device tree bindings to the new YAML format.
+> >>
+> >> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+> >> ---
+> >>
+> >> The link for the datasheet is not attached in the binding document
+> >> because it was not available on the manufacturer's (AMS) website [1].  
+> > 
+> > Very old part now, though plenty of them in circulation or least there
+> > used to be.  I have though not powered up that board for a while.
+> > 
+> > When doing these conversions, do sanity check them against the driver
+> > as the old docs aren't always entirely accurate ; >
+> > Jonathan
+> >   
+> >>
+> >> [1] https://ams.com/ambient-light-sensors
+> >> ---
+> >>   .../devicetree/bindings/iio/light/tsl2563.txt | 19 --------
+> >>   .../bindings/iio/light/tsl2563.yaml           | 46 +++++++++++++++++++
+> >>   2 files changed, 46 insertions(+), 19 deletions(-)
+> >>   delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.txt
+> >>   create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+> >> deleted file mode 100644
+> >> index f91e809e736e..000000000000
+> >> --- a/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+> >> +++ /dev/null
+> >> @@ -1,19 +0,0 @@
+> >> -* AMS TAOS TSL2563 ambient light sensor
+> >> -
+> >> -Required properties:
+> >> -
+> >> -  - compatible : should be "amstaos,tsl2563"
+> >> -  - reg : the I2C address of the sensor
+> >> -
+> >> -Optional properties:
+> >> -
+> >> -  - amstaos,cover-comp-gain : integer used as multiplier for gain
+> >> -                              compensation (default = 1)
+> >> -
+> >> -Example:
+> >> -
+> >> -tsl2563@29 {
+> >> -	compatible = "amstaos,tsl2563";
+> >> -	reg = <0x29>;
+> >> -	amstaos,cover-comp-gain = <16>;
+> >> -};
+> >> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.yaml b/Documentation/devicetree/bindings/iio/light/tsl2563.yaml
+> >> new file mode 100644
+> >> index 000000000000..2a70b8d62760
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/iio/light/tsl2563.yaml
+> >> @@ -0,0 +1,46 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/iio/light/tsl2563.yaml#  
+> > 
+> > Convention is now to name files and this with the manufacturer part
+> > as well.  
+> 
+> Got it! Taken care of in v3.
+> > 
+> > light/amstaos,tsl2563.yaml
+> >   
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: AMS TAOS TSL2563 ambient light sensor
+> >> +
+> >> +maintainers:
+> >> +  - Sebastian Reichel <sre@kernel.org>
+> >> +
+> >> +description: |
+> >> +  Ambient light sensor with an i2c interface.
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    enum:
+> >> +      - amstaos,tsl2563  
+> > 
+> > The original binding was wrong on this.   Check the driver :)
+> > I'm a bit embarrassed I never noticed during review as I have
+> > a tsl2561, be it on a board that was never converted to DT.
+> >   
+> 
+> You're right. Should have cross-checked with the driver before blindly 
+> following the original binding. Corrected in v3.
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  amstaos,cover-comp-gain:
+> >> +    description: Multiplier for gain compensation
+> >> +    allOf:
+> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >> +      - enum: [1, 16]  
+> > 
+> > Not sure it's that restricted...  or to be honest what
+> > that is for at all.  Superficially it looks like
+> > a multiplier to change the 'range' of the the sysfs control.
+> > 
+> > I wonder if anyone cares or if we can just start ignoring that going
+> > forwards?  Sebastian, anyone else?
+> >   
+> 
+>  From what I understood while reading the datasheet [2] (Page 4), 
+> 'amstaos,cover-comp-gain' is used to switch between the low gain and 
+> high gain mode which further adjusts the 'Illuminance Responsivity'. 
+> Ergo, I've taken it forward even in v3 since the driver also relies on 
+> it [3]. Please let me know if my reasoning is erroneous.
 
-  include/uapi/linux/io_uring.h: 1:60 Missing parentheses: OR
+My issue here is that might be the intent, but that's not what the driver
+uses it for.  All the infrastructure seems to be there to control the
+low gain / high gain control but it's not actually hooked up.
 
-Add parentheses to make spdxcheck.py happy.
+The driver currently just applies that number as a multiplier without changing
+the state of the chip to match.
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-applies cleanly on next-20200320
+Let's leave it there, but at somepoint would be good to dig out some hardware
+and actually make this work as expected.  I 'might' get to this at somepoint.
 
- include/uapi/linux/io_uring.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-index 6d9d2b1cc523..e48d746b8e2a 100644
---- a/include/uapi/linux/io_uring.h
-+++ b/include/uapi/linux/io_uring.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note OR MIT */
-+/* SPDX-License-Identifier: (GPL-2.0 WITH Linux-syscall-note) OR MIT */
- /*
-  * Header file for the io_uring interface.
-  *
--- 
-2.17.1
+Jonathan
+> 
+> [2] 
+> https://media.digikey.com/pdf/Data%20Sheets/Austriamicrosystems%20PDFs/TSL2562,63.pdf
+> 
+> [3] 
+> https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/tree/drivers/iio/light/tsl2563.c#n494
+> >> +
+> >> +required:
+> >> +  - compatible
+> >> +  - reg
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    i2c {
+> >> +
+> >> +      #address-cells = <1>;
+> >> +      #size-cells = <0>;
+> >> +
+> >> +      light-sensor@29 {
+> >> +        compatible = "amstaos,tsl2563";
+> >> +        reg = <0x29>;
+> >> +        amstaos,cover-comp-gain = <16>;
+> >> +      };
+> >> +    };
+> >> +...  
+> >   
+> 
+> With regards,
+> Nishant Malpani
 
