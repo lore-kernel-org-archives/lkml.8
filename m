@@ -7,40 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5420C4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F207FC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8407920781
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D536D20754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgCUPyM (ORCPT
+        id S1727980AbgCUPyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:54:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39055 "EHLO
+        Sat, 21 Mar 2020 11:54:15 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39057 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727779AbgCUPx7 (ORCPT
+        with ESMTP id S1727780AbgCUPx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:53:59 -0400
+        Sat, 21 Mar 2020 11:53:58 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFgRe-0005TF-Ck; Sat, 21 Mar 2020 16:53:54 +0100
+        id 1jFgRb-0005Ua-Mz; Sat, 21 Mar 2020 16:53:51 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DFEEE1C22EE;
-        Sat, 21 Mar 2020 16:53:48 +0100 (CET)
-Date:   Sat, 21 Mar 2020 15:53:48 -0000
-From:   "tip-bot2 for Peter Zijlstra (Intel)" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 416E91C22EF;
+        Sat, 21 Mar 2020 16:53:51 +0100 (CET)
+Date:   Sat, 21 Mar 2020 15:53:50 -0000
+From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] rcuwait: Add @state argument to rcuwait_wait_event()
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200321113241.824030968@linutronix.de>
-References: <20200321113241.824030968@linutronix.de>
+Subject: [tip: locking/core] nds32: Remove mm.h from asm/uaccess.h
+Cc:     kbuild test robot <lkp@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200321113241.339289758@linutronix.de>
+References: <20200321113241.339289758@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158480602856.28353.10692996135466470181.tip-bot2@tip-bot2>
+Message-ID: <158480603085.28353.13958347443342587650.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,82 +58,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     80fbaf1c3f2926c834f8ca915441dfe27ce5487e
-Gitweb:        https://git.kernel.org/tip/80fbaf1c3f2926c834f8ca915441dfe27ce5487e
-Author:        Peter Zijlstra (Intel) <peterz@infradead.org>
-AuthorDate:    Sat, 21 Mar 2020 12:25:55 +01:00
+Commit-ID:     43ea9d1a533a08dea4a2a9312d6aa2583313ef23
+Gitweb:        https://git.kernel.org/tip/43ea9d1a533a08dea4a2a9312d6aa2583313ef23
+Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate:    Sat, 21 Mar 2020 12:25:50 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Sat, 21 Mar 2020 16:00:22 +01:00
+CommitterDate: Sat, 21 Mar 2020 16:00:21 +01:00
 
-rcuwait: Add @state argument to rcuwait_wait_event()
+nds32: Remove mm.h from asm/uaccess.h
 
-Extend rcuwait_wait_event() with a state variable so that it is not
-restricted to UNINTERRUPTIBLE waits.
+The defconfig compiles without linux/mm.h. With mm.h included the
+include chain leands to:
+|   CC      kernel/locking/percpu-rwsem.o
+| In file included from include/linux/huge_mm.h:8,
+|                  from include/linux/mm.h:567,
+|                  from arch/nds32/include/asm/uaccess.h:,
+|                  from include/linux/uaccess.h:11,
+|                  from include/linux/sched/task.h:11,
+|                  from include/linux/sched/signal.h:9,
+|                  from include/linux/rcuwait.h:6,
+|                  from include/linux/percpu-rwsem.h:8,
+|                  from kernel/locking/percpu-rwsem.c:6:
+| include/linux/fs.h:1422:29: error: array type has incomplete element type 'struct percpu_rw_semaphore'
+|  1422 |  struct percpu_rw_semaphore rw_sem[SB_FREEZE_LEVELS];
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+once rcuwait.h includes linux/sched/signal.h.
+
+Remove the linux/mm.h include.
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200321113241.824030968@linutronix.de
+Link: https://lkml.kernel.org/r/20200321113241.339289758@linutronix.de
 ---
- include/linux/rcuwait.h       | 12 ++++++++++--
- kernel/locking/percpu-rwsem.c |  2 +-
- 2 files changed, 11 insertions(+), 3 deletions(-)
+ arch/nds32/include/asm/uaccess.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/include/linux/rcuwait.h b/include/linux/rcuwait.h
-index 75c97e4..2ffe1ee 100644
---- a/include/linux/rcuwait.h
-+++ b/include/linux/rcuwait.h
-@@ -3,6 +3,7 @@
- #define _LINUX_RCUWAIT_H_
+diff --git a/arch/nds32/include/asm/uaccess.h b/arch/nds32/include/asm/uaccess.h
+index 8916ad9..3a9219f 100644
+--- a/arch/nds32/include/asm/uaccess.h
++++ b/arch/nds32/include/asm/uaccess.h
+@@ -11,7 +11,6 @@
+ #include <asm/errno.h>
+ #include <asm/memory.h>
+ #include <asm/types.h>
+-#include <linux/mm.h>
  
- #include <linux/rcupdate.h>
-+#include <linux/sched/signal.h>
- 
- /*
-  * rcuwait provides a way of blocking and waking up a single
-@@ -30,23 +31,30 @@ extern void rcuwait_wake_up(struct rcuwait *w);
-  * The caller is responsible for locking around rcuwait_wait_event(),
-  * such that writes to @task are properly serialized.
-  */
--#define rcuwait_wait_event(w, condition)				\
-+#define rcuwait_wait_event(w, condition, state)				\
- ({									\
-+	int __ret = 0;							\
- 	rcu_assign_pointer((w)->task, current);				\
- 	for (;;) {							\
- 		/*							\
- 		 * Implicit barrier (A) pairs with (B) in		\
- 		 * rcuwait_wake_up().					\
- 		 */							\
--		set_current_state(TASK_UNINTERRUPTIBLE);		\
-+		set_current_state(state);				\
- 		if (condition)						\
- 			break;						\
- 									\
-+		if (signal_pending_state(state, current)) {		\
-+			__ret = -EINTR;					\
-+			break;						\
-+		}							\
-+									\
- 		schedule();						\
- 	}								\
- 									\
- 	WRITE_ONCE((w)->task, NULL);					\
- 	__set_current_state(TASK_RUNNING);				\
-+	__ret;								\
- })
- 
- #endif /* _LINUX_RCUWAIT_H_ */
-diff --git a/kernel/locking/percpu-rwsem.c b/kernel/locking/percpu-rwsem.c
-index 183a3aa..a008a1b 100644
---- a/kernel/locking/percpu-rwsem.c
-+++ b/kernel/locking/percpu-rwsem.c
-@@ -234,7 +234,7 @@ void percpu_down_write(struct percpu_rw_semaphore *sem)
- 	 */
- 
- 	/* Wait for all active readers to complete. */
--	rcuwait_wait_event(&sem->writer, readers_active_check(sem));
-+	rcuwait_wait_event(&sem->writer, readers_active_check(sem), TASK_UNINTERRUPTIBLE);
- }
- EXPORT_SYMBOL_GPL(percpu_down_write);
+ #define __asmeq(x, y)  ".ifnc " x "," y " ; .err ; .endif\n\t"
  
