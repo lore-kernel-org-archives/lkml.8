@@ -2,92 +2,77 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FAAC4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C818C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C504C20780
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:11:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584799880;
-	bh=z3bsHcwPw1dy+MZ69yHRllkviwuFf+1W8mJ1Vq6tZx8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xl68fTfTzYLrjjZqz92hlMcur/0TylB57PL3ORzo5SOS3DGng6tQouHiipjjD6BSj
-	 MM9ZNQUTk58FfJnKLN1JZaDVAC8bepRf4QPtGDfz3g8dr5224HuHh/9752PTl5+R27
-	 13EvbGSbYp/8uxvoXR3xzaeWbowxQmm2vbKVGhWo=
+	by mail.kernel.org (Postfix) with ESMTP id 45B1120754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbgCUOLT (ORCPT
+        id S1727400AbgCUOMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 10:11:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbgCUOLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 10:11:19 -0400
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A7A220842;
-        Sat, 21 Mar 2020 14:11:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584799878;
-        bh=z3bsHcwPw1dy+MZ69yHRllkviwuFf+1W8mJ1Vq6tZx8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=U6uraq1+O/wBDq9BdnirqCkla8fi4hhFooa9u8EOGpG/NUK8KcAg8m6t2KHRzRSTZ
-         U1tt2IsiTDMVS0ltxGzSghSwm0SPd3Ix8AtBnYo+moOc67e2fIk/ICATj9ELG9zqHj
-         KWOd3QQR+qDycpEtfRl0ifl4E+I1zEKfB5l1H1GU=
-Received: by mail-lf1-f53.google.com with SMTP id t21so6707987lfe.9;
-        Sat, 21 Mar 2020 07:11:18 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2NRbh5XueagTwvvEpfNbQrjY3WjmYWsExYRuD9ZYsKAjI5eANG
-        5wC7rxeybWBIdvZuJtjEJiBY448WImtO3Cpbfzs=
-X-Google-Smtp-Source: ADFU+vt7yzzoIODXTl3pSLaF05QHM7NQajznhAWuFfmnjqd/dl0IS02TuRz56P5ko6Q0w3g4sq26da7i2uTfuhqRlWs=
-X-Received: by 2002:a05:6512:1116:: with SMTP id l22mr8128251lfg.70.1584799876421;
- Sat, 21 Mar 2020 07:11:16 -0700 (PDT)
+        Sat, 21 Mar 2020 10:12:05 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:43012 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbgCUOME (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 10:12:04 -0400
+Received: by mail-io1-f70.google.com with SMTP id b21so7226832iot.10
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 07:12:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=Zlgi2xoadfax49bYHX7gbtP8mxGb/dTs9YET+aZW4co=;
+        b=OlCzbZSYWx/ZRflxkMcqSG52IlI3TJGWRbNscQE83hFIlgkdOPFneApiITRDrkcES5
+         hJAwh1Xk500D7RR7Zsh1ME6zvOd/PkJSz7n71GLwgKWu6CBH2ptZ0iw8PYzP0xSCezOw
+         Y3GC5e8NHB10oIz59ade0i9QaRoEMU5gRpEzCeJvc2oUvTEEXSH9GVrYRf3XL7u49ZjL
+         PQw79J9Yb87XgnF5eqENXmACwGr68DDnWfm0OhVMj3FTWiWkP2WxpSAnH/w3UTMpcnhJ
+         F26iCImKII1jxqM8eJYbi7XLKeyiQYX3sLBj1pQRABuJjau4saWdVPMGUx6K2tg370Vb
+         Kc4A==
+X-Gm-Message-State: ANhLgQ2+Wghv0GmxoTHW8xb02PE/lmTO2AC4EFuXX3F3U5Cs+gKnMAzp
+        G2HW/8VeYaM1a3dienBGEiOhKpvPPP5/jxQHMshu14CH9Pjn
+X-Google-Smtp-Source: ADFU+vuuCa3cSD3fZhOXW2dpWnTKAtvHOd2BTTp43x5m0RVqxGUPwhgKorQewidseLLgyQQPPATg+dwWVhHeM40pT400onNAlSrA
 MIME-Version: 1.0
-References: <20200318204408.010461877@linutronix.de> <20200320094856.3453859-1-bigeasy@linutronix.de>
- <20200320094856.3453859-3-bigeasy@linutronix.de> <tglx@linutronix.de>
- <CAJF2gTQDvmSdJB3R0By0Q6d9ganVBV1FBm3urL8Jf1fyiEi+1A@mail.gmail.com> <87zhc9rjuz.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87zhc9rjuz.fsf@nanos.tec.linutronix.de>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sat, 21 Mar 2020 22:11:05 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTTFYSwFYZArmJRkVJOKL2pWWgLj9nAQ_EdH2rU3jTdbw@mail.gmail.com>
-Message-ID: <CAJF2gTTTFYSwFYZArmJRkVJOKL2pWWgLj9nAQ_EdH2rU3jTdbw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] csky: Remove mm.h from asm/uaccess.h
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>, balbi@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, dave@stgolabs.net,
-        David Miller <davem@davemloft.net>, gregkh@linuxfoundation.org,
-        joel@joelfernandes.org, kurt.schwemmer@microsemi.com,
-        kvalo@codeaurora.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        logang@deltatee.com, mingo@kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org,
-        oleg@redhat.com, paulmck@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        torvalds@linux-foundation.org, Will Deacon <will@kernel.org>,
-        linux-csky@vger.kernel.org, kbuild test robot <lkp@intel.com>
+X-Received: by 2002:a02:a85:: with SMTP id 127mr12515540jaw.51.1584799922592;
+ Sat, 21 Mar 2020 07:12:02 -0700 (PDT)
+Date:   Sat, 21 Mar 2020 07:12:02 -0700
+In-Reply-To: <000000000000b55d8805992071b5@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006d22ee05a15dfccf@google.com>
+Subject: Re: INFO: task hung in tty_ldisc_hangup
+From:   syzbot <syzbot+3105793febc8f3e591ce@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com, jslaby@suse.cz,
+        linux-kernel@vger.kernel.org, okash.khawaja@gmail.com,
+        samuel.thibault@ens-lyon.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 8:08 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Guo Ren <guoren@kernel.org> writes:
->
-> > Tested and Acked by me.
-> >
-> > Queued for next pull request, thx
->
-> Can we please route that with the rcuwait changes to avoid breakage
-> unless you ship it to Linus right away?
+syzbot suspects this bug was fixed by commit:
 
-Ok, I won't queue it.
+commit e8c75a30a23c6ba63f4ef6895cbf41fd42f21aa2
+Author: Jiri Slaby <jslaby@suse.cz>
+Date:   Fri Feb 28 11:54:06 2020 +0000
+
+    vt: selection, push sel_lock up
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=124970ade00000
+start commit:   c6017471 Merge tag 'xfs-5.5-fixes-2' of git://git.kernel.o..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7f6119e2e3675a73
+dashboard link: https://syzkaller.appspot.com/bug?extid=3105793febc8f3e591ce
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=124fc6c1e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16cb16c1e00000
+
+If the result looks correct, please mark the bug fixed by replying with:
+
+#syz fix: vt: selection, push sel_lock up
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
