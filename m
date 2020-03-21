@@ -2,126 +2,143 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6D3C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E324BC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9CD120722
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF11520757
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:20:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584793201;
+	bh=dAEeJBsBD8vPgIWoHtkB7iVfjDZMwlGNTPBlVTUgEyo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=c+RAPAuvyQ3ooS6WfmEiHlAyirGaVCAWnzAJ1KARG28EdV3NCAtQ5Q75Q07SaVfaI
+	 qugGJfk9xRIg9AVbghcJsiV8ZbLItTfU4L8paituJMnTX+1YNTjLjNlXvlYGpW42sD
+	 5o20wjSBSUkDf3SGvsa9dP/VEfRAomNI2XxD0F+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgCUMRH (ORCPT
+        id S1727135AbgCUMUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 08:17:07 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58736 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727405AbgCUMRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 08:17:06 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4F697CC732300DE34742;
-        Sat, 21 Mar 2020 20:16:42 +0800 (CST)
-Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 21 Mar 2020 20:16:31 +0800
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-To:     <will@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
-        <maz@kernel.org>, <steven.price@arm.com>, <broonie@kernel.org>,
-        <guohanjun@huawei.com>
-CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>
-Subject: [RFC PATCH v3 2/4] mm: Add page table level flags to vm_flags
-Date:   Sat, 21 Mar 2020 20:16:19 +0800
-Message-ID: <20200321121621.1600-3-yezhenyu2@huawei.com>
-X-Mailer: git-send-email 2.22.0.windows.1
-In-Reply-To: <20200321121621.1600-1-yezhenyu2@huawei.com>
-References: <20200321121621.1600-1-yezhenyu2@huawei.com>
+        Sat, 21 Mar 2020 08:20:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726192AbgCUMUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 08:20:00 -0400
+Received: from localhost.localdomain (unknown [49.65.245.234])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 308B020722;
+        Sat, 21 Mar 2020 12:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584793199;
+        bh=dAEeJBsBD8vPgIWoHtkB7iVfjDZMwlGNTPBlVTUgEyo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KQm646WSgVFJGEc8ROvdcbEXR7+q9y6Iuhid9lNRfvqAriTzuCIikvr5d0sHjMgV0
+         oTDapfUuoeOfOqi9iE8Z2zgkUv5ZDh0WEFbiVKqZUZemvHZ8lXThAlYaSh8MQvvfFV
+         Qclgk9KXTBQoucmzHypwjXFLik4SPjwZIWsM/rFA=
+From:   Chao Yu <chao@kernel.org>
+To:     jaegeuk@kernel.org
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v2] f2fs: clean up f2fs_may_encrypt()
+Date:   Sat, 21 Mar 2020 20:19:33 +0800
+Message-Id: <20200321121933.22297-1-chao@kernel.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add VM_LEVEL_[PUD|PMD|PTE] to vm_flags to indicate which level of
-the page tables the vma is in. Those flags can be used to reduce
-the cost of TLB invalidation.
+From: Chao Yu <yuchao0@huawei.com>
 
-These should be common flags for all architectures, however, those
-flags are only available in 64-bits system currently, because the
-lower-order flags are fully used.
+Merge below two conditions into f2fs_may_encrypt() for cleanup
+- IS_ENCRYPTED()
+- DUMMY_ENCRYPTION_ENABLED()
 
-These flags are only used by ARM64 architecture now. See in next
-patch.
+Check IS_ENCRYPTED(inode) condition in f2fs_init_inode_metadata()
+is enough since we have already set encrypt flag in f2fs_new_inode().
 
-Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- include/linux/mm.h             | 10 ++++++++++
- include/trace/events/mmflags.h | 15 ++++++++++++++-
- 2 files changed, 24 insertions(+), 1 deletion(-)
+v2:
+- remove unneeded check condition in f2fs_init_inode_metadata() suggested
+by Eric.
+ fs/f2fs/dir.c   |  4 +---
+ fs/f2fs/f2fs.h  | 13 +++++++++----
+ fs/f2fs/namei.c |  4 +---
+ 3 files changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 52269e56c514..63a04e02a221 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -313,6 +313,16 @@ extern unsigned int kobjsize(const void *objp);
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index 0971ccc4664a..44bfc464df78 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -471,7 +471,6 @@ struct page *f2fs_init_inode_metadata(struct inode *inode, struct inode *dir,
+ 			struct page *dpage)
+ {
+ 	struct page *page;
+-	int dummy_encrypt = DUMMY_ENCRYPTION_ENABLED(F2FS_I_SB(dir));
+ 	int err;
+ 
+ 	if (is_inode_flag_set(inode, FI_NEW_INODE)) {
+@@ -498,8 +497,7 @@ struct page *f2fs_init_inode_metadata(struct inode *inode, struct inode *dir,
+ 		if (err)
+ 			goto put_error;
+ 
+-		if ((IS_ENCRYPTED(dir) || dummy_encrypt) &&
+-					f2fs_may_encrypt(inode)) {
++		if (IS_ENCRYPTED(inode)) {
+ 			err = fscrypt_inherit_context(dir, inode, page, false);
+ 			if (err)
+ 				goto put_error;
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 09db79a20f8e..fcafa68212eb 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3946,15 +3946,20 @@ static inline bool f2fs_lfs_mode(struct f2fs_sb_info *sbi)
+ 	return F2FS_OPTION(sbi).fs_mode == FS_MODE_LFS;
+ }
+ 
+-static inline bool f2fs_may_encrypt(struct inode *inode)
++static inline bool f2fs_may_encrypt(struct inode *dir, struct inode *inode)
+ {
+ #ifdef CONFIG_FS_ENCRYPTION
++	struct f2fs_sb_info *sbi = F2FS_I_SB(dir);
+ 	umode_t mode = inode->i_mode;
+ 
+-	return (S_ISREG(mode) || S_ISDIR(mode) || S_ISLNK(mode));
+-#else
+-	return false;
++	/*
++	 * If the directory encrypted or dummy encryption enabled,
++	 * then we should encrypt the inode.
++	 */
++	if (IS_ENCRYPTED(dir) || DUMMY_ENCRYPTION_ENABLED(sbi))
++		return (S_ISREG(mode) || S_ISDIR(mode) || S_ISLNK(mode));
  #endif
- #endif /* CONFIG_ARCH_HAS_PKEYS */
++	return false;
+ }
  
-+#ifdef CONFIG_64BIT
-+# define VM_LEVEL_PUD	BIT(37)		/* vma is in pud-level of page table */
-+# define VM_LEVEL_PMD	BIT(38)		/* vma is in pmd-level of page table */
-+# define VM_LEVEL_PTE	BIT(39)		/* vma is in pte-level of page table */
-+#else
-+# define VM_LEVEL_PUD	0
-+# define VM_LEVEL_PMD	0
-+# define VM_LEVEL_PTE	0
-+#endif /* CONFIG_64BIT */
-+
- #if defined(CONFIG_X86)
- # define VM_PAT		VM_ARCH_1	/* PAT reserves whole VMA at once (x86) */
- #elif defined(CONFIG_PPC)
-diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
-index a1675d43777e..9f13cfa96f9f 100644
---- a/include/trace/events/mmflags.h
-+++ b/include/trace/events/mmflags.h
-@@ -130,6 +130,16 @@ IF_HAVE_PG_IDLE(PG_idle,		"idle"		)
- #define IF_HAVE_VM_SOFTDIRTY(flag,name)
- #endif
+ static inline bool f2fs_may_compress(struct inode *inode)
+diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+index b75c70813f9e..95cfbce062e8 100644
+--- a/fs/f2fs/namei.c
++++ b/fs/f2fs/namei.c
+@@ -75,9 +75,7 @@ static struct inode *f2fs_new_inode(struct inode *dir, umode_t mode)
  
-+#ifdef CONFIG_64BIT
-+#define IF_HAVE_VM_LEVEL_PUD(flag,name)	{flag, name}
-+#define IF_HAVE_VM_LEVEL_PMD(flag,name)	{flag, name}
-+#define IF_HAVE_VM_LEVEL_PTE(flag,name)	{flag, name}
-+#else
-+#define IF_HAVE_VM_LEVEL_PUD(flag,name)
-+#define IF_HAVE_VM_LEVEL_PMD(flag,name)
-+#define IF_HAVE_VM_LEVEL_PTE(flag,name)
-+#endif
-+
- #define __def_vmaflag_names						\
- 	{VM_READ,			"read"		},		\
- 	{VM_WRITE,			"write"		},		\
-@@ -161,7 +171,10 @@ IF_HAVE_VM_SOFTDIRTY(VM_SOFTDIRTY,	"softdirty"	)		\
- 	{VM_MIXEDMAP,			"mixedmap"	},		\
- 	{VM_HUGEPAGE,			"hugepage"	},		\
- 	{VM_NOHUGEPAGE,			"nohugepage"	},		\
--	{VM_MERGEABLE,			"mergeable"	}		\
-+	{VM_MERGEABLE,			"mergeable"	},		\
-+IF_HAVE_VM_LEVEL_PUD(VM_LEVEL_PUD,	"pud-level"	),		\
-+IF_HAVE_VM_LEVEL_PMD(VM_LEVEL_PMD,	"pmd-level"	),		\
-+IF_HAVE_VM_LEVEL_PTE(VM_LEVEL_PTE,	"pte-level"	)		\
+ 	set_inode_flag(inode, FI_NEW_INODE);
  
- #define show_vma_flags(flags)						\
- 	(flags) ? __print_flags(flags, "|",				\
+-	/* If the directory encrypted, then we should encrypt the inode. */
+-	if ((IS_ENCRYPTED(dir) || DUMMY_ENCRYPTION_ENABLED(sbi)) &&
+-				f2fs_may_encrypt(inode))
++	if (f2fs_may_encrypt(dir, inode))
+ 		f2fs_set_encrypted_inode(inode);
+ 
+ 	if (f2fs_sb_has_extra_attr(sbi)) {
 -- 
-2.19.1
-
+2.22.0
 
