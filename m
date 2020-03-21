@@ -2,141 +2,87 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DFDC4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD91C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFA22070A
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9830A2072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:48:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584751708;
+	bh=QOUycTApzcxEdY/T5Ql9yrIT//5FKyOcb08kWKQNxCI=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=vID5SXA6/2PiHEv1RD0m8EGMYsizF/1U5DswmX+3oEBNlajmrhwrRsdeRMurg+Kr8
+	 CyRFrd5rwUcpZODP09HT+A2pXFHxOIuwvD+DOr7GBWHMWNhKJjQ2iqjKcj3Oluf8ve
+	 ShYgdJUbYfKFcd7AvHynO5MQ4ZcG/fGAbcQmDcFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgCUAsL (ORCPT
+        id S1727840AbgCUAs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 20:48:11 -0400
-Received: from mga07.intel.com ([134.134.136.100]:38993 "EHLO mga07.intel.com"
+        Fri, 20 Mar 2020 20:48:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbgCUAsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 20:48:11 -0400
-IronPort-SDR: 5R15SZoh7AZiclf1w9evz1bU7LMdhcUjdQ44lKItTBQiFG63ouhJimwQoxt1r4Nf74eJgnDqYm
- ZKBIo82Hz35A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 17:48:10 -0700
-IronPort-SDR: i5vQ175Ng+lcCjl+Bl79blk5YiTScZY6WjHYMecLuiIj/YLsjx59boYwX4W0kSCQFartxO1zC0
- qaVTNFI0JdcQ==
-X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
-   d="scan'208";a="237376262"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 17:48:10 -0700
-Date:   Fri, 20 Mar 2020 17:48:09 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH v5 4/9] x86/split_lock: Export handle_user_split_lock()
-Message-ID: <20200321004809.GD6578@agluck-desk2.amr.corp.intel.com>
-References: <20200315050517.127446-1-xiaoyao.li@intel.com>
- <20200315050517.127446-5-xiaoyao.li@intel.com>
+        id S1727304AbgCUAs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 20:48:27 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70C2E2070A;
+        Sat, 21 Mar 2020 00:48:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584751706;
+        bh=QOUycTApzcxEdY/T5Ql9yrIT//5FKyOcb08kWKQNxCI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=xKRZTUOYsfeKel3Pp9thz3GeA/rvFuq2S+GKlD3fG8sikbLkpOeTKs2wVYMxqvpmr
+         sjc79wkFD6kigFV+aP/lqjgUlq0PXPm0AWW4mM7ihyhINHEzE7PItTRZDNpVWEgHP/
+         BTd08mR1QEjnqbDfL/d5GQ2/97sglBKs/zFw5B5s=
+Subject: Re: [PATCH 4.9 00/90] 4.9.217-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200319123928.635114118@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <b58ef002-70c3-de34-c417-746206ebc121@kernel.org>
+Date:   Fri, 20 Mar 2020 18:48:25 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200315050517.127446-5-xiaoyao.li@intel.com>
+In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 15, 2020 at 01:05:12PM +0800, Xiaoyao Li wrote:
-> In the future, KVM will use handle_user_split_lock() to handle #AC
-> caused by split lock in guest. Due to the fact that KVM doesn't have
-> a @regs context and will pre-check EFLASG.AC, move the EFLAGS.AC check
-> to do_alignment_check().
+On 3/19/20 6:59 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.217 release.
+> There are 90 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> ---
->  arch/x86/include/asm/cpu.h  | 4 ++--
->  arch/x86/kernel/cpu/intel.c | 7 ++++---
->  arch/x86/kernel/traps.c     | 2 +-
->  3 files changed, 7 insertions(+), 6 deletions(-)
+> Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
+> Anything received after that time might be too late.
 > 
-> diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-> index ff6f3ca649b3..ff567afa6ee1 100644
-> --- a/arch/x86/include/asm/cpu.h
-> +++ b/arch/x86/include/asm/cpu.h
-> @@ -43,11 +43,11 @@ unsigned int x86_stepping(unsigned int sig);
->  #ifdef CONFIG_CPU_SUP_INTEL
->  extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
->  extern void switch_to_sld(unsigned long tifn);
-> -extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
-> +extern bool handle_user_split_lock(unsigned long ip);
->  #else
->  static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
->  static inline void switch_to_sld(unsigned long tifn) {}
-> -static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-> +static inline bool handle_user_split_lock(unsigned long ip)
->  {
->  	return false;
->  }
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index 3eeab717a0d0..c401d174c8db 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -1102,13 +1102,13 @@ static void split_lock_init(struct cpuinfo_x86 *c)
->  	sld_state = sld_disable;
->  }
->  
-> -bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-> +bool handle_user_split_lock(unsigned long ip)
->  {
-> -	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-> +	if (sld_state == sld_fatal)
->  		return false;
->  
->  	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
-> -			    current->comm, current->pid, regs->ip);
-> +			    current->comm, current->pid, ip);
->  
->  	/*
->  	 * Disable the split lock detection for this task so it can make
-> @@ -1119,6 +1119,7 @@ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
->  	set_tsk_thread_flag(current, TIF_SLD);
->  	return true;
->  }
-> +EXPORT_SYMBOL_GPL(handle_user_split_lock);
->  
->  /*
->   * This function is called only when switching between tasks with
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index 0ef5befaed7d..407ff9be610f 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -304,7 +304,7 @@ dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
->  
->  	local_irq_enable();
->  
-> -	if (handle_user_split_lock(regs, error_code))
-> +	if (!(regs->flags & X86_EFLAGS_AC) && handle_user_split_lock(regs->ip))
->  		return;
->  
->  	do_trap(X86_TRAP_AC, SIGBUS, "alignment check", regs,
-> -- 
-> 2.20.1
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.217-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 > 
 
-Looks good to me.
+Compiled and booted on my test system. No dmesg regressions.
 
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-
+thanks,
+-- Shuah
