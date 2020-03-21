@@ -2,95 +2,87 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CBEC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC9BC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5850B2072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:50:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="zYVv9BcZ"
+	by mail.kernel.org (Postfix) with ESMTP id 41A5220753
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:50:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584751855;
+	bh=M9bbJaVZb9089JUD2phojo7fZFMiZIUm9uRxe1zkSp8=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=aMaj3BvtLy1ZWUkWlDW7+rr4D1NErHaAjiyTUSo76cK2d7MMcP1eIeh3CrLTuu3X/
+	 zgKFexiW/Z0mH+S5vYCOzM3LP2ld9pByVhbPoenZwezArqi3zkT/hXNF9oXxjCCsAY
+	 1/k7JWfutlYDWlFjn5xu1jb6Uv1GZUb7rDlU4B0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgCUAuP (ORCPT
+        id S1727862AbgCUAuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 20:50:15 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:35097 "EHLO frisell.zx2c4.com"
+        Fri, 20 Mar 2020 20:50:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727905AbgCUAuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 20:50:10 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 4ec599b1;
-        Sat, 21 Mar 2020 00:43:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
-        :subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=mail; bh=97eU/t7S2TVZqtyF+efQnC3Hd
-        b4=; b=zYVv9BcZEG8F5tUUPNJVQvNAznHvnZXc5RQdIS//V9Dlv0WeU08QFw+Se
-        PYahdM2LHgitwZoTYsFpw4w4RM+/U28ZNHXcUE6ZJ7p/+MmDL0lHB7EPvRuovUbR
-        NE4b4xHAkOYCJedLByFgDPZ9THmbgs5fvoH0tA6L9a1YEjKPZPDniQi7iGs29qkt
-        M1l+PxWs5stDsX+I83OWqoVVrY2P13KRRE73dzx21nNaLpwEb+M9CRO6+AB3Pm3n
-        DkAOIpIa0m67XGux++B33RzbOz4o5ukrU8tbFajObMYO/nv9SuxL/ypckax2NKmy
-        lQqb08Yopkx9KgXtUYU4ekXcPfw+g==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 26ab3b27 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Sat, 21 Mar 2020 00:43:28 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        x86@kernel.org, linux-crypto@vger.kernel.org
-Subject: [PATCH RFC 3/3] crypto: curve25519 - do not pollute dispatcher based on assembler
-Date:   Fri, 20 Mar 2020 18:49:45 -0600
-Message-Id: <20200321004945.451497-4-Jason@zx2c4.com>
-In-Reply-To: <20200321004945.451497-1-Jason@zx2c4.com>
-References: <CAHk-=wjbTF2iw3EbKgfiRRq_keb4fHwLO8xJyRXbfK3Q7cscuQ@mail.gmail.com>
- <20200321004945.451497-1-Jason@zx2c4.com>
+        id S1726851AbgCUAux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 20:50:53 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1D0D2072D;
+        Sat, 21 Mar 2020 00:50:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584751853;
+        bh=M9bbJaVZb9089JUD2phojo7fZFMiZIUm9uRxe1zkSp8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ZyARP0tx6rNnkEUXpNRVOE83U60WinqFN3Y3Iy5vy5DhHUUM+sYokfTGQHv7A+PDn
+         bZ40vWdp7FTC6YXLXh+J/0Y8EOvx3aTC4jdpVHWmlC/o3RzafbA9ax1gfMUIHljoxd
+         jlD487b8svqAhLgp8jJPy6AmH9AjxJ3mKDQTM/mk=
+Subject: Re: [PATCH 4.4 00/93] 4.4.217-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200319123924.795019515@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <bf7f6d54-40c0-f772-ef1f-ff8a3c505df3@kernel.org>
+Date:   Fri, 20 Mar 2020 18:50:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we're doing a static inline dispatch here, we normally branch
-based on whether or not there's an arch implementation. That would have
-been fine in general, except the crypto Makefile prior used to turn
-things off -- despite the Kconfig -- resulting in us needing to also
-hard code various assembler things into the dispatcher too. The horror!
-Now that the assembler config options are done by Kconfig, we can get
-rid of the inconsistency.
+On 3/19/20 6:59 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.217 release.
+> There are 93 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.217-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
----
- include/crypto/curve25519.h | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Compiled and booted on my test system. No dmesg regressions.
 
-diff --git a/include/crypto/curve25519.h b/include/crypto/curve25519.h
-index 9ecb3c1f0f15..4e6dc840b159 100644
---- a/include/crypto/curve25519.h
-+++ b/include/crypto/curve25519.h
-@@ -33,8 +33,7 @@ bool __must_check curve25519(u8 mypublic[CURVE25519_KEY_SIZE],
- 			     const u8 secret[CURVE25519_KEY_SIZE],
- 			     const u8 basepoint[CURVE25519_KEY_SIZE])
- {
--	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_CURVE25519) &&
--	    (!IS_ENABLED(CONFIG_CRYPTO_CURVE25519_X86) || IS_ENABLED(CONFIG_AS_ADX)))
-+	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_CURVE25519))
- 		curve25519_arch(mypublic, secret, basepoint);
- 	else
- 		curve25519_generic(mypublic, secret, basepoint);
-@@ -50,8 +49,7 @@ __must_check curve25519_generate_public(u8 pub[CURVE25519_KEY_SIZE],
- 				    CURVE25519_KEY_SIZE)))
- 		return false;
- 
--	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_CURVE25519) &&
--	    (!IS_ENABLED(CONFIG_CRYPTO_CURVE25519_X86) || IS_ENABLED(CONFIG_AS_ADX)))
-+	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_CURVE25519))
- 		curve25519_base_arch(pub, secret);
- 	else
- 		curve25519_generic(pub, secret, curve25519_base_point);
--- 
-2.25.1
-
+thanks,
+-- Shuah
