@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15138C54FCE
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A285C4332E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB96A20658
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE69620722
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:35:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbgCULez (ORCPT
+        id S1728727AbgCULfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 07:34:55 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38423 "EHLO
+        Sat, 21 Mar 2020 07:35:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38496 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbgCULex (ORCPT
+        with ESMTP id S1728521AbgCULe5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 07:34:53 -0400
+        Sat, 21 Mar 2020 07:34:57 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFcOZ-0002Re-66; Sat, 21 Mar 2020 12:34:27 +0100
+        id 1jFcOT-0001zi-1B; Sat, 21 Mar 2020 12:34:21 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 692651040CC;
-        Sat, 21 Mar 2020 12:34:22 +0100 (CET)
-Message-Id: <20200321113242.751182723@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 16805FFBBF;
+        Sat, 21 Mar 2020 12:34:20 +0100 (CET)
+Message-Id: <20200321113241.824030968@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sat, 21 Mar 2020 12:26:04 +0100
+Date:   Sat, 21 Mar 2020 12:25:55 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -72,7 +72,7 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Jonathan Corbet <corbet@lwn.net>,
         Randy Dunlap <rdunlap@infradead.org>,
         Davidlohr Bueso <dbueso@suse.de>
-Subject: [patch V3 20/20] lockdep: Add posixtimer context tracing bits
+Subject: [patch V3 11/20] rcuwait: Add @state argument to rcuwait_wait_event()
 References: <20200321112544.878032781@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -85,77 +85,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Splitting run_posix_cpu_timers() into two parts is work in progress which
-is stuck on other entry code related problems. The heavy lifting which
-involves locking of sighand lock will be moved into task context so the
-necessary execution time is burdened on the task and not on interrupt
-context.
+Extend rcuwait_wait_event() with a state variable so that it is not
+restricted to UNINTERRUPTIBLE waits.
 
-Until this work completes lockdep with the spinlock nesting rules enabled
-would emit warnings for this known context.
-
-Prevent it by setting "->irq_config = 1" for the invocation of
-run_posix_cpu_timers() so lockdep does not complain when sighand lock is
-acquried. This will be removed once the split is completed.
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- include/linux/irqflags.h       |   12 ++++++++++++
- kernel/time/posix-cpu-timers.c |    6 +++++-
- 2 files changed, 17 insertions(+), 1 deletion(-)
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
 
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -69,6 +69,16 @@ do {						\
- 			current->irq_config = 0;	\
- 	  } while (0)
+---
+ include/linux/rcuwait.h       |   12 ++++++++++--
+ kernel/locking/percpu-rwsem.c |    2 +-
+ 2 files changed, 11 insertions(+), 3 deletions(-)
+
+--- a/include/linux/rcuwait.h
++++ b/include/linux/rcuwait.h
+@@ -3,6 +3,7 @@
+ #define _LINUX_RCUWAIT_H_
  
-+# define lockdep_posixtimer_enter()				\
-+	  do {							\
-+		  current->irq_config = 1;			\
-+	  } while (0)
-+
-+# define lockdep_posixtimer_exit()				\
-+	  do {							\
-+		  current->irq_config = 0;			\
-+	  } while (0)
-+
- # define lockdep_irq_work_enter(__work)					\
- 	  do {								\
- 		  if (!(atomic_read(&__work->flags) & IRQ_WORK_HARD_IRQ))\
-@@ -94,6 +104,8 @@ do {						\
- # define lockdep_softirq_exit()		do { } while (0)
- # define lockdep_hrtimer_enter(__hrtimer)		do { } while (0)
- # define lockdep_hrtimer_exit(__hrtimer)		do { } while (0)
-+# define lockdep_posixtimer_enter()		do { } while (0)
-+# define lockdep_posixtimer_exit()		do { } while (0)
- # define lockdep_irq_work_enter(__work)		do { } while (0)
- # define lockdep_irq_work_exit(__work)		do { } while (0)
- #endif
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -1126,8 +1126,11 @@ void run_posix_cpu_timers(void)
- 	if (!fastpath_timer_check(tsk))
- 		return;
- 
--	if (!lock_task_sighand(tsk, &flags))
-+	lockdep_posixtimer_enter();
-+	if (!lock_task_sighand(tsk, &flags)) {
-+		lockdep_posixtimer_exit();
- 		return;
-+	}
- 	/*
- 	 * Here we take off tsk->signal->cpu_timers[N] and
- 	 * tsk->cpu_timers[N] all the timers that are firing, and
-@@ -1169,6 +1172,7 @@ void run_posix_cpu_timers(void)
- 			cpu_timer_fire(timer);
- 		spin_unlock(&timer->it_lock);
- 	}
-+	lockdep_posixtimer_exit();
- }
+ #include <linux/rcupdate.h>
++#include <linux/sched/signal.h>
  
  /*
+  * rcuwait provides a way of blocking and waking up a single
+@@ -30,23 +31,30 @@ extern void rcuwait_wake_up(struct rcuwa
+  * The caller is responsible for locking around rcuwait_wait_event(),
+  * such that writes to @task are properly serialized.
+  */
+-#define rcuwait_wait_event(w, condition)				\
++#define rcuwait_wait_event(w, condition, state)				\
+ ({									\
++	int __ret = 0;							\
+ 	rcu_assign_pointer((w)->task, current);				\
+ 	for (;;) {							\
+ 		/*							\
+ 		 * Implicit barrier (A) pairs with (B) in		\
+ 		 * rcuwait_wake_up().					\
+ 		 */							\
+-		set_current_state(TASK_UNINTERRUPTIBLE);		\
++		set_current_state(state);				\
+ 		if (condition)						\
+ 			break;						\
+ 									\
++		if (signal_pending_state(state, current)) {		\
++			__ret = -EINTR;					\
++			break;						\
++		}							\
++									\
+ 		schedule();						\
+ 	}								\
+ 									\
+ 	WRITE_ONCE((w)->task, NULL);					\
+ 	__set_current_state(TASK_RUNNING);				\
++	__ret;								\
+ })
+ 
+ #endif /* _LINUX_RCUWAIT_H_ */
+--- a/kernel/locking/percpu-rwsem.c
++++ b/kernel/locking/percpu-rwsem.c
+@@ -162,7 +162,7 @@ void percpu_down_write(struct percpu_rw_
+ 	 */
+ 
+ 	/* Wait for all now active readers to complete. */
+-	rcuwait_wait_event(&sem->writer, readers_active_check(sem));
++	rcuwait_wait_event(&sem->writer, readers_active_check(sem), TASK_UNINTERRUPTIBLE);
+ }
+ EXPORT_SYMBOL_GPL(percpu_down_write);
+ 
+
 
