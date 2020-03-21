@@ -2,49 +2,48 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 496DFC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 654B9C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F9F20732
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2252320732
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584753887;
-	bh=a7oq14gh90f9G9cupQDvc9EWm1m9yJ4iZFLErXizOcA=;
+	s=default; t=1584753891;
+	bh=UmHKXTMUzMpNRl9QVJY/I1GCYTb5dCitp7Hy9LqKIT8=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=ti1Yyb1a5+HdSTN4jvzLq4oCXpe4vKDpcDhk1BF3wDY7Y14v1rxdRCYjeeXw6KxFg
-	 jDpirfy7sVJ5c9bUvqZnqMPk41pGyeO1WfiIRhUm/WuF9q6tHieBeHOKfyq77Nrlkx
-	 iSz3WOmbe32ydBkyTB3brnynxPGKsBvFEtul/FmE=
+	b=l5ON0Z1ZZalkfTG103gqYlgGreiqb/pKUFwtsYIg+U7WcZn3QcaOTd8hQhmihTvmS
+	 Lj07VI6fjLaKszsU8haLD65+XaXBVwjKBVPDA9GBBTuqIB7eGj+UGGYVWTecTNugz5
+	 /3Q9nEV/5bk3DkbB/Y9NA0RgTJD5w+2asVF+zZLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgCUBYq (ORCPT
+        id S1727943AbgCUBYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 21:24:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45592 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 21:24:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbgCUBYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 21:24:43 -0400
+        id S1726773AbgCUBYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 21:24:48 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 615C820732;
-        Sat, 21 Mar 2020 01:24:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9707420752;
+        Sat, 21 Mar 2020 01:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584753883;
-        bh=a7oq14gh90f9G9cupQDvc9EWm1m9yJ4iZFLErXizOcA=;
+        s=default; t=1584753887;
+        bh=UmHKXTMUzMpNRl9QVJY/I1GCYTb5dCitp7Hy9LqKIT8=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=TGEI4V2Sr9IwJ2vBZpVZGIAwljW2QxC17vCA1WzaVme3mY5AjgPfyfixpvTQgspyz
-         omNWEhBVFBT8YfXNrFYmYw5dg8JcsPjOXCDyoOJWEa4mvy8dpxHs3kTTWYfruumyqT
-         J7JYlBIh/rvdFNpNScrVbkMGiM0orrW9U07q7WGI=
+        b=bTS6UTSiz87KuzlFx2Nbu/rLy91hYrGU4zj4+suGlh8Y+bvM5wK2uPif2+qCrTnqv
+         QtKXDKsIx5ydoPIsWRCf82AQpZFcEZTXaWW2oOU7wiFdafM5GkGAP8lt5FB9niqYbn
+         BOzCSkORMx7V7ttuuOW7O0Uu/Bt7/ZY8NTG3qtyg=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200309194254.29009-5-lkundrak@v3.sk>
-References: <20200309194254.29009-1-lkundrak@v3.sk> <20200309194254.29009-5-lkundrak@v3.sk>
-Subject: Re: [PATCH v2 04/17] clk: mmp2: Add support for PLL clock sources
+In-Reply-To: <20200309194254.29009-6-lkundrak@v3.sk>
+References: <20200309194254.29009-1-lkundrak@v3.sk> <20200309194254.29009-6-lkundrak@v3.sk>
+Subject: Re: [PATCH v2 05/17] clk: mmp2: Stop pretending PLL outputs are constant
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     Michael Turquette <mturquette@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -53,32 +52,23 @@ Cc:     Michael Turquette <mturquette@baylibre.com>,
         linux-arm-kernel@lists.infradead.org,
         Lubomir Rintel <lkundrak@v3.sk>
 To:     Lubomir Rintel <lkundrak@v3.sk>
-Date:   Fri, 20 Mar 2020 18:24:42 -0700
-Message-ID: <158475388263.125146.11372517982520346232@swboyd.mtv.corp.google.com>
+Date:   Fri, 20 Mar 2020 18:24:46 -0700
+Message-ID: <158475388687.125146.14592941783278965687@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Lubomir Rintel (2020-03-09 12:42:41)
-> The clk-of-mmp2 driver pretends that the clock outputs from the PLLs are
-> constant, but in fact they are configurable.
+Quoting Lubomir Rintel (2020-03-09 12:42:42)
+> The hardcoded values for PLL1 and PLL2 are wrong. PLL1 is slightly
+> off -- it defaults to 797.33 MHz, not 800 MHz. PLL2 is disabled by defaul=
+t,
+> but also configurable.
 >=20
-> Add logic for obtaining the actual clock rates on MMP2 as well as MMP3.
-> There is no documentation for either SoC, but the "systemsetting" drivers
-> from Marvell GPL code dump provide some clue as far as MPMU registers on
-> MMP2 [1] and MMP3 [2] go.
->=20
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/lkundrak/linux-mmp3-d=
-ell-ariel.git/tree/drivers/char/mmp2_systemsetting.c
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/lkundrak/linux-mmp3-d=
-ell-ariel.git/tree/drivers/char/mmp3_systemsetting.c
->=20
-> A separate commit will adjust the clk-of-mmp2 driver.
->=20
-> Tested on a MMP3-based Dell Wyse 3020 as well as MMP2-based OLPC
-> XO-1.75 laptop.
+> Tested on a MMP2-based OLPC XO-1.75 laptop, with PLL1=3D797.33 and various
+> values of PLL2 set via set-pll2-520mhz, set-pll2-910mhz and
+> set-pll2-988mhz Open Firmware words.
 >=20
 > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > ---
