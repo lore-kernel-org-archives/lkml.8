@@ -2,149 +2,117 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA0AC43332
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C728C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809DB20724
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F44020724
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584811387;
-	bh=Nb/kpBInkiWsppn05a1CTpV6ZeTEE2HI+Zx4P9ME4Zc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LvVEASXlduyjo9dSRuOK9Mm7d2KXfeldqCjUPppbvUM4IUSo/HCAF2eDaT0PgXSWC
-	 obOHKKHZ9g9cfByjlPsJH64PrrvOVhu5KXOFQ9oGlvkJS8Fr0yXXkEYzxEcMQsYHBz
-	 8+PL5PO3IXqdkr0wFT3J08eie0c3+Yw9gQ/wREIo=
+	s=default; t=1584811390;
+	bh=xECwvu3Zm1NEgzqD5GrnBGLFCYYFmNZsamemFqiM8NY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ae+c+1i0na0XWZxukY1tigOJFlwCfYCD/GSrRK+ZDqtxnd0XQFCdAqwikGA78fd9P
+	 fej1ZFNdiaAUfrHsHVJHfJulHQ3tdpe8ueyhC5MTOJDUxn5Y6onvjkF+uoIVYeImAQ
+	 +iV952XtywBptDk78zBbcgiwima7bYbWPbY7dL14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgCURXG (ORCPT
+        id S1727958AbgCURXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 13:23:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50948 "EHLO mail.kernel.org"
+        Sat, 21 Mar 2020 13:23:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727548AbgCURXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 13:23:06 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1727548AbgCURXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 13:23:07 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A795E20724;
-        Sat, 21 Mar 2020 17:23:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AE9120767;
+        Sat, 21 Mar 2020 17:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584811385;
-        bh=Nb/kpBInkiWsppn05a1CTpV6ZeTEE2HI+Zx4P9ME4Zc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Y4EPE0VFRAijxwRfMUW2/ql3SGyzaDIPI0gBlJljKZQbXTr1j9tONL0g9NFSSUP0M
-         913PJmyRcAPYEYFfA1zZCeb/XflIN1PnehcPeoq8IVIt2THeTzlCQ1khyBh64GvE6d
-         zs3J8LJnV+oLeJKtDarJ+qSwIKjPVMSM7ETPk1BI=
-Date:   Sat, 21 Mar 2020 17:23:00 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        <Laszlo.Nagy@analog.com>, <Andrei.Grozav@analog.com>,
-        <Michael.Hennerich@analog.com>, <Istvan.Csomortani@analog.com>,
-        <Adrian.Costina@analog.com>, <Dragos.Bogdan@analog.com>
-Subject: Re: [PATCH v11 6/8] dt-bindings: iio: adc: add bindings doc for AXI
- ADC driver
-Message-ID: <20200321172300.7bb44fb9@archlinux>
-In-Reply-To: <20200321085315.11030-7-alexandru.ardelean@analog.com>
-References: <20200321085315.11030-1-alexandru.ardelean@analog.com>
-        <20200321085315.11030-7-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1584811386;
+        bh=xECwvu3Zm1NEgzqD5GrnBGLFCYYFmNZsamemFqiM8NY=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=0uZasLyYOOcy2Jn3NQfpB2UAWhjp74rz1TUNHg9BhAjwPgKnZR60zmujqnihmxQ4W
+         7foxJjnQ0xMcW011TdKCXLYocZvyg8MDtNv8kWqj8WW3VxI5OcNV2Y2TQfkKR5STHK
+         tsXIa2UPcdd8dIM4hV5/+BQQoln4Cxe0PVsX+CFA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 8D6D435226C1; Sat, 21 Mar 2020 10:23:05 -0700 (PDT)
+Date:   Sat, 21 Mar 2020 10:23:05 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting
+ documentation
+Message-ID: <20200321172305.GW3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200320160145.GN3199@paulmck-ThinkPad-P72>
+ <87mu8apzxr.fsf@nanos.tec.linutronix.de>
+ <20200320210243.GT3199@paulmck-ThinkPad-P72>
+ <874kuipsbw.fsf@nanos.tec.linutronix.de>
+ <20200321022930.GU3199@paulmck-ThinkPad-P72>
+ <875zeyrold.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <875zeyrold.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 21 Mar 2020 10:53:13 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-
-> This change adds the bindings documentation for the AXI ADC driver.
+On Sat, Mar 21, 2020 at 11:26:06AM +0100, Thomas Gleixner wrote:
+> "Paul E. McKenney" <paulmck@kernel.org> writes:
+> > On Fri, Mar 20, 2020 at 11:36:03PM +0100, Thomas Gleixner wrote:
+> >> I agree that what I tried to express is hard to parse, but it's at least
+> >> halfways correct :)
+> >
+> > Apologies!  That is what I get for not looking it up in the source.  :-/
+> >
+> > OK, so I am stupid enough not only to get it wrong, but also to try again:
+> >
+> >    ... Other types of wakeups would normally unconditionally set the
+> >    task state to RUNNING, but that does not work here because the task
+> >    must remain blocked until the lock becomes available.  Therefore,
+> >    when a non-lock wakeup attempts to awaken a task blocked waiting
+> >    for a spinlock, it instead sets the saved state to RUNNING.  Then,
+> >    when the lock acquisition completes, the lock wakeup sets the task
+> >    state to the saved state, in this case setting it to RUNNING.
+> >
+> > Is that better?
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-
-Applied.
-
-Thanks,
-
-> ---
->  .../bindings/iio/adc/adi,axi-adc.yaml         | 62 +++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+> Definitely!
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
-> new file mode 100644
-> index 000000000000..0924b2b4972b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,axi-adc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AXI ADC IP core
-> +
-> +maintainers:
-> +  - Michael Hennerich <michael.hennerich@analog.com>
-> +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-> +
-> +description: |
-> +  Analog Devices Generic AXI ADC IP core for interfacing an ADC device
-> +  with a high speed serial (JESD204B/C) or source synchronous parallel
-> +  interface (LVDS/CMOS).
-> +  Usually, some other interface type (i.e SPI) is used as a control
-> +  interface for the actual ADC, while this IP core will interface
-> +  to the data-lines of the ADC and handle the streaming of data into
-> +  memory via DMA.
-> +
-> +  https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,axi-adc-10.0.a
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    maxItems: 1
-> +
-> +  dma-names:
-> +    items:
-> +      - const: rx
-> +
-> +  adi,adc-dev:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      A reference to a the actual ADC to which this FPGA ADC interfaces to.
-> +
-> +required:
-> +  - compatible
-> +  - dmas
-> +  - reg
-> +  - adi,adc-dev
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    axi-adc@44a00000 {
-> +          compatible = "adi,axi-adc-10.0.a";
-> +          reg = <0x44a00000 0x10000>;
-> +          dmas = <&rx_dma 0>;
-> +          dma-names = "rx";
-> +
-> +          adi,adc-dev = <&spi_adc>;
-> +    };
-> +...
+> Thanks for all the editorial work!
 
+NP, and glad you like it!
+
+But I felt even more stupid sometime in the middle of the night.  Why on
+earth didn't I work in your nice examples?  :-/
+
+I will pull them in later.  Time to go hike!!!
+
+							Thanx, Paul
