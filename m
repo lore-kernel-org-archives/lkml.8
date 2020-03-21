@@ -7,40 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BFBC43333
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05F1C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C730D20786
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B0220776
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:31:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgCUPas (ORCPT
+        id S1727658AbgCUPbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:30:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38932 "EHLO
+        Sat, 21 Mar 2020 11:31:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38949 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727684AbgCUPam (ORCPT
+        with ESMTP id S1727735AbgCUPaq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:30:42 -0400
+        Sat, 21 Mar 2020 11:30:46 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFg5A-0004zu-7r; Sat, 21 Mar 2020 16:30:40 +0100
+        id 1jFg5A-00052o-GF; Sat, 21 Mar 2020 16:30:40 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D64B31C22E6;
-        Sat, 21 Mar 2020 16:30:34 +0100 (CET)
-Date:   Sat, 21 Mar 2020 15:30:34 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7589C1C22EA;
+        Sat, 21 Mar 2020 16:30:38 +0100 (CET)
+Date:   Sat, 21 Mar 2020 15:30:38 -0000
 From:   "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/entry/64: Add __SYSCALL_COMMON()
+Subject: [tip: x86/entry] x86/entry: Refactor COND_SYSCALL macros
 Cc:     Brian Gerst <brgerst@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200313195144.164260-12-brgerst@gmail.com>
-References: <20200313195144.164260-12-brgerst@gmail.com>
+In-Reply-To: <20200313195144.164260-4-brgerst@gmail.com>
+References: <20200313195144.164260-4-brgerst@gmail.com>
 MIME-Version: 1.0
-Message-ID: <158480463449.28353.8404279805273411879.tip-bot2@tip-bot2>
+Message-ID: <158480463814.28353.17562333830742067269.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,108 +58,138 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     8210efcb153625d2bf4bb79875ddc78eee2aba3e
-Gitweb:        https://git.kernel.org/tip/8210efcb153625d2bf4bb79875ddc78eee2aba3e
+Commit-ID:     6cc8d2b286d9e7168d72e342d1b031317cd7752b
+Gitweb:        https://git.kernel.org/tip/6cc8d2b286d9e7168d72e342d1b031317cd7752b
 Author:        Brian Gerst <brgerst@gmail.com>
-AuthorDate:    Fri, 13 Mar 2020 15:51:37 -04:00
+AuthorDate:    Fri, 13 Mar 2020 15:51:29 -04:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 21 Mar 2020 16:03:22 +01:00
+CommitterDate: Sat, 21 Mar 2020 16:03:19 +01:00
 
-x86/entry/64: Add __SYSCALL_COMMON()
+x86/entry: Refactor COND_SYSCALL macros
 
-Add a __SYSCALL_COMMON() macro to the syscall table, which simplifies syscalltbl.sh.
+Pull the common code out from the COND_SYSCALL macros into a new
+__COND_SYSCALL macro.  Also conditionalize the X64 version in preparation
+for enabling syscall wrappers on 32-bit native kernels.
 
 Signed-off-by: Brian Gerst <brgerst@gmail.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200313195144.164260-12-brgerst@gmail.com
+Reviewed-by: Dominik Brodowski <linux@dominikbrodowski.net>
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
+Link: https://lkml.kernel.org/r/20200313195144.164260-4-brgerst@gmail.com
 
 ---
- arch/x86/entry/syscall_64.c           |  1 +
- arch/x86/entry/syscall_x32.c          |  3 +++
- arch/x86/entry/syscalls/syscalltbl.sh | 22 ++--------------------
- arch/x86/um/sys_call_table_64.c       |  3 +++
- 4 files changed, 9 insertions(+), 20 deletions(-)
+ arch/x86/include/asm/syscall_wrapper.h | 44 ++++++++++++++-----------
+ 1 file changed, 26 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/entry/syscall_64.c b/arch/x86/entry/syscall_64.c
-index bce4821..03645f9 100644
---- a/arch/x86/entry/syscall_64.c
-+++ b/arch/x86/entry/syscall_64.c
-@@ -9,6 +9,7 @@
- #include <asm/syscall.h>
+diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
+index 45ad605..0117b25 100644
+--- a/arch/x86/include/asm/syscall_wrapper.h
++++ b/arch/x86/include/asm/syscall_wrapper.h
+@@ -35,6 +35,13 @@ struct pt_regs;
+ 		return __se_##name(__VA_ARGS__);			\
+ 	}
  
- #define __SYSCALL_X32(nr, sym)
-+#define __SYSCALL_COMMON(nr, sym) __SYSCALL_64(nr, sym)
- 
- #define __SYSCALL_64(nr, sym) extern asmlinkage long sym(const struct pt_regs *);
- #include <asm/syscalls_64.h>
-diff --git a/arch/x86/entry/syscall_x32.c b/arch/x86/entry/syscall_x32.c
-index 21e306c..57a151a 100644
---- a/arch/x86/entry/syscall_x32.c
-+++ b/arch/x86/entry/syscall_x32.c
-@@ -11,10 +11,13 @@
- #define __SYSCALL_64(nr, sym)
- 
- #define __SYSCALL_X32(nr, sym) extern asmlinkage long sym(const struct pt_regs *);
-+#define __SYSCALL_COMMON(nr, sym) extern asmlinkage long sym(const struct pt_regs *);
- #include <asm/syscalls_64.h>
- #undef __SYSCALL_X32
-+#undef __SYSCALL_COMMON
- 
- #define __SYSCALL_X32(nr, sym) [nr] = sym,
-+#define __SYSCALL_COMMON(nr, sym) [nr] = sym,
- 
- asmlinkage const sys_call_ptr_t x32_sys_call_table[__NR_x32_syscall_max+1] = {
- 	/*
-diff --git a/arch/x86/entry/syscalls/syscalltbl.sh b/arch/x86/entry/syscalls/syscalltbl.sh
-index b0519dd..6106ed3 100644
---- a/arch/x86/entry/syscalls/syscalltbl.sh
-+++ b/arch/x86/entry/syscalls/syscalltbl.sh
-@@ -25,7 +25,7 @@ emit() {
-     fi
- 
-     # For CONFIG_UML, we need to strip the __x64_sys prefix
--    if [ "$abi" = "64" -a "${entry}" != "${entry#__x64_sys}" ]; then
-+    if [ "${entry}" != "${entry#__x64_sys}" ]; then
- 	    umlentry="sys${entry#__x64_sys}"
-     fi
- 
-@@ -53,24 +53,6 @@ emit() {
- grep '^[0-9]' "$in" | sort -n | (
-     while read nr abi name entry compat; do
- 	abi=`echo "$abi" | tr '[a-z]' '[A-Z]'`
--	if [ "$abi" = "COMMON" -o "$abi" = "64" ]; then
--	    emit 64 "$nr" "$entry" "$compat"
--	    if [ "$abi" = "COMMON" ]; then
--		# COMMON means that this syscall exists in the same form for
--		# 64-bit and X32.
--		echo "#ifdef CONFIG_X86_X32_ABI"
--		emit X32 "$nr" "$entry" "$compat"
--		echo "#endif"
--	    fi
--	elif [ "$abi" = "X32" ]; then
--	    echo "#ifdef CONFIG_X86_X32_ABI"
--	    emit X32 "$nr" "$entry" "$compat"
--	    echo "#endif"
--	elif [ "$abi" = "I386" ]; then
--	    emit "$abi" "$nr" "$entry" "$compat"
--	else
--	    echo "Unknown abi $abi" >&2
--	    exit 1
--	fi
-+	emit "$abi" "$nr" "$entry" "$compat"
-     done
- ) > "$out"
-diff --git a/arch/x86/um/sys_call_table_64.c b/arch/x86/um/sys_call_table_64.c
-index 7d057ea..2e8544d 100644
---- a/arch/x86/um/sys_call_table_64.c
-+++ b/arch/x86/um/sys_call_table_64.c
-@@ -36,6 +36,9 @@
- #define stub_execveat sys_execveat
- #define stub_rt_sigreturn sys_rt_sigreturn
- 
-+#define __SYSCALL_X32(nr, sym)
-+#define __SYSCALL_COMMON(nr, sym) __SYSCALL_64(nr, sym)
++#define __COND_SYSCALL(abi, name)					\
++	asmlinkage __weak long						\
++	__##abi##_##name(const struct pt_regs *__unused)		\
++	{								\
++		return sys_ni_syscall();				\
++	}
 +
- #define __SYSCALL_64(nr, sym) extern asmlinkage long sym(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long) ;
- #include <asm/syscalls_64.h>
+ #ifdef CONFIG_X86_64
+ #define __X64_SYS_STUB0(name)						\
+ 	__SYS_STUB0(x64, sys_##name)
+@@ -42,9 +49,13 @@ struct pt_regs;
+ #define __X64_SYS_STUBx(x, name, ...)					\
+ 	__SYS_STUBx(x64, sys##name,					\
+ 		    SC_X86_64_REGS_TO_ARGS(x, __VA_ARGS__))
++
++#define __X64_COND_SYSCALL(name)					\
++	__COND_SYSCALL(x64, sys_##name)
+ #else /* CONFIG_X86_64 */
+ #define __X64_SYS_STUB0(name)
+ #define __X64_SYS_STUBx(x, name, ...)
++#define __X64_COND_SYSCALL(name)
+ #endif /* CONFIG_X86_64 */
  
+ #ifdef CONFIG_IA32_EMULATION
+@@ -63,6 +74,9 @@ struct pt_regs;
+ 	__SYS_STUBx(ia32, compat_sys##name,				\
+ 		    SC_IA32_REGS_TO_ARGS(x, __VA_ARGS__))
+ 
++#define __IA32_COMPAT_COND_SYSCALL(name)				\
++	__COND_SYSCALL(ia32, compat_sys_##name)
++
+ #define __IA32_SYS_STUB0(name)						\
+ 	__SYS_STUB0(ia32, sys_##name)
+ 
+@@ -70,15 +84,8 @@ struct pt_regs;
+ 	__SYS_STUBx(ia32, sys##name,					\
+ 		    SC_IA32_REGS_TO_ARGS(x, __VA_ARGS__))
+ 
+-#define COND_SYSCALL(name)							\
+-	asmlinkage __weak long __x64_sys_##name(const struct pt_regs *__unused)	\
+-	{									\
+-		return sys_ni_syscall();					\
+-	}									\
+-	asmlinkage __weak long __ia32_sys_##name(const struct pt_regs *__unused)\
+-	{									\
+-		return sys_ni_syscall();					\
+-	}
++#define __IA32_COND_SYSCALL(name)					\
++	__COND_SYSCALL(ia32, sys_##name)
+ 
+ #define SYS_NI(name)							\
+ 	SYSCALL_ALIAS(__x64_sys_##name, sys_ni_posix_timers);		\
+@@ -87,8 +94,10 @@ struct pt_regs;
+ #else /* CONFIG_IA32_EMULATION */
+ #define __IA32_COMPAT_SYS_STUB0(name)
+ #define __IA32_COMPAT_SYS_STUBx(x, name, ...)
++#define __IA32_COMPAT_COND_SYSCALL(name)
+ #define __IA32_SYS_STUB0(name)
+ #define __IA32_SYS_STUBx(x, name, ...)
++#define __IA32_COND_SYSCALL(name)
+ #endif /* CONFIG_IA32_EMULATION */
+ 
+ 
+@@ -105,9 +114,12 @@ struct pt_regs;
+ 	__SYS_STUBx(x32, compat_sys##name,				\
+ 		    SC_X86_64_REGS_TO_ARGS(x, __VA_ARGS__))
+ 
++#define __X32_COMPAT_COND_SYSCALL(name)					\
++	__COND_SYSCALL(x32, compat_sys_##name)
+ #else /* CONFIG_X86_X32 */
+ #define __X32_COMPAT_SYS_STUB0(name)
+ #define __X32_COMPAT_SYS_STUBx(x, name, ...)
++#define __X32_COMPAT_COND_SYSCALL(name)
+ #endif /* CONFIG_X86_X32 */
+ 
+ 
+@@ -142,8 +154,8 @@ struct pt_regs;
+  * kernel/time/posix-stubs.c to cover this case as well.
+  */
+ #define COND_SYSCALL_COMPAT(name) 					\
+-	cond_syscall(__ia32_compat_sys_##name);				\
+-	cond_syscall(__x32_compat_sys_##name)
++	__IA32_COMPAT_COND_SYSCALL(name)				\
++	__X32_COMPAT_COND_SYSCALL(name)
+ 
+ #define COMPAT_SYS_NI(name)						\
+ 	SYSCALL_ALIAS(__ia32_compat_sys_##name, sys_ni_posix_timers);	\
+@@ -215,13 +227,9 @@ struct pt_regs;
+ 	static asmlinkage long						\
+ 	__do_sys_##sname(const struct pt_regs *__unused)
+ 
+-#ifndef COND_SYSCALL
+-#define COND_SYSCALL(name) 							\
+-	asmlinkage __weak long __x64_sys_##name(const struct pt_regs *__unused)	\
+-	{									\
+-		return sys_ni_syscall();					\
+-	}
+-#endif
++#define COND_SYSCALL(name)						\
++	__X64_COND_SYSCALL(name)					\
++	__IA32_COND_SYSCALL(name)
+ 
+ #ifndef SYS_NI
+ #define SYS_NI(name) SYSCALL_ALIAS(__x64_sys_##name, sys_ni_posix_timers);
