@@ -2,99 +2,79 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDC3C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D0CC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588252076E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4447F20714
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbgCUSdw (ORCPT
+        id S1727533AbgCUSfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 14:33:52 -0400
-Received: from sauhun.de ([88.99.104.3]:38110 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727028AbgCUSdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 14:33:52 -0400
-Received: from localhost (p54B33C59.dip0.t-ipconnect.de [84.179.60.89])
-        by pokefinder.org (Postfix) with ESMTPSA id E797B2C2E9C;
-        Sat, 21 Mar 2020 19:33:49 +0100 (CET)
-Date:   Sat, 21 Mar 2020 19:33:49 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] i2c: designware: Add Baikal-T1 SoC I2C controller
- support
-Message-ID: <20200321183349.GC5632@ninjato>
-References: <20200306131955.12806-1-Sergey.Semin@baikalelectronics.ru>
- <20200306132348.71E638030793@mail.baikalelectronics.ru>
+        Sat, 21 Mar 2020 14:35:39 -0400
+Received: from smtprelay0124.hostedemail.com ([216.40.44.124]:43138 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727015AbgCUSfj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 14:35:39 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id DB539182CED28;
+        Sat, 21 Mar 2020 18:35:37 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: word42_6b2f3b9dd3046
+X-Filterd-Recvd-Size: 2030
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 21 Mar 2020 18:35:36 +0000 (UTC)
+Message-ID: <ed459ac3c268d6287f70a0aa8ca682b022f27a8e.camel@perches.com>
+Subject: Re: [PATCH] drivers: iio: Drop unnecessary explicit casting
+From:   Joe Perches <joe@perches.com>
+To:     Nishant Malpani <nish.malpani25@gmail.com>, jic23@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sat, 21 Mar 2020 11:33:48 -0700
+In-Reply-To: <9aa90ffd-9574-d615-0bc0-f791e51b3be4@gmail.com>
+References: <20200318100754.25667-1-nish.malpani25@gmail.com>
+         <a7778635620163cb6185192819a56ed44d76d4b0.camel@perches.com>
+         <9aa90ffd-9574-d615-0bc0-f791e51b3be4@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7qSK/uQB79J36Y4o"
-Content-Disposition: inline
-In-Reply-To: <20200306132348.71E638030793@mail.baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 2020-03-21 at 23:56 +0530, Nishant Malpani wrote:
+> On 21/03/20 5:56 pm, Joe Perches wrote:
+> > On Wed, 2020-03-18 at 15:37 +0530, Nishant Malpani wrote:
+> > > Provide correct specifiers while printing error logs to discard the use
+> > > of unnecessary explicit casting.
+> > []
+> > > diff --git a/drivers/iio/accel/kxsd9-i2c.c b/drivers/iio/accel/kxsd9-i2c.c
+> > []
+> > > @@ -21,8 +21,8 @@ static int kxsd9_i2c_probe(struct i2c_client *i2c,
+> > >   
+> > >   	regmap = devm_regmap_init_i2c(i2c, &config);
+> > >   	if (IS_ERR(regmap)) {
+> > > -		dev_err(&i2c->dev, "Failed to register i2c regmap %d\n",
+> > > -			(int)PTR_ERR(regmap));
+> > > +		dev_err(&i2c->dev, "Failed to register i2c regmap %ld\n",
+> > > +			PTR_ERR(regmap));
+> > 
+> > Another option would be to use %pe to print the error identifier
+> > and not the error number
+> > 
+> By 'error identifier' you mean the symbolic error name (as described in 
+> docs [1]), right?
 
---7qSK/uQB79J36Y4o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes
 
-On Fri, Mar 06, 2020 at 04:19:58PM +0300, Sergey.Semin@baikalelectronics.ru=
- wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
->=20
-> A third I2C controller embedded into the Baikal-T1 SoC is also fully
-> based on the DW APB I2C core, but its registers are indirectly
-> accessible via "command/data in/data out" trio. There is no difference
-> other than that. So in order to have that controller supported by the
-> common DW APB I2C driver we only need to introduce a new flag
-> ACCESS_INDIRECT and use the access-registers to reach the I2C controller
-> normal registers space in the dw_readl/dw_writel methods. Currently this
-> flag is only enabled for the controllers with "be,bt1-i2c" compatible
-> string.
->=20
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-
-Patches 2,3, and 6 have comments which should be addressed. Patches 4+5
-can be dropped when sending next version.
+> https://www.kernel.org/doc/html/latest/core-api/printk-formats.html#error-pointers
 
 
---7qSK/uQB79J36Y4o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl52Xg0ACgkQFA3kzBSg
-KbYNoQ/+IqAHiu0yu6E7vmrFh163UulAWJmyVeL2xt5Umm6AqdBs1yTL6Oy4JB6w
-9fMelMGKk4uybuL32UvtviBiNBlqdxPrmkNLfqJ3TkFvg/kSev+HR8QIRPS3WNme
-UuHz5MCoYPfZK8Pbx8oJsaopI0Ad7/d0uB9MOmatEERHz6jrvQulhm42psN2/icM
-wufLIsBr803+Ld1VxotTU/15lKfOXsYKhDj3LmiP6iUUtc7K0yQdRcD5KI+3+KZ2
-FehsEcizI4YuexDTQrup4Ri6PFj7Tcc8ZXEFXjMYQIuVyYZP50Fs8USKSQcja0e6
-Q0er8yM3BRqla5ZoCYQsbXqHYDZh70RxYnj6kOPsYFsjyzR54An0NUG9WERTjCaE
-DVt0qoOfG6uQnQGX9fgJhzQA5TDlr1xcwxU3A4WS+VNgRuBiG1PI0pFkux9/oesG
-jFSb0SHLxH9sHE6iH9nhb04hlLxPqiI0esFMtAc8PPW2zaH/ksxa70pc5T3QNJUc
-poJGFzVxhyI9i0mgnWRYjcITPA5rQqIHAPNxzwNOHvkryDyv1L8dzMey2toJzvUB
-0NF0i2II9y5nPt2AWm0ctjdRfmsaikLotwAWLHjNBp+mx+dKpOLtF74D/g/knOKo
-sU0TkXTi56MjIz05pP6/nvbD+fjeVOUtj4MEyYNH5OIhrQQoibE=
-=KXuX
------END PGP SIGNATURE-----
-
---7qSK/uQB79J36Y4o--
