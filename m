@@ -2,123 +2,110 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFE4C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7E4C43332
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F01E20780
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8001920780
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:03:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kx5ovgqm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gu51XIla"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgCUVDT (ORCPT
+        id S1728281AbgCUVDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 17:03:19 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:37248 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgCUVDQ (ORCPT
+        Sat, 21 Mar 2020 17:03:20 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:36333 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728257AbgCUVDT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 17:03:16 -0400
-Received: by mail-pg1-f201.google.com with SMTP id q15so3349673pgb.4
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 14:03:14 -0700 (PDT)
+        Sat, 21 Mar 2020 17:03:19 -0400
+Received: by mail-pj1-f67.google.com with SMTP id nu11so4117427pjb.1;
+        Sat, 21 Mar 2020 14:03:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=xNvYA6UhdIzCQNZy2uMLhsHjhbyUSQ3qyllU0rHtcf0=;
-        b=kx5ovgqmJRy9LGIuPT4ywXhCTs3ARAfhGOZul8HGd64ytF9046OToOx7+bYcct4wDp
-         smEgd1KPD9EJyBA3JJKmZUw1zNINb4lXDpEQtVmU+msGcV0voGhBB/nUyXC8pDL9B6n8
-         4zoZ2K8dHdjHrDgy1oo/AVQMIlkmsceqLBO6pGFZQrzBZdReFjmbbQa7Etko8q7JbqcS
-         R/dqzWdI6BOBvTV7EGEGcji3MwKGwVdUKcbs5Vo//vxMaBfqQJQwV8bEkk2hG4Qh2XSn
-         eQFDa/tXb6HV2gjAxH8/yvbUpSEXrKzzNm/7QzCQtjYZy9cAOIelVI2GjzmDxvMwDZ19
-         gD0Q==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=K3U7fmyEYyX+IvwOON45NT/bPxq4zbojKTs/T1zDlgg=;
+        b=gu51XIlaeq0ktKV5u7yzkquaxiXzZ1nQbRVsc+akrH1yhj1m0DU/m6cFbFmqkYz3hC
+         XbrWIGTYM6q55GcsYea7Nn3c8hFH3UAG7xx5f75+//ygXm6iPJwMkGyGOeiyhAEG7zZ+
+         lyMEaUdY7e2K/XXnlUP3yxwH9NJKNHK4IqOPoXa4dyFRgQaFd9rxdYWNvtjb6bfMS+UT
+         whQe7dL5NxDq881giaAc80mIvJam6Q9Llro9QqnsnkhrL/0UEhXYNtM+enSLyDlNHdLL
+         ZY1J+nH8PKAfaQykCtaWPTgWGzWVL56H7LrwlOOAg1n2hOIn10gB7f2UriAzvUxftgm/
+         aFHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=xNvYA6UhdIzCQNZy2uMLhsHjhbyUSQ3qyllU0rHtcf0=;
-        b=cAtLc8qRfFNsfkgUgf8fG9Rfq1HMYWHH1XQGfLiHvJhwtwevQTslHuuX/2/ILA3KfV
-         cdBRxNLZLUEKaN2KLSHTAqtBcn17JepTaZamZapfMPNcfjzcgfBJiVokElY1Fz3OqFEE
-         3EKfM0pzxpdOEt/zRRGoAHXYWI4KSbaQzTfSfOwPiYmXkSJE73+aMrSpqJBaaZfRzLEd
-         LWFYCg66Zql5DFf0dcjYMcJT+ZA/hsS9kECBgw7nTz5lkGxbmvA7+NrhcLIdmchWB/UQ
-         BoTuYj+II9bocqCfA1CwDC8gqLS07P70dnOBRdyOMB4JCsrjfGz+jmPkdmc+FudBulgv
-         cUTQ==
-X-Gm-Message-State: ANhLgQ2uw9RgxScWEcwR8HWPXAbSv4OufL8wkUrhefgqnfHdF2NfYv8D
-        hAIKQC37ufmK66gqVCtnbBWnqLpP9rcHpks=
-X-Google-Smtp-Source: ADFU+vtYlRCFa88mZmOzBJd3AZ3LAwx5smuo4Pvk3DO0lBLd90kUDcML0zo0KVJTHHQNheV1kmuzhjMEjWY6Ufo=
-X-Received: by 2002:a17:90a:930e:: with SMTP id p14mr16445333pjo.159.1584824594216;
- Sat, 21 Mar 2020 14:03:14 -0700 (PDT)
-Date:   Sat, 21 Mar 2020 14:03:05 -0700
-Message-Id: <20200321210305.28937-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [RFC PATCH v1] driver core: Set fw_devlink to "permissive" behavior
- by default
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, kernel-team@android.com,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=K3U7fmyEYyX+IvwOON45NT/bPxq4zbojKTs/T1zDlgg=;
+        b=i02QiyFUguFwfVVvzyxe64wimQzleqd4V+fTts/jCUPF/N7HczoS/q3D8ArHnHhM2W
+         25Wd20GH+oaeN4E/V0eiORpo630CjJSO4G45nOOYf/6rvjCUOF6dvLDHthgU/iuV2Taf
+         yWk2NmT9xhJfgIzooNW9WE5vRmqXGPCgWyLp+3K617+T2xNLDNZYC7lHESulN53fP80T
+         +y7IjA+Fq8ZCVzYVbDIOsT6o5Zc9h+RgJ46aXyfArlGMtv0Y8GV9pPQ04Uwkk/psrwcI
+         cnFHwhSGzuoPUPB8YcOyZiB/Nl1qraRm9pU1x+dwdsD8Bs6iv5i4UiOOl3/CiH5ymhkW
+         g6lg==
+X-Gm-Message-State: ANhLgQ1bIla4lEW3xXn/ByD2VhDDzgJz8fjeEWsWSM7m9ufsaBa83Suw
+        GbAIFRrBk5EOm5j9FIckD0ntT5iKw/0=
+X-Google-Smtp-Source: ADFU+vuS4wys7i7R2wiGzBkzJy4En0numHwANHdN+Gh7xxWoTQQZwAN91VMb6luKPZVEgJCJntAG9Q==
+X-Received: by 2002:a17:90a:7105:: with SMTP id h5mr16772757pjk.54.1584824598265;
+        Sat, 21 Mar 2020 14:03:18 -0700 (PDT)
+Received: from nish-HP-Pavilion ([2409:4072:488:8b8b:892d:8d8:1a6c:acda])
+        by smtp.gmail.com with ESMTPSA id l7sm8798436pff.204.2020.03.21.14.03.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Mar 2020 14:03:17 -0700 (PDT)
+From:   Nishant Malpani <nish.malpani25@gmail.com>
+To:     jic23@kernel.org
+Cc:     andriy.shevchenko@linux.intel.com, joe@perches.com,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        nish.malpani25@gmail.com, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH 12/13] iio: st_sensors_i2c: Use suitable format specifier
+Date:   Sun, 22 Mar 2020 02:32:03 +0530
+Message-Id: <20200321210204.18106-13-nish.malpani25@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200321210204.18106-1-nish.malpani25@gmail.com>
+References: <20200321210204.18106-1-nish.malpani25@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set fw_devlink to "permissive" behavior by default so that device links
-are automatically created (with DL_FLAG_SYNC_STATE_ONLY) by scanning the
-firmware.
+Provide more suitable format specifiers while printing error logs.
+Discards the use of unnecessary explicit casting and prints symbolic
+error name which might prove to be convenient during debugging.
 
-This ensures suppliers get their sync_state() calls only after all their
-consumers have probed successfully. Without this, suppliers will get
-their sync_state() calls at late_initcall_sync() even if their consuer
-
-Ideally, we'd want to set fw_devlink to "on" or "rpm" by default. But
-that needs more testing as it's known to break some corner case
-drivers/platforms.
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
 ---
 
-I think it's time to soak test this and see if anything fails or if
-anyone complains. Definitely not ready for 5.6. But pulling it in for
-5.7 and having it go through all the rc testing would be helpful.
+Based on conversations in [1] & [2].
 
-I'm sure there'll be reports where some DT properties are ambiguously
-names and is breaking downstream or even some upstream platform. For
-example, a DT property like "nr-gpios" would have a dmesg log about
-parsing error because it looks like a valid "-gpios" DT binding. It'll
-be good to catch those case and fix them.
+[1] https://marc.info/?l=linux-iio&m=158427554607223&w=2
+[2] https://marc.info/?l=linux-iio&m=158481647605891&w=2
+---
+ drivers/iio/common/st_sensors/st_sensors_i2c.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Also, is there no way to look up current value of early_params? It'd be
-nice if there was a way to do that.
-
--Saravana
-
- drivers/base/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 5e3cc1651c78..9fabf9749a06 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2345,7 +2345,7 @@ static int device_private_init(struct device *dev)
- 	return 0;
- }
+diff --git a/drivers/iio/common/st_sensors/st_sensors_i2c.c b/drivers/iio/common/st_sensors/st_sensors_i2c.c
+index 286830fb5d35..6f2f6915107d 100644
+--- a/drivers/iio/common/st_sensors/st_sensors_i2c.c
++++ b/drivers/iio/common/st_sensors/st_sensors_i2c.c
+@@ -49,8 +49,8 @@ int st_sensors_i2c_configure(struct iio_dev *indio_dev,
  
--static u32 fw_devlink_flags;
-+static u32 fw_devlink_flags = DL_FLAG_SYNC_STATE_ONLY;
- static int __init fw_devlink_setup(char *arg)
- {
- 	if (!arg)
+ 	sdata->regmap = devm_regmap_init_i2c(client, config);
+ 	if (IS_ERR(sdata->regmap)) {
+-		dev_err(&client->dev, "Failed to register i2c regmap (%d)\n",
+-			(int)PTR_ERR(sdata->regmap));
++		dev_err(&client->dev, "Failed to register i2c regmap (%pe)\n",
++			sdata->regmap);
+ 		return PTR_ERR(sdata->regmap);
+ 	}
+ 
 -- 
-2.25.1.696.g5e7596f4ac-goog
+2.20.1
 
