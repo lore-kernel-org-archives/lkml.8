@@ -2,167 +2,199 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8283CC43333
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D20FC43333
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 497DB215A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:03:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gUKXJIQa"
+	by mail.kernel.org (Postfix) with ESMTP id EECCA2076C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 01:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584752976;
+	bh=1TMSACbNS6snXsOh2chfn6p2kjbS1jSTgaqql6DheHw=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=VCacyEO/Fybhn+NAK9VPFDasyasKiJTtzkzdX4TOBUFZadkN2wMXrNy2y6nTiafee
+	 Bkx7hRuddRivIQ4VFP7MVZNG4fRLmIxV7pdwIqCFiRXgSXgfmDGVSKLtCamoJXjMFk
+	 dyzcGZ2O7o3R/IY8OKaXeDF6+9iWKieTHCcGmYPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgCUBDF (ORCPT
+        id S1727319AbgCUBJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 21:03:05 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:53871 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727693AbgCUBDE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 21:03:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584752583;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AjQuPaCjd7Ig4gpbwFISut+nUjzFUAzjw+os+HFJBP8=;
-        b=gUKXJIQaM+2nvr74Y65YzDph9UpV/V/vcf1GbZpiP4TzwUxuBsVJv/Tu5zVbOmImeIY0O3
-        JG9WfQzGZLelAVOAlNG0QpEo7/iAT6wR1Dmq2ZuVeDdYsTQks4PXOk4/aDNqoItPzrrt8O
-        h8UR+QE2S2nlYmjy0gFO4eHrPLgSNk4=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-65-J6rnopdwPoKhZLzNW0a9JQ-1; Fri, 20 Mar 2020 21:03:01 -0400
-X-MC-Unique: J6rnopdwPoKhZLzNW0a9JQ-1
-Received: by mail-qk1-f200.google.com with SMTP id l27so7029920qkl.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Mar 2020 18:03:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AjQuPaCjd7Ig4gpbwFISut+nUjzFUAzjw+os+HFJBP8=;
-        b=CdHf0e9Cc7piremt7tZhyDaD/ODu0JOmeLFTqxCq9AOpwVY7OdIJbtxA9ilDUqreJn
-         2t4e/J6t3F6QeO3LZT7hucjTE1twUowDn0LH8PcwRgClsSKr5la6U49WF4HWsG9ELX4N
-         LUR2q2pObNSnLHRTD8ZSDzGIPh8hrUt4P/Cmw/x+A40N0lTWiMce2BLJYv/SlS1nBCRN
-         +INCecySghK/dqlf0xTjYYfyib7ffnC8j++7NnsKZeAVac0wJK4t8SBLaK4TVhXZ8+b2
-         bM2WsRh3n3/bNNz9chzIEdLFyffj1uMIWulspBLP9Vs/QDSd0MS1Zw8xjx+0de/yIz4h
-         9UHA==
-X-Gm-Message-State: ANhLgQ33OUoX0T23hSpHtwdMUOkj1ZgzC5Vr/naJqtqxHuzsvdVDL/M0
-        GRvNQ1CKSHD/IlJNQRJtiypyr+1NVdbjdsDWURRbcqpnEk0VmpVxEeLPhSDwVmR0d+PmpnGa+/K
-        p8B+CZzn6L6C52DOzIutMtGzUM2oThrreHPZ/0nL9
-X-Received: by 2002:a37:9f42:: with SMTP id i63mr11208509qke.192.1584752581297;
-        Fri, 20 Mar 2020 18:03:01 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtCh2wJtD/g8xto3BH0cPBIK4C3l4y4LBkjZ5hI622fvjzhRRZrgbDgis1CB+9R05hCeHqJZDHrFD188Ry1ESA=
-X-Received: by 2002:a37:9f42:: with SMTP id i63mr11208481qke.192.1584752580926;
- Fri, 20 Mar 2020 18:03:00 -0700 (PDT)
+        Fri, 20 Mar 2020 21:09:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726840AbgCUBJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 21:09:33 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 120862072C;
+        Sat, 21 Mar 2020 01:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584752972;
+        bh=1TMSACbNS6snXsOh2chfn6p2kjbS1jSTgaqql6DheHw=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=yeIm/T7/7y1KH1Gbu+UR/1UIDDnUApqSCB7y14Yi+8X2cQl3dY9W9sm2U07WBj0uS
+         YZhyyKsgTUn+hlTiw1pI5dvaYofvwEaMovHPdIpHnq6KqA+eB9sN61MicN5adBFcez
+         YR7zPDRPAXKXRrhzra4E66H0cDSb5fXLTf7R80S4=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200310192627.437947-1-kherbst@redhat.com> <20200320221931.GA23783@google.com>
-In-Reply-To: <20200320221931.GA23783@google.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Sat, 21 Mar 2020 02:02:22 +0100
-Message-ID: <CACO55tsamLG5WE16U=psJpRWfz=7Fy5K8haGKHnhic1h0WAmqA@mail.gmail.com>
-Subject: Re: [PATCH v7] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <82828e89ccf4173de4e5e52dcecacc4d5168315c.1584720678.git.alexander.riesen@cetitec.com>
+References: <cover.1584720678.git.alexander.riesen@cetitec.com> <82828e89ccf4173de4e5e52dcecacc4d5168315c.1584720678.git.alexander.riesen@cetitec.com>
+Subject: Re: [PATCH v3 05/11] media: adv748x: add support for HDMI audio
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-clk <linux-clk@vger.kernel.org>
+To:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+Date:   Fri, 20 Mar 2020 18:09:31 -0700
+Message-ID: <158475297119.125146.8177273856843293558@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 11:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Mar 10, 2020 at 08:26:27PM +0100, Karol Herbst wrote:
-> > Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
-> > Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
-> >
-> > Depending on the used kernel there might be messages like those in demsg:
-> >
-> > "nouveau 0000:01:00.0: Refused to change power state, currently in D3"
-> > "nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
-> > space inaccessible)"
-> > followed by backtraces of kernel crashes or timeouts within nouveau.
-> >
-> > It's still unkown why this issue exists, but this is a reliable workaround
-> > and solves a very annoying issue for user having to choose between a
-> > crashing kernel or higher power consumption of their Laptops.
->
-> Thanks for the bugzilla link.  The bugzilla mentions lots of mailing
-> list discussion.  Can you include links to some of that?
->
-> IIUC this basically just turns off PCI power management for the GPU.
-> Can you do that with something like the following?  I don't know
-> anything about DRM, so I don't know where you could save the pm_cap,
-> but I'm sure the driver could keep it somewhere.
->
+Quoting Alex Riesen (2020-03-20 09:12:00)
+> diff --git a/drivers/media/i2c/adv748x/adv748x-dai.c b/drivers/media/i2c/=
+adv748x/adv748x-dai.c
+> new file mode 100644
+> index 000000000000..6fce7d000423
+> --- /dev/null
+> +++ b/drivers/media/i2c/adv748x/adv748x-dai.c
+> @@ -0,0 +1,265 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Driver for Analog Devices ADV748X HDMI receiver with AFE
+> + * The implementation of DAI.
+> + */
+> +
+> +#include "adv748x.h"
+> +
+> +#include <linux/clk.h>
 
-Sure this would work? From a quick look over the pci code, it looks
-like a of code would be skipped we really need, like the platform code
-to turn off the GPU via ACPI. But I could also remember incorrectly on
-how all of that worked again. I can of course try and see what the
-effect of this patch would be. And would the parent bus even go into
-D3hot if it knows one of its children is still at D0? Because that's
-what the result of that would be as well, no? And I know that if the
-bus stays in D0, that it has a negative impact on power consumption.
+Is this include used? Please try to make a clk provider or a clk
+consumer and not both unless necessary.
 
-Anyway, I will try that out, I am just not seeing how that would help.
-
->
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-> index b65ae817eabf..2ad825e8891c 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-> @@ -618,6 +618,23 @@ nouveau_drm_device_fini(struct drm_device *dev)
->         kfree(drm);
->  }
->
-> +static void quirk_broken_nv_runpm(struct drm_device *drm_dev)
+> +#include <linux/clk-provider.h>
+> +#include <sound/pcm_params.h>
+> +
+> +#define state_of(soc_dai) \
+> +       adv748x_dai_to_state(container_of((soc_dai)->driver, \
+> +                                         struct adv748x_dai, \
+> +                                         drv))
+> +
+> +static const char ADV748X_DAI_NAME[] =3D "adv748x-i2s";
+> +
+[...]
+> +       .set_sysclk =3D adv748x_dai_set_sysclk,
+> +       .set_fmt =3D adv748x_dai_set_fmt,
+> +       .startup =3D adv748x_dai_startup,
+> +       .hw_params =3D adv748x_dai_hw_params,
+> +       .mute_stream =3D adv748x_dai_mute_stream,
+> +       .shutdown =3D adv748x_dai_shutdown,
+> +};
+> +
+> +static int adv748x_of_xlate_dai_name(struct snd_soc_component *component,
+> +                                     struct of_phandle_args *args,
+> +                                     const char **dai_name)
 > +{
-> +       struct pci_dev *pdev = drm_dev->pdev;
-> +       struct pci_dev *bridge = pci_upstream_bridge(pdev);
-> +
-> +       if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
-> +               return;
-> +
-> +       switch (bridge->device) {
-> +       case 0x1901:
-> +               STASH->pm_cap = pdev->pm_cap;
-> +               pdev->pm_cap = 0;
-> +               NV_INFO(drm_dev, "Disabling PCI power management to avoid bug\n");
-> +               break;
-> +       }
+> +       if (dai_name)
+> +               *dai_name =3D ADV748X_DAI_NAME;
+> +       return 0;
 > +}
 > +
->  static int nouveau_drm_probe(struct pci_dev *pdev,
->                              const struct pci_device_id *pent)
->  {
-> @@ -699,6 +716,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
->         if (ret)
->                 goto fail_drm_dev_init;
->
-> +       quirk_broken_nv_runpm(drm_dev);
->         return 0;
->
->  fail_drm_dev_init:
-> @@ -735,6 +753,9 @@ nouveau_drm_remove(struct pci_dev *pdev)
->  {
->         struct drm_device *dev = pci_get_drvdata(pdev);
->
-> +       /* If we disabled PCI power management, restore it */
-> +       if (STASH->pm_cap)
-> +               pdev->pm_cap = STASH->pm_cap;
->         nouveau_drm_device_remove(dev);
->         pci_disable_device(pdev);
->  }
->
+> +static const struct snd_soc_component_driver adv748x_codec =3D {
+> +       .of_xlate_dai_name =3D adv748x_of_xlate_dai_name,
+> +};
+> +
+> +int adv748x_dai_init(struct adv748x_dai *dai)
+> +{
+> +       int ret;
+> +       struct adv748x_state *state =3D adv748x_dai_to_state(dai);
+> +
+> +       dai->mclk_name =3D kasprintf(GFP_KERNEL, "%s.%s-i2s-mclk",
+> +                                  state->dev->driver->name,
+> +                                  dev_name(state->dev));
+> +       if (!dai->mclk_name) {
+> +               ret =3D -ENOMEM;
+> +               adv_err(state, "No memory for MCLK\n");
+> +               goto fail;
+> +       }
+> +       dai->mclk =3D clk_register_fixed_rate(state->dev,
 
+Please register with clk_hw_register_fixed_rate() instead.
+
+> +                                           dai->mclk_name,
+> +                                           NULL /* parent_name */,
+> +                                           0 /* flags */,
+> +                                           12288000 /* rate */);
+
+Not sure these comments are useful.
+
+> +       if (IS_ERR_OR_NULL(dai->mclk)) {
+> +               ret =3D PTR_ERR(dai->mclk);
+> +               adv_err(state, "Failed to register MCLK (%d)\n", ret);
+> +               goto fail;
+> +       }
+> +       ret =3D of_clk_add_provider(state->dev->of_node, of_clk_src_simpl=
+e_get,
+> +                                 dai->mclk);
+> +       if (ret < 0) {
+> +               adv_err(state, "Failed to add MCLK provider (%d)\n", ret);
+> +               goto unreg_mclk;
+> +       }
+> +       dai->drv.name =3D ADV748X_DAI_NAME;
+> +       dai->drv.ops =3D &adv748x_dai_ops;
+> +       dai->drv.capture =3D (struct snd_soc_pcm_stream){
+
+Can this be const?
+
+> +               .stream_name    =3D "Capture",
+> +               .channels_min   =3D 8,
+> +               .channels_max   =3D 8,
+> +               .rates =3D SNDRV_PCM_RATE_48000,
+> +               .formats =3D SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_U=
+24_LE,
+> +       };
+> +
+> +       ret =3D devm_snd_soc_register_component(state->dev, &adv748x_code=
+c,
+> +                                             &dai->drv, 1);
+> +       if (ret < 0) {
+> +               adv_err(state, "Failed to register the codec (%d)\n", ret=
+);
+> +               goto cleanup_mclk;
+> +       }
+> +       return 0;
+> +
+> +cleanup_mclk:
+> +       of_clk_del_provider(state->dev->of_node);
+> +unreg_mclk:
+> +       clk_unregister_fixed_rate(dai->mclk);
+> +fail:
+> +       return ret;
+> +}
+> +
+> +void adv748x_dai_cleanup(struct adv748x_dai *dai)
+> +{
+> +       struct adv748x_state *state =3D adv748x_dai_to_state(dai);
+> +
+> +       of_clk_del_provider(state->dev->of_node);
+> +       clk_unregister_fixed_rate(dai->mclk);
+> +       kfree(dai->mclk_name);
+> +}
+> +
+
+Please drop extra newline at end of file.
