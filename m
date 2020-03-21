@@ -2,77 +2,152 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C818C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB9CC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45B1120754
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8517C20757
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:14:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584800083;
+	bh=BkafZo5ywLgZLTC3Js/WXCIoJuWRu5WaImZuPyUfdoE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=bLudHaCTKvLcWdUxJGx1ftb5wl61k79c6gjdGSlmhnslbc8NyznOiRheGgfAOa7dy
+	 KMaRBTktH+ZkkKoX56WzRqUsheUJ//b0oW1b9NCuy0sOamf/W6YWu2OXVh/kuGnRmj
+	 HOvmZq6G5otUv+p7IO3nwFK5FJuH4hATarklTRSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbgCUOMF (ORCPT
+        id S1727296AbgCUOOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 10:12:05 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:43012 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbgCUOME (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 10:12:04 -0400
-Received: by mail-io1-f70.google.com with SMTP id b21so7226832iot.10
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 07:12:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Zlgi2xoadfax49bYHX7gbtP8mxGb/dTs9YET+aZW4co=;
-        b=OlCzbZSYWx/ZRflxkMcqSG52IlI3TJGWRbNscQE83hFIlgkdOPFneApiITRDrkcES5
-         hJAwh1Xk500D7RR7Zsh1ME6zvOd/PkJSz7n71GLwgKWu6CBH2ptZ0iw8PYzP0xSCezOw
-         Y3GC5e8NHB10oIz59ade0i9QaRoEMU5gRpEzCeJvc2oUvTEEXSH9GVrYRf3XL7u49ZjL
-         PQw79J9Yb87XgnF5eqENXmACwGr68DDnWfm0OhVMj3FTWiWkP2WxpSAnH/w3UTMpcnhJ
-         F26iCImKII1jxqM8eJYbi7XLKeyiQYX3sLBj1pQRABuJjau4saWdVPMGUx6K2tg370Vb
-         Kc4A==
-X-Gm-Message-State: ANhLgQ2+Wghv0GmxoTHW8xb02PE/lmTO2AC4EFuXX3F3U5Cs+gKnMAzp
-        G2HW/8VeYaM1a3dienBGEiOhKpvPPP5/jxQHMshu14CH9Pjn
-X-Google-Smtp-Source: ADFU+vuuCa3cSD3fZhOXW2dpWnTKAtvHOd2BTTp43x5m0RVqxGUPwhgKorQewidseLLgyQQPPATg+dwWVhHeM40pT400onNAlSrA
+        Sat, 21 Mar 2020 10:14:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726823AbgCUOOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 10:14:42 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77C5E20658;
+        Sat, 21 Mar 2020 14:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584800081;
+        bh=BkafZo5ywLgZLTC3Js/WXCIoJuWRu5WaImZuPyUfdoE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Cz1IsoUnhrqVIT/1pySZTxYw0qA3gXQQrCtot7/Pyy8OENEBLxg+RmrD54NQuPM09
+         5t1M7MDdNPhUiiLmXbxJxvAxAtxrXU5i+FIobbWx4j6EsDTmxYrG5O+CV8flUdoYZl
+         2UhQlh8R2x4iRVWOKfxfkhCZXRXNzE62EA7qPR5o=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jFetb-00EVd4-NJ; Sat, 21 Mar 2020 14:14:39 +0000
 MIME-Version: 1.0
-X-Received: by 2002:a02:a85:: with SMTP id 127mr12515540jaw.51.1584799922592;
- Sat, 21 Mar 2020 07:12:02 -0700 (PDT)
-Date:   Sat, 21 Mar 2020 07:12:02 -0700
-In-Reply-To: <000000000000b55d8805992071b5@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006d22ee05a15dfccf@google.com>
-Subject: Re: INFO: task hung in tty_ldisc_hangup
-From:   syzbot <syzbot+3105793febc8f3e591ce@syzkaller.appspotmail.com>
-To:     gregkh@linuxfoundation.org, jslaby@suse.com, jslaby@suse.cz,
-        linux-kernel@vger.kernel.org, okash.khawaja@gmail.com,
-        samuel.thibault@ens-lyon.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 21 Mar 2020 14:14:39 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 04/11] irqchip: Add driver for Loongson-3
+ HyperTransport PIC controller
+In-Reply-To: <20200318062102.8145-5-jiaxun.yang@flygoat.com>
+References: <20200318062102.8145-1-jiaxun.yang@flygoat.com>
+ <20200318062102.8145-5-jiaxun.yang@flygoat.com>
+Message-ID: <f4c009a117a3978e9e98195abcc98c07@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org, chenhc@lemote.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, paulburton@kernel.org, allison@lohutok.net, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+On 2020-03-18 06:20, Jiaxun Yang wrote:
+> This controller appeared on Loongson-3 family of chips to receive 
+> interrupts
+> from PCH PIC.
+> It is a I8259 with optimized interrupt polling flow. We can poll
+> interrupt number
+> from HT vector directly but still have to follow standard I8259
+> routines to mask,
+> unmask and EOI.
+> 
+> Co-developed-by: Huacai Chen <chenhc@lemote.com>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> 
+> ---
+> v4-v5:
+> 	Enhancements according to maz's suggestions:
+> 		- Add static for private struct
+> 		- Drop pointless rename
+> 		- Fix DT parse bug
+> 		- Clarifications in comments and commit message
+> ---
+>  arch/mips/include/asm/i8259.h        |   1 +
+>  drivers/irqchip/Kconfig              |  10 ++
+>  drivers/irqchip/Makefile             |   1 +
+>  drivers/irqchip/irq-loongson-htpic.c | 149 +++++++++++++++++++++++++++
+>  4 files changed, 161 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-loongson-htpic.c
 
-commit e8c75a30a23c6ba63f4ef6895cbf41fd42f21aa2
-Author: Jiri Slaby <jslaby@suse.cz>
-Date:   Fri Feb 28 11:54:06 2020 +0000
+[...]
 
-    vt: selection, push sel_lock up
+> +int __init htpic_of_init(struct device_node *node, struct device_node 
+> *parent)
+> +{
+> +	unsigned int parent_irq[4];
+> +	int i, err;
+> +	int num_parents = 0;
+> +
+> +	if (htpic) {
+> +		pr_err("loongson-htpic: Only one HTPIC is allowed in the system\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	htpic = kzalloc(sizeof(*htpic), GFP_KERNEL);
+> +	if (!htpic) {
+> +		err = -ENOMEM;
+> +		goto out_free;
+> +	}
+> +
+> +	htpic->base = of_iomap(node, 0);
+> +	if (!htpic->base) {
+> +		err = -ENODEV;
+> +		goto out_free;
+> +	}
+> +
+> +	htpic->domain = __init_i8259_irqs(node);
+> +	if (!htpic->domain) {
+> +		pr_err("loongson-htpic: Failed to initialize i8259 IRQs\n");
+> +		err = -ENOMEM;
+> +		goto out_iounmap;
+> +	}
+> +
+> +	/* Interrupt may come from any of the 4 interrupt line */
+> +	for (i = 0; i < HTPIC_MAX_PARENT_IRQ; i++) {
+> +		parent_irq[i] = irq_of_parse_and_map(node, i);
+> +		if (parent_irq[i] < 0)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=124970ade00000
-start commit:   c6017471 Merge tag 'xfs-5.5-fixes-2' of git://git.kernel.o..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7f6119e2e3675a73
-dashboard link: https://syzkaller.appspot.com/bug?extid=3105793febc8f3e591ce
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=124fc6c1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16cb16c1e00000
+irq_of_parse_and_map() returns 0 when there is no interrupt to be
+mapped. You should probably test for that too.
 
-If the result looks correct, please mark the bug fixed by replying with:
+Thanks,
 
-#syz fix: vt: selection, push sel_lock up
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+         M.
+-- 
+Jazz is not dead. It just smells funny...
