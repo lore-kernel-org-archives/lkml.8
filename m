@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B196AC43333
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04958C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C3C2070A
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5922070A
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:42:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BuvGKePY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A7+jsNFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgCUAmL (ORCPT
+        id S1727850AbgCUAmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 20:42:11 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46132 "EHLO
+        Fri, 20 Mar 2020 20:42:13 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35753 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727319AbgCUAmK (ORCPT
+        with ESMTP id S1727197AbgCUAmL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 20:42:10 -0400
-Received: by mail-wr1-f67.google.com with SMTP id j17so6166616wru.13;
-        Fri, 20 Mar 2020 17:42:09 -0700 (PDT)
+        Fri, 20 Mar 2020 20:42:11 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h4so9633402wru.2;
+        Fri, 20 Mar 2020 17:42:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xHUO/4IT5EnvhgOpN3mwFYB9rTRPPJARUg4TrZ/FZw4=;
-        b=BuvGKePY7cenH+sgMOaxA/jmWptkN3I4GHbk74FWG1sQvoYWra2cpKKuvY2FN7koGL
-         nNP0b2XwxvOONK+YVreUi2GytyHhL1X0nDKC4bmY5qesGln4Kj0JNtdDnpq6lQYoSpbI
-         oMGQhNXE+shzk3aGlEd8GES5SkPXb6Br4CBCSfGyfqI/t7DYWnst5q9TObjU2r9FKKDr
-         q4DfgmtIJBOsBeeCh4FvZHcXjEDEFyBNE56Ljh7hgAJorQ5Hn6O+rkgbibP39OZFqF2r
-         LBxC5OI21TqWWXDCvy00cBMVK0FjML2K9bjpa2244YbxTjX4L9e49HbsgcsVR2di3HK6
-         UmTA==
+        bh=3z4MVElDmiI2dm0EzeC2YxIS/QbuYtQadcdcivLvoZQ=;
+        b=A7+jsNFsTfNemQuj2xd8LVu8NvQpWJkK35a5gxMBs/XsSIhku0jZgKxmfgX2q3FxY4
+         xnhGnxcQoSxPXJKsOsrdQyxoDvdw8zHMd0h5GK6Osp3eXOrrnUHmNHNgbK+PqPCnPN0h
+         v23C5lxoPrwv+A8iAE2Al0QoAMxIwmyHVsIDA6SY2tu/bQezbz3KbbME3EPtgJl2IfVv
+         UDHWUX5KGTYRHHOPMZVxbcT+GGMNo+GlQii/7pUJAsOg2gv04yVfhCKKkAEinRCh7Ex7
+         KnHp3P9H5xIAWupXjP4Sk/4a4u0x/gDP31pmsrE4TXeL4QRgaWdh+a0QO/GxMzZS0uzg
+         i3Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=xHUO/4IT5EnvhgOpN3mwFYB9rTRPPJARUg4TrZ/FZw4=;
-        b=jQxJFn0BnOuCrjqU6t968AOw942ivxw0++ZK9hy8txrfCEGrjhK+oF2OvThaYm/Yhn
-         tmekR6gYBSNaVFd/YdKB2hgB/TIMCUOLuqzYdrABlAf9JPJYWYxTIaVDx3rXkKihqFer
-         HsWLwlXJmHo0IvMJ9QtLFHKozYNNd6bsv/0Xyr+MvO7nYL8D9rUl97e0Iu91e75Na2l8
-         4v9TEWLMe+zPCQFw71mXLMvOHI6BD06ZuxfH27UY3EK+I1zWf3C4+8h2jItsQZqMPT+t
-         e9DvZhWLjJlmSECLiQzFWJq+24iZJFXs4xWr9q2yBvY02/jsuhsgeDngWgO/2xrKXRPI
-         IUTg==
-X-Gm-Message-State: ANhLgQ2Z/+pnzW5A+U97bvXYl2e/LVH9b8eUsEFkD1NaFo3T3PG4Bqfk
-        FgepaodFpN+CKjK9ClcY2x8=
-X-Google-Smtp-Source: ADFU+vtkpcQNuQD2RQ3kIznAFVzrW3aHBbsH/LfU8OtLlVRAVlwdoIWDAzeABtYPJlyD3NwceMIeVA==
-X-Received: by 2002:a5d:6386:: with SMTP id p6mr13853115wru.194.1584751328595;
-        Fri, 20 Mar 2020 17:42:08 -0700 (PDT)
+        bh=3z4MVElDmiI2dm0EzeC2YxIS/QbuYtQadcdcivLvoZQ=;
+        b=Tky7Ra/z5JjcjsL5XqqXqZKLQ7PxzqH+s+vCm2c5Xd5PlQ6RddoiaTg9WIRMNyvRPy
+         Ly2E8R/gxl0VvLfwX1W4YNzjpq4oafUSmAoX3WRquMRdB+ADyi512A+jc5E5W1QQGjta
+         jTb6FsPKOeTTiIrN6U/IfEZYlMxsQwj5OIFHgC6P3FgwNODqces5pvzwqiysgsqhkuit
+         RI57dyd5xOIL2bLCuYLuoA1d9+yfnMjjjePfrt7KVHMaWSe4FRIPUrSgT2ROvrNulPus
+         s0TAt4PkXcbnJfndM3BYbJlSbURjQDj+7G0hxW1A8sHKA6Ocp/XhIur0WoRAYAQZrk2G
+         ym4w==
+X-Gm-Message-State: ANhLgQ1fwe3bJGiJtM9zuUXmzIMMdS2pZ4ZavfYNO97aNyJ0nZO9nuGq
+        IE/ELAV6nhH7XWeN/02Tqqc=
+X-Google-Smtp-Source: ADFU+vtbb6CqDYWH1O+xiQCW2MPu6yGgut1UCnE/FSy7D9Bft05TCK6evHkYEYqk8aAuKg8YVzTnBA==
+X-Received: by 2002:a5d:4cc2:: with SMTP id c2mr14558135wrt.398.1584751329809;
+        Fri, 20 Mar 2020 17:42:09 -0700 (PDT)
 Received: from localhost.localdomain (ip5f5bee49.dynamic.kabel-deutschland.de. [95.91.238.73])
-        by smtp.gmail.com with ESMTPSA id j6sm8194982wrb.4.2020.03.20.17.42.07
+        by smtp.gmail.com with ESMTPSA id j6sm8194982wrb.4.2020.03.20.17.42.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 17:42:08 -0700 (PDT)
+        Fri, 20 Mar 2020 17:42:09 -0700 (PDT)
 From:   huobean@gmail.com
 X-Google-Original-From: beanhuo@micron.com
 To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
@@ -65,9 +65,9 @@ To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
         cang@codeaurora.org
 Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
         ymhungry.lee@samsung.com, j-young.choi@samsung.com
-Subject: [PATCH v1 1/5] scsi; ufs: add device descriptor for Host Performance Booster
-Date:   Sat, 21 Mar 2020 01:41:52 +0100
-Message-Id: <20200321004156.23364-2-beanhuo@micron.com>
+Subject: [PATCH v1 2/5] scsi: ufs: make ufshcd_read_unit_desc_param() non-static func
+Date:   Sat, 21 Mar 2020 01:41:53 +0100
+Message-Id: <20200321004156.23364-3-beanhuo@micron.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200321004156.23364-1-beanhuo@micron.com>
 References: <20200321004156.23364-1-beanhuo@micron.com>
@@ -78,66 +78,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bean Huo <beanhuo@micron.com>
 
-HPB support is specified by Bit7 of bUFSFeatureSupport,
-HPB version is indicated by wHPBVersion and the HPB Control
-Mode is specified by bHPBControl in UFS device descriptor.
+HPB driver needs to read unit descriptors through ufshcd_read_unit_desc_param(),
+make it an extern Function.
 
 Signed-off-by: Bean Huo <beanhuo@micron.com>
 ---
- drivers/scsi/ufs/ufs.h    | 10 ++++++++++
- drivers/scsi/ufs/ufshcd.c | 11 +++++++++++
- 2 files changed, 21 insertions(+)
+ drivers/scsi/ufs/ufshcd.c | 8 +++-----
+ drivers/scsi/ufs/ufshcd.h | 5 ++++-
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index b7fec5c73688..31011d86610b 100644
---- a/drivers/scsi/ufs/ufs.h
-+++ b/drivers/scsi/ufs/ufs.h
-@@ -258,6 +258,12 @@ enum device_desc_param {
- 	DEVICE_DESC_PARAM_PSA_MAX_DATA		= 0x25,
- 	DEVICE_DESC_PARAM_PSA_TMT		= 0x29,
- 	DEVICE_DESC_PARAM_PRDCT_REV		= 0x2A,
-+	DEVICE_DESC_PARAM_HPB_VER		= 0x40,
-+	DEVICE_DESC_PARAM_HPB_CTRL_MODE		= 0x42,
-+	DEVICE_DESC_PARAM_EXT_UFS_FEAT		= 0x4F,
-+	DEVICE_DESC_PARAM_WBB_USER_SPEC_EN	= 0x53,
-+	DEVICE_DESC_PARAM_WBB_TYPE		= 0x54,
-+	DEVICE_DESC_PARAM_WBB_SHARED_NUM	= 0x55,
- };
- 
- /* Interconnect descriptor parameters offsets in bytes*/
-@@ -537,6 +543,10 @@ struct ufs_dev_info {
- 	u8 *model;
- 	u16 wspecversion;
- 	u32 clk_gating_wait_us;
-+	/* HPB Version */
-+	u16 hpb_ver;
-+	/* bHPBControl */
-+	u8 hpb_control_mode;
- };
- 
- /**
 diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 2a2a63b68a67..492e4685e587 100644
+index 492e4685e587..a40023ad1336 100644
 --- a/drivers/scsi/ufs/ufshcd.c
 +++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6559,6 +6559,17 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
- 		goto out;
- 	}
- 
-+	if (desc_buf[DEVICE_DESC_PARAM_UFS_FEAT] & 0x80) {
-+		hba->dev_info.hpb_control_mode =
-+			desc_buf[DEVICE_DESC_PARAM_HPB_CTRL_MODE];
-+		hba->dev_info.hpb_ver =
-+			(u16) (desc_buf[DEVICE_DESC_PARAM_HPB_VER] << 8) |
-+			desc_buf[DEVICE_DESC_PARAM_HPB_VER + 1];
-+		dev_info(hba->dev, "HPB Version: 0x%2x\n",
-+			 hba->dev_info.hpb_ver);
-+		dev_info(hba->dev, "HPB control mode: %d\n",
-+			 hba->dev_info.hpb_control_mode);
-+	}
+@@ -3276,11 +3276,9 @@ int ufshcd_read_string_desc(struct ufs_hba *hba, u8 desc_index,
+  *
+  * Return 0 in case of success, non-zero otherwise
+  */
+-static inline int ufshcd_read_unit_desc_param(struct ufs_hba *hba,
+-					      int lun,
+-					      enum unit_desc_param param_offset,
+-					      u8 *param_read_buf,
+-					      u32 param_size)
++int ufshcd_read_unit_desc_param(struct ufs_hba *hba, int lun,
++				enum unit_desc_param param_offset,
++				u8 *param_read_buf, u32 param_size)
+ {
  	/*
- 	 * getting vendor (manufacturerID) and Bank Index in big endian
- 	 * format
+ 	 * Unit descriptors are only available for general purpose LUs (LUN id
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index d45a04444191..2fa9b880e228 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -838,7 +838,10 @@ extern int ufshcd_dme_set_attr(struct ufs_hba *hba, u32 attr_sel,
+ extern int ufshcd_dme_get_attr(struct ufs_hba *hba, u32 attr_sel,
+ 			       u32 *mib_val, u8 peer);
+ extern int ufshcd_config_pwr_mode(struct ufs_hba *hba,
+-			struct ufs_pa_layer_attr *desired_pwr_mode);
++				  struct ufs_pa_layer_attr *desired_pwr_mode);
++extern int ufshcd_read_unit_desc_param(struct ufs_hba *hba, int lun,
++				       enum unit_desc_param param_offset,
++				       u8 *param_read_buf, u32 param_size);
+ 
+ /* UIC command interfaces for DME primitives */
+ #define DME_LOCAL	0
 -- 
 2.17.1
 
