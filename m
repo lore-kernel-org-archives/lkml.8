@@ -2,111 +2,115 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB7CC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4530C4332E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69B5420722
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:09:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dBUbOceT"
+	by mail.kernel.org (Postfix) with ESMTP id 9A52F20776
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584803454;
+	bh=U4Hf1hmpj4n70a3/9ZoGhX0jHOItFAm1K5F9LLLQG5Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PzUh7duZWvyeDNYybb2wdKc8y+8MrQMefQPGtfNXE2wOrOZkt5kiHPMySxtxL5D/J
+	 MXXJKAVWvvPR8dEX01HhB4WzqFOjsudP9w5BqH3Bv+vhbE+3FmxxgVgpfZZkXoLTpd
+	 K33Wngb71JovtoVaB0CZknlGvYkx5RpfXCtmn6ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgCUPJw (ORCPT
+        id S1727432AbgCUPKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:09:52 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:26491 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727033AbgCUPJw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:09:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584803390;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MSU1xW5N48oria5FxYWPX9oN00WI/dUeeRc525ODbVI=;
-        b=dBUbOceTLngiCbgaP/LmI8ldQR5xgdlCQO0g+01GCKBo2KsCAb3V5Wg1iXwHG3VrftWsEI
-        QzjEov47z9Z/WWllh4TQMa+946xyjLWjgtLkM6JK7c1Klr58ZXxkkFWH+ptYqy+mMRpsJK
-        2zFTwkmP15sZDAJVIoy4ShzPoFNHL7w=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-260-elMpNYzHOR2tniNT-ouXgA-1; Sat, 21 Mar 2020 11:09:48 -0400
-X-MC-Unique: elMpNYzHOR2tniNT-ouXgA-1
-Received: by mail-wr1-f70.google.com with SMTP id d17so4370091wrs.7
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 08:09:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MSU1xW5N48oria5FxYWPX9oN00WI/dUeeRc525ODbVI=;
-        b=DKgc+x9U0ohGaI7LHyCvhlUU2m4JUnxp3c0UzO6iGzBfhlH+zCa8a567cMgrHgjGYH
-         aNfLwYjzJ/j1weV6QTOrEfWqYoQspIIiUrUxP44CUu1wdvgUOYtF5saSCjIlQeGmRphS
-         FLpBLLtMPt+g+UxisXdv5KFXBfg0o5Ct8WdS++snIhQeWZBBQrbRn4NpYFGBf+X2G9Nt
-         D88+ZQrm9cp1N0aMEE6JTPuDB+416ol4vQ/aG5YcMSmTiZAsMU6ch59bAcWQ4G4gC5IV
-         Yo8e9GDdL5wAmuiYwXpzmjqip4uXaZ6sixgIgaqFtg2BwdjUNybmBxcmwelrT3MIp9zn
-         f8aQ==
-X-Gm-Message-State: ANhLgQ1WuJtRj8fZUg0aivqnnAC6p41THQRmf1VxuUULeEjqAW9/caXp
-        suXylLthPtQHilfHFDod5l+KjsapG0jmnycKcwx7mWlO1RFNQPELJmzW+cq1b+Gpras+xSWqm30
-        kRbvrd+40MIkL2Eb8M8ZfXlYh
-X-Received: by 2002:a1c:bb86:: with SMTP id l128mr16198897wmf.41.1584803386678;
-        Sat, 21 Mar 2020 08:09:46 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vuaGumNR2yz+KrzOsfQqt0aVh3JYOD0AaJd974Iziew2JHt7IGS4gIzqQDMDPYRf2VFlaHsZw==
-X-Received: by 2002:a1c:bb86:: with SMTP id l128mr16198874wmf.41.1584803386328;
-        Sat, 21 Mar 2020 08:09:46 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id u5sm5767186wrq.85.2020.03.21.08.09.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Mar 2020 08:09:45 -0700 (PDT)
-Subject: Re: linux-next: Fixes tag needs some work in the gpio tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200321162707.5f4b1951@canb.auug.org.au>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <2195891d-4f41-a4e9-c067-2f2b556a1517@redhat.com>
-Date:   Sat, 21 Mar 2020 16:09:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200321162707.5f4b1951@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sat, 21 Mar 2020 11:10:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727052AbgCUPKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 11:10:53 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E6AD20722;
+        Sat, 21 Mar 2020 15:10:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584803452;
+        bh=U4Hf1hmpj4n70a3/9ZoGhX0jHOItFAm1K5F9LLLQG5Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=AHeNcRU1kT/BqNbgah+oGx9/cwnhFBsv12DaB8F752VK/mbJkQzDvkQRAo/h0N33b
+         +mwZOJC8veSw39sK5C3en+B4E2fGL/s8ZhAFNK20SWoWWDATbWVYGJ3YXvTwho0noE
+         vy0Mljle2Tz1+OPfwfapthNvZdYMsYzrNmqyVqxc=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jFfly-00EWFF-9R; Sat, 21 Mar 2020 15:10:50 +0000
+Date:   Sat, 21 Mar 2020 15:10:48 +0000
+Message-ID: <86sgi1zqtj.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] irqchip: irq-bcm7038-l1: Replace zero-length array with flexible-array member
+In-Reply-To: <20200319214438.GA21123@embeddedor.com>
+References: <20200319214438.GA21123@embeddedor.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: gustavo@embeddedor.com, f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 3/21/20 6:27 AM, Stephen Rothwell wrote:
-> Hi all,
+On Thu, 19 Mar 2020 21:44:38 +0000,
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 > 
-> In commit
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
->    1b26f3ba6117 ("gpiolib: acpi: Add quirk to ignore EC wakeups on HP x2 10 CHT + AXP288 model")
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 > 
-> Fixes tag
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
 > 
->    Fixes: aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option + quirk mech
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/irqchip/irq-bcm7038-l1.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-I see in my personal tree that I introduced this broken tag, sorry about
-that. Linus, if you are ok with doing a forced push to fix it up then
-the correct tag should be:
+Queued for 5.7.
 
-Fixes: aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism")
+Thanks,
 
-OTOH if you dislike forced pushes (which I completely understand)
-then we will just have to live with the broken tag.
+	M.
 
-Regards,
-
-Hans
-
+-- 
+Jazz is not dead, it just smells funny.
