@@ -7,43 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB62C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF3BC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD6420754
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D510520754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgCUPyS (ORCPT
+        id S1728109AbgCUPy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:54:18 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39058 "EHLO
+        Sat, 21 Mar 2020 11:54:26 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39083 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbgCUPx7 (ORCPT
+        with ESMTP id S1727894AbgCUPyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:53:59 -0400
+        Sat, 21 Mar 2020 11:54:04 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFgRe-0005W3-Ed; Sat, 21 Mar 2020 16:53:54 +0100
+        id 1jFgRf-0005WP-VX; Sat, 21 Mar 2020 16:53:56 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8F40D1C22F3;
-        Sat, 21 Mar 2020 16:53:52 +0100 (CET)
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 174A01C22F4;
+        Sat, 21 Mar 2020 16:53:53 +0100 (CET)
 Date:   Sat, 21 Mar 2020 15:53:52 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] usb: gadget: Use completion interface instead of
- open coding it
+Subject: [tip: locking/core] pci/switchtec: Replace completion wait queue
+ usage for poll
 Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200321113241.043380271@linutronix.de>
-References: <20200321113241.043380271@linutronix.de>
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200321113240.936097534@linutronix.de>
+References: <20200321113240.936097534@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158480603223.28353.16829608560057265287.tip-bot2@tip-bot2>
+Message-ID: <158480603267.28353.9251472096966677257.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,58 +60,125 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     c1d51dd505577b189bf33867a9c20015ca7efb46
-Gitweb:        https://git.kernel.org/tip/c1d51dd505577b189bf33867a9c20015ca7efb46
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Sat, 21 Mar 2020 12:25:47 +01:00
+Commit-ID:     deaa0a8a74d86573f190e21ae9a444ea5e3bceee
+Gitweb:        https://git.kernel.org/tip/deaa0a8a74d86573f190e21ae9a444ea5e3bceee
+Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate:    Sat, 21 Mar 2020 12:25:46 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Sat, 21 Mar 2020 16:00:20 +01:00
 
-usb: gadget: Use completion interface instead of open coding it
+pci/switchtec: Replace completion wait queue usage for poll
 
-ep_io() uses a completion on stack and open codes the waiting with:
+The poll callback is using the completion wait queue and sticks it into
+poll_wait() to wake up pollers after a command has completed.
 
-  wait_event_interruptible (done.wait, done.done);
-and
-  wait_event (done.wait, done.done);
+This works to some extent, but cannot provide EPOLLEXCLUSIVE support
+because the waker side uses complete_all() which unconditionally wakes up
+all waiters. complete_all() is required because completions internally use
+exclusive wait and complete() only wakes up one waiter by default.
 
-This waits in non-exclusive mode for complete(), but there is no reason to
-do so because the completion can only be waited for by the task itself and
-complete() wakes exactly one exlusive waiter.
+This mixes conceptually different mechanisms and relies on internal
+implementation details of completions, which in turn puts contraints on
+changing the internal implementation of completions.
 
-Replace the open coded implementation with the corresponding
-wait_for_completion*() functions.
+Replace it with a regular wait queue and store the state in struct
+switchtec_user.
 
-No functional change.
-
-Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://lkml.kernel.org/r/20200321113241.043380271@linutronix.de
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200321113240.936097534@linutronix.de
 ---
- drivers/usb/gadget/legacy/inode.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/switch/switchtec.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
-index b47938d..4c3aff9 100644
---- a/drivers/usb/gadget/legacy/inode.c
-+++ b/drivers/usb/gadget/legacy/inode.c
-@@ -344,7 +344,7 @@ ep_io (struct ep_data *epdata, void *buf, unsigned len)
- 	spin_unlock_irq (&epdata->dev->lock);
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index 81dc7ac..e69cac8 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -52,10 +52,11 @@ struct switchtec_user {
  
- 	if (likely (value == 0)) {
--		value = wait_event_interruptible (done.wait, done.done);
-+		value = wait_for_completion_interruptible(&done);
- 		if (value != 0) {
- 			spin_lock_irq (&epdata->dev->lock);
- 			if (likely (epdata->ep != NULL)) {
-@@ -353,7 +353,7 @@ ep_io (struct ep_data *epdata, void *buf, unsigned len)
- 				usb_ep_dequeue (epdata->ep, epdata->req);
- 				spin_unlock_irq (&epdata->dev->lock);
+ 	enum mrpc_state state;
  
--				wait_event (done.wait, done.done);
-+				wait_for_completion(&done);
- 				if (epdata->status == -ECONNRESET)
- 					epdata->status = -EINTR;
- 			} else {
+-	struct completion comp;
++	wait_queue_head_t cmd_comp;
+ 	struct kref kref;
+ 	struct list_head list;
+ 
++	bool cmd_done;
+ 	u32 cmd;
+ 	u32 status;
+ 	u32 return_code;
+@@ -77,7 +78,7 @@ static struct switchtec_user *stuser_create(struct switchtec_dev *stdev)
+ 	stuser->stdev = stdev;
+ 	kref_init(&stuser->kref);
+ 	INIT_LIST_HEAD(&stuser->list);
+-	init_completion(&stuser->comp);
++	init_waitqueue_head(&stuser->cmd_comp);
+ 	stuser->event_cnt = atomic_read(&stdev->event_cnt);
+ 
+ 	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
+@@ -175,7 +176,7 @@ static int mrpc_queue_cmd(struct switchtec_user *stuser)
+ 	kref_get(&stuser->kref);
+ 	stuser->read_len = sizeof(stuser->data);
+ 	stuser_set_state(stuser, MRPC_QUEUED);
+-	reinit_completion(&stuser->comp);
++	stuser->cmd_done = false;
+ 	list_add_tail(&stuser->list, &stdev->mrpc_queue);
+ 
+ 	mrpc_cmd_submit(stdev);
+@@ -222,7 +223,8 @@ static void mrpc_complete_cmd(struct switchtec_dev *stdev)
+ 		memcpy_fromio(stuser->data, &stdev->mmio_mrpc->output_data,
+ 			      stuser->read_len);
+ out:
+-	complete_all(&stuser->comp);
++	stuser->cmd_done = true;
++	wake_up_interruptible(&stuser->cmd_comp);
+ 	list_del_init(&stuser->list);
+ 	stuser_put(stuser);
+ 	stdev->mrpc_busy = 0;
+@@ -529,10 +531,11 @@ static ssize_t switchtec_dev_read(struct file *filp, char __user *data,
+ 	mutex_unlock(&stdev->mrpc_mutex);
+ 
+ 	if (filp->f_flags & O_NONBLOCK) {
+-		if (!try_wait_for_completion(&stuser->comp))
++		if (!stuser->cmd_done)
+ 			return -EAGAIN;
+ 	} else {
+-		rc = wait_for_completion_interruptible(&stuser->comp);
++		rc = wait_event_interruptible(stuser->cmd_comp,
++					      stuser->cmd_done);
+ 		if (rc < 0)
+ 			return rc;
+ 	}
+@@ -580,7 +583,7 @@ static __poll_t switchtec_dev_poll(struct file *filp, poll_table *wait)
+ 	struct switchtec_dev *stdev = stuser->stdev;
+ 	__poll_t ret = 0;
+ 
+-	poll_wait(filp, &stuser->comp.wait, wait);
++	poll_wait(filp, &stuser->cmd_comp, wait);
+ 	poll_wait(filp, &stdev->event_wq, wait);
+ 
+ 	if (lock_mutex_and_test_alive(stdev))
+@@ -588,7 +591,7 @@ static __poll_t switchtec_dev_poll(struct file *filp, poll_table *wait)
+ 
+ 	mutex_unlock(&stdev->mrpc_mutex);
+ 
+-	if (try_wait_for_completion(&stuser->comp))
++	if (stuser->cmd_done)
+ 		ret |= EPOLLIN | EPOLLRDNORM;
+ 
+ 	if (stuser->event_cnt != atomic_read(&stdev->event_cnt))
+@@ -1272,7 +1275,8 @@ static void stdev_kill(struct switchtec_dev *stdev)
+ 
+ 	/* Wake up and kill any users waiting on an MRPC request */
+ 	list_for_each_entry_safe(stuser, tmpuser, &stdev->mrpc_queue, list) {
+-		complete_all(&stuser->comp);
++		stuser->cmd_done = true;
++		wake_up_interruptible(&stuser->cmd_comp);
+ 		list_del_init(&stuser->list);
+ 		stuser_put(stuser);
+ 	}
