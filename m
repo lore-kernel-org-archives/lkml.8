@@ -2,59 +2,116 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B00DC4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25056C4332E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 13:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB4520781
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFEA420780
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 13:10:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rh+Wml1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbgCUM51 (ORCPT
+        id S1727354AbgCUNKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 08:57:27 -0400
-Received: from mail.manjaro.org ([176.9.38.148]:37516 "EHLO mail.manjaro.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbgCUM50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 08:57:26 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.manjaro.org (Postfix) with ESMTP id 598A837E507D;
-        Sat, 21 Mar 2020 13:57:25 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from mail.manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id o75kpYDVcgR2; Sat, 21 Mar 2020 13:57:23 +0100 (CET)
-Subject: Re: [PATCH v5 2/3] dt-bindings: power: supply: add cw2015_battery
- bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200315191914.118565-1-t.schramm@manjaro.org>
- <20200315191914.118565-3-t.schramm@manjaro.org>
- <20200320223108.GB32311@bogus>
-From:   Tobias Schramm <t.schramm@manjaro.org>
-Message-ID: <05c068f5-9621-9879-b500-0a2dc242eefb@manjaro.org>
-Date:   Sat, 21 Mar 2020 13:57:38 +0100
+        Sat, 21 Mar 2020 09:10:25 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39288 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbgCUNKZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 09:10:25 -0400
+Received: by mail-pg1-f195.google.com with SMTP id b22so4530599pgb.6;
+        Sat, 21 Mar 2020 06:10:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0vQsQdcUJTfpg3tUTgYBPKfSjhWzRCMyiQPBapbD6bQ=;
+        b=rh+Wml1AYoYlGwP/sBjz7Maol2ZAJci5n+FHkZt5xqOngDOsEWIkMOqnMSRmwzEdzy
+         aOBz3DjPabcP0iBoMSGhg97lFXJdk5m/YyLeJR5Py9WUlNL3YAGFEn8YBJpo46KmrO+8
+         H46gDPt23aGEk7b+3A9Hf2FP21U9CNzQsZ+51I/j8cg26eQ0hpZKnRoIgTZGVDLov/HJ
+         DfNo8iqatf3fCSVdA+i+nRMC4tApZzSx7tkSQYLEq7L6RwGo/OudBYN6qESaYygVEvZV
+         UYsP+zqkCTq2XNR0qYBYekvsrHgbt38DQpMRgqG4kV42P9x2OzD2TfmPkDdUJV+MJh2q
+         8lRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0vQsQdcUJTfpg3tUTgYBPKfSjhWzRCMyiQPBapbD6bQ=;
+        b=i0gnQin2gKrVJ2MgrgEaQJcorZJgIK6RThuhe9q8FT/MXv7L/BRXbkY952/GPUwNIq
+         gYUn1pdmvcqkrDa5qly+J7id6qWNOp+YgKJvJhWWYyO+wvM/ahFRh7+TTIc5G+knrRnE
+         3cmM48+b0Uv9oINMsMKxrmFS9eN2uREHNCsx9ige0OgNltD8zrSjc4NGekFYTvISw66u
+         jXdgtoB1kORfrQ25DQrgiEzeavLnHt4V6lyLYM7rHV1t2iSw/YWKJlwaA1tBLJIP8e75
+         b1IhlDwQwfCLp0fwyWtNAE6e9zh2Z/1IzPMXYZv8KyueCuwbfEbF+2AN2ZhXrVTqEdkD
+         lTCw==
+X-Gm-Message-State: ANhLgQ1km6NemdTLQsGjpjuu7YuqJ8dSZYg1Nzg/43WcdN8V1x6rGXJr
+        ta8HZoGC3hGsBjzte2sfXDX757PD
+X-Google-Smtp-Source: ADFU+vvfqnXCj9Ov7oFxufOOvZcJ03Cdw7Bd+ttiglbLInNO3TlvJ2etGW3YmQ7aI7sO9eu4+XXtTA==
+X-Received: by 2002:aa7:9f49:: with SMTP id h9mr12829539pfr.217.1584796223891;
+        Sat, 21 Mar 2020 06:10:23 -0700 (PDT)
+Received: from ?IPv6:2409:4072:6e97:2149:892d:8d8:1a6c:acda? ([2409:4072:6e97:2149:892d:8d8:1a6c:acda])
+        by smtp.gmail.com with ESMTPSA id k4sm8932688pfh.0.2020.03.21.06.10.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Mar 2020 06:10:23 -0700 (PDT)
+Subject: Re: [PATCH 1/2] iio: light: tsl2563: Wrap comment description
+To:     Joe Perches <joe@perches.com>, jic23@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1584518000.git.nish.malpani25@gmail.com>
+ <9129a6c25f772bdfba28d556190e5511c7005e8a.1584518000.git.nish.malpani25@gmail.com>
+ <c68e74af78fa0f73a9dc4cf5535a2dc16b99b729.camel@perches.com>
+From:   Nishant Malpani <nish.malpani25@gmail.com>
+Message-ID: <62965030-3cc8-78d3-ef80-f88c585f82e2@gmail.com>
+Date:   Sat, 21 Mar 2020 18:40:16 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200320223108.GB32311@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US-large
+In-Reply-To: <c68e74af78fa0f73a9dc4cf5535a2dc16b99b729.camel@perches.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On 21/03/20 5:21 pm, Joe Perches wrote:
+> On Wed, 2020-03-18 at 13:33 +0530, Nishant Malpani wrote:
+>> This patch wraps the comment description at 75 chars. Fixes the
+>> following warning generated by checkpatch.pl:
+>>
+>> WARNING: Possible unwrapped commit description (prefer a maximum 75 chars per line)
+> 
+> Please do not scan files as patches.
+> 
+> checkpatch does not emit this message on a file
+> when used properly with the -f option.
+> 
+You're right, Joe. I had used checkpatch.pl without the -f option on a 
+file, ergo giving me the aforementioned warning. My bad, I shall refrain 
+from not doing this in the future. Thank you and Jonathan for correcting me.
 
-thanks for the review. I've just sent out v6 addressing the issues you
-have found.
+With regards,
+Nishant Malpani
 
-Tobias
-
+>> diff --git a/drivers/iio/light/tsl2563.c b/drivers/iio/light/tsl2563.c
+> []
+>> @@ -222,9 +222,9 @@ static int tsl2563_read_id(struct tsl2563_chip *chip, u8 *id)
+>>   }
+>>   
+>>   /*
+>> - * "Normalized" ADC value is one obtained with 400ms of integration time and
+>> - * 16x gain. This function returns the number of bits of shift needed to
+>> - * convert between normalized values and HW values obtained using given
+>> + * "Normalized" ADC value is one obtained with 400ms of integration time
+>> + * and 16x gain. This function returns the number of bits of shift needed
+>> + * to convert between normalized values and HW values obtained using given
+>>    * timing and gain settings.
+>>    */
+>>   static int tsl2563_adc_shiftbits(u8 timing)
+> 
