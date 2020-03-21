@@ -7,41 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931A7C4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B87C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6F220781
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B719120780
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:30:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbgCUPak (ORCPT
+        id S1727774AbgCUPaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:30:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38877 "EHLO
+        Sat, 21 Mar 2020 11:30:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38919 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbgCUPaf (ORCPT
+        with ESMTP id S1727497AbgCUPal (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:30:35 -0400
+        Sat, 21 Mar 2020 11:30:41 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFg51-0004wf-Jx; Sat, 21 Mar 2020 16:30:31 +0100
+        id 1jFg59-00051Y-7C; Sat, 21 Mar 2020 16:30:39 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 280B81C22E5;
-        Sat, 21 Mar 2020 16:30:31 +0100 (CET)
-Date:   Sat, 21 Mar 2020 15:30:30 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 156FB1C22E4;
+        Sat, 21 Mar 2020 16:30:37 +0100 (CET)
+Date:   Sat, 21 Mar 2020 15:30:36 -0000
+From:   "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/entry: Rename ___preempt_schedule
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: x86/entry] x86/entry/64: Move sys_ni_syscall stub to common.c
+Cc:     Brian Gerst <brgerst@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200320115858.995685950@infradead.org>
-References: <20200320115858.995685950@infradead.org>
+In-Reply-To: <20200313195144.164260-7-brgerst@gmail.com>
+References: <20200313195144.164260-7-brgerst@gmail.com>
 MIME-Version: 1.0
-Message-ID: <158480463081.28353.17673265563956442627.tip-bot2@tip-bot2>
+Message-ID: <158480463674.28353.6214614962833183223.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,92 +56,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     46db36abc32dfd18041c57d571fe4945fc0057fe
-Gitweb:        https://git.kernel.org/tip/46db36abc32dfd18041c57d571fe4945fc0057fe
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Fri, 20 Mar 2020 12:56:39 +01:00
+Commit-ID:     cc42c045af1ff4dee875196f8fe7d6ed1f29ea64
+Gitweb:        https://git.kernel.org/tip/cc42c045af1ff4dee875196f8fe7d6ed1f29ea64
+Author:        Brian Gerst <brgerst@gmail.com>
+AuthorDate:    Fri, 13 Mar 2020 15:51:32 -04:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 21 Mar 2020 16:03:53 +01:00
+CommitterDate: Sat, 21 Mar 2020 16:03:20 +01:00
 
-x86/entry: Rename ___preempt_schedule
+x86/entry/64: Move sys_ni_syscall stub to common.c
 
-Because moar '_' isn't always moar readable.
+so it can be available to multiple syscall tables.  Also directly return
+-ENOSYS instead of bouncing to the generic sys_ni_syscall().
 
-git grep -l "___preempt_schedule\(_notrace\)*" | while read file;
-do
-	sed -ie 's/___preempt_schedule\(_notrace\)*/preempt_schedule\1_thunk/g' $file;
-done
-
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Brian Gerst <brgerst@gmail.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Will Deacon <will@kernel.org>
-Link: https://lkml.kernel.org/r/20200320115858.995685950@infradead.org
+Link: https://lkml.kernel.org/r/20200313195144.164260-7-brgerst@gmail.com
 
 ---
- arch/x86/entry/thunk_32.S      | 8 ++++----
- arch/x86/entry/thunk_64.S      | 8 ++++----
- arch/x86/include/asm/preempt.h | 8 ++++----
- 3 files changed, 12 insertions(+), 12 deletions(-)
+ arch/x86/entry/common.c                | 7 +++++++
+ arch/x86/entry/syscall_64.c            | 7 -------
+ arch/x86/include/asm/syscall_wrapper.h | 3 +++
+ 3 files changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/entry/thunk_32.S b/arch/x86/entry/thunk_32.S
-index e010d4a..3a07ce3 100644
---- a/arch/x86/entry/thunk_32.S
-+++ b/arch/x86/entry/thunk_32.S
-@@ -35,9 +35,9 @@ SYM_CODE_END(\name)
+diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+index 9747876..149bf54 100644
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -438,3 +438,10 @@ __visible long do_fast_syscall_32(struct pt_regs *regs)
  #endif
- 
- #ifdef CONFIG_PREEMPTION
--	THUNK ___preempt_schedule, preempt_schedule
--	THUNK ___preempt_schedule_notrace, preempt_schedule_notrace
--	EXPORT_SYMBOL(___preempt_schedule)
--	EXPORT_SYMBOL(___preempt_schedule_notrace)
-+	THUNK preempt_schedule_thunk, preempt_schedule
-+	THUNK preempt_schedule_notrace_thunk, preempt_schedule_notrace
-+	EXPORT_SYMBOL(preempt_schedule_thunk)
-+	EXPORT_SYMBOL(preempt_schedule_notrace_thunk)
- #endif
- 
-diff --git a/arch/x86/entry/thunk_64.S b/arch/x86/entry/thunk_64.S
-index c5c3b6e..dbe4493 100644
---- a/arch/x86/entry/thunk_64.S
-+++ b/arch/x86/entry/thunk_64.S
-@@ -47,10 +47,10 @@ SYM_FUNC_END(\name)
- #endif
- 
- #ifdef CONFIG_PREEMPTION
--	THUNK ___preempt_schedule, preempt_schedule
--	THUNK ___preempt_schedule_notrace, preempt_schedule_notrace
--	EXPORT_SYMBOL(___preempt_schedule)
--	EXPORT_SYMBOL(___preempt_schedule_notrace)
-+	THUNK preempt_schedule_thunk, preempt_schedule
-+	THUNK preempt_schedule_notrace_thunk, preempt_schedule_notrace
-+	EXPORT_SYMBOL(preempt_schedule_thunk)
-+	EXPORT_SYMBOL(preempt_schedule_notrace_thunk)
- #endif
- 
- #if defined(CONFIG_TRACE_IRQFLAGS) \
-diff --git a/arch/x86/include/asm/preempt.h b/arch/x86/include/asm/preempt.h
-index 3d4cb83..69485ca 100644
---- a/arch/x86/include/asm/preempt.h
-+++ b/arch/x86/include/asm/preempt.h
-@@ -103,14 +103,14 @@ static __always_inline bool should_resched(int preempt_offset)
  }
- 
- #ifdef CONFIG_PREEMPTION
--  extern asmlinkage void ___preempt_schedule(void);
-+  extern asmlinkage void preempt_schedule_thunk(void);
- # define __preempt_schedule() \
--	asm volatile ("call ___preempt_schedule" : ASM_CALL_CONSTRAINT)
-+	asm volatile ("call preempt_schedule_thunk" : ASM_CALL_CONSTRAINT)
- 
-   extern asmlinkage void preempt_schedule(void);
--  extern asmlinkage void ___preempt_schedule_notrace(void);
-+  extern asmlinkage void preempt_schedule_notrace_thunk(void);
- # define __preempt_schedule_notrace() \
--	asm volatile ("call ___preempt_schedule_notrace" : ASM_CALL_CONSTRAINT)
-+	asm volatile ("call preempt_schedule_notrace_thunk" : ASM_CALL_CONSTRAINT)
- 
-   extern asmlinkage void preempt_schedule_notrace(void);
  #endif
++
++#ifdef CONFIG_X86_64
++SYSCALL_DEFINE0(ni_syscall)
++{
++	return -ENOSYS;
++}
++#endif
+diff --git a/arch/x86/entry/syscall_64.c b/arch/x86/entry/syscall_64.c
+index adf619a..058dc1b 100644
+--- a/arch/x86/entry/syscall_64.c
++++ b/arch/x86/entry/syscall_64.c
+@@ -8,13 +8,6 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/syscall.h>
+ 
+-extern asmlinkage long sys_ni_syscall(void);
+-
+-SYSCALL_DEFINE0(ni_syscall)
+-{
+-	return sys_ni_syscall();
+-}
+-
+ #define __SYSCALL_64(nr, sym, qual) extern asmlinkage long sym(const struct pt_regs *);
+ #define __SYSCALL_X32(nr, sym, qual) __SYSCALL_64(nr, sym, qual)
+ #include <asm/syscalls_64.h>
+diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
+index 1d96cce..0f126e4 100644
+--- a/arch/x86/include/asm/syscall_wrapper.h
++++ b/arch/x86/include/asm/syscall_wrapper.h
+@@ -8,6 +8,9 @@
+ 
+ struct pt_regs;
+ 
++extern asmlinkage long __x64_sys_ni_syscall(const struct pt_regs *regs);
++extern asmlinkage long __ia32_sys_ni_syscall(const struct pt_regs *regs);
++
+ /* Mapping of registers to parameters for syscalls on x86-64 and x32 */
+ #define SC_X86_64_REGS_TO_ARGS(x, ...)					\
+ 	__MAP(x,__SC_ARGS						\
