@@ -2,196 +2,242 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 599B8C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63518C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1EB2072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2998820757
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:47:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OT38GO/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgCUCrL convert rfc822-to-8bit (ORCPT
+        id S1727985AbgCUCrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 22:47:11 -0400
-Received: from mail-am6eur05olkn2059.outbound.protection.outlook.com ([40.92.91.59]:37472
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726840AbgCUCrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 22:47:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dNTjLty013s8Td+o6PdoUKlWu8Y33c2a0O6Rlc2GxuLtf9xX3tlfinv5UtzENmJ+ik60a9TNWhBnfx4ZCsmUGlFql5gB5BmyCeqE7tHPIE8maHGpbhNtSdTUx1Czozdnk+9KKjmQwB+VRP5E/NpDiivRUJpzmQ2erD5TDfGf71tUVq3VeUez8izBFlOZFeHnmcnoWOKrUEIUsgQOFd8SXL2p9PThLxTXxLqAqGog23ayLXQewffKB+PhRVGsdzC1h9+SbEXwGMcLQy5FWgG8/5J38oJuAat4j9s2tnJOSKMLMngFX4JRwWkxzmE/bmyA8WXO4aBh7jBbOXCYnAdGLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fMxz+RuV9RQMUxgG0UAnwQ7e+XVLgekPkpYVpUFheXA=;
- b=BTUOB/kDKAuGJgnIGBVF/H88+AgdugmdNO2fjW3R997zrCNyqocoDrhU8b7nn2e0lCEYU7stApDojpPJuIhyl46CXOQ7IovrS5EI1wuti+M+DTbdHo7I+PT/IyUVtEqPM7Pt5oNUDVwDY46cyLJq3y/PoSD1agVJ8YVN2j0kG53oTX5vb5iZc9bnCa/anTu6TeMOwmowrBPBJ7cE2805jMxZKX1UfHV4FM4mTv2HXa57KFxuEu3fmUF5+V9Iu/h7Oc0eoXyY55YtT3gKxMLP6+mK1wYi/jk1avjf47R099dVeCTRo1bPv0KwmFCV/RzAFi0ikX9DrTfBuGK/IW7L3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from VI1EUR05FT062.eop-eur05.prod.protection.outlook.com
- (2a01:111:e400:fc12::33) by
- VI1EUR05HT022.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc12::77)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.13; Sat, 21 Mar
- 2020 02:47:04 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.233.242.53) by
- VI1EUR05FT062.mail.protection.outlook.com (10.233.243.189) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.13 via Frontend Transport; Sat, 21 Mar 2020 02:47:04 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2835.017; Sat, 21 Mar 2020
- 02:47:04 +0000
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        "jannh@google.com" <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "avagin@gmail.com" <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "duyuyang@gmail.com" <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "christian@kellner.me" <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: [PATCH v6 16/16] doc: Update documentation of ->exec_*_mutex
-Thread-Topic: [PATCH v6 16/16] doc: Update documentation of ->exec_*_mutex
-Thread-Index: AQHV/vVmRRuSYR3ND0imHjEGSGoE8w==
-Date:   Sat, 21 Mar 2020 02:47:04 +0000
-Message-ID: <3ce46b88-7ed3-2f21-c0ed-8f6055d38ebb@hotmail.de>
-References: <077b63b7-6f5e-aa8e-bf96-a586b481cc46@hotmail.de>
-In-Reply-To: <077b63b7-6f5e-aa8e-bf96-a586b481cc46@hotmail.de>
-Accept-Language: en-US, en-GB, de-DE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-imapappendstamp: AM6PR03MB5170.eurprd03.prod.outlook.com
- (15.20.2835.016)
-x-incomingtopheadermarker: OriginalChecksum:D59A7125C1ECEE8EC38414552399C105A4F8B87DB3BC2846933447E6B527A079;UpperCasedChecksum:E01611456461A8E7B89DB78136D189B18EE3BAEFD2C60D65FA6942FBE887FA2F;SizeAsReceived:8475;Count:46
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [FSjQ7o0dBOcWLZIQbDVvCPMI4Lsxt0vu]
-x-ms-publictraffictype: Email
-x-incomingheadercount: 46
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 366a69d2-1471-4b70-ba6d-08d7cd4223d8
-x-ms-traffictypediagnostic: VI1EUR05HT022:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Q34OtT4FVmQK6n7e6GU4FNGkL06IEggWsiG7zRTqKZmX/Baf/5sXo3UPD5hyeKYXdHGV/Pmmfs7u1R/VyKmieckq5Jwgh2brCqmxWvamD7/EcAi9A3HZKbXGO9YKZME83zIji5FZufAEneTII4UvSeqTA7Zio4Fkz06ZDyJl9OG69/MN1kTy07pZrxLj/TLT
-x-ms-exchange-antispam-messagedata: mDB3dAqm/a2K6L0KmfdLOaVkB8BPHaNYy4wU0us/yCkizMj3ebSqd7DXb2TCopp+zepvraJQwCtJonNOQIuJjry/qaA105bGyLTKYZqN/4Ak/p2mh0WXx6solgw5jaRgooiijgaH4nXgmqGnTu/U8g==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <4175CD035CA92C46A2291553CAB5F9B9@sct-15-20-2387-20-msonline-outlook-45755.templateTenant>
-Content-Transfer-Encoding: 8BIT
+        Fri, 20 Mar 2020 22:47:43 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:43923 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgCUCrm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 22:47:42 -0400
+Received: by mail-il1-f194.google.com with SMTP id d14so7750659ilq.10;
+        Fri, 20 Mar 2020 19:47:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P2k0WSrU2ZJXZjVaGAcVV0ERjfzvv5YtgF8yXRGmqTM=;
+        b=OT38GO/5P1zn2/sHIO+sZHLa0OI9KwhNQJKtcFbgKeTiKVu1TACH1x0bwqJ0rTKWBP
+         aiVFYdMWvdh/QkFdX4ER8vhDBqqaAN1pHCSlJLYNYVciWRqBXtaFJx2F9MvOnCU33LvK
+         MFuh4VR4T1TtPf/G1gtn/URn5G+vhj2FTNSyGv3PyAZOQSqTgAQbXH0Cj/01y3mIwMUg
+         jqljry4A0ObdRybqV3tkFHJR/I8MkmR/2mrnMaUOfXAOv/lJ8cPJaytYgBneJ2JiXvSX
+         ZNmUSHd0QuNqurIuQR6smKp75/x15MiCj5SZ3h9Tmggl7RclS84ugc1THsDK4Bkxek34
+         ehXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P2k0WSrU2ZJXZjVaGAcVV0ERjfzvv5YtgF8yXRGmqTM=;
+        b=TXXb4yVbvr1PhEOUFmQRIgSHDPFCtnUEhO1Il2s65vYHXkLgwfhKFbd1qd85UAwKMi
+         sznp1zGF56dehMvbeLBHb6FymwjtomG3kNsHkr48FedtWhmnMpVLsrO4dVfks2UhAeGu
+         5buuPWHouI5L62MEc1ocSm5jkrXS/ojjOj4mYB/G9FluAiBTJjsswPB5RqkhYg8Gcf7b
+         247U3QGASaF3V9Fa9pkGHuLDBzPDZSBQTIg/LglrqRWReFYQVIreR09qNiKpvYTqTqoq
+         +Jq/qPj2ucjXiP+tGzxFbPzYremxGHdEQvw8DsmS2htN3IW4t1XB2cLSYXGlTuDOsqEY
+         VdRA==
+X-Gm-Message-State: ANhLgQ255a+F/LHFnW0kF3RjajNs+qC9vRiB7onvLqoseSjc+CTWeKiV
+        6ZsrQS5SAaHkqBOaFXSIaqiGTchhlPzL00jaME649Io8ENM=
+X-Google-Smtp-Source: ADFU+vuY0R1Q1Q1paA1QkcLiRlZza0f3IQihlav68tUfmh6Giyw+2YLUV5DOd1UF0abU/7hpcGn0Xy2Ckzq2kPsQiTE=
+X-Received: by 2002:a92:bb9d:: with SMTP id x29mr11774869ilk.137.1584758861451;
+ Fri, 20 Mar 2020 19:47:41 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 366a69d2-1471-4b70-ba6d-08d7cd4223d8
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2020 02:47:04.8066
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1EUR05HT022
+References: <1584408485-1921-1-git-send-email-laoar.shao@gmail.com> <158470908459.28353.7390210153247885071.tip-bot2@tip-bot2>
+In-Reply-To: <158470908459.28353.7390210153247885071.tip-bot2@tip-bot2>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Sat, 21 Mar 2020 10:47:05 +0800
+Message-ID: <CALOAHbDGvbZ6x6pDcPah3_3YV9mwMtuFWbLhi0hTQmRro73jqg@mail.gmail.com>
+Subject: Re: [tip: sched/core] psi: Move PF_MEMSTALL out of task->flags
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     linux-tip-commits@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This brings the outdated Documentation/security/credentials.rst
-back in line with the current implementation, and describes the
-purpose of current->signal->exec_update_mutex,
-current->signal->exec_guard_mutex and
-current->signal->unsafe_execve_in_progress.
+On Fri, Mar 20, 2020 at 8:58 PM tip-bot2 for Yafang Shao
+<tip-bot2@linutronix.de> wrote:
+>
+> The following commit has been merged into the sched/core branch of tip:
+>
+> Commit-ID:     1066d1b6974e095d5a6c472ad9180a957b496cd6
+> Gitweb:        https://git.kernel.org/tip/1066d1b6974e095d5a6c472ad9180a957b496cd6
+> Author:        Yafang Shao <laoar.shao@gmail.com>
+> AuthorDate:    Mon, 16 Mar 2020 21:28:05 -04:00
+> Committer:     Peter Zijlstra <peterz@infradead.org>
+> CommitterDate: Fri, 20 Mar 2020 13:06:19 +01:00
+>
+> psi: Move PF_MEMSTALL out of task->flags
+>
+> The task->flags is a 32-bits flag, in which 31 bits have already been
+> consumed. So it is hardly to introduce other new per process flag.
+> Currently there're still enough spaces in the bit-field section of
+> task_struct, so we can define the memstall state as a single bit in
+> task_struct instead.
+> This patch also removes an out-of-date comment pointed by Matthew.
+>
+> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> Link: https://lkml.kernel.org/r/1584408485-1921-1-git-send-email-laoar.shao@gmail.com
+> ---
+>  include/linux/sched.h |  6 ++++--
+>  kernel/sched/psi.c    | 12 ++++++------
+>  kernel/sched/stats.h  | 10 +++++-----
+>  3 files changed, 15 insertions(+), 13 deletions(-)
+>
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 2e9199b..09bddd9 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -785,9 +785,12 @@ struct task_struct {
+>         unsigned                        frozen:1;
+>  #endif
+>  #ifdef CONFIG_BLK_CGROUP
+> -       /* to be used once the psi infrastructure lands upstream. */
+>         unsigned                        use_memdelay:1;
+>  #endif
+> +#ifdef CONFIG_PSI
+> +       /* Stalled due to lack of memory */
+> +       unsigned                        in_memstall:1;
+> +#endif
+>
+>         unsigned long                   atomic_flags; /* Flags requiring atomic access. */
+>
+> @@ -1480,7 +1483,6 @@ extern struct pid *cad_pid;
+>  #define PF_KTHREAD             0x00200000      /* I am a kernel thread */
+>  #define PF_RANDOMIZE           0x00400000      /* Randomize virtual address space */
+>  #define PF_SWAPWRITE           0x00800000      /* Allowed to write to swap */
+> -#define PF_MEMSTALL            0x01000000      /* Stalled due to lack of memory */
+>  #define PF_UMH                 0x02000000      /* I'm an Usermodehelper process */
+>  #define PF_NO_SETAFFINITY      0x04000000      /* Userland is not allowed to meddle with cpus_mask */
+>  #define PF_MCE_EARLY           0x08000000      /* Early kill for mce process policy */
+> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+> index 955a124..8f45cdb 100644
+> --- a/kernel/sched/psi.c
+> +++ b/kernel/sched/psi.c
+> @@ -865,17 +865,17 @@ void psi_memstall_enter(unsigned long *flags)
+>         if (static_branch_likely(&psi_disabled))
+>                 return;
+>
+> -       *flags = current->flags & PF_MEMSTALL;
+> +       *flags = current->in_memstall;
+>         if (*flags)
+>                 return;
+>         /*
+> -        * PF_MEMSTALL setting & accounting needs to be atomic wrt
+> +        * in_memstall setting & accounting needs to be atomic wrt
+>          * changes to the task's scheduling state, otherwise we can
+>          * race with CPU migration.
+>          */
+>         rq = this_rq_lock_irq(&rf);
+>
+> -       current->flags |= PF_MEMSTALL;
+> +       current->in_memstall = 1;
+>         psi_task_change(current, 0, TSK_MEMSTALL);
+>
+>         rq_unlock_irq(rq, &rf);
+> @@ -898,13 +898,13 @@ void psi_memstall_leave(unsigned long *flags)
+>         if (*flags)
+>                 return;
+>         /*
+> -        * PF_MEMSTALL clearing & accounting needs to be atomic wrt
+> +        * in_memstall clearing & accounting needs to be atomic wrt
+>          * changes to the task's scheduling state, otherwise we could
+>          * race with CPU migration.
+>          */
+>         rq = this_rq_lock_irq(&rf);
+>
+> -       current->flags &= ~PF_MEMSTALL;
+> +       current->in_memstall = 0;
+>         psi_task_change(current, TSK_MEMSTALL, 0);
+>
+>         rq_unlock_irq(rq, &rf);
+> @@ -970,7 +970,7 @@ void cgroup_move_task(struct task_struct *task, struct css_set *to)
+>         } else if (task->in_iowait)
+>                 task_flags = TSK_IOWAIT;
+>
+> -       if (task->flags & PF_MEMSTALL)
+> +       if (task->in_memstall)
+>                 task_flags |= TSK_MEMSTALL;
+>
+>         if (task_flags)
+> diff --git a/kernel/sched/stats.h b/kernel/sched/stats.h
+> index 1339f5b..33d0daf 100644
+> --- a/kernel/sched/stats.h
+> +++ b/kernel/sched/stats.h
+> @@ -70,7 +70,7 @@ static inline void psi_enqueue(struct task_struct *p, bool wakeup)
+>                 return;
+>
+>         if (!wakeup || p->sched_psi_wake_requeue) {
+> -               if (p->flags & PF_MEMSTALL)
+> +               if (p->in_memstall)
+>                         set |= TSK_MEMSTALL;
+>                 if (p->sched_psi_wake_requeue)
+>                         p->sched_psi_wake_requeue = 0;
+> @@ -90,7 +90,7 @@ static inline void psi_dequeue(struct task_struct *p, bool sleep)
+>                 return;
+>
+>         if (!sleep) {
+> -               if (p->flags & PF_MEMSTALL)
+> +               if (p->in_memstall)
+>                         clear |= TSK_MEMSTALL;
+>         } else {
+>                 /*
+> @@ -117,14 +117,14 @@ static inline void psi_ttwu_dequeue(struct task_struct *p)
+>          * deregister its sleep-persistent psi states from the old
+>          * queue, and let psi_enqueue() know it has to requeue.
+>          */
+> -       if (unlikely(p->in_iowait || (p->flags & PF_MEMSTALL))) {
+> +       if (unlikely(p->in_iowait || p->in_memstall)) {
+>                 struct rq_flags rf;
+>                 struct rq *rq;
+>                 int clear = 0;
+>
+>                 if (p->in_iowait)
+>                         clear |= TSK_IOWAIT;
+> -               if (p->flags & PF_MEMSTALL)
+> +               if (p->in_memstall)
+>                         clear |= TSK_MEMSTALL;
+>
+>                 rq = __task_rq_lock(p, &rf);
+> @@ -149,7 +149,7 @@ static inline void psi_task_tick(struct rq *rq)
+>         if (static_branch_likely(&psi_disabled))
+>                 return;
+>
+> -       if (unlikely(rq->curr->flags & PF_MEMSTALL))
+> +       if (unlikely(rq->curr->in_memstall))
+>                 psi_memstall_tick(rq->curr, cpu_of(rq));
+>  }
+>  #else /* CONFIG_PSI */
 
-Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
----
- Documentation/security/credentials.rst | 29 +++++++++++++++++++++--------
- 1 file changed, 21 insertions(+), 8 deletions(-)
++ Andrew
 
-diff --git a/Documentation/security/credentials.rst b/Documentation/security/credentials.rst
-index 282e79f..fe4cd76 100644
---- a/Documentation/security/credentials.rst
-+++ b/Documentation/security/credentials.rst
-@@ -437,15 +437,30 @@ new set of credentials by calling::
- 
- 	struct cred *prepare_creds(void);
- 
--this locks current->cred_replace_mutex and then allocates and constructs a
--duplicate of the current process's credentials, returning with the mutex still
--held if successful.  It returns NULL if not successful (out of memory).
-+this allocates and constructs a duplicate of the current process's credentials.
-+It returns NULL if not successful (out of memory).
-+
-+If called from __do_execve_file, the mutex current->signal->exec_guard_mutex
-+is acquired before this function gets called, and usually released after
-+the new process mmap and credentials are installed.  However if one of the
-+sibling threads are being traced when the execve is invoked, there is no
-+guarantee how long it takes to terminate all sibling threads, and therefore
-+the variable current->signal->unsafe_execve_in_progress is set, and the
-+exec_guard_mutex is released immediately.  Functions that may have effect
-+on the credentials of a different thread need to lock the exec_guard_mutex
-+and additionally check the unsafe_execve_in_progress status, and fail with
-+-EAGAIN if that variable is set.
- 
- The mutex prevents ``ptrace()`` from altering the ptrace state of a process
- while security checks on credentials construction and changing is taking place
- as the ptrace state may alter the outcome, particularly in the case of
- ``execve()``.
- 
-+The mutex current->signal->exec_update_mutex is acquired when only a single
-+thread is remaining, and the credentials and the process mmap are actually
-+changed.  Functions that only need to access to a consistent state of the
-+credentials and the process mmap do only need to aquire this mutex.
-+
- The new credentials set should be altered appropriately, and any security
- checks and hooks done.  Both the current and the proposed sets of credentials
- are available for this purpose as current_cred() will return the current set
-@@ -466,9 +481,8 @@ by calling::
- 
- This will alter various aspects of the credentials and the process, giving the
- LSM a chance to do likewise, then it will use ``rcu_assign_pointer()`` to
--actually commit the new credentials to ``current->cred``, it will release
--``current->cred_replace_mutex`` to allow ``ptrace()`` to take place, and it
--will notify the scheduler and others of the changes.
-+actually commit the new credentials to ``current->cred``, and it will notify
-+the scheduler and others of the changes.
- 
- This function is guaranteed to return 0, so that it can be tail-called at the
- end of such functions as ``sys_setresuid()``.
-@@ -486,8 +500,7 @@ invoked::
- 
- 	void abort_creds(struct cred *new);
- 
--This releases the lock on ``current->cred_replace_mutex`` that
--``prepare_creds()`` got and then releases the new credentials.
-+This releases the new credentials.
- 
- 
- A typical credentials alteration function would look something like this::
+Hi Peter,
+
+This patch was aleady added into Andrew's -mm tree.[1]
+I'm not sure whether that could cause merge conflict when both of them
+are merged into Linus's tree.
+
+[1]. https://marc.info/?l=linux-mm-commits&m=158456557519886&w=2
+
 -- 
-1.9.1
+Yafang Shao
+DiDi
