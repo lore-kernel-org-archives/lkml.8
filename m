@@ -2,135 +2,109 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FA8C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 22:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDC0C43332
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 22:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E76620754
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 22:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C299B20777
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 22:46:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584830807;
+	bh=pBP/6b4ajfKJCuF6Edxia1qiK6WLfxFlX24bBcuc9dY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=rvx0Tk9GgiVO/aIPMRm8PGAsPhVbpINLlt+rIBrfZHXxdZ6N1dNp8q7Xg43lZK80I
+	 BVXpx5AhnLqT+fV2Wk5yK3s7a8m32jLWs21xoXMIMvZWc/M5g4QBDXgi/XiV8Vyo22
+	 TYyBjF4SZDLbv6ZeVN8APtLpGKJU8c7P4dVi1esc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgCUWnn (ORCPT
+        id S1728120AbgCUWqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 18:43:43 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37956 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbgCUWnm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 18:43:42 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 837B81C031D; Sat, 21 Mar 2020 23:43:40 +0100 (CET)
-Date:   Sat, 21 Mar 2020 23:43:40 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Pavel Machek <pavel@denx.de>, ben.hutchings@codethink.co.uk,
-        Chris.Paterson2@renesas.com, bigeasy@linutronix.de,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Julia Cartwright <julia@ni.com>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Subject: Re: 4.19.106-rt44 -- boot problems with irqwork: push most work into
- softirq context
-Message-ID: <20200321224339.GA20728@duo.ucw.cz>
-References: <20200228170837.3fe8bb57@gandalf.local.home>
- <20200319214835.GA29781@duo.ucw.cz>
- <20200319232225.GA7878@duo.ucw.cz>
- <20200319204859.5011a488@gandalf.local.home>
- <20200320195432.GA12666@duo.ucw.cz>
- <20200320160545.26a65de3@gandalf.local.home>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
-Content-Disposition: inline
-In-Reply-To: <20200320160545.26a65de3@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 21 Mar 2020 18:46:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56994 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726859AbgCUWqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 18:46:46 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C425E20754;
+        Sat, 21 Mar 2020 22:46:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584830805;
+        bh=pBP/6b4ajfKJCuF6Edxia1qiK6WLfxFlX24bBcuc9dY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Yg0udSPDLvx9DBCpAS4miIQcR5my3Wgw5OgVsuwCeEHl3PEU5nW/yxpZ1ta/O3PqT
+         2VkvG93i+WOHoL0LiinoUqBAndeB6sqyl9BMeBmJxGy7RZmu+3jGlmTBVQ75eFy86N
+         HjQsE/5wuMkFKDW1r/OxKU9b0IbpsHSa7H5C78H0=
+Date:   Sat, 21 Mar 2020 15:46:44 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     "Longpeng (Mike)" <longpeng2@huawei.com>,
+        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
+        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
+        arei.gonglei@huawei.com, weidong.huang@huawei.com,
+        weifuqiang@huawei.com, kvm@vger.kernel.org, linux-mm@kvack.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] mm/hugetlb: fix a addressing exception caused by
+ huge_pte_offset()
+Message-Id: <20200321154644.bcbedca64f620d3cbe215231@linux-foundation.org>
+In-Reply-To: <1b61f55a-d825-5721-2bfe-5e0efc9c9c2d@oracle.com>
+References: <C4ED630A-FAD8-4998-A0A3-9C36F3303379@lca.pw>
+        <f274b368-6fdb-2ae3-160e-fd8b105b9ac4@huawei.com>
+        <20200222170222.GJ24185@bombadil.infradead.org>
+        <dfbfbf46-483a-808f-d197-388f75569d9c@huawei.com>
+        <1b61f55a-d825-5721-2bfe-5e0efc9c9c2d@oracle.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 27 Feb 2020 13:41:46 -0800 Mike Kravetz <mike.kravetz@oracle.com> wrote:
 
---NzB8fVQJ5HfG6fxh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > Secondly, huge_pte_offset in mm/hugetlb.c is for ARCH_WANT_GENERAL_HUGETLB, many
+> > architectures use it, can you make sure there is no issue on all the
+> > architectures using it with all the version of gcc ?
+> > 
+> > Thirdly, there are several places use READ_ONCE to access the page table in mm/*
+> > (e.g. gup_pmd_range), they're also generical for all architectures, and they're
+> > much more like unnecessary than here, so why there can use but not here? What's
+> > more, you can read this commit 688272809.
+> 
+> Apologies for the late reply.
+> 
+> In commit 20a004e7 the message says that "Whilst there are some scenarios
+> where this cannot happen ... the overhead of using READ_ONCE/WRITE_ONCE
+> everywhere is minimal and makes the code an awful lot easier to reason about."
+> Therefore, a decision was made to ALWAYS use READ_ONCE in the arm64 code
+> whether or not it was absolutely necessary.  Therefore, I do not think
+> we can assume all the READ_ONCE additions made in 20a004e7 are necessary.
+> Then the question remains, it it necessary in two statements above?
+> I do not believe it is necessary.  Why?  In the statements,
+> 	if (!pgd_present(*pgd))
+> and
+> 	if (!p4d_present(*p4d))
+> the variables are only accessed and dereferenced once.  I can not imagine
+> any way in which the compiler could perform multiple accesses of the variable.
+> 
+> I do believe the READ_ONCE in code accessing the pud and pmd is necessary.
+> This is because the variables (pud_entry or pmd_entry) are accessed more than
+> once.  And, I could imagine some strange compiler optimization where it would
+> dereference the pud or pmd pointer more than once.  For this same reason
+> (multiple accesses), I believe the READ_ONCE was added in commit 688272809.
+> 
+> I am no expert in this area, so corrections/comments appreciated.
+> 
+> BTW, I still think there may be races present in lookup_address_in_pgd().
+> Multiple dereferences of a p4d, pud and pmd are done.
 
-Hi!
+Based on Mike's observations I shall drop this patch.  If we still
+believe it is needed, please enhance the changelog, resend and let's
+take another look.
 
-On Fri 2020-03-20 16:05:45, Steven Rostedt wrote:
-> On Fri, 20 Mar 2020 20:54:32 +0100
-> Pavel Machek <pavel@denx.de> wrote:
->=20
-> > > Does this patch help? =20
-> >=20
-> > I don't think so. It also failed, and the failure seems to be
-> > identical to me.
-> >=20
-> > https://gitlab.com/cip-project/cip-kernel/linux-cip/tree/ci/pavel/linux=
--cip
-> > https://lava.ciplatform.org/scheduler/job/13110
-> >=20
->=20
-> Can you send me a patch that shows the difference between the revert that
-> you say works, and the upstream v4.19-rt tree (let me know which version
-> of v4.19-rt you are basing it on).
-
-I was using -rt44, and yes, I can probably generate better diffs.
-
-But I guess I found it with code review: how does this look to you? I
-applied it on top of your fix, and am testing. 2 successes so far.
-
-Signed-off-by: Pavel Machek <pavel@denx.de>
-
-Best regards,
-								Pavel
-
-commit aa034c3060dbab96a7b6d6bf827504b394bed15b
-Author: Pavel Machek <pavel@ucw.cz>
-Date:   Sat Mar 21 22:58:43 2020 +0100
-
-    It sounds like irq_work_queue() was queueing on wrong list?
-
-diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-index 0ca75c77536b..dd654865c219 100644
---- a/kernel/irq_work.c
-+++ b/kernel/irq_work.c
-@@ -81,7 +81,8 @@ bool irq_work_queue(struct irq_work *work)
-=20
- 	/* Queue the entry and raise the IPI if needed. */
- 	preempt_disable();
--	if (IS_ENABLED(CONFIG_PREEMPT_RT_FULL) && !(work->flags & IRQ_WORK_HARD_I=
-RQ))
-+	if ((IS_ENABLED(CONFIG_PREEMPT_RT_FULL) && !(work->flags & IRQ_WORK_HARD_=
-IRQ))
-+	    || (work->flags & IRQ_WORK_LAZY))
- 		list =3D this_cpu_ptr(&lazy_list);
- 	else
- 		list =3D this_cpu_ptr(&raised_list);
-
-
-
-      	    	       	      	  	   	    	   Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---NzB8fVQJ5HfG6fxh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXnaYmwAKCRAw5/Bqldv6
-8uRaAKDCWDFPFwlIeZx/6dVMTBD8FlMUvACdHhXhddDpSG1JLgGg5prAU12umD8=
-=0yPB
------END PGP SIGNATURE-----
-
---NzB8fVQJ5HfG6fxh--
