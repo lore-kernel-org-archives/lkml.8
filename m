@@ -2,89 +2,287 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AC3C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34ABEC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D102077D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584816478;
-	bh=2cT5cgTSXrYWRUgqTyPsF3K14RwZy4F0nyDHrnhmO3I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=K5hnyYuTyPOuROH7ZYErEsWqrDV4iKN71qDQ3GXnIzjwvwqYBC59e0ZAANUmO8TgT
-	 svuVviA8jbocWGO41xXfQ878PU6J3zwQ/ZrTIqRouLu5kANsZ2QCv1K3yq7uYmOdgk
-	 BAttSHsMe76nXyXFno5tbcUXOMgWylLWv0/6CW98=
+	by mail.kernel.org (Postfix) with ESMTP id E81A120637
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:49:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bM0uJbMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgCUSr4 (ORCPT
+        id S1727719AbgCUSt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 14:47:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35028 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727262AbgCUSr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 14:47:56 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 21 Mar 2020 14:49:56 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:60207 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727558AbgCUSt4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 14:49:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584816595;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=EBobcy5p19pfVFwT04GgwLMeWoFXAU5zKzV3TA6Y6aA=;
+        b=bM0uJbMzsdZanh5aeMpcKcu8YvP7teryaVNeso5e9jljdJXgUrn4qO76fK9k6TdMkCh0zf
+        R786FmvOreWvPhptjKeMVHDLOxpyx0paEKHJA7+CUuG3YTXjhTjblP3Tym6PqarAIVSTOQ
+        91H7RKAHzy8eztC8hOolwSHPSg+JzZs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-355-kkYwLqIpN7Ct-I1AJ2ovTQ-1; Sat, 21 Mar 2020 14:49:52 -0400
+X-MC-Unique: kkYwLqIpN7Ct-I1AJ2ovTQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDA9320722;
-        Sat, 21 Mar 2020 18:47:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584816476;
-        bh=2cT5cgTSXrYWRUgqTyPsF3K14RwZy4F0nyDHrnhmO3I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cIvp9hgmq4hqcNeMIIjqkKKRyy2Swlb9i/NFYUNmDmtSXxPFwcZtFoqs1F/cyuK0F
-         y3amug9uWe39nvzBjmzfG7jbanBA2TuWIoyWlpA7GSGURzhYilOCZii41J/xSc1GEg
-         TbMzLAxE0oEPWQ+NmoGSl/CoWu5MRsrEtLAUVYco=
-Date:   Sat, 21 Mar 2020 18:47:51 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Nishant Malpani <nish.malpani25@gmail.com>, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers: iio: Drop unnecessary explicit casting
-Message-ID: <20200321184751.717f1d4d@archlinux>
-In-Reply-To: <a7778635620163cb6185192819a56ed44d76d4b0.camel@perches.com>
-References: <20200318100754.25667-1-nish.malpani25@gmail.com>
-        <a7778635620163cb6185192819a56ed44d76d4b0.camel@perches.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CABD113E2;
+        Sat, 21 Mar 2020 18:49:49 +0000 (UTC)
+Received: from llong.com (ovpn-112-193.rdu2.redhat.com [10.10.112.193])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7871D1001DDE;
+        Sat, 21 Mar 2020 18:49:43 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v7 0/2] KEYS: Read keys to internal buffer & then copy to userspace
+Date:   Sat, 21 Mar 2020 14:49:30 -0400
+Message-Id: <20200321184932.16579-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 21 Mar 2020 05:26:52 -0700
-Joe Perches <joe@perches.com> wrote:
+v7:
+ - Restructure code in keyctl_read_key() to reduce nesting.
+ - Restructure patch 2 to use loop instead of backward jump as suggested
+   by Jarkko.
 
-> On Wed, 2020-03-18 at 15:37 +0530, Nishant Malpani wrote:
-> > Provide correct specifiers while printing error logs to discard the use
-> > of unnecessary explicit casting.  
-> []
-> > diff --git a/drivers/iio/accel/kxsd9-i2c.c b/drivers/iio/accel/kxsd9-i2c.c  
-> []
-> > @@ -21,8 +21,8 @@ static int kxsd9_i2c_probe(struct i2c_client *i2c,
-> >  
-> >  	regmap = devm_regmap_init_i2c(i2c, &config);
-> >  	if (IS_ERR(regmap)) {
-> > -		dev_err(&i2c->dev, "Failed to register i2c regmap %d\n",
-> > -			(int)PTR_ERR(regmap));
-> > +		dev_err(&i2c->dev, "Failed to register i2c regmap %ld\n",
-> > +			PTR_ERR(regmap));  
-> 
-> Another option would be to use %pe to print the error identifier
-> and not the error number
-> 
-> etc...
-> 
-> 
+v6:
+ - Make some variable name changes and revise comments as suggested by
+   Jarkko. No functional change from v5.
 
-Indeed that would be even better.  I'd missed that one being added
-to the magic of prink :)
+v5:
+ - Merge v4 patches 2 and 3 into 1 to avoid sparse warning. Merge some of 
+   commit logs into patch 1 as well. There is no further change.
 
-Jonathan
+v4:
+ - Remove the __user annotation from big_key_read() and user_read() in
+   patch 1.
+ - Add a new patch 2 to remove __user annotation from rxrpc_read().
+ - Add a new patch 3 to remove __user annotation from dns_resolver_read().
+ - Merge the original patches 2 and 3 into a single patch 4 and refactor
+   it as suggested by Jarkko and Eric.
+
+The current security key read methods are called with the key semaphore
+held.  The methods then copy out the key data to userspace which is
+subjected to page fault and may acquire the mmap semaphore. That can
+result in circular lock dependency and hence a chance to get into
+deadlock.
+
+To avoid such a deadlock, an internal buffer is now allocated for getting
+out the necessary data first. After releasing the key semaphore, the
+key data are then copied out to userspace sidestepping the circular
+lock dependency.
+
+The keyutils test suite was run and the test passed with these patchset
+applied without any falure.
+
+
+Waiman Long (2):
+  KEYS: Don't write out to userspace while holding key semaphore
+  KEYS: Avoid false positive ENOMEM error on key read
+
+ include/keys/big_key-type.h               |   2 +-
+ include/keys/user-type.h                  |   3 +-
+ include/linux/key-type.h                  |   2 +-
+ net/dns_resolver/dns_key.c                |   2 +-
+ net/rxrpc/key.c                           |  27 ++----
+ security/keys/big_key.c                   |  11 +--
+ security/keys/encrypted-keys/encrypted.c  |   7 +-
+ security/keys/internal.h                  |  12 +++
+ security/keys/keyctl.c                    | 104 ++++++++++++++++++----
+ security/keys/keyring.c                   |   6 +-
+ security/keys/request_key_auth.c          |   7 +-
+ security/keys/trusted-keys/trusted_tpm1.c |  14 +--
+ security/keys/user_defined.c              |   5 +-
+ 13 files changed, 126 insertions(+), 76 deletions(-)
+
+Code diff from v6:
+
+diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
+index ded69108db0d..2f72bbe2962b 100644
+--- a/security/keys/keyctl.c
++++ b/security/keys/keyctl.c
+@@ -827,26 +827,28 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
+ 	struct key *key;
+ 	key_ref_t key_ref;
+ 	long ret;
++	char *key_data = NULL;
++	size_t key_data_len;
+ 
+ 	/* find the key first */
+ 	key_ref = lookup_user_key(keyid, 0, 0);
+ 	if (IS_ERR(key_ref)) {
+ 		ret = -ENOKEY;
+-		goto error;
++		goto out;
+ 	}
+ 
+ 	key = key_ref_to_ptr(key_ref);
+ 
+ 	ret = key_read_state(key);
+ 	if (ret < 0)
+-		goto error2; /* Negatively instantiated */
++		goto key_put_out; /* Negatively instantiated */
+ 
+ 	/* see if we can read it directly */
+ 	ret = key_permission(key_ref, KEY_NEED_READ);
+ 	if (ret == 0)
+ 		goto can_read_key;
+ 	if (ret != -EACCES)
+-		goto error2;
++		goto key_put_out;
+ 
+ 	/* we can't; see if it's searchable from this process's keyrings
+ 	 * - we automatically take account of the fact that it may be
+@@ -854,75 +856,77 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
+ 	 */
+ 	if (!is_key_possessed(key_ref)) {
+ 		ret = -EACCES;
+-		goto error2;
++		goto key_put_out;
+ 	}
+ 
+ 	/* the key is probably readable - now try to read it */
+ can_read_key:
+ 	if (!key->type->read) {
+ 		ret = -EOPNOTSUPP;
+-		goto error2;
++		goto key_put_out;
+ 	}
+ 
+ 	if (!buffer || !buflen) {
+ 		/* Get the key length from the read method */
+ 		ret = __keyctl_read_key(key, NULL, 0);
+-	} else {
+-
+-		/*
+-		 * Read the data with the semaphore held (since we might sleep)
+-		 * to protect against the key being updated or revoked.
+-		 *
+-		 * Allocating a temporary buffer to hold the keys before
+-		 * transferring them to user buffer to avoid potential
+-		 * deadlock involving page fault and mmap_sem.
+-		 */
+-		char *key_data = NULL;
+-		size_t key_data_len = buflen;
++		goto key_put_out;
++	}
+ 
+-		/*
+-		 * When the user-supplied key length is larger than
+-		 * PAGE_SIZE, we get the actual key length first before
+-		 * allocating a right-sized key data buffer.
+-		 */
+-		if (buflen <= PAGE_SIZE) {
+-allocbuf:
++	/*
++	 * Read the data with the semaphore held (since we might sleep)
++	 * to protect against the key being updated or revoked.
++	 *
++	 * Allocating a temporary buffer to hold the keys before
++	 * transferring them to user buffer to avoid potential
++	 * deadlock involving page fault and mmap_sem.
++	 *
++	 * key_data_len = (buflen <= PAGE_SIZE)
++	 *		? buflen : actual length of key data
++	 *
++	 * This prevents allocating arbitrary large buffer which can
++	 * be much larger than the actual key length. In the latter case,
++	 * at least 2 passes of this loop is required.
++	 */
++	key_data_len = (buflen <= PAGE_SIZE) ? buflen : 0;
++	do {
++		if (key_data_len) {
+ 			key_data = kvmalloc(key_data_len, GFP_KERNEL);
+ 			if (!key_data) {
+ 				ret = -ENOMEM;
+-				goto error2;
++				goto key_put_out;
+ 			}
+ 		}
++
+ 		ret = __keyctl_read_key(key, key_data, key_data_len);
+ 
+ 		/*
+-		 * Read methods will just return the required length
+-		 * without any copying if the provided length isn't big
+-		 * enough.
++		 * Read methods will just return the required length without
++		 * any copying if the provided length isn't large enough.
+ 		 */
+-		if (ret > 0 && ret <= buflen) {
+-			/*
+-			 * The key may change (unlikely) in between 2
+-			 * consecutive __keyctl_read_key() calls. We will
+-			 * need to allocate a larger buffer and redo the key
+-			 * read when key_data_len < ret <= buflen.
+-			 */
+-			if (!key_data || unlikely(ret > key_data_len)) {
+-				if (unlikely(key_data))
+-					__kvzfree(key_data, key_data_len);
+-				key_data_len = ret;
+-				goto allocbuf;
+-			}
++		if (ret <= 0 || ret > buflen)
++			break;
+ 
+-			if (copy_to_user(buffer, key_data, ret))
+-				ret = -EFAULT;
++		/*
++		 * The key may change (unlikely) in between 2 consecutive
++		 * __keyctl_read_key() calls. In this case, we reallocate
++		 * a larger buffer and redo the key read when
++		 * key_data_len < ret <= buflen.
++		 */
++		if (ret > key_data_len) {
++			if (unlikely(key_data))
++				__kvzfree(key_data, key_data_len);
++			key_data_len = ret;
++			continue;	/* Allocate buffer */
+ 		}
+-		__kvzfree(key_data, key_data_len);
+-	}
+ 
+-error2:
++		if (copy_to_user(buffer, key_data, ret))
++			ret = -EFAULT;
++	} while (0);
++	__kvzfree(key_data, key_data_len);
++
++key_put_out:
+ 	key_put(key);
+-error:
++out:
+ 	return ret;
+ }
+ 
+-- 
+2.18.1
+
