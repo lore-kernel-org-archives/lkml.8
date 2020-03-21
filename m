@@ -2,74 +2,124 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FEEC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 07:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD4AC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 08:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9858A20739
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 07:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2443720754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 08:15:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="beeswZoq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbgCUH6W (ORCPT
+        id S1728200AbgCUIP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 03:58:22 -0400
-Received: from olimex.com ([184.105.72.32]:49174 "EHLO olimex.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727961AbgCUH6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 03:58:20 -0400
-Received: from localhost.localdomain ([89.25.85.162])
-        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 00:58:17 -0700
-From:   Stefan Mavrodiev <stefan@olimex.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        Stefan Mavrodiev <stefan@olimex.com>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
-        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
-Cc:     linux-sunxi@googlegroups.com
-Subject: [PATCH 2/2] dt-bindings: arm: sunxi: Add compatible for A20-OLinuXino-LIME-eMMC
-Date:   Sat, 21 Mar 2020 09:57:57 +0200
-Message-Id: <20200321075757.15853-3-stefan@olimex.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200321075757.15853-1-stefan@olimex.com>
-References: <20200321075757.15853-1-stefan@olimex.com>
+        Sat, 21 Mar 2020 04:15:58 -0400
+Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:35341 "EHLO
+        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727961AbgCUIP6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 04:15:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
+  t=1584778556; x=1616314556;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=fNaOGd71ykhkOab84O0XrMhdHdHgb/7uZ6XyGD7xzNo=;
+  b=beeswZoqj6Y/vCMUZ1Wp2xgU6mKcqfGiSIfv7hIpTKriyrl14C5qSgYl
+   qV/oCp4X6SgzGy44s/NOHIYdSV1JgczvwKbbuDRGkkQHNEkciPnTx3ULa
+   6miJ/1s/bB20LjwwEkke9CUMZjQuloqR+U421hJnF/eMhIUp0yLGbN+gQ
+   YSRwCuwoy2B/J51/i33mu77ttlYQrP2CLSw28+aYTpxUQu4B9kyOuRHZj
+   yNpPJnPLFh5/gvZS+4BduS1vyVgqGOl8KZi9fTNQ5+JjH5hvZF7s3kizO
+   xwubzXLrZJxCsN1ui/k2vH0ac0bT2nVLwBV/kGFKNAIjqjdx62DsTC8e5
+   A==;
+IronPort-SDR: QN054/gFapPR1cVtlOEJiZqDlCAwPlb/8EK4TVbBtiJo+3qyFMchAGjiDqjV2M8Kfd2CmIdaci
+ r2DY0PjGpI4g==
+From:   Denis Osterland-Heim <denis.osterland@diehl.com>
+To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Denis Osterland-Heim" <denis.osterland@diehl.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>
+Subject: [PATCH v4 3/5] leds: pwm: check result of led_pwm_set() in
+ led_pwm_add()
+Thread-Topic: [PATCH v4 3/5] leds: pwm: check result of led_pwm_set() in
+ led_pwm_add()
+Thread-Index: AQHV/1jvS39qjeoyFEyBmW+H8QD2bg==
+Date:   Sat, 21 Mar 2020 08:15:52 +0000
+Message-ID: <20200321081321.15614-4-Denis.Osterland@diehl.com>
+References: <20200321081321.15614-1-Denis.Osterland@diehl.com>
+In-Reply-To: <20200321081321.15614-1-Denis.Osterland@diehl.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7A1628E3E162584FA7567B765B51EAAE@diehl.internal>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-TrailerSkip: 1
+X-GBS-PROC: byQFdw3ukCM+zy1/poiPc0+a0+k5FkEP7dU6yETXoKGIxEHL1LfZDAUVf0XEZtAp
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add compatible string for A20-OLinuXino-LIME2-eMMC to the
-bindings documentation.
-
-Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
----
- Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-index 327ce6730823..25c09a121b63 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-+++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-@@ -555,6 +555,11 @@ properties:
-           - const: olimex,a20-olinuxino-lime
-           - const: allwinner,sun7i-a20
- 
-+      - description: Olimex A20-OlinuXino LIME (with eMMC)
-+        items:
-+          - const: olimex,a20-olinuxino-lime-emmc
-+          - const: allwinner,sun7i-a20
-+
-       - description: Olimex A20-OlinuXino LIME2
-         items:
-           - const: olimex,a20-olinuxino-lime2
--- 
-2.17.1
-
+bGVkX3B3bV9zZXQoKSBub3cgcmV0dXJucyBhbiBlcnJvciB3aGVuIHNldHRpbmcgdGhlIFBX
+TSBmYWlscy4NCg0KQ2M6IFV3ZSBLbGVpbmUtS8O2bmlnIDx1d2VAa2xlaW5lLWtvZW5pZy5v
+cmc+DQpTaWduZWQtb2ZmLWJ5OiBEZW5pcyBPc3RlcmxhbmQtSGVpbSA8RGVuaXMuT3N0ZXJs
+YW5kQGRpZWhsLmNvbT4NCi0tLQ0KIGRyaXZlcnMvbGVkcy9sZWRzLXB3bS5jIHwgMTYgKysr
+KysrKysrKystLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCA1IGRl
+bGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9sZWRzL2xlZHMtcHdtLmMgYi9k
+cml2ZXJzL2xlZHMvbGVkcy1wd20uYw0KaW5kZXggNmNhZjhiZWE4Y2Q1Li4wN2VhYjJkOGI3
+YzcgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2xlZHMvbGVkcy1wd20uYw0KKysrIGIvZHJpdmVy
+cy9sZWRzL2xlZHMtcHdtLmMNCkBAIC05MSwxNSArOTEsMjEgQEAgc3RhdGljIGludCBsZWRf
+cHdtX2FkZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBsZWRfcHdtX3ByaXYgKnByaXYs
+DQogCXB3bV9pbml0X3N0YXRlKGxlZF9kYXRhLT5wd20sICZsZWRfZGF0YS0+cHdtc3RhdGUp
+Ow0KIA0KIAlyZXQgPSBkZXZtX2xlZF9jbGFzc2Rldl9yZWdpc3RlcihkZXYsICZsZWRfZGF0
+YS0+Y2Rldik7DQotCWlmIChyZXQgPT0gMCkgew0KLQkJcHJpdi0+bnVtX2xlZHMrKzsNCi0J
+CWxlZF9wd21fc2V0KCZsZWRfZGF0YS0+Y2RldiwgbGVkX2RhdGEtPmNkZXYuYnJpZ2h0bmVz
+cyk7DQotCX0gZWxzZSB7DQorCWlmIChyZXQpIHsNCiAJCWRldl9lcnIoZGV2LCAiZmFpbGVk
+IHRvIHJlZ2lzdGVyIFBXTSBsZWQgZm9yICVzOiAlZFxuIiwNCiAJCQlsZWQtPm5hbWUsIHJl
+dCk7DQorCQlyZXR1cm4gcmV0Ow0KIAl9DQogDQotCXJldHVybiByZXQ7DQorCXJldCA9IGxl
+ZF9wd21fc2V0KCZsZWRfZGF0YS0+Y2RldiwgbGVkX2RhdGEtPmNkZXYuYnJpZ2h0bmVzcyk7
+DQorCWlmIChyZXQpIHsNCisJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIHNldCBsZWQgUFdN
+IHZhbHVlIGZvciAlczogJWQiLA0KKwkJCWxlZC0+bmFtZSwgcmV0KTsNCisJCXJldHVybiBy
+ZXQ7DQorCX0NCisNCisJcHJpdi0+bnVtX2xlZHMrKzsNCisJcmV0dXJuIDA7DQogfQ0KIA0K
+IHN0YXRpYyBpbnQgbGVkX3B3bV9jcmVhdGVfZndub2RlKHN0cnVjdCBkZXZpY2UgKmRldiwg
+c3RydWN0IGxlZF9wd21fcHJpdiAqcHJpdikNCi0tIA0KMi4yNS4xDQoNCg0KDQpEaWVobCBD
+b25uZWN0aXZpdHkgU29sdXRpb25zIEdtYkgNCkdlc2Now6RmdHNmw7xocnVuZzogSG9yc3Qg
+TGVvbmJlcmdlcg0KU2l0eiBkZXIgR2VzZWxsc2NoYWZ0OiBOw7xybmJlcmcgLSBSZWdpc3Rl
+cmdlcmljaHQ6IEFtdHNnZXJpY2h0DQpOw7xybmJlcmc6IEhSQiAzMjMxNQ0KX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQoNCkRlciBJbmhhbHQgZGVy
+IHZvcnN0ZWhlbmRlbiBFLU1haWwgaXN0IG5pY2h0IHJlY2h0bGljaCBiaW5kZW5kLiBEaWVz
+ZSBFLU1haWwgZW50aGFlbHQgdmVydHJhdWxpY2hlIHVuZC9vZGVyIHJlY2h0bGljaCBnZXNj
+aHVldHp0ZSBJbmZvcm1hdGlvbmVuLg0KSW5mb3JtaWVyZW4gU2llIHVucyBiaXR0ZSwgd2Vu
+biBTaWUgZGllc2UgRS1NYWlsIGZhZWxzY2hsaWNoZXJ3ZWlzZSBlcmhhbHRlbiBoYWJlbi4g
+Qml0dGUgbG9lc2NoZW4gU2llIGluIGRpZXNlbSBGYWxsIGRpZSBOYWNocmljaHQuDQpKZWRl
+IHVuZXJsYXVidGUgRm9ybSBkZXIgUmVwcm9kdWt0aW9uLCBCZWthbm50Z2FiZSwgQWVuZGVy
+dW5nLCBWZXJ0ZWlsdW5nIHVuZC9vZGVyIFB1Ymxpa2F0aW9uIGRpZXNlciBFLU1haWwgaXN0
+IHN0cmVuZ3N0ZW5zIHVudGVyc2FndC4NCi0gSW5mb3JtYXRpb25lbiB6dW0gRGF0ZW5zY2h1
+dHosIGluc2Jlc29uZGVyZSB6dSBJaHJlbiBSZWNodGVuLCBlcmhhbHRlbiBTaWUgdW50ZXIg
+aHR0cHM6Ly93d3cuZGllaGwuY29tL2dyb3VwL2RlL3RyYW5zcGFyZW56LXVuZC1pbmZvcm1h
+dGlvbnNwZmxpY2h0ZW4vDQoNClRoZSBjb250ZW50cyBvZiB0aGUgYWJvdmUgbWVudGlvbmVk
+IGUtbWFpbCBpcyBub3QgbGVnYWxseSBiaW5kaW5nLiBUaGlzIGUtbWFpbCBjb250YWlucyBj
+b25maWRlbnRpYWwgYW5kL29yIGxlZ2FsbHkgcHJvdGVjdGVkIGluZm9ybWF0aW9uLiBQbGVh
+c2UgaW5mb3JtIHVzIGlmIHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWlsIGJ5DQptaXN0
+YWtlIGFuZCBkZWxldGUgaXQgaW4gc3VjaCBhIGNhc2UuIEVhY2ggdW5hdXRob3JpemVkIHJl
+cHJvZHVjdGlvbiwgZGlzY2xvc3VyZSwgYWx0ZXJhdGlvbiwgZGlzdHJpYnV0aW9uIGFuZC9v
+ciBwdWJsaWNhdGlvbiBvZiB0aGlzIGUtbWFpbCBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLiAN
+Ci0gRm9yIGdlbmVyYWwgaW5mb3JtYXRpb24gb24gZGF0YSBwcm90ZWN0aW9uIGFuZCB5b3Vy
+IHJlc3BlY3RpdmUgcmlnaHRzIHBsZWFzZSB2aXNpdCBodHRwczovL3d3dy5kaWVobC5jb20v
+Z3JvdXAvZW4vdHJhbnNwYXJlbmN5LWFuZC1pbmZvcm1hdGlvbi1vYmxpZ2F0aW9ucy8NCg==
