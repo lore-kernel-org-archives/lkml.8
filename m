@@ -2,116 +2,108 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25056C4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 13:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5944C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 13:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFEA420780
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 13:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F7F320754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 13:17:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rh+Wml1A"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qBE3lA1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbgCUNKZ (ORCPT
+        id S1727391AbgCUNRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 09:10:25 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39288 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbgCUNKZ (ORCPT
+        Sat, 21 Mar 2020 09:17:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54206 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbgCUNRh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 09:10:25 -0400
-Received: by mail-pg1-f195.google.com with SMTP id b22so4530599pgb.6;
-        Sat, 21 Mar 2020 06:10:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0vQsQdcUJTfpg3tUTgYBPKfSjhWzRCMyiQPBapbD6bQ=;
-        b=rh+Wml1AYoYlGwP/sBjz7Maol2ZAJci5n+FHkZt5xqOngDOsEWIkMOqnMSRmwzEdzy
-         aOBz3DjPabcP0iBoMSGhg97lFXJdk5m/YyLeJR5Py9WUlNL3YAGFEn8YBJpo46KmrO+8
-         H46gDPt23aGEk7b+3A9Hf2FP21U9CNzQsZ+51I/j8cg26eQ0hpZKnRoIgTZGVDLov/HJ
-         DfNo8iqatf3fCSVdA+i+nRMC4tApZzSx7tkSQYLEq7L6RwGo/OudBYN6qESaYygVEvZV
-         UYsP+zqkCTq2XNR0qYBYekvsrHgbt38DQpMRgqG4kV42P9x2OzD2TfmPkDdUJV+MJh2q
-         8lRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0vQsQdcUJTfpg3tUTgYBPKfSjhWzRCMyiQPBapbD6bQ=;
-        b=i0gnQin2gKrVJ2MgrgEaQJcorZJgIK6RThuhe9q8FT/MXv7L/BRXbkY952/GPUwNIq
-         gYUn1pdmvcqkrDa5qly+J7id6qWNOp+YgKJvJhWWYyO+wvM/ahFRh7+TTIc5G+knrRnE
-         3cmM48+b0Uv9oINMsMKxrmFS9eN2uREHNCsx9ige0OgNltD8zrSjc4NGekFYTvISw66u
-         jXdgtoB1kORfrQ25DQrgiEzeavLnHt4V6lyLYM7rHV1t2iSw/YWKJlwaA1tBLJIP8e75
-         b1IhlDwQwfCLp0fwyWtNAE6e9zh2Z/1IzPMXYZv8KyueCuwbfEbF+2AN2ZhXrVTqEdkD
-         lTCw==
-X-Gm-Message-State: ANhLgQ1km6NemdTLQsGjpjuu7YuqJ8dSZYg1Nzg/43WcdN8V1x6rGXJr
-        ta8HZoGC3hGsBjzte2sfXDX757PD
-X-Google-Smtp-Source: ADFU+vvfqnXCj9Ov7oFxufOOvZcJ03Cdw7Bd+ttiglbLInNO3TlvJ2etGW3YmQ7aI7sO9eu4+XXtTA==
-X-Received: by 2002:aa7:9f49:: with SMTP id h9mr12829539pfr.217.1584796223891;
-        Sat, 21 Mar 2020 06:10:23 -0700 (PDT)
-Received: from ?IPv6:2409:4072:6e97:2149:892d:8d8:1a6c:acda? ([2409:4072:6e97:2149:892d:8d8:1a6c:acda])
-        by smtp.gmail.com with ESMTPSA id k4sm8932688pfh.0.2020.03.21.06.10.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Mar 2020 06:10:23 -0700 (PDT)
-Subject: Re: [PATCH 1/2] iio: light: tsl2563: Wrap comment description
-To:     Joe Perches <joe@perches.com>, jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1584518000.git.nish.malpani25@gmail.com>
- <9129a6c25f772bdfba28d556190e5511c7005e8a.1584518000.git.nish.malpani25@gmail.com>
- <c68e74af78fa0f73a9dc4cf5535a2dc16b99b729.camel@perches.com>
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-Message-ID: <62965030-3cc8-78d3-ef80-f88c585f82e2@gmail.com>
-Date:   Sat, 21 Mar 2020 18:40:16 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 21 Mar 2020 09:17:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PK/VmxcGeKFBjdt5UuClaNyaFMRmhddz5q967bbSnbs=; b=qBE3lA1ErCdZydq9Lr+5wIewWb
+        pqe8Pe1djK5LkG/FvkG1QhEl7t4AeyNHc5KJPqI9yHtq4MtgphTvfGKj0ubRUyD6LXruyjdkxl8rs
+        NPQu+ZrcefJm+rJQxXXfRsFNFO1400bo7Yxt4iH1Gj0bLH5gTcCTLTtZexJ0nYXQHj0aZqnGlduTA
+        HfBoNUR+VXrEMKVqWGhSHIWhX3Jj0znYpJNb+j35LrOFEZUaNdoaDe0MC1IXppjr6jV15YiqR524P
+        aH9eV3uFHY/w57WSgiHgeAgFq0AThBgxSs8CDTmrY821MrnBPlRK+uMVJdD/XmqeUcIWcFKfQslUA
+        96QSJUpg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jFe06-0005uT-SX; Sat, 21 Mar 2020 13:17:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D211230018B;
+        Sat, 21 Mar 2020 14:17:15 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B38D028B4E0D4; Sat, 21 Mar 2020 14:17:15 +0100 (CET)
+Date:   Sat, 21 Mar 2020 14:17:15 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v3 01/17] notifier: Fix broken error handling pattern
+Message-ID: <20200321131715.GH20696@hirez.programming.kicks-ass.net>
+References: <20200320213844.817147179@infradead.org>
+ <20200320215942.500789386@infradead.org>
+ <20200321122419.GD17494@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <c68e74af78fa0f73a9dc4cf5535a2dc16b99b729.camel@perches.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200321122419.GD17494@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/03/20 5:21 pm, Joe Perches wrote:
-> On Wed, 2020-03-18 at 13:33 +0530, Nishant Malpani wrote:
->> This patch wraps the comment description at 75 chars. Fixes the
->> following warning generated by checkpatch.pl:
->>
->> WARNING: Possible unwrapped commit description (prefer a maximum 75 chars per line)
+On Sat, Mar 21, 2020 at 01:24:19PM +0100, Borislav Petkov wrote:
+> On Fri, Mar 20, 2020 at 10:38:45PM +0100, Peter Zijlstra wrote:
+> > The current notifiers have the following error handling pattern all
+> > over the place:
+> > 
+> > 	int err, nr;
+> > 
+> > 	err = __foo_notifier_call_chain(&chain, val_up, v, -1, &nr);
+> > 	if (err & NOTIFIER_STOP_MASK)
+> > 		__foo_notifier_call_chain(&chain, val_down, v, nr-1, NULL)
+> > 
+> > And aside from the endless repetition thereof, it is broken. Consider
+> > blocking notifiers; both calls take and drop the rwsem, this means
+> > that the notifier list can change in between the two calls, making @nr
+> > meaningless.
+> > 
+> > Fix this by replacing all the __foo_notifier_call_chain() functions
+> > with foo_notifier_call_chain_robust() that embeds the above pattern,
+> > but ensures it is inside a single lock region.
 > 
-> Please do not scan files as patches.
-> 
-> checkpatch does not emit this message on a file
-> when used properly with the -f option.
-> 
-You're right, Joe. I had used checkpatch.pl without the -f option on a 
-file, ergo giving me the aforementioned warning. My bad, I shall refrain 
-from not doing this in the future. Thank you and Jonathan for correcting me.
+> "robust" huh? Sure reads funny :)
 
-With regards,
-Nishant Malpani
+This has been around the bike-shed a few times already.
 
->> diff --git a/drivers/iio/light/tsl2563.c b/drivers/iio/light/tsl2563.c
-> []
->> @@ -222,9 +222,9 @@ static int tsl2563_read_id(struct tsl2563_chip *chip, u8 *id)
->>   }
->>   
->>   /*
->> - * "Normalized" ADC value is one obtained with 400ms of integration time and
->> - * 16x gain. This function returns the number of bits of shift needed to
->> - * convert between normalized values and HW values obtained using given
->> + * "Normalized" ADC value is one obtained with 400ms of integration time
->> + * and 16x gain. This function returns the number of bits of shift needed
->> + * to convert between normalized values and HW values obtained using given
->>    * timing and gain settings.
->>    */
->>   static int tsl2563_adc_shiftbits(u8 timing)
+> So if the "normal" notifier_call_chain() usage is buggy, how about we
+> prepend its name with "__" and call the new one with the rollback,
+> notifier_call_chain() ?
 > 
+> Instead of adding the "robust" set of interfaces?
+
+Well, it depends on the usecase. The robust one can deal with failure,
+the other ones are fine (and preferred) if failure is not an option.
+
+This robust variant ensures that all the notifiers that succeeded prior
+to the one that failed get a second callback with another state. Some
+notifier chains don't care, but a few clearly did and did it utterly
+broken.
+
+> Btw, the indentation in that notifier.* files is yuck.
+
+Yeha, wasn't going to fix that.
+
