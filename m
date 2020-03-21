@@ -2,98 +2,127 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A60C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39366C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E24D20757
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:04:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="skHcS7F3"
+	by mail.kernel.org (Postfix) with ESMTP id 0715020757
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:06:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584799580;
+	bh=2LYqxlJLALkKFlpvVEGc+tjKLuBtfj/ozo9eACQKvaw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gUijOosLvbpzpFMS+WUXIemPqm8+1E+RK8rrY3E7Xumi89A8iqNgIscUb8mXZ+B8u
+	 SGUHP5k41ReUz/MmD4gdnpOuicb+6U7cd4WuRTxuNUGvCbUHvztFTP4hOyG/XSMgPG
+	 sH7AxHR5nLSorYu6NmaOCw7WYeJCkZXEkGsU98kA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbgCUOEj (ORCPT
+        id S1727323AbgCUOFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 10:04:39 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40794 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbgCUOEi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 10:04:38 -0400
-Received: by mail-pl1-f194.google.com with SMTP id h11so3736462plk.7
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 07:04:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=J9eGr1XRuuMVhT4BB0OXqzh8ZUNEQwk5lWfXIehE4RU=;
-        b=skHcS7F3YJWvMX4rRiycVWZ7L8rACzYJkh6R1+nulg0+KzXQS2OcNPrqfQjZgnJGVX
-         +O1jF/a7lmk/2Uqx76M+eoKLfgwz2chvOz0q68gUN3liu3cBVVSKVgSSCX8scFOxnzhB
-         im1AMBM/pu+fA1VJbHiqLkgAnLuurIahr8G/2YOAUeZg32wzUuFpofhTcffvbDRBhMMH
-         Lyb/7HhK1tsbzfAraKZ+jmap7FQCec8AI7vfPZF84S1hr1fKn9JmguxcTK+YOfCM+Rou
-         HFBedKFyAGEapSfaHZsKonbU4NdBwAw1T5GQfkgyXvwWqT2dh3J4Yfpfj9IYRYb6EZIx
-         0qIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=J9eGr1XRuuMVhT4BB0OXqzh8ZUNEQwk5lWfXIehE4RU=;
-        b=SI3VrcvpOsnRd3dYQwxbAdxGgXozzNiICj/ScMem3lfXQT5RvXxnJR4ld2GaBbvZSa
-         cHCfXZcunyQqRHE3S+DXGIDPaaMIxz43xzh3tdL8IWa/HEN7yKSZZSIHyE25UJVHzS/W
-         GFo0VjApdQV4S50IU8K8sq5koM4yQeRNdtBe3PtkEdHfR0NpSjdXRGj3JOzgzp9mSRcn
-         bEfjXPOrmmt3XalZEIUMrbtL5v2nvcJ4Ls4tdBBAh1jJMV/fyO9I8w23GMNJbe6a/vf4
-         N5tzdjjxwKd7Wvdq4f1xtxJ5Acr+zeZt3jHQfgLfick42aKXTDxhIuxlKTgg5oy7Y1PA
-         XZBw==
-X-Gm-Message-State: ANhLgQ39ul3d1HYAVhAchD0Y9olKt0QD+o4aJc/Ycm38PdHSdANSW7/F
-        GWu58kThBevo4sqJ/f7vuC6f+krbzLQ=
-X-Google-Smtp-Source: ADFU+vtB7XAaobJC3/csU7xutUniWUS8W0WcjIp6L3ZMJMv3TV0R1Sw+EZWDGWdeo36fv9M/W0cQCg==
-X-Received: by 2002:a17:902:7b87:: with SMTP id w7mr14025772pll.214.1584799476391;
-        Sat, 21 Mar 2020 07:04:36 -0700 (PDT)
-Received: from simran-Inspiron-5558 ([14.139.82.6])
-        by smtp.gmail.com with ESMTPSA id g2sm1257540pfh.193.2020.03.21.07.04.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2020 07:04:35 -0700 (PDT)
-Date:   Sat, 21 Mar 2020 19:34:31 +0530
-From:   Simran Singhal <singhalsimran0@gmail.com>
-To:     gregkh@linuxfoundation.org, jeremy@azazel.net,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel@googlegroups.com
-Subject: [PATCH] staging: kpc2000: Removing multiple blank lines
-Message-ID: <20200321140430.GA18933@simran-Inspiron-5558>
+        Sat, 21 Mar 2020 10:05:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53122 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726592AbgCUOFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 10:05:04 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 916B320757;
+        Sat, 21 Mar 2020 14:05:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584799503;
+        bh=2LYqxlJLALkKFlpvVEGc+tjKLuBtfj/ozo9eACQKvaw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Viee7yhYqu5DhM3KRxgC7BOYKsHKq2eVJ3mZWlwBmROgY//CXPk6aiRd+kdVMPlfl
+         bQWwtGOskyltOReYv3sK1c/ZZ+aZUm6WpLLUcOluQJk0uRVtwhvRmNZh9V71h0QrpB
+         8bzoBozpXhJ/VbzRA7/M2wjTBafP9GpHyylNWXUw=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jFekH-00EVV7-Sn; Sat, 21 Mar 2020 14:05:02 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 21 Mar 2020 14:05:01 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sungbo Eo <mans0n@gorani.run>
+Cc:     linux-oxnas@groups.io, Linus Walleij <linus.walleij@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Daniel Golle <daniel@makrotopia.org>
+Subject: Re: [PATCH] irqchip/versatile-fpga: Apply clear-mask earlier
+In-Reply-To: <20200321133842.2408823-1-mans0n@gorani.run>
+References: <20200321133842.2408823-1-mans0n@gorani.run>
+Message-ID: <4c8b67a7912b2863db99ff4e765fdb8b@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: mans0n@gorani.run, linux-oxnas@groups.io, linus.walleij@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, narmstrong@baylibre.com, daniel@makrotopia.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes the checkpatch warning by removing multiple blank
-lines.
-CHECK: Please don't use multiple blank lines
+On 2020-03-21 13:38, Sungbo Eo wrote:
+> Clear its own IRQs before the parent IRQ get enabled, so that the
+> remaining IRQs do not accidentally interrupt the parent IRQ controller.
+> 
+> This patch also fixes a reboot bug on OX820 SoC, where the remaining
+> rps-timer IRQ raises a GIC interrupt that is left pending. After that,
+> the rps-timer IRQ is cleared during driver initialization, and there's
+> no IRQ left in rps-irq when local_irq_enable() is called, which evokes
+> an error message "unexpected IRQ trap".
+> 
+> Fixes: bdd272cbb97a ("irqchip: versatile FPGA: support cascaded
+> interrupts from DT")
+> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Daniel Golle <daniel@makrotopia.org>
+> ---
+>  drivers/irqchip/irq-versatile-fpga.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-versatile-fpga.c
+> b/drivers/irqchip/irq-versatile-fpga.c
+> index 70e2cfff8175..f1386733d3bc 100644
+> --- a/drivers/irqchip/irq-versatile-fpga.c
+> +++ b/drivers/irqchip/irq-versatile-fpga.c
+> @@ -212,6 +212,9 @@ int __init fpga_irq_of_init(struct device_node 
+> *node,
+>  	if (of_property_read_u32(node, "valid-mask", &valid_mask))
+>  		valid_mask = 0;
+> 
+> +	writel(clear_mask, base + IRQ_ENABLE_CLEAR);
+> +	writel(clear_mask, base + FIQ_ENABLE_CLEAR);
+> +
+>  	/* Some chips are cascaded from a parent IRQ */
+>  	parent_irq = irq_of_parse_and_map(node, 0);
+>  	if (!parent_irq) {
+> @@ -221,9 +224,6 @@ int __init fpga_irq_of_init(struct device_node 
+> *node,
+> 
+>  	fpga_irq_init(base, node->name, 0, parent_irq, valid_mask, node);
+> 
+> -	writel(clear_mask, base + IRQ_ENABLE_CLEAR);
+> -	writel(clear_mask, base + FIQ_ENABLE_CLEAR);
+> -
+>  	/*
+>  	 * On Versatile AB/PB, some secondary interrupts have a direct
+>  	 * pass-thru to the primary controller for IRQs 20 and 22-31 which 
+> need
 
-Signed-off-by: Simran Singhal <singhalsimran0@gmail.com>
----
- drivers/staging/kpc2000/kpc2000/pcie.h | 1 -
- 1 file changed, 1 deletion(-)
+You're on a roll! ;-) Queued for 5.7.
 
-diff --git a/drivers/staging/kpc2000/kpc2000/pcie.h b/drivers/staging/kpc2000/kpc2000/pcie.h
-index cb815c30faa4..f1fc91b4c704 100644
---- a/drivers/staging/kpc2000/kpc2000/pcie.h
-+++ b/drivers/staging/kpc2000/kpc2000/pcie.h
-@@ -6,7 +6,6 @@
- #include "../kpc.h"
- #include "dma_common_defs.h"
- 
--
- /*      System Register Map (BAR 1, Start Addr 0)
-  *
-  *  BAR Size:
+Thanks,
+
+         M.
 -- 
-2.17.1
-
+Jazz is not dead. It just smells funny...
