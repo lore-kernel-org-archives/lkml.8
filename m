@@ -2,185 +2,247 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB2AC43333
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD38C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4873C20757
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584757773;
-	bh=cx0T7j4Rw8DmtudaxpEVF5LLRRX3FTiCAV1kPl7Nbgc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=UmJC3mXeY7ohPy9q/m+vU0VWdCg0T6NZHUs3sRyEeAJzUp3nN7kndBSFEh96zFlk4
-	 p59YQU8I4O4gH/1aSEEfdSQl45pSs8x2qPdIkrwBuRbL6Zye2XEbd8/jO+r1wVcOXK
-	 jD3P/nQBzizxzMNdYPDU6l2f8qUBqJXI6sqKmd+g=
+	by mail.kernel.org (Postfix) with ESMTP id 3DFF620753
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 02:33:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgCUC3c (ORCPT
+        id S1727883AbgCUCdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 22:29:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55060 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 22:33:18 -0400
+Received: from mga02.intel.com ([134.134.136.20]:41588 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgCUC3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 22:29:31 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2952B2072D;
-        Sat, 21 Mar 2020 02:29:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584757771;
-        bh=cx0T7j4Rw8DmtudaxpEVF5LLRRX3FTiCAV1kPl7Nbgc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=1kXb4KEWo2dzCCzN7/6klHda+1PJHiAUGD5QuqlYfAOdT7fYlhmYaBMMtTuy/WNZN
-         ECiV3hXYdLV0vb5/erVarifnSX6rfZroo+HOqk7zb9SGh8nx4anjDrE1g+i0bZAwHB
-         pzevk+XrUrbjAD4JQ5Js8pF94X/E75fBizrexOo8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E979835226B5; Fri, 20 Mar 2020 19:29:30 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 19:29:30 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting
- documentation
-Message-ID: <20200321022930.GU3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200320160145.GN3199@paulmck-ThinkPad-P72>
- <87mu8apzxr.fsf@nanos.tec.linutronix.de>
- <20200320210243.GT3199@paulmck-ThinkPad-P72>
- <874kuipsbw.fsf@nanos.tec.linutronix.de>
+        id S1727046AbgCUCdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Mar 2020 22:33:17 -0400
+IronPort-SDR: DltsOJ2iGIbfJX+TlIohR0nk3aFt1p7suprr34BWibkBrep+9sOv0nKHauT3fS+2nsdNk1Jnuh
+ qF2RGmI1VQMQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 19:33:17 -0700
+IronPort-SDR: Hs+yxtVMUt6FrSR0Tp9Es+w0IZzm+8V/2buDL+Me6ND8jopJ+vEhfZH7QZ5mdugUkDeERF+To1
+ 8QHfM9mV5a8A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,286,1580803200"; 
+   d="scan'208";a="292078137"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Mar 2020 19:33:15 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jFTwo-0000iY-UB; Sat, 21 Mar 2020 10:33:14 +0800
+Date:   Sat, 21 Mar 2020 10:32:21 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:dev.2020.03.18a] BUILD SUCCESS
+ a068dafb411657fba5595088ff0609642bafb0d1
+Message-ID: <5e757cb5.9pL77QMRaPDT76kN%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kuipsbw.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 11:36:03PM +0100, Thomas Gleixner wrote:
-> "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > On Fri, Mar 20, 2020 at 08:51:44PM +0100, Thomas Gleixner wrote:
-> >> "Paul E. McKenney" <paulmck@kernel.org> writes:
-> >> >
-> >> >  - The soft interrupt related suffix (_bh()) still disables softirq
-> >> >    handlers.  However, unlike non-PREEMPT_RT kernels (which disable
-> >> >    preemption to get this effect), PREEMPT_RT kernels use a per-CPU
-> >> >    lock to exclude softirq handlers.
-> >> 
-> >> I've made that:
-> >> 
-> >>   - The soft interrupt related suffix (_bh()) still disables softirq
-> >>     handlers.
-> >> 
-> >>     Non-PREEMPT_RT kernels disable preemption to get this effect.
-> >> 
-> >>     PREEMPT_RT kernels use a per-CPU lock for serialization. The lock
-> >>     disables softirq handlers and prevents reentrancy by a preempting
-> >>     task.
-> >
-> > That works!  At the end, I would instead say "prevents reentrancy
-> > due to task preemption", but what you have works.
-> 
-> Yours is better.
-> 
-> >>    - Task state is preserved across spinlock acquisition, ensuring that the
-> >>      task-state rules apply to all kernel configurations.  Non-PREEMPT_RT
-> >>      kernels leave task state untouched.  However, PREEMPT_RT must change
-> >>      task state if the task blocks during acquisition.  Therefore, it
-> >>      saves the current task state before blocking and the corresponding
-> >>      lock wakeup restores it. A regular not lock related wakeup sets the
-> >>      task state to RUNNING. If this happens while the task is blocked on
-> >>      a spinlock then the saved task state is changed so that correct
-> >>      state is restored on lock wakeup.
-> >> 
-> >> Hmm?
-> >
-> > I of course cannot resist editing the last two sentences:
-> >
-> >    ... Other types of wakeups unconditionally set task state to RUNNING.
-> >    If this happens while a task is blocked while acquiring a spinlock,
-> >    then the task state is restored to its pre-acquisition value at
-> >    lock-wakeup time.
-> 
-> Errm no. That would mean
-> 
->      state = UNINTERRUPTIBLE
->      lock()
->        block()
->          real_state = state
->          state = SLEEPONLOCK
-> 
->                                non lock wakeup
->                                  state = RUNNING    <--- FAIL #1
-> 
->                                lock wakeup
->                                  state = real_state <--- FAIL #2
-> 
-> How it works is:
-> 
->      state = UNINTERRUPTIBLE
->      lock()
->        block()
->          real_state = state
->          state = SLEEPONLOCK
-> 
->                                non lock wakeup
->                                  real_state = RUNNING
-> 
->                                lock wakeup
->                                  state = real_state == RUNNING
-> 
-> If there is no 'non lock wakeup' before the lock wakeup:
-> 
->      state = UNINTERRUPTIBLE
->      lock()
->        block()
->          real_state = state
->          state = SLEEPONLOCK
-> 
->                                lock wakeup
->                                  state = real_state == UNINTERRUPTIBLE
-> 
-> I agree that what I tried to express is hard to parse, but it's at least
-> halfways correct :)
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.03.18a
+branch HEAD: a068dafb411657fba5595088ff0609642bafb0d1  squash! rcu-tasks: Add an RCU Tasks Trace to simplify protection of tracing hooks
 
-Apologies!  That is what I get for not looking it up in the source.  :-/
+elapsed time: 481m
 
-OK, so I am stupid enough not only to get it wrong, but also to try again:
+configs tested: 180
+configs skipped: 0
 
-   ... Other types of wakeups would normally unconditionally set the
-   task state to RUNNING, but that does not work here because the task
-   must remain blocked until the lock becomes available.  Therefore,
-   when a non-lock wakeup attempts to awaken a task blocked waiting
-   for a spinlock, it instead sets the saved state to RUNNING.  Then,
-   when the lock acquisition completes, the lock wakeup sets the task
-   state to the saved state, in this case setting it to RUNNING.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Is that better?
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+xtensa                          iss_defconfig
+openrisc                 simple_smp_defconfig
+sparc64                          allmodconfig
+riscv                               defconfig
+i386                              allnoconfig
+i386                                defconfig
+ia64                             alldefconfig
+sh                          rsk7269_defconfig
+powerpc                       ppc64_defconfig
+i386                             alldefconfig
+i386                             allyesconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+xtensa                       common_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200321
+x86_64               randconfig-a002-20200321
+x86_64               randconfig-a003-20200321
+i386                 randconfig-a001-20200321
+i386                 randconfig-a002-20200321
+i386                 randconfig-a003-20200321
+x86_64               randconfig-a001-20200320
+x86_64               randconfig-a002-20200320
+x86_64               randconfig-a003-20200320
+i386                 randconfig-a001-20200320
+i386                 randconfig-a002-20200320
+i386                 randconfig-a003-20200320
+alpha                randconfig-a001-20200321
+m68k                 randconfig-a001-20200321
+mips                 randconfig-a001-20200321
+nds32                randconfig-a001-20200321
+parisc               randconfig-a001-20200321
+riscv                randconfig-a001-20200321
+alpha                randconfig-a001-20200320
+m68k                 randconfig-a001-20200320
+mips                 randconfig-a001-20200320
+nds32                randconfig-a001-20200320
+parisc               randconfig-a001-20200320
+riscv                randconfig-a001-20200320
+c6x                  randconfig-a001-20200320
+h8300                randconfig-a001-20200320
+microblaze           randconfig-a001-20200320
+nios2                randconfig-a001-20200320
+sparc64              randconfig-a001-20200320
+csky                 randconfig-a001-20200320
+openrisc             randconfig-a001-20200320
+s390                 randconfig-a001-20200320
+sh                   randconfig-a001-20200320
+xtensa               randconfig-a001-20200320
+x86_64               randconfig-b001-20200320
+x86_64               randconfig-b002-20200320
+x86_64               randconfig-b003-20200320
+i386                 randconfig-b001-20200320
+i386                 randconfig-b002-20200320
+i386                 randconfig-b003-20200320
+x86_64               randconfig-c001-20200320
+x86_64               randconfig-c002-20200320
+x86_64               randconfig-c003-20200320
+i386                 randconfig-c001-20200320
+i386                 randconfig-c002-20200320
+i386                 randconfig-c003-20200320
+x86_64               randconfig-c001-20200321
+x86_64               randconfig-c002-20200321
+x86_64               randconfig-c003-20200321
+i386                 randconfig-c001-20200321
+i386                 randconfig-c002-20200321
+i386                 randconfig-c003-20200321
+x86_64               randconfig-d001-20200320
+x86_64               randconfig-d002-20200320
+x86_64               randconfig-d003-20200320
+i386                 randconfig-d001-20200320
+i386                 randconfig-d002-20200320
+i386                 randconfig-d003-20200320
+x86_64               randconfig-e001-20200321
+x86_64               randconfig-e002-20200321
+x86_64               randconfig-e003-20200321
+i386                 randconfig-e001-20200321
+i386                 randconfig-e002-20200321
+i386                 randconfig-e003-20200321
+x86_64               randconfig-g001-20200320
+x86_64               randconfig-g002-20200320
+x86_64               randconfig-g003-20200320
+i386                 randconfig-g001-20200320
+i386                 randconfig-g002-20200320
+i386                 randconfig-g003-20200320
+x86_64               randconfig-h001-20200320
+x86_64               randconfig-h002-20200320
+x86_64               randconfig-h003-20200320
+i386                 randconfig-h001-20200320
+i386                 randconfig-h002-20200320
+i386                 randconfig-h003-20200320
+arc                  randconfig-a001-20200320
+arm                  randconfig-a001-20200320
+arm64                randconfig-a001-20200320
+ia64                 randconfig-a001-20200320
+powerpc              randconfig-a001-20200320
+sparc                randconfig-a001-20200320
+arm                  randconfig-a001-20200321
+arm64                randconfig-a001-20200321
+ia64                 randconfig-a001-20200321
+powerpc              randconfig-a001-20200321
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
-							Thanx, Paul
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
