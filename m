@@ -7,42 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F207FC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB62C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D536D20754
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FD6420754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgCUPyP (ORCPT
+        id S1727999AbgCUPyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:54:15 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39057 "EHLO
+        Sat, 21 Mar 2020 11:54:18 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39058 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbgCUPx6 (ORCPT
+        with ESMTP id S1727789AbgCUPx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:53:58 -0400
+        Sat, 21 Mar 2020 11:53:59 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFgRb-0005Ua-Mz; Sat, 21 Mar 2020 16:53:51 +0100
+        id 1jFgRe-0005W3-Ed; Sat, 21 Mar 2020 16:53:54 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 416E91C22EF;
-        Sat, 21 Mar 2020 16:53:51 +0100 (CET)
-Date:   Sat, 21 Mar 2020 15:53:50 -0000
-From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8F40D1C22F3;
+        Sat, 21 Mar 2020 16:53:52 +0100 (CET)
+Date:   Sat, 21 Mar 2020 15:53:52 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] nds32: Remove mm.h from asm/uaccess.h
-Cc:     kbuild test robot <lkp@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+Subject: [tip: locking/core] usb: gadget: Use completion interface instead of
+ open coding it
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200321113241.339289758@linutronix.de>
-References: <20200321113241.339289758@linutronix.de>
+In-Reply-To: <20200321113241.043380271@linutronix.de>
+References: <20200321113241.043380271@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158480603085.28353.13958347443342587650.tip-bot2@tip-bot2>
+Message-ID: <158480603223.28353.16829608560057265287.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,52 +59,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     43ea9d1a533a08dea4a2a9312d6aa2583313ef23
-Gitweb:        https://git.kernel.org/tip/43ea9d1a533a08dea4a2a9312d6aa2583313ef23
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Sat, 21 Mar 2020 12:25:50 +01:00
+Commit-ID:     c1d51dd505577b189bf33867a9c20015ca7efb46
+Gitweb:        https://git.kernel.org/tip/c1d51dd505577b189bf33867a9c20015ca7efb46
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Sat, 21 Mar 2020 12:25:47 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Sat, 21 Mar 2020 16:00:21 +01:00
+CommitterDate: Sat, 21 Mar 2020 16:00:20 +01:00
 
-nds32: Remove mm.h from asm/uaccess.h
+usb: gadget: Use completion interface instead of open coding it
 
-The defconfig compiles without linux/mm.h. With mm.h included the
-include chain leands to:
-|   CC      kernel/locking/percpu-rwsem.o
-| In file included from include/linux/huge_mm.h:8,
-|                  from include/linux/mm.h:567,
-|                  from arch/nds32/include/asm/uaccess.h:,
-|                  from include/linux/uaccess.h:11,
-|                  from include/linux/sched/task.h:11,
-|                  from include/linux/sched/signal.h:9,
-|                  from include/linux/rcuwait.h:6,
-|                  from include/linux/percpu-rwsem.h:8,
-|                  from kernel/locking/percpu-rwsem.c:6:
-| include/linux/fs.h:1422:29: error: array type has incomplete element type 'struct percpu_rw_semaphore'
-|  1422 |  struct percpu_rw_semaphore rw_sem[SB_FREEZE_LEVELS];
+ep_io() uses a completion on stack and open codes the waiting with:
 
-once rcuwait.h includes linux/sched/signal.h.
+  wait_event_interruptible (done.wait, done.done);
+and
+  wait_event (done.wait, done.done);
 
-Remove the linux/mm.h include.
+This waits in non-exclusive mode for complete(), but there is no reason to
+do so because the completion can only be waited for by the task itself and
+complete() wakes exactly one exlusive waiter.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Replace the open coded implementation with the corresponding
+wait_for_completion*() functions.
+
+No functional change.
+
+Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200321113241.339289758@linutronix.de
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lkml.kernel.org/r/20200321113241.043380271@linutronix.de
 ---
- arch/nds32/include/asm/uaccess.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/usb/gadget/legacy/inode.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/nds32/include/asm/uaccess.h b/arch/nds32/include/asm/uaccess.h
-index 8916ad9..3a9219f 100644
---- a/arch/nds32/include/asm/uaccess.h
-+++ b/arch/nds32/include/asm/uaccess.h
-@@ -11,7 +11,6 @@
- #include <asm/errno.h>
- #include <asm/memory.h>
- #include <asm/types.h>
--#include <linux/mm.h>
+diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
+index b47938d..4c3aff9 100644
+--- a/drivers/usb/gadget/legacy/inode.c
++++ b/drivers/usb/gadget/legacy/inode.c
+@@ -344,7 +344,7 @@ ep_io (struct ep_data *epdata, void *buf, unsigned len)
+ 	spin_unlock_irq (&epdata->dev->lock);
  
- #define __asmeq(x, y)  ".ifnc " x "," y " ; .err ; .endif\n\t"
+ 	if (likely (value == 0)) {
+-		value = wait_event_interruptible (done.wait, done.done);
++		value = wait_for_completion_interruptible(&done);
+ 		if (value != 0) {
+ 			spin_lock_irq (&epdata->dev->lock);
+ 			if (likely (epdata->ep != NULL)) {
+@@ -353,7 +353,7 @@ ep_io (struct ep_data *epdata, void *buf, unsigned len)
+ 				usb_ep_dequeue (epdata->ep, epdata->req);
+ 				spin_unlock_irq (&epdata->dev->lock);
  
+-				wait_event (done.wait, done.done);
++				wait_for_completion(&done);
+ 				if (epdata->status == -ECONNRESET)
+ 					epdata->status = -EINTR;
+ 			} else {
