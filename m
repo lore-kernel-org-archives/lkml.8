@@ -2,228 +2,104 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F48C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5B0C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B00E720754
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:19:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584789566;
-	bh=/4Tg/7Vu94FAj6F1UEbjVB8URukEL7viIow25tsliJ4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RTqxEBIghKBIgw6qHBWToFAMDUxIrkPstYSRmd6IofNeTrhgb1MBeENT7lC3aH+Hj
-	 RnGoQ28/RAD1hnooly842YlfdgQMlBWn302LNbWYMTwqjXAnI9fjOiGUre0cSqE8ka
-	 yBl3lGhK8oP9NPATzGWbkNrlbPan1JdhRkn2EcjI=
+	by mail.kernel.org (Postfix) with ESMTP id 008FD20754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:22:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iokK+tj+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbgCULTY (ORCPT
+        id S1728463AbgCULWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 07:19:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40782 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbgCULTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 07:19:23 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C76620732;
-        Sat, 21 Mar 2020 11:19:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584789562;
-        bh=/4Tg/7Vu94FAj6F1UEbjVB8URukEL7viIow25tsliJ4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WHRiXzdGrKN3Jxn9uznM6mC+5pmjd4E07ffiO/Z3aAcKoNKh448RTiMgq0EodUc//
-         +31DgIXYa1lbgF82RfR1icQKr3We/m33o7IOtK786qKhLooE1naq7Ws9tIveRc/Fcf
-         ve0cpVwVvmlSzrkgsZlY7DdTOmr+Ad9gUBVg/PYY=
-Date:   Sat, 21 Mar 2020 11:19:16 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Nishant Malpani <nish.malpani25@gmail.com>
-Cc:     robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, mark.rutland@arm.com, sre@kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: iio: tsl2563: convert bindings to YAML
-Message-ID: <20200321111916.4fe23b3e@archlinux>
-In-Reply-To: <1cfe5e97-1c0d-8ffe-88f3-90db77e0f03b@gmail.com>
-References: <20200314134237.12187-1-nish.malpani25@gmail.com>
-        <20200315105834.7a5f4475@archlinux>
-        <1cfe5e97-1c0d-8ffe-88f3-90db77e0f03b@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 21 Mar 2020 07:22:07 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37132 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgCULWG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 07:22:06 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w10so10546932wrm.4;
+        Sat, 21 Mar 2020 04:22:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wrykALwAZHn2gI4OIvSp4Cr1q7UfqoQL07MxjhgqGhI=;
+        b=iokK+tj+ES8Dz+zcq6RpuEqINz9k7mZVDpnL+mOZkdhMW0Z2/zEhFQJ24GS11Yq7ms
+         M7hSQuZrik3r6nZbAKLKKmmtMAmu1S2tgVHkKDuYxcjA3XdOQwM5OP17Px1MMjqiGfZd
+         zmOrQoxr40OMSS2V2D4KLCFTo64Iu+GVX98to2jItoILC9ZoAizm5TBPkEPxCzZ5UDZv
+         tmjPe5MCaRi8D3EObUeTdX+g8lxJEaM/3+xVO+rdU/CZ4rxtIMsCuBy55YGpMkaBi7os
+         f0kwEiAhnLBbpPHTP9f1fl0BEVJ7x0KAnkD+b3JFtPY+Palrrr6ySVVuJCE2bhtyapgc
+         +M+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wrykALwAZHn2gI4OIvSp4Cr1q7UfqoQL07MxjhgqGhI=;
+        b=LKCDRZtdV4M38ZZ6RNZAU7Z0o7EyopJ8UrgcZmdh+PLKMS6ppONM5Di5NdkBloR8xU
+         bgGJ05j0wM2rxD5J8z3bAZRc+u79TvkBfn7rNwVBDMbPoCSkhTwMP9VRbgXgI769f0te
+         vILAA1IYTZAtmVMNlET9uNiySOdm6JTvq6zFqw9KYLZyNbBOSwLUDE0nFBkTuIf8UwWH
+         cd+6bWisCMPWbxwudxAwfDP5pWKoBb/v5k4efy0MQ4aszzNWSlVNOkAPR2hdhaXku68z
+         3uWBI9njVqcaCZsPJl+10MNHuxStw3+gHWjZBYvF1O1NMaUERdyx9QZgl3+B7nlj5pw8
+         O+Rg==
+X-Gm-Message-State: ANhLgQ0GEUlrBIRqaRvMPBPJSG8t30fgyaddTIu1tLba3XWbV0nhn8gU
+        2FEQgog+QmTes1CWJXwrOcQ=
+X-Google-Smtp-Source: ADFU+vvUdBv4IbyytOzeaYSUEhatmuthQBOlPFK2tmwCRSwKRlZbN1HaAN305D2qc31CAbtmwZ+XPQ==
+X-Received: by 2002:adf:e345:: with SMTP id n5mr17736309wrj.220.1584789724226;
+        Sat, 21 Mar 2020 04:22:04 -0700 (PDT)
+Received: from prasmi.home ([2a00:23c8:2510:d000:a04f:dbc7:8e23:adad])
+        by smtp.gmail.com with ESMTPSA id x24sm11986616wmc.36.2020.03.21.04.22.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Mar 2020 04:22:03 -0700 (PDT)
+From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] misc: pci_endpoint_test: remove duplicate macro PCI_ENDPOINT_TEST_STATUS
+Date:   Sat, 21 Mar 2020 11:21:39 +0000
+Message-Id: <20200321112139.17184-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Mar 2020 11:57:20 +0530
-Nishant Malpani <nish.malpani25@gmail.com> wrote:
+PCI_ENDPOINT_TEST_STATUS is already defined in pci_endpoint_test.c along
+with the status bits, so this patch drops duplicate definition.
 
-> A v3 PATCH [1] was generated taking care of the reviews which can be 
-> found inline.
-> 
-> [1] https://marc.info/?l=linux-iio&m=158451158827441&w=2
-> 
-> On 15/03/20 4:28 pm, Jonathan Cameron wrote:
-> > On Sat, 14 Mar 2020 19:12:37 +0530
-> > Nishant Malpani <nish.malpani25@gmail.com> wrote:
-> >   
-> >> Convert the TSL2563 device tree bindings to the new YAML format.
-> >>
-> >> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
-> >> ---
-> >>
-> >> The link for the datasheet is not attached in the binding document
-> >> because it was not available on the manufacturer's (AMS) website [1].  
-> > 
-> > Very old part now, though plenty of them in circulation or least there
-> > used to be.  I have though not powered up that board for a while.
-> > 
-> > When doing these conversions, do sanity check them against the driver
-> > as the old docs aren't always entirely accurate ; >
-> > Jonathan
-> >   
-> >>
-> >> [1] https://ams.com/ambient-light-sensors
-> >> ---
-> >>   .../devicetree/bindings/iio/light/tsl2563.txt | 19 --------
-> >>   .../bindings/iio/light/tsl2563.yaml           | 46 +++++++++++++++++++
-> >>   2 files changed, 46 insertions(+), 19 deletions(-)
-> >>   delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.txt
-> >>   create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
-> >> deleted file mode 100644
-> >> index f91e809e736e..000000000000
-> >> --- a/Documentation/devicetree/bindings/iio/light/tsl2563.txt
-> >> +++ /dev/null
-> >> @@ -1,19 +0,0 @@
-> >> -* AMS TAOS TSL2563 ambient light sensor
-> >> -
-> >> -Required properties:
-> >> -
-> >> -  - compatible : should be "amstaos,tsl2563"
-> >> -  - reg : the I2C address of the sensor
-> >> -
-> >> -Optional properties:
-> >> -
-> >> -  - amstaos,cover-comp-gain : integer used as multiplier for gain
-> >> -                              compensation (default = 1)
-> >> -
-> >> -Example:
-> >> -
-> >> -tsl2563@29 {
-> >> -	compatible = "amstaos,tsl2563";
-> >> -	reg = <0x29>;
-> >> -	amstaos,cover-comp-gain = <16>;
-> >> -};
-> >> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.yaml b/Documentation/devicetree/bindings/iio/light/tsl2563.yaml
-> >> new file mode 100644
-> >> index 000000000000..2a70b8d62760
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/iio/light/tsl2563.yaml
-> >> @@ -0,0 +1,46 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/iio/light/tsl2563.yaml#  
-> > 
-> > Convention is now to name files and this with the manufacturer part
-> > as well.  
-> 
-> Got it! Taken care of in v3.
-> > 
-> > light/amstaos,tsl2563.yaml
-> >   
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: AMS TAOS TSL2563 ambient light sensor
-> >> +
-> >> +maintainers:
-> >> +  - Sebastian Reichel <sre@kernel.org>
-> >> +
-> >> +description: |
-> >> +  Ambient light sensor with an i2c interface.
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    enum:
-> >> +      - amstaos,tsl2563  
-> > 
-> > The original binding was wrong on this.   Check the driver :)
-> > I'm a bit embarrassed I never noticed during review as I have
-> > a tsl2561, be it on a board that was never converted to DT.
-> >   
-> 
-> You're right. Should have cross-checked with the driver before blindly 
-> following the original binding. Corrected in v3.
-> >> +
-> >> +  reg:
-> >> +    maxItems: 1
-> >> +
-> >> +  amstaos,cover-comp-gain:
-> >> +    description: Multiplier for gain compensation
-> >> +    allOf:
-> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> >> +      - enum: [1, 16]  
-> > 
-> > Not sure it's that restricted...  or to be honest what
-> > that is for at all.  Superficially it looks like
-> > a multiplier to change the 'range' of the the sysfs control.
-> > 
-> > I wonder if anyone cares or if we can just start ignoring that going
-> > forwards?  Sebastian, anyone else?
-> >   
-> 
->  From what I understood while reading the datasheet [2] (Page 4), 
-> 'amstaos,cover-comp-gain' is used to switch between the low gain and 
-> high gain mode which further adjusts the 'Illuminance Responsivity'. 
-> Ergo, I've taken it forward even in v3 since the driver also relies on 
-> it [3]. Please let me know if my reasoning is erroneous.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ This patch applies on top of pci/endpoint branch [1].
+ 
+ [1] https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
 
-My issue here is that might be the intent, but that's not what the driver
-uses it for.  All the infrastructure seems to be there to control the
-low gain / high gain control but it's not actually hooked up.
+ drivers/misc/pci_endpoint_test.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-The driver currently just applies that number as a multiplier without changing
-the state of the chip to match.
-
-Let's leave it there, but at somepoint would be good to dig out some hardware
-and actually make this work as expected.  I 'might' get to this at somepoint.
-
-Jonathan
-> 
-> [2] 
-> https://media.digikey.com/pdf/Data%20Sheets/Austriamicrosystems%20PDFs/TSL2562,63.pdf
-> 
-> [3] 
-> https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/tree/drivers/iio/light/tsl2563.c#n494
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - reg
-> >> +
-> >> +examples:
-> >> +  - |
-> >> +    i2c {
-> >> +
-> >> +      #address-cells = <1>;
-> >> +      #size-cells = <0>;
-> >> +
-> >> +      light-sensor@29 {
-> >> +        compatible = "amstaos,tsl2563";
-> >> +        reg = <0x29>;
-> >> +        amstaos,cover-comp-gain = <16>;
-> >> +      };
-> >> +    };
-> >> +...  
-> >   
-> 
-> With regards,
-> Nishant Malpani
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index b536ca4b14ca..a1bb94902b5a 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -53,7 +53,6 @@
+ #define STATUS_SRC_ADDR_INVALID			BIT(7)
+ #define STATUS_DST_ADDR_INVALID			BIT(8)
+ 
+-#define PCI_ENDPOINT_TEST_STATUS		0x8
+ #define PCI_ENDPOINT_TEST_LOWER_SRC_ADDR	0x0c
+ #define PCI_ENDPOINT_TEST_UPPER_SRC_ADDR	0x10
+ 
+-- 
+2.20.1
 
