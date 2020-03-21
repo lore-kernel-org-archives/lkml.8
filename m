@@ -2,123 +2,108 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84726C4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 063C4C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4EF20781
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA6D120788
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:21:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584804070;
+	bh=JVuxAv7PcFwI3VFWuqZ+qL64OlXsn6M06RjI7bB1CNQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Fo2GI31kkTQ9/fVGonM6+ns/BuxzhHhN8EPseGYI/J4IXTJAa9WokmPiEUg22UUfI
+	 favhhITMJ1G0KAvxrNzyzgYynKjiehTOgkPZjkIB/V8mE+7+FbCE06eIL5G9AZmIPe
+	 pKAykkDrXmQk9J6FJGyiDfp64lZk6TVjuU578ei8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbgCUPUp (ORCPT
+        id S1727495AbgCUPVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:20:45 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:52352 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbgCUPUp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:20:45 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id CF6FD1C032C; Sat, 21 Mar 2020 16:20:42 +0100 (CET)
-Date:   Sat, 21 Mar 2020 16:20:37 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Denis Osterland-Heim <denis.osterland@diehl.com>
-Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>
-Subject: Re: [PATCH v4 3/5] leds: pwm: check result of led_pwm_set() in
- led_pwm_add()
-Message-ID: <20200321152037.GB8386@duo.ucw.cz>
-References: <20200321081321.15614-1-Denis.Osterland@diehl.com>
- <20200321081321.15614-4-Denis.Osterland@diehl.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="8GpibOaaTibBMecb"
-Content-Disposition: inline
-In-Reply-To: <20200321081321.15614-4-Denis.Osterland@diehl.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 21 Mar 2020 11:21:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727028AbgCUPVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 11:21:09 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EFDB20780;
+        Sat, 21 Mar 2020 15:21:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584804068;
+        bh=JVuxAv7PcFwI3VFWuqZ+qL64OlXsn6M06RjI7bB1CNQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sY+GDcxXQXt+MlE7vd2I0azOCUDnBZnE1+dy3Rw2fWty+8kWl79XPihhWwlaliWUS
+         84UyUpBPNLhmcDXYHLiRhKF40AW4eZ4f1KZahUw2vpx3JXChvDeCioMI7aoyybjAGD
+         2cy4INOaGTvlQCimdphmN4LF7w/KoJqXogXXdgj0=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jFfvu-00EWKi-R7; Sat, 21 Mar 2020 15:21:06 +0000
+Date:   Sat, 21 Mar 2020 15:21:05 +0000
+Message-ID: <86mu89zqce.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH] irqchip: irq-imx-gpcv2: Remove unnecessary blank lines
+In-Reply-To: <1584421001-2647-1-git-send-email-Anson.Huang@nxp.com>
+References: <1584421001-2647-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: Anson.Huang@nxp.com, tglx@linutronix.de, jason@lakedaemon.net, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---8GpibOaaTibBMecb
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> led_pwm_set() now returns an error when setting the PWM fails.
->=20
-> Cc: Uwe Kleine-K=F6nig <uwe@kleine-koenig.org>
-> Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
-
-I applied 1 and 2, but 3 failed for me. I'll push updated -next, can
-you see what is going on there?
-
-Best regards,
-								Pavel
-
-> +++ b/drivers/leds/leds-pwm.c
-> @@ -91,15 +91,21 @@ static int led_pwm_add(struct device *dev, struct led=
-_pwm_priv *priv,
->  	pwm_init_state(led_data->pwm, &led_data->pwmstate);
-> =20
->  	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
-> -	if (ret =3D=3D 0) {
-> -		priv->num_leds++;
-> -		led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
-> -	} else {
-> +	if (ret) {
->  		dev_err(dev, "failed to register PWM led for %s: %d\n",
->  			led->name, ret);
-> +		return ret;
->  	}
-> =20
-> -	return ret;
-> +	ret =3D led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
-> +	if (ret) {
-> +		dev_err(dev, "failed to set led PWM value for %s: %d",
-> +			led->name, ret);
-> +		return ret;
-> +	}
-> +
-> +	priv->num_leds++;
-> +	return 0;
+On Tue, 17 Mar 2020 04:56:41 +0000,
+Anson Huang <Anson.Huang@nxp.com> wrote:
+> 
+> Remove unnecessary blank lines for cleanup.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/irqchip/irq-imx-gpcv2.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-gpcv2.c
+> index 4f74c15..4f11b9b 100644
+> --- a/drivers/irqchip/irq-imx-gpcv2.c
+> +++ b/drivers/irqchip/irq-imx-gpcv2.c
+> @@ -17,7 +17,6 @@
+>  #define GPC_IMR1_CORE2		0x1c0
+>  #define GPC_IMR1_CORE3		0x1d0
+>  
+> -
+>  struct gpcv2_irqchip_data {
+>  	struct raw_spinlock	rlock;
+>  	void __iomem		*gpc_base;
+> @@ -287,6 +286,5 @@ static int __init imx_gpcv2_irqchip_init(struct device_node *node,
+>  	of_node_clear_flag(node, OF_POPULATED);
+>  	return 0;
 >  }
-> =20
->  static int led_pwm_create_fwnode(struct device *dev, struct
-> led_pwm_priv *priv)
+> -
+>  IRQCHIP_DECLARE(imx_gpcv2_imx7d, "fsl,imx7d-gpc", imx_gpcv2_irqchip_init);
+>  IRQCHIP_DECLARE(imx_gpcv2_imx8mq, "fsl,imx8mq-gpc", imx_gpcv2_irqchip_init);
 
->=20
-> The contents of the above mentioned e-mail is not legally
-> binding. This e-mail contains confidential and/or legally protected
-> information. Please inform us if you have received this e-mail by
+I honestly don't think this deserves a patch. Next time you work on
+this driver, add the cleanups to it. But on its own, it's only churn.
 
-This is lie. Please don't do this.
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Thanks,
 
---8GpibOaaTibBMecb
-Content-Type: application/pgp-signature; name="signature.asc"
+	M.
 
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXnYwxQAKCRAw5/Bqldv6
-8kXiAJ4npfPQ8vzqkySsj2s8Qpj/BC45GwCgwKItekyjd/+ilSTTBVyp1/byw3A=
-=rXOy
------END PGP SIGNATURE-----
-
---8GpibOaaTibBMecb--
+-- 
+Jazz is not dead, it just smells funny.
