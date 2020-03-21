@@ -2,148 +2,118 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216C0C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 010A6C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF04F207FC
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2B3620757
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:55:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbgCUOqg (ORCPT
+        id S1727197AbgCUOzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 10:46:36 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38824 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbgCUOqg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 10:46:36 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFfOQ-0004Ys-C2; Sat, 21 Mar 2020 15:46:30 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id A798FFFC8D; Sat, 21 Mar 2020 15:46:29 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andi Kleen <andi@firstfloor.org>, x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>
-Subject: Re: [PATCH] x86/speculation: Allow overriding seccomp speculation disable
-In-Reply-To: <20200312231222.81861-1-andi@firstfloor.org>
-References: <20200312231222.81861-1-andi@firstfloor.org>
-Date:   Sat, 21 Mar 2020 15:46:29 +0100
-Message-ID: <87sgi1rcje.fsf@nanos.tec.linutronix.de>
+        Sat, 21 Mar 2020 10:55:54 -0400
+Received: from mga09.intel.com ([134.134.136.24]:39819 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726192AbgCUOzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 10:55:53 -0400
+IronPort-SDR: M3x1jC4RDmGQX9zT4cDwovUr31yxNFwg4lqVpumyQTHUCTKrvL7ZCT9Q+i7WG02p4SV23EVfSm
+ VLoy3Vx+n3iA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 07:55:52 -0700
+IronPort-SDR: H7Fx5e3vGBOWvo9sSEFuouY7EMYSDdq5LAAbqIYuuwRubmj2u3R4jrnGqeobrgu3RyPQdPGO14
+ 9ryOAT075zzQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,288,1580803200"; 
+   d="scan'208";a="446950933"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga006.fm.intel.com with ESMTP; 21 Mar 2020 07:55:51 -0700
+Date:   Sat, 21 Mar 2020 07:55:51 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] KVM: VMX: Always VMCLEAR in-use VMCSes during crash
+ with kexec support
+Message-ID: <20200321145551.GA12329@linux.intel.com>
+References: <20200227223047.13125-1-sean.j.christopherson@intel.com>
+ <20200227223047.13125-2-sean.j.christopherson@intel.com>
+ <9edc8cef-9aa4-11ca-f8f2-a1fea990b87e@redhat.com>
+ <20200228145942.GA2329@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228145942.GA2329@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andi Kleen <andi@firstfloor.org> writes:
+On Fri, Feb 28, 2020 at 06:59:43AM -0800, Sean Christopherson wrote:
+> On Fri, Feb 28, 2020 at 11:16:10AM +0100, Paolo Bonzini wrote:
+> > On 27/02/20 23:30, Sean Christopherson wrote:
+> > > -void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs)
+> > > +void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs, bool in_use)
+> > >  {
+> > >  	vmcs_clear(loaded_vmcs->vmcs);
+> > >  	if (loaded_vmcs->shadow_vmcs && loaded_vmcs->launched)
+> > >  		vmcs_clear(loaded_vmcs->shadow_vmcs);
+> > > +
+> > > +	if (in_use) {
+> > > +		list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
+> > > +
+> > > +		/*
+> > > +		 * Ensure deleting loaded_vmcs from its current percpu list
+> > > +		 * completes before setting loaded_vmcs->vcpu to -1, otherwise
+> > > +		 * a different cpu can see vcpu == -1 first and add loaded_vmcs
+> > > +		 * to its percpu list before it's deleted from this cpu's list.
+> > > +		 * Pairs with the smp_rmb() in vmx_vcpu_load_vmcs().
+> > > +		 */
+> > > +		smp_wmb();
+> > > +	}
+> > > +
+> > 
+> > I'd like to avoid the new in_use argument and, also, I think it's a
+> > little bit nicer to always invoke the memory barrier.  Even though we 
+> > use "asm volatile" for vmclear and therefore the compiler is already 
+> > taken care of, in principle it's more correct to order the ->cpu write 
+> > against vmclear's.
+> 
+> Completely agree on all points.  I wanted to avoid in_use as well, but it
+> didn't occur to me to use list_empty()...
+> 
+> > This gives the following patch on top:
+> 
+> Looks good.
+> 
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index c9d6152e7a4d..77a64110577b 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -656,25 +656,24 @@ static int vmx_set_guest_msr(struct vcpu_vmx *vmx, struct shared_msr_entry *msr,
+> >  	return ret;
+> >  }
+> >  
+> > -void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs, bool in_use)
+> > +void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs)
+> >  {
+> >  	vmcs_clear(loaded_vmcs->vmcs);
+> >  	if (loaded_vmcs->shadow_vmcs && loaded_vmcs->launched)
+> >  		vmcs_clear(loaded_vmcs->shadow_vmcs);
+> >  
+> > -	if (in_use) {
+> > +	if (!list_empty(&loaded_vmcs->loaded_vmcss_on_cpu_link))
 
-Cc+: Seccomp maintainers ....
-
-> From: Andi Kleen <ak@linux.intel.com>
->
-> seccomp currently force enables the SSBD and IB mitigations,
-> which disable certain features in the CPU to avoid speculation
-> attacks at a performance penalty.
->
-> This is a heuristic to detect applications that may run untrusted code
-> (such as web browsers) and provide mitigation for them.
->
-> At least for SSBD the mitigation is really only for side channel
-> leaks inside processes.
->
-> There are two cases when the heuristic has problems:
->
-> - The seccomp user has a superior mitigation and doesn't need the
-> CPU level disables. For example for a Web Browser this is using
-> site isolation, which separates different sites in different
-> processes, so side channel leaks inside a process are not
-> of a concern.
->
-> - Another case are seccomp users who don't run untrusted code,
-> such as sshd, and don't really benefit from SSBD
->
-> As currently implemented seccomp force enables the mitigation
-> so it's not possible for processes to opt-in that they don't
-> need mitigations (such as when they already use site isolation).
->
-> In some cases we're seeing significant performance penalties
-> of enabling the SSBD mitigation on web workloads.
->
-> This patch changes the seccomp code to not force enable,
-
-I'm sure I asked you to do
-
-git grep "This patch" Documentation/process/
-
-before.
-
-> but merely enable, the SSBD and IB mitigations.
->
-> This allows processes to use the PR_SET_SPECULATION prctl
-> after running seccomp and reenable SSBD and/or IB
-> if they don't need any extra mitigation.
->
-> The effective default has not changed, it just allows
-> processes to opt-out of the default.
->
-> It's not clear to me what the use case for the force
-> disable is anyways. Certainly if someone controls the process,
-> and can run prctl(), they can leak data in all kinds of
-> ways anyways, or just read the whole memory map.
->
-> Longer term we probably need to discuss if the seccomp heuristic
-> is still warranted and should be perhaps changed. It seemed
-> like a good idea when these vulnerabilities were new, and
-> no web browsers supported site isolation. But with site isolation
-> widely deployed -- Chrome has it on by default, and as I understand
-> it, Firefox is going to enable it by default soon. And other seccomp
-> users (like sshd or systemd) probably don't really need it.
-> Given that it's not clear the default heuristic is still a good
-> idea.
->
-> But anyways this patch doesn't change any defaults, just
-> let's applications override it.
-
-It changes the enforcement and I really want the seccomp people to have
-a say here.
-
-Thanks,
-
-        tglx
-
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> ---
->  arch/x86/kernel/cpu/bugs.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> index ed54b3b21c39..f15ae9bfd7ad 100644
-> --- a/arch/x86/kernel/cpu/bugs.c
-> +++ b/arch/x86/kernel/cpu/bugs.c
-> @@ -1215,9 +1215,9 @@ int arch_prctl_spec_ctrl_set(struct task_struct *task, unsigned long which,
->  void arch_seccomp_spec_mitigate(struct task_struct *task)
->  {
->  	if (ssb_mode == SPEC_STORE_BYPASS_SECCOMP)
-> -		ssb_prctl_set(task, PR_SPEC_FORCE_DISABLE);
-> +		ssb_prctl_set(task, PR_SPEC_DISABLE);
->  	if (spectre_v2_user == SPECTRE_V2_USER_SECCOMP)
-> -		ib_prctl_set(task, PR_SPEC_FORCE_DISABLE);
-> +		ib_prctl_set(task, PR_SPEC_DISABLE);
->  }
->  #endif
->  
-> -- 
-> 2.24.1
+Circling back to this, an even better option is to drop loaded_vmcs_init()
+and open code the required pieces in __loaded_vmcs_clear() and
+alloc_loaded_vmcs().  Those are the only two callers, and the latter
+doesn't need to VMCLEAR the shadow VMCS (guaranteed to be NULL) and
+obviously doesn't need the list manipulation of smp_wmb().
