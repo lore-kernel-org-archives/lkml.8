@@ -2,110 +2,165 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D31C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9DBC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160FA20780
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC572077D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:03:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RA7I2FyC"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="DGAt/QE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgCUVD0 (ORCPT
+        id S1728306AbgCUVDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 17:03:26 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:55301 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728212AbgCUVDZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 17:03:25 -0400
-Received: by mail-pj1-f65.google.com with SMTP id mj6so4140850pjb.5;
-        Sat, 21 Mar 2020 14:03:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ISJDxYcNYwrHzHLY1hairRUTWGOjeAfmeJMLZDyJzbM=;
-        b=RA7I2FyCwTXqAIFLyAcHsYuaPekEEPhXzhOyMHBed7fO5es13LbkG+NQel8BIK6wGj
-         ZGkfBtMOtj0gaY2hg/zh+kLNHHqHiT6aPTqjyODcoGF497kddcLgz6jEDpa2teBrZ8t1
-         12DN3xOu6cgrsKJzK5wBhPOpH0LccPdN9ysKsaAbgS3PZAG7ViCpJGlWIAtKooAYL2YW
-         5sQ5dAjDQeEb6lWAit/zPwtl5jRcHEA4FuPMkjdXpoYAU3uCymLDn7o7XgtsrZpM4NZp
-         qd0G6CmZNoqfklflZvo6Wbv+BACM7y473NTLi47KnTlC4JZWSon5J2OXxPexpRU++aqr
-         B/Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ISJDxYcNYwrHzHLY1hairRUTWGOjeAfmeJMLZDyJzbM=;
-        b=i+J2tPOT4cd6htPJrHRv3tt8L5nCAei7bR3B5bsjYmCWA3YjVG/FNliNO/+e/g+2Mh
-         E6xObYPJB9nm3EK3kCH7PwvdE5HNua6ZAosafyjaNjnHVCbg6aBDbhvAVpzvaLgY+U3E
-         l2VbE/yy+VHx9d1Ejfonq3XQ5NwJVIxnhcRlx4GX+MqlBt0ItTkgsuVkCgPPiu1bK4lD
-         QevHvEJ7VjsUDDJqF+Vm5qFroS8tOBcmJVjp2TSsTJjrUXVMrJZt+rNZVFg/ieTPmJ83
-         5I+V3+Sb8ZIH/MTGRvIFYIeq8h52stzidEnvMilASQSeH9Lx0sv35SHsVWFfCB1j9wSI
-         pRuA==
-X-Gm-Message-State: ANhLgQ2piLCLlguQyTP227+JOkXo8Te0BfskPbNDNr3RtepS7/lqvdll
-        pFnRD5t/USQ6QGJaejFAynNC0yrfSak=
-X-Google-Smtp-Source: ADFU+vvajlpR5QRnV3pGnxcrHEBhRSUrvVqR6LmKzk8FmuW7RRq8AbM6m7Pjc8w2az+lOimebYxdeQ==
-X-Received: by 2002:a17:902:54f:: with SMTP id 73mr14561917plf.255.1584824602950;
-        Sat, 21 Mar 2020 14:03:22 -0700 (PDT)
-Received: from nish-HP-Pavilion ([2409:4072:488:8b8b:892d:8d8:1a6c:acda])
-        by smtp.gmail.com with ESMTPSA id f45sm7839396pjg.29.2020.03.21.14.03.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2020 14:03:22 -0700 (PDT)
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-To:     jic23@kernel.org
-Cc:     andriy.shevchenko@linux.intel.com, joe@perches.com,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        nish.malpani25@gmail.com, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 13/13] iio: st_sensors_spi: Use suitable format specifier
-Date:   Sun, 22 Mar 2020 02:32:04 +0530
-Message-Id: <20200321210204.18106-14-nish.malpani25@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200321210204.18106-1-nish.malpani25@gmail.com>
-References: <20200321210204.18106-1-nish.malpani25@gmail.com>
+        Sat, 21 Mar 2020 17:03:39 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:53389 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727184AbgCUVDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 17:03:39 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48lCmR0rpQz7N;
+        Sat, 21 Mar 2020 22:03:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1584824616; bh=tsS79R0QGq7AHtfKZ66fg1w4PDEYc0Ksv1+dYcvsHpQ=;
+        h=Date:From:Subject:To:Cc:From;
+        b=DGAt/QE/kpXzHWzdgv7tyCX9Z57MPer7iaa7TAHqxN+0L8mkCUYup2g/rHf79NBmx
+         3WChkOx/rIddiRNFmv/eGGqg3B2MqXElA4PSu0B/oNIJYtU/lv7mXcCQKEMG+k+Qzx
+         cMvaRAmF82KihVDHGt7c2TSQbqgt/b22obCAxYxNCz0ShhcjRD/cgHQir0dRe+iFn/
+         VA0U2S67Tt2XlqzHm5zq0CUnwyzmX35WHL1ZfIF1UlLHYWep15hZzmX4zTjiu1muC7
+         QlyLn/ZGCaKAaTa3OMT2996ytGeiM72WtUhZ6/K2TZibHDo7jIJrMGqoFZ9Ua8PzDB
+         UzcFjQsQUVM/Q==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Sat, 21 Mar 2020 22:03:34 +0100
+Message-Id: <6466e066d7cbad20cb6a334ad8e37cdcf521c492.1584822011.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v2] i2c: at91: support atomic write xfer
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+To:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide more suitable format specifiers while printing error logs.
-Discards the use of unnecessary explicit casting and prints symbolic
-error name which might prove to be convenient during debugging.
+Implement basic support for atomic write - enough to get a simple
+write to PMIC on shutdown. Only for chips having ALT_CMD register,
+eg. SAMA5D2.
 
-Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
-
-Based on conversations in [1] & [2].
-
-[1] https://marc.info/?l=linux-iio&m=158427554607223&w=2
-[2] https://marc.info/?l=linux-iio&m=158481647605891&w=2
+v2: remove runtime-PM usage
+    switch to readl*poll*atomic() for transfer completion wait
 ---
- drivers/iio/common/st_sensors/st_sensors_spi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-at91-master.c | 69 +++++++++++++++++++++++++++-
+ 1 file changed, 67 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/common/st_sensors/st_sensors_spi.c b/drivers/iio/common/st_sensors/st_sensors_spi.c
-index 1275fb0eda31..052fb21f2769 100644
---- a/drivers/iio/common/st_sensors/st_sensors_spi.c
-+++ b/drivers/iio/common/st_sensors/st_sensors_spi.c
-@@ -101,8 +101,8 @@ int st_sensors_spi_configure(struct iio_dev *indio_dev,
+diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
+index ba6fbb9c7390..d9226207157a 100644
+--- a/drivers/i2c/busses/i2c-at91-master.c
++++ b/drivers/i2c/busses/i2c-at91-master.c
+@@ -21,6 +21,7 @@
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
++#include <linux/iopoll.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+@@ -709,6 +710,69 @@ static int at91_twi_xfer(struct i2c_adapter *adap, struct i2c_msg *msg, int num)
+ 	return ret;
+ }
  
- 	sdata->regmap = devm_regmap_init_spi(spi, config);
- 	if (IS_ERR(sdata->regmap)) {
--		dev_err(&spi->dev, "Failed to register spi regmap (%d)\n",
--			(int)PTR_ERR(sdata->regmap));
-+		dev_err(&spi->dev, "Failed to register spi regmap (%pe)\n",
-+			sdata->regmap);
- 		return PTR_ERR(sdata->regmap);
- 	}
++static int at91_twi_xfer_atomic(struct i2c_adapter *adap, struct i2c_msg *msg, int num)
++{
++	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
++	unsigned long timeout;
++	struct pinctrl *pins;
++	__u32 stat;
++	int ret;
++
++	/* FIXME: only single write request supported to 7-bit addr */
++	if (num != 1)
++		return -EOPNOTSUPP;
++	if (msg->flags & I2C_M_RD)
++		return -EOPNOTSUPP;
++	if (msg->flags & I2C_M_TEN)
++		return -EOPNOTSUPP;
++	if (msg->len > dev->fifo_size && msg->len > 1)
++		return -EOPNOTSUPP;
++	if (!dev->pdata->has_alt_cmd)
++		return -EOPNOTSUPP;
++
++	pins = pinctrl_get_select_default(&adap->dev);
++
++	ret = clk_prepare_enable(twi_dev->clk);
++	if (ret)
++		goto out;
++
++	/* Clear and disable pending interrupts, such as NACK. */
++	at91_twi_read(dev, AT91_TWI_SR);
++	at91_twi_write(dev, AT91_TWI_IDR, ~0);
++
++	at91_twi_write(dev, AT91_TWI_MMR, msg->addr << 16);
++
++	if (!msg->len) {
++		at91_twi_write(dev, AT91_TWI_CR,
++			       AT91_TWI_ACMDIS | AT91_TWI_QUICK);
++	} else {
++		size_t n = msg->len;
++		__u8 *p;
++
++		at91_twi_write(dev, AT91_TWI_CR,
++				    AT91_TWI_ACMEN |
++				    AT91_TWI_THRCLR | AT91_TWI_RHRCLR);
++		at91_twi_write(dev, AT91_TWI_ACR, AT91_TWI_ACR_DATAL(n));
++		for (p = msg->buf; n--; ++p)
++			writeb_relaxed(*p, dev->base + AT91_TWI_THR);
++	}
++
++	readl_relaxed_poll_timeout_atomic(dev->base + AT91_TWI_SR, stat,
++					  stat & AT91_TWI_TXCOMP, 100,
++					  (2 + msg->len) * 1000);
++	if (stat & AT91_TWI_NACK)
++		ret = -EREMOTEIO;
++	else
++		ret = num;
++
++	clk_disable_unprepare(twi_dev->clk);
++out:
++	if (!IS_ERR(pins))
++		pinctrl_put(pins);
++
++	return ret;
++}
++
+ /*
+  * The hardware can handle at most two messages concatenated by a
+  * repeated start via it's internal address feature.
+@@ -725,8 +789,9 @@ static u32 at91_twi_func(struct i2c_adapter *adapter)
+ }
  
+ static const struct i2c_algorithm at91_twi_algorithm = {
+-	.master_xfer	= at91_twi_xfer,
+-	.functionality	= at91_twi_func,
++	.master_xfer		= at91_twi_xfer,
++	.master_xfer_atomic	= at91_twi_xfer_atomic,
++	.functionality		= at91_twi_func,
+ };
+ 
+ static int at91_twi_configure_dma(struct at91_twi_dev *dev, u32 phy_addr)
 -- 
 2.20.1
 
