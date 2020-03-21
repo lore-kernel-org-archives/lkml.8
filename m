@@ -2,93 +2,98 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF5AC4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5260C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E703620754
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:13:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584789196;
-	bh=a1T1kUTtXXh65fZGIdIjzMnTDBaIQmx8eQK3Hn8fGQ8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YZLaH584XikAH3LLGfbT1IIE3D879VrM5kG94zeOpb3mvGMbodb6RzDUzalaobzBT
-	 zhu6lZfHXYG5VOXDsLXx+WKT7YRqKRseEHcGOU1B/TNyxa0XfQhCiCAI1+Y8g/s0aL
-	 ILWBv1Gx8JiXCIMbfHAgm3Y9tg5AToxCRUecOvD0=
+	by mail.kernel.org (Postfix) with ESMTP id 82A482077D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:19:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cUv2WbX/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbgCULNP (ORCPT
+        id S1728178AbgCULTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 07:13:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbgCULNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 07:13:14 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFBE920732;
-        Sat, 21 Mar 2020 11:13:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584789194;
-        bh=a1T1kUTtXXh65fZGIdIjzMnTDBaIQmx8eQK3Hn8fGQ8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yLWxhgb5eSNb5eHUULfT7r5z1ZOKXMOgN2eZehnC4e6X9m52F8r8KpV72Qvlai3w6
-         vlF35uNx1FfThv+r2hP9REvIrMTbq7MQRy7v6z4g6DLnl6IF9FUsHOG7zaO74BzCUa
-         A97LMbTBXB5q9oP1Yx7ked45pWBsEQqezPyB2dgk=
-Date:   Sat, 21 Mar 2020 11:13:09 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Nishant Malpani <nish.malpani25@gmail.com>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] iio: light: tsl2563: Rename macro to fix typo
-Message-ID: <20200321111309.28d96975@archlinux>
-In-Reply-To: <0793346ea429cc0c932a5857678c802ad7421d80.1584518000.git.nish.malpani25@gmail.com>
-References: <cover.1584518000.git.nish.malpani25@gmail.com>
-        <0793346ea429cc0c932a5857678c802ad7421d80.1584518000.git.nish.malpani25@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 21 Mar 2020 07:19:22 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44885 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgCULTW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 07:19:22 -0400
+Received: by mail-wr1-f66.google.com with SMTP id m17so1548606wrw.11;
+        Sat, 21 Mar 2020 04:19:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=4DHh+FncC3jqVGC7ZZ0jqP/hNLUiPdG5Ott4j1JBTPE=;
+        b=cUv2WbX/FdmKXUyKTkr9rFaUCQceo2Lv1WDeH00AId4csYJnmXX79PxLy2cNOYq2oy
+         25LseCFbvcLhvJCJi/rzaE6TLq6oP/fcf4bHXf0WqVuFtd0AwRmCOR3gmT7kJNt+3WTR
+         uLNVOeP8sQ9zx+DaeSw5D22riM1lCWG8U3EzLr1HT3G/z93pKBaquiNRscuLlYkqY4kG
+         ZdO9OybuWyuDjgG1a1EcEN8kWQvdRyj0eT2WtgBjiHJaT0YY6tAPEow/lX8rzqnQeZXQ
+         7fEnGyhWAqEXXxVQWU4QHEZo8D/S/HBYcFtkRiRPU1Wvj22HzHzXpPl2tMasalhNEtRn
+         C9KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4DHh+FncC3jqVGC7ZZ0jqP/hNLUiPdG5Ott4j1JBTPE=;
+        b=jHrAhnuW139ISpVFOqyO6F71FAILWG2Wpv663DyhLHvsU15yildCgN1cJg068/Qtw9
+         rHu/1UPjvxZla/1d3BhAcKIOG1aidER4nQo5ViY0m53OoJDV/Cp49VfEu58mPhgFsy3f
+         +QqPgNfzScDg40Kw+yyuU4vW0en0CmD8ElJSz71tVqKuQ7FS3Tjbsv0Q5pYoJMt5dcB/
+         xhuhgPFzonttQiV5MkszDrssBjOCR4IjOKDOThYSuoR5nx6pR25/OCgvxeNylH1Nhwx9
+         nltC2zWFtfBAxunUsFq/xFq0Kc8jDUl7kWcRTM9RMIo/7/gy9PpNSJwusCQy2OwoaRha
+         XWCg==
+X-Gm-Message-State: ANhLgQ2ZDDybJthEho2S+AICwxD8PBoDmrz65kqPzpDP19uIsXwdWQKi
+        88MnW+zk+SyndbNkQxWyi/k=
+X-Google-Smtp-Source: ADFU+vv7cKC4LRCcSjn+qvMZADkhv0rZaKnuw0JfyQkwg8vZTuHyRV7kQQtY4q5EcLt1Sd/2OWO8bg==
+X-Received: by 2002:adf:e78e:: with SMTP id n14mr17861476wrm.363.1584789559971;
+        Sat, 21 Mar 2020 04:19:19 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2d49:b100:e503:a7c7:f4c6:1aab])
+        by smtp.gmail.com with ESMTPSA id n1sm13023191wrj.77.2020.03.21.04.19.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Mar 2020 04:19:19 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org
+Cc:     linux-spdx@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] io_uring: make spdxcheck.py happy
+Date:   Sat, 21 Mar 2020 12:19:07 +0100
+Message-Id: <20200321111907.6917-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Mar 2020 13:33:11 +0530
-Nishant Malpani <nish.malpani25@gmail.com> wrote:
+Commit bbbdeb4720a0 ("io_uring: dual license io_uring.h uapi header")
+uses a nested SPDX-License-Identifier to dual license the header.
 
-> This patch renames macro to fix the following warning generated by
-> checkpatch.pl:
-> 
-> WARNING: 'DISBLED' may be misspelled - perhaps 'DISABLED'?
-> 
-> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+Since then, ./scripts/spdxcheck.py complains:
 
-Applied.
+  include/uapi/linux/io_uring.h: 1:60 Missing parentheses: OR
 
-Thanks,
+Add parentheses to make spdxcheck.py happy.
 
-Jonathan
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+applies cleanly on next-20200320
 
-> ---
->  drivers/iio/light/tsl2563.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/light/tsl2563.c b/drivers/iio/light/tsl2563.c
-> index 260b38ee81f7..356f4927cc46 100644
-> --- a/drivers/iio/light/tsl2563.c
-> +++ b/drivers/iio/light/tsl2563.c
-> @@ -69,7 +69,7 @@
->  #define TSL2563_TIMING_GAIN16	0x10
->  #define TSL2563_TIMING_GAIN1	0x00
->  
-> -#define TSL2563_INT_DISBLED	0x00
-> +#define TSL2563_INT_DISABLED	0x00
->  #define TSL2563_INT_LEVEL	0x10
->  #define TSL2563_INT_PERSIST(n)	((n) & 0x0F)
->  
+ include/uapi/linux/io_uring.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+index 6d9d2b1cc523..e48d746b8e2a 100644
+--- a/include/uapi/linux/io_uring.h
++++ b/include/uapi/linux/io_uring.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note OR MIT */
++/* SPDX-License-Identifier: (GPL-2.0 WITH Linux-syscall-note) OR MIT */
+ /*
+  * Header file for the io_uring interface.
+  *
+-- 
+2.17.1
 
