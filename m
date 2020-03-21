@@ -2,78 +2,100 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4011C4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DF6C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 955A020409
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B87A20776
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:16:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584803762;
+	bh=nTORZWwffPqetOv8pvzuDI1pb7sJ67jOClPTg5U2TDI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ahoutlMOuZVCchA43q9u067i97nAFm55OakiMq98fpBoqphKb733wZEE7PguP7T/y
+	 m+UrXPFkfGur1MxmKMjvmRRkmGJ7bq6GBPxqVcYHOuypRSgDLZyPO4DSgmCMQ93fqM
+	 3fqAN7wZc9bgv6rxBdcXYSCIcGpajSL14KyPzTcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgCUPP1 (ORCPT
+        id S1727504AbgCUPQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:15:27 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:51508 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbgCUPP1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:15:27 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 1A9451C031D; Sat, 21 Mar 2020 16:15:25 +0100 (CET)
-Date:   Sat, 21 Mar 2020 16:15:09 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Denis Osterland-Heim <denis.osterland@diehl.com>
-Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v4 5/5] leds: pwm: add reference to common leds for
- default-state
-Message-ID: <20200321151509.GA8386@duo.ucw.cz>
-References: <20200321081321.15614-1-Denis.Osterland@diehl.com>
- <20200321081321.15614-6-Denis.Osterland@diehl.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
-Content-Disposition: inline
-In-Reply-To: <20200321081321.15614-6-Denis.Osterland@diehl.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 21 Mar 2020 11:16:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727267AbgCUPQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 11:16:00 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47D1620409;
+        Sat, 21 Mar 2020 15:16:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584803760;
+        bh=nTORZWwffPqetOv8pvzuDI1pb7sJ67jOClPTg5U2TDI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wc9LTc6Q3vh80MYGwf2uIg4HN31GZ2zQa8pIExy3X8nvEuyon/KHzTpGRgACJDxDi
+         uIzLo2aYmqvGeAqecKBLUid2Ys33VvmUKbKae9rFRqgXek+XjH9wPy4HgiTeExyD0H
+         zALIa3yWmM/aMA/moqV/dtvipiy6VITlRp7n5nIU=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jFfqw-00EWHi-Im; Sat, 21 Mar 2020 15:15:58 +0000
+Date:   Sat, 21 Mar 2020 15:15:57 +0000
+Message-ID: <86pnd5zqky.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     =?UTF-8?B?IuWRqOeQsOadsCAoWmhvdSBZYW5qaWUpIg==?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, paul@crapouillou.net,
+        dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: Re: [PATCH v2] irqchip: Ingenic: Add support for TCU of X1000.
+In-Reply-To: <1584456160-40060-3-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1584456160-40060-1-git-send-email-zhouyanjie@wanyeetech.com>
+        <1584456160-40060-3-git-send-email-zhouyanjie@wanyeetech.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: zhouyanjie@wanyeetech.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, paul@crapouillou.net, dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com, sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---nFreZHaLTZJo0R7j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat 2020-03-21 08:15:51, Denis Osterland-Heim wrote:
-> The default-state is now supported for PWM leds.
+On Tue, 17 Mar 2020 14:42:40 +0000,
+"=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)" <zhouyanjie@wanyeetech.com> wro=
+te:
 >=20
-> Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
+> Enable TCU support for Ingenic X1000, which can be supported by
+> the existing driver.
+>=20
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
+> Acked-by: Marc Zyngier <maz@kernel.org>
+> ---
+>=20
+> Notes:
+>     v1->v2:
+>     Rewrite the commit message as Marc's suggestion.
+>=20
+>  drivers/irqchip/irq-ingenic-tcu.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+Since this is now a standalone patch without any reliance on other
+patches, I've queued it for 5.7.
+
+Thanks,
+
+	M.
 
 --=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---nFreZHaLTZJo0R7j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXnYvfQAKCRAw5/Bqldv6
-8vruAJ9JigSRV352Q9mnIWerJuIlHO7fMwCghlhj8whKe4nARjXc3LwaszgwvbQ=
-=rxOr
------END PGP SIGNATURE-----
-
---nFreZHaLTZJo0R7j--
+Jazz is not dead, it just smells funny.
