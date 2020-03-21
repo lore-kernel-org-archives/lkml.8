@@ -2,105 +2,110 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA9CC4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CACCC43333
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37FC420409
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 033B020409
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:44:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="sAR5y0fA"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="bjtYPXj+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbgCUOjs (ORCPT
+        id S1727314AbgCUOn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 10:39:48 -0400
-Received: from mout-u-204.mailbox.org ([91.198.250.253]:44590 "EHLO
-        mout-u-204.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727244AbgCUOjr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 10:39:47 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-u-204.mailbox.org (Postfix) with ESMTPS id 48l3FY4BMnzQkJl;
-        Sat, 21 Mar 2020 15:39:45 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
-        t=1584801583;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Tkpjw41OSQS6g4mnJ1HdI3U2kVush6jX6zP98pED8vo=;
-        b=sAR5y0fAccgXVWrnYlH9HkSy0j/qIMg3EXITWYl9lGkPa/KR5mp/m083mpcbKwXhx/vgch
-        dS+1bufCW+lKOHUIZJ3hV65QTD1avsJWu0gExWdtuCBfjE3lPVwSwYC+iXhUFITurtJy7h
-        +kx1fhSA9yS9T7EsV5pCv9lEIayFNiwDXWJNiGDTmKI7x2Hcia1O5woQovtAscEk0oT84L
-        w9JrJTwDre073BVtsIF+EiOqmhm3R+Rc9spSXNRpFkVrFuEIBXTjn5YMIJZwSF1IdmVkzh
-        FXxuQh9dhs1Df5CLq21/vxXa3PHki1sA3VdvSLF+dwGlKpk+XAaodJh3JFk9Cw==
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id exzjPqbLDL-R; Sat, 21 Mar 2020 15:39:42 +0100 (CET)
-From:   Sungbo Eo <mans0n@gorani.run>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-oxnas@groups.io,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Sungbo Eo <mans0n@gorani.run>
-Subject: [PATCH] ARM: dts: oxnas: Fix clear-mask property
-Date:   Sat, 21 Mar 2020 23:36:53 +0900
-Message-Id: <20200321143653.2412823-1-mans0n@gorani.run>
+        Sat, 21 Mar 2020 10:43:59 -0400
+Received: from mail-eopbgr150048.outbound.protection.outlook.com ([40.107.15.48]:58543
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726961AbgCUOn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 10:43:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CvzPcWw4mzJIU7/WWvwqx4dg3cqz6NkRiBShPucNxokCU4pIcLjDYypqvvHDomO7ISu26u/O0UINmTaB9Twnme0T/pWwzc9qrIkC8RPGFiM6PhVk7N/G+PfY7Ikke0+ZGHDv6gUX3a8BeXd2oTIOxeTnrUdrMOZvYIgOBXoKF8E7PBeE6ZvlA2RzncoYNOjBrx0T5CneBQjMsmb3QGCKCB0AFissBYDv2hrbbAPPsRNZXLffIbCm/+vTnk6uEjtUkcAQOAYQY2Te0ski105klmYU7h2rJ52qIr13cOBMRR70JmhZMp1bt8ITOmtf6L3E7a4ieyz1uFP4TU96vDJYeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zsIr2ekW0R51VS/6AHX5yRVGYfFXg13LZwAZJbk24U4=;
+ b=dfaljEf5npx8EhIllL3FbXhXQ4uWE8IyOhtmacPKcrt57MTsC9hBD2m+aYgc6525x7K3HxNATPX92LipSx/rEMK5vqtE8bBNLSW8NaUlUul96lOqpk3z3tPPhJIV3Wlb2EA3Gi6AGZtqJZKytdP9mCX7Y6DAbl6hk0mmTHY0TcFnXfJp8vpJmGUG343MpZXVuNeSlD5g+c40S+jz+OuZ2NtmLAwW7+IciS+MLI6scu5McK+5DtxOp8vXHn0QntH0FQfCCBzYDdSBdj80XyX5iXUCmYbhEFbINxZuJxCHeq+5NlXX6CD989hFzEKbzoj3AsllE3WWIjJ5Cj24qevDQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zsIr2ekW0R51VS/6AHX5yRVGYfFXg13LZwAZJbk24U4=;
+ b=bjtYPXj+bAXpTj6icuBELVod4s2bHCP02hAToW2K9h8GVUaJD8zHSJfYGh4q6m2gYQ4I+E3VdOFmBkGv3T8BUFmj6pCQ95tByO8fcXYoN8hMVMWFvTn6/GMWQpSyOejjtbR1lHo1nPOaPsNGI1HCsDSU4iUUMrTomeyZCJE9hmQ=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB6445.eurprd05.prod.outlook.com (20.179.27.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.22; Sat, 21 Mar 2020 14:43:55 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::18d2:a9ea:519:add3]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::18d2:a9ea:519:add3%7]) with mapi id 15.20.2814.025; Sat, 21 Mar 2020
+ 14:43:55 +0000
+Date:   Sat, 21 Mar 2020 11:43:50 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>,
+        Shuah Khan <shuah@kernel.org>
+Cc:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-rdma@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v8 0/3] mm/hmm/test: add self tests for HMM
+Message-ID: <20200321144350.GQ13183@mellanox.com>
+References: <20200321003108.22941-1-rcampbell@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200321003108.22941-1-rcampbell@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: MN2PR14CA0008.namprd14.prod.outlook.com
+ (2603:10b6:208:23e::13) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR14CA0008.namprd14.prod.outlook.com (2603:10b6:208:23e::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.21 via Frontend Transport; Sat, 21 Mar 2020 14:43:54 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jFfLq-000165-H1; Sat, 21 Mar 2020 11:43:50 -0300
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 6c084b2c-be47-4303-8fe1-08d7cda6476c
+X-MS-TrafficTypeDiagnostic: VI1PR05MB6445:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB64450885217BB0E68AA5F6CECFF20@VI1PR05MB6445.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 034902F5BC
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(39850400004)(136003)(376002)(199004)(4744005)(33656002)(478600001)(7416002)(86362001)(81166006)(36756003)(4326008)(2906002)(8676002)(186003)(81156014)(66946007)(54906003)(2616005)(52116002)(1076003)(66556008)(66476007)(316002)(5660300002)(110136005)(9786002)(9746002)(8936002)(26005)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6445;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: W9EYXBASJV2HuEOs6wy1qdOGqRMK/E+B9EHQpwR2E3UVisuf18osV3F+Q6DU59UpU0PoUpzL+oQzOaKDMgwumXb4aQCzTdbKgr5Y+umdRwHSbQhD5u1B1lwA5OWPDlgU+qRNGiCp8TshGn71thJVaom4s0+YCGIjtPkJbNXNjgKyp5+5rREeaqHsMSkfMXUp0x/dDyTfsBTny4stB6OzA9F8b4/3fl2BUwMn1jFJXmo7eyBHN3RkVatm1BfL2THdUiTQ13hFfS9zNQxcE9eEC18P1TUS4jMDaOtBQvseiSlV/ci0h3vZMdxn/vayCAnK5bItXS7+RaICXVbo/uHich49JKkjm/RS2FyYaVIVBNyVK01mrdulBZpTee0937H0gKmxi7cS8QcAFE4t9f4RHkAcyBJoIGh5MLesXdZsXFeK0uJxp6zUhwUGDjt7erLdwDBBqRq78X2fmt+KBORS+71tzYF6Nnjcd+B4yi3QuhuhKTAZfBewdnNLcXXLzsKG
+X-MS-Exchange-AntiSpam-MessageData: MrSUyNwbvrFZdCUrXZdzivE4VVaWdkhRvcigtIOzQ2+PEP/EtH9hxCQl8PuwoKuFxglz1qN+cGKdZYzbi9Kh+iWIq0+oNF9n+Z5jVmRkI5WzMx+L8CCbSHIihrm6RxoVZwObRYL9Tiq/heiYK019gg==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c084b2c-be47-4303-8fe1-08d7cda6476c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2020 14:43:54.9692
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nXA3FfXXFJX0osuojluQcStV0beeW/P8ALaRJTPqcLpdaxa5miBMtJDxhpxXfaBaSCWVu76faR4uT/b2xU1w8w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6445
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disable all rps-irq interrupts during driver initialization to prevent
-an accidental interrupt on GIC.
+On Fri, Mar 20, 2020 at 05:31:05PM -0700, Ralph Campbell wrote:
+> This series adds basic self tests for HMM and are intended for Jason
+> Gunthorpe's rdma tree which has a number of HMM patches applied.
 
-Fixes: 84316f4ef141 ("ARM: boot: dts: Add Oxford Semiconductor OX810SE dtsi")
-Fixes: 38d4a53733f5 ("ARM: dts: Add support for OX820 and Pogoplug V3")
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
----
- arch/arm/boot/dts/ox810se.dtsi | 4 ++--
- arch/arm/boot/dts/ox820.dtsi   | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+We are at v8 of this series and noboy from the selftests land has
+commented, can someone help?
 
-diff --git a/arch/arm/boot/dts/ox810se.dtsi b/arch/arm/boot/dts/ox810se.dtsi
-index 9f6c2b660ed3..0755e5864c4a 100644
---- a/arch/arm/boot/dts/ox810se.dtsi
-+++ b/arch/arm/boot/dts/ox810se.dtsi
-@@ -323,8 +323,8 @@ intc: interrupt-controller@0 {
- 					interrupt-controller;
- 					reg = <0 0x200>;
- 					#interrupt-cells = <1>;
--					valid-mask = <0xFFFFFFFF>;
--					clear-mask = <0>;
-+					valid-mask = <0xffffffff>;
-+					clear-mask = <0xffffffff>;
- 				};
- 
- 				timer0: timer@200 {
-diff --git a/arch/arm/boot/dts/ox820.dtsi b/arch/arm/boot/dts/ox820.dtsi
-index c9b327732063..90846a7655b4 100644
---- a/arch/arm/boot/dts/ox820.dtsi
-+++ b/arch/arm/boot/dts/ox820.dtsi
-@@ -240,8 +240,8 @@ intc: interrupt-controller@0 {
- 					reg = <0 0x200>;
- 					interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
- 					#interrupt-cells = <1>;
--					valid-mask = <0xFFFFFFFF>;
--					clear-mask = <0>;
-+					valid-mask = <0xffffffff>;
-+					clear-mask = <0xffffffff>;
- 				};
- 
- 				timer0: timer@200 {
--- 
-2.25.2
-
+Jason
