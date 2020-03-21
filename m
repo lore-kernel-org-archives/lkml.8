@@ -2,574 +2,167 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08525C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5CEC4332E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B3920739
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 127BA20753
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:43:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vE71Fwk3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgCUJkO (ORCPT
+        id S1728349AbgCUJnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 05:40:14 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:56290 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726995AbgCUJkO (ORCPT
+        Sat, 21 Mar 2020 05:43:25 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46829 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgCUJnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 05:40:14 -0400
-Received: by mail-il1-f199.google.com with SMTP id h10so1941957ilq.22
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 02:40:12 -0700 (PDT)
+        Sat, 21 Mar 2020 05:43:24 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j17so6892560wru.13;
+        Sat, 21 Mar 2020 02:43:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=yZ4/TaWU2jVZLNaE2CUJwiwZnKB070p6Wb75TCVLFjI=;
+        b=vE71Fwk3rSlGWaemVAsSF4ownbULl8jjJtiwn6GGL3rYjSzEdDmBLQU/Ee3vZLRIBL
+         Y3Mt8/x+7liEXsvD17swSwRirSxXrRj6SE/sLeyrmE3Xray93h9lXNogQ1P05/2kZcUN
+         DOm07shAYdditI0e/3iPCWevLFj8K+SpoKMbUoN/mj4bvwREhUIwwtOLlf8IjGXzyYhY
+         atIxPPa1D/RCEZTHjHR7p2mitYWmJIjRxVgNCB8oEcDTYxPqumzBL9bmEF7Ty5s5MIgH
+         xbtkLK4G3Ikzw6n7iXnI767sdDnecubFhKLE/BiW+cwV/4AzWHpwHO9gqWvPSe83E+CU
+         IT3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=KmxQnGJBLUSsjJd4YIqhEUdYIXRrtUNA9oq90lM0pIQ=;
-        b=XBkecUJ28lhA+UIrajWYGs8FocgEzKcbm95BbJtrir5JK+b7Qizp7zb1DXIsd/+flA
-         V6MAWlPOHMDpBXHrWgwb1pFjXScDesNcJzAoWaTTxwtrupc8JWsefY2br7OgIGBrnaqE
-         KqjAK3CXUu28b3zNhRjzAeDAexAGa5AGyDUq+yEAUh2ZzJPqtOBoVMEotB0ciZ3/xz7w
-         IhvmOK9jS7qd7w0DsofBUNMKCcG6Ug8Gm17X2w8DSNVj0iaRJ4QU20nEQRH3c0G87wzi
-         83l9kp+bytuVGI5yszce6o+ws54ugO/qIld61CfafXRYFMtGok9FTbzlTnjNqV6bX6Te
-         2wyw==
-X-Gm-Message-State: ANhLgQ1ZWSMH7Fo3gn1DgrDpzEQnvkyovAq8WkMoiOjKK38adjAc5wK6
-        CFX/fpR4iF38FeS/WsdLWIgO9GoGjUzQmA/3lfikpLIG1DwK
-X-Google-Smtp-Source: ADFU+vvbE4xKWA+UphocEErEuGNP+43V2BUsjb+m7Yo2JQ82kLdFE7pxA7j9Ywa3LfifIaF4QxuYVMRm0NqaU0BvM4VKv16XgLov
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=yZ4/TaWU2jVZLNaE2CUJwiwZnKB070p6Wb75TCVLFjI=;
+        b=CkcCVdJHew7QPKQFQSKHkikaaubBobMFfhZAYAL7ZqTCaJF/zwmijSZ8DIfrXXMHRk
+         3GE7h41KIz9ljeTW/sqj68Qjo2fnaQ3ftUihU+Yk4JILo5zY4OC3IQRR3PdePoVLkxsb
+         +PLmn+NfOys8WxcGQWhW9FI+2XvhaVwJgqqWySb+LbWSNlW9EQJySxcTVTSr00IREpxY
+         JnrJhp1n6U8pvD8Vl0IttyuTUoQkMeyzKTgAVPNJN69L+RSzPe6DLClbrj/02RBOVgs/
+         HF3O1NsaUJ6kdS3sgGm11lIS+WZo62haZlITF73kU3wz0fFdhXm3Z7r9e1ZjZ0NQYwRN
+         6C+A==
+X-Gm-Message-State: ANhLgQ0oTKXq57JYinAV/t+NVT0ivOcAGQ53c7YSoGU/lylwe90ctcct
+        +M/rL0nBmvg/031EyIVJr8k=
+X-Google-Smtp-Source: ADFU+vvW5sct755NUwifdQuwIgqCdWxkVyjJHbtG94yO4DL9dlchRlivIZgLvO5iFOJ5Gh/Q+CXTqg==
+X-Received: by 2002:adf:82a6:: with SMTP id 35mr16709433wrc.307.1584783802797;
+        Sat, 21 Mar 2020 02:43:22 -0700 (PDT)
+Received: from macmini.local (181.4.199.77.rev.sfr.net. [77.199.4.181])
+        by smtp.gmail.com with ESMTPSA id c23sm12867854wrb.79.2020.03.21.02.43.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Mar 2020 02:43:22 -0700 (PDT)
+Date:   Sat, 21 Mar 2020 09:43:21 +0000
+From:   Willy Wolff <willy.mh.wolff.ml@gmail.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: weird cooling_device/cur_state sysfs behaviour
+Message-ID: <20200321094321.6taz2d3fbkeo535i@macmini.local>
+References: <20200320151055.h32rh5hpnv7xyuey@macmini.local>
+ <bbdd32b7-c376-d44b-df2f-a50911592692@linaro.org>
+ <96f75e90-9c14-5908-e9e9-979c9d28a898@linaro.org>
 MIME-Version: 1.0
-X-Received: by 2002:a02:90d0:: with SMTP id c16mr12190017jag.22.1584783612132;
- Sat, 21 Mar 2020 02:40:12 -0700 (PDT)
-Date:   Sat, 21 Mar 2020 02:40:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003f417405a15a30cd@google.com>
-Subject: possible deadlock in peernet2id_alloc
-From:   syzbot <syzbot+3f960c64a104eaa2c813@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dhowells@redhat.com, edumazet@google.com,
-        gnault@redhat.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, nicolas.dichtel@6wind.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <96f75e90-9c14-5908-e9e9-979c9d28a898@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Indeed, many thanks for you help.
 
-syzbot found the following crash on:
-
-HEAD commit:    86e85bf6 sfc: fix XDP-redirect in this driver
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=111eda1de00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b5acf5ac38a50651
-dashboard link: https://syzkaller.appspot.com/bug?extid=3f960c64a104eaa2c813
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3f960c64a104eaa2c813@syzkaller.appspotmail.com
-
-bridge1: port 1(macsec0) entered blocking state
-bridge1: port 1(macsec0) entered disabled state
-device macsec0 entered promiscuous mode
-=====================================================
-WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
-5.6.0-rc5-syzkaller #0 Not tainted
------------------------------------------------------
-syz-executor.1/11771 [HC0[0]:SC0[4]:HE1:SE0] is trying to acquire:
-ffff8880714700e8 (&(&net->nsid_lock)->rlock){+.+.}, at: spin_lock include/linux/spinlock.h:338 [inline]
-ffff8880714700e8 (&(&net->nsid_lock)->rlock){+.+.}, at: peernet2id_alloc+0xcd/0x3f0 net/core/net_namespace.c:240
-
-and this task is already holding:
-ffff888060822280 (&dev->addr_list_lock_key#188){+...}, at: spin_lock_bh include/linux/spinlock.h:343 [inline]
-ffff888060822280 (&dev->addr_list_lock_key#188){+...}, at: netif_addr_lock_bh include/linux/netdevice.h:4163 [inline]
-ffff888060822280 (&dev->addr_list_lock_key#188){+...}, at: dev_uc_add+0x1f/0xb0 net/core/dev_addr_lists.c:588
-which would create a new lock dependency:
- (&dev->addr_list_lock_key#188){+...} -> (&(&net->nsid_lock)->rlock){+.+.}
-
-but this new dependency connects a SOFTIRQ-irq-safe lock:
- (&(&mc->mca_lock)->rlock){+.-.}
-
-... which became SOFTIRQ-irq-safe at:
-  lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
-  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-  _raw_spin_lock_bh+0x2f/0x40 kernel/locking/spinlock.c:175
-  spin_lock_bh include/linux/spinlock.h:343 [inline]
-  mld_send_cr net/ipv6/mcast.c:1953 [inline]
-  mld_ifc_timer_expire+0x2b5/0x920 net/ipv6/mcast.c:2477
-  call_timer_fn+0x195/0x760 kernel/time/timer.c:1404
-  expire_timers kernel/time/timer.c:1449 [inline]
-  __run_timers kernel/time/timer.c:1773 [inline]
-  __run_timers kernel/time/timer.c:1740 [inline]
-  run_timer_softirq+0x623/0x1600 kernel/time/timer.c:1786
-  __do_softirq+0x26c/0x99d kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x192/0x1d0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:546 [inline]
-  smp_apic_timer_interrupt+0x19e/0x600 arch/x86/kernel/apic/apic.c:1146
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-  arch_local_irq_restore arch/x86/include/asm/paravirt.h:759 [inline]
-  kmem_cache_free+0xa4/0x320 mm/slab.c:3695
-  putname+0xe1/0x120 fs/namei.c:259
-  filename_lookup+0x282/0x3e0 fs/namei.c:2475
-  user_path_at include/linux/namei.h:58 [inline]
-  vfs_statx+0x119/0x1e0 fs/stat.c:197
-  vfs_stat include/linux/fs.h:3271 [inline]
-  __do_sys_newstat+0x96/0x120 fs/stat.c:351
-  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-to a SOFTIRQ-irq-unsafe lock:
- (&(&net->nsid_lock)->rlock){+.+.}
-
-... which became SOFTIRQ-irq-unsafe at:
-...
-  lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:338 [inline]
-  peernet2id_alloc+0xcd/0x3f0 net/core/net_namespace.c:240
-  dev_change_net_namespace+0x2a6/0xd30 net/core/dev.c:10066
-  do_setlink+0x18b/0x35e0 net/core/rtnetlink.c:2501
-  __rtnl_newlink+0xad5/0x1590 net/core/rtnetlink.c:3252
-  rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3377
-  rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5440
-  netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
-  netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-  netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
-  netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
-  sock_sendmsg_nosec net/socket.c:652 [inline]
-  sock_sendmsg+0xcf/0x120 net/socket.c:672
-  ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
-  ___sys_sendmsg+0x100/0x170 net/socket.c:2397
-  __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
-  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
-Chain exists of:
-  &(&mc->mca_lock)->rlock --> &dev->addr_list_lock_key#188 --> &(&net->nsid_lock)->rlock
-
- Possible interrupt unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&(&net->nsid_lock)->rlock);
-                               local_irq_disable();
-                               lock(&(&mc->mca_lock)->rlock);
-                               lock(&dev->addr_list_lock_key#188);
-  <Interrupt>
-    lock(&(&mc->mca_lock)->rlock);
-
- *** DEADLOCK ***
-
-3 locks held by syz-executor.1/11771:
- #0: ffffffff8a34fbc0 (rtnl_mutex){+.+.}, at: rtnl_lock net/core/rtnetlink.c:72 [inline]
- #0: ffffffff8a34fbc0 (rtnl_mutex){+.+.}, at: rtnetlink_rcv_msg+0x3f9/0xad0 net/core/rtnetlink.c:5437
- #1: ffff8880607f4bd0 (&(&br->hash_lock)->rlock){+.-.}, at: spin_lock_bh include/linux/spinlock.h:343 [inline]
- #1: ffff8880607f4bd0 (&(&br->hash_lock)->rlock){+.-.}, at: br_fdb_insert+0x24/0x50 net/bridge/br_fdb.c:553
- #2: ffff888060822280 (&dev->addr_list_lock_key#188){+...}, at: spin_lock_bh include/linux/spinlock.h:343 [inline]
- #2: ffff888060822280 (&dev->addr_list_lock_key#188){+...}, at: netif_addr_lock_bh include/linux/netdevice.h:4163 [inline]
- #2: ffff888060822280 (&dev->addr_list_lock_key#188){+...}, at: dev_uc_add+0x1f/0xb0 net/core/dev_addr_lists.c:588
-
-the dependencies between SOFTIRQ-irq-safe lock and the holding lock:
- -> (&(&mc->mca_lock)->rlock){+.-.} {
-    HARDIRQ-ON-W at:
-                      lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
-                      __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-                      _raw_spin_lock_bh+0x2f/0x40 kernel/locking/spinlock.c:175
-                      spin_lock_bh include/linux/spinlock.h:343 [inline]
-                      mld_del_delrec+0x344/0x570 net/ipv6/mcast.c:786
-                      __ipv6_dev_mc_inc+0x80c/0xc90 net/ipv6/mcast.c:930
-                      ipv6_add_dev net/ipv6/addrconf.c:453 [inline]
-                      ipv6_add_dev+0xa2e/0x10b0 net/ipv6/addrconf.c:363
-                      addrconf_init+0xd3/0x39a net/ipv6/addrconf.c:7067
-                      inet6_init+0x368/0x6dc net/ipv6/af_inet6.c:1071
-                      do_one_initcall+0x10a/0x7d0 init/main.c:1152
-                      do_initcall_level init/main.c:1225 [inline]
-                      do_initcalls init/main.c:1241 [inline]
-                      do_basic_setup init/main.c:1261 [inline]
-                      kernel_init_freeable+0x501/0x5ae init/main.c:1445
-                      kernel_init+0xd/0x1bb init/main.c:1352
-                      ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-    IN-SOFTIRQ-W at:
-                      lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
-                      __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-                      _raw_spin_lock_bh+0x2f/0x40 kernel/locking/spinlock.c:175
-                      spin_lock_bh include/linux/spinlock.h:343 [inline]
-                      mld_send_cr net/ipv6/mcast.c:1953 [inline]
-                      mld_ifc_timer_expire+0x2b5/0x920 net/ipv6/mcast.c:2477
-                      call_timer_fn+0x195/0x760 kernel/time/timer.c:1404
-                      expire_timers kernel/time/timer.c:1449 [inline]
-                      __run_timers kernel/time/timer.c:1773 [inline]
-                      __run_timers kernel/time/timer.c:1740 [inline]
-                      run_timer_softirq+0x623/0x1600 kernel/time/timer.c:1786
-                      __do_softirq+0x26c/0x99d kernel/softirq.c:292
-                      invoke_softirq kernel/softirq.c:373 [inline]
-                      irq_exit+0x192/0x1d0 kernel/softirq.c:413
-                      exiting_irq arch/x86/include/asm/apic.h:546 [inline]
-                      smp_apic_timer_interrupt+0x19e/0x600 arch/x86/kernel/apic/apic.c:1146
-                      apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-                      arch_local_irq_restore arch/x86/include/asm/paravirt.h:759 [inline]
-                      kmem_cache_free+0xa4/0x320 mm/slab.c:3695
-                      putname+0xe1/0x120 fs/namei.c:259
-                      filename_lookup+0x282/0x3e0 fs/namei.c:2475
-                      user_path_at include/linux/namei.h:58 [inline]
-                      vfs_statx+0x119/0x1e0 fs/stat.c:197
-                      vfs_stat include/linux/fs.h:3271 [inline]
-                      __do_sys_newstat+0x96/0x120 fs/stat.c:351
-                      do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-                      entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    INITIAL USE at:
-                     lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
-                     __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-                     _raw_spin_lock_bh+0x2f/0x40 kernel/locking/spinlock.c:175
-                     spin_lock_bh include/linux/spinlock.h:343 [inline]
-                     mld_del_delrec+0x344/0x570 net/ipv6/mcast.c:786
-                     __ipv6_dev_mc_inc+0x80c/0xc90 net/ipv6/mcast.c:930
-                     ipv6_add_dev net/ipv6/addrconf.c:453 [inline]
-                     ipv6_add_dev+0xa2e/0x10b0 net/ipv6/addrconf.c:363
-                     addrconf_init+0xd3/0x39a net/ipv6/addrconf.c:7067
-                     inet6_init+0x368/0x6dc net/ipv6/af_inet6.c:1071
-                     do_one_initcall+0x10a/0x7d0 init/main.c:1152
-                     do_initcall_level init/main.c:1225 [inline]
-                     do_initcalls init/main.c:1241 [inline]
-                     do_basic_setup init/main.c:1261 [inline]
-                     kernel_init_freeable+0x501/0x5ae init/main.c:1445
-                     kernel_init+0xd/0x1bb init/main.c:1352
-                     ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-  }
-  ... key      at: [<ffffffff8cf734a0>] __key.78637+0x0/0x40
-  ... acquired at:
-   __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-   _raw_spin_lock_bh+0x2f/0x40 kernel/locking/spinlock.c:175
-   spin_lock_bh include/linux/spinlock.h:343 [inline]
-   netif_addr_lock_bh include/linux/netdevice.h:4163 [inline]
-   __dev_mc_add+0x28/0xd0 net/core/dev_addr_lists.c:765
-   igmp6_group_added+0x375/0x420 net/ipv6/mcast.c:672
-   __ipv6_dev_mc_inc+0x814/0xc90 net/ipv6/mcast.c:931
-   ipv6_add_dev net/ipv6/addrconf.c:456 [inline]
-   ipv6_add_dev+0xa3d/0x10b0 net/ipv6/addrconf.c:363
-   addrconf_notify+0x960/0x2310 net/ipv6/addrconf.c:3497
-   notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
-   call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
-   call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
-   call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
-   call_netdevice_notifiers net/core/dev.c:1974 [inline]
-   register_netdevice+0x69f/0xfc0 net/core/dev.c:9401
-   macsec_newlink+0x2d4/0x1070 drivers/net/macsec.c:3875
-   __rtnl_newlink+0xf18/0x1590 net/core/rtnetlink.c:3319
-   rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3377
-   rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5440
-   netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
-   netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-   netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
-   netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
-   sock_sendmsg_nosec net/socket.c:652 [inline]
-   sock_sendmsg+0xcf/0x120 net/socket.c:672
-   __sys_sendto+0x21a/0x330 net/socket.c:1998
-   __do_sys_sendto net/socket.c:2010 [inline]
-   __se_sys_sendto net/socket.c:2006 [inline]
-   __x64_sys_sendto+0xdd/0x1b0 net/socket.c:2006
-   do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> (&dev->addr_list_lock_key#188){+...} {
-   HARDIRQ-ON-W at:
-                    lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
-                    __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-                    _raw_spin_lock_bh+0x2f/0x40 kernel/locking/spinlock.c:175
-                    spin_lock_bh include/linux/spinlock.h:343 [inline]
-                    netif_addr_lock_bh include/linux/netdevice.h:4163 [inline]
-                    __dev_mc_add+0x28/0xd0 net/core/dev_addr_lists.c:765
-                    igmp6_group_added+0x375/0x420 net/ipv6/mcast.c:672
-                    __ipv6_dev_mc_inc+0x814/0xc90 net/ipv6/mcast.c:931
-                    ipv6_add_dev net/ipv6/addrconf.c:456 [inline]
-                    ipv6_add_dev+0xa3d/0x10b0 net/ipv6/addrconf.c:363
-                    addrconf_notify+0x960/0x2310 net/ipv6/addrconf.c:3497
-                    notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
-                    call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
-                    call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
-                    call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
-                    call_netdevice_notifiers net/core/dev.c:1974 [inline]
-                    register_netdevice+0x69f/0xfc0 net/core/dev.c:9401
-                    macsec_newlink+0x2d4/0x1070 drivers/net/macsec.c:3875
-                    __rtnl_newlink+0xf18/0x1590 net/core/rtnetlink.c:3319
-                    rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3377
-                    rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5440
-                    netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
-                    netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-                    netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
-                    netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
-                    sock_sendmsg_nosec net/socket.c:652 [inline]
-                    sock_sendmsg+0xcf/0x120 net/socket.c:672
-                    __sys_sendto+0x21a/0x330 net/socket.c:1998
-                    __do_sys_sendto net/socket.c:2010 [inline]
-                    __se_sys_sendto net/socket.c:2006 [inline]
-                    __x64_sys_sendto+0xdd/0x1b0 net/socket.c:2006
-                    do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-                    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-   INITIAL USE at:
-                   lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
-                   __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-                   _raw_spin_lock_bh+0x2f/0x40 kernel/locking/spinlock.c:175
-                   spin_lock_bh include/linux/spinlock.h:343 [inline]
-                   netif_addr_lock_bh include/linux/netdevice.h:4163 [inline]
-                   __dev_mc_add+0x28/0xd0 net/core/dev_addr_lists.c:765
-                   igmp6_group_added+0x375/0x420 net/ipv6/mcast.c:672
-                   __ipv6_dev_mc_inc+0x814/0xc90 net/ipv6/mcast.c:931
-                   ipv6_add_dev net/ipv6/addrconf.c:456 [inline]
-                   ipv6_add_dev+0xa3d/0x10b0 net/ipv6/addrconf.c:363
-                   addrconf_notify+0x960/0x2310 net/ipv6/addrconf.c:3497
-                   notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
-                   call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
-                   call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
-                   call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
-                   call_netdevice_notifiers net/core/dev.c:1974 [inline]
-                   register_netdevice+0x69f/0xfc0 net/core/dev.c:9401
-                   macsec_newlink+0x2d4/0x1070 drivers/net/macsec.c:3875
-                   __rtnl_newlink+0xf18/0x1590 net/core/rtnetlink.c:3319
-                   rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3377
-                   rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5440
-                   netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
-                   netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-                   netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
-                   netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
-                   sock_sendmsg_nosec net/socket.c:652 [inline]
-                   sock_sendmsg+0xcf/0x120 net/socket.c:672
-                   __sys_sendto+0x21a/0x330 net/socket.c:1998
-                   __do_sys_sendto net/socket.c:2010 [inline]
-                   __se_sys_sendto net/socket.c:2006 [inline]
-                   __x64_sys_sendto+0xdd/0x1b0 net/socket.c:2006
-                   do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-                   entry_SYSCALL_64_after_hwframe+0x49/0xbe
- }
- ... key      at: [<ffff888060822b48>] 0xffff888060822b48
- ... acquired at:
-   lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
-   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-   _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-   spin_lock include/linux/spinlock.h:338 [inline]
-   peernet2id_alloc+0xcd/0x3f0 net/core/net_namespace.c:240
-   rtnl_fill_link_netnsid net/core/rtnetlink.c:1565 [inline]
-   rtnl_fill_ifinfo+0x1e7c/0x39b0 net/core/rtnetlink.c:1751
-   rtmsg_ifinfo_build_skb+0xcd/0x1a0 net/core/rtnetlink.c:3685
-   rtmsg_ifinfo_event.part.0+0x49/0xe0 net/core/rtnetlink.c:3717
-   rtmsg_ifinfo_event net/core/rtnetlink.c:3728 [inline]
-   rtmsg_ifinfo+0x7f/0xa0 net/core/rtnetlink.c:3726
-   __dev_notify_flags+0x235/0x2c0 net/core/dev.c:8177
-   __dev_set_promiscuity+0x191/0x210 net/core/dev.c:7953
-   dev_set_promiscuity+0x4f/0xe0 net/core/dev.c:7973
-   macsec_dev_change_rx_flags+0x13b/0x170 drivers/net/macsec.c:3423
-   dev_change_rx_flags net/core/dev.c:7906 [inline]
-   __dev_set_promiscuity.cold+0x2e3/0x340 net/core/dev.c:7950
-   __dev_set_rx_mode+0x21f/0x300 net/core/dev.c:8055
-   dev_uc_add+0xa1/0xb0 net/core/dev_addr_lists.c:592
-   fdb_add_hw_addr+0xf3/0x280 net/bridge/br_fdb.c:165
-   fdb_insert+0x173/0x1c0 net/bridge/br_fdb.c:542
-   br_fdb_insert+0x35/0x50 net/bridge/br_fdb.c:554
-   br_add_if+0xca2/0x1800 net/bridge/br_if.c:648
-   do_set_master net/core/rtnetlink.c:2468 [inline]
-   do_set_master+0x1d7/0x230 net/core/rtnetlink.c:2441
-   do_setlink+0xaa2/0x35e0 net/core/rtnetlink.c:2603
-   __rtnl_newlink+0xad5/0x1590 net/core/rtnetlink.c:3252
-   rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3377
-   rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5440
-   netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
-   netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-   netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
-   netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
-   sock_sendmsg_nosec net/socket.c:652 [inline]
-   sock_sendmsg+0xcf/0x120 net/socket.c:672
-   ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
-   ___sys_sendmsg+0x100/0x170 net/socket.c:2397
-   __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
-   do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-
-the dependencies between the lock to be acquired
- and SOFTIRQ-irq-unsafe lock:
--> (&(&net->nsid_lock)->rlock){+.+.} {
-   HARDIRQ-ON-W at:
-                    lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
-                    __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                    _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-                    spin_lock include/linux/spinlock.h:338 [inline]
-                    peernet2id_alloc+0xcd/0x3f0 net/core/net_namespace.c:240
-                    dev_change_net_namespace+0x2a6/0xd30 net/core/dev.c:10066
-                    do_setlink+0x18b/0x35e0 net/core/rtnetlink.c:2501
-                    __rtnl_newlink+0xad5/0x1590 net/core/rtnetlink.c:3252
-                    rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3377
-                    rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5440
-                    netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
-                    netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-                    netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
-                    netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
-                    sock_sendmsg_nosec net/socket.c:652 [inline]
-                    sock_sendmsg+0xcf/0x120 net/socket.c:672
-                    ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
-                    ___sys_sendmsg+0x100/0x170 net/socket.c:2397
-                    __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
-                    do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-                    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-   SOFTIRQ-ON-W at:
-                    lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
-                    __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                    _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-                    spin_lock include/linux/spinlock.h:338 [inline]
-                    peernet2id_alloc+0xcd/0x3f0 net/core/net_namespace.c:240
-                    dev_change_net_namespace+0x2a6/0xd30 net/core/dev.c:10066
-                    do_setlink+0x18b/0x35e0 net/core/rtnetlink.c:2501
-                    __rtnl_newlink+0xad5/0x1590 net/core/rtnetlink.c:3252
-                    rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3377
-                    rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5440
-                    netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
-                    netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-                    netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
-                    netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
-                    sock_sendmsg_nosec net/socket.c:652 [inline]
-                    sock_sendmsg+0xcf/0x120 net/socket.c:672
-                    ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
-                    ___sys_sendmsg+0x100/0x170 net/socket.c:2397
-                    __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
-                    do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-                    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-   INITIAL USE at:
-                   lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
-                   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                   _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-                   spin_lock include/linux/spinlock.h:338 [inline]
-                   peernet2id_alloc+0xcd/0x3f0 net/core/net_namespace.c:240
-                   dev_change_net_namespace+0x2a6/0xd30 net/core/dev.c:10066
-                   do_setlink+0x18b/0x35e0 net/core/rtnetlink.c:2501
-                   __rtnl_newlink+0xad5/0x1590 net/core/rtnetlink.c:3252
-                   rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3377
-                   rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5440
-                   netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
-                   netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-                   netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
-                   netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
-                   sock_sendmsg_nosec net/socket.c:652 [inline]
-                   sock_sendmsg+0xcf/0x120 net/socket.c:672
-                   ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
-                   ___sys_sendmsg+0x100/0x170 net/socket.c:2397
-                   __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
-                   do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-                   entry_SYSCALL_64_after_hwframe+0x49/0xbe
- }
- ... key      at: [<ffffffff8cf4d8c0>] __key.69268+0x0/0x40
- ... acquired at:
-   lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
-   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-   _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-   spin_lock include/linux/spinlock.h:338 [inline]
-   peernet2id_alloc+0xcd/0x3f0 net/core/net_namespace.c:240
-   rtnl_fill_link_netnsid net/core/rtnetlink.c:1565 [inline]
-   rtnl_fill_ifinfo+0x1e7c/0x39b0 net/core/rtnetlink.c:1751
-   rtmsg_ifinfo_build_skb+0xcd/0x1a0 net/core/rtnetlink.c:3685
-   rtmsg_ifinfo_event.part.0+0x49/0xe0 net/core/rtnetlink.c:3717
-   rtmsg_ifinfo_event net/core/rtnetlink.c:3728 [inline]
-   rtmsg_ifinfo+0x7f/0xa0 net/core/rtnetlink.c:3726
-   __dev_notify_flags+0x235/0x2c0 net/core/dev.c:8177
-   __dev_set_promiscuity+0x191/0x210 net/core/dev.c:7953
-   dev_set_promiscuity+0x4f/0xe0 net/core/dev.c:7973
-   macsec_dev_change_rx_flags+0x13b/0x170 drivers/net/macsec.c:3423
-   dev_change_rx_flags net/core/dev.c:7906 [inline]
-   __dev_set_promiscuity.cold+0x2e3/0x340 net/core/dev.c:7950
-   __dev_set_rx_mode+0x21f/0x300 net/core/dev.c:8055
-   dev_uc_add+0xa1/0xb0 net/core/dev_addr_lists.c:592
-   fdb_add_hw_addr+0xf3/0x280 net/bridge/br_fdb.c:165
-   fdb_insert+0x173/0x1c0 net/bridge/br_fdb.c:542
-   br_fdb_insert+0x35/0x50 net/bridge/br_fdb.c:554
-   br_add_if+0xca2/0x1800 net/bridge/br_if.c:648
-   do_set_master net/core/rtnetlink.c:2468 [inline]
-   do_set_master+0x1d7/0x230 net/core/rtnetlink.c:2441
-   do_setlink+0xaa2/0x35e0 net/core/rtnetlink.c:2603
-   __rtnl_newlink+0xad5/0x1590 net/core/rtnetlink.c:3252
-   rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3377
-   rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5440
-   netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
-   netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-   netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
-   netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
-   sock_sendmsg_nosec net/socket.c:652 [inline]
-   sock_sendmsg+0xcf/0x120 net/socket.c:672
-   ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
-   ___sys_sendmsg+0x100/0x170 net/socket.c:2397
-   __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
-   do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-
-stack backtrace:
-CPU: 0 PID: 11771 Comm: syz-executor.1 Not tainted 5.6.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_bad_irq_dependency kernel/locking/lockdep.c:2094 [inline]
- check_irq_usage.cold+0x586/0x6fe kernel/locking/lockdep.c:2292
- check_prev_add kernel/locking/lockdep.c:2479 [inline]
- check_prevs_add kernel/locking/lockdep.c:2580 [inline]
- validate_chain kernel/locking/lockdep.c:2970 [inline]
- __lock_acquire+0x2033/0x3ca0 kernel/locking/lockdep.c:3954
- lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
- __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
- _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
- spin_lock include/linux/spinlock.h:338 [inline]
- peernet2id_alloc+0xcd/0x3f0 net/core/net_namespace.c:240
- rtnl_fill_link_netnsid net/core/rtnetlink.c:1565 [inline]
- rtnl_fill_ifinfo+0x1e7c/0x39b0 net/core/rtnetlink.c:1751
- rtmsg_ifinfo_build_skb+0xcd/0x1a0 net/core/rtnetlink.c:3685
- rtmsg_ifinfo_event.part.0+0x49/0xe0 net/core/rtnetlink.c:3717
- rtmsg_ifinfo_event net/core/rtnetlink.c:3728 [inline]
- rtmsg_ifinfo+0x7f/0xa0 net/core/rtnetlink.c:3726
- __dev_notify_flags+0x235/0x2c0 net/core/dev.c:8177
- __dev_set_promiscuity+0x191/0x210 net/core/dev.c:7953
- dev_set_promiscuity+0x4f/0xe0 net/core/dev.c:7973
- macsec_dev_change_rx_flags+0x13b/0x170 drivers/net/macsec.c:3423
- dev_change_rx_flags net/core/dev.c:7906 [inline]
- __dev_set_promiscuity.cold+0x2e3/0x340 net/core/dev.c:7950
- __dev_set_rx_mode+0x21f/0x300 net/core/dev.c:8055
- dev_uc_add+0xa1/0xb0 net/core/dev_addr_lists.c:592
- fdb_add_hw_addr+0xf3/0x280 net/bridge/br_fdb.c:165
- fdb_insert+0x173/0x1c0 net/bridge/br_fdb.c:542
- br_fdb_insert+0x35/0x50 net/bridge/br_fdb.c:554
- br_add_if+0xca2/0x1800 net/bridge/br_if.c:648
- do_set_master net/core/rtnetlink.c:2468 [inline]
- do_set_master+0x1d7/0x230 net/core/rtnetlink.c:2441
- do_setlink+0xaa2/0x35e0 net/core/rtnetlink.c:2603
- __rtnl_newlink+0xad5/0x1590 net/core/rtnetlink.c:3252
- rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3377
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5440
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
- ___sys_sendmsg+0x100/0x170 net/socket.c:2397
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c849
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007efdbe996c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007efdbe9976d4 RCX: 000000000045c849
-RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000006
-RBP: 000000000076bfa0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000009f9 R14: 00000000004ccb17 R15: 000000000076bfac
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On Fri, Mar 20, 2020 at 09:17:47pm +0100, Daniel Lezcano wrote:
+> Adding Rafael,
+> 
+> On 20/03/2020 18:43, Daniel Lezcano wrote:
+> > On 20/03/2020 16:10, Willy Wolff wrote:
+> >> Hi all,
+> >> Hope you're doing well with the situation.
+> >>
+> >> I fill that my board get a cold too...
+> >>
+> >> When I write to a sysfs node, I have a weird behaviour about the function that is called behind.
+> >> This bug appears on an arm32 odroid-xu3, and only after v5.4, v5.3.18 behave correctly.
+> >>
+> >>
+> >> Here my modification to see what's going on:
+> >>
+> >> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
+> >> index aa99edb4dff7..a437ae3f4b9f 100644
+> >> --- a/drivers/thermal/thermal_sysfs.c
+> >> +++ b/drivers/thermal/thermal_sysfs.c
+> >> @@ -706,11 +706,22 @@ cur_state_store(struct device *dev, struct device_attribute *attr,
+> > 
+> > [ ... ]
+> > 
+> >>         return result ? result : count;
+> >>  }
+> >>  
+> >> +
+> > 
+> > [ ... ]
+> > 
+> >>
+> >> As you can see, the function is recalled with one character less, until the "buffer is empty".
+> >> I don't understand why. Can anybody help me for this thing?
+> >> Many thanks in advance.
+> > 
+> > [ ... ]
+> > 
+> > Very likely the problem is coming from:
+> > 
+> >         result = cdev->ops->set_cur_state(cdev, state);
+> > 
+> > which returns '1' as showed by the traces:
+> > 
+> > drivers/thermal/thermal_sysfs.c:735:cur_state_store result = 1, count = 3
+> > 
+> > And because of the return condition above:
+> > 
+> > 	return result ? result : count;
+> > 
+> >  the function is returning result, so '1', which is interpreted by the
+> > sysfs as "I wrote one character', so it recalls the function with the
+> > two remaining characters, etc ...
+> > 
+> > The problem is from the governor AFAICT, which governor is it?
+> 
+> I went through the code and I believe the problem is coming from:
+> 
+> cpufreq_set_cur_state
+>  -> freq_qos_update_request
+>    -> freq_qos_apply
+>        -> pm_qos_update_target =>
+> 
+> " * This function returns 1 if the aggregated constraint value has changed,"
+> 
+> 	freq_qos_apply() does:
+> 
+> 		ret = pm_qos_update_target()
+> 	...
+> 	return ret;
+> 
+> 
+> At the first glance, it is related to commit 77751a466ebd1 (Nov 2019).
+> 
+> 
+> 
+> 
+> -- 
+>  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> 
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+> 
