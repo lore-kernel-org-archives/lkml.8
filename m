@@ -2,165 +2,335 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9DBC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0AAC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC572077D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:03:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="DGAt/QE/"
+	by mail.kernel.org (Postfix) with ESMTP id 72A2820722
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:09:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgCUVDj (ORCPT
+        id S1727286AbgCUVJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 17:03:39 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:53389 "EHLO rere.qmqm.pl"
+        Sat, 21 Mar 2020 17:09:23 -0400
+Received: from mga07.intel.com ([134.134.136.100]:49832 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727184AbgCUVDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 17:03:39 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48lCmR0rpQz7N;
-        Sat, 21 Mar 2020 22:03:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1584824616; bh=tsS79R0QGq7AHtfKZ66fg1w4PDEYc0Ksv1+dYcvsHpQ=;
-        h=Date:From:Subject:To:Cc:From;
-        b=DGAt/QE/kpXzHWzdgv7tyCX9Z57MPer7iaa7TAHqxN+0L8mkCUYup2g/rHf79NBmx
-         3WChkOx/rIddiRNFmv/eGGqg3B2MqXElA4PSu0B/oNIJYtU/lv7mXcCQKEMG+k+Qzx
-         cMvaRAmF82KihVDHGt7c2TSQbqgt/b22obCAxYxNCz0ShhcjRD/cgHQir0dRe+iFn/
-         VA0U2S67Tt2XlqzHm5zq0CUnwyzmX35WHL1ZfIF1UlLHYWep15hZzmX4zTjiu1muC7
-         QlyLn/ZGCaKAaTa3OMT2996ytGeiM72WtUhZ6/K2TZibHDo7jIJrMGqoFZ9Ua8PzDB
-         UzcFjQsQUVM/Q==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Sat, 21 Mar 2020 22:03:34 +0100
-Message-Id: <6466e066d7cbad20cb6a334ad8e37cdcf521c492.1584822011.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2] i2c: at91: support atomic write xfer
+        id S1726366AbgCUVJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 17:09:23 -0400
+IronPort-SDR: tCkzTud/pHJpYddUI2djKpp8Ij/+Zk62D2U+Bgdt6GWGuzbIHXCW7A1d+Gzi95bV1Y3cwooZ9V
+ SOCDLlLhPIrA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 14:09:21 -0700
+IronPort-SDR: BZY+EKG1RKhkNlv2ucSh4eesHE/QzS58rnDfzqmR1s5ojnZWIkNiBYkAA2P5jk/uRfyahkDY+H
+ 5MvC2nBELqYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,289,1580803200"; 
+   d="scan'208";a="392500096"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 21 Mar 2020 14:09:19 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jFlMv-00BoyE-NU; Sat, 21 Mar 2020 23:09:21 +0200
+Date:   Sat, 21 Mar 2020 23:09:21 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Alexandru Tachici <alexandru.tachici@analog.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jic23@kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: Re: [PATCH v4 1/2] iio: dac: ad5770r: Add AD5770R support
+Message-ID: <20200321210921.GA2814584@smile.fi.intel.com>
+References: <20200218121031.27233-1-alexandru.tachici@analog.com>
+ <20200218121031.27233-2-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Stefan Lengfeld <contact@stefanchrist.eu>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218121031.27233-2-alexandru.tachici@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement basic support for atomic write - enough to get a simple
-write to PMIC on shutdown. Only for chips having ALT_CMD register,
-eg. SAMA5D2.
+On Tue, Feb 18, 2020 at 02:10:30PM +0200, Alexandru Tachici wrote:
+> The AD5770R is a 6-channel, 14-bit resolution, low noise, programmable
+> current output digital-to-analog converter (DAC) for photonics control
+> applications.
+> 
+> It contains five 14-bit resolution current sourcing DAC channels and one
+> 14-bit resolution current sourcing/sinking DAC channel.
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
-v2: remove runtime-PM usage
-    switch to readl*poll*atomic() for transfer completion wait
----
- drivers/i2c/busses/i2c-at91-master.c | 69 +++++++++++++++++++++++++++-
- 1 file changed, 67 insertions(+), 2 deletions(-)
+...
 
-diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
-index ba6fbb9c7390..d9226207157a 100644
---- a/drivers/i2c/busses/i2c-at91-master.c
-+++ b/drivers/i2c/busses/i2c-at91-master.c
-@@ -21,6 +21,7 @@
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
-@@ -709,6 +710,69 @@ static int at91_twi_xfer(struct i2c_adapter *adap, struct i2c_msg *msg, int num)
- 	return ret;
- }
- 
-+static int at91_twi_xfer_atomic(struct i2c_adapter *adap, struct i2c_msg *msg, int num)
-+{
-+	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
-+	unsigned long timeout;
-+	struct pinctrl *pins;
-+	__u32 stat;
-+	int ret;
-+
-+	/* FIXME: only single write request supported to 7-bit addr */
-+	if (num != 1)
-+		return -EOPNOTSUPP;
-+	if (msg->flags & I2C_M_RD)
-+		return -EOPNOTSUPP;
-+	if (msg->flags & I2C_M_TEN)
-+		return -EOPNOTSUPP;
-+	if (msg->len > dev->fifo_size && msg->len > 1)
-+		return -EOPNOTSUPP;
-+	if (!dev->pdata->has_alt_cmd)
-+		return -EOPNOTSUPP;
-+
-+	pins = pinctrl_get_select_default(&adap->dev);
-+
-+	ret = clk_prepare_enable(twi_dev->clk);
-+	if (ret)
-+		goto out;
-+
-+	/* Clear and disable pending interrupts, such as NACK. */
-+	at91_twi_read(dev, AT91_TWI_SR);
-+	at91_twi_write(dev, AT91_TWI_IDR, ~0);
-+
-+	at91_twi_write(dev, AT91_TWI_MMR, msg->addr << 16);
-+
-+	if (!msg->len) {
-+		at91_twi_write(dev, AT91_TWI_CR,
-+			       AT91_TWI_ACMDIS | AT91_TWI_QUICK);
-+	} else {
-+		size_t n = msg->len;
-+		__u8 *p;
-+
-+		at91_twi_write(dev, AT91_TWI_CR,
-+				    AT91_TWI_ACMEN |
-+				    AT91_TWI_THRCLR | AT91_TWI_RHRCLR);
-+		at91_twi_write(dev, AT91_TWI_ACR, AT91_TWI_ACR_DATAL(n));
-+		for (p = msg->buf; n--; ++p)
-+			writeb_relaxed(*p, dev->base + AT91_TWI_THR);
-+	}
-+
-+	readl_relaxed_poll_timeout_atomic(dev->base + AT91_TWI_SR, stat,
-+					  stat & AT91_TWI_TXCOMP, 100,
-+					  (2 + msg->len) * 1000);
-+	if (stat & AT91_TWI_NACK)
-+		ret = -EREMOTEIO;
-+	else
-+		ret = num;
-+
-+	clk_disable_unprepare(twi_dev->clk);
-+out:
-+	if (!IS_ERR(pins))
-+		pinctrl_put(pins);
-+
-+	return ret;
-+}
-+
- /*
-  * The hardware can handle at most two messages concatenated by a
-  * repeated start via it's internal address feature.
-@@ -725,8 +789,9 @@ static u32 at91_twi_func(struct i2c_adapter *adapter)
- }
- 
- static const struct i2c_algorithm at91_twi_algorithm = {
--	.master_xfer	= at91_twi_xfer,
--	.functionality	= at91_twi_func,
-+	.master_xfer		= at91_twi_xfer,
-+	.master_xfer_atomic	= at91_twi_xfer_atomic,
-+	.functionality		= at91_twi_func,
- };
- 
- static int at91_twi_configure_dma(struct at91_twi_dev *dev, u32 phy_addr)
+> +#define AD5770R_CFG_CH0_SINK_EN(x)		(((x) & 0x1) << 7)
+> +#define AD5770R_CFG_SHUTDOWN_B(x, ch)		(((x) & 0x1) << (ch))
+
+BIT(0) ?
+
+> +#define AD5770R_REF_RESISTOR_SEL(x)		(((x) & 0x1) << 2)
+
+Ditto.
+
+> +#define AD5770R_CH_SET(x, ch)		(((x) & 0x1) << (ch))
+
+Ditto.
+
+...
+
+> +enum ad5770r_ch0_modes {
+> +	AD5770R_CH0_0_300 = 0,
+> +	AD5770R_CH0_NEG_60_0,
+> +	AD5770R_CH0_NEG_60_300
+> +};
+> +
+> +enum ad5770r_ch1_modes {
+> +	AD5770R_CH1_0_140_LOW_HEAD = 1,
+> +	AD5770R_CH1_0_140_LOW_NOISE,
+> +	AD5770R_CH1_0_250
+> +};
+> +
+> +enum ad5770r_ch2_5_modes {
+> +	AD5770R_CH_LOW_RANGE = 0,
+> +	AD5770R_CH_HIGH_RANGE
+> +};
+> +
+> +enum ad5770r_ref_v {
+> +	AD5770R_EXT_2_5_V = 0,
+> +	AD5770R_INT_1_25_V_OUT_ON,
+> +	AD5770R_EXT_1_25_V,
+> +	AD5770R_INT_1_25_V_OUT_OFF
+> +};
+> +
+> +enum ad5770r_output_filter_resistor {
+> +	AD5770R_FILTER_60_OHM = 0x0,
+> +	AD5770R_FILTER_5_6_KOHM = 0x5,
+> +	AD5770R_FILTER_11_2_KOHM,
+> +	AD5770R_FILTER_22_2_KOHM,
+> +	AD5770R_FILTER_44_4_KOHM,
+
+> +	AD5770R_FILTER_104_KOHM,
+
+It would be nice to go consistent about last entry in enums. Are they
+terminators? For me it doesn't look like it (new revision of hardware
+always can use extended lists of modes, etc).
+
+So, I think leaving comma for all above is a right thing to do.
+
+> +};
+
+...
+
+> +static const unsigned int ad5770r_filter_reg_vals[] = {
+> +	AD5770R_FILTER_104_KOHM,
+> +	AD5770R_FILTER_44_4_KOHM,
+> +	AD5770R_FILTER_22_2_KOHM,
+> +	AD5770R_FILTER_11_2_KOHM,
+> +	AD5770R_FILTER_5_6_KOHM,
+> +	AD5770R_FILTER_60_OHM
+> +};
+
+Ditto.
+
+...
+
+> +	return regmap_write(st->regmap,
+> +			    AD5770R_OUTPUT_RANGE(channel), regval);
+
+It fits one line (even has room for one character more)
+Perhaps you may consider to amend settings of your text editor?
+Please fix all similar places in all of your patches.
+
+...
+
+> +static int ad5770r_reset(struct ad5770r_state *st)
+> +{
+> +	/* Perform software reset if no GPIO provided */
+> +	if (!st->gpio_reset)
+> +		return ad5770r_soft_reset(st);
+
+
+Perhaps split this to _reset_gpio() and do
+
+	if (gpio)
+		return _reset_gpio();
+	else // It's redundant, but some people use for a style
+		return _soft_reset();
+
+> +
+> +	gpiod_set_value_cansleep(st->gpio_reset, 0);
+> +	usleep_range(10, 20);
+> +	gpiod_set_value_cansleep(st->gpio_reset, 1);
+> +
+> +	/* data must not be written during reset timeframe */
+> +	usleep_range(100, 200);
+> +
+> +	return 0;
+> +}
+
+...
+
+> +		ret = regmap_bulk_read(st->regmap,
+> +				       chan->address,
+
+> +				       st->transf_buf, 2);
+
+sizeof() ?
+
+> +		if (ret)
+> +			return 0;
+
+...
+
+> +		st->transf_buf[0] = ((u16)val >> 6);
+
+Why explicit casting?
+
+> +		st->transf_buf[1] = (val & GENMASK(5, 0)) << 2;
+> +		return regmap_bulk_write(st->regmap, chan->address,
+> +					 st->transf_buf, 2);
+
+sizeof() ?
+
+...
+
+> +static int ad5770r_read_freq_avail(struct iio_dev *indio_dev,
+> +				   struct iio_chan_spec const *chan,
+> +				   const int **vals, int *type, int *length,
+> +				   long mask)
+> +{
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
+> +		*type = IIO_VAL_INT;
+> +		*vals = ad5770r_filter_freqs;
+> +		*length = ARRAY_SIZE(ad5770r_filter_freqs);
+> +		return IIO_AVAIL_LIST;
+> +	}
+> +
+
+> +	return -EINVAL;
+
+default case?
+
+> +}
+
+...
+
+> +	ret = kstrtobool(buf, &readin);
+> +	if (ret)
+> +		return ret;
+> +
+
+> +	readin = !readin;
+
+I think using ! directly in places where it's needed will be helpful ti
+understand the code.
+
+> +
+> +	regval = AD5770R_CFG_SHUTDOWN_B(readin, chan->channel);
+> +	if (chan->channel == 0 &&
+> +	    st->output_mode[0].out_range_mode > AD5770R_CH0_0_300) {
+> +		regval |= AD5770R_CFG_CH0_SINK_EN(readin);
+> +		mask = BIT(chan->channel) + BIT(7);
+> +	} else {
+> +		mask = BIT(chan->channel);
+> +	}
+> +	ret = regmap_update_bits(st->regmap, AD5770R_CHANNEL_CONFIG, mask,
+> +				 regval);
+> +	if (ret)
+> +		return ret;
+> +
+> +	regval = AD5770R_CH_SET(readin, chan->channel);
+> +	ret = regmap_update_bits(st->regmap, AD5770R_CH_ENABLE,
+> +				 BIT(chan->channel), regval);
+> +	if (ret)
+> +		return ret;
+> +
+> +	st->ch_pwr_down[chan->channel] = !readin;
+
+...
+
+> +	int ret, tmp[2], min, max;
+> +	unsigned int num;
+> +	struct fwnode_handle *child;
+> +
+> +	num = device_get_child_node_count(&st->spi->dev);
+> +	if (num != AD5770R_MAX_CHANNELS)
+> +		return -EINVAL;
+> +
+> +	device_for_each_child_node(&st->spi->dev, child) {
+> +		ret = fwnode_property_read_u32(child, "num", &num);
+> +		if (ret)
+> +			return ret;
+> +		if (num > AD5770R_MAX_CHANNELS)
+> +			return -EINVAL;
+> +
+> +		ret = fwnode_property_read_u32_array(child,
+> +						     "adi,range-microamp",
+
+> +						     tmp, 2);
+
+sizeof()?
+
+And perhaps
+	u32 tmp[2];
+
+> +		if (ret)
+> +			return ret;
+> +
+> +		min = tmp[0] / 1000;
+> +		max = tmp[1] / 1000;
+> +		ret = ad5770r_store_output_range(st, min, max, num);
+> +		if (ret)
+> +			return ret;
+> +	}
+
+> +	return ret;
+
+ret might be uninitialized?
+
+In any case, shouldn't be
+	return 0;
+?
+
+> +}
+
+...
+
+> +	st->external_res = fwnode_property_read_bool(st->spi->dev.fwnode,
+> +						     "adi,external-resistor");
+
+Use of fwnode (and esp. w/o dev_fwnode() helper) looks inconsistent here.
+Why not device_property_...()?
+
+> +	return ret;
+
+return 0;
+
+...
+
+> +static const struct of_device_id ad5770r_of_id[] = {
+> +	{ .compatible = "adi,ad5770r", },
+
+> +	{},
+
+No need comma in terminator line.
+
+> +};
+> +MODULE_DEVICE_TABLE(of, ad5770r_of_id);
+> +
+> +static const struct spi_device_id ad5770r_id[] = {
+> +	{ "ad5770r", 0 },
+
+> +	{},
+
+Ditto.
+
+> +};
+
 -- 
-2.20.1
+With Best Regards,
+Andy Shevchenko
+
 
