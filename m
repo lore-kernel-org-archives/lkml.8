@@ -2,76 +2,87 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794AFC4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A614C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59C3420780
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5ECB20776
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:27:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584804433;
+	bh=0b19gtJA7yusDlImxj0s+3IzszDW+W8p7le6RO+0Jic=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=F9llufcAx9jwd2riKRxk0LRw1vlXve71Y/oxLpumrIN0DtdRIoOr6pMzhxFXhEaTd
+	 sk2mXHsnaHvRivkqsLDxJn23nFiaOATZfYr6tDB1uBrJ7gCx7RQjbGpipDAwfu+KLS
+	 YyM8YmpEDtyuHVucZ619ye3DdP5fMCdbdkce0CoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbgCUPVz (ORCPT
+        id S1727433AbgCUP1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:21:55 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:52576 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbgCUPVz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:21:55 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 40F1D1C0337; Sat, 21 Mar 2020 16:21:53 +0100 (CET)
-Date:   Sat, 21 Mar 2020 16:21:52 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
+        Sat, 21 Mar 2020 11:27:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727069AbgCUP1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 11:27:12 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF2F120409;
+        Sat, 21 Mar 2020 15:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584804432;
+        bh=0b19gtJA7yusDlImxj0s+3IzszDW+W8p7le6RO+0Jic=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zlqHqOnceMRlg2MFIMv7jTGw7mkluL9B/W4JiqfFYSA+D4PNjB88tAHVsAe1y+4hl
+         YIYQT8T8Imgy/deAPwfpzx99i7UIaCip/dSnRC4IAQMaEok2a1Kqoaflai+9tRPyDf
+         v5tCkyERzx7LpAirhjUo/1wTNgFUnJjBu56P1bMA=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jFg1m-00EWN2-5D; Sat, 21 Mar 2020 15:27:10 +0000
+Date:   Sat, 21 Mar 2020 15:27:09 +0000
+Message-ID: <86lfntzq2a.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     luanshi <zhangliguang@linux.alibaba.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] leds: leds-pwm: Replace zero-length array with
- flexible-array member
-Message-ID: <20200321152152.GC8386@duo.ucw.cz>
-References: <20200319215146.GA24054@embeddedor.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="0lnxQi9hkpPO77W3"
-Content-Disposition: inline
-In-Reply-To: <20200319215146.GA24054@embeddedor.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Subject: Re: [PATCH] irqchip/gic-v3: Move irq_domain_update_bus_token to after checking for NULL domain
+In-Reply-To: <1583983255-44115-1-git-send-email-zhangliguang@linux.alibaba.com>
+References: <1583983255-44115-1-git-send-email-zhangliguang@linux.alibaba.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: zhangliguang@linux.alibaba.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 12 Mar 2020 03:20:55 +0000,
+luanshi <zhangliguang@linux.alibaba.com> wrote:
+> 
+> irq_domain_update_bus_token should be called after checking for NULL
+> domain.
+> 
+> Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+> ---
+>  drivers/irqchip/irq-gic-v3.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
---0lnxQi9hkpPO77W3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Queued for 5.7.
 
-Hi!
+Thanks,
 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
->=20
-> This issue was found with the help of Coccinelle.
+	M.
 
-I applied both. I'll be unhappy if they break anything.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---0lnxQi9hkpPO77W3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXnYxEAAKCRAw5/Bqldv6
-8iwdAJ9fhHq+m0naK9c/L6eOl12fp1/tXACdGqempYJ/JHn7ME1jPYapzkWKOgo=
-=HHSH
------END PGP SIGNATURE-----
-
---0lnxQi9hkpPO77W3--
+-- 
+Jazz is not dead, it just smells funny.
