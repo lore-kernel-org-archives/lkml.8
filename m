@@ -2,102 +2,127 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1305C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35819C43333
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9999920722
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F186020409
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 00:29:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LhQ1aRbj"
+	dkim=pass (2048-bit key) header.d=who-t.net header.i=@who-t.net header.b="nuXLQyUZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dWFZ+dnL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbgCUAZ4 (ORCPT
+        id S1727422AbgCUA3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Mar 2020 20:25:56 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:16481 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727046AbgCUAZ4 (ORCPT
+        Fri, 20 Mar 2020 20:29:15 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:46393 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726955AbgCUA3O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Mar 2020 20:25:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584750355; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=RFDAvUQyVdRVN+shAEUn6F8OxkZUxxHr+I+3F0JOpSo=; b=LhQ1aRbj2H7zOnl7J2y3mOmpKpbGuOKnuTsoBS7rul3HMFDCfH95dLLlIvbW75npAPbscgC6
- LuAADDjvvvcqOElDiGd2Egth+pxV5A9E4oBUy3tesIDY9kO3ltIkA61ttcuTMjTEFpfpcZWX
- tingjd2VzFXuBIclGDk/G5QTmDs=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e755f04.7f4e12ba9768-smtp-out-n05;
- Sat, 21 Mar 2020 00:25:40 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D6420C43636; Sat, 21 Mar 2020 00:25:38 +0000 (UTC)
-Received: from [10.110.28.154] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D1F87C433D2;
-        Sat, 21 Mar 2020 00:25:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D1F87C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v2 1/2] clk: qcom: gcc: Add USB3 PIPE clock and GDSC for
- SM8150
-To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, mark.rutland@arm.com,
-        mturquette@baylibre.com, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <1584478412-7798-1-git-send-email-wcheng@codeaurora.org>
- <1584478412-7798-2-git-send-email-wcheng@codeaurora.org>
- <158474728076.125146.11401827374115414324@swboyd.mtv.corp.google.com>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <83787def-4ea5-d38d-d745-ea30a914a05f@codeaurora.org>
-Date:   Fri, 20 Mar 2020 17:25:37 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 20 Mar 2020 20:29:14 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 688DF6AC;
+        Fri, 20 Mar 2020 20:29:13 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Fri, 20 Mar 2020 20:29:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=WKm8vmhWsw9PHcu6TsETEz7oSvo
+        Db47LobmLHOphtxw=; b=nuXLQyUZGyiKwniABky14rKZBBGsmotrob+k3fOnddD
+        b9BoTe7uUnK+fYWjDqWK3N7QltLxrlQPm5rUlB8mJc5OGpuKis0wzuBOmt0umgC4
+        ZFm2sEH9LGGh35ATR9Svg4XWLWYxYYwD324jdJTBdHi6UviXc7FbX0N+GFbTgYOO
+        jilxbJfLVGQk7ecQ0PhBnqI/hnEpLpJSAkBB6yge3Am+DbItovp4OzWHIP5IdIR5
+        1lVhlpLjHBQGbnPUcIerYdH0L+SWR99QIGurL3K+hUt36VWFF4Lhp6OzZR5BQyMU
+        IUemSXDayxJxqbWuHNE8obiX9buYGNKKDgNqVR7ZIeQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=WKm8vm
+        hWsw9PHcu6TsETEz7oSvoDb47LobmLHOphtxw=; b=dWFZ+dnLSlqyThAqnCng6+
+        6t1KBmJB81GTIwjgrmz8reDMo4A6mExrL/V33xMcX2x30IPnXPYdpAbQ/rr6WmFy
+        w5v+Ys7gFaaNqR964cojjd8X95YDSmofzYccn6rFseD47VQ7jQPJg/qNmrGd7WfN
+        2knHh5SGqH5JS7wlqyTmzyIyEbYzhIAbqfK6/qaRgQU5jeQlA28p17m93CuO50qz
+        DJ+wBvD88S7drLJxrO9/0rh2NywTxW8HeJ0MJanuuAQUaxGTW4Zd2aKXbdtVAe23
+        H9IhazL6hPulBeLVVLbZAzGnBzqEAiZnHAipVPwYF0QqhDXL5Me2Ld6EXf+8hpLw
+        ==
+X-ME-Sender: <xms:2F91XgN0pa65bMSNNScQeqaab1c1MQafjbBEHp_eVED6Hp_42MxT7A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudegvddgudelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefrvghtvghr
+    ucfjuhhtthgvrhgvrhcuoehpvghtvghrrdhhuhhtthgvrhgvrhesfihhohdqthdrnhgvth
+    eqnecukfhppeduudejrddvtddrjedurddutdelnecuvehluhhsthgvrhfuihiivgeptden
+    ucfrrghrrghmpehmrghilhhfrhhomhepphgvthgvrhdrhhhuthhtvghrvghrseifhhhoqd
+    htrdhnvght
+X-ME-Proxy: <xmx:2F91XqpY4oZ9FMboqHnlzgT58zMsz9GdNZs9XWV7kMDsDfLVF0Eopg>
+    <xmx:2F91XhHXgzt8n0QencuXS2SPqXJ7MqRSxYNvK_zSLJdjhA-4tQGVrg>
+    <xmx:2F91XvpH9a8QOmJKFN7l9SFar4PRvR7KCBKk8BU6ufaVlI1EgfRyuA>
+    <xmx:2V91XscFkTKBpG7WgNK-5z4x1Ud8zGhympmy5fpFCrxgtbZ9L_zZwA>
+Received: from jelly (117-20-71-109.751447.bne.nbn.aussiebb.net [117.20.71.109])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8AB5C328005D;
+        Fri, 20 Mar 2020 20:29:09 -0400 (EDT)
+Date:   Sat, 21 Mar 2020 10:29:04 +1000
+From:   Peter Hutterer <peter.hutterer@who-t.net>
+To:     Mario Limonciello <superm1@gmail.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Filipe =?iso-8859-1?Q?La=EDns?= <lains@archlinux.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Richard Hughes <hughsient@gmail.com>
+Subject: Re: [PATCH] HID: logitech-dj: issue udev change event on device
+ connection
+Message-ID: <20200321002904.GA2472393@jelly>
+References: <20200318161906.3340959-1-lains@archlinux.org>
+ <CA+EcB1MoTXMaueJfRHf51A5PU4oiKSJXrHazfTEvifZK54OrLQ@mail.gmail.com>
+ <e8ea0c2e-445f-21e2-a248-3368f26bf391@redhat.com>
+ <20200319022331.GA2384843@jelly>
+ <nycvar.YFH.7.76.2003210103540.19500@cbobk.fhfr.pm>
+ <CA+EcB1P0qW4hdWG1YAYkD6X8jL1OaXZn4Lfu7aCmGBqwOPrJyA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <158474728076.125146.11401827374115414324@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+EcB1P0qW4hdWG1YAYkD6X8jL1OaXZn4Lfu7aCmGBqwOPrJyA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/20/2020 4:34 PM, Stephen Boyd wrote:
-> Quoting Wesley Cheng (2020-03-17 13:53:31)
->> diff --git a/include/dt-bindings/clock/qcom,gcc-sm8150.h b/include/dt-bindings/clock/qcom,gcc-sm8150.h
->> index 90d60ef..3e1a918 100644
->> --- a/include/dt-bindings/clock/qcom,gcc-sm8150.h
->> +++ b/include/dt-bindings/clock/qcom,gcc-sm8150.h
->> @@ -240,4 +240,8 @@
->>  #define GCC_USB30_SEC_BCR                                      27
->>  #define GCC_USB_PHY_CFG_AHB2PHY_BCR                            28
->>  
->> +/* GCC GDSCRs */
->> +#define USB30_PRIM_GDSC                     4
->> +#define USB30_SEC_GDSC                                         5
+On Fri, Mar 20, 2020 at 07:15:38PM -0500, Mario Limonciello wrote:
+> On Fri, Mar 20, 2020, 19:06 Jiri Kosina <jikos@kernel.org> wrote:
 > 
-> BTW, should we expect more GDSCs at 0,1,2,3 here? Why wasn't that done
-> initially?
+> > On Thu, 19 Mar 2020, Peter Hutterer wrote:
+> >
+> > > > Then we would need to support that attribute forever. IMHO the best
+> > > > option is to just make a uname call and check the kernel version, with
+> > > > the code marked to be removed in the future when kernels older then
+> > > > $version are no longer something we want to support.
+> >
+> > Oh, this doesn't work *at all* with distro kernels backporting everything
+> > that passess by to kernels with major versions looking years old.
+> >
+> > I (as one of the "guilty ones" with my distro hat on) am not at all saying
+> > it's perfect, but that's the way it is.
+> >
+> > --
+> > Jiri Kosina
+> > SUSE Lab
+> >
 > 
+> Another "solution" is to use module versioning bump as part of this patch.
+> At least when distros backport then you can look at module versioning to
+> tell the behavior of the driver.
 
-Hi Stephen,
+tbh, if there is no good solution in the kernel to communicate this,
+userspace can make do without knowing about it ahead of time.
 
-Yes, I assume there should be more GDSCs being introduced, and I have
-notified Taniya (our GCC POC) to upload the rest of the GDSC changes.  I
-decided to keep it with values 4 and 5 in order to be consistent with
-previous chipsets, but if you feel we should shuffle these values, then
-I am OK with that as well.
+long-term you can just assume you'll get the change event and handle the
+error case just as you'd have to do now. Sure it'd be nice to know ahead of
+time but it's not the only thing we don't know until we get the first event.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Cheers,
+   Peter
