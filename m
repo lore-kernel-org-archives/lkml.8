@@ -2,229 +2,120 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D81C43332
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD011C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 124E82076E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96CAD20722
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 18:47:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2jHP2Xn"
+	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="10EtXnXi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbgCUSni (ORCPT
+        id S1727686AbgCUSrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 14:43:38 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45853 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbgCUSnh (ORCPT
+        Sat, 21 Mar 2020 14:47:36 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38131 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727262AbgCUSrf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 14:43:37 -0400
-Received: by mail-pf1-f194.google.com with SMTP id j10so5146000pfi.12;
-        Sat, 21 Mar 2020 11:43:37 -0700 (PDT)
+        Sat, 21 Mar 2020 14:47:35 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w3so3977345plz.5
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 11:47:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:date:from:to:cc:subject:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yRcLkteyX6PlC1Vm2e1Pax2AHd9o6wiG1snjmj+oGxk=;
-        b=A2jHP2XnccTjVNIPvy0XT63cZVksWDKO2+FU+Yzk8ybgFn3cg695kgKrGA+DJdZSLt
-         aQdr7UlGUe3IgGT/Nm4m5vpq/yoBFyspcoWP38tRC208c7lBbms3+HaXmVKeWUqkDSlH
-         ocVjE2tKhePOJVysyMPoA0vwFbFOOLQVOJTvdlTLwRhKYvDSQw8Qof/Ufi21RDmL0aY+
-         6XfTJVOnepR2NA0BcBDXJRprwnzLQrlE2Qoa6ctb+mrL27Z4SkDN363NOu22l05Kz2sI
-         /t8C5+qCa5Pnk2//r5yBPuQOtvG10otTLpuyWHpRsK4SynEYUCRCqehvvnmvMuE77cTk
-         MhSg==
+        d=pensando.io; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=AnR6hfXloIQv8auYA+GHfwp/m7H+vf5QROD5gpqvvmg=;
+        b=10EtXnXim5Hg4Cpui4GMpkO0QIfiWEDtP+YwkxpeF+mQBy8yZZ8KHf60FeUTd3kP4q
+         8FIVPRoaEf+I/FCmeBRJvcgxNMsttS1OXFLHq2D9SsOdmuZAHpzZPS4/RwiYRU6EudO/
+         NW9UrDy5GfDQo24rXziWK4S9VwzL+VmFFwAnxFxn/mStyBMamUc5hWvIQYXJMXCLoCzW
+         7rto2tts0ZQPJSO8fzCXrsCJOuBBeSL8eU9AMr9FJkbNXhzHvjQwXrvihdGmOoTjZoSy
+         qxHKPmo7PhXOjQTt1O3NX5bRN2FrAZkQFlX0W/HEh+YwAsnNejyYchQKKlhPEPiO8iN5
+         I4AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yRcLkteyX6PlC1Vm2e1Pax2AHd9o6wiG1snjmj+oGxk=;
-        b=KfPWceXjRMdL/ZQSHYTv7wb8Q+wCSbQICRqtqm5pFEfEdeLb1Lb4FWDxTw6nMNAC8G
-         aOelFx46Ghyc/XT8qH7c7YNjatK7haiCnbbJqrdB553dChnli9KK99VAIMrIhiHGB16h
-         sDPLGComT4YOOfr3rkoBgZBq+YorLIhl9FBavDvb1QHDVm3C0YP8GH0wUTpJDLhH6Tuz
-         f6/BSmJ0p4GkRke0wJHIWUHCmvaHr1bB3cdQShk94jf41zfNVKV4YzxXCH+Oc1ASJbFY
-         QpKooQfEk6NGuaLe63HFrD40OHkjcSkSBWYgMYzJfb8+ZOFwwi3RBkQBXxf47knM+l++
-         0Oiw==
-X-Gm-Message-State: ANhLgQ3An6g7PGd1UJuzzYCj+/DTfeNiYU8ZHbnnfNJYs0jRdLxZVVAF
-        O2JY+3zMRngHuVJolAbn6mitZCUl
-X-Google-Smtp-Source: ADFU+vvkGl9qxAFdRG4hK7oBMzQSoFQPdeBPeBd6QW3hOi+39SP8/ltnO6dJWjRfu0nKspP1yfspCA==
-X-Received: by 2002:a62:1a03:: with SMTP id a3mr16284219pfa.171.1584816216757;
-        Sat, 21 Mar 2020 11:43:36 -0700 (PDT)
-Received: from SARKAR ([49.207.56.153])
-        by smtp.gmail.com with ESMTPSA id w4sm8058003pgg.2.2020.03.21.11.43.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2020 11:43:36 -0700 (PDT)
-Message-ID: <5e766058.1c69fb81.a65ff.d2eb@mx.google.com>
-X-Google-Original-Message-ID: <20200321184332.GA10817@rohitsarkar5398@gmail.com>
-Date:   Sun, 22 Mar 2020 00:13:32 +0530
-From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
-To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     jic23@kernel.org, dragos.bogdan@analog.com
-Subject: Re: [PATCH v7] iio: adc: max1363: replace uses of mlock
-References: <5e6e522d.1c69fb81.10f54.f95c@mx.google.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=AnR6hfXloIQv8auYA+GHfwp/m7H+vf5QROD5gpqvvmg=;
+        b=P3GPb6T9zpLu34WMVV738gU/9IW7eCNSNd5bCL/woUscmmCW7+2F4t12teeh+IRBRV
+         2wIBtKzeNkcNryk0tMsx74fK51plh0RpowuhjtBF189UGjPnqco5CxfnPEQWsCyXyMtr
+         S8sxi2hlhkGo2v88BKxzYzvdrEjGP3tdW6+JjJhaYXt+/JVtfDoemWA/jbYvw9zUdVgH
+         UtPQaADZYIWTiKYIjijG1xt1pkf9+WRfJoJ228JZEyp3JZebFlxlXmoWCnORYSIq++ME
+         eCDm3QnYdOHRW0mYgVJVxRO+zhOya8MwEgXHvb/dF3JxxuH2QoZKmFruD8Q7yfrvC9Hf
+         WhBA==
+X-Gm-Message-State: ANhLgQ1sBx5aMXki4z3NZBS248YHtoUwmYhNoY4UllfveIRU5nySTgEi
+        WnpNjBcoljfmSzpr0p5Z6Tu6FaZ92/w=
+X-Google-Smtp-Source: ADFU+vs0FwNwvYJsQkFQFEcpXFJzigfrsVLfelXzkPadvRe0lL/cnt4AkOx4y/HBFYRg/dis9wEHwA==
+X-Received: by 2002:a17:902:34f:: with SMTP id 73mr13708424pld.50.1584816453585;
+        Sat, 21 Mar 2020 11:47:33 -0700 (PDT)
+Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
+        by smtp.gmail.com with ESMTPSA id f15sm6924004pfq.100.2020.03.21.11.47.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Mar 2020 11:47:33 -0700 (PDT)
+Subject: Re: [PATCH] ionic: make spdxcheck.py happy
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>, netdev@vger.kernel.org
+Cc:     linux-spdx@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200321120514.10464-1-lukas.bulwahn@gmail.com>
+From:   Shannon Nelson <snelson@pensando.io>
+Message-ID: <0c80a012-738e-dddc-4287-35a6a90fda86@pensando.io>
+Date:   Sat, 21 Mar 2020 11:47:31 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5e6e522d.1c69fb81.10f54.f95c@mx.google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200321120514.10464-1-lukas.bulwahn@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey,
-Does this look fine? Wondering if this was missed during review
-Thanks,
-Rohit
+On 3/21/20 5:05 AM, Lukas Bulwahn wrote:
+> Headers ionic_if.h and ionic_regs.h are licensed under three alternative
+> licenses and the used SPDX-License-Identifier expression makes
+> ./scripts/spdxcheck.py complain:
+>
+> drivers/net/ethernet/pensando/ionic/ionic_if.h: 1:52 Syntax error: OR
+> drivers/net/ethernet/pensando/ionic/ionic_regs.h: 1:52 Syntax error: OR
+>
+> As OR is associative, it is irrelevant if the parentheses are put around
+> the first or the second OR-expression.
+>
+> Simply add parentheses to make spdxcheck.py happy.
+>
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-On Sun, Mar 15, 2020 at 09:34:58PM +0530, Rohit Sarkar wrote:
-> Replace usage indio_dev's mlock with either local lock or
-> iio_device_claim_direct_mode.
-> 
-> Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
+Acked-by: Shannon Nelson <snelson@pensando.io>
+
 > ---
-> Changelog v6 -> v7
-> * Fix failure handling logic
-> 
-> Changelog v5 -> v6
-> * Minor failure handling fixes
-> 
-> Changelog v4 -> v5
-> * Use local lock too at places where driver state needs to be protected.
-> 
-> Changelog v3 -> v4
-> * Fix indentation
-> 
-> Changelog v2 -> v3
-> * use iio_device_claim_direct when switching modes
-> * replace mlock usage in max1363_write_event_config
-> 
-> Changelog v1 -> v2
-> * Fix indentation
-> 
->  drivers/iio/adc/max1363.c | 37 ++++++++++++++++++++++++++++---------
->  1 file changed, 28 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
-> index 5c2cc61b666e..12d72bf3f12a 100644
-> --- a/drivers/iio/adc/max1363.c
-> +++ b/drivers/iio/adc/max1363.c
-> @@ -150,6 +150,7 @@ struct max1363_chip_info {
->   * @current_mode:	the scan mode of this chip
->   * @requestedmask:	a valid requested set of channels
->   * @reg:		supply regulator
-> + * @lock		lock to ensure state is consistent
->   * @monitor_on:		whether monitor mode is enabled
->   * @monitor_speed:	parameter corresponding to device monitor speed setting
->   * @mask_high:		bitmask for enabled high thresholds
-> @@ -169,6 +170,7 @@ struct max1363_state {
->  	const struct max1363_mode	*current_mode;
->  	u32				requestedmask;
->  	struct regulator		*reg;
-> +	struct mutex			lock;
->  
->  	/* Using monitor modes and buffer at the same time is
->  	   currently not supported */
-> @@ -364,7 +366,13 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
->  	struct max1363_state *st = iio_priv(indio_dev);
->  	struct i2c_client *client = st->client;
->  
-> -	mutex_lock(&indio_dev->mlock);
-> +	ret = iio_device_claim_direct_mode(indio_dev);
-> +	if (ret)
-> +		return ret;
-> +	mutex_lock(&st->lock);
-> +
-> +	if (ret < 0)
-> +		goto error_ret;
->  	/*
->  	 * If monitor mode is enabled, the method for reading a single
->  	 * channel will have to be rather different and has not yet
-> @@ -372,7 +380,7 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
->  	 *
->  	 * Also, cannot read directly if buffered capture enabled.
->  	 */
-> -	if (st->monitor_on || iio_buffer_enabled(indio_dev)) {
-> +	if (st->monitor_on) {
->  		ret = -EBUSY;
->  		goto error_ret;
->  	}
-> @@ -404,8 +412,10 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
->  		data = rxbuf[0];
->  	}
->  	*val = data;
-> +
->  error_ret:
-> -	mutex_unlock(&indio_dev->mlock);
-> +	mutex_unlock(&st->lock);
-> +	iio_device_release_direct_mode(indio_dev);
->  	return ret;
->  
->  }
-> @@ -705,9 +715,9 @@ static ssize_t max1363_monitor_store_freq(struct device *dev,
->  	if (!found)
->  		return -EINVAL;
->  
-> -	mutex_lock(&indio_dev->mlock);
-> +	mutex_lock(&st->lock);
->  	st->monitor_speed = i;
-> -	mutex_unlock(&indio_dev->mlock);
-> +	mutex_unlock(&st->lock);
->  
->  	return 0;
->  }
-> @@ -810,12 +820,12 @@ static int max1363_read_event_config(struct iio_dev *indio_dev,
->  	int val;
->  	int number = chan->channel;
->  
-> -	mutex_lock(&indio_dev->mlock);
-> +	mutex_lock(&st->lock);
->  	if (dir == IIO_EV_DIR_FALLING)
->  		val = (1 << number) & st->mask_low;
->  	else
->  		val = (1 << number) & st->mask_high;
-> -	mutex_unlock(&indio_dev->mlock);
-> +	mutex_unlock(&st->lock);
->  
->  	return val;
->  }
-> @@ -962,7 +972,14 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
->  	u16 unifiedmask;
->  	int number = chan->channel;
->  
-> -	mutex_lock(&indio_dev->mlock);
-> +	ret = iio_device_claim_direct_mode(indio_dev);
-> +	if (ret)
-> +		return ret;
-> +	mutex_lock(&st->lock);
-> +
-> +	if (ret < 0)
-> +		goto error_ret;
-> +
->  	unifiedmask = st->mask_low | st->mask_high;
->  	if (dir == IIO_EV_DIR_FALLING) {
->  
-> @@ -989,7 +1006,8 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
->  
->  	max1363_monitor_mode_update(st, !!(st->mask_high | st->mask_low));
->  error_ret:
-> -	mutex_unlock(&indio_dev->mlock);
-> +	mutex_unlock(&st->lock);
-> +	iio_device_release_direct_mode(indio_dev);
->  
->  	return ret;
->  }
-> @@ -1587,6 +1605,7 @@ static int max1363_probe(struct i2c_client *client,
->  
->  	st = iio_priv(indio_dev);
->  
-> +	mutex_init(&st->lock);
->  	st->reg = devm_regulator_get(&client->dev, "vcc");
->  	if (IS_ERR(st->reg)) {
->  		ret = PTR_ERR(st->reg);
-> -- 
-> 2.23.0.385.gbc12974a89
-> 
+>   drivers/net/ethernet/pensando/ionic/ionic_if.h   | 2 +-
+>   drivers/net/ethernet/pensando/ionic/ionic_regs.h | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_if.h b/drivers/net/ethernet/pensando/ionic/ionic_if.h
+> index 54547d53b0f2..51adf5059834 100644
+> --- a/drivers/net/ethernet/pensando/ionic/ionic_if.h
+> +++ b/drivers/net/ethernet/pensando/ionic/ionic_if.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB OR BSD-2-Clause */
+> +/* SPDX-License-Identifier: (GPL-2.0 OR Linux-OpenIB) OR BSD-2-Clause */
+>   /* Copyright (c) 2017-2019 Pensando Systems, Inc.  All rights reserved. */
+>   
+>   #ifndef _IONIC_IF_H_
+> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_regs.h b/drivers/net/ethernet/pensando/ionic/ionic_regs.h
+> index 03ee5a36472b..2e174f45c030 100644
+> --- a/drivers/net/ethernet/pensando/ionic/ionic_regs.h
+> +++ b/drivers/net/ethernet/pensando/ionic/ionic_regs.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB OR BSD-2-Clause */
+> +/* SPDX-License-Identifier: (GPL-2.0 OR Linux-OpenIB) OR BSD-2-Clause */
+>   /* Copyright (c) 2018-2019 Pensando Systems, Inc.  All rights reserved. */
+>   
+>   #ifndef IONIC_REGS_H
+
