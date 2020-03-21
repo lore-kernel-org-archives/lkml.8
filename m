@@ -2,105 +2,253 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BB3C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F41C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CCDF20753
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:19:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oas0AV1o"
+	by mail.kernel.org (Postfix) with ESMTP id A27ED20753
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 20:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgCUUTC (ORCPT
+        id S1727915AbgCUU0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 16:19:02 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:37865 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgCUUTC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 16:19:02 -0400
-Received: by mail-pj1-f67.google.com with SMTP id o12so326478pjs.2;
-        Sat, 21 Mar 2020 13:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pJ0AgRbEJoFommdqX1eg2v1GRS9pD6sawkpvA/Zb67c=;
-        b=oas0AV1oe5ksIUibU59v1KUrsf9zvET7zdNxvM5R+n9/H+28L89s5Fd0z/PQiRQKKE
-         Axr7wppUYJZ5w30AL29RJDaxCXRgpDYyzlRRHYw3DTV016dkyKE+PlP8djs9vLwTPZRj
-         wacAEaeDlRWzP4lop/OSnMxzY9VxsZQpHLqrO3gzVORt87qoTEZegQrcOws+X7JgmlWr
-         7c/sfJsV7h1AlIOVlHlvgPkbx83pkQ2S7tdefrVBWjBOSWvfsindexUd730Z/pclJlwU
-         zgBa7NsSHAAc52rLqbd57qCch0GWItr0Fvhc3GLh1J7WRPb9jNwIsV1cCM7NnVMYZDM+
-         g2HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pJ0AgRbEJoFommdqX1eg2v1GRS9pD6sawkpvA/Zb67c=;
-        b=Gy8wezHxjVJv1Quaeuab/hbYzXZB3Fp02ZOAvxSrluuwqngF7zDdKy/1++y644NjVD
-         piA7gN9Ja1oHZCEbMtxi5YobwVcmpkmtIfupfbmVsM482npC3PzH6PgkvFvdlj8L3uqo
-         mhchvN3idIuxRIGszH+w9MYyuqwT0S/8DaUAMPAR6xaucitVJkf7jdONAYgoD8mXpgrd
-         x7d2SEwXW6EisENF6LEG6Wh1Zgi6HXaucJDL70HhnG1eKr+U1zzRFN3nkR5E5ZKMeAKX
-         dgW4nHSBAYX5Y4vuWxAIP4XRDAmS0nUmg83/HRkOwOg45zQ+4y2Q0JyGHhUWbWkDqcpT
-         Egmg==
-X-Gm-Message-State: ANhLgQ2PO6mTY88Q2KOYJLQIScrsvQdb/zhFn+13CdbrJwv6VkDe2DfL
-        vcI9CVQcTIX9Bk/TmDBMF++vHow9WJe7TVrkxoA=
-X-Google-Smtp-Source: ADFU+vvLvwI30YSioHW9jCG7YRT4vp3Bo1OO5Jz61Wu8AqozjSPXCfyA6nh7vCsBj7upjsgK/dxSqP0i7n+9QZiJQM0=
-X-Received: by 2002:a17:902:54f:: with SMTP id 73mr14443053plf.255.1584821941371;
- Sat, 21 Mar 2020 13:19:01 -0700 (PDT)
+        Sat, 21 Mar 2020 16:26:07 -0400
+Received: from mga03.intel.com ([134.134.136.65]:8930 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726146AbgCUU0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 16:26:07 -0400
+IronPort-SDR: qPmlwfU02OC9s0qWuZ6ZLrUzl9dVV5mxnmgzJXlsduHVXGhQLg+gUJF4klSOC5cnuS5YIpmAwr
+ BwSLp7ZIXlBw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 13:26:05 -0700
+IronPort-SDR: scn7pZUQDpTF3SQ9rG37pbebi3mtbty3HtYRPENAnoNHIWqdnH+Q8Df4p/ny8v2N2HzwcoFbwe
+ 7DKC+AlU6sCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,289,1580803200"; 
+   d="scan'208";a="280773535"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by fmsmga002.fm.intel.com with ESMTP; 21 Mar 2020 13:26:04 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/9] KVM: Pass kvm_init()'s opaque param to additional arch funcs
+Date:   Sat, 21 Mar 2020 13:25:55 -0700
+Message-Id: <20200321202603.19355-2-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200321202603.19355-1-sean.j.christopherson@intel.com>
+References: <20200321202603.19355-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-References: <20200317143336.6098-1-alexandru.ardelean@analog.com>
- <20200321194859.GA2813896@smile.fi.intel.com> <c026dcc85e8454a1ea191c20ba03ce2072271af9.camel@perches.com>
-In-Reply-To: <c026dcc85e8454a1ea191c20ba03ce2072271af9.camel@perches.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 21 Mar 2020 22:18:49 +0200
-Message-ID: <CAHp75VcAo4qHvFyVkv3Keq63XD_HfSvJ=1LBbxYTM0kYGWJh_g@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: remove Stefan Popa's email
-To:     Joe Perches <joe@perches.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Alexandru Ardelean <ardeleanalex@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Michael Hennerich <michael.hennerich@analog.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 10:11 PM Joe Perches <joe@perches.com> wrote:
->
-> On Sat, 2020-03-21 at 21:48 +0200, Andy Shevchenko wrote:
-> > On Tue, Mar 17, 2020 at 04:33:36PM +0200, Alexandru Ardelean wrote:
-> > > The email is no longer active. This change removes Stefan's email from the
-> > > MAINTAINERS list and replaces it with Michael Hennerich's.
-> > >
-> >
-> > Are you planning to fix entries as parse-maintainers.pl does?
-> > (Maybe in a separate change, but also why not here)
->
-> I think perhaps you should not ask people to use parse-maintainers
-> on specific sections anymore as it's rather confusing to use and
-> it's best done as a one-shot by Linus one day.  I hope soon.
+Pass @opaque to kvm_arch_hardware_setup() and
+kvm_arch_check_processor_compat() to allow architecture specific code to
+reference @opaque without having to stash it away in a temporary global
+variable.  This will enable x86 to separate its vendor specific callback
+ops, which are passed via @opaque, into "init" and "runtime" ops without
+having to stash away the "init" ops.
 
-Why not? The benefits are
- - people will know about the tool
- - the particular sections will be fixed since they are touching the data base
+No functional change intended.
 
-And it doesn't prevent Linus or anybody to run the script in the future.
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Tested-by: Cornelia Huck <cohuck@redhat.com> #s390
+Acked-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/mips/kvm/mips.c       |  4 ++--
+ arch/powerpc/kvm/powerpc.c |  4 ++--
+ arch/s390/kvm/kvm-s390.c   |  4 ++--
+ arch/x86/kvm/x86.c         |  4 ++--
+ include/linux/kvm_host.h   |  4 ++--
+ virt/kvm/arm/arm.c         |  4 ++--
+ virt/kvm/kvm_main.c        | 18 ++++++++++++++----
+ 7 files changed, 26 insertions(+), 16 deletions(-)
 
-Actually it will teach people ahead to use the tool then in the future
-we won't see such drastic deviation in ordering.
-
+diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
+index 78507757ba9a..8f05dd0a0f4e 100644
+--- a/arch/mips/kvm/mips.c
++++ b/arch/mips/kvm/mips.c
+@@ -118,12 +118,12 @@ void kvm_arch_hardware_disable(void)
+ 	kvm_mips_callbacks->hardware_disable();
+ }
+ 
+-int kvm_arch_hardware_setup(void)
++int kvm_arch_hardware_setup(void *opaque)
+ {
+ 	return 0;
+ }
+ 
+-int kvm_arch_check_processor_compat(void)
++int kvm_arch_check_processor_compat(void *opaque)
+ {
+ 	return 0;
+ }
+diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
+index 62ee66d5eb6f..f54574564f1e 100644
+--- a/arch/powerpc/kvm/powerpc.c
++++ b/arch/powerpc/kvm/powerpc.c
+@@ -415,12 +415,12 @@ int kvm_arch_hardware_enable(void)
+ 	return 0;
+ }
+ 
+-int kvm_arch_hardware_setup(void)
++int kvm_arch_hardware_setup(void *opaque)
+ {
+ 	return 0;
+ }
+ 
+-int kvm_arch_check_processor_compat(void)
++int kvm_arch_check_processor_compat(void *opaque)
+ {
+ 	return kvmppc_core_check_processor_compat();
+ }
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 807ed6d722dd..0ac8eb29e5aa 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -235,7 +235,7 @@ int kvm_arch_hardware_enable(void)
+ 	return 0;
+ }
+ 
+-int kvm_arch_check_processor_compat(void)
++int kvm_arch_check_processor_compat(void *opaque)
+ {
+ 	return 0;
+ }
+@@ -302,7 +302,7 @@ static struct notifier_block kvm_clock_notifier = {
+ 	.notifier_call = kvm_clock_sync,
+ };
+ 
+-int kvm_arch_hardware_setup(void)
++int kvm_arch_hardware_setup(void *opaque)
+ {
+ 	gmap_notifier.notifier_call = kvm_gmap_notifier;
+ 	gmap_register_pte_notifier(&gmap_notifier);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index e54c6ad628a8..0f08e1b4e762 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9621,7 +9621,7 @@ void kvm_arch_hardware_disable(void)
+ 	drop_user_return_notifiers();
+ }
+ 
+-int kvm_arch_hardware_setup(void)
++int kvm_arch_hardware_setup(void *opaque)
+ {
+ 	int r;
+ 
+@@ -9662,7 +9662,7 @@ void kvm_arch_hardware_unsetup(void)
+ 	kvm_x86_ops->hardware_unsetup();
+ }
+ 
+-int kvm_arch_check_processor_compat(void)
++int kvm_arch_check_processor_compat(void *opaque)
+ {
+ 	struct cpuinfo_x86 *c = &cpu_data(smp_processor_id());
+ 
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 35bc52e187a2..bc48d8fef3e1 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -886,9 +886,9 @@ void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu);
+ 
+ int kvm_arch_hardware_enable(void);
+ void kvm_arch_hardware_disable(void);
+-int kvm_arch_hardware_setup(void);
++int kvm_arch_hardware_setup(void *opaque);
+ void kvm_arch_hardware_unsetup(void);
+-int kvm_arch_check_processor_compat(void);
++int kvm_arch_check_processor_compat(void *opaque);
+ int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu);
+ bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu);
+ int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu);
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index bfdba1caf59d..57e5a143b0db 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -64,12 +64,12 @@ int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
+ 	return kvm_vcpu_exiting_guest_mode(vcpu) == IN_GUEST_MODE;
+ }
+ 
+-int kvm_arch_hardware_setup(void)
++int kvm_arch_hardware_setup(void *opaque)
+ {
+ 	return 0;
+ }
+ 
+-int kvm_arch_check_processor_compat(void)
++int kvm_arch_check_processor_compat(void *opaque)
+ {
+ 	return 0;
+ }
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 28eae681859f..f4e79c891c25 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -4645,14 +4645,22 @@ struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void)
+         return &kvm_running_vcpu;
+ }
+ 
+-static void check_processor_compat(void *rtn)
++struct kvm_cpu_compat_check {
++	void *opaque;
++	int *ret;
++};
++
++static void check_processor_compat(void *data)
+ {
+-	*(int *)rtn = kvm_arch_check_processor_compat();
++	struct kvm_cpu_compat_check *c = data;
++
++	*c->ret = kvm_arch_check_processor_compat(c->opaque);
+ }
+ 
+ int kvm_init(void *opaque, unsigned vcpu_size, unsigned vcpu_align,
+ 		  struct module *module)
+ {
++	struct kvm_cpu_compat_check c;
+ 	int r;
+ 	int cpu;
+ 
+@@ -4676,12 +4684,14 @@ int kvm_init(void *opaque, unsigned vcpu_size, unsigned vcpu_align,
+ 		goto out_free_0;
+ 	}
+ 
+-	r = kvm_arch_hardware_setup();
++	r = kvm_arch_hardware_setup(opaque);
+ 	if (r < 0)
+ 		goto out_free_1;
+ 
++	c.ret = &r;
++	c.opaque = opaque;
+ 	for_each_online_cpu(cpu) {
+-		smp_call_function_single(cpu, check_processor_compat, &r, 1);
++		smp_call_function_single(cpu, check_processor_compat, &c, 1);
+ 		if (r < 0)
+ 			goto out_free_2;
+ 	}
 -- 
-With Best Regards,
-Andy Shevchenko
+2.24.1
+
