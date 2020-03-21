@@ -2,320 +2,69 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CFDC4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 10:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1A6C4332E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 10:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4027B2072C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 10:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D1020754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 10:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584787086;
-	bh=hKz1RERkkN+w1E+koh4wmpVaOH/nKXnTlEK28C/vUGs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=EQiX4QD5shvkimCJ3oErxpurYlz1/ojODsrqwcxgRbPmcHhO00shGvEbvQYlyfVaM
-	 NSR+VN7xAfxKnDtcPAi5+/a2oIsd5+ogj3bj2ZMIissYvoARf78Xb1i3H2usTSPVp5
-	 nfR7SVhQCDJePDSNTkb2UCQlYcDyNZvCEDNwmz90=
+	s=default; t=1584787194;
+	bh=bCp40qIqmUuQz7X5ywaAdzCex0ePugSTNMhM578biFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TNmq/mrRFSL6EXG1e7hshTM1/AFRCnHrc3fhM/u2Ou4+VJZlWiIy69EsnHfjcVLmE
+	 O2rh9VDd9iU8PMrQBLwlqpTWTNJrWGJsnKZWTMf55yKs4TviazeUvPRXquBEFP7Nlx
+	 4nA38J5sbYofk0pCwzHW69IObIBZ7HlYnjmaEWtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbgCUKiF (ORCPT
+        id S1728257AbgCUKjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 06:38:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34574 "EHLO mail.kernel.org"
+        Sat, 21 Mar 2020 06:39:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726607AbgCUKiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 06:38:05 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1726607AbgCUKjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 06:39:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0E4E2072C;
-        Sat, 21 Mar 2020 10:38:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60BC32072C;
+        Sat, 21 Mar 2020 10:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584787083;
-        bh=hKz1RERkkN+w1E+koh4wmpVaOH/nKXnTlEK28C/vUGs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=T32hXV5UR7vsxbXDuJZOlVcgVyBIYNx/A4d1wrOqR8MCvr7aMMdtdoSbG+XO3lXJa
-         QnMxu4n7GMye+eOnUe+TeyoIllnuBDkyWnmNd05cC3JkriWF4TNoX9cuKqM5aua4wi
-         7Xb1w3CX/Y/4OBtO69AaKnSr1vDRQRIO21oGdcHU=
-Date:   Sat, 21 Mar 2020 10:38:05 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Alexandru Tachici <alexandru.tachici@analog.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: Re: [PATCH v4 2/2] dt-bindings: iio: dac: Add docs for AD5770R DAC
-Message-ID: <20200321103805.74285450@archlinux>
-In-Reply-To: <20200320004922.GA3641@bogus>
-References: <20200218121031.27233-1-alexandru.tachici@analog.com>
-        <20200218121031.27233-3-alexandru.tachici@analog.com>
-        <20200320004922.GA3641@bogus>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1584787192;
+        bh=bCp40qIqmUuQz7X5ywaAdzCex0ePugSTNMhM578biFQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EsrzvWE8dE7hDvPPNIiAkPHo8QI8KmjxF0FWVVX/K/sW6xsVA8yWyHi+nXekf9DXC
+         2HsEBNN7jqOR/bIrFVU932u4a0u0Jblfn4+JIDIyUV+w1BqgMSFX6HK1FRwi0FiGdS
+         kklLxMsdWm07eJUaT97n0CCvwwt61JrnKZBaNGdI=
+Date:   Sat, 21 Mar 2020 11:39:50 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     mike.leach@linaro.org, suzuki.poulose@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 00/12] coresight: next v5.6-rc6
+Message-ID: <20200321103950.GA1063010@kroah.com>
+References: <20200320165303.13681-1-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320165303.13681-1-mathieu.poirier@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Mar 2020 18:49:22 -0600
-Rob Herring <robh@kernel.org> wrote:
+On Fri, Mar 20, 2020 at 10:52:51AM -0600, Mathieu Poirier wrote:
+> Hi Greg,
+> 
+> As requested here is another respin - the only thing that changed is
+> the replacement of scnprintf() and all sysfs output are now singular,
+> i.e don't need any parsing.  That triggered some modification to
+> sysfs entries, which have been taken into account in the documentation.
+> 
+> Applies and compile cleanly on your char-misc-next branch.
 
-> On Tue, Feb 18, 2020 at 02:10:31PM +0200, Alexandru Tachici wrote:
-> > Adding dt-bindings documentation for AD5770R DAC.  
-> 
-> DT list needs to be Cc'ed if you want bindings reviewed.
+Much nicer, thanks for these, all now queued up.
 
-Doh. I missed that.
-
-> 
-> > Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> > Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-> > ---
-> >  .../bindings/iio/dac/adi,ad5770r.yaml         | 185 ++++++++++++++++++
-> >  1 file changed, 185 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-> > new file mode 100644
-> > index 000000000000..13d6b5ff479d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-> > @@ -0,0 +1,185 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +# Copyright 2020 Analog Devices Inc.
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad5770r.yaml#  
-> 
-> Jonathan mentioned 'adc' part, but 'bindings' is also wrong. Should be:
-
-Alexandru, please send a fixup patch for the various things Rob has highlighted.
-
-Jonathan
-
-
-> 
-> .../schemas/iio/dac/...
-> 
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analog Devices AD5770R DAC device driver
-> > +
-> > +maintainers:
-> > +  - Mircea Caprioru <mircea.caprioru@analog.com>
-> > +
-> > +description: |
-> > +  Bindings for the Analog Devices AD5770R current DAC device. Datasheet can be
-> > +  found here:
-> > +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD5770R.pdf
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - adi,ad5770r
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  avdd-supply:
-> > +    description:
-> > +      AVdd voltage supply. Represents two different supplies in the datasheet
-> > +      that are in fact the same.
-> > +
-> > +  iovdd-supply:
-> > +    description:
-> > +      Voltage supply for the chip interface.
-> > +
-> > +  vref-supply:
-> > +    description: Specify the voltage of the external reference used.
-> > +      Available reference options are 1.25 V or 2.5 V. If no
-> > +      external reference declared then the device will use the
-> > +      internal reference of 1.25 V.
-> > +
-> > +  adi,external-resistor:
-> > +    description: Specify if an external 2.5k ohm resistor is used. If not
-> > +      specified the device will use an internal 2.5k ohm resistor.
-> > +      The precision resistor is used for reference current generation.
-> > +    type: boolean
-> > +
-> > +  reset-gpios:
-> > +    description: GPIO spec for the RESET pin. If specified, it will be
-> > +      asserted during driver probe.
-> > +    maxItems: 1
-> > +
-> > +  channel0:  
-> 
-> channel@0 ???
-> 
-> Once you fix that, your example will start failing.
-> 
-> > +    description: Represents an external channel which are
-> > +      connected to the DAC. Channel 0 can act both as a current
-> > +      source and sink.
-> > +    type: object
-> > +
-> > +    properties:
-> > +      num:  
-> 
-> Use 'reg' instead.
-> 
-> > +        description: This represents the channel number.
-> > +        items:  
-> 
-> You can drop items.
-> 
-> > +          const: 0
-> > +
-> > +      adi,range-microamp:
-> > +          description: Output range of the channel.
-> > +          oneOf:
-> > +            - $ref: /schemas/types.yaml#/definitions/int32-array  
-> 
-> *-microamp already has a type, so this should be dropped. However, I 
-> believe it's unsigned currently, but we can fix it to be signed.
-> 
-> > +            - items:
-> > +                - enum: [0 300000]
-> > +                - enum: [-60000 0]
-> > +                - enum: [-60000 300000]  
-> 
-> Negative values don't yet work until we fix dtc to be able to output 
-> negative values. For now, can you just avoid negative numbers in the 
-> example.
-> 
-> What's defined here doesn't match the example. You are saying there are 
-> 3 cells with 2 possible values each. I think you want:
-> 
-> oneOf:
->   - items:
->       - const: 0
->       - const: 300000
->   - items:
->       - const: -60000
->       - const: 0
->   - items:
->       - const: -60000
->       - const: 300000
->       
-> 
-> > +
-> > +  channel1:
-> > +    description: Represents an external channel which are
-> > +      connected to the DAC.
-> > +    type: object
-> > +
-> > +    properties:
-> > +      num:
-> > +        description: This represents the channel number.
-> > +        items:
-> > +          const: 1
-> > +
-> > +      adi,range-microamp:
-> > +          description: Output range of the channel.
-> > +          oneOf:
-> > +            - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +            - items:
-> > +                - enum: [0 140000]
-> > +                - enum: [0 250000]
-> > +
-> > +  channel2:
-> > +    description: Represents an external channel which are
-> > +      connected to the DAC.
-> > +    type: object
-> > +
-> > +    properties:
-> > +      num:
-> > +        description: This represents the channel number.
-> > +        items:
-> > +          const: 2
-> > +
-> > +      adi,range-microamp:
-> > +          description: Output range of the channel.
-> > +          oneOf:
-> > +            - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +            - items:
-> > +                - enum: [0 140000]
-> > +                - enum: [0 250000]
-> > +
-> > +patternProperties:
-> > +  "^channel@([3-5])$":
-> > +    type: object
-> > +    description: Represents the external channels which are connected to the DAC.
-> > +    properties:
-> > +      num:
-> > +        description: This represents the channel number.
-> > +        items:
-> > +          minimum: 3
-> > +          maximum: 5
-> > +
-> > +      adi,range-microamp:
-> > +          description: Output range of the channel.
-> > +          oneOf:
-> > +            - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +            - items:
-> > +                - enum: [0 45000]
-> > +                - enum: [0 100000]
-> > +
-> > +required:
-> > +- reg
-> > +- diff-channels
-> > +- channel0
-> > +- channel1
-> > +- channel2
-> > +- channel3
-> > +- channel4
-> > +- channel5
-> > +
-> > +examples:
-> > +  - |
-> > +        spi {
-> > +                #address-cells = <1>;
-> > +                #size-cells = <0>;
-> > +
-> > +                ad5770r@0 {
-> > +                        compatible = "ad5770r";
-> > +                        reg = <0>;
-> > +                        spi-max-frequency = <1000000>;
-> > +                        vref-supply = <&vref>;
-> > +                        adi,external-resistor;
-> > +                        reset-gpios = <&gpio 22 0>;
-> > +
-> > +                        channel@0 {
-> > +                                num = <0>;
-> > +                                adi,range-microamp = <(-60000) 300000>;
-> > +                        };
-> > +
-> > +                        channel@1 {
-> > +                                num = <1>;
-> > +                                adi,range-microamp = <0 140000>;
-> > +                        };
-> > +
-> > +                        channel@2 {
-> > +                                num = <2>;
-> > +                                adi,range-microamp = <0 55000>;
-> > +                        };
-> > +
-> > +                        channel@3 {
-> > +                                num = <3>;
-> > +                                adi,range-microamp = <0 45000>;
-> > +                        };
-> > +
-> > +                        channel@4 {
-> > +                                num = <4>;
-> > +                                adi,range-microamp = <0 45000>;
-> > +                        };
-> > +
-> > +                        channel@5 {
-> > +                                num = <5>;
-> > +                                adi,range-microamp = <0 45000>;
-> > +                        };
-> > +                };
-> > +        };
-> > +...
-> > -- 
-> > 2.20.1
-> >   
-
+greg k-h
