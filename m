@@ -2,152 +2,234 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33229C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE0DC43332
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDC2720732
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:05:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RjEz3dcW"
+	by mail.kernel.org (Postfix) with ESMTP id E5F3220754
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:05:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584788751;
+	bh=KjAbaQI+at1Cu2hUdsJNKQcgayQ71HeqjGgU9dukvGU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VT7tc65CbyV310NOtdBhm0fSHQqjgYLZi+/13pvKYiTSE35/KnuH6qawn/nbz8bdp
+	 /SmG0nazpk5x58NyfD4LcQEyXedKthE9EhfiWEL9OwEz2KZRqpCn7vn5J3aiEUfNkY
+	 +qWKKphn9/ELk8ap4yVGm7lBESxV/eKCDo2TtUtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgCULFi (ORCPT
+        id S1728118AbgCULFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 07:05:38 -0400
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:35337 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbgCULFh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 07:05:37 -0400
-Received: by mail-vk1-f195.google.com with SMTP id n198so1274562vkc.2;
-        Sat, 21 Mar 2020 04:05:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Wjk3ypI3dZf435CgzcIi9qC6un7+JOF8jIyY4A4nu3s=;
-        b=RjEz3dcWNjghPKNfR+K5nt69UDHMD7iBXiJesyKQ2Skfw8qUt+Rqphzu4iXNS7m3Ve
-         s1mUHhNOECdWuRSk05xrTXWAeK0gtTTtmRWr5dVlbYnZ0qtPNGgTghy8YvbRu4Irts82
-         E0d6Ycv70BdiZLWAqTx1zf/qKpcptJP8e8LGPFCdGVAJYFKDgh3ZebKfqYfJVgyeKmqy
-         pMr2iRe1HgFn9xG0fPdZGVmVh+fMWo3clLKYBLBh9KtHPUKOSnVQW8IhO9jFSWFF3Vzl
-         dNKAdBJuHU9wo++7qdiKsKYPgoOZMcX2D5W/Ebj1f6pzWC8b+BabOf8sxPKmtqTpCRQq
-         w9RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Wjk3ypI3dZf435CgzcIi9qC6un7+JOF8jIyY4A4nu3s=;
-        b=twFGdhb/C8ci0yXVliC7YYczz0vN0+9QDj/rbERuJ+aiU0TMsz6AS08MRPAGqqKfmr
-         Pseu+ycv9wt1pG9HxKE4b5eyNhG5Mh5qYI/GdQ/ULEdXmYFAJfC1ayqrO72LmcUNPV8e
-         XWKWr79qNuWR4cptX6SPSux31v8sj+88sQxgsbdplZ/XUla/gtN1Gr1B3FynCVdARMwb
-         l48bH3j6y8xfaahSt8Bo29mZf503lesbMTQBa4sPZivp1VAzUnwLReytG+lKrSSYbpZn
-         U5TWVMrRO5Yi1B5Qw+LGq70wAWBngPqizE+6osg6TCOi9+qU6ig15lVlPDjriSWuHXFZ
-         ctdg==
-X-Gm-Message-State: ANhLgQ1c22h01JTK/Xfwd5IVTw55C+X7Lw7Xwr2OZ4vsKjK2gNvMjms5
-        fgf0LPDK2CPFi8mXI9cazWXuvYmVYOiIPOFlrrb2Dk+P
-X-Google-Smtp-Source: ADFU+vszKLL4yYmgUwbkPfZQxiC7ZgSUrlxN32FC1CEOojgE6O6d980XAdOHGc2iMUXx+7RYnBtYR81+CXcNhF88uhw=
-X-Received: by 2002:a1f:2543:: with SMTP id l64mr9191186vkl.69.1584788736106;
- Sat, 21 Mar 2020 04:05:36 -0700 (PDT)
+        Sat, 21 Mar 2020 07:05:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726192AbgCULFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 07:05:49 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E66EB20732;
+        Sat, 21 Mar 2020 11:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584788747;
+        bh=KjAbaQI+at1Cu2hUdsJNKQcgayQ71HeqjGgU9dukvGU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GAaVOnZEt6h7eFjrgASsg/kcSqxUFbzu/5MNgCoxZlzSjfKqbJJ0PYfWvc0lmj8b4
+         kqlUKUx7EdSzulEm7v/67irWpfH30QHmCFqSIxdekssWvXvIUKXdi9OOXsCiF7BY6y
+         ClTnlTY+VqsPVdpH2GRhRL1RTmIVO/DyBcxDy3E8=
+Date:   Sat, 21 Mar 2020 11:05:41 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Nishant Malpani <nish.malpani25@gmail.com>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: iio: Drop unnecessary explicit casting
+Message-ID: <20200321110541.65b3a768@archlinux>
+In-Reply-To: <20200318100754.25667-1-nish.malpani25@gmail.com>
+References: <20200318100754.25667-1-nish.malpani25@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200319084902.24747-1-martin.kepplinger@puri.sm> <CAKgpwJXyt1O_J2HR5uHgAg3JTcwxSrOBPg7JcLnVyo-K9QRE8g@mail.gmail.com>
-In-Reply-To: <CAKgpwJXyt1O_J2HR5uHgAg3JTcwxSrOBPg7JcLnVyo-K9QRE8g@mail.gmail.com>
-From:   Jun Li <lijun.kernel@gmail.com>
-Date:   Sat, 21 Mar 2020 19:05:24 +0800
-Message-ID: <CAKgpwJWg8TE8-dduQ99CFK9vwgh=2AYwaPfhSN0Scoo_W-8Q8A@mail.gmail.com>
-Subject: Re: [PATCH v2] usb: dwc3: support continuous runtime PM with dual role
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, rogerq@ti.com,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jun Li <lijun.kernel@gmail.com> =E4=BA=8E2020=E5=B9=B43=E6=9C=8821=E6=97=A5=
-=E5=91=A8=E5=85=AD =E4=B8=8B=E5=8D=886:59=E5=86=99=E9=81=93=EF=BC=9A
->
-> Martin Kepplinger <martin.kepplinger@puri.sm> =E4=BA=8E2020=E5=B9=B43=E6=
-=9C=8819=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=884:50=E5=86=99=E9=81=
-=93=EF=BC=9A
-> >
-> > The DRD module calls dwc3_set_mode() on role switches, i.e. when a devi=
-ce is
-> > being pugged in. In order to support continuous runtime power managemen=
-t when
-> > plugging in / unplugging a cable, we need to call pm_runtime_get() in t=
-his path.
-> >
-> > Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> > ---
-> >
-> > revision history
-> > ----------------
-> > v2: move pm_rumtime calls into workqueue (thanks Roger)
-> >     remove unrelated documentation patch
-> > v1: https://lore.kernel.org/linux-usb/ef22f8de-9bfd-c1d5-111c-696f1336d=
-bda@puri.sm/T/
-> >
-> >
-> >  drivers/usb/dwc3/core.c | 11 ++++++++---
-> >  1 file changed, 8 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> > index 1d85c42b9c67..0c058b2ac21d 100644
-> > --- a/drivers/usb/dwc3/core.c
-> > +++ b/drivers/usb/dwc3/core.c
-> > @@ -121,17 +121,19 @@ static void __dwc3_set_mode(struct work_struct *w=
-ork)
-> >         if (dwc->dr_mode !=3D USB_DR_MODE_OTG)
-> >                 return;
-> >
-> > +       pm_runtime_get(dwc->dev);
->
-> I think this needs _get_sync(), as the following mode settings may
-> require runtime resumed
-> to enable clocks...
->
+On Wed, 18 Mar 2020 15:37:54 +0530
+Nishant Malpani <nish.malpani25@gmail.com> wrote:
 
-See your v3, it's ok now.
+> Provide correct specifiers while printing error logs to discard the use
+> of unnecessary explicit casting.
+> 
+> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
 
-> Li Jun
->
-> > +
-> >         if (dwc->current_dr_role =3D=3D DWC3_GCTL_PRTCAP_OTG)
-> >                 dwc3_otg_update(dwc, 0);
-> >
-> >         if (!dwc->desired_dr_role)
-> > -               return;
-> > +               goto out;
-> >
-> >         if (dwc->desired_dr_role =3D=3D dwc->current_dr_role)
-> > -               return;
-> > +               goto out;
-> >
-> >         if (dwc->desired_dr_role =3D=3D DWC3_GCTL_PRTCAP_OTG && dwc->ed=
-ev)
-> > -               return;
-> > +               goto out;
-> >
-> >         switch (dwc->current_dr_role) {
-> >         case DWC3_GCTL_PRTCAP_HOST:
-> > @@ -190,6 +192,9 @@ static void __dwc3_set_mode(struct work_struct *wor=
-k)
-> >                 break;
-> >         }
-> >
-> > +out:
-> > +       pm_runtime_mark_last_busy(dwc->dev);
-> > +       pm_runtime_put_autosuspend(dwc->dev);
-> >  }
-> >
-> >  void dwc3_set_mode(struct dwc3 *dwc, u32 mode)
-> > --
-> > 2.20.1
-> >
+Looks good in general, but I'd prefer one patch per driver
+(all in a series for easy applying).
+
+The reason is that these may need to be applied by someone as a
+precursor to an actual fix.  If we have them as one big set
+they have to do considerably more work to use them than if
+we keep the patches independent for each of the drivers.
+
+Except in very rare cases we try to avoid patches that cover
+multiple otherwise independent bits of code.
+
+Thanks,
+
+Jonathan
+
+> ---
+> 
+> Based on previous conversations which can be found here [1].
+> 
+> [1] https://marc.info/?l=linux-iio&m=158427554607223&w=2
+> ---
+>  drivers/iio/accel/kxsd9-i2c.c              | 4 ++--
+>  drivers/iio/gyro/bmg160_i2c.c              | 4 ++--
+>  drivers/iio/gyro/bmg160_spi.c              | 4 ++--
+>  drivers/iio/gyro/mpu3050-i2c.c             | 4 ++--
+>  drivers/iio/imu/bmi160/bmi160_i2c.c        | 4 ++--
+>  drivers/iio/imu/bmi160/bmi160_spi.c        | 4 ++--
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c  | 4 ++--
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c  | 4 ++--
+>  drivers/iio/magnetometer/bmc150_magn_spi.c | 4 ++--
+>  9 files changed, 18 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/kxsd9-i2c.c b/drivers/iio/accel/kxsd9-i2c.c
+> index 38411e1c155b..6a2fb2e84170 100644
+> --- a/drivers/iio/accel/kxsd9-i2c.c
+> +++ b/drivers/iio/accel/kxsd9-i2c.c
+> @@ -21,8 +21,8 @@ static int kxsd9_i2c_probe(struct i2c_client *i2c,
+>  
+>  	regmap = devm_regmap_init_i2c(i2c, &config);
+>  	if (IS_ERR(regmap)) {
+> -		dev_err(&i2c->dev, "Failed to register i2c regmap %d\n",
+> -			(int)PTR_ERR(regmap));
+> +		dev_err(&i2c->dev, "Failed to register i2c regmap %ld\n",
+> +			PTR_ERR(regmap));
+>  		return PTR_ERR(regmap);
+>  	}
+>  
+> diff --git a/drivers/iio/gyro/bmg160_i2c.c b/drivers/iio/gyro/bmg160_i2c.c
+> index 4fc9c6a3321f..abb11855e1b2 100644
+> --- a/drivers/iio/gyro/bmg160_i2c.c
+> +++ b/drivers/iio/gyro/bmg160_i2c.c
+> @@ -21,8 +21,8 @@ static int bmg160_i2c_probe(struct i2c_client *client,
+>  
+>  	regmap = devm_regmap_init_i2c(client, &bmg160_regmap_i2c_conf);
+>  	if (IS_ERR(regmap)) {
+> -		dev_err(&client->dev, "Failed to register i2c regmap %d\n",
+> -			(int)PTR_ERR(regmap));
+> +		dev_err(&client->dev, "Failed to register i2c regmap %ld\n",
+> +			PTR_ERR(regmap));
+>  		return PTR_ERR(regmap);
+>  	}
+>  
+> diff --git a/drivers/iio/gyro/bmg160_spi.c b/drivers/iio/gyro/bmg160_spi.c
+> index 182a59c42507..104f1bac7805 100644
+> --- a/drivers/iio/gyro/bmg160_spi.c
+> +++ b/drivers/iio/gyro/bmg160_spi.c
+> @@ -19,8 +19,8 @@ static int bmg160_spi_probe(struct spi_device *spi)
+>  
+>  	regmap = devm_regmap_init_spi(spi, &bmg160_regmap_spi_conf);
+>  	if (IS_ERR(regmap)) {
+> -		dev_err(&spi->dev, "Failed to register spi regmap %d\n",
+> -			(int)PTR_ERR(regmap));
+> +		dev_err(&spi->dev, "Failed to register spi regmap %ld\n",
+> +			PTR_ERR(regmap));
+>  		return PTR_ERR(regmap);
+>  	}
+>  
+> diff --git a/drivers/iio/gyro/mpu3050-i2c.c b/drivers/iio/gyro/mpu3050-i2c.c
+> index afa8018b9238..9de9ca295742 100644
+> --- a/drivers/iio/gyro/mpu3050-i2c.c
+> +++ b/drivers/iio/gyro/mpu3050-i2c.c
+> @@ -51,8 +51,8 @@ static int mpu3050_i2c_probe(struct i2c_client *client,
+>  
+>  	regmap = devm_regmap_init_i2c(client, &mpu3050_i2c_regmap_config);
+>  	if (IS_ERR(regmap)) {
+> -		dev_err(&client->dev, "Failed to register i2c regmap %d\n",
+> -			(int)PTR_ERR(regmap));
+> +		dev_err(&client->dev, "Failed to register i2c regmap %ld\n",
+> +			PTR_ERR(regmap));
+>  		return PTR_ERR(regmap);
+>  	}
+>  
+> diff --git a/drivers/iio/imu/bmi160/bmi160_i2c.c b/drivers/iio/imu/bmi160/bmi160_i2c.c
+> index e36f5e82d400..6179d60d3968 100644
+> --- a/drivers/iio/imu/bmi160/bmi160_i2c.c
+> +++ b/drivers/iio/imu/bmi160/bmi160_i2c.c
+> @@ -24,8 +24,8 @@ static int bmi160_i2c_probe(struct i2c_client *client,
+>  
+>  	regmap = devm_regmap_init_i2c(client, &bmi160_regmap_config);
+>  	if (IS_ERR(regmap)) {
+> -		dev_err(&client->dev, "Failed to register i2c regmap %d\n",
+> -			(int)PTR_ERR(regmap));
+> +		dev_err(&client->dev, "Failed to register i2c regmap %ld\n",
+> +			PTR_ERR(regmap));
+>  		return PTR_ERR(regmap);
+>  	}
+>  
+> diff --git a/drivers/iio/imu/bmi160/bmi160_spi.c b/drivers/iio/imu/bmi160/bmi160_spi.c
+> index c19e3df35559..38fc4d124cc0 100644
+> --- a/drivers/iio/imu/bmi160/bmi160_spi.c
+> +++ b/drivers/iio/imu/bmi160/bmi160_spi.c
+> @@ -20,8 +20,8 @@ static int bmi160_spi_probe(struct spi_device *spi)
+>  
+>  	regmap = devm_regmap_init_spi(spi, &bmi160_regmap_config);
+>  	if (IS_ERR(regmap)) {
+> -		dev_err(&spi->dev, "Failed to register spi regmap %d\n",
+> -			(int)PTR_ERR(regmap));
+> +		dev_err(&spi->dev, "Failed to register spi regmap %ld\n",
+> +			PTR_ERR(regmap));
+>  		return PTR_ERR(regmap);
+>  	}
+>  	return bmi160_core_probe(&spi->dev, regmap, id->name, true);
+> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+> index 6993d3b87bb0..90f1f4c79605 100644
+> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+> @@ -122,8 +122,8 @@ static int inv_mpu_probe(struct i2c_client *client,
+>  
+>  	regmap = devm_regmap_init_i2c(client, &inv_mpu_regmap_config);
+>  	if (IS_ERR(regmap)) {
+> -		dev_err(&client->dev, "Failed to register i2c regmap %d\n",
+> -			(int)PTR_ERR(regmap));
+> +		dev_err(&client->dev, "Failed to register i2c regmap %ld\n",
+> +			PTR_ERR(regmap));
+>  		return PTR_ERR(regmap);
+>  	}
+>  
+> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
+> index 673b198e6368..7ee275547531 100644
+> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
+> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
+> @@ -53,8 +53,8 @@ static int inv_mpu_probe(struct spi_device *spi)
+>  
+>  	regmap = devm_regmap_init_spi(spi, &inv_mpu_regmap_config);
+>  	if (IS_ERR(regmap)) {
+> -		dev_err(&spi->dev, "Failed to register spi regmap %d\n",
+> -			(int)PTR_ERR(regmap));
+> +		dev_err(&spi->dev, "Failed to register spi regmap %ld\n",
+> +			PTR_ERR(regmap));
+>  		return PTR_ERR(regmap);
+>  	}
+>  
+> diff --git a/drivers/iio/magnetometer/bmc150_magn_spi.c b/drivers/iio/magnetometer/bmc150_magn_spi.c
+> index ed9be0490d77..f4afad0c44cc 100644
+> --- a/drivers/iio/magnetometer/bmc150_magn_spi.c
+> +++ b/drivers/iio/magnetometer/bmc150_magn_spi.c
+> @@ -22,8 +22,8 @@ static int bmc150_magn_spi_probe(struct spi_device *spi)
+>  
+>  	regmap = devm_regmap_init_spi(spi, &bmc150_magn_regmap_config);
+>  	if (IS_ERR(regmap)) {
+> -		dev_err(&spi->dev, "Failed to register spi regmap %d\n",
+> -			(int)PTR_ERR(regmap));
+> +		dev_err(&spi->dev, "Failed to register spi regmap %ld\n",
+> +			PTR_ERR(regmap));
+>  		return PTR_ERR(regmap);
+>  	}
+>  	return bmc150_magn_probe(&spi->dev, regmap, spi->irq, id->name);
+
