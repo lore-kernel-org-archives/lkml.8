@@ -7,40 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD80C4332D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C61CC4332B
 	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F2D208DB
+	by mail.kernel.org (Postfix) with ESMTP id 4B1CC208C3
 	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgCUPag (ORCPT
+        id S1727628AbgCUPah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:30:36 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38872 "EHLO
+        Sat, 21 Mar 2020 11:30:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38870 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727463AbgCUPaf (ORCPT
+        with ESMTP id S1727056AbgCUPaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 21 Mar 2020 11:30:35 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFg52-0004xJ-1G; Sat, 21 Mar 2020 16:30:32 +0100
+        id 1jFg50-0004wH-So; Sat, 21 Mar 2020 16:30:31 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 937061C22E4;
-        Sat, 21 Mar 2020 16:30:31 +0100 (CET)
-Date:   Sat, 21 Mar 2020 15:30:31 -0000
-From:   "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DF2AB1C22E4;
+        Sat, 21 Mar 2020 16:30:29 +0100 (CET)
+Date:   Sat, 21 Mar 2020 15:30:29 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86: Remove unneeded includes
-Cc:     Brian Gerst <brgerst@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+Subject: [tip: x86/entry] lockdep: Rename
+ trace_{hard,soft}{irq_context,irqs_enabled}()
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200313195144.164260-19-brgerst@gmail.com>
-References: <20200313195144.164260-19-brgerst@gmail.com>
+In-Reply-To: <20200320115859.178626842@infradead.org>
+References: <20200320115859.178626842@infradead.org>
 MIME-Version: 1.0
-Message-ID: <158480463124.28353.11209623914740968.tip-bot2@tip-bot2>
+Message-ID: <158480462951.28353.3034432377742014275.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,117 +58,122 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     ffd75b373f3656cbb593c5221cc36ce232b7bbc1
-Gitweb:        https://git.kernel.org/tip/ffd75b373f3656cbb593c5221cc36ce232b7bbc1
-Author:        Brian Gerst <brgerst@gmail.com>
-AuthorDate:    Fri, 13 Mar 2020 15:51:44 -04:00
+Commit-ID:     ef996916e78e03d25e56c2d372e5e21fdb471882
+Gitweb:        https://git.kernel.org/tip/ef996916e78e03d25e56c2d372e5e21fdb471882
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Fri, 20 Mar 2020 12:56:42 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 21 Mar 2020 16:03:25 +01:00
+CommitterDate: Sat, 21 Mar 2020 16:03:54 +01:00
 
-x86: Remove unneeded includes
+lockdep: Rename trace_{hard,soft}{irq_context,irqs_enabled}()
 
-Clean up includes of and in <asm/syscalls.h>
+Continue what commit:
 
-Signed-off-by: Brian Gerst <brgerst@gmail.com>
+  d820ac4c2fa8 ("locking: rename trace_softirq_[enter|exit] => lockdep_softirq_[enter|exit]")
+
+started, rename these to avoid confusing them with tracepoints.
+
+git grep -l "trace_\(soft\|hard\)\(irq_context\|irqs_enabled\)" | while read file;
+do
+	sed -ie 's/trace_\(soft\|hard\)\(irq_context\|irqs_enabled\)/lockdep_\1\2/g' $file;
+done
+
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200313195144.164260-19-brgerst@gmail.com
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Will Deacon <will@kernel.org>
+Link: https://lkml.kernel.org/r/20200320115859.178626842@infradead.org
 
 ---
- arch/x86/include/asm/syscalls.h | 5 -----
- arch/x86/kernel/ldt.c           | 1 -
- arch/x86/kernel/process.c       | 1 -
- arch/x86/kernel/process_32.c    | 1 -
- arch/x86/kernel/process_64.c    | 1 -
- arch/x86/kernel/signal.c        | 2 --
- arch/x86/kernel/sys_x86_64.c    | 1 -
- 7 files changed, 12 deletions(-)
+ include/linux/irqflags.h       | 16 ++++++++--------
+ kernel/locking/lockdep.c       |  8 ++++----
+ kernel/softirq.c               |  2 +-
+ tools/include/linux/irqflags.h |  8 ++++----
+ 4 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/arch/x86/include/asm/syscalls.h b/arch/x86/include/asm/syscalls.h
-index 06cbdca..6714a35 100644
---- a/arch/x86/include/asm/syscalls.h
-+++ b/arch/x86/include/asm/syscalls.h
-@@ -8,11 +8,6 @@
- #ifndef _ASM_X86_SYSCALLS_H
- #define _ASM_X86_SYSCALLS_H
+diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
+index 7ca1f21..f4c3907 100644
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -31,10 +31,10 @@
+ #ifdef CONFIG_TRACE_IRQFLAGS
+   extern void trace_hardirqs_on(void);
+   extern void trace_hardirqs_off(void);
+-# define trace_hardirq_context(p)	((p)->hardirq_context)
+-# define trace_softirq_context(p)	((p)->softirq_context)
+-# define trace_hardirqs_enabled(p)	((p)->hardirqs_enabled)
+-# define trace_softirqs_enabled(p)	((p)->softirqs_enabled)
++# define lockdep_hardirq_context(p)	((p)->hardirq_context)
++# define lockdep_softirq_context(p)	((p)->softirq_context)
++# define lockdep_hardirqs_enabled(p)	((p)->hardirqs_enabled)
++# define lockdep_softirqs_enabled(p)	((p)->softirqs_enabled)
+ # define lockdep_hardirq_enter()		\
+ do {						\
+ 	current->hardirq_context++;		\
+@@ -54,10 +54,10 @@ do {						\
+ #else
+ # define trace_hardirqs_on()		do { } while (0)
+ # define trace_hardirqs_off()		do { } while (0)
+-# define trace_hardirq_context(p)	0
+-# define trace_softirq_context(p)	0
+-# define trace_hardirqs_enabled(p)	0
+-# define trace_softirqs_enabled(p)	0
++# define lockdep_hardirq_context(p)	0
++# define lockdep_softirq_context(p)	0
++# define lockdep_hardirqs_enabled(p)	0
++# define lockdep_softirqs_enabled(p)	0
+ # define lockdep_hardirq_enter()	do { } while (0)
+ # define lockdep_hardirq_exit()		do { } while (0)
+ # define lockdep_softirq_enter()	do { } while (0)
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 26ef412..4075e3e 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3081,10 +3081,10 @@ print_usage_bug(struct task_struct *curr, struct held_lock *this,
  
--#include <linux/compiler.h>
--#include <linux/linkage.h>
--#include <linux/signal.h>
--#include <linux/types.h>
--
- /* Common in X86_32 and X86_64 */
- /* kernel/ioport.c */
- long ksys_ioperm(unsigned long from, unsigned long num, int turn_on);
-diff --git a/arch/x86/kernel/ldt.c b/arch/x86/kernel/ldt.c
-index c57e1ca..84c3ba3 100644
---- a/arch/x86/kernel/ldt.c
-+++ b/arch/x86/kernel/ldt.c
-@@ -27,7 +27,6 @@
- #include <asm/tlb.h>
- #include <asm/desc.h>
- #include <asm/mmu_context.h>
--#include <asm/syscalls.h>
- #include <asm/pgtable_areas.h>
+ 	pr_warn("%s/%d [HC%u[%lu]:SC%u[%lu]:HE%u:SE%u] takes:\n",
+ 		curr->comm, task_pid_nr(curr),
+-		trace_hardirq_context(curr), hardirq_count() >> HARDIRQ_SHIFT,
+-		trace_softirq_context(curr), softirq_count() >> SOFTIRQ_SHIFT,
+-		trace_hardirqs_enabled(curr),
+-		trace_softirqs_enabled(curr));
++		lockdep_hardirq_context(curr), hardirq_count() >> HARDIRQ_SHIFT,
++		lockdep_softirq_context(curr), softirq_count() >> SOFTIRQ_SHIFT,
++		lockdep_hardirqs_enabled(curr),
++		lockdep_softirqs_enabled(curr));
+ 	print_lock(this);
  
- /* This is a multiple of PAGE_SIZE. */
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 839b524..d78e228 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -28,7 +28,6 @@
- #include <linux/hw_breakpoint.h>
- #include <asm/cpu.h>
- #include <asm/apic.h>
--#include <asm/syscalls.h>
- #include <linux/uaccess.h>
- #include <asm/mwait.h>
- #include <asm/fpu/internal.h>
-diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
-index 5052ced..954b013 100644
---- a/arch/x86/kernel/process_32.c
-+++ b/arch/x86/kernel/process_32.c
-@@ -49,7 +49,6 @@
+ 	pr_warn("{%s} state was registered at:\n", usage_str[prev_bit]);
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index 0112ca0..a47c6dd 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -224,7 +224,7 @@ static inline bool lockdep_softirq_start(void)
+ {
+ 	bool in_hardirq = false;
  
- #include <asm/tlbflush.h>
- #include <asm/cpu.h>
--#include <asm/syscalls.h>
- #include <asm/debugreg.h>
- #include <asm/switch_to.h>
- #include <asm/vm86.h>
-diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index ffd4978..5ef9d8f 100644
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -48,7 +48,6 @@
- #include <asm/desc.h>
- #include <asm/proto.h>
- #include <asm/ia32.h>
--#include <asm/syscalls.h>
- #include <asm/debugreg.h>
- #include <asm/switch_to.h>
- #include <asm/xen/hypervisor.h>
-diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
-index 8609049..0364f8c 100644
---- a/arch/x86/kernel/signal.c
-+++ b/arch/x86/kernel/signal.c
-@@ -42,8 +42,6 @@
- #endif /* CONFIG_X86_64 */
+-	if (trace_hardirq_context(current)) {
++	if (lockdep_hardirq_context(current)) {
+ 		in_hardirq = true;
+ 		lockdep_hardirq_exit();
+ 	}
+diff --git a/tools/include/linux/irqflags.h b/tools/include/linux/irqflags.h
+index ced6f64..67e01bb 100644
+--- a/tools/include/linux/irqflags.h
++++ b/tools/include/linux/irqflags.h
+@@ -2,10 +2,10 @@
+ #ifndef _LIBLOCKDEP_LINUX_TRACE_IRQFLAGS_H_
+ #define _LIBLOCKDEP_LINUX_TRACE_IRQFLAGS_H_
  
- #include <asm/syscall.h>
--#include <asm/syscalls.h>
--
- #include <asm/sigframe.h>
- #include <asm/signal.h>
- 
-diff --git a/arch/x86/kernel/sys_x86_64.c b/arch/x86/kernel/sys_x86_64.c
-index ca3c11a..504fa54 100644
---- a/arch/x86/kernel/sys_x86_64.c
-+++ b/arch/x86/kernel/sys_x86_64.c
-@@ -21,7 +21,6 @@
- 
- #include <asm/elf.h>
- #include <asm/ia32.h>
--#include <asm/syscalls.h>
- 
- /*
-  * Align a virtual address to avoid aliasing in the I$ on AMD F15h.
+-# define trace_hardirq_context(p)	0
+-# define trace_softirq_context(p)	0
+-# define trace_hardirqs_enabled(p)	0
+-# define trace_softirqs_enabled(p)	0
++# define lockdep_hardirq_context(p)	0
++# define lockdep_softirq_context(p)	0
++# define lockdep_hardirqs_enabled(p)	0
++# define lockdep_softirqs_enabled(p)	0
+ # define lockdep_hardirq_enter()	do { } while (0)
+ # define lockdep_hardirq_exit()		do { } while (0)
+ # define lockdep_softirq_enter()	do { } while (0)
