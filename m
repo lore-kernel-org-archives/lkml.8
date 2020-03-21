@@ -6,73 +6,36 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2EEC54EEB
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5777BC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD18E206F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36C56206F9
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:48:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgCURqW (ORCPT
+        id S1727745AbgCURsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 13:46:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39226 "EHLO
+        Sat, 21 Mar 2020 13:48:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39232 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgCURqV (ORCPT
+        with ESMTP id S1727039AbgCURsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 13:46:21 -0400
+        Sat, 21 Mar 2020 13:48:04 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFiBn-0007G4-JJ; Sat, 21 Mar 2020 18:45:39 +0100
+        id 1jFiE6-0007K4-Nt; Sat, 21 Mar 2020 18:48:02 +0100
 Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E02A21040D4; Sat, 21 Mar 2020 18:45:38 +0100 (CET)
+        id 35B7F1040D4; Sat, 21 Mar 2020 18:48:02 +0100 (CET)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
-        Brian Cain <bcain@codeaurora.org>,
-        linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        Michal Simek <monstr@monstr.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geoff Levand <geoff@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [patch V3 00/20] Lock ordering documentation and annotation for lockdep
-In-Reply-To: <20200321171902.xxlnpikc65wd3b4m@linux-p48b>
-References: <20200321112544.878032781@linutronix.de> <20200321171902.xxlnpikc65wd3b4m@linux-p48b>
-Date:   Sat, 21 Mar 2020 18:45:38 +0100
-Message-ID: <87mu89r48t.fsf@nanos.tec.linutronix.de>
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-tip-commits@vger.kernel.org, x86 <x86@kernel.org>
+Subject: Re: [tip: x86/cleanups] x86: Replace setup_irq() by request_irq()
+In-Reply-To: <20200321172626.GA6323@afzalpc>
+References: <158480051619.28353.14186528712410718742.tip-bot2@tip-bot2> <20200321172626.GA6323@afzalpc>
+Date:   Sat, 21 Mar 2020 18:48:02 +0100
+Message-ID: <87imixr44t.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Linutronix-Spam-Score: -1.0
@@ -83,18 +46,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Davidlohr Bueso <dave@stgolabs.net> writes:
+afzal mohammed <afzal.mohd.ma@gmail.com> writes:
 
-> On Sat, 21 Mar 2020, Thomas Gleixner wrote:
->
->>This is the third and hopefully final version of this work. The second one
->>can be found here:
->
-> Would you rather I send in a separate series with the kvm changes, or
-> should I just send a v2 with the fixes here again?
+> On Sat, Mar 21, 2020 at 02:21:56PM -0000, tip-bot2 for afzal mohammed wrote:
+> Oh Thomas, you picked up v2, i had sent v3 [2], wherein i had taken
+> care of your comments on v1 [1] as well as with more commit message
+> tweaking (v2 was sent before you commented on v1)
 
-Send a separate series please. These nested threads are hard to follow.
+Bah. I somehow lost track ///
 
-Thanks,
+> powerpc - in patchworks it is shown as under review after passing all
+> the tests, so expecting it to go in soon.
 
-        tglx
+Ok.
+
+> ARM - i am expecting these to be picked up by Arnd/Olof shortly as
+> they are yet to pickup any of the pull requests for ARM, you have been
+> copied in the followup mail [4].
+
+Ok.
+
+> As of now only c6x, hexagon, sh, unicore32 & alpha are the ones that i
+> have to send you. All others have been picked up by respective
+> maintainers & are in next.
+
+Cool.
