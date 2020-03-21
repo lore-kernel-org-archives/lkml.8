@@ -2,152 +2,151 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB9CC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 162C2C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8517C20757
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:14:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584800083;
-	bh=BkafZo5ywLgZLTC3Js/WXCIoJuWRu5WaImZuPyUfdoE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bLudHaCTKvLcWdUxJGx1ftb5wl61k79c6gjdGSlmhnslbc8NyznOiRheGgfAOa7dy
-	 KMaRBTktH+ZkkKoX56WzRqUsheUJ//b0oW1b9NCuy0sOamf/W6YWu2OXVh/kuGnRmj
-	 HOvmZq6G5otUv+p7IO3nwFK5FJuH4hATarklTRSU=
+	by mail.kernel.org (Postfix) with ESMTP id E2EB920658
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbgCUOOm (ORCPT
+        id S1727383AbgCUOWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 10:14:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbgCUOOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 10:14:42 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77C5E20658;
-        Sat, 21 Mar 2020 14:14:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584800081;
-        bh=BkafZo5ywLgZLTC3Js/WXCIoJuWRu5WaImZuPyUfdoE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Cz1IsoUnhrqVIT/1pySZTxYw0qA3gXQQrCtot7/Pyy8OENEBLxg+RmrD54NQuPM09
-         5t1M7MDdNPhUiiLmXbxJxvAxAtxrXU5i+FIobbWx4j6EsDTmxYrG5O+CV8flUdoYZl
-         2UhQlh8R2x4iRVWOKfxfkhCZXRXNzE62EA7qPR5o=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jFetb-00EVd4-NJ; Sat, 21 Mar 2020 14:14:39 +0000
+        Sat, 21 Mar 2020 10:22:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38662 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727128AbgCUOWB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 10:22:01 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jFf0f-0003yd-2p; Sat, 21 Mar 2020 15:21:57 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A48A51C1CA2;
+        Sat, 21 Mar 2020 15:21:56 +0100 (CET)
+Date:   Sat, 21 Mar 2020 14:21:56 -0000
+From:   "tip-bot2 for afzal mohammed" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86: Replace setup_irq() by request_irq()
+Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: =?utf-8?q?=3C17f85021f6877650a5b09e0212d88323e6a30fd0=2E15824?=
+ =?utf-8?q?71508=2Egit=2Eafzal=2Emohd=2Ema=40gmail=2Ecom=3E?=
+References: =?utf-8?q?=3C17f85021f6877650a5b09e0212d88323e6a30fd0=2E158247?=
+ =?utf-8?q?1508=2Egit=2Eafzal=2Emohd=2Ema=40gmail=2Ecom=3E?=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Message-ID: <158480051619.28353.14186528712410718742.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Date:   Sat, 21 Mar 2020 14:14:39 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 04/11] irqchip: Add driver for Loongson-3
- HyperTransport PIC controller
-In-Reply-To: <20200318062102.8145-5-jiaxun.yang@flygoat.com>
-References: <20200318062102.8145-1-jiaxun.yang@flygoat.com>
- <20200318062102.8145-5-jiaxun.yang@flygoat.com>
-Message-ID: <f4c009a117a3978e9e98195abcc98c07@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org, chenhc@lemote.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, paulburton@kernel.org, allison@lohutok.net, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-18 06:20, Jiaxun Yang wrote:
-> This controller appeared on Loongson-3 family of chips to receive 
-> interrupts
-> from PCH PIC.
-> It is a I8259 with optimized interrupt polling flow. We can poll
-> interrupt number
-> from HT vector directly but still have to follow standard I8259
-> routines to mask,
-> unmask and EOI.
-> 
-> Co-developed-by: Huacai Chen <chenhc@lemote.com>
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> 
-> ---
-> v4-v5:
-> 	Enhancements according to maz's suggestions:
-> 		- Add static for private struct
-> 		- Drop pointless rename
-> 		- Fix DT parse bug
-> 		- Clarifications in comments and commit message
-> ---
->  arch/mips/include/asm/i8259.h        |   1 +
->  drivers/irqchip/Kconfig              |  10 ++
->  drivers/irqchip/Makefile             |   1 +
->  drivers/irqchip/irq-loongson-htpic.c | 149 +++++++++++++++++++++++++++
->  4 files changed, 161 insertions(+)
->  create mode 100644 drivers/irqchip/irq-loongson-htpic.c
+The following commit has been merged into the x86/cleanups branch of tip:
 
-[...]
+Commit-ID:     4dd2a1b92b91b5f2acf853ee1dc0df135054698f
+Gitweb:        https://git.kernel.org/tip/4dd2a1b92b91b5f2acf853ee1dc0df135054698f
+Author:        afzal mohammed <afzal.mohd.ma@gmail.com>
+AuthorDate:    Mon, 24 Feb 2020 06:22:26 +05:30
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Sat, 21 Mar 2020 15:15:47 +01:00
 
-> +int __init htpic_of_init(struct device_node *node, struct device_node 
-> *parent)
-> +{
-> +	unsigned int parent_irq[4];
-> +	int i, err;
-> +	int num_parents = 0;
-> +
-> +	if (htpic) {
-> +		pr_err("loongson-htpic: Only one HTPIC is allowed in the system\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	htpic = kzalloc(sizeof(*htpic), GFP_KERNEL);
-> +	if (!htpic) {
-> +		err = -ENOMEM;
-> +		goto out_free;
-> +	}
-> +
-> +	htpic->base = of_iomap(node, 0);
-> +	if (!htpic->base) {
-> +		err = -ENODEV;
-> +		goto out_free;
-> +	}
-> +
-> +	htpic->domain = __init_i8259_irqs(node);
-> +	if (!htpic->domain) {
-> +		pr_err("loongson-htpic: Failed to initialize i8259 IRQs\n");
-> +		err = -ENOMEM;
-> +		goto out_iounmap;
-> +	}
-> +
-> +	/* Interrupt may come from any of the 4 interrupt line */
-> +	for (i = 0; i < HTPIC_MAX_PARENT_IRQ; i++) {
-> +		parent_irq[i] = irq_of_parse_and_map(node, i);
-> +		if (parent_irq[i] < 0)
+x86: Replace setup_irq() by request_irq()
 
-irq_of_parse_and_map() returns 0 when there is no interrupt to be
-mapped. You should probably test for that too.
+request_irq() is preferred over setup_irq(). The early boot setup_irq()
+invocations happen either via 'init_IRQ()' or 'time_init()', while
+memory allocators are ready by 'mm_init()'.
 
-Thanks,
+setup_irq() was required in old kernels when allocators were not ready by
+the time early interrupts were initialized.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Hence replace setup_irq() by request_irq().
+
+[ tglx: Use a local variable and get rid of the line break. Tweak the
+  	comment a bit ]
+
+Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/17f85021f6877650a5b09e0212d88323e6a30fd0.1582471508.git.afzal.mohd.ma@gmail.com
+
+---
+ arch/x86/kernel/irqinit.c | 16 +++++-----------
+ arch/x86/kernel/time.c    | 15 ++++++---------
+ 2 files changed, 11 insertions(+), 20 deletions(-)
+
+diff --git a/arch/x86/kernel/irqinit.c b/arch/x86/kernel/irqinit.c
+index 1e5ad12..5aa523c 100644
+--- a/arch/x86/kernel/irqinit.c
++++ b/arch/x86/kernel/irqinit.c
+@@ -44,15 +44,6 @@
+  * (these are usually mapped into the 0x30-0xff vector range)
+  */
+ 
+-/*
+- * IRQ2 is cascade interrupt to second interrupt controller
+- */
+-static struct irqaction irq2 = {
+-	.handler = no_action,
+-	.name = "cascade",
+-	.flags = IRQF_NO_THREAD,
+-};
+-
+ DEFINE_PER_CPU(vector_irq_t, vector_irq) = {
+ 	[0 ... NR_VECTORS - 1] = VECTOR_UNUSED,
+ };
+@@ -104,6 +95,9 @@ void __init native_init_IRQ(void)
+ 	idt_setup_apic_and_irq_gates();
+ 	lapic_assign_system_vectors();
+ 
+-	if (!acpi_ioapic && !of_ioapic && nr_legacy_irqs())
+-		setup_irq(2, &irq2);
++	if (!acpi_ioapic && !of_ioapic && nr_legacy_irqs()) {
++		/* IRQ2 is cascade interrupt to second interrupt controller */
++		if (request_irq(2, no_action, IRQF_NO_THREAD, "cascade", NULL))
++			pr_err("%s: request_irq() failed\n", "cascade");
++	}
+ }
+diff --git a/arch/x86/kernel/time.c b/arch/x86/kernel/time.c
+index d8673d8..8c5213e 100644
+--- a/arch/x86/kernel/time.c
++++ b/arch/x86/kernel/time.c
+@@ -62,19 +62,16 @@ static irqreturn_t timer_interrupt(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static struct irqaction irq0  = {
+-	.handler = timer_interrupt,
+-	.flags = IRQF_NOBALANCING | IRQF_IRQPOLL | IRQF_TIMER,
+-	.name = "timer"
+-};
+-
+ static void __init setup_default_timer_irq(void)
+ {
++	unsigned long flags = IRQF_NOBALANCING | IRQF_IRQPOLL | IRQF_TIMER;
++
+ 	/*
+-	 * Unconditionally register the legacy timer; even without legacy
+-	 * PIC/PIT we need this for the HPET0 in legacy replacement mode.
++	 * Unconditionally register the legacy timer interrupt; even
++	 * without legacy PIC/PIT we need this for the HPET0 in legacy
++	 * replacement mode.
+ 	 */
+-	if (setup_irq(0, &irq0))
++	if (request_irq(0, timer_interrupt, flags, "timer", NULL))
+ 		pr_info("Failed to register legacy timer interrupt\n");
+ }
+ 
