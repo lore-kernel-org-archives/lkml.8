@@ -4,95 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D15C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 08:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FA0C4332E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C20C20714
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 08:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9320020739
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgCUI7O (ORCPT
+        id S1728241AbgCUJAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 04:59:14 -0400
-Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:33136 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728112AbgCUI7N (ORCPT
+        Sat, 21 Mar 2020 05:00:33 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:42956 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728008AbgCUJAd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 04:59:13 -0400
-Received: from localhost.localdomain ([90.126.162.40])
-        by mwinf5d62 with ME
-        id Gwyl220070scBcy03wytzK; Sat, 21 Mar 2020 09:59:12 +0100
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 21 Mar 2020 09:59:12 +0100
-X-ME-IP: 90.126.162.40
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     nsekhar@ti.com, bgolaszewski@baylibre.com, linux@armlinux.org.uk
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] ARM: davinci: dm646x-evm: Simplify error handling in 'evm_sw_setup()'
-Date:   Sat, 21 Mar 2020 09:58:36 +0100
-Message-Id: <20200321085836.16493-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Sat, 21 Mar 2020 05:00:33 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02L8st3n014731;
+        Sat, 21 Mar 2020 05:00:19 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ywcs5rdqx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 21 Mar 2020 05:00:19 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 02L90HpF049901
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Sat, 21 Mar 2020 05:00:17 -0400
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sat, 21 Mar 2020 02:00:16 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Sat, 21 Mar 2020 02:00:15 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02L90CUH009329;
+        Sat, 21 Mar 2020 05:00:12 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <lars@metafoo.de>, <andriy.shevchenko@linux.intel.com>,
+        <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2] iio: buffer: re-introduce bitmap_zalloc() for trialmask
+Date:   Sat, 21 Mar 2020 10:59:56 +0200
+Message-ID: <20200321085956.11213-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200317123621.27722-1-alexandru.ardelean@analog.com>
+References: <20200317123621.27722-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-21_02:2020-03-20,2020-03-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 adultscore=0 phishscore=0 priorityscore=1501 impostorscore=0
+ malwarescore=0 clxscore=1015 suspectscore=0 spamscore=0 mlxlogscore=999
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003210051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to call 'gpio_free(evm_sw_gpio[i])' for these error
-handling cases, it is already done in the error handling path at label
-'out_free'.
+Commit 3862828a903d3 ("iio: buffer: Switch to bitmap_zalloc()") introduced
+bitmap_alloc(), but commit 20ea39ef9f2f9 ("iio: Fix scan mask selection")
+reverted it.
 
-Simplify the code and axe a few LoC.
+This change adds it back. The only difference is that it's adding
+bitmap_zalloc(). There might be some changes later that would require
+initializing it to zero. In any case, now it's already zero-ing the
+trialmask.
 
-While at it, also explicitly return 0 in the normal path.
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
-The code after 'out_free' could also be replace by a single
-'evm_sw_teardown()' call, but I'm not a big fan of such construction.
 
-In 'evm_sw_teardown()', the 'gpio_unexport()' call could also be removed
-because it is implied by 'gpio_free()'.
+Changelog v1 -> v2:
+* add 'Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>' 
+* re-send from an Analog server; GMail changed the author to @gmail.com
 
-Let me now if interested for one or both of these additional clean-up.
----
- arch/arm/mach-davinci/board-dm646x-evm.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ drivers/iio/industrialio-buffer.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/board-dm646x-evm.c b/arch/arm/mach-davinci/board-dm646x-evm.c
-index 4600b617f9b4..dd7d60f4139a 100644
---- a/arch/arm/mach-davinci/board-dm646x-evm.c
-+++ b/arch/arm/mach-davinci/board-dm646x-evm.c
-@@ -267,20 +267,15 @@ static int evm_sw_setup(struct i2c_client *client, int gpio,
- 		evm_sw_gpio[i] = gpio++;
+diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+index 4ada5592aa2b..5ff34ce8b6a2 100644
+--- a/drivers/iio/industrialio-buffer.c
++++ b/drivers/iio/industrialio-buffer.c
+@@ -316,8 +316,7 @@ static int iio_scan_mask_set(struct iio_dev *indio_dev,
+ 	const unsigned long *mask;
+ 	unsigned long *trialmask;
  
- 		status = gpio_direction_input(evm_sw_gpio[i]);
--		if (status) {
--			gpio_free(evm_sw_gpio[i]);
--			evm_sw_gpio[i] = -EINVAL;
-+		if (status)
- 			goto out_free;
--		}
- 
- 		status = gpio_export(evm_sw_gpio[i], 0);
--		if (status) {
--			gpio_free(evm_sw_gpio[i]);
--			evm_sw_gpio[i] = -EINVAL;
-+		if (status)
- 			goto out_free;
--		}
- 	}
--	return status;
-+	return 0;
-+
- out_free:
- 	for (i = 0; i < 4; ++i) {
- 		if (evm_sw_gpio[i] != -EINVAL) {
+-	trialmask = kcalloc(BITS_TO_LONGS(indio_dev->masklength),
+-			    sizeof(*trialmask), GFP_KERNEL);
++	trialmask = bitmap_zalloc(indio_dev->masklength, GFP_KERNEL);
+ 	if (trialmask == NULL)
+ 		return -ENOMEM;
+ 	if (!indio_dev->masklength) {
 -- 
-2.20.1
+2.17.1
 
