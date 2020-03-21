@@ -7,41 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96EF5C4332B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8297C4332D
 	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6908520757
+	by mail.kernel.org (Postfix) with ESMTP id A9ABE20757
 	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 15:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbgCUPxu (ORCPT
+        id S1727658AbgCUPxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:53:50 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39001 "EHLO
+        Sat, 21 Mar 2020 11:53:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39015 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726955AbgCUPxt (ORCPT
+        with ESMTP id S1726955AbgCUPxv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 11:53:49 -0400
+        Sat, 21 Mar 2020 11:53:51 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFgRV-0005Pv-Tz; Sat, 21 Mar 2020 16:53:46 +0100
+        id 1jFgRX-0005Rd-KF; Sat, 21 Mar 2020 16:53:47 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8107D1C22EF;
-        Sat, 21 Mar 2020 16:53:45 +0100 (CET)
-Date:   Sat, 21 Mar 2020 15:53:45 -0000
-From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 33F131C22EF;
+        Sat, 21 Mar 2020 16:53:47 +0100 (CET)
+Date:   Sat, 21 Mar 2020 15:53:46 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] lockdep: Annotate irq_work
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Subject: [tip: locking/core] sched/swait: Prepare usage in completions
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200321113242.643576700@linutronix.de>
-References: <20200321113242.643576700@linutronix.de>
+In-Reply-To: <20200321113242.228481202@linutronix.de>
+References: <20200321113242.228481202@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158480602510.28353.4851999853077941579.tip-bot2@tip-bot2>
+Message-ID: <158480602688.28353.9251110165142890607.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,113 +56,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     49915ac35ca7b07c54295a72d905be5064afb89e
-Gitweb:        https://git.kernel.org/tip/49915ac35ca7b07c54295a72d905be5064afb89e
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Sat, 21 Mar 2020 12:26:03 +01:00
+Commit-ID:     b3212fe2bc06fa1014b3063b85b2bac4332a1c28
+Gitweb:        https://git.kernel.org/tip/b3212fe2bc06fa1014b3063b85b2bac4332a1c28
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Sat, 21 Mar 2020 12:25:59 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Sat, 21 Mar 2020 16:00:24 +01:00
+CommitterDate: Sat, 21 Mar 2020 16:00:23 +01:00
 
-lockdep: Annotate irq_work
+sched/swait: Prepare usage in completions
 
-Mark irq_work items with IRQ_WORK_HARD_IRQ which should be invoked in
-hardirq context even on PREEMPT_RT. IRQ_WORK without this flag will be
-invoked in softirq context on PREEMPT_RT.
+As a preparation to use simple wait queues for completions:
 
-Set ->irq_config to 1 for the IRQ_WORK items which are invoked in softirq
-context so lockdep knows that these can safely acquire a spinlock_t.
+  - Provide swake_up_all_locked() to support complete_all()
+  - Make __prepare_to_swait() public available
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+This is done to enable the usage of complete() within truly atomic contexts
+on a PREEMPT_RT enabled kernel.
+
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200321113242.643576700@linutronix.de
+Link: https://lkml.kernel.org/r/20200321113242.228481202@linutronix.de
 ---
- include/linux/irq_work.h |  2 ++
- include/linux/irqflags.h | 13 +++++++++++++
- kernel/irq_work.c        |  2 ++
- kernel/rcu/tree.c        |  1 +
- kernel/time/tick-sched.c |  1 +
- 5 files changed, 19 insertions(+)
+ kernel/sched/sched.h |  3 +++
+ kernel/sched/swait.c | 15 ++++++++++++++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/irq_work.h b/include/linux/irq_work.h
-index 02da997..3b752e8 100644
---- a/include/linux/irq_work.h
-+++ b/include/linux/irq_work.h
-@@ -18,6 +18,8 @@
- 
- /* Doesn't want IPI, wait for tick: */
- #define IRQ_WORK_LAZY		BIT(2)
-+/* Run hard IRQ context, even on RT */
-+#define IRQ_WORK_HARD_IRQ	BIT(3)
- 
- #define IRQ_WORK_CLAIMED	(IRQ_WORK_PENDING | IRQ_WORK_BUSY)
- 
-diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
-index 9c17f9c..f23f540 100644
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -69,6 +69,17 @@ do {						\
- 			current->irq_config = 0;	\
- 	  } while (0)
- 
-+# define lockdep_irq_work_enter(__work)					\
-+	  do {								\
-+		  if (!(atomic_read(&__work->flags) & IRQ_WORK_HARD_IRQ))\
-+			current->irq_config = 1;			\
-+	  } while (0)
-+# define lockdep_irq_work_exit(__work)					\
-+	  do {								\
-+		  if (!(atomic_read(&__work->flags) & IRQ_WORK_HARD_IRQ))\
-+			current->irq_config = 0;			\
-+	  } while (0)
-+
- #else
- # define trace_hardirqs_on()		do { } while (0)
- # define trace_hardirqs_off()		do { } while (0)
-@@ -83,6 +94,8 @@ do {						\
- # define lockdep_softirq_exit()		do { } while (0)
- # define lockdep_hrtimer_enter(__hrtimer)		do { } while (0)
- # define lockdep_hrtimer_exit(__hrtimer)		do { } while (0)
-+# define lockdep_irq_work_enter(__work)		do { } while (0)
-+# define lockdep_irq_work_exit(__work)		do { } while (0)
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 9ea6478..fdc77e7 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2492,3 +2492,6 @@ static inline bool is_per_cpu_kthread(struct task_struct *p)
+ 	return true;
+ }
  #endif
++
++void swake_up_all_locked(struct swait_queue_head *q);
++void __prepare_to_swait(struct swait_queue_head *q, struct swait_queue *wait);
+diff --git a/kernel/sched/swait.c b/kernel/sched/swait.c
+index e83a3f8..e1c655f 100644
+--- a/kernel/sched/swait.c
++++ b/kernel/sched/swait.c
+@@ -32,6 +32,19 @@ void swake_up_locked(struct swait_queue_head *q)
+ }
+ EXPORT_SYMBOL(swake_up_locked);
  
- #if defined(CONFIG_IRQSOFF_TRACER) || \
-diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-index 828cc30..48b5d1b 100644
---- a/kernel/irq_work.c
-+++ b/kernel/irq_work.c
-@@ -153,7 +153,9 @@ static void irq_work_run_list(struct llist_head *list)
- 		 */
- 		flags = atomic_fetch_andnot(IRQ_WORK_PENDING, &work->flags);
++/*
++ * Wake up all waiters. This is an interface which is solely exposed for
++ * completions and not for general usage.
++ *
++ * It is intentionally different from swake_up_all() to allow usage from
++ * hard interrupt context and interrupt disabled regions.
++ */
++void swake_up_all_locked(struct swait_queue_head *q)
++{
++	while (!list_empty(&q->task_list))
++		swake_up_locked(q);
++}
++
+ void swake_up_one(struct swait_queue_head *q)
+ {
+ 	unsigned long flags;
+@@ -69,7 +82,7 @@ void swake_up_all(struct swait_queue_head *q)
+ }
+ EXPORT_SYMBOL(swake_up_all);
  
-+		lockdep_irq_work_enter(work);
- 		work->func(work);
-+		lockdep_irq_work_exit(work);
- 		/*
- 		 * Clear the BUSY bit and return to the free state if
- 		 * no-one else claimed it meanwhile.
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index d91c915..5066d1d 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1113,6 +1113,7 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *rdp)
- 		    !rdp->rcu_iw_pending && rdp->rcu_iw_gp_seq != rnp->gp_seq &&
- 		    (rnp->ffmask & rdp->grpmask)) {
- 			init_irq_work(&rdp->rcu_iw, rcu_iw_handler);
-+			atomic_set(&rdp->rcu_iw.flags, IRQ_WORK_HARD_IRQ);
- 			rdp->rcu_iw_pending = true;
- 			rdp->rcu_iw_gp_seq = rnp->gp_seq;
- 			irq_work_queue_on(&rdp->rcu_iw, rdp->cpu);
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index 4be756b..3e2dc9b 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -245,6 +245,7 @@ static void nohz_full_kick_func(struct irq_work *work)
- 
- static DEFINE_PER_CPU(struct irq_work, nohz_full_kick_work) = {
- 	.func = nohz_full_kick_func,
-+	.flags = ATOMIC_INIT(IRQ_WORK_HARD_IRQ),
- };
- 
- /*
+-static void __prepare_to_swait(struct swait_queue_head *q, struct swait_queue *wait)
++void __prepare_to_swait(struct swait_queue_head *q, struct swait_queue *wait)
+ {
+ 	wait->task = current;
+ 	if (list_empty(&wait->task_list))
