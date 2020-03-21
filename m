@@ -2,72 +2,133 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5777BC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E75C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C56206F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C5C20714
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:57:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aRu6Eu/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbgCURsF (ORCPT
+        id S1727507AbgCUR5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 13:48:05 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39232 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbgCURsE (ORCPT
+        Sat, 21 Mar 2020 13:57:35 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39651 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727224AbgCUR5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 13:48:04 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFiE6-0007K4-Nt; Sat, 21 Mar 2020 18:48:02 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 35B7F1040D4; Sat, 21 Mar 2020 18:48:02 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-tip-commits@vger.kernel.org, x86 <x86@kernel.org>
-Subject: Re: [tip: x86/cleanups] x86: Replace setup_irq() by request_irq()
-In-Reply-To: <20200321172626.GA6323@afzalpc>
-References: <158480051619.28353.14186528712410718742.tip-bot2@tip-bot2> <20200321172626.GA6323@afzalpc>
-Date:   Sat, 21 Mar 2020 18:48:02 +0100
-Message-ID: <87imixr44t.fsf@nanos.tec.linutronix.de>
+        Sat, 21 Mar 2020 13:57:35 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d25so5085279pfn.6
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 10:57:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Pv8727CqHKjdOJFWE3IBXc7KMjqe5Xxt4DnAwegUtcY=;
+        b=aRu6Eu/6rjgASSbGgbWnx4cbAGbM8zBbTfdLAp1HbvBIztE22la/AaGt0U/57+qPjO
+         3HWGiE2vLPobRK1QsIIYzQnKaKzjlkUh+QBKSpQTfkEQSyG3azHj+mufy5xmMX7A70s6
+         8oInrQm5VqKFng0TgcjTWztj00aVQN7rm8WXVUn7GcLoiTYc9IkljbpYsdd30hDt3DAO
+         iiCB7amVODyhQ3yqyzIOzeMb2qipzHto/eAdq8CBtAHnDCgTPHQZdEEUNqow30O+OzsH
+         BkHvBB4ICQYqxLFN3FA+iuEvnHFuCCV69RvIuETn13ePpzmslMa3lKLSZvkW8usVjeVi
+         cNMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pv8727CqHKjdOJFWE3IBXc7KMjqe5Xxt4DnAwegUtcY=;
+        b=NYNBFO0L2P4gXfqXMqSQrxofL7rD3Uo3tTpUtkZGnYFX2zzGRNDzZA1UeEqTDdIlew
+         CM4QTOQBgXx0a1UlxRqplt/dKA/YPKMmy48XlYi+AM9GEXGgrKxTrRshw7rfN0cFkmow
+         P1Oqy03bnpIKth+1epYNJgEimIInsFbB9pCyQ9JtA0b6hhbB7ETtmuLHQidhtldkbyhI
+         1/yL4VS2larb+vw+zDhNdxd4J2mblnAR+jkabPvgz2d7NdhMZAkpS8xtHDqfXkRXq4gC
+         OMgo12T3lbUGm2Byu+yLVWzJZ7RdqIt/Vu59GOtltSNlCAS5D+qO1YjGDjwDlwlpOjQP
+         U2aQ==
+X-Gm-Message-State: ANhLgQ0zgCstqtMvh1unLH8lE2s6mTDf2mNYb81005Bm4jKRFIcNbL1L
+        gJeSHSuX+IH98E/GcrzLQbKsgFZMrBY=
+X-Google-Smtp-Source: ADFU+vtoMqFogpr70liujX2Va7RgU86lU2euOPLSIQjX6AxnAWP43a2hDIKlexf9gA1tx13wvlAxOQ==
+X-Received: by 2002:a63:257:: with SMTP id 84mr14127515pgc.304.1584813453119;
+        Sat, 21 Mar 2020 10:57:33 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c7sm4007767pgg.11.2020.03.21.10.57.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Mar 2020 10:57:32 -0700 (PDT)
+Date:   Sat, 21 Mar 2020 10:57:29 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Cc:     Nikita Shubin <nshubin@topcon.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v5] remoteproc: Fix NULL pointer dereference in
+ rproc_virtio_notify
+Message-ID: <20200321175729.GA52762@builder>
+References: <20200306070325.15232-1-NShubin@topcon.com>
+ <20200306072452.24743-1-NShubin@topcon.com>
+ <6c7ef4f2-6f71-c2fb-b2e9-ad7cbeb7cfbc@st.com>
+ <20200310120846.GA19430@topcon.com>
+ <507197c5412e4b438aeb5c527be74b3a@SFHDAG3NODE1.st.com>
+ <20200311200107.GZ1214176@minitux>
+ <f6de2571-3541-7004-bc57-92cb3fef2c71@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f6de2571-3541-7004-bc57-92cb3fef2c71@st.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-afzal mohammed <afzal.mohd.ma@gmail.com> writes:
+On Tue 17 Mar 07:24 PDT 2020, Arnaud POULIQUEN wrote:
+> On 3/11/20 9:01 PM, Bjorn Andersson wrote:
+> > On Tue 10 Mar 06:19 PDT 2020, Arnaud POULIQUEN wrote:
+> >>> On Mon, Mar 09, 2020 at 03:22:24PM +0100, Arnaud POULIQUEN wrote:
+> >>>> On 3/6/20 8:24 AM, Nikita Shubin wrote:
+[..]
+> >>>>> diff --git a/drivers/remoteproc/remoteproc_virtio.c
+> >>>>> b/drivers/remoteproc/remoteproc_virtio.c
+> >>>>> index 8c07cb2ca8ba..31a62a0b470e 100644
+> >>>>> --- a/drivers/remoteproc/remoteproc_virtio.c
+> >>>>> +++ b/drivers/remoteproc/remoteproc_virtio.c
+> >>>>> @@ -334,6 +334,13 @@ int rproc_add_virtio_dev(struct rproc_vdev
+> >>> *rvdev, int id)
+> >>>>>  	struct rproc_mem_entry *mem;
+> >>>>>  	int ret;
+> >>>>>
+> >>>>> +	if (rproc->ops->kick == NULL) {
+> >>>>> +		ret = -EINVAL;
+> >>>>> +		dev_err(dev, ".kick method not defined for %s",
+> >>>>> +				rproc->name);
+> >>>>> +		goto out;
+> >>>>> +	}
+> >>>>> +
+> >>>> Should the kick ops be mandatory for all the platforms? How about making
+> >>> it optional instead?
+> >>>
+> >>> Hi, Arnaud.
+> >>>
+> >>> It is not mandatory, currently it must be provided if specified vdev entry is in
+> >>> resourse table. Otherwise it looks like there is no point in creating vdev.
+> >>
+> >> Yes, my question was about having it optional for vdev also. A platform could implement the vdev
+> >> without kick mechanism but by polling depending due to hardware capability...
+> >> This could be an alternative avoiding to implement a dummy function in platform driver.
+> >>
+> > 
+> > Is this a real thing or a theoretical suggestion?
+> Only a theoretical suggestion, trigged by the IMX platform patchset which implement a "temporary" dummy kick.
+> and based on OpenAMP lib implementation which does not request a doorbell.
+> Anyway no issue to keep it mandatory here. 
+> 
 
-> On Sat, Mar 21, 2020 at 02:21:56PM -0000, tip-bot2 for afzal mohammed wrote:
-> Oh Thomas, you picked up v2, i had sent v3 [2], wherein i had taken
-> care of your comments on v1 [1] as well as with more commit message
-> tweaking (v2 was sent before you commented on v1)
+Thanks for confirming. I've applied the patch, with Mathieu's ack, and
+we can loosen up this requirement when we need it in the future.
 
-Bah. I somehow lost track ///
-
-> powerpc - in patchworks it is shown as under review after passing all
-> the tests, so expecting it to go in soon.
-
-Ok.
-
-> ARM - i am expecting these to be picked up by Arnd/Olof shortly as
-> they are yet to pickup any of the pull requests for ARM, you have been
-> copied in the followup mail [4].
-
-Ok.
-
-> As of now only c6x, hexagon, sh, unicore32 & alpha are the ones that i
-> have to send you. All others have been picked up by respective
-> maintainers & are in next.
-
-Cool.
+Regards,
+Bjorn
