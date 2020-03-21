@@ -2,169 +2,158 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D8CC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAFCC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1336520722
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32ACA20722
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:17:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584793025;
+	bh=F+kqJs1UV3lFH0p9XsOZOQTFoUy/Hn0KUq/CmPvR7wU=;
+	h=Subject:To:References:Cc:From:Date:In-Reply-To:List-ID:From;
+	b=OxoSJd2K5+Y8TsrfRKfqb7Yl8VbBUg9HmkzEz3lTDhkjiKDOfVy4Uy/enVPMcMaj9
+	 x0qDDfeak5toJtgkK1Gwwp2Lv+050cFX4T/JJrwwj7LkmSeKRhXFx1SWswwQTKpjS5
+	 wz4pV1IM7TCQ9PEkPXrynRz7IdVLLUdHZuRs6+IQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbgCUMQy (ORCPT
+        id S1727428AbgCUMRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 08:16:54 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58802 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727230AbgCUMQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 08:16:53 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 60DF2373D7F53E2F57F7;
-        Sat, 21 Mar 2020 20:16:42 +0800 (CST)
-Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 21 Mar 2020 20:16:33 +0800
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-To:     <will@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
-        <maz@kernel.org>, <steven.price@arm.com>, <broonie@kernel.org>,
-        <guohanjun@huawei.com>
-CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>
-Subject: [RFC PATCH v3 4/4] mm: Set VM_LEVEL flags in some tlb_flush functions
-Date:   Sat, 21 Mar 2020 20:16:21 +0800
-Message-ID: <20200321121621.1600-5-yezhenyu2@huawei.com>
-X-Mailer: git-send-email 2.22.0.windows.1
-In-Reply-To: <20200321121621.1600-1-yezhenyu2@huawei.com>
-References: <20200321121621.1600-1-yezhenyu2@huawei.com>
+        Sat, 21 Mar 2020 08:17:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726834AbgCUMRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 08:17:03 -0400
+Received: from [192.168.0.107] (unknown [49.65.245.234])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8486120757;
+        Sat, 21 Mar 2020 12:16:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584793022;
+        bh=F+kqJs1UV3lFH0p9XsOZOQTFoUy/Hn0KUq/CmPvR7wU=;
+        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
+        b=SOXPr9VoGGVo6hDy+Nniv1abMx8LgRIyU9uX8lSHxeoh6JMWENZQW0MUIAgsnxCiF
+         LNQj5FAWTV2DUcfpM9xkN5gfxc5+J3CPNrrBuDtqe99P9jS4O6RHWd1cjDCpI6UUBz
+         drUdKH+SMIujnKKDpDsiVILV+rKn//fORVWQsPhc=
+Subject: Re: [f2fs-dev] [PATCH 3/4] f2fs: fix NULL pointer dereference in
+ f2fs_verity_work()
+To:     Eric Biggers <ebiggers@kernel.org>, Chao Yu <yuchao0@huawei.com>
+References: <20200319115800.108926-1-yuchao0@huawei.com>
+ <20200319115800.108926-3-yuchao0@huawei.com>
+ <20200320191149.GL851@sol.localdomain>
+Cc:     jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+From:   Chao Yu <chao@kernel.org>
+Message-ID: <915e56c1-3e87-ef0a-8bdf-26a3774b0a18@kernel.org>
+Date:   Sat, 21 Mar 2020 20:16:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200320191149.GL851@sol.localdomain>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The relevant functions are:
+On 2020-3-21 3:11, Eric Biggers wrote:
+> On Thu, Mar 19, 2020 at 07:57:59PM +0800, Chao Yu wrote:
+>> If both compression and fsverity feature is on, generic/572 will
+>> report below NULL pointer dereference bug.
+>>
+>>  BUG: kernel NULL pointer dereference, address: 0000000000000018
+>>  RIP: 0010:f2fs_verity_work+0x60/0x90 [f2fs]
+>>  #PF: supervisor read access in kernel mode
+>>  Workqueue: fsverity_read_queue f2fs_verity_work [f2fs]
+>>  RIP: 0010:f2fs_verity_work+0x60/0x90 [f2fs]
+>>  Call Trace:
+>>   process_one_work+0x16c/0x3f0
+>>   worker_thread+0x4c/0x440
+>>   ? rescuer_thread+0x350/0x350
+>>   kthread+0xf8/0x130
+>>   ? kthread_unpark+0x70/0x70
+>>   ret_from_fork+0x35/0x40
+>>
+>> There are two issue in f2fs_verity_work():
+>> - it needs to traverse and verify all pages in bio.
+>> - if pages in bio belong to non-compressed cluster, accessing
+>> decompress IO context stored in page private will cause NULL
+>> pointer dereference.
+>>
+>> Fix them.
+>>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>>  fs/f2fs/data.c | 35 ++++++++++++++++++++++++++++++-----
+>>  1 file changed, 30 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>> index 5c5db09324b7..66e49fc1056e 100644
+>> --- a/fs/f2fs/data.c
+>> +++ b/fs/f2fs/data.c
+>> @@ -187,12 +187,37 @@ static void f2fs_verify_pages(struct page **rpages, unsigned int cluster_size)
+>>
+>>  static void f2fs_verify_bio(struct bio *bio)
+>>  {
+>> -	struct page *page = bio_first_page_all(bio);
+>> -	struct decompress_io_ctx *dic =
+>> -			(struct decompress_io_ctx *)page_private(page);
+>> +	struct bio_vec *bv;
+>> +	struct bvec_iter_all iter_all;
+>> +	struct decompress_io_ctx *dic, *pdic = NULL;
+>> +
+>> +	bio_for_each_segment_all(bv, bio, iter_all) {
+>> +		struct page *page = bv->bv_page;
+>> +
+>> +		dic = (struct decompress_io_ctx *)page_private(page);
+>> +
+>> +		if (dic) {
+>> +			if (dic != pdic) {
+>> +				f2fs_verify_pages(dic->rpages,
+>> +							dic->cluster_size);
+>> +				f2fs_free_dic(dic);
+>> +				pdic = dic;
+>> +			}
+>> +			continue;
+>> +		}
+>> +		pdic = dic;
+>>
+>> -	f2fs_verify_pages(dic->rpages, dic->cluster_size);
+>> -	f2fs_free_dic(dic);
+>> +		if (bio->bi_status || PageError(page)) {
+>> +			ClearPageUptodate(page);
+>> +			ClearPageError(page);
+>> +		} else {
+>> +			if (fsverity_verify_page(page))
+>> +				SetPageUptodate(page);
+>> +			else
+>> +				SetPageError(page);
+>> +		}
+>> +		unlock_page(page);
+>> +	}
+>
+> I'm a bit confused why you added SetPageError() before unlocking the page.
+> The other error paths actually clear the Error flag, not set it.  I thought
+> there's a reason for that?
 
-	tlb_flush in asm/tlb.h
-	get_clear_flush and clear_flush in mm/hugetlbpage.c
-	flush_pmd|pud_tlb_range in asm-generic/patable.h
-	do_huge_pmd_numa_page and move_huge_pmd in mm/huge_memory.c
+These codes were copy&paste from f2fs_decompress_end_io(), I guess I missed to 
+check that logic, so anyway, we need another patch to fix that first.
 
-Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
----
- arch/arm64/include/asm/tlb.h  | 12 ++++++++++++
- arch/arm64/mm/hugetlbpage.c   |  4 ++--
- include/asm-generic/pgtable.h | 16 ++++++++++++++--
- mm/huge_memory.c              |  8 +++++++-
- 4 files changed, 35 insertions(+), 5 deletions(-)
+Thanks for pointing out this.
 
-diff --git a/arch/arm64/include/asm/tlb.h b/arch/arm64/include/asm/tlb.h
-index b76df828e6b7..77fe942b30b6 100644
---- a/arch/arm64/include/asm/tlb.h
-+++ b/arch/arm64/include/asm/tlb.h
-@@ -27,6 +27,18 @@ static inline void tlb_flush(struct mmu_gather *tlb)
- 	bool last_level = !tlb->freed_tables;
- 	unsigned long stride = tlb_get_unmap_size(tlb);
- 
-+	/*
-+	 * mm_gather tracked which levels of the page tables
-+	 * have been cleared, we can use this info to set
-+	 * vm->vm_flags.
-+	 */
-+	if (tlb->cleared_ptes)
-+		vma.vm_flags |= VM_LEVEL_PTE;
-+	else if (tlb->cleared_pmds)
-+		vma.vm_flags |= VM_LEVEL_PMD;
-+	else if (tlb->cleared_puds)
-+		vma.vm_flags |= VM_LEVEL_PUD;
-+
- 	/*
- 	 * If we're tearing down the address space then we only care about
- 	 * invalidating the walk-cache, since the ASID allocator won't
-diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-index bbeb6a5a6ba6..c35a1bd06bd0 100644
---- a/arch/arm64/mm/hugetlbpage.c
-+++ b/arch/arm64/mm/hugetlbpage.c
-@@ -140,7 +140,7 @@ static pte_t get_clear_flush(struct mm_struct *mm,
- 	}
- 
- 	if (valid) {
--		struct vm_area_struct vma = TLB_FLUSH_VMA(mm, 0);
-+		struct vm_area_struct vma = TLB_FLUSH_VMA(mm, VM_LEVEL_PTE);
- 		flush_tlb_range(&vma, saddr, addr);
- 	}
- 	return orig_pte;
-@@ -161,7 +161,7 @@ static void clear_flush(struct mm_struct *mm,
- 			     unsigned long pgsize,
- 			     unsigned long ncontig)
- {
--	struct vm_area_struct vma = TLB_FLUSH_VMA(mm, 0);
-+	struct vm_area_struct vma = TLB_FLUSH_VMA(mm, VM_LEVEL_PTE);
- 	unsigned long i, saddr = addr;
- 
- 	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index e2e2bef07dd2..391e704faf7a 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -1160,8 +1160,20 @@ static inline int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
-  * invalidate the entire TLB which is not desitable.
-  * e.g. see arch/arc: flush_pmd_tlb_range
-  */
--#define flush_pmd_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
--#define flush_pud_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
-+#define flush_pmd_tlb_range(vma, addr, end)				\
-+	do {								\
-+		vma->vm_flags &= ~(VM_LEVEL_PUD | VM_LEVEL_PTE);	\
-+		vma->vm_flags |= VM_LEVEL_PMD;				\
-+		flush_tlb_range(vma, addr, end);			\
-+	} while (0)
-+
-+#define flush_pud_tlb_range(vma, addr, end)				\
-+	do {								\
-+		vma->vm_flags &= ~(VM_LEVEL_PMD | VM_LEVEL_PTE);	\
-+		vma->vm_flags |= VM_LEVEL_PUD;				\
-+		flush_tlb_range(vma, addr, end);			\
-+	} while (0)
-+
- #else
- #define flush_pmd_tlb_range(vma, addr, end)	BUILD_BUG()
- #define flush_pud_tlb_range(vma, addr, end)	BUILD_BUG()
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index b08b199f9a11..f28ced8d298e 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1646,6 +1646,8 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf, pmd_t pmd)
- 	 * mapping or not. Hence use the tlb range variant
- 	 */
- 	if (mm_tlb_flush_pending(vma->vm_mm)) {
-+		vma->vm_flags &= ~(VM_LEVEL_PUD | VM_LEVEL_PTE);
-+		vma->vm_flags |= VM_LEVEL_PMD;
- 		flush_tlb_range(vma, haddr, haddr + HPAGE_PMD_SIZE);
- 		/*
- 		 * change_huge_pmd() released the pmd lock before
-@@ -1917,8 +1919,12 @@ bool move_huge_pmd(struct vm_area_struct *vma, unsigned long old_addr,
- 		}
- 		pmd = move_soft_dirty_pmd(pmd);
- 		set_pmd_at(mm, new_addr, new_pmd, pmd);
--		if (force_flush)
-+		if (force_flush) {
-+			vma->vm_flags &= ~(VM_LEVEL_PUD | VM_LEVEL_PTE);
-+			vma->vm_flags |= VM_LEVEL_PMD;
- 			flush_tlb_range(vma, old_addr, old_addr + PMD_SIZE);
-+		}
-+
- 		if (new_ptl != old_ptl)
- 			spin_unlock(new_ptl);
- 		spin_unlock(old_ptl);
--- 
-2.19.1
+Thanks,
 
-
+>
+> - Eric
+>
+>
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>
