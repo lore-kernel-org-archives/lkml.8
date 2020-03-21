@@ -2,105 +2,99 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8540FC4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 16:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF22C4332E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 16:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5848520767
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 16:41:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="s+zuYFO0"
+	by mail.kernel.org (Postfix) with ESMTP id 7272820732
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 16:42:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584808934;
+	bh=KuZEfUwVN8v/2F9lILEvPh9UG1+iGjH1bWmWKq6/M3o=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=gW1cty5l7Zb8916SxQoMqUuwJgYX+Wb+lOWjNxoWoTBcw8hAP6zLyC+Cfh0ua5x7A
+	 o4BqAM1p/pO79aVCwpAaVka9M9Vk+y+f0B09id+XpMSeEN1QeIBIMKHtG4DPikrSnW
+	 43ibNiTDlZJ44X7Wf426JBRrV+ZWMvLdmrm6LOLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbgCUQlz (ORCPT
+        id S1727718AbgCUQmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 12:41:55 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:49156 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727033AbgCUQly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 12:41:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=LHaettDoJoZs2+agn5nomuBUacGsVNBQvMqBGMyT69I=; b=s+zuYFO0L8hQXbXVRJyeygiLMl
-        NRVWcOGfqaLo+kW/8OdHMAsW5Dj7WmR+e2DdSArbv8OeQCipkm1+WEVeKzSctVKro2W4+8mQRH8Qv
-        iVk/aK81qBWmCBeOtaJDr5wLt46aG8KLNu68INVD3iJeodnVoA2bhBizPoqMevRW5GOo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jFhBc-00066K-HH; Sat, 21 Mar 2020 17:41:24 +0100
-Date:   Sat, 21 Mar 2020 17:41:24 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        davem@davemloft.net, allison@lohutok.net, corbet@lwn.net,
-        alexios.zavras@intel.com, broonie@kernel.org, tglx@linutronix.de,
-        mchehab+samsung@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 3/7] net: phy: introduce
- phy_read_mmd_poll_timeout macro
-Message-ID: <20200321164124.GC22639@lunn.ch>
-References: <20200320133431.9354-1-zhengdejin5@gmail.com>
- <20200320133431.9354-4-zhengdejin5@gmail.com>
+        Sat, 21 Mar 2020 12:42:13 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36050 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726955AbgCUQmM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 12:42:12 -0400
+Received: by mail-ed1-f66.google.com with SMTP id b18so10971489edu.3;
+        Sat, 21 Mar 2020 09:42:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=hOUxwkqpnMytCzxnbV5rDgipMTnqE3Eo9yayPel3k80=;
+        b=TFHhtUs+kVx9MPvukJpOWN056xY+dp1KtCn2XYi/km5VGfrIgWULvvYuWuW+uV3su9
+         XVKwYDMfm9jzuPkEevFyN735sFX91pEaBfBjz66ycfCPRDiDYhbl/vUlZPUWY7o6HktS
+         85f9UfMhg5lK3RakVEhXsRq76mAt7rdsiItSJcpYI2YPkhhzjpzrFYCh1V/SZ+mZbnB8
+         /UhSjKLqV2/8fGTRDGTumw/nts1j2Gp/fYCEa4/EalyZKwnuu33PrnvJdBBuRF87TvHc
+         ntm6p6wSSwnEktnZIdhdTzq7/rq1tm4JgU1hzSS1X29LXky2H8TEoTXKC2VDFUXBxafQ
+         R98w==
+X-Gm-Message-State: ANhLgQ05XSLA4chUJepwTw/rarXeh2l92A//rmZ0+0KT6N9F6vkheYRw
+        xxjPNyxeln2I9+PQjuCCJXQSltXO6pto3CBawCu2A/nC
+X-Google-Smtp-Source: ADFU+vvzx1+Hm/OFP8lyIzm6w7PjOjndZFKPU8cqU1Voo6lS071IddxB21fSO/xx7NPZFtogCYVfku59Hh+gT0uzUdI=
+X-Received: by 2002:aa7:dbc1:: with SMTP id v1mr13531314edt.177.1584808931122;
+ Sat, 21 Mar 2020 09:42:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320133431.9354-4-zhengdejin5@gmail.com>
+From:   Len Brown <lenb@kernel.org>
+Date:   Sat, 21 Mar 2020 12:41:59 -0400
+Message-ID: <CAJvTdKmNJkx+aeHDcrqRG=0JDfaut5tj4w0oOojGWTjx9tY3qQ@mail.gmail.com>
+Subject: [GIT PULL] turbostat version 20.03.20
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 09:34:27PM +0800, Dejin Zheng wrote:
-> it is sometimes necessary to poll a phy register by phy_read_mmd()
-> function until its value satisfies some condition. introduce
-> phy_read_mmd_poll_timeout() macros that do this.
-> 
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> ---
-> v1 -> v2:
-> 	- passed a phydev, device address and a reg to replace args...
-> 	  parameter in phy_read_mmd_poll_timeout() by Andrew Lunn 's
-> 	  suggestion. Andrew Lunn <andrew@lunn.ch>, Thanks very much for
-> 	  your help!
-> 	- handle phy_read_mmd return an error(the return value < 0) in
-> 	  phy_read_mmd_poll_timeout(). Thanks Andrew again.
-> 
->  include/linux/phy.h | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/include/linux/phy.h b/include/linux/phy.h
-> index 36d9dea04016..bb351f8b8769 100644
-> --- a/include/linux/phy.h
-> +++ b/include/linux/phy.h
-> @@ -24,6 +24,7 @@
->  #include <linux/mod_devicetable.h>
->  #include <linux/u64_stats_sync.h>
->  #include <linux/irqreturn.h>
-> +#include <linux/iopoll.h>
->  
->  #include <linux/atomic.h>
->  
-> @@ -784,6 +785,19 @@ static inline int __phy_modify_changed(struct phy_device *phydev, u32 regnum,
->   */
->  int phy_read_mmd(struct phy_device *phydev, int devad, u32 regnum);
->  
-> +#define phy_read_mmd_poll_timeout(val, cond, sleep_us, timeout_us, \
-> +				  phydev, devad, regnum) \
-> +({ \
-> +	int ret = 0; \
-> +	ret = read_poll_timeout(phy_read_mmd, val, cond || val < 0, sleep_us, \
-> +				timeout_us, phydev, devad, regnum); \
+Hi Linus,
 
-Hi Dejin
+Please pull these patches to update Linux to turbostat v20.03.20.
+These patches unlock the full turbostat features for some
+new machines, plus a couple other minor tweaks.
 
-You probably should have ( ) here to deal with precedence issues.
+thanks!
+Len Brown, Intel Open Source Technology Center
 
-(cond) || val < 0
+The following changes since commit fb33c6510d5595144d585aa194d377cf74d31911:
 
-       Andrew
+  Linux 5.6-rc6 (2020-03-15 15:01:23 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git turbostat
+
+for you to fetch changes up to b95fffb9b4afa8b9aa4a389ec7a0c578811eaf42:
+
+  tools/power turbostat: update version (2020-03-21 00:48:02 -0400)
+
+----------------------------------------------------------------
+Chen Yu (5):
+      tools/power turbostat: Support Cometlake
+      tools/power turbostat: Support Tiger Lake
+      tools/power turbostat: Support Ice Lake server
+      tools/power turbostat: Support Jasper Lake
+      tools/power turbostat: Support Elkhart Lake
+
+Len Brown (5):
+      tools/power turbostat: Fix gcc build warnings
+      tools/power turbostat: Fix missing SYS_LPI counter on some Chromebooks
+      tools/power turbostat: Fix 32-bit capabilities warning
+      tools/power turbostat: Print cpuidle information
+      tools/power turbostat: update version
+
+ tools/power/x86/turbostat/Makefile    |   2 +-
+ tools/power/x86/turbostat/turbostat.c | 142 +++++++++++++++++++++++++++-------
+ 2 files changed, 114 insertions(+), 30 deletions(-)
