@@ -2,138 +2,105 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD283C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8B1C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B51320754
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82790206F9
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 21:54:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ieaj58da"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgCUVtq (ORCPT
+        id S1727906AbgCUVyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 17:49:46 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39343 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgCUVtq (ORCPT
+        Sat, 21 Mar 2020 17:54:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:47011 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbgCUVyd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 17:49:46 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFlzN-0001VX-Ok; Sat, 21 Mar 2020 22:49:06 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id C8A961040D5; Sat, 21 Mar 2020 22:49:04 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting documentation
-In-Reply-To: <20200321212144.GA6475@google.com>
-References: <20200318204302.693307984@linutronix.de> <20200318204408.211530902@linutronix.de> <20200321212144.GA6475@google.com>
-Date:   Sat, 21 Mar 2020 22:49:04 +0100
-Message-ID: <874kuhqsz3.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Sat, 21 Mar 2020 17:54:33 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j17so8475106wru.13;
+        Sat, 21 Mar 2020 14:54:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=DpqLQNw+Y8418IGRjNUnbHR+oFWS/Jp+NdksTj8XtVM=;
+        b=Ieaj58daFUjzApL99s/gSTwsOHAkxY28s8mVlRF88WpDa+sxVLHOlX54uBK0eR6+w6
+         mGDr5YMrqluu+3tiAUUza6bRaumRKLvtuLxfkM0in/Uon3yjy1txb42JyegYqiDv1+NT
+         zPfhyJmgAk9yS5CSlW6fF3UBKBRZRjeJFZRb4+hrGyrOjnvyG/DJq9CuHY2Icf/s1/9h
+         /fezGHHS5vKAp9nWyOteswcCAoIxcSPrBiQytB/s4Y/m2F1xYdynH1KhM4NV415DHTKN
+         UDlbpxjNFjvQrER3+YZ8Fd6mKzINmIvmZZTlVENAu2dmW5eyMYnUaK7qOLNQ/uwk+DZl
+         un1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=DpqLQNw+Y8418IGRjNUnbHR+oFWS/Jp+NdksTj8XtVM=;
+        b=YSy3khPTesiD/hOlY65Q2FjzVXHNSCKo4fxg4KN8P7SQQLX4xhtJwtgSt+1amQzZ/e
+         g7F1E0VbE9qHlDFfXN94AWTdI0l8o0bSHeygzwAiO73EymutWvxvp+REyHUPnIISgX3r
+         GIMGIaGCoWpdw/D86I5MIekhajN2RgfDrvbVVjNDfBQa+U98yEGjvw6RoK03Vszn3Cd7
+         gYPib/dI0ZHd/tbsYQ2zk17mkw/7Vo96OjZeBf3grCa2fiD9i9hzebBAgngGXphCLpLa
+         D5NJPm4+/7gavWAufheq+Wy7wWpQCuDF7/oYORHwKbBI3b0lbFatXgDYy6tEVKEbrgGd
+         C3oA==
+X-Gm-Message-State: ANhLgQ1aiyjlC+7uYaKTCU8ymH6Se1dnf185/lYjnXTO9hYuFtceDFYH
+        bpOG+DdNOAs6hEvxOu8IYZs=
+X-Google-Smtp-Source: ADFU+vvRKpH8zZvngVS+BjZYxUICBZ/L0+SXI1hw0oMVZtCN4+mO/NHzqSU/EVpXrEVYGJT2aPtrVA==
+X-Received: by 2002:adf:fc05:: with SMTP id i5mr19783133wrr.152.1584827671212;
+        Sat, 21 Mar 2020 14:54:31 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id l83sm14113796wmf.43.2020.03.21.14.54.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 21 Mar 2020 14:54:30 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robin.murphy@arm.com, aballier@gentoo.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/6] arm64: dts: rockchip: fix phy nodename for rk3328
+Date:   Sat, 21 Mar 2020 22:54:18 +0100
+Message-Id: <20200321215423.12176-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joel Fernandes <joel@joelfernandes.org> writes:
->> +rwlock_t
->> +========
->> +
->> +rwlock_t is a multiple readers and single writer lock mechanism.
->> +
->> +On a non PREEMPT_RT enabled kernel rwlock_t is implemented as a spinning
->> +lock and the suffix rules of spinlock_t apply accordingly. The
->> +implementation is fair and prevents writer starvation.
->>
->
-> You mentioned writer starvation, but I think it would be good to also mention
-> that rwlock_t on a non-PREEMPT_RT kernel also does not have _reader_
-> starvation problem, since it uses queued implementation.  This fact is worth
-> mentioning here, since further below you explain that an rwlock in PREEMPT_RT
-> does have reader starvation problem.
+A test with the command below gives for example this error:
 
-It's worth mentioning. But RT really has only write starvation not
-reader starvation.
+arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: phy@0:
+'#phy-cells' is a required property
 
->> +rwlock_t and PREEMPT_RT
->> +-----------------------
->> +
->> +On a PREEMPT_RT enabled kernel rwlock_t is mapped to a separate
->> +implementation based on rt_mutex which changes the semantics:
->> +
->> + - Same changes as for spinlock_t
->> +
->> + - The implementation is not fair and can cause writer starvation under
->> +   certain circumstances. The reason for this is that a writer cannot grant
->> +   its priority to multiple readers. Readers which are blocked on a writer
->> +   fully support the priority inheritance protocol.
->
-> Is it hard to give priority to multiple readers because the number of readers
-> to give priority to could be unbounded?
+The phy nodename is used by a phy-handle.
+The parent node is compatible with "snps,dwmac-mdio",
+so change nodename to 'ethernet-phy', for which '#phy-cells'
+is not a required property
 
-Yes, and it's horribly complex and racy. We had an implemetation years
-ago which taught us not to try it again :)
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/schemas/
+phy/phy-provider.yaml
 
->> +PREEMPT_RT also offers a local_lock mechanism to substitute the
->> +local_irq_disable/save() constructs in cases where a separation of the
->> +interrupt disabling and the locking is really unavoidable. This should be
->> +restricted to very rare cases.
->
-> It would also be nice to mention where else local_lock() can be used, such as
-> protecting per-cpu variables without disabling preemption. Could we add a
-> section on protecting per-cpu data? (Happy to do that and send a patch if you
-> prefer).
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The local lock section will come soon when we post the local lock
-patches again.
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index 54b3f4616..8976c869f 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -934,7 +934,7 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 
+-			phy: phy@0 {
++			phy: ethernet-phy@0 {
+ 				compatible = "ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22";
+ 				reg = <0>;
+ 				clocks = <&cru SCLK_MAC2PHY_OUT>;
+-- 
+2.11.0
 
->> +rwsems have grown interfaces which allow non owner release for special
->> +purposes. This usage is problematic on PREEMPT_RT because PREEMPT_RT
->> +substitutes all locking primitives except semaphores with RT-mutex based
->> +implementations to provide priority inheritance for all lock types except
->> +the truly spinning ones. Priority inheritance on ownerless locks is
->> +obviously impossible.
->> +
->> +For now the rwsem non-owner release excludes code which utilizes it from
->> +being used on PREEMPT_RT enabled kernels.
->
-> I could not parse the last sentence here, but I think you meant "For now,
-> PREEMPT_RT enabled kernels disable code that perform a non-owner release of
-> an rwsem". Correct me if I'm wrong.
-
-Right, that's what I wanted to say :)
-
-Care to send a delta patch?
-
-Thanks!
-
-        tglx
