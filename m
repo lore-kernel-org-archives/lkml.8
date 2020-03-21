@@ -2,213 +2,231 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD11C4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 16:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B2CC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98EA20739
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 16:57:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584809841;
-	bh=7jXMHHcxQ7d68jYn4uXmaF7e4FZZUPFhRc7XvdSPvqs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ROryfh2oMRPAmv7pldI3JVjwIHB2yx9S9ZEDhhhVqmyk8hctjl9T5PwSxAHL2TH9H
-	 AuXA7u0B5ZRE8G1ncFQvJJbM5UWqVrgPD2YQIx0U/C8ejkzb4J7cQXfeCPAZu88gVC
-	 frhrMAsPm7k0ySf3xTUIpsvuDoeyzCdsrwG+ndxI=
+	by mail.kernel.org (Postfix) with ESMTP id 99EF120637
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 17:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbgCUQ5V (ORCPT
+        id S1727610AbgCURAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 12:57:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45896 "EHLO mail.kernel.org"
+        Sat, 21 Mar 2020 13:00:44 -0400
+Received: from mga14.intel.com ([192.55.52.115]:3302 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726961AbgCUQ5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 12:57:20 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AAA520732;
-        Sat, 21 Mar 2020 16:57:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584809839;
-        bh=7jXMHHcxQ7d68jYn4uXmaF7e4FZZUPFhRc7XvdSPvqs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=D25faL/NyU+1i4AjQ5GHDz/AmAmC+mWtb7FfmoVJW9uU3px8fa04ZDHiTIcGloGst
-         3oC/280PDhBkEDDRNjyYLH2gVv7q2sBVTNT7reK8VT5yje5GETnDGCaS6rVD8yw+nz
-         vfKxIpFWM9w2MB9MO/zWlnCIaJCq6v+3+1Na+L8A=
-Date:   Sat, 21 Mar 2020 16:57:15 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lars@metafoo.de>
-Subject: Re: [PATCH v2 5/5] iio: adc: ad7793: use read_avail iio hook for
- scale available
-Message-ID: <20200321165715.79c9906d@archlinux>
-In-Reply-To: <20200321090802.11537-5-alexandru.ardelean@analog.com>
-References: <20200321090802.11537-1-alexandru.ardelean@analog.com>
-        <20200321090802.11537-5-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727033AbgCURAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 13:00:43 -0400
+IronPort-SDR: wVqtd+reO2v80UO1kZIWx+ba7qr/CIPZZZyixbhu1Qjw6EHAjG331iu2g/vn3ij5wb4rTD1fjw
+ px86Ebh9lPlQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 10:00:43 -0700
+IronPort-SDR: bVDrf8hgy5YHuwh1KqLYYzVe+w0yPlN5hq/xbDIPRT7v1blD6DsTZGOpKinmbrjo2taGt2W2/0
+ ybHMW64N76ig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,289,1580803200"; 
+   d="scan'208";a="292197001"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 21 Mar 2020 10:00:42 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jFhUH-000EbI-Cp; Sun, 22 Mar 2020 01:00:41 +0800
+Date:   Sun, 22 Mar 2020 00:59:46 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:WIP.locking/kcsan] BUILD SUCCESS
+ f5d2313bd3c540be405c4977a63840cd6d0167b5
+Message-ID: <5e764802.FKAG6Nre7ZfUZFOE%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 21 Mar 2020 11:08:02 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  WIP.locking/kcsan
+branch HEAD: f5d2313bd3c540be405c4977a63840cd6d0167b5  kcsan, trace: Make KCSAN compatible with tracing
 
-> This change uses the read_avail and '.info_mask_shared_by_type_available'
-> modifier to set the available scale.
-> Essentially, nothing changes to the driver's ABI.
-> 
-> The main idea for this patch is to remove the AD7793 driver from
-> checkpatch's radar. There have been about ~3 attempts to fix/break the
-> 'in_voltage-voltage_scale_available' attribute, because checkpatch assumed
-> it to be an arithmetic operation and people were trying to change that.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-At some point it might be nice to move the sampling_frequency over as well
-but clearly not remotely urgent!
+elapsed time: 481m
 
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to poke at it.
+configs tested: 164
+configs skipped: 0
 
-Thanks,
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Jonathan
- 
-> ---
->  drivers/iio/adc/ad7793.c | 53 +++++++++++++++++++++++++++-------------
->  1 file changed, 36 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7793.c b/drivers/iio/adc/ad7793.c
-> index 5592ae573e6b..fad98f1801db 100644
-> --- a/drivers/iio/adc/ad7793.c
-> +++ b/drivers/iio/adc/ad7793.c
-> @@ -354,29 +354,28 @@ static IIO_CONST_ATTR_SAMP_FREQ_AVAIL(
->  static IIO_CONST_ATTR_NAMED(sampling_frequency_available_ad7797,
->  	sampling_frequency_available, "123 62 50 33 17 16 12 10 8 6 4");
->  
-> -static ssize_t ad7793_show_scale_available(struct device *dev,
-> -			struct device_attribute *attr, char *buf)
-> +static int ad7793_read_avail(struct iio_dev *indio_dev,
-> +			     struct iio_chan_spec const *chan,
-> +			     const int **vals, int *type, int *length,
-> +			     long mask)
->  {
-> -	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
->  	struct ad7793_state *st = iio_priv(indio_dev);
-> -	int i, len = 0;
->  
-> -	for (i = 0; i < ARRAY_SIZE(st->scale_avail); i++)
-> -		len += sprintf(buf + len, "%d.%09u ", st->scale_avail[i][0],
-> -			       st->scale_avail[i][1]);
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SCALE:
-> +		*vals = (int *)st->scale_avail;
-> +		*type = IIO_VAL_INT_PLUS_NANO;
-> +		/* Values are stored in a 2D matrix  */
-> +		*length = ARRAY_SIZE(st->scale_avail) * 2;
->  
-> -	len += sprintf(buf + len, "\n");
-> +		return IIO_AVAIL_LIST;
-> +	}
->  
-> -	return len;
-> +	return -EINVAL;
->  }
->  
-> -static IIO_DEVICE_ATTR_NAMED(in_m_in_scale_available,
-> -		in_voltage-voltage_scale_available, S_IRUGO,
-> -		ad7793_show_scale_available, NULL, 0);
-> -
->  static struct attribute *ad7793_attributes[] = {
->  	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
-> -	&iio_dev_attr_in_m_in_scale_available.dev_attr.attr,
->  	NULL
->  };
->  
-> @@ -534,6 +533,7 @@ static const struct iio_info ad7793_info = {
->  	.read_raw = &ad7793_read_raw,
->  	.write_raw = &ad7793_write_raw,
->  	.write_raw_get_fmt = &ad7793_write_raw_get_fmt,
-> +	.read_avail = ad7793_read_avail,
->  	.attrs = &ad7793_attribute_group,
->  	.validate_trigger = ad_sd_validate_trigger,
->  };
-> @@ -547,7 +547,7 @@ static const struct iio_info ad7797_info = {
->  };
->  
->  #define __AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
-> -	_storagebits, _shift, _extend_name, _type, _mask_all) \
-> +	_storagebits, _shift, _extend_name, _type, _mask_type_av, _mask_all) \
->  	{ \
->  		.type = (_type), \
->  		.differential = (_channel2 == -1 ? 0 : 1), \
-> @@ -559,6 +559,7 @@ static const struct iio_info ad7797_info = {
->  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | \
->  			BIT(IIO_CHAN_INFO_OFFSET), \
->  		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
-> +		.info_mask_shared_by_type_available = (_mask_type_av), \
->  		.info_mask_shared_by_all = _mask_all, \
->  		.scan_index = (_si), \
->  		.scan_type = { \
-> @@ -574,23 +575,41 @@ static const struct iio_info ad7797_info = {
->  	_storagebits, _shift) \
->  	__AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
->  		_storagebits, _shift, NULL, IIO_VOLTAGE, \
-> +		BIT(IIO_CHAN_INFO_SCALE), \
->  		BIT(IIO_CHAN_INFO_SAMP_FREQ))
->  
->  #define AD7793_SHORTED_CHANNEL(_si, _channel, _address, _bits, \
->  	_storagebits, _shift) \
->  	__AD7793_CHANNEL(_si, _channel, _channel, _address, _bits, \
->  		_storagebits, _shift, "shorted", IIO_VOLTAGE, \
-> +		BIT(IIO_CHAN_INFO_SCALE), \
->  		BIT(IIO_CHAN_INFO_SAMP_FREQ))
->  
->  #define AD7793_TEMP_CHANNEL(_si, _address, _bits, _storagebits, _shift) \
->  	__AD7793_CHANNEL(_si, 0, -1, _address, _bits, \
->  		_storagebits, _shift, NULL, IIO_TEMP, \
-> +		0, \
->  		BIT(IIO_CHAN_INFO_SAMP_FREQ))
->  
->  #define AD7793_SUPPLY_CHANNEL(_si, _channel, _address, _bits, _storagebits, \
->  	_shift) \
->  	__AD7793_CHANNEL(_si, _channel, -1, _address, _bits, \
->  		_storagebits, _shift, "supply", IIO_VOLTAGE, \
-> +		0, \
-> +		BIT(IIO_CHAN_INFO_SAMP_FREQ))
-> +
-> +#define AD7797_DIFF_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
-> +	_storagebits, _shift) \
-> +	__AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
-> +		_storagebits, _shift, NULL, IIO_VOLTAGE, \
-> +		0, \
-> +		BIT(IIO_CHAN_INFO_SAMP_FREQ))
-> +
-> +#define AD7797_SHORTED_CHANNEL(_si, _channel, _address, _bits, \
-> +	_storagebits, _shift) \
-> +	__AD7793_CHANNEL(_si, _channel, _channel, _address, _bits, \
-> +		_storagebits, _shift, "shorted", IIO_VOLTAGE, \
-> +		0, \
->  		BIT(IIO_CHAN_INFO_SAMP_FREQ))
->  
->  #define DECLARE_AD7793_CHANNELS(_name, _b, _sb, _s) \
-> @@ -620,8 +639,8 @@ const struct iio_chan_spec _name##_channels[] = { \
->  
->  #define DECLARE_AD7797_CHANNELS(_name, _b, _sb) \
->  const struct iio_chan_spec _name##_channels[] = { \
-> -	AD7793_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
-> -	AD7793_SHORTED_CHANNEL(1, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
-> +	AD7797_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
-> +	AD7797_SHORTED_CHANNEL(1, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
->  	AD7793_TEMP_CHANNEL(2, AD7793_CH_TEMP, (_b), (_sb), 0), \
->  	AD7793_SUPPLY_CHANNEL(3, 3, AD7793_CH_AVDD_MONITOR, (_b), (_sb), 0), \
->  	IIO_CHAN_SOFT_TIMESTAMP(4), \
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+mips                      fuloong2e_defconfig
+csky                                defconfig
+m68k                          multi_defconfig
+s390                          debug_defconfig
+alpha                               defconfig
+sparc                               defconfig
+ia64                             allmodconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                           sun3_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+i386                 randconfig-a002-20200321
+x86_64               randconfig-a002-20200321
+i386                 randconfig-a001-20200321
+x86_64               randconfig-a001-20200321
+i386                 randconfig-a003-20200321
+x86_64               randconfig-a003-20200321
+alpha                randconfig-a001-20200321
+m68k                 randconfig-a001-20200321
+mips                 randconfig-a001-20200321
+nds32                randconfig-a001-20200321
+parisc               randconfig-a001-20200321
+riscv                randconfig-a001-20200321
+c6x                  randconfig-a001-20200321
+h8300                randconfig-a001-20200321
+microblaze           randconfig-a001-20200321
+nios2                randconfig-a001-20200321
+sparc64              randconfig-a001-20200321
+s390                 randconfig-a001-20200321
+xtensa               randconfig-a001-20200321
+csky                 randconfig-a001-20200321
+openrisc             randconfig-a001-20200321
+sh                   randconfig-a001-20200321
+x86_64               randconfig-b001-20200321
+x86_64               randconfig-b002-20200321
+x86_64               randconfig-b003-20200321
+i386                 randconfig-b001-20200321
+i386                 randconfig-b002-20200321
+i386                 randconfig-b003-20200321
+x86_64               randconfig-c001-20200321
+x86_64               randconfig-c002-20200321
+x86_64               randconfig-c003-20200321
+i386                 randconfig-c001-20200321
+i386                 randconfig-c002-20200321
+i386                 randconfig-c003-20200321
+x86_64               randconfig-d001-20200321
+x86_64               randconfig-d002-20200321
+x86_64               randconfig-d003-20200321
+i386                 randconfig-d001-20200321
+i386                 randconfig-d002-20200321
+i386                 randconfig-d003-20200321
+x86_64               randconfig-e001-20200321
+x86_64               randconfig-e002-20200321
+x86_64               randconfig-e003-20200321
+i386                 randconfig-e001-20200321
+i386                 randconfig-e002-20200321
+i386                 randconfig-e003-20200321
+x86_64               randconfig-f001-20200321
+x86_64               randconfig-f002-20200321
+x86_64               randconfig-f003-20200321
+i386                 randconfig-f001-20200321
+i386                 randconfig-f002-20200321
+i386                 randconfig-f003-20200321
+x86_64               randconfig-g001-20200321
+x86_64               randconfig-g002-20200321
+x86_64               randconfig-g003-20200321
+i386                 randconfig-g001-20200321
+i386                 randconfig-g002-20200321
+i386                 randconfig-g003-20200321
+x86_64               randconfig-h001-20200321
+x86_64               randconfig-h002-20200321
+x86_64               randconfig-h003-20200321
+i386                 randconfig-h001-20200321
+i386                 randconfig-h002-20200321
+i386                 randconfig-h003-20200321
+arm                  randconfig-a001-20200321
+arm64                randconfig-a001-20200321
+ia64                 randconfig-a001-20200321
+sparc                randconfig-a001-20200321
+arc                  randconfig-a001-20200321
+powerpc              randconfig-a001-20200321
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
