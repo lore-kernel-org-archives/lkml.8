@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FF5C43333
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BBAC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3414820658
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9390520658
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 11:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbgCULgU (ORCPT
+        id S1728595AbgCULe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 07:36:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38497 "EHLO
+        Sat, 21 Mar 2020 07:34:57 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38431 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728526AbgCULe6 (ORCPT
+        with ESMTP id S1726834AbgCULey (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 07:34:58 -0400
+        Sat, 21 Mar 2020 07:34:54 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFcOb-0002LP-6D; Sat, 21 Mar 2020 12:34:29 +0100
+        id 1jFcOU-0001zl-4v; Sat, 21 Mar 2020 12:34:22 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id E04FC1040C9;
-        Sat, 21 Mar 2020 12:34:21 +0100 (CET)
-Message-Id: <20200321113242.534508206@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 53DF71039FD;
+        Sat, 21 Mar 2020 12:34:20 +0100 (CET)
+Message-Id: <20200321113241.930037873@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sat, 21 Mar 2020 12:26:02 +0100
+Date:   Sat, 21 Mar 2020 12:25:56 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -40,6 +40,10 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Joel Fernandes <joel@joelfernandes.org>,
         Oleg Nesterov <oleg@redhat.com>,
         Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geoff Levand <geoff@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org,
         Logan Gunthorpe <logang@deltatee.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
@@ -64,15 +68,11 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
         Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
         Michal Simek <monstr@monstr.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geoff Levand <geoff@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org,
         "Paul E . McKenney" <paulmck@kernel.org>,
         Jonathan Corbet <corbet@lwn.net>,
         Randy Dunlap <rdunlap@infradead.org>,
         Davidlohr Bueso <dbueso@suse.de>
-Subject: [patch V3 18/20] lockdep: Add hrtimer context tracing bits
+Subject: [patch V3 12/20] powerpc/ps3: Convert half completion to rcuwait
 References: <20200321112544.878032781@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -85,100 +85,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Set current->irq_config = 1 for hrtimers which are not marked to expire in
-hard interrupt context during hrtimer_init(). These timers will expire in
-softirq context on PREEMPT_RT.
+The PS3 notification interrupt and kthread use a hacked up completion to
+communicate. Since we're wanting to change the completion implementation and
+this is abuse anyway, replace it with a simple rcuwait since there is only ever
+the one waiter.
 
-Setting this allows lockdep to differentiate these timers. If a timer is
-marked to expire in hard interrupt context then the timer callback is not
-supposed to acquire a regular spinlock instead of a raw_spinlock in the
-expiry callback.
+AFAICT the kthread uses TASK_INTERRUPTIBLE to not increase loadavg, kthreads
+cannot receive signals by default and this one doesn't look different. Use
+TASK_IDLE instead.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Geoff Levand <geoff@infradead.org>
+Cc: linuxppc-dev@lists.ozlabs.org
 ---
- include/linux/irqflags.h |   15 +++++++++++++++
- include/linux/sched.h    |    1 +
- kernel/locking/lockdep.c |    2 +-
- kernel/time/hrtimer.c    |    6 +++++-
- 4 files changed, 22 insertions(+), 2 deletions(-)
+V3: Folded the init fix from bigeasy
+V2: New patch to avoid the magic completion wait variant
+---
+ arch/powerpc/platforms/ps3/device-init.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -56,6 +56,19 @@ do {						\
- do {						\
- 	current->softirq_context--;		\
- } while (0)
-+
-+# define lockdep_hrtimer_enter(__hrtimer)		\
-+	  do {						\
-+		  if (!__hrtimer->is_hard)		\
-+			current->irq_config = 1;	\
-+	  } while (0)
-+
-+# define lockdep_hrtimer_exit(__hrtimer)		\
-+	  do {						\
-+		  if (!__hrtimer->is_hard)		\
-+			current->irq_config = 0;	\
-+	  } while (0)
-+
- #else
- # define trace_hardirqs_on()		do { } while (0)
- # define trace_hardirqs_off()		do { } while (0)
-@@ -68,6 +81,8 @@ do {						\
- # define trace_hardirq_exit()		do { } while (0)
- # define lockdep_softirq_enter()	do { } while (0)
- # define lockdep_softirq_exit()		do { } while (0)
-+# define lockdep_hrtimer_enter(__hrtimer)		do { } while (0)
-+# define lockdep_hrtimer_exit(__hrtimer)		do { } while (0)
- #endif
+--- a/arch/powerpc/platforms/ps3/device-init.c
++++ b/arch/powerpc/platforms/ps3/device-init.c
+@@ -13,6 +13,7 @@
+ #include <linux/init.h>
+ #include <linux/slab.h>
+ #include <linux/reboot.h>
++#include <linux/rcuwait.h>
  
- #if defined(CONFIG_IRQSOFF_TRACER) || \
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -983,6 +983,7 @@ struct task_struct {
- 	unsigned int			softirq_enable_event;
- 	int				softirqs_enabled;
- 	int				softirq_context;
-+	int				irq_config;
- #endif
+ #include <asm/firmware.h>
+ #include <asm/lv1call.h>
+@@ -670,7 +671,8 @@ struct ps3_notification_device {
+ 	spinlock_t lock;
+ 	u64 tag;
+ 	u64 lv1_status;
+-	struct completion done;
++	struct rcuwait wait;
++	bool done;
+ };
  
- #ifdef CONFIG_LOCKDEP
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3759,7 +3759,7 @@ static int check_wait_context(struct tas
- 		/*
- 		 * Check if force_irqthreads will run us threaded.
- 		 */
--		if (curr->hardirq_threaded)
-+		if (curr->hardirq_threaded || curr->irq_config)
- 			curr_inner = LD_WAIT_CONFIG;
- 		else
- 			curr_inner = LD_WAIT_SPIN;
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -1404,7 +1404,7 @@ static void __hrtimer_init(struct hrtime
- 	base = softtimer ? HRTIMER_MAX_CLOCK_BASES / 2 : 0;
- 	base += hrtimer_clockid_to_base(clock_id);
- 	timer->is_soft = softtimer;
--	timer->is_hard = !softtimer;
-+	timer->is_hard = !!(mode & HRTIMER_MODE_HARD);
- 	timer->base = &cpu_base->clock_base[base];
- 	timerqueue_init(&timer->node);
- }
-@@ -1514,7 +1514,11 @@ static void __run_hrtimer(struct hrtimer
- 	 */
- 	raw_spin_unlock_irqrestore(&cpu_base->lock, flags);
- 	trace_hrtimer_expire_entry(timer, now);
-+	lockdep_hrtimer_enter(timer);
-+
- 	restart = fn(timer);
-+
-+	lockdep_hrtimer_exit(timer);
- 	trace_hrtimer_expire_exit(timer);
- 	raw_spin_lock_irq(&cpu_base->lock);
+ enum ps3_notify_type {
+@@ -712,7 +714,8 @@ static irqreturn_t ps3_notification_inte
+ 		pr_debug("%s:%u: completed, status 0x%llx\n", __func__,
+ 			 __LINE__, status);
+ 		dev->lv1_status = status;
+-		complete(&dev->done);
++		dev->done = true;
++		rcuwait_wake_up(&dev->wait);
+ 	}
+ 	spin_unlock(&dev->lock);
+ 	return IRQ_HANDLED;
+@@ -725,12 +728,12 @@ static int ps3_notification_read_write(s
+ 	unsigned long flags;
+ 	int res;
  
-
+-	init_completion(&dev->done);
+ 	spin_lock_irqsave(&dev->lock, flags);
+ 	res = write ? lv1_storage_write(dev->sbd.dev_id, 0, 0, 1, 0, lpar,
+ 					&dev->tag)
+ 		    : lv1_storage_read(dev->sbd.dev_id, 0, 0, 1, 0, lpar,
+ 				       &dev->tag);
++	dev->done = false;
+ 	spin_unlock_irqrestore(&dev->lock, flags);
+ 	if (res) {
+ 		pr_err("%s:%u: %s failed %d\n", __func__, __LINE__, op, res);
+@@ -738,14 +741,10 @@ static int ps3_notification_read_write(s
+ 	}
+ 	pr_debug("%s:%u: notification %s issued\n", __func__, __LINE__, op);
+ 
+-	res = wait_event_interruptible(dev->done.wait,
+-				       dev->done.done || kthread_should_stop());
++	rcuwait_wait_event(&dev->wait, dev->done || kthread_should_stop(), TASK_IDLE);
++
+ 	if (kthread_should_stop())
+ 		res = -EINTR;
+-	if (res) {
+-		pr_debug("%s:%u: interrupted %s\n", __func__, __LINE__, op);
+-		return res;
+-	}
+ 
+ 	if (dev->lv1_status) {
+ 		pr_err("%s:%u: %s not completed, status 0x%llx\n", __func__,
+@@ -810,6 +809,7 @@ static int ps3_probe_thread(void *data)
+ 	}
+ 
+ 	spin_lock_init(&dev.lock);
++	rcuwait_init(&dev.wait);
+ 
+ 	res = request_irq(irq, ps3_notification_interrupt, 0,
+ 			  "ps3_notification", &dev);
 
