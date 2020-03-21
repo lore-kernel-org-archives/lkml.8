@@ -2,144 +2,98 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 015D6C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB056C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B892072C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE51320724
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbgCUTMv (ORCPT
+        id S1727845AbgCUTOF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 15:12:51 -0400
-Received: from mga06.intel.com ([134.134.136.31]:4567 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727028AbgCUTMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 15:12:51 -0400
-IronPort-SDR: BF5uw76TWSpmJxU09thk8Rga+09mJZDkusnxTEn3SaqeAcxZxSGDysE4Je6pOjXMgHW2+z6esi
- NLND2S5j8ACA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 12:12:50 -0700
-IronPort-SDR: LEGngsaaDdt6kb5w+R52hg45Dzy0hFhk3Ck92J3u+FrpKnfuQtr4UDreSOVg9rQ4FlkgxuE9Gt
- SLzGcxHyB8IQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,289,1580803200"; 
-   d="scan'208";a="419063818"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 21 Mar 2020 12:12:50 -0700
-Date:   Sat, 21 Mar 2020 12:12:50 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v7 06/14] KVM: Make dirty ring exclusive to dirty bitmap
- log
-Message-ID: <20200321191250.GB13851@linux.intel.com>
-References: <20200318163720.93929-1-peterx@redhat.com>
- <20200318163720.93929-7-peterx@redhat.com>
+        Sat, 21 Mar 2020 15:14:05 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:48853 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727428AbgCUTOE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 15:14:04 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-258-5dLg6k9dMdWiOUfVgdYHTg-1; Sat, 21 Mar 2020 19:13:59 +0000
+X-MC-Unique: 5dLg6k9dMdWiOUfVgdYHTg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Sat, 21 Mar 2020 19:13:51 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Sat, 21 Mar 2020 19:13:51 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Steven Rostedt' <rostedt@goodmis.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Shuah Khan <shuahkhan@gmail.com>, bpf <bpf@vger.kernel.org>
+Subject: RE: [PATCH 00/12 v2] ring-buffer/tracing: Remove disabling of ring
+ buffer while reading trace file
+Thread-Topic: [PATCH 00/12 v2] ring-buffer/tracing: Remove disabling of ring
+ buffer while reading trace file
+Thread-Index: AQHV/kYCQIwPxRMFlk+UdEERk+KYoKhTa8kQ
+Date:   Sat, 21 Mar 2020 19:13:51 +0000
+Message-ID: <2a7f96545945457cade216aa3c736bcc@AcuMS.aculab.com>
+References: <20200319232219.446480829@goodmis.org>
+In-Reply-To: <20200319232219.446480829@goodmis.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318163720.93929-7-peterx@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 12:37:12PM -0400, Peter Xu wrote:
-> There's no good reason to use both the dirty bitmap logging and the
-> new dirty ring buffer to track dirty bits.  We should be able to even
-> support both of them at the same time, but it could complicate things
-> which could actually help little.  Let's simply make it the rule
-> before we enable dirty ring on any arch, that we don't allow these two
-> interfaces to be used together.
+From: Steven Rostedt
+> Sent: 19 March 2020 23:22
+...
 > 
-> The big world switch would be KVM_CAP_DIRTY_LOG_RING capability
-> enablement.  That's where we'll switch from the default dirty logging
-> way to the dirty ring way.  As long as kvm->dirty_ring_size is setup
-> correctly, we'll once and for all switch to the dirty ring buffer mode
-> for the current virtual machine.
-> 
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  Documentation/virt/kvm/api.rst |  7 +++++++
->  virt/kvm/kvm_main.c            | 12 ++++++++++++
->  2 files changed, 19 insertions(+)
-> 
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index 99ee9cfc20c4..8f3a83298d3f 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -6202,3 +6202,10 @@ make sure all the existing dirty gfns are flushed to the dirty rings.
->  
->  The dirty ring can gets full.  When it happens, the KVM_RUN of the
->  vcpu will return with exit reason KVM_EXIT_DIRTY_LOG_FULL.
-> +
-> +NOTE: the KVM_CAP_DIRTY_LOG_RING capability and the new ioctl
+> This patch series attempts to satisfy that request, by creating a
+> temporary buffer in each of the per cpu iterators to place the
+> read event into, such that it can be passed to users without worrying
+> about a writer to corrupt the event while it was being written out.
+> It also uses the fact that the ring buffer is broken up into pages,
+> where each page has its own timestamp that gets updated when a
+> writer crosses over to it. By copying it to the temp buffer, and
+> doing a "before and after" test of the time stamp with memory barriers,
+> can allow the events to be saved.
 
-Leave off "new", it'll be stale a few months/years from now.
+Does this mean the you will no longer be able to look at a snapshot
+of the trace by running 'less trace' (and typically going to the end
+to get info for all cpus).
 
-> +KVM_RESET_DIRTY_RINGS are exclusive to the existing KVM_GET_DIRTY_LOG
+A lot of the time trace is being written far too fast for it to make
+any sense to try to read it continuously.
 
-Did you mean "mutually exclusive with"?  "exclusive to" would mean they
-can only be used by KVM_GET_DIRTY_LOG with doesn't match the next
-sentence.
+Also, if BPF start using ftrace, no one will be able to use it for
+'normal debugging' on such systems.
 
-> +interface.  After enabling KVM_CAP_DIRTY_LOG_RING with an acceptable
-> +dirty ring size, the virtual machine will switch to the dirty ring
-> +tracking mode, and KVM_GET_DIRTY_LOG, KVM_CLEAR_DIRTY_LOG ioctls will
-> +stop working.
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 54a1e893d17b..b289d3bddd5c 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -1352,6 +1352,10 @@ int kvm_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log,
->  	unsigned long n;
->  	unsigned long any = 0;
->  
-> +	/* Dirty ring tracking is exclusive to dirty log tracking */
-> +	if (kvm->dirty_ring_size)
-> +		return -EINVAL;
-> +
->  	*memslot = NULL;
->  	*is_dirty = 0;
->  
-> @@ -1413,6 +1417,10 @@ static int kvm_get_dirty_log_protect(struct kvm *kvm, struct kvm_dirty_log *log)
->  	unsigned long *dirty_bitmap_buffer;
->  	bool flush;
->  
-> +	/* Dirty ring tracking is exclusive to dirty log tracking */
-> +	if (kvm->dirty_ring_size)
-> +		return -EINVAL;
-> +
->  	as_id = log->slot >> 16;
->  	id = (u16)log->slot;
->  	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_USER_MEM_SLOTS)
-> @@ -1521,6 +1529,10 @@ static int kvm_clear_dirty_log_protect(struct kvm *kvm,
->  	unsigned long *dirty_bitmap_buffer;
->  	bool flush;
->  
-> +	/* Dirty ring tracking is exclusive to dirty log tracking */
-> +	if (kvm->dirty_ring_size)
-> +		return -EINVAL;
-> +
->  	as_id = log->slot >> 16;
->  	id = (u16)log->slot;
->  	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_USER_MEM_SLOTS)
-> -- 
-> 2.24.1
-> 
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
