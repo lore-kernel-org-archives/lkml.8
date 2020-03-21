@@ -2,127 +2,92 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39366C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FAAC4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0715020757
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C504C20780
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 14:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584799580;
-	bh=2LYqxlJLALkKFlpvVEGc+tjKLuBtfj/ozo9eACQKvaw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gUijOosLvbpzpFMS+WUXIemPqm8+1E+RK8rrY3E7Xumi89A8iqNgIscUb8mXZ+B8u
-	 SGUHP5k41ReUz/MmD4gdnpOuicb+6U7cd4WuRTxuNUGvCbUHvztFTP4hOyG/XSMgPG
-	 sH7AxHR5nLSorYu6NmaOCw7WYeJCkZXEkGsU98kA=
+	s=default; t=1584799880;
+	bh=z3bsHcwPw1dy+MZ69yHRllkviwuFf+1W8mJ1Vq6tZx8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xl68fTfTzYLrjjZqz92hlMcur/0TylB57PL3ORzo5SOS3DGng6tQouHiipjjD6BSj
+	 MM9ZNQUTk58FfJnKLN1JZaDVAC8bepRf4QPtGDfz3g8dr5224HuHh/9752PTl5+R27
+	 13EvbGSbYp/8uxvoXR3xzaeWbowxQmm2vbKVGhWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbgCUOFE (ORCPT
+        id S1727365AbgCUOLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 10:05:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53122 "EHLO mail.kernel.org"
+        Sat, 21 Mar 2020 10:11:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726592AbgCUOFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 10:05:04 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726823AbgCUOLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 10:11:19 -0400
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 916B320757;
-        Sat, 21 Mar 2020 14:05:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A7A220842;
+        Sat, 21 Mar 2020 14:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584799503;
-        bh=2LYqxlJLALkKFlpvVEGc+tjKLuBtfj/ozo9eACQKvaw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Viee7yhYqu5DhM3KRxgC7BOYKsHKq2eVJ3mZWlwBmROgY//CXPk6aiRd+kdVMPlfl
-         bQWwtGOskyltOReYv3sK1c/ZZ+aZUm6WpLLUcOluQJk0uRVtwhvRmNZh9V71h0QrpB
-         8bzoBozpXhJ/VbzRA7/M2wjTBafP9GpHyylNWXUw=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jFekH-00EVV7-Sn; Sat, 21 Mar 2020 14:05:02 +0000
+        s=default; t=1584799878;
+        bh=z3bsHcwPw1dy+MZ69yHRllkviwuFf+1W8mJ1Vq6tZx8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=U6uraq1+O/wBDq9BdnirqCkla8fi4hhFooa9u8EOGpG/NUK8KcAg8m6t2KHRzRSTZ
+         U1tt2IsiTDMVS0ltxGzSghSwm0SPd3Ix8AtBnYo+moOc67e2fIk/ICATj9ELG9zqHj
+         KWOd3QQR+qDycpEtfRl0ifl4E+I1zEKfB5l1H1GU=
+Received: by mail-lf1-f53.google.com with SMTP id t21so6707987lfe.9;
+        Sat, 21 Mar 2020 07:11:18 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2NRbh5XueagTwvvEpfNbQrjY3WjmYWsExYRuD9ZYsKAjI5eANG
+        5wC7rxeybWBIdvZuJtjEJiBY448WImtO3Cpbfzs=
+X-Google-Smtp-Source: ADFU+vt7yzzoIODXTl3pSLaF05QHM7NQajznhAWuFfmnjqd/dl0IS02TuRz56P5ko6Q0w3g4sq26da7i2uTfuhqRlWs=
+X-Received: by 2002:a05:6512:1116:: with SMTP id l22mr8128251lfg.70.1584799876421;
+ Sat, 21 Mar 2020 07:11:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 21 Mar 2020 14:05:01 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Sungbo Eo <mans0n@gorani.run>
-Cc:     linux-oxnas@groups.io, Linus Walleij <linus.walleij@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Daniel Golle <daniel@makrotopia.org>
-Subject: Re: [PATCH] irqchip/versatile-fpga: Apply clear-mask earlier
-In-Reply-To: <20200321133842.2408823-1-mans0n@gorani.run>
-References: <20200321133842.2408823-1-mans0n@gorani.run>
-Message-ID: <4c8b67a7912b2863db99ff4e765fdb8b@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: mans0n@gorani.run, linux-oxnas@groups.io, linus.walleij@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, narmstrong@baylibre.com, daniel@makrotopia.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200318204408.010461877@linutronix.de> <20200320094856.3453859-1-bigeasy@linutronix.de>
+ <20200320094856.3453859-3-bigeasy@linutronix.de> <tglx@linutronix.de>
+ <CAJF2gTQDvmSdJB3R0By0Q6d9ganVBV1FBm3urL8Jf1fyiEi+1A@mail.gmail.com> <87zhc9rjuz.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87zhc9rjuz.fsf@nanos.tec.linutronix.de>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Sat, 21 Mar 2020 22:11:05 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTTTFYSwFYZArmJRkVJOKL2pWWgLj9nAQ_EdH2rU3jTdbw@mail.gmail.com>
+Message-ID: <CAJF2gTTTFYSwFYZArmJRkVJOKL2pWWgLj9nAQ_EdH2rU3jTdbw@mail.gmail.com>
+Subject: Re: [PATCH 2/5] csky: Remove mm.h from asm/uaccess.h
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>, balbi@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, dave@stgolabs.net,
+        David Miller <davem@davemloft.net>, gregkh@linuxfoundation.org,
+        joel@joelfernandes.org, kurt.schwemmer@microsemi.com,
+        kvalo@codeaurora.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        logang@deltatee.com, mingo@kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org,
+        oleg@redhat.com, paulmck@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        torvalds@linux-foundation.org, Will Deacon <will@kernel.org>,
+        linux-csky@vger.kernel.org, kbuild test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-21 13:38, Sungbo Eo wrote:
-> Clear its own IRQs before the parent IRQ get enabled, so that the
-> remaining IRQs do not accidentally interrupt the parent IRQ controller.
-> 
-> This patch also fixes a reboot bug on OX820 SoC, where the remaining
-> rps-timer IRQ raises a GIC interrupt that is left pending. After that,
-> the rps-timer IRQ is cleared during driver initialization, and there's
-> no IRQ left in rps-irq when local_irq_enable() is called, which evokes
-> an error message "unexpected IRQ trap".
-> 
-> Fixes: bdd272cbb97a ("irqchip: versatile FPGA: support cascaded
-> interrupts from DT")
-> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: Daniel Golle <daniel@makrotopia.org>
-> ---
->  drivers/irqchip/irq-versatile-fpga.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-versatile-fpga.c
-> b/drivers/irqchip/irq-versatile-fpga.c
-> index 70e2cfff8175..f1386733d3bc 100644
-> --- a/drivers/irqchip/irq-versatile-fpga.c
-> +++ b/drivers/irqchip/irq-versatile-fpga.c
-> @@ -212,6 +212,9 @@ int __init fpga_irq_of_init(struct device_node 
-> *node,
->  	if (of_property_read_u32(node, "valid-mask", &valid_mask))
->  		valid_mask = 0;
-> 
-> +	writel(clear_mask, base + IRQ_ENABLE_CLEAR);
-> +	writel(clear_mask, base + FIQ_ENABLE_CLEAR);
-> +
->  	/* Some chips are cascaded from a parent IRQ */
->  	parent_irq = irq_of_parse_and_map(node, 0);
->  	if (!parent_irq) {
-> @@ -221,9 +224,6 @@ int __init fpga_irq_of_init(struct device_node 
-> *node,
-> 
->  	fpga_irq_init(base, node->name, 0, parent_irq, valid_mask, node);
-> 
-> -	writel(clear_mask, base + IRQ_ENABLE_CLEAR);
-> -	writel(clear_mask, base + FIQ_ENABLE_CLEAR);
-> -
->  	/*
->  	 * On Versatile AB/PB, some secondary interrupts have a direct
->  	 * pass-thru to the primary controller for IRQs 20 and 22-31 which 
-> need
+On Sat, Mar 21, 2020 at 8:08 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Guo Ren <guoren@kernel.org> writes:
+>
+> > Tested and Acked by me.
+> >
+> > Queued for next pull request, thx
+>
+> Can we please route that with the rcuwait changes to avoid breakage
+> unless you ship it to Linus right away?
 
-You're on a roll! ;-) Queued for 5.7.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Ok, I won't queue it.
