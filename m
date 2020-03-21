@@ -2,140 +2,129 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8D7C4332E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB94DC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8B520739
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8179520739
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 09:01:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0+w9r+8"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="kEm5Ygo0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="K5YF/0lq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgCUJBF (ORCPT
+        id S1728309AbgCUJBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 05:01:05 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43221 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728204AbgCUJBF (ORCPT
+        Sat, 21 Mar 2020 05:01:18 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:34793 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728008AbgCUJBR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 05:01:05 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b2so10200801wrj.10
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 02:01:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YohStPVsw3Erx7ZEmjh2wgjlDgrcVBxuvPTzUFp9k2g=;
-        b=G0+w9r+8OCERU4wGlgdAv6EGMbik8XmmeW4mbc+DnLjCsSm69HM29Cj8ucvm/dzJZu
-         3cjtzhedeWCcuGQur5yyutIfAEC9dNUpGDeFDxRlc+6E/Yw++wACd+534kOYYlAGaEMU
-         H1wyKoyCvsg8KyNXN2tHUw7FLkiZgFxT+XjKS0hbWb85h1XztfddQ3JbpjrkA2crvyAV
-         hTytSaqSLGBjIQnNO0pdGkcgF5ZFe3a01UY3bWydMoT+Fv7dWYDsOhsiIPvAsy7TaPlZ
-         uKz9RTAnjNhVq/U+vFxXMpUnznShO2Kx6ONyTUGfBbX1yBdVrj6QmLp2Uppc8LAa28Yl
-         uKVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YohStPVsw3Erx7ZEmjh2wgjlDgrcVBxuvPTzUFp9k2g=;
-        b=e/iU2kJ9zuulLJkQ5lxosfVRYR/cS+BTi1Zw9ud926YWJcxuTpeDInvQ/h6Fw/cKQn
-         sVNmAH1nQoOy0nJOlu19pnKHou1YJx9TvG2/SOK1FaDNUG/W+qIvTt3ikjVc6PiNz1Xw
-         RxDpTdhCDL+8T3BBc0HyJBwSvJYBqGXRPP9uEXsZDpQx9mlMgobSRK0rA+PY0uOgK1Uf
-         NoxEHo6AJIg5Ot0v/9/XQb84p4EonSjCRcKQJC4HY2f4QJagCSESG80e5DcMTk83NF8Z
-         rtYrYmy5IdnYn69zn7k62adozBWNynS5q2CCAeTPiDKHQYp7k0ladANkr5c5TZxvDCQj
-         kztw==
-X-Gm-Message-State: ANhLgQ3DQ7jqfEnaYKurFBMdmGg2mJqtAhKDmEAvubw9wrUgqvWY0db9
-        ETe+6p51E/KURzXod79Z1/ZwMC9B
-X-Google-Smtp-Source: ADFU+vs8cWgvAHUISxwDdbvsD9+XZHHmWwA4TEE2qcDc4yPwL4Roild1fd7EP5kuHixrFj6JVypIbQ==
-X-Received: by 2002:adf:bb45:: with SMTP id x5mr14907079wrg.388.1584781262770;
-        Sat, 21 Mar 2020 02:01:02 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id c7sm1825421wrn.49.2020.03.21.02.01.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2020 02:01:01 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
-        ttayar@habana.ai
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH] habanalabs: show unsupported message for GAUDI
-Date:   Sat, 21 Mar 2020 11:00:59 +0200
-Message-Id: <20200321090059.21960-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 21 Mar 2020 05:01:17 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id F0B87580700;
+        Sat, 21 Mar 2020 05:00:33 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Sat, 21 Mar 2020 05:00:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=ALmjW+HIyhOT5zUGzSO/D37QXo/
+        rPihFOsRD5OGJ6Rg=; b=kEm5Ygo0FPZjRbTYocTFES8NPUlGElygVjugiSsRA3n
+        vru8BJJ8tNWWA1aBC6MUE6AqY6wsLM3GXiyzB7/KcJWCNJ5lCCm/qDclG4dF8plq
+        cNmoLuNTRlVe76ntEf+7CdsaxmJWLFFu4WB1muK4Vr1PWFPH+Sw4G81BFSLewgR+
+        6JB2ll2rZZ1Fqd8jcerWqFgeMP0L+cILkgWYoMYlEPzb/cKy4uHV+HiCyK5HPTEC
+        5gleYoVjpBsM4HR+qUC63mvzdIcTYERc3wPbzHAK/+CXXir9mMtzStZCZrUv+SGR
+        zGf2i6w5hnLo5ZBYfBLQudzv3kzZiHDRw7PCNutkR2g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ALmjW+
+        HIyhOT5zUGzSO/D37QXo/rPihFOsRD5OGJ6Rg=; b=K5YF/0lqzw1nyUZssapERV
+        MtAhWdygOUErp6IxIxf13m4mM6AQAI0DpHLEzGhWDooqcv+bylyHu3N/dfoZBDmj
+        Zhfrekl8SxOJX0+8dtU+T0Wbcql66hw77sdHm8UNHjRryiGD8r1cejEtCeNkgqp+
+        8J7AuVQyzAASfpsd28v/F88EJOVVbAsO14CtUDIMEI1dpYyrnFgJLaj5JcO1RXyl
+        EWgNcRJ2tEoYpU4fr41gGrGUWIm7NOKL5/AxD6Rwh+KJGCzxwOvu/RDxUPGPIaav
+        8wt9JoHbXEWCIyKhYjGIaTP75XGn2edAcZZOq3wZWwKHTLFCu02DsBBLMoLt2NfQ
+        ==
+X-ME-Sender: <xms:sNd1XkY87sJRpJfVaHD11KeSmppo5NtozC6kEyYOa0dy1nWhTxFCcw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudegvddguddvfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuffhomhgrihhnpehkvghrnhgvlh
+    drohhrghenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsthgvrhfuihiivgep
+    tdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:sNd1XjoqGRzcgsGN119CZr0cGB46HCOMC49lNOQF0JG8ZsqhP4506w>
+    <xmx:sNd1XigKcM5vELOC7gzLRXd1s7sdJlHk4LtlOZByhOU-60dxIiwOHw>
+    <xmx:sNd1XtxT4PPqq4P-VuUfbGsOgmAJfzQuUeYekEUtM66_LEn-QrOdgw>
+    <xmx:sdd1XoCMs5G_4X8iRTp-FQMpHB1bsG3DryCpfJp66UyBLjCju3N--A>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 62CB4328005A;
+        Sat, 21 Mar 2020 05:00:32 -0400 (EDT)
+Date:   Sat, 21 Mar 2020 10:00:30 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     David Rientjes <rientjes@google.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: Re: [PATCH] KVM: SVM: Issue WBINVD after deactivating an SEV guest
+Message-ID: <20200321090030.GA884290@kroah.com>
+References: <c8bf9087ca3711c5770bdeaafa3e45b717dc5ef4.1584720426.git.thomas.lendacky@amd.com>
+ <alpine.DEB.2.21.2003201333510.205664@chino.kir.corp.google.com>
+ <7b8d0c8c-d685-627b-676c-01c3d194fc82@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7b8d0c8c-d685-627b-676c-01c3d194fc82@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a GAUDI device is present in the system, display an error message that
-it is not supported by the current kernel.
+On Fri, Mar 20, 2020 at 03:37:23PM -0500, Tom Lendacky wrote:
+> On 3/20/20 3:34 PM, David Rientjes wrote:
+> > On Fri, 20 Mar 2020, Tom Lendacky wrote:
+> > 
+> > > Currently, CLFLUSH is used to flush SEV guest memory before the guest is
+> > > terminated (or a memory hotplug region is removed). However, CLFLUSH is
+> > > not enough to ensure that SEV guest tagged data is flushed from the cache.
+> > > 
+> > > With 33af3a7ef9e6 ("KVM: SVM: Reduce WBINVD/DF_FLUSH invocations"), the
+> > > original WBINVD was removed. This then exposed crashes at random times
+> > > because of a cache flush race with a page that had both a hypervisor and
+> > > a guest tag in the cache.
+> > > 
+> > > Restore the WBINVD when destroying an SEV guest and add a WBINVD to the
+> > > svm_unregister_enc_region() function to ensure hotplug memory is flushed
+> > > when removed. The DF_FLUSH can still be avoided at this point.
+> > > 
+> > > Fixes: 33af3a7ef9e6 ("KVM: SVM: Reduce WBINVD/DF_FLUSH invocations")
+> > > Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> > 
+> > Acked-by: David Rientjes <rientjes@google.com>
+> > 
+> > Should this be marked for stable?
+> 
+> The Fixes tag should take care of that.
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/habanalabs.h     |  4 +++-
- drivers/misc/habanalabs/habanalabs_drv.c | 11 ++++++++++-
- 2 files changed, 13 insertions(+), 2 deletions(-)
+No it does not.
+Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index 9472da3ef847..31ebcf9458fe 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -424,10 +424,12 @@ struct hl_eq {
-  * enum hl_asic_type - supported ASIC types.
-  * @ASIC_INVALID: Invalid ASIC type.
-  * @ASIC_GOYA: Goya device.
-+ * @ASIC_GAUDI: Gaudi device.
-  */
- enum hl_asic_type {
- 	ASIC_INVALID,
--	ASIC_GOYA
-+	ASIC_GOYA,
-+	ASIC_GAUDI
- };
- 
- struct hl_cs_parser;
-diff --git a/drivers/misc/habanalabs/habanalabs_drv.c b/drivers/misc/habanalabs/habanalabs_drv.c
-index 8c342fb499ca..b670859c677a 100644
---- a/drivers/misc/habanalabs/habanalabs_drv.c
-+++ b/drivers/misc/habanalabs/habanalabs_drv.c
-@@ -40,12 +40,13 @@ MODULE_PARM_DESC(reset_on_lockup,
- #define PCI_VENDOR_ID_HABANALABS	0x1da3
- 
- #define PCI_IDS_GOYA			0x0001
-+#define PCI_IDS_GAUDI			0x1000
- 
- static const struct pci_device_id ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_HABANALABS, PCI_IDS_GOYA), },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_HABANALABS, PCI_IDS_GAUDI), },
- 	{ 0, }
- };
--MODULE_DEVICE_TABLE(pci, ids);
- 
- /*
-  * get_asic_type - translate device id to asic type
-@@ -63,6 +64,9 @@ static enum hl_asic_type get_asic_type(u16 device)
- 	case PCI_IDS_GOYA:
- 		asic_type = ASIC_GOYA;
- 		break;
-+	case PCI_IDS_GAUDI:
-+		asic_type = ASIC_GAUDI;
-+		break;
- 	default:
- 		asic_type = ASIC_INVALID;
- 		break;
-@@ -263,6 +267,11 @@ int create_hdev(struct hl_device **dev, struct pci_dev *pdev,
- 			dev_err(&pdev->dev, "Unsupported ASIC\n");
- 			rc = -ENODEV;
- 			goto free_hdev;
-+		} else if (hdev->asic_type == ASIC_GAUDI) {
-+			dev_err(&pdev->dev,
-+				"GAUDI is not supported by the current kernel\n");
-+			rc = -ENODEV;
-+			goto free_hdev;
- 		}
- 	} else {
- 		hdev->asic_type = asic_type;
--- 
-2.17.1
+Yes, I have had to go around and clean up after maintainers who don't
+seem to realize this, but for KVM patches I have been explicitly told to
+NOT take any patch unless it has a cc: stable on it, due to issues that
+have happened in the past.
 
+So for this subsystem, what you suggested guaranteed it would NOT get
+picked up, please do not do that.
+
+greg k-h
