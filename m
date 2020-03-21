@@ -2,70 +2,78 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3737C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD52C4332E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5DD20724
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F66520781
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:34:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584794071;
+	bh=Q6XqKfK0pWystRPr1/fmOD76oUU2oT/CO/tHv4FEv+M=;
+	h=Subject:To:References:Cc:From:Date:In-Reply-To:List-ID:From;
+	b=YsgJcmUUxFgRS3K+sGjlOmZoVPyuV/Gt1YiU73B2XMA3a88Mfm2J1MLAiytu03lue
+	 AEsD4N0G39vL8g1STJDsNcbKivsd4URvalhVl/SsOOwdShjwYUJ0/sSM5J1V+NclBS
+	 K7RdMlMuqXbtvOorXIKRgqz2T1PjzVet/Q4FVrl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgCUM2m (ORCPT
+        id S1727262AbgCUMea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 08:28:42 -0400
-Received: from smtprelay0077.hostedemail.com ([216.40.44.77]:50760 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726192AbgCUM2m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 08:28:42 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 76636837F24F;
-        Sat, 21 Mar 2020 12:28:41 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: wall25_68ce15f06c463
-X-Filterd-Recvd-Size: 1554
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 21 Mar 2020 12:28:40 +0000 (UTC)
-Message-ID: <a7778635620163cb6185192819a56ed44d76d4b0.camel@perches.com>
-Subject: Re: [PATCH] drivers: iio: Drop unnecessary explicit casting
-From:   Joe Perches <joe@perches.com>
-To:     Nishant Malpani <nish.malpani25@gmail.com>, jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sat, 21 Mar 2020 05:26:52 -0700
-In-Reply-To: <20200318100754.25667-1-nish.malpani25@gmail.com>
-References: <20200318100754.25667-1-nish.malpani25@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Sat, 21 Mar 2020 08:34:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726192AbgCUMe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 08:34:29 -0400
+Received: from [192.168.0.107] (unknown [49.65.245.234])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C38F20714;
+        Sat, 21 Mar 2020 12:34:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584794069;
+        bh=Q6XqKfK0pWystRPr1/fmOD76oUU2oT/CO/tHv4FEv+M=;
+        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
+        b=UvmxaCjKTfMCk/EmBAq3YRIvZdf+MlpIq9JFz5KXyFe6O7vfX0lBpNj0bRdKqE4IY
+         7mp4Zavgxc+xNqzUhd2LCGkmHXXqGatoP6Uf3qNoPy/Gj8bAWI0TDu5ZIorpLQLBfj
+         JCe8QAxgl2TgQ+py6UG6Qr7uZ/m1+L4zv1mGdmvA=
+Subject: Re: [f2fs-dev] [PATCH v9 22/25] f2fs: Convert from readpages to
+ readahead
+To:     Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200320142231.2402-1-willy@infradead.org>
+ <20200320142231.2402-23-willy@infradead.org>
+Cc:     linux-xfs@vger.kernel.org,
+        William Kucharski <william.kucharski@oracle.com>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+From:   Chao Yu <chao@kernel.org>
+Message-ID: <557257d3-6799-df31-378a-a39c36fa3191@kernel.org>
+Date:   Sat, 21 Mar 2020 20:34:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200320142231.2402-23-willy@infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-18 at 15:37 +0530, Nishant Malpani wrote:
-> Provide correct specifiers while printing error logs to discard the use
-> of unnecessary explicit casting.
-[]
-> diff --git a/drivers/iio/accel/kxsd9-i2c.c b/drivers/iio/accel/kxsd9-i2c.c
-[]
-> @@ -21,8 +21,8 @@ static int kxsd9_i2c_probe(struct i2c_client *i2c,
->  
->  	regmap = devm_regmap_init_i2c(i2c, &config);
->  	if (IS_ERR(regmap)) {
-> -		dev_err(&i2c->dev, "Failed to register i2c regmap %d\n",
-> -			(int)PTR_ERR(regmap));
-> +		dev_err(&i2c->dev, "Failed to register i2c regmap %ld\n",
-> +			PTR_ERR(regmap));
+On 2020-3-20 22:22, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+>
+> Use the new readahead operation in f2fs
+>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Reviewed-by: William Kucharski <william.kucharski@oracle.com>
 
-Another option would be to use %pe to print the error identifier
-and not the error number
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-etc...
-
-
+Thanks,
