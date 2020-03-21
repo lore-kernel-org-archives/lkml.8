@@ -2,80 +2,122 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BF7C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD140C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEF620780
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:41:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584794479;
-	bh=SYButYYnPtTNzTsvJv/ztlsV2rT6hQCbbeI2pzlT52k=;
-	h=Subject:To:References:Cc:From:Date:In-Reply-To:List-ID:From;
-	b=IE/CPSelDPNhiEv2Es9sFj4iO1Ig+3+4NbU6IT4wKAIWJsXtq44sKyQWSC5Ou4mID
-	 g0bCBzwpFwkYmXn1IpFOeJzz5Lhr9wEfsMGGVXj0QoLCWPsJO94X572UqtOLF8sxjG
-	 hi80Qg/u6WXpGPlmjBx+gi1dLB5LoQbYe0AAuwKU=
+	by mail.kernel.org (Postfix) with ESMTP id 8E5812072C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 12:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbgCUMlS (ORCPT
+        id S1727278AbgCUMxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 08:41:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60138 "EHLO mail.kernel.org"
+        Sat, 21 Mar 2020 08:53:30 -0400
+Received: from mail.manjaro.org ([176.9.38.148]:37078 "EHLO mail.manjaro.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726607AbgCUMlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 08:41:18 -0400
-Received: from [192.168.0.107] (unknown [49.65.245.234])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B163C20754;
-        Sat, 21 Mar 2020 12:41:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584794477;
-        bh=SYButYYnPtTNzTsvJv/ztlsV2rT6hQCbbeI2pzlT52k=;
-        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
-        b=mZAqbYYEyed/TRFC34Za867sHZy20DSHbKWw+pfpCOnVubLSkgdKhC74IfLXb0oQ5
-         irgqnDuLIeHhDqhwmSXSHDKHRIlhYBBteSxo2x9Zg8CrGALnf5+E10sckAtjZq5EYM
-         B0EReMmsHEMDlh4R+X7pNuj+kYgFVEbn3aKM9dbQ=
-Subject: Re: [f2fs-dev] [PATCH v9 19/25] erofs: Convert compressed files from
- readpages to readahead
-To:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200320142231.2402-1-willy@infradead.org>
- <20200320142231.2402-20-willy@infradead.org>
-Cc:     linux-xfs@vger.kernel.org,
-        William Kucharski <william.kucharski@oracle.com>,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
-        Dave Chinner <dchinner@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
-From:   Chao Yu <chao@kernel.org>
-Message-ID: <135c3eeb-c809-08dc-8b4b-31ced90c622a@kernel.org>
-Date:   Sat, 21 Mar 2020 20:41:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+        id S1726192AbgCUMx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 08:53:29 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id BA73237E5074;
+        Sat, 21 Mar 2020 13:53:27 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tcVmSE4T3BKl; Sat, 21 Mar 2020 13:53:25 +0100 (CET)
+From:   Tobias Schramm <t.schramm@manjaro.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tobias Schramm <t.schramm@manjaro.org>
+Subject: [PATCH v6 0/3] Add support for CellWise cw2015 fuel gauge
+Date:   Sat, 21 Mar 2020 13:52:38 +0100
+Message-Id: <20200321125241.3072123-1-t.schramm@manjaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200320142231.2402-20-willy@infradead.org>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-3-20 22:22, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
->
-> Use the new readahead operation in erofs.
->
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Acked-by: Gao Xiang <gaoxiang25@huawei.com>
-> Reviewed-by: Dave Chinner <dchinner@redhat.com>
-> Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+This patchset adds support for the CellWise cw2015 fuel gauge.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+The CellWise cw2015 fuel gauge is a shuntless, single-cell Li-Ion fuel
+gauge. It is used in the pine64 Pinebook Pro laptop.
 
-Thanks,
+This is v6 of the patchset. This version fixes binding issues found
+by Rob.
+
+I've kept the cellwise,battery-profile property in the device tree. Its
+content describes characteristics of the battery built into a device. The
+exact format is unknown and not publicly documented. It is likely
+comprised of some key parameters of the battery (chemistry, voltages,
+design capacity) and parameters for tuning the internal state of charge
+approximation function.
+Since v2 CellWise has confirmed to me that the only way to obtain the
+profile blob is to mail them batteries for testing. Thus we will need to
+keep that property.
+
+In general I'm not 100 % sure about my json-schema binding for the gauge.
+It is my first time ever writing a json-schema binding and I'm not sure
+whether properties like power-supplies or monitored-battery need to be
+added to a separate, common schema for power supplies or not.
+
+
+Best Regards,
+
+Tobias Schramm
+
+Changelog:
+ v2:
+  * Change subject to "Add support for CellWise cw2015 fuel gauge"
+  * Rewrite bindings as json-schema
+  * Use default power-supplies handling
+  * Use regmap for register access
+  * Use standard simple-battery node
+  * Replace printk/pr_* by dev_{dbg,info,warn,err}
+  * Use cancel_delayed_work_sync in remove
+  * General code cleanup
+ v3:
+  * Incorporate review by Andy
+  * Add cellwise vendor prefix
+  * Rename cellwise,bat-config-info property to cellwise,battery-profile
+  * Remove most state of charge post-processing
+  * Use fwnode interface
+  * General code cleanup
+  * Lots of code style fixes
+ v4:
+  * Implement additional changes requested by Andy
+  * Use fwnode inline wrappers
+  * Clean up waiting for gauge
+  * Minor code style fixes
+ v5:
+  * Clean up includes
+  * Handle errors during device property parsing
+  * Refactor device property parsing
+  * Replace i2c->probe by i2c->probe_new 
+  * More code style fixes
+ v6:
+  * Fix bindings according to review by Rob
+
+
+Tobias Schramm (3):
+  dt-bindings: Document cellwise vendor-prefix
+  dt-bindings: power: supply: add cw2015_battery bindings
+  power: supply: add CellWise cw2015 fuel gauge driver
+
+ .../bindings/power/supply/cw2015_battery.yaml |  82 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   6 +
+ drivers/power/supply/Kconfig                  |  11 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/cw2015_battery.c         | 749 ++++++++++++++++++
+ 6 files changed, 851 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
+ create mode 100644 drivers/power/supply/cw2015_battery.c
+
+-- 
+2.24.1
+
