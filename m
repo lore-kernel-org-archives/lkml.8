@@ -2,36 +2,36 @@ Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD51C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27745C4332D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B85B2076E
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C292076E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 19:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbgCUTh7 (ORCPT
+        id S1728128AbgCUTiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 15:37:59 -0400
+        Sat, 21 Mar 2020 15:38:06 -0400
 Received: from mga11.intel.com ([192.55.52.93]:55983 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728002AbgCUThz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727028AbgCUThz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 21 Mar 2020 15:37:55 -0400
-IronPort-SDR: YEPGJGsmLH+vBwZWtcRTk5LgGPZL23LPz+7Z8txALzKWKhpjpqoraeMaHfheFkH398LkHPERu3
- m1BYZKoTVQRA==
+IronPort-SDR: +Rx1ZYW07g0Ptr3eTy5pTl/0VFKi5XxeGN/1roJVNf32H7zeMrc4a2WpQARhhWP33u4enAmQH0
+ jxK197J7eBYw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 12:37:54 -0700
-IronPort-SDR: 7/Pw17EirO65eChZhWblkEnEYmODISes7aBhq9UXgg0738zsHHSc1re5gY5JBmp+uRnM8Vm1L2
- DnB4/pEbGW4A==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 12:37:53 -0700
+IronPort-SDR: WXb3xou5Qmr5WW8ex0hNZM+Ew9D7J/HSFYceqXfQGAiXC65lJSoEKuSP40uZ6LHZkD582big0+
+ tsz1jHfT/rrg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,289,1580803200"; 
-   d="scan'208";a="445353684"
+   d="scan'208";a="445353676"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 21 Mar 2020 12:37:53 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 21 Mar 2020 12:37:52 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -40,12 +40,10 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] KVM: VMX: Gracefully handle faults on VMXON
-Date:   Sat, 21 Mar 2020 12:37:51 -0700
-Message-Id: <20200321193751.24985-4-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 0/3] KVM: VMX: Fix for kexec VMCLEAR and VMXON cleanup
+Date:   Sat, 21 Mar 2020 12:37:48 -0700
+Message-Id: <20200321193751.24985-1-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200321193751.24985-1-sean.j.christopherson@intel.com>
-References: <20200321193751.24985-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,78 +51,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gracefully handle faults on VMXON, e.g. #GP due to VMX being disabled by
-BIOS, instead of letting the fault crash the system.  Now that KVM uses
-cpufeatures to query support instead of reading MSR_IA32_FEAT_CTL
-directly, it's possible for a bug in a different subsystem to cause KVM
-to incorrectly attempt VMXON[*].  Crashing the system is especially
-annoying if the system is configured such that hardware_enable() will
-be triggered during boot.
+Patch 1 fixes a a theoretical bug where a crashdump NMI that arrives
+while KVM is messing with the percpu VMCS list would result in one or more
+VMCSes not being cleared, potentially causing memory corruption in the new
+kexec'd kernel.
 
-Oppurtunistically rename @addr to @vmxon_pointer and use a named param
-to reference it in the inline assembly.
+Patch 2 is cleanup that's made possible by patch 1.
 
-Print 0xdeadbeef in the ultra-"rare" case that reading MSR_IA32_FEAT_CTL
-also faults.
+Patch 3 isn't directly related, but it conflicts with the crash cleanup
+changes, both from a code and a semantics perspective.  Without the crash
+cleanup, IMO hardware_enable() should do crash_disable_local_vmclear()
+if VMXON fails, i.e. clean up after itself.  But hardware_disable()
+doesn't even do crash_disable_local_vmclear() (which is what got me
+looking at that code in the first place).  Basing the VMXON change on top
+of the crash cleanup avoids the debate entirely.
 
-[*] https://lkml.kernel.org/r/20200226231615.13664-1-sean.j.christopherson@intel.com
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/vmx/vmx.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+v2:
+  - Inverted the code flow, i.e. move code from loaded_vmcs_init() to
+    __loaded_vmcs_clear().  Trying to share loaded_vmcs_init() with
+    alloc_loaded_vmcs() was taking more code than it saved. [Paolo]
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 07634caa560d..3aba51d782e2 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2218,18 +2218,33 @@ static __init int vmx_disabled_by_bios(void)
- 	       !boot_cpu_has(X86_FEATURE_VMX);
- }
- 
--static void kvm_cpu_vmxon(u64 addr)
-+static int kvm_cpu_vmxon(u64 vmxon_pointer)
- {
-+	u64 msr;
-+
- 	cr4_set_bits(X86_CR4_VMXE);
- 	intel_pt_handle_vmx(1);
- 
--	asm volatile ("vmxon %0" : : "m"(addr));
-+	asm_volatile_goto("1: vmxon %[vmxon_pointer]\n\t"
-+			  _ASM_EXTABLE(1b, %l[fault])
-+			  : : [vmxon_pointer] "m"(vmxon_pointer)
-+			  : : fault);
-+	return 0;
-+
-+fault:
-+	WARN_ONCE(1, "VMXON faulted, MSR_IA32_FEAT_CTL (0x3a) = 0x%llx\n",
-+		  rdmsrl_safe(MSR_IA32_FEAT_CTL, &msr) ? 0xdeadbeef : msr);
-+	intel_pt_handle_vmx(0);
-+	cr4_clear_bits(X86_CR4_VMXE);
-+
-+	return -EFAULT;
- }
- 
- static int hardware_enable(void)
- {
- 	int cpu = raw_smp_processor_id();
- 	u64 phys_addr = __pa(per_cpu(vmxarea, cpu));
-+	int r;
- 
- 	if (cr4_read_shadow() & X86_CR4_VMXE)
- 		return -EBUSY;
-@@ -2246,7 +2261,10 @@ static int hardware_enable(void)
- 	INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
- 	spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
- 
--	kvm_cpu_vmxon(phys_addr);
-+	r = kvm_cpu_vmxon(phys_addr);
-+	if (r)
-+		return r;
-+
- 	if (enable_ept)
- 		ept_sync_global();
- 
+
+Gory details on the crashdump bug:
+
+I verified my analysis of the NMI bug by simulating what would happen if
+an NMI arrived in the middle of list_add() and list_del().  The below
+output matches expectations, e.g. nothing hangs, the entry being added
+doesn't show up, and the entry being deleted _does_ show up.
+
+[    8.205898] KVM: testing NMI in list_add()
+[    8.205898] KVM: testing NMI in list_del()
+[    8.205899] KVM: found e3
+[    8.205899] KVM: found e2
+[    8.205899] KVM: found e1
+[    8.205900] KVM: found e3
+[    8.205900] KVM: found e1
+
+static void vmx_test_list(struct list_head *list, struct list_head *e1,
+                          struct list_head *e2, struct list_head *e3)
+{
+        struct list_head *tmp;
+
+        list_for_each(tmp, list) {
+                if (tmp == e1)
+                        pr_warn("KVM: found e1\n");
+                else if (tmp == e2)
+                        pr_warn("KVM: found e2\n");
+                else if (tmp == e3)
+                        pr_warn("KVM: found e3\n");
+                else
+                        pr_warn("KVM: kaboom\n");
+        }
+}
+
+static int __init vmx_init(void)
+{
+        LIST_HEAD(list);
+        LIST_HEAD(e1);
+        LIST_HEAD(e2);
+        LIST_HEAD(e3);
+
+        pr_warn("KVM: testing NMI in list_add()\n");
+
+        list.next->prev = &e1;
+        vmx_test_list(&list, &e1, &e2, &e3);
+
+        e1.next = list.next;
+        vmx_test_list(&list, &e1, &e2, &e3);
+
+        e1.prev = &list;
+        vmx_test_list(&list, &e1, &e2, &e3);
+
+        INIT_LIST_HEAD(&list);
+        INIT_LIST_HEAD(&e1);
+
+        list_add(&e1, &list);
+        list_add(&e2, &list);
+        list_add(&e3, &list);
+
+        pr_warn("KVM: testing NMI in list_del()\n");
+
+        e3.prev = &e1;
+        vmx_test_list(&list, &e1, &e2, &e3);
+
+        list_del(&e2);
+        list.prev = &e1;
+        vmx_test_list(&list, &e1, &e2, &e3);
+}
+
+Sean Christopherson (3):
+  KVM: VMX: Always VMCLEAR in-use VMCSes during crash with kexec support
+  KVM: VMX: Fold loaded_vmcs_init() into alloc_loaded_vmcs()
+  KVM: VMX: Gracefully handle faults on VMXON
+
+ arch/x86/kvm/vmx/vmx.c | 103 ++++++++++++++++-------------------------
+ arch/x86/kvm/vmx/vmx.h |   1 -
+ 2 files changed, 40 insertions(+), 64 deletions(-)
+
 -- 
 2.24.1
 
