@@ -2,58 +2,84 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD22C54FCF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D448CC54EEB
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D264206F8
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA252072D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:12:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgCVVMk (ORCPT
+        id S1726962AbgCVVMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 17:12:40 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:51607 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbgCVVMj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 17:12:39 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 623B0C000B;
-        Sun, 22 Mar 2020 21:12:38 +0000 (UTC)
-Date:   Sun, 22 Mar 2020 22:12:37 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, leoyang.li@nxp.com,
-        ran.wang_1@nxp.com, biwen.li@nxp.com
-Subject: Re: [PATCH] rtc: fsl-ftm-alarm: enable acpi support
-Message-ID: <20200322211237.GD221863@piout.net>
-References: <20200318025354.6447-1-peng.ma@nxp.com>
+        Sun, 22 Mar 2020 17:12:44 -0400
+Received: from sauhun.de ([88.99.104.3]:54376 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726741AbgCVVMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 17:12:44 -0400
+Received: from localhost (p54B33042.dip0.t-ipconnect.de [84.179.48.66])
+        by pokefinder.org (Postfix) with ESMTPSA id 3A7F72C0064;
+        Sun, 22 Mar 2020 22:12:41 +0100 (CET)
+Date:   Sun, 22 Mar 2020 22:12:40 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Kurtz <djkurtz@chromium.org>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        syzbot <syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [PATCH] i2c: i801: Fix memory corruption in i801_isr_byte_done()
+Message-ID: <20200322211240.GD11260@ninjato>
+References: <0000000000009586b2059c13c7e1@google.com>
+ <20200114073406.qaq3hbrhtx76fkes@kili.mountain>
+ <20200222124523.GI1716@kunai>
+ <20200320145748.GD1282@ninjato>
+ <20200322190813.39b92de2@endymion>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
 Content-Disposition: inline
-In-Reply-To: <20200318025354.6447-1-peng.ma@nxp.com>
+In-Reply-To: <20200322190813.39b92de2@endymion>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/03/2020 10:53:54+0800, Peng Ma wrote:
-> This patch enables ACPI support in Rtc Flex timer driver.
-> 
-> Signed-off-by: Peng Ma <peng.ma@nxp.com>
-> ---
->  drivers/rtc/rtc-fsl-ftm-alarm.c | 20 +++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
-> 
-Applied, thanks.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--W/nzBZO5zC0uMSeA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+
+> Can you please bounce the previous messages in this thread to me? I was
+> apparently not Cc'd so I'm missing the context.
+
+Sure, done. Your email address in the thread was sadly the outdated one.
+
+
+--W/nzBZO5zC0uMSeA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl531MQACgkQFA3kzBSg
+KbZrig//XkLniI4xzcvSyK2d/ebWUqOdHu3LqisAoXONXpToBiyz16VVPBOHYCNZ
+lqXFFAuz1N9qkh8zroAuRkr45OjAKEGd3LFeDIvmTozwrjytfry0OwGxuqp/LZUA
+w+9i8JqcofTra/7GPXkVgGwd7KrGQe+tlYKfd+7xDDV6xVy1OW7eaD/81TC15qTF
+Zdwuew5Wh7eUILvolCChodFHFOZjqZwSFouBgLQESynJdEeCqb5IEe8olvru2Lf2
+BfaIaKnHaEuEG1uvjzk4uxL5AVHebgUs6VENOpw5dogEJGm/vpt8QkccWMMI4jVH
+/0nXcVZbyRt1zqkMIrrn0S3ZoDDUFtpijNXjylwFqZZ1ZLZ8fvvTqcktSOM69i4y
+dh3dljazaku9if0NGhRPEnLE4lbyZTmUohcE/tlHiPCSpWkcjvU1j/NeETyJIO4a
+Ac3PJCJiEfVsbSM9sigr1sEpcS1QVYqe7fckxM7JyLRyMddWLjblo785KHQID4I/
+xNVrAU1nq0YjVVHPNtKey3SWZoj8m0u2ogPFUoAehVAnnrVPnpvHKpMBWSVOG8xC
+iM2tuX5HkVgXfpD7Be8RgnxVmli9ooLGcuvzivQbWLaoPApjl5tlO1l+TR4Bo/8A
+kgVJee2W5ykMRnNBPAPQqC3F2YR3Uh5HqZU7QuLfv2mxVrjdOLI=
+=ls6/
+-----END PGP SIGNATURE-----
+
+--W/nzBZO5zC0uMSeA--
