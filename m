@@ -2,114 +2,140 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F244C54FCF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 10:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84A5C54FCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 10:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2601C2072E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 10:27:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATE6Wt1X"
+	by mail.kernel.org (Postfix) with ESMTP id B82882072E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 10:28:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgCVK1m (ORCPT
+        id S1726979AbgCVK2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 06:27:42 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38748 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbgCVK1l (ORCPT
+        Sun, 22 Mar 2020 06:28:49 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:53744 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726866AbgCVK2t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 06:27:41 -0400
-Received: by mail-pg1-f194.google.com with SMTP id x7so5590557pgh.5;
-        Sun, 22 Mar 2020 03:27:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6RAxGHRXwEXJ3h4vDKdrVJV5D7I4VTDkjCteTqg0DE4=;
-        b=ATE6Wt1XqdxMdfB6ou2BNReL2AzFsbSGPTn5HoGlIN4Q6h7cfr0WqFjvEvVjrY30yT
-         Jb+wYwsT8bxXm4+Sh7wct5MsDaHkeXrFnOkd93E0ZBw8hymUaMeV4TTLt5SV4EPYeVsR
-         iPaPZQ6ctkYq6Mjq05DnsrrCy5Foxz19G/vbybFsZ3N5OhGga/yCIkeY1GjbIcdq1w+g
-         Ju2qRnzfvi9BgDK1piO4F7jg1H3K+iiSM5QON+uLXKbczFZg+drHIrbmKO6ma24Nmpmk
-         /da4ek4CdMZKcqANCcRayKiUjjJAa6aRB3qt19mNUTBu2JV+go4LRUC4zxl5901vAZ5h
-         Sn6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6RAxGHRXwEXJ3h4vDKdrVJV5D7I4VTDkjCteTqg0DE4=;
-        b=pXGhojYWX7839IPrc+ZvB+q3N+RKzQYcbWbvEdSFbA6ywkbWhJ7/iowSaty8mrA1Q9
-         meb7L7RHb0nzBMFDY/KB75FJdohaoZtzPHmHYDE1li7qULg41bSFJLV0rGDp+ioV6x5z
-         r9w5JnpPp3hVVmN9fPLtL/lh+nLzlYto1RziQ2MMYQwGOlhePk90Mb+TvGL5SbVZ+6tO
-         qSCW1Gm/HplGMT+5eUgY/INXDPoylQPM+jI+Txq5acLV+7BjMcHwZIdk8qbO2gf8nvuc
-         /FfhC3Otry3SVZm/G6oAfJRE5OnjZb8D4QQaOU+GiTkvNBIMcHaNdixQyXnCTjIFQ8tM
-         /wug==
-X-Gm-Message-State: ANhLgQ2iy/H3HOQyYEa1Njav3nxHKpQwRO/mT9zuKL05HgS5DXuIsQAs
-        d8HAiTHqr0wGw6lHcTDom1JTxdoEgz8wfJWn51s=
-X-Google-Smtp-Source: ADFU+vsOBdai13yG5KtkS+8b8BWb50/R/N+cQ1nIdFkd26CYl5CiTZpnHfGQVrzjz6buvXEsIGim5HwlmqFXmONvLCc=
-X-Received: by 2002:a63:798a:: with SMTP id u132mr17648380pgc.203.1584872859132;
- Sun, 22 Mar 2020 03:27:39 -0700 (PDT)
+        Sun, 22 Mar 2020 06:28:49 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07438739|-1;CH=green;DM=||false|;DS=CONTINUE|ham_regular_dialog|0.185973-0.000472118-0.813555;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03311;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.H3OteXN_1584872892;
+Received: from 172.16.10.102(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.H3OteXN_1584872892)
+          by smtp.aliyun-inc.com(10.147.41.137);
+          Sun, 22 Mar 2020 18:28:13 +0800
+Subject: Re: [PATCH v2 01/11] pstore/blk: new support logger for block devices
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+References: <1581078355-19647-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <1581078355-19647-2-git-send-email-liaoweixiong@allwinnertech.com>
+ <202002251626.63FE3E7C6@keescook>
+ <5fd540be-6ed9-a1c7-4932-e67194dddca8@allwinnertech.com>
+ <202003180944.3B36871@keescook>
+ <dab67ab1-c03f-0507-3d56-4a9578e85f6b@allwinnertech.com>
+ <202003201111.BE5EAB9A@keescook>
+From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
+Message-ID: <c49f1d24-b818-aeda-7447-b89d8eddb1c6@allwinnertech.com>
+Date:   Sun, 22 Mar 2020 18:28:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <5e723666.1c69fb81.3545b.79c3@mx.google.com> <20200322002542.GA2826015@smile.fi.intel.com>
- <5e77017a.1c69fb81.dc341.8ab9@mx.google.com>
-In-Reply-To: <5e77017a.1c69fb81.dc341.8ab9@mx.google.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 22 Mar 2020 12:27:27 +0200
-Message-ID: <CAHp75VddtJs1ZCk1XAZ2WJLhWQDcVwiiN5gDpK9oYPEOS=c_ZQ@mail.gmail.com>
-Subject: Re: [PATCH] iio: gyro: adis16136: use scnprintf instead of snprintf
-To:     Rohit Sarkar <rohitsarkar5398@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>, dragos.bogdan@analog.com,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <202003201111.BE5EAB9A@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 8:11 AM Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
->
-> On Sun, Mar 22, 2020 at 02:25:42AM +0200, Andy Shevchenko wrote:
-> > On Wed, Mar 18, 2020 at 08:25:22PM +0530, Rohit Sarkar wrote:
-> > > scnprintf returns the actual number of bytes written into the buffer as
-> > > opposed to snprintf which returns the number of bytes that would have
-> > > been written if the buffer was big enough. Using the output of snprintf
-> > > may lead to difficult to detect bugs.
-> >
-> > Nice. Have you investigate the code?
-> >
-> > > @@ -96,7 +96,7 @@ static ssize_t adis16136_show_serial(struct file *file,
-> > >     if (ret)
-> > >             return ret;
-> > >
-> > > -   len = snprintf(buf, sizeof(buf), "%.4x%.4x%.4x-%.4x\n", lot1, lot2,
-> > > +   len = scnprintf(buf, sizeof(buf), "%.4x%.4x%.4x-%.4x\n", lot1, lot2,
-> > >             lot3, serial);
-> > >
-> > >     return simple_read_from_buffer(userbuf, count, ppos, buf, len);
-> >
-> > The buffer size is 20, the pattern size I count to 19. Do you think snprintf()
-> > can fail?
-> That might be the case, but IMO using scnprintf can be considered as a
-> best practice. There is no overhead with this change and further if the
-> pattern is changed by someone in the future they might overlook the
-> buffersize
+hi Kees Cook,
 
-If we cut the string above we will give wrong information to the user space.
-I think scnprintf() change is a noise and does not improve the situation anyhow.
+On 2020/3/21 上午2:20, Kees Cook wrote:
+> On Fri, Mar 20, 2020 at 09:50:36AM +0800, WeiXiong Liao wrote:
+>> On 2020/3/19 AM 1:23, Kees Cook wrote:
+>>> On Thu, Feb 27, 2020 at 04:21:51PM +0800, liaoweixiong wrote:
+>>>> On 2020/2/26 AM 8:52, Kees Cook wrote:
+>>>>> On Fri, Feb 07, 2020 at 08:25:45PM +0800, WeiXiong Liao wrote:
+>>>>>> +obj-$(CONFIG_PSTORE_BLK) += pstore_blk.o
+>>>>>> +pstore_blk-y += blkzone.o
+>>>>>
+>>>>> Why this dance with files? I would just expect:
+>>>>>
+>>>>> obj-$(CONFIG_PSTORE_BLK)     += blkzone.o
+>>>>>
+>>>>
+>>>> This makes the built module named blkzone.ko rather than
+>>>> pstore_blk.ko.
+>>>
+>>> You can just do a regular build rule:
+>>>
+>>> obj-$(CONFIG_PSTORE_BLK) += blkzone.o
+>>>
+>>
+>> I don't get it. If make it as your words, the built module will be
+>> blkzone.ko.
+>> The module is named pstore/blk, however it built out blkzone.ko. I think
+>> it's confusing.
+> 
+> I mean just pick whatever filename you want it to be named. The Makefile
+> case for ramoops was that ramoops got renamed but we wanted to keep the
+> old API name.
+> 
+> So, if you want it named pstore-blk.ko, just rename blkzone.c to
+> pstore-blk.c.
+> 
 
-So, when anybody modifying such code the test should be performed.
+How about rename blkzone.c to psotre_zone.c and blkoops.c to pstore_blk.c?
 
+Please refer to my reply email for patch 2.
+
+>>>>> If you're expecting concurrent writers (use of atomic_set(), I would
+>>>>> expect the whole write to be locked instead. (i.e. what happens if
+>>>>> multiple callers call blkz_zone_write()?)
+>>>>>
+>>>>
+>>>> I don't agree with it. The datalen will be updated everywhere. It's useless
+>>>> to lock here.
+>>>
+>>> But there could be multiple writers; locking should be needed.
+>>>
+>>
+>> All the recorders such as dmesg, pmsg, console and ftrace have been
+>> locked on
+>> pstore and upper layers. So, a recorder will not write in parallel and
+>> different
+>> recorders operate privately zone. They don't have any influence on each
+>> other.
+> 
+> Yes, sorry, I was confusing myself about pmsg, and I forgot it had a
+> global lock. Each are locked or split by CPU.
+> 
+>> The only parallel case I think is that recorder writes while dirty-flush
+>> thread is
+>> working. And the dirty-flusher will flush the whole zone rather than
+>> part of it, so,
+>> it is OK to call in parallel.
+> 
+> Okay, thanks for clarifying.
+> 
+>> Based on these reasons, I don't think locking should be needed.
+> 
+> Agreed.
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+WeiXiong Liao
