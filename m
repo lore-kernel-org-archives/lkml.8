@@ -2,137 +2,79 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395D8C4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 19:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00C4C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 19:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE732072E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 19:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82EF82070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 19:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584905761;
-	bh=iL1sjTLvw1JVu+N++3CO4C0/tIF4N6blP9U1IKYS5gQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cA5d++JYV/ufEKDudfDpolS4bGkZCED1/FR1NeXe4lq1Mr1bG7Enz7xyKthgLGrPj
-	 W2phtcTFUzexTHDmvCp18h8/4VaoZwOsBF/fKV9584cYP7V+6S3N8hiZ9+MvF+41yW
-	 56epI/j9CEBQ4CNhVckbGjVSqXjZ3hS+xrilikUk=
+	s=default; t=1584905862;
+	bh=EYj1ZjIKsB8UScswc5qhZWW0Mbv6Cjij0kOFbxjDnfc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iW3U7UvoU7anM3Q27EGS4E1EigKbBZWNhRadWlSfx/3oBLknKLS3KTem72OhAvYSt
+	 Y4ruKjQDgqDV/htdF/NMgbWQpAPAw5so4m33wCMPSkzHCqjFfGTIrsXPdXA+Sqdqx1
+	 sCvwqDsxidFc4LG9sFO9RL3OGYTm1ozafOLIwe3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgCVTgA (ORCPT
+        id S1726857AbgCVThl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 15:36:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46734 "EHLO mail.kernel.org"
+        Sun, 22 Mar 2020 15:37:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726502AbgCVTf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 15:35:59 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1726502AbgCVThl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 15:37:41 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB6172070A;
-        Sun, 22 Mar 2020 19:35:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FEBB2070A;
+        Sun, 22 Mar 2020 19:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584905759;
-        bh=iL1sjTLvw1JVu+N++3CO4C0/tIF4N6blP9U1IKYS5gQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kAXEx17aS3TrizisnrRafSOkN+ibt5U0Y7672k6/Yrcv7ai6MHzcqZgalHr4qyo/W
-         A215K6TVqFPDF3E6GPENUbZiJDMKPTfFhFXiwNllNT5vdOKjOmD9nBjxHQmuWx7aLI
-         wpzmhLnSjrqktPegHm6AwDxvzGfDny/5xovTe7Yk=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jG6O5-00Eknk-0F; Sun, 22 Mar 2020 19:35:57 +0000
+        s=default; t=1584905860;
+        bh=EYj1ZjIKsB8UScswc5qhZWW0Mbv6Cjij0kOFbxjDnfc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1q81UiRrdoT3EWkQSrFE/8Oxf5fsbuOdedj+OpfPoWQfNboDFhUWxv7q5Cmew0r3I
+         lscAWsJuoUPQ+YbVM+cjiOtP9jryH8U4n1X2CSx2Rq587hM0J3ux2/ETMi761OGcF9
+         ik1/p1oamSU1FIdpifNjRfJIxwijWCSJDdA+nlQs=
+Date:   Sun, 22 Mar 2020 15:37:39 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.5 01/41] spi: spi-omap2-mcspi: Handle DMA size
+ restriction on AM65x
+Message-ID: <20200322193739.GO4189@sasha-vm>
+References: <20200316023319.749-1-sashal@kernel.org>
+ <20200316115057.GB5010@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 22 Mar 2020 19:35:56 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-Cc:     Anson Huang <Anson.Huang@nxp.com>, tglx@linutronix.de,
-        jason@lakedaemon.net, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <Linux-imx@nxp.com>
-Subject: Re: [PATCH] irqchip: irq-imx-gpcv2: Remove unnecessary blank lines
-In-Reply-To: <CAEnQRZCcmaU91Ep5kVesaGPsrvujq5mznk2SZccmZG9rbSCG0w@mail.gmail.com>
-References: <1584421001-2647-1-git-send-email-Anson.Huang@nxp.com>
- <86mu89zqce.wl-maz@kernel.org>
- <CAEnQRZCcmaU91Ep5kVesaGPsrvujq5mznk2SZccmZG9rbSCG0w@mail.gmail.com>
-Message-ID: <a690ecc9169f0594e22b4eae0a056d89@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: daniel.baluta@gmail.com, Anson.Huang@nxp.com, tglx@linutronix.de, jason@lakedaemon.net, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200316115057.GB5010@sirena.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel,
+On Mon, Mar 16, 2020 at 11:50:57AM +0000, Mark Brown wrote:
+>On Sun, Mar 15, 2020 at 10:32:39PM -0400, Sasha Levin wrote:
+>> From: Vignesh Raghavendra <vigneshr@ti.com>
+>>
+>> [ Upstream commit e4e8276a4f652be2c7bb783a0155d4adb85f5d7d ]
+>>
+>> On AM654, McSPI can only support 4K - 1 bytes per transfer when DMA is
+>> enabled. Therefore populate master->max_transfer_size callback to
+>> inform client drivers of this restriction when DMA channels are
+>> available.
+>
+>As ever this only provides information to other drivers which may be
+>buggy.
 
-On 2020-03-22 19:08, Daniel Baluta wrote:
-> On Sat, Mar 21, 2020 at 5:22 PM Marc Zyngier <maz@kernel.org> wrote:
->> 
->> On Tue, 17 Mar 2020 04:56:41 +0000,
->> Anson Huang <Anson.Huang@nxp.com> wrote:
->> >
->> > Remove unnecessary blank lines for cleanup.
->> >
->> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
->> > ---
->> >  drivers/irqchip/irq-imx-gpcv2.c | 2 --
->> >  1 file changed, 2 deletions(-)
->> >
->> > diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-gpcv2.c
->> > index 4f74c15..4f11b9b 100644
->> > --- a/drivers/irqchip/irq-imx-gpcv2.c
->> > +++ b/drivers/irqchip/irq-imx-gpcv2.c
->> > @@ -17,7 +17,6 @@
->> >  #define GPC_IMR1_CORE2               0x1c0
->> >  #define GPC_IMR1_CORE3               0x1d0
->> >
->> > -
->> >  struct gpcv2_irqchip_data {
->> >       struct raw_spinlock     rlock;
->> >       void __iomem            *gpc_base;
->> > @@ -287,6 +286,5 @@ static int __init imx_gpcv2_irqchip_init(struct device_node *node,
->> >       of_node_clear_flag(node, OF_POPULATED);
->> >       return 0;
->> >  }
->> > -
->> >  IRQCHIP_DECLARE(imx_gpcv2_imx7d, "fsl,imx7d-gpc", imx_gpcv2_irqchip_init);
->> >  IRQCHIP_DECLARE(imx_gpcv2_imx8mq, "fsl,imx8mq-gpc", imx_gpcv2_irqchip_init);
->> 
->> I honestly don't think this deserves a patch. Next time you work on
->> this driver, add the cleanups to it. But on its own, it's only churn.
-> 
-> While you are technically right, it's only churn I think we need this
-> for code consistency and cleanup.
+I'll drop it, thanks!
 
-Get real. We really don't. Two blank lines do not lead to a
-misinterpretation of the code, do not get in the way of normal
-maintenance, do not lead to *any* practical issue.
-
-What's next? Cc stable?
-
-> Even if we fix this when we work on the driver we still need
-> to make the cleanup in a separate patch.
-
-Neither. As well as removing blank lines, you could also remove the
-dead code in this driver. That would be a good cleanup. You could
-also have a look at what feels like a potential deadlock in the
-mask/unmask callbacks. That'd be a good thing to do too.
-
-Certainly more useful than just dropping two blank lines.
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+Thanks,
+Sasha
