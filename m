@@ -2,154 +2,123 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50B7C54EEB
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 23:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE73C54FCF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 23:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB4A20753
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 23:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D188220736
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 23:38:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gJZRw8Gh"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NC4J8tcM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgCVXcs (ORCPT
+        id S1726916AbgCVXiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 19:32:48 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:52468 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgCVXcr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 19:32:47 -0400
-Received: by mail-pj1-f68.google.com with SMTP id ng8so5266684pjb.2;
-        Sun, 22 Mar 2020 16:32:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IENbMcSGhaQb3ITcGtt42TlCIbqArf7b4nbOoZQxr/0=;
-        b=gJZRw8Ghj+uFJGManDNJaEh5tGVtq4ar68g3APlfcnTC/UM62G1dZTEZC9EiOu8x8T
-         EK2Lhb7fOV+nIz8/awxFr3MC6r18K4e/v7mi+9CdZi0d9dsTV7JpA2feKrTgAQ3zSF0e
-         ceB3BcqEO8fMAUdF9bHFlB9wB0nD0uuNeF55tueTktjXIRPtF1crMVSIUmmXbjimo+kX
-         AhZ3ol2geIqX+akPCkQRDT4uFeXHZjfGu2h9E94KPOnSvXuwuqcyuerFu7VfiLWBuCTZ
-         GUkXMilftwjvOnXY7haQAu9G4nVpi6H5ZClCl0D9mPR1H8d3tWvEqj5+4MlinWmCeFLO
-         B/TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IENbMcSGhaQb3ITcGtt42TlCIbqArf7b4nbOoZQxr/0=;
-        b=iwiWMRcWB7OF+abAMsi8/lKFtD7OslBLP7qWx2WUoVuCnvGdXtbMKhZqe6z2QAqHgi
-         14otWl2qniNSYdDlDQ4rZIjo78URa/cVoBmAk9GgM+/PGN+yq/JMyJ2SpMz1EpQg1nOA
-         ydb82BEkM5HSNR2CXQGOJfmdQfeG3Hg2/XnCAM0l1EftJLaHnlMIBInubJbsChjPY6pt
-         8CbhqzYVLbEYxGEIEq5C12LNJei2YSuoa1M7yV+Rsxfna0SE7WVV/5hsGmlebfcbJAJH
-         GNZGbGZskyQK3asGWzQk4gCrtXGQLe4bngaM2onpNNqCO1ftUFJjKth11bUcnaAqFCyX
-         4BNw==
-X-Gm-Message-State: ANhLgQ2yFCVLTaYOvpxKYjAYOMsHYRgheY8DhCnaApE6DhyfEMv4OBbS
-        RDltNvyhD21hIbQkJuPgWni2N9bhMBvoMp/SbP4=
-X-Google-Smtp-Source: ADFU+vuyqy9m3tLnY58woPs/kX8vqXYEvKneO8AtOopyiDKNngQaUcp7XOIiUNm7Ftps1erHsZgDeNLhPXRe7SK387E=
-X-Received: by 2002:a17:90a:3602:: with SMTP id s2mr763542pjb.143.1584919965895;
- Sun, 22 Mar 2020 16:32:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200322224626.13160-1-sravanhome@gmail.com> <20200322224626.13160-4-sravanhome@gmail.com>
-In-Reply-To: <20200322224626.13160-4-sravanhome@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 23 Mar 2020 01:32:34 +0200
-Message-ID: <CAHp75VfauHuAv1Wr=7ga=G+6JOYXuop_oyXiwmQgKeB2e_z=tQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] iio: adc: mp2629: Add support for mp2629 ADC driver
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        Sun, 22 Mar 2020 19:38:00 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34741 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726832AbgCVXiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 19:38:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48lv843Rdjz9sPF;
+        Mon, 23 Mar 2020 10:37:55 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584920276;
+        bh=pB/ij0LQ+hU9R0vbeJpfiRSVLQIXMR/HzdLDcVicW6A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NC4J8tcMAabGrVma91oEIkvAInIZqsunZTcjrDh40RkMwcTQjumEvzpBypgcfMt1n
+         qx5e8D92ptB43Gs5XTuBbjHXeLtbnLkNxYci8bAZ/hPtFw4EZpQnBhCa4m/UnPElTr
+         g9b7rn3R9uBlkzHda06YC6h44bOSmKInZ1Tvyb8VZvVWGrESSyrWloRtMVrFfIO0Vh
+         qDny1qk9Y8f4FXLf5qvGjnq4sWxpSak9PfqdJYbMYjtzGYgLJvxE/IWLVmIh3HY0JO
+         4/yAi5vMyCYjWNkI8UCs6ZBVLS3OmEnc2XeUDk8Bx9sEl+v7W9adqDY7helWOrUEl4
+         wsgurRTggO53A==
+Date:   Mon, 23 Mar 2020 10:37:53 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Grant Peltier <grantpeltier93@gmail.com>
+Subject: linux-next: build failure after merge of the hwmon-staging tree
+Message-ID: <20200323103753.09474a57@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/s6EK36.+4ZLEWuS5Ky_s876";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 12:47 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
->
-> Add support for 8-bit resolution ADC readings for input power
-> supply and battery charging measurement. Provides voltage, current
-> readings to mp2629 power supply driver.
+--Sig_/s6EK36.+4ZLEWuS5Ky_s876
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-...
+Hi all,
 
-> +#include <linux/platform_device.h>
+After merging the hwmon-staging tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-> +#include <linux/of_device.h>
+drivers/hwmon/pmbus/isl68137.c: In function 'raa_dmpvr2_read_word_data':
+drivers/hwmon/pmbus/isl68137.c:125:9: error: too few arguments to function =
+'pmbus_read_word_data'
+  125 |   ret =3D pmbus_read_word_data(client, page, RAA_DMPVR2_READ_VMON);
+      |         ^~~~~~~~~~~~~~~~~~~~
+In file included from drivers/hwmon/pmbus/isl68137.c:19:
+drivers/hwmon/pmbus/pmbus.h:466:5: note: declared here
+  466 | int pmbus_read_word_data(struct i2c_client *client, int page, int p=
+hase,
+      |     ^~~~~~~~~~~~~~~~~~~~
+drivers/hwmon/pmbus/isl68137.c: In function 'isl68137_probe':
+drivers/hwmon/pmbus/isl68137.c:199:24: error: assignment to 'int (*)(struct=
+ i2c_client *, int,  int,  int)' from incompatible pointer type 'int (*)(st=
+ruct i2c_client *, int,  int)' [-Werror=3Dincompatible-pointer-types]
+  199 |   info->read_word_data =3D raa_dmpvr2_read_word_data;
+      |                        ^
+drivers/hwmon/pmbus/isl68137.c:203:24: error: assignment to 'int (*)(struct=
+ i2c_client *, int,  int,  int)' from incompatible pointer type 'int (*)(st=
+ruct i2c_client *, int,  int)' [-Werror=3Dincompatible-pointer-types]
+  203 |   info->read_word_data =3D raa_dmpvr2_read_word_data;
+      |                        ^
+drivers/hwmon/pmbus/isl68137.c:206:24: error: assignment to 'int (*)(struct=
+ i2c_client *, int,  int,  int)' from incompatible pointer type 'int (*)(st=
+ruct i2c_client *, int,  int)' [-Werror=3Dincompatible-pointer-types]
+  206 |   info->read_word_data =3D raa_dmpvr2_read_word_data;
+      |                        ^
+drivers/hwmon/pmbus/isl68137.c:216:24: error: assignment to 'int (*)(struct=
+ i2c_client *, int,  int,  int)' from incompatible pointer type 'int (*)(st=
+ruct i2c_client *, int,  int)' [-Werror=3Dincompatible-pointer-types]
+  216 |   info->read_word_data =3D raa_dmpvr2_read_word_data;
+      |                        ^
 
-Don't see users of it.
+Caused by commit
 
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/regulator/consumer.h>
+  96c72647bc37 ("hwmon: (pmbus) add support for 2nd Gen Renesas digital mul=
+tiphase")
 
-> +#include <linux/sysfs.h>
+I have used the version of the hwmon-staging from next-20200320 for today.
 
-Any users?
+--=20
+Cheers,
+Stephen Rothwell
 
-> +#include <linux/regmap.h>
+--Sig_/s6EK36.+4ZLEWuS5Ky_s876
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Perhaps ordered?
+-----BEGIN PGP SIGNATURE-----
 
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/machine.h>
-> +#include <linux/iio/driver.h>
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl539tEACgkQAVBC80lX
+0GzadQf/WXl0ZzFl0ylfsDmaQRTjRRlXWFpbwMMnB8CmlUQPACBj6pmAMm3LazUs
+XC9XkMYnxNYu/G2eaxeKtWL3hfclhZefVt72/y4Qj7AVm9vobWzGUNhsR+PJz5gt
+D0LpUqRsx4w/utS8JYykl5EJJN36QTMabWOCXoPVK3pCOuXpyGsMjESdrODm1Bi+
+eNdeFK9g2IWRDHq/TjhJObktaXx7q6MlU25ao4xYZMzBIxGpkKEluXI5dbHUBqCj
+/rv2dlQVl/pFUdVYMeu3OB584Uh9GYQ+Mg8NSO5xrGcWhtNX5PtSj7Bs3hny75wu
+xajbo1/YiKA5JGyjJGizaK8S67mf9w==
+=x4Uq
+-----END PGP SIGNATURE-----
 
-+ blank line?
-
-> +#include <linux/mfd/mp2629.h>
-
-...
-
-> +static int mp2629_read_raw(struct iio_dev *indio_dev,
-> +                       struct iio_chan_spec const *chan,
-> +                       int *val, int *val2, long mask)
-> +{
-> +       struct mp2629_adc *info = iio_priv(indio_dev);
-> +       unsigned int rval;
-> +       int ret;
-> +
-> +       switch (mask) {
-> +       case IIO_CHAN_INFO_RAW:
-> +               ret = regmap_read(info->regmap, chan->address, &rval);
-> +               if (ret < 0)
-> +                       return ret;
-> +
-> +               if (chan->address == MP2629_INPUT_VOLT)
-
-> +                       rval &= 0x7f;
-
-GENMASK() ?
-
-> +               *val = rval;
-> +               return IIO_VAL_INT;
-
-> +       return 0;
-> +}
-
-...
-
-> +       void **pdata = pdev->dev.platform_data;
-
-Same Qs as per other patch.
-
-...
-
-> +       indio_dev->dev.of_node = pdev->dev.of_node;
-
-Jonathan, doesn't IIO core do this for all?
-
--- 
-With Best Regards,
-Andy Shevchenko
+--Sig_/s6EK36.+4ZLEWuS5Ky_s876--
