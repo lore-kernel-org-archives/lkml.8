@@ -2,154 +2,124 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D4BC4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 20:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10637C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 20:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC47206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 20:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0462072E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 20:17:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="yQsE9jPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgCVUPz (ORCPT
+        id S1726880AbgCVURm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 16:15:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42990 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbgCVUPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 16:15:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DFBABAC92;
-        Sun, 22 Mar 2020 20:15:52 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id E11BAE0FD3; Sun, 22 Mar 2020 21:15:51 +0100 (CET)
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net] ethtool: fix reference leak in some *_SET handlers
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org
-Message-Id: <20200322201551.E11BAE0FD3@unicorn.suse.cz>
-Date:   Sun, 22 Mar 2020 21:15:51 +0100 (CET)
+        Sun, 22 Mar 2020 16:17:42 -0400
+Received: from mail-pj1-f43.google.com ([209.85.216.43]:54118 "EHLO
+        mail-pj1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbgCVURl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 16:17:41 -0400
+Received: by mail-pj1-f43.google.com with SMTP id l36so5116212pjb.3
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 13:17:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=siZlRY8txSUJlhMo281aqD2ignUiFBwzsrA1ioFeCWc=;
+        b=yQsE9jPoqIE9Ks0/g5mEGQfzQRvi2zC1UrkHqEfQrKl7cYDPxrg0ybOQtJlrEavwmC
+         RsZZNBMfy6UuHKQjbibMDBT6BJ2crbcFTEIwo901wd5yLuuMjMJ0ofccfXoE4ni1ghvp
+         3goncK7uf946Eu2zbw6d+OEMh/Py+tLu+PE0QPUhr15T5IEK01y5puXj0gIEueoulD+K
+         isqP7MzEm5dSlrhiKDPyWintlWnKPgUROL2vz5ypj6hndnDAnCGK1dGMCtdScaBDRaUa
+         h23JHJuit7ThaSEbGLPHCHiD2jVbb2veVPOXbXR2dmyjtSQK9faa1pdRV5JU9jBGJLqr
+         W2ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=siZlRY8txSUJlhMo281aqD2ignUiFBwzsrA1ioFeCWc=;
+        b=tqv4xGgrtKO7gYpsFH55TT2Q80TZ5zPASPD+i1k/LyCelmjQaT9ZGqgq90xyBw+5UP
+         JsqURgjbug/4JXWYYdxzVxYoc3Bdl9VstPTnxyYhlSlqQAHIWfZHSAYxO3VTyLl4InS0
+         40c2QNXM9PBANJKkUQEfAjy6f1mk1KUlmkKvKfbYXGPIL+riEoBKalfJz+V2YBL7FdaV
+         k7qjyg8MxI9vNEzXkB7XLWuCfXEwqj2ox5JOdRWfEuRC5okssq8PRRMVTBzpGoqV/cLL
+         +sF3BZXyWsg3djQ/2N1DLe29NTJ6r6fErRDMP/9NXjYGMb9OAE14YYVshR+agdzUQRgz
+         EkFA==
+X-Gm-Message-State: ANhLgQ1hjSsZ/0LY135HeXLN0HW16djCwwjlaDpnrNxc0kUMZzbroqwC
+        1Q8SJri5av7qF/9m7hO53erL6w==
+X-Google-Smtp-Source: ADFU+vs0g2AtePxKPH5/W1n2yu4vnWRlEivkRnKOvETnf9xMebrSFe6mc4pQWf0hdeBcXIZXZDgCOw==
+X-Received: by 2002:a17:90b:3656:: with SMTP id nh22mr3943791pjb.71.1584908258528;
+        Sun, 22 Mar 2020 13:17:38 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id m29sm963701pgl.35.2020.03.22.13.17.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Mar 2020 13:17:37 -0700 (PDT)
+Subject: Re: INFO: task hung in io_queue_file_removal
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+538d1957ce178382a394@syzkaller.appspotmail.com>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <20200321123827.15256-1-hdanton@sina.com>
+ <20200322020601.5136-1-hdanton@sina.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <5f48249b-19f9-6c18-b849-d77db0b2f247@kernel.dk>
+Date:   Sun, 22 Mar 2020 14:17:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200322020601.5136-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew noticed that some handlers for *_SET commands leak a netdev
-reference if required ethtool_ops callbacks do not exist. A simple
-reproducer would be e.g.
+On 3/21/20 8:06 PM, Hillf Danton wrote:
+> 
+> On Sat, 21 Mar 2020 14:03:24 -0600 Jens Axboe wrote:
+>>
+>> On 3/21/20 6:38 AM, Hillf Danton wrote:
+>>>
+>>> Flush work before waiting for completion.
+>>>
+>>> --- a/fs/io_uring.c
+>>> +++ b/fs/io_uring.c
+>>> @@ -5823,8 +5823,8 @@ static bool io_queue_file_removal(struct
+>>>  
+>>>  	if (pfile == &pfile_stack) {
+>>>  		percpu_ref_switch_to_atomic(&data->refs, io_atomic_switch);
+>>> -		wait_for_completion(&done);
+>>>  		flush_work(&data->ref_work);
+>>> +		wait_for_completion(&done);
+>>>  		return false;
+>>>  	}
+>>>  
+>>> --
+>>>
+>>> And perhaps a tiny cleanup: no deed to wait for completion as
+>>> flushing work itself will wait until the work is done.
+>>
+>> Care to send this version as a real patch? Seems kind of pointless to
+>> just do the above change with that in mind. And then at the same time
+>> turn ->done into ->do_file_put or something, and make it a bool.
+> 
+> Have trouble making a patch with the ideas in your mind all folded in so
+> it may be better that you do it this time leaving me a chance to learn
+> a lesson.
 
-  ip link add veth1 type veth peer name veth2
-  ethtool -s veth1 wol g
-  ip link del veth1
+Maybe my explanation wasn't quite clear! What I meant was that since
+we're no longer using pfile->done, turn that ->done into a ->needs_kfree
+or something, and make that a bool. So basically the same patch as the
+one you posted, just making that naming (and type) change as well.
 
-Make sure dev_put() is called when ethtool_ops check fails.
+Does that help? Would prefer if you sent a patch, you already did
+99% of the hard work.
 
-Reported-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
----
- net/ethtool/debug.c     | 4 +++-
- net/ethtool/linkinfo.c  | 4 +++-
- net/ethtool/linkmodes.c | 4 +++-
- net/ethtool/wol.c       | 4 +++-
- 4 files changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/net/ethtool/debug.c b/net/ethtool/debug.c
-index aaef4843e6ba..92599ad7b3c2 100644
---- a/net/ethtool/debug.c
-+++ b/net/ethtool/debug.c
-@@ -107,8 +107,9 @@ int ethnl_set_debug(struct sk_buff *skb, struct genl_info *info)
- 	if (ret < 0)
- 		return ret;
- 	dev = req_info.dev;
-+	ret = -EOPNOTSUPP;
- 	if (!dev->ethtool_ops->get_msglevel || !dev->ethtool_ops->set_msglevel)
--		return -EOPNOTSUPP;
-+		goto out_dev;
- 
- 	rtnl_lock();
- 	ret = ethnl_ops_begin(dev);
-@@ -129,6 +130,7 @@ int ethnl_set_debug(struct sk_buff *skb, struct genl_info *info)
- 	ethnl_ops_complete(dev);
- out_rtnl:
- 	rtnl_unlock();
-+out_dev:
- 	dev_put(dev);
- 	return ret;
- }
-diff --git a/net/ethtool/linkinfo.c b/net/ethtool/linkinfo.c
-index 5d16cb4e8693..6e9e0b590bb5 100644
---- a/net/ethtool/linkinfo.c
-+++ b/net/ethtool/linkinfo.c
-@@ -126,9 +126,10 @@ int ethnl_set_linkinfo(struct sk_buff *skb, struct genl_info *info)
- 	if (ret < 0)
- 		return ret;
- 	dev = req_info.dev;
-+	ret = -EOPNOTSUPP;
- 	if (!dev->ethtool_ops->get_link_ksettings ||
- 	    !dev->ethtool_ops->set_link_ksettings)
--		return -EOPNOTSUPP;
-+		goto out_dev;
- 
- 	rtnl_lock();
- 	ret = ethnl_ops_begin(dev);
-@@ -162,6 +163,7 @@ int ethnl_set_linkinfo(struct sk_buff *skb, struct genl_info *info)
- 	ethnl_ops_complete(dev);
- out_rtnl:
- 	rtnl_unlock();
-+out_dev:
- 	dev_put(dev);
- 	return ret;
- }
-diff --git a/net/ethtool/linkmodes.c b/net/ethtool/linkmodes.c
-index 96f20be64553..18cc37be2d9c 100644
---- a/net/ethtool/linkmodes.c
-+++ b/net/ethtool/linkmodes.c
-@@ -338,9 +338,10 @@ int ethnl_set_linkmodes(struct sk_buff *skb, struct genl_info *info)
- 	if (ret < 0)
- 		return ret;
- 	dev = req_info.dev;
-+	ret = -EOPNOTSUPP;
- 	if (!dev->ethtool_ops->get_link_ksettings ||
- 	    !dev->ethtool_ops->set_link_ksettings)
--		return -EOPNOTSUPP;
-+		goto out_dev;
- 
- 	rtnl_lock();
- 	ret = ethnl_ops_begin(dev);
-@@ -370,6 +371,7 @@ int ethnl_set_linkmodes(struct sk_buff *skb, struct genl_info *info)
- 	ethnl_ops_complete(dev);
- out_rtnl:
- 	rtnl_unlock();
-+out_dev:
- 	dev_put(dev);
- 	return ret;
- }
-diff --git a/net/ethtool/wol.c b/net/ethtool/wol.c
-index e1b8a65b64c4..55e1ecaaf739 100644
---- a/net/ethtool/wol.c
-+++ b/net/ethtool/wol.c
-@@ -128,8 +128,9 @@ int ethnl_set_wol(struct sk_buff *skb, struct genl_info *info)
- 	if (ret < 0)
- 		return ret;
- 	dev = req_info.dev;
-+	ret = -EOPNOTSUPP;
- 	if (!dev->ethtool_ops->get_wol || !dev->ethtool_ops->set_wol)
--		return -EOPNOTSUPP;
-+		goto out_dev;
- 
- 	rtnl_lock();
- 	ret = ethnl_ops_begin(dev);
-@@ -172,6 +173,7 @@ int ethnl_set_wol(struct sk_buff *skb, struct genl_info *info)
- 	ethnl_ops_complete(dev);
- out_rtnl:
- 	rtnl_unlock();
-+out_dev:
- 	dev_put(dev);
- 	return ret;
- }
 -- 
-2.25.1
+Jens Axboe
 
