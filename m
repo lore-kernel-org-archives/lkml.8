@@ -2,265 +2,192 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C498C54FCF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 13:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82597C4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 13:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2342A2072E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 13:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A69620732
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 13:19:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584883144;
+	bh=cJjXz7mTR35bJeZ7sip2Qhg3W0McxHjMQu+j8nUdb9I=;
+	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
+	b=Hh3KI9qvArBQ+YdH/KEkt0C5A2HfUjasCGhzw0mC9UgyHvjJlps8QZ9p6XQqjYybi
+	 tHa6Tg2LeyWiiP6FIWpKUSk89AkRlq0Eb86YUSxkX1+057rYulGVLBECD+2zKBF5Mt
+	 NYFt6U4XViYZG0bvPJP7cCNg0xNBLpU9176mcL+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgCVNIc (ORCPT
+        id S1726857AbgCVNTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 09:08:32 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:47192 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725785AbgCVNIc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 09:08:32 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436284|-1;CH=green;DM=||false|;DS=CONTINUE|ham_system_inform|0.0771343-0.00168174-0.921184;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03308;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.H3Rvpeu_1584882375;
-Received: from 172.16.10.102(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.H3Rvpeu_1584882375)
-          by smtp.aliyun-inc.com(10.147.41.143);
-          Sun, 22 Mar 2020 21:06:16 +0800
-Subject: Re: [PATCH v2 08/11] blkoops: respect for device to pick recorders
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-References: <1581078355-19647-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1581078355-19647-9-git-send-email-liaoweixiong@allwinnertech.com>
- <202003181136.5F115BFCC1@keescook>
-From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Message-ID: <909c27a3-38d7-4825-6085-5b941c904e57@allwinnertech.com>
-Date:   Sun, 22 Mar 2020 21:06:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 22 Mar 2020 09:19:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725985AbgCVNTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 09:19:03 -0400
+Received: from [192.168.0.107] (unknown [49.65.245.234])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E780E206C3;
+        Sun, 22 Mar 2020 13:18:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584883142;
+        bh=cJjXz7mTR35bJeZ7sip2Qhg3W0McxHjMQu+j8nUdb9I=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=iGx7KuSE6BZZ+GLWAPN1YBrpSItELWyoE/Xzm/PEjrv4sg5hgyoKQBzrSvh/GQj6y
+         kKdo2c1WzRdzaA0gM6nnR5DGUMgAO4NId3hP5nuIiW9wGPdckIgaary/EHtSy933CG
+         6ekP1qHBQdaH7NqRUOK91pRmJqq9QTYzeVh9MkXs=
+Subject: Re: [PATCH] f2fs: fix potential .flags overflow on 32bit architecture
+To:     =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megi@xff.cz>, jaegeuk@kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Chao Yu <yuchao0@huawei.com>
+References: <20200322101327.5979-1-chao@kernel.org>
+ <20200322121434.i2jea6o5tzanip7z@core.my.home>
+From:   Chao Yu <chao@kernel.org>
+Message-ID: <47c71fe9-e168-8080-d0ed-2cfaa9a77e5e@kernel.org>
+Date:   Sun, 22 Mar 2020 21:18:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-In-Reply-To: <202003181136.5F115BFCC1@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200322121434.i2jea6o5tzanip7z@core.my.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Kees Cook,
+Hi,
 
-On 2020/3/19 AM 2:42, Kees Cook wrote:
-> In the subject and through-out:
-> 
-> s/recorders/pstore front-ends/
-> 
-
-OK.
-
-> On Fri, Feb 07, 2020 at 08:25:52PM +0800, WeiXiong Liao wrote:
->> It's one of a series of patches for adaptive to MTD device.
-> 
-> typo: adapting
-> 
-
-Fixed.
-
+On 2020-3-22 20:14, Ondřej Jirman wrote:
+> Hello,
+>
+> On Sun, Mar 22, 2020 at 06:13:27PM +0800, Chao Yu wrote:
+>> From: Chao Yu <yuchao0@huawei.com>
 >>
->> MTD device is not block device. The sector of flash (MTD device) will be
->> broken if erase over limited cycles. Avoid damaging block so fast, we
->> can not write to a sector frequently. So, the recorders of pstore/blk
->> like console and ftrace recorder should not be supported.
+>> f2fs_inode_info.flags is unsigned long variable, it has 32 bits
+>> in 32bit architecture, since we introduced FI_MMAP_FILE flag
+>> when we support data compression, we may access memory cross
+>> the border of .flags field, corrupting .i_sem field, result in
+>> below deadlock.
 >>
->> Besides, mtd device need aligned write/erase size. To avoid
->> over-erasing/writing flash, we should keep a aligned cache and read old
->> data to cache before write/erase, which make codes more complex. So,
->> pmsg do not be supported now because it writes misaligned.
+>> To fix this issue, let's introduce .extra_flags to grab extra
+>> space to store those new flags.
 >>
->> How about dmesg? Luckly, pstore/blk keeps several aligned chunks for
->> dmesg and uses one by one for wear balance.
+>> Call Trace:
+>>  __schedule+0x8d0/0x13fc
+>>  ? mark_held_locks+0xac/0x100
+>>  schedule+0xcc/0x260
+>>  rwsem_down_write_slowpath+0x3ab/0x65d
+>>  down_write+0xc7/0xe0
+>>  f2fs_drop_nlink+0x3d/0x600 [f2fs]
+>>  f2fs_delete_inline_entry+0x300/0x440 [f2fs]
+>>  f2fs_delete_entry+0x3a1/0x7f0 [f2fs]
+>>  f2fs_unlink+0x500/0x790 [f2fs]
+>>  vfs_unlink+0x211/0x490
+>>  do_unlinkat+0x483/0x520
+>>  sys_unlink+0x4a/0x70
+>>  do_fast_syscall_32+0x12b/0x683
+>>  entry_SYSENTER_32+0xaa/0x102
 >>
->> So, MTD device for pstore should pick recorders, that is why the patch
->> here.
->>
->> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
+>> Fixes: 4c8ff7095bef ("f2fs: support data compression")
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
 >> ---
->>  Documentation/admin-guide/pstore-block.rst |  9 +++++++++
->>  fs/pstore/blkoops.c                        | 29 +++++++++++++++++++++--------
->>  include/linux/blkoops.h                    | 14 +++++++++++++-
->>  3 files changed, 43 insertions(+), 9 deletions(-)
+>>  fs/f2fs/f2fs.h  | 26 ++++++++++++++++++++------
+>>  fs/f2fs/inode.c |  1 +
+>>  2 files changed, 21 insertions(+), 6 deletions(-)
 >>
->> diff --git a/Documentation/admin-guide/pstore-block.rst b/Documentation/admin-guide/pstore-block.rst
->> index be865dfc1a28..299142b3d8e6 100644
->> --- a/Documentation/admin-guide/pstore-block.rst
->> +++ b/Documentation/admin-guide/pstore-block.rst
->> @@ -166,6 +166,15 @@ It is only required by block device which is registered by
->>  ``blkoops_register_blkdev``.  It's the major device number of registered
->>  devices, by which blkoops can get the matching driver for @blkdev.
->>  
->> +flags
->> +~~~~~
->> +
->> +Refer to macro starting with *BLKOOPS_DEV_SUPPORT_* which is defined in
->> +*linux/blkoops.h*. They tell us that which pstore/blk recorders this device
->> +supports. Default zero means all recorders for compatible, witch is the same
-> 
-> typo: witch -> which
-> 
-
-Fixed.
-
->> +as BLKOOPS_DEV_SUPPORT_ALL. Recorder works only when chunk size is not zero
->> +and device support.
-> 
-> There are already flags for this, please see "Supported frontends"
-> in include/linux/pstore.h
-> 
-
-yes. You are right. I will change it.
-
->> +
->>  total_size
->>  ~~~~~~~~~~
->>  
->> diff --git a/fs/pstore/blkoops.c b/fs/pstore/blkoops.c
->> index c76bab671b0b..01170b344f00 100644
->> --- a/fs/pstore/blkoops.c
->> +++ b/fs/pstore/blkoops.c
->> @@ -128,9 +128,16 @@ int blkoops_register_device(struct blkoops_device *bo_dev)
->>  		return -ENOMEM;
->>  	}
->>  
->> -#define verify_size(name, defsize, alignsize) {				\
->> -		long _##name_ = (name);					\
->> -		if (_##name_ < 0)					\
->> +	/* zero means all recorders for compatible */
->> +	if (bo_dev->flags == BLKOOPS_DEV_SUPPORT_DEFAULT)
->> +		bo_dev->flags = BLKOOPS_DEV_SUPPORT_ALL;
->> +#define verify_size(name, defsize, alignsize, enable) {			\
->> +		long _##name_;						\
->> +		if (!(enable))						\
->> +			_##name_ = 0;					\
->> +		else if ((name) >= 0)					\
->> +			_##name_ = (name);				\
->> +		else							\
->>  			_##name_ = (defsize);				\
->>  		_##name_ = _##name_ <= 0 ? 0 : (_##name_ * 1024);	\
->>  		if (_##name_ & ((alignsize) - 1)) {			\
->> @@ -142,10 +149,14 @@ int blkoops_register_device(struct blkoops_device *bo_dev)
->>  		bzinfo->name = _##name_;				\
->>  	}
->>  
->> -	verify_size(dmesg_size, DEFAULT_DMESG_SIZE, 4096);
->> -	verify_size(pmsg_size, DEFAULT_PMSG_SIZE, 4096);
->> -	verify_size(console_size, DEFAULT_CONSOLE_SIZE, 4096);
->> -	verify_size(ftrace_size, DEFAULT_FTRACE_SIZE, 4096);
->> +	verify_size(dmesg_size, DEFAULT_DMESG_SIZE, 4096,
->> +			bo_dev->flags & BLKOOPS_DEV_SUPPORT_DMESG);
->> +	verify_size(pmsg_size, DEFAULT_PMSG_SIZE, 4096,
->> +			bo_dev->flags & BLKOOPS_DEV_SUPPORT_PMSG);
->> +	verify_size(console_size, DEFAULT_CONSOLE_SIZE, 4096,
->> +			bo_dev->flags & BLKOOPS_DEV_SUPPORT_CONSOLE);
->> +	verify_size(ftrace_size, DEFAULT_FTRACE_SIZE, 4096,
->> +			bo_dev->flags & BLKOOPS_DEV_SUPPORT_FTRACE);
-> 
-> I'd kind of prefer this patch be moved much earlier in the series so
-> that the later additions of front-end support doesn't have to be touched
-> twice. i.e. when PMSG support is added, it is added as a whole here and
-> does the flag check in that patch, etc.
-> 
-
-OK.
-
->>  #undef verify_size
->>  	dump_oops = !!(dump_oops < 0 ? DEFAULT_DUMP_OOPS : dump_oops);
->>  
->> @@ -336,6 +347,7 @@ static ssize_t blkoops_blk_panic_write(const char *buf, size_t size,
->>   * register block device to blkoops
->>   * @major: the major device number of registering device
->>   * @panic_write: the write interface for panic case.
->> + * @flags: Refer to macro starting with BLKOOPS_DEV_SUPPORT.
->>   *
->>   * It is ONLY used for block device to register to blkoops. In this case,
->>   * the module parameter @blkdev must be valid. Generic read/write interfaces
->> @@ -349,7 +361,7 @@ static ssize_t blkoops_blk_panic_write(const char *buf, size_t size,
->>   * panic occurs but pstore/blk does not recover yet, the first zone of dmesg
->>   * will be used.
->>   */
->> -int blkoops_register_blkdev(unsigned int major,
->> +int blkoops_register_blkdev(unsigned int major, unsigned int flags,
->>  		blkoops_blk_panic_write_op panic_write)
+>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>> index fcafa68212eb..fcd22df2e9ca 100644
+>> --- a/fs/f2fs/f2fs.h
+>> +++ b/fs/f2fs/f2fs.h
+>> @@ -695,6 +695,7 @@ struct f2fs_inode_info {
+>>
+>>  	/* Use below internally in f2fs*/
+>>  	unsigned long flags;		/* use to pass per-file flags */
+>> +	unsigned long extra_flags;	/* extra flags */
+>>  	struct rw_semaphore i_sem;	/* protect fi info */
+>>  	atomic_t dirty_pages;		/* # of dirty pages */
+>>  	f2fs_hash_t chash;		/* hash value of given file name */
+>> @@ -2569,7 +2570,7 @@ enum {
+>>  };
+>>
+>>  static inline void __mark_inode_dirty_flag(struct inode *inode,
+>> -						int flag, bool set)
+>> +					unsigned long long flag, bool set)
 >>  {
->>  	struct block_device *bdev;
->> @@ -372,6 +384,7 @@ int blkoops_register_blkdev(unsigned int major,
->>  	if (bo_dev.total_size == 0)
->>  		goto err_put_bdev;
->>  	bo_dev.panic_write = panic_write ? blkoops_blk_panic_write : NULL;
->> +	bo_dev.flags = flags;
->>  	bo_dev.read = blkoops_generic_blk_read;
->>  	bo_dev.write = blkoops_generic_blk_write;
->>  
->> diff --git a/include/linux/blkoops.h b/include/linux/blkoops.h
->> index 71c596fd4cc8..bc7665d14a98 100644
->> --- a/include/linux/blkoops.h
->> +++ b/include/linux/blkoops.h
->> @@ -6,6 +6,7 @@
->>  #include <linux/types.h>
->>  #include <linux/blkdev.h>
->>  #include <linux/pstore_blk.h>
->> +#include <linux/bitops.h>
->>  
->>  /**
->>   * struct blkoops_device - backend blkoops driver structure.
->> @@ -14,6 +15,10 @@
->>   * blkoops_register_device(). If block device, you are strongly recommended
->>   * to use blkoops_register_blkdev().
->>   *
->> + * @flags:
->> + *	Refer to macro starting with BLKOOPS_DEV_SUPPORT_. These macros tell
->> + *	us that which pstore/blk recorders this device supports. Zero means
->> + *	all recorders for compatible.
->>   * @total_size:
->>   *	The total size in bytes pstore/blk can use. It must be greater than
->>   *	4096 and be multiple of 4096.
->> @@ -38,6 +43,13 @@
->>   *	On error, negative number should be returned.
->>   */
->>  struct blkoops_device {
->> +	unsigned int flags;
->> +#define BLKOOPS_DEV_SUPPORT_ALL		UINT_MAX
->> +#define BLKOOPS_DEV_SUPPORT_DEFAULT	(0)
->> +#define BLKOOPS_DEV_SUPPORT_DMESG	BIT(0)
->> +#define BLKOOPS_DEV_SUPPORT_PMSG	BIT(1)
->> +#define BLKOOPS_DEV_SUPPORT_CONSOLE	BIT(2)
->> +#define BLKOOPS_DEV_SUPPORT_FTRACE	BIT(3)
->>  	unsigned long total_size;
->>  	blkz_read_op read;
->>  	blkz_write_op write;
->> @@ -54,7 +66,7 @@ typedef int (*blkoops_blk_panic_write_op)(const char *buf, sector_t start_sect,
->>  
->>  int  blkoops_register_device(struct blkoops_device *bo_dev);
->>  void blkoops_unregister_device(struct blkoops_device *bo_dev);
->> -int  blkoops_register_blkdev(unsigned int major,
->> +int  blkoops_register_blkdev(unsigned int major, unsigned int flags,
->>  		blkoops_blk_panic_write_op panic_write);
->>  void blkoops_unregister_blkdev(unsigned int major);
->>  int  blkoops_blkdev_info(dev_t *devt, sector_t *nr_sects, sector_t *start_sect);
->> -- 
->> 1.9.1
+>>  	switch (flag) {
+>>  	case FI_INLINE_XATTR:
+>> @@ -2588,20 +2589,33 @@ static inline void __mark_inode_dirty_flag(struct inode *inode,
 >>
-> 
+>>  static inline void set_inode_flag(struct inode *inode, int flag)
+>>  {
+>> -	if (!test_bit(flag, &F2FS_I(inode)->flags))
+>> -		set_bit(flag, &F2FS_I(inode)->flags);
+>> +	if ((1 << flag) <= sizeof(unsigned long)) {
+>
+> ^ this is wrong. Maybe you meant flag <= BITS_PER_LONG
 
--- 
-WeiXiong Liao
+Oh, my bad, I meant that, thanks for pointing out this. :)
+
+>
+> And ditto for the same checks below. Maybe you can make flags an array of
+> BIT_WORD(max_flag_value) + 1 and skip the branches altogether?
+
+That will be better, let me revise this patch.
+
+Thanks,
+
+>
+> thank you and regards,
+> 	o.
+>
+>> +		if (!test_bit(flag, &F2FS_I(inode)->flags))
+>> +			set_bit(flag, &F2FS_I(inode)->flags);
+>> +	} else {
+>> +		if (!test_bit(flag - 32, &F2FS_I(inode)->extra_flags))
+>> +			set_bit(flag - 32, &F2FS_I(inode)->extra_flags);
+>> +	}
+>>  	__mark_inode_dirty_flag(inode, flag, true);
+>>  }
+>>
+>>  static inline int is_inode_flag_set(struct inode *inode, int flag)
+>>  {
+>> -	return test_bit(flag, &F2FS_I(inode)->flags);
+>> +	if ((1 << flag) <= sizeof(unsigned long))
+>> +		return test_bit(flag, &F2FS_I(inode)->flags);
+>> +	else
+>> +		return test_bit(flag - 32, &F2FS_I(inode)->extra_flags);
+>>  }
+>>
+>>  static inline void clear_inode_flag(struct inode *inode, int flag)
+>>  {
+>> -	if (test_bit(flag, &F2FS_I(inode)->flags))
+>> -		clear_bit(flag, &F2FS_I(inode)->flags);
+>> +	if ((1 << flag) <= sizeof(unsigned long)) {
+>> +		if (test_bit(flag, &F2FS_I(inode)->flags))
+>> +			clear_bit(flag, &F2FS_I(inode)->flags);
+>> +	} else {
+>> +		if (test_bit(flag - 32, &F2FS_I(inode)->extra_flags))
+>> +			clear_bit(flag - 32, &F2FS_I(inode)->extra_flags);
+>> +	}
+>>  	__mark_inode_dirty_flag(inode, flag, false);
+>>  }
+>>
+>> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+>> index 44e08bf2e2b4..ca924d7e0e30 100644
+>> --- a/fs/f2fs/inode.c
+>> +++ b/fs/f2fs/inode.c
+>> @@ -363,6 +363,7 @@ static int do_read_inode(struct inode *inode)
+>>  	if (S_ISREG(inode->i_mode))
+>>  		fi->i_flags &= ~F2FS_PROJINHERIT_FL;
+>>  	fi->flags = 0;
+>> +	fi->extra_flags = 0;
+>>  	fi->i_advise = ri->i_advise;
+>>  	fi->i_pino = le32_to_cpu(ri->i_pino);
+>>  	fi->i_dir_level = ri->i_dir_level;
+>> --
+>> 2.22.0
+>>
