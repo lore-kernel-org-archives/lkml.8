@@ -2,195 +2,95 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0AFC4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF3BC4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D2C20724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB05020724
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:30:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Q8MQfK9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgCVQ3F (ORCPT
+        id S1726797AbgCVQaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 12:29:05 -0400
-Received: from mga12.intel.com ([192.55.52.136]:57351 "EHLO mga12.intel.com"
+        Sun, 22 Mar 2020 12:30:18 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:24702 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbgCVQ3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 12:29:05 -0400
-IronPort-SDR: ojcOi2Ce572HZRlc7AjST7P9mVX2pMlHBr7dXUcgicV5J0zu38omGs8XmjsYo/88D6qkgG4JJN
- NhXtWaqa9WoA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2020 09:29:03 -0700
-IronPort-SDR: hy334qU9gf7XAtxMeIChPaVru7f5WDXBOOEXmmF/GOf+dFYHqfZwnEYJD7N6C6bPuXCZkTzNcY
- 6XKBj8EfOaWA==
-X-IronPort-AV: E=Sophos;i="5.72,293,1580803200"; 
-   d="scan'208";a="325353273"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2020 09:29:04 -0700
-Subject: [PATCH v2 6/6] ACPI: HMAT: Attach a device for each soft-reserved
- range
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-acpi@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, peterz@infradead.org,
-        dave.hansen@linux.intel.com, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        joao.m.martins@oracle.com
-Date:   Sun, 22 Mar 2020 09:12:58 -0700
-Message-ID: <158489357825.1457606.17352509511987748598.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <158489354353.1457606.8327903161927980740.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <158489354353.1457606.8327903161927980740.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        id S1726538AbgCVQaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 12:30:18 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48ljfb12z3z2G;
+        Sun, 22 Mar 2020 17:30:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1584894615; bh=WBVUeZvvAtzwJpBPNVmG/7qOTMhN+wXaL0m8YSl6fJw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q8MQfK9DXHUg05IyeRUEfbADewHv7+54iqPT9tBwq3ZbUId3/+m2znh1CJkuEMCvQ
+         ePMEE0MEXRLNbetINKdV97r/aTX9S5/rQcKqQodG8mhzCIv+/AXKp7dJXKJLp5goNG
+         2WwGMKioK4t9sahQA35xGEXSWPEjQD1NjLrq/Axi+GB1JiKv5PpTv02ad7k1O24jGF
+         9FlW1YC3l7vEfGzoa6sVjfX9LSjI2TXzj8RBL0ErWC7JmILGjipe/9iNUq7aMcHh30
+         zAbog5EXd4oJlaHdV2LvyVaMNuxQ2+10F2fbaB81h2zM91KWrOVt/EVvV638cICccZ
+         B5gHf2kiPnJdQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Sun, 22 Mar 2020 17:30:13 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] i2c: at91: support atomic write xfer
+Message-ID: <20200322163013.GA25488@qmqm.qmqm.pl>
+References: <55613934b7d14ae4122b648c20351b63b03a1385.1584851536.git.mirq-linux@rere.qmqm.pl>
+ <20200322143004.GB1091@ninjato>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200322143004.GB1091@ninjato>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hmem enabling in commit 'cf8741ac57ed ("ACPI: NUMA: HMAT: Register
-"soft reserved" memory as an "hmem" device")' only registered ranges to
-the hmem driver for each soft-reservation that also appeared in the
-HMAT. While this is meant to encourage platform firmware to "do the
-right thing" and publish an HMAT, the corollary is that platforms that
-fail to publish an accurate HMAT will strand memory from Linux usage.
-Additionally, the "efi_fake_mem" kernel command line option enabling
-will strand memory by default without an HMAT.
+On Sun, Mar 22, 2020 at 03:30:04PM +0100, Wolfram Sang wrote:
+> 
+> > +	/* FIXME: only single write request supported to 7-bit addr */
+> 
+> Hmm, this is quite limited. Would it be very hard to support multiple
+> messages? Or reads? 10 bits don't matter.
 
-Arrange for "soft reserved" memory that goes unclaimed by HMAT entries
-to be published as raw resource ranges for the hmem driver to consume.
+I don't expect this to be used for much more than a simple write to PMIC
+to kill the power. So this patch is tailor made for exactly this purpose.
+Though, if you would go for full support of atomic transfers, then
+I would suggest to hack the non-atomic path to be usable in atomic mode
+instead (some I2C drivers do just that, eg. i2c-tegra).
 
-Include a module parameter to disable either this fallback behavior, or
-the hmat enabling from creating hmem devices. The module parameter
-requires the hmem device enabling to have unique name in the module
-namespace: "device_hmem".
+BTW, I found this comment in i2c-core.h:
 
-Rather than mark this x86-only, include an interim phys_to_target_node()
-implementation for arm64.
+ * We only allow atomic transfers for very late communication, e.g. to send
+ * the powerdown command to a PMIC. Atomic transfers are a corner case and not
+ * for generic use! 
 
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Brice Goglin <Brice.Goglin@inria.fr>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Jeff Moyer <jmoyer@redhat.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- arch/arm64/mm/numa.c      |   13 +++++++++++++
- drivers/dax/Kconfig       |    1 +
- drivers/dax/hmem/Makefile |    3 ++-
- drivers/dax/hmem/device.c |   33 +++++++++++++++++++++++++++++++++
- 4 files changed, 49 insertions(+), 1 deletion(-)
+I think this covers the idea.
 
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 4decf1659700..00fba21eaec0 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -468,3 +468,16 @@ int memory_add_physaddr_to_nid(u64 addr)
- 	pr_warn("Unknown node for memory at 0x%llx, assuming node 0\n", addr);
- 	return 0;
- }
-+
-+/*
-+ * device-dax instance registrations want a valid target-node in case
-+ * they are ever onlined as memory (see hmem_register_device()).
-+ *
-+ * TODO: consult cached numa info
-+ */
-+int phys_to_target_node(phys_addr_t addr)
-+{
-+	pr_warn_once("Unknown target node for memory at 0x%llx, assuming node 0\n",
-+			addr);
-+	return 0;
-+}
-diff --git a/drivers/dax/Kconfig b/drivers/dax/Kconfig
-index a229f45d34aa..163edde6ba41 100644
---- a/drivers/dax/Kconfig
-+++ b/drivers/dax/Kconfig
-@@ -50,6 +50,7 @@ config DEV_DAX_HMEM
- 
- config DEV_DAX_HMEM_DEVICES
- 	depends on DEV_DAX_HMEM
-+	select NUMA_KEEP_MEMINFO if NUMA
- 	def_bool y
- 
- config DEV_DAX_KMEM
-diff --git a/drivers/dax/hmem/Makefile b/drivers/dax/hmem/Makefile
-index a9d353d0c9ed..57377b4c3d47 100644
---- a/drivers/dax/hmem/Makefile
-+++ b/drivers/dax/hmem/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_DEV_DAX_HMEM) += dax_hmem.o
--obj-$(CONFIG_DEV_DAX_HMEM_DEVICES) += device.o
-+obj-$(CONFIG_DEV_DAX_HMEM_DEVICES) += device_hmem.o
- 
-+device_hmem-y := device.o
- dax_hmem-y := hmem.o
-diff --git a/drivers/dax/hmem/device.c b/drivers/dax/hmem/device.c
-index 99bc15a8b031..f9c5fa8b1880 100644
---- a/drivers/dax/hmem/device.c
-+++ b/drivers/dax/hmem/device.c
-@@ -4,6 +4,9 @@
- #include <linux/module.h>
- #include <linux/mm.h>
- 
-+static bool nohmem;
-+module_param_named(disable, nohmem, bool, 0444);
-+
- void hmem_register_device(int target_nid, struct resource *r)
- {
- 	/* define a clean / non-busy resource for the platform device */
-@@ -16,6 +19,9 @@ void hmem_register_device(int target_nid, struct resource *r)
- 	struct memregion_info info;
- 	int rc, id;
- 
-+	if (nohmem)
-+		return;
-+
- 	rc = region_intersects(res.start, resource_size(&res), IORESOURCE_MEM,
- 			IORES_DESC_SOFT_RESERVED);
- 	if (rc != REGION_INTERSECTS)
-@@ -62,3 +68,30 @@ void hmem_register_device(int target_nid, struct resource *r)
- out_pdev:
- 	memregion_free(id);
- }
-+
-+static __init int hmem_register_one(struct resource *res, void *data)
-+{
-+	/*
-+	 * If the resource is not a top-level resource it was already
-+	 * assigned to a device by the HMAT parsing.
-+	 */
-+	if (res->parent != &iomem_resource)
-+		return 0;
-+
-+	hmem_register_device(phys_to_target_node(res->start), res);
-+
-+	return 0;
-+}
-+
-+static __init int hmem_init(void)
-+{
-+	walk_iomem_res_desc(IORES_DESC_SOFT_RESERVED,
-+			IORESOURCE_MEM, 0, -1, NULL, hmem_register_one);
-+	return 0;
-+}
-+
-+/*
-+ * As this is a fallback for address ranges unclaimed by the ACPI HMAT
-+ * parsing it must be at an initcall level greater than hmat_init().
-+ */
-+late_initcall(hmem_init);
+> > +	if (!dev->pdata->has_alt_cmd)
+> > +		return -EOPNOTSUPP;
+> 
+> We should handle this in probe(), I think:
+> 
+> 	if (dev->pdata->has_alt_cmd)
+> 		at91_twi_algorithm.master_xfer_atomic = at91_twi_xfer_atomic;
 
+This would mean writable ops structure - something I try hard to avoid.
+We can use another copy of i2c_algorithm structure if needed, though.
+
+Best Regards
+Micha³ Miros³aw
