@@ -2,66 +2,53 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D13BC4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 729F0C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205CE20714
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:40:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zp4TF/Lp"
+	by mail.kernel.org (Postfix) with ESMTP id 40F422073C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgCVPkm (ORCPT
+        id S1726896AbgCVPmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 11:40:42 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:50380 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725970AbgCVPkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 11:40:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=DqjrInw4uQy43vEcVImdLOHnf+UCR1fsTY/wpt5VjXk=; b=zp4TF/LprGNiQ4b1hbDimTYTtL
-        SivTfdOn9+ZBqpjIi/vRQC/qCBK00qdhjl32lDpDudvaK2+TQL45nrn3WQSbLdi+4pRurkmvz0VR1
-        JNNtagHfZn0t+TeZ4QhL4gAvq8dbWi8ZTbxMk41soOdl9pgJx5yOr/rRTmbwW/vg2S6Y=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jG2iH-0000d7-OU; Sun, 22 Mar 2020 16:40:33 +0100
-Date:   Sun, 22 Mar 2020 16:40:33 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        broonie@kernel.org, alexios.zavras@intel.com, tglx@linutronix.de,
-        mchehab+samsung@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v4 9/9] net: phy: tja11xx: use
- phy_read_poll_timeout() to simplify the code
-Message-ID: <20200322154033.GR11481@lunn.ch>
-References: <20200322065555.17742-1-zhengdejin5@gmail.com>
- <20200322065555.17742-10-zhengdejin5@gmail.com>
-MIME-Version: 1.0
+        Sun, 22 Mar 2020 11:42:42 -0400
+Received: from in01-tec.fasttelco.net ([78.159.162.5]:57011 "EHLO
+        in01-tec.fasttelco.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgCVPml (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 11:42:41 -0400
+Received: from gjks6v3.com ([62.215.195.91])
+        by in01-tec.fasttelco.net (8.14.3/8.14.3/Debian-9.4) with ESMTP id 02MFgRl8014004
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 18:42:29 +0300
+Message-Id: <202003221542.02MFgRl8014004@in01-tec.fasttelco.net>
+From:   "Robert Andrew Piper" <info@kyomachiya.org>
+Subject: United Nations Assistant Secretary-General for Development
+ Coordination
+To:     linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200322065555.17742-10-zhengdejin5@gmail.com>
+Reply-To: "Robert Andrew Piper" <sarah.buchiri@gmail.com>,
+          sarah.buchiri@gmail.com
+Date:   Sun, 22 Mar 2020 16:42:29 +0100
+X-Priority: 3
+X-Scanned-By: CanIt (www . roaringpenguin . com) on 78.159.162.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 02:55:55PM +0800, Dejin Zheng wrote:
-> use phy_read_poll_timeout() to replace the poll codes for
-> simplify tja11xx_check() function.
-> 
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+United Nations Assistant Secretary-General for Development Coordination, In Affiliation with World Bank Our Ref: U.N.D.C/2020/10/0109
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Congratulations,
 
-    Andrew
+
+Your email was randomly selected for the 2020 first quarter reimbursement. Please reach Mrs. Sarah Buchiri with your code:U.N.D.C/2020/10/0109 for more information.
+
+Contact Name: Mrs. Sarah Buchiri
+Email: sarah.buchiri@gmail.com
+
+
+Robert Andrew Piper
+Assistant Secretary-General for Development Coordination
