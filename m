@@ -2,139 +2,225 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529EAC4332E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6EBC4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2628F206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:50:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Scc6yoHC"
+	by mail.kernel.org (Postfix) with ESMTP id 635B520722
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:52:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584899554;
+	bh=E4tkfsLC2npwliTDR8mBLrea9DerZNIIDxFJTaOlD0k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sco/QKjV9pBU+yA26gmQusHbERFGvEBVpC2f29P1PBmu9MUdtTkxBBJN3p2xX2r3w
+	 zxrg64rHiceKbbQS9hQcaosCmDCvlj4yVSEBFyjJQwrxalAzqLINixM4gGA9V8Wdqg
+	 gnfKfB3CALDFf2fl1CC2YaPMs4es94XcQSpuRZfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgCVRuP (ORCPT
+        id S1726832AbgCVRwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 13:50:15 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:54332 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbgCVRuJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 13:50:09 -0400
-Received: by mail-pj1-f67.google.com with SMTP id np9so5010962pjb.4;
-        Sun, 22 Mar 2020 10:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EW5XLK9JrPHqzxs/NVCXKQ0OXP2FtbApwSHVemtiYBc=;
-        b=Scc6yoHCUc5Ttdxmq8ORfcZ3QQR97YVqSsWSGI35vQORCr7dzC/8/k0S0O+PzF3Wgk
-         NRgLWfbIfLTWhWKFMLWpoGhZKFp4buRqQrHvMSmbcTjUkiq1m3ycPx8PWpjqDyqxrr6S
-         BbH85S5DrTpneMigsd6oP4jSgLvRtz64G21PeiU7Liwmv4qfWR7LYnc3mjVGDLKg2QyZ
-         yqzWSAC7SXIehzyky8JkvvlUxEfABJVYqRMfP4UprNOb/7q/dLczCm6w1MdHlFPw8xkg
-         oDwc2YTY1i1ZIXT4y3+iCTX6AgmPvE2gbU7VPUh8df5eHhvgk79RY0CMs8IhdLQEZwKi
-         1V8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EW5XLK9JrPHqzxs/NVCXKQ0OXP2FtbApwSHVemtiYBc=;
-        b=RGHxVktoSDT99MhQ6j+pTa/9iiSPXZIuCVjr1N/NxFOJKjNv6OTDNUili9BE15Ymv3
-         99DZrUtoDuW3ZKSGU6MoRRxJ3B+TKgID7/3sKY/rhei4Ww7rygjtik8gjoaNzUHSYC4b
-         mfQmPjFf5LVneFd7DAzSS2ydd7Qcg1d3XnuPIAnBFYJUy6XRwrFalHyDAKc18UzhGV8H
-         TwG5dFeSP3NavYh6i5ScX+fCcHxNkM70Z9FCIRJ6Ss7kfdtlovYzu4YenThJ4ZiL1dzb
-         GLr3ocptpRYH9PwQoOyICbmNUpNeemi04CJoDJV1LVV+aiVEpmrNqXTOmK8wkS7tzBCu
-         XOpw==
-X-Gm-Message-State: ANhLgQ3LuP/CA/ANuRlJ5AdkYg10bOt0ISz4km/mjxvK8zM89nMasXck
-        bx4TsFlp73+JkFvHwyWFo58=
-X-Google-Smtp-Source: ADFU+vt6phtugyviM9LoZ112CZOqpzA/IfsyBe5FY8nK/4NTIvqci95/BX6rOYgi4+B7yFs9HDOHpQ==
-X-Received: by 2002:a17:902:7d97:: with SMTP id a23mr16462613plm.31.1584899408179;
-        Sun, 22 Mar 2020 10:50:08 -0700 (PDT)
-Received: from localhost ([216.24.188.11])
-        by smtp.gmail.com with ESMTPSA id s15sm11168314pfd.164.2020.03.22.10.50.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 22 Mar 2020 10:50:07 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, davem@davemloft.net,
-        mchehab+samsung@kernel.org, corbet@lwn.net,
-        gregkh@linuxfoundation.org, broonie@kernel.org, tglx@linutronix.de,
-        netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH net-next v5 04/10] net: phy: bcm84881: use phy_read_mmd_poll_timeout() to simplify the code
-Date:   Mon, 23 Mar 2020 01:49:37 +0800
-Message-Id: <20200322174943.26332-5-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200322174943.26332-1-zhengdejin5@gmail.com>
-References: <20200322174943.26332-1-zhengdejin5@gmail.com>
+        Sun, 22 Mar 2020 13:52:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34418 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725997AbgCVRwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 13:52:33 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24B63206C3;
+        Sun, 22 Mar 2020 17:52:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584899551;
+        bh=E4tkfsLC2npwliTDR8mBLrea9DerZNIIDxFJTaOlD0k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xFXRyqaXvjCustqER/6dHYlCtRtCClXD9avWVmoAzhiR8JaxhRGNOykk4cBwEzcOR
+         RNcYWwpEgqSKS3s5lkvcdMnvJVQWJ6Xe4GCgEMEHekIhMFp2AcoyIPml19SAPRRlKl
+         6YbNPlIbCICXOejuiwNTmgQ3MnkS7q/Fz6sJzIfE=
+Date:   Sun, 22 Mar 2020 17:52:27 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rohit Sarkar <rohitsarkar5398@gmail.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dragos.bogdan@analog.com
+Subject: Re: [PATCH v7] iio: adc: max1363: replace uses of mlock
+Message-ID: <20200322175227.1623048e@archlinux>
+In-Reply-To: <5e766058.1c69fb81.a65ff.d2eb@mx.google.com>
+References: <5e6e522d.1c69fb81.10f54.f95c@mx.google.com>
+        <5e766058.1c69fb81.a65ff.d2eb@mx.google.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-use phy_read_mmd_poll_timeout() to replace the poll codes for
-simplify bcm84881_wait_init() function.
+On Sun, 22 Mar 2020 00:13:32 +0530
+Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
-v4 -> v5:
-	- no changed
-v3 -> v4:
-	- no changed
-v2 -> v3:
-	- adapt to it after modifying the parameter order of the
-	  newly added function
-v1 -> v2:
-	- remove the handle of phy_read_mmd's return error.
+> Hey,
+> Does this look fine? Wondering if this was missed during review
+> Thanks,
+> Rohit
 
- drivers/net/phy/bcm84881.c | 27 ++++-----------------------
- 1 file changed, 4 insertions(+), 23 deletions(-)
+Nope just a busy week.  + I review from latest emails backwards
+(and almost always get through everything).
 
-diff --git a/drivers/net/phy/bcm84881.c b/drivers/net/phy/bcm84881.c
-index 14d55a77eb28..b70be775909c 100644
---- a/drivers/net/phy/bcm84881.c
-+++ b/drivers/net/phy/bcm84881.c
-@@ -22,30 +22,11 @@ enum {
- 
- static int bcm84881_wait_init(struct phy_device *phydev)
- {
--	unsigned int tries = 20;
--	int ret, val;
--
--	do {
--		val = phy_read_mmd(phydev, MDIO_MMD_PMAPMD, MDIO_CTRL1);
--		if (val < 0) {
--			ret = val;
--			break;
--		}
--		if (!(val & MDIO_CTRL1_RESET)) {
--			ret = 0;
--			break;
--		}
--		if (!--tries) {
--			ret = -ETIMEDOUT;
--			break;
--		}
--		msleep(100);
--	} while (1);
-+	int val;
- 
--	if (ret)
--		phydev_err(phydev, "%s failed: %d\n", __func__, ret);
--
--	return ret;
-+	return phy_read_mmd_poll_timeout(phydev, MDIO_MMD_PMAPMD, MDIO_CTRL1,
-+					 val, !(val & MDIO_CTRL1_RESET),
-+					 100000, 2000000);
- }
- 
- static int bcm84881_config_init(struct phy_device *phydev)
--- 
-2.25.0
+Questions have a habit of being resolved quicker that way
+around ;)
+
+Jonathan
+
+> 
+> On Sun, Mar 15, 2020 at 09:34:58PM +0530, Rohit Sarkar wrote:
+> > Replace usage indio_dev's mlock with either local lock or
+> > iio_device_claim_direct_mode.
+> > 
+> > Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
+> > ---
+> > Changelog v6 -> v7
+> > * Fix failure handling logic
+> > 
+> > Changelog v5 -> v6
+> > * Minor failure handling fixes
+> > 
+> > Changelog v4 -> v5
+> > * Use local lock too at places where driver state needs to be protected.
+> > 
+> > Changelog v3 -> v4
+> > * Fix indentation
+> > 
+> > Changelog v2 -> v3
+> > * use iio_device_claim_direct when switching modes
+> > * replace mlock usage in max1363_write_event_config
+> > 
+> > Changelog v1 -> v2
+> > * Fix indentation
+> > 
+> >  drivers/iio/adc/max1363.c | 37 ++++++++++++++++++++++++++++---------
+> >  1 file changed, 28 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
+> > index 5c2cc61b666e..12d72bf3f12a 100644
+> > --- a/drivers/iio/adc/max1363.c
+> > +++ b/drivers/iio/adc/max1363.c
+> > @@ -150,6 +150,7 @@ struct max1363_chip_info {
+> >   * @current_mode:	the scan mode of this chip
+> >   * @requestedmask:	a valid requested set of channels
+> >   * @reg:		supply regulator
+> > + * @lock		lock to ensure state is consistent
+> >   * @monitor_on:		whether monitor mode is enabled
+> >   * @monitor_speed:	parameter corresponding to device monitor speed setting
+> >   * @mask_high:		bitmask for enabled high thresholds
+> > @@ -169,6 +170,7 @@ struct max1363_state {
+> >  	const struct max1363_mode	*current_mode;
+> >  	u32				requestedmask;
+> >  	struct regulator		*reg;
+> > +	struct mutex			lock;
+> >  
+> >  	/* Using monitor modes and buffer at the same time is
+> >  	   currently not supported */
+> > @@ -364,7 +366,13 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
+> >  	struct max1363_state *st = iio_priv(indio_dev);
+> >  	struct i2c_client *client = st->client;
+> >  
+> > -	mutex_lock(&indio_dev->mlock);
+> > +	ret = iio_device_claim_direct_mode(indio_dev);
+> > +	if (ret)
+> > +		return ret;
+> > +	mutex_lock(&st->lock);
+> > +
+> > +	if (ret < 0)
+> > +		goto error_ret;
+> >  	/*
+> >  	 * If monitor mode is enabled, the method for reading a single
+> >  	 * channel will have to be rather different and has not yet
+> > @@ -372,7 +380,7 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
+> >  	 *
+> >  	 * Also, cannot read directly if buffered capture enabled.
+> >  	 */
+> > -	if (st->monitor_on || iio_buffer_enabled(indio_dev)) {
+> > +	if (st->monitor_on) {
+> >  		ret = -EBUSY;
+> >  		goto error_ret;
+> >  	}
+> > @@ -404,8 +412,10 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
+> >  		data = rxbuf[0];
+> >  	}
+> >  	*val = data;
+> > +
+> >  error_ret:
+> > -	mutex_unlock(&indio_dev->mlock);
+> > +	mutex_unlock(&st->lock);
+> > +	iio_device_release_direct_mode(indio_dev);
+> >  	return ret;
+> >  
+> >  }
+> > @@ -705,9 +715,9 @@ static ssize_t max1363_monitor_store_freq(struct device *dev,
+> >  	if (!found)
+> >  		return -EINVAL;
+> >  
+> > -	mutex_lock(&indio_dev->mlock);
+> > +	mutex_lock(&st->lock);
+> >  	st->monitor_speed = i;
+> > -	mutex_unlock(&indio_dev->mlock);
+> > +	mutex_unlock(&st->lock);
+> >  
+> >  	return 0;
+> >  }
+> > @@ -810,12 +820,12 @@ static int max1363_read_event_config(struct iio_dev *indio_dev,
+> >  	int val;
+> >  	int number = chan->channel;
+> >  
+> > -	mutex_lock(&indio_dev->mlock);
+> > +	mutex_lock(&st->lock);
+> >  	if (dir == IIO_EV_DIR_FALLING)
+> >  		val = (1 << number) & st->mask_low;
+> >  	else
+> >  		val = (1 << number) & st->mask_high;
+> > -	mutex_unlock(&indio_dev->mlock);
+> > +	mutex_unlock(&st->lock);
+> >  
+> >  	return val;
+> >  }
+> > @@ -962,7 +972,14 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
+> >  	u16 unifiedmask;
+> >  	int number = chan->channel;
+> >  
+> > -	mutex_lock(&indio_dev->mlock);
+> > +	ret = iio_device_claim_direct_mode(indio_dev);
+> > +	if (ret)
+> > +		return ret;
+> > +	mutex_lock(&st->lock);
+> > +
+> > +	if (ret < 0)
+> > +		goto error_ret;
+> > +
+> >  	unifiedmask = st->mask_low | st->mask_high;
+> >  	if (dir == IIO_EV_DIR_FALLING) {
+> >  
+> > @@ -989,7 +1006,8 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
+> >  
+> >  	max1363_monitor_mode_update(st, !!(st->mask_high | st->mask_low));
+> >  error_ret:
+> > -	mutex_unlock(&indio_dev->mlock);
+> > +	mutex_unlock(&st->lock);
+> > +	iio_device_release_direct_mode(indio_dev);
+> >  
+> >  	return ret;
+> >  }
+> > @@ -1587,6 +1605,7 @@ static int max1363_probe(struct i2c_client *client,
+> >  
+> >  	st = iio_priv(indio_dev);
+> >  
+> > +	mutex_init(&st->lock);
+> >  	st->reg = devm_regulator_get(&client->dev, "vcc");
+> >  	if (IS_ERR(st->reg)) {
+> >  		ret = PTR_ERR(st->reg);
+> > -- 
+> > 2.23.0.385.gbc12974a89
+> >   
 
