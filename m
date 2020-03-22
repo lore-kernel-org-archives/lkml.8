@@ -2,89 +2,94 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CAFC4332E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 04:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92917C43333
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 04:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94D4F20753
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 04:17:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Oto3kWlT"
+	by mail.kernel.org (Postfix) with ESMTP id 67FCD206F9
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 04:31:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584851508;
+	bh=+5nxVvLDglesqKoMyyHWiUfsl0yEfapg6YZP612YgTo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hcy7OVGNGskoEVPcTcj0Dse93B09lQEO4zL/G5jRrSt1qZnWIjPjKCwCYORdqEwkn
+	 q+owwb0C/YR41kGJ260zsW9HWb34okBoVjA11ch855rHfE1UD4OjCju/C9A96TUYGP
+	 WVA6eLjOTXgqykMd6TVilq5BpQxm4oq4xSj9MvII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726137AbgCVER5 (ORCPT
+        id S1726538AbgCVEbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 00:17:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42982 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgCVER5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 00:17:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=eCXmB2ln2EpsN/JeFT/9dVYB0ryeKTlA4ZglGkDY6Sw=; b=Oto3kWlT9moldBC9xAdZbAukTC
-        Pfh/3y3q9EbXGxB/syerXjfXwPzMYvevvdmMvZRi8B0+thCu8NA9sgrKgQ7rqCO4YxSDy6pLLHjFC
-        3acCxKqNnaoTXbB8y0tjBQSC6PId/I0hkiBrfMqO1unCG++zMthOuR5hT2ZOid9C3KaX24CcRxtWV
-        CwpHFks1LdawyDrhZlGzLHkApLTr6KA+XPq6Ck0IdA1JWut+2L91kvrn/eO65Hvp9NjXpQh16kN6T
-        l1yJSUlLBjwfucD7Y0Yyn1WzW1uSy9n1rC47pqKsYUr5Ubp44iKv7BxKXxp1zGTOqfe7bR5tiatuC
-        nr0535BA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jFs3f-00019t-8f; Sun, 22 Mar 2020 04:17:55 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Hemant Kumar <hemantk@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next/-mmotm] bus/mhi: fix printk format for size_t
-Message-ID: <c4852a82-cdb9-6318-70a4-96ccb4ba5af2@infradead.org>
-Date:   Sat, 21 Mar 2020 21:17:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Sun, 22 Mar 2020 00:31:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbgCVEbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 00:31:44 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86C77206F9;
+        Sun, 22 Mar 2020 04:31:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584851503;
+        bh=+5nxVvLDglesqKoMyyHWiUfsl0yEfapg6YZP612YgTo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qDazwTlAD5YbbcoB54nxxYPbplX8cKKt2CJjlCy/obCgoCHH++MpPYAP3pc4Kcywz
+         7PXsl5/3aOqw6vOoJu2R9yD9jFgVxWUk99JQaNYV8e3sl96XXLEUosrfazWkoATa2T
+         cOHzXpoUVYrJqk3haEU/rSjFvim6ogB0js00fPcE=
+Date:   Sat, 21 Mar 2020 21:31:42 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Rafael Aquini <aquini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        shuah@kernel.org, shakeelb@google.com
+Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
+ false-negative errors
+Message-Id: <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
+In-Reply-To: <20200322020326.GB1068248@t490s>
+References: <20200322013525.1095493-1-aquini@redhat.com>
+        <20200321184352.826d3dba38aecc4ff7b32e72@linux-foundation.org>
+        <20200322020326.GB1068248@t490s>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Sat, 21 Mar 2020 22:03:26 -0400 Rafael Aquini <aquini@redhat.com> wrote:
 
-Fix printk format warning by using %z for size_t modifier:
+> > > + * In order to sort out that race, and get the after fault checks consistent,
+> > > + * the "quick and dirty" trick below is required in order to force a call to
+> > > + * lru_add_drain_all() to get the recently MLOCK_ONFAULT pages moved to
+> > > + * the unevictable LRU, as expected by the checks in this selftest.
+> > > + */
+> > > +static void force_lru_add_drain_all(void)
+> > > +{
+> > > +	sched_yield();
+> > > +	system("echo 1 > /proc/sys/vm/compact_memory");
+> > > +}
+> > 
+> > What is the sched_yield() for?
+> >
+> 
+> Mostly it's there to provide a sleeping gap after the fault, whithout 
+> actually adding an arbitrary value with usleep(). 
+> 
+> It's not a hard requirement, but, in some of the tests I performed 
+> (whithout that sleeping gap) I would still see around 1% chance 
+> of hitting the false-negative. After adding it I could not hit
+> the issue anymore.
 
-../drivers/bus/mhi/core/boot.c: In function ‘mhi_rddm_prepare’:
-../drivers/bus/mhi/core/boot.c:55:15: warning: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 5 has type ‘size_t {aka unsigned int}’ [-Wformat=]
-  dev_dbg(dev, "Address: %p and len: 0x%lx sequence: %u\n",
+It's concerning that such deep machinery as pagevec draining is visible
+to userspace.
 
+I suppose that for consistency and correctness we should perform a
+drain prior to each read from /proc/*/pagemap.  Presumably this would
+be far too expensive.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Hemant Kumar <hemantk@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org
----
-Found in mmotm, but in its linux-next.patch file.
-
- drivers/bus/mhi/core/boot.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- mmotm-2020-0321-1517.orig/drivers/bus/mhi/core/boot.c
-+++ mmotm-2020-0321-1517/drivers/bus/mhi/core/boot.c
-@@ -52,7 +52,7 @@ void mhi_rddm_prepare(struct mhi_control
- 			    BHIE_RXVECDB_SEQNUM_BMSK, BHIE_RXVECDB_SEQNUM_SHFT,
- 			    sequence_id);
- 
--	dev_dbg(dev, "Address: %p and len: 0x%lx sequence: %u\n",
-+	dev_dbg(dev, "Address: %p and len: 0x%zx sequence: %u\n",
- 		&mhi_buf->dma_addr, mhi_buf->len, sequence_id);
- }
- 
+Is there any other way?  One such might be to make the MLOCK_ONFAULT
+pages bypass the lru_add_pvecs?
 
