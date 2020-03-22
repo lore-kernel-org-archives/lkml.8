@@ -2,218 +2,200 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 224B2C54FCF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26821C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE9AB20724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D43772072E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:30:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="1LHl9Rxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgCVP1h (ORCPT
+        id S1726816AbgCVPaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 11:27:37 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:53016 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725785AbgCVP1h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 11:27:37 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02MFOvBe003233;
-        Sun, 22 Mar 2020 11:27:23 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ywcs5uuap-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 22 Mar 2020 11:27:23 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 02MFRM74063936
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Sun, 22 Mar 2020 11:27:22 -0400
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sun, 22 Mar 2020 11:27:21 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sun, 22 Mar 2020 11:27:21 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Sun, 22 Mar 2020 11:27:21 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02MFRJf0019168;
-        Sun, 22 Mar 2020 11:27:20 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3] iio: adc: ad7793: use read_avail iio hook for scale available
-Date:   Sun, 22 Mar 2020 17:26:56 +0200
-Message-ID: <20200322152656.41669-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 22 Mar 2020 11:30:17 -0400
+Received: from vps.xff.cz ([195.181.215.36]:34496 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725785AbgCVPaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 11:30:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+        t=1584891015; bh=RoFPbFA3+ibWKe/oDKEUezK72UbjGOqeR5zVlBJwIws=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=1LHl9RxrN4sRj7s3WgembJ8EhmKywDYj6P9hoQhr76RycVHZHFw3iq9T+zKTpF8FH
+         opj1f8voTM7Bl9QzCkgRe+wYr7QrfdKoZgbq0J+0rzIXO+bpp5w/USelrJjaAH20tV
+         0y3AUnMNaIEsaV2eiZEadG77iPQdjmULS7pUHmgA=
+Date:   Sun, 22 Mar 2020 16:30:14 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To:     Chao Yu <chao@kernel.org>
+Cc:     jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Chao Yu <yuchao0@huawei.com>
+Subject: Re: [PATCH] f2fs: fix potential .flags overflow on 32bit architecture
+Message-ID: <20200322153014.czpca7ozhfy4ctdh@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
+        Chao Yu <chao@kernel.org>, jaegeuk@kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Chao Yu <yuchao0@huawei.com>
+References: <20200322101327.5979-1-chao@kernel.org>
+ <20200322121434.i2jea6o5tzanip7z@core.my.home>
+ <47c71fe9-e168-8080-d0ed-2cfaa9a77e5e@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-22_05:2020-03-21,2020-03-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- malwarescore=0 clxscore=1015 suspectscore=0 spamscore=0 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003220093
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <47c71fe9-e168-8080-d0ed-2cfaa9a77e5e@kernel.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change uses the read_avail and '.info_mask_shared_by_type_available'
-modifier to set the available scale.
-Essentially, nothing changes to the driver's ABI.
+On Sun, Mar 22, 2020 at 09:18:56PM +0800, Chao Yu wrote:
+> Hi,
+> 
+> On 2020-3-22 20:14, Ondřej Jirman wrote:
+> > Hello,
+> > 
+> > On Sun, Mar 22, 2020 at 06:13:27PM +0800, Chao Yu wrote:
+> > > From: Chao Yu <yuchao0@huawei.com>
+> > > 
+> > > f2fs_inode_info.flags is unsigned long variable, it has 32 bits
+> > > in 32bit architecture, since we introduced FI_MMAP_FILE flag
+> > > when we support data compression, we may access memory cross
+> > > the border of .flags field, corrupting .i_sem field, result in
+> > > below deadlock.
+> > > 
+> > > To fix this issue, let's introduce .extra_flags to grab extra
+> > > space to store those new flags.
+> > > 
+> > > Call Trace:
+> > >  __schedule+0x8d0/0x13fc
+> > >  ? mark_held_locks+0xac/0x100
+> > >  schedule+0xcc/0x260
+> > >  rwsem_down_write_slowpath+0x3ab/0x65d
+> > >  down_write+0xc7/0xe0
+> > >  f2fs_drop_nlink+0x3d/0x600 [f2fs]
+> > >  f2fs_delete_inline_entry+0x300/0x440 [f2fs]
+> > >  f2fs_delete_entry+0x3a1/0x7f0 [f2fs]
+> > >  f2fs_unlink+0x500/0x790 [f2fs]
+> > >  vfs_unlink+0x211/0x490
+> > >  do_unlinkat+0x483/0x520
+> > >  sys_unlink+0x4a/0x70
+> > >  do_fast_syscall_32+0x12b/0x683
+> > >  entry_SYSENTER_32+0xaa/0x102
+> > > 
+> > > Fixes: 4c8ff7095bef ("f2fs: support data compression")
+> > > Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> > > ---
+> > >  fs/f2fs/f2fs.h  | 26 ++++++++++++++++++++------
+> > >  fs/f2fs/inode.c |  1 +
+> > >  2 files changed, 21 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> > > index fcafa68212eb..fcd22df2e9ca 100644
+> > > --- a/fs/f2fs/f2fs.h
+> > > +++ b/fs/f2fs/f2fs.h
+> > > @@ -695,6 +695,7 @@ struct f2fs_inode_info {
+> > > 
+> > >  	/* Use below internally in f2fs*/
+> > >  	unsigned long flags;		/* use to pass per-file flags */
+> > > +	unsigned long extra_flags;	/* extra flags */
+> > >  	struct rw_semaphore i_sem;	/* protect fi info */
+> > >  	atomic_t dirty_pages;		/* # of dirty pages */
+> > >  	f2fs_hash_t chash;		/* hash value of given file name */
+> > > @@ -2569,7 +2570,7 @@ enum {
+> > >  };
+> > > 
+> > >  static inline void __mark_inode_dirty_flag(struct inode *inode,
+> > > -						int flag, bool set)
+> > > +					unsigned long long flag, bool set)
+> > >  {
+> > >  	switch (flag) {
+> > >  	case FI_INLINE_XATTR:
+> > > @@ -2588,20 +2589,33 @@ static inline void __mark_inode_dirty_flag(struct inode *inode,
+> > > 
+> > >  static inline void set_inode_flag(struct inode *inode, int flag)
+> > >  {
+> > > -	if (!test_bit(flag, &F2FS_I(inode)->flags))
+> > > -		set_bit(flag, &F2FS_I(inode)->flags);
+> > > +	if ((1 << flag) <= sizeof(unsigned long)) {
+> > 
+> > ^ this is wrong. Maybe you meant flag <= BITS_PER_LONG
+> 
+> Oh, my bad, I meant that, thanks for pointing out this. :)
+> 
+> > 
+> > And ditto for the same checks below. Maybe you can make flags an array of
+> > BIT_WORD(max_flag_value) + 1 and skip the branches altogether?
 
-The main idea for this patch is to remove the AD7793 driver from
-checkpatch's radar. There have been about ~3 attempts to fix/break the
-'in_voltage-voltage_scale_available' attribute, because checkpatch assumed
-it to be an arithmetic operation and people were trying to change that.
+I've found maybe a clearer macro for this: 
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
+  https://elixir.bootlin.com/linux/latest/source/include/linux/bitops.h#L15
 
-Changelog v2 -> v3:
-* split from series https://patchwork.kernel.org/project/linux-iio/list/?series=259659
-* moved -EINVAL return to default case
+  BITS_TO_LONGS(nr)
 
- drivers/iio/adc/ad7793.c | 55 +++++++++++++++++++++++++++-------------
- 1 file changed, 37 insertions(+), 18 deletions(-)
+But it takes the number of bits in the bitmap, which would be 
+"max_flag_value + 1".
 
-diff --git a/drivers/iio/adc/ad7793.c b/drivers/iio/adc/ad7793.c
-index 5592ae573e6b..7005bde50a76 100644
---- a/drivers/iio/adc/ad7793.c
-+++ b/drivers/iio/adc/ad7793.c
-@@ -354,29 +354,28 @@ static IIO_CONST_ATTR_SAMP_FREQ_AVAIL(
- static IIO_CONST_ATTR_NAMED(sampling_frequency_available_ad7797,
- 	sampling_frequency_available, "123 62 50 33 17 16 12 10 8 6 4");
- 
--static ssize_t ad7793_show_scale_available(struct device *dev,
--			struct device_attribute *attr, char *buf)
-+static int ad7793_read_avail(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan,
-+			     const int **vals, int *type, int *length,
-+			     long mask)
- {
--	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
- 	struct ad7793_state *st = iio_priv(indio_dev);
--	int i, len = 0;
- 
--	for (i = 0; i < ARRAY_SIZE(st->scale_avail); i++)
--		len += sprintf(buf + len, "%d.%09u ", st->scale_avail[i][0],
--			       st->scale_avail[i][1]);
--
--	len += sprintf(buf + len, "\n");
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SCALE:
-+		*vals = (int *)st->scale_avail;
-+		*type = IIO_VAL_INT_PLUS_NANO;
-+		/* Values are stored in a 2D matrix  */
-+		*length = ARRAY_SIZE(st->scale_avail) * 2;
- 
--	return len;
-+		return IIO_AVAIL_LIST;
-+	default:
-+		return -EINVAL;
-+	}
- }
- 
--static IIO_DEVICE_ATTR_NAMED(in_m_in_scale_available,
--		in_voltage-voltage_scale_available, S_IRUGO,
--		ad7793_show_scale_available, NULL, 0);
--
- static struct attribute *ad7793_attributes[] = {
- 	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
--	&iio_dev_attr_in_m_in_scale_available.dev_attr.attr,
- 	NULL
- };
- 
-@@ -534,6 +533,7 @@ static const struct iio_info ad7793_info = {
- 	.read_raw = &ad7793_read_raw,
- 	.write_raw = &ad7793_write_raw,
- 	.write_raw_get_fmt = &ad7793_write_raw_get_fmt,
-+	.read_avail = ad7793_read_avail,
- 	.attrs = &ad7793_attribute_group,
- 	.validate_trigger = ad_sd_validate_trigger,
- };
-@@ -547,7 +547,7 @@ static const struct iio_info ad7797_info = {
- };
- 
- #define __AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
--	_storagebits, _shift, _extend_name, _type, _mask_all) \
-+	_storagebits, _shift, _extend_name, _type, _mask_type_av, _mask_all) \
- 	{ \
- 		.type = (_type), \
- 		.differential = (_channel2 == -1 ? 0 : 1), \
-@@ -559,6 +559,7 @@ static const struct iio_info ad7797_info = {
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | \
- 			BIT(IIO_CHAN_INFO_OFFSET), \
- 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
-+		.info_mask_shared_by_type_available = (_mask_type_av), \
- 		.info_mask_shared_by_all = _mask_all, \
- 		.scan_index = (_si), \
- 		.scan_type = { \
-@@ -574,23 +575,41 @@ static const struct iio_info ad7797_info = {
- 	_storagebits, _shift) \
- 	__AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
- 		_storagebits, _shift, NULL, IIO_VOLTAGE, \
-+		BIT(IIO_CHAN_INFO_SCALE), \
- 		BIT(IIO_CHAN_INFO_SAMP_FREQ))
- 
- #define AD7793_SHORTED_CHANNEL(_si, _channel, _address, _bits, \
- 	_storagebits, _shift) \
- 	__AD7793_CHANNEL(_si, _channel, _channel, _address, _bits, \
- 		_storagebits, _shift, "shorted", IIO_VOLTAGE, \
-+		BIT(IIO_CHAN_INFO_SCALE), \
- 		BIT(IIO_CHAN_INFO_SAMP_FREQ))
- 
- #define AD7793_TEMP_CHANNEL(_si, _address, _bits, _storagebits, _shift) \
- 	__AD7793_CHANNEL(_si, 0, -1, _address, _bits, \
- 		_storagebits, _shift, NULL, IIO_TEMP, \
-+		0, \
- 		BIT(IIO_CHAN_INFO_SAMP_FREQ))
- 
- #define AD7793_SUPPLY_CHANNEL(_si, _channel, _address, _bits, _storagebits, \
- 	_shift) \
- 	__AD7793_CHANNEL(_si, _channel, -1, _address, _bits, \
- 		_storagebits, _shift, "supply", IIO_VOLTAGE, \
-+		0, \
-+		BIT(IIO_CHAN_INFO_SAMP_FREQ))
-+
-+#define AD7797_DIFF_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
-+	_storagebits, _shift) \
-+	__AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
-+		_storagebits, _shift, NULL, IIO_VOLTAGE, \
-+		0, \
-+		BIT(IIO_CHAN_INFO_SAMP_FREQ))
-+
-+#define AD7797_SHORTED_CHANNEL(_si, _channel, _address, _bits, \
-+	_storagebits, _shift) \
-+	__AD7793_CHANNEL(_si, _channel, _channel, _address, _bits, \
-+		_storagebits, _shift, "shorted", IIO_VOLTAGE, \
-+		0, \
- 		BIT(IIO_CHAN_INFO_SAMP_FREQ))
- 
- #define DECLARE_AD7793_CHANNELS(_name, _b, _sb, _s) \
-@@ -620,8 +639,8 @@ const struct iio_chan_spec _name##_channels[] = { \
- 
- #define DECLARE_AD7797_CHANNELS(_name, _b, _sb) \
- const struct iio_chan_spec _name##_channels[] = { \
--	AD7793_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
--	AD7793_SHORTED_CHANNEL(1, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
-+	AD7797_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
-+	AD7797_SHORTED_CHANNEL(1, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
- 	AD7793_TEMP_CHANNEL(2, AD7793_CH_TEMP, (_b), (_sb), 0), \
- 	AD7793_SUPPLY_CHANNEL(3, 3, AD7793_CH_AVDD_MONITOR, (_b), (_sb), 0), \
- 	IIO_CHAN_SOFT_TIMESTAMP(4), \
--- 
-2.17.1
+regards,
+	o.
 
+> That will be better, let me revise this patch.
+> 
+> Thanks,
+> 
+> > 
+> > thank you and regards,
+> > 	o.
+> > 
+> > > +		if (!test_bit(flag, &F2FS_I(inode)->flags))
+> > > +			set_bit(flag, &F2FS_I(inode)->flags);
+> > > +	} else {
+> > > +		if (!test_bit(flag - 32, &F2FS_I(inode)->extra_flags))
+> > > +			set_bit(flag - 32, &F2FS_I(inode)->extra_flags);
+> > > +	}
+> > >  	__mark_inode_dirty_flag(inode, flag, true);
+> > >  }
+> > > 
+> > >  static inline int is_inode_flag_set(struct inode *inode, int flag)
+> > >  {
+> > > -	return test_bit(flag, &F2FS_I(inode)->flags);
+> > > +	if ((1 << flag) <= sizeof(unsigned long))
+> > > +		return test_bit(flag, &F2FS_I(inode)->flags);
+> > > +	else
+> > > +		return test_bit(flag - 32, &F2FS_I(inode)->extra_flags);
+> > >  }
+> > > 
+> > >  static inline void clear_inode_flag(struct inode *inode, int flag)
+> > >  {
+> > > -	if (test_bit(flag, &F2FS_I(inode)->flags))
+> > > -		clear_bit(flag, &F2FS_I(inode)->flags);
+> > > +	if ((1 << flag) <= sizeof(unsigned long)) {
+> > > +		if (test_bit(flag, &F2FS_I(inode)->flags))
+> > > +			clear_bit(flag, &F2FS_I(inode)->flags);
+> > > +	} else {
+> > > +		if (test_bit(flag - 32, &F2FS_I(inode)->extra_flags))
+> > > +			clear_bit(flag - 32, &F2FS_I(inode)->extra_flags);
+> > > +	}
+> > >  	__mark_inode_dirty_flag(inode, flag, false);
+> > >  }
+> > > 
+> > > diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+> > > index 44e08bf2e2b4..ca924d7e0e30 100644
+> > > --- a/fs/f2fs/inode.c
+> > > +++ b/fs/f2fs/inode.c
+> > > @@ -363,6 +363,7 @@ static int do_read_inode(struct inode *inode)
+> > >  	if (S_ISREG(inode->i_mode))
+> > >  		fi->i_flags &= ~F2FS_PROJINHERIT_FL;
+> > >  	fi->flags = 0;
+> > > +	fi->extra_flags = 0;
+> > >  	fi->i_advise = ri->i_advise;
+> > >  	fi->i_pino = le32_to_cpu(ri->i_pino);
+> > >  	fi->i_dir_level = ri->i_dir_level;
+> > > --
+> > > 2.22.0
+> > > 
