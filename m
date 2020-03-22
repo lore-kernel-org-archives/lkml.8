@@ -2,150 +2,119 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A726AC54EEB
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 19:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A84C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 19:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4162076E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 19:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E62520775
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 19:08:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a/rTj5IB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgCVTIc (ORCPT
+        id S1727107AbgCVTId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 15:08:32 -0400
-Received: from out28-122.mail.aliyun.com ([115.124.28.122]:51736 "EHLO
-        out28-122.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbgCVTIY (ORCPT
+        Sun, 22 Mar 2020 15:08:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44843 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727014AbgCVTIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 22 Mar 2020 15:08:24 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1724075|-1;CH=green;DM=||false|;DS=CONTINUE|ham_regular_dialog|0.0154397-0.00035353-0.984207;FP=3947737658672842609|1|1|8|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.H3Z9uBl_1584904084;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.H3Z9uBl_1584904084)
-          by smtp.aliyun-inc.com(10.147.41.199);
-          Mon, 23 Mar 2020 03:08:19 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, paul@crapouillou.net,
-        dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v7 5/6] dt-bindings: clock: Add and reorder ABI for X1000.
-Date:   Mon, 23 Mar 2020 03:07:37 +0800
-Message-Id: <1584904058-53155-7-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584904058-53155-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1584904058-53155-1-git-send-email-zhouyanjie@wanyeetech.com>
+Received: by mail-wr1-f68.google.com with SMTP id m17so5160135wrw.11
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 12:08:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QHveMlauqRVMu8fl2+LENgr9/RI30rs1DmCAR9b9ZtA=;
+        b=a/rTj5IBVyi1Esfi+59moPOqgxDRn0pnSpMeVKAHeWnJBWIOw215Tbj3bTQ3COnd/9
+         1bwRyXqehZfqBx82HZcPTIlORHRcaoNpr3jgBFAwGPgq7lahDjd7PK9seS1gwJxDH/vC
+         eHA6yiSjV+g4jd6RS0SlsKLzmgf9fEkeOqOOJNIBwmb3dp1PVXkvs42TGHmdvLXlwiRj
+         OlZWsTBy68iWLEgHRlSHypMIJv4ZXIxwMNgi3YmIPamvb4hQASKofbo+mez9rwoGj8cX
+         +2tUiA9iM7/0Kcc6VR2uuJmfU8Wk4aN5PMNvTDAcSQNBKKgiuYzy65Jf2/rIhBI30UPG
+         x2ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QHveMlauqRVMu8fl2+LENgr9/RI30rs1DmCAR9b9ZtA=;
+        b=rSshZ90VR+CczJTRCzvfL6VVeJAq4jBHE4VKQRbVOoJiXLTNWKoYSXdry9/vGp4G/s
+         ZwaXxepZAWIbCun9Em7qTd7URIcjM0hDrcEVFvp/pANDAwfXqOrRZ1lTyxDvyDFDRm/5
+         gK70cwHclMhFNrejXoHw1FOP1Lod5n5fhJZaH/4jFCYdCNFRmmj4UgnCW1GFDe4V/CRK
+         ndmK2cWheR/NoQFzhCfFLp/+w7VaSfZ2HrCKqKBSUSjz05AQRxBMGAyiN0nwZ2+7Oi4L
+         K+R/JZKkvXxtDlY4y8v3V1DFjVWSFhqJp1U/Nw8bdeDcPh12Omf9vCttm906amwBVRxT
+         kKDw==
+X-Gm-Message-State: ANhLgQ2pcYFvm6yH6iJne4QF3XhXhWb0a7TjklmKrLX6IuCt9xf7fi/d
+        DfR4qkZG9syzZYBHfvDNmWWjBzF3RctPICg49SY=
+X-Google-Smtp-Source: ADFU+vufzdDGsWfmALtU7fqgzxBUoCKg4jVeDJkFur2D1C18OFChZZtkuR+40P2N/qETqdOTsNxxvLSe/vyWu+3IkW8=
+X-Received: by 2002:adf:a3db:: with SMTP id m27mr25765703wrb.350.1584904103034;
+ Sun, 22 Mar 2020 12:08:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1584421001-2647-1-git-send-email-Anson.Huang@nxp.com> <86mu89zqce.wl-maz@kernel.org>
+In-Reply-To: <86mu89zqce.wl-maz@kernel.org>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Sun, 22 Mar 2020 21:08:11 +0200
+Message-ID: <CAEnQRZCcmaU91Ep5kVesaGPsrvujq5mznk2SZccmZG9rbSCG0w@mail.gmail.com>
+Subject: Re: [PATCH] irqchip: irq-imx-gpcv2: Remove unnecessary blank lines
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Anson Huang <Anson.Huang@nxp.com>, tglx@linutronix.de,
+        jason@lakedaemon.net, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1.The SSI clock of X1000 not like JZ4770 and JZ4780, they are not
-  directly derived from the output of SSIPLL, but from the clock
-  obtained by dividing the frequency by 2. "X1000_CLK_SSIPLL_DIV2"
-  is added for this purpose, it must between "X1000_CLK_SSIPLL"
-  and "X1000_CLK_SSIMUX", otherwise an error will occurs when
-  initializing the clock. These ABIs are only used for X1000, and
-  I'm sure that no other devicetree out there is using these ABIs,
-  so we should be able to reorder them.
-2.Clocks of LCD, OTG, EMC, EFUSE, OST are also added.
+On Sat, Mar 21, 2020 at 5:22 PM Marc Zyngier <maz@kernel.org> wrote:
+>
+> On Tue, 17 Mar 2020 04:56:41 +0000,
+> Anson Huang <Anson.Huang@nxp.com> wrote:
+> >
+> > Remove unnecessary blank lines for cleanup.
+> >
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> >  drivers/irqchip/irq-imx-gpcv2.c | 2 --
+> >  1 file changed, 2 deletions(-)
+> >
+> > diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-gpcv2.c
+> > index 4f74c15..4f11b9b 100644
+> > --- a/drivers/irqchip/irq-imx-gpcv2.c
+> > +++ b/drivers/irqchip/irq-imx-gpcv2.c
+> > @@ -17,7 +17,6 @@
+> >  #define GPC_IMR1_CORE2               0x1c0
+> >  #define GPC_IMR1_CORE3               0x1d0
+> >
+> > -
+> >  struct gpcv2_irqchip_data {
+> >       struct raw_spinlock     rlock;
+> >       void __iomem            *gpc_base;
+> > @@ -287,6 +286,5 @@ static int __init imx_gpcv2_irqchip_init(struct device_node *node,
+> >       of_node_clear_flag(node, OF_POPULATED);
+> >       return 0;
+> >  }
+> > -
+> >  IRQCHIP_DECLARE(imx_gpcv2_imx7d, "fsl,imx7d-gpc", imx_gpcv2_irqchip_init);
+> >  IRQCHIP_DECLARE(imx_gpcv2_imx8mq, "fsl,imx8mq-gpc", imx_gpcv2_irqchip_init);
+>
+> I honestly don't think this deserves a patch. Next time you work on
+> this driver, add the cleanups to it. But on its own, it's only churn.
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+While you are technically right, it's only churn I think we need this
+for code consistency and cleanup.
 
-Notes:
-    v5:
-    New patch.
-    
-    v5->v6:
-    Add missing part of X1000's CGU.
-    
-    v6->v7:
-    No change.
+Even if we fix this when we work on the driver we still need
+to make the cleanup in a separate patch.
 
- include/dt-bindings/clock/x1000-cgu.h | 62 +++++++++++++++++++----------------
- 1 file changed, 34 insertions(+), 28 deletions(-)
-
-diff --git a/include/dt-bindings/clock/x1000-cgu.h b/include/dt-bindings/clock/x1000-cgu.h
-index bbaebaf..ef6ff63 100644
---- a/include/dt-bindings/clock/x1000-cgu.h
-+++ b/include/dt-bindings/clock/x1000-cgu.h
-@@ -12,33 +12,39 @@
- #ifndef __DT_BINDINGS_CLOCK_X1000_CGU_H__
- #define __DT_BINDINGS_CLOCK_X1000_CGU_H__
- 
--#define X1000_CLK_EXCLK		0
--#define X1000_CLK_RTCLK		1
--#define X1000_CLK_APLL		2
--#define X1000_CLK_MPLL		3
--#define X1000_CLK_SCLKA		4
--#define X1000_CLK_CPUMUX	5
--#define X1000_CLK_CPU		6
--#define X1000_CLK_L2CACHE	7
--#define X1000_CLK_AHB0		8
--#define X1000_CLK_AHB2PMUX	9
--#define X1000_CLK_AHB2		10
--#define X1000_CLK_PCLK		11
--#define X1000_CLK_DDR		12
--#define X1000_CLK_MAC		13
--#define X1000_CLK_MSCMUX	14
--#define X1000_CLK_MSC0		15
--#define X1000_CLK_MSC1		16
--#define X1000_CLK_SSIPLL	17
--#define X1000_CLK_SSIMUX	18
--#define X1000_CLK_SFC		19
--#define X1000_CLK_I2C0		20
--#define X1000_CLK_I2C1		21
--#define X1000_CLK_I2C2		22
--#define X1000_CLK_UART0		23
--#define X1000_CLK_UART1		24
--#define X1000_CLK_UART2		25
--#define X1000_CLK_SSI		26
--#define X1000_CLK_PDMA		27
-+#define X1000_CLK_EXCLK			0
-+#define X1000_CLK_RTCLK			1
-+#define X1000_CLK_APLL			2
-+#define X1000_CLK_MPLL			3
-+#define X1000_CLK_SCLKA			4
-+#define X1000_CLK_CPUMUX		5
-+#define X1000_CLK_CPU			6
-+#define X1000_CLK_L2CACHE		7
-+#define X1000_CLK_AHB0			8
-+#define X1000_CLK_AHB2PMUX		9
-+#define X1000_CLK_AHB2			10
-+#define X1000_CLK_PCLK			11
-+#define X1000_CLK_DDR			12
-+#define X1000_CLK_MAC			13
-+#define X1000_CLK_LCD			14
-+#define X1000_CLK_MSCMUX		15
-+#define X1000_CLK_MSC0			16
-+#define X1000_CLK_MSC1			17
-+#define X1000_CLK_OTG			18
-+#define X1000_CLK_SSIPLL		19
-+#define X1000_CLK_SSIPLL_DIV2	20
-+#define X1000_CLK_SSIMUX		21
-+#define X1000_CLK_EMC			22
-+#define X1000_CLK_EFUSE			23
-+#define X1000_CLK_SFC			24
-+#define X1000_CLK_I2C0			25
-+#define X1000_CLK_I2C1			26
-+#define X1000_CLK_I2C2			27
-+#define X1000_CLK_UART0			28
-+#define X1000_CLK_UART1			29
-+#define X1000_CLK_UART2			30
-+#define X1000_CLK_SSI			31
-+#define X1000_CLK_OST			32
-+#define X1000_CLK_PDMA			33
- 
- #endif /* __DT_BINDINGS_CLOCK_X1000_CGU_H__ */
--- 
-2.7.4
-
+My 2 cents,
+Daniel.
