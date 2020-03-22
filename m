@@ -2,458 +2,293 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 084B3C4332E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 12:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC38C54FD0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 12:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C430520769
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 12:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA58020769
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 12:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgCVM1j (ORCPT
+        id S1727178AbgCVM2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 08:27:39 -0400
-Received: from mga14.intel.com ([192.55.52.115]:23953 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727117AbgCVM1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 08:27:33 -0400
-IronPort-SDR: AZWnW3B9TIgegvjY9Qvtdq2YQpp3rVmN9W2X+kMps/tQyFzVCzzukHhlP7MxDP8HpOAU5FsIBE
- 8KQ/JMWV1VcA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2020 05:27:32 -0700
-IronPort-SDR: mrJEpjYY/nWi64DTjb00cmdEkk087Bn/UCjBNTdgkPivfCtDTkNkRPZv6/SMfo2EMXsHTKjrLr
- pBtpv5eAGZSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,292,1580803200"; 
-   d="scan'208";a="356846587"
-Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Mar 2020 05:27:32 -0700
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     alex.williamson@redhat.com, eric.auger@redhat.com
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        joro@8bytes.org, ashok.raj@intel.com, yi.l.liu@intel.com,
-        jun.j.tian@intel.com, yi.y.sun@intel.com, jean-philippe@linaro.org,
-        peterx@redhat.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, hao.wu@intel.com
-Subject: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
-Date:   Sun, 22 Mar 2020 05:33:14 -0700
-Message-Id: <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
-References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
+        Sun, 22 Mar 2020 08:28:00 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:47704 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727004AbgCVM2A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 08:28:00 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=||false|;DS=CONTINUE|ham_regular_dialog|0.232732-0.000359942-0.766908;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03311;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.H3RTJAs_1584880056;
+Received: from 172.16.10.102(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.H3RTJAs_1584880056)
+          by smtp.aliyun-inc.com(10.147.40.200);
+          Sun, 22 Mar 2020 20:27:37 +0800
+Subject: Re: [PATCH v2 07/11] pstore/blk: skip broken zone for mtd device
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+References: <1581078355-19647-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <1581078355-19647-8-git-send-email-liaoweixiong@allwinnertech.com>
+ <202003181131.3A8F861F@keescook>
+From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
+Message-ID: <a65c9f15-c510-caf5-9bc8-98941a30488c@allwinnertech.com>
+Date:   Sun, 22 Mar 2020 20:27:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <202003181131.3A8F861F@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Yi L <yi.l.liu@intel.com>
+hi Kees Cook,
 
-Per PCIe r5.0, sec 9.3.7.14, if a PF implements the PASID Capability, the
-PF PASID configuration is shared by its VFs.  VFs must not implement their
-own PASID Capability.
+On 2020/3/19 AM 2:35, Kees Cook wrote:
+> On Fri, Feb 07, 2020 at 08:25:51PM +0800, WeiXiong Liao wrote:
+>> It's one of a series of patches for adaptive to MTD device.
+>>
+>> MTD device is not block device. As the block of flash (MTD device) will
+>> be broken, it's necessary for pstore/blk to skip the broken block
+>> (bad block).
+>>
+>> If device drivers return -ENEXT, pstore/blk will try next zone of dmesg.
+>>
+>> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
+>> ---
+>>  Documentation/admin-guide/pstore-block.rst |  3 +-
+>>  fs/pstore/blkzone.c                        | 74 +++++++++++++++++++++++-------
+>>  include/linux/blkoops.h                    |  4 +-
+>>  include/linux/pstore_blk.h                 |  4 ++
+>>  4 files changed, 66 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/pstore-block.rst b/Documentation/admin-guide/pstore-block.rst
+>> index c8a5f68960c3..be865dfc1a28 100644
+>> --- a/Documentation/admin-guide/pstore-block.rst
+>> +++ b/Documentation/admin-guide/pstore-block.rst
+>> @@ -188,7 +188,8 @@ The parameter @offset of these interface is the relative position of the device.
+>>  Normally the number of bytes read/written should be returned, while for error,
+>>  negative number will be returned. The following return numbers mean more:
+>>  
+>> --EBUSY: pstore/blk should try again later.
+>> +1. -EBUSY: pstore/blk should try again later.
+>> +#. -ENEXT: this zone is used or broken, pstore/blk should try next one.
+>>  
+>>  panic_write (for non-block device)
+>>  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> diff --git a/fs/pstore/blkzone.c b/fs/pstore/blkzone.c
+>> index 442e5a5bbfda..205aeff28992 100644
+>> --- a/fs/pstore/blkzone.c
+>> +++ b/fs/pstore/blkzone.c
+>> @@ -207,6 +207,9 @@ static int blkz_zone_write(struct blkz_zone *zone,
+>>  
+>>  	return 0;
+>>  set_dirty:
+>> +	/* no need to mark dirty if going to try next zone */
+>> +	if (wcnt == -ENEXT)
+>> +		return -ENEXT;
+>>  	atomic_set(&zone->dirty, true);
+>>  	/* flush dirty zones nicely */
+>>  	if (wcnt == -EBUSY && !is_on_panic())
+>> @@ -360,7 +363,11 @@ static int blkz_recover_dmesg_meta(struct blkz_context *cxt)
+>>  			return -EINVAL;
+>>  
+>>  		rcnt = info->read((char *)buf, len, zone->off);
+>> -		if (rcnt != len) {
+>> +		if (rcnt == -ENEXT) {
+>> +			pr_debug("%s with id %lu may be broken, skip\n",
+>> +					zone->name, i);
+>> +			continue;
+>> +		} else if (rcnt != len) {
+>>  			pr_err("read %s with id %lu failed\n", zone->name, i);
+>>  			return (int)rcnt < 0 ? (int)rcnt : -EIO;
+>>  		}
+>> @@ -650,24 +657,58 @@ static void blkz_write_kmsg_hdr(struct blkz_zone *zone,
+>>  		hdr->counter = 0;
+>>  }
+>>  
+>> +/*
+>> + * In case zone is broken, which may occur to MTD device, we try each zones,
+>> + * start at cxt->dmesg_write_cnt.
+>> + */
+>>  static inline int notrace blkz_dmesg_write_do(struct blkz_context *cxt,
+>>  		struct pstore_record *record)
+>>  {
+>> +	int ret = -EBUSY;
+>>  	size_t size, hlen;
+>>  	struct blkz_zone *zone;
+>> -	unsigned int zonenum;
+>> +	unsigned int i;
+>>  
+>> -	zonenum = cxt->dmesg_write_cnt;
+>> -	zone = cxt->dbzs[zonenum];
+>> -	if (unlikely(!zone))
+>> -		return -ENOSPC;
+>> -	cxt->dmesg_write_cnt = (zonenum + 1) % cxt->dmesg_max_cnt;
+>> +	for (i = 0; i < cxt->dmesg_max_cnt; i++) {
+>> +		unsigned int zonenum, len;
+>> +
+>> +		zonenum = (cxt->dmesg_write_cnt + i) % cxt->dmesg_max_cnt;
+>> +		zone = cxt->dbzs[zonenum];
+>> +		if (unlikely(!zone))
+>> +			return -ENOSPC;
+>>  
+>> -	pr_debug("write %s to zone id %d\n", zone->name, zonenum);
+>> -	blkz_write_kmsg_hdr(zone, record);
+>> -	hlen = sizeof(struct blkz_dmesg_header);
+>> -	size = min_t(size_t, record->size, zone->buffer_size - hlen);
+>> -	return blkz_zone_write(zone, FLUSH_ALL, record->buf, size, hlen);
+>> +		/* avoid destorying old data, allocate a new one */
+>> +		len = zone->buffer_size + sizeof(*zone->buffer);
+>> +		zone->oldbuf = zone->buffer;
+>> +		zone->buffer = kzalloc(len, GFP_KERNEL);
+>> +		if (!zone->buffer) {
+>> +			zone->buffer = zone->oldbuf;
+>> +			return -ENOMEM;
+>> +		}
+>> +		zone->buffer->sig = zone->oldbuf->sig;
+>> +
+>> +		pr_debug("write %s to zone id %d\n", zone->name, zonenum);
+>> +		blkz_write_kmsg_hdr(zone, record);
+>> +		hlen = sizeof(struct blkz_dmesg_header);
+>> +		size = min_t(size_t, record->size, zone->buffer_size - hlen);
+>> +		ret = blkz_zone_write(zone, FLUSH_ALL, record->buf, size, hlen);
+>> +		if (likely(!ret || ret != -ENEXT)) {
+>> +			cxt->dmesg_write_cnt = zonenum + 1;
+>> +			cxt->dmesg_write_cnt %= cxt->dmesg_max_cnt;
+>> +			/* no need to try next zone, free last zone buffer */
+>> +			kfree(zone->oldbuf);
+>> +			zone->oldbuf = NULL;
+>> +			return ret;
+>> +		}
+>> +
+>> +		pr_debug("zone %u may be broken, try next dmesg zone\n",
+>> +				zonenum);
+>> +		kfree(zone->buffer);
+>> +		zone->buffer = zone->oldbuf;
+>> +		zone->oldbuf = NULL;
+>> +	}
+>> +
+>> +	return -EBUSY;
+>>  }
+>>  
+>>  static int notrace blkz_dmesg_write(struct blkz_context *cxt,
+>> @@ -791,7 +832,6 @@ static int notrace blkz_pstore_write(struct pstore_record *record)
+>>  	}
+>>  }
+>>  
+>> -#define READ_NEXT_ZONE ((ssize_t)(-1024))
+>>  static struct blkz_zone *blkz_read_next_zone(struct blkz_context *cxt)
+>>  {
+>>  	struct blkz_zone *zone = NULL;
+>> @@ -852,7 +892,7 @@ static ssize_t blkz_dmesg_read(struct blkz_zone *zone,
+>>  	if (blkz_read_dmesg_hdr(zone, record)) {
+>>  		atomic_set(&zone->buffer->datalen, 0);
+>>  		atomic_set(&zone->dirty, 0);
+>> -		return READ_NEXT_ZONE;
+>> +		return -ENEXT;
+>>  	}
+>>  	size -= sizeof(struct blkz_dmesg_header);
+>>  
+>> @@ -877,7 +917,7 @@ static ssize_t blkz_dmesg_read(struct blkz_zone *zone,
+>>  	if (unlikely(blkz_zone_read(zone, record->buf + hlen, size,
+>>  				sizeof(struct blkz_dmesg_header)) < 0)) {
+>>  		kfree(record->buf);
+>> -		return READ_NEXT_ZONE;
+>> +		return -ENEXT;
+>>  	}
+>>  
+>>  	return size + hlen;
+>> @@ -891,7 +931,7 @@ static ssize_t blkz_record_read(struct blkz_zone *zone,
+>>  
+>>  	buf = (struct blkz_buffer *)zone->oldbuf;
+>>  	if (!buf)
+>> -		return READ_NEXT_ZONE;
+>> +		return -ENEXT;
+>>  
+>>  	size = atomic_read(&buf->datalen);
+>>  	start = atomic_read(&buf->start);
+>> @@ -943,7 +983,7 @@ static ssize_t blkz_pstore_read(struct pstore_record *record)
+>>  	}
+>>  
+>>  	ret = readop(zone, record);
+>> -	if (ret == READ_NEXT_ZONE)
+>> +	if (ret == -ENEXT)
+>>  		goto next_zone;
+>>  	return ret;
+>>  }
+>> diff --git a/include/linux/blkoops.h b/include/linux/blkoops.h
+>> index 8f40f225545d..71c596fd4cc8 100644
+>> --- a/include/linux/blkoops.h
+>> +++ b/include/linux/blkoops.h
+>> @@ -27,6 +27,7 @@
+>>   *	On error, negative number should be returned. The following returning
+>>   *	number means more:
+>>   *	  -EBUSY: pstore/blk should try again later.
+>> + *	  -ENEXT: this zone is used or broken, pstore/blk should try next one.
+>>   * @panic_write:
+>>   *	The write operation only used for panic.
+>>   *
+>> @@ -45,7 +46,8 @@ struct blkoops_device {
+>>  
+>>  /*
+>>   * Panic write for block device who should write alignmemt to SECTOR_SIZE.
+>> - * On success, zero should be returned. Others mean error.
+>> + * On success, zero should be returned. Others mean error except that -ENEXT
+>> + * means the zone is used or broken, pstore/blk should try next one.
+>>   */
+>>  typedef int (*blkoops_blk_panic_write_op)(const char *buf, sector_t start_sect,
+>>  		sector_t sects);
+>> diff --git a/include/linux/pstore_blk.h b/include/linux/pstore_blk.h
+>> index 77704c1b404a..bbbe4fe37f7c 100644
+>> --- a/include/linux/pstore_blk.h
+>> +++ b/include/linux/pstore_blk.h
+>> @@ -6,6 +6,9 @@
+>>  #include <linux/types.h>
+>>  #include <linux/blkdev.h>
+>>  
+>> +/* read/write function return -ENEXT means try next zone */
+>> +#define ENEXT ((ssize_t)(1024))
+> 
+> I really don't like inventing errno numbers. Can you just reuse an
+> existing (but non-block) errno like ESRCH or ENOMSG or something?
+> 
 
-Per PCIe r5.0, sec 9.3.7.11, VFs must not implement the PRI Capability. If
-the PF implements PRI, it is shared by the VFs.
+ENOMSG is OK.
 
-On bare metal, it has been fixed by below efforts.
-to PASID/PRI are
-https://lkml.org/lkml/2019/9/5/996
-https://lkml.org/lkml/2019/9/5/995
+>> +
+>>  /**
+>>   * struct blkz_info - backend blkzone driver structure
+>>   *
+>> @@ -42,6 +45,7 @@
+>>   *	On error, negative number should be returned. The following returning
+>>   *	number means more:
+>>   *	  -EBUSY: pstore/blk should try again later.
+>> + *	  -ENEXT: this zone is used or broken, pstore/blk should try next one.
+>>   * @panic_write:
+>>   *	The write operation only used for panic. It's optional if you do not
+>>   *	care panic record. If panic occur but blkzone do not recover yet, the
+>> -- 
+>> 1.9.1
+>>
+> 
 
-This patch adds emulated PASID/PRI capabilities for VFs when assigned to
-VMs via vfio-pci driver. This is required for enabling vSVA on pass-through
-VFs as VFs have no PASID/PRI capability structure in its configure space.
-
-Cc: Kevin Tian <kevin.tian@intel.com>
-CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Cc: Eric Auger <eric.auger@redhat.com>
-Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
----
- drivers/vfio/pci/vfio_pci_config.c | 325 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 323 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index 4b9af99..84b4ea0 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1509,11 +1509,304 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
- 	return 0;
- }
- 
-+static int vfio_fill_custom_vconfig_bytes(struct vfio_pci_device *vdev,
-+					int offset, uint8_t *data, int size)
-+{
-+	int ret = 0, data_offset = 0;
-+
-+	while (size) {
-+		int filled;
-+
-+		if (size >= 4 && !(offset % 4)) {
-+			__le32 *dwordp = (__le32 *)&vdev->vconfig[offset];
-+			u32 dword;
-+
-+			memcpy(&dword, data + data_offset, 4);
-+			*dwordp = cpu_to_le32(dword);
-+			filled = 4;
-+		} else if (size >= 2 && !(offset % 2)) {
-+			__le16 *wordp = (__le16 *)&vdev->vconfig[offset];
-+			u16 word;
-+
-+			memcpy(&word, data + data_offset, 2);
-+			*wordp = cpu_to_le16(word);
-+			filled = 2;
-+		} else {
-+			u8 *byte = &vdev->vconfig[offset];
-+
-+			memcpy(byte, data + data_offset, 1);
-+			filled = 1;
-+		}
-+
-+		offset += filled;
-+		data_offset += filled;
-+		size -= filled;
-+	}
-+
-+	return ret;
-+}
-+
-+static int vfio_pci_get_ecap_content(struct pci_dev *pdev,
-+					int cap, int cap_len, u8 *content)
-+{
-+	int pos, offset, len = cap_len, ret = 0;
-+
-+	pos = pci_find_ext_capability(pdev, cap);
-+	if (!pos)
-+		return -EINVAL;
-+
-+	offset = 0;
-+	while (len) {
-+		int fetched;
-+
-+		if (len >= 4 && !(pos % 4)) {
-+			u32 *dwordp = (u32 *) (content + offset);
-+			u32 dword;
-+			__le32 *dwptr = (__le32 *) &dword;
-+
-+			ret = pci_read_config_dword(pdev, pos, &dword);
-+			if (ret)
-+				return ret;
-+			*dwordp = le32_to_cpu(*dwptr);
-+			fetched = 4;
-+		} else if (len >= 2 && !(pos % 2)) {
-+			u16 *wordp = (u16 *) (content + offset);
-+			u16 word;
-+			__le16 *wptr = (__le16 *) &word;
-+
-+			ret = pci_read_config_word(pdev, pos, &word);
-+			if (ret)
-+				return ret;
-+			*wordp = le16_to_cpu(*wptr);
-+			fetched = 2;
-+		} else {
-+			u8 *byte = (u8 *) (content + offset);
-+
-+			ret = pci_read_config_byte(pdev, pos, byte);
-+			if (ret)
-+				return ret;
-+			fetched = 1;
-+		}
-+
-+		pos += fetched;
-+		offset += fetched;
-+		len -= fetched;
-+	}
-+
-+	return ret;
-+}
-+
-+struct vfio_pci_pasid_cap_data {
-+	u32 id:16;
-+	u32 version:4;
-+	u32 next:12;
-+	union {
-+		u16 cap_reg_val;
-+		struct {
-+			u16 rsv1:1;
-+			u16 execs:1;
-+			u16 prvs:1;
-+			u16 rsv2:5;
-+			u16 pasid_bits:5;
-+			u16 rsv3:3;
-+		};
-+	} cap_reg;
-+	union {
-+		u16 control_reg_val;
-+		struct {
-+			u16 paside:1;
-+			u16 exece:1;
-+			u16 prve:1;
-+			u16 rsv4:13;
-+		};
-+	} control_reg;
-+};
-+
-+static int vfio_pci_add_pasid_cap(struct vfio_pci_device *vdev,
-+				    struct pci_dev *pdev,
-+				    u16 epos, u16 *next, __le32 **prevp)
-+{
-+	u8 *map = vdev->pci_config_map;
-+	int ecap = PCI_EXT_CAP_ID_PASID;
-+	int len = pci_ext_cap_length[ecap];
-+	struct vfio_pci_pasid_cap_data pasid_cap;
-+	struct vfio_pci_pasid_cap_data vpasid_cap;
-+	int ret;
-+
-+	/*
-+	 * If no cap filled in this function, should make sure the next
-+	 * pointer points to current epos.
-+	 */
-+	*next = epos;
-+
-+	if (!len) {
-+		pr_info("%s: VF %s hiding PASID capability\n",
-+				__func__, dev_name(&vdev->pdev->dev));
-+		ret = 0;
-+		goto out;
-+	}
-+
-+	/* Add PASID capability*/
-+	ret = vfio_pci_get_ecap_content(pdev, ecap,
-+					len, (u8 *)&pasid_cap);
-+	if (ret)
-+		goto out;
-+
-+	if (!pasid_cap.control_reg.paside) {
-+		pr_debug("%s: its PF's PASID capability is not enabled\n",
-+			dev_name(&vdev->pdev->dev));
-+		ret = 0;
-+		goto out;
-+	}
-+
-+	memcpy(&vpasid_cap, &pasid_cap, len);
-+
-+	vpasid_cap.id = 0x18;
-+	vpasid_cap.next = 0;
-+	/* clear the control reg for guest */
-+	memset(&vpasid_cap.control_reg, 0x0,
-+			sizeof(vpasid_cap.control_reg));
-+
-+	memset(map + epos, vpasid_cap.id, len);
-+	ret = vfio_fill_custom_vconfig_bytes(vdev, epos,
-+					(u8 *)&vpasid_cap, len);
-+	if (!ret) {
-+		/*
-+		 * Successfully filled in PASID cap, update
-+		 * the next offset in previous cap header,
-+		 * and also update caller about the offset
-+		 * of next cap if any.
-+		 */
-+		u32 val = epos;
-+		**prevp &= cpu_to_le32(~(0xffcU << 20));
-+		**prevp |= cpu_to_le32(val << 20);
-+		*prevp = (__le32 *)&vdev->vconfig[epos];
-+		*next = epos + len;
-+	}
-+
-+out:
-+	return ret;
-+}
-+
-+struct vfio_pci_pri_cap_data {
-+	u32 id:16;
-+	u32 version:4;
-+	u32 next:12;
-+	union {
-+		u16 control_reg_val;
-+		struct {
-+			u16 enable:1;
-+			u16 reset:1;
-+			u16 rsv1:14;
-+		};
-+	} control_reg;
-+	union {
-+		u16 status_reg_val;
-+		struct {
-+			u16 rf:1;
-+			u16 uprgi:1;
-+			u16 rsv2:6;
-+			u16 stop:1;
-+			u16 rsv3:6;
-+			u16 pasid_required:1;
-+		};
-+	} status_reg;
-+	u32 prq_capacity;
-+	u32 prq_quota;
-+};
-+
-+static int vfio_pci_add_pri_cap(struct vfio_pci_device *vdev,
-+				    struct pci_dev *pdev,
-+				    u16 epos, u16 *next, __le32 **prevp)
-+{
-+	u8 *map = vdev->pci_config_map;
-+	int ecap = PCI_EXT_CAP_ID_PRI;
-+	int len = pci_ext_cap_length[ecap];
-+	struct vfio_pci_pri_cap_data pri_cap;
-+	struct vfio_pci_pri_cap_data vpri_cap;
-+	int ret;
-+
-+	/*
-+	 * If no cap filled in this function, should make sure the next
-+	 * pointer points to current epos.
-+	 */
-+	*next = epos;
-+
-+	if (!len) {
-+		pr_info("%s: VF %s hiding PRI capability\n",
-+				__func__, dev_name(&vdev->pdev->dev));
-+		ret = 0;
-+		goto out;
-+	}
-+
-+	/* Add PASID capability*/
-+	ret = vfio_pci_get_ecap_content(pdev, ecap,
-+					len, (u8 *)&pri_cap);
-+	if (ret)
-+		goto out;
-+
-+	if (!pri_cap.control_reg.enable) {
-+		pr_debug("%s: its PF's PRI capability is not enabled\n",
-+			dev_name(&vdev->pdev->dev));
-+		ret = 0;
-+		goto out;
-+	}
-+
-+	memcpy(&vpri_cap, &pri_cap, len);
-+
-+	vpri_cap.id = 0x19;
-+	vpri_cap.next = 0;
-+	/* clear the control reg for guest */
-+	memset(&vpri_cap.control_reg, 0x0,
-+			sizeof(vpri_cap.control_reg));
-+
-+	memset(map + epos, vpri_cap.id, len);
-+	ret = vfio_fill_custom_vconfig_bytes(vdev, epos,
-+					(u8 *)&vpri_cap, len);
-+	if (!ret) {
-+		/*
-+		 * Successfully filled in PASID cap, update
-+		 * the next offset in previous cap header,
-+		 * and also update caller about the offset
-+		 * of next cap if any.
-+		 */
-+		u32 val = epos;
-+		**prevp &= cpu_to_le32(~(0xffcU << 20));
-+		**prevp |= cpu_to_le32(val << 20);
-+		*prevp = (__le32 *)&vdev->vconfig[epos];
-+		*next = epos + len;
-+	}
-+
-+out:
-+	return ret;
-+}
-+
-+static int vfio_pci_add_emulated_cap_for_vf(struct vfio_pci_device *vdev,
-+			struct pci_dev *pdev, u16 start_epos, __le32 *prev)
-+{
-+	__le32 *__prev = prev;
-+	u16 epos = start_epos, epos_next = start_epos;
-+	int ret = 0;
-+
-+	/* Add PASID capability*/
-+	ret = vfio_pci_add_pasid_cap(vdev, pdev, epos,
-+					&epos_next, &__prev);
-+	if (ret)
-+		return ret;
-+
-+	/* Add PRI capability */
-+	epos = epos_next;
-+	ret = vfio_pci_add_pri_cap(vdev, pdev, epos,
-+				   &epos_next, &__prev);
-+
-+	return ret;
-+}
-+
- static int vfio_ecap_init(struct vfio_pci_device *vdev)
- {
- 	struct pci_dev *pdev = vdev->pdev;
- 	u8 *map = vdev->pci_config_map;
--	u16 epos;
-+	u16 epos, epos_max;
- 	__le32 *prev = NULL;
- 	int loops, ret, ecaps = 0;
- 
-@@ -1521,6 +1814,7 @@ static int vfio_ecap_init(struct vfio_pci_device *vdev)
- 		return 0;
- 
- 	epos = PCI_CFG_SPACE_SIZE;
-+	epos_max = PCI_CFG_SPACE_SIZE;
- 
- 	loops = (pdev->cfg_size - PCI_CFG_SPACE_SIZE) / PCI_CAP_SIZEOF;
- 
-@@ -1545,6 +1839,9 @@ static int vfio_ecap_init(struct vfio_pci_device *vdev)
- 			}
- 		}
- 
-+		if (epos_max <= (epos + len))
-+			epos_max = epos + len;
-+
- 		if (!len) {
- 			pci_info(pdev, "%s: hiding ecap %#x@%#x\n",
- 				 __func__, ecap, epos);
-@@ -1604,6 +1901,18 @@ static int vfio_ecap_init(struct vfio_pci_device *vdev)
- 	if (!ecaps)
- 		*(u32 *)&vdev->vconfig[PCI_CFG_SPACE_SIZE] = 0;
- 
-+#ifdef CONFIG_PCI_ATS
-+	if (pdev->is_virtfn) {
-+		struct pci_dev *physfn = pdev->physfn;
-+
-+		ret = vfio_pci_add_emulated_cap_for_vf(vdev,
-+					physfn, epos_max, prev);
-+		if (ret)
-+			pr_info("%s, failed to add special caps for VF %s\n",
-+				__func__, dev_name(&vdev->pdev->dev));
-+	}
-+#endif
-+
- 	return 0;
- }
- 
-@@ -1748,6 +2057,17 @@ static size_t vfio_pci_cap_remaining_dword(struct vfio_pci_device *vdev,
- 	return i;
- }
- 
-+static bool vfio_pci_need_virt_perm(struct pci_dev *pdev, u8 cap_id)
-+{
-+#ifdef CONFIG_PCI_ATS
-+	return (pdev->is_virtfn &&
-+		(cap_id == PCI_EXT_CAP_ID_PASID ||
-+		 cap_id == PCI_EXT_CAP_ID_PRI));
-+#else
-+	return false;
-+#endif
-+}
-+
- static ssize_t vfio_config_do_rw(struct vfio_pci_device *vdev, char __user *buf,
- 				 size_t count, loff_t *ppos, bool iswrite)
- {
-@@ -1781,7 +2101,8 @@ static ssize_t vfio_config_do_rw(struct vfio_pci_device *vdev, char __user *buf,
- 	if (cap_id == PCI_CAP_ID_INVALID) {
- 		perm = &unassigned_perms;
- 		cap_start = *ppos;
--	} else if (cap_id == PCI_CAP_ID_INVALID_VIRT) {
-+	} else if (cap_id == PCI_CAP_ID_INVALID_VIRT ||
-+		   vfio_pci_need_virt_perm(pdev, cap_id)) {
- 		perm = &virt_perms;
- 		cap_start = *ppos;
- 	} else {
 -- 
-2.7.4
-
+WeiXiong Liao
