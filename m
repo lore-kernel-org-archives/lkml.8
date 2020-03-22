@@ -2,125 +2,120 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF711C4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BE8C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E0820722
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:50:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pcxm9UqZ"
+	by mail.kernel.org (Postfix) with ESMTP id 67E66206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:50:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584899450;
+	bh=Sh7L3UieGYgixm8GAYfakbok0Y3K+sHMc1ocIK9XGkg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=QVlfPhwG+4a9CUwH03kbJEyiIDqTg/7eh3VmZ1oWgpHXjXdo2MHxIlETqrK7BZXcv
+	 0h2cFLO7T5nGOFsbwoTHp/LKsrtiWlp8P+Jfy6hyec9Ofui/Gc7QCACU+pkCOQ6onO
+	 hmsvqn4a7G3ZIdKxuxMPbYUmXjabHyW8vPiiPD/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgCVRuS (ORCPT
+        id S1727249AbgCVRut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 13:50:18 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36510 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbgCVRuN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 13:50:13 -0400
-Received: by mail-pj1-f66.google.com with SMTP id nu11so4956397pjb.1;
-        Sun, 22 Mar 2020 10:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=n2XYXavZMeYoAHc5mBv6tNDgFoTw76pNiSWNX3EEa9Q=;
-        b=pcxm9UqZ/HAL0OwPYcs8XshKDVUzxHE5vqSAML7ZGwDWBL87tX9LzqHPxf0Vr9ROoP
-         fAsu/S9YFGMA2SkRtG68jKO1/HLH76jlrqZws/qJM5AI1PnjFXYLGdd9QahqogxEHgAt
-         i8Uzzb2ffn35pW1gFKRQNkoe9jIYY4t6d0d07+a7wNK8hoscfFFmnSVkbY9gv1fdJ1Y8
-         vMO0skSFZ/HJnd+/S4PdIiPV/YSUSffvpNfYFXsuxgW6ocqKUEOaiR/k79Oi42VQyP2Y
-         Q93DMXy7n3V+Kv3RrcTZaZViZDsRHRRaGx55jufJwy9vPIXMSMqQ2pkFDpCY/fRGytmV
-         F0iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=n2XYXavZMeYoAHc5mBv6tNDgFoTw76pNiSWNX3EEa9Q=;
-        b=IuvIB8dkMoy3ivp0cLdfHl6nOZyWlrT4Oah9Yb4wn0Ym4Yn+4ePiotG/L9OhUOJUuG
-         Pg/ew2jmptsKxZV0JIemLWDA2h7D6HrWuQ5vtvzZKEhwC8ecmSyuPfB8u24V4bWbLTx2
-         8wD1mo0/W52rJw6kED4bMoO1/KcNBL2mY0MMv4Ht/a6ICHB+Agy0H+toHLkUq8h+GCPN
-         mxceKJZuO0n6FLWP8tGJubuVM5NZNoasSbDwi/I/iPmlV87ut61F4izoKemT3dN9ZJQJ
-         Df6bbEZ7VUZ0LtWL3Q0S/Zt4gbd8ZSntOBDAUKj9iKdEbmSLsc40ZeCIWAX6HQIRm3f+
-         Cpvw==
-X-Gm-Message-State: ANhLgQ3KAUIqX8cIlCPnTH6nZKhLGxaBGEkehcwnEzR99JjkRNAUOGcw
-        q6Wg1x8JT9MBJYYlHXn6IzA=
-X-Google-Smtp-Source: ADFU+vvZo/GquTPYaiXgc6x6RKv+XMsH+z54GAX/IH3g5frJzPtJbDNf3qiNbeVAxAk3xrIiVwV54Q==
-X-Received: by 2002:a17:90a:8806:: with SMTP id s6mr21311160pjn.141.1584899412228;
-        Sun, 22 Mar 2020 10:50:12 -0700 (PDT)
-Received: from localhost (216.24.188.11.16clouds.com. [216.24.188.11])
-        by smtp.gmail.com with ESMTPSA id nk12sm1366666pjb.41.2020.03.22.10.50.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 22 Mar 2020 10:50:11 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, davem@davemloft.net,
-        mchehab+samsung@kernel.org, corbet@lwn.net,
-        gregkh@linuxfoundation.org, broonie@kernel.org, tglx@linutronix.de,
-        netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH net-next v5 05/10] net: phy: aquantia: use phy_read_mmd_poll_timeout() to simplify the code
-Date:   Mon, 23 Mar 2020 01:49:38 +0800
-Message-Id: <20200322174943.26332-6-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200322174943.26332-1-zhengdejin5@gmail.com>
-References: <20200322174943.26332-1-zhengdejin5@gmail.com>
+        Sun, 22 Mar 2020 13:50:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726710AbgCVRur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 13:50:47 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1FC5206C3;
+        Sun, 22 Mar 2020 17:50:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584899446;
+        bh=Sh7L3UieGYgixm8GAYfakbok0Y3K+sHMc1ocIK9XGkg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ktftY6ofPak9V2HY5dfbS30wwGib13PT/8ptEYmPwtilPfKvU1P0KmPJUtDPaf0XO
+         5N8GybHQEcLNsSyOqaovwArE4vDlxcnzseasiGCYzq1CrDO4iLJLuFsZISf9XR8B+a
+         /Xw72O8RB+XdYs3bCgvjyN5wkKoeQfLDG+oFv3to=
+Date:   Sun, 22 Mar 2020 17:50:42 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rohit Sarkar <rohitsarkar5398@gmail.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alexandru.Ardelean@analog.com, dragos.bogdan@analog.com,
+        Matt Ranostay <matt.ranostay@konsulko.com>
+Subject: Re: [PATCH v2] iio: health: max30100: use generic property handler
+Message-ID: <20200322175042.7903862d@archlinux>
+In-Reply-To: <5e6e48dd.1c69fb81.11507.523e@mx.google.com>
+References: <5e6e48dd.1c69fb81.11507.523e@mx.google.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-use phy_read_mmd_poll_timeout() to replace the poll codes for
-simplify aqr107_wait_reset_complete() function.
+On Sun, 15 Mar 2020 20:55:12 +0530
+Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
-v4 -> v5:
-	- no changed
-v3 -> v4:
-	- no changed
-v2 -> v3:
-	- adapt to it after modifying the parameter order of the
-	  newly added function
-v1 -> v2:
-	- remove the handle of phy_read_mmd's return error.
+> Instead of of_property_read_xxx use device_property_read_xxx as it is
+> compatible with ACPI too as opposed to only device tree.
+> 
+> Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
 
- drivers/net/phy/aquantia_main.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+Looks good to me.
 
-diff --git a/drivers/net/phy/aquantia_main.c b/drivers/net/phy/aquantia_main.c
-index 31927b2c7d5a..db3e20938729 100644
---- a/drivers/net/phy/aquantia_main.c
-+++ b/drivers/net/phy/aquantia_main.c
-@@ -451,16 +451,11 @@ static int aqr107_set_tunable(struct phy_device *phydev,
-  */
- static int aqr107_wait_reset_complete(struct phy_device *phydev)
- {
--	int val, retries = 100;
--
--	do {
--		val = phy_read_mmd(phydev, MDIO_MMD_VEND1, VEND1_GLOBAL_FW_ID);
--		if (val < 0)
--			return val;
--		msleep(20);
--	} while (!val && --retries);
-+	int val;
- 
--	return val ? 0 : -ETIMEDOUT;
-+	return phy_read_mmd_poll_timeout(phydev, MDIO_MMD_VEND1,
-+					 VEND1_GLOBAL_FW_ID, val,
-+					 val != 0, 20000, 2000000);
- }
- 
- static void aqr107_chip_info(struct phy_device *phydev)
--- 
-2.25.0
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with them.
+
+Thanks,
+
+Jonathan
+
+> ---
+> Changelog
+> v1 -> v2
+> - remove of_match_ptr to make it possible to use PRP0001 ACPI based
+>   bindings
+>  drivers/iio/health/max30100.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
+> index 84010501762d..546fc37ad75d 100644
+> --- a/drivers/iio/health/max30100.c
+> +++ b/drivers/iio/health/max30100.c
+> @@ -16,7 +16,7 @@
+>  #include <linux/irq.h>
+>  #include <linux/i2c.h>
+>  #include <linux/mutex.h>
+> -#include <linux/of.h>
+> +#include <linux/property.h>
+>  #include <linux/regmap.h>
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/buffer.h>
+> @@ -267,11 +267,10 @@ static int max30100_get_current_idx(unsigned int val, int *reg)
+>  static int max30100_led_init(struct max30100_data *data)
+>  {
+>  	struct device *dev = &data->client->dev;
+> -	struct device_node *np = dev->of_node;
+>  	unsigned int val[2];
+>  	int reg, ret;
+>  
+> -	ret = of_property_read_u32_array(np, "maxim,led-current-microamp",
+> +	ret = device_property_read_u32_array(dev, "maxim,led-current-microamp",
+>  					(unsigned int *) &val, 2);
+>  	if (ret) {
+>  		/* Default to 24 mA RED LED, 50 mA IR LED */
+> @@ -502,7 +501,7 @@ MODULE_DEVICE_TABLE(of, max30100_dt_ids);
+>  static struct i2c_driver max30100_driver = {
+>  	.driver = {
+>  		.name	= MAX30100_DRV_NAME,
+> -		.of_match_table	= of_match_ptr(max30100_dt_ids),
+> +		.of_match_table	= max30100_dt_ids,
+>  	},
+>  	.probe		= max30100_probe,
+>  	.remove		= max30100_remove,
 
