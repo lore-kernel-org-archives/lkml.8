@@ -2,238 +2,150 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFBEC43332
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 09:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E7EC54FCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 09:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3E120663
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 09:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB1C20753
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 09:09:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b1uHgD+j"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="aXwJE/Ao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgCVJEc (ORCPT
+        id S1726872AbgCVJJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 05:04:32 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35806 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgCVJEc (ORCPT
+        Sun, 22 Mar 2020 05:09:23 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:18758 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725987AbgCVJJX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 05:04:32 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g6so4518752plt.2;
-        Sun, 22 Mar 2020 02:04:31 -0700 (PDT)
+        Sun, 22 Mar 2020 05:09:23 -0400
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02M92YNC025808;
+        Sun, 22 Mar 2020 05:09:12 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2ywcp9jvwj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 22 Mar 2020 05:09:12 -0400
+Received: from m0167091.ppops.net (m0167091.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02M99Clq032122;
+        Sun, 22 Mar 2020 05:09:12 -0400
+Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2054.outbound.protection.outlook.com [104.47.45.54])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2ywcp9jvwe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 22 Mar 2020 05:09:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iZwjR0+0ryqqa3nmfNTcGsmmxf5WAi4O/niloWDp93uNU06/q2z+gSFyO4eUxnmKrvWSndknkKxuIMKtfUehh3mG6B2CzhuCgcCRl9/pTjFPeLwoI9Q8Lc0X5LLFljeR4kqditW3igtJpxupxGomv47o0vMTNNNv3S3ufroOnr7mtgMKe9yOG4o63tezsXU/oflxrpaEGwMgnObDoJezNs/jlaGxNs5Wyzw1F6hlAYh7iMan+6ioGCEMHD9MYuftnw7KdQLFyeFquAmlSvgtlItBWFbakmx5zd4YFWxRIY4MWu4bfP5T9Q8SwnP1uLUg8jduS8Tc39TSiC8pqlFPmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fGa/HcmyTtBtCtvagB2tESZ+jEhcZRu3Ox5gDq3UD/Q=;
+ b=VyrJkacclhQQrkvg81fB5WZVWWtC8G5VF0LH1meqtgvyJpRowV19GM47oYxrNGt/hLwmyZ7LfhMOggkgRba89Z8BIrevNgInaJK018gA7Iyy8gxX1q6BYQl5Z6+jUfWWKcD9ih6YpRNmqZ9k5i88ZMKU/Ls++dw53SqjOfRIBQb9RET/NTdAvQgrKmXtzpVcZ/57CQSwCku0oRLU3mnBLKjmbAC72tUTaYy0SJCiWijby6XZCCtJuFF1tulqDYknICZz6NdpUWyZAJYpCkdwV7nvhTbOu8iThDjk9iTgVGIkcjhjSdrnNtMLWqGh1qnHiBmVrPpVtlR/vziBL8Dnhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=kOrH9obYAhAAUwDoWxwdeahbQ3EMm25sPBi4jccaRMc=;
-        b=b1uHgD+jdr8UXfkUYkXDIjYA3jRFUdWw5/l0hKKavJOIBXbuc9y66BYBLEa5ZlbbDr
-         4XTEgEroryedhvhz7lfcV1v17NWfVvJ8wpdQnsNtuzGh0s7ZDF7TKbo+fxeSG8AAmr+x
-         fMRfI9N7PFCgdcSpaoJjzSez/75Ds0q4laPiuXQLHSE5FQE97GwUv6fpTiWWdIkLoz29
-         L22f20CWYGAF/I1SRxesN6qZbOGe5fhzGZcn5NoBL319ZDDS3t61rf4GGfTBApHvwjVP
-         StSqlzCvOO8GCTPVUmJf4VtEZM3vBZrn/H0b20n1/ZnlPp7rpZhX9x1xAs/orSzNCygw
-         GZzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kOrH9obYAhAAUwDoWxwdeahbQ3EMm25sPBi4jccaRMc=;
-        b=G55+hmRhVHAYAUj2MArHuIuO8bub52QjJJTUgKyq1lDFpPFQPcg61hiQ5iomvza59u
-         6HCcxU9iIpO5t4I0BHluZLKaaJu8b5LivWXRvXbVfzAH5gcS+kJSIjwkVavPE71h7ALu
-         eySK7GiIyJ6WoTaPi9Id6di/V1gWcazCmOa1Mezh9/wJbIFI5Ix0ni/sn3Sao1IB41Tb
-         aT/4crARfph6KNqGsHctL6ILQoHbtPzT/csM9BR2DIJESAXymgLS/Mq2cIWjzYUKQCHE
-         L8h5cOtnLKmqf7y4/R8xeCVk9q9JKZDDkwt5yB6/SiPWNFNkTYK1DsyplKoe5iIF/1oK
-         DZzQ==
-X-Gm-Message-State: ANhLgQ3X7Qj6KYCUzn4bRf65g1cXxTOHfqreGVCwXpmf2VA3o1Dfrkd6
-        F714IEV0uplTVImt/ANUMi4=
-X-Google-Smtp-Source: ADFU+vtAGBlHwd72iLAZq7XB4NlHgv1KiyK/Y2sA9AklismBOMr/rZecQtNXuJfnNAu+UEbOQsnF0g==
-X-Received: by 2002:a17:90a:c392:: with SMTP id h18mr6937339pjt.89.1584867870863;
-        Sun, 22 Mar 2020 02:04:30 -0700 (PDT)
-Received: from localhost ([161.117.239.120])
-        by smtp.gmail.com with ESMTPSA id y9sm5948074pfo.135.2020.03.22.02.04.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 22 Mar 2020 02:04:30 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     marcelo.leitner@gmail.com, davem@davemloft.net
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com, kuba@kernel.org,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, anenbupt@gmail.com,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH v4] sctp: fix refcount bug in sctp_wfree
-Date:   Sun, 22 Mar 2020 17:04:25 +0800
-Message-Id: <20200322090425.6253-1-hqjagain@gmail.com>
-X-Mailer: git-send-email 2.17.1
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fGa/HcmyTtBtCtvagB2tESZ+jEhcZRu3Ox5gDq3UD/Q=;
+ b=aXwJE/AopqOz00taQ2m9VvZddCFJtnaIrz9+Lgkevzn8O/LnmT5BRPZb0tVdX635Kl7WEUzO/tPSDM+uAWoCbfz8cfD1MA2dQ6iCF0ZMKEtFc5Hy7+uPEiBr9zfo7pQDPivELbD21ZOwLch6F4DAORwb9DF45wYRzdRFyfQKUu0=
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
+ by DM6PR03MB5131.namprd03.prod.outlook.com (2603:10b6:5:1f0::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.18; Sun, 22 Mar
+ 2020 09:09:10 +0000
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2814.025; Sun, 22 Mar 2020
+ 09:09:10 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "joe@perches.com" <joe@perches.com>
+CC:     "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "ardeleanalex@gmail.com" <ardeleanalex@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>
+Subject: Re: [PATCH] MAINTAINERS: remove Stefan Popa's email
+Thread-Topic: [PATCH] MAINTAINERS: remove Stefan Popa's email
+Thread-Index: AQHV/GkdYDTl6mIztkSu/yTbmh4uNKhTerSAgAAFpACAAAKygIAA1zuA
+Date:   Sun, 22 Mar 2020 09:09:10 +0000
+Message-ID: <6175728c63483acc80cf36f40e17fa5bac18d545.camel@analog.com>
+References: <20200317143336.6098-1-alexandru.ardelean@analog.com>
+         <20200321194859.GA2813896@smile.fi.intel.com>
+         <c026dcc85e8454a1ea191c20ba03ce2072271af9.camel@perches.com>
+         <CAHp75VcAo4qHvFyVkv3Keq63XD_HfSvJ=1LBbxYTM0kYGWJh_g@mail.gmail.com>
+In-Reply-To: <CAHp75VcAo4qHvFyVkv3Keq63XD_HfSvJ=1LBbxYTM0kYGWJh_g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [188.26.73.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: eaeefa18-b712-4a9e-1fc6-08d7ce40aef4
+x-ms-traffictypediagnostic: DM6PR03MB5131:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR03MB5131D8E92B2EFC489881C867F9F30@DM6PR03MB5131.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0350D7A55D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39850400004)(396003)(346002)(376002)(366004)(136003)(199004)(36756003)(8676002)(81166006)(81156014)(8936002)(2906002)(66476007)(53546011)(66556008)(66446008)(64756008)(54906003)(110136005)(316002)(6486002)(86362001)(66946007)(91956017)(76116006)(6512007)(6506007)(2616005)(186003)(71200400001)(5660300002)(4326008)(107886003)(26005)(7416002)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB5131;H:DM6PR03MB4411.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IUH0KrWQLL/Veliq0G9jneRLHIjSKkFUU/pfZvJl168dhfPufCNBpPMESnF4GRDc+744TYO3XgrzUSpu4hYcZ8ZAA5ZMZn6FbRMxP7AuZpGuRdXW2emeaA9mlBbPZccfJCwclDjMiZ+EXNr7lRNKVfTmzeUmDWDwy7CTQ//LQQqbdJ8s8Mb+xIhYUvgpISvdVObG2wyQFDvYvYRxevp/RkJ7/io44Q14ncDBD4vyG990UbeQaDs95H+KMG90MqSuyWKzwRXL9ucnm/F0Peq+WJQyA7qhO6jzr2j6tZ7nyIzWxkVUcIflfePWi7xNXoysSlW2aZtuMLyva3syduR4dY8xVkCfPUWrK46790lzLNDQV2Fv0v4BMOXs5lnP/NOD1nDPs+YETJCXcbLJt40l1bwttg911rJgqdOanx2XoVfPQ9feTW6lS4uW7oBUH3pS
+x-ms-exchange-antispam-messagedata: 1HkmjKs8KcB2mhClYBVpLWzlOmHazpDcUf7xG7n3JRHJEFYewD5s3AErcpOaJ2jioGkGSI0SGA36yolM5LHxjmAeBh1NmSU6B75Lqqdv6eSYgAi2piyoLXuyWq8N8/A2pcoo0aWXcWvkYzzGMVNZow==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B546BFFDDD941C4AA9948549B0AF419F@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eaeefa18-b712-4a9e-1fc6-08d7ce40aef4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2020 09:09:10.2798
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3Rc+jMB1IhKIKMV7heYSVMc59pnOEvtMSo2IBubkNwLWbFuowkvzoeHM2vdESxZ8T+hxk/E4O0a8LNktej63W8AvbdI/+csBLhQIIdFUV44=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5131
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-22_02:2020-03-21,2020-03-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ priorityscore=1501 clxscore=1011 adultscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 suspectscore=0 mlxlogscore=999 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003220053
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sctp_sock_migrate should iterate over the datamsgs to modify
-all trunks(skbs) to newsk. For this, out_msg_list is added to
-sctp_outq to maintain datamsgs list.
-
-The following case cause the bug:
-
-for the trouble SKB, it was in outq->transmitted list
-
-sctp_outq_sack
-        sctp_check_transmitted
-                SKB was moved to outq->sacked list
-        then throw away the sack queue
-                SKB was deleted from outq->sacked
-(but it was held by datamsg at sctp_datamsg_to_asoc
-So, sctp_wfree was not called here)
-
-then migrate happened
-
-        sctp_for_each_tx_datachunk(
-        sctp_clear_owner_w);
-        sctp_assoc_migrate();
-        sctp_for_each_tx_datachunk(
-        sctp_set_owner_w);
-SKB was not in the outq, and was not changed to newsk
-
-finally
-
-__sctp_outq_teardown
-        sctp_chunk_put (for another skb)
-                sctp_datamsg_put
-                        __kfree_skb(msg->frag_list)
-                                sctp_wfree (for SKB)
-	SKB->sk was still oldsk (skb->sk != asoc->base.sk).
-
-Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- include/net/sctp/structs.h |  5 +++++
- net/sctp/chunk.c           |  4 ++++
- net/sctp/outqueue.c        |  1 +
- net/sctp/sm_sideeffect.c   |  1 +
- net/sctp/socket.c          | 27 +++++++--------------------
- 5 files changed, 18 insertions(+), 20 deletions(-)
-
-diff --git a/include/net/sctp/structs.h b/include/net/sctp/structs.h
-index 314a2fa21d6b..f72ba7418230 100644
---- a/include/net/sctp/structs.h
-+++ b/include/net/sctp/structs.h
-@@ -522,6 +522,8 @@ struct sctp_pf {
- struct sctp_datamsg {
- 	/* Chunks waiting to be submitted to lower layer. */
- 	struct list_head chunks;
-+	/* List in outq. */
-+	struct list_head list;
- 	/* Reference counting. */
- 	refcount_t refcnt;
- 	/* When is this message no longer interesting to the peer? */
-@@ -1063,6 +1065,9 @@ struct sctp_outq {
- 	/* Data pending that has never been transmitted.  */
- 	struct list_head out_chunk_list;
- 
-+	/* Data msg list. */
-+	struct list_head out_msg_list;
-+
- 	/* Stream scheduler being used */
- 	struct sctp_sched_ops *sched;
- 
-diff --git a/net/sctp/chunk.c b/net/sctp/chunk.c
-index ab6a997e222f..17b38e9a8a7b 100644
---- a/net/sctp/chunk.c
-+++ b/net/sctp/chunk.c
-@@ -41,6 +41,7 @@ static void sctp_datamsg_init(struct sctp_datamsg *msg)
- 	msg->abandoned = 0;
- 	msg->expires_at = 0;
- 	INIT_LIST_HEAD(&msg->chunks);
-+	INIT_LIST_HEAD(&msg->list);
- }
- 
- /* Allocate and initialize datamsg. */
-@@ -111,6 +112,9 @@ static void sctp_datamsg_destroy(struct sctp_datamsg *msg)
- 		sctp_chunk_put(chunk);
- 	}
- 
-+	if (!list_empty(&msg->list))
-+		list_del_init(&msg->list);
-+
- 	SCTP_DBG_OBJCNT_DEC(datamsg);
- 	kfree(msg);
- }
-diff --git a/net/sctp/outqueue.c b/net/sctp/outqueue.c
-index 577e3bc4ee6f..3bbcb140c887 100644
---- a/net/sctp/outqueue.c
-+++ b/net/sctp/outqueue.c
-@@ -194,6 +194,7 @@ void sctp_outq_init(struct sctp_association *asoc, struct sctp_outq *q)
- 
- 	q->asoc = asoc;
- 	INIT_LIST_HEAD(&q->out_chunk_list);
-+	INIT_LIST_HEAD(&q->out_msg_list);
- 	INIT_LIST_HEAD(&q->control_chunk_list);
- 	INIT_LIST_HEAD(&q->retransmit);
- 	INIT_LIST_HEAD(&q->sacked);
-diff --git a/net/sctp/sm_sideeffect.c b/net/sctp/sm_sideeffect.c
-index 2bc29463e1dc..93cc911256f6 100644
---- a/net/sctp/sm_sideeffect.c
-+++ b/net/sctp/sm_sideeffect.c
-@@ -1099,6 +1099,7 @@ static void sctp_cmd_send_msg(struct sctp_association *asoc,
- 	list_for_each_entry(chunk, &msg->chunks, frag_list)
- 		sctp_outq_tail(&asoc->outqueue, chunk, gfp);
- 
-+	list_add_tail(&msg->list, &asoc->outqueue.out_msg_list);
- 	asoc->outqueue.sched->enqueue(&asoc->outqueue, msg);
- }
- 
-diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-index 1b56fc440606..32f6111bccbf 100644
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -147,29 +147,16 @@ static void sctp_clear_owner_w(struct sctp_chunk *chunk)
- 	skb_orphan(chunk->skb);
- }
- 
--static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
--				       void (*cb)(struct sctp_chunk *))
-+static void sctp_for_each_tx_datamsg(struct sctp_association *asoc,
-+				     void (*cb)(struct sctp_chunk *))
- 
- {
--	struct sctp_outq *q = &asoc->outqueue;
--	struct sctp_transport *t;
- 	struct sctp_chunk *chunk;
-+	struct sctp_datamsg *msg;
- 
--	list_for_each_entry(t, &asoc->peer.transport_addr_list, transports)
--		list_for_each_entry(chunk, &t->transmitted, transmitted_list)
-+	list_for_each_entry(msg, &asoc->outqueue.out_msg_list, list)
-+		list_for_each_entry(chunk, &msg->chunks, frag_list)
- 			cb(chunk);
--
--	list_for_each_entry(chunk, &q->retransmit, transmitted_list)
--		cb(chunk);
--
--	list_for_each_entry(chunk, &q->sacked, transmitted_list)
--		cb(chunk);
--
--	list_for_each_entry(chunk, &q->abandoned, transmitted_list)
--		cb(chunk);
--
--	list_for_each_entry(chunk, &q->out_chunk_list, list)
--		cb(chunk);
- }
- 
- static void sctp_for_each_rx_skb(struct sctp_association *asoc, struct sock *sk,
-@@ -9574,9 +9561,9 @@ static int sctp_sock_migrate(struct sock *oldsk, struct sock *newsk,
- 	 * paths won't try to lock it and then oldsk.
- 	 */
- 	lock_sock_nested(newsk, SINGLE_DEPTH_NESTING);
--	sctp_for_each_tx_datachunk(assoc, sctp_clear_owner_w);
-+	sctp_for_each_tx_datamsg(assoc, sctp_clear_owner_w);
- 	sctp_assoc_migrate(assoc, newsk);
--	sctp_for_each_tx_datachunk(assoc, sctp_set_owner_w);
-+	sctp_for_each_tx_datamsg(assoc, sctp_set_owner_w);
- 
- 	/* If the association on the newsk is already closed before accept()
- 	 * is called, set RCV_SHUTDOWN flag.
--- 
-2.17.1
-
+T24gU2F0LCAyMDIwLTAzLTIxIGF0IDIyOjE4ICswMjAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6
+DQo+IFtFeHRlcm5hbF0NCj4gDQo+IE9uIFNhdCwgTWFyIDIxLCAyMDIwIGF0IDEwOjExIFBNIEpv
+ZSBQZXJjaGVzIDxqb2VAcGVyY2hlcy5jb20+IHdyb3RlOg0KPiA+IE9uIFNhdCwgMjAyMC0wMy0y
+MSBhdCAyMTo0OCArMDIwMCwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiA+ID4gT24gVHVlLCBN
+YXIgMTcsIDIwMjAgYXQgMDQ6MzM6MzZQTSArMDIwMCwgQWxleGFuZHJ1IEFyZGVsZWFuIHdyb3Rl
+Og0KPiA+ID4gPiBUaGUgZW1haWwgaXMgbm8gbG9uZ2VyIGFjdGl2ZS4gVGhpcyBjaGFuZ2UgcmVt
+b3ZlcyBTdGVmYW4ncyBlbWFpbCBmcm9tDQo+ID4gPiA+IHRoZQ0KPiA+ID4gPiBNQUlOVEFJTkVS
+UyBsaXN0IGFuZCByZXBsYWNlcyBpdCB3aXRoIE1pY2hhZWwgSGVubmVyaWNoJ3MuDQo+ID4gPiA+
+IA0KPiA+ID4gDQo+ID4gPiBBcmUgeW91IHBsYW5uaW5nIHRvIGZpeCBlbnRyaWVzIGFzIHBhcnNl
+LW1haW50YWluZXJzLnBsIGRvZXM/DQo+ID4gPiAoTWF5YmUgaW4gYSBzZXBhcmF0ZSBjaGFuZ2Us
+IGJ1dCBhbHNvIHdoeSBub3QgaGVyZSkNCj4gPiANCj4gPiBJIHRoaW5rIHBlcmhhcHMgeW91IHNo
+b3VsZCBub3QgYXNrIHBlb3BsZSB0byB1c2UgcGFyc2UtbWFpbnRhaW5lcnMNCj4gPiBvbiBzcGVj
+aWZpYyBzZWN0aW9ucyBhbnltb3JlIGFzIGl0J3MgcmF0aGVyIGNvbmZ1c2luZyB0byB1c2UgYW5k
+DQo+ID4gaXQncyBiZXN0IGRvbmUgYXMgYSBvbmUtc2hvdCBieSBMaW51cyBvbmUgZGF5LiAgSSBo
+b3BlIHNvb24uDQo+IA0KPiBXaHkgbm90PyBUaGUgYmVuZWZpdHMgYXJlDQo+ICAtIHBlb3BsZSB3
+aWxsIGtub3cgYWJvdXQgdGhlIHRvb2wNCj4gIC0gdGhlIHBhcnRpY3VsYXIgc2VjdGlvbnMgd2ls
+bCBiZSBmaXhlZCBzaW5jZSB0aGV5IGFyZSB0b3VjaGluZyB0aGUgZGF0YSBiYXNlDQo+IA0KPiBB
+bmQgaXQgZG9lc24ndCBwcmV2ZW50IExpbnVzIG9yIGFueWJvZHkgdG8gcnVuIHRoZSBzY3JpcHQg
+aW4gdGhlIGZ1dHVyZS4NCj4gDQo+IEFjdHVhbGx5IGl0IHdpbGwgdGVhY2ggcGVvcGxlIGFoZWFk
+IHRvIHVzZSB0aGUgdG9vbCB0aGVuIGluIHRoZSBmdXR1cmUNCj4gd2Ugd29uJ3Qgc2VlIHN1Y2gg
+ZHJhc3RpYyBkZXZpYXRpb24gaW4gb3JkZXJpbmcuDQo+IA0KDQppIGd1ZXNzIHRoaXMgbWVhbnMg
+aXQncyBhIG5vb3AgZm9yIG1lIG5vdw0K
