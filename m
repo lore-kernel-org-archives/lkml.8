@@ -2,92 +2,154 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CACC54EEB
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 19:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D4BC4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 20:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6DE2077D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 19:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC47206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 20:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgCVTvh (ORCPT
+        id S1726822AbgCVUPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 15:51:37 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:36356 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbgCVTvh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 15:51:37 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 1D0771C033C; Sun, 22 Mar 2020 20:51:35 +0100 (CET)
-Date:   Sun, 22 Mar 2020 20:51:34 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>
-Subject: Re: [PATCH 5.5 00/65] 5.5.11-rc1 review
-Message-ID: <20200322195134.GA3127@duo.ucw.cz>
-References: <20200319123926.466988514@linuxfoundation.org>
- <fcf6db4c-cebe-9ad3-9f19-00d49a7b1043@roeck-us.net>
- <20200319145900.GC92193@kroah.com>
- <32c627bf-0e6b-8bc4-88d3-032a69484aa6@roeck-us.net>
- <20200320144658.GK4189@sasha-vm>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
-Content-Disposition: inline
-In-Reply-To: <20200320144658.GK4189@sasha-vm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 22 Mar 2020 16:15:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42990 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726623AbgCVUPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 16:15:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DFBABAC92;
+        Sun, 22 Mar 2020 20:15:52 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id E11BAE0FD3; Sun, 22 Mar 2020 21:15:51 +0100 (CET)
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net] ethtool: fix reference leak in some *_SET handlers
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Cc:     Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org
+Message-Id: <20200322201551.E11BAE0FD3@unicorn.suse.cz>
+Date:   Sun, 22 Mar 2020 21:15:51 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Andrew noticed that some handlers for *_SET commands leak a netdev
+reference if required ethtool_ops callbacks do not exist. A simple
+reproducer would be e.g.
 
---mYCpIKhGyMATD0i+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  ip link add veth1 type veth peer name veth2
+  ethtool -s veth1 wol g
+  ip link del veth1
 
-Hi!
+Make sure dev_put() is called when ethtool_ops check fails.
 
-> > > Thanks for letting me know, I've now dropped that patch (others
-> > > complained about it for other reasons) and will push out a -rc2 with
-> > > that fix.
-> > >=20
-> >=20
-> > I did wonder why the offending patch was included, but then I figured t=
-hat
-> > I lost the "we apply too many patches to stable releases" battle, and I=
- didn't
-> > want to re-litigate it.
->=20
-> I usually much rather take prerequisite patches rather than do
-> backports, which is why that patch was selected.
+Reported-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+---
+ net/ethtool/debug.c     | 4 +++-
+ net/ethtool/linkinfo.c  | 4 +++-
+ net/ethtool/linkmodes.c | 4 +++-
+ net/ethtool/wol.c       | 4 +++-
+ 4 files changed, 12 insertions(+), 4 deletions(-)
 
-Unfortunately, that results in less useful -stable.
+diff --git a/net/ethtool/debug.c b/net/ethtool/debug.c
+index aaef4843e6ba..92599ad7b3c2 100644
+--- a/net/ethtool/debug.c
++++ b/net/ethtool/debug.c
+@@ -107,8 +107,9 @@ int ethnl_set_debug(struct sk_buff *skb, struct genl_info *info)
+ 	if (ret < 0)
+ 		return ret;
+ 	dev = req_info.dev;
++	ret = -EOPNOTSUPP;
+ 	if (!dev->ethtool_ops->get_msglevel || !dev->ethtool_ops->set_msglevel)
+-		return -EOPNOTSUPP;
++		goto out_dev;
+ 
+ 	rtnl_lock();
+ 	ret = ethnl_ops_begin(dev);
+@@ -129,6 +130,7 @@ int ethnl_set_debug(struct sk_buff *skb, struct genl_info *info)
+ 	ethnl_ops_complete(dev);
+ out_rtnl:
+ 	rtnl_unlock();
++out_dev:
+ 	dev_put(dev);
+ 	return ret;
+ }
+diff --git a/net/ethtool/linkinfo.c b/net/ethtool/linkinfo.c
+index 5d16cb4e8693..6e9e0b590bb5 100644
+--- a/net/ethtool/linkinfo.c
++++ b/net/ethtool/linkinfo.c
+@@ -126,9 +126,10 @@ int ethnl_set_linkinfo(struct sk_buff *skb, struct genl_info *info)
+ 	if (ret < 0)
+ 		return ret;
+ 	dev = req_info.dev;
++	ret = -EOPNOTSUPP;
+ 	if (!dev->ethtool_ops->get_link_ksettings ||
+ 	    !dev->ethtool_ops->set_link_ksettings)
+-		return -EOPNOTSUPP;
++		goto out_dev;
+ 
+ 	rtnl_lock();
+ 	ret = ethnl_ops_begin(dev);
+@@ -162,6 +163,7 @@ int ethnl_set_linkinfo(struct sk_buff *skb, struct genl_info *info)
+ 	ethnl_ops_complete(dev);
+ out_rtnl:
+ 	rtnl_unlock();
++out_dev:
+ 	dev_put(dev);
+ 	return ret;
+ }
+diff --git a/net/ethtool/linkmodes.c b/net/ethtool/linkmodes.c
+index 96f20be64553..18cc37be2d9c 100644
+--- a/net/ethtool/linkmodes.c
++++ b/net/ethtool/linkmodes.c
+@@ -338,9 +338,10 @@ int ethnl_set_linkmodes(struct sk_buff *skb, struct genl_info *info)
+ 	if (ret < 0)
+ 		return ret;
+ 	dev = req_info.dev;
++	ret = -EOPNOTSUPP;
+ 	if (!dev->ethtool_ops->get_link_ksettings ||
+ 	    !dev->ethtool_ops->set_link_ksettings)
+-		return -EOPNOTSUPP;
++		goto out_dev;
+ 
+ 	rtnl_lock();
+ 	ret = ethnl_ops_begin(dev);
+@@ -370,6 +371,7 @@ int ethnl_set_linkmodes(struct sk_buff *skb, struct genl_info *info)
+ 	ethnl_ops_complete(dev);
+ out_rtnl:
+ 	rtnl_unlock();
++out_dev:
+ 	dev_put(dev);
+ 	return ret;
+ }
+diff --git a/net/ethtool/wol.c b/net/ethtool/wol.c
+index e1b8a65b64c4..55e1ecaaf739 100644
+--- a/net/ethtool/wol.c
++++ b/net/ethtool/wol.c
+@@ -128,8 +128,9 @@ int ethnl_set_wol(struct sk_buff *skb, struct genl_info *info)
+ 	if (ret < 0)
+ 		return ret;
+ 	dev = req_info.dev;
++	ret = -EOPNOTSUPP;
+ 	if (!dev->ethtool_ops->get_wol || !dev->ethtool_ops->set_wol)
+-		return -EOPNOTSUPP;
++		goto out_dev;
+ 
+ 	rtnl_lock();
+ 	ret = ethnl_ops_begin(dev);
+@@ -172,6 +173,7 @@ int ethnl_set_wol(struct sk_buff *skb, struct genl_info *info)
+ 	ethnl_ops_complete(dev);
+ out_rtnl:
+ 	rtnl_unlock();
++out_dev:
+ 	dev_put(dev);
+ 	return ret;
+ }
+-- 
+2.25.1
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---mYCpIKhGyMATD0i+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXnfBxgAKCRAw5/Bqldv6
-8vd0AJ4zzgG0kwMalfU/hzmGareDQj+tkgCfXEoBcazXsKSah/ct3Zx1qGWDwc8=
-=BRHX
------END PGP SIGNATURE-----
-
---mYCpIKhGyMATD0i+--
