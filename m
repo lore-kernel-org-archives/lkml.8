@@ -2,169 +2,114 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AE5C54EEB
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 10:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F244C54FCF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 10:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2A52072E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 10:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2601C2072E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 10:27:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATE6Wt1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgCVK0M (ORCPT
+        id S1726956AbgCVK1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 06:26:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39621 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbgCVK0L (ORCPT
+        Sun, 22 Mar 2020 06:27:42 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38748 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbgCVK1l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 06:26:11 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jFxnr-0006VV-0Z; Sun, 22 Mar 2020 11:25:59 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 26AA61C001F;
-        Sun, 22 Mar 2020 11:25:58 +0100 (CET)
-Date:   Sun, 22 Mar 2020 10:25:57 -0000
-From:   "tip-bot2 for Wei Huang" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: ras/core] x86/mce/amd: Add PPIN support for AMD MCE
-Cc:     Smita Koralahalli Channabasappa 
-        <smita.koralahallichannabasappa@amd.com>,
-        Wei Huang <wei.huang2@amd.com>, Borislav Petkov <bp@suse.de>,
-        Tony Luck <tony.luck@intel.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200321193800.3666964-1-wei.huang2@amd.com>
-References: <20200321193800.3666964-1-wei.huang2@amd.com>
+        Sun, 22 Mar 2020 06:27:41 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x7so5590557pgh.5;
+        Sun, 22 Mar 2020 03:27:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6RAxGHRXwEXJ3h4vDKdrVJV5D7I4VTDkjCteTqg0DE4=;
+        b=ATE6Wt1XqdxMdfB6ou2BNReL2AzFsbSGPTn5HoGlIN4Q6h7cfr0WqFjvEvVjrY30yT
+         Jb+wYwsT8bxXm4+Sh7wct5MsDaHkeXrFnOkd93E0ZBw8hymUaMeV4TTLt5SV4EPYeVsR
+         iPaPZQ6ctkYq6Mjq05DnsrrCy5Foxz19G/vbybFsZ3N5OhGga/yCIkeY1GjbIcdq1w+g
+         Ju2qRnzfvi9BgDK1piO4F7jg1H3K+iiSM5QON+uLXKbczFZg+drHIrbmKO6ma24Nmpmk
+         /da4ek4CdMZKcqANCcRayKiUjjJAa6aRB3qt19mNUTBu2JV+go4LRUC4zxl5901vAZ5h
+         Sn6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6RAxGHRXwEXJ3h4vDKdrVJV5D7I4VTDkjCteTqg0DE4=;
+        b=pXGhojYWX7839IPrc+ZvB+q3N+RKzQYcbWbvEdSFbA6ywkbWhJ7/iowSaty8mrA1Q9
+         meb7L7RHb0nzBMFDY/KB75FJdohaoZtzPHmHYDE1li7qULg41bSFJLV0rGDp+ioV6x5z
+         r9w5JnpPp3hVVmN9fPLtL/lh+nLzlYto1RziQ2MMYQwGOlhePk90Mb+TvGL5SbVZ+6tO
+         qSCW1Gm/HplGMT+5eUgY/INXDPoylQPM+jI+Txq5acLV+7BjMcHwZIdk8qbO2gf8nvuc
+         /FfhC3Otry3SVZm/G6oAfJRE5OnjZb8D4QQaOU+GiTkvNBIMcHaNdixQyXnCTjIFQ8tM
+         /wug==
+X-Gm-Message-State: ANhLgQ2iy/H3HOQyYEa1Njav3nxHKpQwRO/mT9zuKL05HgS5DXuIsQAs
+        d8HAiTHqr0wGw6lHcTDom1JTxdoEgz8wfJWn51s=
+X-Google-Smtp-Source: ADFU+vsOBdai13yG5KtkS+8b8BWb50/R/N+cQ1nIdFkd26CYl5CiTZpnHfGQVrzjz6buvXEsIGim5HwlmqFXmONvLCc=
+X-Received: by 2002:a63:798a:: with SMTP id u132mr17648380pgc.203.1584872859132;
+ Sun, 22 Mar 2020 03:27:39 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <158487275776.28353.17966552354241526971.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <5e723666.1c69fb81.3545b.79c3@mx.google.com> <20200322002542.GA2826015@smile.fi.intel.com>
+ <5e77017a.1c69fb81.dc341.8ab9@mx.google.com>
+In-Reply-To: <5e77017a.1c69fb81.dc341.8ab9@mx.google.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 22 Mar 2020 12:27:27 +0200
+Message-ID: <CAHp75VddtJs1ZCk1XAZ2WJLhWQDcVwiiN5gDpK9oYPEOS=c_ZQ@mail.gmail.com>
+Subject: Re: [PATCH] iio: gyro: adis16136: use scnprintf instead of snprintf
+To:     Rohit Sarkar <rohitsarkar5398@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>, dragos.bogdan@analog.com,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the ras/core branch of tip:
+On Sun, Mar 22, 2020 at 8:11 AM Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
+>
+> On Sun, Mar 22, 2020 at 02:25:42AM +0200, Andy Shevchenko wrote:
+> > On Wed, Mar 18, 2020 at 08:25:22PM +0530, Rohit Sarkar wrote:
+> > > scnprintf returns the actual number of bytes written into the buffer as
+> > > opposed to snprintf which returns the number of bytes that would have
+> > > been written if the buffer was big enough. Using the output of snprintf
+> > > may lead to difficult to detect bugs.
+> >
+> > Nice. Have you investigate the code?
+> >
+> > > @@ -96,7 +96,7 @@ static ssize_t adis16136_show_serial(struct file *file,
+> > >     if (ret)
+> > >             return ret;
+> > >
+> > > -   len = snprintf(buf, sizeof(buf), "%.4x%.4x%.4x-%.4x\n", lot1, lot2,
+> > > +   len = scnprintf(buf, sizeof(buf), "%.4x%.4x%.4x-%.4x\n", lot1, lot2,
+> > >             lot3, serial);
+> > >
+> > >     return simple_read_from_buffer(userbuf, count, ppos, buf, len);
+> >
+> > The buffer size is 20, the pattern size I count to 19. Do you think snprintf()
+> > can fail?
+> That might be the case, but IMO using scnprintf can be considered as a
+> best practice. There is no overhead with this change and further if the
+> pattern is changed by someone in the future they might overlook the
+> buffersize
 
-Commit-ID:     077168e241ec5a3b273652acb1e85f8bc1dc2d81
-Gitweb:        https://git.kernel.org/tip/077168e241ec5a3b273652acb1e85f8bc1dc2d81
-Author:        Wei Huang <wei.huang2@amd.com>
-AuthorDate:    Sat, 21 Mar 2020 14:38:00 -05:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Sun, 22 Mar 2020 11:03:47 +01:00
+If we cut the string above we will give wrong information to the user space.
+I think scnprintf() change is a noise and does not improve the situation anyhow.
 
-x86/mce/amd: Add PPIN support for AMD MCE
+So, when anybody modifying such code the test should be performed.
 
-Newer AMD CPUs support a feature called protected processor
-identification number (PPIN). This feature can be detected via
-CPUID_Fn80000008_EBX[23].
 
-However, CPUID alone is not enough to read the processor identification
-number - MSR_AMD_PPIN_CTL also needs to be configured properly. If, for
-any reason, MSR_AMD_PPIN_CTL[PPIN_EN] can not be turned on, such as
-disabled in BIOS, the CPU capability bit X86_FEATURE_AMD_PPIN needs to
-be cleared.
-
-When the X86_FEATURE_AMD_PPIN capability is available, the
-identification number is issued together with the MCE error info in
-order to keep track of the source of MCE errors.
-
- [ bp: Massage. ]
-
-Co-developed-by: Smita Koralahalli Channabasappa <smita.koralahallichannabasappa@amd.com>
-Signed-off-by: Smita Koralahalli Channabasappa <smita.koralahallichannabasappa@amd.com>
-Signed-off-by: Wei Huang <wei.huang2@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20200321193800.3666964-1-wei.huang2@amd.com
----
- arch/x86/include/asm/cpufeatures.h |  1 +-
- arch/x86/kernel/cpu/amd.c          | 30 +++++++++++++++++++++++++++++-
- arch/x86/kernel/cpu/mce/core.c     |  2 ++-
- 3 files changed, 33 insertions(+)
-
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index f3327cb..4b263ff 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -299,6 +299,7 @@
- #define X86_FEATURE_AMD_IBRS		(13*32+14) /* "" Indirect Branch Restricted Speculation */
- #define X86_FEATURE_AMD_STIBP		(13*32+15) /* "" Single Thread Indirect Branch Predictors */
- #define X86_FEATURE_AMD_STIBP_ALWAYS_ON	(13*32+17) /* "" Single Thread Indirect Branch Predictors always-on preferred */
-+#define X86_FEATURE_AMD_PPIN		(13*32+23) /* Protected Processor Inventory Number */
- #define X86_FEATURE_AMD_SSBD		(13*32+24) /* "" Speculative Store Bypass Disable */
- #define X86_FEATURE_VIRT_SSBD		(13*32+25) /* Virtualized Speculative Store Bypass Disable */
- #define X86_FEATURE_AMD_SSB_NO		(13*32+26) /* "" Speculative Store Bypass is fixed in hardware. */
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index ac83a0f..a2cd870 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -393,6 +393,35 @@ static void amd_detect_cmp(struct cpuinfo_x86 *c)
- 	per_cpu(cpu_llc_id, cpu) = c->phys_proc_id;
- }
- 
-+static void amd_detect_ppin(struct cpuinfo_x86 *c)
-+{
-+	unsigned long long val;
-+
-+	if (!cpu_has(c, X86_FEATURE_AMD_PPIN))
-+		return;
-+
-+	/* When PPIN is defined in CPUID, still need to check PPIN_CTL MSR */
-+	if (rdmsrl_safe(MSR_AMD_PPIN_CTL, &val))
-+		goto clear_ppin;
-+
-+	/* PPIN is locked in disabled mode, clear feature bit */
-+	if ((val & 3UL) == 1UL)
-+		goto clear_ppin;
-+
-+	/* If PPIN is disabled, try to enable it */
-+	if (!(val & 2UL)) {
-+		wrmsrl_safe(MSR_AMD_PPIN_CTL,  val | 2UL);
-+		rdmsrl_safe(MSR_AMD_PPIN_CTL, &val);
-+	}
-+
-+	/* If PPIN_EN bit is 1, return from here; otherwise fall through */
-+	if (val & 2UL)
-+		return;
-+
-+clear_ppin:
-+	clear_cpu_cap(c, X86_FEATURE_AMD_PPIN);
-+}
-+
- u16 amd_get_nb_id(int cpu)
- {
- 	return per_cpu(cpu_llc_id, cpu);
-@@ -940,6 +969,7 @@ static void init_amd(struct cpuinfo_x86 *c)
- 	amd_detect_cmp(c);
- 	amd_get_topology(c);
- 	srat_detect_node(c);
-+	amd_detect_ppin(c);
- 
- 	init_amd_cacheinfo(c);
- 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index fe3983d..dd06fce 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -142,6 +142,8 @@ void mce_setup(struct mce *m)
- 
- 	if (this_cpu_has(X86_FEATURE_INTEL_PPIN))
- 		rdmsrl(MSR_PPIN, m->ppin);
-+	else if (this_cpu_has(X86_FEATURE_AMD_PPIN))
-+		rdmsrl(MSR_AMD_PPIN, m->ppin);
- 
- 	m->microcode = boot_cpu_data.microcode;
- }
+-- 
+With Best Regards,
+Andy Shevchenko
