@@ -2,125 +2,125 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BA9C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 23:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D2BC54EEB
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 23:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 356DC2072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 23:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD1720735
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 23:18:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SHq/JyC7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIp+rh9W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgCVXRg (ORCPT
+        id S1726936AbgCVXSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 19:17:36 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:6584 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgCVXRg (ORCPT
+        Sun, 22 Mar 2020 19:18:17 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43385 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgCVXSR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 19:17:36 -0400
+        Sun, 22 Mar 2020 19:18:17 -0400
+Received: by mail-pl1-f194.google.com with SMTP id v23so1035300ply.10
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 16:18:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1584919055; x=1616455055;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=NWWujVvKBsYuQnE25EfOxyG+Ag9go0PlW2vd+guccGQ=;
-  b=SHq/JyC7z1WlpAxNupO0z2e+ODlBTEzMLpi4VvhpxfowgqqiO6BF6x20
-   sa2S7rIvN7S5YimJHFE/qBr8dFh6LAE7oVaa9tybP/S0/5OIsxxajleC0
-   fj8S2Cw2brt27hGqNWn+HRwHFFyogvP0g550lNaBs162LMF93kFs0Hclv
-   k=;
-IronPort-SDR: psMJdEHhn9HE1lORvN+HIndleyDmvT/ccFO2oqeZqIozXUfBQIrCSR+fnREZ83khQfsIJ6Dkbe
- Om2lC4pQDTHw==
-X-IronPort-AV: E=Sophos;i="5.72,294,1580774400"; 
-   d="scan'208";a="22240729"
-Subject: Re: [RFC PATCH] arch/x86: Optionally flush L1D on context switch
-Thread-Topic: [RFC PATCH] arch/x86: Optionally flush L1D on context switch
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 22 Mar 2020 23:17:22 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com (Postfix) with ESMTPS id 1827EA2808;
-        Sun, 22 Mar 2020 23:17:22 +0000 (UTC)
-Received: from EX13D01UWB003.ant.amazon.com (10.43.161.94) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 22 Mar 2020 23:17:21 +0000
-Received: from EX13D21UWB003.ant.amazon.com (10.43.161.212) by
- EX13d01UWB003.ant.amazon.com (10.43.161.94) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sun, 22 Mar 2020 23:17:21 +0000
-Received: from EX13D21UWB003.ant.amazon.com ([10.43.161.212]) by
- EX13D21UWB003.ant.amazon.com ([10.43.161.212]) with mapi id 15.00.1497.006;
- Sun, 22 Mar 2020 23:17:21 +0000
-From:   "Herrenschmidt, Benjamin" <benh@amazon.com>
-To:     "luto@amacapital.net" <luto@amacapital.net>
-CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Thread-Index: AQHWAAfn6i+PyJUPFk+FYFtSBQE7c6hUt/uAgACIBoA=
-Date:   Sun, 22 Mar 2020 23:17:21 +0000
-Message-ID: <0eb0804b3061ddd52fe7736b0ae124234581a9dc.camel@amazon.com>
-References: <99ef5eec8502a7b53eee362063b9b2252a5a47da.camel@amazon.com>
-         <A38682A4-62B2-4849-ADEA-196DFF4D36C9@amacapital.net>
-In-Reply-To: <A38682A4-62B2-4849-ADEA-196DFF4D36C9@amacapital.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.173]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C87D9847FB6ABD4889534C0AFCA3A766@amazon.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sAqNs7cLCNrJManKOoO5nJSc+vgXtk4yt3qmrV/VGSA=;
+        b=HIp+rh9WJhP9XJ05dPnVLE6lGZZVOrktfOxFWCcQc6e+ITUiDnTHi7eVBHR+gqTpz1
+         9E3jTzzgeo75fyj4YLXAKf43uYVdNqGlHsRWqpJqRGfJjb40PH/6cTyUF1nW7q9dF7Lh
+         mVN1aweTD8A8eZagP0n40qUi52I+bbuwsKLRGB4QuwuqJfu4A+NVxrIEp779rGyrp9b8
+         PHpzicfdVQHDOMxdmM/HPNdMb6K17ElTO2yxT1XFbYh1OMpDgaHtPnMpWthE4gQ2Jvct
+         4j85JZzluxPclQWmXmX0txu07361+pzqsbxmdf1w+Gt2KhoOYFOd4fOWiau20nAZxlaK
+         vEcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sAqNs7cLCNrJManKOoO5nJSc+vgXtk4yt3qmrV/VGSA=;
+        b=glL4MFAmiKBnbrUd/NzugtefBPKbGvlwDsl2Lw14dk2XUCpI+8q0iNZWOLd0HwWYzC
+         cIHku7xpVxXCuCp/TRgtjDMUlfTE5aIufG34X9X3+lLFyQdoQr8lgP2oQ8yyVwvQvFS5
+         lHe+JdVY1NoALZi67P5miQM0Z2Rrq00barbN/hYjOEIwY7m4ict+B1qX5Pzxt7jY9U6M
+         iSFduLVwba8qRKfBESSEa81a5IOWMOsrqDGZ+K6N+n74BWXJCs+KMcWW/Z6pfAhoMhc6
+         yEUSWTXGFBtqnBPM5jjX4SdyW58ep0xTCmI2zcRY2YmvwwsJn+6Uekqi24/nyybN4qXC
+         OJyQ==
+X-Gm-Message-State: ANhLgQ16kNKSwndO0B0O/Zsmy4W0CUYESoNqHL7Ok+BqmPq/Dzl+hKdt
+        NJ1xdKR4buDrbhQxxT2NHWA=
+X-Google-Smtp-Source: ADFU+vvdLVqHMNFGHPUVUc1e14qG8smozDKMLnqvr/DxMD5yvtO27wPyexteJOp/73/BvjTEUcO7VA==
+X-Received: by 2002:a17:902:694c:: with SMTP id k12mr18968806plt.173.1584919094450;
+        Sun, 22 Mar 2020 16:18:14 -0700 (PDT)
+Received: from Shreeya-Patel ([113.193.34.113])
+        by smtp.googlemail.com with ESMTPSA id z12sm12403521pfj.144.2020.03.22.16.18.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 22 Mar 2020 16:18:13 -0700 (PDT)
+Message-ID: <f2b4f7f38a8a490ffc917f7199099ac95656c8c2.camel@gmail.com>
+Subject: Re: [Outreachy kernel] [PATCH 01/11] Staging: rtl8188eu: hal_com:
+ Add space around operators
+From:   Shreeya Patel <shreeya.patel23498@gmail.com>
+To:     Joe Perches <joe@perches.com>, Greg KH <gregkh@linuxfoundation.org>
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
+Date:   Mon, 23 Mar 2020 04:48:08 +0530
+In-Reply-To: <e40d49aaa96a61019804255c2990d229b2eef7dc.camel@perches.com>
+References: <cover.1584826154.git.shreeya.patel23498@gmail.com>
+         <19950c71482b3be0dd9518398af85e964f3b66b1.1584826154.git.shreeya.patel23498@gmail.com>
+         <20200322112744.GC75383@kroah.com>
+         <e40d49aaa96a61019804255c2990d229b2eef7dc.camel@perches.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU3VuLCAyMDIwLTAzLTIyIGF0IDA4OjEwIC0wNzAwLCBBbmR5IEx1dG9taXJza2kgd3JvdGU6
-DQo+IA0KPiBMZXQgbWUgdHJ5IHRvIHVuZGVyc3RhbmQgdGhlIGlzc3VlLiBUaGVyZSBpcyBzb21l
-IGhpZ2gtdmFsdWUgZGF0YSwNCj4gYW5kIHRoYXQgZGF0YSBpcyBvd25lZCBieSBhIGhpZ2gtdmFs
-dWUgcHJvY2Vzcy4gQXQgc29tZSBwb2ludCwgdGhlDQo+IGRhdGEgZW5kcyB1cCBpbiBMMUQuICBM
-YXRlciBpbiwgZXZpbCBjb2RlIHJ1bnMgYW5kIG1heSBhdHRlbXB0IHRvDQo+IGV4ZmlsdHJhdGUg
-IHRoYXQgZGF0YSBmcm9tIEwxRCB1c2luZyBhIHNpZGUgY2hhbm5lbC4gKFRoZSBldmlsIGNvZGUN
-Cj4gaXMgbm90IG5lY2Vzc2FyaWx5IGluIGEgbWFsaWNpb3VzIHByb2Nlc3MgY29udGV4dC4gSXQg
-Y291bGQgYmUga2VybmVsDQo+IGNvZGUgdGFyZ2V0ZWQgYnkgTFZJIG9yIHNpbWlsYXIuIEl0IGNv
-dWxkIGJlIG9yZGluYXJ5IGNvZGUgdGhhdA0KPiBoYXBwZW5zIHRvIGNvbnRhaW4gYSBzaWRlIGNo
-YW5uZWwgZ2FkZ2V0IGJ5IGFjY2lkZW50LikNCg0KV2UgYXJlbid0IHRyeWluZyB0byBwcm90ZWN0
-IHByb2Nlc3NlcyBhZ2FpbnN0IHRoZSBrZXJuZWwuIEkgdGhpbmsNCnRoYXQncyBiZXlvbmQgd2hh
-dCBjYW4gcmVhc29uYWJseSBiZSBkb25lIGlmIHRoZSBrZXJuZWwgaXMNCmNvbXByb21pc2VkLi4u
-IElmIHlvdSBhcmUgd29ycmllZCBhYm91dCB0aGF0IGNhc2UsIHVzZSBWTXMuDQoNCldlIGFyZSBt
-b3N0bHkgdHJ5aW5nIHRvIHByb3RlY3QgcHJvY2VzcyB2cy4gcHJvY2Vzcy4gZWl0aGVyIGxhbmd1
-YWdlDQpydW50aW1lcyBwb3RlbnRpYWxseSBydW5uaW5nIGRpZmZlcmVudCAidXNlciIgY29kZSwg
-b3IgY29udGFpbmVycw0KcGVydGFpbmluZyB0byBkaWZmZXJlbnQgInVzZXJzIiBldGMuLi4uDQoN
-Cj4gU28gdGhlIGlkZWEgaXMgdG8gZmx1c2ggTDFEIGFmdGVyIG1hbmlwdWxhdGluZyBoaWdoLXZh
-bHVlIGRhdGEgYW5kDQo+IGJlZm9yZSBydW5uaW5nIGV2aWwgY29kZS4NCj4NCj4gVGhlIG5hc3R5
-IHBhcnQgaGVyZSBpcyB0aGF0IHdlIGRvbuKAmXQgaGF2ZSBhIGdvb2QgaGFuZGxlIG9uIHdoZW4g
-TDFEDQo+IGlzIGZpbGxlZCBhbmQgd2hlbiB0aGUgZXZpbCBjb2RlIHJ1bnMuIElmIHRoZSBldmls
-IGNvZGUgaXMgdW50cnVzdGVkDQo+IHByb2Nlc3MgdXNlcnNwYWNlIGFuZCB0aGUgZmlsbCBpcyBh
-biBpbnRlcnJ1cHQsIHRoZW4gc3dpdGNoX21tIGlzDQo+IHVzZWxlc3MgYW5kIHdlIHdhbnQgdG8g
-Zmx1c2ggb24ga2VybmVsIGV4aXQgaW5zdGVhZC4gSWYgdGhlIGZpbGwgYW5kDQo+IGV2aWwgY29k
-ZSBhcmUgYm90aCB1c2Vyc3BhY2UsIHRoZW4gc3dpdGNoX21tIGlzIHByb2JhYmx5IHRoZSByaWdo
-dA0KPiBjaG9pY2UsIGJ1dCBwcmVwYXJlX2V4aXRfZnJvbV91c2VybW9kZSB3b3JrcyB0b28uIElm
-IFNNVCBpcyBvbiwgd2UNCj4gbG9zZSBubyBtYXR0ZXIgd2hhdC4gIElmIHRoZSBldmlsIGNvZGUg
-aXMgaW4ga2VybmVsIGNvbnRleHQsIHRoZW4NCj4gaXTigJlzIG5vdCBjbGVhciB3aGF0IHRvIGRv
-LiBJZiB0aGUgZmlsbCBhbmQgdGhlIGV2aWwgY29kZSBhcmUgYm90aCBpbg0KPiBrZXJuZWwgdGhy
-ZWFkcyAoaGksIGlvX3VyaW5nKSwgdGhlbiBJ4oCZbSBub3QgYXQgYWxsIHN1cmUgd2hhdCB0byBk
-by4NCj4gDQo+IEluIHN1bW1hcnksIGtlcm5lbCBleGl0IHNlZW1zIHN0cm9uZ2VyLCBidXQgdGhl
-IHJpZ2h0IGFuc3dlciBpc27igJl0IHNvDQo+IGNsZWFyLg0KDQpSaWdodC4gV2hpY2ggaXMgd2h5
-IHdlIGFyZSBoYXBweSB0byBsaW1pdCB0aGUgc2NvcGUgb2YgdGhpcyB0bw0KcHJvY2Vzc2VzLiBJ
-IHRoaW5rIGlmIHRoZSBrZXJuZWwgY2Fubm90IGJlIHRydXN0ZWQgaW4gYSBnaXZlbiBzeXN0ZW0s
-DQp0aGUgcmFuZ2Ugb2YgcG9zc2libGUgZXhwbG9pdHMgZHdhcmZzIHRoaXMgb25lLCBJIGRvbid0
-IHRoaW5rIGl0J3Mgd2hhdA0Kd2UgcmVhc29uYWJseSB3YW50IHRvIGFkZHJlc3MgaGVyZS4NCg0K
-VGhhdCBzYWlkLCBJIGFtIG5vdCBtYXJyaWVkIHRvIHRoZSBzd2l0Y2hfbW0oKSBzb2x1dGlvbiwg
-aWYgdGhlcmUgaXMNCmNvbnNlbnN1cyB0aGF0IHRoZXNlIHRoaW5ncyBhcmUgYmV0dGVyIGRvbmUg
-aW4gdGhlIGtlcm5lbCBlbnRyeS9leGl0DQpwYXRoLCB0aGVuIHNvIGJlIGl0LiBCdXQgbXkgZ3V0
-IGZlZWxpbmcgaW4gdGhhdCBzcGVjaWZpYyBjYXNlIGlzIHRoYXQNCnRoZSBvdmVyaGVhZCB3aWxs
-IGJlIGxvd2VyIGFuZCB0aGUgY29kZSBwb3RlbnRpYWxseSBzaW1wbGVyIGluDQpzd2l0Y2hfbW0u
-DQoNCj4gV2UgY291bGQgZG8gYW4gb3B0aW1pemVkIHZhcmlhbnQgd2hlcmUgd2UgZmx1c2ggYXQg
-a2VybmVsIGV4aXQgYnV0IHdlDQo+ICpkZWNpZGUqIHRvIGZsdXNoIGluIHN3aXRjaF9tbS4NCg0K
-Q2hlZXJzLA0KQmVuLg0KDQo=
+On Sun, 2020-03-22 at 08:09 -0700, Joe Perches wrote:
+> On Sun, 2020-03-22 at 12:27 +0100, Greg KH wrote:
+
+Hi Greg and Joe,
+
+> > On Sun, Mar 22, 2020 at 03:51:13AM +0530, Shreeya Patel wrote:
+> > > Add space around operators for improving the code
+> > > readability.
+> > > Reported by checkpatch.pl
+> > > 
+> > > git diff -w shows no difference.
+> > > diff of the .o files before and after the changes shows no
+> > > difference.
+> > 
+> > There is no need to have these two lines on every changelog comment
+> > in
+> > this series :(
+> 
+Yes I get that.
+
+> In my opinion, there's no need for a series here.
+> 
+> Whitespace only changes _should_ be done all at once.
+> 
+> Whitespace changes _could_ have changed string constants.
+> 
+> So noting that the patch in only whitespace and that
+> there isn't a difference in object files is useful as
+> it shows any change has been compiled and tested.
+> 
+
+Joe, I feel the same thing, there is no need of a patch series
+for it but I was given a suggestion that it becomes difficult for the
+reviewers to review the patch so it is good to send a patchset instead.
+
+But as you said, we are testing that there is no change in the object
+file so we can go ahead with a single patch for all the whitespace
+changes.
+
+If you feel this is right then can I go ahead and send a single patch
+for it? ( need your or Greg's confirmation before I do it )
+
+Thanks
+
+> 
+
