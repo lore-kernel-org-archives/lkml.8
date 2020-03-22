@@ -2,163 +2,366 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5CBC54FCF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 12:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815FAC54FCF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 12:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 686E12076F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 12:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 545DF2076F
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 12:27:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbgCVM0x (ORCPT
+        id S1727264AbgCVM1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 08:26:53 -0400
-Received: from mga18.intel.com ([134.134.136.126]:51562 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726984AbgCVM0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 08:26:25 -0400
-IronPort-SDR: VbsgSx7gSsGf0N6hgS7G+ORwFbJCKjK9GL+4sY/Na9D3xsa/K+iMMK0VegOFi7XmAvrjF+u+tB
- YrsqFxuW5C5g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2020 05:26:23 -0700
-IronPort-SDR: Cy6rHL7Yt8Bx00K+whxJzVWM95dDmNBC+s3FORZdpg1GwjHmSDiRC2tikfoh+bCYeuAvqfteE8
- Zdeyt14VdXSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,292,1580803200"; 
-   d="scan'208";a="239663862"
-Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga008.jf.intel.com with ESMTP; 22 Mar 2020 05:26:23 -0700
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     alex.williamson@redhat.com, eric.auger@redhat.com
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        joro@8bytes.org, ashok.raj@intel.com, yi.l.liu@intel.com,
-        jun.j.tian@intel.com, yi.y.sun@intel.com, jean-philippe@linaro.org,
-        peterx@redhat.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, hao.wu@intel.com
-Subject: [PATCH v1 0/8] vfio: expose virtual Shared Virtual Addressing to VMs
-Date:   Sun, 22 Mar 2020 05:31:57 -0700
-Message-Id: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 22 Mar 2020 08:27:07 -0400
+Received: from out28-97.mail.aliyun.com ([115.124.28.97]:42449 "EHLO
+        out28-97.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgCVM1G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 08:27:06 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07447577|-1;CH=green;DM=||false|;DS=CONTINUE|ham_system_inform|0.418236-0.000470919-0.581293;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.H3RDnPI_1584879915;
+Received: from 192.168.10.227(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.H3RDnPI_1584879915)
+          by smtp.aliyun-inc.com(10.147.41.120);
+          Sun, 22 Mar 2020 20:25:16 +0800
+Subject: Re: [PATCH v6 2/6] clk: Ingenic: Adjust cgu code to make it
+ compatible with X1830.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1584865262-25297-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1584865262-25297-4-git-send-email-zhouyanjie@wanyeetech.com>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sboyd@kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <5E775929.8080100@wanyeetech.com>
+Date:   Sun, 22 Mar 2020 20:25:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
+MIME-Version: 1.0
+In-Reply-To: <1584865262-25297-4-git-send-email-zhouyanjie@wanyeetech.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Yi L <yi.l.liu@intel.com>
+Hi Paul,
 
-Shared Virtual Addressing (SVA), a.k.a, Shared Virtual Memory (SVM) on
-Intel platforms allows address space sharing between device DMA and
-applications. SVA can reduce programming complexity and enhance security.
+On 2020年03月22日 20:04, Paul Cercueil wrote:
+> Hi Zhou,
+>
+> Le dim. 22 mars 2020 à 16:20, 周琰杰 (Zhou Yanjie) 
+> <zhouyanjie@wanyeetech.com> a écrit :
+>> The PLL of X1830 Soc from Ingenic has been greatly changed,
+>> the bypass control is placed in another register, so now two
+>> registers may needed to control the PLL. To this end, the
+>> original "reg" was changed to "pll_reg", and a new "bypass_reg"
+>> was introduced. In addition, when calculating rate, the PLL of
+>> X1830 introduced an extra 2x multiplier, so a new "rate_multiplier"
+>> was introduced. And adjust the code in jz47xx-cgu.c and x1000-cgu.c,
+>> make it to be compatible with the new cgu code.
+>>
+>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>
+> I think you need to update the commit message...
+>
 
-This VFIO series is intended to expose SVA usage to VMs. i.e. Sharing
-guest application address space with passthru devices. This is called
-vSVA in this series. The whole vSVA enabling requires QEMU/VFIO/IOMMU
-changes. For IOMMU and QEMU changes, they are in separate series (listed
-in the "Related series").
+Oops, forgot to update it, I'll update it in next version.
 
-The high-level architecture for SVA virtualization is as below, the key
-design of vSVA support is to utilize the dual-stage IOMMU translation (
-also known as IOMMU nesting translation) capability in host IOMMU.
+Thanks and best regards!
 
-
-    .-------------.  .---------------------------.
-    |   vIOMMU    |  | Guest process CR3, FL only|
-    |             |  '---------------------------'
-    .----------------/
-    | PASID Entry |--- PASID cache flush -
-    '-------------'                       |
-    |             |                       V
-    |             |                CR3 in GPA
-    '-------------'
-Guest
-------| Shadow |--------------------------|--------
-      v        v                          v
-Host
-    .-------------.  .----------------------.
-    |   pIOMMU    |  | Bind FL for GVA-GPA  |
-    |             |  '----------------------'
-    .----------------/  |
-    | PASID Entry |     V (Nested xlate)
-    '----------------\.------------------------------.
-    |             |   |SL for GPA-HPA, default domain|
-    |             |   '------------------------------'
-    '-------------'
-Where:
- - FL = First level/stage one page tables
- - SL = Second level/stage two page tables
-
-There are roughly four parts in this patchset which are
-corresponding to the basic vSVA support for PCI device
-assignment
- 1. vfio support for PASID allocation and free for VMs
- 2. vfio support for guest page table binding request from VMs
- 3. vfio support for IOMMU cache invalidation from VMs
- 4. vfio support for vSVA usage on IOMMU-backed mdevs
-
-The complete vSVA kernel upstream patches are divided into three phases:
-    1. Common APIs and PCI device direct assignment
-    2. IOMMU-backed Mediated Device assignment
-    3. Page Request Services (PRS) support
-
-This patchset is aiming for the phase 1 and phase 2, and based on Jacob's
-below series.
-[PATCH V10 00/11] Nested Shared Virtual Address (SVA) VT-d support:
-https://lkml.org/lkml/2020/3/20/1172
-
-Complete set for current vSVA can be found in below branch.
-https://github.com/luxis1999/linux-vsva.git: vsva-linux-5.6-rc6
-
-The corresponding QEMU patch series is as below, complete QEMU set can be
-found in below branch.
-[PATCH v1 00/22] intel_iommu: expose Shared Virtual Addressing to VMs
-complete QEMU set can be found in below link:
-https://github.com/luxis1999/qemu.git: sva_vtd_v10_v1
-
-Regards,
-Yi Liu
-
-Changelog:
-	- RFC v1 -> Patch v1:
-	  a) Address comments to the PASID request(alloc/free) path
-	  b) Report PASID alloc/free availabitiy to user-space
-	  c) Add a vfio_iommu_type1 parameter to support pasid quota tuning
-	  d) Adjusted to latest ioasid code implementation. e.g. remove the
-	     code for tracking the allocated PASIDs as latest ioasid code
-	     will track it, VFIO could use ioasid_free_set() to free all
-	     PASIDs.
-
-	- RFC v2 -> v3:
-	  a) Refine the whole patchset to fit the roughly parts in this series
-	  b) Adds complete vfio PASID management framework. e.g. pasid alloc,
-	  free, reclaim in VM crash/down and per-VM PASID quota to prevent
-	  PASID abuse.
-	  c) Adds IOMMU uAPI version check and page table format check to ensure
-	  version compatibility and hardware compatibility.
-	  d) Adds vSVA vfio support for IOMMU-backed mdevs.
-
-	- RFC v1 -> v2:
-	  Dropped vfio: VFIO_IOMMU_ATTACH/DETACH_PASID_TABLE.
-
-Liu Yi L (8):
-  vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-  vfio/type1: Add vfio_iommu_type1 parameter for quota tuning
-  vfio/type1: Report PASID alloc/free support to userspace
-  vfio: Check nesting iommu uAPI version
-  vfio/type1: Report 1st-level/stage-1 format to userspace
-  vfio/type1: Bind guest page tables to host
-  vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
-  vfio/type1: Add vSVA support for IOMMU-backed mdevs
-
- drivers/vfio/vfio.c             | 136 +++++++++++++
- drivers/vfio/vfio_iommu_type1.c | 419 ++++++++++++++++++++++++++++++++++++++++
- include/linux/vfio.h            |  21 ++
- include/uapi/linux/vfio.h       | 127 ++++++++++++
- 4 files changed, 703 insertions(+)
-
--- 
-2.7.4
+> With that fixed,
+> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+>
+> -Paul
+>
+>> ---
+>>
+>> Notes:
+>>     v1->v2:
+>>     1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
+>>       array (reg[2]).
+>>     2.Remove the "pll_info->version" and add a 
+>> "pll_info->rate_multiplier".
+>>     3.Fix the coding style and add more detailed commit message.
+>>     4.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
+>>       to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
+>>       the old mailbox is in an unstable state.
+>>
+>>     v2->v3:
+>>     Adjust order from [1/5] in v2 to [2/5] in v3.
+>>
+>>     v3->v4:
+>>     Merge [3/5] in v3 into this patch.
+>>
+>>     v4->v5:
+>>     Rebase on top of kernel 5.6-rc1.
+>>
+>>     v5->v6:
+>>     Revert "pll_reg" to "reg" to minimize patch as Paul Cercueil's 
+>> suggest.
+>>
+>>  drivers/clk/ingenic/cgu.c         | 16 +++++++++++++---
+>>  drivers/clk/ingenic/cgu.h         |  4 ++++
+>>  drivers/clk/ingenic/jz4725b-cgu.c |  2 ++
+>>  drivers/clk/ingenic/jz4740-cgu.c  |  2 ++
+>>  drivers/clk/ingenic/jz4770-cgu.c  |  6 +++++-
+>>  drivers/clk/ingenic/jz4780-cgu.c  |  2 ++
+>>  drivers/clk/ingenic/x1000-cgu.c   |  4 ++++
+>>  7 files changed, 32 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+>> index ab1302a..d7981b6 100644
+>> --- a/drivers/clk/ingenic/cgu.c
+>> +++ b/drivers/clk/ingenic/cgu.c
+>> @@ -90,6 +90,9 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned 
+>> long parent_rate)
+>>      n += pll_info->n_offset;
+>>      od_enc = ctl >> pll_info->od_shift;
+>>      od_enc &= GENMASK(pll_info->od_bits - 1, 0);
+>> +
+>> +    ctl = readl(cgu->base + pll_info->bypass_reg);
+>> +
+>>      bypass = !pll_info->no_bypass_bit &&
+>>           !!(ctl & BIT(pll_info->bypass_bit));
+>>
+>> @@ -103,7 +106,8 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, 
+>> unsigned long parent_rate)
+>>      BUG_ON(od == pll_info->od_max);
+>>      od++;
+>>
+>> -    return div_u64((u64)parent_rate * m, n * od);
+>> +    return div_u64((u64)parent_rate * m * pll_info->rate_multiplier,
+>> +        n * od);
+>>  }
+>>
+>>  static unsigned long
+>> @@ -136,7 +140,8 @@ ingenic_pll_calc(const struct 
+>> ingenic_cgu_clk_info *clk_info,
+>>      if (pod)
+>>          *pod = od;
+>>
+>> -    return div_u64((u64)parent_rate * m, n * od);
+>> +    return div_u64((u64)parent_rate * m * pll_info->rate_multiplier,
+>> +        n * od);
+>>  }
+>>
+>>  static inline const struct ingenic_cgu_clk_info *to_clk_info(
+>> @@ -209,9 +214,14 @@ static int ingenic_pll_enable(struct clk_hw *hw)
+>>      u32 ctl;
+>>
+>>      spin_lock_irqsave(&cgu->lock, flags);
+>> -    ctl = readl(cgu->base + pll_info->reg);
+>> +    ctl = readl(cgu->base + pll_info->bypass_reg);
+>>
+>>      ctl &= ~BIT(pll_info->bypass_bit);
+>> +
+>> +    writel(ctl, cgu->base + pll_info->bypass_reg);
+>> +
+>> +    ctl = readl(cgu->base + pll_info->reg);
+>> +
+>>      ctl |= BIT(pll_info->enable_bit);
+>>
+>>      writel(ctl, cgu->base + pll_info->reg);
+>> diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
+>> index 0dc8004..2c75ef4 100644
+>> --- a/drivers/clk/ingenic/cgu.h
+>> +++ b/drivers/clk/ingenic/cgu.h
+>> @@ -17,6 +17,7 @@
+>>  /**
+>>   * struct ingenic_cgu_pll_info - information about a PLL
+>>   * @reg: the offset of the PLL's control register within the CGU
+>> + * @rate_multiplier: the multiplier needed by pll rate calculation
+>>   * @m_shift: the number of bits to shift the multiplier value by 
+>> (ie. the
+>>   *           index of the lowest bit of the multiplier value in the 
+>> PLL's
+>>   *           control register)
+>> @@ -37,6 +38,7 @@
+>>   * @od_encoding: a pointer to an array mapping post-VCO divider 
+>> values to
+>>   *               their encoded values in the PLL control register, 
+>> or -1 for
+>>   *               unsupported values
+>> + * @bypass_reg: the offset of the bypass control register within the 
+>> CGU
+>>   * @bypass_bit: the index of the bypass bit in the PLL control register
+>>   * @enable_bit: the index of the enable bit in the PLL control register
+>>   * @stable_bit: the index of the stable bit in the PLL control register
+>> @@ -44,10 +46,12 @@
+>>   */
+>>  struct ingenic_cgu_pll_info {
+>>      unsigned reg;
+>> +    unsigned rate_multiplier;
+>>      const s8 *od_encoding;
+>>      u8 m_shift, m_bits, m_offset;
+>>      u8 n_shift, n_bits, n_offset;
+>>      u8 od_shift, od_bits, od_max;
+>> +    unsigned bypass_reg;
+>>      u8 bypass_bit;
+>>      u8 enable_bit;
+>>      u8 stable_bit;
+>> diff --git a/drivers/clk/ingenic/jz4725b-cgu.c 
+>> b/drivers/clk/ingenic/jz4725b-cgu.c
+>> index a3b4635..4799627 100644
+>> --- a/drivers/clk/ingenic/jz4725b-cgu.c
+>> +++ b/drivers/clk/ingenic/jz4725b-cgu.c
+>> @@ -54,6 +54,7 @@ static const struct ingenic_cgu_clk_info 
+>> jz4725b_cgu_clocks[] = {
+>>          .parents = { JZ4725B_CLK_EXT, -1, -1, -1 },
+>>          .pll = {
+>>              .reg = CGU_REG_CPPCR,
+>> +            .rate_multiplier = 1,
+>>              .m_shift = 23,
+>>              .m_bits = 9,
+>>              .m_offset = 2,
+>> @@ -65,6 +66,7 @@ static const struct ingenic_cgu_clk_info 
+>> jz4725b_cgu_clocks[] = {
+>>              .od_max = 4,
+>>              .od_encoding = pll_od_encoding,
+>>              .stable_bit = 10,
+>> +            .bypass_reg = CGU_REG_CPPCR,
+>>              .bypass_bit = 9,
+>>              .enable_bit = 8,
+>>          },
+>> diff --git a/drivers/clk/ingenic/jz4740-cgu.c 
+>> b/drivers/clk/ingenic/jz4740-cgu.c
+>> index 4f0e92c..16f7e1e 100644
+>> --- a/drivers/clk/ingenic/jz4740-cgu.c
+>> +++ b/drivers/clk/ingenic/jz4740-cgu.c
+>> @@ -69,6 +69,7 @@ static const struct ingenic_cgu_clk_info 
+>> jz4740_cgu_clocks[] = {
+>>          .parents = { JZ4740_CLK_EXT, -1, -1, -1 },
+>>          .pll = {
+>>              .reg = CGU_REG_CPPCR,
+>> +            .rate_multiplier = 1,
+>>              .m_shift = 23,
+>>              .m_bits = 9,
+>>              .m_offset = 2,
+>> @@ -80,6 +81,7 @@ static const struct ingenic_cgu_clk_info 
+>> jz4740_cgu_clocks[] = {
+>>              .od_max = 4,
+>>              .od_encoding = pll_od_encoding,
+>>              .stable_bit = 10,
+>> +            .bypass_reg = CGU_REG_CPPCR,
+>>              .bypass_bit = 9,
+>>              .enable_bit = 8,
+>>          },
+>> diff --git a/drivers/clk/ingenic/jz4770-cgu.c 
+>> b/drivers/clk/ingenic/jz4770-cgu.c
+>> index 956dd65..1976008 100644
+>> --- a/drivers/clk/ingenic/jz4770-cgu.c
+>> +++ b/drivers/clk/ingenic/jz4770-cgu.c
+>> @@ -102,6 +102,7 @@ static const struct ingenic_cgu_clk_info 
+>> jz4770_cgu_clocks[] = {
+>>          .parents = { JZ4770_CLK_EXT },
+>>          .pll = {
+>>              .reg = CGU_REG_CPPCR0,
+>> +            .rate_multiplier = 1,
+>>              .m_shift = 24,
+>>              .m_bits = 7,
+>>              .m_offset = 1,
+>> @@ -112,6 +113,7 @@ static const struct ingenic_cgu_clk_info 
+>> jz4770_cgu_clocks[] = {
+>>              .od_bits = 2,
+>>              .od_max = 8,
+>>              .od_encoding = pll_od_encoding,
+>> +            .bypass_reg = CGU_REG_CPPCR0,
+>>              .bypass_bit = 9,
+>>              .enable_bit = 8,
+>>              .stable_bit = 10,
+>> @@ -124,6 +126,7 @@ static const struct ingenic_cgu_clk_info 
+>> jz4770_cgu_clocks[] = {
+>>          .parents = { JZ4770_CLK_EXT },
+>>          .pll = {
+>>              .reg = CGU_REG_CPPCR1,
+>> +            .rate_multiplier = 1,
+>>              .m_shift = 24,
+>>              .m_bits = 7,
+>>              .m_offset = 1,
+>> @@ -134,9 +137,10 @@ static const struct ingenic_cgu_clk_info 
+>> jz4770_cgu_clocks[] = {
+>>              .od_bits = 2,
+>>              .od_max = 8,
+>>              .od_encoding = pll_od_encoding,
+>> +            .bypass_reg = CGU_REG_CPPCR1,
+>> +            .no_bypass_bit = true,
+>>              .enable_bit = 7,
+>>              .stable_bit = 6,
+>> -            .no_bypass_bit = true,
+>>          },
+>>      },
+>>
+>> diff --git a/drivers/clk/ingenic/jz4780-cgu.c 
+>> b/drivers/clk/ingenic/jz4780-cgu.c
+>> index ea905ff..5102432 100644
+>> --- a/drivers/clk/ingenic/jz4780-cgu.c
+>> +++ b/drivers/clk/ingenic/jz4780-cgu.c
+>> @@ -221,6 +221,7 @@ static const struct ingenic_cgu_clk_info 
+>> jz4780_cgu_clocks[] = {
+>>
+>>  #define DEF_PLL(name) { \
+>>      .reg = CGU_REG_ ## name, \
+>> +    .rate_multiplier = 1, \
+>>      .m_shift = 19, \
+>>      .m_bits = 13, \
+>>      .m_offset = 1, \
+>> @@ -232,6 +233,7 @@ static const struct ingenic_cgu_clk_info 
+>> jz4780_cgu_clocks[] = {
+>>      .od_max = 16, \
+>>      .od_encoding = pll_od_encoding, \
+>>      .stable_bit = 6, \
+>> +    .bypass_reg = CGU_REG_ ## name, \
+>>      .bypass_bit = 1, \
+>>      .enable_bit = 0, \
+>>  }
+>> diff --git a/drivers/clk/ingenic/x1000-cgu.c 
+>> b/drivers/clk/ingenic/x1000-cgu.c
+>> index b22d87b..6f0ec9d 100644
+>> --- a/drivers/clk/ingenic/x1000-cgu.c
+>> +++ b/drivers/clk/ingenic/x1000-cgu.c
+>> @@ -58,6 +58,7 @@ static const struct ingenic_cgu_clk_info 
+>> x1000_cgu_clocks[] = {
+>>          .parents = { X1000_CLK_EXCLK, -1, -1, -1 },
+>>          .pll = {
+>>              .reg = CGU_REG_APLL,
+>> +            .rate_multiplier = 1,
+>>              .m_shift = 24,
+>>              .m_bits = 7,
+>>              .m_offset = 1,
+>> @@ -68,6 +69,7 @@ static const struct ingenic_cgu_clk_info 
+>> x1000_cgu_clocks[] = {
+>>              .od_bits = 2,
+>>              .od_max = 8,
+>>              .od_encoding = pll_od_encoding,
+>> +            .bypass_reg = CGU_REG_APLL,
+>>              .bypass_bit = 9,
+>>              .enable_bit = 8,
+>>              .stable_bit = 10,
+>> @@ -79,6 +81,7 @@ static const struct ingenic_cgu_clk_info 
+>> x1000_cgu_clocks[] = {
+>>          .parents = { X1000_CLK_EXCLK, -1, -1, -1 },
+>>          .pll = {
+>>              .reg = CGU_REG_MPLL,
+>> +            .rate_multiplier = 1,
+>>              .m_shift = 24,
+>>              .m_bits = 7,
+>>              .m_offset = 1,
+>> @@ -89,6 +92,7 @@ static const struct ingenic_cgu_clk_info 
+>> x1000_cgu_clocks[] = {
+>>              .od_bits = 2,
+>>              .od_max = 8,
+>>              .od_encoding = pll_od_encoding,
+>> +            .bypass_reg = CGU_REG_MPLL,
+>>              .bypass_bit = 6,
+>>              .enable_bit = 7,
+>>              .stable_bit = 0,
+>> -- 
+>> 2.7.4
+>>
+>
 
