@@ -2,197 +2,145 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB42C4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E957C4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F82020736
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:37:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qnQSMhd3"
+	by mail.kernel.org (Postfix) with ESMTP id 35E2720732
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:38:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584898715;
+	bh=DtWJe5A8ojR9MDf5iOQGE9ZnKuUBzNSzoGABAMyWA/U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=aeCIPmfLWK8/BarhHOKw8Otm/90iTqROHjqPVtvw/EXENVbY06EWzHOXvn782N8uo
+	 eiqh5ZSr6hff9QMWIjRPTiVjON5eIDrFutN6eK2U764U+d80uyM+Iw4fvbll/z+R64
+	 H9owfzgM+6CFGZvCB1FHQx/aZQMB1J8us5jtaAYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgCVRhN (ORCPT
+        id S1726901AbgCVRie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 13:37:13 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37106 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbgCVRhK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 13:37:10 -0400
-Received: by mail-pf1-f194.google.com with SMTP id h72so4061269pfe.4;
-        Sun, 22 Mar 2020 10:37:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uFjqerOpAXXY1w84b6DnYVFNxiy8C9qzfSlLAukKhAk=;
-        b=qnQSMhd39MEE9TjdNvplzII+uAo1ntqM8eJ90m2Esf3prCDYVAX77d9AsYQOE8R6W4
-         UbLd01N7XVDpXfqx0uRiCQRO9UYcTzBLAgZtmMWCiUqyhthEW6rx8040YnY3rapUwfMZ
-         EyUm6aGr6R2Jph58O2TZxnry7ikEh8svgNUxmkcsYov/hTM4h2GQfP8aBoqRt2u3JaJz
-         bRWTcXJKGRRfYbBajPQdfcqrtm7zSLGcyVWvY8Q2IdjI/EoRXCfbecduOr/EiuV3Iwe0
-         cZpZGNt9R2b308+CLiy8AO9pbUEL3JvDDRyq0xQ7vH7oJTz0jorZfdv+4wUs6or433NH
-         0x4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uFjqerOpAXXY1w84b6DnYVFNxiy8C9qzfSlLAukKhAk=;
-        b=uLzXkj7hwK2dGW+zY4v8VLdVMUhI+VvIspjbdJZXA9+Zj1VgwGaD/pWTaJWzCkgoxm
-         N6Wq0pVQEVNbqJM2lWeXeY+088mbxwbKxLhkvZqxbTALeZKtEW+NcnNNdQ1M54ClwGSp
-         DjHwUx6hLuzhOSduPj0/2JDNH0ZrMj5LHfOfXCstdIwoZDYSNYwiiGMFzvKS/6Q/dUmZ
-         cDGKemnKy55vpR40o7f2Irl8oXAaHNFfAcBeQfPmmiHRudIgIFujJ0XmfEVduHfAyuvX
-         P6bhQ8Veshv0BaJcDgnvAszDhb1VJxs+WOYz7EzvhyYkKqu6B75LSs8HLr36Cf8cpUrI
-         hkTQ==
-X-Gm-Message-State: ANhLgQ0pzT/N9dSiDinTOukB4t4eisnaVfjSTuIF3ZQa+XE/biDrAtlO
-        fvMbSOlYidGHvvAwHNfBbGncu+eHPDo=
-X-Google-Smtp-Source: ADFU+vsda57LLmdZodUXWrDSSkM4zN5Ko0cmIKxgWT/T8KRBW0AHy4/KzO3fY+ywKVRyrNNdhMnShw==
-X-Received: by 2002:a65:424b:: with SMTP id d11mr17452753pgq.17.1584898628938;
-        Sun, 22 Mar 2020 10:37:08 -0700 (PDT)
-Received: from ?IPv6:2409:4072:992:9f95:b1e5:4cbf:6219:65ee? ([2409:4072:992:9f95:b1e5:4cbf:6219:65ee])
-        by smtp.gmail.com with ESMTPSA id x70sm10088379pgd.37.2020.03.22.10.37.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Mar 2020 10:37:08 -0700 (PDT)
-Subject: Re: [PATCH v2 1/4] dt-bindings: iio: vcnl4000: convert bindings to
- YAML format
-To:     Jonathan Cameron <jic23@kernel.org>,
-        =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>
-Cc:     Tomas Novotny <tomas@novotny.cz>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-References: <cover.1584380360.git.agx@sigxcpu.org>
- <6182053bb8c442e0b4d72b34c83c7f1565f4a258.1584380360.git.agx@sigxcpu.org>
- <20200322172910.51456fe4@archlinux>
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-Message-ID: <f5ea512c-d427-94c7-cf5f-f1300cbd4aa3@gmail.com>
-Date:   Sun, 22 Mar 2020 23:07:00 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 22 Mar 2020 13:38:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725971AbgCVRie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 13:38:34 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9011B206F8;
+        Sun, 22 Mar 2020 17:38:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584898713;
+        bh=DtWJe5A8ojR9MDf5iOQGE9ZnKuUBzNSzoGABAMyWA/U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Mxkym/oQg7bQpJufaf/IUzGqZbu4zPS37mpf4k+MvxAXJJSac33lUNTQv2WaNxkO3
+         lG76xSK+H6vr1ljqxiQlGBtM7S7iS5THYYarx6uYrp/IOeq3bZtnDLFwlyKnV3jeZJ
+         JErrsO2bAuVTDJxU1Z7cQo5wqYUFMgHYuLMHKr4I=
+Date:   Sun, 22 Mar 2020 17:38:26 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Mike Looijmans <mike.looijmans@topic.nl>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        hns@goldelico.com, rui.silva@linaro.org
+Subject: Re: [PATCH] iio/gyro/bmg160: Add support for BMI088 chip
+Message-ID: <20200322173826.12a7c28c@archlinux>
+In-Reply-To: <20200316063403.3094-1-mike.looijmans@topic.nl>
+References: <20200316063403.3094-1-mike.looijmans@topic.nl>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200322172910.51456fe4@archlinux>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/03/20 10:59 pm, Jonathan Cameron wrote:
-> On Mon, 16 Mar 2020 18:46:17 +0100
-> Guido Günther <agx@sigxcpu.org> wrote:
-> 
->> Convert the vcnl4000 device tree bindings to the new YAML format.
->>
->> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> Looks good to me. However, I've made far too many mistakes in
-> DT binding review recently, so will definitely be waiting for Rob to
-> get a chance to look at it!
-> 
-> Jonathan
-> 
->> ---
->>   .../bindings/iio/light/vcnl4000.txt           | 24 ----------
->>   .../bindings/iio/light/vcnl4000.yaml          | 45 +++++++++++++++++++
->>   2 files changed, 45 insertions(+), 24 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4000.txt
->>   create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt b/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
->> deleted file mode 100644
->> index 955af4555c90..000000000000
->> --- a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
->> +++ /dev/null
->> @@ -1,24 +0,0 @@
->> -VISHAY VCNL4000 -  Ambient Light and proximity sensor
->> -
->> -This driver supports the VCNL4000/10/20/40 and VCNL4200 chips
->> -
->> -Required properties:
->> -
->> -	-compatible: must be one of :
->> -        vishay,vcnl4000
->> -        vishay,vcnl4010
->> -        vishay,vcnl4020
->> -        vishay,vcnl4040
->> -        vishay,vcnl4200
->> -
->> -	-reg: I2C address of the sensor, should be one from below based on the model:
->> -        0x13
->> -        0x51
->> -        0x60
->> -
->> -Example:
->> -
->> -light-sensor@51 {
->> -	compatible = "vishay,vcnl4200";
->> -	reg = <0x51>;
->> -};
->> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml b/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
->> new file mode 100644
->> index 000000000000..74d53cfbeb85
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
->> @@ -0,0 +1,45 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/iio/light/vcnl4000.yaml#
-Shouldn't the devicetree binding document be named with the manufacturer 
-part as well?
+On Mon, 16 Mar 2020 07:34:03 +0100
+Mike Looijmans <mike.looijmans@topic.nl> wrote:
 
-With regards,
-Nishant
-
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: VISHAY VCNL4000 ambient light and proximity sensor
->> +
->> +maintainers:
->> +  - Peter Meerwald <pmeerw@pmeerw.net>
->> +
->> +description: |
->> +  Ambient light sensing with proximity detection over an i2c
->> +  interface.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - vishay,vcnl4000
->> +      - vishay,vcnl4010
->> +      - vishay,vcnl4020
->> +      - vishay,vcnl4040
->> +      - vishay,vcnl4200
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +- |
->> +  i2c {
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +
->> +      light-sensor@51 {
->> +              compatible = "vishay,vcnl4200";
->> +              reg = <0x51>;
->> +      };
->> +  };
->> +...
+> The BMI088 is pin-compatible with the BMI055, and provides
+> both gyro and accel functions. The gyro part is similar to
+> the BMI055 and this adds the chip to the list of supported
+> devices for the gyro part.
 > 
+> The accel part of the chip is not compatible with anything
+> existing already.
+> 
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+
+Applied.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  Documentation/devicetree/bindings/iio/gyroscope/bmg160.txt | 2 +-
+>  drivers/iio/gyro/Kconfig                                   | 2 +-
+>  drivers/iio/gyro/bmg160_i2c.c                              | 2 ++
+>  drivers/iio/gyro/bmg160_spi.c                              | 1 +
+>  4 files changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/bmg160.txt b/Documentation/devicetree/bindings/iio/gyroscope/bmg160.txt
+> index 78e18a1e9c1d..bb43d1ad9c9f 100644
+> --- a/Documentation/devicetree/bindings/iio/gyroscope/bmg160.txt
+> +++ b/Documentation/devicetree/bindings/iio/gyroscope/bmg160.txt
+> @@ -2,7 +2,7 @@
+>  
+>  Required properties:
+>  
+> -  - compatible : should be "bosch,bmg160" or "bosch,bmi055_gyro"
+> +  - compatible : should be "bosch,bmg160", "bosch,bmi055_gyro" or "bosch,bmi088_gyro"
+>    - reg : the I2C address of the sensor (0x69)
+>  
+>  Optional properties:
+> diff --git a/drivers/iio/gyro/Kconfig b/drivers/iio/gyro/Kconfig
+> index 7eaf77707b0b..6daeddf37f60 100644
+> --- a/drivers/iio/gyro/Kconfig
+> +++ b/drivers/iio/gyro/Kconfig
+> @@ -61,7 +61,7 @@ config BMG160
+>  	help
+>  	  Say yes here to build support for BOSCH BMG160 Tri-axis Gyro Sensor
+>  	  driver connected via I2C or SPI. This driver also supports BMI055
+> -	  gyroscope.
+> +	  and BMI088 gyroscope.
+>  
+>  	  This driver can also be built as a module.  If so, the module
+>  	  will be called bmg160_i2c or bmg160_spi.
+> diff --git a/drivers/iio/gyro/bmg160_i2c.c b/drivers/iio/gyro/bmg160_i2c.c
+> index 4fc9c6a3321f..de15c6fc3381 100644
+> --- a/drivers/iio/gyro/bmg160_i2c.c
+> +++ b/drivers/iio/gyro/bmg160_i2c.c
+> @@ -42,6 +42,7 @@ static int bmg160_i2c_remove(struct i2c_client *client)
+>  static const struct acpi_device_id bmg160_acpi_match[] = {
+>  	{"BMG0160", 0},
+>  	{"BMI055B", 0},
+> +	{"BMI088B", 0},
+>  	{},
+>  };
+>  
+> @@ -50,6 +51,7 @@ MODULE_DEVICE_TABLE(acpi, bmg160_acpi_match);
+>  static const struct i2c_device_id bmg160_i2c_id[] = {
+>  	{"bmg160", 0},
+>  	{"bmi055_gyro", 0},
+> +	{"bmi088_gyro", 0},
+>  	{}
+>  };
+>  
+> diff --git a/drivers/iio/gyro/bmg160_spi.c b/drivers/iio/gyro/bmg160_spi.c
+> index 182a59c42507..03e80bb2601a 100644
+> --- a/drivers/iio/gyro/bmg160_spi.c
+> +++ b/drivers/iio/gyro/bmg160_spi.c
+> @@ -37,6 +37,7 @@ static int bmg160_spi_remove(struct spi_device *spi)
+>  static const struct spi_device_id bmg160_spi_id[] = {
+>  	{"bmg160", 0},
+>  	{"bmi055_gyro", 0},
+> +	{"bmi088_gyro", 0},
+>  	{}
+>  };
+>  
+
