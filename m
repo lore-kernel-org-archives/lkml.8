@@ -2,48 +2,47 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57B6C54FCF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B414CC4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F57720736
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9287420736
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgCVSH7 (ORCPT
+        id S1726936AbgCVSIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 14:07:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42642 "EHLO mail.kernel.org"
+        Sun, 22 Mar 2020 14:08:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41510 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725881AbgCVSH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 14:07:59 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F61E2072E;
-        Sun, 22 Mar 2020 18:07:57 +0000 (UTC)
-Date:   Sun, 22 Mar 2020 14:07:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Shuah Khan <shuahkhan@gmail.com>, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH 00/12 v2] ring-buffer/tracing: Remove disabling of ring
- buffer while reading trace file
-Message-ID: <20200322140756.7257b867@gandalf.local.home>
-In-Reply-To: <2a7f96545945457cade216aa3c736bcc@AcuMS.aculab.com>
-References: <20200319232219.446480829@goodmis.org>
-        <2a7f96545945457cade216aa3c736bcc@AcuMS.aculab.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725785AbgCVSIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 14:08:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 242A4AD8E;
+        Sun, 22 Mar 2020 18:08:15 +0000 (UTC)
+Date:   Sun, 22 Mar 2020 19:08:13 +0100
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Kurtz <djkurtz@chromium.org>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        syzbot <syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [PATCH] i2c: i801: Fix memory corruption in
+ i801_isr_byte_done()
+Message-ID: <20200322190813.39b92de2@endymion>
+In-Reply-To: <20200320145748.GD1282@ninjato>
+References: <0000000000009586b2059c13c7e1@google.com>
+        <20200114073406.qaq3hbrhtx76fkes@kili.mountain>
+        <20200222124523.GI1716@kunai>
+        <20200320145748.GD1282@ninjato>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -52,41 +51,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 21 Mar 2020 19:13:51 +0000
-David Laight <David.Laight@ACULAB.COM> wrote:
+Hi Wolfram,
 
-> From: Steven Rostedt
-> > Sent: 19 March 2020 23:22  
-> ...
+Can you please bounce the previous messages in this thread to me? I was
+apparently not Cc'd so I'm missing the context.
+
+Thanks,
+Jean
+
+On Fri, 20 Mar 2020 15:57:48 +0100, Wolfram Sang wrote:
+> On Sat, Feb 22, 2020 at 01:45:23PM +0100, Wolfram Sang wrote:
+> > On Tue, Jan 14, 2020 at 10:34:06AM +0300, Dan Carpenter wrote:  
+> > > Assigning "priv->data[-1] = priv->len;" obviously doesn't make sense.
+> > > What it does is it ends up corrupting the last byte of priv->len so
+> > > priv->len becomes a very high number.
+> > > 
+> > > Reported-by: syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com
+> > > Fixes: d3ff6ce40031 ("i2c-i801: Enable IRQ for byte_by_byte transactions")
+> > > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > > ---  
 > > 
-> > This patch series attempts to satisfy that request, by creating a
-> > temporary buffer in each of the per cpu iterators to place the
-> > read event into, such that it can be passed to users without worrying
-> > about a writer to corrupt the event while it was being written out.
-> > It also uses the fact that the ring buffer is broken up into pages,
-> > where each page has its own timestamp that gets updated when a
-> > writer crosses over to it. By copying it to the temp buffer, and
-> > doing a "before and after" test of the time stamp with memory barriers,
-> > can allow the events to be saved.  
+> > Daniel, Jean: what do you think?
+> > Also, adding Jarkko to CC who works a lot with this driver...  
 > 
-> Does this mean the you will no longer be able to look at a snapshot
-> of the trace by running 'less trace' (and typically going to the end
-> to get info for all cpus).
-
-If there's a use case for this, it will be trivial to add an option to
-bring back the old behavior. If you want that, I can do that, and even add
-a config that makes it the default.
-
+> Ping. Adding more people...
 > 
-> A lot of the time trace is being written far too fast for it to make
-> any sense to try to read it continuously.
-> 
-> Also, if BPF start using ftrace, no one will be able to use it for
-> 'normal debugging' on such systems.
-
-I believe its used for debugging bpf, not for normal tracing. BPF only
-uses this when it has their trace_printk() using it. Which gives that nasty
-"THIS IS A DEBUG KERNEL" message ;-)   Thus, I don't think you need to
-worry about bpf having this in production.
-
--- Steve
+> >   
+> > > Untested.
+> > > 
+> > >  drivers/i2c/busses/i2c-i801.c | 1 -
+> > >  1 file changed, 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+> > > index f5e69fe56532..420d8025901e 100644
+> > > --- a/drivers/i2c/busses/i2c-i801.c
+> > > +++ b/drivers/i2c/busses/i2c-i801.c
+> > > @@ -584,7 +584,6 @@ static void i801_isr_byte_done(struct i801_priv *priv)
+> > >  					"SMBus block read size is %d\n",
+> > >  					priv->len);
+> > >  			}
+> > > -			priv->data[-1] = priv->len;
+> > >  		}
+> > >  
+> > >  		/* Read next byte */
+> > > -- 
+> > > 2.11.0
+> > >   
