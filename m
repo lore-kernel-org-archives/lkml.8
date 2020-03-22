@@ -2,86 +2,129 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F039C54FCF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8003DC54FCF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB8420724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5808B20724
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:28:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DMIkZSYb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgCVQX4 (ORCPT
+        id S1726857AbgCVQ2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 12:23:56 -0400
-Received: from sauhun.de ([88.99.104.3]:51494 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726869AbgCVQXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 12:23:55 -0400
-Received: from localhost (p54B33042.dip0.t-ipconnect.de [84.179.48.66])
-        by pokefinder.org (Postfix) with ESMTPSA id 8EE862C0064;
-        Sun, 22 Mar 2020 17:23:53 +0100 (CET)
-Date:   Sun, 22 Mar 2020 17:23:53 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, vkoul@kernel.org,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: mxs: Use dma_request_chan() instead
- dma_request_slave_channel()
-Message-ID: <20200322162353.GE6766@ninjato>
-References: <20191217074505.22527-1-peter.ujfalusi@ti.com>
+        Sun, 22 Mar 2020 12:28:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58018 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgCVQ2U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 12:28:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=+q5SE8PabkJ4E2ARJpyvT2voAuJ2mKWWauYSLk4KvP8=; b=DMIkZSYbAXVYZnU8ct+6eTALIM
+        IIwMq32XvglVnA0tcHkjB7yxlMiata26hBz45kwB5a05tIb02c9RE5ySYhs3Ho1G+lFVSgzlzVVDc
+        DUMiK8p2sT6gtwlUuoh5Nc7LPQ6R2kVmwSly/JqhfRE2B1JKygrsPQSdgxP2bs4+VdMciVAE86kHt
+        faPtljJno8DX46yFjGcZZwU56Jt23D6buy8qiu9daFTCr8dE5hV5cU6dlBPdz0Fx7mooeF/M7/3E9
+        cV1R/zopL7FbuerKPz2Tn81i5E79BF6SUI1praSaJFyVmD8DjvZ9DxsxJvgden2Wq6jHCv3KoNE8F
+        cMFMFWAw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jG3SU-0000CF-PX; Sun, 22 Mar 2020 16:28:18 +0000
+Date:   Sun, 22 Mar 2020 09:28:18 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-xfs@vger.kernel.org,
+        William Kucharski <william.kucharski@oracle.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v9 12/25] mm: Move end_index check out of readahead loop
+Message-ID: <20200322162818.GG4971@bombadil.infradead.org>
+References: <20200320142231.2402-1-willy@infradead.org>
+ <20200320142231.2402-13-willy@infradead.org>
+ <20200320165828.GB851@sol.localdomain>
+ <20200320173040.GB4971@bombadil.infradead.org>
+ <20200320180017.GE851@sol.localdomain>
+ <20200320181132.GD4971@bombadil.infradead.org>
+ <20200320182452.GF851@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2qXFWqzzG3v1+95a"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191217074505.22527-1-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200320182452.GF851@sol.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 20, 2020 at 11:24:52AM -0700, Eric Biggers wrote:
+> On Fri, Mar 20, 2020 at 11:11:32AM -0700, Matthew Wilcox wrote:
+> > On Fri, Mar 20, 2020 at 11:00:17AM -0700, Eric Biggers wrote:
+> > > But then if someone passes index=0 and nr_to_read=0, this underflows and the
+> > > entire file gets read.
+> > 
+> > nr_to_read == 0 doesn't make sense ... I thought we filtered that out
+> > earlier, but I can't find anywhere that does that right now.  I'd
+> > rather return early from __do_page_cache_readahead() to fix that.
+> > 
+> > > The page cache isn't actually supposed to contain a page at index ULONG_MAX,
+> > > since MAX_LFS_FILESIZE is at most ((loff_t)ULONG_MAX << PAGE_SHIFT), right?  So
+> > > I don't think we need to worry about reading the page with index ULONG_MAX.
+> > > I.e. I think it's fine to limit nr_to_read to 'ULONG_MAX - index', if that makes
+> > > it easier to avoid an overflow or underflow in the next check.
+> > 
+> > I think we can get a page at ULONG_MAX on 32-bit systems?  I mean, we can buy
+> > hard drives which are larger than 16TiB these days:
+> > https://www.pcmag.com/news/seagate-will-ship-18tb-and-20tb-hard-drives-in-2020
+> > (even ignoring RAID devices)
+> 
+> The max file size is ((loff_t)ULONG_MAX << PAGE_SHIFT) which means the maximum
+> page *index* is ULONG_MAX - 1, not ULONG_MAX.
 
---2qXFWqzzG3v1+95a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I see where we set that for _files_ ... I can't find anywhere that we prevent
+i_size getting that big for block devices.  Maybe I'm missing something.
 
-On Tue, Dec 17, 2019 at 09:45:05AM +0200, Peter Ujfalusi wrote:
-> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-> eating up the error code.
->=20
-> By using dma_request_chan() directly the driver can support deferred
-> probing against DMA.
->=20
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Anyway, I think we may be making this much too complicated.  How about just:
+> 
+> 	pgoff_t i_nrpages = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
+> 
+> 	if (index >= i_nrpages)
+> 		return;
+> 	/* Don't read past the end of the file */
+> 	nr_to_read = min(nr_to_read, i_nrpages - index);
+> 
+> That's 2 branches instead of 4.  (Note that assigning to i_nrpages can't
+> overflow, since the max number of pages is ULONG_MAX not ULONG_MAX + 1.)
 
-Applied to for-next, thanks!
+I like where you're going with this.  Just to be on the safe side, I'd
+prefer to do this:
 
-This driver is looking for a maintainer! Not much work, but still. So,
-if someone who reads this is interested, let me know.
+@@ -266,11 +266,8 @@ void __do_page_cache_readahead(struct address_space *mapping,
+        end_index = (isize - 1) >> PAGE_SHIFT;
+        if (index > end_index)
+                return;
+-       /* Avoid wrapping to the beginning of the file */
+-       if (index + nr_to_read < index)
+-               nr_to_read = ULONG_MAX - index + 1;
+        /* Don't read past the page containing the last byte of the file */
+-       if (index + nr_to_read >= end_index)
++       if (nr_to_read > end_index - index)
+                nr_to_read = end_index - index + 1;
+ 
+        page_cache_readahead_unbounded(mapping, file, index, nr_to_read,
 
+end_index - index + 1 could only overflow if end_index is ULONG_MAX
+and index is 0.  But if end_index is ULONG_MAX and index is 0, then
+nr_to_read is necessarily <= ULONG_MAX, so the condition is false.
+And if nr_to_read is 0, then the condition is also false, so it won't
+increase nr_to_read from 0 to 1.  It might assign x to nr_to_read when
+nr_to_read is already x, but that's harmless.
 
---2qXFWqzzG3v1+95a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl53kRgACgkQFA3kzBSg
-KbYpww//ZHuO+vdrwCU/8+E79GAmZOvtmFZavOMa97NDWrNFFvB/RoP2gZPhEoZ3
-irMqPrbs9wRlFp1/17zvEfdvTcd/SaG+Eo2/eYFcEu+JTzZ6+CRkqv8VrDfCTKp/
-U4KRE9qnn0bQCSlU/PqqnBGZLT/M3UIZBpZETd1woCbry/jb8vtjUhXqOi9fiRvx
-7a5N22vNRR29NmafmjOnppWh/GQJwF369apaF/0vXCK09hB98nPCrX9XdJqxfPZZ
-eWACcwoyPxEA1KednREw2Si7jqbMNosEdsfN2/+GJZlQstMtDoye6du6JkoCOeOv
-XtlHcIX9gC5aViQWsOoxdOAPnCEH3EN+xa+lDveOCwVQSUtyQlCmoCE9DbsNwQCH
-1W80a8O4ktMG9KSeWmbjsGmyZOoxE3Oxj8Nwwebp7Fk535GqjXIxZGRnxA0Kynm1
-XJR4hcZJvLVzFEG/3yhLtS7meSoXmiVHmmSgRsHFvownE/K3RllREHlOxe4e+18x
-zj5j+9BUhDwUuaXlLU7JUcp8RXz0d1cJk4YWdmQqkz5I0KA/TzPORb5V+mrsNM4j
-WXaaKFd/LTu7YszYxtes38skel/elO8rH4ONRf0l2JGyQ6iq+xCvJOBNEB4PISi7
-vShJaiIv7ez8UE429xH3gzbapalKxjZld+602Obn1ssavQiynyU=
-=N00J
------END PGP SIGNATURE-----
-
---2qXFWqzzG3v1+95a--
+Thanks!
