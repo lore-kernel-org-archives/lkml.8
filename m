@@ -2,134 +2,128 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A43C54EEB
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 19:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45A1C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 19:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD48A2076E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 19:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B0A20724
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 19:18:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="saMGtVA/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgCVTIs (ORCPT
+        id S1726786AbgCVTSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 15:08:48 -0400
-Received: from out28-97.mail.aliyun.com ([115.124.28.97]:59556 "EHLO
-        out28-97.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbgCVTIT (ORCPT
+        Sun, 22 Mar 2020 15:18:54 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:40278 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgCVTSy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 15:08:19 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07496299|-1;CH=green;DM=||false|;DS=CONTINUE|ham_system_inform|0.345318-0.00103386-0.653648;FP=12402199364501017658|1|1|8|0|-1|-1|-1;HT=e02c03312;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.H3Z9uBl_1584904084;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.H3Z9uBl_1584904084)
-          by smtp.aliyun-inc.com(10.147.41.199);
-          Mon, 23 Mar 2020 03:08:15 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, paul@crapouillou.net,
-        dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v7 1/6] clk: Ingenic: Remove unnecessary spinlock when reading registers.
-Date:   Mon, 23 Mar 2020 03:07:33 +0800
-Message-Id: <1584904058-53155-3-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584904058-53155-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1584904058-53155-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Sun, 22 Mar 2020 15:18:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RIAHvjZgxomQVpQmFNUiVpDvO2IIucaa9jhgrsz8pG4=; b=saMGtVA/YKdtAqF7xH6b7rV0u
+        l7FOMTkOsflESbP4bX4ej2nf+wfqjZGyiGYiIVL6d3pXfZLLcnmojQS1QcLWE5iTGK3pvVRMiRd3L
+        dOBa+fxaWc4tyC7gShu+LORrP04YDnaOKsyjFZ6ZRxEAwbpMD+lxLZthMc7MbAt7Nx4DPBt5e9VRx
+        SQhQlrBjLA7huji+msBOUFlvnRKGRXe58xfBzmYqGaIwuBp6KpGOE8/f6Tg/RvoCE7PgUyETbztli
+        2VNWtXvD9g8IJUNyUlXYnfNVR960sgEAfkx1QGoSyIPoqJdolWa7QrI49fBFvXLWSf2CxSrTVtAQK
+        HN2SXpfgw==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:35850)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jG67I-0005AM-5m; Sun, 22 Mar 2020 19:18:36 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jG67E-0007yZ-4A; Sun, 22 Mar 2020 19:18:32 +0000
+Date:   Sun, 22 Mar 2020 19:18:32 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        davem@davemloft.net, mchehab+samsung@kernel.org, corbet@lwn.net,
+        gregkh@linuxfoundation.org, broonie@kernel.org, tglx@linutronix.de,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 08/10] net: phy: use phy_read_poll_timeout()
+ to simplify the code
+Message-ID: <20200322191832.GW25745@shell.armlinux.org.uk>
+References: <20200322174943.26332-1-zhengdejin5@gmail.com>
+ <20200322174943.26332-9-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200322174943.26332-9-zhengdejin5@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is not necessary to use spinlock when reading registers,
-so remove it from cgu.c.
+On Mon, Mar 23, 2020 at 01:49:41AM +0800, Dejin Zheng wrote:
+> use phy_read_poll_timeout() to replace the poll codes for
+> simplify the code in phy_poll_reset() function.
+> 
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+> v4 -> v5:
+> 	- it can add msleep before call phy_read_poll_timeout()
+> 	  to keep the code more similar. so add it.
+> v3 -> v4:
+> 	- drop it.
+> v2 -> v3:
+> 	- adapt to it after modifying the parameter order of the
+> 	  newly added function
+> v1 -> v2:
+> 	- remove the handle of phy_read()'s return error.
+> 
+> 
+>  drivers/net/phy/phy_device.c | 17 +++++------------
+>  1 file changed, 5 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> index a585faf8b844..24297ee7f626 100644
+> --- a/drivers/net/phy/phy_device.c
+> +++ b/drivers/net/phy/phy_device.c
+> @@ -1059,23 +1059,16 @@ EXPORT_SYMBOL(phy_disconnect);
+>  static int phy_poll_reset(struct phy_device *phydev)
+>  {
+>  	/* Poll until the reset bit clears (50ms per retry == 0.6 sec) */
+> -	unsigned int retries = 12;
+> -	int ret;
+> -
+> -	do {
+> -		msleep(50);
+> -		ret = phy_read(phydev, MII_BMCR);
+> -		if (ret < 0)
+> -			return ret;
+> -	} while (ret & BMCR_RESET && --retries);
+> -	if (ret & BMCR_RESET)
+> -		return -ETIMEDOUT;
+> +	int ret, val;
+>  
+> +	msleep(50);
+> +	ret = phy_read_poll_timeout(phydev, MII_BMCR, val, !(val & BMCR_RESET),
+> +				    50000, 550000);
+>  	/* Some chips (smsc911x) may still need up to another 1ms after the
+>  	 * BMCR_RESET bit is cleared before they are usable.
+>  	 */
+>  	msleep(1);
+> -	return 0;
+> +	return ret;
 
-Suggested-by: Paul Cercueil <paul@crapouillou.net>
-Suggested-by: Paul Burton <paulburton@kernel.org>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
----
+This isn't actually equivaent behaviour.  If the read timed out, the old
+code didn't wait 1ms.  Your new code does.  However, since we've waited
+about 600ms already, it probably doesn't matter.
 
-Notes:
-    v2:
-    New patch.
-    
-    v2->v3:
-    Adjust order from [5/5] in v2 to [1/5] in v3.
-    
-    v3->v4:
-    Remove the spinlock around ingenic_cgu_gate_get().
-    
-    v4->v5:
-    Rebase on top of kernel 5.6-rc1.
-    
-    v5->v6:
-    No change.
-    
-    v6->v7:
-    No change.
+These sorts of things should be documented in the commit log, IMHO, so
+it's obvious that it's been considered.
 
- drivers/clk/ingenic/cgu.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
-
-diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
-index 6e96303..ab1302a 100644
---- a/drivers/clk/ingenic/cgu.c
-+++ b/drivers/clk/ingenic/cgu.c
-@@ -76,16 +76,13 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
- 	const struct ingenic_cgu_pll_info *pll_info;
- 	unsigned m, n, od_enc, od;
- 	bool bypass;
--	unsigned long flags;
- 	u32 ctl;
- 
- 	clk_info = &cgu->clock_info[ingenic_clk->idx];
- 	BUG_ON(clk_info->type != CGU_CLK_PLL);
- 	pll_info = &clk_info->pll;
- 
--	spin_lock_irqsave(&cgu->lock, flags);
- 	ctl = readl(cgu->base + pll_info->reg);
--	spin_unlock_irqrestore(&cgu->lock, flags);
- 
- 	m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
- 	m += pll_info->m_offset;
-@@ -259,12 +256,9 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
- 	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
- 	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
--	unsigned long flags;
- 	u32 ctl;
- 
--	spin_lock_irqsave(&cgu->lock, flags);
- 	ctl = readl(cgu->base + pll_info->reg);
--	spin_unlock_irqrestore(&cgu->lock, flags);
- 
- 	return !!(ctl & BIT(pll_info->enable_bit));
- }
-@@ -562,16 +556,12 @@ static int ingenic_clk_is_enabled(struct clk_hw *hw)
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
- 	const struct ingenic_cgu_clk_info *clk_info;
--	unsigned long flags;
- 	int enabled = 1;
- 
- 	clk_info = &cgu->clock_info[ingenic_clk->idx];
- 
--	if (clk_info->type & CGU_CLK_GATE) {
--		spin_lock_irqsave(&cgu->lock, flags);
-+	if (clk_info->type & CGU_CLK_GATE)
- 		enabled = !ingenic_cgu_gate_get(cgu, &clk_info->gate);
--		spin_unlock_irqrestore(&cgu->lock, flags);
--	}
- 
- 	return enabled;
- }
 -- 
-2.7.4
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
