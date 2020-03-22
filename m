@@ -2,86 +2,353 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51687C4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BE8C54FD0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2610720724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:16:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rR8TitqV"
+	by mail.kernel.org (Postfix) with ESMTP id 0195320736
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:20:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584890442;
+	bh=yn8D5eI3HGMn3u2AltrMrKFgz8JKNLqK+ddrDMifGLo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2BKWCj3v+Uj2jLw5/t07g4QoA2Q37GS0asCS4hPd1GdBI084+j4sl+NOSFTk8++Xr
+	 Msy2pNR7m4AVuUBkg34kux4a1n8YjzpMKGeM+CDh2XZMcdWNQiaUsIKyLFhkL/iKSa
+	 bG0rQVhXUlwjqbX9/bNbkg3Egey+xM0eGJSit3r8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgCVPQ3 (ORCPT
+        id S1726871AbgCVPUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 11:16:29 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39644 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbgCVPQ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 11:16:28 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j15so8201901lfk.6
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 08:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UiQbUXjkv7dvJPYjix5G08GTr5tXFgyICC/8mG3TbLM=;
-        b=rR8TitqVvdTSiG5IDnpTZycycf9Juv73G4Oq20wrsO8YxX6DngsUCy1LjlHZFtog/3
-         on1H0z4jKEsE7lu9SGJQBZNtm2p5U4MCd2jXKDFUfA4N7DG1Rg3+onS0YfLmPZrV6NFc
-         D3rkIpEG5nDNe8TiUYZojIxcUN9l4MfSeTF2afJnAid9bRhFmKCsrJbI6GtajF2Y/t6j
-         Moxs1vzKpPPSpvA5pH/J/OtZ+ps2dHwAx2Nq8oT1Lx6YXSzRjvYPEML/lxQWcIjwajSS
-         +d+JlSGOzOYo1xvlFTSuMBKTp1rbRcZ9Ew9rRjFUhLXaXvHfQpcJBkRHF4fRhBhyKViP
-         TzSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UiQbUXjkv7dvJPYjix5G08GTr5tXFgyICC/8mG3TbLM=;
-        b=FBhq+R4kNuUR33P9Ilh0zwG//5jH9BflJ78apTHeOfGz1QTV16TddnhVNTliP5OWji
-         CCFV1C1HWUs66xu0K0iyf3UKK2g4ELVe3SmZXquigi81/ZRNYREm7tvWE8oxLaLs5SN4
-         O6MGRyEZ3WGNL896/Vw1SvoUYq1I34QY8+nnGKbpbHVF52npjXz+NvIiExuy0a/C6WCk
-         l+BIpbHjAp7tx2k8UmfNP4OSneanXftYtlyxkeLNAIifzKPo+1kaXbbWEOoUdIrUrTt5
-         uTK/7KvKG5QbfaKGyYIlDEc6fqABiP7PwfLkhiay8InDaOtOplnsP5QCYu5mHtGZuVG4
-         mSlA==
-X-Gm-Message-State: ANhLgQ0yDlGC1dhFZmGi4Wow/IXb9QDclLWIVSYgBYQI+Rx0cdlmQbSx
-        jgutLmoScjH+PTFvYuHpzIbkQy8OVCsNsEoFtDQULA==
-X-Google-Smtp-Source: ADFU+vsCUq5yboISgFixyCY71nyL49myzuOxRv5IfB4yL45p/mq8M+oDVJbl73ER46yiPXZDDtpIUZVSaAp5CwjfWDc=
-X-Received: by 2002:a19:ac42:: with SMTP id r2mr10521930lfc.38.1584890184772;
- Sun, 22 Mar 2020 08:16:24 -0700 (PDT)
+        Sun, 22 Mar 2020 11:20:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbgCVPUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 11:20:40 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1B1520724;
+        Sun, 22 Mar 2020 15:20:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584890439;
+        bh=yn8D5eI3HGMn3u2AltrMrKFgz8JKNLqK+ddrDMifGLo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=E6FnCahXBBHLeBVGjntp+BdW8VUJ571OUZAB1h2nAZlhfOrNcHzZWo/gr6zeakC6P
+         pkoU5IlHUdxTq8pZWQSaZex4APgnjyjK3ZqCAcI8RLHhBkaQDIvJ12lQED9yNyHCy4
+         wHbFj2Iff6BjxEFXcUVzQjOR3Uaw6xaZJgYyEF0M=
+Date:   Sun, 22 Mar 2020 15:20:33 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "Grozav, Andrei" <Andrei.Grozav@analog.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "Nagy, Laszlo" <Laszlo.Nagy@analog.com>,
+        "Csomortani, Istvan" <Istvan.Csomortani@analog.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
+        "Costina, Adrian" <Adrian.Costina@analog.com>
+Subject: Re: [PATCH v11 5/8] iio: adc: adi-axi-adc: add support for AXI ADC
+ IP core
+Message-ID: <20200322152033.0351547c@archlinux>
+In-Reply-To: <979ef870a4f0935e41e95e7759847eba8bd0407c.camel@analog.com>
+References: <20200321085315.11030-1-alexandru.ardelean@analog.com>
+        <20200321085315.11030-6-alexandru.ardelean@analog.com>
+        <CAHp75VecnornqckmG_WgN-V9A1VSQfRT85TxFzwHgaLw9dAHeA@mail.gmail.com>
+        <979ef870a4f0935e41e95e7759847eba8bd0407c.camel@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1584065460-22205-1-git-send-email-jrdr.linux@gmail.com> <20200313122210.GB31668@ziepe.ca>
-In-Reply-To: <20200313122210.GB31668@ziepe.ca>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Sun, 22 Mar 2020 20:46:13 +0530
-Message-ID: <CAFqt6zY-ahQwj0wUD4KgR+NwTejqNNJ4-gTjAqV7Lr7Wh3dT9A@mail.gmail.com>
-Subject: Re: [PATCH] mm/hmm.c : Remove additional check for lockdep_assert_held()
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 5:52 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Fri, Mar 13, 2020 at 07:41:00AM +0530, Souptick Joarder wrote:
-> > walk_page_range() already has a check for lockdep_assert_held().
-> > So additional check for lockdep_assert_held() can be removed from
-> > hmm_range_fault().
->
-> Is there a reason why you think this redundancy is bad?
+On Sun, 22 Mar 2020 09:35:57 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-Other than removing an extra check , I don't have any other strong
-reason to support this patch.
->
-> IMHO it makes it easier to understand the API contract if key top
-> level APIs have their assumptions coded in lockdep.
+> On Sat, 2020-03-21 at 23:38 +0200, Andy Shevchenko wrote:
+> > [External]
+> > 
+> > On Sat, Mar 21, 2020 at 10:55 AM Alexandru Ardelean
+> > <alexandru.ardelean@analog.com> wrote:  
+> > > From: Michael Hennerich <michael.hennerich@analog.com>
+> > > 
+> > > This change adds support for the Analog Devices Generic AXI ADC IP core.
+> > > The IP core is used for interfacing with analog-to-digital (ADC) converters
+> > > that require either a high-speed serial interface (JESD204B/C) or a source
+> > > synchronous parallel interface (LVDS/CMOS).
+> > > 
+> > > Usually, some other interface type (i.e SPI) is used as a control interface
+> > > for the actual ADC, while the IP core (controlled via this driver), will
+> > > interface to the data-lines of the ADC and handle  the streaming of data
+> > > into memory via DMA.
+> > > 
+> > > Because of this, the AXI ADC driver needs the other SPI-ADC driver to
+> > > register with it. The SPI-ADC needs to be register via the SPI framework,
+> > > while the AXI ADC registers as a platform driver. The two cannot be ordered
+> > > in a hierarchy as both drivers have their own registers, and trying to
+> > > organize this [in a hierarchy becomes] problematic when trying to map
+> > > memory/registers.
+> > > 
+> > > There are some modes where the AXI ADC can operate as standalone ADC, but
+> > > those will be implemented at a later point in time.
+> > > 
+> > > Link: https://wiki.analog.com/resources/fpga/docs/axi_adc_ip  
+> >   
+> 
+> i can send a v12 for this in a few days;
+I'll drop v11 of the series then.
 
-Ok, I will drop this patch. Sorry for the noise.
+Jonathan
+
+
+> 
+> > Is it tag or simple link? I would suggest not to use Link: if it's not a tag.  
+> 
+> simple link
+> any suggestions/alternatives?
+> i wasn't aware of conventions about this;
+> 
+> > 
+> > ...
+> >   
+> > > +static struct adi_axi_adc_client *conv_to_client(struct adi_axi_adc_conv
+> > > *conv)
+> > > +{
+> > > +       if (!conv)
+> > > +               return NULL;  
+> > 
+> > This is so unusual. Why do you need it?  
+> 
+> see [1]
+> 
+> >   
+> > > +       return container_of(conv, struct adi_axi_adc_client, conv);
+> > > +}
+> > > +
+> > > +void *adi_axi_adc_conv_priv(struct adi_axi_adc_conv *conv)
+> > > +{
+> > > +       struct adi_axi_adc_client *cl = conv_to_client(conv);
+> > > +
+> > > +       if (!cl)
+> > > +               return NULL;  
+> > 
+> > So about this.  
+> 
+> [1]
+> because 'adi_axi_adc_conv_priv()' (and implicitly conv_to_client()) gets called
+> from other drivers; we can't expect to be sure that conv & cl aren't NULL;
+> 
+> >   
+> > > +
+> > > +       return (char *)cl + ALIGN(sizeof(struct adi_axi_adc_client),
+> > > IIO_ALIGN);  
+> > 
+> > This all looks a bit confusing. Is it invention of offsetof() ?  
+> 
+> umm; tbh, it's more of a copy/clone of iio_priv() 
+> 
+> it's not un-common though;
+> see [and this one has more exposure]:
+> --------------------------------------------------------
+> static inline void *netdev_priv(const struct net_device *dev)
+> {       
+>         return (char *)dev + ALIGN(sizeof(struct net_device), NETDEV_ALIGN);
+> }
+> --------------------------------------------------------
+> 
+> 
+> >   
+> > > +}  
+> > 
+> > ...
+> >   
+> > > +static struct adi_axi_adc_conv *adi_axi_adc_conv_register(struct device
+> > > *dev,
+> > > +                                                         int sizeof_priv)
+> > > +{
+> > > +       struct adi_axi_adc_client *cl;
+> > > +       size_t alloc_size;
+> > > +
+> > > +       alloc_size = sizeof(struct adi_axi_adc_client);
+> > > +       if (sizeof_priv) {
+> > > +               alloc_size = ALIGN(alloc_size, IIO_ALIGN);
+> > > +               alloc_size += sizeof_priv;
+> > > +       }
+> > > +       alloc_size += IIO_ALIGN - 1;  
+> > 
+> > Have you looked at linux/overflow.h?  
+> 
+> i did now;
+> any hints where i should look closer?
+> 
+> >   
+> > > +       cl = kzalloc(alloc_size, GFP_KERNEL);
+> > > +       if (!cl)
+> > > +               return ERR_PTR(-ENOMEM);
+> > > +
+> > > +       mutex_lock(&registered_clients_lock);
+> > > +
+> > > +       get_device(dev);
+> > > +       cl->dev = dev;  
+> > 
+> > cl->dev = get_device(dev);  
+> 
+> sure
+> 
+> >   
+> > > +       list_add_tail(&cl->entry, &registered_clients);
+> > > +
+> > > +       mutex_unlock(&registered_clients_lock);
+> > > +
+> > > +       return &cl->conv;
+> > > +}
+> > > +
+> > > +static void adi_axi_adc_conv_unregister(struct adi_axi_adc_conv *conv)
+> > > +{
+> > > +       struct adi_axi_adc_client *cl = conv_to_client(conv);
+> > > +
+> > > +       if (!cl)
+> > > +               return;  
+> > 
+> > When is this possible?  
+> 
+> good point; it isn't;
+> it's a left-over from when adi_axi_adc_conv_unregister() was exported
+> still, i wouldn't mind leaving it [for paranoia], if there isn't a strong
+> opinion to remove it;
+> 
+> >   
+> > > +
+> > > +       mutex_lock(&registered_clients_lock);
+> > > +
+> > > +       list_del(&cl->entry);
+> > > +       put_device(cl->dev);
+> > > +
+> > > +       mutex_unlock(&registered_clients_lock);
+> > > +
+> > > +       kfree(cl);
+> > > +}  
+> > 
+> > ...
+> >   
+> > > +static ssize_t in_voltage_scale_available_show(struct device *dev,
+> > > +                                              struct device_attribute
+> > > *attr,
+> > > +                                              char *buf)
+> > > +{
+> > > +       for (i = 0; i < conv->chip_info->num_scales; i++) {
+> > > +               const unsigned int *s = conv->chip_info->scale_table[i];
+> > > +
+> > > +               len += scnprintf(buf + len, PAGE_SIZE - len,
+> > > +                                "%u.%06u ", s[0], s[1]);
+> > > +       }
+> > > +       buf[len - 1] = '\n';  
+> > 
+> > Is num_scales guaranteed to be great than 0 whe we call this?  
+> 
+> yes
+> see axi_adc_attr_is_visible()
+> 
+> >   
+> > > +
+> > > +       return len;
+> > > +}  
+> > 
+> > ...
+> >   
+> > > +static struct attribute *adi_axi_adc_attributes[] = {
+> > > +       ADI_AXI_ATTR(SCALE_AVAIL, in_voltage_scale_available),
+> > > +       NULL,  
+> > 
+> > Terminators good w/o comma.  
+> 
+> i don't feel strongly pro/against
+> sure
+> 
+> >   
+> > > +};  
+> > 
+> > ...
+> >   
+> > > +/* Match table for of_platform binding */
+> > > +static const struct of_device_id adi_axi_adc_of_match[] = {
+> > > +       { .compatible = "adi,axi-adc-10.0.a", .data =
+> > > &adi_axi_adc_10_0_a_info },
+> > > +       { /* end of list */ },  
+> > 
+> > Ditto.
+> >   
+> > > +};  
+> > 
+> > ...
+> >   
+> > > +struct adi_axi_adc_client *adi_axi_adc_attach_client(struct device *dev)
+> > > +{
+> > > +       const struct of_device_id *id;
+> > > +       struct adi_axi_adc_client *cl;
+> > > +       struct device_node *cln;
+> > > +
+> > > +       if (!dev->of_node) {
+> > > +               dev_err(dev, "DT node is null\n");
+> > > +               return ERR_PTR(-ENODEV);
+> > > +       }
+> > > +
+> > > +       id = of_match_node(adi_axi_adc_of_match, dev->of_node);  
+> > 
+> > You may use this from struct driver and move the table after this function.  
+> 
+> 
+> right; it didn't occur to me, since i was already using
+> of_device_get_match_data() in ad9467
+> 
+> >   
+> > > +       if (!id)
+> > > +               return ERR_PTR(-ENODEV);
+> > > +
+> > > +       cln = of_parse_phandle(dev->of_node, "adi,adc-dev", 0);
+> > > +       if (!cln) {
+> > > +               dev_err(dev, "No 'adi,adc-dev' node defined\n");
+> > > +               return ERR_PTR(-ENODEV);
+> > > +       }
+> > > +
+> > > +       mutex_lock(&registered_clients_lock);
+> > > +
+> > > +       list_for_each_entry(cl, &registered_clients, entry) {
+> > > +               if (!cl->dev)
+> > > +                       continue;
+> > > +               if (cl->dev->of_node == cln) {  
+> > 
+> > So, why not to be consistent with above, i.e.
+> >   if (of_node != cln)
+> >     continue;  
+> 
+> sure
+> 
+> > ?
+> >   
+> > > +                       if (!try_module_get(dev->driver->owner)) {
+> > > +                               mutex_unlock(&registered_clients_lock);
+> > > +                               return ERR_PTR(-ENODEV);
+> > > +                       }
+> > > +                       get_device(dev);
+> > > +                       cl->info = id->data;
+> > > +                       mutex_unlock(&registered_clients_lock);
+> > > +                       return cl;
+> > > +               }
+> > > +       }
+> > > +
+> > > +       mutex_unlock(&registered_clients_lock);
+> > > +
+> > > +       return ERR_PTR(-EPROBE_DEFER);
+> > > +}  
+> > 
+> >   
+
