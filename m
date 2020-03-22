@@ -2,88 +2,96 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9DEC4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF57C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C37720724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0458F2072E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:39:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MG6B+FaJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgCVOaH (ORCPT
+        id S1726872AbgCVOjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 10:30:07 -0400
-Received: from sauhun.de ([88.99.104.3]:50556 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbgCVOaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 10:30:07 -0400
-Received: from localhost (p54B33042.dip0.t-ipconnect.de [84.179.48.66])
-        by pokefinder.org (Postfix) with ESMTPSA id 226352C0064;
-        Sun, 22 Mar 2020 15:30:05 +0100 (CET)
-Date:   Sun, 22 Mar 2020 15:30:04 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Stefan Lengfeld <contact@stefanchrist.eu>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] i2c: at91: support atomic write xfer
-Message-ID: <20200322143004.GB1091@ninjato>
-References: <55613934b7d14ae4122b648c20351b63b03a1385.1584851536.git.mirq-linux@rere.qmqm.pl>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Pd0ReVV5GZGQvF3a"
-Content-Disposition: inline
-In-Reply-To: <55613934b7d14ae4122b648c20351b63b03a1385.1584851536.git.mirq-linux@rere.qmqm.pl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 22 Mar 2020 10:39:07 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55818 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbgCVOjH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 10:39:07 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 6so11505330wmi.5
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 07:39:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=GvYI8WaQRSbAIkEp+Up6kURcpv9g50Aym6muvhz7xBk=;
+        b=MG6B+FaJToH/hEbijjzGNT+dZCOT/OH2l1ug1yhxI1tRY+Kx4h7Qcx5wgTBXnNsXIk
+         bdAe1IQHfJidPmlO5cXDKtzLuQGBXjYHAVZHMIcreusk55CAapRHO74hiaM69z4xEn3u
+         D2KYNOMnAbfj/K5e180nZnqjQt5utjMEkOP+0BIIB1wxJeCEOjX7/jP76TOFVPRhuNrO
+         UAA5ZYU+Kq7uij8PQ3l0ezbGoSCjwoJPuFwCoFGbuLfzSe7ERPpNJxTAalEP52Wwge0B
+         fogqV4IwV6+G0CqyCOQHqAC8vfi8whjRENquE4UzwKFsEU2KkBjUOSQvv9aWLlj5rxsG
+         qXlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GvYI8WaQRSbAIkEp+Up6kURcpv9g50Aym6muvhz7xBk=;
+        b=SLONTA6XBLlsEG+omxna3AEU8FyCq+f4kvetsKW+386c7b7mcFLx3RSifQdFRaEq+/
+         /IVpz9eP3LG3STZ2Fsyx2tBCsqgdND+HjqYTNFkJNMmYWHo6Y5YCMGJGY0GVBwjHGHu3
+         slBg88VMRf16cOX5UwpCMMUUziYwGZeiOHTDkPMMyizip7mv646wUMb40zQOg9ZHbOhX
+         BF6HPdmm4eGe2UvohjJrOeCRJoKijO46tfMe7yWUIn99MxV7NukvqA9WLKLtir6xfQuc
+         D/QDBEiH4kgVdSPTffw0wOD75GBGzkSX94lL+BFhrJCshDCQvVeTlbWbUELZifkCXnlc
+         7rpg==
+X-Gm-Message-State: ANhLgQ1Al7oJp9K6qy1vbggNNS8qd3u8LhK7f8kl54Bzq4j2304aLzyl
+        /qEzOX1BtTHz0ESMwBTFK3njXdky
+X-Google-Smtp-Source: ADFU+vup5qzK9YYNoPmyhRsWYhSMMd02Kja055juOR71uh7IvlkYt4Y0Ovpn4xCJZjN8m2UoDR+ACg==
+X-Received: by 2002:a1c:2c85:: with SMTP id s127mr21990439wms.18.1584887945061;
+        Sun, 22 Mar 2020 07:39:05 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id i8sm18204993wrw.55.2020.03.22.07.39.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Mar 2020 07:39:04 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
+        ttayar@habana.ai
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH] habanalabs: fix pm manual->auto in GOYA
+Date:   Sun, 22 Mar 2020 16:39:04 +0200
+Message-Id: <20200322143904.2305-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When moving from manual to automatic power management mode in GOYA, the
+driver didn't correctly place the device in LOW power mode. As a result, if
+an application was run immediately after the move, it would have run with
+low frequencies.
 
---Pd0ReVV5GZGQvF3a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/goya/goya_hwmgr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/misc/habanalabs/goya/goya_hwmgr.c b/drivers/misc/habanalabs/goya/goya_hwmgr.c
+index b2ebc01e27f4..cdd4903e48fa 100644
+--- a/drivers/misc/habanalabs/goya/goya_hwmgr.c
++++ b/drivers/misc/habanalabs/goya/goya_hwmgr.c
+@@ -298,8 +298,8 @@ static ssize_t pm_mng_profile_store(struct device *dev,
+ 		/* Make sure we are in LOW PLL when changing modes */
+ 		if (hdev->pm_mng_profile == PM_MANUAL) {
+ 			hdev->curr_pll_profile = PLL_HIGH;
+-			hl_device_set_frequency(hdev, PLL_LOW);
+ 			hdev->pm_mng_profile = PM_AUTO;
++			hl_device_set_frequency(hdev, PLL_LOW);
+ 		}
+ 	} else if (strncmp("manual", buf, strlen("manual")) == 0) {
+ 		if (hdev->pm_mng_profile == PM_AUTO) {
+-- 
+2.17.1
 
-> +	/* FIXME: only single write request supported to 7-bit addr */
-
-Hmm, this is quite limited. Would it be very hard to support multiple
-messages? Or reads? 10 bits don't matter.
-
-> +	if (!dev->pdata->has_alt_cmd)
-> +		return -EOPNOTSUPP;
-
-We should handle this in probe(), I think:
-
-	if (dev->pdata->has_alt_cmd)
-		at91_twi_algorithm.master_xfer_atomic = at91_twi_xfer_atomic;
-
-
---Pd0ReVV5GZGQvF3a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl53dmgACgkQFA3kzBSg
-KbY95g//dGarTg6cS+mlOrvC92nc9FsPDk4ovBNx5QEc5w7VYirESZJCs6+OTJEs
-t0zYn9dzEAo1UVyYUzUetdM2Ma88oB40HCF4lS4A1d2sKzmvxX8niF9YUttD290A
-A3gZIqr3hio6jeXPzFhaDv7IwpnTDDP4pVgQdVnLZdBPeObTIYNzyM+NKmBAivoG
-VFKwRKONuhb1hL29jtqmQeSQCEUWLUKu8d4sEVK72/ONqHUX70M6Is5Xv32nVkb1
-nPZkKMnUr3X0oX1Fa6S33Q7vqLx5eHNlUaD8hAcodhTJluiLw+wVKZdmNl99o8Hm
-7HtEpGFo2jcyTDejstloWX5iPHcPjXIJgtRGwP3PlVWsgWqhTPolM8r025bjJt5E
-FL46Bf656Gfisd6j7xNWQY6JwXw7kzhqPQCbUb0DZddXuYqtuFUswtLBg2/QQ99K
-FdykWp76hOHTqCXFW3V6H7jZRW+J98upcsSQFNyHhjO2hYZ48A3yZ/A4W10R0VAe
-J0fTuK5xLLi7PZn3Q/e/Z56jgoKdmucqcrE7jfBfW5nXtWIWgdcrJO35yBBDU00C
-BGksiCA4Rpi0SHf0UCqqOfu/6bAXGVD9LxPzRc6O+l0qzD6rm7i21ZoXTkOMZQuF
-B2TQW2Z/V8bN8zje+tZC6yvjBi5C9osHCeTMOHTIKpEqPhF3zio=
-=Upnv
------END PGP SIGNATURE-----
-
---Pd0ReVV5GZGQvF3a--
