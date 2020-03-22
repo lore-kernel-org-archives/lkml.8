@@ -2,132 +2,151 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005F0C4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98407C4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDDCA206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72C1D206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:49:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HWbNwU4b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgCVRtx (ORCPT
+        id S1726954AbgCVRt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 13:49:53 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:50645 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgCVRtx (ORCPT
+        Sun, 22 Mar 2020 13:49:56 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38005 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbgCVRtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 22 Mar 2020 13:49:53 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 48llQQ1pF4z1rn32;
-        Sun, 22 Mar 2020 18:49:50 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 48llQQ0hnXz1qv4S;
-        Sun, 22 Mar 2020 18:49:50 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id 3-qeDV3uJFOP; Sun, 22 Mar 2020 18:49:48 +0100 (CET)
-X-Auth-Info: m8gazT5yJHbOX8AVW6gKdokOWg0xO2LJked0Vv1wmZc=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Sun, 22 Mar 2020 18:49:48 +0100 (CET)
-Subject: Re: [PATCH] mtd: rawnand: denali: add more delays before latching
- incoming data
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200316104307.1891-1-yamada.masahiro@socionext.com>
- <20200320181159.5004099f@xps13>
- <2d02c851-4249-053c-99e9-69b209bffad2@denx.de>
- <CAK7LNAR5_uCmfmxAduMRxnBNzhtCwNR65OJ__AdZsNz2iiNJWA@mail.gmail.com>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <727b7c26-a57a-6aec-ebba-57c215a5b901@denx.de>
-Date:   Sun, 22 Mar 2020 18:49:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+Received: by mail-pl1-f196.google.com with SMTP id w3so4863886plz.5;
+        Sun, 22 Mar 2020 10:49:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eBI1fOyFAnh9kYunzCXwVSyGJl58uc4POnZ1ZNbJnhI=;
+        b=HWbNwU4beCX3e6YY3C3JucuQ0Lf1/KuM7c2PM+v6sPA//MlFTMHYP7fByddN78jS0o
+         7uNscZPdT61JQLjJVsPmFedAEGxOqjCWnj5ENKsfRFUnrEwbutCOMhR+xPlJUfvdo6/P
+         9xozdPXPdrxWa7h+6iN28CNNgAH0o7qSr0BUhQk332P/JRj5WhwMe5FAbfAuHVlJdvKN
+         4G3DuEbmXzKVG/FRKif2JhrjHFNBQLrvnlle9LttE1EAWCB5aQsLuHO8DhaNkFUz00Om
+         5pcqwjYWcmI96XDe6joDNmPdtbFxz9oaGcHI9P9uTiVNlP0U/eUmNU4y9TqEY3Lq4kxz
+         To2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eBI1fOyFAnh9kYunzCXwVSyGJl58uc4POnZ1ZNbJnhI=;
+        b=TGV8erUImv0vm2XyYLZLdj5zkoq0IueubvwhTrCT2cOhhK4r5dbqKcUjkb5XGbESuj
+         0Tk7iY5/RKboBXZYPOavtcjAQAjq+tK/B/ie8xhICwI8ec0ylNy2e3qCvi6eSRLnoQOD
+         ZVz5e6KAESeek9oBG2zAPu3AcnE/jfM65OfzLVwtOVDmV9R1RDbohIkL14N7db9p/wBP
+         bmr8qy/faHxMtukRoaZkuSj8MHc2bHKWnGAR2UKhfatbZ8QSlG0kLmF7ox0R5Rzb/aCB
+         GoWjl9phjpL7N9njPcfhwL5tCCgAxOC9LwlD0m8dsju//B+Jslg0Zn03XFRXmry9DHKW
+         0eLg==
+X-Gm-Message-State: ANhLgQ0XQSmLp/HRBy2mKWNiGKGeWuZ3l8qLsPMmwDSCN6EPcWg3/TPX
+        XoneWo259h5DvK6bXKArTWk=
+X-Google-Smtp-Source: ADFU+vt+qWs5qCqT4eTDA7QOL5+LyYtp81v7eRas/d3P1xroRdbp0/pBSSxiHFMSYW46YuEDpvVtIg==
+X-Received: by 2002:a17:90a:a40f:: with SMTP id y15mr21922925pjp.143.1584899390870;
+        Sun, 22 Mar 2020 10:49:50 -0700 (PDT)
+Received: from localhost ([216.24.188.11])
+        by smtp.gmail.com with ESMTPSA id a3sm10965055pfg.172.2020.03.22.10.49.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 22 Mar 2020 10:49:50 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, davem@davemloft.net,
+        mchehab+samsung@kernel.org, corbet@lwn.net,
+        gregkh@linuxfoundation.org, broonie@kernel.org, tglx@linutronix.de,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH net-next v5 00/10] introduce read_poll_timeout
+Date:   Mon, 23 Mar 2020 01:49:33 +0800
+Message-Id: <20200322174943.26332-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNAR5_uCmfmxAduMRxnBNzhtCwNR65OJ__AdZsNz2iiNJWA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/22/20 6:42 PM, Masahiro Yamada wrote:
-> On Sat, Mar 21, 2020 at 2:15 AM Marek Vasut <marex@denx.de> wrote:
->>
->> On 3/20/20 6:11 PM, Miquel Raynal wrote:
->>> Hi Marek,
->>>
->>> Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Mon, 16 Mar
->>> 2020 19:43:07 +0900:
->>>
->>>> The Denali IP have several registers to specify how many clock cycles
->>>> should be waited between falling/rising signals. You can improve the
->>>> NAND access performance by programming these registers with optimized
->>>> values.
->>>>
->>>> Because struct nand_sdr_timings represents the device requirement
->>>> in pico seconds, denali_setup_data_interface() computes the register
->>>> values by dividing the device timings with the clock period.
->>>>
->>>> Marek Vasut reported this driver in the latest kernel does not work
->>>> on his SOCFPGA board. (The on-board NAND chip is mode 5)
->>>>
->>>> The suspicious parameter is acc_clks, so this commit relaxes it.
->>>>
->>>> The Denali NAND Flash Memory Controller User's Guide describes this
->>>> register as follows:
->>>>
->>>>   acc_clks
->>>>     signifies the number of bus interface clk_x clock cycles,
->>>>     controller should wait from read enable going low to sending
->>>>     out a strobe of clk_x for capturing of incoming data.
->>>>
->>>> Currently, acc_clks is calculated only based on tREA, the delay on the
->>>> chip side. This does not include additional delays that come from the
->>>> data path on the PCB and in the SoC, load capacity of the pins, etc.
->>>>
->>>> This relatively becomes a big factor on faster timing modes like mode 5.
->>>>
->>>> Before supporting the ->setup_data_interface() hook (e.g. Linux 4.12),
->>>> the Denali driver hacks acc_clks in a couple of ways [1] [2] to support
->>>> the timing mode 5.
->>>>
->>>> We would not go back to the hard-coded acc_clks, but we need to include
->>>> this factor into the delay somehow. Let's say the amount of the additional
->>>> delay is 10000 pico sec.
->>>>
->>>> In the new calculation, acc_clks is determined by timings->tREA_max +
->>>> data_setup_on_host.
->>>>
->>>> Also, prolong the RE# low period to make sure the data hold is met.
->>>>
->>>> Finally, re-center the data latch timing for extra safety.
->>>>
->>>> [1] https://github.com/torvalds/linux/blob/v4.12/drivers/mtd/nand/denali.c#L276
->>>> [2] https://github.com/torvalds/linux/blob/v4.12/drivers/mtd/nand/denali.c#L282
->>>>
->>>> Reported-by: Marek Vasut <marex@denx.de>
->>>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->>>> ---
->>>
->>> Can you please give this patch a try and report the result?
->>
->> It's on my list, don't worry.
-> 
-> 
-> Preferably, please test v2.
+This patch sets is introduce read_poll_timeout macro, it is an extension
+of readx_poll_timeout macro. the accessor function op just supports only
+one parameter in the readx_poll_timeout macro, but this macro can
+supports multiple variable parameters for it. so functions like
+phy_read(struct phy_device *phydev, u32 regnum) and
+phy_read_mmd(struct phy_device *phydev, int devad, u32 regnum) can
+use this poll timeout framework.
 
-Yes, I see the V2.
+the first patch introduce read_poll_timeout macro, and the second patch
+redefined readx_poll_timeout macro by read_poll_timeout(), and the other
+patches are examples using read_poll_timeout macro.
+
+v4 -> v5:
+	- add some msleep() before call phy_read_mmd_poll_timeout() to
+	  keep the code more similar in patch 6 and patch 9.
+	- add a patch of drop by v4, it can add msleep before call
+	  phy_read_poll_timeout() to keep the code more similar.
+v3 -> v4:
+	- add 3 examples of using new functions.
+	- deal with precedence issues for parameter cond.
+	- drop a patch about phy_poll_reset() function.
+v2 -> v3:
+	- modify the parameter order of newly added functions.
+	  phy_read_mmd_poll_timeout(val, cond, sleep_us, timeout_us, \
+				     phydev, devaddr, regnum)
+				||
+				\/
+	  phy_read_mmd_poll_timeout(phydev, devaddr regnum, val, cond, \
+				    sleep_us, timeout_us)
+
+	  phy_read_poll_timeout(val, cond, sleep_us, timeout_us, \
+				phydev, regnum)
+				||
+				\/
+	  phy_read_poll_timeout(phydev, regnum, val, cond, sleep_us, \
+				timeout_us)
+v1 -> v2:
+	- passed a phydev, device address and a reg to replace args...
+	  parameter in phy_read_mmd_poll_timeout() by Andrew Lunn 's
+	  suggestion in patch 3. Andrew Lunn <andrew@lunn.ch>, Thanks
+	  very much for your help!
+	- also in patch 3, handle phy_read_mmd return an error(the return
+	  value < 0) in phy_read_mmd_poll_timeout(). Thanks Andrew
+	  again.
+	- in patch 6, pass a phydev and a reg to replace args...
+	  parameter in phy_read_poll_timeout(), and also handle the
+	  phy_read() function's return error.
+
+Dejin Zheng (10):
+  iopoll: introduce read_poll_timeout macro
+  iopoll: redefined readx_poll_timeout macro to simplify the code
+  net: phy: introduce phy_read_mmd_poll_timeout macro
+  net: phy: bcm84881: use phy_read_mmd_poll_timeout() to simplify the
+    code
+  net: phy: aquantia: use phy_read_mmd_poll_timeout() to simplify the
+    code
+  net: phy: marvell10g: use phy_read_mmd_poll_timeout() to simplify the
+    code
+  net: phy: introduce phy_read_poll_timeout macro
+  net: phy: use phy_read_poll_timeout() to simplify the code
+  net: phy: smsc: use phy_read_poll_timeout() to simplify the code
+  net: phy: tja11xx: use phy_read_poll_timeout() to simplify the code
+
+ drivers/net/phy/aquantia_main.c | 13 ++++--------
+ drivers/net/phy/bcm84881.c      | 27 ++++---------------------
+ drivers/net/phy/marvell10g.c    | 16 ++++++---------
+ drivers/net/phy/nxp-tja11xx.c   | 16 +++------------
+ drivers/net/phy/phy_device.c    | 17 +++++-----------
+ drivers/net/phy/smsc.c          | 17 ++++++----------
+ include/linux/iopoll.h          | 36 ++++++++++++++++++++++++++-------
+ include/linux/phy.h             | 28 +++++++++++++++++++++++++
+ 8 files changed, 85 insertions(+), 85 deletions(-)
+
+-- 
+2.25.0
+
