@@ -2,152 +2,123 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC00C54EEB
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 09:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D362C54EEB
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 09:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDBBC20753
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 09:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BE420777
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 09:23:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StLgn8Pb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ibuy+ubV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgCVJTi (ORCPT
+        id S1726872AbgCVJXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 05:19:38 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40183 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbgCVJTh (ORCPT
+        Sun, 22 Mar 2020 05:23:15 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45529 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726789AbgCVJXP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 05:19:37 -0400
-Received: by mail-pj1-f66.google.com with SMTP id bo3so4562233pjb.5;
-        Sun, 22 Mar 2020 02:19:36 -0700 (PDT)
+        Sun, 22 Mar 2020 05:23:15 -0400
+Received: by mail-oi1-f194.google.com with SMTP id l22so750923oii.12
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 02:23:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=RcD8qCKrPNyWahymG+XggFywpYlZflG+yOoi1VKPcZM=;
-        b=StLgn8PbrwJUm7PSm4ZmiUUFOZu5relJteRb0w2rOHU3ZbLHU2J1ymZ7llG0UkTnVz
-         0QOKG27kbiHAv3LEJMwGjELp7f6ExNG0iB/+ioSz5/++rhSlLfDtpzeQg2Jmd+KKFcik
-         ZTzzc795Ico0pVtHbhCjmOOXqYVNFrRYlCB5HFyF5ZR8CPoFqJilS5wewFeaMkaXh/IX
-         hoSV/F0EnxnIpokg14WI6ejSYSdOR/dkZPbgxlDt3FV777EyA5Ac+yxpLCLvHpRBKL3R
-         QkWTocxO3YBvXJsMjV5KSE25kW6t6KwTp+2mW5Dj2qFj+airVbQaPTFRrg/MKH2ohuSA
-         AgEw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y2Cpzw4E1MH/apRZiYWRudyXyqXaavHR/FmSYKlPnKY=;
+        b=Ibuy+ubVA2CVcrbPJvsQrC1fRR62x2DqzOpX0d2eshUp/quaABfC1TH/hgxFFG6Wx7
+         QdaEazKdUdGwDSYnZ3rBIHMTyVfagmHXs2oyeq07akmRK+cNsI/1WJA8w8eKXVLCpQqm
+         p+gxA5mWusTwmt/3IeG7QRB7Fn8m+RaWdfqqoEyQkCph5ZmnCLsXqaGMwLEmxPhi36Ap
+         CkJWjmNGHipOBxYYRaCJRKffXEOoMwg+2ycrub/LbFNP2Ia/1J8KMwyxyT0BSCJzWglg
+         O8sYQplfT02vYidaK8oYvZl9geWd18FnNYYgjyj+Uwks/9zEEb5/6iRtu4z6ZihMneyX
+         BY/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=RcD8qCKrPNyWahymG+XggFywpYlZflG+yOoi1VKPcZM=;
-        b=QGyi6rv1wlMlG1QHOhm8vABpfY/gcs5j2KLbBZoftFnKX+pK3ndkzU8VukO1ge7boR
-         D59oG6GwCsifLDuX0k2OnTxgnekaeLprUP8mvZFDtxk9kO6ebojkLRZkL8XxDoiARbB8
-         D0ENSeqy2YTSq4ig2GCrWLAI7NeXHRN0QkSHWl9S7hJB6ii/m4qZCvTnLwRNdBVtkdTl
-         XijSsTxdxAq0SVM5W+5TWk8PUF5R+dhiLSshFkP9PcibWHEVOLEfg8ZvarmZWGUmn1Pf
-         7zByW9oNZw4K/p6PoVMKNxZc9IJGWm7thDPbs5uFMpKRPXfx0psCSOmBGnY3Bj3IWke/
-         Jd7A==
-X-Gm-Message-State: ANhLgQ1PkimG1nrIydueKzCmozaZEoihUyyly9xyOgwAk5Qo9h4o7kKu
-        tJb+BIFoHHLabnxo4uvPuQU=
-X-Google-Smtp-Source: ADFU+vtSQWcRQXBqFkI6+6wD9KgSitqZbOhf0f5r0lePNLY7dXEhFsjp8mRszfo1EE5B+fQ+MhbwMA==
-X-Received: by 2002:a17:902:169:: with SMTP id 96mr16385732plb.140.1584868776275;
-        Sun, 22 Mar 2020 02:19:36 -0700 (PDT)
-Received: from localhost (14-202-190-183.tpgi.com.au. [14.202.190.183])
-        by smtp.gmail.com with ESMTPSA id 6sm10061621pfx.69.2020.03.22.02.19.34
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y2Cpzw4E1MH/apRZiYWRudyXyqXaavHR/FmSYKlPnKY=;
+        b=PO6X7qVn4z/kUbBZ9mrFAX51bl33nYxpTWhSBOWQn6B1jprTWK7cj8GyvITC4RfsKo
+         Dal4w1KVBlF1aFtWfIHLlLacqvIkTxnI27XPNtpBFmuUX/LvjHBi7ykU6CflfOeV5A+l
+         OCfy247e+3il+/TiHVZEGaUIpc6EmjDVrGGbVfLNkv6tcgutWTAWG9l8DWzZA2zpJT/L
+         c81tE8Z4cEnXZ4+Albalfo+F3HwXnAFT0+o1VDIQAaaJu3436v3EQf6leMTq7hOISGz1
+         7wSkTQuZVi/ONdAEFC5hslzbOZITjWnxpNfcVFgjbANHOHMQpDxi50csd57599FmfExC
+         dOtw==
+X-Gm-Message-State: ANhLgQ3lohLAa2Ln7P1DEbRgxqwLNGp7z+nUtfNjHyRsvx6YwYt0STaQ
+        fA1ArJ6pEU8QKh7HL3A8Myg=
+X-Google-Smtp-Source: ADFU+vspPS7so6VE8j9qZXzQ0KcQtEgbBXoFaaBDSVq2xbd9/uULvPgCs2C7uBn34CChyWzmhsbjAA==
+X-Received: by 2002:aca:4bc5:: with SMTP id y188mr13419644oia.9.1584868994030;
+        Sun, 22 Mar 2020 02:23:14 -0700 (PDT)
+Received: from ManjaroKDE.fios-router.home ([47.144.161.84])
+        by smtp.gmail.com with ESMTPSA id a33sm3836804otb.70.2020.03.22.02.23.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2020 02:19:35 -0700 (PDT)
-Date:   Sun, 22 Mar 2020 19:16:29 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH 1/9] scripts/link-vmlinux.sh: Delay orphan handling
- warnings until final link
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        clang-built-linux@googlegroups.com,
-        "H.J. Lu" <hjl.tools@gmail.com>, James Morse <james.morse@arm.com>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Will Deacon <will@kernel.org>, x86@kernel.org
-References: <20200228002244.15240-1-keescook@chromium.org>
-        <20200228002244.15240-2-keescook@chromium.org>
-        <1584672297.mudnpz3ir9.astroid@bobo.none> <202003201121.8CBD96451B@keescook>
-In-Reply-To: <202003201121.8CBD96451B@keescook>
+        Sun, 22 Mar 2020 02:23:13 -0700 (PDT)
+From:   "John B. Wyatt IV" <jbwyatt4@gmail.com>
+To:     outreachy-kernel@googlegroups.com,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Colin Ian King <colin.king@canonical.com>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Oscar Carter <oscar.carter@gmx.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
+Subject: [PATCH] staging: vt6656: remove unneeded variable: ret
+Date:   Sun, 22 Mar 2020 02:23:03 -0700
+Message-Id: <20200322092303.2518033-1-jbwyatt4@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1584868418.o62lxee8k1.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook's on March 21, 2020 4:24 am:
-> On Fri, Mar 20, 2020 at 12:47:54PM +1000, Nicholas Piggin wrote:
->> Kees Cook's on February 28, 2020 10:22 am:
->> > Right now, powerpc adds "--orphan-handling=3Dwarn" to LD_FLAGS_vmlinux
->> > to detect when there are unexpected sections getting added to the kern=
-el
->> > image. There is no need to report these warnings more than once, so it
->> > can be removed until the final link stage.
->> >=20
->> > This helps pave the way for other architectures to enable this, with t=
-he
->> > end goal of enabling this warning by default for vmlinux for all
->> > architectures.
->> >=20
->> > Signed-off-by: Kees Cook <keescook@chromium.org>
->> > ---
->> >  scripts/link-vmlinux.sh | 6 ++++++
->> >  1 file changed, 6 insertions(+)
->> >=20
->> > diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
->> > index 1919c311c149..416968fea685 100755
->> > --- a/scripts/link-vmlinux.sh
->> > +++ b/scripts/link-vmlinux.sh
->> > @@ -255,6 +255,11 @@ info GEN modules.builtin
->> >  tr '\0' '\n' < modules.builtin.modinfo | sed -n 's/^[[:alnum:]:_]*\.f=
-ile=3D//p' |
->> >  	tr ' ' '\n' | uniq | sed -e 's:^:kernel/:' -e 's/$/.ko/' > modules.b=
-uiltin
->> > =20
->> > +
->> > +# Do not warn about orphan sections until the final link stage.
->> > +saved_LDFLAGS_vmlinux=3D"${LDFLAGS_vmlinux}"
->> > +LDFLAGS_vmlinux=3D"$(echo "${LDFLAGS_vmlinux}" | sed -E 's/ --orphan-=
-handling=3Dwarn( |$)/ /g')"
->> > +
->> >  btf_vmlinux_bin_o=3D""
->> >  if [ -n "${CONFIG_DEBUG_INFO_BTF}" ]; then
->> >  	if gen_btf .tmp_vmlinux.btf .btf.vmlinux.bin.o ; then
->> > @@ -306,6 +311,7 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
->> >  	fi
->> >  fi
->> > =20
->> > +LDFLAGS_vmlinux=3D"${saved_LDFLAGS_vmlinux}"
->> >  vmlinux_link vmlinux "${kallsymso}" ${btf_vmlinux_bin_o}
->> > =20
->> >  if [ -n "${CONFIG_BUILDTIME_TABLE_SORT}" ]; then
->>=20
->> That's ugly. Why not just enable it for all archs?
->=20
-> It is ugly; I agree.
->=20
-> I can try to do this for all architectures, but I worry there are a
-> bunch I can't test. But I guess it would stand out. ;)
+Remove unneeded variable ret; replace with 0 for the return value.
 
-It's only warn, so it doesn't break their builds (unless there's a=20
-linker error on warn option I don't know about?). We had a powerpc bug=20
-that would have been caught with it as well, so it's not a bad idea to
-get everyone using it.
+Update function documentation (comment) on the return status as
+suggested by Julia Lawall <julia.lawall@inria.fr>.
 
-I would just do it. Doesn't take much to fix.
+Issue reported by coccinelle (coccicheck).
 
-Thanks,
-Nick
-=
+Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
+---
+ drivers/staging/vt6656/card.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/vt6656/card.c b/drivers/staging/vt6656/card.c
+index dc3ab10eb630..05b57a2489a0 100644
+--- a/drivers/staging/vt6656/card.c
++++ b/drivers/staging/vt6656/card.c
+@@ -716,13 +716,11 @@ int vnt_radio_power_off(struct vnt_private *priv)
+  *  Out:
+  *      none
+  *
+- * Return Value: true if success; otherwise false
++ * Return Value: 0
+  *
+  */
+ int vnt_radio_power_on(struct vnt_private *priv)
+ {
+-	int ret = 0;
+-
+ 	vnt_exit_deep_sleep(priv);
+ 
+ 	vnt_mac_reg_bits_on(priv, MAC_REG_HOSTCR, HOSTCR_RXON);
+@@ -741,7 +739,7 @@ int vnt_radio_power_on(struct vnt_private *priv)
+ 
+ 	vnt_mac_reg_bits_off(priv, MAC_REG_GPIOCTL1, GPIO3_INTMD);
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ void vnt_set_bss_mode(struct vnt_private *priv)
+-- 
+2.25.1
+
