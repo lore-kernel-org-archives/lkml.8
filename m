@@ -2,236 +2,673 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B79DC54FCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 09:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9214FC54FCF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 09:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD9D20753
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 09:38:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="HOAC7uXr"
+	by mail.kernel.org (Postfix) with ESMTP id 557C620753
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 09:43:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgCVJiX (ORCPT
+        id S1726940AbgCVJnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 05:38:23 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:39904 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726789AbgCVJiW (ORCPT
+        Sun, 22 Mar 2020 05:43:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53138 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbgCVJnp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 05:38:22 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02M9ZRft023733;
-        Sun, 22 Mar 2020 05:38:10 -0400
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ywcs5u7cf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 22 Mar 2020 05:38:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UqBOFfJzElMhJFw2UxVnQPuu/j3+3uZGpQ7nYNjM8ZM5mEycgPEMY+2C6z13I2d2t+K63P5wIyQQZjpKcIYcF7eF7ilZ0hjQyfhzZjRWCC5hjwT3Bv91UhWqL2sSNvRH8bbJdmBXhKcCHErXfY1aFKZ/ru0I9tImht+1RgVatSazFlLUJ5hfnuegLg3dCiLFdKdZIJFJbvvJHCysVoTKWEKwwc1QJdyIetmW/Fq1aWKZioeyPxUXT89uSJJV60SVaBkha3WQPhKXcJ60v6tSVCw5cXznhXD1/f7I+4BxUXx96stA1c7NMlIpQbuGmS+/DpVrNe8d+yMr44w6+UgUGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kSwAavZKD4ZCSmucXvWrG6EfQY0LaOfy7vI7RT6XoKA=;
- b=OuqW/EfSJ/0Bqmks0BwyOXJgOPzCax7z1JGmSfuIgrTE59gWf+F/yGIHe6/uQY+LyvahRIn8+aMfhr/EzvQQam3hXlWnbL/fP3FnkTAyqTv+qIdwyc3J6QgMEbrTUiegM9u+5VIuKPtThO0v9NFTgAgcr/xj98X7vfpX4E4dxaUoxZJZvWnKyOzhaVTalDRGMscwrkxtrATkDgAV5amsU0mtL5pu4/gc2NhqVxjA7tAKTdrnYnGkk7cL4eTn+52RN5hmYENKgI3f1AuOEEg4PdaKzYw2quYcI4SS3kNKgXjk6sf3S1VM+3zPWtzgigV9+a5Nuz9HQZwnPCdX5Vf7Bg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kSwAavZKD4ZCSmucXvWrG6EfQY0LaOfy7vI7RT6XoKA=;
- b=HOAC7uXrnzrs/L8vS0bnyiHxSt87FybAMzocAL2lzRkvQ4jwscjWOD/BXczI0k2lA/ja6fOP2+XoJH5l1v99JYq6Bm9FCQ9wV4RJ2GmuYv3iyHjnyIyD4fq7k8Lc8xHsugyWFoV77PnHn3utAkqhRqN6gBw3AIrqhKXday3yduw=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB4346.namprd03.prod.outlook.com (2603:10b6:5:102::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.21; Sun, 22 Mar
- 2020 09:38:07 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2814.025; Sun, 22 Mar 2020
- 09:38:07 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "jic23@kernel.org" <jic23@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH v2 5/5] iio: adc: ad7793: use read_avail iio hook for
- scale available
-Thread-Topic: [PATCH v2 5/5] iio: adc: ad7793: use read_avail iio hook for
- scale available
-Thread-Index: AQHV/2BQOhkk6JaXP0ey2wVMJn6Iw6hTRMqAgAEXowA=
-Date:   Sun, 22 Mar 2020 09:38:07 +0000
-Message-ID: <edaef02e458398288775b65176489e8a3f68a900.camel@analog.com>
-References: <20200321090802.11537-1-alexandru.ardelean@analog.com>
-         <20200321090802.11537-5-alexandru.ardelean@analog.com>
-         <20200321165715.79c9906d@archlinux>
-In-Reply-To: <20200321165715.79c9906d@archlinux>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [188.26.73.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f4faf9d6-715c-4ed3-ec54-08d7ce44ba8a
-x-ms-traffictypediagnostic: DM6PR03MB4346:
-x-microsoft-antispam-prvs: <DM6PR03MB434634ED6B4C166D59DEDB0DF9F30@DM6PR03MB4346.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0350D7A55D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(396003)(376002)(136003)(39850400004)(199004)(186003)(6506007)(54906003)(71200400001)(316002)(36756003)(6916009)(6486002)(478600001)(64756008)(6512007)(5660300002)(4326008)(26005)(2616005)(91956017)(66446008)(86362001)(81166006)(8676002)(66946007)(8936002)(66556008)(2906002)(76116006)(66476007)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB4346;H:DM6PR03MB4411.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: X6QRK1+KTbronVW2ebfnpRj/ME3d8nCLBmoBVbTbHv2+VGpoQAeqmvmGiNqMF6gYe7hrJkWQ5A5sNoPK8i2v5mnfhlhrpNuPVwjwif1sFjy22JjjjTfGBwkttmASlOHtN5EkRKg9TwdgMcLrTIrZ/MpmU54pdgyOomg09gr/fsTGy6csA1e3WWYIz7bvxaUbbOXWZvjynFJnDy1uuI9BAGeFzbNXpB8JoJTDEWLQsgJqs6NMhKcoGbXQJWNYbRcgaJtuKMlOwp9GxdAMPW1WDjIvLiXCaykD7SO4r6JfphzA4PxdKzSXmdqn4LOucBtl1xgvDyK88Ib4ep4cJN8LCF7tGz/Dxa7Mrnfbvzs5zDiihDBD7xe5cTB/ebMFLR1T59iZb5Ov4czB2tEaaqhjICmLNXM8NQNWaxCo1F2UqGwuYgS/7DnMLG9ZAnuZRz++
-x-ms-exchange-antispam-messagedata: Tp+mAPLp1FC0843UVY54sP+QL1HfTVFZtLVVIIcW92uek1Tycj0sWjhD2oYUYrdi0xrOsogE8P5BCdX2/j1HYqBl9j8LHMGddgWVooxeCdZZLSCTNWu42meQU0MJy8yJDLZQKpEf6ne++T9Js4gTGQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9C726693A2EEF54EB5B6F525559E8CC1@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sun, 22 Mar 2020 05:43:45 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id B201528188B
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     vbendeb@chromium.org, groeck@chromium.org, bleung@chromium.org,
+        dtor@chromium.org, gwendal@chromium.org, andy@infradead.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Yauhen Kharuzhy <jekhor@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2] platform: x86: Add ACPI driver for ChromeOS
+Date:   Sun, 22 Mar 2020 10:43:34 +0100
+Message-Id: <20200322094334.1872663-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4faf9d6-715c-4ed3-ec54-08d7ce44ba8a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2020 09:38:07.8229
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EquOffgPqmBLrybQlOIfz/2nRMPqOv8wU5s5PLly4bbLzMUZl74kgVghjcG4ylY1nJSBGL/GrZmPE1jtl06yYxoDhH3XQAJH3mCj8eyDF6Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4346
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-22_02:2020-03-21,2020-03-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- malwarescore=0 clxscore=1015 suspectscore=0 spamscore=0 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003220057
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTAzLTIxIGF0IDE2OjU3ICswMDAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
-Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiBPbiBTYXQsIDIxIE1hciAyMDIwIDExOjA4OjAyICswMjAw
-DQo+IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+IHdy
-b3RlOg0KPiANCj4gPiBUaGlzIGNoYW5nZSB1c2VzIHRoZSByZWFkX2F2YWlsIGFuZCAnLmluZm9f
-bWFza19zaGFyZWRfYnlfdHlwZV9hdmFpbGFibGUnDQo+ID4gbW9kaWZpZXIgdG8gc2V0IHRoZSBh
-dmFpbGFibGUgc2NhbGUuDQo+ID4gRXNzZW50aWFsbHksIG5vdGhpbmcgY2hhbmdlcyB0byB0aGUg
-ZHJpdmVyJ3MgQUJJLg0KPiA+IA0KPiA+IFRoZSBtYWluIGlkZWEgZm9yIHRoaXMgcGF0Y2ggaXMg
-dG8gcmVtb3ZlIHRoZSBBRDc3OTMgZHJpdmVyIGZyb20NCj4gPiBjaGVja3BhdGNoJ3MgcmFkYXIu
-IFRoZXJlIGhhdmUgYmVlbiBhYm91dCB+MyBhdHRlbXB0cyB0byBmaXgvYnJlYWsgdGhlDQo+ID4g
-J2luX3ZvbHRhZ2Utdm9sdGFnZV9zY2FsZV9hdmFpbGFibGUnIGF0dHJpYnV0ZSwgYmVjYXVzZSBj
-aGVja3BhdGNoIGFzc3VtZWQNCj4gPiBpdCB0byBiZSBhbiBhcml0aG1ldGljIG9wZXJhdGlvbiBh
-bmQgcGVvcGxlIHdlcmUgdHJ5aW5nIHRvIGNoYW5nZSB0aGF0Lg0KPiA+IA0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+
-DQo+IEF0IHNvbWUgcG9pbnQgaXQgbWlnaHQgYmUgbmljZSB0byBtb3ZlIHRoZSBzYW1wbGluZ19m
-cmVxdWVuY3kgb3ZlciBhcyB3ZWxsDQo+IGJ1dCBjbGVhcmx5IG5vdCByZW1vdGVseSB1cmdlbnQh
-DQoNCkkgYWxzbyB0aG91Z2h0IGFib3V0IHRoYXQgbm93Lg0KQnV0IEkgZGVjaWRlZCB0byBkZWZl
-ciBpdDsgdGhlIHBhdGNoc2V0IHRvIGRvIGp1c3QgdGhpcyBzZWVtZWQgYmlnIGVub3VnaC4NCkkg
-bW9zdGx5IHdhbnQgdG8gYXZvaWQgY2hlY2twYXRjaCBmaXhlcyBmb3IgdGhpcy4NCkl0IGxvb2tz
-IGJhZCBvbiBvdXIgcGFydCBpZiB3ZSBnZXQgaGl0IHBlcmlvZGljYWxseSBvbiB0aGlzLCBhbmQg
-ZG9uJ3QgZG8NCmFueXRoaW5nIGFib3V0IGl0Lg0KDQo+IA0KPiBBcHBsaWVkIHRvIHRoZSB0b2dy
-ZWcgYnJhbmNoIG9mIGlpby5naXQgYW5kIHB1c2hlZCBvdXQgYXMgdGVzdGluZw0KPiBmb3IgdGhl
-IGF1dG9idWlsZGVycyB0byBwb2tlIGF0IGl0Lg0KPiANCj4gVGhhbmtzLA0KPiANCj4gSm9uYXRo
-YW4NCj4gIA0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2lpby9hZGMvYWQ3NzkzLmMgfCA1MyArKysr
-KysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2Vk
-LCAzNiBpbnNlcnRpb25zKCspLCAxNyBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9paW8vYWRjL2FkNzc5My5jIGIvZHJpdmVycy9paW8vYWRjL2FkNzc5My5jDQo+
-ID4gaW5kZXggNTU5MmFlNTczZTZiLi5mYWQ5OGYxODAxZGIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJp
-dmVycy9paW8vYWRjL2FkNzc5My5jDQo+ID4gKysrIGIvZHJpdmVycy9paW8vYWRjL2FkNzc5My5j
-DQo+ID4gQEAgLTM1NCwyOSArMzU0LDI4IEBAIHN0YXRpYyBJSU9fQ09OU1RfQVRUUl9TQU1QX0ZS
-RVFfQVZBSUwoDQo+ID4gIHN0YXRpYyBJSU9fQ09OU1RfQVRUUl9OQU1FRChzYW1wbGluZ19mcmVx
-dWVuY3lfYXZhaWxhYmxlX2FkNzc5NywNCj4gPiAgCXNhbXBsaW5nX2ZyZXF1ZW5jeV9hdmFpbGFi
-bGUsICIxMjMgNjIgNTAgMzMgMTcgMTYgMTIgMTAgOCA2IDQiKTsNCj4gPiAgDQo+ID4gLXN0YXRp
-YyBzc2l6ZV90IGFkNzc5M19zaG93X3NjYWxlX2F2YWlsYWJsZShzdHJ1Y3QgZGV2aWNlICpkZXYs
-DQo+ID4gLQkJCXN0cnVjdCBkZXZpY2VfYXR0cmlidXRlICphdHRyLCBjaGFyICpidWYpDQo+ID4g
-K3N0YXRpYyBpbnQgYWQ3NzkzX3JlYWRfYXZhaWwoc3RydWN0IGlpb19kZXYgKmluZGlvX2RldiwN
-Cj4gPiArCQkJICAgICBzdHJ1Y3QgaWlvX2NoYW5fc3BlYyBjb25zdCAqY2hhbiwNCj4gPiArCQkJ
-ICAgICBjb25zdCBpbnQgKip2YWxzLCBpbnQgKnR5cGUsIGludCAqbGVuZ3RoLA0KPiA+ICsJCQkg
-ICAgIGxvbmcgbWFzaykNCj4gPiAgew0KPiA+IC0Jc3RydWN0IGlpb19kZXYgKmluZGlvX2RldiA9
-IGRldl90b19paW9fZGV2KGRldik7DQo+ID4gIAlzdHJ1Y3QgYWQ3NzkzX3N0YXRlICpzdCA9IGlp
-b19wcml2KGluZGlvX2Rldik7DQo+ID4gLQlpbnQgaSwgbGVuID0gMDsNCj4gPiAgDQo+ID4gLQlm
-b3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShzdC0+c2NhbGVfYXZhaWwpOyBpKyspDQo+ID4gLQkJ
-bGVuICs9IHNwcmludGYoYnVmICsgbGVuLCAiJWQuJTA5dSAiLCBzdC0+c2NhbGVfYXZhaWxbaV1b
-MF0sDQo+ID4gLQkJCSAgICAgICBzdC0+c2NhbGVfYXZhaWxbaV1bMV0pOw0KPiA+ICsJc3dpdGNo
-IChtYXNrKSB7DQo+ID4gKwljYXNlIElJT19DSEFOX0lORk9fU0NBTEU6DQo+ID4gKwkJKnZhbHMg
-PSAoaW50ICopc3QtPnNjYWxlX2F2YWlsOw0KPiA+ICsJCSp0eXBlID0gSUlPX1ZBTF9JTlRfUExV
-U19OQU5POw0KPiA+ICsJCS8qIFZhbHVlcyBhcmUgc3RvcmVkIGluIGEgMkQgbWF0cml4ICAqLw0K
-PiA+ICsJCSpsZW5ndGggPSBBUlJBWV9TSVpFKHN0LT5zY2FsZV9hdmFpbCkgKiAyOw0KPiA+ICAN
-Cj4gPiAtCWxlbiArPSBzcHJpbnRmKGJ1ZiArIGxlbiwgIlxuIik7DQo+ID4gKwkJcmV0dXJuIElJ
-T19BVkFJTF9MSVNUOw0KPiA+ICsJfQ0KPiA+ICANCj4gPiAtCXJldHVybiBsZW47DQo+ID4gKwly
-ZXR1cm4gLUVJTlZBTDsNCj4gPiAgfQ0KPiA+ICANCj4gPiAtc3RhdGljIElJT19ERVZJQ0VfQVRU
-Ul9OQU1FRChpbl9tX2luX3NjYWxlX2F2YWlsYWJsZSwNCj4gPiAtCQlpbl92b2x0YWdlLXZvbHRh
-Z2Vfc2NhbGVfYXZhaWxhYmxlLCBTX0lSVUdPLA0KPiA+IC0JCWFkNzc5M19zaG93X3NjYWxlX2F2
-YWlsYWJsZSwgTlVMTCwgMCk7DQo+ID4gLQ0KPiA+ICBzdGF0aWMgc3RydWN0IGF0dHJpYnV0ZSAq
-YWQ3NzkzX2F0dHJpYnV0ZXNbXSA9IHsNCj4gPiAgCSZpaW9fY29uc3RfYXR0cl9zYW1wbGluZ19m
-cmVxdWVuY3lfYXZhaWxhYmxlLmRldl9hdHRyLmF0dHIsDQo+ID4gLQkmaWlvX2Rldl9hdHRyX2lu
-X21faW5fc2NhbGVfYXZhaWxhYmxlLmRldl9hdHRyLmF0dHIsDQo+ID4gIAlOVUxMDQo+ID4gIH07
-DQo+ID4gIA0KPiA+IEBAIC01MzQsNiArNTMzLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBpaW9f
-aW5mbyBhZDc3OTNfaW5mbyA9IHsNCj4gPiAgCS5yZWFkX3JhdyA9ICZhZDc3OTNfcmVhZF9yYXcs
-DQo+ID4gIAkud3JpdGVfcmF3ID0gJmFkNzc5M193cml0ZV9yYXcsDQo+ID4gIAkud3JpdGVfcmF3
-X2dldF9mbXQgPSAmYWQ3NzkzX3dyaXRlX3Jhd19nZXRfZm10LA0KPiA+ICsJLnJlYWRfYXZhaWwg
-PSBhZDc3OTNfcmVhZF9hdmFpbCwNCj4gPiAgCS5hdHRycyA9ICZhZDc3OTNfYXR0cmlidXRlX2dy
-b3VwLA0KPiA+ICAJLnZhbGlkYXRlX3RyaWdnZXIgPSBhZF9zZF92YWxpZGF0ZV90cmlnZ2VyLA0K
-PiA+ICB9Ow0KPiA+IEBAIC01NDcsNyArNTQ3LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBpaW9f
-aW5mbyBhZDc3OTdfaW5mbyA9IHsNCj4gPiAgfTsNCj4gPiAgDQo+ID4gICNkZWZpbmUgX19BRDc3
-OTNfQ0hBTk5FTChfc2ksIF9jaGFubmVsMSwgX2NoYW5uZWwyLCBfYWRkcmVzcywgX2JpdHMsIFwN
-Cj4gPiAtCV9zdG9yYWdlYml0cywgX3NoaWZ0LCBfZXh0ZW5kX25hbWUsIF90eXBlLCBfbWFza19h
-bGwpIFwNCj4gPiArCV9zdG9yYWdlYml0cywgX3NoaWZ0LCBfZXh0ZW5kX25hbWUsIF90eXBlLCBf
-bWFza190eXBlX2F2LCBfbWFza19hbGwpIFwNCj4gPiAgCXsgXA0KPiA+ICAJCS50eXBlID0gKF90
-eXBlKSwgXA0KPiA+ICAJCS5kaWZmZXJlbnRpYWwgPSAoX2NoYW5uZWwyID09IC0xID8gMCA6IDEp
-LCBcDQo+ID4gQEAgLTU1OSw2ICs1NTksNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGlpb19pbmZv
-IGFkNzc5N19pbmZvID0gew0KPiA+ICAJCS5pbmZvX21hc2tfc2VwYXJhdGUgPSBCSVQoSUlPX0NI
-QU5fSU5GT19SQVcpIHwgXA0KPiA+ICAJCQlCSVQoSUlPX0NIQU5fSU5GT19PRkZTRVQpLCBcDQo+
-ID4gIAkJLmluZm9fbWFza19zaGFyZWRfYnlfdHlwZSA9IEJJVChJSU9fQ0hBTl9JTkZPX1NDQUxF
-KSwgXA0KPiA+ICsJCS5pbmZvX21hc2tfc2hhcmVkX2J5X3R5cGVfYXZhaWxhYmxlID0gKF9tYXNr
-X3R5cGVfYXYpLCBcDQo+ID4gIAkJLmluZm9fbWFza19zaGFyZWRfYnlfYWxsID0gX21hc2tfYWxs
-LCBcDQo+ID4gIAkJLnNjYW5faW5kZXggPSAoX3NpKSwgXA0KPiA+ICAJCS5zY2FuX3R5cGUgPSB7
-IFwNCj4gPiBAQCAtNTc0LDIzICs1NzUsNDEgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBpaW9faW5m
-byBhZDc3OTdfaW5mbyA9IHsNCj4gPiAgCV9zdG9yYWdlYml0cywgX3NoaWZ0KSBcDQo+ID4gIAlf
-X0FENzc5M19DSEFOTkVMKF9zaSwgX2NoYW5uZWwxLCBfY2hhbm5lbDIsIF9hZGRyZXNzLCBfYml0
-cywgXA0KPiA+ICAJCV9zdG9yYWdlYml0cywgX3NoaWZ0LCBOVUxMLCBJSU9fVk9MVEFHRSwgXA0K
-PiA+ICsJCUJJVChJSU9fQ0hBTl9JTkZPX1NDQUxFKSwgXA0KPiA+ICAJCUJJVChJSU9fQ0hBTl9J
-TkZPX1NBTVBfRlJFUSkpDQo+ID4gIA0KPiA+ICAjZGVmaW5lIEFENzc5M19TSE9SVEVEX0NIQU5O
-RUwoX3NpLCBfY2hhbm5lbCwgX2FkZHJlc3MsIF9iaXRzLCBcDQo+ID4gIAlfc3RvcmFnZWJpdHMs
-IF9zaGlmdCkgXA0KPiA+ICAJX19BRDc3OTNfQ0hBTk5FTChfc2ksIF9jaGFubmVsLCBfY2hhbm5l
-bCwgX2FkZHJlc3MsIF9iaXRzLCBcDQo+ID4gIAkJX3N0b3JhZ2ViaXRzLCBfc2hpZnQsICJzaG9y
-dGVkIiwgSUlPX1ZPTFRBR0UsIFwNCj4gPiArCQlCSVQoSUlPX0NIQU5fSU5GT19TQ0FMRSksIFwN
-Cj4gPiAgCQlCSVQoSUlPX0NIQU5fSU5GT19TQU1QX0ZSRVEpKQ0KPiA+ICANCj4gPiAgI2RlZmlu
-ZSBBRDc3OTNfVEVNUF9DSEFOTkVMKF9zaSwgX2FkZHJlc3MsIF9iaXRzLCBfc3RvcmFnZWJpdHMs
-IF9zaGlmdCkgXA0KPiA+ICAJX19BRDc3OTNfQ0hBTk5FTChfc2ksIDAsIC0xLCBfYWRkcmVzcywg
-X2JpdHMsIFwNCj4gPiAgCQlfc3RvcmFnZWJpdHMsIF9zaGlmdCwgTlVMTCwgSUlPX1RFTVAsIFwN
-Cj4gPiArCQkwLCBcDQo+ID4gIAkJQklUKElJT19DSEFOX0lORk9fU0FNUF9GUkVRKSkNCj4gPiAg
-DQo+ID4gICNkZWZpbmUgQUQ3NzkzX1NVUFBMWV9DSEFOTkVMKF9zaSwgX2NoYW5uZWwsIF9hZGRy
-ZXNzLCBfYml0cywgX3N0b3JhZ2ViaXRzLA0KPiA+IFwNCj4gPiAgCV9zaGlmdCkgXA0KPiA+ICAJ
-X19BRDc3OTNfQ0hBTk5FTChfc2ksIF9jaGFubmVsLCAtMSwgX2FkZHJlc3MsIF9iaXRzLCBcDQo+
-ID4gIAkJX3N0b3JhZ2ViaXRzLCBfc2hpZnQsICJzdXBwbHkiLCBJSU9fVk9MVEFHRSwgXA0KPiA+
-ICsJCTAsIFwNCj4gPiArCQlCSVQoSUlPX0NIQU5fSU5GT19TQU1QX0ZSRVEpKQ0KPiA+ICsNCj4g
-PiArI2RlZmluZSBBRDc3OTdfRElGRl9DSEFOTkVMKF9zaSwgX2NoYW5uZWwxLCBfY2hhbm5lbDIs
-IF9hZGRyZXNzLCBfYml0cywgXA0KPiA+ICsJX3N0b3JhZ2ViaXRzLCBfc2hpZnQpIFwNCj4gPiAr
-CV9fQUQ3NzkzX0NIQU5ORUwoX3NpLCBfY2hhbm5lbDEsIF9jaGFubmVsMiwgX2FkZHJlc3MsIF9i
-aXRzLCBcDQo+ID4gKwkJX3N0b3JhZ2ViaXRzLCBfc2hpZnQsIE5VTEwsIElJT19WT0xUQUdFLCBc
-DQo+ID4gKwkJMCwgXA0KPiA+ICsJCUJJVChJSU9fQ0hBTl9JTkZPX1NBTVBfRlJFUSkpDQo+ID4g
-Kw0KPiA+ICsjZGVmaW5lIEFENzc5N19TSE9SVEVEX0NIQU5ORUwoX3NpLCBfY2hhbm5lbCwgX2Fk
-ZHJlc3MsIF9iaXRzLCBcDQo+ID4gKwlfc3RvcmFnZWJpdHMsIF9zaGlmdCkgXA0KPiA+ICsJX19B
-RDc3OTNfQ0hBTk5FTChfc2ksIF9jaGFubmVsLCBfY2hhbm5lbCwgX2FkZHJlc3MsIF9iaXRzLCBc
-DQo+ID4gKwkJX3N0b3JhZ2ViaXRzLCBfc2hpZnQsICJzaG9ydGVkIiwgSUlPX1ZPTFRBR0UsIFwN
-Cj4gPiArCQkwLCBcDQo+ID4gIAkJQklUKElJT19DSEFOX0lORk9fU0FNUF9GUkVRKSkNCj4gPiAg
-DQo+ID4gICNkZWZpbmUgREVDTEFSRV9BRDc3OTNfQ0hBTk5FTFMoX25hbWUsIF9iLCBfc2IsIF9z
-KSBcDQo+ID4gQEAgLTYyMCw4ICs2MzksOCBAQCBjb25zdCBzdHJ1Y3QgaWlvX2NoYW5fc3BlYyBf
-bmFtZSMjX2NoYW5uZWxzW10gPSB7IFwNCj4gPiAgDQo+ID4gICNkZWZpbmUgREVDTEFSRV9BRDc3
-OTdfQ0hBTk5FTFMoX25hbWUsIF9iLCBfc2IpIFwNCj4gPiAgY29uc3Qgc3RydWN0IGlpb19jaGFu
-X3NwZWMgX25hbWUjI19jaGFubmVsc1tdID0geyBcDQo+ID4gLQlBRDc3OTNfRElGRl9DSEFOTkVM
-KDAsIDAsIDAsIEFENzc5M19DSF9BSU4xUF9BSU4xTSwgKF9iKSwgKF9zYiksIDApLCBcDQo+ID4g
-LQlBRDc3OTNfU0hPUlRFRF9DSEFOTkVMKDEsIDAsIEFENzc5M19DSF9BSU4xTV9BSU4xTSwgKF9i
-KSwgKF9zYiksIDApLCBcDQo+ID4gKwlBRDc3OTdfRElGRl9DSEFOTkVMKDAsIDAsIDAsIEFENzc5
-M19DSF9BSU4xUF9BSU4xTSwgKF9iKSwgKF9zYiksIDApLCBcDQo+ID4gKwlBRDc3OTdfU0hPUlRF
-RF9DSEFOTkVMKDEsIDAsIEFENzc5M19DSF9BSU4xTV9BSU4xTSwgKF9iKSwgKF9zYiksIDApLCBc
-DQo+ID4gIAlBRDc3OTNfVEVNUF9DSEFOTkVMKDIsIEFENzc5M19DSF9URU1QLCAoX2IpLCAoX3Ni
-KSwgMCksIFwNCj4gPiAgCUFENzc5M19TVVBQTFlfQ0hBTk5FTCgzLCAzLCBBRDc3OTNfQ0hfQVZE
-RF9NT05JVE9SLCAoX2IpLCAoX3NiKSwgMCksIFwNCj4gPiAgCUlJT19DSEFOX1NPRlRfVElNRVNU
-QU1QKDQpLCBcDQo=
+This driver attaches to the ChromeOS ACPI device and then exports the values
+reported by the ACPI in a sysfs directory. The ACPI values are presented in
+the string form (numbers as decimal values) or binary blobs, and can be
+accessed as the contents of the appropriate read only files in the sysfs
+directory tree originating in /sys/devices/platform/chromeos_acpi.
+
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
+Hi,
+
+I sent the first patch of this three years ago [1], and then, due a lack
+of time and a change of priorities I forget about it. Now, I completely
+reworked that driver and keep only in this driver the part that is related
+to export the sysfs attributes, making it a bit more easy to review,
+hopefully I can get your feedback and I'll able to address it now to
+finally land this patch.
+
+These properties are used on some userspace tools available in the
+ChromeOS userspace like the crash reporter. This driver was tested on a
+Samus Chromebook with following data and checking that matches with the
+data reported with the downstream driver.
+
+Also installed/removed the driver several times, no problems observed
+and the allocated resouces are freeid.
+
+ /sys/devices/platform/chromeos_acpi/BINF.2 : 1
+ /sys/devices/platform/chromeos_acpi/FMAP : -2031616
+ /sys/devices/platform/chromeos_acpi/HWID : SAMUS E25-G7R-W35
+ /sys/devices/platform/chromeos_acpi/BINF.0 : 0
+ /sys/devices/platform/chromeos_acpi/GPIO.0/GPIO.2 : -1
+ /sys/devices/platform/chromeos_acpi/GPIO.0/GPIO.0 : 1
+ /sys/devices/platform/chromeos_acpi/GPIO.0/GPIO.3 : INT3437:00
+ /sys/devices/platform/chromeos_acpi/GPIO.0/GPIO.1 : 0
+ /sys/devices/platform/chromeos_acpi/FRID : Google_Samus.6300.102.0
+ /sys/devices/platform/chromeos_acpi/VBNV.0 : 38
+ /sys/devices/platform/chromeos_acpi/BINF.3 : 2
+ /sys/devices/platform/chromeos_acpi/BINF.1 : 1
+ /sys/devices/platform/chromeos_acpi/GPIO.1/GPIO.2 : 16
+ /sys/devices/platform/chromeos_acpi/GPIO.1/GPIO.0 : 3
+ /sys/devices/platform/chromeos_acpi/GPIO.1/GPIO.3 : INT3437:00
+ /sys/devices/platform/chromeos_acpi/GPIO.1/GPIO.1 : 1
+ /sys/devices/platform/chromeos_acpi/CHSW : 0
+ /sys/devices/platform/chromeos_acpi/FWID : Google_Samus.6300.330.0
+ /sys/devices/platform/chromeos_acpi/VBNV.1 : 16
+ /sys/devices/platform/chromeos_acpi/BINF.4 : 0
+
+And for binary packages:
+
+cat /sys/devices/platform/chromeos_acpi/MECK | hexdump
+ 0000000 02fb 8e72 a025 0a73 0f13 095e 9e07 41e6
+ 0000010 f9e6 bb4e 76cc bef9 cca7 70e2 8f6d 863d
+ 0000020
+
+cat /sys/devices/platform/chromeos_acpi/VDAT | hexdump
+ 0000000 6256 4453 0002 0000 0448 0000 0000 0000
+ 0000010 0c00 0000 0000 0000 0850 0000 0000 0000
+ 0000020 7c54 0003 0000 0000 0420 0000 0000 0000
+ 0000030 0408 0000 0000 0000 0007 0000 0000 0000
+ 0000040 0003 0000 0000 0000 0448 0000 0000 0000
+ 0000050 0408 0000 0000 0000 9335 1f80 0000 0000
+ 0000060 69a8 21f3 0000 0000 1d02 21f9 0000 0000
+ 0000070 ba55 371b 0000 0000 0000 0000 0000 0000
+ 0000080 bcae 001d 0000 0000 0003 0001 0001 0003
+ 0000090 000c 0000 0003 0001 0003 0001 0001 0000
+ 00000a0 0001 0000 0000 0000 cc00 01da 0000 0000
+ 00000b0 0200 0000 0204 0000 0001 0000 0000 0000
+ 00000c0 0800 0000 0000 0000 0000 0001 0000 0000
+ 00000d0 0001 0001 1301 0000 0000 0000 0000 0000
+ 00000e0 0000 0000 0000 0000 0000 0000 0000 0000
+ *
+
+Thanks,
+ Enric
+
+[1] https://lkml.org/lkml/2017/7/31/378
+
+Changes in v2:
+- Note that this version is a total rework, with those major changes:
+  - Use lists to track dinamically allocated attributes and groups.
+  - Use sysfs binary attributes to store the ACPI contents.
+  - Remove all the functionalities except the one that creates the sysfs files.
+
+ drivers/platform/x86/Kconfig         |  12 +
+ drivers/platform/x86/Makefile        |   1 +
+ drivers/platform/x86/chromeos_acpi.c | 489 +++++++++++++++++++++++++++
+ 3 files changed, 502 insertions(+)
+ create mode 100644 drivers/platform/x86/chromeos_acpi.c
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 587403c44598..917a1c1a0758 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -72,6 +72,18 @@ config ACERHDF
+ 	  If you have an Acer Aspire One netbook, say Y or M
+ 	  here.
+ 
++config ACPI_CHROMEOS
++	tristate "ChromeOS specific ACPI extensions"
++	depends on ACPI
++	depends on CHROME_PLATFORMS
++	help
++	  This driver provides the firmware interface for the services
++	  exported through the ChromeOS interfaces when using ChromeOS
++	  ACPI firmware.
++
++	  If you have an ACPI-compatible Chromebook, say Y or M
++	  here.
++
+ config ALIENWARE_WMI
+ 	tristate "Alienware Special feature control"
+ 	depends on ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 3747b1f07cf1..222e2e88ccb8 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -83,6 +83,7 @@ obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
+ obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
+ obj-$(CONFIG_INTEL_RST)		+= intel-rst.o
+ obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
++obj-$(CONFIG_ACPI_CHROMEOS)	+= chromeos_acpi.o
+ 
+ obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
+ obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
+diff --git a/drivers/platform/x86/chromeos_acpi.c b/drivers/platform/x86/chromeos_acpi.c
+new file mode 100644
+index 000000000000..4d9addee2473
+--- /dev/null
++++ b/drivers/platform/x86/chromeos_acpi.c
+@@ -0,0 +1,489 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * ChromeOS specific ACPI extensions
++ *
++ * Copyright 2011 Google, Inc.
++ * Copyright 2020 Google LLC
++ *
++ * This file is a rework and part of the code is ported from
++ * drivers/platform/x86/chromeos_acpi.c of the chromeos-3.18 kernel and
++ * was originally written by Vadim Bendebury <vbendeb@chromium.org>.
++ *
++ * This driver attaches to the ChromeOS ACPI device and then exports the
++ * values reported by the ACPI in a sysfs directory. All values are
++ * presented in the string form (numbers as decimal values) and can be
++ * accessed as the contents of the appropriate read only files in the
++ * sysfs directory tree originating in /sys/devices/platform/chromeos_acpi.
++ */
++
++#include <linux/acpi.h>
++#include <linux/kernel.h>
++#include <linux/list.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++/*
++ * ACPI method name for MLST; the response for this method is a package of
++ * strings listing the methods which should be reflected in sysfs.
++ */
++#define MLST "MLST"
++
++/*
++ * The default list of methods the ChromeOS ACPI device is supposed to export,
++ * if the MLST method is not present or is poorly formed.  The MLST method
++ * itself is included, to aid in debugging.
++ */
++static char *chromeos_acpi_default_methods[] = {
++	"CHSW", "HWID", "BINF", "GPIO", "CHNV", "FWID", "FRID", MLST
++};
++
++/*
++ * Representation of a single sysfs attribute. In addition to the standard
++ * bin_attribute structure has a list of these structures (to keep track for
++ * de-allocation when removing the driver) and a pointer to the actual
++ * attribute name and value, reported when accessing the appropriate sysfs
++ * file.
++ */
++struct chromeos_acpi_attribute {
++	struct bin_attribute bin_attr;
++	struct list_head list;
++	char *name;
++	char *data;
++};
++
++/*
++ * Representation of a sysfs attribute group (a sub directory in the device's
++ * sysfs directory). In addition to the standard structure has lists to allow
++ * to keep track of the allocated structures.
++ */
++struct chromeos_acpi_attribute_group {
++	struct list_head attribs;
++	struct list_head list;
++	struct kobject *kobj;	/* chromeos_acpi/name directory */
++	char *name;
++};
++
++/*
++ * This is the main structure, we use it to store data and adds links pointing
++ * at lists of allocated attributes and attribute groups.
++ */
++struct chromeos_acpi_dev {
++	struct platform_device *pdev;
++
++	struct chromeos_acpi_attribute_group root;
++	struct list_head groups;
++};
++
++static struct chromeos_acpi_dev chromeos_acpi;
++
++static ssize_t chromeos_acpi_read_bin_attribute(struct file *filp,
++						struct kobject *kobj,
++						struct bin_attribute *bin_attr,
++						char *buffer, loff_t pos,
++						size_t count)
++{
++	struct chromeos_acpi_attribute *info = bin_attr->private;
++
++	return memory_read_from_buffer(buffer, count, &pos, info->data,
++				       info->bin_attr.size);
++}
++
++static char *chromeos_acpi_alloc_name(char *name, int count, int index)
++{
++	char *str;
++
++	if (count == 1)
++		str = kstrdup(name, GFP_KERNEL);
++	else
++		str = kasprintf(GFP_KERNEL, "%s.%d", name, index);
++
++	return str;
++}
++
++static int
++chromeos_acpi_add_attr(struct chromeos_acpi_attribute_group *aag,
++		       union acpi_object *element, char *name,
++		       int count, int index)
++{
++	struct chromeos_acpi_attribute *info;
++	char buffer[24]; /* enough to store a u64 and "\n\0" */
++	int length;
++	int ret;
++
++	info = kzalloc(sizeof(*info), GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
++	info->name = chromeos_acpi_alloc_name(name, count, index);
++	if (!info->name) {
++		ret = -ENOMEM;
++		goto free_attribute;
++	}
++
++	sysfs_bin_attr_init(&info->bin_attr);
++	info->bin_attr.attr.name = info->name;
++	info->bin_attr.attr.mode = 0444;
++
++	switch (element->type) {
++	case ACPI_TYPE_BUFFER:
++		length = element->buffer.length;
++		info->data = kmemdup(element->buffer.pointer,
++				     length, GFP_KERNEL);
++		break;
++	case ACPI_TYPE_INTEGER:
++		length = snprintf(buffer, sizeof(buffer), "%d",
++				  (int)element->integer.value);
++		info->data = kmemdup(buffer, length, GFP_KERNEL);
++		break;
++	case ACPI_TYPE_STRING:
++		length = element->string.length + 1;
++		info->data = kstrdup(element->string.pointer, GFP_KERNEL);
++		break;
++	default:
++		ret = -EINVAL;
++		goto free_attr_name;
++	}
++
++	if (!info->data) {
++		ret = -ENOMEM;
++		goto free_attr_name;
++	}
++
++	info->bin_attr.size = length;
++	info->bin_attr.read = chromeos_acpi_read_bin_attribute;
++	info->bin_attr.private = info;
++
++	INIT_LIST_HEAD(&info->list);
++
++	ret = sysfs_create_bin_file(aag->kobj, &info->bin_attr);
++	if (ret)
++		goto free_attr_data;
++
++	list_add(&info->list, &aag->attribs);
++
++	return 0;
++
++free_attr_data:
++	kfree(info->data);
++free_attr_name:
++	kfree(info->name);
++free_attribute:
++	kfree(info);
++	return ret;
++}
++
++static void
++chromeos_acpi_remove_attribs(struct chromeos_acpi_attribute_group *aag)
++{
++	struct chromeos_acpi_attribute *attr, *tmp_attr;
++
++	list_for_each_entry_safe(attr, tmp_attr, &aag->attribs, list) {
++		sysfs_remove_bin_file(aag->kobj, &attr->bin_attr);
++		kfree(attr->name);
++		kfree(attr->data);
++		kfree(attr);
++	}
++}
++
++/**
++ * chromeos_acpi_add_group() - Create a sysfs group including attributes
++ *			       representing a nested ACPI package.
++ *
++ * @obj: Package contents as returned by ACPI.
++ * @name: Name of the group.
++ * @num_attrs: Number of attributes of this package.
++ * @index: Index number of this particular group.
++ *
++ * The created group is called @name in case there is a single instance, or
++ * @name.@index otherwise.
++ *
++ * All group and attribute storage allocations are included in the lists for
++ * tracking of allocated memory.
++ *
++ * Return: 0 on success, negative errno on failure.
++ */
++static int chromeos_acpi_add_group(union acpi_object *obj, char *name,
++				   int num_attrs, int index)
++{
++	struct device *dev = &chromeos_acpi.pdev->dev;
++	struct chromeos_acpi_attribute_group *aag;
++	union acpi_object *element;
++	int i, count, ret;
++
++	aag = kzalloc(sizeof(*aag), GFP_KERNEL);
++	if (!aag)
++		return -ENOMEM;
++
++	aag->name = chromeos_acpi_alloc_name(name, num_attrs, index);
++	if (!aag->name) {
++		ret = -ENOMEM;
++		goto free_group;
++	}
++
++	aag->kobj = kobject_create_and_add(aag->name, &dev->kobj);
++	if (!aag->kobj) {
++		ret = -EINVAL;
++		goto free_group_name;
++	}
++
++	INIT_LIST_HEAD(&aag->attribs);
++	INIT_LIST_HEAD(&aag->list);
++
++	count = obj->package.count;
++	element = obj->package.elements;
++	for (i = 0; i < count; i++, element++) {
++		ret = chromeos_acpi_add_attr(aag, element, name, count, i);
++		if (ret)
++			goto free_group_attr;
++	}
++
++	list_add(&aag->list, &chromeos_acpi.groups);
++
++	return 0;
++
++free_group_attr:
++	chromeos_acpi_remove_attribs(aag);
++	kobject_put(aag->kobj);
++free_group_name:
++	kfree(aag->name);
++free_group:
++	kfree(aag);
++	return ret;
++}
++
++static void chromeos_acpi_remove_groups(void)
++{
++	struct chromeos_acpi_attribute_group *aag, *tmp_aag;
++
++	list_for_each_entry_safe(aag, tmp_aag, &chromeos_acpi.groups, list) {
++		chromeos_acpi_remove_attribs(aag);
++		kfree(aag->name);
++		kobject_put(aag->kobj);
++		kfree(aag);
++	}
++}
++
++/**
++ * chromeos_acpi_handle_package() - Create sysfs group including attributes
++ *				    representing an ACPI package.
++ *
++ * @obj: Package contents as returned by ACPI.
++ * @name: Name of the group.
++ *
++ * Scalar objects included in the package get sysfs attributes created for
++ * them. Nested packages are passed to a function creating a sysfs group per
++ * package.
++ *
++ * Return: 0 on success, negative errno on failure.
++ */
++static int chromeos_acpi_handle_package(union acpi_object *obj, char *name)
++{
++	struct device *dev = &chromeos_acpi.pdev->dev;
++	int count = obj->package.count;
++	union acpi_object *element;
++	int i, ret = 0;
++
++	element = obj->package.elements;
++	for (i = 0; i < count; i++, element++) {
++		if (element->type == ACPI_TYPE_BUFFER ||
++		    element->type == ACPI_TYPE_STRING ||
++		    element->type == ACPI_TYPE_INTEGER)
++			/* Create a single attribute in the root directory */
++			ret = chromeos_acpi_add_attr(&chromeos_acpi.root,
++						     element, name,
++						     count, i);
++		else if (element->type == ACPI_TYPE_PACKAGE)
++			/* Create a group of attributes */
++			ret = chromeos_acpi_add_group(element, name,
++						      count, i);
++		else
++			ret = -EINVAL;
++		if (ret)
++			dev_err(dev,
++				"failed to create group attributes (%d)\n",
++				ret);
++	}
++
++	return ret;
++}
++
++/**
++ * chromeos_acpi_add_method() - Evaluate an ACPI method and create sysfs
++ *				attributes.
++ *
++ * @adev: ACPI device
++ * @name: Name of the method to evaluate
++ *
++ * Return: 0 on success, non-zero on failure
++ */
++static int chromeos_acpi_add_method(struct acpi_device *adev, char *name)
++{
++	struct device *dev = &chromeos_acpi.pdev->dev;
++	struct acpi_buffer output;
++	union acpi_object *obj;
++	acpi_status status;
++	int ret = 0;
++
++	output.length = ACPI_ALLOCATE_BUFFER;
++
++	status = acpi_evaluate_object(adev->handle, name, NULL, &output);
++	if (ACPI_FAILURE(status)) {
++		dev_err(dev, "failed to retrieve %s (%d)\n", name, status);
++		return status;
++	}
++
++	obj = output.pointer;
++	if (obj->type == ACPI_TYPE_PACKAGE)
++		ret = chromeos_acpi_handle_package(obj, name);
++
++	kfree(output.pointer);
++
++	return ret;
++}
++
++/**
++ * chromeos_acpi_process_mlst() - Evaluate the MLST method and add methods
++ *				  listed in the response.
++ *
++ * @adev: ACPI device
++ *
++ * Returns: 0 if successful, non-zero if error.
++ */
++static int chromeos_acpi_process_mlst(struct acpi_device *adev)
++{
++	char name[ACPI_NAMESEG_SIZE + 1];
++	union acpi_object *element, *obj;
++	struct acpi_buffer output;
++	acpi_status status;
++	int ret = 0;
++	int size;
++	int i;
++
++	output.length = ACPI_ALLOCATE_BUFFER;
++	status = acpi_evaluate_object(adev->handle, MLST, NULL,
++				      &output);
++	if (ACPI_FAILURE(status))
++		return status;
++
++	obj = output.pointer;
++	if (obj->type != ACPI_TYPE_PACKAGE) {
++		ret = -EINVAL;
++		goto free_acpi_buffer;
++	}
++
++	element = obj->package.elements;
++	for (i = 0; i < obj->package.count; i++, element++) {
++		if (element->type == ACPI_TYPE_STRING) {
++			size = min(element->string.length + 1,
++				   (u32)ACPI_NAMESEG_SIZE + 1);
++			strlcpy(name, element->string.pointer, size);
++			ret = chromeos_acpi_add_method(adev, name);
++			if (ret) {
++				chromeos_acpi_remove_groups();
++				break;
++			}
++		}
++	}
++
++free_acpi_buffer:
++	kfree(output.pointer);
++
++	return ret;
++}
++
++static int chromeos_acpi_device_add(struct acpi_device *adev)
++{
++	struct chromeos_acpi_attribute_group *aag = &chromeos_acpi.root;
++	struct device *dev = &chromeos_acpi.pdev->dev;
++	int i, ret;
++
++	INIT_LIST_HEAD(&aag->attribs);
++	INIT_LIST_HEAD(&aag->list);
++
++	aag->kobj = &dev->kobj;
++
++	/*
++	 * Attempt to add methods by querying the device's MLST method
++	 * for the list of methods.
++	 */
++	if (!chromeos_acpi_process_mlst(adev))
++		return 0;
++
++	dev_info(dev, "falling back to default list of methods\n");
++
++	for (i = 0; i < ARRAY_SIZE(chromeos_acpi_default_methods); i++) {
++		ret = chromeos_acpi_add_method(adev,
++					     chromeos_acpi_default_methods[i]);
++		if (ret) {
++			dev_err(dev, "failed to add default methods (%d)\n",
++				ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static int chromeos_acpi_device_remove(struct acpi_device *adev)
++{
++	/* Remove dinamically allocated sysfs groups and attributes */
++	chromeos_acpi_remove_groups();
++	/* Remove attributes from the root group */
++	chromeos_acpi_remove_attribs(&chromeos_acpi.root);
++
++	return 0;
++}
++
++static const struct acpi_device_id chromeos_device_ids[] = {
++	{ "GGL0001", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, chromeos_device_ids);
++
++static struct acpi_driver chromeos_acpi_driver = {
++	.name = "ChromeOS ACPI driver",
++	.class = "chromeos-acpi",
++	.ids = chromeos_device_ids,
++	.ops = {
++		.add = chromeos_acpi_device_add,
++		.remove = chromeos_acpi_device_remove,
++	},
++	.owner = THIS_MODULE,
++};
++
++static int __init chromeos_acpi_init(void)
++{
++	int ret;
++
++	chromeos_acpi.pdev = platform_device_register_simple("chromeos_acpi",
++						PLATFORM_DEVID_NONE, NULL, 0);
++	if (IS_ERR(chromeos_acpi.pdev)) {
++		pr_err("unable to register chromeos_acpi platform device\n");
++		return PTR_ERR(chromeos_acpi.pdev);
++	}
++
++	INIT_LIST_HEAD(&chromeos_acpi.groups);
++
++	ret = acpi_bus_register_driver(&chromeos_acpi_driver);
++	if (ret < 0) {
++		pr_err("failed to register chromeos_acpi driver (%d)\n", ret);
++		platform_device_unregister(chromeos_acpi.pdev);
++		chromeos_acpi.pdev = NULL;
++		return ret;
++	}
++
++	return 0;
++}
++
++static void __exit chromeos_acpi_exit(void)
++{
++	acpi_bus_unregister_driver(&chromeos_acpi_driver);
++	platform_device_unregister(chromeos_acpi.pdev);
++}
++
++module_init(chromeos_acpi_init);
++module_exit(chromeos_acpi_exit);
++
++MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>");
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("ChromeOS specific ACPI extensions");
+-- 
+2.25.1
+
