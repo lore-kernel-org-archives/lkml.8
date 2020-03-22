@@ -2,133 +2,82 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF60C54EEB
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03378C1975A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D54422072E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:25:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LapJvSgT"
+	by mail.kernel.org (Postfix) with ESMTP id D1B7E206F9
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgCVVZA (ORCPT
+        id S1726979AbgCVVZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 17:25:00 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38213 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbgCVVZA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 17:25:00 -0400
-Received: by mail-wm1-f66.google.com with SMTP id l20so12561376wmi.3;
-        Sun, 22 Mar 2020 14:24:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4eC7LgpYmufFPA4go7wViPXd9HrWnapviUO9r1ibY6k=;
-        b=LapJvSgTCtjQi9nX184UGsDHpUX/TX22HBxdtaIyBUM0KT5jyDoxRaL5I7XpR2K95E
-         TPbT4BbXDh81HPga7+arn8UlLXszTZ6GSo1m+nPJd4c7c1+vPklZnaZPGVfkVLth8iyy
-         Nzu5E9TxkNlskexMQOg+eQmZ+7kOB7NTFqx3ys+kDksN56Wfmhj7DZ0g2ZGtC6ydF0Qo
-         JBLII/YkKMxsI9/aW+gMUfTJxSvboNTQ4hDtAmllybZK76ZKWrOUrOMxLz0gY+ruVOqP
-         Bb/BQZ6PeUbbsniMAhs6/g7M6kwNS1nzHiJe6M9/+BtpjFYxqwqH2qOkC05T/qTsSE4E
-         DCFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4eC7LgpYmufFPA4go7wViPXd9HrWnapviUO9r1ibY6k=;
-        b=ndUmlNgQ0szG6ir8IeklBsvypsUZNfolPKTW2cgtF+DfWiMMX+GGB+R0FjxlpF1qql
-         a114DNQLAZP3QotIY/2dsBFnT4cC0817cWBYWtBPhtd1mFrkft4Aje6xBALGnzFA0pQH
-         ncBDHL79MOV5OxVV+auqzzE1i6X/2HqhLiGo82ngeuWM2rwtmn9Gf5i5Ldtanf28vAdm
-         eT9akOCP5msyNw+KVgL4WpPxQzfaJTUBTMrSHiYF0b7m9UTizsdXLP+ylGaIVnyW1V1Q
-         S39f6NTQByjv0WeE+o7esKAnOdPovJErfDE0yaF2NqR3SsaOitCjl1KNF6hCRji4iPZm
-         ruOQ==
-X-Gm-Message-State: ANhLgQ3L2y6BeCHVI6Ia/hxrJHL5XOPsfeau4dx11z3aCNvIQXPoMbuC
-        z6UhOkenwa0dMBGv2q9tiC57hF5X
-X-Google-Smtp-Source: ADFU+vscviZCvQDrqB2KghMBcdXdMt4E+sfq3RIWA4PlYJeqq7tjYpaLmVwJuuozljUrk/MlCulg6w==
-X-Received: by 2002:a7b:c308:: with SMTP id k8mr24245774wmj.40.1584912298099;
-        Sun, 22 Mar 2020 14:24:58 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.140.227])
-        by smtp.gmail.com with ESMTPSA id w67sm17620512wmb.41.2020.03.22.14.24.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2020 14:24:57 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] io_uring: Fix ->data corruption on re-enqueue
-Date:   Mon, 23 Mar 2020 00:23:29 +0300
-Message-Id: <c8d9cc69995858fd8859b339f77901f93574c528.1584912194.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Sun, 22 Mar 2020 17:25:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57224 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726741AbgCVVZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 17:25:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A3A79AB7F;
+        Sun, 22 Mar 2020 21:25:09 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 5698EE0FD3; Sun, 22 Mar 2020 22:25:09 +0100 (CET)
+Date:   Sun, 22 Mar 2020 22:25:09 +0100
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] ethtool: fix reference leak in some *_SET handlers
+Message-ID: <20200322212509.GG31519@unicorn.suse.cz>
+References: <20200322201551.E11BAE0FD3@unicorn.suse.cz>
+ <20200322134356.55f7d9b8@kicinski-fedora-PC1C0HJN>
+ <20200322205109.GF31519@unicorn.suse.cz>
+ <20200322140623.633d3446@kicinski-fedora-PC1C0HJN>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200322140623.633d3446@kicinski-fedora-PC1C0HJN>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-work->data and work->list are shared in union. io_wq_assign_next() sets
-->data if a req having a linked_timeout, but then io-wq may want to use
-work->list, e.g. to do re-enqueue of a request, so corrupting ->data.
+On Sun, Mar 22, 2020 at 02:06:23PM -0700, Jakub Kicinski wrote:
+> On Sun, 22 Mar 2020 21:51:09 +0100 Michal Kubecek wrote:
+> > On Sun, Mar 22, 2020 at 01:43:56PM -0700, Jakub Kicinski wrote:
+> > > On Sun, 22 Mar 2020 21:15:51 +0100 (CET) Michal Kubecek wrote:  
+> > > > Andrew noticed that some handlers for *_SET commands leak a netdev
+> > > > reference if required ethtool_ops callbacks do not exist. A simple
+> > > > reproducer would be e.g.
+> > > > 
+> > > >   ip link add veth1 type veth peer name veth2
+> > > >   ethtool -s veth1 wol g
+> > > >   ip link del veth1
+> > > > 
+> > > > Make sure dev_put() is called when ethtool_ops check fails.  
+> > > 
+> > > Fixes: e54d04e3afea ("ethtool: set message mask with DEBUG_SET request")
+> > > Fixes: a53f3d41e4d3 ("ethtool: set link settings with LINKINFO_SET request")
+> > > Fixes: bfbcfe2032e7 ("ethtool: set link modes related data with LINKMODES_SET request")
+> > > Fixes: 8d425b19b305 ("ethtool: set wake-on-lan settings with WOL_SET request")  
+> > 
+> > Yes, thank you, I forgot about Fixes tags.
+> > 
+> > Should I resubmit or will patchworks pick the tags from your reply?
+> 
+> Patchwork sees them, I think, but I don't think it adds them to the
+> patch as downloaded by git-pw. Probably easiest to repost.
 
-->data is not necessary, just remove it and extract linked_timeout
-through @link_list.
+Sent v2 with Fixes and Reviewed-by tags.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io-wq.h    | 5 +----
- fs/io_uring.c | 9 ++++-----
- 2 files changed, 5 insertions(+), 9 deletions(-)
+Michal
 
-diff --git a/fs/io-wq.h b/fs/io-wq.h
-index 298b21f4a4d2..d2a5684bf673 100644
---- a/fs/io-wq.h
-+++ b/fs/io-wq.h
-@@ -63,10 +63,7 @@ static inline void wq_node_del(struct io_wq_work_list *list,
- } while (0)
- 
- struct io_wq_work {
--	union {
--		struct io_wq_work_node list;
--		void *data;
--	};
-+	struct io_wq_work_node list;
- 	void (*func)(struct io_wq_work **);
- 	struct files_struct *files;
- 	struct mm_struct *mm;
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 5267e331b4a4..ce8f38aa070a 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1567,9 +1567,10 @@ static void io_free_req(struct io_kiocb *req)
- 
- static void io_link_work_cb(struct io_wq_work **workptr)
- {
--	struct io_wq_work *work = *workptr;
--	struct io_kiocb *link = work->data;
-+	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
-+	struct io_kiocb *link;
- 
-+	link = list_first_entry(&req->link_list, struct io_kiocb, link_list);
- 	io_queue_linked_timeout(link);
- 	io_wq_submit_work(workptr);
- }
-@@ -1584,10 +1585,8 @@ static void io_wq_assign_next(struct io_wq_work **workptr, struct io_kiocb *nxt)
- 
- 	*workptr = &nxt->work;
- 	link = io_prep_linked_timeout(nxt);
--	if (link) {
-+	if (link)
- 		nxt->work.func = io_link_work_cb;
--		nxt->work.data = link;
--	}
- }
- 
- /*
--- 
-2.24.0
-
+> > > > Reported-by: Andrew Lunn <andrew@lunn.ch>
+> > > > Signed-off-by: Michal Kubecek <mkubecek@suse.cz>  
+> > > 
+> > > Reviewed-by: Jakub Kicinski <kuba@kernel.org>  
+> 
