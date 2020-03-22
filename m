@@ -2,73 +2,42 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 209B5C4332E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8407C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE2620724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:24:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fz7Iizoy"
+	by mail.kernel.org (Postfix) with ESMTP id 8EC1420714
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:25:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbgCVRYa (ORCPT
+        id S1726843AbgCVRZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 13:24:30 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42639 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbgCVRY3 (ORCPT
+        Sun, 22 Mar 2020 13:25:41 -0400
+Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:35374 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgCVRZl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 13:24:29 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 22so2661562pfa.9;
-        Sun, 22 Mar 2020 10:24:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eoICbZdrd63nRhP9W5legHD2adGutvhEft5WhE/G10k=;
-        b=Fz7IizoyXm66jwJQrY9CDambmJPHpX2RfQjmLDayM02jE0jIyj5RvCSSnmREaIK7Fn
-         L5PXE8EIA0yCuq79kwtW0N+gslcZDeU/B0k0GcA557LG6DxvAAQUeXR3ZChek0O/lu7m
-         Xk0Z93csBmvR27nbgF5BkuiQUcJvLvd26lRnDkVYz6W1r3enuwnCS1gcoUD2L/L6djAa
-         49APvurYzSK5x67lTy0IdFRFPi/QYtvjgqoMzSZHl5sv0OofKFcb88iv7ezLb3AtlECy
-         eYkMRoUAFLt1mgMRdTmBqfTysTh2dYNYKjSgIrqU3K/9f3u/yrHRdpGna1D8bgvLGMTk
-         Rqcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eoICbZdrd63nRhP9W5legHD2adGutvhEft5WhE/G10k=;
-        b=j+P0USnyn+d/UZ87xJtORU9KjNS8VHFsfE9jW2diXSkuTsjwWw94IPBoxJibQh+/Au
-         kLofeGARU9WIoC9/stsC90TRqaKQJIYpEMkZTkGAqoAsWAS6I95hvvEeHsfoPAPWB6AP
-         ALfUmAyNEqwtVpMZTQVMwYQCFeijJwWsufiHpYP9YiKcsOz4bHslyWooPbyRtK1Ey1SK
-         JuV+ILUxU0zQMb3bUHYfgDgbv9IxXKjGU+vNHt26QxQyRl1je+a83qm19TNj6wFWdMff
-         JTcz8RzN5vMe5i14erwmzqaOhVpaA2REmohPBrOr1+LLg/AdQBtttCVkpfDYL58p+foi
-         WK1g==
-X-Gm-Message-State: ANhLgQ1D2aewcrJwRrFTd7Qc0uUAidr3MTB9E2jOse2rYmK7DqEgW+dG
-        RZrNj5OJ/inbunFqkvj90tvyfTT2mNs=
-X-Google-Smtp-Source: ADFU+vsW7XsPITe5FLiUnWASfzdCBcfCNkjvekEE0amMT97wkN7DS9h+7UUmJFDhv8qcv/qsibYkdg==
-X-Received: by 2002:a62:7c8b:: with SMTP id x133mr19820054pfc.229.1584897868065;
-        Sun, 22 Mar 2020 10:24:28 -0700 (PDT)
-Received: from nish-HP-Pavilion ([2409:4072:992:9f95:b1e5:4cbf:6219:65ee])
-        by smtp.gmail.com with ESMTPSA id f15sm807449pfd.215.2020.03.22.10.24.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2020 10:24:27 -0700 (PDT)
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-To:     jic23@kernel.org
-Cc:     andriy.shevchenko@linux.intel.com, joe@perches.com,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        nish.malpani25@gmail.com, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 13/13] iio: magn: bmc150: Use vsprintf extension %pe for symbolic error name
-Date:   Sun, 22 Mar 2020 22:53:15 +0530
-Message-Id: <aea18dc7c140eacaaba24b82ee7809196047c1e7.1584897364.git.nish.malpani25@gmail.com>
+        Sun, 22 Mar 2020 13:25:41 -0400
+Received: from localhost.localdomain ([93.22.150.255])
+        by mwinf5d85 with ME
+        id HVRR220015WryPR03VRRhT; Sun, 22 Mar 2020 18:25:36 +0100
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 22 Mar 2020 18:25:36 +0100
+X-ME-IP: 93.22.150.255
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, kan.liang@linux.intel.com,
+        zhe.he@windriver.com, dzickus@redhat.com, jstancek@redhat.com
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] perf cpumap: Use scnprintf instead of snprintf
+Date:   Sun, 22 Mar 2020 18:25:23 +0100
+Message-Id: <20200322172523.2677-1-christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1584897364.git.nish.malpani25@gmail.com>
-References: <cover.1584897364.git.nish.malpani25@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,41 +45,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Utilize %pe format specifier from vsprintf while printing error logs
-with dev_err(). Discards the use of unnecessary explicit casting and
-prints symbolic error name which might prove to be convenient during
-debugging.
+'scnprintf' returns the number of characters written in the output buffer
+excluding the trailing '\0', instead of the number of characters which
+would be generated for the given input.
 
-Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+Both function return a number of characters, excluding the trailing '\0'.
+So comparaison to check if it overflows, should be done against max_size-1.
+Comparaison against max_size can never match.
+
+Fixes: 7780c25bae59f ("perf tools: Allow ability to map cpus to nodes easily")
+Fixes: a24020e6b7cf6 ("perf tools: Change cpu_map__fprintf output")
+Fixes: 92a7e1278005b ("perf cpumap: Add cpu__max_present_cpu()")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
+ tools/perf/util/cpumap.c | 39 ++++++++++++++++++++-------------------
+ 1 file changed, 20 insertions(+), 19 deletions(-)
 
-Changes in v2:
-  - Rewrite commit subject line outlining the usage of %pe.
-  - Add a separator between regmap and its error name.
-
-Based on conversations in [1] & [2].
-
-[1] https://marc.info/?l=linux-iio&m=158427554607223&w=2
-[2] https://marc.info/?l=linux-iio&m=158481647605891&w=2
----
- drivers/iio/magnetometer/bmc150_magn_spi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iio/magnetometer/bmc150_magn_spi.c b/drivers/iio/magnetometer/bmc150_magn_spi.c
-index ed9be0490d77..c6ed3ea8460a 100644
---- a/drivers/iio/magnetometer/bmc150_magn_spi.c
-+++ b/drivers/iio/magnetometer/bmc150_magn_spi.c
-@@ -22,8 +22,8 @@ static int bmc150_magn_spi_probe(struct spi_device *spi)
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 983b7388f22b..b87e7ef4d130 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -316,8 +316,8 @@ static void set_max_cpu_num(void)
+ 		goto out;
  
- 	regmap = devm_regmap_init_spi(spi, &bmc150_magn_regmap_config);
- 	if (IS_ERR(regmap)) {
--		dev_err(&spi->dev, "Failed to register spi regmap %d\n",
--			(int)PTR_ERR(regmap));
-+		dev_err(&spi->dev, "Failed to register spi regmap: %pe\n",
-+			regmap);
- 		return PTR_ERR(regmap);
+ 	/* get the highest possible cpu number for a sparse allocation */
+-	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
+-	if (ret == PATH_MAX) {
++	ret = scnprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
++	if (ret == PATH_MAX-1) {
+ 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
+ 		goto out;
  	}
- 	return bmc150_magn_probe(&spi->dev, regmap, spi->irq, id->name);
+@@ -327,8 +327,8 @@ static void set_max_cpu_num(void)
+ 		goto out;
+ 
+ 	/* get the highest present cpu number for a sparse allocation */
+-	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/present", mnt);
+-	if (ret == PATH_MAX) {
++	ret = scnprintf(path, PATH_MAX, "%s/devices/system/cpu/present", mnt);
++	if (ret == PATH_MAX-1) {
+ 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
+ 		goto out;
+ 	}
+@@ -355,8 +355,8 @@ static void set_max_node_num(void)
+ 		goto out;
+ 
+ 	/* get the highest possible cpu number for a sparse allocation */
+-	ret = snprintf(path, PATH_MAX, "%s/devices/system/node/possible", mnt);
+-	if (ret == PATH_MAX) {
++	ret = scnprintf(path, PATH_MAX, "%s/devices/system/node/possible", mnt);
++	if (ret == PATH_MAX-1) {
+ 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
+ 		goto out;
+ 	}
+@@ -440,8 +440,8 @@ int cpu__setup_cpunode_map(void)
+ 	if (!mnt)
+ 		return 0;
+ 
+-	n = snprintf(path, PATH_MAX, "%s/devices/system/node", mnt);
+-	if (n == PATH_MAX) {
++	n = scnprintf(path, PATH_MAX, "%s/devices/system/node", mnt);
++	if (n == PATH_MAX-1) {
+ 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
+ 		return -1;
+ 	}
+@@ -455,8 +455,8 @@ int cpu__setup_cpunode_map(void)
+ 		if (dent1->d_type != DT_DIR || sscanf(dent1->d_name, "node%u", &mem) < 1)
+ 			continue;
+ 
+-		n = snprintf(buf, PATH_MAX, "%s/%s", path, dent1->d_name);
+-		if (n == PATH_MAX) {
++		n = scnprintf(buf, PATH_MAX, "%s/%s", path, dent1->d_name);
++		if (n == PATH_MAX-1) {
+ 			pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
+ 			continue;
+ 		}
+@@ -501,21 +501,22 @@ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size)
+ 		if (start == -1) {
+ 			start = i;
+ 			if (last) {
+-				ret += snprintf(buf + ret, size - ret,
+-						"%s%d", COMMA,
+-						map->map[i]);
++				ret += scnprintf(buf + ret, size - ret,
++						 "%s%d", COMMA,
++						 map->map[i]);
+ 			}
+ 		} else if (((i - start) != (cpu - map->map[start])) || last) {
+ 			int end = i - 1;
+ 
+ 			if (start == end) {
+-				ret += snprintf(buf + ret, size - ret,
+-						"%s%d", COMMA,
+-						map->map[start]);
++				ret += scnprintf(buf + ret, size - ret,
++						 "%s%d", COMMA,
++						 map->map[start]);
+ 			} else {
+-				ret += snprintf(buf + ret, size - ret,
+-						"%s%d-%d", COMMA,
+-						map->map[start], map->map[end]);
++				ret += scnprintf(buf + ret, size - ret,
++						 "%s%d-%d", COMMA,
++						 map->map[start],
++						 map->map[end]);
+ 			}
+ 			first = false;
+ 			start = i;
 -- 
 2.20.1
 
