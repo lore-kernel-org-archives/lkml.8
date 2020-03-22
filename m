@@ -2,146 +2,114 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C39EC4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 677C7C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E11C820753
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A41B20724
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:34:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="i9/EM43p"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rJvUhtoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgCVSbe (ORCPT
+        id S1726710AbgCVSe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 14:31:34 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45721 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgCVSbe (ORCPT
+        Sun, 22 Mar 2020 14:34:56 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34151 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgCVSez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 14:31:34 -0400
-Received: by mail-wr1-f68.google.com with SMTP id t7so9334882wrw.12
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 11:31:33 -0700 (PDT)
+        Sun, 22 Mar 2020 14:34:55 -0400
+Received: by mail-io1-f67.google.com with SMTP id h131so11893540iof.1
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 11:34:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=t345tliBlqINDa8PSXt4lv98Z6uPV9ApDsTwoyUh4K8=;
-        b=i9/EM43pwbkPODkA43IfFBziz7mD/e2iF6QmH9MXMkV9EccK1pkaR3rkTuF8/B8fI7
-         4Z+8vCAC/lxmreMsVBxcXHtkQ9nDEPc49qfT9K2JQY2ad7+kBpmT5zUEWR+uF0t//LPC
-         8AhdL3pPEdMamUDWdUXITgMN3Kpky5dMfJZvQTsEnkWoszljOc5ILpGVgBirodYJ9l+c
-         uU9HINVEpKOEBNXi4PYSkyex0Yo70OrXvUFy4UhVMXU7WiWG/KgfsHEo9jhtREw26K3n
-         oLY8u9EJG854eFvPSh/uvdoQKzyg9kgriDehTs5l9MhzrLrteW1u1wzrONNFlpBjPT6a
-         /j8w==
+        d=linaro.org; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=I96GfMTGq9tUWRXE8nK4GMh5+Rk8r1hA4SJWjtfIz8c=;
+        b=rJvUhtoJSZoJZ59xKruwqvuxmnNykSJnrdZl61bfZeAwFcD2KOYValDzc3KdUgDuzo
+         Fs84zAqxmx6HmXvBbsccutjeE56+jKXSZVYKNibpIxJghE5tCF6rmWXT4tps1fo4+nJh
+         n8PDln4LMaInk0pGEk1GAEPhJ6XUdael/r3ZeLaJtimq6/Q4TxJRU/90wU+WutYNccVl
+         8kJVfc3jvWlWUaEfHDmmsVpaqXkml9GKOhxLpBNQ+fXBGbMbT5YpB8K1dCYrUwpB6c21
+         aet7+AQPCCjURaqqSSA9ANtEFxfXJb8WcurJBw15kGHaLzCfKR4gu1wZzC8D8jL1Mc9M
+         ey6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=t345tliBlqINDa8PSXt4lv98Z6uPV9ApDsTwoyUh4K8=;
-        b=OdHBg5+Rk0QmBz3E3NtwqU19tRijJhm5pQS1Iria1dDUccXGSUUdv7NeswEwL7PvjG
-         79xJJ1rZ/82iTIkMgplXTcQEmkHrDSYvYwYMIFwn1eKTlogvwfjbfu+d5xQzVeip3Kmy
-         VdhrxfpSuJZHMi3E6MUYB8kGvycVb6DcPHKSQXuuxzDUlG6PQogMFjkZ9q/08Uc+gyEf
-         ES1Gkmxuvbv7L51q06cmgVdV2OClrE64NxWgABmoU0280slOzuRS1Oydr597UNX5c7bn
-         JC79HUbmobMONJvK/yLG4pUsQQV9n9D2g+Qfpwqt+pP6JgwR83hNGNRUiUHR0eV98qec
-         Vngg==
-X-Gm-Message-State: ANhLgQ1OC1kE70ZpFkwDd0Xwjted7aY/5i+BYRr3Tlr5tYrL5GRIMyQJ
-        0YRW41U/ulQpbBqwulMdj14Bvg==
-X-Google-Smtp-Source: ADFU+vtYl2tirhzygQLImaRvVxGsLaQ7qwRGlxRLIFaQgG6POo2NZlaxl4e7Zub8wnLdztr8JVbVyw==
-X-Received: by 2002:adf:b31d:: with SMTP id j29mr10790210wrd.218.1584901893310;
-        Sun, 22 Mar 2020 11:31:33 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id s1sm19915958wrp.41.2020.03.22.11.31.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2020 11:31:32 -0700 (PDT)
-References: <20200316023411.1263-1-sashal@kernel.org> <20200316023411.1263-8-sashal@kernel.org> <1ja74gg0v8.fsf@starbuckisacylon.baylibre.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH AUTOSEL 5.4 08/35] ASoC: meson: g12a: add tohdmitx reset
-In-reply-to: <1ja74gg0v8.fsf@starbuckisacylon.baylibre.com>
-Date:   Sun, 22 Mar 2020 19:31:31 +0100
-Message-ID: <1jsgi0ckcc.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=I96GfMTGq9tUWRXE8nK4GMh5+Rk8r1hA4SJWjtfIz8c=;
+        b=ZaZCqHUUDKaeDGAJOCmoVSlQg2e9Sjh7OLEXHrml6pWCftINPi5OzlvkAU5OhwsZqG
+         5UyjVE9DcwyiK8W/fsHUhDEauxgCxM1sDLaK9pi/HEggJFJBHdIFkfW9ci9d8Maa29V+
+         MDYXcSBQn8Wy1qlxHYSYx3uUVmS10j8uSg+r5josyKa8Em44pCoGnGhKDFP2AHanrJwm
+         mhlFZjIsdegxKf0t9BNFL0opMo74DGa+6lL+wIn6iBTqgtPs60DtJPwcNTFxYCtu2Wju
+         Ly7QE1PukJq/PUjEBihn4503yBcSdUZvR6DFC0bpC3vYc3GAD8fDSNgbg3myPjJrMEL5
+         +bkQ==
+X-Gm-Message-State: ANhLgQ2OldRXJtRSEf+TfXamigk/hutu9mD8Upd2s2iDTELwkM7fTuqH
+        odmhGRbyqRXgok+ux6A8nd0W9g==
+X-Google-Smtp-Source: ADFU+vvrk/Ou3tOtIOKEMMAqZ7PMZvdC4HXpfkqhgNXtBlpBKJE3/XcxE4hujRiRTCDop7ZBPLp45g==
+X-Received: by 2002:a02:7a07:: with SMTP id a7mr17054094jac.96.1584902093315;
+        Sun, 22 Mar 2020 11:34:53 -0700 (PDT)
+Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id d15sm614598ioe.49.2020.03.22.11.34.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Mar 2020 11:34:52 -0700 (PDT)
+Subject: Re: [greybus-dev] [PATCH] staging: greybus: tools: Fix braces {}
+ style
+To:     Simran Singhal <singhalsimran0@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        outreachy-kernel <outreachy-kernel@googlegroups.com>
+References: <20200322173045.GA24700@simran-Inspiron-5558>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <7fc65c6f-1f1d-8f60-faad-e43dda3d0cfa@linaro.org>
+Date:   Sun, 22 Mar 2020 13:34:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200322173045.GA24700@simran-Inspiron-5558>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/22/20 12:30 PM, Simran Singhal wrote:
+> This patch fixes the check reported by checkpatch.pl
+> for braces {} should be used on all arms of this statement.
+> 
+> Signed-off-by: Simran Singhal <singhalsimran0@gmail.com>
 
-On Mon 16 Mar 2020 at 09:28, Jerome Brunet <jbrunet@baylibre.com> wrote:
+Looks fine to me.  And I saw no other instances of this in the
+Greybus code.  Thanks for the patch.
 
-> On Mon 16 Mar 2020 at 03:33, Sasha Levin <sashal@kernel.org> wrote:
->
->> From: Jerome Brunet <jbrunet@baylibre.com>
->>
->> [ Upstream commit 22946f37557e27697aabc8e4f62642bfe4a17fd8 ]
->>
->> Reset the g12a hdmi codec glue on probe. This ensure a sane startup state.
->>
->> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
->> Link: https://lore.kernel.org/r/20200221121146.1498427-1-jbrunet@baylibre.com
->> Signed-off-by: Mark Brown <broonie@kernel.org>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->
-> Hi Sasha,
->
-> The tohdmitx reset property is not in the amlogic g12a DT in v5.4.
-> Backporting this patch on v5.4 would break the hdmi sound, and probably
-> the related sound card since the reset is not optional.
->
-> Could you please drop this from v5.4 stable ?
+Reviewed-by: Alex Elder <elder@linaro.org>
 
-Hi Sasha,
-
-I just received a notification that this patch has been applied to 5.4
-stable.
-
-As explained above, it will cause a regression.
-Could you please drop it from v5.4 stable ?
-
-Thanks
-Jerome
-
-> It is ok to keep it for v5.5.
->
-> Thanks
-> Jerome
->
->> ---
->>  sound/soc/meson/g12a-tohdmitx.c | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/sound/soc/meson/g12a-tohdmitx.c b/sound/soc/meson/g12a-tohdmitx.c
->> index 9cfbd343a00c8..8a0db28a6a406 100644
->> --- a/sound/soc/meson/g12a-tohdmitx.c
->> +++ b/sound/soc/meson/g12a-tohdmitx.c
->> @@ -8,6 +8,7 @@
->>  #include <linux/module.h>
->>  #include <sound/pcm_params.h>
->>  #include <linux/regmap.h>
->> +#include <linux/reset.h>
->>  #include <sound/soc.h>
->>  #include <sound/soc-dai.h>
->>  
->> @@ -378,6 +379,11 @@ static int g12a_tohdmitx_probe(struct platform_device *pdev)
->>  	struct device *dev = &pdev->dev;
->>  	void __iomem *regs;
->>  	struct regmap *map;
->> +	int ret;
->> +
->> +	ret = device_reset(dev);
->> +	if (ret)
->> +		return ret;
->>  
->>  	regs = devm_platform_ioremap_resource(pdev, 0);
->>  	if (IS_ERR(regs))
+> ---
+>  drivers/staging/greybus/tools/loopback_test.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/greybus/tools/loopback_test.c b/drivers/staging/greybus/tools/loopback_test.c
+> index ba6f905f26fa..d46721502897 100644
+> --- a/drivers/staging/greybus/tools/loopback_test.c
+> +++ b/drivers/staging/greybus/tools/loopback_test.c
+> @@ -801,8 +801,9 @@ static void prepare_devices(struct loopback_test *t)
+>  			write_sysfs_val(t->devices[i].sysfs_entry,
+>  					"outstanding_operations_max",
+>  					t->async_outstanding_operations);
+> -		} else
+> +		} else {
+>  			write_sysfs_val(t->devices[i].sysfs_entry, "async", 0);
+> +		}
+>  	}
+>  }
+>  
+> 
 
