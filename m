@@ -2,102 +2,80 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CA6C4332D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 07:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A3AC43332
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 07:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9D4206F8
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 07:58:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="m/T+oeOD"
+	by mail.kernel.org (Postfix) with ESMTP id 0458520774
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 07:58:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584863935;
+	bh=eWjdMSV3Xt1zzPnKPS1H2YP8+k8sOMZZteG9XBHhj7U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1y1QQjCTVYvOA/79w90XXk5Xr1bB0XKx+pTD/cCW3neRrM+8xzq7wYH3B6rHZGxuI
+	 kVxy6lHkPKZhMUcv96CwShyQ5Wc2BAH4wj0b1aOge+zl8SvH6UgEXZYeCVF/J8vusK
+	 wciukGqP7Hyr6ey3G0VR05G3/49kRx8bFJyYJteE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgCVH57 (ORCPT
+        id S1726822AbgCVH6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 03:57:59 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:60803 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725769AbgCVH57 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 03:57:59 -0400
-X-UUID: e8fc1f60d13d4fecb20824b8b5ac1334-20200322
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=0SlVnuKkPvNl1cm3aUi1MmMi33v297Tf8W2wHp9Pizo=;
-        b=m/T+oeODnMdXZQhCkTIr2D164EKWkksrg/KPGUNIqDGIXN6Zjk8uvwt9LV8VNZdeu+djRhrwSW9kSiOAEEaBOvgAQYaNjt8YswWL52dVbrEdhdr5dVpXykqrzo+76DHj8TQ39rrhQAJydadUaudcxA4Ud0l7Z4f/72MB2wDnMYI=;
-X-UUID: e8fc1f60d13d4fecb20824b8b5ac1334-20200322
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <gtk_ruiwang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 507518638; Sun, 22 Mar 2020 15:57:54 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sun, 22 Mar 2020 15:55:24 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 22 Mar 2020 15:58:07 +0800
-From:   <gtk_ruiwang@mediatek.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        <linux-media@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Erin Lo <erin.lo@mediatek.com>, Sj Huang <sj.huang@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        <gtk_ruiwang@mediatek.com>, <srv_heupstream@mediatek.com>
-Subject: [PATCH] media: mtk-vpu: load vpu firmware from the new location
-Date:   Sun, 22 Mar 2020 15:57:45 +0800
-Message-ID: <20200322075745.6133-1-gtk_ruiwang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Sun, 22 Mar 2020 03:58:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726137AbgCVH6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 03:58:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 990FB206F8;
+        Sun, 22 Mar 2020 07:58:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584863933;
+        bh=eWjdMSV3Xt1zzPnKPS1H2YP8+k8sOMZZteG9XBHhj7U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bVGZ7shbaQ5BLOwPtynGKZyTw/ZRjcMkgWzPSoWdH5CweCwAr1Ax55WFQBS2Z3+Ij
+         2vQwzICdeKtApLnSiY0U2MlWvW/OE+s78vRX7N6izBB7HsCDBnyGX8w2bU+UVYhY3i
+         UvtJx37pR3IP/JZq1tY2UPmsj0ICqWwOeiyTYrGM=
+Date:   Sun, 22 Mar 2020 08:58:50 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Qiujun Huang <anenbupt@gmail.com>
+Cc:     syzbot <syzbot+df767d588771697b0433@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, tranmanphong@gmail.com
+Subject: Re: WARNING in hwahc_probe
+Message-ID: <20200322075850.GA68214@kroah.com>
+References: <0000000000001a033405a15e3acb@google.com>
+ <CADG63jBdvJMAem7_VF3GbCUSXGRuFrrv6_GqFc=KcKkxcNebCA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADG63jBdvJMAem7_VF3GbCUSXGRuFrrv6_GqFc=KcKkxcNebCA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogZ3RrX3J1aXdhbmcgPGd0a19ydWl3YW5nQG1lZGlhdGVrLmNvbT4NCg0KbXQ4MTczIFZQ
-VSBmaXJtd2FyZSBoYXMgYmVlbiBtb3ZlZCB0byBhIHN1Yi1mb2xkZXIgb2YNCmxpbnV4LWZpcm13
-YXJlLCBzbyBsb2FkIHZwdS1mdyBmcm9tIHRoZSBuZXcgbG9jYXRpb24gZmlyc3QsDQppZiBpdCBm
-YWlscywgdGhlbiBmcm9tIHRoZSBvbGQgb25lLg0KDQpTaWduZWQtb2ZmLWJ5OiBSdWkgV2FuZyA8
-Z3RrX3J1aXdhbmdAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9t
-dGstdnB1L210a192cHUuYyB8IDE2ICsrKysrKysrKysrKystLS0NCiAxIGZpbGUgY2hhbmdlZCwg
-MTMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-bWVkaWEvcGxhdGZvcm0vbXRrLXZwdS9tdGtfdnB1LmMgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3Jt
-L210ay12cHUvbXRrX3ZwdS5jDQppbmRleCBhNzY4NzA3YWJiOTQuLjg5Mjc0ODQyZTA3YiAxMDA2
-NDQNCi0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZwdS9tdGtfdnB1LmMNCisrKyBi
-L2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZwdS9tdGtfdnB1LmMNCkBAIC00Niw2ICs0Niw4
-IEBADQogLyogYmluYXJ5IGZpcm13YXJlIG5hbWUgKi8NCiAjZGVmaW5lIFZQVV9QX0ZXCQkidnB1
-X3AuYmluIg0KICNkZWZpbmUgVlBVX0RfRlcJCSJ2cHVfZC5iaW4iDQorI2RlZmluZSBWUFVfUF9G
-V19ORVcJCSJtZWRpYXRlay9tdDgxNzMvdnB1X3AuYmluIg0KKyNkZWZpbmUgVlBVX0RfRldfTkVX
-CQkibWVkaWF0ZWsvbXQ4MTczL3ZwdV9kLmJpbiINCiANCiAjZGVmaW5lIFZQVV9SRVNFVAkJMHgw
-DQogI2RlZmluZSBWUFVfVENNX0NGRwkJMHgwMDA4DQpAQCAtNDc3LDE2ICs0NzksMjQgQEAgc3Rh
-dGljIGludCBsb2FkX3JlcXVlc3RlZF92cHUoc3RydWN0IG10a192cHUgKnZwdSwNCiAJc2l6ZV90
-IHRjbV9zaXplID0gZndfdHlwZSA/IFZQVV9EVENNX1NJWkUgOiBWUFVfUFRDTV9TSVpFOw0KIAlz
-aXplX3QgZndfc2l6ZSA9IGZ3X3R5cGUgPyBWUFVfRF9GV19TSVpFIDogVlBVX1BfRldfU0laRTsN
-CiAJY2hhciAqZndfbmFtZSA9IGZ3X3R5cGUgPyBWUFVfRF9GVyA6IFZQVV9QX0ZXOw0KKwljaGFy
-ICpmd19uZXdfbmFtZSA9IGZ3X3R5cGUgPyBWUFVfRF9GV19ORVcgOiBWUFVfUF9GV19ORVc7DQog
-CWNvbnN0IHN0cnVjdCBmaXJtd2FyZSAqdnB1X2Z3Ow0KIAlzaXplX3QgZGxfc2l6ZSA9IDA7DQog
-CXNpemVfdCBleHRyYV9md19zaXplID0gMDsNCiAJdm9pZCAqZGVzdDsNCiAJaW50IHJldDsNCiAN
-Ci0JcmV0ID0gcmVxdWVzdF9maXJtd2FyZSgmdnB1X2Z3LCBmd19uYW1lLCB2cHUtPmRldik7DQor
-CXJldCA9IHJlcXVlc3RfZmlybXdhcmUoJnZwdV9mdywgZndfbmV3X25hbWUsIHZwdS0+ZGV2KTsN
-CiAJaWYgKHJldCA8IDApIHsNCi0JCWRldl9lcnIodnB1LT5kZXYsICJGYWlsZWQgdG8gbG9hZCAl
-cywgJWRcbiIsIGZ3X25hbWUsIHJldCk7DQotCQlyZXR1cm4gcmV0Ow0KKwkJZGV2X2luZm8odnB1
-LT5kZXYsICJGYWlsZWQgdG8gbG9hZCAlcywgJWQsIHJldHJ5XG4iLA0KKwkJCSBmd19uZXdfbmFt
-ZSwgcmV0KTsNCisNCisJCXJldCA9IHJlcXVlc3RfZmlybXdhcmUoJnZwdV9mdywgZndfbmFtZSwg
-dnB1LT5kZXYpOw0KKwkJaWYgKHJldCA8IDApIHsNCisJCQlkZXZfZXJyKHZwdS0+ZGV2LCAiRmFp
-bGVkIHRvIGxvYWQgJXMsICVkXG4iLCBmd19uYW1lLA0KKwkJCQlyZXQpOw0KKwkJCXJldHVybiBy
-ZXQ7DQorCQl9DQogCX0NCiAJZGxfc2l6ZSA9IHZwdV9mdy0+c2l6ZTsNCiAJaWYgKGRsX3NpemUg
-PiBmd19zaXplKSB7DQotLSANCjIuMTguMA0K
+On Sun, Mar 22, 2020 at 03:53:44PM +0800, Qiujun Huang wrote:
+> The return value of snprintf is longer than expected if the string is
+> truncated. Bytes need to be checked here.
+> 
+> diff --git a/drivers/staging/wusbcore/host/hwa-hc.c
+> b/drivers/staging/wusbcore/host/hwa-hc.c
+> index 8d959e9..1475a48 100644
+> --- a/drivers/staging/wusbcore/host/hwa-hc.c
+> +++ b/drivers/staging/wusbcore/host/hwa-hc.c
 
+This file is no longer in the linux-next tree and will be deleted in the
+next kernel release.
+
+Also, no one has this hardware so there's no real security issue here at
+all.
+
+And finally, you forgot a signed-off-by line on your patch :(
+
+thanks,
+
+greg k-h
