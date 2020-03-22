@@ -2,230 +2,81 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F64C4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E76A0C54FCF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8AA20658
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B549820658
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:17:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="v7JOYLCZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgCVOQt (ORCPT
+        id S1726871AbgCVORk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 10:16:49 -0400
-Received: from mga02.intel.com ([134.134.136.20]:49292 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbgCVOQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 10:16:49 -0400
-IronPort-SDR: oAZLyx8ZqFeacg7YgsQM8JJfPWyyjV6fgZRMuVmwUDDhyfVAOjOM4hPDntABz66+B0yBxVCJsU
- ZuF7CFEm1Unw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2020 07:16:46 -0700
-IronPort-SDR: uft4PUcxrSB9cd53hVf1SOeOoCOOfwzC/067V4nnQmdpcnuB16IJniGRnOGNDoiNxJ9LZEzMy+
- 0zGUXWJQT7Lg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,292,1580803200"; 
-   d="scan'208";a="249362586"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 22 Mar 2020 07:16:45 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jG1PA-000AuW-8m; Sun, 22 Mar 2020 22:16:44 +0800
-Date:   Sun, 22 Mar 2020 22:16:07 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:for-mingo] BUILD SUCCESS
- aa93ec620be378cce1454286122915533ff8fa48
-Message-ID: <5e777327.s2aCoSjEVFwbToYY%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Sun, 22 Mar 2020 10:17:40 -0400
+Received: from mr85p00im-zteg06021501.me.com ([17.58.23.183]:45100 "EHLO
+        mr85p00im-zteg06021501.me.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725997AbgCVORk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 10:17:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
+        t=1584886070; bh=0bf0boBl6+WiqF/tkyebjgPSbA4EbGvKPFn8GKnl33A=;
+        h=From:To:Subject:Date:Message-Id;
+        b=v7JOYLCZmpqBkMp6sh9V2/yZ03FN4N5BvQYB5zw9jNlbhIUl0Fjf1GL09ZVH5uwt4
+         QT/RUwLQ5tmmX5XV/i3qi4sYjmx9ozbqNOQYxAuRLvkpvUMUw86HcrdiUkGXec+y5p
+         zFNDMMZr1ERCh/Ga6UApiMQwPBSEVRvAYU0HgaDYHt9VID45N0KmgSHO0u/lEkBxab
+         ZsgOt3crFunhe1ZiOm/PNSH7gT9WwQixfqtZfz5bOGESdGEerG/jEHrAzRHVgBqSSK
+         pHO8pYHyz8NPi0ioTxxhHtsBsXgIyFZyA1c03/aO0JkWwKKoIsE+Tog20y61O9depA
+         4tBSNIvIOciag==
+Received: from localhost (101.220.150.77.rev.sfr.net [77.150.220.101])
+        by mr85p00im-zteg06021501.me.com (Postfix) with ESMTPSA id B432738031E;
+        Sun, 22 Mar 2020 14:07:49 +0000 (UTC)
+From:   Alain Volmat <avolmat@me.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, lee.jones@linaro.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     patrice.chotard@st.com, avolmat@me.com
+Subject: [PATCH] clk: clk-flexgen: fix clock-critical handling
+Date:   Sun, 22 Mar 2020 15:07:40 +0100
+Message-Id: <20200322140740.3970-1-avolmat@me.com>
+X-Mailer: git-send-email 2.17.1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-03-22_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 clxscore=1011 mlxscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-2003220086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  for-mingo
-branch HEAD: aa93ec620be378cce1454286122915533ff8fa48  Merge branches 'doc.2020.02.27a', 'fixes.2020.03.21a', 'kfree_rcu.2020.02.20a', 'locktorture.2020.02.20a', 'ovld.2020.02.20a', 'rcu-tasks.2020.02.20a', 'srcu.2020.02.20a' and 'torture.2020.02.20a' into HEAD
+Fixes an issue leading to having all clocks following a critical
+clocks marked as well as criticals.
 
-elapsed time: 837m
+Fixes: fa6415affe20 ("clk: st: clk-flexgen: Detect critical clocks")
 
-configs tested: 163
-configs skipped: 0
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-powerpc                             defconfig
-arc                              allyesconfig
-riscv                               defconfig
-nds32                               defconfig
-openrisc                    or1ksim_defconfig
-h8300                    h8300h-sim_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-i386                 randconfig-a002-20200322
-i386                 randconfig-a001-20200322
-x86_64               randconfig-a002-20200322
-x86_64               randconfig-a001-20200322
-i386                 randconfig-a003-20200322
-x86_64               randconfig-a003-20200322
-alpha                randconfig-a001-20200322
-m68k                 randconfig-a001-20200322
-mips                 randconfig-a001-20200322
-nds32                randconfig-a001-20200322
-parisc               randconfig-a001-20200322
-riscv                randconfig-a001-20200322
-h8300                randconfig-a001-20200322
-microblaze           randconfig-a001-20200322
-nios2                randconfig-a001-20200322
-c6x                  randconfig-a001-20200322
-sparc64              randconfig-a001-20200322
-s390                 randconfig-a001-20200322
-csky                 randconfig-a001-20200322
-xtensa               randconfig-a001-20200322
-openrisc             randconfig-a001-20200322
-sh                   randconfig-a001-20200322
-i386                 randconfig-b003-20200322
-i386                 randconfig-b001-20200322
-x86_64               randconfig-b003-20200322
-i386                 randconfig-b002-20200322
-x86_64               randconfig-b002-20200322
-x86_64               randconfig-c001-20200322
-x86_64               randconfig-c002-20200322
-x86_64               randconfig-c003-20200322
-i386                 randconfig-c001-20200322
-i386                 randconfig-c002-20200322
-i386                 randconfig-c003-20200322
-i386                 randconfig-d003-20200322
-i386                 randconfig-d001-20200322
-i386                 randconfig-d002-20200322
-x86_64               randconfig-d001-20200322
-x86_64               randconfig-d003-20200322
-x86_64               randconfig-d002-20200322
-x86_64               randconfig-e001-20200322
-x86_64               randconfig-e002-20200322
-x86_64               randconfig-e003-20200322
-i386                 randconfig-e001-20200322
-i386                 randconfig-e002-20200322
-i386                 randconfig-e003-20200322
-i386                 randconfig-f001-20200322
-i386                 randconfig-f003-20200322
-i386                 randconfig-f002-20200322
-x86_64               randconfig-f002-20200322
-x86_64               randconfig-f003-20200322
-x86_64               randconfig-f001-20200322
-i386                 randconfig-g003-20200322
-x86_64               randconfig-g002-20200322
-i386                 randconfig-g001-20200322
-i386                 randconfig-g002-20200322
-x86_64               randconfig-g001-20200322
-x86_64               randconfig-g003-20200322
-x86_64               randconfig-h002-20200322
-x86_64               randconfig-h003-20200322
-i386                 randconfig-h003-20200322
-x86_64               randconfig-h001-20200322
-i386                 randconfig-h001-20200322
-i386                 randconfig-h002-20200322
-arc                  randconfig-a001-20200322
-arm                  randconfig-a001-20200322
-arm64                randconfig-a001-20200322
-ia64                 randconfig-a001-20200322
-powerpc              randconfig-a001-20200322
-sparc                randconfig-a001-20200322
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
+Signed-off-by: Alain Volmat <avolmat@me.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/clk/st/clk-flexgen.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/clk/st/clk-flexgen.c b/drivers/clk/st/clk-flexgen.c
+index 4413b6e04a8e..55873d4b7603 100644
+--- a/drivers/clk/st/clk-flexgen.c
++++ b/drivers/clk/st/clk-flexgen.c
+@@ -375,6 +375,7 @@ static void __init st_of_flexgen_setup(struct device_node *np)
+ 			break;
+ 		}
+ 
++		flex_flags &= ~CLK_IS_CRITICAL;
+ 		of_clk_detect_critical(np, i, &flex_flags);
+ 
+ 		/*
+-- 
+2.17.1
+
