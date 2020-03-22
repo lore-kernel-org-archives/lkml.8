@@ -2,105 +2,65 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2858EC4332E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 03:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FD7C4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 03:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3ECD20724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 03:03:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/KT82Ga"
+	by mail.kernel.org (Postfix) with ESMTP id 2A93720724
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 03:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgCVDDH (ORCPT
+        id S1728345AbgCVDK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 23:03:07 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46990 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbgCVDDH (ORCPT
+        Sat, 21 Mar 2020 23:10:26 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:34390 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbgCVDKZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 23:03:07 -0400
-Received: by mail-pl1-f194.google.com with SMTP id r3so4295864pls.13;
-        Sat, 21 Mar 2020 20:03:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WMhY0cWXzJNSFE+R5ZlYq8GhanMI8L49EmbBfXYaPc8=;
-        b=t/KT82Ga7Yn3Ujoty56BWTvXREr8JeoHrRRp0wr96qCQfuukSu6qUfuN/qu7BD0NlU
-         yielUgMlLLPY5gfg1Lm3E6IVvpx3DpdV0JzIDQ2xJIRX+Wo9rXJlKL/aoMezchjLyuQH
-         zs1fIVg2qw5nhX7voYVx4UM0ns8zUKsYf+2CF2y/syPLx9TDf55C/3HGPXlawY3fk0E1
-         8+hy72wJHxbVlE1afRfA4m+B7Z3F99RpF/Q9DUutltJ3wljaPbkODrOvV6whOwKVQNMK
-         z6ptX8bpuuio0P2rCK4KNvHX5YT47sS/PlgPKmCWEE0/qyRuBfTNjfYyaQOb3yqtTgcI
-         6Idg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WMhY0cWXzJNSFE+R5ZlYq8GhanMI8L49EmbBfXYaPc8=;
-        b=lSvFG1RRk1672B3RuWSiBDQHKmMRxg5UHXYSRc8q49ZvUYpyhyx+iMXBuTtao6trOG
-         orpDAKYWPEShB/8cCUbRr1Oz4Diw4wgjg/La9tWFq+6VqJvY2iOL4v3Yi+x5I18AEaOn
-         waEKCyWMK4MSKMH8+z48ECZMxrHzj52VKPsCpwlIfGDNdy1Jq9mb4I5OryK+kSaM/aKj
-         JHgszFK3yV2I2es9jnyv8OqmRejNnbEu5ctCFXNYOBRvnYFpkMnyEmHwYR8VdF1xRiJZ
-         scLWPsuNSR+j2mRLd2J9+Nfb8u+Sy29lZW8YL8G+aP5d+r3fekgC2QB5C6F1e8TZn7ng
-         3Ilg==
-X-Gm-Message-State: ANhLgQ0t9hQUK7uBIj4DPgIt83RRLHpm+LAVFV4+3i2G3qzvpOW9zBsG
-        d4n+T2PF5qcy+GHHtwtklnw=
-X-Google-Smtp-Source: ADFU+vshITSurdtD2KIngwe4FgygSTH20ImwzSQ745/COUEW0AiScZmFJalbWz00XwlxWtc9zdvSqA==
-X-Received: by 2002:a17:90a:25c6:: with SMTP id k64mr17610781pje.9.1584846186091;
-        Sat, 21 Mar 2020 20:03:06 -0700 (PDT)
-Received: from localhost ([216.24.188.11])
-        by smtp.gmail.com with ESMTPSA id a19sm9733964pfk.110.2020.03.21.20.03.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 21 Mar 2020 20:03:05 -0700 (PDT)
-Date:   Sun, 22 Mar 2020 11:03:01 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        davem@davemloft.net, allison@lohutok.net, corbet@lwn.net,
-        alexios.zavras@intel.com, broonie@kernel.org, tglx@linutronix.de,
-        mchehab+samsung@kernel.org, netdev@vger.kernel.org,
+        Sat, 21 Mar 2020 23:10:25 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4546215AC1030;
+        Sat, 21 Mar 2020 20:10:24 -0700 (PDT)
+Date:   Sat, 21 Mar 2020 20:10:22 -0700 (PDT)
+Message-Id: <20200321.201022.719210614219273669.davem@davemloft.net>
+To:     grygorii.strashko@ti.com
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, dmurphy@ti.com,
+        hkallweit1@gmail.com, netdev@vger.kernel.org, nsekhar@ti.com,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 0/7] introduce read_poll_timeout
-Message-ID: <20200322030301.GA31541@nuc8i5>
-References: <20200320133431.9354-1-zhengdejin5@gmail.com>
- <20200321165014.GD22639@lunn.ch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200321165014.GD22639@lunn.ch>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Subject: Re: [PATCH] net: phy: dp83867: w/a for fld detect threshold
+ bootstrapping issue
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200317180454.22393-1-grygorii.strashko@ti.com>
+References: <20200317180454.22393-1-grygorii.strashko@ti.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 21 Mar 2020 20:10:25 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 05:50:14PM +0100, Andrew Lunn wrote:
-> On Fri, Mar 20, 2020 at 09:34:24PM +0800, Dejin Zheng wrote:
-> > This patch sets is introduce read_poll_timeout macro, it is an extension
-> > of readx_poll_timeout macro. the accessor function op just supports only
-> > one parameter in the readx_poll_timeout macro, but this macro can
-> > supports multiple variable parameters for it. so functions like
-> > phy_read(struct phy_device *phydev, u32 regnum) and
-> > phy_read_mmd(struct phy_device *phydev, int devad, u32 regnum) can
-> > use this poll timeout framework.
-> > 
-> > the first patch introduce read_poll_timeout macro, and the second patch
-> > redefined readx_poll_timeout macro by read_poll_timeout(), and the other
-> > patches are examples using read_poll_timeout macro.
-> 
-> You missed lan87xx_read_status(), tja11xx_check(), and mv3310_reset().
-> 
-> If you convert all these, your diffstat might look better.
-> 
->    Andrew
-Hi Andrew:
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Date: Tue, 17 Mar 2020 20:04:54 +0200
 
-ok, Thanks for your reminder, I will do it.
+> When the DP83867 PHY is strapped to enable Fast Link Drop (FLD) feature
+> STRAP_STS2.STRAP_ FLD (reg 0x006F bit 10), the Energy Lost Threshold for
+> FLD Energy Lost Mode FLD_THR_CFG.ENERGY_LOST_FLD_THR (reg 0x002e bits 2:0)
+> will be defaulted to 0x2. This may cause the phy link to be unstable. The
+> new DP83867 DM recommends to always restore ENERGY_LOST_FLD_THR to 0x1.
+> 
+> Hence, restore default value of FLD_THR_CFG.ENERGY_LOST_FLD_THR to 0x1 when
+> FLD is enabled by bootstrapping as recommended by DM.
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
-BR,
-Dejin
+Applied, thank you.
 
+Let me know if I should queue this up for -stable.
