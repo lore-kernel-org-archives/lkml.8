@@ -2,84 +2,64 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D448CC54EEB
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B68FCC54FD0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA252072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 947AE206F9
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgCVVMo (ORCPT
+        id S1726912AbgCVVOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 17:12:44 -0400
-Received: from sauhun.de ([88.99.104.3]:54376 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726741AbgCVVMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 17:12:44 -0400
-Received: from localhost (p54B33042.dip0.t-ipconnect.de [84.179.48.66])
-        by pokefinder.org (Postfix) with ESMTPSA id 3A7F72C0064;
-        Sun, 22 Mar 2020 22:12:41 +0100 (CET)
-Date:   Sun, 22 Mar 2020 22:12:40 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Jean Delvare <jdelvare@suse.de>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Kurtz <djkurtz@chromium.org>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Subject: Re: [PATCH] i2c: i801: Fix memory corruption in i801_isr_byte_done()
-Message-ID: <20200322211240.GD11260@ninjato>
-References: <0000000000009586b2059c13c7e1@google.com>
- <20200114073406.qaq3hbrhtx76fkes@kili.mountain>
- <20200222124523.GI1716@kunai>
- <20200320145748.GD1282@ninjato>
- <20200322190813.39b92de2@endymion>
+        Sun, 22 Mar 2020 17:14:40 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:46069 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbgCVVOk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 17:14:40 -0400
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 010E6FF80D;
+        Sun, 22 Mar 2020 21:14:37 +0000 (UTC)
+Date:   Sun, 22 Mar 2020 22:14:37 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Corentin Labbe <clabbe@baylibre.com>
+Cc:     a.zummo@towertech.it, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] rtc: max8907: add missing select REGMAP_IRQ
+Message-ID: <20200322211437.GE221863@piout.net>
+References: <1584545209-20433-1-git-send-email-clabbe@baylibre.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200322190813.39b92de2@endymion>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1584545209-20433-1-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 18/03/2020 15:26:49+0000, Corentin Labbe wrote:
+> I have hit the following build error:
+> armv7a-hardfloat-linux-gnueabi-ld: drivers/rtc/rtc-max8907.o: in function `max8907_rtc_probe':
+> rtc-max8907.c:(.text+0x400): undefined reference to `regmap_irq_get_virq'
+> 
+> max8907 should select REGMAP_IRQ
+> 
+> Fixes: 94c01ab6d7544 ("rtc: add MAX8907 RTC driver")
+> Cc: stable <stable@vger.kernel.org>
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> ---
+>  drivers/rtc/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+Applied, thanks.
 
---W/nzBZO5zC0uMSeA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-
-> Can you please bounce the previous messages in this thread to me? I was
-> apparently not Cc'd so I'm missing the context.
-
-Sure, done. Your email address in the thread was sadly the outdated one.
-
-
---W/nzBZO5zC0uMSeA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl531MQACgkQFA3kzBSg
-KbZrig//XkLniI4xzcvSyK2d/ebWUqOdHu3LqisAoXONXpToBiyz16VVPBOHYCNZ
-lqXFFAuz1N9qkh8zroAuRkr45OjAKEGd3LFeDIvmTozwrjytfry0OwGxuqp/LZUA
-w+9i8JqcofTra/7GPXkVgGwd7KrGQe+tlYKfd+7xDDV6xVy1OW7eaD/81TC15qTF
-Zdwuew5Wh7eUILvolCChodFHFOZjqZwSFouBgLQESynJdEeCqb5IEe8olvru2Lf2
-BfaIaKnHaEuEG1uvjzk4uxL5AVHebgUs6VENOpw5dogEJGm/vpt8QkccWMMI4jVH
-/0nXcVZbyRt1zqkMIrrn0S3ZoDDUFtpijNXjylwFqZZ1ZLZ8fvvTqcktSOM69i4y
-dh3dljazaku9if0NGhRPEnLE4lbyZTmUohcE/tlHiPCSpWkcjvU1j/NeETyJIO4a
-Ac3PJCJiEfVsbSM9sigr1sEpcS1QVYqe7fckxM7JyLRyMddWLjblo785KHQID4I/
-xNVrAU1nq0YjVVHPNtKey3SWZoj8m0u2ogPFUoAehVAnnrVPnpvHKpMBWSVOG8xC
-iM2tuX5HkVgXfpD7Be8RgnxVmli9ooLGcuvzivQbWLaoPApjl5tlO1l+TR4Bo/8A
-kgVJee2W5ykMRnNBPAPQqC3F2YR3Uh5HqZU7QuLfv2mxVrjdOLI=
-=ls6/
------END PGP SIGNATURE-----
-
---W/nzBZO5zC0uMSeA--
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
