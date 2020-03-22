@@ -2,228 +2,457 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C0CC4332D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 07:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE5AC4332D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 07:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D1720637
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 07:03:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tn415uxJ"
+	by mail.kernel.org (Postfix) with ESMTP id C73E020719
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 07:11:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgCVHDb (ORCPT
+        id S1726137AbgCVHKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 03:03:31 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40618 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgCVHDb (ORCPT
+        Sun, 22 Mar 2020 03:10:49 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:42911 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbgCVHKt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 03:03:31 -0400
-Received: by mail-qt1-f195.google.com with SMTP id c9so1966198qtw.7
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 00:03:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uCqt57idHmjJkKnDV2pTVzQGXYCvhK7v2Ozv+3+3YEg=;
-        b=Tn415uxJNNTQG79PfTWRWpdm6R8uAj2JDlwOw4uQ8u9fefXMwDv6/buYtnLAGVYr+E
-         AK951bj/IOQaMLWg9fP5VGnmwePhOXejkT1vNXUF2zViSW/8rHuPSr+h4jSqEPqXe+ax
-         LLShs6pJSklfF3RK+7oba0McfXq+/YGTMK/+7+licgA1FmkwSvwospmu8GQIdzg2cPbx
-         JjsoUyDes6+BLQURibtp0YAvVCH5J9dvd6ACSlKeAhsE0qqlSQcMDfLPaSdpG01XuYbY
-         fQqiuO+BwvZjN8JU0sOxKuRaW1dnxQ0bpt2GFvmoynTxwzScaNk1p8C5CgLfaJ7PWktv
-         jjpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uCqt57idHmjJkKnDV2pTVzQGXYCvhK7v2Ozv+3+3YEg=;
-        b=ibEzGhLcINDPpc2kdkq3ONln7V9ApVUYeiOHZwPGZbMwJV7sYPYhLDbI/T9DbRfliZ
-         j4cas0eWZKxOmGlJADVKjd3NO/Z6ShrmXDl4txxloNDrkMoN2won7wLdpfEwh7InqSMK
-         dsOSMrYe1AfIZrYW4cBWbRw/SAqT1uAwnCRwkDxry2Ea2rGXwJpFrNzZJmnFcvDnc5p1
-         GQB2E6UlmDYEQX7rpaS/MLfHbGgWHpP4KMfK5YIkzENjtlzw6GZrYz6vSSkXaqaRh6Kr
-         IAoXdTIr0v0H/HkU+4AJh1syfjfZYWGaWf1AfOytekaRBEJbkn9S1yt1kaM0Tkh+ZGfM
-         UV1g==
-X-Gm-Message-State: ANhLgQ06yCwX+3VvJFL1JUDrfn8GcMYcn/846NAqrj4vqEN0YMa6JRUt
-        tosLSY7TTN0YaGkn8M7nUTs83vSsJVskXT+3Wp9Xkg==
-X-Google-Smtp-Source: ADFU+vvdAkqi6cZjPmLyQu1GA6EVwai8Wq264eWSqCEk45vpbm0AnJf/bANXXDZt8OWjDFIPsyMjm8XoFN9APbpyDm0=
-X-Received: by 2002:aed:2591:: with SMTP id x17mr16170685qtc.380.1584860608200;
- Sun, 22 Mar 2020 00:03:28 -0700 (PDT)
+        Sun, 22 Mar 2020 03:10:49 -0400
+X-Originating-IP: 2.7.45.25
+Received: from [192.168.1.11] (lfbn-lyo-1-453-25.w2-7.abo.wanadoo.fr [2.7.45.25])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 7FDBFFF802;
+        Sun, 22 Mar 2020 07:10:45 +0000 (UTC)
+From:   Alex Ghiti <alex@ghiti.fr>
+Subject: Re: [PATCH RESEND v2] riscv: Introduce CONFIG_RELOCATABLE
+To:     Zong Li <zong.li@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+References: <20200303054437.650-1-alex@ghiti.fr>
+ <mhng-346cdebc-e24d-49db-bb2e-0d4fa8d57030@palmerdabbelt-glaptop1>
+ <CANXhq0rvnuzgSxF9b8emkYKLnTwuK90XG3=5-pPFW9a9_5BS3w@mail.gmail.com>
+Message-ID: <4d8f0629-4815-825f-fda2-3033e7956da3@ghiti.fr>
+Date:   Sun, 22 Mar 2020 03:10:45 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <000000000000277a0405a16bd5c9@google.com> <CACT4Y+b1WFT87pWQaXD3CWjyjoQaP1jcycHdHF+rtxoR5xW1ww@mail.gmail.com>
-In-Reply-To: <CACT4Y+b1WFT87pWQaXD3CWjyjoQaP1jcycHdHF+rtxoR5xW1ww@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sun, 22 Mar 2020 08:03:17 +0100
-Message-ID: <CACT4Y+Zs5YCRgpsu6v781HvEUU6EZEuz=zj=D2VXQxrO3_L4aA@mail.gmail.com>
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in handle_external_interrupt_irqoff
-To:     syzbot <syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Cc:     Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, wanpengli@tencent.com,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CANXhq0rvnuzgSxF9b8emkYKLnTwuK90XG3=5-pPFW9a9_5BS3w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 7:59 AM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Sun, Mar 22, 2020 at 7:43 AM syzbot
-> <syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    b74b991f Merge tag 'block-5.6-20200320' of git://git.kerne..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=16403223e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=6dfa02302d6db985
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3f29ca2efb056a761e38
-> > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com
->
-> +clang-built-linux
->
-> This only happens on the instance that uses clang. So potentially this
-> is related to clang. The instance also uses smack lsm, but it's less
-> likely to be involved I think.
-> This actually started happening around Mar 6, but the ORC unwinder
-> somehow fails to unwind stack and prints only questionable frames, so
-> the reports were classified as "corrupted" and all thrown in the
-> "corrupted reports" bucket:
-> https://syzkaller.appspot.com/bug?id=d5bc3e0c66d200d72216ab343a67c4327e4a3452
->
-> There is already some discussion about this on the clang-built-linux list:
-> https://groups.google.com/d/msg/clang-built-linux/Cm3VojRK69I/cfDGxIlTAwAJ
->
-> The handle_external_interrupt_irqoff has some inline asm and the
-> special STACK_FRAME_NON_STANDARD. So it has some potential for bad
-> interaction with compilers...
->
-> The commit range is presumably
-> fb279f4e238617417b132a550f24c1e86d922558..63849c8f410717eb2e6662f3953ff674727303e7
-> But I don't see anything that says "it's me". The only commit that
-> does non-trivial changes to x86/vmx seems to be "KVM: VMX: check
-> descriptor table exits on instruction emulation":
->
-> $ git log --oneline
-> fb279f4e238617417b132a550f24c1e86d922558..63849c8f410717eb2e6662f3953ff674727303e7
-> virt/kvm/ arch/x86/kvm/
-> 86f7e90ce840a KVM: VMX: check descriptor table exits on instruction emulation
-> e951445f4d3b5 Merge tag 'kvmarm-fixes-5.6-1' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
-> ef935c25fd648 kvm: x86: Limit the number of "kvm: disabled by bios" messages
-> aaec7c03de92c KVM: x86: avoid useless copy of cpufreq policy
-> 4f337faf1c55e KVM: allow disabling -Werror
-> 575b255c1663c KVM: x86: allow compiling as non-module with W=1
-> 7943f4acea3ca KVM: SVM: allocate AVIC data structures based on kvm_amd
-> module parameter
-> b3f15ec3d809c kvm: arm/arm64: Fold VHE entry/exit work into kvm_vcpu_run_vhe()
-> 51b2569402a38 KVM: arm/arm64: Fix up includes for trace.h
+Hi Zong,
 
+Sorry for the response delay, please find below my comments.
 
-And the problem with this crash is that it happens all the time,
-basically the only crash that now happens on the instance. So
-effectively all kernel testing of all subsystems has stalled due to
-this.
+On 3/12/20 1:57 AM, Zong Li wrote:
+> On Sat, Mar 7, 2020 at 1:58 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>>
+>> On Mon, 02 Mar 2020 21:44:37 PST (-0800), alex@ghiti.fr wrote:
+>>> This config allows to compile the kernel as PIE and to relocate it at any
+>>> virtual address at runtime: this paves the way to KASLR and to 4-level
+>>> page table folding at runtime. Runtime relocation is possible since
+>>> relocation metadata are embedded into the kernel.
+>>>
+>>> Note that relocating at runtime introduces an overhead even if the kernel
+>>> is loaded at the same address it was linked at and that the compiler
+>>> options are those used in arm64 which uses the same RELA relocation format.
+>>>
+>>> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+>>> Reviewed-by: Zong Li <zong.li@sifive.com>
+>>> Reviewed-by: Anup Patel <anup@brainfault.org>
+>>> Tested-by: Zong Li <zong.li@sifive.com>
+>>> ---
+>>> Changes in v2:
+>>> - Make RELOCATABLE depend on MMU as suggested by Anup
+>>> - Rename kernel_load_addr into kernel_virt_addr as suggested by Anup
+>>> - Use __pa_symbol instead of __pa, as suggested by Zong
+>>> - Rebased on top of v5.6-rc3
+>>> - Tested with sv48 patchset
+>>> - Add Reviewed/Tested-by from Zong and Anup
+>>>
+>>>   arch/riscv/Kconfig              | 12 +++++
+>>>   arch/riscv/Makefile             |  5 +-
+>>>   arch/riscv/boot/loader.lds.S    |  2 +-
+>>>   arch/riscv/include/asm/page.h   |  5 +-
+>>>   arch/riscv/kernel/head.S        |  3 +-
+>>>   arch/riscv/kernel/vmlinux.lds.S | 10 ++--
+>>>   arch/riscv/mm/Makefile          |  4 ++
+>>>   arch/riscv/mm/init.c            | 92 ++++++++++++++++++++++++++++-----
+>>>   8 files changed, 111 insertions(+), 22 deletions(-)
+>>>
+>>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+>>> index 73f029eae0cc..f5f3d474504d 100644
+>>> --- a/arch/riscv/Kconfig
+>>> +++ b/arch/riscv/Kconfig
+>>> @@ -163,6 +163,18 @@ config PGTABLE_LEVELS
+>>>        default 3 if 64BIT
+>>>        default 2
+>>>
+>>> +config RELOCATABLE
+>>> +     bool
+>>> +     depends on MMU
+>>> +     help
+>>> +          This builds a kernel as a Position Independent Executable (PIE),
+>>> +          which retains all relocation metadata required to relocate the
+>>> +          kernel binary at runtime to a different virtual address than the
+>>> +          address it was linked at.
+>>> +          Since RISCV uses the RELA relocation format, this requires a
+>>> +          relocation pass at runtime even if the kernel is loaded at the
+>>> +          same address it was linked at.
+>>> +
+>>>   source "arch/riscv/Kconfig.socs"
+>>>
+>>>   menu "Platform type"
+>>> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+>>> index b9009a2fbaf5..5a115cf6a9c1 100644
+>>> --- a/arch/riscv/Makefile
+>>> +++ b/arch/riscv/Makefile
+>>> @@ -9,7 +9,10 @@
+>>>   #
+>>>
+>>>   OBJCOPYFLAGS    := -O binary
+>>> -LDFLAGS_vmlinux :=
+>>> +ifeq ($(CONFIG_RELOCATABLE),y)
+>>> +LDFLAGS_vmlinux := -shared -Bsymbolic -z notext -z norelro
+>>> +KBUILD_CFLAGS += -fPIE
+>>> +endif
+>>>   ifeq ($(CONFIG_DYNAMIC_FTRACE),y)
+>>>        LDFLAGS_vmlinux := --no-relax
+>>>   endif
+>>> diff --git a/arch/riscv/boot/loader.lds.S b/arch/riscv/boot/loader.lds.S
+>>> index 47a5003c2e28..a9ed218171aa 100644
+>>> --- a/arch/riscv/boot/loader.lds.S
+>>> +++ b/arch/riscv/boot/loader.lds.S
+>>> @@ -7,7 +7,7 @@ ENTRY(_start)
+>>>
+>>>   SECTIONS
+>>>   {
+>>> -     . = PAGE_OFFSET;
+>>> +     . = CONFIG_PAGE_OFFSET;
+>>>
+>>>        .payload : {
+>>>                *(.payload)
+>>> diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
+>>> index 8ca1930caa44..af5810f9aebd 100644
+>>> --- a/arch/riscv/include/asm/page.h
+>>> +++ b/arch/riscv/include/asm/page.h
+>>> @@ -31,9 +31,9 @@
+>>>    * When not using MMU this corresponds to the first free page in
+>>>    * physical memory (aligned on a page boundary).
+>>>    */
+>>> -#define PAGE_OFFSET          _AC(CONFIG_PAGE_OFFSET, UL)
+>>> +#define PAGE_OFFSET          kernel_virt_addr
+>>
+>> I assume we want to keep PAGE_OFFSET a constant for the non-relocatable
+>> systems.  As it currently stands this is imposing a performance hit even when
+>>
+> 
+> I had almost done the KASLR implementation on top of this patch.
+> Actually, PAGE_OFFSET change is unnecessary in KASLR , because we
+> would move kernel image to a random physical address as well, so the
+> $pc will go to the relevant random virtual address. We need
 
+I don't understand what you mean here, can you explain it a bit more ?
 
-> > BUG: kernel NULL pointer dereference, address: 0000000000000086
-> > #PF: supervisor instruction fetch in kernel mode
-> > #PF: error_code(0x0010) - not-present page
-> > PGD a63a4067 P4D a63a4067 PUD a7627067 PMD 0
-> > Oops: 0010 [#1] PREEMPT SMP KASAN
-> > CPU: 0 PID: 9785 Comm: syz-executor.2 Not tainted 5.6.0-rc6-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > RIP: 0010:0x86
-> > Code: Bad RIP value.
-> > RSP: 0018:ffffc90001ac7998 EFLAGS: 00010086
-> > RAX: ffffc90001ac79c8 RBX: fffffe0000000000 RCX: 0000000000040000
-> > RDX: ffffc9000e20f000 RSI: 000000000000b452 RDI: 000000000000b453
-> > RBP: 0000000000000ec0 R08: ffffffff83987523 R09: ffffffff811c7eca
-> > R10: ffff8880a4e94200 R11: 0000000000000002 R12: dffffc0000000000
-> > R13: fffffe0000000ec8 R14: ffffffff880016f0 R15: fffffe0000000ecb
-> > FS:  00007fb50e370700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 000000000000005c CR3: 0000000092fc7000 CR4: 00000000001426f0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >  handle_external_interrupt_irqoff+0x154/0x280 arch/x86/kvm/vmx/vmx.c:6274
-> >  kvm_before_interrupt arch/x86/kvm/x86.h:343 [inline]
-> >  handle_external_interrupt_irqoff+0x132/0x280 arch/x86/kvm/vmx/vmx.c:6272
-> >  __irqentry_text_start+0x8/0x8
-> >  vcpu_enter_guest+0x6c77/0x9290 arch/x86/kvm/x86.c:8405
-> >  save_stack mm/kasan/common.c:72 [inline]
-> >  set_track mm/kasan/common.c:80 [inline]
-> >  kasan_set_free_info mm/kasan/common.c:337 [inline]
-> >  __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
-> >  __cache_free mm/slab.c:3426 [inline]
-> >  kfree+0x10a/0x220 mm/slab.c:3757
-> >  tomoyo_path_number_perm+0x525/0x690 security/tomoyo/file.c:736
-> >  security_file_ioctl+0x55/0xb0 security/security.c:1441
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >  __lock_acquire+0xc5a/0x1bc0 kernel/locking/lockdep.c:3954
-> >  test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
-> >  hlock_class kernel/locking/lockdep.c:163 [inline]
-> >  mark_lock+0x107/0x1650 kernel/locking/lockdep.c:3642
-> >  lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
-> >  rcu_lock_acquire+0x9/0x30 include/linux/rcupdate.h:208
-> >  kvm_check_async_pf_completion+0x34e/0x360 arch/x86/kvm/../../../virt/kvm/async_pf.c:137
-> >  vcpu_run+0x3a3/0xd50 arch/x86/kvm/x86.c:8513
-> >  kvm_arch_vcpu_ioctl_run+0x419/0x880 arch/x86/kvm/x86.c:8735
-> >  kvm_vcpu_ioctl+0x67c/0xa80 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2932
-> >  kvm_vm_release+0x50/0x50 arch/x86/kvm/../../../virt/kvm/kvm_main.c:858
-> >  vfs_ioctl fs/ioctl.c:47 [inline]
-> >  ksys_ioctl fs/ioctl.c:763 [inline]
-> >  __do_sys_ioctl fs/ioctl.c:772 [inline]
-> >  __se_sys_ioctl+0xf9/0x160 fs/ioctl.c:770
-> >  do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:294
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > Modules linked in:
-> > CR2: 0000000000000086
-> > ---[ end trace 4da75c292cd7e3e8 ]---
-> > RIP: 0010:0x86
-> > Code: Bad RIP value.
-> > RSP: 0018:ffffc90001ac7998 EFLAGS: 00010086
-> > RAX: ffffc90001ac79c8 RBX: fffffe0000000000 RCX: 0000000000040000
-> > RDX: ffffc9000e20f000 RSI: 000000000000b452 RDI: 000000000000b453
-> > RBP: 0000000000000ec0 R08: ffffffff83987523 R09: ffffffff811c7eca
-> > R10: ffff8880a4e94200 R11: 0000000000000002 R12: dffffc0000000000
-> > R13: fffffe0000000ec8 R14: ffffffff880016f0 R15: fffffe0000000ecb
-> > FS:  00007fb50e370700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 000000000000005c CR3: 0000000092fc7000 CR4: 00000000001426f0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000277a0405a16bd5c9%40google.com.
+> kernel_virt_addr to record the new destination, but keep PAGE_OFFSET
+> to be CONFIG_PAGE_OFFSET is enough.
+
+ From my understanding, PAGE_OFFSET should represent the start of the 
+direct mapping, so in case of a relocatable kernel, its value should 
+reflect the offset too.
+
+Is there any issue with having PAGE_OFFSET equal to kernel_virt_addr ?
+
+If we use both, we will need to know precisely when we should use 
+kernel_virt_addr or PAGE_OFFSET, which I think will be painful and error 
+prone.
+
+> 
+>>> -#define KERN_VIRT_SIZE (-PAGE_OFFSET)
+>>> +#define KERN_VIRT_SIZE               (-_AC(CONFIG_PAGE_OFFSET, UL))
+>>
+>> This seems like it would cause issues if the kernel is relocated to high enough
+>> addresses that "kernel_virt_addr+KERN_VIRT_SIZE" overflows.
+>>
+> 
+> Based on the same reason, keep KERN_VIRT_SIZE to be -PAGE_OFFSET is good.
+> 
+>>>   #ifndef __ASSEMBLY__
+>>>
+>>> @@ -97,6 +97,7 @@ extern unsigned long pfn_base;
+>>>   #define ARCH_PFN_OFFSET              (PAGE_OFFSET >> PAGE_SHIFT)
+>>>   #endif /* CONFIG_MMU */
+>>>
+>>> +extern unsigned long kernel_virt_addr;
+>>>   extern unsigned long max_low_pfn;
+>>>   extern unsigned long min_low_pfn;
+>>>
+>>> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+>>> index 271860fc2c3f..d792912c2da3 100644
+>>> --- a/arch/riscv/kernel/head.S
+>>> +++ b/arch/riscv/kernel/head.S
+>>> @@ -131,7 +131,8 @@ clear_bss_done:
+>>>   #ifdef CONFIG_MMU
+>>>   relocate:
+>>>        /* Relocate return address */
+>>> -     li a1, PAGE_OFFSET
+>>> +     la a1, kernel_virt_addr
+>>> +     REG_L a1, 0(a1)
+>>>        la a2, _start
+>>>        sub a1, a1, a2
+>>>        add ra, ra, a1
+>>> diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+>>> index 1e0193ded420..5bf69e9b91e6 100644
+>>> --- a/arch/riscv/kernel/vmlinux.lds.S
+>>> +++ b/arch/riscv/kernel/vmlinux.lds.S
+>>> @@ -4,7 +4,7 @@
+>>>    * Copyright (C) 2017 SiFive
+>>>    */
+>>>
+>>> -#define LOAD_OFFSET PAGE_OFFSET
+>>> +#define LOAD_OFFSET CONFIG_PAGE_OFFSET
+>>>   #include <asm/vmlinux.lds.h>
+>>>   #include <asm/page.h>
+>>>   #include <asm/cache.h>
+>>> @@ -71,9 +71,11 @@ SECTIONS
+>>>
+>>>        EXCEPTION_TABLE(0x10)
+>>>
+>>> -     .rel.dyn : {
+>>> -             *(.rel.dyn*)
+>>> -     }
+>>> +        .rela.dyn : ALIGN(8) {
+>>> +             __rela_dyn_start = .;
+>>> +                *(.rela .rela*)
+>>> +             __rela_dyn_end = .;
+>>> +        }
+>>
+>> It looks like the indentation is screwed up here: I see a mix of tabs/spaces
+>> that doesn't match the rest of the file.
+>>
+>>>
+>>>        _end = .;
+>>>
+>>> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
+>>> index 50b7af58c566..27593d362248 100644
+>>> --- a/arch/riscv/mm/Makefile
+>>> +++ b/arch/riscv/mm/Makefile
+>>> @@ -1,6 +1,10 @@
+>>>   # SPDX-License-Identifier: GPL-2.0-only
+>>>
+>>>   CFLAGS_init.o := -mcmodel=medany
+>>> +ifdef CONFIG_RELOCATABLE
+>>> +CFLAGS_init.o += -fno-pie
+>>> +endif
+>>> +
+>>>   ifdef CONFIG_FTRACE
+>>>   CFLAGS_REMOVE_init.o = -pg
+>>>   endif
+>>> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+>>> index 965a8cf4829c..428aee2669aa 100644
+>>> --- a/arch/riscv/mm/init.c
+>>> +++ b/arch/riscv/mm/init.c
+>>> @@ -12,6 +12,9 @@
+>>>   #include <linux/sizes.h>
+>>>   #include <linux/of_fdt.h>
+>>>   #include <linux/libfdt.h>
+>>> +#ifdef CONFIG_RELOCATABLE
+>>> +#include <linux/elf.h>
+>>> +#endif
+>>>
+>>>   #include <asm/fixmap.h>
+>>>   #include <asm/tlbflush.h>
+>>> @@ -28,6 +31,9 @@ EXPORT_SYMBOL(empty_zero_page);
+>>>   extern char _start[];
+>>>   void *dtb_early_va;
+>>>
+>>> +unsigned long kernel_virt_addr = _AC(CONFIG_PAGE_OFFSET, UL);
+>>> +EXPORT_SYMBOL(kernel_virt_addr);
+>>> +
+>>>   static void __init zone_sizes_init(void)
+>>>   {
+>>>        unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
+>>> @@ -132,7 +138,8 @@ void __init setup_bootmem(void)
+>>>                phys_addr_t end = reg->base + reg->size;
+>>>
+>>>                if (reg->base <= vmlinux_end && vmlinux_end <= end) {
+>>> -                     mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
+>>> +                     mem_size = min(reg->size,
+>>> +                                    (phys_addr_t)-kernel_virt_addr);
+>>
+>> PAGE_OFFSET is kernel_virt_addr, so I don't see any reason to change these --
+>> they account for a significant fraction of the diff.
+>>
+> 
+> kernel_virt_addr would be assigned to a random destination by KASLR,
+> but here still should be PAGE_OFFSET rather than kernel_virt_addr as
+> mentioned above.
+> 
+>>>                        /*
+>>>                         * Remove memblock from the end of usable area to the
+>>> @@ -269,7 +276,7 @@ static phys_addr_t __init alloc_pmd(uintptr_t va)
+>>>        if (mmu_enabled)
+>>>                return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+>>>
+>>> -     pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
+>>> +     pmd_num = (va - kernel_virt_addr) >> PGDIR_SHIFT;
+> 
+> Here is the same, please use PAGE_OFFSET instead of kernel_virt_addr.
+> 
+>>>        BUG_ON(pmd_num >= NUM_EARLY_PMDS);
+>>>        return (uintptr_t)&early_pmd[pmd_num * PTRS_PER_PMD];
+>>>   }
+>>> @@ -370,6 +377,54 @@ static uintptr_t __init best_map_size(phys_addr_t base, phys_addr_t size)
+>>>   #error "setup_vm() is called from head.S before relocate so it should not use absolute addressing."
+>>>   #endif
+>>>
+>>> +#ifdef CONFIG_RELOCATABLE
+>>> +extern unsigned long __rela_dyn_start, __rela_dyn_end;
+>>> +
+>>> +#ifdef CONFIG_64BIT
+>>> +#define Elf_Rela Elf64_Rela
+>>> +#define Elf_Addr Elf64_Addr
+>>> +#else
+>>> +#define Elf_Rela Elf32_Rela
+>>> +#define Elf_Addr Elf32_Addr
+>>> +#endif
+>>> +
+>>> +void __init relocate_kernel(uintptr_t load_pa)
+>>> +{
+>>> +     Elf_Rela *rela = (Elf_Rela *)&__rela_dyn_start;
+>>> +     uintptr_t link_addr = _AC(CONFIG_PAGE_OFFSET, UL);
+>>> +     /*
+>>> +      * This holds the offset between the linked virtual address and the
+>>> +      * relocated virtual address.
+>>> +      */
+>>> +     uintptr_t reloc_offset = kernel_virt_addr - link_addr;
+>>> +     /*
+>>> +      * This holds the offset between linked virtual address and physical
+>>> +      * address whereas va_pa_offset holds the offset between relocated
+>>> +      * virtual address and physical address.
+>>> +      */
+>>> +     uintptr_t va_link_pa_offset = link_addr - load_pa;
+>>> +
+>>> +     for ( ; rela < (Elf_Rela *)&__rela_dyn_end; rela++) {
+>>> +             Elf_Addr addr = (rela->r_offset - va_link_pa_offset);
+>>> +             Elf_Addr relocated_addr = rela->r_addend;
+>>> +
+>>> +             if (rela->r_info != R_RISCV_RELATIVE)
+>>> +                     continue;
+>>
+>> This should at least provide a warning when it encounters an unresolvable
+>> relocation.  Is it currently stands this just ignores all other runtime
+>> relocations, and while I can buy the argument there shouldn't be any (though
+>> I'd expect R_RISCV_{32,64} to show up?) we certainly shouldn't just silently
+>> skip them.
+>>
+>>> +
+>>> +             /*
+>>> +              * Make sure to not relocate vdso symbols like rt_sigreturn
+>>> +              * which are linked from the address 0 in vmlinux since
+>>> +              * vdso symbol addresses are actually used as an offset from
+>>> +              * mm->context.vdso in VDSO_OFFSET macro.
+>>> +              */
+>>> +             if (relocated_addr >= link_addr)
+>>> +                     relocated_addr += reloc_offset;
+>>> +
+>>> +             *(Elf_Addr *)addr = relocated_addr;
+>>> +     }
+>>> +}
+>>> +#endif
+>>> +
+>>>   asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+>>>   {
+>>>        uintptr_t va, end_va;
+>>> @@ -377,9 +432,20 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+>>>        uintptr_t load_sz = (uintptr_t)(&_end) - load_pa;
+>>>        uintptr_t map_size = best_map_size(load_pa, MAX_EARLY_MAPPING_SIZE);
+>>>
+>>> -     va_pa_offset = PAGE_OFFSET - load_pa;
+>>> +     va_pa_offset = kernel_virt_addr - load_pa;
+>>>        pfn_base = PFN_DOWN(load_pa);
+>>>
+>>> +#ifdef CONFIG_RELOCATABLE
+>>> +     /*
+>>> +      * Early page table uses only one PGDIR, which makes it possible
+>>> +      * to map 1GB aligned on 1GB: if the relocation offset makes the kernel
+>>> +      * cross over a 1G boundary, raise a bug since a part of the kernel
+>>> +      * would not get mapped.
+>>> +      */
+>>> +     BUG_ON(SZ_1G - (kernel_virt_addr & (SZ_1G - 1)) < load_sz);
+>>> +     relocate_kernel(load_pa);
+>>> +#endif
+>>> +
+>>>        /*
+>>>         * Enforce boot alignment requirements of RV32 and
+>>>         * RV64 by only allowing PMD or PGD mappings.
+>>> @@ -387,7 +453,7 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+>>>        BUG_ON(map_size == PAGE_SIZE);
+>>>
+>>>        /* Sanity check alignment and size */
+>>> -     BUG_ON((PAGE_OFFSET % PGDIR_SIZE) != 0);
+>>> +     BUILD_BUG_ON((_AC(CONFIG_PAGE_OFFSET, UL) % PGDIR_SIZE) != 0);
+>>>        BUG_ON((load_pa % map_size) != 0);
+>>>        BUG_ON(load_sz > MAX_EARLY_MAPPING_SIZE);
+>>>
+>>> @@ -400,13 +466,13 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+>>>        create_pmd_mapping(fixmap_pmd, FIXADDR_START,
+>>>                           (uintptr_t)fixmap_pte, PMD_SIZE, PAGE_TABLE);
+>>>        /* Setup trampoline PGD and PMD */
+>>> -     create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
+>>> +     create_pgd_mapping(trampoline_pg_dir, kernel_virt_addr,
+>>>                           (uintptr_t)trampoline_pmd, PGDIR_SIZE, PAGE_TABLE);
+>>> -     create_pmd_mapping(trampoline_pmd, PAGE_OFFSET,
+>>> +     create_pmd_mapping(trampoline_pmd, kernel_virt_addr,
+>>>                           load_pa, PMD_SIZE, PAGE_KERNEL_EXEC);
+>>>   #else
+>>>        /* Setup trampoline PGD */
+>>> -     create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
+>>> +     create_pgd_mapping(trampoline_pg_dir, kernel_virt_addr,
+>>>                           load_pa, PGDIR_SIZE, PAGE_KERNEL_EXEC);
+>>>   #endif
+>>>
+>>> @@ -415,10 +481,10 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+>>>         * us to reach paging_init(). We map all memory banks later
+>>>         * in setup_vm_final() below.
+>>>         */
+>>> -     end_va = PAGE_OFFSET + load_sz;
+>>> -     for (va = PAGE_OFFSET; va < end_va; va += map_size)
+>>> +     end_va = kernel_virt_addr + load_sz;
+>>> +     for (va = kernel_virt_addr; va < end_va; va += map_size)
+>>>                create_pgd_mapping(early_pg_dir, va,
+>>> -                                load_pa + (va - PAGE_OFFSET),
+>>> +                                load_pa + (va - kernel_virt_addr),
+>>>                                   map_size, PAGE_KERNEL_EXEC);
+>>>
+>>>        /* Create fixed mapping for early FDT parsing */
+>>> @@ -457,9 +523,9 @@ static void __init setup_vm_final(void)
+>>>                        break;
+>>>                if (memblock_is_nomap(reg))
+>>>                        continue;
+>>> -             if (start <= __pa(PAGE_OFFSET) &&
+>>> -                 __pa(PAGE_OFFSET) < end)
+>>> -                     start = __pa(PAGE_OFFSET);
+>>> +             if (start <= __pa_symbol(kernel_virt_addr) &&
+>>> +                 __pa(kernel_virt_addr) < end)
+>>> +                     start = __pa_symbol(kernel_virt_addr);
+> 
+> Here is the same, please use PAGE_OFFSET instead of kernel_virt_addr.
+> 
+>>>
+>>>                map_size = best_map_size(start, end - start);
+>>>                for (pa = start; pa < end; pa += map_size) {
+
+Thanks,
+
+Alex
