@@ -7,25 +7,26 @@ X-Spam-Status: No, score=-10.8 required=3.0
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DE8C4332D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 08:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0ACC4332D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 09:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 128BE20753
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 08:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A85220753
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 09:01:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgCVI7j (ORCPT
+        id S1726902AbgCVJBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 04:59:39 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:56471 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgCVI7j (ORCPT
+        Sun, 22 Mar 2020 05:01:24 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:42125 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgCVJBY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 04:59:39 -0400
+        Sun, 22 Mar 2020 05:01:24 -0400
+X-Originating-IP: 86.202.105.35
 Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 26DDB24000B;
-        Sun, 22 Mar 2020 08:59:32 +0000 (UTC)
-Date:   Sun, 22 Mar 2020 09:59:31 +0100
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 70DCAC0005;
+        Sun, 22 Mar 2020 09:01:16 +0000 (UTC)
+Date:   Sun, 22 Mar 2020 10:01:16 +0100
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: <soc.lore.kernel.org>
 To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
@@ -33,8 +34,8 @@ To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
 Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
         Ludovic Desroches <ludovic.desroches@microchip.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ARM: at91: DT for 5.7
-Message-ID: <20200322085931.GA208770@piout.net>
+Subject: [GIT PULL] ARM: at91: SoC for 5.7
+Message-ID: <20200322090116.GA208895@piout.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -45,8 +46,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Arnd, Olof,
 
-Very few DT updates this cycle. I've filled in the google doc as you
-requested.
+A bigger update than usual, reworking the PM code to support sam9x60.
+I've filled in the google doc as you requested.
 
 The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
@@ -54,52 +55,39 @@ The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux tags/at91-5.7-dt
+  git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux tags/at91-5.7-soc
 
-for you to fetch changes up to b8c2c052de210d23d83eb178fa030b541ca51842:
+for you to fetch changes up to bb1a0e87e1c54cd884e9b92b1cec06b186edc7a0:
 
-  ARM: dts: at91: sama5d27_wlsom1_ek: add USB device node (2020-03-20 23:58:14 +0100)
-
-----------------------------------------------------------------
-AT91 DT for 5.7
-
- - Enable watchdog on sam9x60
- - Correct sama5d4/2 RTC compatibles
- - Add i2c gpio pinctrl to allow i2c recovery
+  ARM: at91: pm: add quirk for sam9x60's ulp1 (2020-02-18 21:47:54 +0100)
 
 ----------------------------------------------------------------
-Alexandre Belloni (2):
-      ARM: dts: at91: sama5d2: use correct rtc compatible
-      ARM: dts: at91: sama5d4: use correct rtc compatible
+AT91 SoC for 5.7
 
-Cristian Birsan (1):
-      ARM: dts: at91: sama5d27_wlsom1_ek: add USB device node
+ - Rework PM to support sam9x60
 
-Eugen Hristev (2):
-      ARM: dts: at91: sam9x60: add watchdog node
-      ARM: dts: at91: sam9x60ek: enable watchdog node
+----------------------------------------------------------------
+Claudiu Beznea (8):
+      ARM: at91: pm: use proper master clock register offset
+      ARM: at91: pm: revert do not disable/enable PLLA for ULP modes
+      ARM: at91: pm: add macros for plla disable/enable
+      ARM: at91: pm: add pmc_version member to at91_pm_data
+      ARM: at91: pm: s/sfr/sfrbu in pm_suspend.S
+      clk: at91: move sam9x60's PLL register offsets to PMC header
+      ARM: at91: pm: add plla disable/enable support for sam9x60
+      ARM: at91: pm: add quirk for sam9x60's ulp1
 
-Kamel Bouhara (3):
-      ARM: dts: at91: sama5d3: add i2c gpio pinctrl
-      ARM: dts: at91: sama5d4: add i2c gpio pinctrl
-      ARM: dts: at91: sama5d2: add i2c gpio pinctrl
+Geert Uytterhoeven (1):
+      ARM: at91: Drop unneeded select of COMMON_CLK
 
-Rob Herring (1):
-      ARM: dts: at91: Kill off "simple-panel" compatibles
-
- arch/arm/boot/dts/at91-dvk_su60_somc_lcm.dtsi |  2 +-
- arch/arm/boot/dts/at91-sam9x60ek.dts          |  5 ++++
- arch/arm/boot/dts/at91-sama5d27_wlsom1_ek.dts | 12 +++++++++
- arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts     | 33 ++++++++++++++++++++++---
- arch/arm/boot/dts/at91-sama5d2_xplained.dts   | 33 ++++++++++++++++++++++---
- arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts   |  2 +-
- arch/arm/boot/dts/at91sam9n12ek.dts           |  2 +-
- arch/arm/boot/dts/at91sam9x5dm.dtsi           |  2 +-
- arch/arm/boot/dts/sam9x60.dtsi                |  8 ++++++
- arch/arm/boot/dts/sama5d2.dtsi                |  2 +-
- arch/arm/boot/dts/sama5d3.dtsi                | 33 ++++++++++++++++++++++---
- arch/arm/boot/dts/sama5d4.dtsi                | 35 ++++++++++++++++++++++++---
- 12 files changed, 151 insertions(+), 18 deletions(-)
+ arch/arm/mach-at91/Kconfig           |   1 -
+ arch/arm/mach-at91/pm.c              |  35 ++++++-
+ arch/arm/mach-at91/pm.h              |   2 +
+ arch/arm/mach-at91/pm_data-offsets.c |   4 +
+ arch/arm/mach-at91/pm_suspend.S      | 189 ++++++++++++++++++++++++++++++++---
+ drivers/clk/at91/clk-sam9x60-pll.c   |  91 +++++++----------
+ include/linux/clk/at91_pmc.h         |  23 +++++
+ 7 files changed, 270 insertions(+), 75 deletions(-)
 
 -- 
 Alexandre Belloni, Bootlin
