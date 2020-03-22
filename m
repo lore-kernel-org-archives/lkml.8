@@ -2,84 +2,109 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A6CC4332D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 00:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631F3C4332D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 00:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4F4D20767
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 00:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4193120767
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 00:32:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgCVAZn (ORCPT
+        id S1728219AbgCVAcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 20:25:43 -0400
-Received: from mga14.intel.com ([192.55.52.115]:30447 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727296AbgCVAZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 20:25:43 -0400
-IronPort-SDR: LU5tnGu79NI8ftd9DyBlDFfWc9lECniFP14v4zMKMHwf7tUaqe4yThJJpwniz3gXhdh+Z8by09
- j620MPSDGT7w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 17:25:43 -0700
-IronPort-SDR: xxcblHMX2RBUykp4thoYSybBcZ9e/GoEScu8af4cI/GdBdJGgLUMtPkHogh2/F3OPZGlhfYb+L
- wKTOFtak/WxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,290,1580803200"; 
-   d="scan'208";a="325223523"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 21 Mar 2020 17:25:40 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jFoQw-00BrDM-F8; Sun, 22 Mar 2020 02:25:42 +0200
-Date:   Sun, 22 Mar 2020 02:25:42 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Rohit Sarkar <rohitsarkar5398@gmail.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jic23@kernel.org, dragos.bogdan@analog.com,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>, knaack.h@gmx.de,
-        pmeerw@pmeerw.net
-Subject: Re: [PATCH] iio: gyro: adis16136: use scnprintf instead of snprintf
-Message-ID: <20200322002542.GA2826015@smile.fi.intel.com>
-References: <5e723666.1c69fb81.3545b.79c3@mx.google.com>
+        Sat, 21 Mar 2020 20:32:19 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:58026 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbgCVAcT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 20:32:19 -0400
+Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 02M0VQKJ025665;
+        Sun, 22 Mar 2020 09:31:26 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp);
+ Sun, 22 Mar 2020 09:31:26 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 02M0VLN8025536
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Sun, 22 Mar 2020 09:31:26 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: Re: [PATCH v7 2/2] KEYS: Avoid false positive ENOMEM error on key
+ read
+To:     Waiman Long <longman@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+References: <20200321184932.16579-1-longman@redhat.com>
+ <20200321184932.16579-3-longman@redhat.com>
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Message-ID: <e3d7a227-8915-5c00-cd34-fe2db7fc7121@I-love.SAKURA.ne.jp>
+Date:   Sun, 22 Mar 2020 09:31:21 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5e723666.1c69fb81.3545b.79c3@mx.google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200321184932.16579-3-longman@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 08:25:22PM +0530, Rohit Sarkar wrote:
-> scnprintf returns the actual number of bytes written into the buffer as
-> opposed to snprintf which returns the number of bytes that would have
-> been written if the buffer was big enough. Using the output of snprintf
-> may lead to difficult to detect bugs.
+On 2020/03/22 3:49, Waiman Long wrote:
+> +	do {
 
-Nice. Have you investigate the code?
+> +		if (ret > key_data_len) {
+> +			if (unlikely(key_data))
+> +				__kvzfree(key_data, key_data_len);
+> +			key_data_len = ret;
+> +			continue;	/* Allocate buffer */
 
-> @@ -96,7 +96,7 @@ static ssize_t adis16136_show_serial(struct file *file,
->  	if (ret)
->  		return ret;
->  
-> -	len = snprintf(buf, sizeof(buf), "%.4x%.4x%.4x-%.4x\n", lot1, lot2,
-> +	len = scnprintf(buf, sizeof(buf), "%.4x%.4x%.4x-%.4x\n", lot1, lot2,
->  		lot3, serial);
->  
->  	return simple_read_from_buffer(userbuf, count, ppos, buf, len);
+Excuse me, but "continue;" inside "do { ... } while (0);" means "break;"
+because "while (0)" is evaluated before continuing the loop.
 
-The buffer size is 20, the pattern size I count to 19. Do you think snprintf()
-can fail?
+----------
+#include <stdio.h>
 
--- 
-With Best Regards,
-Andy Shevchenko
+int main(int argc, char *argv[])
+{
+        do {
+                printf("step 1\n");
+                if (1) {
+                        printf("step 2\n");
+                        continue;
+                }
+                printf("step 3\n");
+        } while (0);
+        printf("step 4\n");
+        return 0;
+}
+----------
 
+----------
+step 1
+step 2
+step 4
+----------
 
+> +		}
+
+> +	} while (0);
