@@ -2,116 +2,72 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1214AC4332D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 04:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F28C4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 04:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB67120719
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 04:07:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584850059;
-	bh=MmzjRpd1cA3MkO3jSisu6OnNkmFy4CJs3TYnE1Yhpxk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gtSmuzpE9lOGooAC3zK9VEBtr45x9WVUUS822VlFbM3nKQSp+OujDceoU8MW1YYdD
-	 nuMxAxaWp2j2bkD0d6+T/8gZC5rJmn8b71e7nYqrQqDqFqCpZTPo+WgS58quv6yGdx
-	 oWIVo9byJ+rEeYDcxfgIoQL8DNsXgcLxtwwnDwfY=
+	by mail.kernel.org (Postfix) with ESMTP id D354620719
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 04:12:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dpEJQIKP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725797AbgCVEHV (ORCPT
+        id S1726538AbgCVEMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 00:07:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgCVEHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 00:07:20 -0400
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF4CC20722
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 04:07:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584850040;
-        bh=MmzjRpd1cA3MkO3jSisu6OnNkmFy4CJs3TYnE1Yhpxk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wtvXqWUSVy7uWtMRU4TUWbVyM+S83YisbvHE4bn4cf2aWyhh3J9BU4fKao3LtT10/
-         qOWpclXK6LbHYWs73DiXxzkRk18GsIUGke5xKWwhmf7jWteTIg22N0LlnXlDGiN9kz
-         PmQHGFmkHmBBq8KffoHg4jwXhLb1aR/IvGHFdOsA=
-Received: by mail-wr1-f44.google.com with SMTP id j17so8900824wru.13
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 21:07:19 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3pIYb4Ecpv4y0/Hfzqh/U/D4kQimdVY3Gdj2SEx5od89G6n9fX
-        +XtJy+ZJUcTi503m6tbjPGjVvX4TbFgIa9aJCU+KiA==
-X-Google-Smtp-Source: ADFU+vuIo9ggwxg/8xm/9AW7+XAYhr2y2WU/yYstA9S7KJUbcRq3645kOveaAHy/EOo+hVBC29MXG8CIyh8+DNKhLLE=
-X-Received: by 2002:adf:df8f:: with SMTP id z15mr20651687wrl.184.1584850038167;
- Sat, 21 Mar 2020 21:07:18 -0700 (PDT)
+        Sun, 22 Mar 2020 00:12:13 -0400
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:39535 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725271AbgCVEMM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 00:12:12 -0400
+Received: by mail-vk1-f194.google.com with SMTP id r129so2881773vkr.6;
+        Sat, 21 Mar 2020 21:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SZhbSsWH3Nd28xNaH9H1iKoB8x/tihaQFiafijcYuWo=;
+        b=dpEJQIKP7FWxh6J4Z1n90Vtb2qSU4QCUF6i/YKT2t7xjElB3L5Zp70CJNvV7s5wlqE
+         z0HL8fqQsSztYtyU9ngFAo/b+XfJ7gUBv2NGeY9j6/UfBLSf6TGxuo5jinv5R0m8RlTC
+         Ym+yvMLf59g0FfI6xVlZ6FNY4cpzxOvdd1EQUGwMF/MVjPwbwbhxNx6P5Xcr63h4kIV3
+         GT2PFZFhNQ3l3rAJTqd0tvXP8+BtD4SkP3zIQaE3KN7v2mn7SZwFf3cWL5167jq49o1o
+         4s3YCTvrQEk4Yu3wDXoqUstsfa49ODDj1ulNNiR3MFKu4QL1ESWZte75FCF07w5R9GSi
+         jXFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SZhbSsWH3Nd28xNaH9H1iKoB8x/tihaQFiafijcYuWo=;
+        b=rVZ2R7ybJRtuTINLzn40Ck3wrkcxbim1QRXR4GDBhazMUQbVfW1NbinoO4hS+vSfJ/
+         ffWrofkPBOgMl1LsV0b1GOqt3K0eCUFHFmf42Zp4WzsAWY/GwzooPykLPjXSUDEkQwwt
+         bEvGENI6IzVbXHjOab5LAI3HJdw9QjKydvHKfqmOeA8cnmV2axGtilIkY+uy4Wx4hEfW
+         ysAVIcETHBpG5AAZtTvClpwmw4fwr9FBI1SwDOzn+so2RbbwAuy0XN4vYW+B1O3jIjsP
+         GGwWfunO6hhdxZB4Pt2f9CUcLVyz+09Mt+74kuNHWnpadmzZZckXGAi/yrjKScwYcSg3
+         KQqA==
+X-Gm-Message-State: ANhLgQ3aSNPizu2Kfa2WTMOWdmiQiVg/ebXjx7Gs0pdOUD2FfDi9MGsP
+        UVUAiQ4g/EX+Sck2amwxxWNyb6ba9twP57euWRE=
+X-Google-Smtp-Source: ADFU+vsS91fN7bZOUZ7YiLvDMR/ru1lFo1M5djZemNARcBG+g71rMTCsKgNqksfgobUXwrvgRR3rujBIRAxxZVumqD8=
+X-Received: by 2002:ac5:c1ca:: with SMTP id g10mr11197264vkk.16.1584850331664;
+ Sat, 21 Mar 2020 21:12:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200312231222.81861-1-andi@firstfloor.org> <87sgi1rcje.fsf@nanos.tec.linutronix.de>
- <202003211916.8078081E0@keescook>
-In-Reply-To: <202003211916.8078081E0@keescook>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sat, 21 Mar 2020 21:07:07 -0700
-X-Gmail-Original-Message-ID: <CALCETrVYSBBtjyBSsHYirKf5eL+YTcLJAnh3W2krxU+uMET8uA@mail.gmail.com>
-Message-ID: <CALCETrVYSBBtjyBSsHYirKf5eL+YTcLJAnh3W2krxU+uMET8uA@mail.gmail.com>
-Subject: Re: [PATCH] x86/speculation: Allow overriding seccomp speculation disable
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andi Kleen <andi@firstfloor.org>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, Will Drewry <wad@chromium.org>
+References: <00000000000088452f05a07621d2@google.com>
+In-Reply-To: <00000000000088452f05a07621d2@google.com>
+From:   Qiujun Huang <anenbupt@gmail.com>
+Date:   Sun, 22 Mar 2020 12:11:58 +0800
+Message-ID: <CADG63jB59ZXWSUFKieXKGGEbPT9=z5OPARBjGqMgfh+K-k4-yQ@mail.gmail.com>
+Subject: Re: WARNING: refcount bug in sctp_wfree
+To:     syzbot <syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
+        netdev@vger.kernel.org, nhorman@tuxdriver.com,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 7:29 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Sat, Mar 21, 2020 at 03:46:29PM +0100, Thomas Gleixner wrote:
-> > Cc+: Seccomp maintainers ....
->
-> Thanks!
->
-> > Andi Kleen <andi@firstfloor.org> writes:
-> > > [...]
-> > >
-> > > Longer term we probably need to discuss if the seccomp heuristic
-> > > is still warranted and should be perhaps changed. It seemed
-> > > like a good idea when these vulnerabilities were new, and
-> > > no web browsers supported site isolation. But with site isolation
-> > > widely deployed -- Chrome has it on by default, and as I understand
-> > > it, Firefox is going to enable it by default soon. And other seccomp
-> > > users (like sshd or systemd) probably don't really need it.
-> > > Given that it's not clear the default heuristic is still a good
-> > > idea.
-> > >
-> > > But anyways this patch doesn't change any defaults, just
-> > > let's applications override it.
-> >
-> > It changes the enforcement and I really want the seccomp people to have
-> > a say here.
->
-> None of this commit makes sense to me. :)
->
-> The point of the defaults was to grandfather older seccomp users into
-> speculation mitigations. Newly built seccomp users can choose to disable
-> this with SECCOMP_FILTER_FLAG_SPEC_ALLOW when applying seccomp filters.
-> The rationale was that once a process knows how to manage its exposure,
-> it can choose to leave off the automatic enabling. I don't see any
-> mention of that method in the commit log, so if there is some reason
-> it's not workable, that would need to be discussed first.
-
-Agreed.
-
-
->
-> And the force disable matches the design goals of seccomp: no applied
-> restrictions can be later relaxed for a process. I'm more in favor of
-> changing the behavior of SPEC_STORE_BYPASS_CMD_AUTO, but probably not for
-> another 3 years at least. (To get us to at least 5 years since Meltdown,
-> which is relatively close to various longer LTS cycles.)
->
-> -Kees
->
-> --
-> Kees Cook
+#syz test: https://github.com/hqj/hqjagain_test.git sctp_for_each_tx_datachunk
