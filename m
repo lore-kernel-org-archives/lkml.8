@@ -2,65 +2,91 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDEEC4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEA2C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C050E2072E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:34:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0RpHDXnc"
+	by mail.kernel.org (Postfix) with ESMTP id 1345B2072E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:34:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584891290;
+	bh=UCXXOiIFzG5USxwTHZk7yE+L13xN0ZWV3Sj+DrUNxoA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=H64v2br4RBiGf54tx4t/kkDIZ66aVVjUEn5+ZAXKqB5HGoN8UpyaoqMCzLTMkiqBA
+	 I6tsohRHuRPAwXheVDYZ7pJKVNkHrbOHW5YWaBRy3ZczOg6ULKECE77mWnXVKBwt36
+	 e9lhyvqe90L85ePONsUzzzsmSSVpAQ3MUhdp4AfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgCVPe1 (ORCPT
+        id S1726971AbgCVPes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 11:34:27 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:50308 "EHLO vps0.lunn.ch"
+        Sun, 22 Mar 2020 11:34:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbgCVPe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 11:34:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=s4KFQDd4eawKJE0/3oZUP1iM0XwdGMsfHIRqHpKxyX4=; b=0RpHDXnckZ7FpvcUzCGyLRkBBQ
-        MsvP3J6JQaNoXOGqBFrqZoKGOJQQuDfvf3731Vw6enZ3SidPSuk5YOwsbmRxqRhMz6D/tXVP33oA2
-        Quk2VPIy1lJ645xPCnp0apAiV5Q7fqR6W4x/6+7ctMIcZMYh1WMCc/LktqVZod+okfGQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jG2cD-0000YM-DB; Sun, 22 Mar 2020 16:34:17 +0100
-Date:   Sun, 22 Mar 2020 16:34:17 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        broonie@kernel.org, alexios.zavras@intel.com, tglx@linutronix.de,
-        mchehab+samsung@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v4 5/9] net: phy: aquantia: use
- phy_read_mmd_poll_timeout() to simplify the code
-Message-ID: <20200322153417.GN11481@lunn.ch>
-References: <20200322065555.17742-1-zhengdejin5@gmail.com>
- <20200322065555.17742-6-zhengdejin5@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200322065555.17742-6-zhengdejin5@gmail.com>
+        id S1725785AbgCVPes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 11:34:48 -0400
+Received: from DESKTOP-GFFITBK.localdomain (218-161-90-76.HINET-IP.hinet.net [218.161.90.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F5E320714;
+        Sun, 22 Mar 2020 15:34:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584891288;
+        bh=UCXXOiIFzG5USxwTHZk7yE+L13xN0ZWV3Sj+DrUNxoA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ho8dXUpFLrv7BWu3u7E2TB++p0MLIf6s67sN+3RlOwvBi+4Xr+/UVlQrTvgwQMzjs
+         UQ53mbl7I9awnG7V3B2cf/38GwUdGo12q5guF1ymzPTb00RbAKYdMd+3L5SMy+dxlg
+         7iES2r/rJIzvnYjkpTAEZATydgwN6iYoGlBUIxJE=
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Subject: [PATCH 0/4] Move Mediatek HDMI PHY driver from DRM folder to PHY folder
+Date:   Sun, 22 Mar 2020 23:34:20 +0800
+Message-Id: <20200322153424.2447-1-chunkuang.hu@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 02:55:51PM +0800, Dejin Zheng wrote:
-> use phy_read_mmd_poll_timeout() to replace the poll codes for
-> simplify aqr107_wait_reset_complete() function.
-> 
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+mtk_hdmi_phy is currently placed inside mediatek drm driver, but it's
+more suitable to place a phy driver into phy driver folder, so move
+mtk_hdmi_phy driver into phy driver folder.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+CK Hu (3):
+  drm/mediatek: Move tz_disabled from mtk_hdmi_phy to mtk_hdmi driver
+  drm/mediatek: Separate mtk_hdmi_phy to an independent module
+  drm/mediatek: Move mtk_hdmi_phy driver into drivers/phy/mediatek
+    folder
 
-    Andrew
+Chun-Kuang Hu (1):
+  MAINTAINERS: add files for Mediatek DRM drivers
+
+ MAINTAINERS                                   |  1 +
+ drivers/gpu/drm/mediatek/Kconfig              |  2 +-
+ drivers/gpu/drm/mediatek/Makefile             |  5 +---
+ drivers/gpu/drm/mediatek/mtk_hdmi.c           | 23 +++++++++++++++----
+ drivers/gpu/drm/mediatek/mtk_hdmi.h           |  1 -
+ drivers/phy/mediatek/Kconfig                  |  7 ++++++
+ drivers/phy/mediatek/Makefile                 |  7 ++++++
+ .../mediatek/phy-mtk-hdmi-mt2701.c}           |  3 +--
+ .../mediatek/phy-mtk-hdmi-mt8173.c}           |  2 +-
+ .../mediatek/phy-mtk-hdmi.c}                  |  3 ++-
+ .../mediatek/phy-mtk-hdmi.h}                  |  2 --
+ 11 files changed, 40 insertions(+), 16 deletions(-)
+ rename drivers/{gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c => phy/mediatek/phy-mtk-hdmi-mt2701.c} (99%)
+ rename drivers/{gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c => phy/mediatek/phy-mtk-hdmi-mt8173.c} (99%)
+ rename drivers/{gpu/drm/mediatek/mtk_hdmi_phy.c => phy/mediatek/phy-mtk-hdmi.c} (98%)
+ rename drivers/{gpu/drm/mediatek/mtk_hdmi_phy.h => phy/mediatek/phy-mtk-hdmi.h} (95%)
+
+-- 
+2.17.1
+
