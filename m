@@ -2,92 +2,107 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6775C4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D953DC54FCF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6507120724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA8B20724
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:16:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Nor6zKKF"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gFETB48t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgCVRFB (ORCPT
+        id S1726756AbgCVRQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 13:05:01 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:33021 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbgCVRFA (ORCPT
+        Sun, 22 Mar 2020 13:16:00 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4620 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgCVRP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 13:05:00 -0400
-Received: by mail-pj1-f68.google.com with SMTP id dw20so4926463pjb.0
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 10:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=fRx3KO2qD4+O5ApjJxU5X5/ulUb2Awba8fbTnXXL7JY=;
-        b=Nor6zKKF4GDfP3V+tc3dvu7Pcj2yzCbQ6bzSD7U3UHV8QpznP2UHkedBDzexXLAc8X
-         Ea99OdKUA6yrcbQ23/2BWpOsm5IGI4Xc3pFGTJzopkzOAdSNt69KgD3geDcx92L6faQI
-         Ytu7ycbG3v6XLOj0jwlA7hUb6+ev5CS/HajOrOlTQN6M4RYfCFTW4gWIAPE7QGvY0AMU
-         OOEni94M51O18A7wBy5mizj9n3cOmCl3tL0hYte9CMuItgHYvoplMy1CqU+SDt1kmX2J
-         Mtdl7N7doiXRdMtsmNcPAwgtrixwvx2Vr2veJk9ihpkWmKIyTjTEsAM4Bjk+SD+JkQ6A
-         VG1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fRx3KO2qD4+O5ApjJxU5X5/ulUb2Awba8fbTnXXL7JY=;
-        b=FBPr3mtTdvo85saRs0ufku0Bx6CMf32Cp65UPpbHgP9TYIja/Xj5Z4l9MKjlL9eYOf
-         +KnVMjtAuCKxyJMWRJD91/cHn2Lz0hnZF5fTE/bfdsZlTiEPxlAiLH/41ChzsL40cb72
-         X9CEXSYBn5eWA0/JyowOlUrst//DG8E4/JhYBSZe1GCicfcPDHjKcCMOFPMG85MyGOoa
-         N0m4Hp8BeM6kJRiUineDdZO9CobtSTf5L13tDCVEt2RQ4pu5fCuRPZOdRPWSOLoqAeIu
-         EfTOI+mM4SZgS65R0TyRlpqcGcigMrSxmi62c7weYgIMNRPKa630TOy0kpMcr+F7T+MD
-         Ef4w==
-X-Gm-Message-State: ANhLgQ1WFAlmwP5dUMTsOB8XuMxIsmAEW3Wb+nu+Q8nJPl2JekVTiEco
-        2M5ahloG8LT3SIeVw9t6tNzvdMZk4680gg==
-X-Google-Smtp-Source: ADFU+vtpK8jhMAOPtr/h6vSmBHcZX31XZyST3vX0GDj4Z26MUGDns4bnWf3+wMziOsDOxmQpa+VHnA==
-X-Received: by 2002:a17:90a:22a9:: with SMTP id s38mr20311200pjc.3.1584896698331;
-        Sun, 22 Mar 2020 10:04:58 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id g69sm9884859pje.34.2020.03.22.10.04.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Mar 2020 10:04:57 -0700 (PDT)
-Subject: Re: [PATCH 1/1] io-wq: close cancel gap for hashed linked work
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <b9bc821a0ff3bc52a60281d8a9005dff93f6dcc3.1584893591.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <c7f352b4-0255-d87a-1fb4-0b55984df137@kernel.dk>
-Date:   Sun, 22 Mar 2020 11:04:55 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 22 Mar 2020 13:15:59 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e779d410000>; Sun, 22 Mar 2020 10:15:45 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 22 Mar 2020 10:15:59 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 22 Mar 2020 10:15:59 -0700
+Received: from [10.25.74.3] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 22 Mar
+ 2020 17:15:53 +0000
+Subject: Re: [PATCH V5 5/5] PCI: tegra: Add support for PCIe endpoint mode in
+ Tegra194
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>, <kishon@ti.com>,
+        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20200303181052.16134-1-vidyas@nvidia.com>
+ <20200303181052.16134-6-vidyas@nvidia.com>
+ <20200322145020.GA2040@roeck-us.net>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <7e6a9643-fcdb-fd80-8e84-2983975889a9@nvidia.com>
+Date:   Sun, 22 Mar 2020 22:45:50 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <b9bc821a0ff3bc52a60281d8a9005dff93f6dcc3.1584893591.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200322145020.GA2040@roeck-us.net>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1584897345; bh=81yKHmaHyYQhIkyTLm3XouWH6+1+9Fc4JlQx9GW85L4=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=gFETB48tFJt3O4znt+n+8BergJZyU/hJhpkPWPbWEwB7677kL5v+g4hCX6S+pKQgV
+         XmHKtxcoChOqmxXenlsxoShjUOrRnchD2riZJT3MlWURxtx+cUEet9WRbL2ocDweXQ
+         8LrAplGao1MB3D8NDqDMkS5c+/hegqiJ6w/qIVczuJ484lwQq0tDK1cnGLDdPMGOa3
+         X6zmpemmwLFb3trGY/Y6sGkuINsuHjIu9PJD1X5E7izg0i63z3hAjrRZlG3xXmGxjj
+         xOZurhnggZUOXDlYNUwa/tlOCjAKUC1qk1jVEj4rziEWtQx5UrrhEPXBA+eVL2Z71Q
+         8GlTBqlqVo46A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/22/20 10:14 AM, Pavel Begunkov wrote:
-> After io_assign_current_work() of a linked work, it can be decided to
-> offloaded to another thread so doing io_wqe_enqueue(). However, until
-> next io_assign_current_work() it can be cancelled, that isn't handled.
+
+
+On 3/22/2020 8:20 PM, Guenter Roeck wrote:
+> External email: Use caution opening links or attachments
 > 
-> Don't assign it, if it's not going to be executed.
+> 
+> On Tue, Mar 03, 2020 at 11:40:52PM +0530, Vidya Sagar wrote:
+>> Add support for the endpoint mode of Synopsys DesignWare core based
+>> dual mode PCIe controllers present in Tegra194 SoC.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+> 
+> ERROR: modpost: "dw_pcie_ep_init" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+> ERROR: modpost: "dw_pcie_ep_linkup" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+> ERROR: modpost: "dw_pcie_ep_init_notify" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+> ERROR: modpost: "dw_pcie_ep_init_complete" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+> 
+> Either the symbols must be exported, or the driver's Kconfig entry must be
+> bool, not tristate.
+Qiujun has already posted a patch to fix it @ 
+http://patchwork.ozlabs.org/patch/1258659/
 
-This needs a Fixes: line as well. I'm guessing like this:
-
-Fixes: 60cf46ae6054 ("io-wq: hash dependent work")
-
-but I didn't look too closely yet... Fix looks good, though.
-
--- 
-Jens Axboe
-
+Thanks,
+Vidya Sagar
+> 
+> Guenter
+> 
