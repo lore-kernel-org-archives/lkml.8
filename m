@@ -2,94 +2,168 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92917C43333
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 04:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C112C4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 04:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67FCD206F9
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 04:31:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584851508;
-	bh=+5nxVvLDglesqKoMyyHWiUfsl0yEfapg6YZP612YgTo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=hcy7OVGNGskoEVPcTcj0Dse93B09lQEO4zL/G5jRrSt1qZnWIjPjKCwCYORdqEwkn
-	 q+owwb0C/YR41kGJ260zsW9HWb34okBoVjA11ch855rHfE1UD4OjCju/C9A96TUYGP
-	 WVA6eLjOTXgqykMd6TVilq5BpQxm4oq4xSj9MvII=
+	by mail.kernel.org (Postfix) with ESMTP id 356D8206F9
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 04:33:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="sRnSlAbb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbgCVEbp (ORCPT
+        id S1727689AbgCVEdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 00:31:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60740 "EHLO mail.kernel.org"
+        Sun, 22 Mar 2020 00:33:33 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:1058 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgCVEbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 00:31:44 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86C77206F9;
-        Sun, 22 Mar 2020 04:31:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584851503;
-        bh=+5nxVvLDglesqKoMyyHWiUfsl0yEfapg6YZP612YgTo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qDazwTlAD5YbbcoB54nxxYPbplX8cKKt2CJjlCy/obCgoCHH++MpPYAP3pc4Kcywz
-         7PXsl5/3aOqw6vOoJu2R9yD9jFgVxWUk99JQaNYV8e3sl96XXLEUosrfazWkoATa2T
-         cOHzXpoUVYrJqk3haEU/rSjFvim6ogB0js00fPcE=
-Date:   Sat, 21 Mar 2020 21:31:42 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Rafael Aquini <aquini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        shuah@kernel.org, shakeelb@google.com
-Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
- false-negative errors
-Message-Id: <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
-In-Reply-To: <20200322020326.GB1068248@t490s>
-References: <20200322013525.1095493-1-aquini@redhat.com>
-        <20200321184352.826d3dba38aecc4ff7b32e72@linux-foundation.org>
-        <20200322020326.GB1068248@t490s>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1725554AbgCVEdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 00:33:32 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48lPlX6smlz9Y;
+        Sun, 22 Mar 2020 05:33:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1584851609; bh=C8e5pKmEfUU+/34pD/pB8sAms2bn/d06yI4BbHoDCfM=;
+        h=Date:From:Subject:To:Cc:From;
+        b=sRnSlAbbte+rmAkBIvOStnCK5wfC6ORRdetGOh9oQPObxbvM7b3MD5AI08Yua1+3z
+         D5ifJM3sSifPBgpVQzFbv4UTAvCFJMo09FDnaxjFyyveMrse01oDMG3Cyqlc2yD4aD
+         u5qRFswL2nOyGMOk3VMn6SxwPEKqWYEmpdYKM155oK49mjMdGOBFpWiyvlpaYOfVvB
+         ew81nrQLkZFSL3grtmwpwJGw3SJL6bImP1qe8HYLmQ5kRkBo73gGL8bauYMxb8x85h
+         O/FDRW+7Kzi6+mfJ+Ag6uzY09dd37TTbHerQp8UxGhrj0ypQrrm1hFUbENtfNkFLqJ
+         KeG7N9LkF1/dw==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Sun, 22 Mar 2020 05:33:27 +0100
+Message-Id: <55613934b7d14ae4122b648c20351b63b03a1385.1584851536.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v3] i2c: at91: support atomic write xfer
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 21 Mar 2020 22:03:26 -0400 Rafael Aquini <aquini@redhat.com> wrote:
+Implement basic support for atomic write - enough to get a simple
+write to PMIC on shutdown. Only for chips having ALT_CMD register,
+eg. SAMA5D2.
 
-> > > + * In order to sort out that race, and get the after fault checks consistent,
-> > > + * the "quick and dirty" trick below is required in order to force a call to
-> > > + * lru_add_drain_all() to get the recently MLOCK_ONFAULT pages moved to
-> > > + * the unevictable LRU, as expected by the checks in this selftest.
-> > > + */
-> > > +static void force_lru_add_drain_all(void)
-> > > +{
-> > > +	sched_yield();
-> > > +	system("echo 1 > /proc/sys/vm/compact_memory");
-> > > +}
-> > 
-> > What is the sched_yield() for?
-> >
-> 
-> Mostly it's there to provide a sleeping gap after the fault, whithout 
-> actually adding an arbitrary value with usleep(). 
-> 
-> It's not a hard requirement, but, in some of the tests I performed 
-> (whithout that sleeping gap) I would still see around 1% chance 
-> of hitting the false-negative. After adding it I could not hit
-> the issue anymore.
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+v2: remove runtime-PM usage
+    switch to readl*poll*atomic() for transfer completion wait
+v3: build fixes
+---
+ drivers/i2c/busses/i2c-at91-master.c | 69 +++++++++++++++++++++++++++-
+ 1 file changed, 67 insertions(+), 2 deletions(-)
 
-It's concerning that such deep machinery as pagevec draining is visible
-to userspace.
-
-I suppose that for consistency and correctness we should perform a
-drain prior to each read from /proc/*/pagemap.  Presumably this would
-be far too expensive.
-
-Is there any other way?  One such might be to make the MLOCK_ONFAULT
-pages bypass the lru_add_pvecs?
+diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
+index ba6fbb9c7390..10c66809df83 100644
+--- a/drivers/i2c/busses/i2c-at91-master.c
++++ b/drivers/i2c/busses/i2c-at91-master.c
+@@ -21,8 +21,10 @@
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
++#include <linux/iopoll.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+ #include <linux/platform_data/dma-atmel.h>
+ #include <linux/pm_runtime.h>
+@@ -709,6 +711,68 @@ static int at91_twi_xfer(struct i2c_adapter *adap, struct i2c_msg *msg, int num)
+ 	return ret;
+ }
+ 
++static int at91_twi_xfer_atomic(struct i2c_adapter *adap, struct i2c_msg *msg, int num)
++{
++	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
++	struct pinctrl *pins;
++	__u32 stat;
++	int ret;
++
++	/* FIXME: only single write request supported to 7-bit addr */
++	if (num != 1)
++		return -EOPNOTSUPP;
++	if (msg->flags & I2C_M_RD)
++		return -EOPNOTSUPP;
++	if (msg->flags & I2C_M_TEN)
++		return -EOPNOTSUPP;
++	if (msg->len > dev->fifo_size && msg->len > 1)
++		return -EOPNOTSUPP;
++	if (!dev->pdata->has_alt_cmd)
++		return -EOPNOTSUPP;
++
++	pins = pinctrl_get_select_default(&adap->dev);
++
++	ret = clk_prepare_enable(dev->clk);
++	if (ret)
++		goto out;
++
++	/* Clear and disable pending interrupts, such as NACK. */
++	at91_twi_read(dev, AT91_TWI_SR);
++	at91_twi_write(dev, AT91_TWI_IDR, ~0);
++
++	at91_twi_write(dev, AT91_TWI_MMR, msg->addr << 16);
++
++	if (!msg->len) {
++		at91_twi_write(dev, AT91_TWI_CR,
++			       AT91_TWI_ACMDIS | AT91_TWI_QUICK);
++	} else {
++		size_t n = msg->len;
++		__u8 *p;
++
++		at91_twi_write(dev, AT91_TWI_CR,
++				    AT91_TWI_ACMEN |
++				    AT91_TWI_THRCLR | AT91_TWI_RHRCLR);
++		at91_twi_write(dev, AT91_TWI_ACR, AT91_TWI_ACR_DATAL(n));
++		for (p = msg->buf; n--; ++p)
++			writeb_relaxed(*p, dev->base + AT91_TWI_THR);
++	}
++
++	readl_relaxed_poll_timeout_atomic(dev->base + AT91_TWI_SR, stat,
++					  stat & AT91_TWI_TXCOMP, 100,
++					  (2 + msg->len) * 1000);
++	if (stat & AT91_TWI_NACK)
++		ret = -EREMOTEIO;
++	else
++		ret = num;
++
++	clk_disable_unprepare(dev->clk);
++out:
++	if (!IS_ERR(pins))
++		pinctrl_put(pins);
++
++	return ret;
++}
++
+ /*
+  * The hardware can handle at most two messages concatenated by a
+  * repeated start via it's internal address feature.
+@@ -725,8 +789,9 @@ static u32 at91_twi_func(struct i2c_adapter *adapter)
+ }
+ 
+ static const struct i2c_algorithm at91_twi_algorithm = {
+-	.master_xfer	= at91_twi_xfer,
+-	.functionality	= at91_twi_func,
++	.master_xfer		= at91_twi_xfer,
++	.master_xfer_atomic	= at91_twi_xfer_atomic,
++	.functionality		= at91_twi_func,
+ };
+ 
+ static int at91_twi_configure_dma(struct at91_twi_dev *dev, u32 phy_addr)
+-- 
+2.20.1
 
