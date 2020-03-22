@@ -2,77 +2,138 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5CCC4332E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA82FC4332D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6AC2070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9DE22070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:48:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LK1mfyTD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbgCVCrO (ORCPT
+        id S1728330AbgCVCso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 22:47:14 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:34224 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbgCVCrO (ORCPT
+        Sat, 21 Mar 2020 22:48:44 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:50880 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728111AbgCVCso (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 22:47:14 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id AA58915ABB519;
-        Sat, 21 Mar 2020 19:47:13 -0700 (PDT)
-Date:   Sat, 21 Mar 2020 19:47:13 -0700 (PDT)
-Message-Id: <20200321.194713.2123710379405962592.davem@davemloft.net>
-To:     elder@linaro.org
-Cc:     bjorn.andersson@linaro.org, naresh.kamboju@linaro.org,
-        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] soc: qcom: ipa: kill IPA_RX_BUFFER_ORDER
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200320160220.21425-1-elder@linaro.org>
-References: <20200320160220.21425-1-elder@linaro.org>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 21 Mar 2020 19:47:13 -0700 (PDT)
+        Sat, 21 Mar 2020 22:48:44 -0400
+Received: by mail-pj1-f68.google.com with SMTP id v13so4380669pjb.0;
+        Sat, 21 Mar 2020 19:48:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DCIj8fq/q96jHYgzBLDVhdpM+eEwLuU/oTk6gStMAzM=;
+        b=LK1mfyTDiod3vlsSB3jvYdhENXRmVObA9TKK+RdbV5Vaqcge4vsH/oZSNHvc1breOt
+         DKvRGfLe0ozP3KK9/4DYascv4ARIsJM2XVKasFcJJ76DAVoT0IgrOjMcch1q2B/6iRlo
+         snzMVMlYVofZ9pJA5YQlDKFPNrGZ+d+7QISYjiEKm3OrzZX2hhIbyh+SXCQq8hk/TC2M
+         rWi+y0Dw/F6sljMzM7xy4MC1CO1UdCejB79OQgVqQB+gelMuOyA2vMSAAg87FcHR1p0E
+         Y/RmGMtvBT06ZlAA8+5Tfg+yvpVf24rG4msJvGmchVHxSA3pnOoN4G4Pen4/05f/FvSH
+         u3pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DCIj8fq/q96jHYgzBLDVhdpM+eEwLuU/oTk6gStMAzM=;
+        b=iXtcvW75yaCIaTG1c06Pb2DGjGGgJxQ/qnUBItGfygjBPKXsi1F0t+psocp2aeboHg
+         kL/DHI79aepzbR44ACNN1prnYJF8vUskH7caDEcfdULHzliZ4Qco10USElWsj1a9cPa6
+         EHe3XhSp5sSyJA3MZXdux0ksCR+Ll/2vTL5+syFsKKDrGH1syolzV7RABJaTV21aeIhG
+         IX2nD9+qup9Mi132aoTSyWB9VBQyVEQuXAs8ozsj/c+SX/WI7Fdr2VvUQ5qJ3VGlZlxB
+         934Nja1G5B8pcHWdmsDEDtSQdxsTu9vjMSgT1KQF2wryEHshsbE52XjZf4vHWlp/CrEM
+         ntVQ==
+X-Gm-Message-State: ANhLgQ0a5MwJMjT8mQBkwxjmph/uWgw/SIYzh8j+ZYj5mZ36h4NEEpvt
+        DyYFhcvAoPhHHCGhR9ug7z0=
+X-Google-Smtp-Source: ADFU+vutnZtVGO1QhqBaniTvdqYJF53udVJM+ZAyn1irF4Ke1mDcqDCkQxkomylnEkpIpLqTKxuImQ==
+X-Received: by 2002:a17:902:8508:: with SMTP id bj8mr15402454plb.309.1584845321925;
+        Sat, 21 Mar 2020 19:48:41 -0700 (PDT)
+Received: from localhost ([216.24.188.11])
+        by smtp.gmail.com with ESMTPSA id my15sm8429921pjb.28.2020.03.21.19.48.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 21 Mar 2020 19:48:41 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, davem@davemloft.net, allison@lohutok.net,
+        tglx@linutronix.de, gregkh@linuxfoundation.org,
+        mchehab+samsung@kernel.org, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH net-next v3 0/7] introduce read_poll_timeout
+Date:   Sun, 22 Mar 2020 10:48:27 +0800
+Message-Id: <20200322024834.31402-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Elder <elder@linaro.org>
-Date: Fri, 20 Mar 2020 11:02:20 -0500
+This patch sets is introduce read_poll_timeout macro, it is an extension
+of readx_poll_timeout macro. the accessor function op just supports only
+one parameter in the readx_poll_timeout macro, but this macro can
+supports multiple variable parameters for it. so functions like
+phy_read(struct phy_device *phydev, u32 regnum) and
+phy_read_mmd(struct phy_device *phydev, int devad, u32 regnum) can
+use this poll timeout framework.
 
-> Don't assume the receive buffer size is a power-of-2 number of pages.
-> Instead, define the receive buffer size independently, and then
-> compute the page order from that size when needed.
-> 
-> This fixes a build problem that arises when the ARM64_PAGE_SHIFT
-> config option is set to have a page size greater than 4KB.  The
-> problem was identified by Linux Kernel Functional Testing.
-> 
-> The IPA code basically assumed the page size to be 4KB.  A larger page
-> size caused the receive buffer size to become correspondingly larger
-> (32KB or 128KB for ARM64_16K_PAGES and ARM64_64K_PAGES, respectively).
-> The receive buffer size is used to compute an "aggregation byte limit"
-> value that gets programmed into the hardware, and the large page sizes
-> caused that limit value to be too big to fit in a 5 bit field.  This
-> triggered a BUILD_BUG_ON() call in ipa_endpoint_validate_build().
-> 
-> This fix causes a lot of receive buffer memory to be wasted if
-> system is configured for page size greater than 4KB.  But such a
-> misguided configuration will now build successfully.
-> 
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Signed-off-by: Alex Elder <elder@linaro.org>
-> ---
-> 
-> Dave, I *hope* this is it for IPA for this release.	-Alex
+the first patch introduce read_poll_timeout macro, and the second patch
+redefined readx_poll_timeout macro by read_poll_timeout(), and the other
+patches are examples using read_poll_timeout macro.
 
-Applied to net-next, thanks.
+v2 -> v3:
+	- modify the parameter order of newly added functions.
+	  phy_read_mmd_poll_timeout(val, cond, sleep_us, timeout_us, \
+				     phydev, devaddr, regnum)
+				||
+				\/
+	  phy_read_mmd_poll_timeout(phydev, devaddr regnum, val, cond, \
+				    sleep_us, timeout_us)
+
+	  phy_read_poll_timeout(val, cond, sleep_us, timeout_us, \
+				phydev, regnum)
+				||
+				\/
+	  phy_read_poll_timeout(phydev, regnum, val, cond, sleep_us, \
+				timeout_us)
+
+
+v1 -> v2:
+	- passed a phydev, device address and a reg to replace args...
+	  parameter in phy_read_mmd_poll_timeout() by Andrew Lunn 's
+	  suggestion in patch 3. Andrew Lunn <andrew@lunn.ch>, Thanks
+	  very much for your help!
+	- also in patch 3, handle phy_read_mmd return an error(the return
+	  value < 0) in phy_read_mmd_poll_timeout(). Thanks Andrew
+	  again.
+	- in patch 6, pass a phydev and a reg to replace args...
+	  parameter in phy_read_poll_timeout(), and also handle the
+	  phy_read() function's return error.
+
+
+
+Dejin Zheng (7):
+  iopoll: introduce read_poll_timeout macro
+  iopoll: redefined readx_poll_timeout macro to simplify the code
+  net: phy: introduce phy_read_mmd_poll_timeout macro
+  net: phy: bcm84881: use phy_read_mmd_poll_timeout() to simplify the
+    code
+  net: phy: aquantia: use phy_read_mmd_poll_timeout() to simplify the
+    code
+  net: phy: introduce phy_read_poll_timeout macro
+  net: phy: use phy_read_poll_timeout() to simplify the code
+
+ drivers/net/phy/aquantia_main.c | 13 ++++--------
+ drivers/net/phy/bcm84881.c      | 27 ++++---------------------
+ drivers/net/phy/phy_device.c    | 16 ++++-----------
+ include/linux/iopoll.h          | 36 ++++++++++++++++++++++++++-------
+ include/linux/phy.h             | 27 +++++++++++++++++++++++++
+ 5 files changed, 68 insertions(+), 51 deletions(-)
+
+-- 
+2.25.0
+
