@@ -2,110 +2,123 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 779A1C54FCF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A619C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE6B20736
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:16:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584890161;
-	bh=0kLQ8SZT6fi5PlbGvkx9sA9jLe7XK5mmnp7GNjGyLZg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=axIRDnbJaqj2xMNMMjTBzhAbi7EaJ3l5Z2zk5RpeVuFwdgukaDNh5wbL+j8p1pajI
-	 yiyX/tQjBcyXh3DmerosVok1oCnph0NmJ0B6ZVu00t6626SQNGfN8tzcOzUW+rGDmL
-	 NxJgnJnIxwgm45i1+IpoGZRlaZuP4aulusO2GUqA=
+	by mail.kernel.org (Postfix) with ESMTP id D2D3220736
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:16:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cI3Ojtue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgCVPP7 (ORCPT
+        id S1726936AbgCVPQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 11:15:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbgCVPP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 11:15:59 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1079220724;
-        Sun, 22 Mar 2020 15:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584890159;
-        bh=0kLQ8SZT6fi5PlbGvkx9sA9jLe7XK5mmnp7GNjGyLZg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EQlaeglv9LS5i23NWi0MRzxqoWrZJbUQqmwHrtxthsPIHO5WDVcgslrkyvBl5EABk
-         +jMFp2hZye7ReedMO5/68WhJ206wGiJYH4iVERas4u4yIgaelAL+v4vXHOmYX1bvU/
-         MKAqelyRo2cPYySBiQZgGr9PautDfPMg2N5W6m3w=
-Date:   Sun, 22 Mar 2020 15:15:54 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH v2 5/5] iio: adc: ad7793: use read_avail iio hook for
- scale available
-Message-ID: <20200322151554.2c204c49@archlinux>
-In-Reply-To: <5ae09f8526a8847cb45435aa5280f905956ff588.camel@analog.com>
-References: <20200321090802.11537-1-alexandru.ardelean@analog.com>
-        <20200321090802.11537-5-alexandru.ardelean@analog.com>
-        <20200321193726.GA2813151@smile.fi.intel.com>
-        <5ae09f8526a8847cb45435aa5280f905956ff588.camel@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 22 Mar 2020 11:16:05 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33791 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbgCVPQF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 11:16:05 -0400
+Received: by mail-pf1-f193.google.com with SMTP id j1so3464012pfe.0
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 08:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6dpw9rDwVFF+jBSqqps/Fz65ini0gev9EsYNdaUAAOw=;
+        b=cI3Ojtue1abNbnhEXHj2iryE86swUOebT5p/+8RCaO5uNSnhQ9Y7TVRjkqQM9VLRFP
+         dJv9sDMVYKxFQa0rCrirVl8449WdxPXtbt8AiVGom/vRGCQjpA1SrRhdc4HdrJ8NCERe
+         BzLIan9hI5+ldnBF53MPXrWaJDzIME7aEKxgc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6dpw9rDwVFF+jBSqqps/Fz65ini0gev9EsYNdaUAAOw=;
+        b=aaOCm1GLbkj2YH5UiV+nq3AyTMVR/X3ei3SOtDabQ9LLeiDFdrCnQizEd0Lm7No1zs
+         Co6mHA16iG/YcgrMrDZzQ0bST0r8Em+8rNnxde8L5fOsfnmMyUJMtb0CbUbiYb4QiDJw
+         387Jx25U+ViYlJa6MN5Ib/Q29NAIKpC8u5TDL8X4fKc8c6sufF2l9h8mq6GY7Gwtybzo
+         qdb6XwidWyr8IQKWWM4VMo4PUkRpaYhxn93unxi/2a3K5vt8g3CeDFcrVwpBXluYJyuq
+         XG1EcsNDPolIGSByWljdrY/XmZ/e/nz0ghU9o1qnAccswyynHXwKk9WeBfFiq8JhWlwO
+         BdNA==
+X-Gm-Message-State: ANhLgQ0XctbGqJus4i516Ecnj+iRc/giBTduFojznVKCgjVJaNm43YX/
+        N57m/c7yEhqqT/y4en9VDVTWtQ==
+X-Google-Smtp-Source: ADFU+vuWKzy086D5ElUKvJfnJKYW2BQ4xV1n4gXNC8LIJaIR7+nZmnQmmYjnlO8aEfT/1OxfgJL/Cg==
+X-Received: by 2002:a63:ff0d:: with SMTP id k13mr8595652pgi.376.1584890163299;
+        Sun, 22 Mar 2020 08:16:03 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 11sm10770850pfz.91.2020.03.22.08.16.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Mar 2020 08:16:02 -0700 (PDT)
+Date:   Sun, 22 Mar 2020 08:16:01 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 05/11] pstore/blk: blkoops: support ftrace recorder
+Message-ID: <202003220814.713B5DF7AA@keescook>
+References: <1581078355-19647-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <1581078355-19647-6-git-send-email-liaoweixiong@allwinnertech.com>
+ <202003181117.6EA5486@keescook>
+ <42205dc0-f001-bbf0-00b6-85aca0cdb1f8@allwinnertech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42205dc0-f001-bbf0-00b6-85aca0cdb1f8@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 22 Mar 2020 09:18:13 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
-
-> On Sat, 2020-03-21 at 21:37 +0200, Andy Shevchenko wrote:
-> > [External]
+On Sun, Mar 22, 2020 at 07:42:07PM +0800, WeiXiong Liao wrote:
+> On 2020/3/19 AM 2:19, Kees Cook wrote:
+> > On Fri, Feb 07, 2020 at 08:25:49PM +0800, WeiXiong Liao wrote:
+> >> +static int blkz_recover_zones(struct blkz_context *cxt,
+> >> +		struct blkz_zone **zones, unsigned int cnt)
+> >> +{
+> >> +	int ret;
+> >> +	unsigned int i;
+> >> +	struct blkz_zone *zone;
+> >> +
+> >> +	if (!zones)
+> >> +		return 0;
+> >> +
+> >> +	for (i = 0; i < cnt; i++) {
+> >> +		zone = zones[i];
+> >> +		if (unlikely(!zone))
+> >> +			continue;
+> >> +		ret = blkz_recover_zone(cxt, zone);
+> >> +		if (ret)
+> >> +			goto recover_fail;
+> >> +	}
+> >> +
+> >> +	return 0;
+> >> +recover_fail:
+> >> +	pr_debug("recover %s[%u] failed\n", zone->name, i);
+> >> +	return ret;
+> >> +}
 > > 
-> > On Sat, Mar 21, 2020 at 11:08:02AM +0200, Alexandru Ardelean wrote:  
-> > > This change uses the read_avail and '.info_mask_shared_by_type_available'
-> > > modifier to set the available scale.
-> > > Essentially, nothing changes to the driver's ABI.
-> > > 
-> > > The main idea for this patch is to remove the AD7793 driver from
-> > > checkpatch's radar. There have been about ~3 attempts to fix/break the
-> > > 'in_voltage-voltage_scale_available' attribute, because checkpatch assumed
-> > > it to be an arithmetic operation and people were trying to change that.
-> > > +static int ad7793_read_avail(struct iio_dev *indio_dev,
-> > > +			     struct iio_chan_spec const *chan,
-> > > +			     const int **vals, int *type, int *length,
-> > > +			     long mask)
-> > >  {
-> > >  	struct ad7793_state *st = iio_priv(indio_dev);
-> > >  
-> > > +	switch (mask) {
-> > > +	case IIO_CHAN_INFO_SCALE:
-> > > +		*vals = (int *)st->scale_avail;
-> > > +		*type = IIO_VAL_INT_PLUS_NANO;
-> > > +		/* Values are stored in a 2D matrix  */
-> > > +		*length = ARRAY_SIZE(st->scale_avail) * 2;
-> > >  
-> > > +		return IIO_AVAIL_LIST;
-> > > +	}
-> > >  
-> > > +	return -EINVAL;  
-> > 
-> > Wouldn't be better move this under default case?
-> >   
+> > Why is this introduced here? Shouldn't this be earlier in the series?
 > 
-> Ummm, sure.
-> I'm a bit vague how we do from here since Jonathan accepted this and the
-> patchset.
-> I'll send a V3 of the whole set [in a few days max].
+> blkz_recover_zones() is used to recover a array of zones. Only ftrace
+> recorder need it, so it's introduced here.
 
-I'll drop this last patch.  Just resend this one with the change.
+Okay, that's fine. I thought maybe the dmesg front-end could use it too?
+Anyway, I can look at it again in v3. :)
 
-Jonathan
-
+-- 
+Kees Cook
