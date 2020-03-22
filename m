@@ -2,163 +2,133 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741BBC1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF60C54EEB
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C29C206F9
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54422072E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 21:25:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LapJvSgT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgCVVYZ (ORCPT
+        id S1726951AbgCVVZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 17:24:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57092 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgCVVYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 17:24:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1070BAB7F;
-        Sun, 22 Mar 2020 21:24:22 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 4A8B1E0FD3; Sun, 22 Mar 2020 22:24:21 +0100 (CET)
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net v2] ethtool: fix reference leak in some *_SET handlers
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org
-Message-Id: <20200322212421.4A8B1E0FD3@unicorn.suse.cz>
-Date:   Sun, 22 Mar 2020 22:24:21 +0100 (CET)
+        Sun, 22 Mar 2020 17:25:00 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38213 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbgCVVZA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 17:25:00 -0400
+Received: by mail-wm1-f66.google.com with SMTP id l20so12561376wmi.3;
+        Sun, 22 Mar 2020 14:24:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4eC7LgpYmufFPA4go7wViPXd9HrWnapviUO9r1ibY6k=;
+        b=LapJvSgTCtjQi9nX184UGsDHpUX/TX22HBxdtaIyBUM0KT5jyDoxRaL5I7XpR2K95E
+         TPbT4BbXDh81HPga7+arn8UlLXszTZ6GSo1m+nPJd4c7c1+vPklZnaZPGVfkVLth8iyy
+         Nzu5E9TxkNlskexMQOg+eQmZ+7kOB7NTFqx3ys+kDksN56Wfmhj7DZ0g2ZGtC6ydF0Qo
+         JBLII/YkKMxsI9/aW+gMUfTJxSvboNTQ4hDtAmllybZK76ZKWrOUrOMxLz0gY+ruVOqP
+         Bb/BQZ6PeUbbsniMAhs6/g7M6kwNS1nzHiJe6M9/+BtpjFYxqwqH2qOkC05T/qTsSE4E
+         DCFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4eC7LgpYmufFPA4go7wViPXd9HrWnapviUO9r1ibY6k=;
+        b=ndUmlNgQ0szG6ir8IeklBsvypsUZNfolPKTW2cgtF+DfWiMMX+GGB+R0FjxlpF1qql
+         a114DNQLAZP3QotIY/2dsBFnT4cC0817cWBYWtBPhtd1mFrkft4Aje6xBALGnzFA0pQH
+         ncBDHL79MOV5OxVV+auqzzE1i6X/2HqhLiGo82ngeuWM2rwtmn9Gf5i5Ldtanf28vAdm
+         eT9akOCP5msyNw+KVgL4WpPxQzfaJTUBTMrSHiYF0b7m9UTizsdXLP+ylGaIVnyW1V1Q
+         S39f6NTQByjv0WeE+o7esKAnOdPovJErfDE0yaF2NqR3SsaOitCjl1KNF6hCRji4iPZm
+         ruOQ==
+X-Gm-Message-State: ANhLgQ3L2y6BeCHVI6Ia/hxrJHL5XOPsfeau4dx11z3aCNvIQXPoMbuC
+        z6UhOkenwa0dMBGv2q9tiC57hF5X
+X-Google-Smtp-Source: ADFU+vscviZCvQDrqB2KghMBcdXdMt4E+sfq3RIWA4PlYJeqq7tjYpaLmVwJuuozljUrk/MlCulg6w==
+X-Received: by 2002:a7b:c308:: with SMTP id k8mr24245774wmj.40.1584912298099;
+        Sun, 22 Mar 2020 14:24:58 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.140.227])
+        by smtp.gmail.com with ESMTPSA id w67sm17620512wmb.41.2020.03.22.14.24.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Mar 2020 14:24:57 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] io_uring: Fix ->data corruption on re-enqueue
+Date:   Mon, 23 Mar 2020 00:23:29 +0300
+Message-Id: <c8d9cc69995858fd8859b339f77901f93574c528.1584912194.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew noticed that some handlers for *_SET commands leak a netdev
-reference if required ethtool_ops callbacks do not exist. A simple
-reproducer would be e.g.
+work->data and work->list are shared in union. io_wq_assign_next() sets
+->data if a req having a linked_timeout, but then io-wq may want to use
+work->list, e.g. to do re-enqueue of a request, so corrupting ->data.
 
-  ip link add veth1 type veth peer name veth2
-  ethtool -s veth1 wol g
-  ip link del veth1
+->data is not necessary, just remove it and extract linked_timeout
+through @link_list.
 
-Make sure dev_put() is called when ethtool_ops check fails.
-
-v2: add Fixes tags
-
-Fixes: a53f3d41e4d3 ("ethtool: set link settings with LINKINFO_SET request")
-Fixes: bfbcfe2032e7 ("ethtool: set link modes related data with LINKMODES_SET request")
-Fixes: e54d04e3afea ("ethtool: set message mask with DEBUG_SET request")
-Fixes: 8d425b19b305 ("ethtool: set wake-on-lan settings with WOL_SET request")
-Reported-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- net/ethtool/debug.c     | 4 +++-
- net/ethtool/linkinfo.c  | 4 +++-
- net/ethtool/linkmodes.c | 4 +++-
- net/ethtool/wol.c       | 4 +++-
- 4 files changed, 12 insertions(+), 4 deletions(-)
+ fs/io-wq.h    | 5 +----
+ fs/io_uring.c | 9 ++++-----
+ 2 files changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/net/ethtool/debug.c b/net/ethtool/debug.c
-index aaef4843e6ba..92599ad7b3c2 100644
---- a/net/ethtool/debug.c
-+++ b/net/ethtool/debug.c
-@@ -107,8 +107,9 @@ int ethnl_set_debug(struct sk_buff *skb, struct genl_info *info)
- 	if (ret < 0)
- 		return ret;
- 	dev = req_info.dev;
-+	ret = -EOPNOTSUPP;
- 	if (!dev->ethtool_ops->get_msglevel || !dev->ethtool_ops->set_msglevel)
--		return -EOPNOTSUPP;
-+		goto out_dev;
+diff --git a/fs/io-wq.h b/fs/io-wq.h
+index 298b21f4a4d2..d2a5684bf673 100644
+--- a/fs/io-wq.h
++++ b/fs/io-wq.h
+@@ -63,10 +63,7 @@ static inline void wq_node_del(struct io_wq_work_list *list,
+ } while (0)
  
- 	rtnl_lock();
- 	ret = ethnl_ops_begin(dev);
-@@ -129,6 +130,7 @@ int ethnl_set_debug(struct sk_buff *skb, struct genl_info *info)
- 	ethnl_ops_complete(dev);
- out_rtnl:
- 	rtnl_unlock();
-+out_dev:
- 	dev_put(dev);
- 	return ret;
- }
-diff --git a/net/ethtool/linkinfo.c b/net/ethtool/linkinfo.c
-index 5d16cb4e8693..6e9e0b590bb5 100644
---- a/net/ethtool/linkinfo.c
-+++ b/net/ethtool/linkinfo.c
-@@ -126,9 +126,10 @@ int ethnl_set_linkinfo(struct sk_buff *skb, struct genl_info *info)
- 	if (ret < 0)
- 		return ret;
- 	dev = req_info.dev;
-+	ret = -EOPNOTSUPP;
- 	if (!dev->ethtool_ops->get_link_ksettings ||
- 	    !dev->ethtool_ops->set_link_ksettings)
--		return -EOPNOTSUPP;
-+		goto out_dev;
+ struct io_wq_work {
+-	union {
+-		struct io_wq_work_node list;
+-		void *data;
+-	};
++	struct io_wq_work_node list;
+ 	void (*func)(struct io_wq_work **);
+ 	struct files_struct *files;
+ 	struct mm_struct *mm;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 5267e331b4a4..ce8f38aa070a 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1567,9 +1567,10 @@ static void io_free_req(struct io_kiocb *req)
  
- 	rtnl_lock();
- 	ret = ethnl_ops_begin(dev);
-@@ -162,6 +163,7 @@ int ethnl_set_linkinfo(struct sk_buff *skb, struct genl_info *info)
- 	ethnl_ops_complete(dev);
- out_rtnl:
- 	rtnl_unlock();
-+out_dev:
- 	dev_put(dev);
- 	return ret;
- }
-diff --git a/net/ethtool/linkmodes.c b/net/ethtool/linkmodes.c
-index 96f20be64553..18cc37be2d9c 100644
---- a/net/ethtool/linkmodes.c
-+++ b/net/ethtool/linkmodes.c
-@@ -338,9 +338,10 @@ int ethnl_set_linkmodes(struct sk_buff *skb, struct genl_info *info)
- 	if (ret < 0)
- 		return ret;
- 	dev = req_info.dev;
-+	ret = -EOPNOTSUPP;
- 	if (!dev->ethtool_ops->get_link_ksettings ||
- 	    !dev->ethtool_ops->set_link_ksettings)
--		return -EOPNOTSUPP;
-+		goto out_dev;
+ static void io_link_work_cb(struct io_wq_work **workptr)
+ {
+-	struct io_wq_work *work = *workptr;
+-	struct io_kiocb *link = work->data;
++	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
++	struct io_kiocb *link;
  
- 	rtnl_lock();
- 	ret = ethnl_ops_begin(dev);
-@@ -370,6 +371,7 @@ int ethnl_set_linkmodes(struct sk_buff *skb, struct genl_info *info)
- 	ethnl_ops_complete(dev);
- out_rtnl:
- 	rtnl_unlock();
-+out_dev:
- 	dev_put(dev);
- 	return ret;
++	link = list_first_entry(&req->link_list, struct io_kiocb, link_list);
+ 	io_queue_linked_timeout(link);
+ 	io_wq_submit_work(workptr);
  }
-diff --git a/net/ethtool/wol.c b/net/ethtool/wol.c
-index e1b8a65b64c4..55e1ecaaf739 100644
---- a/net/ethtool/wol.c
-+++ b/net/ethtool/wol.c
-@@ -128,8 +128,9 @@ int ethnl_set_wol(struct sk_buff *skb, struct genl_info *info)
- 	if (ret < 0)
- 		return ret;
- 	dev = req_info.dev;
-+	ret = -EOPNOTSUPP;
- 	if (!dev->ethtool_ops->get_wol || !dev->ethtool_ops->set_wol)
--		return -EOPNOTSUPP;
-+		goto out_dev;
+@@ -1584,10 +1585,8 @@ static void io_wq_assign_next(struct io_wq_work **workptr, struct io_kiocb *nxt)
  
- 	rtnl_lock();
- 	ret = ethnl_ops_begin(dev);
-@@ -172,6 +173,7 @@ int ethnl_set_wol(struct sk_buff *skb, struct genl_info *info)
- 	ethnl_ops_complete(dev);
- out_rtnl:
- 	rtnl_unlock();
-+out_dev:
- 	dev_put(dev);
- 	return ret;
+ 	*workptr = &nxt->work;
+ 	link = io_prep_linked_timeout(nxt);
+-	if (link) {
++	if (link)
+ 		nxt->work.func = io_link_work_cb;
+-		nxt->work.data = link;
+-	}
  }
+ 
+ /*
 -- 
-2.25.1
+2.24.0
 
