@@ -2,96 +2,102 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1490C43332
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 07:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CA6C4332D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 07:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C83A3206F8
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 07:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D9D4206F8
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 07:58:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m96WaUkt"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="m/T+oeOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgCVHx6 (ORCPT
+        id S1726781AbgCVH57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 03:53:58 -0400
-Received: from mail-vs1-f51.google.com ([209.85.217.51]:45540 "EHLO
-        mail-vs1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbgCVHx5 (ORCPT
+        Sun, 22 Mar 2020 03:57:59 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:60803 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725769AbgCVH57 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 03:53:57 -0400
-Received: by mail-vs1-f51.google.com with SMTP id x82so6678459vsc.12;
-        Sun, 22 Mar 2020 00:53:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NGOXhbNE/Yvzyog9sFZHGWWLHVko+x/bs3AqHRI4q8Q=;
-        b=m96WaUkt7JedMDG4ISXzSttGGPakucXaGSVr/CYifkOtp1fXoh6INQyccXIcIHwWkN
-         kwHQcCsQV7Q+TSHtHrK9ld/SyfRZdtQr2Qvt2j/UaZaGXv7K4RQVCBIgDPD5ezAbmyAL
-         Udey756fd1cdVbIMrkT1TXC9TGTUfAUw/vd9wbBgnbb5MGMYpLuChPZecSi3XaxgXPaJ
-         bwt7GDbEo/DCfm5GoDyEIu6S9SaXgR9Uj3M1mI9VymysO2XUPC/cVRblxr50e5NAnCHx
-         jWTUaXxpGIQdTvWM00hvprFzLv19IlFZNmTcAHhFfui3ZXW+K0fWS8QxgwBZ2sZdpHSf
-         HnuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NGOXhbNE/Yvzyog9sFZHGWWLHVko+x/bs3AqHRI4q8Q=;
-        b=CprABLM6GQ9ynrYqjEYe/oAgHhCcqg4lbrwOQwCjq4EmgZN2d1NRtaaz54WaRC1QAw
-         IoLI3dqLxXctV650hiDZqlab9oTxcMaAlfifxITQtygYZx/6ymipJbtrNb3davP9hGEM
-         uXOZnNIQya+ThdTTzM4bu6vxTMZCL9I7xTz8RBFP/H0vcmSJzx3SnrBQrNzHl9LG7hOh
-         4yK+37EZ7NvTE5zso/4gSxUlg3deih21UVrXCcMwPp8Me7SyrHn6b1JYFAyGAM4hrf/f
-         Mtwo9ryx5Br6LlfdvJeD9I2coPj7HejecUairN78u9w5MxnA1bbEpjwBqQVHyh7UEKI0
-         L8Ig==
-X-Gm-Message-State: ANhLgQ1k46lJojdgp2ayxWJmYEy9zsncwM5kW+TNYKjMYsH6c7V5ulgZ
-        9MfunUN7+eOqou1x+tL5qeiTg1NZgp0tJk1F5h8=
-X-Google-Smtp-Source: ADFU+vtEaTWfmqFJuCBiwee7to6ZSYgE6Hq6H5nMKMxws5DkFoNazDU8YjIGQOGlm3hDkX3bRwxL9pdx9gcfqgOYvJQ=
-X-Received: by 2002:a67:3201:: with SMTP id y1mr12112175vsy.54.1584863635053;
- Sun, 22 Mar 2020 00:53:55 -0700 (PDT)
+        Sun, 22 Mar 2020 03:57:59 -0400
+X-UUID: e8fc1f60d13d4fecb20824b8b5ac1334-20200322
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=0SlVnuKkPvNl1cm3aUi1MmMi33v297Tf8W2wHp9Pizo=;
+        b=m/T+oeODnMdXZQhCkTIr2D164EKWkksrg/KPGUNIqDGIXN6Zjk8uvwt9LV8VNZdeu+djRhrwSW9kSiOAEEaBOvgAQYaNjt8YswWL52dVbrEdhdr5dVpXykqrzo+76DHj8TQ39rrhQAJydadUaudcxA4Ud0l7Z4f/72MB2wDnMYI=;
+X-UUID: e8fc1f60d13d4fecb20824b8b5ac1334-20200322
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <gtk_ruiwang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 507518638; Sun, 22 Mar 2020 15:57:54 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sun, 22 Mar 2020 15:55:24 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sun, 22 Mar 2020 15:58:07 +0800
+From:   <gtk_ruiwang@mediatek.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        <linux-media@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Erin Lo <erin.lo@mediatek.com>, Sj Huang <sj.huang@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        <gtk_ruiwang@mediatek.com>, <srv_heupstream@mediatek.com>
+Subject: [PATCH] media: mtk-vpu: load vpu firmware from the new location
+Date:   Sun, 22 Mar 2020 15:57:45 +0800
+Message-ID: <20200322075745.6133-1-gtk_ruiwang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <0000000000001a033405a15e3acb@google.com>
-In-Reply-To: <0000000000001a033405a15e3acb@google.com>
-From:   Qiujun Huang <anenbupt@gmail.com>
-Date:   Sun, 22 Mar 2020 15:53:44 +0800
-Message-ID: <CADG63jBdvJMAem7_VF3GbCUSXGRuFrrv6_GqFc=KcKkxcNebCA@mail.gmail.com>
-Subject: Re: WARNING in hwahc_probe
-To:     syzbot <syzbot+df767d588771697b0433@syzkaller.appspotmail.com>
-Cc:     andreyknvl@google.com, devel@driverdev.osuosl.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tranmanphong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The return value of snprintf is longer than expected if the string is
-truncated. Bytes need to be checked here.
+RnJvbTogZ3RrX3J1aXdhbmcgPGd0a19ydWl3YW5nQG1lZGlhdGVrLmNvbT4NCg0KbXQ4MTczIFZQ
+VSBmaXJtd2FyZSBoYXMgYmVlbiBtb3ZlZCB0byBhIHN1Yi1mb2xkZXIgb2YNCmxpbnV4LWZpcm13
+YXJlLCBzbyBsb2FkIHZwdS1mdyBmcm9tIHRoZSBuZXcgbG9jYXRpb24gZmlyc3QsDQppZiBpdCBm
+YWlscywgdGhlbiBmcm9tIHRoZSBvbGQgb25lLg0KDQpTaWduZWQtb2ZmLWJ5OiBSdWkgV2FuZyA8
+Z3RrX3J1aXdhbmdAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9t
+dGstdnB1L210a192cHUuYyB8IDE2ICsrKysrKysrKysrKystLS0NCiAxIGZpbGUgY2hhbmdlZCwg
+MTMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+bWVkaWEvcGxhdGZvcm0vbXRrLXZwdS9tdGtfdnB1LmMgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3Jt
+L210ay12cHUvbXRrX3ZwdS5jDQppbmRleCBhNzY4NzA3YWJiOTQuLjg5Mjc0ODQyZTA3YiAxMDA2
+NDQNCi0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZwdS9tdGtfdnB1LmMNCisrKyBi
+L2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZwdS9tdGtfdnB1LmMNCkBAIC00Niw2ICs0Niw4
+IEBADQogLyogYmluYXJ5IGZpcm13YXJlIG5hbWUgKi8NCiAjZGVmaW5lIFZQVV9QX0ZXCQkidnB1
+X3AuYmluIg0KICNkZWZpbmUgVlBVX0RfRlcJCSJ2cHVfZC5iaW4iDQorI2RlZmluZSBWUFVfUF9G
+V19ORVcJCSJtZWRpYXRlay9tdDgxNzMvdnB1X3AuYmluIg0KKyNkZWZpbmUgVlBVX0RfRldfTkVX
+CQkibWVkaWF0ZWsvbXQ4MTczL3ZwdV9kLmJpbiINCiANCiAjZGVmaW5lIFZQVV9SRVNFVAkJMHgw
+DQogI2RlZmluZSBWUFVfVENNX0NGRwkJMHgwMDA4DQpAQCAtNDc3LDE2ICs0NzksMjQgQEAgc3Rh
+dGljIGludCBsb2FkX3JlcXVlc3RlZF92cHUoc3RydWN0IG10a192cHUgKnZwdSwNCiAJc2l6ZV90
+IHRjbV9zaXplID0gZndfdHlwZSA/IFZQVV9EVENNX1NJWkUgOiBWUFVfUFRDTV9TSVpFOw0KIAlz
+aXplX3QgZndfc2l6ZSA9IGZ3X3R5cGUgPyBWUFVfRF9GV19TSVpFIDogVlBVX1BfRldfU0laRTsN
+CiAJY2hhciAqZndfbmFtZSA9IGZ3X3R5cGUgPyBWUFVfRF9GVyA6IFZQVV9QX0ZXOw0KKwljaGFy
+ICpmd19uZXdfbmFtZSA9IGZ3X3R5cGUgPyBWUFVfRF9GV19ORVcgOiBWUFVfUF9GV19ORVc7DQog
+CWNvbnN0IHN0cnVjdCBmaXJtd2FyZSAqdnB1X2Z3Ow0KIAlzaXplX3QgZGxfc2l6ZSA9IDA7DQog
+CXNpemVfdCBleHRyYV9md19zaXplID0gMDsNCiAJdm9pZCAqZGVzdDsNCiAJaW50IHJldDsNCiAN
+Ci0JcmV0ID0gcmVxdWVzdF9maXJtd2FyZSgmdnB1X2Z3LCBmd19uYW1lLCB2cHUtPmRldik7DQor
+CXJldCA9IHJlcXVlc3RfZmlybXdhcmUoJnZwdV9mdywgZndfbmV3X25hbWUsIHZwdS0+ZGV2KTsN
+CiAJaWYgKHJldCA8IDApIHsNCi0JCWRldl9lcnIodnB1LT5kZXYsICJGYWlsZWQgdG8gbG9hZCAl
+cywgJWRcbiIsIGZ3X25hbWUsIHJldCk7DQotCQlyZXR1cm4gcmV0Ow0KKwkJZGV2X2luZm8odnB1
+LT5kZXYsICJGYWlsZWQgdG8gbG9hZCAlcywgJWQsIHJldHJ5XG4iLA0KKwkJCSBmd19uZXdfbmFt
+ZSwgcmV0KTsNCisNCisJCXJldCA9IHJlcXVlc3RfZmlybXdhcmUoJnZwdV9mdywgZndfbmFtZSwg
+dnB1LT5kZXYpOw0KKwkJaWYgKHJldCA8IDApIHsNCisJCQlkZXZfZXJyKHZwdS0+ZGV2LCAiRmFp
+bGVkIHRvIGxvYWQgJXMsICVkXG4iLCBmd19uYW1lLA0KKwkJCQlyZXQpOw0KKwkJCXJldHVybiBy
+ZXQ7DQorCQl9DQogCX0NCiAJZGxfc2l6ZSA9IHZwdV9mdy0+c2l6ZTsNCiAJaWYgKGRsX3NpemUg
+PiBmd19zaXplKSB7DQotLSANCjIuMTguMA0K
 
-diff --git a/drivers/staging/wusbcore/host/hwa-hc.c
-b/drivers/staging/wusbcore/host/hwa-hc.c
-index 8d959e9..1475a48 100644
---- a/drivers/staging/wusbcore/host/hwa-hc.c
-+++ b/drivers/staging/wusbcore/host/hwa-hc.c
-@@ -680,10 +680,12 @@ static int hwahc_security_create(struct hwahc *hwahc)
-                        break;
-                }
-                itr += etd->bLength;
--               bytes += snprintf(buf + bytes, sizeof(buf) - bytes,
--                                 "%s (0x%02x) ",
--                                 wusb_et_name(etd->bEncryptionType),
--                                 etd->bEncryptionValue);
-+
-+               if (sizeof(buf) > bytes)
-+                       bytes += snprintf(buf + bytes, sizeof(buf) - bytes,
-+                                       "%s (0x%02x) ",
-+                                       wusb_et_name(etd->bEncryptionType),
-+                                       etd->bEncryptionValue);
-                wusbhc->ccm1_etd = etd;
-        }
-        dev_info(dev, "supported encryption types: %s\n", buf);
