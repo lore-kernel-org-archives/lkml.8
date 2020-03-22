@@ -2,129 +2,99 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4297C43333
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 08:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F15C4332D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 08:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB1620774
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 08:10:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584864644;
-	bh=2Q5vrn72Xm0DFK1rhozsPFjcLu4nBGHSn0WW/B4hy6k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XC2m4vjBMFezQ8rYUVUZRUgRVRSTEUxmUEeS+YeVEttKhvqGRrGAkrl5QqyXNUtoR
-	 KlzP8fSQfXWyNxjp+I+TWHeIP7El7ZWnavo7lqLhQ7nXZ2+yiXVpHJ5DEZqTOp7lSX
-	 oEE6fvovsdNvDCBz9st/rCOS6S6kwMKfCiwW5XCg=
+	by mail.kernel.org (Postfix) with ESMTP id 96A9820753
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 08:15:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rcSLAkh7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgCVIKn (ORCPT
+        id S1726827AbgCVIPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 04:10:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgCVIKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 04:10:42 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88E0E20722;
-        Sun, 22 Mar 2020 08:10:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584864642;
-        bh=2Q5vrn72Xm0DFK1rhozsPFjcLu4nBGHSn0WW/B4hy6k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L24eYQEHtPNVXBgXPI6F87X2FZP066Z7WvO/y4nzDz8C3IEcAyT7ngAk7oNGA+29i
-         ZYi8wigGkqhCS04qXfoeKuTSp6qD+ngU2Zp4KEcDEe8mhHXcAhJQ7aL/yiNNjoQp4z
-         66NjEGhMK1JQPwXCQKE7eH+ciL6zOJZqUPgb3rEI=
-Date:   Sun, 22 Mar 2020 10:10:38 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Ralph Campbell <rcampbell@nvidia.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v8 0/3] mm/hmm/test: add self tests for HMM
-Message-ID: <20200322081038.GG650439@unreal>
-References: <20200321003108.22941-1-rcampbell@nvidia.com>
- <20200321090047.GM514123@unreal>
- <396f0c30-4a49-6a18-ff02-a73ee1a09883@nvidia.com>
- <20200321215505.GW20941@ziepe.ca>
+        Sun, 22 Mar 2020 04:15:42 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:43489 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgCVIPm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 04:15:42 -0400
+Received: by mail-vs1-f66.google.com with SMTP id i12so3376561vso.10;
+        Sun, 22 Mar 2020 01:15:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ezcgfr720kBfY/HJS4uuB/t7vgSWU2iG9iLOlGLgKJI=;
+        b=rcSLAkh7COROd7o4ApgHEMEtSLdExdWECEl2GabkxrsN+ajPA3EU8JS1OZl6Icyf7x
+         Y0BQvlpEvAxK5C20AtiAX/TXpsBpjkpJIgWUSDfH/5jKlo/lIJ/o+cMJhOdBTdCMJBag
+         0DyrmKqON8QcLvN80mh+5px3XsjyFARF4DCVyv1ScbEVYHs8sTEPKCKyZ/pN7gb29dAV
+         +zBWweAs00EYhERPlLd2tNxp3Zr9RghPSPVQAbD2JF5PNlTCZtjOS2gQVN5h0OPQrnyE
+         zpI5GEMYpCmNOLdPOy2G7kE4rS3sig50kY0YNG60CVNyvFuUJnnqyvZTgc9WoU9WNebr
+         4mfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ezcgfr720kBfY/HJS4uuB/t7vgSWU2iG9iLOlGLgKJI=;
+        b=b/urVFpKXlI48SeHWGGm1K9RO8ZIGUgkBCv8lnA/pscLFie35j6bIqI13NIe+wqKyp
+         XHfqevazXWNZYIguLXZStLJzQAuRGrqWRAWbWWwOlCWVQx4ElYlSG0iCqMvYJxMsmNrz
+         MvBcZ7OqVkCRjKy7vE/BT/yxjI6ROPBSva0V4PuikYfcG7y/jrXD7Lrc3ytfoYHux7gW
+         l5wwexAtZCNSFaSFwRxXCer24Dcpt+ZUPtzc1Pqxy1sU9QrfdnBrkjl0qWObSjMjPv/W
+         WaBRz4D6T9EIb6ey66yzAFTFqmnUDRFoldQP2nORo32Yb6rPG+zaheQ5WgAXFrQRBkV1
+         I9og==
+X-Gm-Message-State: ANhLgQ2eBlM3843Q8xIKQokVlZdM3x91tkZwoAIL1UxOj20rObenLFj2
+        plxCF3CcX9b2ixKr3H2ZrJLqAH9ALTJ8ZJAKQJg=
+X-Google-Smtp-Source: ADFU+vtkMCRgTxiszn+evIYmA8iNm7v4BrYphINlVDqn6EguH6H6hzPEt788R/4wOf7kBv6RpieQU0M9GuiJtSdGBX4=
+X-Received: by 2002:a67:c189:: with SMTP id h9mr1262941vsj.91.1584864939578;
+ Sun, 22 Mar 2020 01:15:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200321215505.GW20941@ziepe.ca>
+References: <0000000000001a033405a15e3acb@google.com> <CADG63jBdvJMAem7_VF3GbCUSXGRuFrrv6_GqFc=KcKkxcNebCA@mail.gmail.com>
+ <20200322075850.GA68214@kroah.com>
+In-Reply-To: <20200322075850.GA68214@kroah.com>
+From:   Qiujun Huang <anenbupt@gmail.com>
+Date:   Sun, 22 Mar 2020 16:15:28 +0800
+Message-ID: <CADG63jD5vHoTqfmqeRjcYniBLk8reBRfKy+=ZT2aJfcRDa4S6A@mail.gmail.com>
+Subject: Re: WARNING in hwahc_probe
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     syzbot <syzbot+df767d588771697b0433@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tranmanphong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 06:55:05PM -0300, Jason Gunthorpe wrote:
-> On Sat, Mar 21, 2020 at 10:27:46AM -0700, Ralph Campbell wrote:
+On Sun, Mar 22, 2020 at 3:58 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Sun, Mar 22, 2020 at 03:53:44PM +0800, Qiujun Huang wrote:
+> > The return value of snprintf is longer than expected if the string is
+> > truncated. Bytes need to be checked here.
 > >
-> > On 3/21/20 2:00 AM, Leon Romanovsky wrote:
-> > > On Fri, Mar 20, 2020 at 05:31:05PM -0700, Ralph Campbell wrote:
-> > > > This series adds basic self tests for HMM and are intended for Jason
-> > > > Gunthorpe's rdma tree which has a number of HMM patches applied.
-> > > >
-> > > > Changes v7 -> v8:
-> > > > Rebased to Jason's rdma/hmm tree, plus Jason's 6 patch series
-> > > >    "Small hmm_range_fault() cleanups".
-> > > > Applied a number of changes from Jason's comments.
-> > > >
-> > > > Changes v6 -> v7:
-> > > > Rebased to linux-5.6.0-rc6
-> > > > Reverted back to just using mmu_interval_notifier_insert() and making
-> > > >    this series only introduce HMM self tests.
-> > > >
-> > > > Changes v5 -> v6:
-> > > > Rebased to linux-5.5.0-rc6
-> > > > Refactored mmu interval notifier patches
-> > > > Converted nouveau to use the new mmu interval notifier API
-> > > >
-> > > > Changes v4 -> v5:
-> > > > Added mmu interval notifier insert/remove/update callable from the
-> > > >    invalidate() callback
-> > > > Updated HMM tests to use the new core interval notifier API
-> > > >
-> > > > Changes v1 -> v4:
-> > > > https://lore.kernel.org/linux-mm/20191104222141.5173-1-rcampbell@nvidia.com
-> > > >
-> > > > Ralph Campbell (3):
-> > > >    mm/hmm/test: add selftest driver for HMM
-> > > >    mm/hmm/test: add selftests for HMM
-> > > >    MAINTAINERS: add HMM selftests
-> > > >
-> > > >   MAINTAINERS                            |    3 +
-> > > >   include/uapi/linux/test_hmm.h          |   59 ++
-> > >
-> > > Isn't UAPI folder supposed to be for user-visible interfaces that follow
-> > > the rule of non-breaking user space and not for selftests?
-> > >
-> > > Thanks
-> > >
-> >
-> > Most of the other kernel module tests seem to invoke the test as part of the
-> > module load/init. I'm open to moving it if there is a more appropriate location.
+> > diff --git a/drivers/staging/wusbcore/host/hwa-hc.c
+> > b/drivers/staging/wusbcore/host/hwa-hc.c
+> > index 8d959e9..1475a48 100644
+> > --- a/drivers/staging/wusbcore/host/hwa-hc.c
+> > +++ b/drivers/staging/wusbcore/host/hwa-hc.c
 >
-> Is it even possible to create a user mm_struct and put crazy things in
-> it soley from a kernel module?
+> This file is no longer in the linux-next tree and will be deleted in the
+> next kernel release.
+>
+> Also, no one has this hardware so there's no real security issue here at
+> all.
+>
+> And finally, you forgot a signed-off-by line on your patch :(
 
-I didn't look very closely of what Ralph did in his patchsets, but from
-what I know, if you want in-kernel interface, you use in-kernel module,
-if you want to test user visible uapi, you write application. You don't
-create new UAPI just to test something in the kernel.
-
-Can kunit help here?
-https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html
-
-Thanks
+Get that, thanks.
 
 >
-> Jason
+> thanks,
 >
+> greg k-h
