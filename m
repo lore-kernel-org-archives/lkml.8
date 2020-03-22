@@ -2,119 +2,124 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 781B1C4332E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B000C43333
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5032720757
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3158E20767
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:23:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="wuN8YhHs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vIXRN51V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgCVCTv (ORCPT
+        id S1728265AbgCVCXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 22:19:51 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34966 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgCVCTu (ORCPT
+        Sat, 21 Mar 2020 22:23:52 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40047 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726409AbgCVCXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 22:19:50 -0400
-Received: by mail-qt1-f196.google.com with SMTP id v15so8735601qto.2
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 19:19:48 -0700 (PDT)
+        Sat, 21 Mar 2020 22:23:51 -0400
+Received: by mail-wr1-f66.google.com with SMTP id f3so12194287wrw.7;
+        Sat, 21 Mar 2020 19:23:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=g7SHC7AQfO9TwwpN/x0z3E15F8GnLYestCEz0TtL0YM=;
-        b=wuN8YhHsGNS+KBnGqTssJtfUY56E0cibB4sykRbRaY8Uzc+i5+w1tUbC+QacGhjerF
-         2FKP+0tqFKpl5j6mvSpNhHrzHI2RBcE9nKKbqsXo8WPFNcaSf55ZHe0L5o66KwwNiwSk
-         6vmBzdMEzCYwgRzBV91lIxRvfLKdELWAHnRdc=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ioMqBUlgEP197yOqRJldZRP4FcdjiAk47h+WqmBXfrA=;
+        b=vIXRN51VH1yI4dp+CvD6MX04O1CKnXPkgl4TbZXa4W9rUq3G7vS392ucc3BQ4CHgTP
+         r/huLkYYD+y5ihfiM9K09Tmj0EussGjo/TYnXlRJrzZGUYK82+EJbWm6OPnOgmDCOZTh
+         c/k/WtcD2Atl5L9ug+jX2T9Y0sfxUUTl0qiDcMtu374q35nD51SAm/t8SW0oM8iwZ7Wy
+         FbC2vtFm4MLu19K+3cRQTFOJyEL83n1amdV6JoynnUbh1oIbiiTwDFD/lEMqk9j0dfzj
+         Dx19M2ViyyEWsQrp/PkQwVU+wYi6QRjE8HbQfu69sLyse99XC3LkZDp1N9fkazXq1IGC
+         KYAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=g7SHC7AQfO9TwwpN/x0z3E15F8GnLYestCEz0TtL0YM=;
-        b=bvYh0d9K4LvhvI/e3r8qAYyK4NH7A5Par/r88q/kkZtymVQVZ1h7fkYF2a4LrUSaSj
-         Lye+5aKfpKTBFnL8cdmQdVbb47CsnsZjzleluXdP9pN+axwXNTpsbl0wYXnBT/c11U7z
-         P1mUJlfJBG7WEpLoUjO+XYU11i4m0BmHPd5Mlpq765cJZZ9FfQyRhds0EYwtRkA7mXLg
-         I764QCF6AkC8StNRxL5scx8SjWZHfG1E/X29q9RwuE3/egcu8o8iAra62Rsh88FTF/eM
-         QcAKazZuwG5M1xOIbWz5zA2UaV1e3wl3KoitIrRd48BWAjiqgfNlXq7nQQW3zV4sNaKg
-         pfYw==
-X-Gm-Message-State: ANhLgQ2dDpBUoKSu0N8QdcBUIVNtoOckALl9UF/Dbx3ghcxvCbmE1yWX
-        iUF7E5SMkkZXtJF4sBa1Q7cMi3pxC24=
-X-Google-Smtp-Source: ADFU+vuZl6DL/jFqnNj4u0sNih/73JNqy/GIOCoxZp/XGx+R2DvQ+abdhYVPGYbeEZYzc7Sq2kUaBg==
-X-Received: by 2002:ac8:748e:: with SMTP id v14mr15603731qtq.82.1584843588059;
-        Sat, 21 Mar 2020 19:19:48 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id h138sm8150819qke.86.2020.03.21.19.19.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2020 19:19:47 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org Felipe Balbi" <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org Kalle Valo" <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH] Documentation: Clarify better about the rwsem non-owner release issue
-Date:   Sat, 21 Mar 2020 22:19:38 -0400
-Message-Id: <20200322021938.175736-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ioMqBUlgEP197yOqRJldZRP4FcdjiAk47h+WqmBXfrA=;
+        b=sypj7Ksoa+GsKk3ApMHNXpRJk0urmb1rC1jXW5zXRPf2FWY3bJzwIHqKu3LBDAnZj5
+         DACCZzmxDcQuwIcurZjd8W5lqrNQ3OI73O9u/bjaBX9OyVbMU+D0L6erV8LyCd7pOd/y
+         INQ0yAd/n5jQNtze3xsgwnHuFHRf2+yeNo0dCCvNBA/vSRLrVCs8hLfkohkY8eSMq4db
+         Hn2iffGsAqg4XjOcvQpFunE6bfFSQQWJvlYRTeeOhC3PlR8+U+C+hjuuvALpFpx86GcZ
+         ATAut+474Pp4vwpkud6DdJuae8sgNexcTpl3F4bTW7xK5a+fzRjcr0D0YBll3M+zmAsw
+         26Jw==
+X-Gm-Message-State: ANhLgQ1TiVYpoosfMJdeN8zSdHoGSrG7+mHXPa2SrrufkivrCwA3k6a1
+        MfPH0kwYJRX+S46RsqIBISoeh63d/SBopD6JSBo=
+X-Google-Smtp-Source: ADFU+vsFdmXWrsHJPw61O9GrgiXWOvmQz4H1EzO5bX6oaejYFzkLeS3cOLXLjMwlseimcBcMImN4sKDPyS7I5pYtUto=
+X-Received: by 2002:adf:ff82:: with SMTP id j2mr13878951wrr.48.1584843829809;
+ Sat, 21 Mar 2020 19:23:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200319203427.2259891-1-martin.blumenstingl@googlemail.com> <20200319203427.2259891-2-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20200319203427.2259891-2-martin.blumenstingl@googlemail.com>
+From:   Qiang Yu <yuq825@gmail.com>
+Date:   Sun, 22 Mar 2020 10:23:38 +0800
+Message-ID: <CAKGbVbvDEkfLyhstd0+akqq0Amt-s-JMayxiQA2OxEfZPwj_CQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: gpu: mali-utgard: Add the
+ #cooling-cells property
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Rob Herring <robh@kernel.org>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reword and clarify better about the rwsem non-owner release issue.
+Looks good for me, patch is:
+Reviewed-by: Qiang Yu <yuq825@gmail.com>
 
-Link: https://lore.kernel.org/linux-pci/20200321212144.GA6475@google.com/
+Regards,
+Qiang
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- Documentation/locking/locktypes.rst | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/locking/locktypes.rst b/Documentation/locking/locktypes.rst
-index 6f2c0f5b041e..656dce72f11f 100644
---- a/Documentation/locking/locktypes.rst
-+++ b/Documentation/locking/locktypes.rst
-@@ -292,7 +292,7 @@ implementations to provide priority inheritance for all lock types except
- the truly spinning ones. Priority inheritance on ownerless locks is
- obviously impossible.
- 
--For now the rwsem non-owner release excludes code which utilizes it from
--being used on PREEMPT_RT enabled kernels. In same cases this can be
--mitigated by disabling portions of the code, in other cases the complete
--functionality has to be disabled until a workable solution has been found.
-+For now, a PREEMPT_RT kernel just disables code sections that perform a
-+non-owner release of an rwsem. In some cases, parts of the code are disabled.
-+In other cases, the complete functionality has to be disabled until a workable
-+solution has been found.
--- 
-2.25.1.696.g5e7596f4ac-goog
-
+On Fri, Mar 20, 2020 at 4:35 AM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> The GPU can be one of the big heat sources on a SoC. Allow the
+> "#cooling-cells" property to be specified for ARM Mali Utgard GPUs so
+> the GPU clock speeds (and voltages) can be reduced to prevent a SoC from
+> overheating.
+>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+> index afde81be3c29..33548ca2a759 100644
+> --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+> @@ -107,6 +107,9 @@ properties:
+>
+>    operating-points-v2: true
+>
+> +  "#cooling-cells":
+> +    const: 2
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -162,6 +165,7 @@ examples:
+>        clocks = <&ccu 1>, <&ccu 2>;
+>        clock-names = "bus", "core";
+>        resets = <&ccu 1>;
+> +      #cooling-cells = <2>;
+>      };
+>
+>  ...
+> --
+> 2.25.2
+>
