@@ -2,216 +2,102 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6301C54FCF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D83DC4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB202072E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584892501;
-	bh=bUaS1no88iUEEU7/gDqwncAVOF2oPiDcBG6aHYYgUl0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZuobrvwMZ0c0oYo2jjcdxWT+jaAApPiZGOEI7xx57gSURkBO/VKxWQGMYEpTdS6k6
-	 73JsNXFzGSSr56XHUkUhvf1qYxJI6oO5H2acH+FEsvJehDxpwVSS9QrFYVmH/Q3ILT
-	 Q0Cw8kackCUpXj6kFxF8qzQ7xRD5afLdVjEw+dy8=
+	by mail.kernel.org (Postfix) with ESMTP id EEF2820722
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:56:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgCVPzA (ORCPT
+        id S1726783AbgCVP44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 11:55:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60106 "EHLO mail.kernel.org"
+        Sun, 22 Mar 2020 11:56:56 -0400
+Received: from sauhun.de ([88.99.104.3]:51134 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbgCVPzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 11:55:00 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0F2620722;
-        Sun, 22 Mar 2020 15:54:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584892499;
-        bh=bUaS1no88iUEEU7/gDqwncAVOF2oPiDcBG6aHYYgUl0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cVET3hIVABIZKKpquH+IPWI7pl5Qq1Irs+fxRbhT0bn/uKT9Cix/VpJ4DFdH8bmJx
-         MPurAe9KZDcVuwzELNPZSHW+Uzy/JYeaTKFl+PKtJd22+mEr0QgiEZJq8ALjEFtfZQ
-         DG1F0kS5UGaumlrrbhWnmKd6xB/fiqMtbeqt971Q=
-Date:   Sun, 22 Mar 2020 15:54:55 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Lars-Peter Clausen <lars@metafoo.de>
-Cc:     Alexandru Tachici <tachicialex@gmail.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] iio: accel: adxl372: Add support for FIFO peak
- mode
-Message-ID: <20200322155455.18573976@archlinux>
-In-Reply-To: <7a86c39a-1653-1e06-88df-a7cd15477ecc@metafoo.de>
-References: <20200318110958.8621-1-alexandru.tachici@analog.com>
-        <20200318110958.8621-2-alexandru.tachici@analog.com>
-        <7a86c39a-1653-1e06-88df-a7cd15477ecc@metafoo.de>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725785AbgCVP4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 11:56:55 -0400
+Received: from localhost (p54B33042.dip0.t-ipconnect.de [84.179.48.66])
+        by pokefinder.org (Postfix) with ESMTPSA id 6400C2C0064;
+        Sun, 22 Mar 2020 16:56:53 +0100 (CET)
+Date:   Sun, 22 Mar 2020 16:56:52 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Xu Wang <vulab@iscas.ac.cn>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] i2c: Fix a potential use after free
+Message-ID: <20200322155652.GC1091@ninjato>
+References: <1577439272-10362-1-git-send-email-vulab@iscas.ac.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="H8ygTp4AXg6deix2"
+Content-Disposition: inline
+In-Reply-To: <1577439272-10362-1-git-send-email-vulab@iscas.ac.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Mar 2020 11:10:10 +0100
-Lars-Peter Clausen <lars@metafoo.de> wrote:
 
-> On 3/18/20 12:09 PM, Alexandru Tachici wrote:
-> > From: Stefan Popa <stefan.popa@analog.com>
-> > 
-> > By default, if all three channels (x, y, z) are enabled, sample sets of
-> > concurrent 3-axis data is stored in the FIFO. This patch adds the option
-> > to configure the FIFO to store peak acceleration (x, y and z) of every
-> > over-threshold event. When pushing to iio buffer we push only enabled
-> > axis data.
-> > 
-> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-> > ---
-> >   drivers/iio/accel/adxl372.c | 74 ++++++++++++++++++++++++++++++++++++-
-> >   1 file changed, 73 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
-> > index 67b8817995c0..90c37d6f10d3 100644
-> > --- a/drivers/iio/accel/adxl372.c
-> > +++ b/drivers/iio/accel/adxl372.c
-> > @@ -133,6 +133,9 @@
-> >   
-> >   /* The ADXL372 includes a deep, 512 sample FIFO buffer */
-> >   #define ADXL372_FIFO_SIZE			512
-> > +#define ADXL372_X_AXIS_EN(x)			(((x) >> 0) & 0x1)
-> > +#define ADXL372_Y_AXIS_EN(x)			(((x) >> 1) & 0x1)
-> > +#define ADXL372_Z_AXIS_EN(x)			(((x) >> 2) & 0x1)
-> >   
-> >   /*
-> >    * At +/- 200g with 12-bit resolution, scale is computed as:
-> > @@ -253,6 +256,7 @@ struct adxl372_state {
-> >   	struct iio_trigger		*dready_trig;
-> >   	enum adxl372_fifo_mode		fifo_mode;
-> >   	enum adxl372_fifo_format	fifo_format;
-> > +	unsigned int			fifo_axis_mask;
-> >   	enum adxl372_op_mode		op_mode;
-> >   	enum adxl372_act_proc_mode	act_proc_mode;
-> >   	enum adxl372_odr		odr;
-> > @@ -264,6 +268,7 @@ struct adxl372_state {
-> >   	u8				int2_bitmask;
-> >   	u16				watermark;
-> >   	__be16				fifo_buf[ADXL372_FIFO_SIZE];
-> > +	bool				peak_fifo_mode_en;
-> >   };
-> >   
-> >   static const unsigned long adxl372_channel_masks[] = {
-> > @@ -522,6 +527,22 @@ static int adxl372_get_status(struct adxl372_state *st,
-> >   	return ret;
-> >   }
-> >   
-> > +static void adxl372_arrange_axis_data(struct adxl372_state *st, __be16 *sample)
-> > +{
-> > +	__be16	axis_sample[3];
-> > +	int i = 0;
-> > +
-> > +	memset(axis_sample, 0, 3 * sizeof(__be16));
-> > +	if (ADXL372_X_AXIS_EN(st->fifo_axis_mask))
-> > +		axis_sample[i++] = sample[0];
-> > +	if (ADXL372_Y_AXIS_EN(st->fifo_axis_mask))
-> > +		axis_sample[i++] = sample[1];
-> > +	if (ADXL372_Z_AXIS_EN(st->fifo_axis_mask))
-> > +		axis_sample[i++] = sample[2];
-> > +
-> > +	memcpy(sample, axis_sample, 3 * sizeof(__be16));
-> > +}
-> > +
-> >   static irqreturn_t adxl372_trigger_handler(int irq, void  *p)
-> >   {
-> >   	struct iio_poll_func *pf = p;
-> > @@ -553,8 +574,12 @@ static irqreturn_t adxl372_trigger_handler(int irq, void  *p)
-> >   			goto err;
-> >   
-> >   		/* Each sample is 2 bytes */
-> > -		for (i = 0; i < fifo_entries; i += st->fifo_set_size)
-> > +		for (i = 0; i < fifo_entries; i += st->fifo_set_size) {
-> > +			/* filter peak detection data */
-> > +			if (st->peak_fifo_mode_en)
-> > +				adxl372_arrange_axis_data(st, &st->fifo_buf[i]);
-> >   			iio_push_to_buffers(indio_dev, &st->fifo_buf[i]);
-> > +		}
-> >   	}
-> >   err:
-> >   	iio_trigger_notify_done(indio_dev->trig);
-> > @@ -722,6 +747,43 @@ static int adxl372_write_raw(struct iio_dev *indio_dev,
-> >   	}
-> >   }
-> >   
-> > +static ssize_t adxl372_peak_fifo_en_get(struct device *dev,
-> > +					struct device_attribute *attr,
-> > +					char *buf)
-> > +{
-> > +	struct adxl372_state *st = iio_priv(dev_to_iio_dev(dev));
-> > +
-> > +	return sprintf(buf, "%d\n", st->peak_fifo_mode_en);
-> > +}
-> > +
-> > +static ssize_t adxl372_peak_fifo_en_set(struct device *dev,
-> > +					struct device_attribute *attr,
-> > +					const char *buf, size_t len)
-> > +{
-> > +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> > +	struct adxl372_state *st = iio_priv(indio_dev);
-> > +	bool val;
-> > +	int ret;
-> > +
-> > +	ret = iio_device_claim_direct_mode(indio_dev);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret = kstrtobool(buf, &val);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	st->peak_fifo_mode_en = val;
-> > +
-> > +	iio_device_release_direct_mode(indio_dev);
-> > +
-> > +	return len;
-> > +}
-> > +
-> > +static IIO_DEVICE_ATTR(hwfifo_peak_mode_enable, 0644,
-> > +		       adxl372_peak_fifo_en_get,
-> > +		       adxl372_peak_fifo_en_set, 0);
-> > +  
-> 
-> Rather than going with a non-standard attribute, I'd register a IIO 
-> trigger for the peak mode and switch between peak and normal mode by 
-> assigning the corresponding trigger.
-> 
-> At least that's how I understand how this mode works. Data capture is 
-> triggered by exceeding a threshold.
+--H8ygTp4AXg6deix2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I wondered about that, but my reading of the datasheet suggests this isn't
-simply a trigger that runs when data is above a threshold but rather
-specifically the highest value that occurs between crossing the threshold
-on the way up and crossing it again on the way down.
+On Fri, Dec 27, 2019 at 09:34:32AM +0000, Xu Wang wrote:
+> Free the adap structure only after we are done using it.
+> This patch just moves the put_device() down a bit to avoid the
+> use after free.
+>=20
+> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
 
-We could still consider it a trigger though, be it a very strange one.
+Do you have a testcase to reproduce it?
 
-There is another mode where it moves out of lower power mode into
-high power mode at the first crossing of a threshold.  That one I can't
-see how to implement as a trigger type really as it wouldn't jump back
-into low power mode without some form of user intervention.
+I wonder because we are freeing the device structure which is embedded
+inside the adap structure, not the adap structure itself. Or?
 
-Confusing device...
+> ---
+>  drivers/i2c/i2c-core-base.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 9f8dcd3..160d43e 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -2301,8 +2301,8 @@ void i2c_put_adapter(struct i2c_adapter *adap)
+>  	if (!adap)
+>  		return;
+> =20
+> -	put_device(&adap->dev);
+>  	module_put(adap->owner);
+> +	put_device(&adap->dev);
+>  }
+>  EXPORT_SYMBOL(i2c_put_adapter);
+> =20
+> --=20
+> 2.7.4
+>=20
 
-Jonathan
+--H8ygTp4AXg6deix2
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl53isAACgkQFA3kzBSg
+KbYjVQ//YLOOhtSoKVw5BP0gfEP0MKQ3+62E6Jt3VnIw9lP/6HPEuLg47deiPSaq
+cz1bI+JD3u+TlFemJtWKbFn/41I5musXXfDYzmOWrDa3iGJ4M2fTE6BuVkN87pvy
+L3v7Lpbd8yvsA8QPX0UOgyuG0TURtw9T2ZYT3XVnjBeojTbISFaOPz0qyRuVQovn
+S2Ov5aGgRtrHPfsVOfSCKF9Wdq5dfjvQAeQVA7uiHILTvYjVLglUD4ugHjVl7jt+
+Wpy2VAGfz+Ero6V3qSCuOQ7i628NZsg2XQ6dA1Awi8SbiUfE9/LzAfDjRT2ot91U
+JNfLSWQvGCOUfQzLZjkk4WzkF2Q91ocuzpHNatnusnwb+CRAeH9VYsFjVC3qVHMD
+bSWet/OpsbP3b0sz2U0VHmHvdStkwjw9Oczt3u8EC3RoiskUCdLDWDJKcbG8HUyx
+giEmgXaEHKKZw/0Hx4Z1BircivOPboGohzO5mShLuVY69WbQAptjLC+EO2zw5fgg
+rHwhKfc0lTZyfPV81ijcJqDHqMsnLsQLDfsU3h4W8fqGrw/Nr9AJu3FpkeCv1f6U
+0R7QUWbA7SATR4MCGosdCfngwPAHZQ1FOQsOnfwICeXgbNrzuH5srHs4jm5pyOI2
+WhM1EBvqtI2xCLiqNNUuLNT4QPF4VdxsdUdiE2xULM+IMsTkp9c=
+=Urp0
+-----END PGP SIGNATURE-----
 
-> 
-> - Lars
-> 
-
+--H8ygTp4AXg6deix2--
