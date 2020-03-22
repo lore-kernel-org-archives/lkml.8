@@ -2,265 +2,230 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E242C54FD0
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F64C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF0F206F8
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF8AA20658
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:16:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgCVONJ (ORCPT
+        id S1726797AbgCVOQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 10:13:09 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:44787 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725785AbgCVONJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 10:13:09 -0400
-X-IronPort-AV: E=Sophos;i="5.72,292,1580742000"; 
-   d="scan'208";a="42507573"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 22 Mar 2020 23:13:06 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 22EBF420C93D;
-        Sun, 22 Mar 2020 23:13:04 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2] arm64: dts: renesas: r8a774c0-cat874: Add support for AISTARVISION MIPI Adapter V2.1
-Date:   Sun, 22 Mar 2020 14:12:32 +0000
-Message-Id: <1584886352-4132-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 22 Mar 2020 10:16:49 -0400
+Received: from mga02.intel.com ([134.134.136.20]:49292 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbgCVOQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 10:16:49 -0400
+IronPort-SDR: oAZLyx8ZqFeacg7YgsQM8JJfPWyyjV6fgZRMuVmwUDDhyfVAOjOM4hPDntABz66+B0yBxVCJsU
+ ZuF7CFEm1Unw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2020 07:16:46 -0700
+IronPort-SDR: uft4PUcxrSB9cd53hVf1SOeOoCOOfwzC/067V4nnQmdpcnuB16IJniGRnOGNDoiNxJ9LZEzMy+
+ 0zGUXWJQT7Lg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,292,1580803200"; 
+   d="scan'208";a="249362586"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 22 Mar 2020 07:16:45 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jG1PA-000AuW-8m; Sun, 22 Mar 2020 22:16:44 +0800
+Date:   Sun, 22 Mar 2020 22:16:07 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:for-mingo] BUILD SUCCESS
+ aa93ec620be378cce1454286122915533ff8fa48
+Message-ID: <5e777327.s2aCoSjEVFwbToYY%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for AISTARVISION MIPI Adapter V2.1 board connected
-to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
-which have the camera endpoint nodes for imx219 and ov5645 so that this can
-be re-used with other G2x platforms.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  for-mingo
+branch HEAD: aa93ec620be378cce1454286122915533ff8fa48  Merge branches 'doc.2020.02.27a', 'fixes.2020.03.21a', 'kfree_rcu.2020.02.20a', 'locktorture.2020.02.20a', 'ovld.2020.02.20a', 'rcu-tasks.2020.02.20a', 'srcu.2020.02.20a' and 'torture.2020.02.20a' into HEAD
 
-r8a774c0-ek874-mipi-2.1.dts file enables the required VIN/CSI nodes and by
-default ties ov5645 camera endpoint to CSI2.
+elapsed time: 837m
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+configs tested: 163
+configs skipped: 0
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+powerpc                             defconfig
+arc                              allyesconfig
+riscv                               defconfig
+nds32                               defconfig
+openrisc                    or1ksim_defconfig
+h8300                    h8300h-sim_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+i386                 randconfig-a002-20200322
+i386                 randconfig-a001-20200322
+x86_64               randconfig-a002-20200322
+x86_64               randconfig-a001-20200322
+i386                 randconfig-a003-20200322
+x86_64               randconfig-a003-20200322
+alpha                randconfig-a001-20200322
+m68k                 randconfig-a001-20200322
+mips                 randconfig-a001-20200322
+nds32                randconfig-a001-20200322
+parisc               randconfig-a001-20200322
+riscv                randconfig-a001-20200322
+h8300                randconfig-a001-20200322
+microblaze           randconfig-a001-20200322
+nios2                randconfig-a001-20200322
+c6x                  randconfig-a001-20200322
+sparc64              randconfig-a001-20200322
+s390                 randconfig-a001-20200322
+csky                 randconfig-a001-20200322
+xtensa               randconfig-a001-20200322
+openrisc             randconfig-a001-20200322
+sh                   randconfig-a001-20200322
+i386                 randconfig-b003-20200322
+i386                 randconfig-b001-20200322
+x86_64               randconfig-b003-20200322
+i386                 randconfig-b002-20200322
+x86_64               randconfig-b002-20200322
+x86_64               randconfig-c001-20200322
+x86_64               randconfig-c002-20200322
+x86_64               randconfig-c003-20200322
+i386                 randconfig-c001-20200322
+i386                 randconfig-c002-20200322
+i386                 randconfig-c003-20200322
+i386                 randconfig-d003-20200322
+i386                 randconfig-d001-20200322
+i386                 randconfig-d002-20200322
+x86_64               randconfig-d001-20200322
+x86_64               randconfig-d003-20200322
+x86_64               randconfig-d002-20200322
+x86_64               randconfig-e001-20200322
+x86_64               randconfig-e002-20200322
+x86_64               randconfig-e003-20200322
+i386                 randconfig-e001-20200322
+i386                 randconfig-e002-20200322
+i386                 randconfig-e003-20200322
+i386                 randconfig-f001-20200322
+i386                 randconfig-f003-20200322
+i386                 randconfig-f002-20200322
+x86_64               randconfig-f002-20200322
+x86_64               randconfig-f003-20200322
+x86_64               randconfig-f001-20200322
+i386                 randconfig-g003-20200322
+x86_64               randconfig-g002-20200322
+i386                 randconfig-g001-20200322
+i386                 randconfig-g002-20200322
+x86_64               randconfig-g001-20200322
+x86_64               randconfig-g003-20200322
+x86_64               randconfig-h002-20200322
+x86_64               randconfig-h003-20200322
+i386                 randconfig-h003-20200322
+x86_64               randconfig-h001-20200322
+i386                 randconfig-h001-20200322
+i386                 randconfig-h002-20200322
+arc                  randconfig-a001-20200322
+arm                  randconfig-a001-20200322
+arm64                randconfig-a001-20200322
+ia64                 randconfig-a001-20200322
+powerpc              randconfig-a001-20200322
+sparc                randconfig-a001-20200322
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
 ---
- Changes for v2:
- * Dropped #{address,size}-cells
- * Dropped unit address and reg for port
-
- arch/arm64/boot/dts/renesas/Makefile          |  3 +-
- .../aistarvision-mipi-adapter-2.1.dtsi        | 95 +++++++++++++++++++
- .../dts/renesas/r8a774c0-ek874-mipi-2.1.dts   | 75 +++++++++++++++
- 3 files changed, 172 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-
-diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index 2153842321ce..9f5c53d62f5e 100644
---- a/arch/arm64/boot/dts/renesas/Makefile
-+++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -4,7 +4,8 @@ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
- dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n.dtb
- dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex.dtb
- dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
--			       r8a774c0-ek874-idk-2121wr.dtb
-+			       r8a774c0-ek874-idk-2121wr.dtb \
-+			       r8a774c0-ek874-mipi-2.1.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a77950-salvator-x.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a77950-ulcb.dtb r8a77950-ulcb-kf.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a77951-salvator-x.dtb r8a77951-salvator-xs.dtb
-diff --git a/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi b/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
-new file mode 100644
-index 000000000000..d2b656579b54
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the AISTARVISION MIPI Adapter V2.1
-+ *
-+ * Copyright (C) 2020 Renesas Electronics Corp.
-+ */
-+
-+/ {
-+	ov5645_vdddo_1v8: 1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdddo";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	ov5645_vdda_2v8: 2p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdda";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		regulator-always-on;
-+	};
-+
-+	ov5645_vddd_1v5: 1p5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vddd";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-always-on;
-+	};
-+
-+	imx219_vana_2v8: 2p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vana";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		regulator-always-on;
-+	};
-+
-+	imx219_vdig_1v8: 1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdig";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-always-on;
-+	};
-+
-+	imx219_vddl_1v2: 1p2v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vddl";
-+		regulator-min-microvolt = <1200000>;
-+		regulator-max-microvolt = <1200000>;
-+		regulator-always-on;
-+	};
-+
-+	imx219_clk: imx219_clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <24000000>;
-+	};
-+};
-+
-+&MIPI_PARENT_I2C {
-+	ov5645: ov5645@3c {
-+		compatible = "ovti,ov5645";
-+		reg = <0x3c>;
-+
-+		clock-names = "xclk";
-+
-+		vdddo-supply = <&ov5645_vdddo_1v8>;
-+		vdda-supply = <&ov5645_vdda_2v8>;
-+		vddd-supply = <&ov5645_vddd_1v5>;
-+
-+		port {
-+			ov5645_ep: endpoint {
-+			};
-+		};
-+	};
-+
-+	imx219: imx219@10 {
-+		compatible = "sony,imx219";
-+		reg = <0x10>;
-+
-+		VANA-supply = <&imx219_vana_2v8>;
-+		VDIG-supply = <&imx219_vdig_1v8>;
-+		VDDL-supply = <&imx219_vddl_1v2>;
-+		clocks = <&imx219_clk>;
-+
-+		port {
-+			imx219_ep: endpoint {
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-new file mode 100644
-index 000000000000..62000cc933bf
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-@@ -0,0 +1,75 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
-+ * connected with aistarvision-mipi-v2-adapter board
-+ *
-+ * Copyright (C) 2020 Renesas Electronics Corp.
-+ */
-+
-+/dts-v1/;
-+#include "r8a774c0-ek874.dts"
-+#define MIPI_PARENT_I2C i2c3
-+#include "aistarvision-mipi-adapter-2.1.dtsi"
-+
-+/ {
-+	model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
-+	compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&vin4 {
-+	status = "okay";
-+};
-+
-+&vin5 {
-+	status = "okay";
-+};
-+
-+&csi40 {
-+	status = "okay";
-+
-+	ports {
-+		port {
-+			csi40_in: endpoint {
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+				remote-endpoint = <&ov5645_ep>;
-+			};
-+		};
-+	};
-+};
-+
-+&ov5645 {
-+	enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
-+	reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
-+
-+	clocks = <&cpg CPG_MOD 716>;
-+	clock-frequency = <24000000>;
-+
-+	port {
-+		ov5645_ep: endpoint {
-+			clock-lanes = <0>;
-+			data-lanes = <1 2>;
-+			remote-endpoint = <&csi40_in>;
-+		};
-+	};
-+};
-+
-+&imx219 {
-+	port {
-+		imx219_ep: endpoint {
-+			clock-lanes = <0>;
-+			data-lanes = <1 2>;
-+			link-frequencies = /bits/ 64 <456000000>;
-+			/* uncomment remote-endpoint property to tie imx219 to
-+			 * CSI2 also make sure remote-endpoint for ov5645 camera
-+			 * is commented and remote endpoint phandle in csi40_in
-+			 * is imx219_ep
-+			 */
-+			/* remote-endpoint = <&csi40_in>; */
-+		};
-+	};
-+};
--- 
-2.20.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
