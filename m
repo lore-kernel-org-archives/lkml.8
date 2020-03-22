@@ -2,119 +2,145 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC3DC4332D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 01:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EC9C4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 01:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E0F320754
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 01:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF22720754
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 01:40:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="PL1RyTyq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2itsDeP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgCVBg1 (ORCPT
+        id S1728236AbgCVBkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 21:36:27 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41347 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbgCVBg0 (ORCPT
+        Sat, 21 Mar 2020 21:40:05 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43976 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726859AbgCVBkF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 21:36:26 -0400
-Received: by mail-qk1-f193.google.com with SMTP id q188so6244469qke.8
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 18:36:26 -0700 (PDT)
+        Sat, 21 Mar 2020 21:40:05 -0400
+Received: by mail-lf1-f66.google.com with SMTP id n20so7465485lfl.10;
+        Sat, 21 Mar 2020 18:40:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ubq/qZnX/ujKaYfjOueGLD6Nqh5QSMEUH2vduTkKjHA=;
-        b=PL1RyTyq/WRZKZrEHqL4R/7W0dJU38ey6RtLKNXSwKxSkIN9TA8rk+1XHkXSB34Z3U
-         +hT8qUXMqZjtKTftKJLwunclFMXbCFua88wGTvXHtsD23zMsiUUWyiPeyIJ6vgtbThHW
-         gFwhM+xyJWfZ3VhmNgEQUPD4gXknbn5mHpUV8=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Rh41HaJLEukHlz9L4bxl8YXEU6CfzBjQTvMTQdRv0XI=;
+        b=A2itsDePqsyV9qrFuNgM0lFfYTDt2HciDl+SeWHWoG607WDTZ3NKOEUj/LTyHKoS+F
+         jFFmmFNqd0YbjegQ+LKYjVOQKfcM5GoRKu265mMTGz6umdE3CuB8CrKPhuoASZ2cVcMK
+         NZ+FFeRq6MKgqt2sVoZfOVSyd6y/SfQpSZ3O/EBWT0z7ObJtLbZjsjQhuwx+a3ok8cvR
+         Osr5594oaONix/PQH9CT9YwG2GnIvd/m1XCP/crl3iomVlAnueyIdosEFK3tA4BaMgRS
+         5ryZ9AzidUx62wkuDP3GbMsVN4VLA0W9vmL7sxvmhU7dvwJmRzz8umctuAvYyPmbNXOR
+         yQ2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ubq/qZnX/ujKaYfjOueGLD6Nqh5QSMEUH2vduTkKjHA=;
-        b=IIkrBdA8j/FLekP3/UJDbPAHGWWnocmhuq+DU8bNNkbU3f9G2FM+z3mB5TCkdapFKS
-         p07mJZFOlX8Ned84kCnPrJq15USCRDwTF8FeUtP5P7fNyuNFVK7rkZMcoVFyaRW5JeBa
-         F6UrfWymbPSzGw8Jljgiz0RjKfRILFb3kazLemOdmfDWi0JduzjEBF+B7QK4pqQYidlX
-         aeFQma09CN65oAnbJlxeW8Cww6U/9hqu9z8FbvMEstOLDw37N+mJBkS6I5AgnT7Jn7o9
-         ERIkIbxZCWTAEOJmccRF6I9saV7UZUxcM5wXdyTjPqq1fxP6tloq+vq6UktJiuQuQexr
-         7n9Q==
-X-Gm-Message-State: ANhLgQ1JRjVCu6f8v5rz0wZrFbNkLGJ3l45z2Echbp6BhNWI0e8nFoxE
-        +A89cgoqj36QOdjXfRsgTz/iNQ==
-X-Google-Smtp-Source: ADFU+vu+Jf1CVw4GQOx5dNoxGTymqpn5p1dmtyWCTiwwU99STlnO5FKSrpzUOQTz2PYCKmBpD/vEgA==
-X-Received: by 2002:a37:db0a:: with SMTP id e10mr2637693qki.273.1584840985412;
-        Sat, 21 Mar 2020 18:36:25 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id w18sm7979664qkw.130.2020.03.21.18.36.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2020 18:36:24 -0700 (PDT)
-Date:   Sat, 21 Mar 2020 21:36:24 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting
- documentation
-Message-ID: <20200322013624.GA161885@google.com>
-References: <20200318204302.693307984@linutronix.de>
- <20200318204408.211530902@linutronix.de>
- <20200321212144.GA6475@google.com>
- <874kuhqsz3.fsf@nanos.tec.linutronix.de>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Rh41HaJLEukHlz9L4bxl8YXEU6CfzBjQTvMTQdRv0XI=;
+        b=bqynzamJ15fhHPCOEVSSJPGSIKUcQawmAlnmITm/U4WK6gXLa/R0UCFkRNaO18uDRb
+         sgEIwByTfCjAuqgd1GcK0Z/KcQBwAc3S/vxkDIUQ+oSKAkxq3Pc5NTOOFqFN5EkMMNdM
+         3OYcOWI+a93UBegeZmcQKFGmzckVEJiV0cR+nwb6FQzTDZPgm0xdupb7pBDRWGB0k1RU
+         6DrXKq7k2JZjrCNjNyMHB9bcnLWb6klF1nBBihSZBySmQWP85ZZBhz5iPIm9/iNMfHif
+         4PiHFGKYoU+L2Hpq6ezTEGHW6ZIgvx2p4Yc9S5SFOx4/0xGOtmR2o71oSyaCEooyeYbH
+         eUDQ==
+X-Gm-Message-State: ANhLgQ0MNLjkTIkofcaWwETvze7MjFugwU2FCaDmglWzMF7ibEtqE23K
+        E2oG+/4+2mgUcFC+C+aUc8xoBSsy
+X-Google-Smtp-Source: ADFU+vuZuozUWQV6BLICwAKo1+jI/TEjXwD9hBKtQ5v8aWyvrI6KABdk5u6lFT+g2Nofdvdv+/5hhA==
+X-Received: by 2002:ac2:5092:: with SMTP id f18mr1773895lfm.162.1584841200457;
+        Sat, 21 Mar 2020 18:40:00 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id d20sm6016843lfl.53.2020.03.21.18.39.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Mar 2020 18:39:59 -0700 (PDT)
+Subject: Re: [PATCH v2] i2c: at91: support atomic write xfer
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Stefan Lengfeld <contact@stefanchrist.eu>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <6466e066d7cbad20cb6a334ad8e37cdcf521c492.1584822011.git.mirq-linux@rere.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <c789352c-5517-1fd9-980d-f8f6c2017901@gmail.com>
+Date:   Sun, 22 Mar 2020 04:39:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kuhqsz3.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <6466e066d7cbad20cb6a334ad8e37cdcf521c492.1584822011.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 10:49:04PM +0100, Thomas Gleixner wrote:
-[...] 
-> >> +rwsems have grown interfaces which allow non owner release for special
-> >> +purposes. This usage is problematic on PREEMPT_RT because PREEMPT_RT
-> >> +substitutes all locking primitives except semaphores with RT-mutex based
-> >> +implementations to provide priority inheritance for all lock types except
-> >> +the truly spinning ones. Priority inheritance on ownerless locks is
-> >> +obviously impossible.
-> >> +
-> >> +For now the rwsem non-owner release excludes code which utilizes it from
-> >> +being used on PREEMPT_RT enabled kernels.
-> >
-> > I could not parse the last sentence here, but I think you meant "For now,
-> > PREEMPT_RT enabled kernels disable code that perform a non-owner release of
-> > an rwsem". Correct me if I'm wrong.
+22.03.2020 00:03, Michał Mirosław пишет:
+> Implement basic support for atomic write - enough to get a simple
+> write to PMIC on shutdown. Only for chips having ALT_CMD register,
+> eg. SAMA5D2.
 > 
-> Right, that's what I wanted to say :)
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
+> v2: remove runtime-PM usage
+>     switch to readl*poll*atomic() for transfer completion wait
+> ---
+>  drivers/i2c/busses/i2c-at91-master.c | 69 +++++++++++++++++++++++++++-
+>  1 file changed, 67 insertions(+), 2 deletions(-)
 > 
-> Care to send a delta patch?
+> diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
+> index ba6fbb9c7390..d9226207157a 100644
+> --- a/drivers/i2c/busses/i2c-at91-master.c
+> +++ b/drivers/i2c/busses/i2c-at91-master.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+> +#include <linux/iopoll.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+> @@ -709,6 +710,69 @@ static int at91_twi_xfer(struct i2c_adapter *adap, struct i2c_msg *msg, int num)
+>  	return ret;
+>  }
+>  
+> +static int at91_twi_xfer_atomic(struct i2c_adapter *adap, struct i2c_msg *msg, int num)
+> +{
+> +	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
+> +	unsigned long timeout;
+> +	struct pinctrl *pins;
+> +	__u32 stat;
+> +	int ret;
+> +
+> +	/* FIXME: only single write request supported to 7-bit addr */
+> +	if (num != 1)
+> +		return -EOPNOTSUPP;
+> +	if (msg->flags & I2C_M_RD)
+> +		return -EOPNOTSUPP;
+> +	if (msg->flags & I2C_M_TEN)
+> +		return -EOPNOTSUPP;
+> +	if (msg->len > dev->fifo_size && msg->len > 1)
+> +		return -EOPNOTSUPP;
+> +	if (!dev->pdata->has_alt_cmd)
+> +		return -EOPNOTSUPP;
+> +
+> +	pins = pinctrl_get_select_default(&adap->dev);
+> +
+> +	ret = clk_prepare_enable(twi_dev->clk);
 
-Absolutely, doing that now. :-)
+Hello Michał,
 
-thanks,
+Please see comments to the clk_prepare_enable() and clk_prepare().
 
- - Joel
+/* clk_prepare_enable helps cases using clk_enable in non-atomic context. */
+static inline int clk_prepare_enable(struct clk *clk)
+...
+ * clk_prepare may sleep, which differentiates it from clk_enable.
 
