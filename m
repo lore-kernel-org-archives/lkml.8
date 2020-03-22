@@ -2,114 +2,97 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6C7C54FCF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 11:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CC3C54FCF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 11:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D28BD20719
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 11:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06EF120732
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 11:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uxOB2o16"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YEBV9C++"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgCVLjA (ORCPT
+        id S1727024AbgCVLpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 07:39:00 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33678 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbgCVLjA (ORCPT
+        Sun, 22 Mar 2020 07:45:42 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33943 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbgCVLpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 07:39:00 -0400
-Received: by mail-pf1-f196.google.com with SMTP id j1so3291883pfe.0;
-        Sun, 22 Mar 2020 04:38:59 -0700 (PDT)
+        Sun, 22 Mar 2020 07:45:42 -0400
+Received: by mail-lj1-f193.google.com with SMTP id s13so11395471ljm.1
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 04:45:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Z+r+Ca5wy4wGRgdBd/D74jqqWNbUOBR9cUPVfMcIPhI=;
-        b=uxOB2o16Ee1fduqLQBOWbIJFB2t8k9yyl73bpylT+j6pX6Tqeo1mZYo6j30lEej0dh
-         2af30A9uzLyBWK75QZGafmoz17qdAbIDNBJ0YLBZBEb4tby2g16/FsrUGeQqMVIWQAqk
-         C7GjnohnYNd6zToIT2Q3HGmL3tdoxN7xN0+GRCgM4qf3eWylyVnlftmOX4zBwgqvlp/z
-         22mWqBWTIakkr1YK2nKYNda3k21hqfJa7U0JeA5gdpPkoT4pOyBu38SokPQNFpVDqtwu
-         BoTYEQz57MVJCvHbl71TtpAQ7jpf8CLr5mOqdiUpjW+UIUHy9Y+iuqajdETkw3fVQo96
-         G/UQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wvkwniGOgLV8mB9CWYJP/ZbTdJL82BLIEY1BcTY1Qto=;
+        b=YEBV9C++ndScMxatDthA+7c/f8KKuvfqHltiGzT/Jc2ZHPU1tE227G0/kAb2z60WP+
+         tCkZtG0LYyh89fSCUGOCOuSHrushC6Kuo1nBUPKiHVbwgog5bDAnMkK1DDXTzqLbbkao
+         uC2xZTER+EwG7GN0qOrBq9pX2sFNst9ayS+K9GtKWWY4BSlZ8srH1+HnmajSF0ikQDG8
+         xJKMCr/0rDN486nzu53ft/63SkVj4DkAKkblD88kmaUoP/BofYCVVgREFD13eXHBH9jf
+         iILEc0VBhXKw8zus2J2RFO+uZi8GDlj2bZHAHqbeDCEuJKQi0Qu1qkIHkQZqZRFoN9UK
+         TRoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Z+r+Ca5wy4wGRgdBd/D74jqqWNbUOBR9cUPVfMcIPhI=;
-        b=adImztvhmKQItfNtIWb1CXv9q9OG5tyRbUNPCZ/XSxrZghXZQG/HuBa1JRUmO6E63H
-         MttRg6GLIuwiwt1BtAIgvy5rDt3WJlg4NiELVExACy7NzWr5YuUaVFZqDPQlAZsf5zi4
-         dfX6xhMvlGHPsxERUBHV2w87GJDzT2tXhQCmjKxZ2yAcvEMpLwgmeFAQARmKUY3yMC8Q
-         Nx1Y7Hlzcq0toCJh9rpoMXevFrEq08NX1pLlRadfD8OsaypcvwPC1+0wx7QO/gWiZamX
-         j8I/EMmoAlCxGIU0EhqkhQjXmsGt1ExNf8kFb0rG5mdO+eRPGNL0uA7Uqj5xupVmf0Kh
-         lwxw==
-X-Gm-Message-State: ANhLgQ09iPFLNcb+I/prs8KBLB83kXE7vx4mopv7HcQumQz43QWtISA8
-        3yre+DZ8aK0TqaNN0bwTk1HsVfex2QI=
-X-Google-Smtp-Source: ADFU+vs7NwrhSo9TcVfHDTikYxjPBNlGMHUU1LCMZhjEcqLlxHVm2YdFqJYnLbwaUBw+97Gb+1QP9A==
-X-Received: by 2002:a63:b60:: with SMTP id a32mr17655841pgl.417.1584877138268;
-        Sun, 22 Mar 2020 04:38:58 -0700 (PDT)
-Received: from localhost.localdomain ([203.109.114.220])
-        by smtp.gmail.com with ESMTPSA id w19sm9902111pgm.27.2020.03.22.04.38.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 22 Mar 2020 04:38:57 -0700 (PDT)
-From:   Raag Jadav <raagjadav@gmail.com>
-To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     mchehab@kernel.org, wenyou.yang@microchip.com,
-        Raag Jadav <raagjadav@gmail.com>
-Subject: [PATCH] media: ov7740: use SCCB regmap
-Date:   Sun, 22 Mar 2020 17:08:11 +0530
-Message-Id: <1584877091-16838-1-git-send-email-raagjadav@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wvkwniGOgLV8mB9CWYJP/ZbTdJL82BLIEY1BcTY1Qto=;
+        b=eg9luKN+DqoOi23o/srZfY9jvq1dFpnqYvboV16BO3xUj2Ws0DMJFXsgRiSNhQapC2
+         VEnGUopr33Jd6nLxDEId4bARXviYi/LaAujnyA9/2QfMeNpc4jAsSKoaXLhZXvt0EZLa
+         8qMqQtIC6Dz3O0YDTrhOi+i5CBufAF4cM17o2PpcQS5+sUWbUmfpRosCeYDrpB5fFs8H
+         qsiDkktbgCrIykSIskREPBsfL7cY95xe/FGubCk8C8YSImH2tB3tS39IGXAvN1czy4k+
+         cpmmAfBkgOayjnkqxFH33CHiZnCC15vLMI/tnWZE44rP1NMLn6DIbSnFVz5XZjeOWUYA
+         aqdg==
+X-Gm-Message-State: ANhLgQ1owCw95FQiIEGcvAspr1LXqrkQmOquUjoUMlJaEYY+9VyPT1iq
+        omDRo1HsUZ+A0PhCLK512bkDG9L7HpzBQgVrTat+wQ==
+X-Google-Smtp-Source: ADFU+vtz8JnRQjucKNvAZ8vvh9L8MfwrXSOVPk5erRyANVzjEGlUnxBNNGaucWacBWN8eUzf6lDDsJ8zv+51Z7tWzlw=
+X-Received: by 2002:a2e:8ecf:: with SMTP id e15mr11158856ljl.223.1584877540117;
+ Sun, 22 Mar 2020 04:45:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200321133842.2408823-1-mans0n@gorani.run>
+In-Reply-To: <20200321133842.2408823-1-mans0n@gorani.run>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 22 Mar 2020 12:45:29 +0100
+Message-ID: <CACRpkdYvoVF_q1Re_v_sJCYVDOhte0NpdU91UtYB2SpHH60-jg@mail.gmail.com>
+Subject: Re: [PATCH] irqchip/versatile-fpga: Apply clear-mask earlier
+To:     Sungbo Eo <mans0n@gorani.run>
+Cc:     linux-oxnas@groups.io, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Daniel Golle <daniel@makrotopia.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of SCCB APIs for regmap operations.
+On Sat, Mar 21, 2020 at 2:40 PM Sungbo Eo <mans0n@gorani.run> wrote:
 
-Signed-off-by: Raag Jadav <raagjadav@gmail.com>
----
- drivers/media/i2c/ov7740.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+> Clear its own IRQs before the parent IRQ get enabled, so that the
+> remaining IRQs do not accidentally interrupt the parent IRQ controller.
+>
+> This patch also fixes a reboot bug on OX820 SoC, where the remaining
+> rps-timer IRQ raises a GIC interrupt that is left pending. After that,
+> the rps-timer IRQ is cleared during driver initialization, and there's
+> no IRQ left in rps-irq when local_irq_enable() is called, which evokes
+> an error message "unexpected IRQ trap".
+>
+> Fixes: bdd272cbb97a ("irqchip: versatile FPGA: support cascaded interrupts from DT")
+> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Daniel Golle <daniel@makrotopia.org>
 
-diff --git a/drivers/media/i2c/ov7740.c b/drivers/media/i2c/ov7740.c
-index 732655f..5832461 100644
---- a/drivers/media/i2c/ov7740.c
-+++ b/drivers/media/i2c/ov7740.c
-@@ -1068,13 +1068,6 @@ static int ov7740_probe(struct i2c_client *client)
- 	struct v4l2_subdev *sd;
- 	int ret;
- 
--	if (!i2c_check_functionality(client->adapter,
--				     I2C_FUNC_SMBUS_BYTE_DATA)) {
--		dev_err(&client->dev,
--			"OV7740: I2C-Adapter doesn't support SMBUS\n");
--		return -EIO;
--	}
--
- 	ov7740 = devm_kzalloc(&client->dev, sizeof(*ov7740), GFP_KERNEL);
- 	if (!ov7740)
- 		return -ENOMEM;
-@@ -1091,7 +1084,7 @@ static int ov7740_probe(struct i2c_client *client)
- 	if (ret)
- 		return ret;
- 
--	ov7740->regmap = devm_regmap_init_i2c(client, &ov7740_regmap_config);
-+	ov7740->regmap = devm_regmap_init_sccb(client, &ov7740_regmap_config);
- 	if (IS_ERR(ov7740->regmap)) {
- 		ret = PTR_ERR(ov7740->regmap);
- 		dev_err(&client->dev, "Failed to allocate register map: %d\n",
-@@ -1100,7 +1093,6 @@ static int ov7740_probe(struct i2c_client *client)
- 	}
- 
- 	sd = &ov7740->subdev;
--	client->flags |= I2C_CLIENT_SCCB;
- 	v4l2_i2c_subdev_init(sd, client, &ov7740_subdev_ops);
- 
- #ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
--- 
-2.7.4
+Good catch!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Marc: Cc stable?
+
+Yours,
+Linus Walleij
