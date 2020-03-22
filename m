@@ -2,113 +2,135 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2CCC4332D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 06:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A1FC4332D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 06:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1F9D20753
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 06:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6785520777
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 06:12:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h337aAfE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hcXuOW1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgCVGLK (ORCPT
+        id S1726822AbgCVGMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 02:11:10 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45240 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgCVGLJ (ORCPT
+        Sun, 22 Mar 2020 02:12:41 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36600 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgCVGMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 02:11:09 -0400
-Received: by mail-pf1-f196.google.com with SMTP id j10so5718639pfi.12;
-        Sat, 21 Mar 2020 23:11:07 -0700 (PDT)
+        Sun, 22 Mar 2020 02:12:40 -0400
+Received: by mail-pj1-f65.google.com with SMTP id nu11so4469366pjb.1;
+        Sat, 21 Mar 2020 23:12:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=message-id:date:from:to:cc:subject:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OlTTwgDJDrxhOFNzpLQTgXtTgLH4e4DZxu3thtRL82o=;
-        b=h337aAfEFa9h2tcpJIXUoh+RHQPy44foiVQQyVLR5FcC2ClOiZBE8d1SrnX3yQWwaX
-         tgz+qxMiyaj209JhBonSMiwiDsCdTl0lfOcdfuEThU4q+g0Rhh8/myDM0umodKqMve+Z
-         nI3gbp7zJKPBmdnCcFDSyPP/GIdv2znD84wIAGS2Xb6QzJXvNZa1VIPs+F9I0i339ZOb
-         47NcAJHggaHFjOYwXQqxMW/3l/NYmbRhz+JA6ERCM3sgXb2wg31dlWjaYrzTO7QmWTNj
-         r7EIR+1ZeNiAfV2PE8b56AhkM4pwyiRt6VNSJXDg8cri+CdT0Td3kvXJ+YB4zQ+YQ78K
-         KTSw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=uAK6TKBCDDk7h5/OByrdwQjpqLN9cTxpZB4sdO/I36Y=;
+        b=hcXuOW1EBXtoglSD0qea+XzyUQp8VavAOaHF0B22XyLDKgJKUVtG9q4HXB5ojrcc81
+         ERWMzeV0bbuw8LusA0hGUnGraIPkk/5bpq51Pe0weKFD9nPRy9Vjz+nXCRxj1JzZz/eS
+         9ijoYtwqG4TRQ/TsQjUXckiwZ63aBv8e7eCcceZIbwEtAVfytrYneBagr4aifKULntwg
+         ki/c2pBsaMoGQLaKJfi7DGwQ308azZpc0tQFJ/9qiSoOfsVO+DmBKJRztnLDHXFjKYcp
+         fcYy+wpuhS3gFfQrwIfLxNI6u92jFYhNrgL/WVlyr6NXCu1ZP+Zd+oQvYr9XwJy8ti7w
+         hDCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OlTTwgDJDrxhOFNzpLQTgXtTgLH4e4DZxu3thtRL82o=;
-        b=Nh8/nRCZ5Jw95QSiaUPu3E6ZzvkLZBJ1FwVHKZsxy22FpNKZnzsK1rSxm2V9loATCl
-         Wvv5clTZXCwb1UtOt3dDfM8HojUxXN9VqHtVuH2svP35oJ+eHWl1XkwM8UR8hWhfAnsG
-         720hLxPH4XhP4es3WNoJoYGzzZxMlCaK14AS5C/84dio68naVSWzkpxlaEtSpvQQONB7
-         a3CIa+lKfteePhRbyA1eg0i+aZQjW9Q89TiTDvwwg9G/PdwwT1lenu64p/rIF3pdB4fv
-         xJOz4FDipCEJXYitpXUz1x/XSzcLlRXe6c5Qe6Rj3fp/4YDxm6vVSSeWXtjbMIaBFxJ3
-         meZQ==
-X-Gm-Message-State: ANhLgQ3J5uDKBYyYOerSxMjiCaKkMddO6cOl2BmZ0AS+Y26VLFmiLrt9
-        WN7fipLPRstY9GLYA8JTpe/FO1y9kEY=
-X-Google-Smtp-Source: ADFU+vuF8WchGXRdT82EO59i+tFpChkiMs7Eatqag+5y9JFsUISI+og4W2JlbD2EaS6oGmXyQoP59Q==
-X-Received: by 2002:a63:5011:: with SMTP id e17mr16250248pgb.338.1584857466789;
-        Sat, 21 Mar 2020 23:11:06 -0700 (PDT)
-Received: from SARKAR ([49.207.56.153])
-        by smtp.gmail.com with ESMTPSA id w4sm6744586pfc.57.2020.03.21.23.11.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2020 23:11:06 -0700 (PDT)
-Message-ID: <5e77017a.1c69fb81.dc341.8ab9@mx.google.com>
-X-Google-Original-Message-ID: <20200322061102.GA17797@rohitsarkar5398@gmail.com>
-Date:   Sun, 22 Mar 2020 11:41:02 +0530
-From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jic23@kernel.org, dragos.bogdan@analog.com,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>, knaack.h@gmx.de,
-        pmeerw@pmeerw.net
-Subject: Re: [PATCH] iio: gyro: adis16136: use scnprintf instead of snprintf
-References: <5e723666.1c69fb81.3545b.79c3@mx.google.com>
- <20200322002542.GA2826015@smile.fi.intel.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=uAK6TKBCDDk7h5/OByrdwQjpqLN9cTxpZB4sdO/I36Y=;
+        b=enTbH2MyUtpIavy7faa1moiVlvM+JEsJqQl23W/S/dih+IjvqpohqUbz9M9tXaQSBp
+         EzGxw9q1aptCH3fTC7ZYMcXrYsIsOWSZl0Cch08U2rnRt4a6GP0+SiD0gClEIBp79xJJ
+         ymURT9N1vEWGsy+pGwwUl33H6x2wJrHvpQxbAyxvJgepW5hlgurMcBojFxLvjYrOuFM7
+         6F8FTWqFatLGet8Ic2f2nj7xy5GwACZiQm8HqEhTlD2KDLGjEVhM6Y+zdAalW8FCe/6f
+         U6ZfdEGuLAsNbMzYEE69Et5T8UPdjr6z1d6GQgkUpDMafXLd4PovQya+30B9Nklv0Yw7
+         tTbg==
+X-Gm-Message-State: ANhLgQ3Z5HF+93y2d3OxCuUi8t2AUxa97c3O9ZLXeZSiO042Rv0lZaHn
+        JAcyqAA9l5JX4Y78oi8+Qbw=
+X-Google-Smtp-Source: ADFU+vtgXQJ8cYxetVmdBrDHo0wv4pTnrn8U69MQt06dCBZ+rUg8bxCKHLyMVhBsxDLNsJyDlu9V2g==
+X-Received: by 2002:a17:90a:bd0e:: with SMTP id y14mr18698669pjr.11.1584857559562;
+        Sat, 21 Mar 2020 23:12:39 -0700 (PDT)
+Received: from localhost (216.24.188.11.16clouds.com. [216.24.188.11])
+        by smtp.gmail.com with ESMTPSA id ck23sm8696181pjb.14.2020.03.21.23.12.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 21 Mar 2020 23:12:39 -0700 (PDT)
+Date:   Sun, 22 Mar 2020 14:12:25 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        davem@davemloft.net, allison@lohutok.net, tglx@linutronix.de,
+        gregkh@linuxfoundation.org, mchehab+samsung@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 7/7] net: phy: use phy_read_poll_timeout() to
+ simplify the code
+Message-ID: <20200322061225.GA22897@nuc8i5>
+References: <20200322024834.31402-1-zhengdejin5@gmail.com>
+ <20200322024834.31402-8-zhengdejin5@gmail.com>
+ <242d4d32-8559-4ffc-9272-7ee1efc30793@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200322002542.GA2826015@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <242d4d32-8559-4ffc-9272-7ee1efc30793@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 02:25:42AM +0200, Andy Shevchenko wrote:
-> On Wed, Mar 18, 2020 at 08:25:22PM +0530, Rohit Sarkar wrote:
-> > scnprintf returns the actual number of bytes written into the buffer as
-> > opposed to snprintf which returns the number of bytes that would have
-> > been written if the buffer was big enough. Using the output of snprintf
-> > may lead to difficult to detect bugs.
+On Sat, Mar 21, 2020 at 07:57:11PM -0700, Florian Fainelli wrote:
 > 
-> Nice. Have you investigate the code?
 > 
-> > @@ -96,7 +96,7 @@ static ssize_t adis16136_show_serial(struct file *file,
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > -	len = snprintf(buf, sizeof(buf), "%.4x%.4x%.4x-%.4x\n", lot1, lot2,
-> > +	len = scnprintf(buf, sizeof(buf), "%.4x%.4x%.4x-%.4x\n", lot1, lot2,
-> >  		lot3, serial);
-> >  
-> >  	return simple_read_from_buffer(userbuf, count, ppos, buf, len);
+> On 3/21/2020 7:48 PM, Dejin Zheng wrote:
+> > use phy_read_poll_timeout() to replace the poll codes for
+> > simplify the code in phy_poll_reset() function.
+> > 
+> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> > ---
+> > v2 -> v3:
+> > 	- adapt to it after modifying the parameter order of the
+> > 	  newly added function
+> > v1 -> v2:
+> > 	- remove the handle of phy_read()'s return error.
+> > 
+> >  drivers/net/phy/phy_device.c | 16 ++++------------
+> >  1 file changed, 4 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> > index a585faf8b844..cfe7aae35084 100644
+> > --- a/drivers/net/phy/phy_device.c
+> > +++ b/drivers/net/phy/phy_device.c
+> > @@ -1059,23 +1059,15 @@ EXPORT_SYMBOL(phy_disconnect);
+> >  static int phy_poll_reset(struct phy_device *phydev)
+> >  {
+> >  	/* Poll until the reset bit clears (50ms per retry == 0.6 sec) */
+> > -	unsigned int retries = 12;
+> > -	int ret;
+> > -
+> > -	do {
+> > -		msleep(50);
+> > -		ret = phy_read(phydev, MII_BMCR);
 > 
-> The buffer size is 20, the pattern size I count to 19. Do you think snprintf()
-> can fail?
-That might be the case, but IMO using scnprintf can be considered as a
-best practice. There is no overhead with this change and further if the
-pattern is changed by someone in the future they might overlook the
-buffersize
-Thanks,
-Rohit
+> You are doing some subtle changes here, the sleep used to be *before*
+> the read of BMCR and now it will be *after*. If there were PHY devices
+> that required 50ms at least, but would incorrectly return that
+> BMCR_RESET is cleared *before* 50ms, then we would be breaking those.
+> 
+> I would recommend we drop this patch for now, the rest looks good to me
+> though.
+
+Hi Florian��
+
+Thanks very much for your comments, I will drop this patch, and can I get
+your ack/reviewed-by for the rest patches? thanks again!
+
+BR,
+dejin
+
 > -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+> Florian
