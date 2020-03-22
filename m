@@ -2,129 +2,184 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8003DC54FCF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A61C54FCF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5808B20724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:28:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DMIkZSYb"
+	by mail.kernel.org (Postfix) with ESMTP id 59B4F20724
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgCVQ2U (ORCPT
+        id S1726944AbgCVQ2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 12:28:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58018 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgCVQ2U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 12:28:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+q5SE8PabkJ4E2ARJpyvT2voAuJ2mKWWauYSLk4KvP8=; b=DMIkZSYbAXVYZnU8ct+6eTALIM
-        IIwMq32XvglVnA0tcHkjB7yxlMiata26hBz45kwB5a05tIb02c9RE5ySYhs3Ho1G+lFVSgzlzVVDc
-        DUMiK8p2sT6gtwlUuoh5Nc7LPQ6R2kVmwSly/JqhfRE2B1JKygrsPQSdgxP2bs4+VdMciVAE86kHt
-        faPtljJno8DX46yFjGcZZwU56Jt23D6buy8qiu9daFTCr8dE5hV5cU6dlBPdz0Fx7mooeF/M7/3E9
-        cV1R/zopL7FbuerKPz2Tn81i5E79BF6SUI1praSaJFyVmD8DjvZ9DxsxJvgden2Wq6jHCv3KoNE8F
-        cMFMFWAw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jG3SU-0000CF-PX; Sun, 22 Mar 2020 16:28:18 +0000
-Date:   Sun, 22 Mar 2020 09:28:18 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-xfs@vger.kernel.org,
-        William Kucharski <william.kucharski@oracle.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH v9 12/25] mm: Move end_index check out of readahead loop
-Message-ID: <20200322162818.GG4971@bombadil.infradead.org>
-References: <20200320142231.2402-1-willy@infradead.org>
- <20200320142231.2402-13-willy@infradead.org>
- <20200320165828.GB851@sol.localdomain>
- <20200320173040.GB4971@bombadil.infradead.org>
- <20200320180017.GE851@sol.localdomain>
- <20200320181132.GD4971@bombadil.infradead.org>
- <20200320182452.GF851@sol.localdomain>
+        Sun, 22 Mar 2020 12:28:33 -0400
+Received: from mga11.intel.com ([192.55.52.93]:4086 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725785AbgCVQ2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 12:28:32 -0400
+IronPort-SDR: 6BGa79Zvinhui8/p2u8HeND9AF3xlkxAjFXMCG8mmiXuI4xlAMa4TuuB25Pnd4BDi1NNqSdzHz
+ zVvWG25xQ8nQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2020 09:28:31 -0700
+IronPort-SDR: ZNYSGDdCKqMndeTUunFztK8jUdJEalFJo9nJ7o9zgaEkHzDyFMea8OAJg+5mWNsNnbHofBnCjx
+ OF8kC5fFlnBg==
+X-IronPort-AV: E=Sophos;i="5.72,293,1580803200"; 
+   d="scan'208";a="419253068"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2020 09:28:30 -0700
+Subject: [PATCH v2 0/6] Manual definition of Soft Reserved memory devices
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-acpi@vger.kernel.org
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Wei Yang <richardw.yang@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jeff Moyer <jmoyer@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, joao.m.martins@oracle.com
+Date:   Sun, 22 Mar 2020 09:12:23 -0700
+Message-ID: <158489354353.1457606.8327903161927980740.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320182452.GF851@sol.localdomain>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 11:24:52AM -0700, Eric Biggers wrote:
-> On Fri, Mar 20, 2020 at 11:11:32AM -0700, Matthew Wilcox wrote:
-> > On Fri, Mar 20, 2020 at 11:00:17AM -0700, Eric Biggers wrote:
-> > > But then if someone passes index=0 and nr_to_read=0, this underflows and the
-> > > entire file gets read.
-> > 
-> > nr_to_read == 0 doesn't make sense ... I thought we filtered that out
-> > earlier, but I can't find anywhere that does that right now.  I'd
-> > rather return early from __do_page_cache_readahead() to fix that.
-> > 
-> > > The page cache isn't actually supposed to contain a page at index ULONG_MAX,
-> > > since MAX_LFS_FILESIZE is at most ((loff_t)ULONG_MAX << PAGE_SHIFT), right?  So
-> > > I don't think we need to worry about reading the page with index ULONG_MAX.
-> > > I.e. I think it's fine to limit nr_to_read to 'ULONG_MAX - index', if that makes
-> > > it easier to avoid an overflow or underflow in the next check.
-> > 
-> > I think we can get a page at ULONG_MAX on 32-bit systems?  I mean, we can buy
-> > hard drives which are larger than 16TiB these days:
-> > https://www.pcmag.com/news/seagate-will-ship-18tb-and-20tb-hard-drives-in-2020
-> > (even ignoring RAID devices)
-> 
-> The max file size is ((loff_t)ULONG_MAX << PAGE_SHIFT) which means the maximum
-> page *index* is ULONG_MAX - 1, not ULONG_MAX.
+Changes since v1 [1]:
+- Kill the ifdef'ery in arch/x86/mm/numa.c (Rafael)
 
-I see where we set that for _files_ ... I can't find anywhere that we prevent
-i_size getting that big for block devices.  Maybe I'm missing something.
+- Add a dummy phys_to_target_node() for ARM64 (0day-robot)
 
-> Anyway, I think we may be making this much too complicated.  How about just:
-> 
-> 	pgoff_t i_nrpages = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
-> 
-> 	if (index >= i_nrpages)
-> 		return;
-> 	/* Don't read past the end of the file */
-> 	nr_to_read = min(nr_to_read, i_nrpages - index);
-> 
-> That's 2 branches instead of 4.  (Note that assigning to i_nrpages can't
-> overflow, since the max number of pages is ULONG_MAX not ULONG_MAX + 1.)
+- Initialize ->child and ->sibling to NULL in the resource returned by
+  find_next_iomem_res() (Inspired by Tom's feedback even though it does
+  not set them like he suggested)
 
-I like where you're going with this.  Just to be on the safe side, I'd
-prefer to do this:
+- Collect Ard's Ack
 
-@@ -266,11 +266,8 @@ void __do_page_cache_readahead(struct address_space *mapping,
-        end_index = (isize - 1) >> PAGE_SHIFT;
-        if (index > end_index)
-                return;
--       /* Avoid wrapping to the beginning of the file */
--       if (index + nr_to_read < index)
--               nr_to_read = ULONG_MAX - index + 1;
-        /* Don't read past the page containing the last byte of the file */
--       if (index + nr_to_read >= end_index)
-+       if (nr_to_read > end_index - index)
-                nr_to_read = end_index - index + 1;
- 
-        page_cache_readahead_unbounded(mapping, file, index, nr_to_read,
+[1]: http://lore.kernel.org/r/158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com
 
-end_index - index + 1 could only overflow if end_index is ULONG_MAX
-and index is 0.  But if end_index is ULONG_MAX and index is 0, then
-nr_to_read is necessarily <= ULONG_MAX, so the condition is false.
-And if nr_to_read is 0, then the condition is also false, so it won't
-increase nr_to_read from 0 to 1.  It might assign x to nr_to_read when
-nr_to_read is already x, but that's harmless.
+---
 
-Thanks!
+My primary motivation is making the dax_kmem facility useful to
+shipping platforms that have performance differentiated memory, but
+may not have EFI-defined soft-reservations / HMAT (or
+non-EFI-ACPI-platform equivalent). I'm anticipating HMAT enabled
+platforms where the platform firmware policy for what is
+soft-reserved, or not, is not the policy the system owner would pick.
+I'd also highlight Joao's work [2] (see the TODO section) as an
+indication of the demand for custom carving memory resources and
+applying the device-dax memory management interface.
+
+Given the current dearth of systems that supply an ACPI HMAT table, and
+the utility of being able to manually define device-dax "hmem" instances
+via the efi_fake_mem= option, relax the requirements for creating these
+devices. Specifically, add an option (numa=nohmat) to optionally disable
+consideration of the HMAT and update efi_fake_mem= to behave like
+memmap=nn!ss in terms of delimiting device boundaries.
+
+[2]: https://lore.kernel.org/lkml/20200110190313.17144-1-joao.m.martins@oracle.com/
+
+With Ard's and Rafael's ack I'd feel ok taking this through the nvdimm
+tree, please holler if anything still needs some fixups.
+
+Dependencies:
+
+b2ca916ce392 ACPI: NUMA: Up-level "map to online node" functionality
+4fcbe96e4d0b mm/numa: Skip NUMA_NO_NODE and online nodes in numa_map_to_online_node()
+575e23b6e13c powerpc/papr_scm: Switch to numa_map_to_online_node()
+1e5d8e1e47af x86/mm: Introduce CONFIG_NUMA_KEEP_MEMINFO
+5d30f92e7631 x86/NUMA: Provide a range-to-target_node lookup facility
+7b27a8622f80 libnvdimm/e820: Retrieve and populate correct 'target_node' info
+
+Tested with:
+
+        numa=nohmat efi_fake_mem=4G@9G:0x40000,4G@13G:0x40000
+
+...to create to device-dax instances:
+
+	# daxctl list -RDu
+	[
+	  {
+	    "path":"\/platform\/hmem.1",
+	    "id":1,
+	    "size":"4.00 GiB (4.29 GB)",
+	    "align":2097152,
+	    "devices":[
+	      {
+	        "chardev":"dax1.0",
+	        "size":"4.00 GiB (4.29 GB)",
+	        "target_node":3,
+	        "mode":"devdax"
+	      }
+	    ]
+	  },
+	  {
+	    "path":"\/platform\/hmem.0",
+	    "id":0,
+	    "size":"4.00 GiB (4.29 GB)",
+	    "align":2097152,
+	    "devices":[
+	      {
+	        "chardev":"dax0.0",
+	        "size":"4.00 GiB (4.29 GB)",
+	        "target_node":2,
+	        "mode":"devdax"
+	      }
+	    ]
+	  }
+	]
+
+
+---
+
+Dan Williams (6):
+      x86/numa: Cleanup configuration dependent command-line options
+      x86/numa: Add 'nohmat' option
+      efi/fake_mem: Arrange for a resource entry per efi_fake_mem instance
+      ACPI: HMAT: Refactor hmat_register_target_device to hmem_register_device
+      resource: Report parent to walk_iomem_res_desc() callback
+      ACPI: HMAT: Attach a device for each soft-reserved range
+
+ arch/arm64/mm/numa.c                |   13 +++++
+ arch/x86/include/asm/numa.h         |    8 +++
+ arch/x86/kernel/e820.c              |   16 +++++-
+ arch/x86/mm/numa.c                  |   10 +---
+ arch/x86/mm/numa_emulation.c        |    3 +
+ arch/x86/xen/enlighten_pv.c         |    2 -
+ drivers/acpi/numa/hmat.c            |   76 +++++----------------------
+ drivers/acpi/numa/srat.c            |    9 +++
+ drivers/dax/Kconfig                 |    5 ++
+ drivers/dax/Makefile                |    3 -
+ drivers/dax/hmem/Makefile           |    6 ++
+ drivers/dax/hmem/device.c           |   97 +++++++++++++++++++++++++++++++++++
+ drivers/dax/hmem/hmem.c             |    2 -
+ drivers/firmware/efi/x86_fake_mem.c |   12 +++-
+ include/acpi/acpi_numa.h            |   14 +++++
+ include/linux/dax.h                 |    8 +++
+ kernel/resource.c                   |   11 +++-
+ 17 files changed, 209 insertions(+), 86 deletions(-)
+ create mode 100644 drivers/dax/hmem/Makefile
+ create mode 100644 drivers/dax/hmem/device.c
+ rename drivers/dax/{hmem.c => hmem/hmem.c} (98%)
+
+base-commit: 7b27a8622f802761d5c6abd6c37b22312a35343c
