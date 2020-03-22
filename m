@@ -2,142 +2,393 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BF1C1975A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3040C54EEB
 	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 23:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C74B2072D
+	by mail.kernel.org (Postfix) with ESMTP id C01F42072D
 	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 23:58:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUWX8hEI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584921503;
+	bh=u1jD3IbInsOEaDrU9BXhS73XN403pHiJecqMTyfKo30=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jzYIbyYoyCiLGA1z0dI1KDk1oSOhLK3XoTzNdrvdXTzxz7nhJ2NDUcjPvsHSdKhOX
+	 27cgv983xep1xohnRqDgxhRCCEiMrGFDhV0n0nWRdeqSDVXrA1e3c1cFsAXwmKwkXD
+	 TDmsirrcj+kmLKD5teqPfhKnNkHi0NAbJkl7t+uY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgCVX6L (ORCPT
+        id S1726986AbgCVX6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 19:58:11 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40826 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgCVX6L (ORCPT
+        Sun, 22 Mar 2020 19:58:19 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34564 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbgCVX6T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 19:58:11 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w26so7994335edu.7;
-        Sun, 22 Mar 2020 16:58:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=16n5W71pgyT6GLbXOW01rJLBzPo7sl4nqjxN9D4dB2g=;
-        b=MUWX8hEIe2xtcWw5PGoYP41lapbLjFNAQ5MwKfKtOqvT8ALEsxnOJtpJkwHDCApYIR
-         yIi0d7E0FFRCNJ70LAd49zcszL/tVjZkPP8HZSAwkD8sUzIUxsZGdvzh8PPocI/ihEC4
-         eDDudVlNJEJJTt9wWsez6yE2BM7W7ASQctkuhBTqAqhcdrWiUmfm0fPM5GlsMwjwh4Vp
-         GCMKtMPAS6y7qGZaqqS3QWOpBnW3XmVqdgNc6lPV6M2dRjg1i+cwNpFfW/wbbl0FRFfq
-         DkddZhhAzx6nWtdKVlBnKYIB3bIo9Rx2bfE6D7dTTQQXR4HT9WY5+1CNjS/t20LCvnkz
-         ovlA==
+        Sun, 22 Mar 2020 19:58:19 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 26so7763757wmk.1;
+        Sun, 22 Mar 2020 16:58:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=16n5W71pgyT6GLbXOW01rJLBzPo7sl4nqjxN9D4dB2g=;
-        b=Vbq3Npqr/AbOlZJ7tteEUxrFJ2UUtxNN37nTKDzC6pqsMaqWWgCViiovJeEP7F8PQs
-         qE+Do62ZlXDPiqr/dHWseFRW8RwvDC1HrM6JhTxEhxv4aMINJQSxXCtJG+FH3nYpbDGr
-         pke7wXncPmAIqjZBIkraNrnNl4VtKCY4f7dYHxdVZPq72MZOFm8Kl3xBf99gPeqQAM8I
-         bdK7t7Rco/1gcETyyNXIgkbB7FRvYm9LlbWXX1gMR4TJ9WtFPRw01DZ6lB1Jj9YQkpgq
-         Z+pKo/8WlVTA378iMyqERGilFeXmDCA1C3nguMMgb7uIkWfuaFgu7AHjuFpXrd8r6J4Q
-         Mf0A==
-X-Gm-Message-State: ANhLgQ2uGNOYP+3Wibr9dON5SQRBq3ptKA82N1w3KCXIujye6mRv9UY6
-        peztLYJq9ah5DTCayAv6dtizNav3alhn9rxHRLc=
-X-Google-Smtp-Source: ADFU+vszdzmENHtwsaq4alTfUpwKBMZhf2fMVh/X2IJgdcPXWfW4LIPeYm2Ir/FxfjTfYe4DrU3ivo+G8vBz95Jx+0I=
-X-Received: by 2002:a50:aca3:: with SMTP id x32mr19159147edc.368.1584921488688;
- Sun, 22 Mar 2020 16:58:08 -0700 (PDT)
+        bh=1u2HajMxZOO6lE3B4pGCCJXeMZ2tGYJNbbDaBEbx78k=;
+        b=GtuufJqUGYQuK+2KOFVYtmop0mIuOSghHCK/Vy2XlIs3+vIsXt/3Dbz5wkhN+RsMwd
+         VU1ejr2sP3SZETD28w0b5MFRJiZQ8O8clrjMsMxywRH6b1aLwm/ObKfnSm4tm6vKsF93
+         8sfxHW4esKSKxRdoa4FgusmbczqF706Zj2AsLYIdLSaQVHyedJi45SbQhmqZk7tu4b7R
+         nDJ+XuXraJCz6KkSb5UOQcbSAIAqkISvO8hp8nOGqmWqYCsrvYgcEeK48l/+j4Hk2LCV
+         IOKQyLRtqU4mR8L95j6AxTfS28Ze6sYVfsB2gCFIcAueFoS368a1OfnWkPePMOtolugg
+         aorw==
+X-Gm-Message-State: ANhLgQ2FeHYJKfA6DAX2CMDlT4IgJ32H4sPwWoehN6pu3KqkzJ4869jk
+        gKqICwORwhpMSKDS5W8FbbLj8K7N0ezVT+X0FK4=
+X-Google-Smtp-Source: ADFU+vuG4vP7sG0Mn7MpGkfnSOWY0b9bDeHUuSd5ib/JzQ2EReiHixDYZyjKzSOP5C0zYWDEtKdO/s5RaaBfjTy17D0=
+X-Received: by 2002:a1c:4684:: with SMTP id t126mr8192483wma.128.1584921495984;
+ Sun, 22 Mar 2020 16:58:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200322210957.3940-1-f.fainelli@gmail.com>
-In-Reply-To: <20200322210957.3940-1-f.fainelli@gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 23 Mar 2020 01:57:57 +0200
-Message-ID: <CA+h21ho5tVuRSOfFXLDdexNcqz3BtH0st0zwrhJBR-hb4rZKkg@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: dsa: Implement flow dissection for tag_brcm.c
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20200224043749.69466-1-namhyung@kernel.org>
+In-Reply-To: <20200224043749.69466-1-namhyung@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 23 Mar 2020 08:58:04 +0900
+Message-ID: <CAM9d7chneHzibiQFopmN1rED=mf-nBpy58kauXWSOSYy2zCtzQ@mail.gmail.com>
+Subject: Re: [PATCHSET 00/10] perf: Improve cgroup profiling (v5)
+To:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tejun Heo <tj@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 22 Mar 2020 at 23:10, Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> Provide a flow_dissect callback which returns the network offset and
-> where to find the skb protocol, given the tags structure a common
-> function works for both tagging formats that are supported.
->
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
+Hello Peter, Tejun and folks.
 
-Looks good to me.
+Do you have any other comments on the kernel side?
+If not, can I get your Ack?
 
->  net/dsa/tag_brcm.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+Thanks
+Namhyung
+
+
+On Mon, Feb 24, 2020 at 1:37 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> diff --git a/net/dsa/tag_brcm.c b/net/dsa/tag_brcm.c
-> index 9c3114179690..0d3f796d14a3 100644
-> --- a/net/dsa/tag_brcm.c
-> +++ b/net/dsa/tag_brcm.c
-> @@ -142,6 +142,27 @@ static struct sk_buff *brcm_tag_rcv_ll(struct sk_buff *skb,
+> Hello,
 >
->         return skb;
->  }
-> +
-> +static int brcm_tag_flow_dissect(const struct sk_buff *skb, __be16 *proto,
-> +                                int *offset)
-> +{
-> +       /* We have been called on the DSA master network device after
-> +        * eth_type_trans() which pulled the Ethernet header already.
-> +        * Frames have one of these two layouts:
-> +        * -----------------------------------
-> +        * | MAC DA | MAC SA | 4b tag | Type | DSA_TAG_PROTO_BRCM
-> +        * -----------------------------------
-> +        * -----------------------------------
-> +        * | 4b tag | MAC DA | MAC SA | Type | DSA_TAG_PROTO_BRCM_PREPEND
-> +        * -----------------------------------
-> +        * skb->data points 2 bytes before the actual Ethernet type field and
-> +        * we have an offset of 4bytes between where skb->data and where the
-> +        * payload starts.
-> +        */
-> +       *offset = BRCM_TAG_LEN;
-> +       *proto = ((__be16 *)skb->data)[1];
-> +       return 0;
-> +}
->  #endif
+> This work is to improve cgroup profiling in perf.  Currently it only
+> supports profiling tasks in a specific cgroup and there's no way to
+> identify which cgroup the current sample belongs to.  So I added
+> PERF_SAMPLE_CGROUP to add cgroup id into each sample.  It's a 64-bit
+> integer having file handle of the cgroup.  And kernel also generates
+> PERF_RECORD_CGROUP event for new groups to correlate the cgroup id and
+> cgroup name (path in the cgroup filesystem).  The cgroup id can be
+> read from userspace by name_to_handle_at() system call so it can
+> synthesize the CGROUP event for existing groups.
 >
->  #if IS_ENABLED(CONFIG_NET_DSA_TAG_BRCM)
-> @@ -177,6 +198,7 @@ static const struct dsa_device_ops brcm_netdev_ops = {
->         .xmit   = brcm_tag_xmit,
->         .rcv    = brcm_tag_rcv,
->         .overhead = BRCM_TAG_LEN,
-> +       .flow_dissect = brcm_tag_flow_dissect,
->  };
+> So why do we want this?  Systems running a large number of jobs in
+> different cgroups want to profiling such jobs precisely. This includes
+> container hosting systems widely used today. Currently perf supports
+> namespace tracking but the systems may not use (cgroup) namespace for
+> their jobs. Also it'd be more intuitive to see cgroup names (as
+> they're given by user or sysadmin) rather than numeric
+> cgroup/namespace id even if they use the namespaces.
 >
->  DSA_TAG_DRIVER(brcm_netdev_ops);
-> @@ -205,6 +227,7 @@ static const struct dsa_device_ops brcm_prepend_netdev_ops = {
->         .xmit   = brcm_tag_xmit_prepend,
->         .rcv    = brcm_tag_rcv_prepend,
->         .overhead = BRCM_TAG_LEN,
-> +       .flow_dissect = brcm_tag_flow_dissect,
->  };
+> From Stephane Eranian:
+> > In data centers you care about attributing samples to a job not such
+> > much to a process.  A job may have multiple processes which may come
+> > and go. The cgroup on the other hand stays around for the entire
+> > lifetime of the job. It is much easier to map a cgroup name to a
+> > particular job than it is to map a pid back to a job name,
+> > especially for offline post-processing.
 >
->  DSA_TAG_DRIVER(brcm_prepend_netdev_ops);
+> Note that this only works for "perf_event" cgroups (obviously) so if
+> users are still using cgroup-v1 interface, they need to have same
+> hierarchy for subsystem(s) want to profile with it.
+>
+>  * Changes from v4:
+>   - use CONFIG_CGROUP_PERF
+>   - move cgroup tree to perf_env
+>   - move cgroup fs utility function to tools/lib/api/fs
+>   - use a local buffer and check its size for cgroup systhesis
+>
+>  * Changes from v3:
+>   - staticize perf_event_cgroup()
+>   - fix sample parsing test
+>
+>  * Changes from v2:
+>   - remove path_len from cgroup_event
+>   - bail out if kernel doesn't support cgroup sampling
+>   - add some description in the Kconfig
+>
+>  * Changes from v1:
+>   - use new cgroup id (= file handle)
+>
+> The code is available at perf/cgroup-v5 branch in
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+>
+>
+> The testing result looks something like this:
+>
+>   [root@qemu build]# ./perf record --all-cgroups ./cgtest
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.009 MB perf.data (150 samples) ]
+>
+>   [root@qemu build]# ./perf report -s cgroup,comm --stdio
+>   # To display the perf.data header info, please use --header/--header-only options.
+>   #
+>   #
+>   # Total Lost Samples: 0
+>   #
+>   # Samples: 150  of event 'cpu-clock:pppH'
+>   # Event count (approx.): 37500000
+>   #
+>   # Overhead  cgroup      Command
+>   # ........  ..........  .......
+>   #
+>       32.00%  /sub/cgrp2  looper2
+>       28.00%  /sub/cgrp1  looper1
+>       25.33%  /sub        looper0
+>        4.00%  /           cgtest
+>        4.00%  /sub        cgtest
+>        3.33%  /sub/cgrp2  cgtest
+>        2.67%  /sub/cgrp1  cgtest
+>        0.67%  /           looper0
+>
+>
+> The test program (cgtest) follows.
+>
+> Thanks,
+> Namhyung
+>
+>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Li Zefan <lizefan@huawei.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+>
+>
+> -------8<-----------------------------------------8<----------------
+> #define _GNU_SOURCE
+> #include <stdio.h>
+> #include <stdlib.h>
+> #include <string.h>
+> #include <unistd.h>
+> #include <fcntl.h>
+> #include <sched.h>
+> #include <errno.h>
+> #include <sys/stat.h>
+> #include <sys/wait.h>
+> #include <sys/prctl.h>
+> #include <sys/mount.h>
+>
+> char cgbase[] = "/sys/fs/cgroup/perf_event";
+>
+> void mkcgrp(char *name) {
+>   char buf[256];
+>
+>   snprintf(buf, sizeof(buf), "%s%s", cgbase, name);
+>   if (mkdir(buf, 0755) < 0)
+>     perror("mkdir");
+> }
+>
+> void rmcgrp(char *name) {
+>   char buf[256];
+>
+>   snprintf(buf, sizeof(buf), "%s%s", cgbase, name);
+>   if (rmdir(buf) < 0)
+>     perror("rmdir");
+> }
+>
+> void setcgrp(char *name) {
+>   char buf[256];
+>   int fd;
+>
+>   snprintf(buf, sizeof(buf), "%s%s/tasks", cgbase, name);
+>
+>   fd = open(buf, O_WRONLY);
+>   if (fd > 0) {
+>     if (write(fd, "0\n", 2) != 2)
+>       perror("write");
+>     close(fd);
+>   }
+> }
+>
+> void create_sub_cgroup(int idx) {
+>   char buf[128];
+>
+>   snprintf(buf, sizeof(buf), "/sub/cgrp%d", idx);
+>   mkcgrp(buf);
+> }
+>
+> void remove_sub_cgroup(int idx) {
+>   char buf[128];
+>
+>   snprintf(buf, sizeof(buf), "/sub/cgrp%d", idx);
+>   rmcgrp(buf);
+> }
+>
+> void set_sub_cgroup(int idx) {
+>   char buf[128];
+>
+>   snprintf(buf, sizeof(buf), "/sub/cgrp%d", idx);
+>   setcgrp(buf);
+> }
+>
+> void set_task_name(int idx) {
+>   char buf[16];
+>
+>   snprintf(buf, sizeof(buf), "looper%d", idx);
+>   prctl(PR_SET_NAME, buf, 0, 0, 0);
+> }
+>
+> void loop(unsigned max) {
+>   volatile unsigned int count = 1;
+>
+>   while (count++ != max) {
+>     asm volatile ("pause");
+>   }
+> }
+>
+> void worker(int idx, unsigned cnt, int new_ns) {
+>   int oldns;
+>
+>   create_sub_cgroup(idx);
+>   set_sub_cgroup(idx);
+>
+>   if (new_ns) {
+>     if (unshare(CLONE_NEWCGROUP) < 0)
+>       perror("unshare");
+>
+> #if 0  /* FIXME */
+>     if (unshare(CLONE_NEWNS) < 0)
+>       perror("unshare");
+>
+>     if (mount("none", "/sys", NULL, MS_REMOUNT | MS_REC | MS_SLAVE, NULL) < 0)
+>       perror("mount --make-rslave");
+>
+>     sleep(1);
+>     if (umount("/sys/fs/cgroup/perf_event") < 0)
+>       perror("umount");
+>
+>     if (mount("cgroup", "/sys/fs/cgroup/perf_event", "cgroup",
+>               MS_NODEV | MS_NOEXEC | MS_NOSUID, "perf_event") < 0)
+>       perror("mount again");
+> #endif
+>   }
+>
+>   if (fork() == 0) {
+>     set_task_name(idx);
+>     loop(cnt);
+>     exit(0);
+>   }
+>   wait(NULL);
+> }
+>
+> int main(int argc, char *argv[])
+> {
+>   int i, nr = 2;
+>   int new_ns = 1;
+>   unsigned cnt = 1000000;
+>   int fd;
+>
+>   if (argc > 1)
+>     nr = atoi(argv[1]);
+>   if (argc > 2)
+>     cnt = atoi(argv[2]);
+>   if (argc > 3)
+>     new_ns = atoi(argv[3]);
+>
+>   mkcgrp("/sub");
+>   setcgrp("/sub");
+>
+>   for (i = 0; i < nr; i++) {
+>     if (fork() == 0) {
+>       worker(i+1, cnt, new_ns);
+>       exit(0);
+>     }
+>   }
+>
+>   set_task_name(0);
+>   loop(cnt);
+>
+>   for (i = 0; i < nr; i++)
+>     wait(NULL);
+>
+>   for (i = 0; i < nr; i++)
+>     remove_sub_cgroup(i+1);
+>
+>   setcgrp("/");
+>   rmcgrp("/sub");
+>
+>   return 0;
+> }
+> -------8<-----------------------------------------8<----------------
+>
+>
+> Namhyung Kim (10):
+>   perf/core: Add PERF_RECORD_CGROUP event
+>   perf/core: Add PERF_SAMPLE_CGROUP feature
+>   tools lib api fs: Move cgroupsfs__mountpoint()
+>   perf tools: Basic support for CGROUP event
+>   perf tools: Maintain cgroup hierarchy
+>   perf report: Add 'cgroup' sort key
+>   perf record: Support synthesizing cgroup events
+>   perf record: Add --all-cgroups option
+>   perf top: Add --all-cgroups option
+>   perf script: Add --show-cgroup-events option
+>
+>  include/linux/perf_event.h                |   1 +
+>  include/uapi/linux/perf_event.h           |  16 ++-
+>  init/Kconfig                              |   3 +-
+>  kernel/events/core.c                      | 133 ++++++++++++++++++++
+>  tools/include/uapi/linux/perf_event.h     |  16 ++-
+>  tools/lib/api/fs/Build                    |   1 +
+>  tools/lib/api/fs/cgroup.c                 |  67 ++++++++++
+>  tools/lib/api/fs/fs.h                     |   2 +
+>  tools/lib/perf/include/perf/event.h       |   7 ++
+>  tools/perf/Documentation/perf-record.txt  |   5 +-
+>  tools/perf/Documentation/perf-report.txt  |   1 +
+>  tools/perf/Documentation/perf-script.txt  |   3 +
+>  tools/perf/Documentation/perf-top.txt     |   4 +
+>  tools/perf/builtin-diff.c                 |   1 +
+>  tools/perf/builtin-record.c               |  10 ++
+>  tools/perf/builtin-report.c               |   1 +
+>  tools/perf/builtin-script.c               |  41 +++++++
+>  tools/perf/builtin-top.c                  |   9 ++
+>  tools/perf/tests/sample-parsing.c         |   6 +-
+>  tools/perf/util/cgroup.c                  | 143 +++++++++++++---------
+>  tools/perf/util/cgroup.h                  |  18 ++-
+>  tools/perf/util/env.c                     |   2 +
+>  tools/perf/util/env.h                     |   6 +
+>  tools/perf/util/event.c                   |  19 +++
+>  tools/perf/util/event.h                   |   6 +
+>  tools/perf/util/evsel.c                   |  17 ++-
+>  tools/perf/util/evsel.h                   |   1 +
+>  tools/perf/util/hist.c                    |  12 ++
+>  tools/perf/util/hist.h                    |   1 +
+>  tools/perf/util/machine.c                 |  19 +++
+>  tools/perf/util/machine.h                 |   3 +
+>  tools/perf/util/perf_event_attr_fprintf.c |   2 +
+>  tools/perf/util/record.h                  |   1 +
+>  tools/perf/util/session.c                 |   4 +
+>  tools/perf/util/sort.c                    |  37 ++++++
+>  tools/perf/util/sort.h                    |   2 +
+>  tools/perf/util/synthetic-events.c        | 121 ++++++++++++++++++
+>  tools/perf/util/synthetic-events.h        |   1 +
+>  tools/perf/util/tool.h                    |   2 +
+>  39 files changed, 671 insertions(+), 73 deletions(-)
+>  create mode 100644 tools/lib/api/fs/cgroup.c
+>
 > --
-> 2.19.1
+> 2.25.0.265.gbab2e86ba0-goog
 >
-
-Regards,
--Vladimir
