@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58073C54EEB
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 11:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25778C54EEB
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 11:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33E2A2072E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 11:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F20A32072E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 11:03:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgCVLCn (ORCPT
+        id S1727014AbgCVLDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 07:02:43 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:51445 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbgCVLCn (ORCPT
+        Sun, 22 Mar 2020 07:03:45 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:41023 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbgCVLDp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 07:02:43 -0400
+        Sun, 22 Mar 2020 07:03:45 -0400
 X-Originating-IP: 2.7.45.25
 Received: from localhost.localdomain (lfbn-lyo-1-453-25.w2-7.abo.wanadoo.fr [2.7.45.25])
         (Authenticated sender: alex@ghiti.fr)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 1BE05C0002;
-        Sun, 22 Mar 2020 11:02:39 +0000 (UTC)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 3253A60009;
+        Sun, 22 Mar 2020 11:03:41 +0000 (UTC)
 From:   Alexandre Ghiti <alex@ghiti.fr>
 To:     Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
@@ -32,9 +32,9 @@ To:     Paul Walmsley <paul.walmsley@sifive.com>,
         Christoph Hellwig <hch@lst.de>,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Alexandre Ghiti <alex@ghiti.fr>
-Subject: [RFC PATCH 2/7] riscv: Allow to dynamically define VA_BITS
-Date:   Sun, 22 Mar 2020 07:00:23 -0400
-Message-Id: <20200322110028.18279-3-alex@ghiti.fr>
+Subject: [RFC PATCH 3/7] riscv: Simplify MAXPHYSMEM config
+Date:   Sun, 22 Mar 2020 07:00:24 -0400
+Message-Id: <20200322110028.18279-4-alex@ghiti.fr>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200322110028.18279-1-alex@ghiti.fr>
 References: <20200322110028.18279-1-alex@ghiti.fr>
@@ -45,79 +45,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With 4-level page table folding at runtime, we don't know at compile time
-the size of the virtual address space so we must set VA_BITS dynamically
-so that sparsemem reserves the right amount of memory for struct pages.
+Either the user specifies maximum physical memory size of 2GB or the
+user lives with the system constraint which is 128GB in 64BIT for now.
 
 Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
 ---
- arch/riscv/Kconfig                 | 10 ----------
- arch/riscv/include/asm/pgtable.h   | 10 +++++++++-
- arch/riscv/include/asm/sparsemem.h |  2 +-
- 3 files changed, 10 insertions(+), 12 deletions(-)
+ arch/riscv/Kconfig | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
 
 diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index f5f3d474504d..8e4b1cbcf2c2 100644
+index 8e4b1cbcf2c2..a475c78e66bc 100644
 --- a/arch/riscv/Kconfig
 +++ b/arch/riscv/Kconfig
-@@ -99,16 +99,6 @@ config ZONE_DMA32
- 	bool
- 	default y if 64BIT
- 
--config VA_BITS
--	int
--	default 32 if 32BIT
--	default 39 if 64BIT
--
--config PA_BITS
--	int
--	default 34 if 32BIT
--	default 56 if 64BIT
--
- config PAGE_OFFSET
- 	hex
+@@ -104,7 +104,7 @@ config PAGE_OFFSET
  	default 0xC0000000 if 32BIT && MAXPHYSMEM_2GB
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 185ffe3723ec..dce401eed1d3 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -26,6 +26,14 @@
- #endif /* CONFIG_64BIT */
+ 	default 0x80000000 if 64BIT && !MMU
+ 	default 0xffffffff80000000 if 64BIT && MAXPHYSMEM_2GB
+-	default 0xffffffe000000000 if 64BIT && MAXPHYSMEM_128GB
++	default 0xffffffe000000000 if 64BIT && !MAXPHYSMEM_2GB
  
- #ifdef CONFIG_MMU
-+#ifdef CONFIG_64BIT
-+#define VA_BITS		39
-+#define PA_BITS		56
-+#else
-+#define VA_BITS		32
-+#define PA_BITS		34
-+#endif
-+
- /* Number of entries in the page global directory */
- #define PTRS_PER_PGD    (PAGE_SIZE / sizeof(pgd_t))
- /* Number of entries in the page table */
-@@ -108,7 +116,7 @@ extern pgd_t swapper_pg_dir[];
-  * position vmemmap directly below the VMALLOC region.
-  */
- #define VMEMMAP_SHIFT \
--	(CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
-+	(VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
- #define VMEMMAP_SIZE	BIT(VMEMMAP_SHIFT)
- #define VMEMMAP_END	(VMALLOC_START - 1)
- #define VMEMMAP_START	(VMALLOC_START - VMEMMAP_SIZE)
-diff --git a/arch/riscv/include/asm/sparsemem.h b/arch/riscv/include/asm/sparsemem.h
-index 45a7018a8118..f08d72155bc8 100644
---- a/arch/riscv/include/asm/sparsemem.h
-+++ b/arch/riscv/include/asm/sparsemem.h
-@@ -4,7 +4,7 @@
- #define _ASM_RISCV_SPARSEMEM_H
+ config ARCH_FLATMEM_ENABLE
+ 	def_bool y
+@@ -216,19 +216,11 @@ config MODULE_SECTIONS
+ 	bool
+ 	select HAVE_MOD_ARCH_SPECIFIC
  
- #ifdef CONFIG_SPARSEMEM
--#define MAX_PHYSMEM_BITS	CONFIG_PA_BITS
-+#define MAX_PHYSMEM_BITS	PA_BITS
- #define SECTION_SIZE_BITS	27
- #endif /* CONFIG_SPARSEMEM */
+-choice
+-	prompt "Maximum Physical Memory"
+-	default MAXPHYSMEM_2GB if 32BIT
+-	default MAXPHYSMEM_2GB if 64BIT && CMODEL_MEDLOW
+-	default MAXPHYSMEM_128GB if 64BIT && CMODEL_MEDANY
+-
+-	config MAXPHYSMEM_2GB
+-		bool "2GiB"
+-	config MAXPHYSMEM_128GB
+-		depends on 64BIT && CMODEL_MEDANY
+-		bool "128GiB"
+-endchoice
+-
++config MAXPHYSMEM_2GB
++	bool "Maximum Physical Memory 2GiB"
++	default y if 32BIT
++	default y if 64BIT && CMODEL_MEDLOW
++	default n
  
+ config SMP
+ 	bool "Symmetric Multi-Processing"
 -- 
 2.20.1
 
