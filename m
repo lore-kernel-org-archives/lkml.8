@@ -2,122 +2,194 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0ADC4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33848C54FCF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 452E420719
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:23:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BJaiKVHO"
+	by mail.kernel.org (Postfix) with ESMTP id 0609820719
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:24:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584901465;
+	bh=yCz/ZT341lKLDKklGLVfKp6Q+x33rLv+tIrcibyvKJ0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Fc1SdPrhb/yS7RGd9lvr574cPyjwMRnaYci2X8mOidyyyEckmD8V+k3w++eLd7DF7
+	 WQD+A/0LjwnJ2kx/BXou8qZkQT3aUab/rYZGB/FyGldQNar56J+8vCKl2fXUBFOa/h
+	 Lch9nLV9yq9oGabr3z7QRzQ92wv38lQe2D0j+2IQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgCVSXh (ORCPT
+        id S1726809AbgCVSYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 14:23:37 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41959 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgCVSXg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 14:23:36 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h9so13996851wrc.8
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 11:23:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=mJxJlTV4kRRQdamwDKjoIvHLdlpESFc+S0X+geSNFqE=;
-        b=BJaiKVHOu3AzckjfTNAW7nWLG7qzRP4YevQaBhi1qM6EFEruYms/H447/JaITaOGmy
-         1NjCsotimSOEddJqoP6QIXKRGQS/GVnQkV/q5uejX4Q1Eg5S7Xe2QCGoMp48pR5WNb06
-         un+BC6TI3OSW80qWsCZGdBwj6SRhdLm9D702g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=mJxJlTV4kRRQdamwDKjoIvHLdlpESFc+S0X+geSNFqE=;
-        b=UExRc33peoyMiPvj68ZcwG0D/ITrI0XUltMRQe72tfDGhD+A/tYGOIA+XVXJwu2Dud
-         /RsxuRA82qBZkmAP6238ijDSY6DQQB3dKHkk8kVZH2uI5zMZ2KYSeHEOEA3TqzzvKcCP
-         YxS2l5GQ0V7tBLDu7Jcxd9ab7rHim4u29ix1egPNWizHbHyAg+bwndPwWm+1LHdRqAo/
-         cvVbv7U9wAe+AoVCK+n2tTxLae/Ilf7LHKt9d1HsY8Rm8MD6Q/fxDxO84uvKacjoni5n
-         5a6kcfOidbXyrR4PLrJZ8eo9jEGW/xUlqKCspBPMdLILEXCLuPQpqEKgyKAASz0ocAAC
-         /BmQ==
-X-Gm-Message-State: ANhLgQ1/iZMmz5z7rU4MZLvgVZHf7hdQKsMC0VjKWkydK/b3/ooOFmZs
-        LDnQHlUQGyW7WDITTLg4M18C4A==
-X-Google-Smtp-Source: ADFU+vvcdR4iaQTCyJEtVWF44e2sCFqWNQLkGn043JRn0pdCuYAclM13FTmoxf09QPwSxZnocF2WGQ==
-X-Received: by 2002:adf:b1c1:: with SMTP id r1mr23574240wra.337.1584901414969;
-        Sun, 22 Mar 2020 11:23:34 -0700 (PDT)
-Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id z6sm18498640wrp.95.2020.03.22.11.23.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2020 11:23:34 -0700 (PDT)
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-To:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Lori Hikichi <lori.hikichi@broadcom.com>,
-        Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Subject: [PATCH v1 1/1] i2c: iproc: add support for SMBUS quick cmd
-Date:   Sun, 22 Mar 2020 23:53:22 +0530
-Message-Id: <20200322182322.32743-1-rayagonda.kokatanur@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 22 Mar 2020 14:24:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44820 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725785AbgCVSYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 14:24:23 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16EAB206F9;
+        Sun, 22 Mar 2020 18:24:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584901462;
+        bh=yCz/ZT341lKLDKklGLVfKp6Q+x33rLv+tIrcibyvKJ0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0AfrCZThU/qf/WRxw+8nyxnzHig5IhoLfg2M1gD/6LwD6K3zDgO9Fa0JRZE/GZnI9
+         mhSK6+zutycPn7AJuRr8JQfKtVriZG2Y5U/rkOVjUiiBQcZERn55lyVdeKlhE9HzVf
+         DYKR0488Q5VkdbT7Dqgd1lzqo68OmqsWwJmi8nGk=
+Date:   Sun, 22 Mar 2020 18:24:16 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Nishant Malpani <nish.malpani25@gmail.com>
+Cc:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>,
+        Tomas Novotny <tomas@novotny.cz>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: iio: vcnl4000: convert bindings to
+ YAML format
+Message-ID: <20200322182416.079dc992@archlinux>
+In-Reply-To: <f5ea512c-d427-94c7-cf5f-f1300cbd4aa3@gmail.com>
+References: <cover.1584380360.git.agx@sigxcpu.org>
+        <6182053bb8c442e0b4d72b34c83c7f1565f4a258.1584380360.git.agx@sigxcpu.org>
+        <20200322172910.51456fe4@archlinux>
+        <f5ea512c-d427-94c7-cf5f-f1300cbd4aa3@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for SMBUS quick command.
+On Sun, 22 Mar 2020 23:07:00 +0530
+Nishant Malpani <nish.malpani25@gmail.com> wrote:
 
-SMBUS quick command passes single bit of information to the
-slave (target) device. Can be used to turn slave device on or off.
+> On 22/03/20 10:59 pm, Jonathan Cameron wrote:
+> > On Mon, 16 Mar 2020 18:46:17 +0100
+> > Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+> >  =20
+> >> Convert the vcnl4000 device tree bindings to the new YAML format.
+> >>
+> >> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org> =20
+> > Looks good to me. However, I've made far too many mistakes in
+> > DT binding review recently, so will definitely be waiting for Rob to
+> > get a chance to look at it!
+> >=20
+> > Jonathan
+> >  =20
+> >> ---
+> >>   .../bindings/iio/light/vcnl4000.txt           | 24 ----------
+> >>   .../bindings/iio/light/vcnl4000.yaml          | 45 +++++++++++++++++=
+++
+> >>   2 files changed, 45 insertions(+), 24 deletions(-)
+> >>   delete mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4=
+000.txt
+> >>   create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4=
+000.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt =
+b/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
+> >> deleted file mode 100644
+> >> index 955af4555c90..000000000000
+> >> --- a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
+> >> +++ /dev/null
+> >> @@ -1,24 +0,0 @@
+> >> -VISHAY VCNL4000 -  Ambient Light and proximity sensor
+> >> -
+> >> -This driver supports the VCNL4000/10/20/40 and VCNL4200 chips
+> >> -
+> >> -Required properties:
+> >> -
+> >> -	-compatible: must be one of :
+> >> -        vishay,vcnl4000
+> >> -        vishay,vcnl4010
+> >> -        vishay,vcnl4020
+> >> -        vishay,vcnl4040
+> >> -        vishay,vcnl4200
+> >> -
+> >> -	-reg: I2C address of the sensor, should be one from below based on t=
+he model:
+> >> -        0x13
+> >> -        0x51
+> >> -        0x60
+> >> -
+> >> -Example:
+> >> -
+> >> -light-sensor@51 {
+> >> -	compatible =3D "vishay,vcnl4200";
+> >> -	reg =3D <0x51>;
+> >> -};
+> >> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml=
+ b/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
+> >> new file mode 100644
+> >> index 000000000000..74d53cfbeb85
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
+> >> @@ -0,0 +1,45 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/iio/light/vcnl4000.yaml# =20
+> Shouldn't the devicetree binding document be named with the manufacturer=
+=20
+> part as well?
 
-By default i2c_detect tool uses the smbus quick cmd to try and
-detect devices. Without this support it will not detect some slaves.
+Yup. Good spot.  Told you I kept missing things ;)
 
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
----
- drivers/i2c/busses/i2c-bcm-iproc.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+Jonathan
 
-diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-index 30efb7913b2e..6a461e06e6dd 100644
---- a/drivers/i2c/busses/i2c-bcm-iproc.c
-+++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-@@ -79,6 +79,7 @@
- #define M_CMD_STATUS_RX_FIFO_FULL    0x6
- #define M_CMD_PROTOCOL_SHIFT         9
- #define M_CMD_PROTOCOL_MASK          0xf
-+#define M_CMD_PROTOCOL_QUICK         0x0
- #define M_CMD_PROTOCOL_BLK_WR        0x7
- #define M_CMD_PROTOCOL_BLK_RD        0x8
- #define M_CMD_PROTOCOL_PROCESS       0xa
-@@ -765,7 +766,11 @@ static int bcm_iproc_i2c_xfer_internal(struct bcm_iproc_i2c_dev *iproc_i2c,
- 	 * number of bytes to read
- 	 */
- 	val = BIT(M_CMD_START_BUSY_SHIFT);
--	if (msg->flags & I2C_M_RD) {
-+
-+	if (msg->len == 0) {
-+		/* SMBUS QUICK Command (Read/Write) */
-+		val |= (M_CMD_PROTOCOL_QUICK << M_CMD_PROTOCOL_SHIFT);
-+	} else if (msg->flags & I2C_M_RD) {
- 		u32 protocol;
- 
- 		iproc_i2c->rx_bytes = 0;
-@@ -827,8 +832,7 @@ static uint32_t bcm_iproc_i2c_functionality(struct i2c_adapter *adap)
- {
- 	u32 val;
- 
--	/* We do not support the SMBUS Quick command */
--	val = I2C_FUNC_I2C | (I2C_FUNC_SMBUS_EMUL & ~I2C_FUNC_SMBUS_QUICK);
-+	val = I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
- 
- 	if (adap->algo->reg_slave)
- 		val |= I2C_FUNC_SLAVE;
--- 
-2.17.1
+>=20
+> With regards,
+> Nishant
+>=20
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: VISHAY VCNL4000 ambient light and proximity sensor
+> >> +
+> >> +maintainers:
+> >> +  - Peter Meerwald <pmeerw@pmeerw.net>
+> >> +
+> >> +description: |
+> >> +  Ambient light sensing with proximity detection over an i2c
+> >> +  interface.
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    enum:
+> >> +      - vishay,vcnl4000
+> >> +      - vishay,vcnl4010
+> >> +      - vishay,vcnl4020
+> >> +      - vishay,vcnl4040
+> >> +      - vishay,vcnl4200
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +required:
+> >> +  - compatible
+> >> +  - reg
+> >> +
+> >> +additionalProperties: false
+> >> +
+> >> +examples:
+> >> +- |
+> >> +  i2c {
+> >> +      #address-cells =3D <1>;
+> >> +      #size-cells =3D <0>;
+> >> +
+> >> +      light-sensor@51 {
+> >> +              compatible =3D "vishay,vcnl4200";
+> >> +              reg =3D <0x51>;
+> >> +      };
+> >> +  };
+> >> +... =20
+> >  =20
 
