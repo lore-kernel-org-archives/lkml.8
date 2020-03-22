@@ -2,194 +2,218 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33848C54FCF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AC2C54FCE
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0609820719
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584901465;
-	bh=yCz/ZT341lKLDKklGLVfKp6Q+x33rLv+tIrcibyvKJ0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Fc1SdPrhb/yS7RGd9lvr574cPyjwMRnaYci2X8mOidyyyEckmD8V+k3w++eLd7DF7
-	 WQD+A/0LjwnJ2kx/BXou8qZkQT3aUab/rYZGB/FyGldQNar56J+8vCKl2fXUBFOa/h
-	 Lch9nLV9yq9oGabr3z7QRzQ92wv38lQe2D0j+2IQ=
+	by mail.kernel.org (Postfix) with ESMTP id D5F6720719
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:24:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgCVSYY (ORCPT
+        id S1726857AbgCVSY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 14:24:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44820 "EHLO mail.kernel.org"
+        Sun, 22 Mar 2020 14:24:27 -0400
+Received: from mga09.intel.com ([134.134.136.24]:54613 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbgCVSYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 14:24:23 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16EAB206F9;
-        Sun, 22 Mar 2020 18:24:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584901462;
-        bh=yCz/ZT341lKLDKklGLVfKp6Q+x33rLv+tIrcibyvKJ0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0AfrCZThU/qf/WRxw+8nyxnzHig5IhoLfg2M1gD/6LwD6K3zDgO9Fa0JRZE/GZnI9
-         mhSK6+zutycPn7AJuRr8JQfKtVriZG2Y5U/rkOVjUiiBQcZERn55lyVdeKlhE9HzVf
-         DYKR0488Q5VkdbT7Dqgd1lzqo68OmqsWwJmi8nGk=
-Date:   Sun, 22 Mar 2020 18:24:16 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Nishant Malpani <nish.malpani25@gmail.com>
-Cc:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>,
-        Tomas Novotny <tomas@novotny.cz>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: iio: vcnl4000: convert bindings to
- YAML format
-Message-ID: <20200322182416.079dc992@archlinux>
-In-Reply-To: <f5ea512c-d427-94c7-cf5f-f1300cbd4aa3@gmail.com>
-References: <cover.1584380360.git.agx@sigxcpu.org>
-        <6182053bb8c442e0b4d72b34c83c7f1565f4a258.1584380360.git.agx@sigxcpu.org>
-        <20200322172910.51456fe4@archlinux>
-        <f5ea512c-d427-94c7-cf5f-f1300cbd4aa3@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725785AbgCVSYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 14:24:25 -0400
+IronPort-SDR: 9dxrKsdrgxFwf+WeeqRYSk+8vaAUWo+mgGDCRmFpOLMYqWUNP7JM5UrAM2oMngpGzKOKXB5cTq
+ hwq/rmuyII+w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2020 11:24:24 -0700
+IronPort-SDR: UNYlJ046PaaI6qDfLN/fpO934kNJBXRUOzpwP5Ft8HjUjizZx08fztXB3E5PrV3zazX1bkAp2G
+ Y1krdUsLn9kA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,293,1580803200"; 
+   d="scan'208";a="269643127"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 22 Mar 2020 11:24:22 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jG5Go-0008VJ-At; Mon, 23 Mar 2020 02:24:22 +0800
+Date:   Mon, 23 Mar 2020 02:23:31 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:ras/core] BUILD SUCCESS
+ 077168e241ec5a3b273652acb1e85f8bc1dc2d81
+Message-ID: <5e77ad23.raonTYTveYNOyIPz%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 22 Mar 2020 23:07:00 +0530
-Nishant Malpani <nish.malpani25@gmail.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  ras/core
+branch HEAD: 077168e241ec5a3b273652acb1e85f8bc1dc2d81  x86/mce/amd: Add PPIN support for AMD MCE
 
-> On 22/03/20 10:59 pm, Jonathan Cameron wrote:
-> > On Mon, 16 Mar 2020 18:46:17 +0100
-> > Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
-> >  =20
-> >> Convert the vcnl4000 device tree bindings to the new YAML format.
-> >>
-> >> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org> =20
-> > Looks good to me. However, I've made far too many mistakes in
-> > DT binding review recently, so will definitely be waiting for Rob to
-> > get a chance to look at it!
-> >=20
-> > Jonathan
-> >  =20
-> >> ---
-> >>   .../bindings/iio/light/vcnl4000.txt           | 24 ----------
-> >>   .../bindings/iio/light/vcnl4000.yaml          | 45 +++++++++++++++++=
-++
-> >>   2 files changed, 45 insertions(+), 24 deletions(-)
-> >>   delete mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4=
-000.txt
-> >>   create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4=
-000.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt =
-b/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
-> >> deleted file mode 100644
-> >> index 955af4555c90..000000000000
-> >> --- a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
-> >> +++ /dev/null
-> >> @@ -1,24 +0,0 @@
-> >> -VISHAY VCNL4000 -  Ambient Light and proximity sensor
-> >> -
-> >> -This driver supports the VCNL4000/10/20/40 and VCNL4200 chips
-> >> -
-> >> -Required properties:
-> >> -
-> >> -	-compatible: must be one of :
-> >> -        vishay,vcnl4000
-> >> -        vishay,vcnl4010
-> >> -        vishay,vcnl4020
-> >> -        vishay,vcnl4040
-> >> -        vishay,vcnl4200
-> >> -
-> >> -	-reg: I2C address of the sensor, should be one from below based on t=
-he model:
-> >> -        0x13
-> >> -        0x51
-> >> -        0x60
-> >> -
-> >> -Example:
-> >> -
-> >> -light-sensor@51 {
-> >> -	compatible =3D "vishay,vcnl4200";
-> >> -	reg =3D <0x51>;
-> >> -};
-> >> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml=
- b/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
-> >> new file mode 100644
-> >> index 000000000000..74d53cfbeb85
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
-> >> @@ -0,0 +1,45 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/iio/light/vcnl4000.yaml# =20
-> Shouldn't the devicetree binding document be named with the manufacturer=
-=20
-> part as well?
+elapsed time: 481m
 
-Yup. Good spot.  Told you I kept missing things ;)
+configs tested: 151
+configs skipped: 106
 
-Jonathan
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->=20
-> With regards,
-> Nishant
->=20
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: VISHAY VCNL4000 ambient light and proximity sensor
-> >> +
-> >> +maintainers:
-> >> +  - Peter Meerwald <pmeerw@pmeerw.net>
-> >> +
-> >> +description: |
-> >> +  Ambient light sensing with proximity detection over an i2c
-> >> +  interface.
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    enum:
-> >> +      - vishay,vcnl4000
-> >> +      - vishay,vcnl4010
-> >> +      - vishay,vcnl4020
-> >> +      - vishay,vcnl4040
-> >> +      - vishay,vcnl4200
-> >> +
-> >> +  reg:
-> >> +    maxItems: 1
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - reg
-> >> +
-> >> +additionalProperties: false
-> >> +
-> >> +examples:
-> >> +- |
-> >> +  i2c {
-> >> +      #address-cells =3D <1>;
-> >> +      #size-cells =3D <0>;
-> >> +
-> >> +      light-sensor@51 {
-> >> +              compatible =3D "vishay,vcnl4200";
-> >> +              reg =3D <0x51>;
-> >> +      };
-> >> +  };
-> >> +... =20
-> >  =20
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+powerpc                             defconfig
+mips                      fuloong2e_defconfig
+s390                              allnoconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200322
+x86_64               randconfig-a002-20200322
+x86_64               randconfig-a003-20200322
+i386                 randconfig-a001-20200322
+i386                 randconfig-a002-20200322
+i386                 randconfig-a003-20200322
+alpha                randconfig-a001-20200322
+m68k                 randconfig-a001-20200322
+mips                 randconfig-a001-20200322
+nds32                randconfig-a001-20200322
+parisc               randconfig-a001-20200322
+riscv                randconfig-a001-20200322
+csky                 randconfig-a001-20200322
+openrisc             randconfig-a001-20200322
+s390                 randconfig-a001-20200322
+sh                   randconfig-a001-20200322
+xtensa               randconfig-a001-20200322
+i386                 randconfig-b003-20200322
+i386                 randconfig-b001-20200322
+x86_64               randconfig-b003-20200322
+i386                 randconfig-b002-20200322
+x86_64               randconfig-b002-20200322
+x86_64               randconfig-c003-20200322
+x86_64               randconfig-c001-20200322
+i386                 randconfig-c002-20200322
+x86_64               randconfig-c002-20200322
+i386                 randconfig-c003-20200322
+i386                 randconfig-c001-20200322
+x86_64               randconfig-d001-20200322
+x86_64               randconfig-d002-20200322
+x86_64               randconfig-d003-20200322
+i386                 randconfig-d001-20200322
+i386                 randconfig-d002-20200322
+i386                 randconfig-d003-20200322
+x86_64               randconfig-e001-20200322
+x86_64               randconfig-e002-20200322
+x86_64               randconfig-e003-20200322
+i386                 randconfig-e001-20200322
+i386                 randconfig-e002-20200322
+i386                 randconfig-e003-20200322
+x86_64               randconfig-f001-20200322
+x86_64               randconfig-f002-20200322
+x86_64               randconfig-f003-20200322
+i386                 randconfig-f001-20200322
+i386                 randconfig-f002-20200322
+i386                 randconfig-f003-20200322
+x86_64               randconfig-g001-20200322
+x86_64               randconfig-g002-20200322
+x86_64               randconfig-g003-20200322
+i386                 randconfig-g001-20200322
+i386                 randconfig-g002-20200322
+i386                 randconfig-g003-20200322
+x86_64               randconfig-h001-20200322
+x86_64               randconfig-h002-20200322
+x86_64               randconfig-h003-20200322
+i386                 randconfig-h001-20200322
+i386                 randconfig-h002-20200322
+i386                 randconfig-h003-20200322
+arc                  randconfig-a001-20200322
+arm                  randconfig-a001-20200322
+arm64                randconfig-a001-20200322
+ia64                 randconfig-a001-20200322
+powerpc              randconfig-a001-20200322
+sparc                randconfig-a001-20200322
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
