@@ -2,105 +2,132 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93BCC4332E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 005F0C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F21120722
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A3Qj1OqZ"
+	by mail.kernel.org (Postfix) with ESMTP id CDDCA206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:49:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgCVRtf (ORCPT
+        id S1726913AbgCVRtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 13:49:35 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:40764 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgCVRte (ORCPT
+        Sun, 22 Mar 2020 13:49:53 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:50645 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgCVRtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 13:49:34 -0400
-Received: by mail-yb1-f195.google.com with SMTP id o1so5735229ybp.7
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 10:49:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iBSKyEapNJdFDgkGK5NVnULV3E9a0TwHux4z8qk4QOI=;
-        b=A3Qj1OqZur8cYwBAguz7+LJxXHCNgcoFf6ozFJp2nwgiCfdiiRkTL9D9cb4tWvnp+t
-         GSTfGkKsyk138anPW2i0ZVOMf+BQ9Xm8zapqod/RnEoCvl6+tFkZ1bfI9gBvL6Qk/odT
-         iq0nN3A9WgtlxbbqJd4NFRGBTFE9q5LVwvi72VI90jjCqWOvqU0gwATxg6/MV4Zgu3Db
-         tFtMimZEJzH34BeVDwk0YxUT6QLlcZADBs7wPDiR1gon3qScfaSM/UZiucpUk3ri0XC4
-         76cBoINyNcg0XSRiHQi3oL4/OQOAxFky/KyEV2WAOT+lf+ql2DyuF7ZOkep80aRP0Ks/
-         zqHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iBSKyEapNJdFDgkGK5NVnULV3E9a0TwHux4z8qk4QOI=;
-        b=Rk89DHwceNJ8YEOW/+b3DbgIP82GMr2Pd4pBd64+wzeLTApyQU0q1oaOeVxkEJ2AC2
-         PgWCJOGxSUbVg2YfoigM1l24K/wGdvPyAngh9VcjCbitTOhZy4WR6FKv5CcuuV7MnrsS
-         oq3fyQCTBApxsyZ976ihOOTDdhW3VQ+kWzAqlHJA8E2uMwX+ULtU3Xmzcc7IfJOLV+1/
-         GhbPIFgTbikEPJMS4/+tilo2vzseMciqCwAyoNPfCHLakGwJoAl3p+F6dpXCzFc3cXpy
-         6F5k9pEKnNEc5AZIGux1IHQ7mzSg7zyOmOvgJ5jcI+/kT+GvIOzxN1qy9Lrf63hFJA0J
-         bPjA==
-X-Gm-Message-State: ANhLgQ0IaWFS1iNYYTARavO5QaVHDzIbevEBablCi1/KgBwENY/o4DNm
-        V0LRFY322RC/d7S9+cpZ2frQc55y9q/6tU5RPU0=
-X-Google-Smtp-Source: ADFU+vujMILMvlk5bbVmuQa0RF4y3Qk57Y571CzlbeXaKgG4dsRXBY/cjgbviAvO4VfuvftXAupG1r53uOLWYnc8X8U=
-X-Received: by 2002:a5b:648:: with SMTP id o8mr30066618ybq.471.1584899372689;
- Sun, 22 Mar 2020 10:49:32 -0700 (PDT)
+        Sun, 22 Mar 2020 13:49:53 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 48llQQ1pF4z1rn32;
+        Sun, 22 Mar 2020 18:49:50 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 48llQQ0hnXz1qv4S;
+        Sun, 22 Mar 2020 18:49:50 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id 3-qeDV3uJFOP; Sun, 22 Mar 2020 18:49:48 +0100 (CET)
+X-Auth-Info: m8gazT5yJHbOX8AVW6gKdokOWg0xO2LJked0Vv1wmZc=
+Received: from [IPv6:::1] (unknown [195.140.253.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Sun, 22 Mar 2020 18:49:48 +0100 (CET)
+Subject: Re: [PATCH] mtd: rawnand: denali: add more delays before latching
+ incoming data
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200316104307.1891-1-yamada.masahiro@socionext.com>
+ <20200320181159.5004099f@xps13>
+ <2d02c851-4249-053c-99e9-69b209bffad2@denx.de>
+ <CAK7LNAR5_uCmfmxAduMRxnBNzhtCwNR65OJ__AdZsNz2iiNJWA@mail.gmail.com>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <727b7c26-a57a-6aec-ebba-57c215a5b901@denx.de>
+Date:   Sun, 22 Mar 2020 18:49:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200318011144.91532-1-atish.patra@wdc.com>
-In-Reply-To: <20200318011144.91532-1-atish.patra@wdc.com>
-From:   Emil Renner Berthing <emil.renner.berthing@gmail.com>
-Date:   Sun, 22 Mar 2020 18:49:21 +0100
-Message-ID: <CANBLGcxB7Tf7wmkDnjsiEpmo6djwzN2DEjGqPfCt4LG6wcjLbQ@mail.gmail.com>
-Subject: Re: [PATCH v11 00/11] Add support for SBI v0.2 and CPU hotplug
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Zong Li <zong.li@sifive.com>, Nick Hu <nickhu@andestech.com>,
-        Vincent Chen <vincent.chen@sifive.com>,
-        Anup Patel <anup@brainfault.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Gary Guo <gary@garyguo.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        linux-riscv@lists.infradead.org, Bin Meng <bmeng.cn@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mao Han <han_mao@c-sky.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAK7LNAR5_uCmfmxAduMRxnBNzhtCwNR65OJ__AdZsNz2iiNJWA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Atish,
+On 3/22/20 6:42 PM, Masahiro Yamada wrote:
+> On Sat, Mar 21, 2020 at 2:15 AM Marek Vasut <marex@denx.de> wrote:
+>>
+>> On 3/20/20 6:11 PM, Miquel Raynal wrote:
+>>> Hi Marek,
+>>>
+>>> Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Mon, 16 Mar
+>>> 2020 19:43:07 +0900:
+>>>
+>>>> The Denali IP have several registers to specify how many clock cycles
+>>>> should be waited between falling/rising signals. You can improve the
+>>>> NAND access performance by programming these registers with optimized
+>>>> values.
+>>>>
+>>>> Because struct nand_sdr_timings represents the device requirement
+>>>> in pico seconds, denali_setup_data_interface() computes the register
+>>>> values by dividing the device timings with the clock period.
+>>>>
+>>>> Marek Vasut reported this driver in the latest kernel does not work
+>>>> on his SOCFPGA board. (The on-board NAND chip is mode 5)
+>>>>
+>>>> The suspicious parameter is acc_clks, so this commit relaxes it.
+>>>>
+>>>> The Denali NAND Flash Memory Controller User's Guide describes this
+>>>> register as follows:
+>>>>
+>>>>   acc_clks
+>>>>     signifies the number of bus interface clk_x clock cycles,
+>>>>     controller should wait from read enable going low to sending
+>>>>     out a strobe of clk_x for capturing of incoming data.
+>>>>
+>>>> Currently, acc_clks is calculated only based on tREA, the delay on the
+>>>> chip side. This does not include additional delays that come from the
+>>>> data path on the PCB and in the SoC, load capacity of the pins, etc.
+>>>>
+>>>> This relatively becomes a big factor on faster timing modes like mode 5.
+>>>>
+>>>> Before supporting the ->setup_data_interface() hook (e.g. Linux 4.12),
+>>>> the Denali driver hacks acc_clks in a couple of ways [1] [2] to support
+>>>> the timing mode 5.
+>>>>
+>>>> We would not go back to the hard-coded acc_clks, but we need to include
+>>>> this factor into the delay somehow. Let's say the amount of the additional
+>>>> delay is 10000 pico sec.
+>>>>
+>>>> In the new calculation, acc_clks is determined by timings->tREA_max +
+>>>> data_setup_on_host.
+>>>>
+>>>> Also, prolong the RE# low period to make sure the data hold is met.
+>>>>
+>>>> Finally, re-center the data latch timing for extra safety.
+>>>>
+>>>> [1] https://github.com/torvalds/linux/blob/v4.12/drivers/mtd/nand/denali.c#L276
+>>>> [2] https://github.com/torvalds/linux/blob/v4.12/drivers/mtd/nand/denali.c#L282
+>>>>
+>>>> Reported-by: Marek Vasut <marex@denx.de>
+>>>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>>>> ---
+>>>
+>>> Can you please give this patch a try and report the result?
+>>
+>> It's on my list, don't worry.
+> 
+> 
+> Preferably, please test v2.
 
-On Wed, 18 Mar 2020 at 02:12, Atish Patra <atish.patra@wdc.com> wrote:
->
-> The Supervisor Binary Interface(SBI) specification[1] now defines a
-> base extension that provides extendability to add future extensions
-> while maintaining backward compatibility with previous versions.
-> The new version is defined as 0.2 and older version is marked as 0.1.
->
-> This series adds following features to RISC-V Linux.
-> 1. Adds support for SBI v0.2
-> 2. A Unified calling convention implementation between 0.1 and 0.2.
-> 3. SBI Hart state management extension (HSM)
-> 4. Ordered booting of harts
-> 4. CPU hotplug
-
-If it's any help I tried this series with both OpenSBI v0.6 and master
-(9a74a64ae08),
-and in both cases Linux found all four cpus. I can test the hotplug
-stuff too if you send
-me instructions. In any case you can add my
-
-Tested-by: Emil Renner Berthing <kernel@esmil.dk>
-
-/Emil
+Yes, I see the V2.
