@@ -2,107 +2,128 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70388C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 05:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2144DC4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 05:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 474CD20722
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 05:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C3820722
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 05:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qpVJsvU7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AznKW8a/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgCVFkZ (ORCPT
+        id S1726789AbgCVFlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 01:40:25 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43429 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgCVFkZ (ORCPT
+        Sun, 22 Mar 2020 01:41:40 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:51889 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725970AbgCVFlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 01:40:25 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u12so5359867pgb.10;
-        Sat, 21 Mar 2020 22:40:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=spP+yCGSzPzhe+8wghduZrLrXmzq5c5ZgZYSiNEqLBI=;
-        b=qpVJsvU7hkYt3W99PKuoEMfwXr92qpJIkIm8CSZQbserjPIxwrAKcNXjpnPNRLTaxu
-         63OYk6p7jtaQHxbxeZLFH5vq/HZSs6i1xJRV/cvQHN64qOrJnaEZFe3GWyoHK/fIHH85
-         knFIj/fBu6TKbQD3We08BnpjmvcLUk+mk4kP7TBRObuAb2h+1eq5fWpUtIhlZh+ue3zP
-         nlmUyP7eKwBoAKlteRpXBhn3/ddzHsu3o97kdvOmF44p6yznbWvN6AQDjiMV+eMBDgrC
-         pLdf0ugcprMtwriWbxr1hPVFUGTuGIKCsWibD5+ElN53wm0RNNIv2l5UBorzSUP+ktTn
-         6ZTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=spP+yCGSzPzhe+8wghduZrLrXmzq5c5ZgZYSiNEqLBI=;
-        b=l+w/hLmDwtbl/EiwYguwJAXi/CrLZVElc7v5afKJVPqnRctrFOz03TP4PaV0bkiepr
-         vjWaA6bp7SmK+fCN9numFtYZJppmZ0W0PcJFcRF7rCEw3HDUSLOIa74bCpU+ynhcezcf
-         ROu5tCBR6NwPkbAoQqWv+wX81mxQryMjMas/wd1B7KwDHsD6xyXZqO2FifH8TD1ld/OJ
-         F4m3fFu9kAR2WZsRFemRKeK2xTJGvA42b4SSgNPQH1AJjjGKoNil6aDfmpECx2WHUkWe
-         KJGqbVgIhprpN/jVpEJUCwdXfJXPAjDNGV9+J3cdN/uygzhLsKEUw7GrGaXsam3CFaYi
-         Qv7Q==
-X-Gm-Message-State: ANhLgQ0nWHd+ChzWPXas7GIwLLyNzNkb4Gk2zxGPpDLw5PzvZwR7kfoM
-        4dPw7Gt/L2orazdDhSKBnE8VhitF
-X-Google-Smtp-Source: ADFU+vsv5Jyp3yjIOXaxdDtCfInZ7GyXCcd8Cialhv34o12iz3INqzCy+ClrQ9Ah+p+GlO1fg8HXMg==
-X-Received: by 2002:a62:868a:: with SMTP id x132mr17147262pfd.208.1584855624030;
-        Sat, 21 Mar 2020 22:40:24 -0700 (PDT)
-Received: from xps.vpn2.bfsu.edu.cn ([103.125.232.133])
-        by smtp.gmail.com with ESMTPSA id b23sm910831pft.116.2020.03.21.22.40.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2020 22:40:23 -0700 (PDT)
-From:   YunQiang Su <syq@debian.org>
-To:     mtk.manpages@gmail.com
-Cc:     linux-man@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, YunQiang Su <syq@debian.org>
-Subject: [PATCH] getauxval.3: MIPS, AT_BASE_PLATFORM passes ISA level
-Date:   Sun, 22 Mar 2020 13:39:16 +0800
-Message-Id: <20200322053916.391906-1-syq@debian.org>
-X-Mailer: git-send-email 2.26.0.rc2
+        Sun, 22 Mar 2020 01:41:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584855698;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9uyrweGHZQGxIp4uBrTVmnRgE+IcgAxrg3YHUzMhEKM=;
+        b=AznKW8a/BPO02Zsa86JPOjiyGGSjFPigpTz/OjDF7X8g6c3B3tHw9W073epf7afx3vHcuv
+        pk1cUDB29dbv0pnbQLM8H5ftIIHP1B0a04OdcJlDqfYpvpNGLImsJTy5ZUiIUR8bAJo5Rx
+        Mf6zzNXtoTBnYc42UUpPm19uvaM7K5c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-480-f6goE7KzM6Gu4t4Se8tiUA-1; Sun, 22 Mar 2020 01:41:36 -0400
+X-MC-Unique: f6goE7KzM6Gu4t4Se8tiUA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7330F8017CC;
+        Sun, 22 Mar 2020 05:41:35 +0000 (UTC)
+Received: from t490s (ovpn-112-50.phx2.redhat.com [10.3.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 650475DA7D;
+        Sun, 22 Mar 2020 05:41:34 +0000 (UTC)
+Date:   Sun, 22 Mar 2020 01:41:31 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        shuah@kernel.org, shakeelb@google.com
+Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
+ false-negative errors
+Message-ID: <20200322054131.GC1068248@t490s>
+References: <20200322013525.1095493-1-aquini@redhat.com>
+ <20200321184352.826d3dba38aecc4ff7b32e72@linux-foundation.org>
+ <20200322020326.GB1068248@t490s>
+ <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since Linux 5.7, on MIPS, we use AT_BASE_PLATFORM to pass ISA level.
-The values may be:
-  mips2, mips3, mips4, mips5,
-  mips32, mips32r2, mips32r6,
-  mips64, mips64r2, mips64r6.
+On Sat, Mar 21, 2020 at 09:31:42PM -0700, Andrew Morton wrote:
+> On Sat, 21 Mar 2020 22:03:26 -0400 Rafael Aquini <aquini@redhat.com> wrote:
+> 
+> > > > + * In order to sort out that race, and get the after fault checks consistent,
+> > > > + * the "quick and dirty" trick below is required in order to force a call to
+> > > > + * lru_add_drain_all() to get the recently MLOCK_ONFAULT pages moved to
+> > > > + * the unevictable LRU, as expected by the checks in this selftest.
+> > > > + */
+> > > > +static void force_lru_add_drain_all(void)
+> > > > +{
+> > > > +	sched_yield();
+> > > > +	system("echo 1 > /proc/sys/vm/compact_memory");
+> > > > +}
+> > > 
+> > > What is the sched_yield() for?
+> > >
+> > 
+> > Mostly it's there to provide a sleeping gap after the fault, whithout 
+> > actually adding an arbitrary value with usleep(). 
+> > 
+> > It's not a hard requirement, but, in some of the tests I performed 
+> > (whithout that sleeping gap) I would still see around 1% chance 
+> > of hitting the false-negative. After adding it I could not hit
+> > the issue anymore.
+> 
+> It's concerning that such deep machinery as pagevec draining is visible
+> to userspace.
+> 
+> I suppose that for consistency and correctness we should perform a
+> drain prior to each read from /proc/*/pagemap.  Presumably this would
+> be far too expensive.
+> 
+> Is there any other way?  One such might be to make the MLOCK_ONFAULT
+> pages bypass the lru_add_pvecs?
+>
 
-This behaivor is different with PowerPC.
+Well,
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=e585b768da111f2c2d413de6214e83bbdfee8f22
-Signed-off-by: YunQiang Su <syq@debian.org>
----
- man3/getauxval.3 | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+I admit I wasn't taking the approach of changing the kernel because I was 
+thinking it would require a partial, or even full, revert of commit 
+9c4e6b1a7027f, and that would be increasing complexity, but on a 
+second thought, it seems that we might just be missing:
 
-diff --git a/man3/getauxval.3 b/man3/getauxval.3
-index 456371c6a..518faf5d3 100644
---- a/man3/getauxval.3
-+++ b/man3/getauxval.3
-@@ -60,9 +60,10 @@ values are present on all architectures.
- The base address of the program interpreter (usually, the dynamic linker).
- .TP
- .BR AT_BASE_PLATFORM
--A pointer to a string identifying the real platform; may differ from
--.BR AT_PLATFORM
--(PowerPC only).
-+A pointer to a string (PowerPC and MIPS only).
-+On PowerPC, this identifys the real platform; may differ from
-+.BR AT_PLATFORM "."
-+On MIPS, this identifys the ISA level (Since 5.7).
- .TP
- .BR AT_CLKTCK
- The frequency with which
--- 
-2.26.0.rc2
+diff --git a/mm/swap.c b/mm/swap.c
+index cf39d24ada2a..b1601228ded4 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -473,6 +473,7 @@ void lru_cache_add_active_or_unevictable(struct page *page,
+                __mod_zone_page_state(page_zone(page), NR_MLOCK,
+                                    hpage_nr_pages(page));
+                count_vm_event(UNEVICTABLE_PGMLOCKED);
++               SetPageUnevictable(page);
+        }
+        lru_cache_add(page);
+ }
+
+
+I'll take a closer look into it, as well as test it properly, tomorrow. 
+Thanks for the heads up, Andrew.
+-- Rafael
 
