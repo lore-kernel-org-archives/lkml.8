@@ -2,90 +2,131 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB30C4332E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A31DC4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72FA820724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F020520724
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:35:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="DwyoxYeZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgCVQe2 (ORCPT
+        id S1726912AbgCVQff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 12:34:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52958 "EHLO mx2.suse.de"
+        Sun, 22 Mar 2020 12:35:35 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:16606 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726502AbgCVQe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 12:34:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 93574AC24;
-        Sun, 22 Mar 2020 16:34:24 +0000 (UTC)
-Date:   Sun, 22 Mar 2020 09:33:17 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, arnd@arndb.de, balbi@kernel.org,
-        bhelgaas@google.com, bigeasy@linutronix.de, davem@davemloft.net,
-        gregkh@linuxfoundation.org, joel@joelfernandes.org,
-        kurt.schwemmer@microsemi.com, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, logang@deltatee.com,
-        mingo@kernel.org, mpe@ellerman.id.au, netdev@vger.kernel.org,
-        oleg@redhat.com, paulmck@kernel.org, rdunlap@infradead.org,
-        rostedt@goodmis.org, torvalds@linux-foundation.org,
-        will@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH 18/15] kvm: Replace vcpu->swait with rcuwait
-Message-ID: <20200322163317.mh4sygr7xcjptmjp@linux-p48b>
-References: <20200318204302.693307984@linutronix.de>
- <20200320085527.23861-1-dave@stgolabs.net>
- <20200320085527.23861-3-dave@stgolabs.net>
- <20200320125455.GE20696@hirez.programming.kicks-ass.net>
+        id S1725881AbgCVQff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 12:35:35 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48ljmh2nyMzpZ;
+        Sun, 22 Mar 2020 17:35:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1584894932; bh=F2JpJtwjbUC4OboLswzNjH0udha1to+s6UTJnixAQLk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DwyoxYeZu0x1E2x5oeHyfbR/cfOfqq4LaDplQhvFdlI0zymiI2kSMtw7bakAWooru
+         zZMfgl5dSbd5OLpu6veTAPPgdLYJZjNOhoUOzR5YB80rdD2F/G1org45lNeD7SY0mq
+         mZrk/q4q52ZKs4vI5vrVGbWFgpYDIgkVhFEoAuMfxSHCiO6zZDoO1rnBmJZG+MPQE0
+         ZIbn7yTe27TxX+eJ6HpgP5GnlWAdB05Y1U/pVhJjPQnzWm2TOkSM1gaFXQsxtnImjh
+         qReHPIu8RxnNUINuYT5KqM7h6BGX2B0cFjfMoefKKkmhNj0ILyd9gTumM9LVtaeTKJ
+         59xq8FyjXpU7Q==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Sun, 22 Mar 2020 17:35:31 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] i2c: at91: support atomic write xfer
+Message-ID: <20200322163531.GB25488@qmqm.qmqm.pl>
+References: <6466e066d7cbad20cb6a334ad8e37cdcf521c492.1584822011.git.mirq-linux@rere.qmqm.pl>
+ <c789352c-5517-1fd9-980d-f8f6c2017901@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200320125455.GE20696@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c789352c-5517-1fd9-980d-f8f6c2017901@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Mar 2020, Peter Zijlstra wrote:
+On Sun, Mar 22, 2020 at 04:39:58AM +0300, Dmitry Osipenko wrote:
+> 22.03.2020 00:03, Michał Mirosław пишет:
+> > Implement basic support for atomic write - enough to get a simple
+> > write to PMIC on shutdown. Only for chips having ALT_CMD register,
+> > eg. SAMA5D2.
+> > 
+> > Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> > ---
+> > v2: remove runtime-PM usage
+> >     switch to readl*poll*atomic() for transfer completion wait
+> > ---
+> >  drivers/i2c/busses/i2c-at91-master.c | 69 +++++++++++++++++++++++++++-
+> >  1 file changed, 67 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
+> > index ba6fbb9c7390..d9226207157a 100644
+> > --- a/drivers/i2c/busses/i2c-at91-master.c
+> > +++ b/drivers/i2c/busses/i2c-at91-master.c
+> > @@ -21,6 +21,7 @@
+> >  #include <linux/i2c.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/io.h>
+> > +#include <linux/iopoll.h>
+> >  #include <linux/of.h>
+> >  #include <linux/of_device.h>
+> >  #include <linux/platform_device.h>
+> > @@ -709,6 +710,69 @@ static int at91_twi_xfer(struct i2c_adapter *adap, struct i2c_msg *msg, int num)
+> >  	return ret;
+> >  }
+> >  
+> > +static int at91_twi_xfer_atomic(struct i2c_adapter *adap, struct i2c_msg *msg, int num)
+> > +{
+> > +	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
+> > +	unsigned long timeout;
+> > +	struct pinctrl *pins;
+> > +	__u32 stat;
+> > +	int ret;
+> > +
+> > +	/* FIXME: only single write request supported to 7-bit addr */
+> > +	if (num != 1)
+> > +		return -EOPNOTSUPP;
+> > +	if (msg->flags & I2C_M_RD)
+> > +		return -EOPNOTSUPP;
+> > +	if (msg->flags & I2C_M_TEN)
+> > +		return -EOPNOTSUPP;
+> > +	if (msg->len > dev->fifo_size && msg->len > 1)
+> > +		return -EOPNOTSUPP;
+> > +	if (!dev->pdata->has_alt_cmd)
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	pins = pinctrl_get_select_default(&adap->dev);
+> > +
+> > +	ret = clk_prepare_enable(twi_dev->clk);
+> 
+> Hello Michał,
+> 
+> Please see comments to the clk_prepare_enable() and clk_prepare().
+> 
+> /* clk_prepare_enable helps cases using clk_enable in non-atomic context. */
+> static inline int clk_prepare_enable(struct clk *clk)
+> ...
+>  * clk_prepare may sleep, which differentiates it from clk_enable.
+> 
 
->On Fri, Mar 20, 2020 at 01:55:26AM -0700, Davidlohr Bueso wrote:
->> -	swait_event_interruptible_exclusive(*wq, ((!vcpu->arch.power_off) &&
->> -				       (!vcpu->arch.pause)));
->> +	rcuwait_wait_event(*wait,
->> +			   (!vcpu->arch.power_off) && (!vcpu->arch.pause),
->> +			   TASK_INTERRUPTIBLE);
->
->> -	for (;;) {
->> -		prepare_to_swait_exclusive(&vcpu->wq, &wait, TASK_INTERRUPTIBLE);
->> -
->> -		if (kvm_vcpu_check_block(vcpu) < 0)
->> -			break;
->> -
->> -		waited = true;
->> -		schedule();
->> -	}
->> -
->> -	finish_swait(&vcpu->wq, &wait);
->> +	rcuwait_wait_event(&vcpu->wait,
->> +			   (block_check = kvm_vcpu_check_block(vcpu)) < 0,
->> +			   TASK_INTERRUPTIBLE);
->
->Are these yet more instances that really want to be TASK_IDLE ?
+Yes, it may. Though in this case unlikely. Even though clk_prepare()
+takes a mutex, this is running only after there are no more processes
+in the system, so there are no possible contenders.
 
-Hmm probably as it makes sense for a blocked vcpu not to be contributing to
-the loadavg. So if this is the only reason to use interruptible, then yes we
-ought to change it.
-
-However, I'll make this a separate patch, given this (ab)use isn't as obvious
-as the PS3 case, which is a kthread and therefore signals are masked.
-
-Thanks,
-Davidlohr
+Best Regards,
+Michał Mirosław
