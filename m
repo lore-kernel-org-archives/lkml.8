@@ -2,135 +2,100 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119E6C4332E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 01:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBB4C4332D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 01:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAF1820757
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 01:25:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584840334;
-	bh=KC4zfxD7JHcPoNOjR26SeubEwUf7mlAkJzmUBSH4FT0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wxsGXB0FT39oKc44aJzJE1LbeLbR4nt/mfB+SVW5LePlvYbwxjTP/nivSchL5dOrQ
-	 1MWYBtWGDkUr35K4Rjq2LAo2OGT9RTeI/c6KVpRJucbXyFie28s2/aui8ZTXdmhoVA
-	 PxaPVonXi7oSzkeUOTK+4mTVbPVyts5gjO6EqXRs=
+	by mail.kernel.org (Postfix) with ESMTP id 7BEC320754
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 01:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgCVBZe (ORCPT
+        id S1728184AbgCVB3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 21:25:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41670 "EHLO mail.kernel.org"
+        Sat, 21 Mar 2020 21:29:39 -0400
+Received: from mga12.intel.com ([192.55.52.136]:65450 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726859AbgCVBZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 21:25:33 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB3E920658;
-        Sun, 22 Mar 2020 01:25:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584840333;
-        bh=KC4zfxD7JHcPoNOjR26SeubEwUf7mlAkJzmUBSH4FT0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yBmcQoBTZLjht51wsVYVhflo0M4LqZcKiS4o88gbqWB5zT07410lRvrHyJmdmxefp
-         N3pLBx+yYJHZjcvHUeiwVCF3ZpZMX8B/xWDEW2PXE9MVp436+Qivg85aojFjj0g9uP
-         K18iNdWGaKd67/K9FhSSXn0Aj60kiwUKUkf/CMN0=
-Date:   Sat, 21 Mar 2020 21:25:31 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: [PATCH 4.19 00/48] 4.19.112-rc1 review
-Message-ID: <20200322012531.GL4189@sasha-vm>
-References: <20200319123902.941451241@linuxfoundation.org>
- <CA+G9fYsDw6JEznSHm2X=Wvq1dysGbGa4-VpXJyzKWZQxLMdagw@mail.gmail.com>
- <7a8c6a752793f0907662c3e9c197c284fc461550.camel@codethink.co.uk>
- <20200320080317.GA312074@kroah.com>
+        id S1726859AbgCVB3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 21:29:38 -0400
+IronPort-SDR: qWmlt/qxraIgO2TMLYnyXlLkRY0PurKycktrgSaotzl6oe6DaR9hCnJt67yagrohnce14pDo3c
+ 5JJVGuH/FrbQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 18:29:37 -0700
+IronPort-SDR: uvgmWcsmqqPKN/s0mPCsPuLNZQTddXWljiLsdd1lxX6ysU7uzjzaaYeFXyfv0k+diEGjxLU4Ot
+ PGJR6W699pPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,290,1580803200"; 
+   d="scan'208";a="419117017"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.213.45]) ([10.254.213.45])
+  by orsmga005.jf.intel.com with ESMTP; 21 Mar 2020 18:29:33 -0700
+Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH V10 02/11] iommu/uapi: Define a mask for bind data
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1584746861-76386-3-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <ae2a1a46-07ed-8445-d905-37dda1459e28@linux.intel.com>
+Date:   Sun, 22 Mar 2020 09:29:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <1584746861-76386-3-git-send-email-jacob.jun.pan@linux.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200320080317.GA312074@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 09:03:17AM +0100, Greg Kroah-Hartman wrote:
->On Thu, Mar 19, 2020 at 08:00:32PM +0000, Ben Hutchings wrote:
->> On Fri, 2020-03-20 at 01:12 +0530, Naresh Kamboju wrote:
->> > On Thu, 19 Mar 2020 at 18:50, Greg Kroah-Hartman
->> > <gregkh@linuxfoundation.org> wrote:
->> > > This is the start of the stable review cycle for the 4.19.112 release.
->> > > There are 48 patches in this series, all will be posted as a response
->> > > to this one.  If anyone has any issues with these being applied, please
->> > > let me know.
->> > >
->> > > Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
->> > > Anything received after that time might be too late.
->> > >
->> > > The whole patch series can be found in one patch at:
->> > >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.112-rc1.gz
->> > > or in the git tree and branch at:
->> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
->> > > and the diffstat can be found below.
->> > >
->> > > thanks,
->> > >
->> > > greg k-h
->> > >
->> > > Faiz Abbas <faiz_abbas@ti.com>
->> > >     mmc: sdhci-omap: Fix Tuning procedure for temperatures < -20C
->> > >
->> > > Faiz Abbas <faiz_abbas@ti.com>
->> > >     mmc: sdhci-omap: Don't finish_mrq() on a command error during tuning
->> >
->> > Results from Linaro’s test farm.
->> > No regressions on arm64, arm, x86_64, and i386.
->> >
->> > NOTE:
->> > The arm beagleboard x15 device running stable rc 4.19.112-rc1, 5.4.27-rc1
->> > and 5.5.11-rc2 kernel pops up the following messages on console log,
->> > Is this a problem ?
->> >
->> > [   15.737765] mmc1: unspecified timeout for CMD6 - use generic
->> > [   16.754248] mmc1: unspecified timeout for CMD6 - use generic
->> > [   16.842071] mmc1: unspecified timeout for CMD6 - use generic
->> > ...
->> > [  977.126652] mmc1: unspecified timeout for CMD6 - use generic
->> > [  985.449798] mmc1: unspecified timeout for CMD6 - use generic
->> [...]
->>
->> This warning was introduced by commit 533a6cfe08f9 "mmc: core: Default
->> to generic_cmd6_time as timeout in __mmc_switch()".  That should not be
->> applied to stable branches; it is not valid without (at least) these
->> preparatory changes:
->>
->> 0c204979c691 mmc: core: Cleanup BKOPS support
->> 24ed3bd01d6a mmc: core: Specify timeouts for BKOPS and CACHE_FLUSH for eMMC
->> ad91619aa9d7 mmc: block: Use generic_cmd6_time when modifying INAND_CMD38_ARG_EXT_CSD
->
->Ok, I've now dropped that patch, which also required me to drop
->1292e3efb149 ("mmc: core: Allow host controllers to require R1B for
->CMD6").  I've done so for 5.5.y, 5.4.y, and 4.19.y.
+On 2020/3/21 7:27, Jacob Pan wrote:
+> Memory type related flags can be grouped together for one simple check.
+> 
+> ---
+> v9 renamed from EMT to MTS since these are memory type support flags.
+> ---
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>   include/uapi/linux/iommu.h | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+> index 4ad3496e5c43..d7bcbc5f79b0 100644
+> --- a/include/uapi/linux/iommu.h
+> +++ b/include/uapi/linux/iommu.h
+> @@ -284,7 +284,10 @@ struct iommu_gpasid_bind_data_vtd {
+>   	__u32 pat;
+>   	__u32 emt;
+>   };
+> -
+> +#define IOMMU_SVA_VTD_GPASID_MTS_MASK	(IOMMU_SVA_VTD_GPASID_CD | \
+> +					 IOMMU_SVA_VTD_GPASID_EMTE | \
+> +					 IOMMU_SVA_VTD_GPASID_PCD |  \
+> +					 IOMMU_SVA_VTD_GPASID_PWT)
 
-Should we instead take those preparatory changes, and 1292e3efb149?
+As name implies, can this move to intel-iommu.h?
 
--- 
-Thanks,
-Sasha
+Best regards,
+baolu
+
+>   /**
+>    * struct iommu_gpasid_bind_data - Information about device and guest PASID binding
+>    * @version:	Version of this data structure
+> 
