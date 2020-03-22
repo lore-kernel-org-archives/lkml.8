@@ -2,77 +2,116 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DECC4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CBAC54FD0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F413A20724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA9AF20724
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:15:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBTufxsr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgCVQPA (ORCPT
+        id S1726902AbgCVQPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 12:15:00 -0400
-Received: from sauhun.de ([88.99.104.3]:51334 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726538AbgCVQO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 12:14:59 -0400
-Received: from localhost (p54B33042.dip0.t-ipconnect.de [84.179.48.66])
-        by pokefinder.org (Postfix) with ESMTPSA id 81B8A2C0064;
-        Sun, 22 Mar 2020 17:14:57 +0100 (CET)
-Date:   Sun, 22 Mar 2020 17:14:57 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: hix5hd2: add missed clk_disable_unprepare in remove
-Message-ID: <20200322161456.GA6766@ninjato>
-References: <20191104150049.6366-1-hslester96@gmail.com>
+        Sun, 22 Mar 2020 12:15:38 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33512 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbgCVQPi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 12:15:38 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a25so13648072wrd.0;
+        Sun, 22 Mar 2020 09:15:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dYEAGywc3sKy6VK1CPH4F8NN5656DQLq2EzqYJV/ulM=;
+        b=NBTufxsrCQO6z8iFuT8T18U3zVogZEW3K7OOaCf+fufNvIZrRLjH8OMMoF2OOO4RWx
+         DlpcPNDYv1/mjlBgkalGHhMyYTnBmsMU9OnMEkUWoXQZdlw9r2XzibRzjO9FObFGLEOL
+         jed+rGOO5x5pVSpzOf0bx5gnZI+3NBvkwpwZRbnhp9FKcWgbDBmehEQD2uz4oHt/4tvk
+         f1pxdKaCSjzpOr7+J51T4yYbyIHArtpppokNe0ie2kD5PBleOkSUBRGI6emzleoCCE+1
+         kv22QGiutxsed9+yvgnr07nwjdlCniazvLpxHGgpYd8vHzLCr6K1k3+BALFvXpqfqioe
+         Fs4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dYEAGywc3sKy6VK1CPH4F8NN5656DQLq2EzqYJV/ulM=;
+        b=kEvSO5+53Jw582Vd6ClHvLja5IXxY5Dp3c/alMrl/gPnGsXXU6m5bhjTkJBqzjEO/X
+         PF7UVqe7SM0pSfPn7MMw6JdD4K1VjbessfEZrAuhBB/XEgaRi2DEiSXnLHTl4rCqBZ0a
+         YojSQGu2SHFGdODIxV+7KYzmzRYwhjvWsvA6wfijnN9nLApmpVL2kRo9Ia503QJq6oO0
+         Hy9upmDX2A8dMlmh0/gbNbcTqi5BytkVem4uzqtW+waE8voAmIFBY/PdY0+ursaZ/60h
+         mLZY/ktbhB8Eod1h0ek+QaCQwW1Bt6TZCZiMWNz9HV7z9ukGs8myu1ebbNZvQ4c0QI0L
+         g9Wg==
+X-Gm-Message-State: ANhLgQ0sS7FjT+slrLscMtGSLX8LamgvTtER7FoDWrreA9OemSSw6dQD
+        dhKlwx1Mv0rTDm2AN2FnsLcizXS3
+X-Google-Smtp-Source: ADFU+vsRcBwWTYsRdZEsYv42CXHuGjwd0bF7Rin9njyUTNdGbJcV8kcAmciAsTxz7p2kZkaHbu73Fw==
+X-Received: by 2002:a5d:4091:: with SMTP id o17mr8991126wrp.254.1584893735117;
+        Sun, 22 Mar 2020 09:15:35 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.140.227])
+        by smtp.gmail.com with ESMTPSA id 71sm3229317wrc.53.2020.03.22.09.15.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Mar 2020 09:15:34 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] io-wq: close cancel gap for hashed linked work
+Date:   Sun, 22 Mar 2020 19:14:26 +0300
+Message-Id: <b9bc821a0ff3bc52a60281d8a9005dff93f6dcc3.1584893591.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
-Content-Disposition: inline
-In-Reply-To: <20191104150049.6366-1-hslester96@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+After io_assign_current_work() of a linked work, it can be decided to
+offloaded to another thread so doing io_wqe_enqueue(). However, until
+next io_assign_current_work() it can be cancelled, that isn't handled.
 
---a8Wt8u1KmwUX3Y2C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Don't assign it, if it's not going to be executed.
 
-On Mon, Nov 04, 2019 at 11:00:48PM +0800, Chuhong Yuan wrote:
-> The driver forgets to disable and unprepare clk when remove.
-> Add a call to clk_disable_unprepare to fix it.
->=20
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/io-wq.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-Applied to for-current, thanks!
+diff --git a/fs/io-wq.c b/fs/io-wq.c
+index 9541df2729de..b3fb61ec0870 100644
+--- a/fs/io-wq.c
++++ b/fs/io-wq.c
+@@ -485,7 +485,7 @@ static void io_worker_handle_work(struct io_worker *worker)
+ 	struct io_wq *wq = wqe->wq;
+ 
+ 	do {
+-		struct io_wq_work *work;
++		struct io_wq_work *work, *assign_work;
+ 		unsigned int hash;
+ get_next:
+ 		/*
+@@ -522,10 +522,14 @@ static void io_worker_handle_work(struct io_worker *worker)
+ 			hash = io_get_work_hash(work);
+ 			work->func(&work);
+ 			work = (old_work == work) ? NULL : work;
+-			io_assign_current_work(worker, work);
++
++			assign_work = work;
++			if (work && io_wq_is_hashed(work))
++				assign_work = NULL;
++			io_assign_current_work(worker, assign_work);
+ 			wq->free_work(old_work);
+ 
+-			if (work && io_wq_is_hashed(work)) {
++			if (work && !assign_work) {
+ 				io_wqe_enqueue(wqe, work);
+ 				work = NULL;
+ 			}
+-- 
+2.24.0
 
-
---a8Wt8u1KmwUX3Y2C
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl53jwAACgkQFA3kzBSg
-Kba2Pg//dI6w5vFqspLeTRNaiDFsFq5gDXt9k58j06uWcfGFFtSMKxb0AjH2wMGW
-6YldH/SDxcEClJg/6RtN8qkVSNTvoVl0uM5kUl3ZozMkQ+nvx/LAZ5D0xlF02kem
-sGcqfynPMxS5HOfT0tRZlOPYNqaml3rKv9dFsCkWaSJhXa1nKWT7RDj4kKj8W40/
-+GYQi36WCGouvlghYy8OGX5TKcU1MhVme51RJCE7zZpOFzQPGskqWiBGmxPCNuWv
-weLoSk3+UsOILL13hAIIyDj2MF3+JpIxf2ofPfXUGGQDWKzwlNufWWt+2uhQla8v
-/3h3RdBAGa6SCk4XQ4tYi3PXaIUsqEAML5x4Mfw54q1pdYSws4AWvGIWaI2hJTD8
-0/I4QM6QkWVNRU0jsFWla6G262i9sULSoAziBh2tDYpYu2GjighiSDBAu/flNyit
-BqKqpzrovToAYvCuC8e8Cvl8LtPtxjz/HEJKdu4KREGPPkal5Rke4Iah3PKZp0js
-D89P1S77mczcrXcj7IjvUnlYSeMSmRRt1c0G1Sw415BkfMHJULcQAiv8+ljeJ7u9
-YhRqucPUN+SqJsYA0rkXQ7KoilutnOv7W5JHGob8N3ikpO3bDQzmpeKgOP7ZzDaS
-+EqJ7fQsIVt0/koN2/BPsDnFg0slL8XWUCwLYfCim2eW/2iCU+U=
-=z57U
------END PGP SIGNATURE-----
-
---a8Wt8u1KmwUX3Y2C--
