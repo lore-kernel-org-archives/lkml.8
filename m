@@ -2,156 +2,172 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8407C4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A434EC4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC1420714
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70F8720732
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584898158;
+	bh=zfhz4frlqYfSulkRHPiW5gaTisQkKjgaXVLTMLiAmZM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ipq3cR0h1KtydwwNb+AeRx8sQ56xxWsuA3uDj4yVpSPDfhUPPAH81kz3/OBQ/1vpu
+	 mfOLUO2SXl9/KOczN4q1jLk12lefY39r6KAVyeBWz80HLrp/Oj2To6J8DK0U/UslEY
+	 WxB9yXNG8vGgaF5iTfO5QjnkctXt1Qn+eHRLgmc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgCVRZl (ORCPT
+        id S1726786AbgCVR3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 13:25:41 -0400
-Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:35374 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgCVRZl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 13:25:41 -0400
-Received: from localhost.localdomain ([93.22.150.255])
-        by mwinf5d85 with ME
-        id HVRR220015WryPR03VRRhT; Sun, 22 Mar 2020 18:25:36 +0100
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 22 Mar 2020 18:25:36 +0100
-X-ME-IP: 93.22.150.255
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, kan.liang@linux.intel.com,
-        zhe.he@windriver.com, dzickus@redhat.com, jstancek@redhat.com
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] perf cpumap: Use scnprintf instead of snprintf
-Date:   Sun, 22 Mar 2020 18:25:23 +0100
-Message-Id: <20200322172523.2677-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Sun, 22 Mar 2020 13:29:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbgCVR3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 13:29:17 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB28020714;
+        Sun, 22 Mar 2020 17:29:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584898155;
+        bh=zfhz4frlqYfSulkRHPiW5gaTisQkKjgaXVLTMLiAmZM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=B/jhkHvTVC87MZEV+fRZcPXI4jp7/Ix+aDQgab8+XAgmFNGP7r1JuvSjmpC0vP8W3
+         c1Up7/3DNCQSk1/qzA/pt4Pv9S5nICrFa/dmRMgRAjKlHW5uix+x2JAEU+srUqryKU
+         XLU7xOxLaVbnBN9oN86WSoGcmIJo+IEbaJIYvUQc=
+Date:   Sun, 22 Mar 2020 17:29:10 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
+Cc:     Tomas Novotny <tomas@novotny.cz>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: iio: vcnl4000: convert bindings to
+ YAML format
+Message-ID: <20200322172910.51456fe4@archlinux>
+In-Reply-To: <6182053bb8c442e0b4d72b34c83c7f1565f4a258.1584380360.git.agx@sigxcpu.org>
+References: <cover.1584380360.git.agx@sigxcpu.org>
+        <6182053bb8c442e0b4d72b34c83c7f1565f4a258.1584380360.git.agx@sigxcpu.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'scnprintf' returns the number of characters written in the output buffer
-excluding the trailing '\0', instead of the number of characters which
-would be generated for the given input.
+On Mon, 16 Mar 2020 18:46:17 +0100
+Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
 
-Both function return a number of characters, excluding the trailing '\0'.
-So comparaison to check if it overflows, should be done against max_size-1.
-Comparaison against max_size can never match.
+> Convert the vcnl4000 device tree bindings to the new YAML format.
+>=20
+> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+Looks good to me. However, I've made far too many mistakes in
+DT binding review recently, so will definitely be waiting for Rob to
+get a chance to look at it!
 
-Fixes: 7780c25bae59f ("perf tools: Allow ability to map cpus to nodes easily")
-Fixes: a24020e6b7cf6 ("perf tools: Change cpu_map__fprintf output")
-Fixes: 92a7e1278005b ("perf cpumap: Add cpu__max_present_cpu()")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- tools/perf/util/cpumap.c | 39 ++++++++++++++++++++-------------------
- 1 file changed, 20 insertions(+), 19 deletions(-)
+Jonathan
 
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 983b7388f22b..b87e7ef4d130 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -316,8 +316,8 @@ static void set_max_cpu_num(void)
- 		goto out;
- 
- 	/* get the highest possible cpu number for a sparse allocation */
--	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
--	if (ret == PATH_MAX) {
-+	ret = scnprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
-+	if (ret == PATH_MAX-1) {
- 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
- 		goto out;
- 	}
-@@ -327,8 +327,8 @@ static void set_max_cpu_num(void)
- 		goto out;
- 
- 	/* get the highest present cpu number for a sparse allocation */
--	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/present", mnt);
--	if (ret == PATH_MAX) {
-+	ret = scnprintf(path, PATH_MAX, "%s/devices/system/cpu/present", mnt);
-+	if (ret == PATH_MAX-1) {
- 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
- 		goto out;
- 	}
-@@ -355,8 +355,8 @@ static void set_max_node_num(void)
- 		goto out;
- 
- 	/* get the highest possible cpu number for a sparse allocation */
--	ret = snprintf(path, PATH_MAX, "%s/devices/system/node/possible", mnt);
--	if (ret == PATH_MAX) {
-+	ret = scnprintf(path, PATH_MAX, "%s/devices/system/node/possible", mnt);
-+	if (ret == PATH_MAX-1) {
- 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
- 		goto out;
- 	}
-@@ -440,8 +440,8 @@ int cpu__setup_cpunode_map(void)
- 	if (!mnt)
- 		return 0;
- 
--	n = snprintf(path, PATH_MAX, "%s/devices/system/node", mnt);
--	if (n == PATH_MAX) {
-+	n = scnprintf(path, PATH_MAX, "%s/devices/system/node", mnt);
-+	if (n == PATH_MAX-1) {
- 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
- 		return -1;
- 	}
-@@ -455,8 +455,8 @@ int cpu__setup_cpunode_map(void)
- 		if (dent1->d_type != DT_DIR || sscanf(dent1->d_name, "node%u", &mem) < 1)
- 			continue;
- 
--		n = snprintf(buf, PATH_MAX, "%s/%s", path, dent1->d_name);
--		if (n == PATH_MAX) {
-+		n = scnprintf(buf, PATH_MAX, "%s/%s", path, dent1->d_name);
-+		if (n == PATH_MAX-1) {
- 			pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
- 			continue;
- 		}
-@@ -501,21 +501,22 @@ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size)
- 		if (start == -1) {
- 			start = i;
- 			if (last) {
--				ret += snprintf(buf + ret, size - ret,
--						"%s%d", COMMA,
--						map->map[i]);
-+				ret += scnprintf(buf + ret, size - ret,
-+						 "%s%d", COMMA,
-+						 map->map[i]);
- 			}
- 		} else if (((i - start) != (cpu - map->map[start])) || last) {
- 			int end = i - 1;
- 
- 			if (start == end) {
--				ret += snprintf(buf + ret, size - ret,
--						"%s%d", COMMA,
--						map->map[start]);
-+				ret += scnprintf(buf + ret, size - ret,
-+						 "%s%d", COMMA,
-+						 map->map[start]);
- 			} else {
--				ret += snprintf(buf + ret, size - ret,
--						"%s%d-%d", COMMA,
--						map->map[start], map->map[end]);
-+				ret += scnprintf(buf + ret, size - ret,
-+						 "%s%d-%d", COMMA,
-+						 map->map[start],
-+						 map->map[end]);
- 			}
- 			first = false;
- 			start = i;
--- 
-2.20.1
+> ---
+>  .../bindings/iio/light/vcnl4000.txt           | 24 ----------
+>  .../bindings/iio/light/vcnl4000.yaml          | 45 +++++++++++++++++++
+>  2 files changed, 45 insertions(+), 24 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4000.=
+txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4000.=
+yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt b/D=
+ocumentation/devicetree/bindings/iio/light/vcnl4000.txt
+> deleted file mode 100644
+> index 955af4555c90..000000000000
+> --- a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
+> +++ /dev/null
+> @@ -1,24 +0,0 @@
+> -VISHAY VCNL4000 -  Ambient Light and proximity sensor
+> -
+> -This driver supports the VCNL4000/10/20/40 and VCNL4200 chips
+> -
+> -Required properties:
+> -
+> -	-compatible: must be one of :
+> -        vishay,vcnl4000
+> -        vishay,vcnl4010
+> -        vishay,vcnl4020
+> -        vishay,vcnl4040
+> -        vishay,vcnl4200
+> -
+> -	-reg: I2C address of the sensor, should be one from below based on the =
+model:
+> -        0x13
+> -        0x51
+> -        0x60
+> -
+> -Example:
+> -
+> -light-sensor@51 {
+> -	compatible =3D "vishay,vcnl4200";
+> -	reg =3D <0x51>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml b/=
+Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
+> new file mode 100644
+> index 000000000000..74d53cfbeb85
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/light/vcnl4000.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: VISHAY VCNL4000 ambient light and proximity sensor
+> +
+> +maintainers:
+> +  - Peter Meerwald <pmeerw@pmeerw.net>
+> +
+> +description: |
+> +  Ambient light sensing with proximity detection over an i2c
+> +  interface.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - vishay,vcnl4000
+> +      - vishay,vcnl4010
+> +      - vishay,vcnl4020
+> +      - vishay,vcnl4040
+> +      - vishay,vcnl4200
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +- |
+> +  i2c {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +
+> +      light-sensor@51 {
+> +              compatible =3D "vishay,vcnl4200";
+> +              reg =3D <0x51>;
+> +      };
+> +  };
+> +...
 
