@@ -2,128 +2,113 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2144DC4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 05:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2CCC4332D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 06:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C3820722
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 05:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1F9D20753
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 06:11:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AznKW8a/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h337aAfE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgCVFlk (ORCPT
+        id S1726752AbgCVGLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 01:41:40 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:51889 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725970AbgCVFlk (ORCPT
+        Sun, 22 Mar 2020 02:11:10 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45240 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgCVGLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 01:41:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584855698;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9uyrweGHZQGxIp4uBrTVmnRgE+IcgAxrg3YHUzMhEKM=;
-        b=AznKW8a/BPO02Zsa86JPOjiyGGSjFPigpTz/OjDF7X8g6c3B3tHw9W073epf7afx3vHcuv
-        pk1cUDB29dbv0pnbQLM8H5ftIIHP1B0a04OdcJlDqfYpvpNGLImsJTy5ZUiIUR8bAJo5Rx
-        Mf6zzNXtoTBnYc42UUpPm19uvaM7K5c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-480-f6goE7KzM6Gu4t4Se8tiUA-1; Sun, 22 Mar 2020 01:41:36 -0400
-X-MC-Unique: f6goE7KzM6Gu4t4Se8tiUA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7330F8017CC;
-        Sun, 22 Mar 2020 05:41:35 +0000 (UTC)
-Received: from t490s (ovpn-112-50.phx2.redhat.com [10.3.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 650475DA7D;
-        Sun, 22 Mar 2020 05:41:34 +0000 (UTC)
-Date:   Sun, 22 Mar 2020 01:41:31 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        shuah@kernel.org, shakeelb@google.com
-Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
- false-negative errors
-Message-ID: <20200322054131.GC1068248@t490s>
-References: <20200322013525.1095493-1-aquini@redhat.com>
- <20200321184352.826d3dba38aecc4ff7b32e72@linux-foundation.org>
- <20200322020326.GB1068248@t490s>
- <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
+        Sun, 22 Mar 2020 02:11:09 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j10so5718639pfi.12;
+        Sat, 21 Mar 2020 23:11:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:date:from:to:cc:subject:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OlTTwgDJDrxhOFNzpLQTgXtTgLH4e4DZxu3thtRL82o=;
+        b=h337aAfEFa9h2tcpJIXUoh+RHQPy44foiVQQyVLR5FcC2ClOiZBE8d1SrnX3yQWwaX
+         tgz+qxMiyaj209JhBonSMiwiDsCdTl0lfOcdfuEThU4q+g0Rhh8/myDM0umodKqMve+Z
+         nI3gbp7zJKPBmdnCcFDSyPP/GIdv2znD84wIAGS2Xb6QzJXvNZa1VIPs+F9I0i339ZOb
+         47NcAJHggaHFjOYwXQqxMW/3l/NYmbRhz+JA6ERCM3sgXb2wg31dlWjaYrzTO7QmWTNj
+         r7EIR+1ZeNiAfV2PE8b56AhkM4pwyiRt6VNSJXDg8cri+CdT0Td3kvXJ+YB4zQ+YQ78K
+         KTSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OlTTwgDJDrxhOFNzpLQTgXtTgLH4e4DZxu3thtRL82o=;
+        b=Nh8/nRCZ5Jw95QSiaUPu3E6ZzvkLZBJ1FwVHKZsxy22FpNKZnzsK1rSxm2V9loATCl
+         Wvv5clTZXCwb1UtOt3dDfM8HojUxXN9VqHtVuH2svP35oJ+eHWl1XkwM8UR8hWhfAnsG
+         720hLxPH4XhP4es3WNoJoYGzzZxMlCaK14AS5C/84dio68naVSWzkpxlaEtSpvQQONB7
+         a3CIa+lKfteePhRbyA1eg0i+aZQjW9Q89TiTDvwwg9G/PdwwT1lenu64p/rIF3pdB4fv
+         xJOz4FDipCEJXYitpXUz1x/XSzcLlRXe6c5Qe6Rj3fp/4YDxm6vVSSeWXtjbMIaBFxJ3
+         meZQ==
+X-Gm-Message-State: ANhLgQ3J5uDKBYyYOerSxMjiCaKkMddO6cOl2BmZ0AS+Y26VLFmiLrt9
+        WN7fipLPRstY9GLYA8JTpe/FO1y9kEY=
+X-Google-Smtp-Source: ADFU+vuF8WchGXRdT82EO59i+tFpChkiMs7Eatqag+5y9JFsUISI+og4W2JlbD2EaS6oGmXyQoP59Q==
+X-Received: by 2002:a63:5011:: with SMTP id e17mr16250248pgb.338.1584857466789;
+        Sat, 21 Mar 2020 23:11:06 -0700 (PDT)
+Received: from SARKAR ([49.207.56.153])
+        by smtp.gmail.com with ESMTPSA id w4sm6744586pfc.57.2020.03.21.23.11.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Mar 2020 23:11:06 -0700 (PDT)
+Message-ID: <5e77017a.1c69fb81.dc341.8ab9@mx.google.com>
+X-Google-Original-Message-ID: <20200322061102.GA17797@rohitsarkar5398@gmail.com>
+Date:   Sun, 22 Mar 2020 11:41:02 +0530
+From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jic23@kernel.org, dragos.bogdan@analog.com,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>, knaack.h@gmx.de,
+        pmeerw@pmeerw.net
+Subject: Re: [PATCH] iio: gyro: adis16136: use scnprintf instead of snprintf
+References: <5e723666.1c69fb81.3545b.79c3@mx.google.com>
+ <20200322002542.GA2826015@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200322002542.GA2826015@smile.fi.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 09:31:42PM -0700, Andrew Morton wrote:
-> On Sat, 21 Mar 2020 22:03:26 -0400 Rafael Aquini <aquini@redhat.com> wrote:
+On Sun, Mar 22, 2020 at 02:25:42AM +0200, Andy Shevchenko wrote:
+> On Wed, Mar 18, 2020 at 08:25:22PM +0530, Rohit Sarkar wrote:
+> > scnprintf returns the actual number of bytes written into the buffer as
+> > opposed to snprintf which returns the number of bytes that would have
+> > been written if the buffer was big enough. Using the output of snprintf
+> > may lead to difficult to detect bugs.
 > 
-> > > > + * In order to sort out that race, and get the after fault checks consistent,
-> > > > + * the "quick and dirty" trick below is required in order to force a call to
-> > > > + * lru_add_drain_all() to get the recently MLOCK_ONFAULT pages moved to
-> > > > + * the unevictable LRU, as expected by the checks in this selftest.
-> > > > + */
-> > > > +static void force_lru_add_drain_all(void)
-> > > > +{
-> > > > +	sched_yield();
-> > > > +	system("echo 1 > /proc/sys/vm/compact_memory");
-> > > > +}
-> > > 
-> > > What is the sched_yield() for?
-> > >
-> > 
-> > Mostly it's there to provide a sleeping gap after the fault, whithout 
-> > actually adding an arbitrary value with usleep(). 
-> > 
-> > It's not a hard requirement, but, in some of the tests I performed 
-> > (whithout that sleeping gap) I would still see around 1% chance 
-> > of hitting the false-negative. After adding it I could not hit
-> > the issue anymore.
+> Nice. Have you investigate the code?
 > 
-> It's concerning that such deep machinery as pagevec draining is visible
-> to userspace.
+> > @@ -96,7 +96,7 @@ static ssize_t adis16136_show_serial(struct file *file,
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -	len = snprintf(buf, sizeof(buf), "%.4x%.4x%.4x-%.4x\n", lot1, lot2,
+> > +	len = scnprintf(buf, sizeof(buf), "%.4x%.4x%.4x-%.4x\n", lot1, lot2,
+> >  		lot3, serial);
+> >  
+> >  	return simple_read_from_buffer(userbuf, count, ppos, buf, len);
 > 
-> I suppose that for consistency and correctness we should perform a
-> drain prior to each read from /proc/*/pagemap.  Presumably this would
-> be far too expensive.
+> The buffer size is 20, the pattern size I count to 19. Do you think snprintf()
+> can fail?
+That might be the case, but IMO using scnprintf can be considered as a
+best practice. There is no overhead with this change and further if the
+pattern is changed by someone in the future they might overlook the
+buffersize
+Thanks,
+Rohit
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 > 
-> Is there any other way?  One such might be to make the MLOCK_ONFAULT
-> pages bypass the lru_add_pvecs?
->
-
-Well,
-
-I admit I wasn't taking the approach of changing the kernel because I was 
-thinking it would require a partial, or even full, revert of commit 
-9c4e6b1a7027f, and that would be increasing complexity, but on a 
-second thought, it seems that we might just be missing:
-
-diff --git a/mm/swap.c b/mm/swap.c
-index cf39d24ada2a..b1601228ded4 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -473,6 +473,7 @@ void lru_cache_add_active_or_unevictable(struct page *page,
-                __mod_zone_page_state(page_zone(page), NR_MLOCK,
-                                    hpage_nr_pages(page));
-                count_vm_event(UNEVICTABLE_PGMLOCKED);
-+               SetPageUnevictable(page);
-        }
-        lru_cache_add(page);
- }
-
-
-I'll take a closer look into it, as well as test it properly, tomorrow. 
-Thanks for the heads up, Andrew.
--- Rafael
-
+> 
