@@ -2,221 +2,204 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC550C4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F69C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E87F20724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A5F20724
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgCVQDA (ORCPT
+        id S1726797AbgCVQG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 12:03:00 -0400
-Received: from mga14.intel.com ([192.55.52.115]:39159 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbgCVQDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 12:03:00 -0400
-IronPort-SDR: EON68pOvPonYUdWNe3zBc+yt8wMTMH0FeDmMbSRYLML7Lx/sr2KFeR7R6jhFfWsYoxglrEEcG8
- hIde99uRyfHw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2020 09:02:58 -0700
-IronPort-SDR: ViSR3TJG1Cxn9F/ZaLFWq7+gvwl6jNq8ynTDuwhkkxUKwN6uPi9/JG1YhQNBKbLeKiTXnnzmaP
- x2GQHZEf/VwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,293,1580803200"; 
-   d="scan'208";a="419249220"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 22 Mar 2020 09:02:56 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jG33v-000EQl-Ln; Mon, 23 Mar 2020 00:02:55 +0800
-Date:   Mon, 23 Mar 2020 00:02:00 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/test] BUILD SUCCESS
- e19d2829fed163f76ebea82bfd0d305d9e1e258d
-Message-ID: <5e778bf8.cJGWdk6Tq+AfZxe8%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Sun, 22 Mar 2020 12:06:28 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:48490 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725985AbgCVQG1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 12:06:27 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TtH5FIv_1584893121;
+Received: from localhost(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TtH5FIv_1584893121)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 23 Mar 2020 00:05:28 +0800
+From:   Hui Zhu <teawater@gmail.com>
+To:     mst@redhat.com, jasowang@redhat.com, akpm@linux-foundation.org,
+        mojha@codeaurora.org, pagupta@redhat.com, aquini@redhat.com,
+        namit@vmware.com, david@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        qemu-devel@nongnu.org
+Cc:     Hui Zhu <teawater@gmail.com>, Hui Zhu <teawaterz@linux.alibaba.com>
+Subject: [PATCH for QEMU v2] virtio-balloon: Add option cont-pages to set VIRTIO_BALLOON_VQ_INFLATE_CONT
+Date:   Mon, 23 Mar 2020 00:04:57 +0800
+Message-Id: <1584893097-12317-2-git-send-email-teawater@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1584893097-12317-1-git-send-email-teawater@gmail.com>
+References: <1584893097-12317-1-git-send-email-teawater@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/test
-branch HEAD: e19d2829fed163f76ebea82bfd0d305d9e1e258d  Merge remote-tracking branch 'linus/master' into HEAD
+If the guest kernel has many fragmentation pages, use virtio_balloon
+will split THP of QEMU when it calls MADV_DONTNEED madvise to release
+the balloon pages.
+Set option cont-pages to on will open flags VIRTIO_BALLOON_VQ_INFLATE_CONT
+and set continuous pages order to THP order.
+Then It will get continuous pages PFN from VQ icvq use use madvise
+MADV_DONTNEED release the THP page.
+This will handle the THP split issue.
 
-elapsed time: 797m
-
-configs tested: 154
-configs skipped: 0
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-sparc                            allyesconfig
-ia64                             allmodconfig
-arc                              allyesconfig
-arm                         at91_dt_defconfig
-arm                          exynos_defconfig
-arm                           sunxi_defconfig
-mips                      fuloong2e_defconfig
-arm                        multi_v5_defconfig
-h8300                    h8300h-sim_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                     edosk2674_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                      malta_kvm_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200322
-x86_64               randconfig-a002-20200322
-x86_64               randconfig-a003-20200322
-i386                 randconfig-a001-20200322
-i386                 randconfig-a002-20200322
-i386                 randconfig-a003-20200322
-alpha                randconfig-a001-20200322
-m68k                 randconfig-a001-20200322
-mips                 randconfig-a001-20200322
-nds32                randconfig-a001-20200322
-parisc               randconfig-a001-20200322
-riscv                randconfig-a001-20200322
-csky                 randconfig-a001-20200322
-openrisc             randconfig-a001-20200322
-s390                 randconfig-a001-20200322
-sh                   randconfig-a001-20200322
-xtensa               randconfig-a001-20200322
-i386                 randconfig-b003-20200322
-i386                 randconfig-b001-20200322
-x86_64               randconfig-b003-20200322
-i386                 randconfig-b002-20200322
-x86_64               randconfig-b002-20200322
-x86_64               randconfig-c001-20200322
-x86_64               randconfig-c002-20200322
-x86_64               randconfig-c003-20200322
-i386                 randconfig-c001-20200322
-i386                 randconfig-c002-20200322
-i386                 randconfig-c003-20200322
-x86_64               randconfig-d001-20200322
-x86_64               randconfig-d002-20200322
-x86_64               randconfig-d003-20200322
-i386                 randconfig-d001-20200322
-i386                 randconfig-d002-20200322
-i386                 randconfig-d003-20200322
-x86_64               randconfig-e001-20200322
-x86_64               randconfig-e002-20200322
-x86_64               randconfig-e003-20200322
-i386                 randconfig-e001-20200322
-i386                 randconfig-e002-20200322
-i386                 randconfig-e003-20200322
-x86_64               randconfig-f001-20200322
-x86_64               randconfig-f002-20200322
-x86_64               randconfig-f003-20200322
-i386                 randconfig-f001-20200322
-i386                 randconfig-f002-20200322
-i386                 randconfig-f003-20200322
-x86_64               randconfig-g001-20200322
-x86_64               randconfig-g002-20200322
-x86_64               randconfig-g003-20200322
-i386                 randconfig-g001-20200322
-i386                 randconfig-g002-20200322
-i386                 randconfig-g003-20200322
-x86_64               randconfig-h001-20200322
-x86_64               randconfig-h002-20200322
-x86_64               randconfig-h003-20200322
-i386                 randconfig-h001-20200322
-i386                 randconfig-h002-20200322
-i386                 randconfig-h003-20200322
-arc                  randconfig-a001-20200322
-arm                  randconfig-a001-20200322
-arm64                randconfig-a001-20200322
-ia64                 randconfig-a001-20200322
-powerpc              randconfig-a001-20200322
-sparc                randconfig-a001-20200322
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
+Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ hw/virtio/virtio-balloon.c                      | 32 +++++++++++++++++++++----
+ include/hw/virtio/virtio-balloon.h              |  4 +++-
+ include/standard-headers/linux/virtio_balloon.h |  4 ++++
+ 3 files changed, 35 insertions(+), 5 deletions(-)
+
+diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
+index a4729f7..88bdaca 100644
+--- a/hw/virtio/virtio-balloon.c
++++ b/hw/virtio/virtio-balloon.c
+@@ -34,6 +34,7 @@
+ #include "hw/virtio/virtio-access.h"
+ 
+ #define BALLOON_PAGE_SIZE  (1 << VIRTIO_BALLOON_PFN_SHIFT)
++#define CONT_PAGES_ORDER   9
+ 
+ typedef struct PartiallyBalloonedPage {
+     ram_addr_t base_gpa;
+@@ -65,7 +66,8 @@ static bool virtio_balloon_pbp_matches(PartiallyBalloonedPage *pbp,
+ 
+ static void balloon_inflate_page(VirtIOBalloon *balloon,
+                                  MemoryRegion *mr, hwaddr mr_offset,
+-                                 PartiallyBalloonedPage *pbp)
++                                 PartiallyBalloonedPage *pbp, 
++                                 bool is_cont_pages)
+ {
+     void *addr = memory_region_get_ram_ptr(mr) + mr_offset;
+     ram_addr_t rb_offset, rb_aligned_offset, base_gpa;
+@@ -76,6 +78,13 @@ static void balloon_inflate_page(VirtIOBalloon *balloon,
+     /* XXX is there a better way to get to the RAMBlock than via a
+      * host address? */
+     rb = qemu_ram_block_from_host(addr, false, &rb_offset);
++
++    if (is_cont_pages) {
++        ram_block_discard_range(rb, rb_offset,
++                                BALLOON_PAGE_SIZE << CONT_PAGES_ORDER);
++        return;
++    }
++
+     rb_page_size = qemu_ram_pagesize(rb);
+ 
+     if (rb_page_size == BALLOON_PAGE_SIZE) {
+@@ -361,9 +370,10 @@ static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
+             trace_virtio_balloon_handle_output(memory_region_name(section.mr),
+                                                pa);
+             if (!qemu_balloon_is_inhibited()) {
+-                if (vq == s->ivq) {
++                if (vq == s->ivq || vq == s->icvq) {
+                     balloon_inflate_page(s, section.mr,
+-                                         section.offset_within_region, &pbp);
++                                         section.offset_within_region, &pbp,
++                                         vq == s->icvq);
+                 } else if (vq == s->dvq) {
+                     balloon_deflate_page(s, section.mr, section.offset_within_region);
+                 } else {
+@@ -618,9 +628,12 @@ static size_t virtio_balloon_config_size(VirtIOBalloon *s)
+     if (s->qemu_4_0_config_size) {
+         return sizeof(struct virtio_balloon_config);
+     }
+-    if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON)) {
++    if (virtio_has_feature(s->host_features, VIRTIO_BALLOON_F_CONT_PAGES)) {
+         return sizeof(struct virtio_balloon_config);
+     }
++    if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON)) {
++        return offsetof(struct virtio_balloon_config, pages_order);
++    }
+     if (virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
+         return offsetof(struct virtio_balloon_config, poison_val);
+     }
+@@ -646,6 +659,10 @@ static void virtio_balloon_get_config(VirtIODevice *vdev, uint8_t *config_data)
+                        cpu_to_le32(VIRTIO_BALLOON_CMD_ID_DONE);
+     }
+ 
++    if (virtio_has_feature(dev->host_features, VIRTIO_BALLOON_F_CONT_PAGES)) {
++        config.pages_order = cpu_to_le32(CONT_PAGES_ORDER);
++    }
++
+     trace_virtio_balloon_get_config(config.num_pages, config.actual);
+     memcpy(config_data, &config, virtio_balloon_config_size(dev));
+ }
+@@ -816,6 +833,11 @@ static void virtio_balloon_device_realize(DeviceState *dev, Error **errp)
+             virtio_error(vdev, "iothread is missing");
+         }
+     }
++
++    if (virtio_has_feature(s->host_features, VIRTIO_BALLOON_F_CONT_PAGES)) {
++        s->icvq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
++    }
++
+     reset_stats(s);
+ }
+ 
+@@ -916,6 +938,8 @@ static Property virtio_balloon_properties[] = {
+                     VIRTIO_BALLOON_F_DEFLATE_ON_OOM, false),
+     DEFINE_PROP_BIT("free-page-hint", VirtIOBalloon, host_features,
+                     VIRTIO_BALLOON_F_FREE_PAGE_HINT, false),
++    DEFINE_PROP_BIT("cont-pages", VirtIOBalloon, host_features,
++                    VIRTIO_BALLOON_F_CONT_PAGES, false),
+     /* QEMU 4.0 accidentally changed the config size even when free-page-hint
+      * is disabled, resulting in QEMU 3.1 migration incompatibility.  This
+      * property retains this quirk for QEMU 4.1 machine types.
+diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
+index d1c968d..61d2419 100644
+--- a/include/hw/virtio/virtio-balloon.h
++++ b/include/hw/virtio/virtio-balloon.h
+@@ -42,7 +42,7 @@ enum virtio_balloon_free_page_report_status {
+ 
+ typedef struct VirtIOBalloon {
+     VirtIODevice parent_obj;
+-    VirtQueue *ivq, *dvq, *svq, *free_page_vq;
++    VirtQueue *ivq, *dvq, *svq, *free_page_vq, *icvq;
+     uint32_t free_page_report_status;
+     uint32_t num_pages;
+     uint32_t actual;
+@@ -70,6 +70,8 @@ typedef struct VirtIOBalloon {
+     uint32_t host_features;
+ 
+     bool qemu_4_0_config_size;
++
++    uint32_t pages_order;
+ } VirtIOBalloon;
+ 
+ #endif
+diff --git a/include/standard-headers/linux/virtio_balloon.h b/include/standard-headers/linux/virtio_balloon.h
+index 9375ca2..ee18be7 100644
+--- a/include/standard-headers/linux/virtio_balloon.h
++++ b/include/standard-headers/linux/virtio_balloon.h
+@@ -36,6 +36,8 @@
+ #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
+ #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
+ #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
++#define VIRTIO_BALLOON_F_CONT_PAGES	5 /* VQ to report continuous pages */
++
+ 
+ /* Size of a PFN in the balloon interface. */
+ #define VIRTIO_BALLOON_PFN_SHIFT 12
+@@ -51,6 +53,8 @@ struct virtio_balloon_config {
+ 	uint32_t free_page_report_cmd_id;
+ 	/* Stores PAGE_POISON if page poisoning is in use */
+ 	uint32_t poison_val;
++	/* Pages order if VIRTIO_BALLOON_F_CONT_PAGES is set */
++	uint32_t pages_order;
+ };
+ 
+ #define VIRTIO_BALLOON_S_SWAP_IN  0   /* Amount of memory swapped in */
+-- 
+2.7.4
+
