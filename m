@@ -2,145 +2,117 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EC9C4332E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 01:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86B8C4332D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 01:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF22720754
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 01:40:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2itsDeP"
+	by mail.kernel.org (Postfix) with ESMTP id ACE3E20767
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 01:43:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584841434;
+	bh=Q13b5glXHFBJZs1KR/nBSkLQOAK6lOsqQAlibGsDiWU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LlivzhvnlnH9MMrNKmS3LRpn5y5Qp6Cl/0DHF1/uRlIXWyOxGJlEU7t2YRC1//D6S
+	 pLQbwAqcwct4GMTmTDtmmEa5/lmqhOIOnGtmLeikR5DCf+2PXN2Ix1hISs7ajSzalH
+	 p7ykA8Kva7E06lnSl16gnJASioVAU4w6jXjQpXrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbgCVBkF (ORCPT
+        id S1728226AbgCVBnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 21:40:05 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43976 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbgCVBkF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 21:40:05 -0400
-Received: by mail-lf1-f66.google.com with SMTP id n20so7465485lfl.10;
-        Sat, 21 Mar 2020 18:40:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Rh41HaJLEukHlz9L4bxl8YXEU6CfzBjQTvMTQdRv0XI=;
-        b=A2itsDePqsyV9qrFuNgM0lFfYTDt2HciDl+SeWHWoG607WDTZ3NKOEUj/LTyHKoS+F
-         jFFmmFNqd0YbjegQ+LKYjVOQKfcM5GoRKu265mMTGz6umdE3CuB8CrKPhuoASZ2cVcMK
-         NZ+FFeRq6MKgqt2sVoZfOVSyd6y/SfQpSZ3O/EBWT0z7ObJtLbZjsjQhuwx+a3ok8cvR
-         Osr5594oaONix/PQH9CT9YwG2GnIvd/m1XCP/crl3iomVlAnueyIdosEFK3tA4BaMgRS
-         5ryZ9AzidUx62wkuDP3GbMsVN4VLA0W9vmL7sxvmhU7dvwJmRzz8umctuAvYyPmbNXOR
-         yQ2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Rh41HaJLEukHlz9L4bxl8YXEU6CfzBjQTvMTQdRv0XI=;
-        b=bqynzamJ15fhHPCOEVSSJPGSIKUcQawmAlnmITm/U4WK6gXLa/R0UCFkRNaO18uDRb
-         sgEIwByTfCjAuqgd1GcK0Z/KcQBwAc3S/vxkDIUQ+oSKAkxq3Pc5NTOOFqFN5EkMMNdM
-         3OYcOWI+a93UBegeZmcQKFGmzckVEJiV0cR+nwb6FQzTDZPgm0xdupb7pBDRWGB0k1RU
-         6DrXKq7k2JZjrCNjNyMHB9bcnLWb6klF1nBBihSZBySmQWP85ZZBhz5iPIm9/iNMfHif
-         4PiHFGKYoU+L2Hpq6ezTEGHW6ZIgvx2p4Yc9S5SFOx4/0xGOtmR2o71oSyaCEooyeYbH
-         eUDQ==
-X-Gm-Message-State: ANhLgQ0MNLjkTIkofcaWwETvze7MjFugwU2FCaDmglWzMF7ibEtqE23K
-        E2oG+/4+2mgUcFC+C+aUc8xoBSsy
-X-Google-Smtp-Source: ADFU+vuZuozUWQV6BLICwAKo1+jI/TEjXwD9hBKtQ5v8aWyvrI6KABdk5u6lFT+g2Nofdvdv+/5hhA==
-X-Received: by 2002:ac2:5092:: with SMTP id f18mr1773895lfm.162.1584841200457;
-        Sat, 21 Mar 2020 18:40:00 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id d20sm6016843lfl.53.2020.03.21.18.39.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Mar 2020 18:39:59 -0700 (PDT)
-Subject: Re: [PATCH v2] i2c: at91: support atomic write xfer
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Stefan Lengfeld <contact@stefanchrist.eu>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <6466e066d7cbad20cb6a334ad8e37cdcf521c492.1584822011.git.mirq-linux@rere.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c789352c-5517-1fd9-980d-f8f6c2017901@gmail.com>
-Date:   Sun, 22 Mar 2020 04:39:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <6466e066d7cbad20cb6a334ad8e37cdcf521c492.1584822011.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Sat, 21 Mar 2020 21:43:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727296AbgCVBnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 21:43:53 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F013520754;
+        Sun, 22 Mar 2020 01:43:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584841433;
+        bh=Q13b5glXHFBJZs1KR/nBSkLQOAK6lOsqQAlibGsDiWU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=x8BOMsYzf23Ri1SZ98QIxxvV84n0HJHGdEmX14iaF5afC8+0ple2Y5EIotpsEt4H8
+         7Kq0tTfa4BqpLHdDMnMpiMfwl2gmY9LWDgD8l/h5RX20/dpyIAKQ187qNOqmmWCk11
+         TXOr85yg95o5fw8xXEi+IeXo80241NgGjbivE71g=
+Date:   Sat, 21 Mar 2020 18:43:52 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Rafael Aquini <aquini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        shuah@kernel.org, shakeelb@google.com
+Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
+ false-negative errors
+Message-Id: <20200321184352.826d3dba38aecc4ff7b32e72@linux-foundation.org>
+In-Reply-To: <20200322013525.1095493-1-aquini@redhat.com>
+References: <20200322013525.1095493-1-aquini@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-22.03.2020 00:03, Michał Mirosław пишет:
-> Implement basic support for atomic write - enough to get a simple
-> write to PMIC on shutdown. Only for chips having ALT_CMD register,
-> eg. SAMA5D2.
+On Sat, 21 Mar 2020 21:35:25 -0400 Rafael Aquini <aquini@redhat.com> wrote:
+
+> Changes for commit 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
+> break this test expectations on the behavior of mlock syscall family immediately
+> inserting the recently faulted pages into the UNEVICTABLE_LRU, when MCL_ONFAULT is
+> passed to the syscall as part of its flag-set.
 > 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
-> v2: remove runtime-PM usage
->     switch to readl*poll*atomic() for transfer completion wait
-> ---
->  drivers/i2c/busses/i2c-at91-master.c | 69 +++++++++++++++++++++++++++-
->  1 file changed, 67 insertions(+), 2 deletions(-)
+> There is no functional error introduced by the aforementioned commit,
+> but it opens up a time window where the recently faulted and locked pages
+> might yet not be put back into the UNEVICTABLE_LRU, thus causing a
+> subsequent and immediate PFN flag check for the UNEVICTABLE bit
+> to trip on false-negative errors, as it happens with this test.
 > 
-> diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
-> index ba6fbb9c7390..d9226207157a 100644
-> --- a/drivers/i2c/busses/i2c-at91-master.c
-> +++ b/drivers/i2c/busses/i2c-at91-master.c
-> @@ -21,6 +21,7 @@
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
-> +#include <linux/iopoll.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
->  #include <linux/platform_device.h>
-> @@ -709,6 +710,69 @@ static int at91_twi_xfer(struct i2c_adapter *adap, struct i2c_msg *msg, int num)
->  	return ret;
->  }
+> This patch fix the false negative by forcefully resorting to a code path that
+> will call a CPU pagevec drain right after the fault but before the PFN flag
+> check takes place, sorting out the race that way.
+> 
 >  
-> +static int at91_twi_xfer_atomic(struct i2c_adapter *adap, struct i2c_msg *msg, int num)
+> +/*
+> + * After commit 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
+> + * changes made by calls to mlock* family might not be immediately reflected
+> + * on the LRUs, thus checking the PFN flags might race against pagevec drain.
+> + *
+> + * In order to sort out that race, and get the after fault checks consistent,
+> + * the "quick and dirty" trick below is required in order to force a call to
+> + * lru_add_drain_all() to get the recently MLOCK_ONFAULT pages moved to
+> + * the unevictable LRU, as expected by the checks in this selftest.
+> + */
+> +static void force_lru_add_drain_all(void)
 > +{
-> +	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
-> +	unsigned long timeout;
-> +	struct pinctrl *pins;
-> +	__u32 stat;
-> +	int ret;
-> +
-> +	/* FIXME: only single write request supported to 7-bit addr */
-> +	if (num != 1)
-> +		return -EOPNOTSUPP;
-> +	if (msg->flags & I2C_M_RD)
-> +		return -EOPNOTSUPP;
-> +	if (msg->flags & I2C_M_TEN)
-> +		return -EOPNOTSUPP;
-> +	if (msg->len > dev->fifo_size && msg->len > 1)
-> +		return -EOPNOTSUPP;
-> +	if (!dev->pdata->has_alt_cmd)
-> +		return -EOPNOTSUPP;
-> +
-> +	pins = pinctrl_get_select_default(&adap->dev);
-> +
-> +	ret = clk_prepare_enable(twi_dev->clk);
+> +	sched_yield();
+> +	system("echo 1 > /proc/sys/vm/compact_memory");
+> +}
 
-Hello Michał,
+What is the sched_yield() for?
 
-Please see comments to the clk_prepare_enable() and clk_prepare().
-
-/* clk_prepare_enable helps cases using clk_enable in non-atomic context. */
-static inline int clk_prepare_enable(struct clk *clk)
-...
- * clk_prepare may sleep, which differentiates it from clk_enable.
+>  static int onfault_check(char *map)
+>  {
+>  	unsigned long page_size = getpagesize();
+> @@ -343,6 +360,9 @@ static int onfault_check(char *map)
+>  	}
+>  
+>  	*map = 'a';
+> +
+> +	force_lru_add_drain_all();
+> +
+>  	page1_flags = get_pageflags((unsigned long)map);
+>  	page2_flags = get_pageflags((unsigned long)map + page_size);
+>  
+> @@ -465,6 +485,8 @@ static int test_lock_onfault_of_present()
+>  		goto unmap;
+>  	}
+>  
+> +	force_lru_add_drain_all();
+> +
+>  	page1_flags = get_pageflags((unsigned long)map);
+>  	page2_flags = get_pageflags((unsigned long)map + page_size);
+>  	page1_flags = get_kpageflags(page1_flags & PFN_MASK);
 
