@@ -2,209 +2,69 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE677C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 20:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B5CC1975A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 20:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AABD920735
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 20:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584908548;
-	bh=3iqFi+iOlhYLfzs5C4DX6o8MS+PKtlz8ewsZrMIVj/A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sNSaZ9wZjC0GdcajCsuHBsIq5gWYqLHf3b3xIfNpvwBnM21YlEmb83kx4zlZeF3ff
-	 j6epZoH+N5vHkvw907t3WhZFo1qUb3Q/+pmFUAVJtSjaK5gPiq6e1SRX1O/Hjne4GB
-	 HXYxjap/ZHeKc7CKsRK3rnXSMrMebYeAZjVZVhew=
+	by mail.kernel.org (Postfix) with ESMTP id AB43A20722
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 20:23:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OSXrgMzm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgCVUW1 (ORCPT
+        id S1726900AbgCVUX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 16:22:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53442 "EHLO mail.kernel.org"
+        Sun, 22 Mar 2020 16:23:56 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50746 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbgCVUW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 16:22:26 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6CC020722;
-        Sun, 22 Mar 2020 20:22:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584908546;
-        bh=3iqFi+iOlhYLfzs5C4DX6o8MS+PKtlz8ewsZrMIVj/A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sX92G5bbCV2eAlSZHvaDMnW74MY7He001Umr+Nz+p/KzgLRyAk4QkT4jirmw4zi4j
-         jwtCt7kualmiN9LheylhoIC2d2fEVa6vyIklRnvnnI2+rFKcBFLCH/6JS8fhrrHGv+
-         I2yWgn5HuE5Vc5YzWvMiRbefTalRaKqA9xlsrbfY=
-Date:   Sun, 22 Mar 2020 16:22:24 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     20200116141849.73955-1-r.czerwinski@pengutronix.de
-Cc:     Rouven Czerwinski <r.czerwinski@pengutronix.de>,
-        s.hauer@pengutronix.de, shawnguo@kernel.org,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-arm-kernel@lists.infradead.org,
-        Lucas Stach <l.stach@pengutronix.de>, stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] ARM: imx: build v7_cpu_resume() unconditionally
-Message-ID: <20200322202224.GQ4189@sasha-vm>
-References: <20200116141849.73955-1-r.czerwinski@pengutronix.de>
- <20200322185022.GA82867@workstation.tuxnet>
+        id S1726623AbgCVUX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 16:23:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Y1E2ofj9UBjZicuoiVM7MKb+d/EIWm4bm2+rPrDxTzU=; b=OSXrgMzmOHr93LXcev85S0IwsI
+        sewIA7jqbhLXVxGmor+kNr4u3ul2kB+KAsEXH4EQwH0fjC712N/N6HCoLWrTf0n+MmVnxCuGrM5r0
+        D+zfZifwP1gpWsaLyV7+0Hh+YVGEu43URgCdfFjOzzFDVo/EVUj03pp+n5GqzGfvY0J0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jG78R-0002L5-Rz; Sun, 22 Mar 2020 21:23:51 +0100
+Date:   Sun, 22 Mar 2020 21:23:51 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] ethtool: fix reference leak in some *_SET handlers
+Message-ID: <20200322202351.GE3819@lunn.ch>
+References: <20200322201551.E11BAE0FD3@unicorn.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200322185022.GA82867@workstation.tuxnet>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200322201551.E11BAE0FD3@unicorn.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 07:50:22PM +0100, Clemens Gruber wrote:
->Hi,
->
->On Thu, Jan 16, 2020 at 03:18:49PM +0100, Rouven Czerwinski wrote:
->> From: Ahmad Fatoum <a.fatoum@pengutronix.de>
->>
->> This function is not only needed by the platform suspend code, but is also
->> reused as the CPU resume function when the ARM cores can be powered down
->> completely in deep idle, which is the case on i.MX6SX and i.MX6UL(L).
->>
->> Providing the static inline stub whenever CONFIG_SUSPEND is disabled means
->> that those platforms will hang on resume from cpuidle if suspend is disabled.
->>
->> So there are two problems:
->>
->>   - The static inline stub masks the linker error
->>   - The function is not available where needed
->>
->> Fix both by just building the function unconditionally, when
->> CONFIG_SOC_IMX6 is enabled. The actual code is three instructions long,
->> so it's arguably ok to just leave it in for all i.MX6 kernel configurations.
->>
->> Fixes: 05136f0897b5 ("ARM: imx: support arm power off in cpuidle for i.mx6sx")
->> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
->> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
->> Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
->> ---
->>  arch/arm/mach-imx/Makefile       |  2 ++
->>  arch/arm/mach-imx/common.h       |  4 ++--
->>  arch/arm/mach-imx/resume-imx6.S  | 24 ++++++++++++++++++++++++
->>  arch/arm/mach-imx/suspend-imx6.S | 14 --------------
->>  4 files changed, 28 insertions(+), 16 deletions(-)
->>  create mode 100644 arch/arm/mach-imx/resume-imx6.S
->>
->> diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
->> index 35ff620537e6..03506ce46149 100644
->> --- a/arch/arm/mach-imx/Makefile
->> +++ b/arch/arm/mach-imx/Makefile
->> @@ -91,6 +91,8 @@ AFLAGS_suspend-imx6.o :=-Wa,-march=armv7-a
->>  obj-$(CONFIG_SOC_IMX6) += suspend-imx6.o
->>  obj-$(CONFIG_SOC_IMX53) += suspend-imx53.o
->>  endif
->> +AFLAGS_resume-imx6.o :=-Wa,-march=armv7-a
->> +obj-$(CONFIG_SOC_IMX6) += resume-imx6.o
->>  obj-$(CONFIG_SOC_IMX6) += pm-imx6.o
->>
->>  obj-$(CONFIG_SOC_IMX1) += mach-imx1.o
->> diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
->> index 912aeceb4ff8..5aa5796cff0e 100644
->> --- a/arch/arm/mach-imx/common.h
->> +++ b/arch/arm/mach-imx/common.h
->> @@ -109,17 +109,17 @@ void imx_cpu_die(unsigned int cpu);
->>  int imx_cpu_kill(unsigned int cpu);
->>
->>  #ifdef CONFIG_SUSPEND
->> -void v7_cpu_resume(void);
->>  void imx53_suspend(void __iomem *ocram_vbase);
->>  extern const u32 imx53_suspend_sz;
->>  void imx6_suspend(void __iomem *ocram_vbase);
->>  #else
->> -static inline void v7_cpu_resume(void) {}
->>  static inline void imx53_suspend(void __iomem *ocram_vbase) {}
->>  static const u32 imx53_suspend_sz;
->>  static inline void imx6_suspend(void __iomem *ocram_vbase) {}
->>  #endif
->>
->> +void v7_cpu_resume(void);
->> +
->>  void imx6_pm_ccm_init(const char *ccm_compat);
->>  void imx6q_pm_init(void);
->>  void imx6dl_pm_init(void);
->> diff --git a/arch/arm/mach-imx/resume-imx6.S b/arch/arm/mach-imx/resume-imx6.S
->> new file mode 100644
->> index 000000000000..5bd1ba7ef15b
->> --- /dev/null
->> +++ b/arch/arm/mach-imx/resume-imx6.S
->> @@ -0,0 +1,24 @@
->> +/* SPDX-License-Identifier: GPL-2.0-or-later */
->> +/*
->> + * Copyright 2014 Freescale Semiconductor, Inc.
->> + */
->> +
->> +#include <linux/linkage.h>
->> +#include <asm/assembler.h>
->> +#include <asm/asm-offsets.h>
->> +#include <asm/hardware/cache-l2x0.h>
->> +#include "hardware.h"
->> +
->> +/*
->> + * The following code must assume it is running from physical address
->> + * where absolute virtual addresses to the data section have to be
->> + * turned into relative ones.
->> + */
->> +
->> +ENTRY(v7_cpu_resume)
->> +	bl	v7_invalidate_l1
->> +#ifdef CONFIG_CACHE_L2X0
->> +	bl	l2c310_early_resume
->> +#endif
->> +	b	cpu_resume
->> +ENDPROC(v7_cpu_resume)
->> diff --git a/arch/arm/mach-imx/suspend-imx6.S b/arch/arm/mach-imx/suspend-imx6.S
->> index 062391ff13da..1eabf2d2834b 100644
->> --- a/arch/arm/mach-imx/suspend-imx6.S
->> +++ b/arch/arm/mach-imx/suspend-imx6.S
->> @@ -327,17 +327,3 @@ resume:
->>
->>  	ret	lr
->>  ENDPROC(imx6_suspend)
->> -
->> -/*
->> - * The following code must assume it is running from physical address
->> - * where absolute virtual addresses to the data section have to be
->> - * turned into relative ones.
->> - */
->> -
->> -ENTRY(v7_cpu_resume)
->> -	bl	v7_invalidate_l1
->> -#ifdef CONFIG_CACHE_L2X0
->> -	bl	l2c310_early_resume
->> -#endif
->> -	b	cpu_resume
->> -ENDPROC(v7_cpu_resume)
->> --
->> 2.25.0
->
->This patch broke the build for our i.MX6 kernel.
->
->I am referring to commits 512a928aff in mainline and
->7199cb65bb in linux-stable.
->
->In our kernel, neither CONFIG_PM nor CONFIG_SUSPEND are set. Therefore,
->ARM_CPU_SUSPEND is also unset, which means that sleep.S (containing
->cpu_resume) is not built.
->
->With this patch, ld reports the following error:
->arch/arm/mach-imx/resume-imx6.o: in function `v7_cpu_resume':
->(.text+0x8): undefined reference to `cpu_resume'
+On Sun, Mar 22, 2020 at 09:15:51PM +0100, Michal Kubecek wrote:
+> Andrew noticed that some handlers for *_SET commands leak a netdev
+> reference if required ethtool_ops callbacks do not exist. A simple
+> reproducer would be e.g.
+> 
+>   ip link add veth1 type veth peer name veth2
+>   ethtool -s veth1 wol g
+>   ip link del veth1
+> 
+> Make sure dev_put() is called when ethtool_ops check fails.
+> 
+> Reported-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 
-Is this a problem with Linus's tree as well?
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
--- 
-Thanks,
-Sasha
+    Andrew
