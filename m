@@ -2,217 +2,201 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0CEC54FCE
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F204AC4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E240220736
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:26:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584901608;
-	bh=JNL/JoCsYbg+cQsO68XaEG0HOUodGMAq71VOxp587uI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qTWuPvXDP7iwJ33MqNjW2ece0rbK9DpqQZqqFlgvlKIvq+xTM7E494ng1dwM8R9z6
-	 OIu6a8Zw1cBPA87E6Qm7eGoVFFqpVC6I66QenLQc8ZZguPugtBcVCHQDgi3h3xDEhc
-	 Z/LsChWmQlM1p7MI9iufBNL1iVK/A2eWIINvZ+PI=
+	by mail.kernel.org (Postfix) with ESMTP id C9923206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 18:29:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgCVS0r (ORCPT
+        id S1726741AbgCVS30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 14:26:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45196 "EHLO mail.kernel.org"
+        Sun, 22 Mar 2020 14:29:26 -0400
+Received: from mga06.intel.com ([134.134.136.31]:27031 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbgCVS0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 14:26:46 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3EC320719;
-        Sun, 22 Mar 2020 18:26:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584901606;
-        bh=JNL/JoCsYbg+cQsO68XaEG0HOUodGMAq71VOxp587uI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jfzoqi5jPVKbH9aUMQP6pANm54u6xELSZBReLqSNiaiRXP/bj7AnxRIiPQotPjprM
-         jScVSCRFJW0/jng8wCQ65+HqBNdhb7EF3vQAKVg5wtGI44+2PFR33JFlDQ8HzWKIxv
-         rYWN1HPhr0OWTB6BDZvakTefVbeHyDaQ8UcFiHb4=
-Date:   Sun, 22 Mar 2020 18:26:40 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "keescook@chromium.org" <keescook@chromium.org>,
-        "Costina, Adrian" <Adrian.Costina@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "Grozav, Andrei" <Andrei.Grozav@analog.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "Nagy, Laszlo" <Laszlo.Nagy@analog.com>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
-        "Csomortani, Istvan" <Istvan.Csomortani@analog.com>
-Subject: Re: [PATCH v11 5/8] iio: adc: adi-axi-adc: add support for AXI ADC
- IP core
-Message-ID: <20200322182640.20b83ce0@archlinux>
-In-Reply-To: <319e36a6e4553a54812c63d89df181aee165bd4b.camel@analog.com>
-References: <20200321085315.11030-1-alexandru.ardelean@analog.com>
-        <20200321085315.11030-6-alexandru.ardelean@analog.com>
-        <CAHp75VecnornqckmG_WgN-V9A1VSQfRT85TxFzwHgaLw9dAHeA@mail.gmail.com>
-        <979ef870a4f0935e41e95e7759847eba8bd0407c.camel@analog.com>
-        <CAHp75Vdna2+txY=w87n+SWE3x3FYJLeMjYbYa6V-co3z0mYx_g@mail.gmail.com>
-        <202003220901.880A6DF@keescook>
-        <20200322165317.0b1f0674@archlinux>
-        <319e36a6e4553a54812c63d89df181aee165bd4b.camel@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725881AbgCVS30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 14:29:26 -0400
+IronPort-SDR: beBnqxJoW+V30ynrkc/oGJied7TBONzV1q3VmusPy7Vniy1w2AEy4Fx/hi5jvogxOrmgW7H6Cj
+ yQZ94GE4KPxg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2020 11:29:24 -0700
+IronPort-SDR: 5ARlM6Tq5kef3Sz9aIjYnefefnJnP1J4dl5TxP9OL8De26VTnfIM/H8vkz0bu1pI9GSM99hSXB
+ MVTZmvK+LdRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,293,1580803200"; 
+   d="scan'208";a="249400440"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 22 Mar 2020 11:29:23 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jG5Le-0002Uw-Gx; Mon, 23 Mar 2020 02:29:22 +0800
+Date:   Mon, 23 Mar 2020 02:28:37 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ d14ca0ded81c6ff6d919dc43afe424e9de51c317
+Message-ID: <5e77ae55.77wYWPBcaE+Z0ozK%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 22 Mar 2020 17:40:30 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: d14ca0ded81c6ff6d919dc43afe424e9de51c317  Merge branch 'ras/core'
 
-> On Sun, 2020-03-22 at 16:53 +0000, Jonathan Cameron wrote:
-> > On Sun, 22 Mar 2020 09:16:36 -0700
-> > Kees Cook <keescook@chromium.org> wrote:
-> >   
-> > > On Sun, Mar 22, 2020 at 12:45:39PM +0200, Andy Shevchenko wrote:  
-> > > > +Cc Kees (see below about allocation size checks)
-> > > > 
-> > > > On Sun, Mar 22, 2020 at 11:36 AM Ardelean, Alexandru
-> > > > <alexandru.Ardelean@analog.com> wrote:    
-> > > > > On Sat, 2020-03-21 at 23:38 +0200, Andy Shevchenko wrote:    
-> > > > > > On Sat, Mar 21, 2020 at 10:55 AM Alexandru Ardelean
-> > > > > > <alexandru.ardelean@analog.com> wrote:    
-> > > > 
-> > > > ...
-> > > >     
-> > > > > > > +static struct adi_axi_adc_conv *adi_axi_adc_conv_register(struct
-> > > > > > > device
-> > > > > > > *dev,
-> > > > > > > +                                                         int
-> > > > > > > sizeof_priv)
-> > > > > > > +{
-> > > > > > > +       struct adi_axi_adc_client *cl;
-> > > > > > > +       size_t alloc_size;
-> > > > > > > +
-> > > > > > > +       alloc_size = sizeof(struct adi_axi_adc_client);
-> > > > > > > +       if (sizeof_priv) {
-> > > > > > > +               alloc_size = ALIGN(alloc_size, IIO_ALIGN);
-> > > > > > > +               alloc_size += sizeof_priv;
-> > > > > > > +       }
-> > > > > > > +       alloc_size += IIO_ALIGN - 1;    
-> > > > > > 
-> > > > > > Have you looked at linux/overflow.h?    
-> > > > > 
-> > > > > i did now;
-> > > > > any hints where i should look closer?    
-> > > > 
-> > > > It seems it lacks of this kind of allocation size checks... Perhaps add
-> > > > one?
-> > > > Kees, what do you think?
-> > > >     
-> > > > > > > +       cl = kzalloc(alloc_size, GFP_KERNEL);
-> > > > > > > +       if (!cl)
-> > > > > > > +               return ERR_PTR(-ENOMEM);    
-> > > 
-> > > My head hurts trying to read this! ;) Okay, so the base size is
-> > > sizeof(struct adi_axi_adc_client). But if sizeof_priv is non-zero
-> > > (this arg should be size_t not int), then we need to make the struct
-> > > size ALIGNed? And then what is the "+= IIO_ALIGN - 1" for?  
-> > 
-> > I'm a bit embarrassed.  I can't remember what the += IIO_ALIGN - 1
-> > was for in the first place and I can't work it out now.
-> > 
-> > The purpose of the fun here was to end up with a structure that
-> > was either
-> > a) sizeof(struct iio_dev) long,
-> > b) sizeof(struct iio_dev) + padding + sizeof_priv 
-> > where the padding ensured that any __cacheline_aligned elements
-> > in the private structure were cacheline aligned within resulting
-> > allocation.
-> > 
-> > So why the extra IIO_ALIGN - 1....
-> > 
-> > The original patch doesn't help much either given it's got a question
-> > in there for why this bit is needed.
-> > 
-> > https://lore.kernel.org/linux-iio/1302890160-8823-5-git-send-email-jic23@cam.ac.uk/
-> > 
-> > However, it rang a slight bell.  Seems I lifted the code from netdev.
-> > https://elixir.bootlin.com/linux/latest/source/net/core/dev.c#L9718
-> > 
-> > I'm fairly sure we don't need that padding here..  What can I say,
-> > I was young and stupid :)
-> > 
-> > I did add a question mark so clearly meant to come back and
-> > take another look ;)
-> > 
-> > One vague thought is that it's about ensuring we are big enough to
-> > ensure we are cacheline aligned.  That's obviously not a problem with
-> > current struct iio_dev which is far from small,
-> > but in theory it could have been.  Also, thinking about it we only
-> > need the struct iio_dev to be cacheline aligned if we have
-> > an iio_priv structure.  If we have one of those it will definitely
-> > be big enough anyway.
-> > 
-> > At somepoint I'd like to look at cleaning it up for iio_device_alloc
-> > but with a lot of testing as who knows what is relying on this behaviour
-> > or if I've missed something.  Crashes around this alignment are
-> > infrequent and nasty to trace at the best of times.  
-> 
-> In the meantime, are there any objections if I leave the allocation as-is for
-> this driver as well?
-> I've tested the driver a bit more with this form.
+elapsed time: 484m
 
-Hmm. I'd rather we didn't introduce this with the extra padding unless we
-can figure out why it would need it.  It would be a bit horrible to
-patch this in a few weeks time for this reason.
+configs tested: 134
+configs skipped: 106
 
-If you absolutely can't retest for remote reasons then I suppose we could
-merge it and tidy up later.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Jonathan
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+powerpc                             defconfig
+m68k                          multi_defconfig
+arm                              allyesconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+i386                 randconfig-a002-20200322
+i386                 randconfig-a001-20200322
+x86_64               randconfig-a002-20200322
+x86_64               randconfig-a001-20200322
+i386                 randconfig-a003-20200322
+x86_64               randconfig-a003-20200322
+csky                 randconfig-a001-20200322
+openrisc             randconfig-a001-20200322
+s390                 randconfig-a001-20200322
+sh                   randconfig-a001-20200322
+xtensa               randconfig-a001-20200322
+i386                 randconfig-b003-20200322
+i386                 randconfig-b001-20200322
+x86_64               randconfig-b003-20200322
+i386                 randconfig-b002-20200322
+x86_64               randconfig-b002-20200322
+x86_64               randconfig-c001-20200322
+x86_64               randconfig-c002-20200322
+x86_64               randconfig-c003-20200322
+i386                 randconfig-c001-20200322
+i386                 randconfig-c002-20200322
+i386                 randconfig-c003-20200322
+x86_64               randconfig-d001-20200322
+x86_64               randconfig-d002-20200322
+x86_64               randconfig-d003-20200322
+i386                 randconfig-d001-20200322
+i386                 randconfig-d002-20200322
+i386                 randconfig-d003-20200322
+x86_64               randconfig-e001-20200322
+i386                 randconfig-e002-20200322
+i386                 randconfig-e003-20200322
+i386                 randconfig-e001-20200322
+x86_64               randconfig-e002-20200322
+x86_64               randconfig-f001-20200322
+x86_64               randconfig-f002-20200322
+x86_64               randconfig-f003-20200322
+i386                 randconfig-f001-20200322
+i386                 randconfig-f002-20200322
+i386                 randconfig-f003-20200322
+x86_64               randconfig-g001-20200322
+x86_64               randconfig-g002-20200322
+x86_64               randconfig-g003-20200322
+i386                 randconfig-g001-20200322
+i386                 randconfig-g002-20200322
+i386                 randconfig-g003-20200322
+x86_64               randconfig-h002-20200322
+x86_64               randconfig-h003-20200322
+i386                 randconfig-h003-20200322
+x86_64               randconfig-h001-20200322
+i386                 randconfig-h001-20200322
+i386                 randconfig-h002-20200322
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
-> 
-> > 
-> > Jonathan
-> >   
-> > > It's not clear to me what the expect alignment/padding is here.
-> > > 
-> > > I would probably construct this as:
-> > > 
-> > > 	sizeof_self = sizeof(struct adi_axi_adc_client);
-> > > 	if (sizeof_priv)
-> > > 		sizeof_self = ALIGN(sizeof_self, IIO_ALIGN);
-> > > 	if (check_add_overflow(sizeof_self, sizeof_priv, &sizeof_alloc))
-> > > 		return ERR_PTR(-ENOMEM);
-> > > 	if (check_add_overflow(sizeof_alloc, IIO_ALIGN - 1, &sizeof_alloc))
-> > > 		return ERR_PTR(-ENOMEM);
-> > > 
-> > > But I don't understand the "IIO_ALIGN - 1" part, so I assume this could
-> > > be shortened with better use of ALIGN()?
-> > > 
-> > > Also, this feels like a weird driver allocation overall:
-> > > 
-> > > +	struct adi_axi_adc_conv **ptr, *conv;
-> > > +
-> > > +	ptr = devres_alloc(devm_adi_axi_adc_conv_release, sizeof(*ptr),
-> > > +			   GFP_KERNEL);
-> > > +	if (!ptr)
-> > > +		return ERR_PTR(-ENOMEM);
-> > > +
-> > > +	conv = adi_axi_adc_conv_register(dev, sizeof_priv);
-> > > 
-> > > devres_alloc() allocates storage for a _single pointer_. :P That's not
-> > > useful for resource tracking. Why is devres_alloc() being called here
-> > > and not down in adi_axi_adc_conv_register() and just passing the pointer
-> > > back up?
-> > >   
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
