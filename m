@@ -2,111 +2,162 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FA8C4332E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09A1C4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A385E20724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9616120732
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:16:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="jdmxPOOU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WD3m1vYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgCVQQg (ORCPT
+        id S1726986AbgCVQQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 12:16:36 -0400
-Received: from mr85p00im-zteg06011501.me.com ([17.58.23.182]:52932 "EHLO
-        mr85p00im-zteg06011501.me.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726809AbgCVQQg (ORCPT
+        Sun, 22 Mar 2020 12:16:40 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38317 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbgCVQQj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 12:16:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
-        t=1584893795; bh=owGB4mIyguzHqbacAQ1ITgVAMVCvoWtMPYe1ryNau40=;
-        h=From:To:Subject:Date:Message-Id;
-        b=jdmxPOOU947wEYpxkztzbuTxjTnVtF0JLrauThWv12N5LxsVx+QTkXP2XLaI9Q49g
-         nAEY50vCkZkq5zFUBvDLg1q3H3dBebua0MDuKJTkS6BjD/QIR9Rj+ak0iGsM2OenUC
-         X4s1eKTwDNdhCiYxyZRb1yVlWdU++DCjZkDT88rybVRvP8dABw0WBRNoZH81bwzCX6
-         BJsd58ldpLSe/aPAlM+Wscc8ll9JzTpclQSCxeVNIAbKNHINyeZ993zZSkJHho610q
-         dTq9Opl4C67U50CMujK1pfNlWXrdsN4I0WVs2UD+mKUo44LuXyQLquwoEn0FtODsdx
-         fj71q1lJM2mQg==
-Received: from localhost (101.220.150.77.rev.sfr.net [77.150.220.101])
-        by mr85p00im-zteg06011501.me.com (Postfix) with ESMTPSA id BC6BF2A0436;
-        Sun, 22 Mar 2020 16:16:34 +0000 (UTC)
-From:   Alain Volmat <avolmat@me.com>
-To:     patrice.chotard@st.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     avolmat@me.com
-Subject: [PATCH] dts: arm: stih418: Fix complain about IRQ_TYPE_NONE usage
-Date:   Sun, 22 Mar 2020 17:16:31 +0100
-Message-Id: <20200322161631.19151-1-avolmat@me.com>
-X-Mailer: git-send-email 2.17.1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-03-22_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 clxscore=1011 mlxscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-2003220099
+        Sun, 22 Mar 2020 12:16:39 -0400
+Received: by mail-pj1-f68.google.com with SMTP id m15so4881522pje.3
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 09:16:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lPrpjX3DIANTx2/srJAYBr3XZH1bElctL0wHyLULZ6Y=;
+        b=WD3m1vYkX0pfhbxJVj6RQoGnfbpuvgEa7hUI61NCROsrtiT8Ue+lqyIyCLZX17Yf7f
+         4HqoeW8gMzuXJAUOL2ulkpp+CPjAYO6Y4vWOdfMM4c+y6bZtP2rmq33lzX7H2bMmbrgD
+         TkvaX6gs8yldXpQNf2jfu6AfNfAjkWicNsh7I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lPrpjX3DIANTx2/srJAYBr3XZH1bElctL0wHyLULZ6Y=;
+        b=mycFlfPvthZw7bq012r4h/Oy80tUXLBtj4uN62nns9x/LhutBMdEOgGRK3iE02uu/X
+         L/+wZRlALvmg5zZ8xrtAZbuMRmy2Nr7I3ajoSwLNKBgaU4ar+PsRFi4JCCQ9Hh+SvGWD
+         Pt72QkJe2VlHr7rE0gWfEL3Z5DnLQSjcOmMep3dj6em35PHLjswKh3pief27sdfQ7Ikt
+         Vo9ztxhiuyMhhopLOK/5XpRDzsSyVJTv3OEJuVF4HNJdK4jKrnJ7Ox1B4lwt/+qPtZwb
+         1TtGoPSUf0lv9OTvrRCXrUgPrhT70MGpg2WgijxTDErV72gyQveqxq3hsyt5wgTcNHvE
+         u7Gg==
+X-Gm-Message-State: ANhLgQ0o05WTMWgsQ/zzfEn2bO9Jp0oF7NhJhRtVEJydP5PzeOAb3JLv
+        1cszFrsqBGFnSyDOBR1NeHSl/tQPdCA=
+X-Google-Smtp-Source: ADFU+vtp5cYRDmRZyGTSvbeiQHuj7NGAgNa6e4Lbwa7tEggV7tzNrwpzBOvpDq00Q3v84HJgt0kkeQ==
+X-Received: by 2002:a17:90a:c583:: with SMTP id l3mr6918945pjt.84.1584893798370;
+        Sun, 22 Mar 2020 09:16:38 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p14sm9723743pgm.49.2020.03.22.09.16.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Mar 2020 09:16:37 -0700 (PDT)
+Date:   Sun, 22 Mar 2020 09:16:36 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "Grozav, Andrei" <Andrei.Grozav@analog.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "Nagy, Laszlo" <Laszlo.Nagy@analog.com>,
+        "Csomortani, Istvan" <Istvan.Csomortani@analog.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
+        "Costina, Adrian" <Adrian.Costina@analog.com>
+Subject: Re: [PATCH v11 5/8] iio: adc: adi-axi-adc: add support for AXI ADC
+ IP core
+Message-ID: <202003220901.880A6DF@keescook>
+References: <20200321085315.11030-1-alexandru.ardelean@analog.com>
+ <20200321085315.11030-6-alexandru.ardelean@analog.com>
+ <CAHp75VecnornqckmG_WgN-V9A1VSQfRT85TxFzwHgaLw9dAHeA@mail.gmail.com>
+ <979ef870a4f0935e41e95e7759847eba8bd0407c.camel@analog.com>
+ <CAHp75Vdna2+txY=w87n+SWE3x3FYJLeMjYbYa6V-co3z0mYx_g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vdna2+txY=w87n+SWE3x3FYJLeMjYbYa6V-co3z0mYx_g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 83a86fbb5b56 ("irqchip/gic: Loudly complain about the use of IRQ_TYPE_NONE")
-kernel is complaining about the IRQ_TYPE_NONE usage which shouldn't
-be used.
+On Sun, Mar 22, 2020 at 12:45:39PM +0200, Andy Shevchenko wrote:
+> +Cc Kees (see below about allocation size checks)
+> 
+> On Sun, Mar 22, 2020 at 11:36 AM Ardelean, Alexandru
+> <alexandru.Ardelean@analog.com> wrote:
+> > On Sat, 2020-03-21 at 23:38 +0200, Andy Shevchenko wrote:
+> > > On Sat, Mar 21, 2020 at 10:55 AM Alexandru Ardelean
+> > > <alexandru.ardelean@analog.com> wrote:
+> 
+> ...
+> 
+> > > > +static struct adi_axi_adc_conv *adi_axi_adc_conv_register(struct device
+> > > > *dev,
+> > > > +                                                         int sizeof_priv)
+> > > > +{
+> > > > +       struct adi_axi_adc_client *cl;
+> > > > +       size_t alloc_size;
+> > > > +
+> > > > +       alloc_size = sizeof(struct adi_axi_adc_client);
+> > > > +       if (sizeof_priv) {
+> > > > +               alloc_size = ALIGN(alloc_size, IIO_ALIGN);
+> > > > +               alloc_size += sizeof_priv;
+> > > > +       }
+> > > > +       alloc_size += IIO_ALIGN - 1;
+> > >
+> > > Have you looked at linux/overflow.h?
+> >
+> > i did now;
+> > any hints where i should look closer?
+> 
+> It seems it lacks of this kind of allocation size checks... Perhaps add one?
+> Kees, what do you think?
+> 
+> > > > +       cl = kzalloc(alloc_size, GFP_KERNEL);
+> > > > +       if (!cl)
+> > > > +               return ERR_PTR(-ENOMEM);
 
-Use IRQ_TYPE_LEVEL_HIGH instead.
+My head hurts trying to read this! ;) Okay, so the base size is
+sizeof(struct adi_axi_adc_client). But if sizeof_priv is non-zero
+(this arg should be size_t not int), then we need to make the struct
+size ALIGNed? And then what is the "+= IIO_ALIGN - 1" for?
 
-Signed-off-by: Alain Volmat <avolmat@me.com>
----
- arch/arm/boot/dts/stih418.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+It's not clear to me what the expect alignment/padding is here.
 
-diff --git a/arch/arm/boot/dts/stih418.dtsi b/arch/arm/boot/dts/stih418.dtsi
-index 83411322bd92..a05e2278b448 100644
---- a/arch/arm/boot/dts/stih418.dtsi
-+++ b/arch/arm/boot/dts/stih418.dtsi
-@@ -50,7 +50,7 @@
- 		ohci0: usb@9a03c00 {
- 			compatible = "st,st-ohci-300x";
- 			reg = <0x9a03c00 0x100>;
--			interrupts = <GIC_SPI 180 IRQ_TYPE_NONE>;
-+			interrupts = <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_s_c0_flexgen CLK_TX_ICN_DISP_0>;
- 			resets = <&powerdown STIH407_USB2_PORT0_POWERDOWN>,
- 				 <&softreset STIH407_USB2_PORT0_SOFTRESET>;
-@@ -62,7 +62,7 @@
- 		ehci0: usb@9a03e00 {
- 			compatible = "st,st-ehci-300x";
- 			reg = <0x9a03e00 0x100>;
--			interrupts = <GIC_SPI 151 IRQ_TYPE_NONE>;
-+			interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usb0>;
- 			clocks = <&clk_s_c0_flexgen CLK_TX_ICN_DISP_0>;
-@@ -76,7 +76,7 @@
- 		ohci1: usb@9a83c00 {
- 			compatible = "st,st-ohci-300x";
- 			reg = <0x9a83c00 0x100>;
--			interrupts = <GIC_SPI 181 IRQ_TYPE_NONE>;
-+			interrupts = <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_s_c0_flexgen CLK_TX_ICN_DISP_0>;
- 			resets = <&powerdown STIH407_USB2_PORT1_POWERDOWN>,
- 				 <&softreset STIH407_USB2_PORT1_SOFTRESET>;
-@@ -88,7 +88,7 @@
- 		ehci1: usb@9a83e00 {
- 			compatible = "st,st-ehci-300x";
- 			reg = <0x9a83e00 0x100>;
--			interrupts = <GIC_SPI 153 IRQ_TYPE_NONE>;
-+			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usb1>;
- 			clocks = <&clk_s_c0_flexgen CLK_TX_ICN_DISP_0>;
+I would probably construct this as:
+
+	sizeof_self = sizeof(struct adi_axi_adc_client);
+	if (sizeof_priv)
+		sizeof_self = ALIGN(sizeof_self, IIO_ALIGN);
+	if (check_add_overflow(sizeof_self, sizeof_priv, &sizeof_alloc))
+		return ERR_PTR(-ENOMEM);
+	if (check_add_overflow(sizeof_alloc, IIO_ALIGN - 1, &sizeof_alloc))
+		return ERR_PTR(-ENOMEM);
+
+But I don't understand the "IIO_ALIGN - 1" part, so I assume this could
+be shortened with better use of ALIGN()?
+
+Also, this feels like a weird driver allocation overall:
+
++	struct adi_axi_adc_conv **ptr, *conv;
++
++	ptr = devres_alloc(devm_adi_axi_adc_conv_release, sizeof(*ptr),
++			   GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
++
++	conv = adi_axi_adc_conv_register(dev, sizeof_priv);
+
+devres_alloc() allocates storage for a _single pointer_. :P That's not
+useful for resource tracking. Why is devres_alloc() being called here
+and not down in adi_axi_adc_conv_register() and just passing the pointer
+back up?
+
 -- 
-2.17.1
-
+Kees Cook
