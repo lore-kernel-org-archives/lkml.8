@@ -2,151 +2,101 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E007C4332D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 06:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEC2C43333
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 06:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C4820753
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 06:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FBF020753
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 06:51:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Xs+5Gjqh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgCVGnQ (ORCPT
+        id S1726752AbgCVGvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 02:43:16 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:50841 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgCVGnP (ORCPT
+        Sun, 22 Mar 2020 02:51:40 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:27759 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725987AbgCVGvj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 02:43:15 -0400
-Received: by mail-io1-f70.google.com with SMTP id s2so8571268iot.17
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 23:43:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=wv/2UGF5kabN9EEOv4z2Ow9WAicDcFU5RQkZ7pucyB0=;
-        b=BAhpK82lfS4FVAHa5psOkUqoBJNYhS9utpeLxrejl0HBN8LXt7Aa++0R9UY081Kk1A
-         YfngBaVU4SovjEJmI4MUs8Q9vhkEh1lN4tuALuLxLIz76tjz2kR0YtTET8QtXsCwwGq5
-         MzRFJqfflGozaSqlBTkLTP2Uc/yf/Y/A7txKCV2Dw7CBcsYKQ7hSr44fiLDpbaeJHWU9
-         LkMKM7wE3akursW4zJlf6UQWG9u8NktliIwQbdJlRZY/oULVin8a+knFdDFUAoPLe6rM
-         5mTAb0MEpMjFt1FZW5omgiNLgtPl2nZfYhBZHMXnkTyHpIdqTEERP27e8nlIrHiW0QYP
-         EORw==
-X-Gm-Message-State: ANhLgQ1TYR5jSHXfP+PFjDmZESCIVSiCtbzYeLJBABjR8E2NgSGKKv6a
-        vhrwmgWA7up44zUDqcrGq19eokL1vikqfrLfRutw4N4iQ+kk
-X-Google-Smtp-Source: ADFU+vvquubI8dGpFseC2Ei0DUvjZKxJrkikh5RCLWOtXbSUoiMVcMYH3a7lLyO1hc/9OQ4tE2sYsnGJv5+bUd2KTp8uDMMZwCj5
+        Sun, 22 Mar 2020 02:51:39 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584859899; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=NqefWYA7oKSyYiu2yGdTUR8SlVG4/Arckme8ISShSZ8=; b=Xs+5GjqhZsvOenMwDsq5GITYBWNr509kjDb2dJvdEKoq/m83YGlwY2jRvoRYUGn09gTGFxev
+ jGfDoze1UrpsHuSYDJ7gsT6QyNtOIVOrTPPqYviOj3H04oq2ZTlV35sTtcTOdP67J/JlbKQz
+ m1AiH8Rr6wxcCUTU8xy+PSr3mXI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e770aee.7f43d036f1b8-smtp-out-n02;
+ Sun, 22 Mar 2020 06:51:26 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E77C8C44795; Sun, 22 Mar 2020 06:51:24 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 38C5DC433D2;
+        Sun, 22 Mar 2020 06:51:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 38C5DC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     "Joel Fernandes \(Google\)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci\@vger.kernel.org Felipe Balbi" <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] Documentation: Clarify better about the rwsem non-owner release issue
+References: <20200322021938.175736-1-joel@joelfernandes.org>
+Date:   Sun, 22 Mar 2020 08:51:15 +0200
+In-Reply-To: <20200322021938.175736-1-joel@joelfernandes.org> (Joel
+        Fernandes's message of "Sat, 21 Mar 2020 22:19:38 -0400")
+Message-ID: <87a748khlo.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-X-Received: by 2002:a92:8312:: with SMTP id f18mr15328045ild.98.1584859393258;
- Sat, 21 Mar 2020 23:43:13 -0700 (PDT)
-Date:   Sat, 21 Mar 2020 23:43:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000277a0405a16bd5c9@google.com>
-Subject: BUG: unable to handle kernel NULL pointer dereference in handle_external_interrupt_irqoff
-From:   syzbot <syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+"Joel Fernandes (Google)" <joel@joelfernandes.org> writes:
 
-syzbot found the following crash on:
+> Reword and clarify better about the rwsem non-owner release issue.
+>
+> Link: https://lore.kernel.org/linux-pci/20200321212144.GA6475@google.com/
+>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-HEAD commit:    b74b991f Merge tag 'block-5.6-20200320' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16403223e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6dfa02302d6db985
-dashboard link: https://syzkaller.appspot.com/bug?extid=3f29ca2efb056a761e38
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+There's something wrong with your linux-pci and linux-usb addresses:
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com
-
-BUG: kernel NULL pointer dereference, address: 0000000000000086
-#PF: supervisor instruction fetch in kernel mode
-#PF: error_code(0x0010) - not-present page
-PGD a63a4067 P4D a63a4067 PUD a7627067 PMD 0 
-Oops: 0010 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 9785 Comm: syz-executor.2 Not tainted 5.6.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:0x86
-Code: Bad RIP value.
-RSP: 0018:ffffc90001ac7998 EFLAGS: 00010086
-RAX: ffffc90001ac79c8 RBX: fffffe0000000000 RCX: 0000000000040000
-RDX: ffffc9000e20f000 RSI: 000000000000b452 RDI: 000000000000b453
-RBP: 0000000000000ec0 R08: ffffffff83987523 R09: ffffffff811c7eca
-R10: ffff8880a4e94200 R11: 0000000000000002 R12: dffffc0000000000
-R13: fffffe0000000ec8 R14: ffffffff880016f0 R15: fffffe0000000ecb
-FS:  00007fb50e370700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000000005c CR3: 0000000092fc7000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- handle_external_interrupt_irqoff+0x154/0x280 arch/x86/kvm/vmx/vmx.c:6274
- kvm_before_interrupt arch/x86/kvm/x86.h:343 [inline]
- handle_external_interrupt_irqoff+0x132/0x280 arch/x86/kvm/vmx/vmx.c:6272
- __irqentry_text_start+0x8/0x8
- vcpu_enter_guest+0x6c77/0x9290 arch/x86/kvm/x86.c:8405
- save_stack mm/kasan/common.c:72 [inline]
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10a/0x220 mm/slab.c:3757
- tomoyo_path_number_perm+0x525/0x690 security/tomoyo/file.c:736
- security_file_ioctl+0x55/0xb0 security/security.c:1441
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
- __lock_acquire+0xc5a/0x1bc0 kernel/locking/lockdep.c:3954
- test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
- hlock_class kernel/locking/lockdep.c:163 [inline]
- mark_lock+0x107/0x1650 kernel/locking/lockdep.c:3642
- lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
- rcu_lock_acquire+0x9/0x30 include/linux/rcupdate.h:208
- kvm_check_async_pf_completion+0x34e/0x360 arch/x86/kvm/../../../virt/kvm/async_pf.c:137
- vcpu_run+0x3a3/0xd50 arch/x86/kvm/x86.c:8513
- kvm_arch_vcpu_ioctl_run+0x419/0x880 arch/x86/kvm/x86.c:8735
- kvm_vcpu_ioctl+0x67c/0xa80 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2932
- kvm_vm_release+0x50/0x50 arch/x86/kvm/../../../virt/kvm/kvm_main.c:858
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl fs/ioctl.c:763 [inline]
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl+0xf9/0x160 fs/ioctl.c:770
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-Modules linked in:
-CR2: 0000000000000086
----[ end trace 4da75c292cd7e3e8 ]---
-RIP: 0010:0x86
-Code: Bad RIP value.
-RSP: 0018:ffffc90001ac7998 EFLAGS: 00010086
-RAX: ffffc90001ac79c8 RBX: fffffe0000000000 RCX: 0000000000040000
-RDX: ffffc9000e20f000 RSI: 000000000000b452 RDI: 000000000000b453
-RBP: 0000000000000ec0 R08: ffffffff83987523 R09: ffffffff811c7eca
-R10: ffff8880a4e94200 R11: 0000000000000002 R12: dffffc0000000000
-R13: fffffe0000000ec8 R14: ffffffff880016f0 R15: fffffe0000000ecb
-FS:  00007fb50e370700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000000005c CR3: 0000000092fc7000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+	"linux-pci@vger.kernel.org Felipe Balbi" <balbi@kernel.org>,
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+	"linux-usb@vger.kernel.org Kalle Valo" <kvalo@codeaurora.org>,
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
