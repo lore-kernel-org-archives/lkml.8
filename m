@@ -2,102 +2,93 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2B8C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 22:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAA7C54EEB
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 22:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D2120722
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 22:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19CE720409
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 22:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgCVWLK (ORCPT
+        id S1726869AbgCVWTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 18:11:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35488 "EHLO mx2.suse.de"
+        Sun, 22 Mar 2020 18:19:15 -0400
+Received: from mga09.intel.com ([134.134.136.24]:5508 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgCVWLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 18:11:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9A575AFC1;
-        Sun, 22 Mar 2020 22:11:07 +0000 (UTC)
-Date:   Sun, 22 Mar 2020 23:11:06 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Daniel Kurtz <djkurtz@chromium.org>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com>
-Subject: Re: [PATCH] i2c: i801: Fix memory corruption in
- i801_isr_byte_done()
-Message-ID: <20200322231106.3d431ced@endymion>
-In-Reply-To: <20200114073406.qaq3hbrhtx76fkes@kili.mountain>
-References: <0000000000009586b2059c13c7e1@google.com>
-        <20200114073406.qaq3hbrhtx76fkes@kili.mountain>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        id S1726786AbgCVWTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 18:19:14 -0400
+IronPort-SDR: MnHtTAhXaQ4HBKsKSXHdFg95ntStwAeBdkcA1gia4PzMZbQQLmfse14sVBF7cS13xrjwUB2jtI
+ z98QpBxUHdNg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2020 15:19:12 -0700
+IronPort-SDR: ArCCCWHZfxdjjjQGOMdgfA+yfU2ZGiAWq4zyZfdIijj1MbxJkGc/2Lb2CyulLY0Y45akDwVBGA
+ QNH8hg24P3UQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,294,1580803200"; 
+   d="scan'208";a="280987324"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 22 Mar 2020 15:19:10 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jG8w5-00C5OE-1f; Mon, 23 Mar 2020 00:19:13 +0200
+Date:   Mon, 23 Mar 2020 00:19:13 +0200
+From:   "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "Tachici, Alexandru" <Alexandru.Tachici@analog.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "Caprioru, Mircea" <Mircea.Caprioru@analog.com>
+Subject: Re: [PATCH v4 1/2] iio: dac: ad5770r: Add AD5770R support
+Message-ID: <20200322221913.GA1922688@smile.fi.intel.com>
+References: <20200218121031.27233-1-alexandru.tachici@analog.com>
+ <20200218121031.27233-2-alexandru.tachici@analog.com>
+ <20200321210921.GA2814584@smile.fi.intel.com>
+ <2942e900ab01957027b918b2a5fdbd665fe6b2ed.camel@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2942e900ab01957027b918b2a5fdbd665fe6b2ed.camel@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
-
-On Tue, 14 Jan 2020 10:34:06 +0300, Dan Carpenter wrote:
-> Assigning "priv->data[-1] = priv->len;" obviously doesn't make sense.
-> What it does is it ends up corrupting the last byte of priv->len so
-> priv->len becomes a very high number.
-
-I don't follow you, sorry. "priv->data[-1] = priv->len" is writing to
-priv->data, not priv->len, so I can't see how this could corrupt
-priv->len;
-
-Yes, I see that len is right before data in struct i801_priv, however
-priv->data is a pointer, not an array inside the structure, it points
-outside the structure so whatever is done through that pointer can't
-affect the structure's content.
-
-As for priv->data[-1], in priv->data is defined as:
-
-		priv->data = &data->block[1];
-
-which means the pointer is 1 byte inside the actual block array,
-therefore priv->data[-1] albeit convoluted looks legal to me.
-
-> Reported-by: syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com
-> Fixes: d3ff6ce40031 ("i2c-i801: Enable IRQ for byte_by_byte transactions")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
-> Untested.
+On Sun, Mar 22, 2020 at 09:17:06AM +0000, Ardelean, Alexandru wrote:
+> On Sat, 2020-03-21 at 23:09 +0200, Andy Shevchenko wrote:
+> > On Tue, Feb 18, 2020 at 02:10:30PM +0200, Alexandru Tachici wrote:
+> > > The AD5770R is a 6-channel, 14-bit resolution, low noise, programmable
+> > > current output digital-to-analog converter (DAC) for photonics control
+> > > applications.
+> > > 
+> > > It contains five 14-bit resolution current sourcing DAC channels and one
+> > > 14-bit resolution current sourcing/sinking DAC channel.
+> > 
 > 
->  drivers/i2c/busses/i2c-i801.c | 1 -
->  1 file changed, 1 deletion(-)
+> This patch made it into linux-next.
+> Doing a v2 now may be a bit noisy.
 > 
-> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-> index f5e69fe56532..420d8025901e 100644
-> --- a/drivers/i2c/busses/i2c-i801.c
-> +++ b/drivers/i2c/busses/i2c-i801.c
-> @@ -584,7 +584,6 @@ static void i801_isr_byte_done(struct i801_priv *priv)
->  					"SMBus block read size is %d\n",
->  					priv->len);
->  			}
-> -			priv->data[-1] = priv->len;
->  		}
->  
->  		/* Read next byte */
+> Maybe we can tidy-this-up later.
+> To be honest, it won't be the highest on our list.
+> [ I know how that sounds ]
 
-Definitely not correct. The first byte of the block data array MUST be
-the size of the block read. Even if the code above does not do the
-right thing, removing the line will not help.
+Yes, you may consider a follow up.
 
-Is it possible that kasan got this wrong due to the convoluted logic?
-It's late and I'll check again tomorrow morning but the code looks OK
-to me.
+> We can probably leave it for other people to clean it up.
+> [ People that want to start contributing to the kernel ]
+
+Maybe, but isn't better to supply cleaner code in the first place?
+
+I mean that these comments may be taken into consideration for the future
+contributions.
 
 -- 
-Jean Delvare
-SUSE L3 Support
+With Best Regards,
+Andy Shevchenko
+
+
