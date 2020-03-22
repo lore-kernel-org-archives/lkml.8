@@ -1,118 +1,120 @@
-Return-Path: <SRS0=DSgr=5G=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9257C4332D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 23:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9B4C4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 00:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D5B20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Mar 2020 23:48:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584834539;
-	bh=sWExtjn8sa4U+VoWjZDvGtP+9AcpWaq/4Mq2vl0qPTw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1xkz1L3xC+KETvRLMlpKi1khEoCjn01RFPmeLnUsNKT6QYbXPkeY/hJB5sCPNGUO6
-	 OWtzdKAFrJwK1R9Ttw+e0FQsRnx8nWEWPAS0NLf86ArWa/4aE4EEyeZCyZYYQWuYG7
-	 u9BgdBEW7SUV+BjRQ5G5YwO1avFeY+6UGVb0Os7Q=
+	by mail.kernel.org (Postfix) with ESMTP id A014820767
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 00:21:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUlsm6g9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgCUXs6 (ORCPT
+        id S1728178AbgCVAVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 19:48:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbgCUXs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 19:48:58 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FCB520776;
-        Sat, 21 Mar 2020 23:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584834537;
-        bh=sWExtjn8sa4U+VoWjZDvGtP+9AcpWaq/4Mq2vl0qPTw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=d9Tdc1/r7NUzkOgvOakY6hhP+Dr5lXeCZPcNa0FEny4Ue+fx23XzfbRoN+isjFRnt
-         WVm/r9s1cCwT0VQyt9izelOraD9hU3NuEm0IdL2tY8gLS03kTOSi229WjhiHuyR6M1
-         gOLnRyzVaXknbwTTlZRYopw6g6oS0JHKbRsjUeb4=
-Date:   Sat, 21 Mar 2020 16:48:56 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        <stable@vger.kernel.org>
-Subject: Re: [PATCH] mm: fork: fix kernel_stack memcg stats for various
- stack implementations
-Message-Id: <20200321164856.be68344b7fac84b759e23727@linux-foundation.org>
-In-Reply-To: <20200303233550.251375-1-guro@fb.com>
-References: <20200303233550.251375-1-guro@fb.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 21 Mar 2020 20:21:16 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44274 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbgCVAVP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 20:21:15 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 37so5130160pgm.11;
+        Sat, 21 Mar 2020 17:21:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oo1KhDpsYm4r+ZCFpfpS62+p3Q8htiktdPZfhYhrkqM=;
+        b=PUlsm6g9R40oqeZpDaQXuGcpnmirz9Da9vYRs56HYevTggKswALehHL5ie5FIi5P5s
+         XBBMIUzBtqTcG8u4A0p5/p/7eXiZtP+ikmxAC1gLeqWibgabGzKsfueK+TORmT8EKkGG
+         JEsKy6cMrvPs6oAp8tvxX+RUiuAfwkXFCpLHedzf6SanwuBcg6jcg5OhrJbc4HxIIgDL
+         QoLS2aulPY9IKthojust6jmNvf2oAVctlnOZI/TCXixUSQeH5Tz8mryJvU9LTPXGVqD5
+         CaT21P6vM5dvdhk7S3Fdqx1oGK69Kh8GNjcGb4UtksXS40+j2RyzgN2eBJ8+h0Z3N1qU
+         YBXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oo1KhDpsYm4r+ZCFpfpS62+p3Q8htiktdPZfhYhrkqM=;
+        b=osHXChdmbB+YrH7kHq5OPxZ/C4RfvrLnvzz7yWcSeB8D8WNG9DJP63vc3y7Qwhy0Fg
+         TDRnGLhvzU1um79OFi2lD8asdWhQY0T9qDnz0sOX5e3bTzw1tZRCJ3o1Gapx1KXhgYRi
+         T/EFwYmJFZ9NcGm4F/imszC3oNUn1IV4BS8mjQCvkl2aaG/Rr53A5zKO0+g5sQs47KY7
+         am52SjanRB4hGRvPxvf++gM1vQBOkwHEoD9Kt2Yw8JjwqwcrQaXWDB+3rGNxwTMD8tmb
+         GnPO2p7hyFgMhsKIDxD3G2G0DPvxiZcXM+pmMDj9rNboYY+agKB3bco4tQXQsGj8cXj0
+         bCog==
+X-Gm-Message-State: ANhLgQ1rBebVZRtMdV3320/cZOEF6rudp19cOvo8eCS7vkb3XAlOdnU8
+        QHSSc/bmfS7bafpAJk4QwsQIddUbT341S2PLCgJpZyfqDHO7lg==
+X-Google-Smtp-Source: ADFU+vsa0ivPADE4hSeky25Q7EI3YbLdtV5qmX0dYZSfF4r4NYyeZaiojOWGaifckbRlK6AEm76cUtG00EWEIaTXBJo=
+X-Received: by 2002:a63:1c4d:: with SMTP id c13mr15056673pgm.4.1584836474171;
+ Sat, 21 Mar 2020 17:21:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1584380360.git.agx@sigxcpu.org> <5566fe01df933d3281f058666e2147cb97b38126.1584380360.git.agx@sigxcpu.org>
+In-Reply-To: <5566fe01df933d3281f058666e2147cb97b38126.1584380360.git.agx@sigxcpu.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 22 Mar 2020 02:21:02 +0200
+Message-ID: <CAHp75VcHuAUDB59ZDJQAQgugQOwASM6K+sQ9uPAR7jMyOcdZCQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] iio: vcnl4000: Export near level property for
+ proximity sensor
+To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Cc:     Tomas Novotny <tomas@novotny.cz>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Mar 2020 15:35:50 -0800 Roman Gushchin <guro@fb.com> wrote:
+On Mon, Mar 16, 2020 at 7:47 PM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+>
+> When an object can be considered close to the sensor is hardware
+> dependent. Allowing to configure the property via device tree
+> allows to configure this device specific value.
+>
+> This is useful for e.g. iio-sensor-proxy to indicate to userspace
+> if an object is close to the sensor.
 
-> Depending on CONFIG_VMAP_STACK and the THREAD_SIZE / PAGE_SIZE ratio
-> the space for task stacks can be allocated using __vmalloc_node_range(),
-> alloc_pages_node() and kmem_cache_alloc_node(). In the first and the
-> second cases page->mem_cgroup pointer is set, but in the third it's
-> not: memcg membership of a slab page should be determined using the
-> memcg_from_slab_page() function, which looks at
-> page->slab_cache->memcg_params.memcg . In this case, using
-> mod_memcg_page_state() (as in account_kernel_stack()) is incorrect:
-> page->mem_cgroup pointer is NULL even for pages charged to a non-root
-> memory cgroup.
-> 
-> It can lead to kernel_stack per-memcg counters permanently showing 0
-> on some architectures (depending on the configuration).
-> 
-> In order to fix it, let's introduce a mod_memcg_obj_state() helper,
-> which takes a pointer to a kernel object as a first argument, uses
-> mem_cgroup_from_obj() to get a RCU-protected memcg pointer and
-> calls mod_memcg_state(). It allows to handle all possible
-> configurations (CONFIG_VMAP_STACK and various THREAD_SIZE/PAGE_SIZE
-> values) without spilling any memcg/kmem specifics into fork.c .
-> 
-> Note: this patch has been first posted as a part of the new slab
-> controller patchset. This is a slightly updated version: the fixes
-> tag has been added and the commit log was extended by the advice
-> of Johannes Weiner. Because it's a fix that makes sense by itself,
-> I'm re-posting it as a standalone patch.
+...
 
-Actually, it isn't a standalone patch.
+> @@ -342,6 +343,26 @@ static const struct vcnl4000_chip_spec vcnl4000_chip=
+_spec_cfg[] =3D {
+>         },
+>  };
+>
 
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -776,6 +776,17 @@ void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val)
->  	rcu_read_unlock();
->  }
->  
-> +void mod_memcg_obj_state(void *p, int idx, int val)
-> +{
-> +	struct mem_cgroup *memcg;
 > +
-> +	rcu_read_lock();
-> +	memcg = mem_cgroup_from_obj(p);
-> +	if (memcg)
-> +		mod_memcg_state(memcg, idx, val);
-> +	rcu_read_unlock();
-> +}
 
-mem_cgroup_from_obj() is later added by
-http://lkml.kernel.org/r/20200117203609.3146239-1-guro@fb.com
+No need for this blank line.
 
-We could merge both mm-memcg-slab-introduce-mem_cgroup_from_obj.patch
-and this patch, but that's a whole lot of stuff to backport into
--stable.
+> +static ssize_t vcnl4000_read_near_level(struct iio_dev *indio_dev,
+> +                                       uintptr_t priv,
+> +                                       const struct iio_chan_spec *chan,
+> +                                       char *buf)
 
-Are you able to come up with a simpler suitable-for-stable fix?
+...
+
+> +       if (device_property_read_u32(&client->dev, "near-level",
+> +                                    &data->near_level) < 0)
+
+It doesn't return > 0. So, you may drop that and put everything to one
+line I think.
+
+> +               data->near_level =3D 0;
+
+--=20
+With Best Regards,
+Andy Shevchenko
