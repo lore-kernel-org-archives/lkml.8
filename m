@@ -2,84 +2,112 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7938C4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C9DC4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D21420724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 770BD2072E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:18:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RtLaXqzw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgCVQSS (ORCPT
+        id S1726971AbgCVQSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 12:18:18 -0400
-Received: from sauhun.de ([88.99.104.3]:51386 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726502AbgCVQSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 12:18:18 -0400
-Received: from localhost (p54B33042.dip0.t-ipconnect.de [84.179.48.66])
-        by pokefinder.org (Postfix) with ESMTPSA id A62F12C0064;
-        Sun, 22 Mar 2020 17:18:16 +0100 (CET)
-Date:   Sun, 22 Mar 2020 17:18:16 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     erico.nunes@datacom.ind.br, dan.carpenter@oracle.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: BUG: KASAN: i2c dev use after free
-Message-ID: <20200322161816.GB6766@ninjato>
-References: <CADYN=9KkjPSP4KJ+AzG=Njq49zJ5fbWNZ4V_jOvHkq_kt0biyA@mail.gmail.com>
+        Sun, 22 Mar 2020 12:18:22 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39613 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgCVQSV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 12:18:21 -0400
+Received: by mail-pg1-f195.google.com with SMTP id b22so5863467pgb.6;
+        Sun, 22 Mar 2020 09:18:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZgXf5QsLU8moUeFbGruEqUCy/5/OEI1y7w06IrP82bU=;
+        b=RtLaXqzwZI9+/JGvMRZAHdpZi8i8pV0EDDKeoyZeKUR7X0F+Y1CGzGNtCwdlSZ9zFs
+         rparodvlt1pi2kMcwA5cPjdY0AcEzgJATpDsoqFG4THrRz1v+uu8xSMMQeio5I//Kj/q
+         +l2BnGahK6KoX+vGIsJXyNFdOZez5GO8F5bjNesohBbplmNsbHabWf9+u14bZ4PcJFWL
+         HcFmxfGwB15OdcFUPVxtmFDLAamB/tx7MvVaWb+mORSFuhmEcO3ZX4Pslz17xzB1TerA
+         Hb8WBZdzu68ADjptzoZgwSdD2X//RkO1YwTcPekPY+BuRd8y04QJWJLnIySslbUU6EEG
+         7u0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZgXf5QsLU8moUeFbGruEqUCy/5/OEI1y7w06IrP82bU=;
+        b=PjUDgJkjIidbUvKY3QTyG+4l+fkSpP11DpvL5Y2P3lsOZ5/+z5ZdTCq4CfrQ5JpG6J
+         12zSEwBTnVzRQele+7HuSGJiqg3R5/3z/CeuxnuN2gmjSlkWLD2INnaFcjPxAHlPao25
+         Ptj7Qe2TWcWArtvGsH7pcBP5ZOmOmfQDNqZfBpfOa4zwn8RvAtsfGJLmc23MJJA2O4sM
+         A6Q0qkl/qfkXIZa5YO/ym9HuFMxlSLsGf2zhT6rmnDp+4vJyE6a/VIy5vAP8eDgu7Zgl
+         BiaWXYJUzLv7zzz5q2V4F5dMgGOjC9Mpeh5OapMJG0sucRdoHSIADKPrEAG+VGBJOLz5
+         rCIg==
+X-Gm-Message-State: ANhLgQ2imhliaLRtci4jyEfKhmjSBaoXAIrnhSfRdTpDH1TeD8TfKxHY
+        +rtbCQbZTQx/6F6vzfBX4RU=
+X-Google-Smtp-Source: ADFU+vvan0sQfqD07F/TK9MP8hmyuLR1qMO7rFAedZvxNYSgKXU619VndCDd+iPYT9613B2mXnn6Pg==
+X-Received: by 2002:a63:1e57:: with SMTP id p23mr18544525pgm.316.1584893899795;
+        Sun, 22 Mar 2020 09:18:19 -0700 (PDT)
+Received: from localhost (216.24.188.11.16clouds.com. [216.24.188.11])
+        by smtp.gmail.com with ESMTPSA id mq18sm10682596pjb.6.2020.03.22.09.18.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 22 Mar 2020 09:18:19 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 00:18:14 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        broonie@kernel.org, alexios.zavras@intel.com, tglx@linutronix.de,
+        mchehab+samsung@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v4 6/9] net: phy: marvell10g: use
+ phy_read_mmd_poll_timeout() to simplify the code
+Message-ID: <20200322161814.GA20189@nuc8i5>
+References: <20200322065555.17742-1-zhengdejin5@gmail.com>
+ <20200322065555.17742-7-zhengdejin5@gmail.com>
+ <20200322153659.GO11481@lunn.ch>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="v9Ux+11Zm5mwPlX6"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADYN=9KkjPSP4KJ+AzG=Njq49zJ5fbWNZ4V_jOvHkq_kt0biyA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200322153659.GO11481@lunn.ch>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Mar 22, 2020 at 04:36:59PM +0100, Andrew Lunn wrote:
+> > --- a/drivers/net/phy/marvell10g.c
+> > +++ b/drivers/net/phy/marvell10g.c
+> > @@ -241,22 +241,17 @@ static int mv3310_power_up(struct phy_device *phydev)
+> >  
+> >  static int mv3310_reset(struct phy_device *phydev, u32 unit)
+> >  {
+> > -	int retries, val, err;
+> > +	int val, err;
+> >  
+> >  	err = phy_modify_mmd(phydev, MDIO_MMD_PCS, unit + MDIO_CTRL1,
+> >  			     MDIO_CTRL1_RESET, MDIO_CTRL1_RESET);
+> >  	if (err < 0)
+> >  		return err;
+> >  
+> > -	retries = 20;
+> > -	do {
+> > -		msleep(5);
+> > -		val = phy_read_mmd(phydev, MDIO_MMD_PCS, unit + MDIO_CTRL1);
+> > -		if (val < 0)
+> > -			return val;
+> > -	} while (val & MDIO_CTRL1_RESET && --retries);
+> 
+> This is another example of the sleep happening first. To keep the code
+> more similar, you probably should add an msleep(5) before calling
+> phy_read_mmd_poll_timeout().
+> 
+> 	Andrew
+Andrew, you're right, do it right away. Thank you for helping me so
+patiently!
 
---v9Ux+11Zm5mwPlX6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-
-> I think patch introduced this issue d6760b14d4a1 ("i2c: dev: switch
-> from register_chrdev to cdev API")
-> and patch e6be18f6d62c ("i2c: dev: use after free in detach") tried to solve it.
-> However, when CONFIG_DEBUG_KOBJECT_RELEASE is enabled it delays
-> the ->release callback to make sure that anything that is done in release can
-> be done later than it happens in normal execution.
-> The cdev structure is supposed to be freed in the remove callback or after it,
-> but here it has already been freed by the put_i2c_dev().
-
-For the record, Kevin Hao fixed it and it is now in linux-next as:
-1413ef638aba ("i2c: dev: Fix the race between the release of i2c_dev and cdev")
-
-Thanks, Kevin!
-
-
---v9Ux+11Zm5mwPlX6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl53j8gACgkQFA3kzBSg
-KbbJ0w/+KxfnJmP8fsZdM3HROAtMRqlHltteP4XVBZDLt+jjvRD3qng93F4nPg6d
-JEch2PurElj6AQC5AsK2rN9flYW+Of/jFZZS4Su8/hFb5FkeH+3aSSQMK8kJnYkQ
-XJj6D2MEtPkTCnv5HY+lg9d25T037vZQO2gQgBm8HfciUcC3VF0iK7yxbZuqyOHF
-rF1JT8SbFas6motZJj4CJwinVkfVRmDnKivmMdiv/qRrjxJyrRlmbJJSQjgc0z38
-Sd1kgsCgUJGtCBVINQG3HONmjkKddXjJB1kE/d5DarpDrg8ho0r1bY1tLaI0QXLw
-OnGPFLOTp2I0DPDWE47hSM1Gb3xn3U/KDvbw3OnmXuOWi1zIDv0sv2mPOZfpYuJT
-v/e2nqJknK57wG3Jr7PnwfVSl1o/JvJ82avnTm+PCRSvEDSS5ZIg6m4Veu9P8S/X
-qYhosU/XwVbA0Y90AoZD3BZS3MWgZap5A9Q77jndGA6vARyZPTB9RDGbcuhKCLBs
-Nq1EkZg91PJKjgF1ugt0WjNuS6kij8Q59cnDstteq2ll+hDhua4MstDBBqcmAqNO
-pkEg/qwxBbNdpqBpNrjf3HzkWWnwea6gavn2pBOGOZOlw1m65EoWv1tOzl38aqA1
-pJLq/5Zu4a8z1cpavXVxAOXV22WQrjPaUcRNXedho8S+Vx9e/vE=
-=hqfi
------END PGP SIGNATURE-----
-
---v9Ux+11Zm5mwPlX6--
