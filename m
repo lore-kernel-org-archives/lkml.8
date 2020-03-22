@@ -2,96 +2,98 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF57C4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD897C4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0458F2072E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4E9820663
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:50:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MG6B+FaJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+wyUWCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgCVOjH (ORCPT
+        id S1726843AbgCVOuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 10:39:07 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55818 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgCVOjH (ORCPT
+        Sun, 22 Mar 2020 10:50:25 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33491 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbgCVOuZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 10:39:07 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 6so11505330wmi.5
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 07:39:06 -0700 (PDT)
+        Sun, 22 Mar 2020 10:50:25 -0400
+Received: by mail-pf1-f195.google.com with SMTP id j1so3443054pfe.0;
+        Sun, 22 Mar 2020 07:50:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=GvYI8WaQRSbAIkEp+Up6kURcpv9g50Aym6muvhz7xBk=;
-        b=MG6B+FaJToH/hEbijjzGNT+dZCOT/OH2l1ug1yhxI1tRY+Kx4h7Qcx5wgTBXnNsXIk
-         bdAe1IQHfJidPmlO5cXDKtzLuQGBXjYHAVZHMIcreusk55CAapRHO74hiaM69z4xEn3u
-         D2KYNOMnAbfj/K5e180nZnqjQt5utjMEkOP+0BIIB1wxJeCEOjX7/jP76TOFVPRhuNrO
-         UAA5ZYU+Kq7uij8PQ3l0ezbGoSCjwoJPuFwCoFGbuLfzSe7ERPpNJxTAalEP52Wwge0B
-         fogqV4IwV6+G0CqyCOQHqAC8vfi8whjRENquE4UzwKFsEU2KkBjUOSQvv9aWLlj5rxsG
-         qXlQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VzpMsaGUucPpP6fSW/cSM6C+7riJcwDU7MFrk8qZK08=;
+        b=A+wyUWCyuSGbBGYrVxL3lfpAMEm9Pw7lyM1JfznsrrtgMW/o6IzzRGitu4S4esNGpi
+         8Ee78r+qIGkf45lpvlDrcRjhgDtARjTA/HFA3m2CHQISObO0vJqixQI6XTNulD+VxxMV
+         Ac7RW9icnj4MN1AJfv6kTVT2sq84yKep5ghOOqZ2SHiCfj68EAKTIu46hbFFhLsNxk77
+         dYvyOjYv8rHyGxlZ0IXpgt6Cz0Mj9A+eFS20jNm7RtLw9EaSHfJikcrDvlymvinrn+00
+         ij8YnbvINbjAQsnoOdKd3n795yaUqPJ2ZdWZEC7tladhIE1FDzVAklYUGTR+Qj/9FrdU
+         WHWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GvYI8WaQRSbAIkEp+Up6kURcpv9g50Aym6muvhz7xBk=;
-        b=SLONTA6XBLlsEG+omxna3AEU8FyCq+f4kvetsKW+386c7b7mcFLx3RSifQdFRaEq+/
-         /IVpz9eP3LG3STZ2Fsyx2tBCsqgdND+HjqYTNFkJNMmYWHo6Y5YCMGJGY0GVBwjHGHu3
-         slBg88VMRf16cOX5UwpCMMUUziYwGZeiOHTDkPMMyizip7mv646wUMb40zQOg9ZHbOhX
-         BF6HPdmm4eGe2UvohjJrOeCRJoKijO46tfMe7yWUIn99MxV7NukvqA9WLKLtir6xfQuc
-         D/QDBEiH4kgVdSPTffw0wOD75GBGzkSX94lL+BFhrJCshDCQvVeTlbWbUELZifkCXnlc
-         7rpg==
-X-Gm-Message-State: ANhLgQ1Al7oJp9K6qy1vbggNNS8qd3u8LhK7f8kl54Bzq4j2304aLzyl
-        /qEzOX1BtTHz0ESMwBTFK3njXdky
-X-Google-Smtp-Source: ADFU+vup5qzK9YYNoPmyhRsWYhSMMd02Kja055juOR71uh7IvlkYt4Y0Ovpn4xCJZjN8m2UoDR+ACg==
-X-Received: by 2002:a1c:2c85:: with SMTP id s127mr21990439wms.18.1584887945061;
-        Sun, 22 Mar 2020 07:39:05 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id i8sm18204993wrw.55.2020.03.22.07.39.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2020 07:39:04 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
-        ttayar@habana.ai
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH] habanalabs: fix pm manual->auto in GOYA
-Date:   Sun, 22 Mar 2020 16:39:04 +0200
-Message-Id: <20200322143904.2305-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VzpMsaGUucPpP6fSW/cSM6C+7riJcwDU7MFrk8qZK08=;
+        b=sh7tks2Gg3xPmigOsjnD4wInDsbWBIg2VF1z2e9FuAiRbsA4e061GmD6RP5fYeR0AG
+         msxjK5oqIpLx+OWE9iDwUn3qWoUPkMrPEaqGJm5jEpSFXM169gnIwL4Cozl4iFKrdO55
+         gFchvR4zlsezkv33cdnGJax9I8mXHWmrHn1AVbynRoTDIW9P5OnP0sV11RQPskgV2u6+
+         fzwIat+2urd1eIkDaiaShgYt6piVoPQmdYxbamFjFQVVDyJL/hKC+kqRihOAOtey/Z3H
+         SokBnAhJXPgNCn1XRaL6Sj1CxwDbMI0AUztozNAqpFmSLjmI+BPGlHNrG5WZFhQ6TSkE
+         u5+w==
+X-Gm-Message-State: ANhLgQ3ql6kWUYddEcUnCo1YTpYwayF9J/J7qKCVCvbiH49abanN1QP6
+        oYb66S4pBoqOO12rd+eb700=
+X-Google-Smtp-Source: ADFU+vsC3unH8wqa2M/Kjr8Fps9W1SvqISpzPCWWajii9wOO7dTp9OThgGswhR+FbVFnRd+cWKO23w==
+X-Received: by 2002:a62:b613:: with SMTP id j19mr20415336pff.90.1584888623675;
+        Sun, 22 Mar 2020 07:50:23 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p9sm9666063pgs.50.2020.03.22.07.50.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 22 Mar 2020 07:50:22 -0700 (PDT)
+Date:   Sun, 22 Mar 2020 07:50:20 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V5 5/5] PCI: tegra: Add support for PCIe endpoint mode in
+ Tegra194
+Message-ID: <20200322145020.GA2040@roeck-us.net>
+References: <20200303181052.16134-1-vidyas@nvidia.com>
+ <20200303181052.16134-6-vidyas@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303181052.16134-6-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When moving from manual to automatic power management mode in GOYA, the
-driver didn't correctly place the device in LOW power mode. As a result, if
-an application was run immediately after the move, it would have run with
-low frequencies.
+On Tue, Mar 03, 2020 at 11:40:52PM +0530, Vidya Sagar wrote:
+> Add support for the endpoint mode of Synopsys DesignWare core based
+> dual mode PCIe controllers present in Tegra194 SoC.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/goya/goya_hwmgr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ERROR: modpost: "dw_pcie_ep_init" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+ERROR: modpost: "dw_pcie_ep_linkup" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+ERROR: modpost: "dw_pcie_ep_init_notify" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+ERROR: modpost: "dw_pcie_ep_init_complete" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
 
-diff --git a/drivers/misc/habanalabs/goya/goya_hwmgr.c b/drivers/misc/habanalabs/goya/goya_hwmgr.c
-index b2ebc01e27f4..cdd4903e48fa 100644
---- a/drivers/misc/habanalabs/goya/goya_hwmgr.c
-+++ b/drivers/misc/habanalabs/goya/goya_hwmgr.c
-@@ -298,8 +298,8 @@ static ssize_t pm_mng_profile_store(struct device *dev,
- 		/* Make sure we are in LOW PLL when changing modes */
- 		if (hdev->pm_mng_profile == PM_MANUAL) {
- 			hdev->curr_pll_profile = PLL_HIGH;
--			hl_device_set_frequency(hdev, PLL_LOW);
- 			hdev->pm_mng_profile = PM_AUTO;
-+			hl_device_set_frequency(hdev, PLL_LOW);
- 		}
- 	} else if (strncmp("manual", buf, strlen("manual")) == 0) {
- 		if (hdev->pm_mng_profile == PM_AUTO) {
--- 
-2.17.1
+Either the symbols must be exported, or the driver's Kconfig entry must be
+bool, not tristate.
 
+Guenter
