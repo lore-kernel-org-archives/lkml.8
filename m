@@ -2,56 +2,77 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3B8C4332D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5CCC4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8675D2070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D6AC2070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:47:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbgCVCos (ORCPT
+        id S1728315AbgCVCrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 22:44:48 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:34216 "EHLO
+        Sat, 21 Mar 2020 22:47:14 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:34224 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbgCVCos (ORCPT
+        with ESMTP id S1727851AbgCVCrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 22:44:48 -0400
+        Sat, 21 Mar 2020 22:47:14 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2492615AB51DC;
-        Sat, 21 Mar 2020 19:44:47 -0700 (PDT)
-Date:   Sat, 21 Mar 2020 19:44:42 -0700 (PDT)
-Message-Id: <20200321.194442.1984083061754940574.davem@davemloft.net>
-To:     luobin9@huawei.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        luoxianjun@huawei.com, yin.yinshi@huawei.com,
-        cloud.wangxiaoyun@huawei.com
-Subject: Re: [PATCH net 0/5] hinic: BugFixes
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AA58915ABB519;
+        Sat, 21 Mar 2020 19:47:13 -0700 (PDT)
+Date:   Sat, 21 Mar 2020 19:47:13 -0700 (PDT)
+Message-Id: <20200321.194713.2123710379405962592.davem@davemloft.net>
+To:     elder@linaro.org
+Cc:     bjorn.andersson@linaro.org, naresh.kamboju@linaro.org,
+        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] soc: qcom: ipa: kill IPA_RX_BUFFER_ORDER
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200320231320.1001-1-luobin9@huawei.com>
-References: <20200320231320.1001-1-luobin9@huawei.com>
+In-Reply-To: <20200320160220.21425-1-elder@linaro.org>
+References: <20200320160220.21425-1-elder@linaro.org>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 21 Mar 2020 19:44:47 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 21 Mar 2020 19:47:13 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo bin <luobin9@huawei.com>
-Date: Fri, 20 Mar 2020 23:13:15 +0000
+From: Alex Elder <elder@linaro.org>
+Date: Fri, 20 Mar 2020 11:02:20 -0500
 
-> Fix a number of bugs which have been present since the first commit.
+> Don't assume the receive buffer size is a power-of-2 number of pages.
+> Instead, define the receive buffer size independently, and then
+> compute the page order from that size when needed.
 > 
-> The bugs fixed in these patchs are hardly exposed unless given
-> very specific conditions.
+> This fixes a build problem that arises when the ARM64_PAGE_SHIFT
+> config option is set to have a page size greater than 4KB.  The
+> problem was identified by Linux Kernel Functional Testing.
+> 
+> The IPA code basically assumed the page size to be 4KB.  A larger page
+> size caused the receive buffer size to become correspondingly larger
+> (32KB or 128KB for ARM64_16K_PAGES and ARM64_64K_PAGES, respectively).
+> The receive buffer size is used to compute an "aggregation byte limit"
+> value that gets programmed into the hardware, and the large page sizes
+> caused that limit value to be too big to fit in a 5 bit field.  This
+> triggered a BUILD_BUG_ON() call in ipa_endpoint_validate_build().
+> 
+> This fix causes a lot of receive buffer memory to be wasted if
+> system is configured for page size greater than 4KB.  But such a
+> misguided configuration will now build successfully.
+> 
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Signed-off-by: Alex Elder <elder@linaro.org>
+> ---
+> 
+> Dave, I *hope* this is it for IPA for this release.	-Alex
 
-Series applied, thank you.
+Applied to net-next, thanks.
