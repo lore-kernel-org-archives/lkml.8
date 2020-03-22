@@ -2,120 +2,105 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D60BCC4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95EEC54FCF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A925A206F8
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:57:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cm3Y5RK6"
+	by mail.kernel.org (Postfix) with ESMTP id B59072072E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:01:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584896501;
+	bh=fRgZZMF3O8FsJEBNZuwdEDytSWq+gORzarwQbFC502M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=NJtyHIfsF9tqXFLZsNe08f1DxGGEgRHN+HbBE/pAbAZAeK34jKNeff0gZty3t7vK9
+	 Dghgx01sRuUNA079bR2eNNoykTB0FqkHSOhvkyLYPTI6wqsSsMeU6kRgFHgnDxyYW7
+	 uN+uUXXz/9m/1R3aLWSCcjqja9wauHvwwCmgbOr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgCVQ5P (ORCPT
+        id S1726710AbgCVRBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 12:57:15 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35697 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgCVQ5O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 12:57:14 -0400
-Received: by mail-wr1-f67.google.com with SMTP id d5so1378007wrn.2;
-        Sun, 22 Mar 2020 09:57:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wUQo9FObQ1FgjFAGXhInSZHPZVn6g0FEvK2Y0V4ii4s=;
-        b=cm3Y5RK61DgWTyAjUEHbhN4kf16h0FsjsXqX5Wi4X5whIT2SP4SdktnwB1jesX8aKQ
-         tzqzci22S8NX105QyHJSiJLu+FRV5Ba4SfX5yFnz6ccIyIDW1PWvsMLg9r8xrhMqFK6o
-         P/mPFg7lfPr+20+Hvo4DGbSaVc4l4bJe6PGv3bPESHghmSt2Yh92ha2kxNsRMlcCSMue
-         +Y3zrB2Xi60lRou1SzOm+pU+qpq1VP5FPjer+W9z3WwbCpysaj5W6e6XOsI6DSpEBNHq
-         DvUE4cMFexRKyp5N50ZLLKReIo6qW2vO1clbvnLuwO3q1BgwEN6cuH1Jbni9vIjnq3cv
-         xQQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wUQo9FObQ1FgjFAGXhInSZHPZVn6g0FEvK2Y0V4ii4s=;
-        b=iW85Pm/taJ1PPEDcsJQS7sGlCUOPxqZg+Yoi4U3MHpd6cYcm8Ryw9XRlH1m/8ktDtf
-         GJ5+cIzrbUsXDV2G32ioOr4mJ8aTmMuf96TQVWhuTmjtbX5yPjEHNQf78tkUc9MWcB0E
-         2QMdW1Y4PZ5Dlt7FUUIFSTGjlYC0zJB9LrGmg5/WVne7cZLFeyyYReAiMuwHQrWogT09
-         W+MsZeLK3IiA2oUfh4hFhS+maIeeULpGicSNvgX2Sg6qiPeXd7cnQrIKmaLZ5ON4HINs
-         W9Cc/4OF3z2VZOqyy2v2mQTIT0gZFoAGeHJtL/StvHz6ZqRdAEOPFa37if4UPzrxkrhF
-         /BLQ==
-X-Gm-Message-State: ANhLgQ2ndDq1p1KEfxI30QwjpsvvxMnvDXXuI20U0Rr0J3XdYfscF7Hz
-        htAOQKBvzpwUH7onswdDlRU=
-X-Google-Smtp-Source: ADFU+vv0O1PRSJTkoWSbd2kn8eMmyO5OQPBalAxMSJYJK6yNWO8ywwkAx6pb4+XopsfmHHm9FENUxQ==
-X-Received: by 2002:a5d:498b:: with SMTP id r11mr24635645wrq.368.1584896231295;
-        Sun, 22 Mar 2020 09:57:11 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2d25:ed00:30d0:a825:e837:3a59])
-        by smtp.gmail.com with ESMTPSA id t126sm18806162wmb.27.2020.03.22.09.57.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2020 09:57:10 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Jiri Kosina <trivial@kernel.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Nicholas Krause <xerofoify@gmail.com>,
-        Duan Jiong <duanj.fnst@cn.fujitsu.com>,
-        Sachin Kamat <sachin.kamat@linaro.org>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] err.h: remove deprecated PTR_RET for good
-Date:   Sun, 22 Mar 2020 17:57:02 +0100
-Message-Id: <20200322165702.6712-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 22 Mar 2020 13:01:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725881AbgCVRBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 13:01:40 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D49FF20724;
+        Sun, 22 Mar 2020 17:01:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584896499;
+        bh=fRgZZMF3O8FsJEBNZuwdEDytSWq+gORzarwQbFC502M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=icTarVVZBn8HYnGaH7DB2idV9R5zd0ChanKmPcbwcm+MUn6QvqZVMti4e75xzTDDc
+         EO8N+2l3FlE58AzsWiD2tqjxHBf09vfYEeg0cTnHHB2RcK6otA4nGfuz0uAcRd4Z7i
+         qoiBKz44XQNNjqLn77Kx6gyYSO3EGUolGKyyGzcU=
+Date:   Sun, 22 Mar 2020 17:01:31 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lars@metafoo.de>, <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2] iio: buffer: re-introduce bitmap_zalloc() for
+ trialmask
+Message-ID: <20200322170131.3e83f0bd@archlinux>
+In-Reply-To: <20200321085956.11213-1-alexandru.ardelean@analog.com>
+References: <20200317123621.27722-1-alexandru.ardelean@analog.com>
+        <20200321085956.11213-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initially, commit fa9ee9c4b988 ("include/linux/err.h: add a function to
-cast error-pointers to a return value") from Uwe Kleine-König introduced
-PTR_RET in 03/2011. Then, in 07/2013, commit 6e8b8726ad50 ("PTR_RET is
-now PTR_ERR_OR_ZERO") from Rusty Russell renamed PTR_RET to
-PTR_ERR_OR_ZERO, and left PTR_RET as deprecated-marked alias.
+On Sat, 21 Mar 2020 10:59:56 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-After six years since the renaming and various repeated cleanups in the
-meantime, it is time to finally remove the deprecated PTR_RET for good.
+> Commit 3862828a903d3 ("iio: buffer: Switch to bitmap_zalloc()") introduced
+> bitmap_alloc(), but commit 20ea39ef9f2f9 ("iio: Fix scan mask selection")
+> reverted it.
+> 
+> This change adds it back. The only difference is that it's adding
+> bitmap_zalloc(). There might be some changes later that would require
+> initializing it to zero. In any case, now it's already zero-ing the
+> trialmask.
+> 
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Rusty, if you are still around, Acked-by is appreciated.
-Uwe, Acked-by is appreciated.
-Kudos to Gustavo, Nicholas, Duan & Sachin for previous cleanups.
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to poke it.
 
-applies cleanly on current master and on next-20200320
-Jiri, please pick this trival patch for the next merge window. Thanks.
+Thanks,
 
- include/linux/err.h | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/include/linux/err.h b/include/linux/err.h
-index 87be24350e91..a139c64aef2a 100644
---- a/include/linux/err.h
-+++ b/include/linux/err.h
-@@ -62,9 +62,6 @@ static inline int __must_check PTR_ERR_OR_ZERO(__force const void *ptr)
- 		return 0;
- }
- 
--/* Deprecated */
--#define PTR_RET(p) PTR_ERR_OR_ZERO(p)
--
- #endif
- 
- #endif /* _LINUX_ERR_H */
--- 
-2.17.1
+Jonathan
+> ---
+> 
+> Changelog v1 -> v2:
+> * add 'Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>' 
+> * re-send from an Analog server; GMail changed the author to @gmail.com
+> 
+>  drivers/iio/industrialio-buffer.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+> index 4ada5592aa2b..5ff34ce8b6a2 100644
+> --- a/drivers/iio/industrialio-buffer.c
+> +++ b/drivers/iio/industrialio-buffer.c
+> @@ -316,8 +316,7 @@ static int iio_scan_mask_set(struct iio_dev *indio_dev,
+>  	const unsigned long *mask;
+>  	unsigned long *trialmask;
+>  
+> -	trialmask = kcalloc(BITS_TO_LONGS(indio_dev->masklength),
+> -			    sizeof(*trialmask), GFP_KERNEL);
+> +	trialmask = bitmap_zalloc(indio_dev->masklength, GFP_KERNEL);
+>  	if (trialmask == NULL)
+>  		return -ENOMEM;
+>  	if (!indio_dev->masklength) {
 
