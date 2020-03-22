@@ -2,169 +2,83 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F17C54FD0
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ED3C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A049220714
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:35:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584891303;
-	bh=ki4luHp0OQAeDhZgqPV1JFV+XVQvTAfNpxMgrkDTG88=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TnukmyBQb1/pO41aWnsQFe4RH253c5/0GGhiJy0dxntNluTR1aXg5lL8FLpns9mr9
-	 44rfrt7wT8skC273Uxi4cueB6+YJHyu9CamK13WPJ3WsbsKAHUR600qRUMa4A1xvwj
-	 kMRUCn5l5uEeKhA3Cwa7m0UChuwIp7kBhqwGFnpg=
+	by mail.kernel.org (Postfix) with ESMTP id 916DD20714
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:37:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="b2S0ec00"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgCVPe4 (ORCPT
+        id S1726843AbgCVPhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 11:34:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57470 "EHLO mail.kernel.org"
+        Sun, 22 Mar 2020 11:37:09 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50326 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbgCVPex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 11:34:53 -0400
-Received: from DESKTOP-GFFITBK.localdomain (218-161-90-76.HINET-IP.hinet.net [218.161.90.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A888E2073C;
-        Sun, 22 Mar 2020 15:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584891292;
-        bh=ki4luHp0OQAeDhZgqPV1JFV+XVQvTAfNpxMgrkDTG88=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xU9fJF6gtSS5qtfDQ8hQKNNVOkimXGoFM8v439v3wMgDHakqgB0gsy3bbBonJEXEJ
-         fwuK9EfDB3mK1IaBIfqfmg7Kg3AiHIcgt6TRKoFi/vIPf3ycIU49kRFhCgD9zJiJMf
-         rPBOlYVrzpkDw81efw1y3teTT3iZdnlYo9AL+FuY=
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, CK Hu <ck.hu@mediatek.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Subject: [PATCH 2/4] drm/mediatek: Separate mtk_hdmi_phy to an independent module
-Date:   Sun, 22 Mar 2020 23:34:22 +0800
-Message-Id: <20200322153424.2447-3-chunkuang.hu@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200322153424.2447-1-chunkuang.hu@kernel.org>
-References: <20200322153424.2447-1-chunkuang.hu@kernel.org>
+        id S1725970AbgCVPhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 11:37:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=2onCqIcc3JF4Rkct2eyxjN9xBx7pmz24s+lxRPXhiYE=; b=b2S0ec00q/gcNeKzWmh7n+6pBZ
+        9BcqShjiDxzxQ/Rzd7NsHIU/63eAVMfgE2hfC/4d7RkQ47XV1FVC4a8sBjYWHRoI9asopjwoNMvGK
+        RvLUC9v+z0aBaPDorkmnE5i7KTrQskPBa9m5dTaNRpecX7eAM/qVVUgfXS5W3t3Tv5gQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jG2ep-0000Zh-Vk; Sun, 22 Mar 2020 16:36:59 +0100
+Date:   Sun, 22 Mar 2020 16:36:59 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        broonie@kernel.org, alexios.zavras@intel.com, tglx@linutronix.de,
+        mchehab+samsung@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v4 6/9] net: phy: marvell10g: use
+ phy_read_mmd_poll_timeout() to simplify the code
+Message-ID: <20200322153659.GO11481@lunn.ch>
+References: <20200322065555.17742-1-zhengdejin5@gmail.com>
+ <20200322065555.17742-7-zhengdejin5@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200322065555.17742-7-zhengdejin5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: CK Hu <ck.hu@mediatek.com>
+> --- a/drivers/net/phy/marvell10g.c
+> +++ b/drivers/net/phy/marvell10g.c
+> @@ -241,22 +241,17 @@ static int mv3310_power_up(struct phy_device *phydev)
+>  
+>  static int mv3310_reset(struct phy_device *phydev, u32 unit)
+>  {
+> -	int retries, val, err;
+> +	int val, err;
+>  
+>  	err = phy_modify_mmd(phydev, MDIO_MMD_PCS, unit + MDIO_CTRL1,
+>  			     MDIO_CTRL1_RESET, MDIO_CTRL1_RESET);
+>  	if (err < 0)
+>  		return err;
+>  
+> -	retries = 20;
+> -	do {
+> -		msleep(5);
+> -		val = phy_read_mmd(phydev, MDIO_MMD_PCS, unit + MDIO_CTRL1);
+> -		if (val < 0)
+> -			return val;
+> -	} while (val & MDIO_CTRL1_RESET && --retries);
 
-mtk_hdmi_phy is a part of mtk_hdmi module, but phy driver should be an
-independent module rather than be part of drm module, so separate the phy
-driver to an independent module.
+This is another example of the sleep happening first. To keep the code
+more similar, you probably should add an msleep(5) before calling
+phy_read_mmd_poll_timeout().
 
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
----
- drivers/gpu/drm/mediatek/Kconfig        |  9 ++++++++-
- drivers/gpu/drm/mediatek/Makefile       | 11 +++++++----
- drivers/gpu/drm/mediatek/mtk_hdmi.c     |  1 -
- drivers/gpu/drm/mediatek/mtk_hdmi.h     |  1 -
- drivers/gpu/drm/mediatek/mtk_hdmi_phy.c |  1 +
- drivers/gpu/drm/mediatek/mtk_hdmi_phy.h |  1 -
- 6 files changed, 16 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
-index fa5ffc4fe823..ff6a1eb4ae83 100644
---- a/drivers/gpu/drm/mediatek/Kconfig
-+++ b/drivers/gpu/drm/mediatek/Kconfig
-@@ -23,6 +23,13 @@ config DRM_MEDIATEK_HDMI
- 	tristate "DRM HDMI Support for Mediatek SoCs"
- 	depends on DRM_MEDIATEK
- 	select SND_SOC_HDMI_CODEC if SND_SOC
--	select GENERIC_PHY
-+	select PHY_MTK_HDMI
- 	help
- 	  DRM/KMS HDMI driver for Mediatek SoCs
-+
-+config PHY_MTK_HDMI
-+    tristate "MediaTek HDMI-PHY Driver"
-+    depends on ARCH_MEDIATEK && OF
-+    select GENERIC_PHY
-+    help
-+          Enable this to support HDMI-PHY
-diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/mediatek/Makefile
-index b7a82ed5788f..fcbef23aa6ce 100644
---- a/drivers/gpu/drm/mediatek/Makefile
-+++ b/drivers/gpu/drm/mediatek/Makefile
-@@ -19,9 +19,12 @@ obj-$(CONFIG_DRM_MEDIATEK) += mediatek-drm.o
- 
- mediatek-drm-hdmi-objs := mtk_cec.o \
- 			  mtk_hdmi.o \
--			  mtk_hdmi_ddc.o \
--			  mtk_mt2701_hdmi_phy.o \
--			  mtk_mt8173_hdmi_phy.o \
--			  mtk_hdmi_phy.o
-+			  mtk_hdmi_ddc.o
- 
- obj-$(CONFIG_DRM_MEDIATEK_HDMI) += mediatek-drm-hdmi.o
-+
-+phy-mtk-hdmi-drv-objs := mtk_hdmi_phy.o \
-+			 mtk_mt2701_hdmi_phy.o \
-+			 mtk_mt8173_hdmi_phy.o
-+
-+obj-$(CONFIG_PHY_MTK_HDMI) += phy-mtk-hdmi-drv.o
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index 878433c09c9b..17399bdae22d 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -1797,7 +1797,6 @@ static struct platform_driver mtk_hdmi_driver = {
- };
- 
- static struct platform_driver * const mtk_hdmi_drivers[] = {
--	&mtk_hdmi_phy_driver,
- 	&mtk_hdmi_ddc_driver,
- 	&mtk_cec_driver,
- 	&mtk_hdmi_driver,
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.h b/drivers/gpu/drm/mediatek/mtk_hdmi.h
-index bb3653de6bd1..472bf141c92b 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.h
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.h
-@@ -5,7 +5,6 @@
-  */
- #ifndef _MTK_HDMI_CTRL_H
- #define _MTK_HDMI_CTRL_H
--#include "mtk_hdmi_phy.h"
- 
- struct platform_driver;
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-index 5223498502c4..fe022acddbef 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-@@ -205,6 +205,7 @@ struct platform_driver mtk_hdmi_phy_driver = {
- 		.of_match_table = mtk_hdmi_phy_match,
- 	},
- };
-+module_platform_driver(mtk_hdmi_phy_driver);
- 
- MODULE_DESCRIPTION("MediaTek HDMI PHY Driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-index fc1c2efd1128..b13e1d5f8e78 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-@@ -49,7 +49,6 @@ void mtk_hdmi_phy_mask(struct mtk_hdmi_phy *hdmi_phy, u32 offset,
- 		       u32 val, u32 mask);
- struct mtk_hdmi_phy *to_mtk_hdmi_phy(struct clk_hw *hw);
- 
--extern struct platform_driver mtk_hdmi_phy_driver;
- extern struct mtk_hdmi_phy_conf mtk_hdmi_phy_8173_conf;
- extern struct mtk_hdmi_phy_conf mtk_hdmi_phy_2701_conf;
- 
--- 
-2.17.1
-
+	Andrew
