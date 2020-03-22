@@ -2,101 +2,110 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9714DC4332E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 779A1C54FCF
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECAE20724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:14:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d7DJJwA+"
+	by mail.kernel.org (Postfix) with ESMTP id 4EE6B20736
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 15:16:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584890161;
+	bh=0kLQ8SZT6fi5PlbGvkx9sA9jLe7XK5mmnp7GNjGyLZg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=axIRDnbJaqj2xMNMMjTBzhAbi7EaJ3l5Z2zk5RpeVuFwdgukaDNh5wbL+j8p1pajI
+	 yiyX/tQjBcyXh3DmerosVok1oCnph0NmJ0B6ZVu00t6626SQNGfN8tzcOzUW+rGDmL
+	 NxJgnJnIxwgm45i1+IpoGZRlaZuP4aulusO2GUqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbgCVPOE (ORCPT
+        id S1726871AbgCVPP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 11:14:04 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:55728 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbgCVPOD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 11:14:03 -0400
-Received: by mail-pj1-f66.google.com with SMTP id mj6so4892699pjb.5
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 08:14:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jU1tZN9SvriQuTPAY9v52hKU3vRtjkoA4roKYV/o0ys=;
-        b=d7DJJwA+X2FK84QrpDwYCttb8rdd2e4lT8+Q5t70Gv2OgQB48UzwilKy9HxnqIx0u6
-         Pw5Oc4gmv7sKIZukyv/OadTHJirAPW4rkMqZHFbHOgACPEw7NSmh3qZcMhkhuTUlmksz
-         H9RtOhwhEi0o2YorU6S02Z6fTWGneSV7k9tLM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jU1tZN9SvriQuTPAY9v52hKU3vRtjkoA4roKYV/o0ys=;
-        b=aoEZsKaD3o7s4OTV9b/1xidTiLR/ZxIeomVb6ySmJqwZ9SbAwzlBWzQkMXtm9reIq1
-         JHpvo8+T1RFIrfo2yokPmDloyX5JoNsRBjszr+zCewD7NPglwxg9WOayJFXOzZpSw/qn
-         JOtPSs1oG/ixR4ba5SzhW2xatDztZnyb973YS00yOr5d+ADEAMdF3MZxZdKM33B1HMkY
-         LA42PwyI1KIKmkI7hgL4fbmTSYgBLWKEo/I9uWozXrDoeJXrQeYSYDwCP9LraUXmX7PN
-         klgvDD7xQL3vHlpMTgY/xCdeAI4BAIfB9BChw738hL9MDOcvdQiv0mNkc8w1twjKeGxl
-         hylg==
-X-Gm-Message-State: ANhLgQ0HVvVoPrXgvZ2dKMu2FxJ+Fmje2sPhkPwi5P6NsP4jvdtQGCtj
-        6C32EftT/pZ81vUwRfVHFJ0ZRg==
-X-Google-Smtp-Source: ADFU+vtbmF3l7sn6QV7hQukMIYQEHoGaYcXFfhI82JP1bexvWQg3p2JE0n4ekAuPsSplVisGoCrg4A==
-X-Received: by 2002:a17:90a:3589:: with SMTP id r9mr20229184pjb.196.1584890042470;
-        Sun, 22 Mar 2020 08:14:02 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i2sm10807108pfr.151.2020.03.22.08.14.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2020 08:14:00 -0700 (PDT)
-Date:   Sun, 22 Mar 2020 08:13:59 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 11/11] mtd: new support oops logger based on pstore/blk
-Message-ID: <202003220812.5728216E0@keescook>
-References: <1581078355-19647-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1581078355-19647-12-git-send-email-liaoweixiong@allwinnertech.com>
- <202003181149.90B22E24@keescook>
- <69b0133c-dfa3-2680-2a2e-473033750703@allwinnertech.com>
+        Sun, 22 Mar 2020 11:15:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726623AbgCVPP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 11:15:59 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1079220724;
+        Sun, 22 Mar 2020 15:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584890159;
+        bh=0kLQ8SZT6fi5PlbGvkx9sA9jLe7XK5mmnp7GNjGyLZg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EQlaeglv9LS5i23NWi0MRzxqoWrZJbUQqmwHrtxthsPIHO5WDVcgslrkyvBl5EABk
+         +jMFp2hZye7ReedMO5/68WhJ206wGiJYH4iVERas4u4yIgaelAL+v4vXHOmYX1bvU/
+         MKAqelyRo2cPYySBiQZgGr9PautDfPMg2N5W6m3w=
+Date:   Sun, 22 Mar 2020 15:15:54 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>
+Subject: Re: [PATCH v2 5/5] iio: adc: ad7793: use read_avail iio hook for
+ scale available
+Message-ID: <20200322151554.2c204c49@archlinux>
+In-Reply-To: <5ae09f8526a8847cb45435aa5280f905956ff588.camel@analog.com>
+References: <20200321090802.11537-1-alexandru.ardelean@analog.com>
+        <20200321090802.11537-5-alexandru.ardelean@analog.com>
+        <20200321193726.GA2813151@smile.fi.intel.com>
+        <5ae09f8526a8847cb45435aa5280f905956ff588.camel@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69b0133c-dfa3-2680-2a2e-473033750703@allwinnertech.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 09:51:19PM +0800, WeiXiong Liao wrote:
-> The physical features of MTD device require that the user configurations
-> must meet some requirements. For example the record size must be
-> multiples of page size of MTD flash. It's really different to block device.
-> If we make this device driver "invisible", we should have other way to
-> limit user configurations. The dmesg pstore front-end is the most easiest
-> one to fix to. There are still much work to do to support other front-ends.
+On Sun, 22 Mar 2020 09:18:13 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-I finally understand this now -- I was still thinking of things like
-nvme which ultimately expose a block layer. MTD appear to genuinely be a
-"non-block" device. But it is still considered a "storage" device, yes?
+> On Sat, 2020-03-21 at 21:37 +0200, Andy Shevchenko wrote:
+> > [External]
+> > 
+> > On Sat, Mar 21, 2020 at 11:08:02AM +0200, Alexandru Ardelean wrote:  
+> > > This change uses the read_avail and '.info_mask_shared_by_type_available'
+> > > modifier to set the available scale.
+> > > Essentially, nothing changes to the driver's ABI.
+> > > 
+> > > The main idea for this patch is to remove the AD7793 driver from
+> > > checkpatch's radar. There have been about ~3 attempts to fix/break the
+> > > 'in_voltage-voltage_scale_available' attribute, because checkpatch assumed
+> > > it to be an arithmetic operation and people were trying to change that.
+> > > +static int ad7793_read_avail(struct iio_dev *indio_dev,
+> > > +			     struct iio_chan_spec const *chan,
+> > > +			     const int **vals, int *type, int *length,
+> > > +			     long mask)
+> > >  {
+> > >  	struct ad7793_state *st = iio_priv(indio_dev);
+> > >  
+> > > +	switch (mask) {
+> > > +	case IIO_CHAN_INFO_SCALE:
+> > > +		*vals = (int *)st->scale_avail;
+> > > +		*type = IIO_VAL_INT_PLUS_NANO;
+> > > +		/* Values are stored in a 2D matrix  */
+> > > +		*length = ARRAY_SIZE(st->scale_avail) * 2;
+> > >  
+> > > +		return IIO_AVAIL_LIST;
+> > > +	}
+> > >  
+> > > +	return -EINVAL;  
+> > 
+> > Wouldn't be better move this under default case?
+> >   
+> 
+> Ummm, sure.
+> I'm a bit vague how we do from here since Jonathan accepted this and the
+> patchset.
+> I'll send a V3 of the whole set [in a few days max].
 
-So perhaps "block storage device" and "non-block storage device"?
+I'll drop this last patch.  Just resend this one with the change.
 
--- 
-Kees Cook
+Jonathan
+
