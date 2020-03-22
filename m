@@ -5,113 +5,89 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CBAC54FD0
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A01C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA9AF20724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB7412072E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:16:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBTufxsr"
+	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="ma1pavz3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgCVQPi (ORCPT
+        id S1726916AbgCVQQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 12:15:38 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33512 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbgCVQPi (ORCPT
+        Sun, 22 Mar 2020 12:16:20 -0400
+Received: from mr85p00im-hyfv06021301.me.com ([17.58.23.188]:42327 "EHLO
+        mr85p00im-hyfv06021301.me.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726785AbgCVQQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 12:15:38 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a25so13648072wrd.0;
-        Sun, 22 Mar 2020 09:15:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dYEAGywc3sKy6VK1CPH4F8NN5656DQLq2EzqYJV/ulM=;
-        b=NBTufxsrCQO6z8iFuT8T18U3zVogZEW3K7OOaCf+fufNvIZrRLjH8OMMoF2OOO4RWx
-         DlpcPNDYv1/mjlBgkalGHhMyYTnBmsMU9OnMEkUWoXQZdlw9r2XzibRzjO9FObFGLEOL
-         jed+rGOO5x5pVSpzOf0bx5gnZI+3NBvkwpwZRbnhp9FKcWgbDBmehEQD2uz4oHt/4tvk
-         f1pxdKaCSjzpOr7+J51T4yYbyIHArtpppokNe0ie2kD5PBleOkSUBRGI6emzleoCCE+1
-         kv22QGiutxsed9+yvgnr07nwjdlCniazvLpxHGgpYd8vHzLCr6K1k3+BALFvXpqfqioe
-         Fs4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dYEAGywc3sKy6VK1CPH4F8NN5656DQLq2EzqYJV/ulM=;
-        b=kEvSO5+53Jw582Vd6ClHvLja5IXxY5Dp3c/alMrl/gPnGsXXU6m5bhjTkJBqzjEO/X
-         PF7UVqe7SM0pSfPn7MMw6JdD4K1VjbessfEZrAuhBB/XEgaRi2DEiSXnLHTl4rCqBZ0a
-         YojSQGu2SHFGdODIxV+7KYzmzRYwhjvWsvA6wfijnN9nLApmpVL2kRo9Ia503QJq6oO0
-         Hy9upmDX2A8dMlmh0/gbNbcTqi5BytkVem4uzqtW+waE8voAmIFBY/PdY0+ursaZ/60h
-         mLZY/ktbhB8Eod1h0ek+QaCQwW1Bt6TZCZiMWNz9HV7z9ukGs8myu1ebbNZvQ4c0QI0L
-         g9Wg==
-X-Gm-Message-State: ANhLgQ0sS7FjT+slrLscMtGSLX8LamgvTtER7FoDWrreA9OemSSw6dQD
-        dhKlwx1Mv0rTDm2AN2FnsLcizXS3
-X-Google-Smtp-Source: ADFU+vsRcBwWTYsRdZEsYv42CXHuGjwd0bF7Rin9njyUTNdGbJcV8kcAmciAsTxz7p2kZkaHbu73Fw==
-X-Received: by 2002:a5d:4091:: with SMTP id o17mr8991126wrp.254.1584893735117;
-        Sun, 22 Mar 2020 09:15:35 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.140.227])
-        by smtp.gmail.com with ESMTPSA id 71sm3229317wrc.53.2020.03.22.09.15.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2020 09:15:34 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        Sun, 22 Mar 2020 12:16:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
+        t=1584893780; bh=lUx573AhALdx5V9UYwZ7h1AoyYiVLJFqxyU5PbCpUmI=;
+        h=From:To:Subject:Date:Message-Id;
+        b=ma1pavz3PiIsOwmVg9f8z7scVV4fmyT4WEaiFHd1Jfe6z1KZ/QiF+koKGHn5g8vFt
+         zsOuP+vYp9d3BhrD5UCEpuEgj+gNe0sEIIRGZZl9QkTgkxilYyaiw8fGLG3csK8LVB
+         vDe5XSdhxWVH9GEX0h6wcmicy7F6pALXxdnLE1rkhvaxTkYCIK3LebQhjfT6o4w2Ec
+         OgFTYgeui3spfmsbg/IJ90cGWPsNREGUUO8GVuU4S4TQKTVyfiupgqDSHoftrm9+g4
+         5D6snyGBajUHf4ee0/amhe5JQWUpUzYWSSreAi87oLzjzwowH+U8XCEKEcj+x5Z34V
+         J7cc00aKTq15g==
+Received: from localhost (101.220.150.77.rev.sfr.net [77.150.220.101])
+        by mr85p00im-hyfv06021301.me.com (Postfix) with ESMTPSA id 6D26140520;
+        Sun, 22 Mar 2020 16:16:19 +0000 (UTC)
+From:   Alain Volmat <avolmat@me.com>
+To:     patrice.chotard@st.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] io-wq: close cancel gap for hashed linked work
-Date:   Sun, 22 Mar 2020 19:14:26 +0300
-Message-Id: <b9bc821a0ff3bc52a60281d8a9005dff93f6dcc3.1584893591.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Cc:     avolmat@me.com
+Subject: [PATCH] dts: arm: stih407-family: remove duplicated rng nodes
+Date:   Sun, 22 Mar 2020 17:16:16 +0100
+Message-Id: <20200322161616.19111-1-avolmat@me.com>
+X-Mailer: git-send-email 2.17.1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-03-22_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 clxscore=1011 mlxscore=0
+ mlxlogscore=938 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-2003220099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After io_assign_current_work() of a linked work, it can be decided to
-offloaded to another thread so doing io_wqe_enqueue(). However, until
-next io_assign_current_work() it can be cancelled, that isn't handled.
+the 2 rng nodes are duplicated within the stih407-family.dtsi
 
-Don't assign it, if it's not going to be executed.
-
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Alain Volmat <avolmat@me.com>
 ---
- fs/io-wq.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/stih407-family.dtsi | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-diff --git a/fs/io-wq.c b/fs/io-wq.c
-index 9541df2729de..b3fb61ec0870 100644
---- a/fs/io-wq.c
-+++ b/fs/io-wq.c
-@@ -485,7 +485,7 @@ static void io_worker_handle_work(struct io_worker *worker)
- 	struct io_wq *wq = wqe->wq;
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 7c36c37260a4..23a1746f3baa 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -767,20 +767,6 @@
+ 				 <&clk_s_c0_flexgen CLK_ETH_PHY>;
+ 		};
  
- 	do {
--		struct io_wq_work *work;
-+		struct io_wq_work *work, *assign_work;
- 		unsigned int hash;
- get_next:
- 		/*
-@@ -522,10 +522,14 @@ static void io_worker_handle_work(struct io_worker *worker)
- 			hash = io_get_work_hash(work);
- 			work->func(&work);
- 			work = (old_work == work) ? NULL : work;
--			io_assign_current_work(worker, work);
-+
-+			assign_work = work;
-+			if (work && io_wq_is_hashed(work))
-+				assign_work = NULL;
-+			io_assign_current_work(worker, assign_work);
- 			wq->free_work(old_work);
- 
--			if (work && io_wq_is_hashed(work)) {
-+			if (work && !assign_work) {
- 				io_wqe_enqueue(wqe, work);
- 				work = NULL;
- 			}
+-		rng10: rng@8a89000 {
+-			compatible      = "st,rng";
+-			reg		= <0x08a89000 0x1000>;
+-			clocks          = <&clk_sysin>;
+-			status		= "okay";
+-		};
+-
+-		rng11: rng@8a8a000 {
+-			compatible      = "st,rng";
+-			reg		= <0x08a8a000 0x1000>;
+-			clocks          = <&clk_sysin>;
+-			status		= "okay";
+-		};
+-
+ 		mailbox0: mailbox@8f00000  {
+ 			compatible	= "st,stih407-mailbox";
+ 			reg		= <0x8f00000 0x1000>;
 -- 
-2.24.0
+2.17.1
 
