@@ -2,98 +2,137 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A28C4332E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F66C4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AEBC20719
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6837020409
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 14:09:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iBQtUWUH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJIxq9L5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgCVOIv (ORCPT
+        id S1726916AbgCVOJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 10:08:51 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53859 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbgCVOIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 10:08:51 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48lfWM39hGz9sPR;
-        Mon, 23 Mar 2020 01:08:46 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584886128;
-        bh=v+avydRkhT5ope5s3q1yjw/QAkHfksGUTqmRNqlrD0U=;
-        h=Date:From:To:Cc:Subject:From;
-        b=iBQtUWUHqpOYC7sRSkR6s/8qqLgYfQDa8thK54hccDZznTgiz6r8qpMLSJvyuJyMt
-         DKCUxLPozIFUV5GzFUoWAiSrDJeNOIlEyUSH50ZCXfE3hj+B3uvEB9zxIkRKVlJQnD
-         cSDkohvvRio088RE90317uC+5+GZj3ev8Mkd7/ZYws1gOzP6Y1M+Pof4Wnet0++nnl
-         wMoieGoDT/YN9wvfTQtTpF0eTj1kCu91sHfPYAeP3v/vxzN11fB8JWyJxPepDhOURo
-         TJgExDjKeqAhSX5ob6vNoVwq1c5qpf9a0wjaAymVz6jawAcKiRWKLwfZLbEcTmJj5m
-         dOmS+mswo7qAg==
-Date:   Mon, 23 Mar 2020 01:08:42 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Feilong Lin <linfeilong@huawei.com>
-Subject: linux-next: Fixes tag needs some work in the block tree
-Message-ID: <20200323010842.335a248c@canb.auug.org.au>
+        Sun, 22 Mar 2020 10:09:16 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42539 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgCVOJP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 10:09:15 -0400
+Received: by mail-ed1-f67.google.com with SMTP id b21so13201824edy.9;
+        Sun, 22 Mar 2020 07:09:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pBi9Z1+WU4iatz2iMB4jF1UwMBCBTv6eef7cooUFzms=;
+        b=TJIxq9L5ba4cEhBvxABO8RbqK99o+J/uKW5K1NX4zXF9+ccmgGCPN9xMUi3ODDtmLB
+         PBcy2vAXjGmcFRLGDazaFjQZvbJh+C9y+uSB775OZQa/Bt5Ggi0yydC2VFFqBXH7gj52
+         LqUsLpN7NtK+REuoB0Nv2mBg0qVXg+k4aMoRmFVo+m6xiMAgWrlFo8W/hI4JadSMvf7J
+         bhqnmhjnGg9m1dsznfGJ6HxlhaTKBtn0UWLHwW+Ec8zCodR4zlWgkqxU1ENYrBPSsQ9d
+         UHQONLyRmz2kJCTh6MrOG+d2qEE7dNmpMg8y2pJLEqAK5KvYotdGwiZn02+j2embB16p
+         W3UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pBi9Z1+WU4iatz2iMB4jF1UwMBCBTv6eef7cooUFzms=;
+        b=J1DcsnXm0zWPVxh2lHFMBcVbWxxwbsnarohsNTjO6RrtJGuYFTwtJGs/2OhcfrXOzS
+         RlBS/Omeza/s6TmtostNIrP4t8e4q39hZlIu8FqEhfA4Wq7VyIEw+kr5JUZlK2eCb2mq
+         SG0EDCTNrQ8BteQJK99BuqMQY4d6k24rJlTYSXPi7UeB0GEWifl8NOMDTu1n3JHXKEJG
+         dm8ZVyS3G7q2cszI2bhGCtIv8lN9JNFwrbBXZyaVBAEjNi0mvQl8rVwy2z3tb8nMvKjg
+         VocdeRbzbMI+JFHC5A7yxaeYsN5z2+aIIZPtnFgadOazp0T1XWQKx/QrCRCaK7TaXHwl
+         eWjQ==
+X-Gm-Message-State: ANhLgQ3D/unUw2dHkkCNc5RqTAWsiaaVgPNebeYhYgcNOu1H/e8JtZ6M
+        DOI7I/rhScA+JTHebTqELMV66jGgG14=
+X-Google-Smtp-Source: ADFU+vuhSK4TFcDIFhTkZwOxUmu0pr1ErNd/GgOB/C6SQTrQ+k1F8Ju8FjeneoUiS7JIUf/BaHIP1g==
+X-Received: by 2002:a17:906:34db:: with SMTP id h27mr15609447ejb.111.1584886152225;
+        Sun, 22 Mar 2020 07:09:12 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:21b0:9002:6131:e6f7:db0e:d6e9:e56e])
+        by smtp.googlemail.com with ESMTPSA id q21sm223858ejb.47.2020.03.22.07.09.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 22 Mar 2020 07:09:11 -0700 (PDT)
+From:   Jean-Philippe Menil <jpmenil@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, jpmenil@gmail.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] bpf: fix build warning - missing prototype
+Date:   Sun, 22 Mar 2020 15:08:44 +0100
+Message-Id: <20200322140844.4674-1-jpmenil@gmail.com>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/0XuDueXN4ndoo/Zj1FcL66L";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/0XuDueXN4ndoo/Zj1FcL66L
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Fix build warning when building net/bpf/test_run.o with W=1 due
+to missing prototype for bpf_fentry_test{1..6}.
 
-Hi all,
+These functions are only used in test_run.c so just make them static.
+Therefore inline keyword should sit between storage class and type.
 
-In commit
+Signed-off-by: Jean-Philippe Menil <jpmenil@gmail.com>
+---
+ net/bpf/test_run.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-  2f95fa5c955d ("block, bfq: fix use-after-free in bfq_idle_slice_timer_bod=
-y")
+diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+index d555c0d8657d..c0dcd29f682c 100644
+--- a/net/bpf/test_run.c
++++ b/net/bpf/test_run.c
+@@ -113,32 +113,32 @@ static int bpf_test_finish(const union bpf_attr *kattr,
+  * architecture dependent calling conventions. 7+ can be supported in the
+  * future.
+  */
+-int noinline bpf_fentry_test1(int a)
++static noinline int bpf_fentry_test1(int a)
+ {
+ 	return a + 1;
+ }
+ 
+-int noinline bpf_fentry_test2(int a, u64 b)
++static noinline int bpf_fentry_test2(int a, u64 b)
+ {
+ 	return a + b;
+ }
+ 
+-int noinline bpf_fentry_test3(char a, int b, u64 c)
++static noinline int bpf_fentry_test3(char a, int b, u64 c)
+ {
+ 	return a + b + c;
+ }
+ 
+-int noinline bpf_fentry_test4(void *a, char b, int c, u64 d)
++static noinline int bpf_fentry_test4(void *a, char b, int c, u64 d)
+ {
+ 	return (long)a + b + c + d;
+ }
+ 
+-int noinline bpf_fentry_test5(u64 a, void *b, short c, int d, u64 e)
++static noinline int bpf_fentry_test5(u64 a, void *b, short c, int d, u64 e)
+ {
+ 	return a + (long)b + c + d + e;
+ }
+ 
+-int noinline bpf_fentry_test6(u64 a, void *b, short c, int d, void *e, u64 f)
++static noinline int bpf_fentry_test6(u64 a, void *b, short c, int d, void *e, u64 f)
+ {
+ 	return a + (long)b + c + d + (long)e + f;
+ }
+-- 
+2.25.2
 
-Fixes tag
-
-  Fixes: aee69d78d ("block, bfq: introduce the BFQ-v0 I/O scheduler as an e=
-xtra scheduler")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/0XuDueXN4ndoo/Zj1FcL66L
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl53cWoACgkQAVBC80lX
-0GwQfAf/VfdPM0p93yPULc6qDhkUuqsDAd+CmfMKgnJ5kZ3ZJLOOP7hCjNk99iQL
-8Vr3p17cRT3qj9h/7B4HnacVqp7Bu31e8OXk284nFfv3a6qIdXcowwGhS0Eh1ub2
-XhxvAGjY7KpealIGvQ2NkPrf2lWq6blqP1fuJylj/uBJ/Dq0Kg1+gTLCayakvwG8
-bRllNvLYW6gnD1/f3r/NxLqZya22C7gzm4JcrV2fxcAbxL3JUUKiQGByvS3OqFVX
-AYZozTjiTKwHkT8Wg5riFjekcqf/tvI329TkMEh/tgMJm1kCtaTO2vWUXLU7gxEh
-9bTn/TwGLJgz9BB/cEgpVgUPea1Okg==
-=csYG
------END PGP SIGNATURE-----
-
---Sig_/0XuDueXN4ndoo/Zj1FcL66L--
