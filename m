@@ -2,68 +2,331 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D13C1975A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 23:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DE4C54FD0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 23:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA2EE2072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 23:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF502072D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 23:26:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mv5Fi2wt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgCVXSW (ORCPT
+        id S1726902AbgCVX0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 19:18:22 -0400
-Received: from mga03.intel.com ([134.134.136.65]:35541 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726814AbgCVXSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 19:18:22 -0400
-IronPort-SDR: TQmMScp9Lc6nPGSoJh6N9ub3Q3PuDAKbvk2VSA9yjNxC2pWT1ckNUCQR+4FFY39HI+VuKPOSTe
- AVLVk9Mtf3rw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2020 16:18:21 -0700
-IronPort-SDR: rTUNOvwITZGPd+WKcrPOiG/4qSYfi49vqmF1tMqSlVcd6PiUnkHrD1obms4uZeXb6/i8ctSt9f
- WeOfho2Kw0lA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,294,1580803200"; 
-   d="scan'208";a="447223183"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Mar 2020 16:18:20 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id CA321301779; Sun, 22 Mar 2020 16:18:20 -0700 (PDT)
-Date:   Sun, 22 Mar 2020 16:18:20 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2] perf test x86: address multiplexing in rdpmc test
-Message-ID: <20200322231820.GB267978@tassilo.jf.intel.com>
-References: <20200321173710.127770-1-irogers@google.com>
- <20200322101848.GF2452@worktop.programming.kicks-ass.net>
+        Sun, 22 Mar 2020 19:26:14 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:34274 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgCVX0O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 19:26:14 -0400
+Received: by mail-pj1-f66.google.com with SMTP id q16so5059761pje.1;
+        Sun, 22 Mar 2020 16:26:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZDKQMZnLV2Qxu2G2wWsWQEZI3Xmwo2zYfXZksiF4wOY=;
+        b=Mv5Fi2wtUcS1EUcl7QT0VXTLjfoS4onO9OZbnEUT04S9/8ccgjdFiycWWn52Ydw/iF
+         yItaI8TiAWHFHOhM+9ga/M2EiSZTn4DuR6pMfmmJ5QjUfsvG3G8oNKigZYCjbkju4Qs1
+         BfimpVE9iFttTgJaeziTWulobv1XKLxmhnl7+HF0qhQ4c9C8vqyLfFqrlsEwg58bL7xu
+         cUbThefH40SQSSrIkjr3N/s6TotsVqXy/QN4Vjo95a0M6k3Tor1QLvClkR5YKP+LLvBK
+         y3pzJwob7QPVinRXQMY/HJVv1vbBSBeLf8Pbj8nmzapGsmUsrk6EQnk9HRZezxS4cpNy
+         rsKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZDKQMZnLV2Qxu2G2wWsWQEZI3Xmwo2zYfXZksiF4wOY=;
+        b=GI6XFfwZbDVyiL6FxIsywY24KohmaYZMiNCOhofVF71UvYZDb0LPuhQAibnYIMz5Gf
+         XD++i7Dwu1o9+GeqosbC0MXJNjuAHpReNOo86yzUUOBtxRBY/gQdTByGK5WQWzgPs/Z6
+         sRpf3TRjrT+hMx8oO5n3Fj1JHDseo733uJBojRvvCI/2cbsqH+NrMZP1CB8rc9+0SAO2
+         KHnfMOf2NObjePZbpXaiLBWQ30euJB2FxId1eMc4BkI7E5haGuBqJVPhXSDmnC3WPR1e
+         vymEtzxW6jKSQcV4DvKtBybXNbUKPB/eisi2JY/p8Vl9YD0zOVtVttb3i2yZLDKpCyUZ
+         xEtg==
+X-Gm-Message-State: ANhLgQ1T5jpC9S6C0uHni6JiHwlxsjN8C6e5n/jZetT8iyuH2rI0549W
+        iAqJLFQ9legIY5Q/UxuRkA0r9C2hmBC+jRB2LBg=
+X-Google-Smtp-Source: ADFU+vvW2kjUDse5l5NFdqxGMDTjhGi14s5N4SJUT/TVrlYDd6CZNBX+yJSMVIfRDYpLBRnaYmLavSvnN5U2StVAm5w=
+X-Received: by 2002:a17:90a:8403:: with SMTP id j3mr22305527pjn.8.1584919572031;
+ Sun, 22 Mar 2020 16:26:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200322101848.GF2452@worktop.programming.kicks-ass.net>
+References: <20200322224626.13160-1-sravanhome@gmail.com> <20200322224626.13160-5-sravanhome@gmail.com>
+In-Reply-To: <20200322224626.13160-5-sravanhome@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 23 Mar 2020 01:26:00 +0200
+Message-ID: <CAHp75Vf0iAV1g5GV8XoewNEMnGee=_Wkgz=8Y_ym8UPdsb6eFQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] power: supply: Add support for mps mp2629 battery charger
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Here's something a little better. Much of it copied from linux/math64.h
-> and asm/div64.h.
+On Mon, Mar 23, 2020 at 12:47 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
+>
+> The mp2629 provides switching-mode battery charge management for
+> single-cell Li-ion or Li-polymer battery. Driver supports the
+> access/control input source and battery charging parameters.
 
-Not sure what the point is of micro optimizing a unit test?
+...
 
-This is never run in production.
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
 
--Andi
+> +#include <linux/of_device.h>
 
+Do you need this one?
+
+> +#include <linux/interrupt.h>
+> +#include <linux/iio/consumer.h>
+> +#include <linux/iio/types.h>
+> +#include <linux/power_supply.h>
+> +#include <linux/workqueue.h>
+> +#include <linux/regmap.h>
+
+Perhaps put them in order?
+
+> +#include <linux/mfd/core.h>
+
+How this is being used?
+
+> +#include <linux/mfd/mp2629.h>
+
+...
+
+> +#define MP2629_MASK_INPUT_TYPE         0xe0
+> +#define MP2629_MASK_CHARGE_TYPE                0x18
+> +#define MP2629_MASK_CHARGE_CTRL                0x30
+> +#define MP2629_MASK_WDOG_CTRL          0x30
+> +#define MP2629_MASK_IMPEDANCE          0xf0
+
+GENMASK()?
+
+...
+
+> +       struct regmap_field *regmap_fields[TERM_CURRENT + 1];
+
+Hmm... Why not to have a definition to cover + 1?
+
+...
+
+> +static int mp2629_get_prop(struct mp2629_charger *charger,
+> +                          enum mp2629_field fld,
+> +                          union power_supply_propval *val)
+> +{
+> +       int ret;
+> +       unsigned int rval;
+> +
+
+> +       ret = regmap_field_read(charger->regmap_fields[fld], &rval);
+> +       if (!ret)
+> +               val->intval = (rval * props[fld].step) + props[fld].min;
+> +
+> +       return ret;
+
+Why not to use standard pattern, i.e.
+
+  if (ret)
+    return ret;
+  ...
+  return 0;
+
+?
+
+> +}
+
+...
+
+> +static int mp2629_charger_battery_set_prop(struct power_supply *psy,
+> +                                       enum power_supply_property psp,
+> +                                       const union power_supply_propval *val)
+> +{
+> +       struct mp2629_charger *charger = dev_get_drvdata(psy->dev.parent);
+
+> +       int ret;
+
+You may replace it with in-place return statements.
+
+> +
+> +       switch (psp) {
+> +       case POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT:
+> +               ret = mp2629_set_prop(charger, TERM_CURRENT, val);
+> +               break;
+> +
+> +       case POWER_SUPPLY_PROP_PRECHARGE_CURRENT:
+> +               ret = mp2629_set_prop(charger, PRECHARGE, val);
+> +               break;
+> +
+> +       case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
+> +               ret = mp2629_set_prop(charger, CHARGE_VLIM, val);
+> +               break;
+> +
+> +       case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
+> +               ret = mp2629_set_prop(charger, CHARGE_ILIM, val);
+> +               break;
+> +
+> +       default:
+> +               return -EINVAL;
+> +       }
+
+> +
+> +       return ret;
+
+...and drop this completely.
+
+> +}
+
+...
+
+> +       case POWER_SUPPLY_PROP_ONLINE:
+> +               ret = regmap_read(charger->regmap, MP2629_REG_STATUS, &rval);
+> +               if (!ret)
+> +                       val->intval = !!(rval & MP2629_MASK_INPUT_TYPE);
+> +               break;
+
+Traditional pattern?
+
+...
+
+> +static int mp2629_charger_usb_set_prop(struct power_supply *psy,
+> +                               enum power_supply_property psp,
+> +                               const union power_supply_propval *val)
+> +{
+> +       struct mp2629_charger *charger = dev_get_drvdata(psy->dev.parent);
+
+> +       int ret;
+
+No need to have it.
+
+> +       switch (psp) {
+> +       case POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT:
+> +               ret = mp2629_set_prop(charger, INPUT_VLIM, val);
+> +               break;
+> +
+> +       case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
+> +               ret = mp2629_set_prop(charger, INPUT_ILIM, val);
+> +               break;
+> +
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       return ret;
+> +}
+
+...
+
+> +       return (psp == POWER_SUPPLY_PROP_PRECHARGE_CURRENT ||
+> +               psp == POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT ||
+> +               psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT ||
+> +               psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE);
+
+Redundant parentheses.
+Ditto for similar cases in the driver.
+
+...
+
+> +static ssize_t batt_impedance_compensation_show(struct device *dev,
+> +                                          struct device_attribute *attr,
+> +                                          char *buf)
+> +{
+> +       struct mp2629_charger *charger = dev_get_drvdata(dev->parent);
+> +       unsigned int rval;
+> +       int ret;
+> +
+> +       ret = regmap_read(charger->regmap, MP2629_REG_IMPEDANCE_COMP, &rval);
+
+> +       if (ret < 0)
+
+' < 0' is not needed.
+Ditto for other cases.
+
+> +               return ret;
+> +
+> +       rval = (rval >> 4) * 10;
+> +
+
+> +       return scnprintf(buf, PAGE_SIZE, "%d mohm\n", rval);
+
+Simple sprintf().
+
+> +}
+
+...
+
+> +static ssize_t batt_impedance_compensation_store(struct device *dev,
+> +                                           struct device_attribute *attr,
+> +                                           const char *buf,
+> +                                           size_t count)
+> +{
+> +       struct mp2629_charger *charger = dev_get_drvdata(dev->parent);
+> +       long val;
+> +       int ret;
+> +
+> +       ret = kstrtol(buf, 10, &val);
+
+> +       if (ret < 0)
+
+No need to check for negative only.
+
+> +               return ret;
+> +
+> +       if (val < 0 && val > 140)
+> +               return -ERANGE;
+
+And what the point then to use l instead of ul or even uint variant of
+the conversion above?
+
+> +       /* multiples of 10 mohm so round off */
+> +       val = val / 10;
+> +       ret = regmap_update_bits(charger->regmap, MP2629_REG_IMPEDANCE_COMP,
+> +                                       MP2629_MASK_IMPEDANCE, val << 4);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       return count;
+> +}
+
+...
+
+> +static int mp2629_charger_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+
+> +       void **pdata = pdev->dev.platform_data;
+
+Why void?
+Why **?
+Why not to use dev_get_platdata()?
+Why do we need platform data at all?
+
+> +       struct mp2629_charger *charger;
+> +       struct power_supply_config psy_cfg = {0};
+> +       int ret, i;
+
+> +       charger->regmap = *pdata;
+
+> +       regmap_update_bits(charger->regmap, MP2629_REG_INTERRUPT,
+> +                               GENMASK(6, 5), (BIT(6) | BIT(5)));
+
+Too many parentheses.
+
+> +}
+
+--
+With Best Regards,
+Andy Shevchenko
