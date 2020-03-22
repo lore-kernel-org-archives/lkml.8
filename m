@@ -2,85 +2,165 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE93C4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 13:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E378AC4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 13:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25FB3206C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 13:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A6C20732
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 13:38:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fom7hRCl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725881AbgCVN3E (ORCPT
+        id S1726797AbgCVNiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 09:29:04 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:50590 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgCVN3D (ORCPT
+        Sun, 22 Mar 2020 09:38:01 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:31359 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725997AbgCVNiA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 09:29:03 -0400
-Received: by mail-il1-f197.google.com with SMTP id z12so9873965ilh.17
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 06:29:03 -0700 (PDT)
+        Sun, 22 Mar 2020 09:38:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584884278;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2GuvjGXk9RjsgHc8J4qtgc0NzvRfPOmRjXcou1INlWA=;
+        b=fom7hRClYw8A+zF1ciCTjN2GTULddsmbhh0Ewbu6DWWZheLgZB8IVq4z1WpH4f7t+LmMHg
+        O6BrUSDSVvLv5LJk9bMsiQwFV3KcJAtRQpiQfGciXB67OQlQ7v8sHNb52W/pYHAoUpXLLD
+        hyPe7LRMPBRv1Y7nN3XiB486q/ppBt8=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-329-uwawSjl2O16wJG0PHMZazQ-1; Sun, 22 Mar 2020 09:37:54 -0400
+X-MC-Unique: uwawSjl2O16wJG0PHMZazQ-1
+Received: by mail-wr1-f72.google.com with SMTP id p2so5812049wrw.8
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 06:37:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=jmLK9Nx0sV4n9spz6FizKEO/UiXLat+guCFQpWcvF0A=;
-        b=nIHLanqxfFtC1PS3iPFVX/B1DK4Ran97mBco2Ai+HQ7846UYyQmEx4eR3I0JNRoj/3
-         YTB5W7qC4vCDAkbADNJ7LoT5ICgjsjyTfof+HK6G7V5HDUmtuhgezy9iSnmaM6TSHkU6
-         bV5+YfO4OXUk31bAVHjuf4Qvh463M14ldMLNtIdJGuKt5o6wuU3GGvHWbf103aIvFRpH
-         QxbgBYwtYcii5HvxknVWU4y85S0bA6a2YXWB9J719P6tekrA7YdSUbuyRZyBnKIogIhI
-         fhvWJD0NlTad3pBNXfqM4EiMJbwpkKhUvHmyjcpwmz1fKYWkhDTzZumswieP98ERUmkp
-         1vqQ==
-X-Gm-Message-State: ANhLgQ3i3SyyW7e/gxc1m0HOEzCMcZpL5QpAgUH0KBOpXHy4hkIW2BKy
-        4shyasJsxE9wupZ48p6X489ERPNEDFIuAAhGbyKqN4f6QzEk
-X-Google-Smtp-Source: ADFU+vuxGqce5HdcWsT4uwnV72WS992615JlGUhT5JCgdY61XjgcaVQW8M8Cui/rAj31oWjxi4kC07HBUM/mm6t6pOUvYSxhRcSr
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=2GuvjGXk9RjsgHc8J4qtgc0NzvRfPOmRjXcou1INlWA=;
+        b=jkUZaBslBCKv/CEU6INouvLo0lQ+pFvZWBXpbVVNB4QUXO8+itNaKmd9vDDfub1h3k
+         9eTuHJ8XTc6mz6Mp5PPVkXmemoAKY012isANsmH4epQjLwPtGbfP0aEtX5Odwpj4Sckj
+         upvytiUEtJXdeMstEPJjiZUN8joN1nc7q5fV952Wa+tv/xzVRyQ6ediIISUhG8uw8v0a
+         tBmqhhwtgX/PDWZobAuGNuX8St6okt/hiFGnxFHEt/rlV4bTe20Pi7AoTL3BqV0rhc0+
+         GpP9WRyGgjNZ5y98X+oXRk/puF2qj3s2BvWPej1JmsCLpYTeAkloFdyGfB8ACQTcJ432
+         BeIQ==
+X-Gm-Message-State: ANhLgQ1+U8QC1Ew/LdWv0jMsvTv89QcLTdCpbUNGR6uANuuWRHPxJn+N
+        V7gy0hKStR/O1/bNSF+D682cclrI2uT+jq/N8Rc2WPwOuV9ydt1KgRRU2LQ6ooGxfZS54supYLZ
+        rYWPOji6LqAGuQb6288b9Yi6l
+X-Received: by 2002:adf:e60b:: with SMTP id p11mr22708432wrm.140.1584884272727;
+        Sun, 22 Mar 2020 06:37:52 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vs03y3pVKRYbTeAT36KRES6FOZECQoomDnyeqBy0FVIgahIetvBQmSCdFAeNUXvH2fKP/d9Sg==
+X-Received: by 2002:adf:e60b:: with SMTP id p11mr22708417wrm.140.1584884272438;
+        Sun, 22 Mar 2020 06:37:52 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id g1sm4191923wro.28.2020.03.22.06.37.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Mar 2020 06:37:51 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] KVM: VMX: Gracefully handle faults on VMXON
+In-Reply-To: <20200321193751.24985-4-sean.j.christopherson@intel.com>
+References: <20200321193751.24985-1-sean.j.christopherson@intel.com> <20200321193751.24985-4-sean.j.christopherson@intel.com>
+Date:   Sun, 22 Mar 2020 14:37:50 +0100
+Message-ID: <87d094bjdd.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:398:: with SMTP id y24mr5155770jap.125.1584883742893;
- Sun, 22 Mar 2020 06:29:02 -0700 (PDT)
-Date:   Sun, 22 Mar 2020 06:29:02 -0700
-In-Reply-To: <000000000000277a0405a16bd5c9@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008172fe05a17180aa@google.com>
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in handle_external_interrupt_irqoff
-From:   syzbot <syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com>
-To:     bp@alien8.de, clang-built-linux@googlegroups.com,
-        davem@davemloft.net, dhowells@redhat.com, dvyukov@google.com,
-        hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kuba@kernel.org, kvm@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, netdev@vger.kernel.org, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-commit f71dbf2fb28489a79bde0dca1c8adfb9cdb20a6b
-Author: David Howells <dhowells@redhat.com>
-Date:   Thu Jan 30 21:50:36 2020 +0000
+> Gracefully handle faults on VMXON, e.g. #GP due to VMX being disabled by
+> BIOS, instead of letting the fault crash the system.  Now that KVM uses
+> cpufeatures to query support instead of reading MSR_IA32_FEAT_CTL
+> directly, it's possible for a bug in a different subsystem to cause KVM
+> to incorrectly attempt VMXON[*].  Crashing the system is especially
+> annoying if the system is configured such that hardware_enable() will
+> be triggered during boot.
+>
+> Oppurtunistically rename @addr to @vmxon_pointer and use a named param
+> to reference it in the inline assembly.
+>
+> Print 0xdeadbeef in the ultra-"rare" case that reading MSR_IA32_FEAT_CTL
+> also faults.
+>
+> [*] https://lkml.kernel.org/r/20200226231615.13664-1-sean.j.christopherson@intel.com
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 24 +++++++++++++++++++++---
+>  1 file changed, 21 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 07634caa560d..3aba51d782e2 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -2218,18 +2218,33 @@ static __init int vmx_disabled_by_bios(void)
+>  	       !boot_cpu_has(X86_FEATURE_VMX);
+>  }
+>  
+> -static void kvm_cpu_vmxon(u64 addr)
+> +static int kvm_cpu_vmxon(u64 vmxon_pointer)
+>  {
+> +	u64 msr;
+> +
+>  	cr4_set_bits(X86_CR4_VMXE);
+>  	intel_pt_handle_vmx(1);
+>  
+> -	asm volatile ("vmxon %0" : : "m"(addr));
+> +	asm_volatile_goto("1: vmxon %[vmxon_pointer]\n\t"
+> +			  _ASM_EXTABLE(1b, %l[fault])
+> +			  : : [vmxon_pointer] "m"(vmxon_pointer)
+> +			  : : fault);
+> +	return 0;
+> +
+> +fault:
+> +	WARN_ONCE(1, "VMXON faulted, MSR_IA32_FEAT_CTL (0x3a) = 0x%llx\n",
+> +		  rdmsrl_safe(MSR_IA32_FEAT_CTL, &msr) ? 0xdeadbeef : msr);
 
-    rxrpc: Fix insufficient receive notification generation
+We seem to be acting under an assumption that the fault is (likelt)
+caused my disabled VMX feature but afaics the fault can be caused by
+passing a bogus pointer too (but that would be a KVM bug, of course).
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1483bb19e00000
-start commit:   b74b991f Merge tag 'block-5.6-20200320' of git://git.kerne..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1683bb19e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1283bb19e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6dfa02302d6db985
-dashboard link: https://syzkaller.appspot.com/bug?extid=3f29ca2efb056a761e38
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1199c0c5e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15097373e00000
+> +	intel_pt_handle_vmx(0);
+> +	cr4_clear_bits(X86_CR4_VMXE);
+> +
+> +	return -EFAULT;
+>  }
+>  
+>  static int hardware_enable(void)
+>  {
+>  	int cpu = raw_smp_processor_id();
+>  	u64 phys_addr = __pa(per_cpu(vmxarea, cpu));
+> +	int r;
+>  
+>  	if (cr4_read_shadow() & X86_CR4_VMXE)
+>  		return -EBUSY;
+> @@ -2246,7 +2261,10 @@ static int hardware_enable(void)
+>  	INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
+>  	spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
+>  
+> -	kvm_cpu_vmxon(phys_addr);
+> +	r = kvm_cpu_vmxon(phys_addr);
+> +	if (r)
+> +		return r;
+> +
+>  	if (enable_ept)
+>  		ept_sync_global();
 
-Reported-by: syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com
-Fixes: f71dbf2fb284 ("rxrpc: Fix insufficient receive notification generation")
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+Vitaly
+
