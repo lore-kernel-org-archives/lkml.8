@@ -2,149 +2,162 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6FFC4332B
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF5CC4332B
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D074E20724
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:00:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UiseloQi"
+	by mail.kernel.org (Postfix) with ESMTP id AED962072E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 16:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgCVQAZ (ORCPT
+        id S1726897AbgCVQAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 12:00:25 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41347 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbgCVQAZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 12:00:25 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z65so6184369pfz.8
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 09:00:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MZnunFMXbRiY6HhjSua+SYJfQ+tuSHBnq9fjrfedNSU=;
-        b=UiseloQi7Q50zpFXi5Sj0YO9rKXAWYBKycPFxzwvcjG+fSbAEz8JpjkczACNYpw6y8
-         i43J4zt0Bu+J+WnbtpFAh1BdbvLy2cqLus59mgkM8/XjySQ2RuPeFya5b/pyiEZ74Bw2
-         kzB/pjprqBnITJPTNa9esWoz6cPqUebmBsckA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MZnunFMXbRiY6HhjSua+SYJfQ+tuSHBnq9fjrfedNSU=;
-        b=Him3o+7Qqs2BJJFQ3zX7gHvXylbfKMlRB0+q165QpmeW2iOhUqKcnjuvNgCob6YWqB
-         kUw7GsBLuTycXnmt7Aa6kMaWKFEiZXJqL2NALE61aRxwRIin1GxiNuNc4nvtWcaPGUj6
-         LsrRtjFKyMF2Fxm5CCY1BUvIOJqX8HSMcrpMvMLYEZsykGgTCb7YhJLyo7PjzJ4kTsnN
-         fRP8PjkRH/Pu3k+UEGl6L8E/5PC/DQNmPmaMvtFrwGEP9OvoW7vO88bnkk9//P2M6y+N
-         u6JiAZ5U+s0cvLlJopE1gKT825zV9r4chVclJuiHvRrgFvyIsZjjTLpkr4DjTVFaT1X/
-         6qUQ==
-X-Gm-Message-State: ANhLgQ0jlwsKbyixgl0g4yhpeUhklJpXIswgi9ZtvIzP0GGxB9BMvhow
-        c7GK9Al3+/ly0hpFbTR3vFKDXg==
-X-Google-Smtp-Source: ADFU+vvsIHJRgFm4AMsl8mZy4RcjRPdpt/Bxks2m7kQfkj84k1duCai32eKXFRMuQMfF7FOK2pobZA==
-X-Received: by 2002:a63:7159:: with SMTP id b25mr8811601pgn.72.1584892824203;
-        Sun, 22 Mar 2020 09:00:24 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 15sm10831504pfu.186.2020.03.22.09.00.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2020 09:00:23 -0700 (PDT)
-Date:   Sun, 22 Mar 2020 09:00:22 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        clang-built-linux@googlegroups.com,
-        "H.J. Lu" <hjl.tools@gmail.com>, James Morse <james.morse@arm.com>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Will Deacon <will@kernel.org>, x86@kernel.org
-Subject: Re: [PATCH 1/9] scripts/link-vmlinux.sh: Delay orphan handling
- warnings until final link
-Message-ID: <202003220859.E54327D98C@keescook>
-References: <20200228002244.15240-1-keescook@chromium.org>
- <20200228002244.15240-2-keescook@chromium.org>
- <1584672297.mudnpz3ir9.astroid@bobo.none>
- <202003201121.8CBD96451B@keescook>
- <1584868418.o62lxee8k1.astroid@bobo.none>
+        Sun, 22 Mar 2020 12:00:43 -0400
+Received: from sauhun.de ([88.99.104.3]:51172 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726502AbgCVQAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 12:00:43 -0400
+Received: from localhost (p54B33042.dip0.t-ipconnect.de [84.179.48.66])
+        by pokefinder.org (Postfix) with ESMTPSA id ADCB32C0064;
+        Sun, 22 Mar 2020 17:00:40 +0100 (CET)
+Date:   Sun, 22 Mar 2020 17:00:40 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Chuhong Yuan <hslester96@gmail.com>,
+        Jan Glauber <jglauber@cavium.com>
+Cc:     David Daney <david.daney@cavium.com>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: thunderx: Add missed pci_release_regions
+Message-ID: <20200322160040.GD1091@ninjato>
+References: <20191206075349.18297-1-hslester96@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="n/aVsWSeQ4JHkrmm"
 Content-Disposition: inline
-In-Reply-To: <1584868418.o62lxee8k1.astroid@bobo.none>
+In-Reply-To: <20191206075349.18297-1-hslester96@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 07:16:29PM +1000, Nicholas Piggin wrote:
-> Kees Cook's on March 21, 2020 4:24 am:
-> > On Fri, Mar 20, 2020 at 12:47:54PM +1000, Nicholas Piggin wrote:
-> >> Kees Cook's on February 28, 2020 10:22 am:
-> >> > Right now, powerpc adds "--orphan-handling=warn" to LD_FLAGS_vmlinux
-> >> > to detect when there are unexpected sections getting added to the kernel
-> >> > image. There is no need to report these warnings more than once, so it
-> >> > can be removed until the final link stage.
-> >> > 
-> >> > This helps pave the way for other architectures to enable this, with the
-> >> > end goal of enabling this warning by default for vmlinux for all
-> >> > architectures.
-> >> > 
-> >> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> >> > ---
-> >> >  scripts/link-vmlinux.sh | 6 ++++++
-> >> >  1 file changed, 6 insertions(+)
-> >> > 
-> >> > diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-> >> > index 1919c311c149..416968fea685 100755
-> >> > --- a/scripts/link-vmlinux.sh
-> >> > +++ b/scripts/link-vmlinux.sh
-> >> > @@ -255,6 +255,11 @@ info GEN modules.builtin
-> >> >  tr '\0' '\n' < modules.builtin.modinfo | sed -n 's/^[[:alnum:]:_]*\.file=//p' |
-> >> >  	tr ' ' '\n' | uniq | sed -e 's:^:kernel/:' -e 's/$/.ko/' > modules.builtin
-> >> >  
-> >> > +
-> >> > +# Do not warn about orphan sections until the final link stage.
-> >> > +saved_LDFLAGS_vmlinux="${LDFLAGS_vmlinux}"
-> >> > +LDFLAGS_vmlinux="$(echo "${LDFLAGS_vmlinux}" | sed -E 's/ --orphan-handling=warn( |$)/ /g')"
-> >> > +
-> >> >  btf_vmlinux_bin_o=""
-> >> >  if [ -n "${CONFIG_DEBUG_INFO_BTF}" ]; then
-> >> >  	if gen_btf .tmp_vmlinux.btf .btf.vmlinux.bin.o ; then
-> >> > @@ -306,6 +311,7 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
-> >> >  	fi
-> >> >  fi
-> >> >  
-> >> > +LDFLAGS_vmlinux="${saved_LDFLAGS_vmlinux}"
-> >> >  vmlinux_link vmlinux "${kallsymso}" ${btf_vmlinux_bin_o}
-> >> >  
-> >> >  if [ -n "${CONFIG_BUILDTIME_TABLE_SORT}" ]; then
-> >> 
-> >> That's ugly. Why not just enable it for all archs?
-> > 
-> > It is ugly; I agree.
-> > 
-> > I can try to do this for all architectures, but I worry there are a
-> > bunch I can't test. But I guess it would stand out. ;)
-> 
-> It's only warn, so it doesn't break their builds (unless there's a 
-> linker error on warn option I don't know about?). We had a powerpc bug 
-> that would have been caught with it as well, so it's not a bad idea to
-> get everyone using it.
 
-Well, it's bad form to add warnings to a build. I am expected to fix any
-warnings before I enable a warning flag.
+--n/aVsWSeQ4JHkrmm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I would just do it. Doesn't take much to fix.
+On Fri, Dec 06, 2019 at 03:53:49PM +0800, Chuhong Yuan wrote:
+> The driver forgets to call pci_release_regions() in probe failure
+> and remove.
+> Add the missed calls to fix it.
+>=20
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
-I will do my best on the archs I can't test. :)
+Jan, any comment to this patch?
 
--- 
-Kees Cook
+Chuhong Yang, please make sure you have a proper To-Header next time!
+
+> ---
+>  drivers/i2c/busses/i2c-thunderx-pcidrv.c | 19 ++++++++++++-------
+>  1 file changed, 12 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-thunderx-pcidrv.c b/drivers/i2c/busse=
+s/i2c-thunderx-pcidrv.c
+> index 19f8eec38717..31f7e254e99f 100644
+> --- a/drivers/i2c/busses/i2c-thunderx-pcidrv.c
+> +++ b/drivers/i2c/busses/i2c-thunderx-pcidrv.c
+> @@ -172,8 +172,10 @@ static int thunder_i2c_probe_pci(struct pci_dev *pde=
+v,
+>  		return ret;
+> =20
+>  	i2c->twsi_base =3D pcim_iomap(pdev, 0, pci_resource_len(pdev, 0));
+> -	if (!i2c->twsi_base)
+> -		return -EINVAL;
+> +	if (!i2c->twsi_base) {
+> +		ret =3D -EINVAL;
+> +		goto error_release_regions;
+> +	}
+> =20
+>  	thunder_i2c_clock_enable(dev, i2c);
+>  	ret =3D device_property_read_u32(dev, "clock-frequency", &i2c->twsi_fre=
+q);
+> @@ -189,16 +191,16 @@ static int thunder_i2c_probe_pci(struct pci_dev *pd=
+ev,
+> =20
+>  	ret =3D pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_MSIX);
+>  	if (ret < 0)
+> -		goto error;
+> +		goto error_disable_clock;
+> =20
+>  	ret =3D devm_request_irq(dev, pci_irq_vector(pdev, 0), octeon_i2c_isr, =
+0,
+>  			       DRV_NAME, i2c);
+>  	if (ret)
+> -		goto error;
+> +		goto error_disable_clock;
+> =20
+>  	ret =3D octeon_i2c_init_lowlevel(i2c);
+>  	if (ret)
+> -		goto error;
+> +		goto error_disable_clock;
+> =20
+>  	octeon_i2c_set_clock(i2c);
+> =20
+> @@ -214,7 +216,7 @@ static int thunder_i2c_probe_pci(struct pci_dev *pdev,
+> =20
+>  	ret =3D i2c_add_adapter(&i2c->adap);
+>  	if (ret)
+> -		goto error;
+> +		goto error_disable_clock;
+> =20
+>  	dev_info(i2c->dev, "Probed. Set system clock to %u\n", i2c->sys_freq);
+> =20
+> @@ -224,8 +226,10 @@ static int thunder_i2c_probe_pci(struct pci_dev *pde=
+v,
+> =20
+>  	return 0;
+> =20
+> -error:
+> +error_disable_clock:
+>  	thunder_i2c_clock_disable(dev, i2c->clk);
+> +error_release_regions:
+> +	pci_release_regions(pdev);
+>  	return ret;
+>  }
+> =20
+> @@ -236,6 +240,7 @@ static void thunder_i2c_remove_pci(struct pci_dev *pd=
+ev)
+>  	thunder_i2c_smbus_remove(i2c);
+>  	thunder_i2c_clock_disable(&pdev->dev, i2c->clk);
+>  	i2c_del_adapter(&i2c->adap);
+> +	pci_release_regions(pdev);
+>  }
+> =20
+>  static const struct pci_device_id thunder_i2c_pci_id_table[] =3D {
+> --=20
+> 2.24.0
+>=20
+
+--n/aVsWSeQ4JHkrmm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl53i6gACgkQFA3kzBSg
+Kbak5BAAoEmoF7vf0DlvwMvEh2XuDo71I8d3Zmetn9FCGVpebdlyzdWFnsfCHqDu
+bYztVMExdM32UGRLOzROtmbN7/Y7dLSmWZ301NrI9lStFnuMKPwTAbR0vZn8KAee
+QLDSC5MkF8fl7eisQ+PwTqfF34pOTBljEOYijiV+0QGObjlF5Xy8mB/DOyGwnwhX
+0MKbdMXihTZRYDe2AOnBY78LARy10eZlClVnmDMCNqBJC4dZjRXCawspwzlIeywE
+s0eyokf0799Fy2Vwsqc3Ebvk6WUpDudLKo54BvnnsJcXfN440vDSoW5P8xbI6HsR
+w4Cq29lNd94u3kGMxjdg3LMaqDxf90fAhkDKRCFxJY4BzNChTSmgSUD2UbRGKGHQ
+9gGqWmGSRx1qqrog0zolPhGP1s6fULoIkyqLYVH5fMLQbbJUGcxFNj3OAGuOJ5Q9
+rfd2+lDA3tdQw/0NncOeB3Qr6VeGlQTUGv5clFhSXsxCVOdVX0T2FDJuJHP3Z1pe
+8upjPoKeIlXs3Z9fsJIO1OOWvT2K+nvVLkbE56OVXwXqJONa9CdKtk2tTiWm4s4o
+K8DL7FVMOIqJ7mOw8j5u4x+wEwAPanWlBUVOPbTrAXPbmrsSQSQFX/srF/XcGuWb
+9BALH6uiD51Pfst3kjIpkQ/829zhxg7efY6wFEPbK1Ptus7+hn8=
+=ZCWF
+-----END PGP SIGNATURE-----
+
+--n/aVsWSeQ4JHkrmm--
