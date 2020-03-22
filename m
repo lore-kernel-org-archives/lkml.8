@@ -2,128 +2,168 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4FFC54EEB
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 11:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EEBC54EEB
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 11:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A28F2072E
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 11:09:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AzYsiaYz"
+	by mail.kernel.org (Postfix) with ESMTP id 3A27A2077D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 11:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584875429;
+	bh=iH2xpwbdk0la4ImkwS0diiu4fTYIIucmeHAgAm8qw5k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zyiRSwgYpJvc0xqX3NJodRK02ylEZa+iDb6rfUXspI4J1knUnqip+lgyzmDD1W/F9
+	 ZSrEPf1DddYPhVki33vgvcmhxhiJhc3dzx9/eRWro95+KtI5z7/eZ8QEvtoAjQU2ry
+	 0puWmscLab1OCfIkAnc0eNJlvFxOjMebwIObwrO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgCVLJN (ORCPT
+        id S1727023AbgCVLK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 07:09:13 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:50565 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726866AbgCVLJM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 07:09:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584875351;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=UuVeC4/NGVly7qh8t4z6DXcT1v9hFLFYvhikXTFie/A=;
-        b=AzYsiaYzyMwyzXJiAz6ssrFyvtFgM0Pu68Xng9hX1gpZ1GtdbrXfSCNLafzqhYTMGGOcG5
-        W3lRppfEQ30TyQW67cnSnuromVLIdvFj3m4SXXV+COQycbdoUnhxIOzE7lr7x2gFBWckLP
-        KFxdb55Zx7t4ysixHLlJOGReN9MGJgo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-311-zV-lPawhNWa3_kqsuXuZ7Q-1; Sun, 22 Mar 2020 07:09:06 -0400
-X-MC-Unique: zV-lPawhNWa3_kqsuXuZ7Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sun, 22 Mar 2020 07:10:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726866AbgCVLK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 07:10:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F208107ACC4;
-        Sun, 22 Mar 2020 11:09:04 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.62])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 670B05C1B2;
-        Sun, 22 Mar 2020 11:09:02 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Sun, 22 Mar 2020 12:09:04 +0100 (CET)
-Date:   Sun, 22 Mar 2020 12:09:01 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Yoji <yoji.fujihar.min@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] ipc/mqueue.c: change __do_notify() to bypass
- check_kill_permission()
-Message-ID: <20200322110901.GA25108@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 355E220753;
+        Sun, 22 Mar 2020 11:10:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584875425;
+        bh=iH2xpwbdk0la4ImkwS0diiu4fTYIIucmeHAgAm8qw5k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QyiYfLvszE7iCfPTahohxPlDecflGZpl5nj5yHJNjHrQ+GWXpSZk3pvC+EqSNSru/
+         gnW8SK1idnSYcM178YtQa30H2/QGdizdWcMFcqsMUEXLXhEZSX4lE0LN96C2ThtjS0
+         EhqKWZBzr5ZMgacLTmqokmfJyzI6V9cW/D7Xn7VM=
+Date:   Sun, 22 Mar 2020 12:10:22 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, vbendeb@chromium.org,
+        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
+        gwendal@chromium.org, andy@infradead.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Yauhen Kharuzhy <jekhor@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform: x86: Add ACPI driver for ChromeOS
+Message-ID: <20200322111022.GA72939@kroah.com>
+References: <20200322094334.1872663-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200322094334.1872663-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit cc731525f26a ("signal: Remove kernel interal si_code magic")
-changed the value of SI_FROMUSER(SI_MESGQ), this means that mq_notify()
-no longer works if the sender doesn't have rights to send a signal.
+On Sun, Mar 22, 2020 at 10:43:34AM +0100, Enric Balletbo i Serra wrote:
+> This driver attaches to the ChromeOS ACPI device and then exports the values
+> reported by the ACPI in a sysfs directory. The ACPI values are presented in
+> the string form (numbers as decimal values) or binary blobs, and can be
+> accessed as the contents of the appropriate read only files in the sysfs
+> directory tree originating in /sys/devices/platform/chromeos_acpi.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-Change __do_notify() to use do_send_sig_info() instead of kill_pid_info()
-to avoid check_kill_permission().
+What is wrong with the "default" ACPI sysfs access?  Why do you need a
+special driver just for this specific ACPI firmware?
 
-This needs the additional notify.sigev_signo != 0 check, shouldn't we
-change do_mq_notify() to deny sigev_signo == 0 ?
+Also, you forgot to add Documentation/ABI/ entries for your new files :(
 
-Reported-by: Yoji <yoji.fujihar.min@gmail.com>
-Fixes: cc731525f26a ("signal: Remove kernel interal si_code magic")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- ipc/mqueue.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+> +config ACPI_CHROMEOS
+> +	tristate "ChromeOS specific ACPI extensions"
+> +	depends on ACPI
+> +	depends on CHROME_PLATFORMS
 
-diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-index 49a05ba3000d..3145fae162c1 100644
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -775,12 +775,15 @@ static void __do_notify(struct mqueue_inode_info *info)
- 	if (info->notify_owner &&
- 	    info->attr.mq_curmsgs == 1) {
- 		struct kernel_siginfo sig_i;
-+		struct task_struct *task;
- 		switch (info->notify.sigev_notify) {
- 		case SIGEV_NONE:
- 			break;
- 		case SIGEV_SIGNAL:
-+			/* do_mq_notify() accepts sigev_signo == 0, why?? */
-+			if (!info->notify.sigev_signo)
-+				break;
- 			/* sends signal */
--
- 			clear_siginfo(&sig_i);
- 			sig_i.si_signo = info->notify.sigev_signo;
- 			sig_i.si_errno = 0;
-@@ -790,11 +793,13 @@ static void __do_notify(struct mqueue_inode_info *info)
- 			rcu_read_lock();
- 			sig_i.si_pid = task_tgid_nr_ns(current,
- 						ns_of_pid(info->notify_owner));
--			sig_i.si_uid = from_kuid_munged(info->notify_user_ns, current_uid());
-+			sig_i.si_uid = from_kuid_munged(info->notify_user_ns,
-+						current_uid());
-+			task = pid_task(info->notify_owner, PIDTYPE_PID);
-+			if (task)
-+				do_send_sig_info(info->notify.sigev_signo,
-+						&sig_i, task, PIDTYPE_TGID);
- 			rcu_read_unlock();
--
--			kill_pid_info(info->notify.sigev_signo,
--				      &sig_i, info->notify_owner);
- 			break;
- 		case SIGEV_THREAD:
- 			set_cookie(info->notify_cookie, NOTIFY_WOKENUP);
--- 
-2.25.1.362.g51ebf55
+No BUILD_TEST?
 
 
+> +static void
+> +chromeos_acpi_remove_attribs(struct chromeos_acpi_attribute_group *aag)
+> +{
+> +	struct chromeos_acpi_attribute *attr, *tmp_attr;
+> +
+> +	list_for_each_entry_safe(attr, tmp_attr, &aag->attribs, list) {
+> +		sysfs_remove_bin_file(aag->kobj, &attr->bin_attr);
+
+Attribute groups are your friend, do not do this "by hand".
+
+> +		kfree(attr->name);
+> +		kfree(attr->data);
+> +		kfree(attr);
+> +	}
+> +}
+> +
+> +/**
+> + * chromeos_acpi_add_group() - Create a sysfs group including attributes
+> + *			       representing a nested ACPI package.
+> + *
+> + * @obj: Package contents as returned by ACPI.
+> + * @name: Name of the group.
+> + * @num_attrs: Number of attributes of this package.
+> + * @index: Index number of this particular group.
+> + *
+> + * The created group is called @name in case there is a single instance, or
+> + * @name.@index otherwise.
+> + *
+> + * All group and attribute storage allocations are included in the lists for
+> + * tracking of allocated memory.
+> + *
+> + * Return: 0 on success, negative errno on failure.
+> + */
+> +static int chromeos_acpi_add_group(union acpi_object *obj, char *name,
+> +				   int num_attrs, int index)
+> +{
+> +	struct device *dev = &chromeos_acpi.pdev->dev;
+> +	struct chromeos_acpi_attribute_group *aag;
+> +	union acpi_object *element;
+> +	int i, count, ret;
+> +
+> +	aag = kzalloc(sizeof(*aag), GFP_KERNEL);
+> +	if (!aag)
+> +		return -ENOMEM;
+> +
+> +	aag->name = chromeos_acpi_alloc_name(name, num_attrs, index);
+> +	if (!aag->name) {
+> +		ret = -ENOMEM;
+> +		goto free_group;
+> +	}
+> +
+> +	aag->kobj = kobject_create_and_add(aag->name, &dev->kobj);
+
+By using "raw" kobjects, you just now prevented any userspace tool from
+seeing these attributes (like udev).  Not nice :(
+
+Why, if you really really have to do this, are you not just using
+"normal" struct device attributes instead?
+
+> +static int __init chromeos_acpi_init(void)
+> +{
+> +	int ret;
+> +
+> +	chromeos_acpi.pdev = platform_device_register_simple("chromeos_acpi",
+> +						PLATFORM_DEVID_NONE, NULL, 0);
+> +	if (IS_ERR(chromeos_acpi.pdev)) {
+> +		pr_err("unable to register chromeos_acpi platform device\n");
+> +		return PTR_ERR(chromeos_acpi.pdev);
+> +	}
+
+Only use platform devices and drivers for things that are actually
+platform devices and drivers.  That's not what this is, it is an ACPI
+device and driver.  Don't abuse the platform interface please.
+
+thanks,
+
+greg k-h
