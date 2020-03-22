@@ -1,162 +1,148 @@
-Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88341C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C96C4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 00:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A94F2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF1D20767
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 00:10:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725899AbgCWTiB (ORCPT
+        id S1728176AbgCVAKV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:38:01 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:48132 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgCWTiA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:38:00 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 48mPmh58Qkz1rrKb;
-        Mon, 23 Mar 2020 20:37:56 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 48mPmh3dmXz1qyDd;
-        Mon, 23 Mar 2020 20:37:56 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id la4VWb-ZJ090; Mon, 23 Mar 2020 20:37:55 +0100 (CET)
-X-Auth-Info: 2HAWIBbYvus5V2XKLd5HdN0JKCCAwwqp/nMJ0D/R/6c=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Mon, 23 Mar 2020 20:37:55 +0100 (CET)
-Subject: Re: [PATCH v3 2/2] pinctrl: stm32: Add level interrupt support to
- gpio irq chip
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20200219143229.18084-1-alexandre.torgue@st.com>
- <20200219143229.18084-3-alexandre.torgue@st.com>
- <CACRpkdZ7uq4U6GBQQQh=pTLf4wW3KfH3Zrz9z_3ZQgoaJD9Ynw@mail.gmail.com>
- <c991edca3e8925cf0489c0a5676f77b2@kernel.org>
- <a7fc5e43-34c2-a4e6-e0c5-1584f17fb024@denx.de>
- <8d6f6646-56e4-5218-9990-f0c96862dc83@denx.de> <20200323193157.038f36f9@why>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <8e2795d8-4a8b-35a7-7d3f-e24d011878f6@denx.de>
-Date:   Mon, 23 Mar 2020 20:37:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200323193157.038f36f9@why>
-Content-Type: text/plain; charset=utf-8
+        Sat, 21 Mar 2020 20:10:21 -0400
+Received: from mga02.intel.com ([134.134.136.20]:60486 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727296AbgCVAKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Mar 2020 20:10:21 -0400
+IronPort-SDR: XTO9Vy5E8Z8LqTgJjBwnUodRU3dtxByjimZbBLzojmQTuwoEId5XT4Dtj+iaUeRarb2wRBZV2t
+ kplmb8KAovSg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 17:10:20 -0700
+IronPort-SDR: mii5KpTSfIGBj11O2+43GbeJRFg2WXU27ap44jA/W0ADYtZKKyrhVhS9ZdfY8htiBNZLtRAHRH
+ o/FKu1TMR8JQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,290,1580803200"; 
+   d="scan'208";a="249242511"
+Received: from pgsmsx112.gar.corp.intel.com ([10.108.55.201])
+  by orsmga006.jf.intel.com with ESMTP; 21 Mar 2020 17:10:19 -0700
+Received: from pgsmsx110.gar.corp.intel.com (10.221.44.111) by
+ PGSMSX112.gar.corp.intel.com (10.108.55.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 22 Mar 2020 08:10:16 +0800
+Received: from pgsmsx101.gar.corp.intel.com ([169.254.1.189]) by
+ PGSMSX110.gar.corp.intel.com ([169.254.13.28]) with mapi id 14.03.0439.000;
+ Sun, 22 Mar 2020 08:10:16 +0800
+From:   "Tsai, Rex" <rex.tsai@intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: RE: [Intel-wired-lan] [PATCH 1/1] e1000e: Disable s0ix flow for X1
+ Carbon 7th
+Thread-Topic: [Intel-wired-lan] [PATCH 1/1] e1000e: Disable s0ix flow for X1
+ Carbon 7th
+Thread-Index: AQG3cCI3NG3RtKSKRa6ZGiuDYJEouqiQ3AGQ
+Date:   Sun, 22 Mar 2020 00:10:15 +0000
+Message-ID: <D83742F1B1819A43B1E71852F964BF245D763260@PGSMSX101.gar.corp.intel.com>
+References: <20200319052629.7282-1-kai.heng.feng@canonical.com>
+In-Reply-To: <20200319052629.7282-1-kai.heng.feng@canonical.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [172.30.20.206]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/23/20 8:31 PM, Marc Zyngier wrote:
-> On Mon, 23 Mar 2020 20:19:39 +0100
-> Marek Vasut <marex@denx.de> wrote:
-> 
->> On 3/23/20 8:04 PM, Marek Vasut wrote:
->>> On 2/20/20 10:17 AM, Marc Zyngier wrote:
->>>> On 2020-02-20 09:04, Linus Walleij wrote:
->>>>> On Wed, Feb 19, 2020 at 3:32 PM Alexandre Torgue
->>>>> <alexandre.torgue@st.com> wrote:
->>>>>
->>>>>> GPIO hardware block is directly linked to EXTI block but EXTI handles
->>>>>> external interrupts only on edge. To be able to handle GPIO interrupt on
->>>>>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
->>>>>> chip)
->>>>>> is retriggered following interrupt type and gpio line value.
->>>>>>
->>>>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->>>>>> Tested-by: Marek Vasut <marex@denx.de>
->>>>>
->>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>>>>
->>>>> If Marc want to merge it with patch 1/2 go ahead!
->>>>
->>>> I'll queue the whole thing for 5.7.
->>>
->>> I have a feeling this doesn't work with threaded interrupts.
->>>
->>> If the interrupt handler runs in a thread context, the EOI will happen
->>> almost right away (while the IRQ handler runs) and so will the code
->>> handling the IRQ retriggering. But since the IRQ handler still runs and
->>> didn't return yet, the retriggering doesn't cause the IRQ handler to be
->>> called again once it finishes, even if the IRQ line is still asserted.
->>> And that could result in some of the retriggers now happening I think.
->>> Or am I doing something wrong ?
->>
->> The patch below makes my usecase work, but I don't know whether it's
->> correct. Basically once the threaded IRQ handler finishes and unmasks
->> the IRQ, check whether the line is asserted and retrigger if so.
->>
->> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c
->> b/drivers/pinctrl/stm32/pinctrl-stm32.c
->> index 9ac9ecfc2f34..060dbcb7ae72 100644
->> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
->> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
->> @@ -371,12 +371,26 @@ static void
->> stm32_gpio_irq_release_resources(struct irq_data *irq_data)
->>         gpiochip_unlock_as_irq(&bank->gpio_chip, irq_data->hwirq);
->>  }
->>
->> +static void stm32_gpio_irq_unmask(struct irq_data *d)
->> +{
->> +       struct stm32_gpio_bank *bank = d->domain->host_data;
->> +       int level;
->> +
->> +       irq_chip_unmask_parent(d);
->> +
->> +       /* If level interrupt type then retrig */
->> +       level = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
->> +       if ((level == 0 && bank->irq_type[d->hwirq] ==
->> IRQ_TYPE_LEVEL_LOW) ||
->> +           (level == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
->> +               irq_chip_retrigger_hierarchy(d);
->> +}
->> +
->>  static struct irq_chip stm32_gpio_irq_chip = {
->>         .name           = "stm32gpio",
->>         .irq_eoi        = stm32_gpio_irq_eoi,
->>         .irq_ack        = irq_chip_ack_parent,
->>         .irq_mask       = irq_chip_mask_parent,
->> -       .irq_unmask     = irq_chip_unmask_parent,
->> +       .irq_unmask     = stm32_gpio_irq_unmask,
->>         .irq_set_type   = stm32_gpio_set_type,
->>         .irq_set_wake   = irq_chip_set_wake_parent,
->>         .irq_request_resources = stm32_gpio_irq_request_resources,
->>
-> 
-> OK, I see your problem now.
-> 
-> The usual flow is along the line of Ack+Eoi, and that's what the
-> current code guarantees.
-> 
-> Threaded interrupts do Ack+Mask+Eoi, followed by an Unmask once the
-> thread finishes. This unmask needs to do the retrigger as well, as you
-> found out.
-> 
-> Can you please refactor the above so that we have the common code
-> between unmask and eoi in a separate function, send a proper patch, and
-> I'll apply it on top of the current irq/irqchip-5.7 branch.
+Hello Kai-Heng,
+I will take over here. When do you have a chance to talk this issue next week?
 
-Sure, I can. Do we still need this retriggering in the irq_eoi too ?
+Rex Tsai | Intel Client LAN Engineer | +1 (503) 264-0517
 
-Also, are there any other hidden details I might've missed ?
+-----Original Message-----
+From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf Of Kai-Heng Feng
+Sent: Wednesday, March 18, 2020 10:26 PM
+To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>
+Cc: open list:NETWORKING DRIVERS <netdev@vger.kernel.org>; Kai-Heng Feng <kai.heng.feng@canonical.com>; moderated list:INTEL ETHERNET DRIVERS <intel-wired-lan@lists.osuosl.org>; David S. Miller <davem@davemloft.net>; open list <linux-kernel@vger.kernel.org>
+Subject: [Intel-wired-lan] [PATCH 1/1] e1000e: Disable s0ix flow for X1 Carbon 7th
+
+The s0ix flow makes X1 Carbon 7th can only run S2Idle for only once.
+
+Temporarily disable it until Intel found a solution.
+
+Link:
+https://lists.osuosl.org/pipermail/intel-wired-lan/Week-of-Mon-20200316/0192
+22.html
+BugLink: https://bugs.launchpad.net/bugs/1865570
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/net/ethernet/intel/e1000e/netdev.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c
+b/drivers/net/ethernet/intel/e1000e/netdev.c
+index db4ea58bac82..3e090aa993ee 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -25,6 +25,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/aer.h>
+ #include <linux/prefetch.h>
++#include <linux/dmi.h>
+ 
+ #include "e1000.h"
+ 
+@@ -6843,6 +6844,17 @@ static int __e1000_resume(struct pci_dev *pdev)  }
+ 
+ #ifdef CONFIG_PM_SLEEP
++static const struct dmi_system_id s0ix_blacklist[] = {
++	{
++		.ident = "LENOVO ThinkPad X1 Carbon 7th",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad X1 Carbon
+7th"),
++		},
++	},
++	{}
++};
++
+ static int e1000e_pm_suspend(struct device *dev)  {
+ 	struct net_device *netdev = pci_get_drvdata(to_pci_dev(dev)); @@ -6860,7 +6872,7 @@ static int e1000e_pm_suspend(struct device *dev)
+ 		e1000e_pm_thaw(dev);
+ 
+ 	/* Introduce S0ix implementation */
+-	if (hw->mac.type >= e1000_pch_cnp)
++	if (hw->mac.type >= e1000_pch_cnp &&
+!dmi_check_system(s0ix_blacklist))
+ 		e1000e_s0ix_entry_flow(adapter);
+ 
+ 	return rc;
+@@ -6875,7 +6887,7 @@ static int e1000e_pm_resume(struct device *dev)
+ 	int rc;
+ 
+ 	/* Introduce S0ix implementation */
+-	if (hw->mac.type >= e1000_pch_cnp)
++	if (hw->mac.type >= e1000_pch_cnp &&
+!dmi_check_system(s0ix_blacklist))
+ 		e1000e_s0ix_exit_flow(adapter);
+ 
+ 	rc = __e1000_resume(pdev);
+--
+2.17.1
+
+_______________________________________________
+Intel-wired-lan mailing list
+Intel-wired-lan@osuosl.org
+https://lists.osuosl.org/mailman/listinfo/intel-wired-lan
