@@ -2,135 +2,119 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF275C4332D
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 781B1C4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B65F020732
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5032720757
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 02:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MS5OrLk5"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="wuN8YhHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbgCVCDf (ORCPT
+        id S1728214AbgCVCTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Mar 2020 22:03:35 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:54011 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726409AbgCVCDe (ORCPT
+        Sat, 21 Mar 2020 22:19:51 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34966 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbgCVCTu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Mar 2020 22:03:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584842613;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0oLEv6h2GsY7etmwcwb3B6JzIa6mncrHOx3tmzkR0Og=;
-        b=MS5OrLk5EyGD1XDlCS6+Jw7wTIrvqSiml17fywinmm22gZqhnwJY2Oovb8P1hhBiyHhNSq
-        jxb/ovz7henItus+B73rmgYWLmg+yTWM89D9d6h865cscpzcuFsmqNYkVFOydczw1RuOrK
-        CoVCahdRoahZFwYeMcYvpOPQrnOlwr4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-382-UOWmatbmNBC-pPp3B53xHg-1; Sat, 21 Mar 2020 22:03:31 -0400
-X-MC-Unique: UOWmatbmNBC-pPp3B53xHg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 922BC189F760;
-        Sun, 22 Mar 2020 02:03:30 +0000 (UTC)
-Received: from t490s (ovpn-112-44.phx2.redhat.com [10.3.112.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BAF2B73884;
-        Sun, 22 Mar 2020 02:03:29 +0000 (UTC)
-Date:   Sat, 21 Mar 2020 22:03:26 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        shuah@kernel.org, shakeelb@google.com
-Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
- false-negative errors
-Message-ID: <20200322020326.GB1068248@t490s>
-References: <20200322013525.1095493-1-aquini@redhat.com>
- <20200321184352.826d3dba38aecc4ff7b32e72@linux-foundation.org>
+        Sat, 21 Mar 2020 22:19:50 -0400
+Received: by mail-qt1-f196.google.com with SMTP id v15so8735601qto.2
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Mar 2020 19:19:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g7SHC7AQfO9TwwpN/x0z3E15F8GnLYestCEz0TtL0YM=;
+        b=wuN8YhHsGNS+KBnGqTssJtfUY56E0cibB4sykRbRaY8Uzc+i5+w1tUbC+QacGhjerF
+         2FKP+0tqFKpl5j6mvSpNhHrzHI2RBcE9nKKbqsXo8WPFNcaSf55ZHe0L5o66KwwNiwSk
+         6vmBzdMEzCYwgRzBV91lIxRvfLKdELWAHnRdc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g7SHC7AQfO9TwwpN/x0z3E15F8GnLYestCEz0TtL0YM=;
+        b=bvYh0d9K4LvhvI/e3r8qAYyK4NH7A5Par/r88q/kkZtymVQVZ1h7fkYF2a4LrUSaSj
+         Lye+5aKfpKTBFnL8cdmQdVbb47CsnsZjzleluXdP9pN+axwXNTpsbl0wYXnBT/c11U7z
+         P1mUJlfJBG7WEpLoUjO+XYU11i4m0BmHPd5Mlpq765cJZZ9FfQyRhds0EYwtRkA7mXLg
+         I764QCF6AkC8StNRxL5scx8SjWZHfG1E/X29q9RwuE3/egcu8o8iAra62Rsh88FTF/eM
+         QcAKazZuwG5M1xOIbWz5zA2UaV1e3wl3KoitIrRd48BWAjiqgfNlXq7nQQW3zV4sNaKg
+         pfYw==
+X-Gm-Message-State: ANhLgQ2dDpBUoKSu0N8QdcBUIVNtoOckALl9UF/Dbx3ghcxvCbmE1yWX
+        iUF7E5SMkkZXtJF4sBa1Q7cMi3pxC24=
+X-Google-Smtp-Source: ADFU+vuZl6DL/jFqnNj4u0sNih/73JNqy/GIOCoxZp/XGx+R2DvQ+abdhYVPGYbeEZYzc7Sq2kUaBg==
+X-Received: by 2002:ac8:748e:: with SMTP id v14mr15603731qtq.82.1584843588059;
+        Sat, 21 Mar 2020 19:19:48 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id h138sm8150819qke.86.2020.03.21.19.19.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Mar 2020 19:19:47 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org Felipe Balbi" <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org Kalle Valo" <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] Documentation: Clarify better about the rwsem non-owner release issue
+Date:   Sat, 21 Mar 2020 22:19:38 -0400
+Message-Id: <20200322021938.175736-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200321184352.826d3dba38aecc4ff7b32e72@linux-foundation.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 06:43:52PM -0700, Andrew Morton wrote:
-> On Sat, 21 Mar 2020 21:35:25 -0400 Rafael Aquini <aquini@redhat.com> wrote:
-> 
-> > Changes for commit 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
-> > break this test expectations on the behavior of mlock syscall family immediately
-> > inserting the recently faulted pages into the UNEVICTABLE_LRU, when MCL_ONFAULT is
-> > passed to the syscall as part of its flag-set.
-> > 
-> > There is no functional error introduced by the aforementioned commit,
-> > but it opens up a time window where the recently faulted and locked pages
-> > might yet not be put back into the UNEVICTABLE_LRU, thus causing a
-> > subsequent and immediate PFN flag check for the UNEVICTABLE bit
-> > to trip on false-negative errors, as it happens with this test.
-> > 
-> > This patch fix the false negative by forcefully resorting to a code path that
-> > will call a CPU pagevec drain right after the fault but before the PFN flag
-> > check takes place, sorting out the race that way.
-> > 
-> >  
-> > +/*
-> > + * After commit 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
-> > + * changes made by calls to mlock* family might not be immediately reflected
-> > + * on the LRUs, thus checking the PFN flags might race against pagevec drain.
-> > + *
-> > + * In order to sort out that race, and get the after fault checks consistent,
-> > + * the "quick and dirty" trick below is required in order to force a call to
-> > + * lru_add_drain_all() to get the recently MLOCK_ONFAULT pages moved to
-> > + * the unevictable LRU, as expected by the checks in this selftest.
-> > + */
-> > +static void force_lru_add_drain_all(void)
-> > +{
-> > +	sched_yield();
-> > +	system("echo 1 > /proc/sys/vm/compact_memory");
-> > +}
-> 
-> What is the sched_yield() for?
->
+Reword and clarify better about the rwsem non-owner release issue.
 
-Mostly it's there to provide a sleeping gap after the fault, whithout 
-actually adding an arbitrary value with usleep(). 
+Link: https://lore.kernel.org/linux-pci/20200321212144.GA6475@google.com/
 
-It's not a hard requirement, but, in some of the tests I performed 
-(whithout that sleeping gap) I would still see around 1% chance 
-of hitting the false-negative. After adding it I could not hit
-the issue anymore.
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ Documentation/locking/locktypes.rst | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/Documentation/locking/locktypes.rst b/Documentation/locking/locktypes.rst
+index 6f2c0f5b041e..656dce72f11f 100644
+--- a/Documentation/locking/locktypes.rst
++++ b/Documentation/locking/locktypes.rst
+@@ -292,7 +292,7 @@ implementations to provide priority inheritance for all lock types except
+ the truly spinning ones. Priority inheritance on ownerless locks is
+ obviously impossible.
  
-> >  static int onfault_check(char *map)
-> >  {
-> >  	unsigned long page_size = getpagesize();
-> > @@ -343,6 +360,9 @@ static int onfault_check(char *map)
-> >  	}
-> >  
-> >  	*map = 'a';
-> > +
-> > +	force_lru_add_drain_all();
-> > +
-> >  	page1_flags = get_pageflags((unsigned long)map);
-> >  	page2_flags = get_pageflags((unsigned long)map + page_size);
-> >  
-> > @@ -465,6 +485,8 @@ static int test_lock_onfault_of_present()
-> >  		goto unmap;
-> >  	}
-> >  
-> > +	force_lru_add_drain_all();
-> > +
-> >  	page1_flags = get_pageflags((unsigned long)map);
-> >  	page2_flags = get_pageflags((unsigned long)map + page_size);
-> >  	page1_flags = get_kpageflags(page1_flags & PFN_MASK);
-> 
+-For now the rwsem non-owner release excludes code which utilizes it from
+-being used on PREEMPT_RT enabled kernels. In same cases this can be
+-mitigated by disabling portions of the code, in other cases the complete
+-functionality has to be disabled until a workable solution has been found.
++For now, a PREEMPT_RT kernel just disables code sections that perform a
++non-owner release of an rwsem. In some cases, parts of the code are disabled.
++In other cases, the complete functionality has to be disabled until a workable
++solution has been found.
+-- 
+2.25.1.696.g5e7596f4ac-goog
 
