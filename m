@@ -2,119 +2,111 @@ Return-Path: <SRS0=o5Nk=5H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0820C54FCF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81566C4332E
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97679206F8
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:34:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UustbaFU"
+	by mail.kernel.org (Postfix) with ESMTP id 4F8AB20732
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Mar 2020 17:37:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584898631;
+	bh=Lgovlxg7dFbPO/P+o/rnIrwfYlOLF/A2RWcibjrilSc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=s3BNLB90h4OaxeyfVMMU14fRiponL3y6MHKBuOd1cpKZ09LGGkLmno1wLlN9RBhBa
+	 pk6FnQQBP93gjJgOGn0TisEPKMlZ4U6XGFqpGjwLDJ+ZqG1TyVZ519/OiHjQU7/Zc8
+	 XBzYKy4mepYknJXxo1W3TpxR3lQp23dSoO3yX/Ik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgCVReW (ORCPT
+        id S1726900AbgCVRhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 13:34:22 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42487 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbgCVReW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 13:34:22 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h15so1637871wrx.9;
-        Sun, 22 Mar 2020 10:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=cQ7HYMFbbKAuDCMOfbn6HqKEoBXsMZuFfeRp8Yh61Ok=;
-        b=UustbaFUhoIub2rOK6HQ+QJ3QiUqiOPp4lEhc11koY0aJfLjlS9hNdXf4IoGv/ID9m
-         wtC7boPwQvl5NlI+CB1IelqUUiL/3AX4bCSKsQgZ+W5J9a/LXxJI8h3rtOyGGBE554H9
-         1rZ7abibNGBYKHhCbx6dt4jMdbnchwmTUpFTdHVxVvlsNbIQ6JVJK9sy8V7F2laxU7tx
-         J++nNIZwuxTwrbQ9TaR/AVEgRe2celCLlfoMnvNJ4l+ILzw8i3YtgLonvJrC2APyZ8SC
-         0WzoH6MECDTiiJxOx7J4fVz7+aWgqZS4kI/2Jku74H2jYRVcRHsGbgvBNEKubDxMw+IJ
-         xELg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cQ7HYMFbbKAuDCMOfbn6HqKEoBXsMZuFfeRp8Yh61Ok=;
-        b=WI7cadNz7wyu8BK/HdG11UPfDPsOiklKNyz1nQ1EYsZTUwjgcw1VMjj5DrDACFFmHQ
-         klTnsmEYwHj5XNfDusjxa6J3BBTFtXfP1QkQSUleKuLFp8n5oMSp9+EkRCWC54I2dGtk
-         ENEFIKf4Z4lWakr7rrmd043iopD7OD+D9/Orgwd3Do+S1p4cgmj+NHJSC1mMhbOvccj2
-         rWjA3/ByG2JpvyVlq7yny5DyTnO2eXN/kTG39h2p6Cgpmus+HQQ0BoGXXP1KxrfUKplr
-         LCtXkd36v9D4bDci0v5bBl/r4JF5LmrSTDIFEJNAF46xjEA61AWVn9BQscbTSIt0EnL1
-         CapA==
-X-Gm-Message-State: ANhLgQ11UDWSVggbqyJIdyZ+CLBsJrTbbU+gJx2HH++kXw8lXkXFxjg+
-        GnFd4eEmVF+5bVHZCvKDb3Q=
-X-Google-Smtp-Source: ADFU+vs6xFWgxOsPlZz4IW1uYgigFjNLcWueKdt7J01toef8xawT7hnF+aF+CIipF1uCl3oKBPTHRw==
-X-Received: by 2002:a05:6000:1184:: with SMTP id g4mr24816792wrx.396.1584898459650;
-        Sun, 22 Mar 2020 10:34:19 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.140.227])
-        by smtp.gmail.com with ESMTPSA id t21sm5245948wmt.43.2020.03.22.10.34.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2020 10:34:17 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] io-wq: close cancel gap for hashed linked work
-Date:   Sun, 22 Mar 2020 20:33:16 +0300
-Message-Id: <c38a2421e15e3aaa5c55e3e0d7ddca4c77d178e1.1584898199.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <c7f352b4-0255-d87a-1fb4-0b55984df137@kernel.dk>
-References: <c7f352b4-0255-d87a-1fb4-0b55984df137@kernel.dk>
+        Sun, 22 Mar 2020 13:37:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726623AbgCVRhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 13:37:10 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 814FD206F8;
+        Sun, 22 Mar 2020 17:37:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584898629;
+        bh=Lgovlxg7dFbPO/P+o/rnIrwfYlOLF/A2RWcibjrilSc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oYUcvBg5CpQFHeK6Liw6ik7cNSfw93xu6MvnG0PDvdqv1JGdVmSjPOzsGKZ4dtDDG
+         VmpjUJCVgQc5+j9kncqQjWELS8ztwauU3TZJgf+a2ZJw0J37fbMLbWKdZOUlYp8XAK
+         zSqT3QsCgMoRtbFiNo79Km/7lxlSXIuAvuheBSC8=
+Date:   Sun, 22 Mar 2020 17:37:04 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Mike Looijmans <mike.looijmans@topic.nl>
+Cc:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH] dt-bindings: iio: accel: Add bmi088 accelerometer
+ bindings
+Message-ID: <20200322173704.5cc497c1@archlinux>
+In-Reply-To: <20200316065218.4103-1-mike.looijmans@topic.nl>
+References: <20200316065218.4103-1-mike.looijmans@topic.nl>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After io_assign_current_work() of a linked work, it can be decided to
-offloaded to another thread so doing io_wqe_enqueue(). However, until
-next io_assign_current_work() it can be cancelled, that isn't handled.
+On Mon, 16 Mar 2020 07:52:18 +0100
+Mike Looijmans <mike.looijmans@topic.nl> wrote:
 
-Don't assign it, if it's not going to be executed.
+> This adds the device-tree bindings for the Bosch Sensortec BMI088 IMU,
+> the accelerometer part.
+> 
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> ---
+>  .../devicetree/bindings/iio/accel/bmi088.txt  | 23 +++++++++++++++++++
 
-Fixes: 60cf46ae605446feb0c43c472c0 ("io-wq: hash dependent work")
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io-wq.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+Sorry.  All new DT bindings need to be in yaml format.
 
-diff --git a/fs/io-wq.c b/fs/io-wq.c
-index 9541df2729de..b3fb61ec0870 100644
---- a/fs/io-wq.c
-+++ b/fs/io-wq.c
-@@ -485,7 +485,7 @@ static void io_worker_handle_work(struct io_worker *worker)
- 	struct io_wq *wq = wqe->wq;
- 
- 	do {
--		struct io_wq_work *work;
-+		struct io_wq_work *work, *assign_work;
- 		unsigned int hash;
- get_next:
- 		/*
-@@ -522,10 +522,14 @@ static void io_worker_handle_work(struct io_worker *worker)
- 			hash = io_get_work_hash(work);
- 			work->func(&work);
- 			work = (old_work == work) ? NULL : work;
--			io_assign_current_work(worker, work);
-+
-+			assign_work = work;
-+			if (work && io_wq_is_hashed(work))
-+				assign_work = NULL;
-+			io_assign_current_work(worker, assign_work);
- 			wq->free_work(old_work);
- 
--			if (work && io_wq_is_hashed(work)) {
-+			if (work && !assign_work) {
- 				io_wqe_enqueue(wqe, work);
- 				work = NULL;
- 			}
--- 
-2.24.0
+Please put this in the same series as the driver.
+
+Thanks,
+
+Jonathan
+
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/bmi088.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/bmi088.txt b/Documentation/devicetree/bindings/iio/accel/bmi088.txt
+> new file mode 100644
+> index 000000000000..691a47726dbc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/accel/bmi088.txt
+> @@ -0,0 +1,23 @@
+> +* Bosch BMI088 IMU combining accelerometer and gyroscope
+> +
+> +https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf
+> +
+> +Required properties:
+> +
+> +  - compatible : should be "bosch,bmi088_accel"
+> +  - reg : the I2C address of the sensor or the SPI chip select number
+> +
+> +Optional properties:
+> +
+> +  - interrupts : interrupt mapping for GPIO IRQ, it should be configured with
+> +		 IRQ_TYPE_EDGE_RISING
+> +
+> +Example:
+> +
+> +bmi088_accel@1 {
+> +	compatible = "bosch,bmi088_accel";
+> +	reg = <1>;
+> +	spi-max-frequency = <10000000>;
+> +	interrupt-parent = <&gpio>;
+> +	interrupts = <90 IRQ_TYPE_EDGE_RISING>;
+> +};
 
