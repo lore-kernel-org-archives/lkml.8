@@ -2,107 +2,136 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB93DC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6849FC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 972642073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AAF620719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:30:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dmIBPfG9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgCWV2v (ORCPT
+        id S1727253AbgCWVaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 17:28:51 -0400
-Received: from mga03.intel.com ([134.134.136.65]:6139 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbgCWV2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 17:28:51 -0400
-IronPort-SDR: 8dUI776iB47pUP1ATV2x2fL6ofzXbgOk089LTpP199sMwN/huegDEjSEbB4wBrJlPBaWWVwwrk
- f/mnlgL5XqEQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 14:28:50 -0700
-IronPort-SDR: v7m990sy4UIzlgnBvHixJeHDugXx9yBPcaHMHJPtLr+/szpFs3u3DwOitw/M6BsSCCFEHT9NSG
- +kHzcOzkIrvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="419648976"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 23 Mar 2020 14:28:50 -0700
-Date:   Mon, 23 Mar 2020 14:28:50 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: Re: [PATCH 6/7] KVM: selftests: Expose the primary memslot number to
- tests
-Message-ID: <20200323212850.GU28711@linux.intel.com>
-References: <20200320205546.2396-1-sean.j.christopherson@intel.com>
- <20200320205546.2396-7-sean.j.christopherson@intel.com>
- <20200323191202.GN127076@xz-x1>
+        Mon, 23 Mar 2020 17:30:21 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:55170 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726203AbgCWVaU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 17:30:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584999019;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZVsEY6cNKMHIU4w2rXsM2TCIqoA6fSVNDl3M8SH4l6g=;
+        b=dmIBPfG9V1I/WxDzg/hZwdfDj2J8fpaXgoK18IerITJF56Ddpi9jz3NEVWoAQ5TtRromFK
+        yGMPPAUf6vKI79VGCeIg+mfa8pvFnR7NEGRS2el0H4eoiKWROLLDuWnScdLgjIaBqHT41n
+        CMLiGcfygK3Q5oPgZF4x4p3pcN7IkYA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-suLvxhWCM16kHxyllzdYtw-1; Mon, 23 Mar 2020 17:30:15 -0400
+X-MC-Unique: suLvxhWCM16kHxyllzdYtw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E714A10CE782;
+        Mon, 23 Mar 2020 21:30:12 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 21B2F60BF3;
+        Mon, 23 Mar 2020 21:30:00 +0000 (UTC)
+Date:   Mon, 23 Mar 2020 15:29:59 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "dgilbert@redhat.com" <dgilbert@redhat.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "berrange@redhat.com" <berrange@redhat.com>,
+        "dinechin@redhat.com" <dinechin@redhat.com>
+Subject: Re: [PATCH v4 0/2] introduction of migration_version attribute for
+ VFIO live migration
+Message-ID: <20200323152959.1c39e9a7@w520.home>
+In-Reply-To: <20190604003422.GA30229@joy-OptiPlex-7040>
+References: <20190531004438.24528-1-yan.y.zhao@intel.com>
+        <20190603132932.1b5dc7fe@x1.home>
+        <20190604003422.GA30229@joy-OptiPlex-7040>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323191202.GN127076@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 03:12:02PM -0400, Peter Xu wrote:
-> On Fri, Mar 20, 2020 at 01:55:45PM -0700, Sean Christopherson wrote:
-> > Add a define for the primary memslot number so that tests can manipulate
-> > the memslot, e.g. to delete it.
+On Mon, 3 Jun 2019 20:34:22 -0400
+Yan Zhao <yan.y.zhao@intel.com> wrote:
+
+> On Tue, Jun 04, 2019 at 03:29:32AM +0800, Alex Williamson wrote:
+> > On Thu, 30 May 2019 20:44:38 -0400
+> > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> >   
+> > > This patchset introduces a migration_version attribute under sysfs of VFIO
+> > > Mediated devices.
+> > > 
+> > > This migration_version attribute is used to check migration compatibility
+> > > between two mdev devices of the same mdev type.
+> > > 
+> > > Patch 1 defines migration_version attribute in
+> > > Documentation/vfio-mediated-device.txt
+> > > 
+> > > Patch 2 uses GVT as an example to show how to expose migration_version
+> > > attribute and check migration compatibility in vendor driver.  
 > > 
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > ---
-> >  tools/testing/selftests/kvm/include/kvm_util.h | 2 ++
-> >  tools/testing/selftests/kvm/lib/kvm_util.c     | 4 ++--
-> >  2 files changed, 4 insertions(+), 2 deletions(-)
+> > Thanks for iterating through this, it looks like we've settled on
+> > something reasonable, but now what?  This is one piece of the puzzle to
+> > supporting mdev migration, but I don't think it makes sense to commit
+> > this upstream on its own without also defining the remainder of how we
+> > actually do migration, preferably with more than one working
+> > implementation and at least prototyped, if not final, QEMU support.  I
+> > hope that was the intent, and maybe it's now time to look at the next
+> > piece of the puzzle.  Thanks,
 > > 
-> > diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> > index 0f0e86e188c4..43b5feb546c6 100644
-> > --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> > +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> > @@ -60,6 +60,8 @@ enum vm_mem_backing_src_type {
-> >  	VM_MEM_SRC_ANONYMOUS_HUGETLB,
-> >  };
-> >  
-> > +#define VM_PRIMARY_MEM_SLOT	0
-> > +
-> >  int kvm_check_cap(long cap);
-> >  int vm_enable_cap(struct kvm_vm *vm, struct kvm_enable_cap *cap);
-> >  
-> > diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> > index f69fa84c9a4c..6a1af0455e44 100644
-> > --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> > +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> > @@ -247,8 +247,8 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
-> >  	/* Allocate and setup memory for guest. */
-> >  	vm->vpages_mapped = sparsebit_alloc();
-> >  	if (phy_pages != 0)
-> > -		vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
-> > -					    0, 0, phy_pages, 0);
-> > +		vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS, 0,
-> > +					    VM_PRIMARY_MEM_SLOT, phy_pages, 0);
+> > Alex  
 > 
-> IIUC VM_PRIMARY_MEM_SLOT should be used more than here... E.g., to all
-> the places that allocate page tables in virt_map() as the last param?
-> I didn't check other places.
+> Got it. 
+> Also thank you and all for discussing and guiding all along:)
+> We'll move to the next episode now.
 
-Ouch, yeah, it bleeds into vm_vaddr_alloc() as well.
- 
-> Maybe it's simpler to drop this patch for now and use 0 directly as
-> before for now, after all in the last patch the comment is good enough
-> for me to understand slot 0 is the default slot.
+Hi Yan,
 
-Ya, I'll drop this and hardcode '0', it's a rather absurd amount of call
-sites to change.
+As we're hopefully moving towards a migration API, would it make sense
+to refresh this series at the same time?  I think we're still expecting
+a vendor driver implementing Kirti's migration API to also implement
+this sysfs interface for compatibility verification.  Thanks,
+
+Alex
+
