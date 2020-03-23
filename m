@@ -2,114 +2,90 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86153C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 529E1C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5809A20409
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:36:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vHjIVGC6"
+	by mail.kernel.org (Postfix) with ESMTP id 21DC220637
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbgCWPgO (ORCPT
+        id S1727364AbgCWPgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:36:14 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:49632 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727230AbgCWPgN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:36:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584977773; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=wijimHVzaAPkYdmKEb1ozTEK2M9kYeLXNSo3279w37s=;
- b=vHjIVGC6utN2Jb/yVV2RCp2jUZISZPDISBNbZbOLWvvsGD+t3sbBidiwmojBZl+GFi1YWzUK
- kYznyQt2O90qUtRtcP8RJ5G4fxxqHBVhPaUJX2lay3wjmPEmKKAHDGuL9gNT4ZE8Xt0RV+Xp
- H/h4/zsAmpIAsCTDK+jy5dCZEXA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e78d76c.7f9b3ececab0-smtp-out-n03;
- Mon, 23 Mar 2020 15:36:12 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9A551C432C2; Mon, 23 Mar 2020 15:36:12 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D7712C433D2;
-        Mon, 23 Mar 2020 15:36:11 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 23 Mar 2020 21:06:11 +0530
-From:   kgunda@codeaurora.org
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V3 2/4] backlight: qcom-wled: Add callback functions
-In-Reply-To: <20200311103047.v7rt5ii3saack22a@holly.lan>
-References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
- <1583760362-26978-3-git-send-email-kgunda@codeaurora.org>
- <20200310152719.5hpzh6osq22y4qbn@holly.lan>
- <05ab744dfbd83b6704bd394ce3c3dfc9@codeaurora.org>
- <20200311103047.v7rt5ii3saack22a@holly.lan>
-Message-ID: <45964027ff388aec97d27f579d96c012@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Mon, 23 Mar 2020 11:36:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35632 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727124AbgCWPgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:36:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B9F18AE24;
+        Mon, 23 Mar 2020 15:36:21 +0000 (UTC)
+Message-ID: <1584977769.27949.18.camel@suse.de>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+From:   Oliver Neukum <oneukum@suse.de>
+To:     Qais Yousef <qais.yousef@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Date:   Mon, 23 Mar 2020 16:36:09 +0100
+In-Reply-To: <20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com>
+References: <20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com>
+Content-Type: multipart/mixed; boundary="=-IYg+DkhohS1dh6vva5Gj"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-11 16:00, Daniel Thompson wrote:
-> On Wed, Mar 11, 2020 at 12:11:00PM +0530, kgunda@codeaurora.org wrote:
->> On 2020-03-10 20:57, Daniel Thompson wrote:
->> > On Mon, Mar 09, 2020 at 06:56:00PM +0530, Kiran Gunda wrote:
->> > > Add cabc_config, sync_toggle, wled_ovp_fault_status and wled_ovp_delay
->> > > callback functions to prepare the driver for adding WLED5 support.
->> > >
->> > > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
->> >
->> > Overall this code would a lot easier to review if
->> > > ---
->> > >  drivers/video/backlight/qcom-wled.c | 196
->> > > +++++++++++++++++++++++-------------
->> > >  1 file changed, 126 insertions(+), 70 deletions(-)
->> > >
->> > > diff --git a/drivers/video/backlight/qcom-wled.c
->> > > b/drivers/video/backlight/qcom-wled.c
->> > > index 3d276b3..b73f273 100644
->> > > --- a/drivers/video/backlight/qcom-wled.c
->> > > +++ b/drivers/video/backlight/qcom-wled.c
->> > > @@ -128,6 +128,7 @@ struct wled_config {
->> > >  	bool cs_out_en;
->> > >  	bool ext_gen;
->> > >  	bool cabc;
->> > > +	bool en_cabc;
->> >
->> > Does this ever get set to true?
->> >
->> Yes. If user wants use the cabc pin to control the brightness and
->> use the "qcom,cabc" DT property in the device tree.
+
+--=-IYg+DkhohS1dh6vva5Gj
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+
+Am Montag, den 23.03.2020, 14:38 +0000 schrieb Qais Yousef:
+> Hi
 > 
-> That sounds like what you intended the code to do!
+> I've hit the following lockdep warning when I trigger hibernate on arm64
+> platform (Juno-r2)
 > 
-> Is the code that does this present in the patch? I could not find
-> it.
 > 
-okay... It's my bad. We already have the "cabc" for this. I will remove 
-the en_cabc in
-next series.
+> 	echo suspend > /sys/power/disk
+> 	echo disk > /sys/power/state
 > 
-> Daniel.
+> I only had a usb flash drive attached to it. Let me know if you need more info.
+
+Hi,
+
+that is not a lockdep issue, but the hub driver is not properly killing
+its URB presumably. Yet, the driver looks correct to me. Please use
+the additional patch and activate dynamic debugging for usbcore.
+
+	Regards
+		Oliver
+
+--=-IYg+DkhohS1dh6vva5Gj
+Content-Disposition: attachment; filename="0001-usb-hub-additional-debugging.patch"
+Content-Type: text/x-patch; name="0001-usb-hub-additional-debugging.patch";
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+RnJvbSA4MzU3ZDlkN2FiZTM1ZDVlMzY4NGY1MTI3ZmVhNmQyNDMwMDExNTI2IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPgpEYXRl
+OiBNb24sIDIzIE1hciAyMDIwIDE2OjM0OjM1ICswMTAwClN1YmplY3Q6IFtQQVRDSF0gdXNiOiBo
+dWIgYWRkaXRpb25hbCBkZWJ1Z2dpbmcKCi0tLQogZHJpdmVycy91c2IvY29yZS9odWIuYyB8IDEg
+KwogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy91
+c2IvY29yZS9odWIuYyBiL2RyaXZlcnMvdXNiL2NvcmUvaHViLmMKaW5kZXggNTRjZDhlZjc5NWVj
+Li4yNTUzMGNmMzAzODEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvdXNiL2NvcmUvaHViLmMKKysrIGIv
+ZHJpdmVycy91c2IvY29yZS9odWIuYwpAQCAtMTYyOSw2ICsxNjI5LDcgQEAgc3RhdGljIGludCBo
+dWJfY29uZmlndXJlKHN0cnVjdCB1c2JfaHViICpodWIsCiAJCXJldCA9IC1FTk9NRU07CiAJCWdv
+dG8gZmFpbDsKIAl9CisJZGV2X2RiZyhodWJfZGV2LCAiJXAgVVJCIGFsbG9jYXRlZCBcbiIpOwog
+CiAJdXNiX2ZpbGxfaW50X3VyYihodWItPnVyYiwgaGRldiwgcGlwZSwgKmh1Yi0+YnVmZmVyLCBt
+YXhwLCBodWJfaXJxLAogCQlodWIsIGVuZHBvaW50LT5iSW50ZXJ2YWwpOwotLSAKMi4xNi40Cgo=
+
+
+--=-IYg+DkhohS1dh6vva5Gj--
+
