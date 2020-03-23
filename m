@@ -2,182 +2,141 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8ECC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AFFC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3988A206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:13:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584976383;
-	bh=enniVPz3502Kag1xUTfxFAFoI4o/Gsr1Vj+prIUJy3Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kec/lTtLfezOqgtKIHDR8XqfJFv6xORCxZrg1Og8652/wChL8zdHvNtBWCWftPD9A
-	 lQMP/f/2uqOq6Y/8OxyStnMmLJXgxJegOworKh7b4yK6NpWYr/Pf3RAaKtPcf/WY8q
-	 pPx7uUSLThdH3kKSDGG0XSE4GOXkXuq++Q7j0icc=
+	by mail.kernel.org (Postfix) with ESMTP id 9D84E206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:13:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Gl69dg/K";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HN2Ugj01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbgCWPNC (ORCPT
+        id S1727324AbgCWPNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:13:02 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54055 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgCWPNB (ORCPT
+        Mon, 23 Mar 2020 11:13:08 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:41957 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725861AbgCWPNI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:13:01 -0400
-Received: by mail-wm1-f66.google.com with SMTP id b12so2044263wmj.3;
-        Mon, 23 Mar 2020 08:12:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cLJYUtlzJQnIte12O+1TX7NShd0c3CUtv4V79jlUG84=;
-        b=JGJupvO7EldIErAkGQH+3A2PbUoff+OsUf3jxHWlgUug4K4kJ5V6OYOiO2ipJSbccI
-         Mszsiz24eJdP0wREB0crKDQyiPYiGhxKjWEl8zeWtbx+cNweQNZ18yN2waxuzTFm059+
-         60QoGfqKG+rH5/yn739TTJ19BjPBA3dBl6W17IHOhuPIYbj0ckkNRxP3dld9gu2587B8
-         p4yF1c6DWlaV7KlJhygThY/Q8Y9dbCjonH7I16HX3u3MUxBssTGPSWrze1oLxRWvqjQD
-         z13zmOAryGl2z7i3FS1JoLH9IaGVvKVFYHFpRlBSrxpRRkpbRG84PLq5pIZ6GtPSo5Gj
-         7NrQ==
-X-Gm-Message-State: ANhLgQ1OqrlTXvR+DkW4vaQbjZeVwPAeptRCy6A7Gu10211XxStNLV5q
-        39VQvBWJxpd3Q4IkbYJ9J+g=
-X-Google-Smtp-Source: ADFU+vsua7OLk/30k9tXowXZF7JCw9SZSk5+/fONQ8eNrvIfByUUwexLlvp/OcSMb8/stQ4yLQvsyQ==
-X-Received: by 2002:a1c:1b51:: with SMTP id b78mr27754175wmb.8.1584976379152;
-        Mon, 23 Mar 2020 08:12:59 -0700 (PDT)
-Received: from localhost (ip-37-188-135-150.eurotel.cz. [37.188.135.150])
-        by smtp.gmail.com with ESMTPSA id y7sm1335565wrq.54.2020.03.23.08.12.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 08:12:58 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 16:12:56 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Rafael Aquini <aquini@redhat.com>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org
-Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
- false-negative errors
-Message-ID: <20200323151256.GP7524@dhcp22.suse.cz>
-References: <20200322013525.1095493-1-aquini@redhat.com>
- <20200321184352.826d3dba38aecc4ff7b32e72@linux-foundation.org>
- <20200322020326.GB1068248@t490s>
- <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
- <CALvZod7LiMiK1JtfdvvU3W36cGSUKhhKf6dMZpsNZv6nMiJ5=g@mail.gmail.com>
- <20200323075208.GC7524@dhcp22.suse.cz>
- <20200323144240.GB23364@optiplex-lnx>
- <20200323145106.GM7524@dhcp22.suse.cz>
- <20200323150259.GD23364@optiplex-lnx>
+        Mon, 23 Mar 2020 11:13:08 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 783A9580118;
+        Mon, 23 Mar 2020 11:13:06 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 23 Mar 2020 11:13:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=GAe9evQKgPl6kCh0zfTEzT/CM76
+        CMhkxj8qnRU/5u+0=; b=Gl69dg/KL0fB2QP1vl5cZ85/lT7aRrLjbJKGwt/RdTL
+        /7jB+HgApPvKUMRoyb2Qt1EGvMIqDp/QjW+rSokBqQTEkyTuV3JUq/j7ZKA/Hrnp
+        WlcEJzNWRJUmAwK6ntpcVTDG+Yz3lrG8AffcoAKC4GnpQM/TNe94/ZaZerhaN7RL
+        oD6NmOGsQNPiiIhsunX/G3w/SNo4xJo+hpS73o9OIBXbuKZZ2KJWRMqfpzTUgGFN
+        +k17QeS4Jt9vVw1hQ/4NL6mAC7YtiwHoKYTvz9MvfMS0IFxW0F/FMSB7KE8MACOf
+        FnQb+9TNuNyLmR/GIFY5ihN7vA9o1sYXrSRbsr0rtWw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=GAe9ev
+        QKgPl6kCh0zfTEzT/CM76CMhkxj8qnRU/5u+0=; b=HN2Ugj01J2KGTv3SX8ynQn
+        KNFCNrha666DIO28e6EycqxyieMUf9tx9eylhLd5vjqq/QEkNHUzspqXL2C6IkV8
+        5SSiplNdrZ27rxu2kHw5R3tMD5KJjLWNaYPkg7SunLBjtYjwV3wefeCofWXliLfK
+        onST2HlEBdMuB0HpRudemyOfssvewDt6XG6FH4Fa6yDxwAU2ZPlgSWNv6L+9WqTg
+        MirRl1b64x1WKbxCel0c5MrB8oIR4XUPlSzb5tcxF2hGsXqzN+141nw7U3UjLsjn
+        nguxZuWYQtUjeO0r/GUzgZy9uhxiejE29TNx5zYf4SikxOirwNncxLW64L4BfJ9A
+        ==
+X-ME-Sender: <xms:ANJ4XtJNo40pA1nqiNL8_aKRSu00TlMjV_QZsv9m3yClraBzeEdI5g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudegkedgjeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:ANJ4XgQAKlM8v0yTpNI5NFWm2IWzuF4DJ4QXOyL9VEnAN8bGknTD6A>
+    <xmx:ANJ4XoEWcJDSOi546MJKkxfd3cdhgtd7uLKFtnvVUd-PeSfx0CC3fQ>
+    <xmx:ANJ4XoFlPY5gSl3QM-_rjLR-tGIMoXFQ9ve6UUiiivHQXYGRSDiFDw>
+    <xmx:AtJ4Xg3kdjwW1dkBLRNuaXG9Rrbo83yojgh7ddnJzZaUJam9ajIH8w>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D7EF3328005A;
+        Mon, 23 Mar 2020 11:13:03 -0400 (EDT)
+Date:   Mon, 23 Mar 2020 16:13:02 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 07/89] clk: bcm: rpi: Allow the driver to be probed by DT
+Message-ID: <20200323151302.ckpvc4a7eiinnfbq@gilmour.lan>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+ <c358081207dcf4f320a6b7e2932f0d5365bf3242.1582533919.git-series.maxime@cerno.tech>
+ <d793e358-32db-5fea-aac9-d06062918718@i2se.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="v5m5awxasxzcip5g"
 Content-Disposition: inline
-In-Reply-To: <20200323150259.GD23364@optiplex-lnx>
+In-Reply-To: <d793e358-32db-5fea-aac9-d06062918718@i2se.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 23-03-20 11:02:59, Rafael Aquini wrote:
-> On Mon, Mar 23, 2020 at 03:51:06PM +0100, Michal Hocko wrote:
-> > On Mon 23-03-20 10:42:40, Rafael Aquini wrote:
-> > > On Mon, Mar 23, 2020 at 08:52:08AM +0100, Michal Hocko wrote:
-> > > > On Sun 22-03-20 09:36:49, Shakeel Butt wrote:
-> > > > > On Sat, Mar 21, 2020 at 9:31 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > > > > >
-> > > > > > On Sat, 21 Mar 2020 22:03:26 -0400 Rafael Aquini <aquini@redhat.com> wrote:
-> > > > > >
-> > > > > > > > > + * In order to sort out that race, and get the after fault checks consistent,
-> > > > > > > > > + * the "quick and dirty" trick below is required in order to force a call to
-> > > > > > > > > + * lru_add_drain_all() to get the recently MLOCK_ONFAULT pages moved to
-> > > > > > > > > + * the unevictable LRU, as expected by the checks in this selftest.
-> > > > > > > > > + */
-> > > > > > > > > +static void force_lru_add_drain_all(void)
-> > > > > > > > > +{
-> > > > > > > > > + sched_yield();
-> > > > > > > > > + system("echo 1 > /proc/sys/vm/compact_memory");
-> > > > > > > > > +}
-> > > > > > > >
-> > > > > > > > What is the sched_yield() for?
-> > > > > > > >
-> > > > > > >
-> > > > > > > Mostly it's there to provide a sleeping gap after the fault, whithout
-> > > > > > > actually adding an arbitrary value with usleep().
-> > > > > > >
-> > > > > > > It's not a hard requirement, but, in some of the tests I performed
-> > > > > > > (whithout that sleeping gap) I would still see around 1% chance
-> > > > > > > of hitting the false-negative. After adding it I could not hit
-> > > > > > > the issue anymore.
-> > > > > >
-> > > > > > It's concerning that such deep machinery as pagevec draining is visible
-> > > > > > to userspace.
-> > > > > >
-> > > > > 
-> > > > > We already have other examples like memcg stats where the
-> > > > > optimizations like batching per-cpu stats collection exposes
-> > > > > differences to the userspace. I would not be that worried here.
-> > > > 
-> > > > Agreed! Tests should be more tolerant for counters imprecision.
-> > > > Unevictable LRU is an optimization and transition to that list is a
-> > > > matter of an internal implementation detail.
-> > > >
-> > > > > > I suppose that for consistency and correctness we should perform a
-> > > > > > drain prior to each read from /proc/*/pagemap.  Presumably this would
-> > > > > > be far too expensive.
-> > > > > >
-> > > > > > Is there any other way?  One such might be to make the MLOCK_ONFAULT
-> > > > > > pages bypass the lru_add_pvecs?
-> > > > > >
-> > > > > 
-> > > > > I would rather prefer to have something similar to
-> > > > > /proc/sys/vm/stat_refresh which drains the pagevecs.
-> > > > 
-> > > > No, please don't. Pagevecs draining is by far not the only batching
-> > > > scheme we use and an interface like this would promise users to
-> > > > effectivelly force flushing all of them.
-> > > > 
-> > > > Can we simply update the test to be more tolerant to imprecisions
-> > > > instead?
-> > > > 
-> > > 
-> > > I don't think, thouhg, that this particular test case can be entirely
-> > > reduced as "counter imprecison".
-> > > 
-> > > The reason I think this is a different beast, is that having the page
-> > > being flagged as PG_unevictable is expected part of the aftermath of
-> > > a mlock* call. This selftest is, IMO, correctly verifying that fact,
-> > > as it checks the functionality correctness.
-> > > 
-> > > The problem boils down to the fact that the page would immediately
-> > > be flagged as PG_unevictable after the mlock (under MCL_FUTURE|MCL_ONFAULT
-> > > semantics) call, and the test was expecting it, and commit 9c4e6b1a7027f
-> > > changed that by "delaying" that flag setting.
-> > 
-> > As I've tried to explain in other email in this email thread. The test
-> > was exploiting a certain user visible side effect. The unevictable flag
-> > or the placement on the unevictable LRU list is are not really needed
-> > for the user contract correctness. That means that the test is not
-> > really correct. Working around that by trying to enforce kernel to
-> > comply with the test expectations is just plain wrong at least for two
-> > reasons 1) you cannot expect or event do not want userspace to do the
-> > same because the behavior might change in the future 2) the test is not
-> > really testing for correctness in the first place.
+
+--v5m5awxasxzcip5g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Stefan,
+
+On Sun, Mar 01, 2020 at 01:16:28PM +0100, Stefan Wahren wrote:
+> Hi Maxime,
+>
+> Am 24.02.20 um 10:06 schrieb Maxime Ripard:
+> > The current firmware clock driver for the RaspberryPi can only be probed by
+> > manually registering an associated platform_device.
 > >
-> 
-> Sorry, Michal, it seems we keep going back and forth (I just replied to
-> your comment on the other thread)
-> 
-> The selftest also checks the kernel visible effect, via
-> /proc/kpageflags, and that's where it fails after 9c4e6b1a7027f.
+> > While this works fine for cpufreq where the device gets attached a clkdev
+> > lookup, it would be tedious to maintain a table of all the devices using
+> > one of the clocks exposed by the firmware.
+> >
+> > Since the DT on the other hand is the perfect place to store those
+> > associations, make the firmware clocks driver probe-able through the device
+> > tree so that we can represent it as a node.
+> >
+> > Cc: Michael Turquette <mturquette@baylibre.com>
+> > Cc: Stephen Boyd <sboyd@kernel.org>
+> > Cc: linux-clk@vger.kernel.org
+> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+>
+> FWIW i want to mention that starting with this commit, X doesn't start
+> on my Raspberry Pi 3A (applied on top of linux-next using
+> multi_v7_defconfig).
 
-I really fail to see your point. Even if you are right that the self
-test is somehow evaluating the kernel implementation which I am not sure
-is the scope of the selft thest but anyway. The mere fact that the
-kernel test fails on a perfectly valid change should just suggest that
-the test is leading to false positives and therefore should be fixed.
-Your proposed fix is simply suboptimal because it relies on yet another
-side effect which might change anytime in the future and still lead to a
-correctly behaving kernel. See my point?
+Was this the same issue you reported with the HSM clock rate, or truly
+an issue with my series?
 
--- 
-Michal Hocko
-SUSE Labs
+Maxime
+
+--v5m5awxasxzcip5g
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXnjR/gAKCRDj7w1vZxhR
+xWCaAQCLY6mdJ+pXqjn7wvV8WOobxLaPy0P6y1ZPPf/arV8g9AEAnOxapP+tmnzB
+zJdBac5cosAeX20cT1zCpqqzz1jHQQE=
+=7v4z
+-----END PGP SIGNATURE-----
+
+--v5m5awxasxzcip5g--
