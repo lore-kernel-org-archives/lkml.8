@@ -2,178 +2,165 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31570C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DB2C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0580D20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:00:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="WmZMZ6NT"
+	by mail.kernel.org (Postfix) with ESMTP id AAFFD20774
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725852AbgCWEA2 (ORCPT
+        id S1725880AbgCWEDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 00:00:28 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39721 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgCWEA1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 00:00:27 -0400
-Received: by mail-qt1-f193.google.com with SMTP id f20so10609115qtq.6
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 21:00:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pd4yz+kFP7lRzD+ddVAViEtwIsYcKKu1zuZ2dDOrHSA=;
-        b=WmZMZ6NTtot5yfwyAH1h0bWrhjSlmqWTXm8Cm7gf1kUivT9FwuCF+JHOsFnTe+I1WQ
-         lCxYov3Cfv1BV67v0fWJTc4k77FvFLW6PqRgmaJYHZWp4pjpGYEsi+fR/WLRuwLOz2ua
-         48JmD39B7gMB52UjVRa3lgREpgLXfAHTTHcHsyjTTTmXbmKHDplYzqFDi5gHanLE6eXV
-         ZbUmGHqguX7sel1c9Ib3EmXLxXKrAzB1vFg79mVastEuWB7euv09dr355bwoq8j/s/PO
-         YGPKWIviu448yyg2u5pNYt0MT17F/XJH+l9rQ3up++oUgJdO+8S9aEAnA39B7NgwiG5s
-         XD+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pd4yz+kFP7lRzD+ddVAViEtwIsYcKKu1zuZ2dDOrHSA=;
-        b=pKxeXr2aEvik2kirXuxDD7jcSBHwCCgMtul9Qpz6gd5EY1ZIiShmsMnhipxfOgwfjl
-         36Z1MxtvQu6cTrYTnbfJW3MpbS10ZQYocNpGHvU7TmdOVN0vDhVzdfXiPoLtMzK5bGl6
-         EByDXy8veH76Y9IWH+DZ64ddfhJMUfE+olRCdySjrHvUTYzNr3ijhUoKhGE5kYOJf3H4
-         vKh0GZQgng8HQxsMG5tcvMvsHk90nFG3IGFN/nGa7FMgYW0OELE9+vo1pMbsgaH09lFU
-         GdzZtQaUtrixFsT8aH8ACxtLoZXorBl9H2mr7UFyKc7MesnOCYRJXKe4AJ8CbVtdU7DC
-         HOHw==
-X-Gm-Message-State: ANhLgQ3NdG17ueHequpw1ZHAQzAmMeE4hgAcZ7o74CFXisLmPyU2rXFZ
-        X1FqtuxXNBpbljvyY8VJSMHhhdcUNiv6jZzXe9Ju9A==
-X-Google-Smtp-Source: ADFU+vve2wwWJUjM/bzFrdZK8ZxEBDqw7JUyk/0S7m5yM0IdkahoMGOrU2lWEA0CQl0sq4C7lBM0DLganBu18/7bDhs=
-X-Received: by 2002:ac8:67cd:: with SMTP id r13mr19502310qtp.51.1584936025812;
- Sun, 22 Mar 2020 21:00:25 -0700 (PDT)
+        Mon, 23 Mar 2020 00:03:25 -0400
+Received: from mx.socionext.com ([202.248.49.38]:59585 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725208AbgCWEDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 00:03:25 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 23 Mar 2020 13:03:23 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 5182C60057;
+        Mon, 23 Mar 2020 13:03:23 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Mon, 23 Mar 2020 13:03:23 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id B034D1A12AD;
+        Mon, 23 Mar 2020 13:03:22 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 7646812013D;
+        Mon, 23 Mar 2020 13:03:22 +0900 (JST)
+Date:   Mon, 23 Mar 2020 13:03:22 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v2 2/2] PCI: uniphier: Add UniPhier PCIe endpoint controller support
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+In-Reply-To: <20200319170659.GA158868@google.com>
+References: <1584604449-13461-3-git-send-email-hayashi.kunihiko@socionext.com> <20200319170659.GA158868@google.com>
+Message-Id: <20200323130322.E519.4A936039@socionext.com>
 MIME-Version: 1.0
-References: <20200308094954.13258-1-guoren@kernel.org>
-In-Reply-To: <20200308094954.13258-1-guoren@kernel.org>
-From:   Greentime Hu <greentime.hu@sifive.com>
-Date:   Mon, 23 Mar 2020 12:00:10 +0800
-Message-ID: <CAHCEehKrzv0TozP7x9Vaq1t+Utpvqfgt=wo7eXXp0HRUKFO=WQ@mail.gmail.com>
-Subject: Re: [RFC PATCH V3 00/11] riscv: Add vector ISA support
-To:     guoren@kernel.org
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Anup.Patel@wdc.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch@vger.kernel.org, arnd@arndb.de,
-        linux-csky@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Liu Zhiwei <zhiwei_liu@c-sky.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-<guoren@kernel.org> =E6=96=BC 2020=E5=B9=B43=E6=9C=888=E6=97=A5 =E9=80=B1=
-=E6=97=A5 =E4=B8=8B=E5=8D=885:50=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> From: Guo Ren <guoren@linux.alibaba.com>
->
-> The implementation follow the RISC-V "V" Vector Extension draft v0.8 with
-> 128bit-vlen and it's based on linux-5.6-rc3 and tested with qemu [1].
->
-> The patch implement basic context switch, sigcontext save/restore and
-> ptrace interface with a new regset NT_RISCV_VECTOR. Only fixed 128bit-vle=
-n
-> is implemented. We need to discuss about vlen-size for libc sigcontext an=
-d
-> ptrace (the maximum size of vlen is unlimited in spec).
->
-> Puzzle:
-> Dave Martin has talked "Growing CPU register state without breaking ABI" =
-[2]
-> before, and riscv also met vlen size problem. Let's discuss the common is=
-sue
-> for all architectures and we need a better solution for unlimited vlen.
->
-> Any help are welcomed :)
->
->  1: https://github.com/romanheros/qemu.git branch:vector-upstream-v3
->  2: https://blog.linuxplumbersconf.org/2017/ocw/sessions/4671.html
->
+Hi Bjorn,
 
-Hi Ren,
+Thank you for your comment.
 
-Thanks for the patch. I have some ideas about the vlen and sigcontext.
-Since vlen may not be fixed of each RISC-V cores and it could be super
-big, it means we have to allocate the memory dynamically.
-In kernel space, we may use a pointer in the context data structure.
-Something like https://github.com/torvalds/linux/blob/master/arch/arm64/ker=
-nel/fpsimd.c#L498
-In user space, we need to let user space know the length of vector
-registers. We may create a special header in sigcontext. Something
-like https://github.com/torvalds/linux/blob/master/arch/arm64/include/uapi/=
-asm/sigcontext.h#L36
-https://github.com/torvalds/linux/blob/master/arch/arm64/include/uapi/asm/s=
-igcontext.h#L127
+On Thu, 19 Mar 2020 12:06:59 -0500 <helgaas@kernel.org> wrote:
 
-For the implementation in makecontext, swapcontext, getcontext,
-setcontext of glibc, we may not need to port because it seems to be
-deprecated?
-https://stackoverflow.com/questions/4298986/is-there-something-to-replace-t=
-he-ucontext-h-functions
+> On Thu, Mar 19, 2020 at 04:54:09PM +0900, Kunihiko Hayashi wrote:
+> > This introduces specific glue layer for UniPhier platform to support
+> > PCIe controller that is based on the DesignWare PCIe core, and
+> > this driver supports endpoint mode. This supports for Pro5 SoC only.
+> 
+> Possible alternate text: ("specific glue layer" isn't the usual way to
+> describe a driver)
+> 
+>   PCI: uniphier: Add Socionext UniPhier Pro5 SoC endpoint controller driver
+> 
+>   Add driver for the Socionext UniPhier Pro5 SoC endpoint controller.
+>   This controller is based on the DesignWare PCIe core.
 
-For the unwinding implementation of libgcc since it needs to know the
-meaning of data structure is  changed. It also need to be port.
+I see. I'll accept your suggestion for the commit log.
 
-> ---
-> Changelog V3
->  - Rebase linux-5.6-rc3 and tested with qemu
->  - Seperate patches with Anup's advice
->  - Give out a ABI puzzle with unlimited vlen
->
-> Changelog V2
->  - Fixup typo "vecotr, fstate_save->vstate_save".
->  - Fixup wrong saved registers' length in vector.S.
->  - Seperate unrelated patches from this one.
->
-> Guo Ren (11):
->   riscv: Separate patch for cflags and aflags
->   riscv: Rename __switch_to_aux -> fpu
->   riscv: Extending cpufeature.c to detect V-extension
->   riscv: Add CSR defines related to VECTOR extension
->   riscv: Add vector feature to compile
->   riscv: Add has_vector detect
->   riscv: Reset vector register
->   riscv: Add vector struct and assembler definitions
->   riscv: Add task switch support for VECTOR
->   riscv: Add ptrace support
->   riscv: Add sigcontext save/restore
->
->  arch/riscv/Kconfig                       |   9 ++
->  arch/riscv/Makefile                      |  19 ++-
->  arch/riscv/include/asm/csr.h             |  17 ++-
->  arch/riscv/include/asm/processor.h       |   1 +
->  arch/riscv/include/asm/switch_to.h       |  54 ++++++-
->  arch/riscv/include/uapi/asm/elf.h        |   1 +
->  arch/riscv/include/uapi/asm/hwcap.h      |   1 +
->  arch/riscv/include/uapi/asm/ptrace.h     |   9 ++
->  arch/riscv/include/uapi/asm/sigcontext.h |   1 +
->  arch/riscv/kernel/Makefile               |   1 +
->  arch/riscv/kernel/asm-offsets.c          | 187 +++++++++++++++++++++++
->  arch/riscv/kernel/cpufeature.c           |  12 +-
->  arch/riscv/kernel/entry.S                |   2 +-
->  arch/riscv/kernel/head.S                 |  49 +++++-
->  arch/riscv/kernel/process.c              |  10 ++
->  arch/riscv/kernel/ptrace.c               |  41 +++++
->  arch/riscv/kernel/signal.c               |  40 +++++
->  arch/riscv/kernel/vector.S               |  84 ++++++++++
->  include/uapi/linux/elf.h                 |   1 +
->  19 files changed, 524 insertions(+), 15 deletions(-)
->  create mode 100644 arch/riscv/kernel/vector.S
->
-> --
-> 2.17.0
->
+> > +/* assertion time of intx in usec */
+> 
+> s/intx/INTx/ to match usage in spec (and in comments below :))
+
+Certainly this isn't unified. I'll fix it.
+
+> > +#define PCL_INTX_WIDTH_USEC		30
+> 
+> > +struct uniphier_pcie_ep_soc_data {
+> > +	bool is_legacy;
+> 
+> I'd prefer "unsigned int is_legacy:1".  See [1].
+> 
+> But AFAICT you actually don't need this at all (yet), since you only
+> have a single of_device_id, and it sets "is_legacy = true".  That
+> means the *not* legacy code is effectively dead and hasn't been
+> tested.
+
+Yes.
+Now I know the difference about between legacy and non-legacy SoC,
+however, currently the driver doesn't have any non-legacy SoC support.
+
+> My preference would be to add "is_legacy" and the associated tests
+> when you actually *need* them, i.e., when you add support for a
+> non-legacy device.
+
+Agreed. The test for non-legacy SoC is necessary.
+So I'll remove 'is_legacy' and related coded, and rewrite this driver
+to support only legacy device.
+
+And I'll remember [1] when adding non-legacy support.
+
+> > +static int uniphier_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep)
+> > +{
+> > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+> > +	u32 val;
+> > +
+> > +	/* assert INTx */
+> > +	val = readl(priv->base + PCL_APP_INTX);
+> > +	val |= PCL_APP_INTX_SYS_INT;
+> > +	writel(val, priv->base + PCL_APP_INTX);
+> > +
+> > +	udelay(PCL_INTX_WIDTH_USEC);
+> > +
+> > +	/* deassert INTx */
+> > +	val = readl(priv->base + PCL_APP_INTX);
+> 
+> Why do you need to read PCL_APP_INTX again here?
+
+Indeed. This 'readl' isn't unnecessary.
+
+> > +	val &= ~PCL_APP_INTX_SYS_INT;
+> > +	writel(val, priv->base + PCL_APP_INTX);
+> > +
+> > +	return 0;
+> > +}
+> 
+> > +	ret = dw_pcie_ep_init(ep);
+> > +	if (ret) {
+> > +		dev_err(dev, "Failed to initialize endpoint (%d)\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	return 0;
+> 
+> This is equivalent to:
+> 
+>   ret = dw_pcie_ep_init(ep);
+>   if (ret)
+>     dev_err(dev, "Failed to initialize endpoint (%d)\n", ret);
+> 
+>   return ret;
+
+Agreed. I'll rewrite it next.
+
+> 
+> > +}
+> 
+> [1] https://lore.kernel.org/linux-fsdevel/CA+55aFzKQ6Pj18TB8p4Yr0M4t+S+BsiHH=BJNmn=76-NcjTj-g@mail.gmail.com/
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
+
