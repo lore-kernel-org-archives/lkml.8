@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D69C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C4EC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8676620722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3C72076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:50:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B2qCjKD/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6nGo2oO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgCWKsv (ORCPT
+        id S1728077AbgCWKuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 06:48:51 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46809 "EHLO
+        Mon, 23 Mar 2020 06:50:11 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:32867 "EHLO
         mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727908AbgCWKsv (ORCPT
+        with ESMTP id S1727874AbgCWKuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 06:48:51 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y83so2016223lff.13
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 03:48:48 -0700 (PDT)
+        Mon, 23 Mar 2020 06:50:11 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c20so9844318lfb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 03:50:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=myXNNOjoobSEA/eA0whlQCS4O/6vRCkk1D3R/DCqh+I=;
-        b=B2qCjKD/5EObCU6LYmdV2FfqM5/r3TYNz4ixlrgXvaxEo2NHwIjN25YZ3kG63Trq3v
-         rRrNTnrmqZu6HgWQbGKhFQ0RV8UbKmCvfy+bIX56+XLRPaBz3GGhVi+Grmebxj/NRjUh
-         6BUwBKIW7FeDw8scUykNrWRHYdveW+cVp67RT/pIeKZPVTzi7Zj8CLzLQhTKNxkvqjAx
-         1LWUY24Sa3rw90vzOwqCRihoNcf0R/fC5YaTTeB6gnflQO2cEfJI6OJEnEo3wcCfryE6
-         GNbB06eFM9qKrWhagHJwP5/my/y9gUve4WJgt4iUTxrCW9ud8B3wPLdDb9d03yPScUHh
-         2erQ==
+        bh=siKVSOSU2AuaxCnLGzXMnO9hKgx66VndyuGaKMeNzAk=;
+        b=G6nGo2oOHsvAJv17GKLVj/we/ZtSZ5nznKfQGFsZUvB0VOn3+E48g1tAniEG6MbQJZ
+         rrvKvQOjOvESLanVYURjrhMorX//raN51ngN7gFqvLotu/J3Bpfm3tWa1GLzg9eUdTwr
+         3vyjfUUPciutYkb1atk8VnFy6OP2Kn+bEkh+dDu6hLeFTR4M1G60Sh5YEp0svmCNjikN
+         GZht+smbCmDEgUh2xS22ASBe1nev4M1nKPx9THcQYg1YCsc/fjWgZVlbCmkdc5k9W5bq
+         BYA+XbwtiTxIzHn25uyyIQnUUDdZwF9QbB3JqIaCCZOj8AmOxsWHHCy9kCLRBJtBGKf8
+         LAIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=myXNNOjoobSEA/eA0whlQCS4O/6vRCkk1D3R/DCqh+I=;
-        b=ONWZE+ZJLKh+n9N374SMzeIyPNMwwulxReXItHmEmNpJvtWYZmp2s0YH9isaQ+p+eN
-         0cm61HihG3q7FNsMRRv6DxPf93DGChL6Sq4tBIOjnLPLLP+3kwCFB1xT3AfSfCqLQ3X8
-         L+4B/KioHkx8PHBCxHz8+luv4D6ic3lmtXHqQ3Hu4tXota+efHTJUfHX9GKy4wwGss0a
-         DqsN2Bgr9HioLzvIeE1W0LMBFSAZWSx0fJUNHaprIyp3DEAekJ4HKnojKTwJxYPz73Iw
-         +ax8704UW2Y98zt8MlstZH22De+3B0zxFkebuaicLWGdThFBYhlil2cKFTincVtOTIIC
-         eq9g==
-X-Gm-Message-State: ANhLgQ1dknJNHcBBmRP0JCHFHQqMjl39GGoDeg0BC91+YzTQCm6vdpLg
-        a/HZbX+lhjbaWTuvjx89LDw7H4eOu6Y=
-X-Google-Smtp-Source: ADFU+vscSL6yH2OmnTbzM/qR6j1QPbA4Ivlh3SOlk2IlRojZSN6VtN7XeGMrAsu36u7F2x+T77pG2g==
-X-Received: by 2002:a19:5019:: with SMTP id e25mr8549651lfb.68.1584960527448;
-        Mon, 23 Mar 2020 03:48:47 -0700 (PDT)
+        bh=siKVSOSU2AuaxCnLGzXMnO9hKgx66VndyuGaKMeNzAk=;
+        b=JaUfEEjj6qo7b6vn0bbzITpzI4hM2hAzwRaTPpOc8x71K5CFHKfQykhbHQeXbdXpF5
+         e+QLB4zJTEJFQxpNJzFrg0VcKY14Owm44fLwISlcAswh6zd2BDsFDZBq+MeYu6IE6l1o
+         G0u6aa4RANL7dACIu7Jt4/1DJ68GF6xH3sVdrTk6Tag5y4gVd/P4jFuGdYf5cJVXsBaO
+         bNQC9/JkFo5Gz2PqDSP7YYMEejb/mQzl+XkiKoFP9go+bXVqx84LevCx8Si26EHeqvAo
+         nsqDVUB43vYaGhRGPFQGzHUW2mbthXerppOiKPE7HAdCBpLVzRo/wyffDiwae7ZxZAnH
+         7Pow==
+X-Gm-Message-State: ANhLgQ24iT+hfgHD+ISbtE/bLNOOww7vVvW8BOQvKG23tvEd62etrTZ2
+        J/MRuMYJcArpQSWmM4nWuIW5DQrMxY8=
+X-Google-Smtp-Source: ADFU+vuqCztGnSgEvaBbLfIgKv+NmYx+f8L26fTeb1SeELM4AjCd4cDOrJ1+xvWKNWCkk/mTRWYUDw==
+X-Received: by 2002:a19:4f0c:: with SMTP id d12mr4078302lfb.117.1584960608526;
+        Mon, 23 Mar 2020 03:50:08 -0700 (PDT)
 Received: from [192.168.0.74] ([178.233.178.9])
-        by smtp.gmail.com with ESMTPSA id b198sm1611076lfg.11.2020.03.23.03.48.45
+        by smtp.gmail.com with ESMTPSA id t136sm4144179lff.48.2020.03.23.03.50.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2020 03:48:46 -0700 (PDT)
-Subject: [RFC PATCH 1/3] printk: Add function to set console to preferred
- console's driver
+        Mon, 23 Mar 2020 03:50:07 -0700 (PDT)
+Subject: [RFC PATCH 2/3] vt: Set as preferred console when a non-dummy
+ backend, is bound
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, Petr Mladek <pmladek@suse.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
@@ -67,8 +67,8 @@ Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 References: <44156595-0eee-58da-4376-fd25b634d21b@gmail.com>
 From:   Alper Nebi Yasak <alpernebiyasak@gmail.com>
-Message-ID: <b6d95636-adf2-254c-b992-7304cfd6b6c3@gmail.com>
-Date:   Mon, 23 Mar 2020 13:48:41 +0300
+Message-ID: <611f42ec-194c-a121-bba1-5f0ac8e2109b@gmail.com>
+Date:   Mon, 23 Mar 2020 13:50:03 +0300
 User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
@@ -81,136 +81,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, add_preferred_console sets a preferred console, but doesn't
-actually change /dev/console to match it. That part is handled within
-register_device, where a newly registered console driver will be set as
-/dev/console if it matches the preferred console.
+When a machine's device-tree has a "chosen" node with a "stdout-path"
+property that specified console is added as the preferred console by
+of_console_check via an add_preferred_console call. The property is
+quite common in kernel device-tree definitions. As far as I can tell, it
+is set to provide a reasonable default value for earlycon, and the
+(usually serial) console is set as preferred to avoid output going to
+VT's dummy backend instead of a working console.
 
-However, if the relevant driver is already registered, the only way to
-set it as /dev/console is by un-registering and re-registering it. An
-example is the xenfb_make_preferred_console() function:
+However, a chosen stdout-path property is included even in device-trees
+of systems that are designed to be used with a built-in display, e.g.
+several ARM Chromebooks. In these cases where CONFIG_VT_CONSOLE is
+enabled and no console argument is given on the kernel commandline, tty0
+is still registered (presumably based on the order of of_console_check
+and vt's register_console calls) but ends up not being the preferred
+console.
 
-	console_lock();
-	for_each_console(c) {
-		if (!strcmp(c->name, "tty") && c->index == 0)
-			break;
-	}
-	console_unlock();
-	if (c) {
-		unregister_console(c);
-		c->flags |= CON_CONSDEV;
-		c->flags &= ~CON_PRINTBUFFER; /* don't print again */
-		register_console(c);
-	}
+As a result, it is possible for early userspace prompts (encryption
+passphrase requests, emergency shells) to end up in a console that the
+user doesn't expect or even have access to.
 
-The code above was introduced in commit 9e124fe16ff2. In short, it's aim
-is to set VT as the preferred console only after a working framebuffer
-is registered and thus VT is not the dummy device.
+This patch tries to set tty0 as the /dev/console whenever a non-dummy
+backend tries to register as its default, unless the preferred console
+was set from the kernel commandline arguments.
 
-This patch introduces an update_console_to_preferred function that
-handles the necessary /dev/console change. With this change, the example
-above can be replaced with:
+On a Samsung Chromebook Plus (Google Kevin, rk3399-gru-kevin.dts), boot
+messages are still visible on the framebuffer without this patch, but it
+isn't the preferred console due to the device-tree having a stdout-path
+property (from rk3399-gru.dtsi):
 
-	console_lock();
-	add_preferred_console("tty", 0, NULL);
-	update_console_to_preferred();
-	console_unlock();
+	$ sudo dmesg | grep -i "console\|printk"
+	[    0.000000] printk: bootconsole [uart0] enabled
+	[    0.010232] Console: colour dummy device 80x25
+	[    0.015107] printk: console [tty0] enabled
+	[    0.019601] printk: bootconsole [uart0] disabled
+	[    7.145478] printk: console [ttyS2] enabled
+	[    9.316094] Console: switching to colour frame buffer device 300x100
 
-More importantly, these two calls can be moved to vt.c in order to bump
-its priority when a non-dummy backend for it is introduced, solving that
-problem in general.
+	$ cat /proc/consoles
+	ttyS2                -W- (EC p a)    4:66
+	tty0                 -WU (E     )    4:7
+
+And on the same machine, with this patch:
+
+	$ sudo dmesg | grep -i "console\|printk"
+	[    0.000000] printk: bootconsole [uart0] enabled
+	[    0.010257] Console: colour dummy device 80x25
+	[    0.015132] printk: console [tty0] enabled
+	[    0.019626] printk: bootconsole [uart0] disabled
+	[    4.741120] printk: console [ttyS2] enabled
+	[    6.779994] Console: switching to colour frame buffer device 300x100
+	[    6.836117] printk: switching to console [tty0]
+
+	$ cat /proc/consoles
+	tty0                 -WU (EC    )    4:7
+	ttyS2                -W- (E  p a)    4:66
 
 Signed-off-by: Alper Nebi Yasak <alpernebiyasak@gmail.com>
 ---
- include/linux/console.h |  1 +
- kernel/printk/printk.c  | 56 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 57 insertions(+)
+ drivers/tty/vt/vt.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/include/linux/console.h b/include/linux/console.h
-index 75dd20650fb..4b3fa34be24 100644
---- a/include/linux/console.h
-+++ b/include/linux/console.h
-@@ -172,6 +172,7 @@ enum con_flush_mode {
- };
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index bbc26d73209..0fc462ae8b2 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -3566,6 +3566,13 @@ static int do_bind_con_driver(const struct consw *csw, int first, int last,
+ 		pr_cont("to %s\n", desc);
+ 	}
  
- extern int add_preferred_console(char *name, int idx, char *options);
-+extern int update_console_to_preferred(void);
- extern void register_console(struct console *);
- extern int unregister_console(struct console *);
- extern struct console *console_drivers;
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index ad460623454..6b16c973587 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2212,12 +2212,68 @@ __setup("console=", console_setup);
-  * be used by arch-specific code either to override the user or more
-  * commonly to provide a default console (ie from PROM variables) when
-  * the user has not supplied one.
-+ *
-+ * Preferences set by this function don't take effect until the next
-+ * time a matching driver for the preferred console is registered. If a
-+ * matching driver was already registered, @update_console_to_preferred
-+ * function can be used to set that as the preferred console driver.
-  */
- int add_preferred_console(char *name, int idx, char *options)
- {
- 	return __add_preferred_console(name, idx, options, NULL, false);
- }
- 
-+/**
-+ * update_console_to_preferred - set console to the preferred console's driver.
-+ *
-+ * Updates console_drivers and CON_CONSDEV flags so that an already
-+ * registered and enabled console driver matching the preferred console
-+ * is used as /dev/console.
-+ *
-+ * Must be called within console_lock();.
-+ */
-+int update_console_to_preferred(void)
-+{
-+	struct console_cmdline *c = NULL;
-+	struct console *con = NULL;
-+	struct console *tmp = NULL;
-+
-+	if (preferred_console >= 0)
-+		c = &console_cmdline[preferred_console];
-+
-+	if (!c || !c->name[0])
-+		return 0;
-+
-+	for_each_console(con) {
-+		if (!con->next || !(con->next->flags & CON_ENABLED))
-+			continue;
-+		if (strcmp(c->name, con->next->name) != 0)
-+			continue;
-+		if (con->next->index >= 0 &&
-+		    con->next->index != c->index)
-+			continue;
-+		break;
++#ifdef CONFIG_VT_CONSOLE
++	if (!console_set_on_cmdline && deflt && conswitchp != &dummy_con) {
++		add_preferred_console("tty", 0, NULL);
++		update_console_to_preferred();
 +	}
++#endif
 +
-+	if (!con)
-+		return -ENODEV;
-+
-+	pr_info("switching to console [%s%d]\n",
-+		con->next->name, con->next->index);
-+
-+	tmp = con->next;
-+	con->next = con->next->next;
-+	tmp->next = console_drivers;
-+	console_drivers = tmp;
-+
-+	if (console_drivers->next)
-+		console_drivers->next->flags &= ~CON_CONSDEV;
-+	console_drivers->flags |= CON_CONSDEV;
-+	has_preferred_console = true;
-+
-+	return 0;
-+}
-+
- bool console_suspend_enabled = true;
- EXPORT_SYMBOL(console_suspend_enabled);
- 
+ 	retval = 0;
+ err:
+ 	module_put(owner);
 -- 
 2.26.0.rc2
+
 
