@@ -2,127 +2,246 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A566FC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF7FC4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7926F20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584958911;
-	bh=WUDqjxSP5HIye7Jm6hq9yOS7QIpPig9D7tnQpVgfrh8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=sVvPCvIVH7z13gr2tXWg7ab+kkOhYJ54oeSGVi8dqFsgTHzKvvyE8fiLl+JNxo9Fh
-	 VmsZ30NiNMAf3P2H88I5vFcj/P0PuVctQdju4pstjApz3jiayPrIMeiiU8ZPzG+aGh
-	 NBw1pQeOIQHQ2+Og5N5JiuoZpD/PLxmP/xYwcXQ8=
+	by mail.kernel.org (Postfix) with ESMTP id 8E38C2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:32:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lQzO1/oM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgCWKVu (ORCPT
+        id S1727934AbgCWKci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 06:21:50 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58176 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbgCWKVu (ORCPT
+        Mon, 23 Mar 2020 06:32:38 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40753 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbgCWKci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 06:21:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description;
-        bh=3WfSQ3OZhM0uMtvR96lPO9D2XEhT6VnleEL2HTMq9qc=; b=B5q6NfBAhKcSzZ3KlhdFVBHL7w
-        DZB2imhu75xJbB3QtYbJRRfGTzNKz/YBND322z63b+tNyIQuKPbKkUZWry1fWF5T0/wsNa5MZpEfm
-        Z3eEjbwIg8P7CrA/OOneVnMtgehQijD/+dIePxPF9uo/UPfCwTcpoqatNj54Z4WEc85Tw1YPAfGMK
-        uVL9iBX5OyyKfNdtnWQW+pLmpCjMd0bqTghGYIZbjy0UEjxgGS3ktZJATt+VhxDnnfiuUif3khhOX
-        ikM/lun32HfmT6ajMX9N6aDSPhtx4W/Ih/hXHQ1cblAEZZWO+DGSSV0GVgSxQl3Ei5IR2IaBEyEAp
-        9XfudGdQ==;
-Received: from ip5f5ad4e9.dynamic.kabel-deutschland.de ([95.90.212.233] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGKDM-0005ME-AT; Mon, 23 Mar 2020 10:21:48 +0000
-Date:   Mon, 23 Mar 2020 11:21:42 +0100
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Martin Knoblauch <knobi@knobisoft.de>
-Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: Build error on 5.5.10 after activating v4l in .config
-Message-ID: <20200323112142.457a8a28@coco.lan>
-In-Reply-To: <CAJtcoLZKbiSqRPvLMz-Bp142sxEFhuAkbZzx7P3n3VW2bNCtQA@mail.gmail.com>
-References: <CAJtcoLYiGLa3UWQ-XBVc=ATQEnsFrfZuU0i_fS22b7Uv+S-Ysw@mail.gmail.com>
-        <20200320161301.36866c31@coco.lan>
-        <CAJtcoLZKbiSqRPvLMz-Bp142sxEFhuAkbZzx7P3n3VW2bNCtQA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 23 Mar 2020 06:32:38 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a81so8385832wmf.5;
+        Mon, 23 Mar 2020 03:32:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=59Ut9IY4o/q5MZFN98JGtJfE2YyEe3hnu26+XZPTOIo=;
+        b=lQzO1/oMkjJlrnRwkhpmsHy8gUzTzpBjViiDOt1dlcveGJijRmQZy0ei+PbS1diI1L
+         OucC4Hl8fpR+/xIAcYduI8ZL0RsFPGN4Ucf9PepZYb1VtlU1iEPAzp5KMHa1+kwLdTvA
+         7fQAts/DtpCIgIf9kKffMYLxAVmUI+sG9NR3JAnTBLedGl7PiKaOA9IP506C55ioOEVf
+         +fZ2N5c9AFJb8O7fy5M1p41MheEf2MaGSnV5hl73wfpd71PS4TwdmQjDjaqXaPXFR2cl
+         L6HebqUBoBZc/KL2E/y9fDjrY9FSzaVyXeLsvgpBHd7JEAGyXjsUtSGudWa4uvzNywDs
+         JqLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=59Ut9IY4o/q5MZFN98JGtJfE2YyEe3hnu26+XZPTOIo=;
+        b=GcAWT94mhrHy/PZNNFaZD0nOOVp3Tk6587NxQ43npcbKhnqQZdiKbBHw29JUXwFpB1
+         d6ir9hOrik7scGkJkgIkgdjjAfMG+7eLo/0zOhD1wxlKxNKdMVEcIKiZ+glhcD8011Dy
+         LRxXOJNNscVUHOwa33XqjFu4S+MsH0v9Iy0o0IgX8YTKSL8VijO89Tacq5yvRDh+Jym2
+         dYLW4yq93SlbxfV3CkTRIej52JGV9fFiEfW+3wZsAdhObM+VaeKJ4mf8b3y5gkvVmBZY
+         jE2N08W5nfPc8mIp2JzsrUcOdA6ZplgOdBGQsMGaVkLMW05MNcNMrDpowJMGxSXPLpdI
+         Hp0g==
+X-Gm-Message-State: ANhLgQ28ZUXUo/oemQR+XB/LKrLVGJ3E/JHL0vZ5gxjroRjtp0gIu32L
+        bbBOdL6hztPLdRiyG741zbcU0jLUhIR7MvrezjY=
+X-Google-Smtp-Source: ADFU+vt/QLigcG486ru4fwyg+nnx96T1p/Nq94xgY8sKoWbbeCXaO1ssyA8TBN4/K2CEP5dtp/CYchu1wgRVhBoCN3A=
+X-Received: by 2002:a05:600c:228f:: with SMTP id 15mr7693466wmf.140.1584959554995;
+ Mon, 23 Mar 2020 03:32:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200224193436.26860-1-atish.patra@wdc.com> <mhng-a36eb560-2fbf-4fba-8416-8181a2c8ad5b@palmerdabbelt-glaptop1>
+ <CAEn-LTo=GP5OMZiaBi8BL1etLcGrCyofQrtQ4-JOo5zcpCLu8A@mail.gmail.com>
+In-Reply-To: <CAEn-LTo=GP5OMZiaBi8BL1etLcGrCyofQrtQ4-JOo5zcpCLu8A@mail.gmail.com>
+From:   David Abdurachmanov <david.abdurachmanov@gmail.com>
+Date:   Mon, 23 Mar 2020 12:31:58 +0200
+Message-ID: <CAEn-LTokKZXgoNgDi2e5XW2WgL5O+e5UVs7wX2ndqecCdPnN4g@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Move all address space definition macros to one place
+To:     Palmer Dabbelt <palmerdabbelt@google.com>
+Cc:     Atish Patra <Atish.Patra@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>, nickhu@andestech.com,
+        Bjorn Topel <bjorn.topel@gmail.com>,
+        Anup Patel <Anup.Patel@wdc.com>, stable@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        akpm@linux-foundation.org,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 23 Mar 2020 10:44:42 +0100
-Martin Knoblauch <knobi@knobisoft.de> escreveu:
-
-> On Fri, Mar 20, 2020 at 4:13 PM Mauro Carvalho Chehab <mchehab@kernel.org>
-> wrote:
-> 
-> > Em Fri, 20 Mar 2020 15:56:16 +0100
-> > Martin Knoblauch <knobi@knobisoft.de> escreveu:
-> >  
-> > > Hi, (sesending without attachment)
-> > >
-> > >  today I tried to build 5.5.10 based on a working 5.5.6 configuration. I
-> > > also enabled v4l in the configuration using menuconfig. This resulted in
-> > > the following build error:
-> > >
-> > >   AS      arch/x86/boot/compressed/efi_thunk_64.o
-> > >   CC      arch/x86/boot/compressed/misc.o
-> > >   XZKERN  arch/x86/boot/compressed/vmlinux.bin.xz
-> > > ERROR: "__devm_regmap_init_i2c" [drivers/media/i2c/tvp5150.ko] undefined!
-> > > make[1]: *** [scripts/Makefile.modpost:94: __modpost] Error 1
-> > > make: *** [Makefile:1282: modules] Error 2
-> > > make: *** Waiting for unfinished jobs....
-> > >
-> > > After some searching the universal support tool, I applied the following
-> > > patch:
-> > >
-> > > --- ./drivers/media/i2c/Kconfig-orig 2020-03-18 13:57:30.288639392 +0100
-> > > +++ ./drivers/media/i2c/Kconfig 2020-03-18 16:44:03.938384192 +0100
-> > > @@ -378,6 +378,7 @@
-> > >  config VIDEO_TVP5150
-> > >   tristate "Texas Instruments TVP5150 video decoder"
-> > >   depends on VIDEO_V4L2 && I2C
-> > > + select REGMAP_I2C
-> > >   select V4L2_FWNODE
-> > >   help
-> > >    Support for the Texas Instruments TVP5150 video decoder.
-> > >
-> > > This made my build work again. But I am absolutely not sure this is the
-> > > right fix or whether it is complete.  
+On Sat, Mar 21, 2020 at 10:29 PM David Abdurachmanov
+<david.abdurachmanov@gmail.com> wrote:
+>
+> On Fri, Mar 6, 2020 at 2:20 AM Palmer Dabbelt <palmerdabbelt@google.com> =
+wrote:
 > >
-> > Yes, it is. There are other places where the same select is needed.
+> > On Mon, 24 Feb 2020 11:34:36 PST (-0800), Atish Patra wrote:
+> > > If both CONFIG_KASAN and CONFIG_SPARSEMEM_VMEMMAP are set, we get the
+> > > following compilation error.
+> > >
+> > > ---------------------------------------------------------------
+> > > ./arch/riscv/include/asm/pgtable-64.h: In function =E2=80=98pud_page=
+=E2=80=99:
+> > > ./include/asm-generic/memory_model.h:54:29: error: =E2=80=98vmemmap=
+=E2=80=99 undeclared
+> > > (first use in this function); did you mean =E2=80=98mem_map=E2=80=99?
+> > >  #define __pfn_to_page(pfn) (vmemmap + (pfn))
+> > >                              ^~~~~~~
+> > > ./include/asm-generic/memory_model.h:82:21: note: in expansion of
+> > > macro =E2=80=98__pfn_to_page=E2=80=99
+> > >
+> > >  #define pfn_to_page __pfn_to_page
+> > >                      ^~~~~~~~~~~~~
+> > > ./arch/riscv/include/asm/pgtable-64.h:70:9: note: in expansion of mac=
+ro
+> > > =E2=80=98pfn_to_page=E2=80=99
+> > >   return pfn_to_page(pud_val(pud) >> _PAGE_PFN_SHIFT);
+> > > ---------------------------------------------------------------
+> > >
+> > > Fix the compliation errors by moving all the address space definition
+> > > macros before including pgtable-64.h.
+> > >
+> > > Cc: stable@vger.kernel.org
+> > > Fixes: 8ad8b72721d0 (riscv: Add KASAN support)
+> > >
+> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > ---
+> > >  arch/riscv/include/asm/pgtable.h | 78 +++++++++++++++++-------------=
+--
+> > >  1 file changed, 41 insertions(+), 37 deletions(-)
+> > >
+> > > diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/as=
+m/pgtable.h
+> > > index 453afb0a570a..4f6ee48a42e8 100644
+> > > --- a/arch/riscv/include/asm/pgtable.h
+> > > +++ b/arch/riscv/include/asm/pgtable.h
+> > > @@ -19,6 +19,47 @@
+> > >  #include <asm/tlbflush.h>
+> > >  #include <linux/mm_types.h>
+> > >
+> > > +#ifdef CONFIG_MMU
+> > > +
+> > > +#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
+> > > +#define VMALLOC_END      (PAGE_OFFSET - 1)
+> > > +#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
+> > > +
+> > > +#define BPF_JIT_REGION_SIZE  (SZ_128M)
+> > > +#define BPF_JIT_REGION_START (PAGE_OFFSET - BPF_JIT_REGION_SIZE)
+> > > +#define BPF_JIT_REGION_END   (VMALLOC_END)
+> > > +
+> > > +/*
+> > > + * Roughly size the vmemmap space to be large enough to fit enough
+> > > + * struct pages to map half the virtual address space. Then
+> > > + * position vmemmap directly below the VMALLOC region.
+> > > + */
+> > > +#define VMEMMAP_SHIFT \
+> > > +     (CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
+> > > +#define VMEMMAP_SIZE BIT(VMEMMAP_SHIFT)
+> > > +#define VMEMMAP_END  (VMALLOC_START - 1)
+> > > +#define VMEMMAP_START        (VMALLOC_START - VMEMMAP_SIZE)
+> > > +
+> > > +/*
+> > > + * Define vmemmap for pfn_to_page & page_to_pfn calls. Needed if ker=
+nel
+> > > + * is configured with CONFIG_SPARSEMEM_VMEMMAP enabled.
+> > > + */
+> > > +#define vmemmap              ((struct page *)VMEMMAP_START)
+> > > +
+> > > +#define PCI_IO_SIZE      SZ_16M
+> > > +#define PCI_IO_END       VMEMMAP_START
+> > > +#define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
+> > > +
+> > > +#define FIXADDR_TOP      PCI_IO_START
+> > > +#ifdef CONFIG_64BIT
+> > > +#define FIXADDR_SIZE     PMD_SIZE
+> > > +#else
+> > > +#define FIXADDR_SIZE     PGDIR_SIZE
+> > > +#endif
+> > > +#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
+> > > +
+> > > +#endif
+> > > +
+> > >  #ifdef CONFIG_64BIT
+> > >  #include <asm/pgtable-64.h>
+> > >  #else
+> > > @@ -90,31 +131,6 @@ extern pgd_t swapper_pg_dir[];
+> > >  #define __S110       PAGE_SHARED_EXEC
+> > >  #define __S111       PAGE_SHARED_EXEC
+> > >
+> > > -#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
+> > > -#define VMALLOC_END      (PAGE_OFFSET - 1)
+> > > -#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
+> > > -
+> > > -#define BPF_JIT_REGION_SIZE  (SZ_128M)
+> > > -#define BPF_JIT_REGION_START (PAGE_OFFSET - BPF_JIT_REGION_SIZE)
+> > > -#define BPF_JIT_REGION_END   (VMALLOC_END)
+> > > -
+> > > -/*
+> > > - * Roughly size the vmemmap space to be large enough to fit enough
+> > > - * struct pages to map half the virtual address space. Then
+> > > - * position vmemmap directly below the VMALLOC region.
+> > > - */
+> > > -#define VMEMMAP_SHIFT \
+> > > -     (CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
+> > > -#define VMEMMAP_SIZE BIT(VMEMMAP_SHIFT)
+> > > -#define VMEMMAP_END  (VMALLOC_START - 1)
+> > > -#define VMEMMAP_START        (VMALLOC_START - VMEMMAP_SIZE)
+> > > -
+> > > -/*
+> > > - * Define vmemmap for pfn_to_page & page_to_pfn calls. Needed if ker=
+nel
+> > > - * is configured with CONFIG_SPARSEMEM_VMEMMAP enabled.
+> > > - */
+> > > -#define vmemmap              ((struct page *)VMEMMAP_START)
+> > > -
+> > >  static inline int pmd_present(pmd_t pmd)
+> > >  {
+> > >       return (pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROT_NONE));
+> > > @@ -452,18 +468,6 @@ static inline int ptep_clear_flush_young(struct =
+vm_area_struct *vma,
+> > >  #define __pte_to_swp_entry(pte)      ((swp_entry_t) { pte_val(pte) }=
+)
+> > >  #define __swp_entry_to_pte(x)        ((pte_t) { (x).val })
+> > >
+> > > -#define PCI_IO_SIZE      SZ_16M
+> > > -#define PCI_IO_END       VMEMMAP_START
+> > > -#define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
+> > > -
+> > > -#define FIXADDR_TOP      PCI_IO_START
+> > > -#ifdef CONFIG_64BIT
+> > > -#define FIXADDR_SIZE     PMD_SIZE
+> > > -#else
+> > > -#define FIXADDR_SIZE     PGDIR_SIZE
+> > > -#endif
+> > > -#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
+> > > -
+> > >  /*
+> > >   * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
+> > >   * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
 > >
-> > There's already a patch upstream (linux-next) addressing this issue.
-> >
-> > It should be merged for 5.7.
-> >
-> > Regards,
-> > Mauro
-> >  
-> 
-> Hi Mauro,
-> 
->  so I had the same issue again with 5.5.11 (expected). In order to avoid
-> keeping a local patch until 5.5.7, I tried to deselect the driver. But it
-> seems I cannot. Only options I have for it are "M" or "*". So, what makes
-> this device different from e.g. TVP514x? I do not have the TVP5150 and the
-> driver is also not loaded. To me it seems the forced selection should not
-> happen in the first place ?
+> > While this isn't technically a fix, I'm inclined to target it for the R=
+Cs just
+> > to avoid conflicts.  I've put it on for-next now so the builders have s=
+ome time
+> > to chew on things, as I don't want to put in a non-fix too quickly.
+>
+> I hit the same issue in Fedora/RISCV while building kernel-5.6.0-0.rc6, a=
+nd
+> we don't have KASAN selected. We do have CONFIG_SPARSEMEM_VMEMMAP
+> selected.
+>
+> I will try this patch tomorrow.
+>
+Confirmed to solve my build errors with kernel in Fedora/RISCV.
 
-Some other driver you selected may support boards with tvp5150. By default,
-it will auto-select all possible dependencies. 
-
-You can disable MEDIA_SUBDRV_AUTOSELECT. Please notice, however, that this
-may break support for some hardware.
-
-Thanks,
-Mauro
+david
