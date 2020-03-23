@@ -2,387 +2,325 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B073C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D50C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D641C2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC6062072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:13:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="r+acbKxZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LSV/jgtR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbgCWJM2 (ORCPT
+        id S1727693AbgCWJNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 05:12:28 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:34009 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727655AbgCWJM2 (ORCPT
+        Mon, 23 Mar 2020 05:13:43 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41181 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727649AbgCWJNn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:12:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584954747; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=SoK1G4xKcKDpUeUvLPp2R79L97dcvrVTXnYs55SSTm8=;
- b=r+acbKxZoUgYbU2QIx7jKlwLUWkqt83Dav+eBJM0YkZjTInmesquNSby3K6+C/jiy1JP4tg7
- oAG8e2DGyCgRNs6qfoZCw5RK0XL01Hm5x11SE2hEf2vxMFxgvmME+29IN1Z3CbYpjB49FISY
- jXFh+ysMJll/qVdUUKOpbE23xf4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e787d76.7f87b1b51fb8-smtp-out-n03;
- Mon, 23 Mar 2020 09:12:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DE840C43637; Mon, 23 Mar 2020 09:12:21 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rjliao)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AE0ABC433CB;
-        Mon, 23 Mar 2020 09:12:20 +0000 (UTC)
+        Mon, 23 Mar 2020 05:13:43 -0400
+Received: by mail-lf1-f67.google.com with SMTP id z22so9591823lfd.8;
+        Mon, 23 Mar 2020 02:13:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pGDFm3nnObU1qnSEL0ZjLRRIteoo9pq6mn3EACs6vPI=;
+        b=LSV/jgtR6k4RO8vGauAAYTGcSQpuGjq+5uJPHvCBuxzx0UulWA4wflYu9TwJvH3rER
+         AeVu7OcjRqUs53YiETaiAlSqsG9GxWqWduFdvp0AcQyN+ggIrHoo0Uc7jbBghRkZhzSv
+         9JIwrXz4of+HNqyK37oNptgWoklxV7aCN/0e736VPUoP3RRIQFvYH6YgPY4Xp5snexHs
+         rBDEAG+HuodHSFo0kQqs4LIF5VI6bRVv7+pDpvMO5Am36Up5ezbtdu/khAW4TrryNFtV
+         JA2t3JPv7aJpLrwX2C14oBd48LqzsDg6U1i78MEb3o9g6UPts35dCERmTXabIRBPXytW
+         l1tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pGDFm3nnObU1qnSEL0ZjLRRIteoo9pq6mn3EACs6vPI=;
+        b=innDvZSFWumkpqeDgC9sO5JcN1aUWmrqZjDN3OqAWEwyQirEAwZzzSCnUdJS0stm92
+         actymzEwsbBPHkEQwuGzfPco4uiN/tOJhvtsSXIkLSPknaPrwUv0hAaIBEpcpb7MmA0d
+         nPwZ4oCR7y9XykWXlLg5taXZJgxXChw+8yHsXQg+Z0DuvYdbCzSPPtETaeP16DMyD3jn
+         j1+ICogOYrB83iNMu46lJaGsuJ67y/o9oztwdkqBBNUbBdcaBrq01a7pjBfxuwNKGWOk
+         o8SfWhD49jy1LmA6CzfYxb6y8RpiJ5Os5ZhfuRtt3rtKVVSftgDWQpQn3YxCTdxh8qKD
+         hUtA==
+X-Gm-Message-State: ANhLgQ2csN2ZGj+r4Qasr/yYHeOvHM1lGqaHeLoUMgmYBGGbs939hBwc
+        xEl12P2SGEyZ4KIGBEhW4uMIVnYo7FaTmgUgf3c=
+X-Google-Smtp-Source: ADFU+vv3f8BsVmyZj4IiQrQldMgtErEwIH2IGIJcmV0tvtwI6KTqqG6H0+T0TF4eMJp/dKU+0a8NmyW9o5Nyis2IMZs=
+X-Received: by 2002:ac2:4199:: with SMTP id z25mr12824675lfh.90.1584954819446;
+ Mon, 23 Mar 2020 02:13:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 23 Mar 2020 17:12:20 +0800
-From:   Rocky Liao <rjliao@codeaurora.org>
-To:     bgodavar@codeaurora.org
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, c-hbandi@codeaurora.org,
-        hemantg@codeaurora.org, mka@chromium.org
-Subject: Re: [PATCH v1 1/2] Bluetooth: hci_qca: Add support for Qualcomm
- Bluetooth SoC QCA6390
-In-Reply-To: <77f651b52dbaae4d30aabfa361915eda@codeaurora.org>
-References: <20200314094328.3331-1-rjliao@codeaurora.org>
- <77f651b52dbaae4d30aabfa361915eda@codeaurora.org>
-Message-ID: <5a2b7eea5d4755d06605dc0ba2e8e802@codeaurora.org>
-X-Sender: rjliao@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <cover.1584350380.git.baolin.wang7@gmail.com> <c2e62e5a9942fb833dfc0cdc8c967a12f3c34b03.1584350380.git.baolin.wang7@gmail.com>
+ <20200318100123.GA27531@ming.t460p> <CADBw62qbdpoyPZd+_np6f0L+83Ah8B218EYKmi8xiUbBf5c6+A@mail.gmail.com>
+ <CADBw62rWWk=Jeg7=3nEBqK2prQjLzCGcFyJ+WkZ0D6_grcETHA@mail.gmail.com>
+ <20200323034432.GA27507@ming.t460p> <CADBw62rxFdriCSEo78M7_xnS3UiaDPN9CwURtiDOTxGVCevbsg@mail.gmail.com>
+ <20200323072640.GA4767@ming.t460p> <CADBw62rDOUUpEdOKxoC3J5R=noSGMLzkJZjjjFa1Mv6J7FX_Aw@mail.gmail.com>
+ <20200323082830.GB5616@ming.t460p>
+In-Reply-To: <20200323082830.GB5616@ming.t460p>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Mon, 23 Mar 2020 17:13:27 +0800
+Message-ID: <CADBw62rd4Ro2VbfFZqev6ou7jY+sLtn6b9Z6HCcZAigHngj9Fw@mail.gmail.com>
+Subject: Re: [RESEND RFC PATCH 2/8] block: Allow sending a batch of requests
+ from the scheduler to hardware
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     axboe@kernel.dk, Paolo Valente <paolo.valente@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020-03-16 23:04，bgodavar@codeaurora.org 写道：
-> On 2020-03-14 15:13, Rocky Liao wrote:
->> This patch adds support for QCA6390, including the devicetree and acpi
->> compatible hwid matching, and patch/nvm downloading.
->> 
->> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
->> ---
->>  drivers/bluetooth/btqca.c   | 44 +++++++++++++++++++++++++++++++----
->>  drivers/bluetooth/btqca.h   |  8 +++++++
->>  drivers/bluetooth/hci_qca.c | 46 
->> +++++++++++++++++++++++++++++++------
->>  3 files changed, 86 insertions(+), 12 deletions(-)
->> 
->> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
->> index a16845c0751d..ca126e499c58 100644
->> --- a/drivers/bluetooth/btqca.c
->> +++ b/drivers/bluetooth/btqca.c
->> @@ -14,6 +14,9 @@
->> 
->>  #define VERSION "0.1"
->> 
->> +#define QCA_IS_3991_6390(soc_type)    \
->> +	(soc_type == QCA_WCN3991 || soc_type == QCA_QCA6390)
->> +
-> 
-> [Bala]: Why don't we do >= QCA_WCN3991 (mostly both the devices
-> support same features)
-> 
-OK
+On Mon, Mar 23, 2020 at 4:29 PM Ming Lei <ming.lei@redhat.com> wrote:
+>
+> On Mon, Mar 23, 2020 at 04:22:38PM +0800, Baolin Wang wrote:
+> > On Mon, Mar 23, 2020 at 3:27 PM Ming Lei <ming.lei@redhat.com> wrote:
+> > >
+> > > On Mon, Mar 23, 2020 at 01:36:34PM +0800, Baolin Wang wrote:
+> > > > On Mon, Mar 23, 2020 at 11:44 AM Ming Lei <ming.lei@redhat.com> wrote:
+> > > > >
+> > > > > On Fri, Mar 20, 2020 at 06:27:41PM +0800, Baolin Wang wrote:
+> > > > > > Hi Ming,
+> > > > > >
+> > > > > > On Wed, Mar 18, 2020 at 6:26 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > > > > > >
+> > > > > > > Hi Ming,
+> > > > > > >
+> > > > > > > On Wed, Mar 18, 2020 at 6:01 PM Ming Lei <ming.lei@redhat.com> wrote:
+> > > > > > > >
+> > > > > > > > On Mon, Mar 16, 2020 at 06:01:19PM +0800, Baolin Wang wrote:
+> > > > > > > > > As we know, some SD/MMC host controllers can support packed request,
+> > > > > > > > > that means we can package several requests to host controller at one
+> > > > > > > > > time to improve performence. So the hardware driver expects the blk-mq
+> > > > > > > > > can dispatch a batch of requests at one time, and driver can use bd.last
+> > > > > > > > > to indicate if it is the last request in the batch to help to combine
+> > > > > > > > > requests as much as possible.
+> > > > > > > > >
+> > > > > > > > > Thus we should add batch requests setting from the block driver to tell
+> > > > > > > > > the scheduler how many requests can be dispatched in a batch, as well
+> > > > > > > > > as changing the scheduler to dispatch more than one request if setting
+> > > > > > > > > the maximum batch requests number.
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > I feel this batch dispatch style is more complicated, and some other
+> > > > > > > > drivers(virtio blk/scsi) still may get benefit if we can pass real 'last' flag in
+> > > > > > > > .queue_rq().
+> > > > > > > >
+> > > > > > > > So what about the following way by extending .commit_rqs() to this usage?
+> > > > > > > > And you can do whatever batch processing in .commit_rqs() which will be
+> > > > > > > > guaranteed to be called if BLK_MQ_F_FORCE_COMMIT_RQS is set by driver.
+> > > > > > >
+> > > > > > > I'm very appreciated for your good suggestion, which is much simpler than mine.
+> > > > > > > It seems to solve my problem, and I will try it on my platform to see
+> > > > > > > if it can work and give you the feadback. Thanks again.
+> > > > > >
+> > > > > > I tried your approach on my platform, but met some problems, see below.
+> > > > > >
+> > > > > > >
+> > > > > > > > diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+> > > > > > > > index 856356b1619e..cd2bbe56f83f 100644
+> > > > > > > > --- a/block/blk-mq-sched.c
+> > > > > > > > +++ b/block/blk-mq-sched.c
+> > > > > > > > @@ -85,11 +85,12 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
+> > > > > > > >   * its queue by itself in its completion handler, so we don't need to
+> > > > > > > >   * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
+> > > > > > > >   */
+> > > > > > > > -static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+> > > > > > > > +static bool blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+> > > > > > > >  {
+> > > > > > > >         struct request_queue *q = hctx->queue;
+> > > > > > > >         struct elevator_queue *e = q->elevator;
+> > > > > > > >         LIST_HEAD(rq_list);
+> > > > > > > > +       bool ret = false;
+> > > > > > > >
+> > > > > > > >         do {
+> > > > > > > >                 struct request *rq;
+> > > > > > > > @@ -112,7 +113,10 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+> > > > > > > >                  * in blk_mq_dispatch_rq_list().
+> > > > > > > >                  */
+> > > > > > > >                 list_add(&rq->queuelist, &rq_list);
+> > > > > > > > -       } while (blk_mq_dispatch_rq_list(q, &rq_list, true));
+> > > > > > > > +               ret = blk_mq_dispatch_rq_list(q, &rq_list, true);
+> > > > > > > > +       } while (ret);
+> > > > > > > > +
+> > > > > > > > +       return ret;
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > >  static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+> > > > > > > > @@ -131,11 +135,12 @@ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+> > > > > > > >   * its queue by itself in its completion handler, so we don't need to
+> > > > > > > >   * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
+> > > > > > > >   */
+> > > > > > > > -static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+> > > > > > > > +static bool blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+> > > > > > > >  {
+> > > > > > > >         struct request_queue *q = hctx->queue;
+> > > > > > > >         LIST_HEAD(rq_list);
+> > > > > > > >         struct blk_mq_ctx *ctx = READ_ONCE(hctx->dispatch_from);
+> > > > > > > > +       bool ret = false;
+> > > > > > > >
+> > > > > > > >         do {
+> > > > > > > >                 struct request *rq;
+> > > > > > > > @@ -161,10 +166,12 @@ static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+> > > > > > > >
+> > > > > > > >                 /* round robin for fair dispatch */
+> > > > > > > >                 ctx = blk_mq_next_ctx(hctx, rq->mq_ctx);
+> > > > > > > > -
+> > > > > > > > -       } while (blk_mq_dispatch_rq_list(q, &rq_list, true));
+> > > > > > > > +               ret = blk_mq_dispatch_rq_list(q, &rq_list, true);
+> > > > > > > > +       } while (ret);
+> > > > > > > >
+> > > > > > > >         WRITE_ONCE(hctx->dispatch_from, ctx);
+> > > > > > > > +
+> > > > > > > > +       return ret;
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > >  void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+> > > > > > > > @@ -173,6 +180,7 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+> > > > > > > >         struct elevator_queue *e = q->elevator;
+> > > > > > > >         const bool has_sched_dispatch = e && e->type->ops.dispatch_request;
+> > > > > > > >         LIST_HEAD(rq_list);
+> > > > > > > > +       bool dispatch_ret;
+> > > > > > > >
+> > > > > > > >         /* RCU or SRCU read lock is needed before checking quiesced flag */
+> > > > > > > >         if (unlikely(blk_mq_hctx_stopped(hctx) || blk_queue_quiesced(q)))
+> > > > > > > > @@ -206,20 +214,26 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+> > > > > > > >          */
+> > > > > > > >         if (!list_empty(&rq_list)) {
+> > > > > > > >                 blk_mq_sched_mark_restart_hctx(hctx);
+> > > > > > > > -               if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
+> > > > > > > > +               dispatch_ret = blk_mq_dispatch_rq_list(q, &rq_list, false);
+> > > > > > > > +               if (dispatch_ret) {
+> > > > > > > >                         if (has_sched_dispatch)
+> > > > > > > > -                               blk_mq_do_dispatch_sched(hctx);
+> > > > > > > > +                               dispatch_ret = blk_mq_do_dispatch_sched(hctx);
+> > > > > >
+> > > > > > If we dispatched a request successfully by blk_mq_dispatch_rq_list(),
+> > > > > > and got dispatch_ret = true now. Then we will try to dispatch more
+> > > > > > reuqests from scheduler by blk_mq_do_dispatch_sched(), but if now no
+> > > > > > more requests in scheduler, then we will got dispatch_ret = false. In
+> > > > >
+> > > > > 'dispatch_ret' always holds result of the last blk_mq_do_dispatch_sched().
+> > > > > When any one request has been dispatched successfully, 'dispatch_ret'
+> > > > > is true. New request is always added to list before calling
+> > > > > blk_mq_do_dispatch_sched(), so once blk_mq_do_dispatch_sched() returns
+> > > > > false, it means that .commit_rqs() has been called.
+> > > >
+> > > > Not really, if no requests int the IO cheduler, we will break the loop
+> > > > in blk_mq_do_dispatch_sched() and return false without calling
+> > > > .commit_rqs().
+> > >
+> > > If there isn't any request to dispatch, false is returned. Otherwise,
+> > > always return the return value of last 'blk_mq_dispatch_rq_list'.
+> > >
+> > > >
+> > > > So in this case, blk_mq_do_dispatch_sched() will return 'false', which
+> > > > overlapped the return value of 'true' from blk_mq_dispatch_rq_list(),
+> > > > and did not call .commit_rqs(). Then the IO processing will be stuck.
+> > >
+> > > See below.
+> > >
+> > > >
+> > > > static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+> > > > {
+> > > >         struct request_queue *q = hctx->queue;
+> > > >         struct elevator_queue *e = q->elevator;
+> > > >         LIST_HEAD(rq_list);
+> > > >         bool ret = false;
+> > >
+> > > The above initialization is just done once.
+> > >
+> > > >
+> > > >        do {
+> > > >               struct request *rq;
+> > > >
+> > > >               if (e->type->ops.has_work && !e->type->ops.has_work(hctx))
+> > > >                      break;
+> > > >
+> > > >               .......
+> > >                             ret = blk_mq_dispatch_rq_list(q, list, ...);
+> > >
+> > > list includes one request, so blk_mq_dispatch_rq_list() won't return
+> > > false in case of no request in list.
+> > >
+> > > >        } while (ret);
+> > > >
+> > > >        return ret;
+> > >
+> > > 'ret' is always updated by return value of last blk_mq_dispatch_rq_list()
+> > > if at least one request is dispatched. So if it becomes false, the loop
+> > > breaks, that means .commit_rqs() has been called cause 'list' does
+> > > include one request for blk_mq_dispatch_rq_list(). Otherwise, true is
+> > > still returned.
+> >
+> > Sorry for my confusing description, let me try again to describe the problem.
+> > When I try to mount the block device, I got the IO stuck with your
+> > patch, and I did some debugging. I found we missed calling
+> > commit_rqs() for one case:
+> >
+> > void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+> > @@ -173,6 +180,7 @@ void blk_mq_sched_dispatch_requests(struct
+> > blk_mq_hw_ctx *hctx)
+> >         struct elevator_queue *e = q->elevator;
+> >         const bool has_sched_dispatch = e && e->type->ops.dispatch_request;
+> >         LIST_HEAD(rq_list);
+> > +       bool dispatch_ret;
+> >
+> >         /* RCU or SRCU read lock is needed before checking quiesced flag */
+> >         if (unlikely(blk_mq_hctx_stopped(hctx) || blk_queue_quiesced(q)))
+> > @@ -206,20 +214,26 @@ void blk_mq_sched_dispatch_requests(struct
+> > blk_mq_hw_ctx *hctx)
+> >          */
+> >         if (!list_empty(&rq_list)) {
+> >                 blk_mq_sched_mark_restart_hctx(hctx);
+> > -               if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
+> > +               dispatch_ret = blk_mq_dispatch_rq_list(q, &rq_list, false);
+> >
+> > Suppose we dispatch one request to block driver, and return 'true' here.
+> >
+> > +               if (dispatch_ret) {
+> >                         if (has_sched_dispatch)
+> > -                               blk_mq_do_dispatch_sched(hctx);
+> > +                               dispatch_ret = blk_mq_do_dispatch_sched(hctx);
+> >
+> > Then we will continue to try to dispatch more requests from IO
+> > scheduler, but if there are no requests in IO scheduler now, it will
+> > return 'false' here, and set dispatch_ret as false.
+> >
+> >                         else
+> > -                               blk_mq_do_dispatch_ctx(hctx);
+> > +                               dispatch_ret = blk_mq_do_dispatch_ctx(hctx);
+>
+> OK, this one is an issue, but it can be fixed simply by not updating
+> 'dispatch_ret' for the following dispatch, something like the below
+> way:
+>
+>         if (dispatch_ret) {
+>                 if (has_sched_dispatch)
+>                         blk_mq_do_dispatch_sched(hctx);
+>                 else
+>                         blk_mq_do_dispatch_ctx(hctx);
+>         }
 
->>  int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version,
->>  			 enum qca_btsoc_type soc_type)
->>  {
->> @@ -32,7 +35,7 @@ int qca_read_soc_version(struct hci_dev *hdev, u32
->> *soc_version,
->>  	 * VSE event. WCN3991 sends version command response as a payload to
->>  	 * command complete event.
->>  	 */
->> -	if (soc_type == QCA_WCN3991) {
->> +	if (QCA_IS_3991_6390(soc_type)) {
->>  		event_type = 0;
->>  		rlen += 1;
->>  		rtype = EDL_PATCH_VER_REQ_CMD;
->> @@ -69,7 +72,7 @@ int qca_read_soc_version(struct hci_dev *hdev, u32
->> *soc_version,
->>  		goto out;
->>  	}
->> 
->> -	if (soc_type == QCA_WCN3991)
->> +	if (QCA_IS_3991_6390(soc_type))
->>  		memmove(&edl->data, &edl->data[1], sizeof(*ver));
->> 
->>  	ver = (struct qca_btsoc_version *)(edl->data);
->> @@ -138,6 +141,29 @@ int qca_send_pre_shutdown_cmd(struct hci_dev 
->> *hdev)
->>  }
->>  EXPORT_SYMBOL_GPL(qca_send_pre_shutdown_cmd);
->> 
->> +int qca_send_enhancelog_enable_cmd(struct hci_dev *hdev)
->> +{
->> +	struct sk_buff *skb;
->> +	int err;
->> +	const u8 param[2] = {0x14, 0x01};
-> 
-> [Bala]: advisable to use MACRO's
-> 
-This func will be removed, we don't need to enable enhanced log by 
-default. It can be done by hcitool whenever needed.
->> +
->> +	bt_dev_dbg(hdev, "QCA enhanced log enable cmd");
->> +
->> +	skb = __hci_cmd_sync_ev(hdev, QCA_ENHANCED_LOG_ENABLE_CMD, 2,
->> +				param, HCI_EV_CMD_COMPLETE, HCI_INIT_TIMEOUT);
->> +
->> +	if (IS_ERR(skb)) {
->> +		err = PTR_ERR(skb);
->> +		bt_dev_err(hdev, "Enhanced log enable cmd failed (%d)", err);
->> +		return err;
->> +	}
->> +
->> +	kfree_skb(skb);
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(qca_send_enhancelog_enable_cmd);
->> +
->>  static void qca_tlv_check_data(struct qca_fw_config *config,
->>  		const struct firmware *fw, enum qca_btsoc_type soc_type)
->>  {
->> @@ -217,7 +243,7 @@ static void qca_tlv_check_data(struct 
->> qca_fw_config *config,
->>  				tlv_nvm->data[0] |= 0x80;
->> 
->>  				/* UART Baud Rate */
->> -				if (soc_type == QCA_WCN3991)
->> +				if (QCA_IS_3991_6390(soc_type))
->>  					tlv_nvm->data[1] = nvm_baud_rate;
->>  				else
->>  					tlv_nvm->data[2] = nvm_baud_rate;
->> @@ -268,7 +294,7 @@ static int qca_tlv_send_segment(struct hci_dev
->> *hdev, int seg_size,
->>  	 * VSE event. WCN3991 sends version command response as a payload to
->>  	 * command complete event.
->>  	 */
->> -	if (soc_type == QCA_WCN3991) {
->> +	if (QCA_IS_3991_6390(soc_type)) {
->>  		event_type = 0;
->>  		rlen = sizeof(*edl);
->>  		rtype = EDL_PATCH_TLV_REQ_CMD;
->> @@ -301,7 +327,7 @@ static int qca_tlv_send_segment(struct hci_dev
->> *hdev, int seg_size,
->>  		err = -EIO;
->>  	}
->> 
->> -	if (soc_type == QCA_WCN3991)
->> +	if (QCA_IS_3991_6390(soc_type))
->>  		goto out;
->> 
->>  	tlv_resp = (struct tlv_seg_resp *)(edl->data);
->> @@ -442,6 +468,11 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
->> baudrate,
->>  			    (soc_ver & 0x0000000f);
->>  		snprintf(config.fwname, sizeof(config.fwname),
->>  			 "qca/crbtfw%02x.tlv", rom_ver);
->> +	} else if (soc_type == QCA_QCA6390) {
->> +		rom_ver = ((soc_ver & 0x00000f00) >> 0x04) |
->> +			    (soc_ver & 0x0000000f);
->> +		snprintf(config.fwname, sizeof(config.fwname),
->> +			 "qca/htbtfw%02x.tlv", rom_ver);
-> 
-> [Bala]: This part we need to rethink to having to optimize.
-> 
-> ROME use: rampatch<>.tlv
-> WCN399x: uses cr<>.tlv
-> QCA6390: uses ht
-> tomorrow if some new chipset comes, it uses different name again a we
-> need to handle this part.
-> i would suggest add this prefix to  "qca_bluetooth_of_match"
-> which can be passed as argument
-> 
-I would like to do this in a separate patch.
->>  	} else {
->>  		snprintf(config.fwname, sizeof(config.fwname),
->>  			 "qca/rampatch_%08x.bin", soc_ver);
->> @@ -464,6 +495,9 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
->> baudrate,
->>  	else if (qca_is_wcn399x(soc_type))
->>  		snprintf(config.fwname, sizeof(config.fwname),
->>  			 "qca/crnv%02x.bin", rom_ver);
->> +	else if (soc_type == QCA_QCA6390)
->> +		snprintf(config.fwname, sizeof(config.fwname),
->> +			 "qca/htnv%02x.bin", rom_ver);
->>  	else
->>  		snprintf(config.fwname, sizeof(config.fwname),
->>  			 "qca/nvm_%08x.bin", soc_ver);
->> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
->> index e16a4d650597..bc703817c3d7 100644
->> --- a/drivers/bluetooth/btqca.h
->> +++ b/drivers/bluetooth/btqca.h
->> @@ -14,6 +14,7 @@
->>  #define EDL_NVM_ACCESS_SET_REQ_CMD	(0x01)
->>  #define MAX_SIZE_PER_TLV_SEGMENT	(243)
->>  #define QCA_PRE_SHUTDOWN_CMD		(0xFC08)
->> +#define QCA_ENHANCED_LOG_ENABLE_CMD     (0xFC17)
->> 
->>  #define EDL_CMD_REQ_RES_EVT		(0x00)
->>  #define EDL_PATCH_VER_RES_EVT		(0x19)
->> @@ -127,6 +128,7 @@ enum qca_btsoc_type {
->>  	QCA_WCN3990,
->>  	QCA_WCN3991,
->>  	QCA_WCN3998,
->> +	QCA_QCA6390,
->>  };
->> 
->>  #if IS_ENABLED(CONFIG_BT_QCA)
->> @@ -139,6 +141,7 @@ int qca_read_soc_version(struct hci_dev *hdev, u32
->> *soc_version,
->>  			 enum qca_btsoc_type);
->>  int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
->>  int qca_send_pre_shutdown_cmd(struct hci_dev *hdev);
->> +int qca_send_enhancelog_enable_cmd(struct hci_dev *hdev);
->>  static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
->>  {
->>  	return soc_type == QCA_WCN3990 || soc_type == QCA_WCN3991 ||
->> @@ -178,4 +181,9 @@ static inline int qca_send_pre_shutdown_cmd(struct
->> hci_dev *hdev)
->>  {
->>  	return -EOPNOTSUPP;
->>  }
->> +
->> +static inline int qca_send_enhancelog_enable_cmd(struct hci_dev 
->> *hdev)
->> +{
->> +	return -EOPNOTSUPP;
->> +}
->>  #endif
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> index 439392b1c043..0176264b0828 100644
->> --- a/drivers/bluetooth/hci_qca.c
->> +++ b/drivers/bluetooth/hci_qca.c
->> @@ -26,6 +26,7 @@
->>  #include <linux/mod_devicetable.h>
->>  #include <linux/module.h>
->>  #include <linux/of_device.h>
->> +#include <linux/acpi.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/regulator/consumer.h>
->>  #include <linux/serdev.h>
->> @@ -1596,7 +1597,7 @@ static int qca_setup(struct hci_uart *hu)
->>  	set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
->> 
->>  	bt_dev_info(hdev, "setting up %s",
->> -		qca_is_wcn399x(soc_type) ? "wcn399x" : "ROME");
->> +		qca_is_wcn399x(soc_type) ? "wcn399x" : "ROME/QCA6390");
->> 
->>  retry:
->>  	ret = qca_power_on(hdev);
->> @@ -1639,6 +1640,12 @@ static int qca_setup(struct hci_uart *hu)
->>  		qca_debugfs_init(hdev);
->>  		hu->hdev->hw_error = qca_hw_error;
->>  		hu->hdev->cmd_timeout = qca_cmd_timeout;
->> +
->> +		/* QCA6390 FW doesn't enable enhanced log by default
->> +		 * need to send VSC to enable it
->> +		 */
->> +		if (soc_type == QCA_QCA6390)
->> +			qca_send_enhancelog_enable_cmd(hdev);
->>  	} else if (ret == -ENOENT) {
->>  		/* No patch/nvm-config found, run with original fw/config */
->>  		ret = 0;
->> @@ -1665,10 +1672,10 @@ static int qca_setup(struct hci_uart *hu)
->>  	}
->> 
->>  	/* Setup bdaddr */
->> -	if (qca_is_wcn399x(soc_type))
->> -		hu->hdev->set_bdaddr = qca_set_bdaddr;
->> -	else
->> +	if (soc_type == QCA_ROME)
->>  		hu->hdev->set_bdaddr = qca_set_bdaddr_rome;
->> +	else
->> +		hu->hdev->set_bdaddr = qca_set_bdaddr;
->> 
->>  	return ret;
->>  }
->> @@ -1721,6 +1728,11 @@ static const struct qca_vreg_data
->> qca_soc_data_wcn3998 = {
->>  	.num_vregs = 4,
->>  };
->> 
->> +static const struct qca_vreg_data qca_soc_data_qca6390 = {
->> +	.soc_type = QCA_QCA6390,
->> +	.num_vregs = 0,
->> +};
->> +
->>  static void qca_power_shutdown(struct hci_uart *hu)
->>  {
->>  	struct qca_serdev *qcadev;
->> @@ -1764,7 +1776,7 @@ static int qca_power_off(struct hci_dev *hdev)
->>  	enum qca_btsoc_type soc_type = qca_soc_type(hu);
->> 
->>  	/* Stop sending shutdown command if soc crashes. */
->> -	if (qca_is_wcn399x(soc_type)
->> +	if (soc_type != QCA_ROME
->>  		&& qca->memdump_state == QCA_MEMDUMP_IDLE) {
->>  		qca_send_pre_shutdown_cmd(hdev);
->>  		usleep_range(8000, 10000);
->> @@ -1900,7 +1912,11 @@ static int qca_serdev_probe(struct 
->> serdev_device *serdev)
->>  			return err;
->>  		}
->>  	} else {
->> -		qcadev->btsoc_type = QCA_ROME;
->> +		if (data)
->> +			qcadev->btsoc_type = data->soc_type;
->> +		else
->> +			qcadev->btsoc_type = QCA_ROME;
->> +
->>  		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
->>  					       GPIOD_OUT_LOW);
->>  		if (!qcadev->bt_en) {
->> @@ -2044,21 +2060,37 @@ static int __maybe_unused qca_resume(struct 
->> device *dev)
->> 
->>  static SIMPLE_DEV_PM_OPS(qca_pm_ops, qca_suspend, qca_resume);
->> 
->> +#ifdef CONFIG_OF
->>  static const struct of_device_id qca_bluetooth_of_match[] = {
->>  	{ .compatible = "qcom,qca6174-bt" },
->> +	{ .compatible = "qcom,qca6390-bt", .data = &qca_soc_data_qca6390},
->>  	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data_wcn3990},
->>  	{ .compatible = "qcom,wcn3991-bt", .data = &qca_soc_data_wcn3991},
->>  	{ .compatible = "qcom,wcn3998-bt", .data = &qca_soc_data_wcn3998},
->>  	{ /* sentinel */ }
->>  };
->>  MODULE_DEVICE_TABLE(of, qca_bluetooth_of_match);
->> +#endif
->> +
->> +#ifdef CONFIG_ACPI
->> +static const struct acpi_device_id qca_bluetooth_acpi_match[] = {
->> +	{ "QCOM6390", (kernel_ulong_t)&qca_soc_data_qca6390 },
->> +	{ "DLA16390", (kernel_ulong_t)&qca_soc_data_qca6390 },
->> +	{ "DLB16390", (kernel_ulong_t)&qca_soc_data_qca6390 },
->> +	{ "DLB26390", (kernel_ulong_t)&qca_soc_data_qca6390 },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(acpi, qca_bluetooth_acpi_match);
->> +#endif
->> +
->> 
->>  static struct serdev_device_driver qca_serdev_driver = {
->>  	.probe = qca_serdev_probe,
->>  	.remove = qca_serdev_remove,
->>  	.driver = {
->>  		.name = "hci_uart_qca",
->> -		.of_match_table = qca_bluetooth_of_match,
->> +		.of_match_table = of_match_ptr(qca_bluetooth_of_match),
->> +		.acpi_match_table = ACPI_PTR(qca_bluetooth_acpi_match),
->>  		.pm = &qca_pm_ops,
->>  	},
->>  };
+Yes, this can work.
+
+But I found your patch will drop some performance comparing with my
+method in patch 1/2. My method can fetch several requests from IO
+scheduler and dispatch them to block driver at one time, but in your
+patch we still need dispatch request one by one, which will drop some
+performance I think.
+What do you think? Thanks.
+
+-- 
+Baolin Wang
