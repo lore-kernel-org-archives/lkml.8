@@ -2,102 +2,143 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2201BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE033C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6BED20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDDBF2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgCWTwk (ORCPT
+        id S1726173AbgCWTyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:52:40 -0400
-Received: from mga06.intel.com ([134.134.136.31]:8997 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbgCWTwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:52:39 -0400
-IronPort-SDR: Hil7GnDvCHZ32ZP9nHyq4rIn9XNvVEexrUdeEhPtbJFXgfIAZrXFjvTp61BBKnWZIp3RfcrMI3
- 5vb/nyHtqZ7g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 12:52:39 -0700
-IronPort-SDR: Vohca3L5jlz9TiqCsKKEWDF2BiIfSISZ0Ru1G8HIh5UPMYDdmkupTlJSq+C15QWFmXlNp80Rkq
- zzD140jkwCLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="264887791"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 23 Mar 2020 12:52:36 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jGT7k-000I2b-8m; Tue, 24 Mar 2020 03:52:36 +0800
-Date:   Tue, 24 Mar 2020 03:51:41 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     kbuild-all@lists.01.org, netdev@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: phy: dp83867: fix semicolon.cocci warnings
-Message-ID: <20200323195141.GA142065@b4e372e8fdf0>
-References: <202003240333.9w4m8TaM%lkp@intel.com>
+        Mon, 23 Mar 2020 15:54:20 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38174 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbgCWTyU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 15:54:20 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 97A9480307CA;
+        Mon, 23 Mar 2020 19:54:18 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id LBgY4mT1fO6X; Mon, 23 Mar 2020 22:54:17 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 0/6] gpio: dwapb: Fix reference clocks usage
+Date:   Mon, 23 Mar 2020 22:53:55 +0300
+Message-ID: <20200323195401.30338-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202003240333.9w4m8TaM%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+From: Serge Semin <fancer.lancer@gmail.com>
 
-drivers/net/phy/dp83867.c:363:2-3: Unneeded semicolon
-drivers/net/phy/dp83867.c:398:2-3: Unneeded semicolon
+There is no need in any fixes to have the Baikal-T1 SoC DW GPIO controllers
+supported by the kernel DW APB GPIO driver. It works for them just fine with
+no modifications. But still there is a room for optimizations there.
 
+First of all as it tends to be traditional for all Baikal-T1 SoC related
+patchset we replaced the legacy plain text-based dt-binding file with
+yaml-based one. Baikal-T1 DW GPIO port A supports a debounce functionality,
+but in order to use it the corresponding reference clock must be enabled.
+We added support of that clock in the driver and made sure the dt-bindings
+had its declaration. In addition seeing both APB and debounce reference
+clocks are optional, we replaced the standard devm_clk_get() usage with
+the function of optional clocks acquisition.
 
- Remove unneeded semicolon.
+This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+commit 98d54f81e36b ("Linux 5.6-rc4").
 
-Generated by: scripts/coccinelle/misc/semicolon.cocci
+Changelog v2:
+- Use a shorter summary describing the DT bindings conversion patch.
+- Add myself to the MAINTAINERS file as a maintainer of the DW APB GPIO driver.
+- Add myself to the maintainers list of the DW APB GPIO driver DT schema.
+- Print error instead of info-message if APB/debounce clocks either
+  failed to be acquired or couldn't be enabled.
+- Rearrange the SoB tags.
+- Make sure DT schema defines the lowercase hex numbers in the main dt-node
+  name and in the sub-node names.
+- Use "allOf:" statement to apply uint32 and "minimum/maximum" limitations
+  on the "snps,nr-gpios" property of the DW APB GPIO DT schema.
+- Discard "interrupts-extended" property from the DT schema.
+- Make sure the sub-nodes have names with either 'gpio-port' or
+  'gpio-controller' prefixes.
+- Our corporate email server doesn't change Message-Id anymore, so the patchset
+  is resubmitted being in the cover-letter-threaded format.
 
-Fixes: cd26d72d4d43 ("net: phy: dp83867: Add speed optimization feature")
-CC: Dan Murphy <dmurphy@ti.com>
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
+Changelog v3:
+- Replace S: with M: section entry in the MAINTAINERS file.
+- Cc Andy to all patches he isn't added by the auto "cc-cmd" command.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git master
-head:   09984483db080b541c8242d846c30bc1e6a194e1
-commit: cd26d72d4d43175cec8c10bed4df7f21ac5316b3 [54/321] net: phy: dp83867: Add speed optimization feature
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Hoan Tran <hoan@os.amperecomputing.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc: linux-gpio@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
- dp83867.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Serge Semin (6):
+  dt-bindings: gpio: Convert snps,dw-apb-gpio to DT schema
+  dt-bindings: gpio: Add DW GPIO debounce clock property
+  dt-bindings: gpio: Add Sergey Semin to DW APB GPIO driver maintainers
+  gpio: dwapb: Use optional-clocks interface for APB ref-clock
+  gpio: dwapb: Add debounce reference clock support
+  MAINTAINERS: Add Segey Semin to maintainers of DW APB GPIO driver
 
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -360,7 +360,7 @@ static int dp83867_get_downshift(struct
- 		break;
- 	default:
- 		return -EINVAL;
--	};
-+	}
- 
- 	*data = enable ? count : DOWNSHIFT_DEV_DISABLE;
- 
-@@ -395,7 +395,7 @@ static int dp83867_set_downshift(struct
- 			phydev_err(phydev,
- 				   "Downshift count must be 1, 2, 4 or 8\n");
- 			return -EINVAL;
--	};
-+	}
- 
- 	val = DP83867_DOWNSHIFT_EN;
- 	val |= FIELD_PREP(DP83867_DOWNSHIFT_ATTEMPT_MASK, count);
+ .../bindings/gpio/snps,dw-apb-gpio.yaml       | 134 ++++++++++++++++++
+ .../bindings/gpio/snps-dwapb-gpio.txt         |  65 ---------
+ MAINTAINERS                                   |   1 +
+ drivers/gpio/gpio-dwapb.c                     |  41 ++++--
+ 4 files changed, 161 insertions(+), 80 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+
+-- 
+2.25.1
+
