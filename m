@@ -2,111 +2,114 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B45FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86153C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 294C320714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:34:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584977679;
-	bh=DInxYfQiqRHYOI49FnJU7I3F0DNh7c3v5Bpu42/3e3I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uczR8jp+qlvJ1kJZtMojHDW2U1ZxoXEbsEYlTlV9O6P04b/3UEwur6JC7P0Ds+ltg
-	 cHn4n0Y33TW8YwWN4iqtt1RMb5VpiHm7b8u8gufRBYCl01+8F4VJrJjq6mhDUS3mEC
-	 JnBxsyBdgAKUeG0xmnfDm59VSL1qwQAZr+HhIvr0=
+	by mail.kernel.org (Postfix) with ESMTP id 5809A20409
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:36:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vHjIVGC6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbgCWPei (ORCPT
+        id S1727282AbgCWPgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:34:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727313AbgCWPeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:34:37 -0400
-Received: from localhost (unknown [122.178.205.141])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 23 Mar 2020 11:36:14 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:49632 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727230AbgCWPgN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:36:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584977773; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=wijimHVzaAPkYdmKEb1ozTEK2M9kYeLXNSo3279w37s=;
+ b=vHjIVGC6utN2Jb/yVV2RCp2jUZISZPDISBNbZbOLWvvsGD+t3sbBidiwmojBZl+GFi1YWzUK
+ kYznyQt2O90qUtRtcP8RJ5G4fxxqHBVhPaUJX2lay3wjmPEmKKAHDGuL9gNT4ZE8Xt0RV+Xp
+ H/h4/zsAmpIAsCTDK+jy5dCZEXA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e78d76c.7f9b3ececab0-smtp-out-n03;
+ Mon, 23 Mar 2020 15:36:12 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9A551C432C2; Mon, 23 Mar 2020 15:36:12 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BD3420409;
-        Mon, 23 Mar 2020 15:34:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584977677;
-        bh=DInxYfQiqRHYOI49FnJU7I3F0DNh7c3v5Bpu42/3e3I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ajtBK9vv0Y1kOS5LD73f0LwYvfdJazjc48yA+RBjA3u0z4XYGlBcdSv30C5jS8pHF
-         aRSLe27s3d07J1yjI1zuKf/bEkTtRHIrbI1aDwbF1+mJnFkhadh3x1BKg6MQdmOUYQ
-         kTbeFrvz44s25BzjcYDv1V1GWwJ6E8gztCdGC+6M=
-Date:   Mon, 23 Mar 2020 21:04:29 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-arm-msm@vger.kernel.org, Bjorn Andersson" 
-        <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [PATCH v7 1/5] usb: hci: add hc_driver as argument for
- usb_hcd_pci_probe
-Message-ID: <20200323153429.GR72691@vkoul-mobl>
-References: <20200323101121.243906-2-vkoul@kernel.org>
- <202003232207.IGeWbiPn%lkp@intel.com>
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D7712C433D2;
+        Mon, 23 Mar 2020 15:36:11 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202003232207.IGeWbiPn%lkp@intel.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 23 Mar 2020 21:06:11 +0530
+From:   kgunda@codeaurora.org
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V3 2/4] backlight: qcom-wled: Add callback functions
+In-Reply-To: <20200311103047.v7rt5ii3saack22a@holly.lan>
+References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
+ <1583760362-26978-3-git-send-email-kgunda@codeaurora.org>
+ <20200310152719.5hpzh6osq22y4qbn@holly.lan>
+ <05ab744dfbd83b6704bd394ce3c3dfc9@codeaurora.org>
+ <20200311103047.v7rt5ii3saack22a@holly.lan>
+Message-ID: <45964027ff388aec97d27f579d96c012@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-03-20, 22:49, kbuild test robot wrote:
-> Hi Vinod,
+On 2020-03-11 16:00, Daniel Thompson wrote:
+> On Wed, Mar 11, 2020 at 12:11:00PM +0530, kgunda@codeaurora.org wrote:
+>> On 2020-03-10 20:57, Daniel Thompson wrote:
+>> > On Mon, Mar 09, 2020 at 06:56:00PM +0530, Kiran Gunda wrote:
+>> > > Add cabc_config, sync_toggle, wled_ovp_fault_status and wled_ovp_delay
+>> > > callback functions to prepare the driver for adding WLED5 support.
+>> > >
+>> > > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> >
+>> > Overall this code would a lot easier to review if
+>> > > ---
+>> > >  drivers/video/backlight/qcom-wled.c | 196
+>> > > +++++++++++++++++++++++-------------
+>> > >  1 file changed, 126 insertions(+), 70 deletions(-)
+>> > >
+>> > > diff --git a/drivers/video/backlight/qcom-wled.c
+>> > > b/drivers/video/backlight/qcom-wled.c
+>> > > index 3d276b3..b73f273 100644
+>> > > --- a/drivers/video/backlight/qcom-wled.c
+>> > > +++ b/drivers/video/backlight/qcom-wled.c
+>> > > @@ -128,6 +128,7 @@ struct wled_config {
+>> > >  	bool cs_out_en;
+>> > >  	bool ext_gen;
+>> > >  	bool cabc;
+>> > > +	bool en_cabc;
+>> >
+>> > Does this ever get set to true?
+>> >
+>> Yes. If user wants use the cabc pin to control the brightness and
+>> use the "qcom,cabc" DT property in the device tree.
 > 
-> I love your patch! Yet something to improve:
-
-Thanks for the report.
-
-> [auto build test ERROR on v5.6-rc7]
-> [also build test ERROR on next-20200323]
-> [cannot apply to usb/usb-testing]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> That sounds like what you intended the code to do!
 > 
-> url:    https://github.com/0day-ci/linux/commits/Vinod-Koul/usb-xhci-Add-support-for-Renesas-USB-controllers/20200323-203447
-> base:    16fbf79b0f83bc752cee8589279f1ebfe57b3b6e
-> config: x86_64-defconfig (attached as .config)
-> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 006244152d6c7dd6a390ff89b236cc7801834b46)
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         COMPILER=clang make.cross ARCH=x86_64 
+> Is the code that does this present in the patch? I could not find
+> it.
 > 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
+okay... It's my bad. We already have the "cabc" for this. I will remove 
+the en_cabc in
+next series.
 > 
-> All errors (new ones prefixed by >>):
-> 
->    In file included from drivers/usb/host/uhci-hcd.c:847:
-> >> drivers/usb/host/uhci-pci.c:297:36: error: passing 'const struct hc_driver *' to parameter of type 'struct hc_driver *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
->            return usb_hcd_pci_probe(dev, id, &uhci_driver);
->                                              ^~~~~~~~~~~~
->    include/linux/usb/hcd.h:483:27: note: passing argument to parameter 'driver' here
->                                 struct hc_driver *driver);
-
-I need to drop the const qualifiers for uhci_driver, I have checked that
-and will send v8 with this fix
-
-
--- 
-~Vinod
+> Daniel.
