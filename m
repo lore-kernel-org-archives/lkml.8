@@ -2,365 +2,149 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEB3C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84E6C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ECBE20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E432074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbgCWIyL (ORCPT
+        id S1727684AbgCWIyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 04:54:11 -0400
-Received: from m177134.mail.qiye.163.com ([123.58.177.134]:42785 "EHLO
-        m177134.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727477AbgCWIyL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 04:54:11 -0400
-Received: from lcc-VirtualBox.vivo.xyz (unknown [58.251.74.227])
-        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id EAE32261995;
-        Mon, 23 Mar 2020 16:53:56 +0800 (CST)
-From:   Chucheng Luo <luochucheng@vivo.com>
-To:     alex.shi@linux.alibaba.com, Harry Wei <harryxiyou@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Chucheng Luo <luochucheng@vivo.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@vivo.com
-Subject: [PATCH v4] Translate debugfs.txt into Chinese and link it to the index.
-Date:   Mon, 23 Mar 2020 16:53:34 +0800
-Message-Id: <20200323085348.15121-1-luochucheng@vivo.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 23 Mar 2020 04:54:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:45790 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727477AbgCWIyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 04:54:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B627631B;
+        Mon, 23 Mar 2020 01:54:31 -0700 (PDT)
+Received: from [10.57.24.152] (unknown [10.57.24.152])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D41E63F792;
+        Mon, 23 Mar 2020 01:54:30 -0700 (PDT)
+Subject: Re: [PATCH v5 00/13] SCMI Notifications Core Support
+To:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     sudeep.holla@arm.com, james.quinlan@broadcom.com,
+        Jonathan.Cameron@Huawei.com
+References: <20200316150334.47463-1-cristian.marussi@arm.com>
+ <e51598b5-2c7b-56f2-4426-9cce3d5d3d52@arm.com>
+From:   Cristian Marussi <cristian.marussi@arm.com>
+Message-ID: <00e588ec-9bc7-88e2-5e57-e0c223450693@arm.com>
+Date:   Mon, 23 Mar 2020 08:54:41 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
+In-Reply-To: <e51598b5-2c7b-56f2-4426-9cce3d5d3d52@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUlXWQgYFAkeWUFZTFVIS09CQkNDTE9NTU9ISllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PTo6Kyo5TTg8NC8KTzU6LhM*
-        CQkwCT1VSlVKTkNPQk5ITUhMT0tNVTMWGhIXVRcOFBgTDhgTHhUcOw0SDRRVGBQWRVlXWRILWUFZ
-        TkNVSU5KVUxPVUlJTFlXWQgBWUFKSExCSjcG
-X-HM-Tid: 0a710699397e9375kuwseae32261995
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Translate Documentation/filesystems/debugfs.txt into Chinese.
+Hi Lukasz
 
-Signed-off-by: Chucheng Luo <luochucheng@vivo.com>
----
- .../zh_CN/filesystems/debugfs.rst             | 253 ++++++++++++++++++
- .../translations/zh_CN/filesystems/index.rst  |  21 ++
- Documentation/translations/zh_CN/index.rst    |   2 +
- 3 files changed, 276 insertions(+)
- create mode 100644 Documentation/translations/zh_CN/filesystems/debugfs.rst
- create mode 100644 Documentation/translations/zh_CN/filesystems/index.rst
+On 3/18/20 9:01 AM, Lukasz Luba wrote:
+> Hi Cristian,
+> 
+> On 3/16/20 3:03 PM, Cristian Marussi wrote:
+>> Hi all,
+>>
+>> this series wants to introduce SCMI Notification Support, built on top of
+>> the standard Kernel notification chain subsystem.
+>>
+>> At initialization time each SCMI Protocol takes care to register with the
+>> new SCMI notification core the set of its own events which it intends to
+>> support.
+>>
+>> Using the API exposed via scmi_handle.notify_ops a Kernel user can register
+>> its own notifier_t callback (via a notifier_block as usual) against any
+>> registered event as identified by the tuple:
+>>
+>>         (proto_id, event_id, src_id)
+>>
+>> where src_id represents a generic source identifier which is protocol
+>> dependent like domain_id, performance_id, sensor_id and so forth.
+>> (users can anyway do NOT provide any src_id, and subscribe instead to ALL
+>>   the existing (if any) src_id sources for that proto_id/evt_id combination)
+>>
+>> Each of the above tuple-specified event will be served on its own dedicated
+>> blocking notification chain, dynamically allocated on-demand when at least
+>> one user has shown interest on that event.
+>>
+>> Upon a notification delivery all the users' registered notifier_t callbacks
+>> will be in turn invoked and fed with the event_id as @action param and a
+>> generated custom per-event struct _report as @data param.
+>> (as in include/linux/scmi_protocol.h)
+>>
+>> The final step of notification delivery via users' callback invocation is
+>> instead delegated to a pool of deferred workers (Kernel cmwq): each
+>> SCMI protocol has its own dedicated worker and dedicated queue to push
+>> events from the rx ISR to the worker.
+>>
+> 
+> Could you give an example how the notification would be delivered
+> further to the upper layers, like hwmon driver, cpufreq or thermal?
 
-diff --git a/Documentation/translations/zh_CN/filesystems/debugfs.rst b/Documentation/translations/zh_CN/filesystems/debugfs.rst
-new file mode 100644
-index 000000000000..9c7012c4b48a
---- /dev/null
-+++ b/Documentation/translations/zh_CN/filesystems/debugfs.rst
-@@ -0,0 +1,253 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+.. warning::
-+     此文件的目的是为让中文读者更容易阅读和理解，而不是作为一个分支。 因此，
-+     如果您对此文件有任何意见或更新，请先尝试更新原始英文文件。
-+
-+.. note::
-+     如果您发现本文档与原始文件有任何不同或者有翻译问题，请联系该文件的译者，
-+     或者请求罗楚成的帮助：<luochucheng@vivo.com>。
-+
-+:Original: :ref:`Documentation/filesystems/debugfs.txt<debugfs_index>`
-+
-+==========================
-+Debugfs
-+==========================
-+
-+译者
-+::
-+
-+	中文版维护者： 罗楚成 Chucheng Luo <luochucheng@vivo.com>
-+	中文版翻译者： 罗楚成 Chucheng Luo <luochucheng@vivo.com>
-+	中文版校译者:  罗楚成 Chucheng Luo <luochucheng@vivo.com>
-+
-+
-+
-+
-+版权所有2020 罗楚成 <luochucheng@vivo.com>
-+
-+介绍
-+====
-+
-+Debugfs是内核开发人员在用户空间获取信息的简单方法。
-+与/proc不同，proc只提供进程信息。
-+也不像sysfs,具有严格的“每个文件一个值“的规则。
-+debugfs根本没有规则,开发人员可以在这里放置他们想要的任何信息。
-+debugfs文件系统也不能用作稳定的ABI接口。
-+从理论上讲，debugfs导出文件的时候没有任何约束。
-+但是[1]实际情况并不总是那么简单。
-+即使是debugfs接口，也最好根据需要进行设计,
-+并尽量保持接口不变。
-+
-+用法
-+====
-+
-+Debugfs通常使用以下命令安装::
-+
-+    mount -t debugfs none /sys/kernel/debug
-+
-+（或等效的/etc/fstab行）。
-+debugfs根目录默认仅可由root用户访问。
-+要更改对文件树的访问，请使用“ uid”，“ gid”和“ mode”挂载选项。
-+
-+请注意，debugfs API仅按照GPL协议导出到模块。
-+
-+使用debugfs的代码应包含<linux/debugfs.h>。
-+然后，首先是创建至少一个目录来保存一组debugfs文件::
-+
-+    struct dentry *debugfs_create_dir(const char *name, struct dentry *parent);
-+
-+如果成功，此调用将在指定的父目录下创建一个名为name的目录。
-+如果parent参数为空，则会在debugfs根目录中创建。
-+创建目录成功时，返回值是一个指向dentry结构体的指针。
-+该dentry结构体的指针可用于在目录中创建文件（以及最后将其清理干净）。
-+ERR_PTR（-ERROR）返回值表明出错。
-+如果返回ERR_PTR（-ENODEV），则表明内核
-+是在没有debugfs支持的情况下构建的，并且下述函数都不会起作用。
-+
-+在debugfs目录中创建文件的最通用方法是::
-+
-+    struct dentry *debugfs_create_file(const char *name, umode_t mode,
-+				       struct dentry *parent, void *data,
-+				       const struct file_operations *fops);
-+
-+在这里，name是要创建的文件的名称，mode描述了访问
-+文件应具有的权限，parent指向应该保存文件的目录
-+，data将存储在产生的inode结构体的i_private字段中
-+，而fops是一组文件操作函数，这些函数中
-+实现文件操作的具体行为。至少，read（）和/或write（）
-+操作应提供；其他可以根据需要包括在内。同样的，
-+返回值将是指向创建文件的dentry指针，
-+错误时返回ERR_PTR（-ERROR），系统不支持debugfs时返回值为ERR_PTR（-ENODEV）。
-+
-+创建一个初始大小的文件，可以使用以下函数代替::
-+
-+    struct dentry *debugfs_create_file_size(const char *name, umode_t mode,
-+				struct dentry *parent, void *data,
-+				const struct file_operations *fops,
-+				loff_t file_size);
-+
-+file_size是初始文件大小。其他参数跟函数debugfs_create_file的相同。
-+
-+在许多情况下，没必要自己去创建一组文件操作;
-+对于一些简单的情况,debugfs代码提供了许多帮助函数。
-+包含单个整数值的文件可以使用以下任何一项创建::
-+
-+    void debugfs_create_u8(const char *name, umode_t mode,
-+			   struct dentry *parent, u8 *value);
-+    void debugfs_create_u16(const char *name, umode_t mode,
-+			    struct dentry *parent, u16 *value);
-+    struct dentry *debugfs_create_u32(const char *name, umode_t mode,
-+				      struct dentry *parent, u32 *value);
-+    void debugfs_create_u64(const char *name, umode_t mode,
-+			    struct dentry *parent, u64 *value);
-+
-+这些文件支持读取和写入给定值。
-+如果某个文件不支持写入，只需根据需要设置mode参数位。
-+这些文件中的值以十进制表示；如果需要使用十六进制，
-+可以使用以下函数替代::
-+
-+    void debugfs_create_x8(const char *name, umode_t mode,
-+			   struct dentry *parent, u8 *value);
-+    void debugfs_create_x16(const char *name, umode_t mode,
-+			    struct dentry *parent, u16 *value);
-+    void debugfs_create_x32(const char *name, umode_t mode,
-+			    struct dentry *parent, u32 *value);
-+    void debugfs_create_x64(const char *name, umode_t mode,
-+			    struct dentry *parent, u64 *value);
-+
-+这些功能只有在开发人员知道导出值的大小的时候才有用。
-+某些数据类型在不同的架构上有不同的宽度，这样会使情况变得有些复杂。
-+在这种特殊情况下可以使用以下函数::
-+
-+    void debugfs_create_size_t(const char *name, umode_t mode,
-+			       struct dentry *parent, size_t *value);
-+
-+不出所料，此函数将创建一个debugfs文件来表示类型为size_t的变量。
-+
-+同样地，也有导出无符号长整型变量的函数，分别以十进制和十六进制表示如下::
-+
-+    struct dentry *debugfs_create_ulong(const char *name, umode_t mode,
-+					struct dentry *parent,
-+					unsigned long *value);
-+    void debugfs_create_xul(const char *name, umode_t mode,
-+			    struct dentry *parent, unsigned long *value);
-+
-+布尔值可以通过以下方式放置在debugfs中::
-+
-+    struct dentry *debugfs_create_bool(const char *name, umode_t mode,
-+				       struct dentry *parent, bool *value);
-+
-+
-+读取结果文件将产生Y（对于非零值）或N，后跟换行符。
-+写入的时候，它只接受大写或小写值或1或0。任何其他输入将被忽略。
-+
-+同样，atomic_t类型的值也可以放置在debugfs中::
-+
-+    void debugfs_create_atomic_t(const char *name, umode_t mode,
-+				 struct dentry *parent, atomic_t *value)
-+
-+读取此文件将获得atomic_t值，写入此文件将设置atomic_t值。
-+
-+另一个选择是通过以下结构体和函数导出一个任意二进制数据块::
-+
-+    struct debugfs_blob_wrapper {
-+	void *data;
-+	unsigned long size;
-+    };
-+
-+    struct dentry *debugfs_create_blob(const char *name, umode_t mode,
-+				       struct dentry *parent,
-+				       struct debugfs_blob_wrapper *blob);
-+
-+读取此文件将返回由指针指向debugfs_blob_wrapper结构体的数据。
-+一些驱动使用“blobs”作为一种返回几行（静态）格式化文本的简单方法。
-+这个函数可用于导出二进制信息，但似乎在主线中没有任何代码这样做。
-+请注意，使用debugfs_create_blob（）命令创建的所有文件是只读的。
-+
-+如果您要转储一个寄存器块（在开发过程中经常会这么做，
-+但是这样的调试代码很少上传到主线中。
-+Debugfs提供两个函数：一个用于创建仅寄存器文件，
-+另一个把一个寄存器块插入一个顺序文件中::
-+
-+    struct debugfs_reg32 {
-+	char *name;
-+	unsigned long offset;
-+    };
-+
-+    struct debugfs_regset32 {
-+	struct debugfs_reg32 *regs;
-+	int nregs;
-+	void __iomem *base;
-+    };
-+
-+    struct dentry *debugfs_create_regset32(const char *name, umode_t mode,
-+				     struct dentry *parent,
-+				     struct debugfs_regset32 *regset);
-+
-+    void debugfs_print_regs32(struct seq_file *s, struct debugfs_reg32 *regs,
-+			 int nregs, void __iomem *base, char *prefix);
-+
-+“base”参数可能为0，但您可能需要使用__stringify构建
-+reg32数组，实际上有许多寄存器名称（宏）是寄存器块在
-+基址上的字节偏移量。
-+
-+如果要在debugfs中转储u32数组，可以使用以下函数创建文件::
-+
-+     void debugfs_create_u32_array(const char *name, umode_t mode,
-+			struct dentry *parent,
-+			u32 *array, u32 elements);
-+
-+“array”参数提供数据，而“elements”参数为
-+数组中元素的数量。注意：数组创建后，数组大小无法更改。
-+
-+有一个函数来创建与设备相关的seq_file::
-+
-+   struct dentry *debugfs_create_devm_seqfile(struct device *dev,
-+				const char *name,
-+				struct dentry *parent,
-+				int (*read_fn)(struct seq_file *s,
-+					void *data));
-+
-+“dev”参数是与此debugfs文件相关的设备，并且
-+“read_fn”是一个函数指针，这个函数在打印seq_file内容的时候被回调。
-+
-+还有一些其他的面向目录的函数::
-+
-+    struct dentry *debugfs_rename(struct dentry *old_dir,
-+		                  struct dentry *old_dentry,
-+		                  struct dentry *new_dir,
-+				  const char *new_name);
-+
-+    struct dentry *debugfs_create_symlink(const char *name,
-+                                          struct dentry *parent,
-+                                          const char *target);
-+
-+调用debugfs_rename()将为现有的debugfs文件重命名，
-+可能同时切换目录。 new_name函数调用之前不能存在；
-+返回值为old_dentry，其中包含更新的信息。
-+可以使用debugfs_create_symlink（）创建符号链接。
-+
-+所有debugfs用户必须考虑的一件事是：
-+debugfs不会自动清除在其中创建的任何目录。
-+如果一个模块在不显式删除debugfs目录的情况下卸载模块，
-+结果将会遗留很多野指针，从而导致系统不稳定。
-+因此，所有debugfs用户-至少是那些可以作为模块构建的用户-必须
-+做模块unload的时候准备删除在此创建的所有文件和目录。
-+一份文件可以通过以下方式删除::
-+
-+    void debugfs_remove(struct dentry *dentry);
-+
-+dentry值可以为NULL或错误值，在这种情况下，不会有任何文件被删除。
-+
-+很久以前，内核开发者使用debugfs时需要记录
-+他们创建的每个dentry指针，以便最后所有文件都可以被清理掉。
-+但是，现在debugfs用户能调用以下函数递归清除之前创建的文件::
-+
-+    void debugfs_remove_recursive(struct dentry *dentry);
-+
-+如果将对应顶层目录的dentry传递给以上函数，
-+则该目录下的整个层次结构将会被删除。
-+
-+注意：
-+[1] http://lwn.net/Articles/309298/
-diff --git a/Documentation/translations/zh_CN/filesystems/index.rst b/Documentation/translations/zh_CN/filesystems/index.rst
-new file mode 100644
-index 000000000000..3a7f5233767d
---- /dev/null
-+++ b/Documentation/translations/zh_CN/filesystems/index.rst
-@@ -0,0 +1,21 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===============================
-+Linux 内核中的文件系统
-+===============================
-+
-+这个不完整的指南在某一天将会提供关于Linux 虚拟文件系统(VFS)层如何工作的
-+完整信息。以及VFS以下的的文件系统。目前为止，我们提供了以下信息。
-+
-+
-+
-+
-+文件系统
-+===========
-+
-+关于文件系统实现的文档.
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-+   debugfs
-diff --git a/Documentation/translations/zh_CN/index.rst b/Documentation/translations/zh_CN/index.rst
-index d3165535ec9e..770f886d081c 100644
---- a/Documentation/translations/zh_CN/index.rst
-+++ b/Documentation/translations/zh_CN/index.rst
-@@ -1,3 +1,4 @@
-+.. SPDX-License-Identifier: GPL-2.0
- .. raw:: latex
- 
- 	\renewcommand\thesection*
-@@ -14,6 +15,7 @@
-    :maxdepth: 2
- 
-    process/index
-+   filesystems/index
- 
- 目录和表格
- ----------
--- 
-2.17.1
+Sure. I tested registering various callbacks against PERF events (since they're
+what I have available on my platform implementation); I used probe() in scmi-genpd
+and scmi-cpufreq to register generic testing callbacks like:
 
+scmi_cpufrq_probe()
+
+...
+	src_id = 0x00;
+	handle->notify_ops->register_event_notifier(handle, SCMI_PROTOCOL_PERF,
+						    0x1, &src_id, &my_cpufreq_nb);
+
+and removing similarly in remove().
+
+I'll send you my debug patches that includes genpd/cpufreq callbacks registration and
+an additional dummy driver that just registers perf callbacks so you can have a better idea
+of the intended usage.
+
+> For example, for sensor protocol which delivers event
+> SENSOR_TRIP_POINT_EVENT indicating a trip point was crossed.
+>
+
+Regarding sensors it could be something like:
+
+
+	sensor_id = 0x00;
+
+	handle->notify_ops->register_event_notifier(handle, SCMI_PROTOCOL_SENSOR,
+						    0x0, &sensor_id, &my_sensor_nb);
+
+	handle->sensor_ops->trip_point_config(handle, sensor_id, 0, 10000);
+  
+Note that the notification core takes care on its own of enabling the specific events generation
+when you register the first callback for a specific event as identified by (proto_id, event_id, src_id)
+but in the case of the sensor protocol you'll need to explicitly setup the trip_point too.
+
+As a result when the trip point is crossed you'll receive in your callback a sensor_report
+(as in include/linux/scmi_protocol.h) as your data arg.
+
+I just realized that being the notification enable method (trip_notify) also exposed by the ops directly,
+I should probably add some sort of alert for a user...since it is not meant to be used directly when
+the notification subsystem is being used....I'll think about this pitfall.
+
+> Would it be possible for:
+> drivers/hwmon/scmi-hwmon.c
+> to get this temperature events like an interrupt?
+> 
+
+Sorry I did not get what you mean here.
+
+Regards
+
+Cristian
+
+> I couldn't find it in the implementation of the registered handlers.
+> 
+> Regards,
+> Lukasz
