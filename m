@@ -2,125 +2,129 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A29C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20F9C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07019206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:37:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KzeqrLYF"
+	by mail.kernel.org (Postfix) with ESMTP id A63FB206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:42:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgCWBho (ORCPT
+        id S1726979AbgCWBmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 21:37:44 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:54006 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726951AbgCWBho (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 21:37:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584927462;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tg3v//938qsYJhCGyEEV6MmGSlsR1D+MJVYdwSmyjYA=;
-        b=KzeqrLYFzZyomZ47IFhe9qw8kWrRbmO1boxa1ry1uhwcVNXkmpnXIJQ/HUYXRGlztsRaQX
-        dfkxjM59GzAA3UeHJ1l7G0W9HZ3PI4P/UreNR1G17broh9IolX9N8BF4EcoEHLomieO5ef
-        Ixi5x9CLeFo6znWRMI8uwy1UsjmwV+Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-245-zCMmMiyGN_qvBj5Mdzb_LQ-1; Sun, 22 Mar 2020 21:37:38 -0400
-X-MC-Unique: zCMmMiyGN_qvBj5Mdzb_LQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7F16800D4E;
-        Mon, 23 Mar 2020 01:37:35 +0000 (UTC)
-Received: from localhost (ovpn-12-35.pek2.redhat.com [10.72.12.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C114D19C4F;
-        Mon, 23 Mar 2020 01:37:34 +0000 (UTC)
-Date:   Mon, 23 Mar 2020 09:37:32 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, jhubbard@nvidia.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/memory: Drop pud_mknotpresent()
-Message-ID: <20200323013732.GC3039@MiWiFi-R3L-srv>
-References: <1584925542-13034-1-git-send-email-anshuman.khandual@arm.com>
+        Sun, 22 Mar 2020 21:42:31 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12173 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726951AbgCWBmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 21:42:31 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 188EEA22B45C05522922;
+        Mon, 23 Mar 2020 09:42:21 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 23 Mar
+ 2020 09:42:18 +0800
+Subject: Re: [f2fs-dev] [PATCH] ENOSPC returned but there still many free
+ segments
+To:     chenying <chen.ying153@zte.com.cn>, <jaegeuk@kernel.org>
+CC:     <wang.yi59@zte.com.cn>, <xue.zhihong@zte.com.cn>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>, <jiang.xuexin@zte.com.cn>
+References: <1584754308-39299-1-git-send-email-chen.ying153@zte.com.cn>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <26f11617-92e4-1dc5-38fd-5048e92e059e@huawei.com>
+Date:   Mon, 23 Mar 2020 09:42:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584925542-13034-1-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <1584754308-39299-1-git-send-email-chen.ying153@zte.com.cn>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/23/20 at 06:35am, Anshuman Khandual wrote:
-> There is an inconsistency between PMD and PUD based THP page table helpers
-> like the following, as pud_present() does not test for _PAGE_PSE.
+On 2020/3/21 9:31, chenying wrote:
+> I write data to a compressed file when the disk space is almost full
+> and it return -ENOSPC error, but cat /sys/kernel/debug/f2fs/status
+> shows that there still many free segments.
+
+free segments include reserved segments, so its value should never be zero,
+otherwise there should be a bug.
+
+BTW, could you check result in 'stat -f <your_mountpoint>' rather than f2fs
+status in debugfs?
+
 > 
-> pmd_present(pmd_mknotpresent(pmd)) : True
-> pud_present(pud_mknotpresent(pud)) : False
-> 
-> This drops pud_mknotpresent() as there are no current users. If/when needed
-> back later, pud_present() will also have to fixed to accommodate _PAGE_PSE.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Dave Hansen <dave.hansen@intel.com>
-> Cc: Kirill A. Shutemov <kirill@shutemov.name>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: x86@kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> Signed-off-by: chenying <chen.ying153@zte.com.cn>
 > ---
-> This has been build and boot tested on x86.
+>  fs/f2fs/compress.c | 5 ++++-
+>  fs/f2fs/file.c     | 4 ++++
+>  2 files changed, 8 insertions(+), 1 deletion(-)
 > 
-> Changes in V2:
-> 
-> - Dropped pud_mknotpresent() instead per Kirill
-> 
-> Changes in V1: (https://patchwork.kernel.org/patch/11444529/)
-> 
->  arch/x86/include/asm/pgtable.h | 6 ------
->  1 file changed, 6 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-> index 7e118660bbd9..d74dc560e3ab 100644
-> --- a/arch/x86/include/asm/pgtable.h
-> +++ b/arch/x86/include/asm/pgtable.h
-> @@ -595,12 +595,6 @@ static inline pmd_t pmd_mknotpresent(pmd_t pmd)
->  		      __pgprot(pmd_flags(pmd) & ~(_PAGE_PRESENT|_PAGE_PROTNONE)));
->  }
->  
-> -static inline pud_t pud_mknotpresent(pud_t pud)
-> -{
-> -	return pfn_pud(pud_pfn(pud),
-> -	      __pgprot(pud_flags(pud) & ~(_PAGE_PRESENT|_PAGE_PROTNONE)));
-> -}
-> -
->  static inline u64 flip_protnone_guard(u64 oldval, u64 val, u64 mask);
->  
->  static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> index d8a64be..6ca058b 100644
+> --- a/fs/f2fs/compress.c
+> +++ b/fs/f2fs/compress.c
+> @@ -854,6 +854,8 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+>  				fio.compr_blocks++;
+>  			if (__is_valid_data_blkaddr(blkaddr))
+>  				f2fs_invalidate_blocks(sbi, blkaddr);
+> +			else if (blkaddr != NULL_ADDR)
+> +				dec_valid_block_count(sbi, dn.inode, 1);
+>  			f2fs_update_data_blkaddr(&dn, COMPRESS_ADDR);
+>  			goto unlock_continue;
+>  		}
+> @@ -865,7 +867,8 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+>  			if (__is_valid_data_blkaddr(blkaddr)) {
+>  				f2fs_invalidate_blocks(sbi, blkaddr);
+>  				f2fs_update_data_blkaddr(&dn, NEW_ADDR);
+> -			}
+> +			} else if (blkaddr != NULL_ADDR)
+> +				dec_valid_block_count(sbi, dn.inode, 1);
 
-Reviewed-by: Baoquan He <bhe@redhat.com>
+I don't think this is correct, you could check message in git pull of 5.6:
 
+Quoted:
+
+"f2fs-for-5.6
+
+In this series, we've implemented transparent compression experimentally. It
+supports LZO and LZ4, but will add more later as we investigate in the field
+more. At this point, the feature doesn't expose compressed space to user
+directly in order to guarantee potential data updates later to the space.
+Instead, the main goal is to reduce data writes to flash disk as much as
+possible, resulting in extending disk life time as well as relaxing IO
+congestion. Alternatively, we're also considering to add ioctl() to reclaim
+compressed space and show it to user after putting the immutable bit.
+"
+
+That means we will keep reserved blocks in compressed cluster until user
+release them via ioctl.
+
+Thanks,
+
+>  			goto unlock_continue;
+>  		}
+>  
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 0d4da64..f07c9e2 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -589,6 +589,10 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+>  			clear_inode_flag(dn->inode, FI_FIRST_BLOCK_WRITTEN);
+>  
+>  		f2fs_invalidate_blocks(sbi, blkaddr);
+> +		if (compressed_cluster &&
+> +			(blkaddr == NEW_ADDR || blkaddr == COMPRESS_ADDR))
+> +			continue;
+> +
+>  		nr_free++;
+>  	}
+>  
+> 
