@@ -2,98 +2,119 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E75C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD711C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3E8820714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC29D20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:56:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgCWQzx (ORCPT
+        id S1727773AbgCWQ4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:55:53 -0400
-Received: from mga05.intel.com ([192.55.52.43]:57826 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727479AbgCWQzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:55:52 -0400
-IronPort-SDR: BSht4oHei0LHYXbnCmFQk2tzsrm4Nl5X1kyj2VAgwVsFlnZRvLtoUOv64WHOlLgq+gGQYeUAWc
- whQagWfh+r3w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 09:55:52 -0700
-IronPort-SDR: VxdhzTYxCVd0LA1ifLMuASQRa9I7ogT8V9fqrhCfr75NHfTTSYk/LOQrJenn3x47WNfthB6qQq
- Jh6q92mHVsrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="392972376"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga004.jf.intel.com with ESMTP; 23 Mar 2020 09:55:51 -0700
-Date:   Mon, 23 Mar 2020 09:55:51 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v7 03/14] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20200323165551.GS28711@linux.intel.com>
-References: <20200318163720.93929-1-peterx@redhat.com>
- <20200318163720.93929-4-peterx@redhat.com>
- <20200321192211.GC13851@linux.intel.com>
- <20200323145824.GI127076@xz-x1>
- <20200323154216.GG28711@linux.intel.com>
- <20200323162617.GK127076@xz-x1>
+        Mon, 23 Mar 2020 12:56:52 -0400
+Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:33669 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727277AbgCWQ4w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 12:56:52 -0400
+Received: from [192.168.42.210] ([93.22.39.252])
+        by mwinf5d85 with ME
+        id Hswm2200j5SRGh103swn5w; Mon, 23 Mar 2020 17:56:49 +0100
+X-ME-Helo: [192.168.42.210]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 23 Mar 2020 17:56:49 +0100
+X-ME-IP: 93.22.39.252
+Subject: Re: [PATCH] usbip: vhci_hcd: slighly simplify code in
+ 'vhci_urb_dequeue()'
+To:     shuah <shuah@kernel.org>, valentina.manea.m@gmail.com,
+        gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Newsgroups: gmane.linux.kernel,gmane.linux.usb.general,gmane.linux.kernel.janitors
+References: <20200321152938.19580-1-christophe.jaillet@wanadoo.fr>
+ <c8e319c8-cd65-2c2c-df5d-e75908ca63b7@kernel.org>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <2fb983be-2a42-1b89-447a-a7415ffc7335@wanadoo.fr>
+Date:   Mon, 23 Mar 2020 17:56:46 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323162617.GK127076@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <c8e319c8-cd65-2c2c-df5d-e75908ca63b7@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 12:26:17PM -0400, Peter Xu wrote:
-> On Mon, Mar 23, 2020 at 08:42:16AM -0700, Sean Christopherson wrote:
-> > > > Regarding the HVA, it's a bit confusing saying that it's guaranteed to be
-> > > > valid, and then contradicting that in the second clause.  Maybe something
-> > > > like this to explain the GPA->HVA is guaranteed to be valid, but the
-> > > > HVA->HPA is not.
-> > > >  
-> > > > /*
-> > > >  * before use.  Note, KVM internal memory slots are guaranteed to remain valid
-> > > >  * and unchanged until the VM is destroyed, i.e. the GPA->HVA translation will
-> > > >  * not change.  However, the HVA is a user address, i.e. its accessibility is
-> > > >  * not guaranteed, and must be accessed via __copy_{to,from}_user().
-> > > >  */
-> > > 
-> > > Sure I can switch to this, though note that I still think the GPA->HVA
-> > > is not guaranteed logically because the userspace can unmap any HVA it
-> > > wants..
-> > 
-> > You're conflating the GPA->HVA translation with the validity of the HVA,
-> > i.e. the HVA->HPA and/or HVA->VMA translation/association.  GPA->HVA is
-> > guaranteed because userspace doesn't have access to the memslot which
-> > defines that transation.
-> 
-> Yes I completely agree if you mean the pure mapping of GPA->HVA.
-> 
-> I think it's a matter of how to define the "valid" when you say
-> "guaranteed to remain valid", because I don't think the mapping is
-> still valid from the most strict sense if e.g. the backing HVA does
-> not exist any more for that GPA->HVA mapping, then the memslot won't
-> be anything useful.
+Le 23/03/2020 à 17:48, shuah a écrit :
+> On 3/21/20 9:29 AM, Christophe JAILLET wrote:
+>> The allocation of 'unlink' can be moved before a spin_lock.
+>> This slighly simplifies the error handling if the memory allocation 
+>> fails,
+>
+> slightly (spelling nit)
+>
+>> aligns the code structure with what is done in 'vhci_tx_urb()' and 
+>> reduces
+>> potential lock contention.
+>>
+>
+> Are you seeing any problems or is this a potential lock contention?
+> If you are seeing issues, please share the problem seen.
+>
+No, the issue is just theoretical.
 
-Yes.  That's why my proposed comment is worded to state that the _memslot_
-will remain valid.  It deliberately avoids mentioning "valid HVA".
+
+>
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>> ---
+>>   drivers/usb/usbip/vhci_hcd.c | 5 ++---
+>>   1 file changed, 2 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
+>> index 65850e9c7190..b909a634260c 100644
+>> --- a/drivers/usb/usbip/vhci_hcd.c
+>> +++ b/drivers/usb/usbip/vhci_hcd.c
+>> @@ -905,17 +905,16 @@ static int vhci_urb_dequeue(struct usb_hcd 
+>> *hcd, struct urb *urb, int status)
+>>           /* tcp connection is alive */
+>>           struct vhci_unlink *unlink;
+>>   -        spin_lock(&vdev->priv_lock);
+>> -
+>
+> This change might simplify the error path, however it could
+> open a race window with the unlink activity during 
+> vhci_shutdown_connection() when the connection is being taken
+> down. It would be safer to hold both locks as soon as the
+> connection check is done.
+
+My proposal was just a small clean-up (from my point of view at least).
+If it can have some side effects, please, just consider it as a NACK.
+
+CJ
+
+>
+>>           /* setup CMD_UNLINK pdu */
+>>           unlink = kzalloc(sizeof(struct vhci_unlink), GFP_ATOMIC);
+>>           if (!unlink) {
+>> -            spin_unlock(&vdev->priv_lock);
+>>               spin_unlock_irqrestore(&vhci->lock, flags);
+>>               usbip_event_add(&vdev->ud, VDEV_EVENT_ERROR_MALLOC);
+>>               return -ENOMEM;
+>>           }
+>>   +        spin_lock(&vdev->priv_lock);
+>> +
+>>           unlink->seqnum = atomic_inc_return(&vhci_hcd->seqnum);
+>>           if (unlink->seqnum == 0xffff)
+>>               pr_info("seqnum max\n");
+>>
+>
+> thanks,
+> -- Shuah
+>
+
