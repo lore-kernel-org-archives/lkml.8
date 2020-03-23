@@ -2,93 +2,105 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C02C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01577C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06CD2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C254F2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:29:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584973786;
+	bh=vxk2CFpWP9Q0hSe7Ofy07jBrChfrIs3fwHTY5QitQ9A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jEtVrEbrzQee4Nwu3YPHM6vJrtqeALv4KgW4Zk4szQMKUruScCDHOGOcRHmj2mSTy
+	 RQgRar+KTC+2nrP/d+sV/Ou14NfL/aTHKTcslm9JCH3rHo+rteiCHAap9HYRZ6lMLP
+	 0iIDQ4NavR/JxMHL/i1osuWQrRYPpFdQ4pkzFDAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbgCWO12 (ORCPT
+        id S1727024AbgCWO3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:27:28 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36580 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbgCWO11 (ORCPT
+        Mon, 23 Mar 2020 10:29:45 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39361 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbgCWO3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:27:27 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 3E4FF2965CC
-Message-ID: <c1fbc7912187302fdc27d9e333fab43b0c253507.camel@collabora.com>
-Subject: Re: [PATCH 2/2] media: coda: be more flexible wrt jpeg dimensions
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, kernel@pengutronix.de,
-        Tim Harvey <tharvey@gateworks.com>
-Date:   Mon, 23 Mar 2020 11:27:15 -0300
-In-Reply-To: <20200323130937.3666244-3-adrian.ratiu@collabora.com>
-References: <20200323130937.3666244-1-adrian.ratiu@collabora.com>
-         <20200323130937.3666244-3-adrian.ratiu@collabora.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Mon, 23 Mar 2020 10:29:45 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a9so11989326wmj.4;
+        Mon, 23 Mar 2020 07:29:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PgGrbAJ9j98exfSo98nJNMVRX6RscOjYHAK4YDkqU6w=;
+        b=UwDcH+L2EuL558+CYxzr3YdodBQrK7RwZYhK4o5BYMuBCh40UA9vLaebQSscaa1weW
+         deLRMuzzmTqyMvEmHhvFqrWaKXetpT2y/nmPctnd+c6WaADbQc936d/EiRVTLJYp+49V
+         jDHqI7FBldPgJrLATnyVa7XD9jYxFpOglnn7eYJ5cQmJH/rdS53Jwb6w+9mSTcMJv7yi
+         tzc7zChTaHio0BSpA/anT6+CsaenSoucpBe2D0NfarZ6DhcuN8+/IhErVfxoTuf1lwSC
+         Z7ey86JId0C6tM4T3Bo4VU+IxPAlAWF8fs/ORHdQkCnvjpvJbZR0h0B6+uZDwSCYOogL
+         uwiA==
+X-Gm-Message-State: ANhLgQ2xofHj+FE67i7ET4M+6cqY0CbjeVo22AJonX8pnZgHl2djuS5u
+        M0mO00Rk+wjyI0wH5TM1TPM=
+X-Google-Smtp-Source: ADFU+vv5KrI51E89paspeXPPrGtzXE/bYqE9+eI3q6rJMUr8Di29zK/34i9JOiFoFKnhNovbBsc6Qw==
+X-Received: by 2002:a1c:de82:: with SMTP id v124mr27142143wmg.70.1584973783317;
+        Mon, 23 Mar 2020 07:29:43 -0700 (PDT)
+Received: from localhost (ip-37-188-135-150.eurotel.cz. [37.188.135.150])
+        by smtp.gmail.com with ESMTPSA id n2sm25447536wro.25.2020.03.23.07.29.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 07:29:42 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 15:29:41 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Rafael Aquini <aquini@redhat.com>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, shuah@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
+ false-negative errors
+Message-ID: <20200323142941.GK7524@dhcp22.suse.cz>
+References: <20200322013525.1095493-1-aquini@redhat.com>
+ <CALvZod4GjRFLRX=S_YFYnJk-kL6tjveYEDOBFS76NqrURERHHQ@mail.gmail.com>
+ <20200323141659.GA23364@optiplex-lnx>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323141659.GA23364@optiplex-lnx>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-23 at 15:09 +0200, Adrian Ratiu wrote:
-> Don't require jpeg dimensions to exactly match format dimensions,
-> so we are able to decode and display a wider range jpegs instead
-> of outright rejecting the ones which don't match.
+On Mon 23-03-20 10:16:59, Rafael Aquini wrote:
+> On Sun, Mar 22, 2020 at 09:31:04AM -0700, Shakeel Butt wrote:
+> > On Sat, Mar 21, 2020 at 6:35 PM Rafael Aquini <aquini@redhat.com> wrote:
+> > >
+> > > Changes for commit 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
+> > > break this test expectations on the behavior of mlock syscall family immediately
+> > > inserting the recently faulted pages into the UNEVICTABLE_LRU, when MCL_ONFAULT is
+> > > passed to the syscall as part of its flag-set.
+> > 
+> > mlock* syscalls do not provide any guarantee that the pages will be in
+> > unevictable LRU, only that the pages will not be paged-out. The test
+> > is checking something very internal to the kernel and this is expected
+> > to break.
 > 
-> This is useful in applications which pass jpegs with arbitrary
-> dimensions, where buffers can be reused to decode smaller jpegs
-> without having to do expensive renegotiations.
-> 
-> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
-> ---
->  drivers/media/platform/coda/coda-jpeg.c | 7 -------
->  1 file changed, 7 deletions(-)
-> 
-> diff --git a/drivers/media/platform/coda/coda-jpeg.c b/drivers/media/platform/coda/coda-jpeg.c
-> index 162ba28a6b95..782a78dcaf4d 100644
-> --- a/drivers/media/platform/coda/coda-jpeg.c
-> +++ b/drivers/media/platform/coda/coda-jpeg.c
-> @@ -302,13 +302,6 @@ int coda_jpeg_decode_header(struct coda_ctx *ctx, struct vb2_buffer *vb)
->  	}
->  
->  	q_data_src = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_OUTPUT);
-> -	if (header.frame.height != q_data_src->height ||
-> -	    header.frame.width != q_data_src->width) {
-> -		v4l2_err(&dev->v4l2_dev,
-> -			 "dimensions don't match format: %dx%d\n",
-> -			 header.frame.width, header.frame.height);
-> -		return -EINVAL;
-> -	}
+> It was a check expected to be satisfied before the commit, though. 
+> Getting the mlocked pages inserted directly into the unevictable LRU,
+> skipping the pagevec, was established behavior before the aforementioned
+> commit, and even though one could argue userspace should not be aware,
+> or care, about such inner kernel circles the program in question is not an 
+> ordinary userspace app, but a kernel selftest that is supposed to check
+> for the functionality correctness.
 
-Since you are dropping this check, and allowing other sizes to be
-decoded using, do you have any check to make sure you don't overrun
-(in bytes, not in width x height) the CAPTURE (decoded) buffer?
+But mlock (in neither mode) is reall forced to put pages to the
+UNEVICTABLE_LRU for correctness. If the test is really depending on it
+then the selftest is bogus. A real MCL_ONFAULT test should focus on the
+user observable contract of this api. And that is that a new mapping
+doesn't fault in the page during the mlock call but the memory is locked
+after the memory is faulted in. You can use different methods to observe
+locked memory - e.g. try to reclaim it and check or check /proc/<pid>/smaps
 
-Also, IIUC your application is negotiating W x H, but then
-passing a different size: I wonder if this is not an abuse
-of the spec?
-
-Thanks,
-Ezequiel
-
->  
->  	if (header.frame.num_components != 3) {
->  		v4l2_err(&dev->v4l2_dev,
-
-
+-- 
+Michal Hocko
+SUSE Labs
