@@ -2,96 +2,107 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6932C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B13C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A1B20788
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C427820784
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:09:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbgCWMI6 convert rfc822-to-8bit (ORCPT
+        id S1727453AbgCWMJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:08:58 -0400
-Received: from poy.remlab.net ([94.23.215.26]:57246 "EHLO
-        ns207790.ip-94-23-215.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgCWMI5 (ORCPT
+        Mon, 23 Mar 2020 08:09:02 -0400
+Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:31087 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727430AbgCWMJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 08:08:57 -0400
-Received: from basile.remlab.net (87-92-31-51.bb.dnainternet.fi [87.92.31.51])
-        (Authenticated sender: remi)
-        by ns207790.ip-94-23-215.eu (Postfix) with ESMTPSA id 0E6085FCA2;
-        Mon, 23 Mar 2020 13:08:54 +0100 (CET)
-From:   =?ISO-8859-1?Q?R=E9mi?= Denis-Courmont <remi@remlab.net>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, james.morse@arm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] arm64: clean up trampoline vector loads
-Date:   Mon, 23 Mar 2020 14:08:53 +0200
-Message-ID: <2345780.q8flsOIESp@basile.remlab.net>
-Organization: Remlab
-In-Reply-To: <20200323120700.GB2597@C02TD0UTHF1T.local>
-References: <1938400.7m7sAWtiY1@basile.remlab.net> <20200319091407.51449-1-remi@remlab.net> <20200323120700.GB2597@C02TD0UTHF1T.local>
+        Mon, 23 Mar 2020 08:09:02 -0400
+Received: from [192.168.42.210] ([93.22.39.252])
+        by mwinf5d69 with ME
+        id Ho8n2200f5SRGh103o8oSn; Mon, 23 Mar 2020 13:08:59 +0100
+X-ME-Helo: [192.168.42.210]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 23 Mar 2020 13:08:59 +0100
+X-ME-IP: 93.22.39.252
+Subject: Re: [PATCH] perf cpumap: Use scnprintf instead of snprintf
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, kan.liang@linux.intel.com,
+        zhe.he@windriver.com, dzickus@redhat.com, jstancek@redhat.com,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Newsgroups: gmane.linux.kernel,gmane.linux.kernel.janitors
+References: <20200322172523.2677-1-christophe.jaillet@wanadoo.fr>
+ <20200323110334.GC26299@kadam>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <9f8351f9-7664-8c96-9c37-a6e86efc9643@wanadoo.fr>
+Date:   Mon, 23 Mar 2020 13:08:47 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200323110334.GC26299@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le maanantaina 23. maaliskuuta 2020, 14.07.00 EET Mark Rutland a écrit :
-> On Thu, Mar 19, 2020 at 11:14:05AM +0200, Rémi Denis-Courmont wrote:
-> > From: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
-> > 
-> > This switches from custom instruction patterns to the regular large
-> > memory model sequence with ADRP and LDR. In doing so, the ADD
-> > instruction can be eliminated in the SDEI handler, and the code no
-> > longer assumes that the trampoline vectors and the vectors address both
-> > start on a page boundary.
-> > 
-> > Signed-off-by: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
-> > ---
-> > 
-> >  arch/arm64/kernel/entry.S | 9 ++++-----
-> >  1 file changed, 4 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-> > index e5d4e30ee242..24f828739696 100644
-> > --- a/arch/arm64/kernel/entry.S
-> > +++ b/arch/arm64/kernel/entry.S
-> > @@ -805,9 +805,9 @@ alternative_else_nop_endif
-> > 
-> >  2:
-> >  	tramp_map_kernel	x30
-> >  
-> >  #ifdef CONFIG_RANDOMIZE_BASE
-> > 
-> > -	adr	x30, tramp_vectors + PAGE_SIZE
-> > +	adrp	x30, tramp_vectors + PAGE_SIZE
-> > 
-> >  alternative_insn isb, nop, ARM64_WORKAROUND_QCOM_FALKOR_E1003
-> > 
-> > -	ldr	x30, [x30]
-> > +	ldr	x30, [x30, #:lo12:__entry_tramp_data_start]
-> 
-> I think this is busted for !4K kernels once we reduce the alignment of
-> __entry_tramp_data_start.
-> 
-> The ADRP gives us a 64K aligned address (with bits 15:0 clear). The lo12
-> relocation gives us bits 11:0, so we haven't accounted for bits 15:12.
+Le 23/03/2020 à 12:03, Dan Carpenter a écrit :
+> On Sun, Mar 22, 2020 at 06:25:23PM +0100, Christophe JAILLET wrote:
+>> 'scnprintf' returns the number of characters written in the output buffer
+>> excluding the trailing '\0', instead of the number of characters which
+>> would be generated for the given input.
+>>
+>> Both function return a number of characters, excluding the trailing '\0'.
+>> So comparaison to check if it overflows, should be done against max_size-1.
+>> Comparaison against max_size can never match.
+>>
+>> Fixes: 7780c25bae59f ("perf tools: Allow ability to map cpus to nodes easily")
+>> Fixes: a24020e6b7cf6 ("perf tools: Change cpu_map__fprintf output")
+>> Fixes: 92a7e1278005b ("perf cpumap: Add cpu__max_present_cpu()")
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>> ---
+>>   tools/perf/util/cpumap.c | 39 ++++++++++++++++++++-------------------
+>>   1 file changed, 20 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+>> index 983b7388f22b..b87e7ef4d130 100644
+>> --- a/tools/perf/util/cpumap.c
+>> +++ b/tools/perf/util/cpumap.c
+>> @@ -316,8 +316,8 @@ static void set_max_cpu_num(void)
+>>   		goto out;
+>>   
+>>   	/* get the highest possible cpu number for a sparse allocation */
+>> -	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
+>> -	if (ret == PATH_MAX) {
+>> +	ret = scnprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
+>> +	if (ret == PATH_MAX-1) {
+> This should be a static analysis warning.
+>
+> But isn't this stuff userspace?  I can't figure out how to compile it on
+> Debian so I'm not sure.  There is no scnprintf() in user space.
+>
+> regards,
+> dan carpenter
 
-IMU, ADRP gives a 4K aligned value, regardless of MMU (TCR) settings.
+I compiled it with:
 
-I rather suspect that the problem is with my C code diff assuming that 
-PAGE_MASK is 4095.
+     make tools/perf
 
--- 
-Rémi Denis-Courmont
-http://www.remlab.net/
+the cpumap.o is generated and if I introduce an error, 
+'scn<SPACE>printf' for example, gcc triggers a built error.
+
+I though it was enough to validate the patch, before sending it.
 
 
+Anyway, keeping 'snprintf' could be better to check for the overflow, 
+but 'if (ret == PATH_MAX)' should be turned in 'if (ret >= PATH_MAX)'.
+If agreed, I can send a V2.
+
+CJ
 
