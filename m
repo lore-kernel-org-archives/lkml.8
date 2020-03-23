@@ -2,170 +2,76 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11888C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870BCC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF8820735
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:03:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q0zycYaR"
+	by mail.kernel.org (Postfix) with ESMTP id 5CFCC206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbgCWPDL (ORCPT
+        id S1727333AbgCWPDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:03:11 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:45911 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727138AbgCWPDL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:03:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584975789;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=C04vHTmtlsvJpQjudnPl4U8KUo7RqEolEs590PlIhK8=;
-        b=Q0zycYaRaJKnXqjULcX09Hg1ZUqgkHQMy2xrahBZDWHRSwHMyw/y2tjIx0Bvz9vqyx99WT
-        2gJ97BbDuIjDlsgRKMHWKC7lUM7aUM3+qD0GPrWsBMXDBSzRAaQ35ej5JSAjUm9Nr+t0Op
-        PzUw//XIQPXjb8Lp1DRqjLmS4AddhAw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-378-UK1BPhOWOhe2y3PD85mHHg-1; Mon, 23 Mar 2020 11:03:05 -0400
-X-MC-Unique: UK1BPhOWOhe2y3PD85mHHg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2EDB3100550D;
-        Mon, 23 Mar 2020 15:03:04 +0000 (UTC)
-Received: from optiplex-lnx (unknown [10.33.36.220])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 50D7F5C1B2;
-        Mon, 23 Mar 2020 15:03:02 +0000 (UTC)
-Date:   Mon, 23 Mar 2020 11:02:59 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org
-Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
- false-negative errors
-Message-ID: <20200323150259.GD23364@optiplex-lnx>
-References: <20200322013525.1095493-1-aquini@redhat.com>
- <20200321184352.826d3dba38aecc4ff7b32e72@linux-foundation.org>
- <20200322020326.GB1068248@t490s>
- <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
- <CALvZod7LiMiK1JtfdvvU3W36cGSUKhhKf6dMZpsNZv6nMiJ5=g@mail.gmail.com>
- <20200323075208.GC7524@dhcp22.suse.cz>
- <20200323144240.GB23364@optiplex-lnx>
- <20200323145106.GM7524@dhcp22.suse.cz>
+        Mon, 23 Mar 2020 11:03:51 -0400
+Received: from mga05.intel.com ([192.55.52.43]:46999 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727050AbgCWPDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:03:51 -0400
+IronPort-SDR: LapmL+7/Kq9IMO4nKBKaaLiQK3N2mqszyHvyB8FGbczDxy/vDNJcQmAvxFBD+f0UCJdMQ6Uo4Z
+ bx56YWDEsdWg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 08:03:48 -0700
+IronPort-SDR: mHHNLNQ0A/+Zr0fMQurJa2EsXFsMlu2fBmkH6MHRuzF9OYszpfxRoiO3+8ENpbBRzAf6jj7yIa
+ qbicpWu0OHiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,296,1580803200"; 
+   d="scan'208";a="264800941"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 23 Mar 2020 08:03:44 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jGOcD-00CGr2-UD; Mon, 23 Mar 2020 17:03:45 +0200
+Date:   Mon, 23 Mar 2020 17:03:45 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Tali Perry <tali.perry1@gmail.com>
+Cc:     brendanhiggins@google.com, avifishman70@gmail.com,
+        tmaimon77@gmail.com, kfting@nuvoton.com, venture@google.com,
+        yuenn@google.com, benjaminfair@google.com, robh+dt@kernel.org,
+        wsa@the-dreams.de, linux-arm-kernel@lists.infradead.org,
+        linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 1/3] dt-bindings: i2c: npcm7xx: add NPCM I2C controller
+Message-ID: <20200323150345.GP1922688@smile.fi.intel.com>
+References: <20200323134437.259210-1-tali.perry1@gmail.com>
+ <20200323134437.259210-2-tali.perry1@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200323145106.GM7524@dhcp22.suse.cz>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200323134437.259210-2-tali.perry1@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 03:51:06PM +0100, Michal Hocko wrote:
-> On Mon 23-03-20 10:42:40, Rafael Aquini wrote:
-> > On Mon, Mar 23, 2020 at 08:52:08AM +0100, Michal Hocko wrote:
-> > > On Sun 22-03-20 09:36:49, Shakeel Butt wrote:
-> > > > On Sat, Mar 21, 2020 at 9:31 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > > > >
-> > > > > On Sat, 21 Mar 2020 22:03:26 -0400 Rafael Aquini <aquini@redhat.com> wrote:
-> > > > >
-> > > > > > > > + * In order to sort out that race, and get the after fault checks consistent,
-> > > > > > > > + * the "quick and dirty" trick below is required in order to force a call to
-> > > > > > > > + * lru_add_drain_all() to get the recently MLOCK_ONFAULT pages moved to
-> > > > > > > > + * the unevictable LRU, as expected by the checks in this selftest.
-> > > > > > > > + */
-> > > > > > > > +static void force_lru_add_drain_all(void)
-> > > > > > > > +{
-> > > > > > > > + sched_yield();
-> > > > > > > > + system("echo 1 > /proc/sys/vm/compact_memory");
-> > > > > > > > +}
-> > > > > > >
-> > > > > > > What is the sched_yield() for?
-> > > > > > >
-> > > > > >
-> > > > > > Mostly it's there to provide a sleeping gap after the fault, whithout
-> > > > > > actually adding an arbitrary value with usleep().
-> > > > > >
-> > > > > > It's not a hard requirement, but, in some of the tests I performed
-> > > > > > (whithout that sleeping gap) I would still see around 1% chance
-> > > > > > of hitting the false-negative. After adding it I could not hit
-> > > > > > the issue anymore.
-> > > > >
-> > > > > It's concerning that such deep machinery as pagevec draining is visible
-> > > > > to userspace.
-> > > > >
-> > > > 
-> > > > We already have other examples like memcg stats where the
-> > > > optimizations like batching per-cpu stats collection exposes
-> > > > differences to the userspace. I would not be that worried here.
-> > > 
-> > > Agreed! Tests should be more tolerant for counters imprecision.
-> > > Unevictable LRU is an optimization and transition to that list is a
-> > > matter of an internal implementation detail.
-> > >
-> > > > > I suppose that for consistency and correctness we should perform a
-> > > > > drain prior to each read from /proc/*/pagemap.  Presumably this would
-> > > > > be far too expensive.
-> > > > >
-> > > > > Is there any other way?  One such might be to make the MLOCK_ONFAULT
-> > > > > pages bypass the lru_add_pvecs?
-> > > > >
-> > > > 
-> > > > I would rather prefer to have something similar to
-> > > > /proc/sys/vm/stat_refresh which drains the pagevecs.
-> > > 
-> > > No, please don't. Pagevecs draining is by far not the only batching
-> > > scheme we use and an interface like this would promise users to
-> > > effectivelly force flushing all of them.
-> > > 
-> > > Can we simply update the test to be more tolerant to imprecisions
-> > > instead?
-> > > 
-> > 
-> > I don't think, thouhg, that this particular test case can be entirely
-> > reduced as "counter imprecison".
-> > 
-> > The reason I think this is a different beast, is that having the page
-> > being flagged as PG_unevictable is expected part of the aftermath of
-> > a mlock* call. This selftest is, IMO, correctly verifying that fact,
-> > as it checks the functionality correctness.
-> > 
-> > The problem boils down to the fact that the page would immediately
-> > be flagged as PG_unevictable after the mlock (under MCL_FUTURE|MCL_ONFAULT
-> > semantics) call, and the test was expecting it, and commit 9c4e6b1a7027f
-> > changed that by "delaying" that flag setting.
+On Mon, Mar 23, 2020 at 03:44:35PM +0200, Tali Perry wrote:
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM I2C controller.
 > 
-> As I've tried to explain in other email in this email thread. The test
-> was exploiting a certain user visible side effect. The unevictable flag
-> or the placement on the unevictable LRU list is are not really needed
-> for the user contract correctness. That means that the test is not
-> really correct. Working around that by trying to enforce kernel to
-> comply with the test expectations is just plain wrong at least for two
-> reasons 1) you cannot expect or event do not want userspace to do the
-> same because the behavior might change in the future 2) the test is not
-> really testing for correctness in the first place.
->
+> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/i2c/i2c-npcm7xx.txt   | 29 +++++++++++++++++++
 
-Sorry, Michal, it seems we keep going back and forth (I just replied to
-your comment on the other thread)
+Wouldn't be better to have it in YAML from the day 1?
 
-The selftest also checks the kernel visible effect, via
-/proc/kpageflags, and that's where it fails after 9c4e6b1a7027f.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-As I mentioned before, I think it is a reasonable check, given this
-is a kernel selftest, although we need to compensate it for the
-differences between its expectations and what the kernel is doing
-currently.
-
--- Rafael
 
