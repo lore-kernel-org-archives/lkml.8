@@ -2,93 +2,111 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EB7C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D00E3C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35BDA2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:14:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585001655;
-	bh=OrsdWWDpMVBkmg4P2n1X0Ud13wXuOs05aSb+v05IoxM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ybNoDKarChe86w+ISFXywwt4M+3aS8CE5UYA4fy//PmMcFbxrv/53luvHFsuSq2q2
-	 EtRIinn4cpcnAu13ioFuNFi+qMx4fiXVy4PjGAwh+yesVzQ2b2VMFOoGCD9zMbb1Rf
-	 1cRfS9T7oZkdUnnYOfuv1FVSuLLC+O3tiqSG76fs=
+	by mail.kernel.org (Postfix) with ESMTP id A3D262073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:14:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Ase+58t8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgCWWOO (ORCPT
+        id S1727102AbgCWWOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:14:14 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:36445 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgCWWOO (ORCPT
+        Mon, 23 Mar 2020 18:14:18 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:59884 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727063AbgCWWOR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 18:14:14 -0400
-Received: by mail-il1-f193.google.com with SMTP id h3so14948113ils.3;
-        Mon, 23 Mar 2020 15:14:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YwDVmx/7pr36/zBUwTKAawrGVSeIBJncPSwg7RtZXaI=;
-        b=Ck2Blp+HDFleRsp3E1gSqZ3Up8yJWRB1b6U/4AF3CxyG3fozXzhKln1Q48TlEZAmc1
-         HLVDxCe1O+yZH+1tu5K3JAZV/YF9k/ZwubsqO79CXoQLmRdyAQ8ZEvTEP61PbzJXithp
-         MeWJeBbAx3E1Q+dc5aSkJzVufwS04FWJ5vL1jSUnk3lmj3Y7RvvdXB2KS28E3AcOVpeN
-         f5bqXClZUBPPw6K7U0kJl+CIIi/3Zl/DwW4lhI22oM7/SFRd/C/pvnDbV1ie1+YJaCwa
-         fNu3tI8kwEAALUiJ9byGzoooQkwCkNI6wJhUfw9k2GWHjh9T8XCoulzyfvZVox0z0Cl9
-         gQeQ==
-X-Gm-Message-State: ANhLgQ3RKNjMecA2TjzJHfsEg4o1Rf6udk7UgOQDc0vhYEQ5wWWXxzLB
-        Se6dIHQoK7097lvGRD/LuT1c0lA=
-X-Google-Smtp-Source: ADFU+vtmB9+BQuIncmj63KKHCHqFICX0S67XCzAYHEXUebAJ+2wdsOgqdZHyMJFrPNYNL3B2XPdGkg==
-X-Received: by 2002:a92:9a4d:: with SMTP id t74mr14100809ili.168.1585001652864;
-        Mon, 23 Mar 2020 15:14:12 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id h12sm4651950iob.22.2020.03.23.15.14.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 15:14:12 -0700 (PDT)
-Received: (nullmailer pid 315 invoked by uid 1000);
-        Mon, 23 Mar 2020 22:14:10 -0000
-Date:   Mon, 23 Mar 2020 16:14:10 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 3/3] dt-bindings: rtc: Convert and update jz4740-rtc
- doc to YAML
-Message-ID: <20200323221410.GA32740@bogus>
-References: <20200311182318.22154-1-paul@crapouillou.net>
- <20200311182318.22154-3-paul@crapouillou.net>
+        Mon, 23 Mar 2020 18:14:17 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02NM8eDQ015399
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 15:14:17 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=erPXsWmd23fd3W9Xuv20sBNJ3NxEkbQhYsmOpbVq2AI=;
+ b=Ase+58t8NRI2h/zfLau/NM4sVfVwV1hDnIRfl6k7hlOH5NZuhtjQudVOJDWzjb5ECvVS
+ iUlPQnTbnOWrAAgxx4xoTWqnLc+iTEscNnLyAQJUDuHzp4lzyryyL7rhkGmIt1ffhLvz
+ k6iewYo3GuMCj6jvz1azNim6a67PYY4xfcA= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yx2udyknd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 15:14:17 -0700
+Received: from intmgw003.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Mon, 23 Mar 2020 15:14:15 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id 274BD3BEB983D; Mon, 23 Mar 2020 15:14:12 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Aslan Barkirov <aslan@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        <linux-mm@kvack.org>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>, Rik van Riel <riel@surriel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH] mm: hugetlb: fix per-node size calculation for hugetlb_cma
+Date:   Mon, 23 Mar 2020 15:14:11 -0700
+Message-ID: <20200323221411.2152675-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311182318.22154-3-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-23_09:2020-03-23,2020-03-23 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ lowpriorityscore=0 bulkscore=0 clxscore=1015 phishscore=0
+ priorityscore=1501 impostorscore=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003230110
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020 19:23:18 +0100, Paul Cercueil wrote:
-> Convert the jz4740-rtc doc to YAML, and update it to reflect the new
-> changes in the driver:
-> - More compatible strings are specified, with fallbacks if needed,
-> - The vendor-specific properties are now properly prefixed with the
->   'ingenic,' prefix.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  .../bindings/rtc/ingenic,jz4740-rtc.txt       | 37 ---------
->  .../devicetree/bindings/rtc/ingenic,rtc.yaml  | 83 +++++++++++++++++++
->  2 files changed, 83 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
->  create mode 100644 Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
-> 
+Aslan found a bug in the per-node hugetlb_cma area size calculation:
+the total remaining size should cap the per-node area size instead
+of be the minimal possible allocation.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Without the fix:
+[    0.004136] hugetlb_cma: reserve 2048 MiB, up to 1024 MiB per node
+[    0.004138] cma: Reserved 2048 MiB at 0x0000000180000000
+[    0.004139] hugetlb_cma: reserved 2048 MiB on node 0
+
+With the fix:
+[    0.006780] hugetlb_cma: reserve 2048 MiB, up to 1024 MiB per node
+[    0.006786] cma: Reserved 1024 MiB at 0x00000001c0000000
+[    0.006787] hugetlb_cma: reserved 1024 MiB on node 0
+[    0.006788] cma: Reserved 1024 MiB at 0x00000003c0000000
+[    0.006789] hugetlb_cma: reserved 1024 MiB on node 1
+
+Reported-by: Aslan Barkirov <aslan@fb.com>
+Signed-off-by: Roman Gushchin <guro@fb.com>
+---
+ mm/hugetlb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 456f4c010fea..44b47c2b6fab 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -5590,7 +5590,7 @@ void __init hugetlb_cma_reserve(int order)
+ 		min_pfn = min_low_pfn;
+ 		max_pfn = max_low_pfn;
+ #endif
+-		size = max(per_node, hugetlb_cma_size - reserved);
++		size = min(per_node, hugetlb_cma_size - reserved);
+ 		size = round_up(size, PAGE_SIZE << order);
+ 
+ 		if (size > ((max_pfn - min_pfn) << PAGE_SHIFT) / 2) {
+-- 
+2.25.1
+
