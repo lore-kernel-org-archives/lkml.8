@@ -2,123 +2,100 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEDBC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF3CC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2F9C20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3084720753
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:44:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QZD/KgRP"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="EQ3ZqVc1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgCWUop (ORCPT
+        id S1727008AbgCWUo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 16:44:45 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37314 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbgCWUop (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 16:44:45 -0400
-Received: by mail-lf1-f67.google.com with SMTP id j11so11367035lfg.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 13:44:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e061pcmiSocm5TCH2kexNo/1LtEisTcSsHnrvUPbEiA=;
-        b=QZD/KgRPHgcOxtb0qWhUKPvSZHXx/HGVixEwM+IWFrVubL8hnRtHer1OuNpH4SX2hM
-         et/A57hTvPYZavJafDtMEIwBI2RqvlxrTruXy8fqS79oLTB9xNaxZ5+SV7JpbRzuvdCg
-         1yByR6BBDe43ZDKfbVgD0TZhf3QtjUcKNI1S3uVmbSg5b69Gb1gr0+LDcDcY9e6E6bq9
-         E3rB6iYP6yTcHa7eDfeld72008bfP8yEOtCRhjLSve4gf/TFGx+Ayi34Vhvj8SUNr3at
-         7whfcwefkLPfp6Jiyll9s2NGZWA6w5U6NHk3FffeQRbES+Ahf8qiCsMKgE9opWmINOow
-         jGFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e061pcmiSocm5TCH2kexNo/1LtEisTcSsHnrvUPbEiA=;
-        b=NKsq+4wZ73HrBCshQnayZKUdpqM806aIsFJ0IJysDPiiOTIQnIxTUnKbP299KITdo8
-         CQG0mbAE08wuhFfhUH4pqu6cH5ihGmGGkeDdUzHxX8MXPgIDAwu9XEeoxLQRcvU/2weK
-         OKKYgk0bmvDPUKMAKkvTsowU0d4wkuqufa1j3gAEbpatP9izB07IE2kT0jiGU/0a4cmU
-         4Jj6tFTAqOjBdNc67s+mAEOO5VMz/4VWu+8z0VttEcu1yZLojHdmKHjrZ3hjYAZx+PSe
-         oWZ9INvi9+qPkunzRDwpmdVytqXUMcOdE8TOnLMDyDpBk5UVNSIGIy8q5rzE2Hv4rKHw
-         AfaQ==
-X-Gm-Message-State: ANhLgQ29Tz6NXeZhp4CsMM0JEtHfMYBRHdlJEaQ9PclINQSJtg+0sO9L
-        dExR3chSN1FoO26SoGnP/BoWxKeysPKzdVl/QAephbxo
-X-Google-Smtp-Source: ADFU+vsTXJ33avbaKKNKuuv9JSmVCumR5ejYDfgc7vUWBMzBSRxV9N+5vck7HENKih2MNH2L3VHcCttJW2RMzVBhWfs=
-X-Received: by 2002:ac2:548f:: with SMTP id t15mr14146896lfk.115.1584996282705;
- Mon, 23 Mar 2020 13:44:42 -0700 (PDT)
+        Mon, 23 Mar 2020 16:44:57 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:35063 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbgCWUo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 16:44:57 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 34bb9f45;
+        Mon, 23 Mar 2020 20:37:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=date:from:to
+        :cc:subject:message-id:references:mime-version:content-type
+        :in-reply-to; s=mail; bh=lO1tfTg2EiIAONfM9UiInlqel2I=; b=EQ3ZqVc
+        1rOs+mxB/P0W1ebcdTeJHplIaDOV4gL8GTuteSAFNQypSC2uNxAv+ikkkQasf/BD
+        6id/edk4fHX6E8Oir60ULnCpPr+adAC21hmJWWsBeb7JCFmbfPbx8VUtZEqDV6Mp
+        2VBkY0KCJejYuRfxx0NAV53yy1WRzY+6lF0zqOj1hmqVUGSXvMU0K4qIiodNtIwn
+        R2Wrmtep+hxGsSav/c/i3ChzI3jsTMc6UssD6iX5v79hETPfZ/aSed4bEPRxBxmo
+        A3GTxzh/k8Pmx5SanmBdb1lIv/VgcZ9iX2kBuRWfOiHXnJHPqABSXiHLWnsjvJUP
+        4uPVzzqwvqnNQXQ==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 17584a94 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Mon, 23 Mar 2020 20:37:53 +0000 (UTC)
+Date:   Mon, 23 Mar 2020 14:44:54 -0600
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     bp@alien8.de
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Mauro Rossi <issor.oruam@gmail.com>,
+        Michael Matz <matz@suse.de>
+Subject: Re: [PATCH] Documentation/changes: Raise minimum supported binutils
+ version to 2.23
+Message-ID: <20200323204454.GA2611336@zx2c4.com>
+References: <20200113161310.GA191743@rani.riverdale.lan>
+ <20200113195337.604646-1-nivedita@alum.mit.edu>
+ <202001131750.C1B8468@keescook>
+ <20200114165135.GK31032@zn.tnic>
+ <20200115002131.GA3258770@rani.riverdale.lan>
+ <20200115122458.GB20975@zn.tnic>
+ <20200316160259.GN26126@zn.tnic>
 MIME-Version: 1.0
-References: <CAEAjamv3wT4aqF0y1_PHG_=cbzH-ATsP6TiV5Zt5Qc+ACVnOPw@mail.gmail.com>
- <20200323064616.GB129571@kroah.com>
-In-Reply-To: <20200323064616.GB129571@kroah.com>
-From:   Kyungtae Kim <kt0755@gmail.com>
-Date:   Mon, 23 Mar 2020 16:44:31 -0400
-Message-ID: <CAEAjamvv7LzaTBu-Xh5rg4r1-_NaDDGVoe9LZ7NmZv3gpLXkuw@mail.gmail.com>
-Subject: Re: UBSAN: Undefined behaviour in drivers/tty/vt/keyboard.c
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     jslaby@suse.com, slyfox@gentoo.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>, rei4dan@gmail.com,
-        Dave Tian <dave.jing.tian@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200316160259.GN26126@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 07:46:16AM +0100, Greg KH wrote:
-> On Sun, Mar 22, 2020 at 11:34:01PM -0400, Kyungtae Kim wrote:
-> > We report a bug (in linux-5.5.11) found by FuzzUSB (modified version
-> > of syzkaller)
-> >
-> > Seems the variable "npadch" has a very large value (i.e., 333333333)
-> > as a result of multiple executions of the function "k_ascii" (keyboard.c:888)
-> > while the variable "base" has 10.
-> > So their multiplication at line 888 in "k_ascii" will become
-> > larger than the max of type int, causing such an integer overflow.
-> >
-> > I believe this can be solved by checking for overflow ahead of operations
-> > e.g., using check_mul_overflow().
-> >
-> > kernel config: https://kt0755.github.io/etc/config_v5.5.11
->
-> Great, can you send a patch for this?
->
-> thanks,
->
-> greg k-h
+On Mon, Mar 16, 2020 at 05:02:59PM +0100, Borislav Petkov wrote:
+> Long overdue patch, see below.
+> 
+> Plan is to queue it after 5.7-rc1.
+> 
+> ---
+> From: Borislav Petkov <bp@suse.de>
+> Date: Mon, 16 Mar 2020 16:28:36 +0100
+> Subject: [PATCH] Documentation/changes: Raise minimum supported binutilsa version to 2.23
+> 
+> The currently minimum-supported binutils version 2.21 has the problem of
+> promoting symbols which are defined outside of a section into absolute.
+> According to Arvind:
+> 
+>   binutils-2.21 and -2.22. An x86-64 defconfig will fail with
+>           Invalid absolute R_X86_64_32S relocation: _etext
+>   and after fixing that one, with
+>           Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
+> 
+> Those two versions of binutils have a bug when it comes to handling
+> symbols defined outside of a section and binutils 2.23 has the proper
+> fix, see: https://sourceware.org/legacy-ml/binutils/2012-06/msg00155.html
+> 
+> Therefore, up to the fixed version directly, skipping the broken ones.
+> 
+> Currently shipping distros already have the fixed binutils version so
+> there should be no breakage resulting from this.
+> 
+> For more details about the whole thing, see the thread in Link.
 
-I'm not sure the following works best.
+That sounds very good to me. Then we'll be able to use ADX instructions
+without ifdefs.
 
-diff --git a/drivers/tty/vt/keyboard.c b/drivers/tty/vt/keyboard.c
-index 15d33fa0c925..c1ae9d2e6970 100644
---- a/drivers/tty/vt/keyboard.c
-+++ b/drivers/tty/vt/keyboard.c
-@@ -869,6 +869,7 @@ static void k_meta(struct vc_data *vc, unsigned
-char value, char up_flag)
- static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
- {
-        int base;
-+       int bytes, res;
-
-        if (up_flag)
-                return;
-@@ -884,6 +885,8 @@ static void k_ascii(struct vc_data *vc, unsigned
-char value, char up_flag)
-
-        if (npadch == -1)
-                npadch = value;
-+       else if (check_mul_overflow(npadch, base, &bytes) ||
-check_add_overflow(bytes, value, &res))
-+               return;
-        else
-                npadch = npadch * base + value;
- }
-
-Thanks,
-Kyungtae Kim
+Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
