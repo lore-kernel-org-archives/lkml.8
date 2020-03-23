@@ -2,186 +2,146 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B12C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88690C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D732074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:53:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584957229;
-	bh=vYQRdibAHre6Z0ZRM2+BRlR2nFJ0LeQHPRN+LvLMVBQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q2j4VisFxD1mHw8sHiJnupGaRhAzWIGmoOLfBJjeR6k+gLqMI6TQOj/4gJebmCKBD
-	 MuPS2OMkpKEXLhILSuGSozH1VRDT/BI5JlQIsyrmrJwrlkelC1D1HeCCfZxuOOaTHt
-	 NyhmzJ6xCeig4TOAkKEJPMLZ8ZXPTb1WOPOusAYU=
+	by mail.kernel.org (Postfix) with ESMTP id 3B0F22072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:54:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="WMZPh9ZM";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="RCfcRfvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgCWJxs (ORCPT
+        id S1727821AbgCWJyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 05:53:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727737AbgCWJxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:53:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 23 Mar 2020 05:54:47 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:33396 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727737AbgCWJyq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 05:54:46 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5CDF2072D;
-        Mon, 23 Mar 2020 09:53:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584957227;
-        bh=vYQRdibAHre6Z0ZRM2+BRlR2nFJ0LeQHPRN+LvLMVBQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yWjYuu7kvYMl56D+Y8BuUPq3QPFiMCKuoOxVlWQhwAM+Wm8idPdIVqevNxw69uAAk
-         ovtTcEbcF8rxF1O0XGhGCwlQyvi72gjTGLHWblk502xAlVEL1Pik4+Qi5JPX9hQqV2
-         2pOn7t/JqTJs1YpmmO9wrZEG1pWDWllk+Oa0PCDY=
-Date:   Mon, 23 Mar 2020 10:53:44 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jaewon Kim <jaewon31.kim@samsung.com>
-Cc:     leon@kernel.org, vbabka@suse.cz, adobriyan@gmail.com,
-        akpm@linux-foundation.org, labbott@redhat.com,
-        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com, kasong@redhat.com,
-        bhe@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        jaewon31.kim@gmail.com, linux-api@vger.kernel.org,
-        kexec@lists.infradead.org
-Subject: Re: [RFC PATCH v2 1/3] meminfo_extra: introduce meminfo extra
-Message-ID: <20200323095344.GB425358@kroah.com>
-References: <20200323080503.6224-1-jaewon31.kim@samsung.com>
- <CGME20200323080508epcas1p387c9c19b480da53be40fe5d51e76a477@epcas1p3.samsung.com>
- <20200323080503.6224-2-jaewon31.kim@samsung.com>
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id F061EC04CE;
+        Mon, 23 Mar 2020 09:54:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1584957285; bh=OXX0CLAiESutixt4vvsP5RxceHVf/uXL+RPkEt+wnuc=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=WMZPh9ZMpF1wHv+02kYp1ys5v+5rMhY7Ky1hOCHN4xqxYKAVuJHOwCc9dtlW7DH3S
+         ykBQH8IvMK/MHdhWPijk9zIM1xcBbBHyqf+JPoOr+HyjJ/Bd5wg1I922fVyYn1N7tq
+         En7s9AmOG1+0KeZ1cZKvBypwNQt2Yo+q/Or50UrUD0iYuMmmOy1p3VgHuWJsxdnv+/
+         XR0IYk9MeoIrMakBZh3ET9qV4gola4ryc/sP7VO1LQb4GGmZanAbVJnYdYbnvtouoj
+         MJD+d4IzyOPO/4p2ewYwjoTx9KoWH9sc1qjsBNm65n4GsOzassskG8N+GG8NTrDdNK
+         SI1QL+KwFaldQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id B256AA0085;
+        Mon, 23 Mar 2020 09:54:39 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 23 Mar 2020 02:54:39 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 23 Mar 2020 02:54:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SiGPr06UdJlTkQhk00P+VinaDE+iVTK/6LGM878d/O9wQs2TmGxuWeTYDVGrDp4yNsh7dK+LwB+XJOy87nqS8cNVFV1ifunKPLmOj+X2V6/uHUNSELYvekXWWqapExu54+8uyEg2MgYO1vUGeUsXWHPqIpJPyOrDYQD2c5qmB/3smi/fYilqYm/XxbKwgUPoZGnJf8iJDqua+cI3ir0alFZhQw/6c2qg/n4YpvoZog0WUfVfaG+TWGv2CgBoeWF0te7PpfO9xUkNnmRkL61voJUeRWT5jn/O6C4mZScr8c/i5Ta5qg8BKQu5UfgSnYaUwzLTHZCI+8Ci1BZOMNpOQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OXX0CLAiESutixt4vvsP5RxceHVf/uXL+RPkEt+wnuc=;
+ b=Y18nQfnBXQeGQfb0Ds34HTeXqmpKTJZjdpoo1CHG0zm+0y1jujRtdDWHcaHBNdSrwfFDVy2NqlttwTMqYLrdBufTUYwC+AdI5UWNHNcXVJgW2WCUH4HyoNZw9RTgxobWGbpO9dRUQH6D0U8M24TMV6nwDJRI+VEvWGr7LgyUbWKBZSS08xPRpQI1HP7hJh8DvmXz8qaPh3rkIY/05pU6FgPeoH79QeInmDg633BrKf1xEnGhViop40TG7mmfpJFeAkWQBrn7NjqcdwWX192tzrXB08CO6t1C9gp/Xtf4wvcwwjZ7hLsRQoWo4K1MlVBnaIFQrnPeMWt1VWAhRquqMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OXX0CLAiESutixt4vvsP5RxceHVf/uXL+RPkEt+wnuc=;
+ b=RCfcRfvxlppLc4plC4Nf7jnUqYqq5tnZLp2tZBpU5gyhCZ5Tyq8A2vTRgXdLNu2od58KusUAzpb4DwoMcLPf3OMXBXtxcSzDiMjTyZ032+endan5hUve1CA3uLR8KOkQjCUuXOyJNcdfGClEODdqzElb5IMW9P/iKM3ujlNDXY0=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (2603:10b6:408:6e::17)
+ by BN8PR12MB3571.namprd12.prod.outlook.com (2603:10b6:408:62::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Mon, 23 Mar
+ 2020 09:54:37 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c9ed:b08e:f3c5:42fa]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c9ed:b08e:f3c5:42fa%7]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
+ 09:54:37 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Voon Weifeng <weifeng.voon@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>
+Subject: RE: [net-next,v1, 0/3] Add additional EHL PCI info and PCI ID
+Thread-Topic: [net-next,v1, 0/3] Add additional EHL PCI info and PCI ID
+Thread-Index: AQHV/td2/oAH68ZDTEGE4kkUdhEJt6hV8/OQ
+Date:   Mon, 23 Mar 2020 09:54:37 +0000
+Message-ID: <BN8PR12MB3266C3C3CE39D141DF15AA76D3F00@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <20200320164825.14200-1-weifeng.voon@intel.com>
+In-Reply-To: <20200320164825.14200-1-weifeng.voon@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [198.182.37.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 623ddfff-c1ce-46af-9ff2-08d7cf1032f2
+x-ms-traffictypediagnostic: BN8PR12MB3571:
+x-microsoft-antispam-prvs: <BN8PR12MB3571E79B1C9DEE971C80F111D3F00@BN8PR12MB3571.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0351D213B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(366004)(396003)(39850400004)(346002)(199004)(4744005)(64756008)(66556008)(66476007)(66946007)(26005)(66446008)(2906002)(76116006)(33656002)(478600001)(86362001)(71200400001)(7696005)(4326008)(8936002)(52536014)(110136005)(8676002)(186003)(54906003)(316002)(6506007)(9686003)(81156014)(5660300002)(55016002)(81166006)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3571;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nlRp6lq+wJKKUXd+KCOCBeCZltyeO13pdK3D084KYFzUCJhXCOaV523s3djIY6Fhx6jMACx3KJvKsEfuE8t+OTpeLb17qpqlX46zD4f+NSJQlJcqiPd57FY2TrFSpGzx8YwnN94+b/tnYPQ1XuH+d9sc2swA+gLK9SK4dE+tMDuii59XIgLAJMHIKNNYc/vS+PquG8+o5kEMdctdYQdyv8u5kjA+hLRwJFsbHX8o8T3tJjImjfnW7VWnsqqmwLkxJKQxGPP9nujDiIX5w/1VterwSGQ/w9Va0xLKirTud+MghqUtYjgJEOi42iZcCdtJWqPkHAn9mxqj3V3I56VjnGC0+UBGTP/1kDuBMVRs5I78XF9ya+uj/tLv3VVpjUtAytV1EEcW2+DHsIY6qVmblmpQ9xtW8kuh1l19MROscR0J8Rp0omVs4NjtXiOc4P/sYZywLRPSUsYQYoVFDP6eEsBCwRxXTkVsSVIyOhJWa+akkQaZUvCQEFb0lBgvi+S3
+x-ms-exchange-antispam-messagedata: aireonCaBXdzVNlO9zpe1pA86wqRJq5E06npndnUeWO1x2sWwhYLMZAkaVWIjJq2L52cRi1B0vVtnnoOityDPasPIaLjYesFuTfFaD9uvTSuK2ewxr8G9zdRxZAeHURTUkir2baclIGYKFVx+uoYDw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323080503.6224-2-jaewon31.kim@samsung.com>
+X-MS-Exchange-CrossTenant-Network-Message-Id: 623ddfff-c1ce-46af-9ff2-08d7cf1032f2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2020 09:54:37.6402
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nkM/mNF8TbKf8S7BNuVF/STd0dEJcCaf3nIQQaI3eYS7KviSPnizxoSJAgsY+8o9WJSuM02FzcsBArHCJNh7iQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3571
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 05:05:01PM +0900, Jaewon Kim wrote:
-> Provide APIs to drivers so that they can show its memory usage on
-> /proc/meminfo_extra.
-> 
-> int register_meminfo_extra(atomic_long_t *val, int shift,
-> 			   const char *name);
-> int unregister_meminfo_extra(atomic_long_t *val);
+From: Voon Weifeng <weifeng.voon@intel.com>
+Date: Mar/20/2020, 16:48:22 (UTC+00:00)
 
-Nit, isn't it nicer to have the subsystem name first:
-	meminfo_extra_register()
-	meminfo_extra_unregister()
-?
+> Intel EHL consist of 3 identical MAC. 2 are located in the Intel(R)
+> Programmable Services Engine (Intel(R) PSE) and 1 is located in the
+> platform Controller Hub (PCH). Each MAC consist of 3 PCI IDs which are
+> differentiated by MII and speed.
 
+This stmmac_pci.c is getting bigger and bigger ... Can you consider adding=
+=20
+your own PCI driver (dwmac-intel.c) to stmmac tree ?
 
+You could even submit a patch for MAINTAINERS for this particular driver=20
+as it's already done for others.
 
-> 
-> Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
-> ---
-> v2: move to /proc/meminfo_extra as a new file, meminfo_extra.c
->     use rcu to reduce lock overhead
-> v1: print info at /proc/meminfo
-> ---
->  fs/proc/Makefile        |   1 +
->  fs/proc/meminfo_extra.c | 123 ++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mm.h      |   4 ++
->  mm/page_alloc.c         |   1 +
->  4 files changed, 129 insertions(+)
->  create mode 100644 fs/proc/meminfo_extra.c
-> 
-> diff --git a/fs/proc/Makefile b/fs/proc/Makefile
-> index bd08616ed8ba..83d2f55591c6 100644
-> --- a/fs/proc/Makefile
-> +++ b/fs/proc/Makefile
-> @@ -19,6 +19,7 @@ proc-y	+= devices.o
->  proc-y	+= interrupts.o
->  proc-y	+= loadavg.o
->  proc-y	+= meminfo.o
-> +proc-y	+= meminfo_extra.o
->  proc-y	+= stat.o
->  proc-y	+= uptime.o
->  proc-y	+= util.o
-> diff --git a/fs/proc/meminfo_extra.c b/fs/proc/meminfo_extra.c
-> new file mode 100644
-> index 000000000000..bd3f0d2b7fb7
-> --- /dev/null
-> +++ b/fs/proc/meminfo_extra.c
-> @@ -0,0 +1,123 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/mm.h>
-> +#include <linux/proc_fs.h>
-> +#include <linux/seq_file.h>
-> +#include <linux/slab.h>
-> +
-> +static void show_val_kb(struct seq_file *m, const char *s, unsigned long num)
-> +{
-> +	seq_put_decimal_ull_width(m, s, num << (PAGE_SHIFT - 10), 8);
-> +	seq_write(m, " kB\n", 4);
-> +}
-> +
-> +static LIST_HEAD(meminfo_head);
-> +static DEFINE_SPINLOCK(meminfo_lock);
-> +
-> +#define NAME_SIZE      15
-> +#define NAME_BUF_SIZE  (NAME_SIZE + 2) /* ':' and '\0' */
-> +
-> +struct meminfo_extra {
-> +	struct list_head list;
-> +	atomic_long_t *val;
-> +	int shift_for_page;
-> +	char name[NAME_BUF_SIZE];
-> +	char name_pad[NAME_BUF_SIZE];
-> +};
-> +
-> +int register_meminfo_extra(atomic_long_t *val, int shift, const char *name)
-> +{
-> +	struct meminfo_extra *meminfo, *memtemp;
-> +	int len;
-> +	int error = 0;
-> +
-> +	meminfo = kzalloc(sizeof(*meminfo), GFP_KERNEL);
-> +	if (!meminfo) {
-> +		error = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	meminfo->val = val;
-> +	meminfo->shift_for_page = shift;
-> +	strncpy(meminfo->name, name, NAME_SIZE);
-> +	len = strlen(meminfo->name);
-> +	meminfo->name[len] = ':';
-> +	strncpy(meminfo->name_pad, meminfo->name, NAME_BUF_SIZE);
-> +	while (++len < NAME_BUF_SIZE - 1)
-> +		meminfo->name_pad[len] = ' ';
-> +
-> +	spin_lock(&meminfo_lock);
-> +	list_for_each_entry_rcu(memtemp, &meminfo_head, list) {
-> +		if (memtemp->val == val) {
-> +			error = -EINVAL;
-> +			break;
-> +		}
-> +	}
-> +	if (!error)
-> +		list_add_tail_rcu(&meminfo->list, &meminfo_head);
-> +	spin_unlock(&meminfo_lock);
-
-If you have a lock, why are you needing rcu?
-
-
-
-> +	if (error)
-> +		kfree(meminfo);
-> +out:
-> +
-> +	return error;
-> +}
-> +EXPORT_SYMBOL(register_meminfo_extra);
-
-EXPORT_SYMBOL_GPL()?  I have to ask :)
-
-thanks,
-
-greg k-h
+---
+Thanks,
+Jose Miguel Abreu
