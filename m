@@ -2,143 +2,235 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DC7C54FD4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122ECC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8290A20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:25:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GpqM04sb"
+	by mail.kernel.org (Postfix) with ESMTP id DA6D32076E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbgCWUY7 (ORCPT
+        id S1727726AbgCWUZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 16:24:59 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36916 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbgCWUXG (ORCPT
+        Mon, 23 Mar 2020 16:25:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42768 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbgCWUY5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 16:23:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=qGMDtGI8LcILAiviNIJOK9D4EAi8624WVoxyVV3Hgf4=; b=GpqM04sbe6riKS+15W0ugVavP6
-        Apf+u6QJ4Hta+TVnwLxfhu0lR/o5eMq2YMzSRxqV1WJMT4DE/xg6HZkuskBGaovRmyE8hYh5qFqog
-        A8xp50rkVr/2QDJyUsy+/I0BbeYMJRhdS3/cwQUttvRr0c0kGgJCCV4czApsFvjjeqe/gvRWH+PSX
-        fYFU3xGhaR7WuxJGMj8A9UErysQ5v8qZCwsr/kVdE/uKjzNcVGwEwFsz7IePsFTCUET3a0eG6tW3I
-        JuZLWWCOtkaW/6xgEeis+jCq/zpwokSH/5QTXuT+EgNhBqdYo+71WOCT8KdFQum4tnjtU36DwMjiX
-        jT07SCtQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGTbC-0003Vj-15; Mon, 23 Mar 2020 20:23:02 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
-        Gao Xiang <gaoxiang25@huawei.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v10 19/25] erofs: Convert compressed files from readpages to readahead
-Date:   Mon, 23 Mar 2020 13:22:53 -0700
-Message-Id: <20200323202259.13363-20-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200323202259.13363-1-willy@infradead.org>
-References: <20200323202259.13363-1-willy@infradead.org>
+        Mon, 23 Mar 2020 16:24:57 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jGTcm-0006Yi-2v; Mon, 23 Mar 2020 21:24:40 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 2D0391040AA; Mon, 23 Mar 2020 21:24:39 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH v5 1/9] x86/split_lock: Rework the initialization flow of split lock detection
+In-Reply-To: <87zhc7ovhj.fsf@nanos.tec.linutronix.de>
+References: <20200315050517.127446-1-xiaoyao.li@intel.com> <20200315050517.127446-2-xiaoyao.li@intel.com> <87zhc7ovhj.fsf@nanos.tec.linutronix.de>
+Date:   Mon, 23 Mar 2020 21:24:39 +0100
+Message-ID: <87lfnqq0oo.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Thomas Gleixner <tglx@linutronix.de> writes:
+> Xiaoyao Li <xiaoyao.li@intel.com> writes:
+>
+>> Current initialization flow of split lock detection has following issues:
+>> 1. It assumes the initial value of MSR_TEST_CTRL.SPLIT_LOCK_DETECT to be
+>>    zero. However, it's possible that BIOS/firmware has set it.
+>
+> Ok.
+>
+>> 2. X86_FEATURE_SPLIT_LOCK_DETECT flag is unconditionally set even if
+>>    there is a virtualization flaw that FMS indicates the existence while
+>>    it's actually not supported.
+>>
+>> 3. Because of #2, KVM cannot rely on X86_FEATURE_SPLIT_LOCK_DETECT flag
+>>    to check verify if feature does exist, so cannot expose it to
+>>    guest.
+>
+> Sorry this does not make anny sense. KVM is the hypervisor, so it better
+> can rely on the detect flag. Unless you talk about nested virt and a
+> broken L1 hypervisor.
+>
+>> To solve these issues, introducing a new sld_state, "sld_not_exist",
+>> as
+>
+> The usual naming convention is sld_not_supported.
 
-Use the new readahead operation in erofs.
+But this extra state is not needed at all, it already exists:
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Acked-by: Gao Xiang <gaoxiang25@huawei.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+    X86_FEATURE_SPLIT_LOCK_DETECT
+
+You just need to make split_lock_setup() a bit smarter. Soemthing like
+the below. It just wants to be split into separate patches.
+
+Thanks,
+
+        tglx
 ---
- fs/erofs/zdata.c | 29 +++++++++--------------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
-
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index acbfe05b1b12..be50a4d9d273 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -1305,28 +1305,23 @@ static bool should_decompress_synchronously(struct erofs_sb_info *sbi,
- 	return nr <= sbi->ctx.max_sync_decompress_pages;
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -45,6 +45,7 @@ enum split_lock_detect_state {
+  * split lock detect, unless there is a command line override.
+  */
+ static enum split_lock_detect_state sld_state = sld_off;
++static DEFINE_PER_CPU(u64, msr_test_ctrl_cache);
+ 
+ /*
+  * Processors which have self-snooping capability can handle conflicting
+@@ -984,11 +985,32 @@ static inline bool match_option(const ch
+ 	return len == arglen && !strncmp(arg, opt, len);
  }
  
--static int z_erofs_readpages(struct file *filp, struct address_space *mapping,
--			     struct list_head *pages, unsigned int nr_pages)
-+static void z_erofs_readahead(struct readahead_control *rac)
++static bool __init split_lock_verify_msr(bool on)
++{
++	u64 ctrl, tmp;
++
++	if (rdmsrl_safe(MSR_TEST_CTRL, &ctrl))
++		return false;
++	if (on)
++		ctrl |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
++	else
++		ctrl &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
++	if (wrmsrl_safe(MSR_TEST_CTRL, ctrl))
++		return false;
++	rdmsrl(MSR_TEST_CTRL, tmp);
++	return ctrl == tmp;
++}
++
+ static void __init split_lock_setup(void)
  {
--	struct inode *const inode = mapping->host;
-+	struct inode *const inode = rac->mapping->host;
- 	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
+ 	char arg[20];
+ 	int i, ret;
  
--	bool sync = should_decompress_synchronously(sbi, nr_pages);
-+	bool sync = should_decompress_synchronously(sbi, readahead_count(rac));
- 	struct z_erofs_decompress_frontend f = DECOMPRESS_FRONTEND_INIT(inode);
--	gfp_t gfp = mapping_gfp_constraint(mapping, GFP_KERNEL);
--	struct page *head = NULL;
-+	struct page *page, *head = NULL;
- 	LIST_HEAD(pagepool);
++	if (!split_lock_verify_msr(true) || !split_lock_verify_msr(false)) {
++		pr_info("MSR access failed: Disabled\n");
++		return;
++	}
++
+ 	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
+ 	sld_state = sld_warn;
  
--	trace_erofs_readpages(mapping->host, lru_to_page(pages)->index,
--			      nr_pages, false);
-+	trace_erofs_readpages(inode, readahead_index(rac),
-+			readahead_count(rac), false);
- 
--	f.headoffset = (erofs_off_t)lru_to_page(pages)->index << PAGE_SHIFT;
+@@ -1007,7 +1029,6 @@ static void __init split_lock_setup(void
+ 	case sld_off:
+ 		pr_info("disabled\n");
+ 		break;
 -
--	for (; nr_pages; --nr_pages) {
--		struct page *page = lru_to_page(pages);
-+	f.headoffset = readahead_pos(rac);
- 
-+	while ((page = readahead_page(rac))) {
- 		prefetchw(&page->flags);
--		list_del(&page->lru);
- 
- 		/*
- 		 * A pure asynchronous readahead is indicated if
-@@ -1335,11 +1330,6 @@ static int z_erofs_readpages(struct file *filp, struct address_space *mapping,
- 		 */
- 		sync &= !(PageReadahead(page) && !head);
- 
--		if (add_to_page_cache_lru(page, mapping, page->index, gfp)) {
--			list_add(&page->lru, &pagepool);
--			continue;
--		}
--
- 		set_page_private(page, (unsigned long)head);
- 		head = page;
+ 	case sld_warn:
+ 		pr_info("warning about user-space split_locks\n");
+ 		break;
+@@ -1018,44 +1039,40 @@ static void __init split_lock_setup(void
  	}
-@@ -1368,11 +1358,10 @@ static int z_erofs_readpages(struct file *filp, struct address_space *mapping,
- 
- 	/* clean up the remaining free pages */
- 	put_pages_list(&pagepool);
--	return 0;
  }
  
- const struct address_space_operations z_erofs_aops = {
- 	.readpage = z_erofs_readpage,
--	.readpages = z_erofs_readpages,
-+	.readahead = z_erofs_readahead,
- };
+-/*
+- * Locking is not required at the moment because only bit 29 of this
+- * MSR is implemented and locking would not prevent that the operation
+- * of one thread is immediately undone by the sibling thread.
+- * Use the "safe" versions of rdmsr/wrmsr here because although code
+- * checks CPUID and MSR bits to make sure the TEST_CTRL MSR should
+- * exist, there may be glitches in virtualization that leave a guest
+- * with an incorrect view of real h/w capabilities.
+- */
+-static bool __sld_msr_set(bool on)
++static void split_lock_init(void)
+ {
+-	u64 test_ctrl_val;
++	u64 ctrl;
  
--- 
-2.25.1
+-	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
+-		return false;
++	if (!boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
++		return;
+ 
+-	if (on)
+-		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
++	rdmsrl(MSR_TEST_CTRL, ctrl);
++	if (sld_state == sld_off)
++		ctrl &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+ 	else
+-		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+-
+-	return !wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val);
++		ctrl |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
++	wrmsrl(MSR_TEST_CTRL, ctrl);
++	this_cpu_write(msr_test_ctrl_cache, ctrl);
+ }
+ 
+-static void split_lock_init(void)
++/*
++ * MSR_TEST_CTRL is per core, but we treat it like a per CPU MSR. Locking
++ * is not implemented as one thread could undo the setting of the other
++ * thread immediately after dropping the lock anyway.
++ */
++static void msr_test_ctrl_update(bool on, u64 mask)
+ {
+-	if (sld_state == sld_off)
+-		return;
++	u64 tmp, ctrl = this_cpu_read(msr_test_ctrl_cache);
+ 
+-	if (__sld_msr_set(true))
+-		return;
++	if (on)
++		tmp = ctrl | mask;
++	else
++		tmp = ctrl & ~mask;
+ 
+-	/*
+-	 * If this is anything other than the boot-cpu, you've done
+-	 * funny things and you get to keep whatever pieces.
+-	 */
+-	pr_warn("MSR fail -- disabled\n");
+-	sld_state = sld_off;
++	if (tmp != ctrl) {
++		wrmsrl(MSR_TEST_CTRL, ctrl);
++		this_cpu_write(msr_test_ctrl_cache, ctrl);
++	}
+ }
+ 
+ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+@@ -1071,7 +1088,7 @@ bool handle_user_split_lock(struct pt_re
+ 	 * progress and set TIF_SLD so the detection is re-enabled via
+ 	 * switch_to_sld() when the task is scheduled out.
+ 	 */
+-	__sld_msr_set(false);
++	msr_test_ctrl_update(false, MSR_TEST_CTRL_SPLIT_LOCK_DETECT);
+ 	set_tsk_thread_flag(current, TIF_SLD);
+ 	return true;
+ }
+@@ -1085,7 +1102,7 @@ bool handle_user_split_lock(struct pt_re
+  */
+ void switch_to_sld(unsigned long tifn)
+ {
+-	__sld_msr_set(!(tifn & _TIF_SLD));
++	msr_test_ctrl_update(!(tifn & _TIF_SLD), MSR_TEST_CTRL_SPLIT_LOCK_DETECT);
+ }
+ 
+ #define SPLIT_LOCK_CPU(model) {X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY}
+
 
