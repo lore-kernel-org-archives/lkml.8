@@ -2,188 +2,134 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA28BC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40255C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96BF12072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:08:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FEuT4RD+"
+	by mail.kernel.org (Postfix) with ESMTP id 17EC420786
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584987013;
+	bh=ZxtzdYe1aySc/6Zcb6xeiWHSi3BhCPzFQ2KAylMKIZk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=UBJR//3F/x0y5I0s4ILXAXRtIORpiwp2QcicAvx3kXGKfvolrzufTfDkdqzLzTYov
+	 63+3vPt/81kYAbHRU7NmmldatTdB8UsvodFisE6PaVsoiyJ7D7gtjq9Ck3cwsALtYV
+	 JM3+zhqjCutcphuxvTx8durxEnk54+NbpKWLeLJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgCWSIp (ORCPT
+        id S1727624AbgCWSKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:08:45 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:59840 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727361AbgCWSIp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:08:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584986924;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2P7VoVY9lo6a7MhH8O+9cow+9oWrLXzQHPFSk6fMSdo=;
-        b=FEuT4RD+eAP2Cl1ISy5PAIboCul8z22qaGJHQ5tbLrqpAyxCuw6ebC5umeadaPf2IJhXFg
-        nPjYJ+KXV11yo5/RSC10I8k1JSxnGOOg7tVm4FpK6700UFNt2sLlJ8lHEgDC8T8UlWjMi4
-        hFGQUXgUuSn/t9KlTXjfyvrySX4hLhY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-249-LKAUHvlWNGqOgfKfgQlKBA-1; Mon, 23 Mar 2020 14:08:40 -0400
-X-MC-Unique: LKAUHvlWNGqOgfKfgQlKBA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 23 Mar 2020 14:10:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727011AbgCWSKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 14:10:11 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD0718018B7;
-        Mon, 23 Mar 2020 18:08:38 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-56.rdu2.redhat.com [10.10.117.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C6B519497D;
-        Mon, 23 Mar 2020 18:08:37 +0000 (UTC)
-Subject: Re: [PATCH v3] ipc: use a work queue to free_ipc
-To:     Giuseppe Scrivano <gscrivan@redhat.com>,
+        by mail.kernel.org (Postfix) with ESMTPSA id A09E32072D;
+        Mon, 23 Mar 2020 18:10:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584987010;
+        bh=ZxtzdYe1aySc/6Zcb6xeiWHSi3BhCPzFQ2KAylMKIZk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=bRusqA49OlMA7lZIKSsJ2ujROUYz5EoGJkPgKqB6RugLyf6F0HRjIxIPJLBf8vuWy
+         D/g7cuyJAh8X2mEKV8YfxBESIIbx4F1ApLmEdaGSFFYYlab6RE60nZrS0i2NgDCCiI
+         zrJ9sPqn7WSTrP1EZVHqdLxm9GdeZZvqzVrKiKVY=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 7318335226E4; Mon, 23 Mar 2020 11:10:10 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 11:10:10 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
         linux-kernel@vger.kernel.org
-Cc:     rcu@vger.kernel.org, ebiederm@xmission.com, paulmck@kernel.org,
-        viro@zeniv.linux.org.uk
-References: <20200225145419.527994-1-gscrivan@redhat.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <1cdee0c9-58d3-62c1-92db-3f2035fb8424@redhat.com>
-Date:   Mon, 23 Mar 2020 14:08:37 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+Subject: Re: Hit WARN_ON() in rcutorture.c:1055
+Message-ID: <20200323181010.GN3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200323154309.nah44so2556ee56g@e107158-lin.cambridge.arm.com>
+ <20200323155731.GK3199@paulmck-ThinkPad-P72>
+ <20200323170609.w64xrfahd2snfz6h@e107158-lin.cambridge.arm.com>
+ <20200323171751.GL3199@paulmck-ThinkPad-P72>
+ <20200323174147.lneh4rp4tazhtm6x@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200225145419.527994-1-gscrivan@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323174147.lneh4rp4tazhtm6x@e107158-lin.cambridge.arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/20 9:54 AM, Giuseppe Scrivano wrote:
-> the reason is to avoid a delay caused by the synchronize_rcu() call in
-> kern_umount() when the mqueue mount is freed.
->
-> the code:
->
-> \#define _GNU_SOURCE
-> \#include <sched.h>
-> \#include <error.h>
-> \#include <errno.h>
-> \#include <stdlib.h>
-> int main()
-> {
->   int i;
->   for (i  = 0; i < 1000; i++)
->     if (unshare (CLONE_NEWIPC) < 0)
->       error (EXIT_FAILURE, errno, "unshare");
-> }
->
-> gets from:
->
-> 	Command being timed: "./ipc-namespace"
-> 	User time (seconds): 0.00
-> 	System time (seconds): 0.06
-> 	Percent of CPU this job got: 0%
-> 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:08.05
->
-> to:
->
-> 	Command being timed: "./ipc-namespace"
-> 	User time (seconds): 0.00
-> 	System time (seconds): 0.02
-> 	Percent of CPU this job got: 96%
-> 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.03
->
-> Signed-off-by: Giuseppe Scrivano <gscrivan@redhat.com>
-> ---
-> v3:
-> - added comment for free_ipc_work
-> - commit message rephrased
->
-> v2: https://lkml.org/lkml/2020/2/17/839
-> - comment added in free_ipc_ns()
->
-> v1: https://lkml.org/lkml/2020/2/11/692
->
->  include/linux/ipc_namespace.h |  2 ++
->  ipc/namespace.c               | 24 ++++++++++++++++++++++--
->  2 files changed, 24 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/ipc_namespace.h b/include/linux/ipc_namespace.h
-> index c309f43bde45..a06a78c67f19 100644
-> --- a/include/linux/ipc_namespace.h
-> +++ b/include/linux/ipc_namespace.h
-> @@ -68,6 +68,8 @@ struct ipc_namespace {
->  	struct user_namespace *user_ns;
->  	struct ucounts *ucounts;
->  
-> +	struct llist_node mnt_llist;
-> +
->  	struct ns_common ns;
->  } __randomize_layout;
->  
-> diff --git a/ipc/namespace.c b/ipc/namespace.c
-> index b3ca1476ca51..c0470aef41a0 100644
-> --- a/ipc/namespace.c
-> +++ b/ipc/namespace.c
-> @@ -117,6 +117,10 @@ void free_ipcs(struct ipc_namespace *ns, struct ipc_ids *ids,
->  
->  static void free_ipc_ns(struct ipc_namespace *ns)
->  {
-> +	/* mq_put_mnt() waits for a grace period as kern_unmount()
-> +	 * uses synchronize_rcu().
-> +	 */
-> +	mq_put_mnt(ns);
->  	sem_exit_ns(ns);
->  	msg_exit_ns(ns);
->  	shm_exit_ns(ns);
-> @@ -127,6 +131,21 @@ static void free_ipc_ns(struct ipc_namespace *ns)
->  	kfree(ns);
->  }
->  
-> +static LLIST_HEAD(free_ipc_list);
-> +static void free_ipc(struct work_struct *unused)
-> +{
-> +	struct llist_node *node = llist_del_all(&free_ipc_list);
-> +	struct ipc_namespace *n, *t;
-> +
-> +	llist_for_each_entry_safe(n, t, node, mnt_llist)
-> +		free_ipc_ns(n);
-> +}
-> +
-> +/*
-> + * The work queue is used to avoid the cost of synchronize_rcu in kern_unmount.
-> + */
-> +static DECLARE_WORK(free_ipc_work, free_ipc);
-> +
->  /*
->   * put_ipc_ns - drop a reference to an ipc namespace.
->   * @ns: the namespace to put
-> @@ -148,8 +167,9 @@ void put_ipc_ns(struct ipc_namespace *ns)
->  	if (refcount_dec_and_lock(&ns->count, &mq_lock)) {
->  		mq_clear_sbinfo(ns);
->  		spin_unlock(&mq_lock);
-> -		mq_put_mnt(ns);
-> -		free_ipc_ns(ns);
-> +
-> +		if (llist_add(&ns->mnt_llist, &free_ipc_list))
-> +			schedule_work(&free_ipc_work);
->  	}
->  }
->  
+On Mon, Mar 23, 2020 at 05:41:48PM +0000, Qais Yousef wrote:
+> On 03/23/20 10:17, Paul E. McKenney wrote:
+> > On Mon, Mar 23, 2020 at 05:06:10PM +0000, Qais Yousef wrote:
+> > > On 03/23/20 08:57, Paul E. McKenney wrote:
+> > > > On Mon, Mar 23, 2020 at 03:43:09PM +0000, Qais Yousef wrote:
+> > > > > Hi
+> > > > > 
+> > > > > I hit the following warning while running rcutorture tests. It only happens
+> > > > > when I try to hibernate the system (arm64 Juno-r2).
+> > > > 
+> > > > Hibernating the system during rcutorture tests.  Now that is gutsy!  ;-)
+> > > 
+> > > Hehe was just a side effect of testing the cpu hotplug stuff :-)
+> > > 
+> > > > 
+> > > > > Let me know if you need additional info.
+> > > > 
+> > > > 1.	Do you need this to work?  If so, please tell me your use case.
+> > > 
+> > > Nope. It just happened while trying to stress the cpu hotplug series I just
+> > > posted.
+> > > 
+> > > > 2.	What is line 1055 of your rcutorture.c?  Here is my guess:
+> > > 
+> > > It's 5.6-rc6, sorry should have mentioned in the report.
+> > > 
+> > > 		/* Cycle through nesting levels of rcu_expedite_gp() calls. */
+> > > 		if (can_expedite &&
+> > > 		    !(torture_random(&rand) & 0xff & (!!expediting - 1))) {
+> > > 			WARN_ON_ONCE(expediting == 0 && rcu_gp_is_expedited());
+> > > 			if (expediting >= 0)
+> > > 				rcu_expedite_gp();
+> > > 			else
+> > > 				rcu_unexpedite_gp();
+> > > 			if (++expediting > 3)
+> > > 				expediting = -expediting;
+> > > 		} else if (!can_expedite) { /* Disabled during boot, recheck. */
+> > > 
+> > > If it's something you don't care about, then I don't care about too. I just
+> > > thought I'd report it in case it uncovered something worthwhile.
+> > 
+> > Well, my guess was wrong.  ;-)
+> > 
+> > This is instead rcutorture being surprised by the fact that RCU grace
+> > periods are expedited during the hibernate process.  I could fix this
+> > particular situation, but I bet that there are a number of others,
+> > including my guess above.
+> > 
+> > One approach would be to halt rcutorture testing just before hibernating
+> > and restart it just after resuming.
+> > 
+> > Thoughts?
+> 
+> {register, unregister}_pm_notifier() don't seem to be too hard to use.
 
-I also have used llist recently. This is the standard way llist is used
-and I don't any problem using it to defer the freeing so that it won't
-block the put_ipc_ns() caller.
+That part is easy.  It would also be necessary to find all the affected
+warnings in rcutorture and suppress them, not only during this time,
+but also for some period of time afterwards.  Maybe this is the only one,
+but that would be surprising.  ;-)
 
-Reviewed-by: Waiman Long <longman@redhat.com>
+> But if it's not that simple, then it's not worthwhile I'd say. The report
+> lives in LKML as a documentation of this missing support :-P
 
+It might at some point be necessary for rcutorture to handle suspends
+and hibernates in midstream, and yes, it could be done, but first I need
+to see some reason why it provides significant help.
+
+							Thanx, Paul
