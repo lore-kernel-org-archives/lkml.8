@@ -2,134 +2,109 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A8DC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 814D6C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ACF72074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5919B20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:14:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BhUO1QzI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dA8QVxYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbgCWROG (ORCPT
+        id S1727641AbgCWROg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:14:06 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:45410 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725844AbgCWROF (ORCPT
+        Mon, 23 Mar 2020 13:14:36 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:31230 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727461AbgCWROf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:14:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584983644;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=anWzOdOgydkXrVKrOdnLEoUCtM0RcJIym3nCiuRJjrM=;
-        b=BhUO1QzIzvwv0dIeDRWU04p/weaqk7brY8/CzyGV7Xi8f/ghqyBfxVYWWW97LyLSmDuVqQ
-        sWT3+jwxeKJLlw1J4WkkllXOcQmyrzoEjeLPLXO56YILrMLYtVaQjtG9ZT2sHZrkrQPFGr
-        4fvzJ/acMMhjQpWdYnkRDYYTTSDkzjA=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-144-RzDO5mU4NTWssemEvuUGnQ-1; Mon, 23 Mar 2020 13:14:00 -0400
-X-MC-Unique: RzDO5mU4NTWssemEvuUGnQ-1
-Received: by mail-wm1-f70.google.com with SMTP id f185so61438wmf.8
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 10:14:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=anWzOdOgydkXrVKrOdnLEoUCtM0RcJIym3nCiuRJjrM=;
-        b=MaH8RbIbRnXSRdDnmgIkG0m4nAbXp13Tr2R6c3lk7vRrZkNFdGfuv4Pw6KI3veeofw
-         k8U1ngWdOEw0cWbLnhjp8rYQRXCphP8I0I+qh9TB0uHimq5PrIphmSiO1vd9IkVKY4D6
-         LLta4f2/M00yXu55nHhkbmTnnyoAHo5M9es5FGexLnX4d7Vvt3LtL5wOdmrpFBM9Jck5
-         QqpErpsqeM/VxMH9/p55h6vCCAuU8Ewx8oHp6xaU1EA2RKtGmX2w/dJepTTktIhEiLR0
-         qeBov9s4Ac5zlQD5ozSbdx+H++MN8ht6ozUpql7+jN8X4JXQ403p5HWWmYc6/5r2IbvU
-         q0+w==
-X-Gm-Message-State: ANhLgQ3QZ9vvdzUpMB8Kie+MgqWXYc/B7iKQw7HUEGXHqLG/XCeae2kq
-        9t63O76ouhd82uyGQPFV+V37bk7auKLnuKGJ84vGlLOS2LxhxjMWL9TgyCUFBaVHKSY1QmyYkX2
-        Sxk1xDbgcCH8BqKLEbA9vxJH8
-X-Received: by 2002:a1c:6608:: with SMTP id a8mr257466wmc.113.1584983639231;
-        Mon, 23 Mar 2020 10:13:59 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtFs4cMXB58aHkd+sJ2rJvzjNXQnaBV17W4ys2qEcHxMUKHMNNVjeSlWnIw66VFZcu5zRYmXA==
-X-Received: by 2002:a1c:6608:: with SMTP id a8mr257428wmc.113.1584983638901;
-        Mon, 23 Mar 2020 10:13:58 -0700 (PDT)
-Received: from xz-x1 (CPEf81d0fb19163-CMf81d0fb19160.cpe.net.fido.ca. [72.137.123.47])
-        by smtp.gmail.com with ESMTPSA id a192sm306901wme.5.2020.03.23.10.13.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 10:13:58 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 13:13:53 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v7 03/14] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20200323171353.GL127076@xz-x1>
-References: <20200318163720.93929-1-peterx@redhat.com>
- <20200318163720.93929-4-peterx@redhat.com>
- <20200321192211.GC13851@linux.intel.com>
- <20200323145824.GI127076@xz-x1>
- <20200323154216.GG28711@linux.intel.com>
- <20200323162617.GK127076@xz-x1>
- <20200323165551.GS28711@linux.intel.com>
+        Mon, 23 Mar 2020 13:14:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584983675; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=NeOBqUvjE8rbI90/UsOr8mvzxWqqYBUc/IgxsVpCfr4=;
+ b=dA8QVxYYe50n3lci14tI1oO3xsYr8hV5J1FwslLnTovqveVcoX1rS0WV7enORZ6k+ZyFZFSJ
+ WA3u5gcxglZHoVxcw2iOhIu9aziDYvDQrsTBq0wWjqwU4pF0upd/SQxu4pXow2C628ekwvz+
+ rw+LpSIgkX2tg8A+9WoQIaiNn2k=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e78ee60.7fdc7018c810-smtp-out-n04;
+ Mon, 23 Mar 2020 17:14:08 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5E84CC432C2; Mon, 23 Mar 2020 17:14:07 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2E723C433D2;
+        Mon, 23 Mar 2020 17:14:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2E723C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200323165551.GS28711@linux.intel.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] zd1211rw: Replace zero-length array with
+ flexible-array member
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200305111216.GA24982@embeddedor>
+References: <20200305111216.GA24982@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Daniel Drake <dsd@gentoo.org>, Ulrich Kunitz <kune@deine-taler.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200323171407.5E84CC432C2@smtp.codeaurora.org>
+Date:   Mon, 23 Mar 2020 17:14:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 09:55:51AM -0700, Sean Christopherson wrote:
-> On Mon, Mar 23, 2020 at 12:26:17PM -0400, Peter Xu wrote:
-> > On Mon, Mar 23, 2020 at 08:42:16AM -0700, Sean Christopherson wrote:
-> > > > > Regarding the HVA, it's a bit confusing saying that it's guaranteed to be
-> > > > > valid, and then contradicting that in the second clause.  Maybe something
-> > > > > like this to explain the GPA->HVA is guaranteed to be valid, but the
-> > > > > HVA->HPA is not.
-> > > > >  
-> > > > > /*
-> > > > >  * before use.  Note, KVM internal memory slots are guaranteed to remain valid
-> > > > >  * and unchanged until the VM is destroyed, i.e. the GPA->HVA translation will
-> > > > >  * not change.  However, the HVA is a user address, i.e. its accessibility is
-> > > > >  * not guaranteed, and must be accessed via __copy_{to,from}_user().
-> > > > >  */
-> > > > 
-> > > > Sure I can switch to this, though note that I still think the GPA->HVA
-> > > > is not guaranteed logically because the userspace can unmap any HVA it
-> > > > wants..
-> > > 
-> > > You're conflating the GPA->HVA translation with the validity of the HVA,
-> > > i.e. the HVA->HPA and/or HVA->VMA translation/association.  GPA->HVA is
-> > > guaranteed because userspace doesn't have access to the memslot which
-> > > defines that transation.
-> > 
-> > Yes I completely agree if you mean the pure mapping of GPA->HVA.
-> > 
-> > I think it's a matter of how to define the "valid" when you say
-> > "guaranteed to remain valid", because I don't think the mapping is
-> > still valid from the most strict sense if e.g. the backing HVA does
-> > not exist any more for that GPA->HVA mapping, then the memslot won't
-> > be anything useful.
-> 
-> Yes.  That's why my proposed comment is worded to state that the _memslot_
-> will remain valid.  It deliberately avoids mentioning "valid HVA".
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 
-OK, I see the point.  I did re-read the two versions again, I agree
-yours is better, which I'll replace with.  Thanks!
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+Patch applied to wireless-drivers-next.git, thanks.
+
+8622a0e5a499 zd1211rw: Replace zero-length array with flexible-array member
 
 -- 
-Peter Xu
+https://patchwork.kernel.org/patch/11421571/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
