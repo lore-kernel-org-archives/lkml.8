@@ -2,102 +2,85 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D1AC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EFBC10F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2922D20736
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACF620736
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:53:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="tuhwgUCA"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cvOyUgm3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbgCWGxY (ORCPT
+        id S1727398AbgCWGxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 02:53:24 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:57655 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727164AbgCWGxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 02:53:23 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 4025283f;
-        Mon, 23 Mar 2020 06:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=hhsjJ5nTbW/Bbc8zpStB0FYxsX4=; b=tuhwgU
-        CA3CliFET6ommFcdWnTY9HTFkBS8OxDwc7nsw3GhO5sx9aE5GBe5Ydojnok9nCw1
-        1vYdyFqJzC6IUQojzF0/FaGqmY5bFAP0IIv9SYipC3yMwn3j+di1WhG1goRr3VCW
-        P5cmkIKnazgNMzsqvfnWe6TVUvCuEqWD3um+ZYGPc/BpggtsnSpsmyIAX7/MCK+7
-        IuH9MvimzRnSwT0LjlX7USt92bcXJvxwX8NMrlSIfASPVrcc6GxFbzodBtZPbpNE
-        O0nmc2kSVca49dbX8zFc+js7wcC2h3zxcuvooAmt5gY5EDdSktMe/KXh2dnda38f
-        ZJnxrIA5yatRhvvg==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 386d45d0 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Mon, 23 Mar 2020 06:46:24 +0000 (UTC)
-Received: by mail-il1-f180.google.com with SMTP id a6so12115110ilc.4;
-        Sun, 22 Mar 2020 23:53:21 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0yBy7JeiyoYgx/saz1H31ggZeKBarL+VktwiAitKFsEKhxQbL/
-        Q/59bFvUpjwpWqY1unhQXXdEgIaCuSEVSMI7a98=
-X-Google-Smtp-Source: ADFU+vvErpWTeF+7DC+qPRKivjaXJFbfQ/Ox9xb4I/r/H5QniD3d2icAJTBOpd6e052DbBZKVfb+zvNoYRMiCNhl/jc=
-X-Received: by 2002:a92:cece:: with SMTP id z14mr11415751ilq.38.1584946400678;
- Sun, 22 Mar 2020 23:53:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200323020844.17064-1-masahiroy@kernel.org> <CAHmME9p=ECJ15uyPH79bF0tuzEksdxoUsjGQSyz74FfdEJxTpQ@mail.gmail.com>
- <CAHmME9q4egN7_KeYB-ZHCFPfXs-virgTv4iz9jW2SVOM7dTnLw@mail.gmail.com> <CAK7LNAR07vZFzh1Bbpq4CoJ4zmsc+p5rxpkO1Zv8QVfqhfvr2w@mail.gmail.com>
-In-Reply-To: <CAK7LNAR07vZFzh1Bbpq4CoJ4zmsc+p5rxpkO1Zv8QVfqhfvr2w@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Mon, 23 Mar 2020 00:53:09 -0600
-X-Gmail-Original-Message-ID: <CAHmME9qCjo4kOQM3Dw6PDjEebmb6rvXajqhK-m-=vKcHWqNhAw@mail.gmail.com>
-Message-ID: <CAHmME9qCjo4kOQM3Dw6PDjEebmb6rvXajqhK-m-=vKcHWqNhAw@mail.gmail.com>
-Subject: Re: [PATCH 0/7] x86: remove always-defined CONFIG_AS_* options
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     X86 ML <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Song Liu <songliubraving@fb.com>,
-        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 23 Mar 2020 02:53:34 -0400
+Received: from mail-wr1-f49.google.com ([209.85.221.49]:40984 "EHLO
+        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727164AbgCWGxe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 02:53:34 -0400
+Received: by mail-wr1-f49.google.com with SMTP id h9so15488387wrc.8
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 23:53:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=wGDd6myf+GdHCozxtrhmVLjHaTI84rSVkvwPMbf2b58=;
+        b=cvOyUgm3MfUe3yvKUo5aJ1XPsi8hi07U2PZdZJHUC+l7JhpHg/ZEBxJ+h1nY84FsqI
+         Di2wMDfKuZbHvQcV6aOX/CIP+n+BcgERrqB2X3Nu4/8JcPE4c8ZmvmaSEw2C44p66rF8
+         O7kcYXct7EuBmdOGVfdzqc7lOAISg7+5BQLs0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wGDd6myf+GdHCozxtrhmVLjHaTI84rSVkvwPMbf2b58=;
+        b=tpRKSrqnErdHFWtRnjMbY4DWiMVCTmpkqwTPqYjz9d19jOT74L155ahJbCg2zzbAiV
+         siOoxt7n84FfEF069XIW0w/wtQtGDIzCAla8ZQxm7J7hHpYGwpXgj9VK9uNvYrK+LRYY
+         pdC1HLL5pO3f7lMcxtUjaCeJdoaMreqH+oJdpjpZeJcGarCJwFdv4/XVJM58sR7eabPc
+         RrOaVcle+LrX+sPYInS5CyJ8DydxFrmdZjltSD1PL/64c7lPSy++K5MIreFDsbOkbrRZ
+         IJHSTelGRg82i7pNwUAk7NVWqbHIdSK7n7xEAiqiog6q+95eSfk8IN1bQmVY3SSKuOmM
+         5f9Q==
+X-Gm-Message-State: ANhLgQ3rEMtf5zRl00RsMMVYLaHLyF1HNfG6jjulICrFydMpza3TeC9R
+        /cF/C5/CBkDHO7MWi5tsJLg2vg==
+X-Google-Smtp-Source: ADFU+vvwB0MywmLuH1Zm77A5oLo0Gs8q6wjwWuZhQExQclt1yA8E1xmrBOZA/+OlJRl7ZFtCTqdUtA==
+X-Received: by 2002:a5d:6245:: with SMTP id m5mr28064980wrv.154.1584946411935;
+        Sun, 22 Mar 2020 23:53:31 -0700 (PDT)
+Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id g128sm21127453wmf.27.2020.03.22.23.53.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Mar 2020 23:53:31 -0700 (PDT)
+From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Yendapally Reddy Dhananjaya Reddy 
+        <yendapally.reddy@broadcom.com>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Subject: [PATCH v1 0/2] Handle return value and remove unnecessary check
+Date:   Mon, 23 Mar 2020 12:23:16 +0530
+Message-Id: <20200323065318.16533-1-rayagonda.kokatanur@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 12:36 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Hi Jason,
->
-> On Mon, Mar 23, 2020 at 1:28 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> >
-> > Hi again,
-> >
-> > I've consolidated your patches and rebased mine on top, and
-> > incorporated your useful binutils comments. The result lives here:
-> >
-> > https://git.zx2c4.com/linux-dev/log/?h=jd/kconfig-assembler-support
-> >
-> > I can submit all of those to the list, if you want, or maybe you can
-> > just pull them out of there, include them in your v2, and put them in
-> > your tree for 5.7? However you want is fine with me.
->
->
-> Your series does not work correctly.
->
-> I will comment why later.
+This patch series contains following changes,
+1. Handle clk_get_rate() return
+2. remove unnecessary check of 'duty'
 
-Bummer, okay. Looking forward to learning what's up. Also, if some
-parts of it are useful (like the resorting and organizing of
-arch/x86/crypto/Makefile), feel free to cannibalize it, keeping what's
-useful and discarding what's not.
+Rayagonda Kokatanur (2):
+  pwm: bcm-iproc: handle clk_get_rate() return
+  pwm: bcm-iproc: remove unnecessary check of 'duty'
 
-Jason
+ drivers/pwm/pwm-bcm-iproc.c | 35 ++++++++++++++++++++---------------
+ 1 file changed, 20 insertions(+), 15 deletions(-)
+
+-- 
+2.17.1
+
