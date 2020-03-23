@@ -2,394 +2,149 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C30C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2684CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BED420714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3BF620714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:58:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YSYjEAYd"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="AQehhYNv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbgCWP6M (ORCPT
+        id S1727445AbgCWP6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:58:12 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:44767 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727129AbgCWP6L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:58:11 -0400
-Received: by mail-vs1-f68.google.com with SMTP id e138so9042787vsc.11
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 08:58:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n3nF2XEJF+3VJmtugEEG0k9Mal8VgUQrukDbfKGmZmw=;
-        b=YSYjEAYdWU+Fcf3THNsHZiqYlveQL9H5/YFc9huB2qW0SVXTH1coofuUlbrn12kIXG
-         oEk+JCxz5/G4NuMkHiNN7TAz7qKbGH/2/LivZdBvUWyHlsMIQKNiU0onzYv8obbaoTjt
-         aeVMD/Sshl9NlDcl26nZwcS9+y/BY7b/zTqTcHFSp9ZQaR0PJSbVTm8cebq6uNXVaIt6
-         59OCuJye0bTcysKaPKl2VgWUCHsPLLdSSdH9zqfrmljm1SRIc9ovUMHITte6oii5+Ggo
-         I7/RrIzz0BW+kdgHwlADprLyL3QG6UqLfHEgIq9e+d1drrFHbg7oOZajk5V27vtRp6JJ
-         fh6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n3nF2XEJF+3VJmtugEEG0k9Mal8VgUQrukDbfKGmZmw=;
-        b=RVVnCldUxg+tkTiZ/ZIAxlSxQGFU/yeH4+dmnAVBzA72n7IdxcDVVjxfUidfQAhIZk
-         RtlsWBSTFiyJ26+u8Q0sd1cmTE7An0mKmUjznUYnooSMCV2e5eUPjggMxTvXiBAG6moU
-         XIYoFDKtBoLJmkuWqfGPExbPu2IQS9RtIF2o5a/ES5vg0NRn9Bdw/uEikRH9yNSD7NZf
-         lxyCGRJP/UKkSbCfZRWhnN94Jarpj0Gf9YBHZ+Dn+LHn4e8hr06j8rGqAko1dkx7f1f6
-         uLVPi5kAWRaaGLWEd2v3XEQ8fHmO17eR8RyARz3lCDFD0qms5xiKvPWOxANIyo0Y3cZT
-         7QBg==
-X-Gm-Message-State: ANhLgQ3jaT3Ld1UylI7oDL3h6Y9eOAbvsDGCZK3BObI5dPfqMY8siEuK
-        dRcDfxpcThXcR97R/rjT21W7PQd9k7DwgABJdlSR9w==
-X-Google-Smtp-Source: ADFU+vsS91ZoQIuI8ccP/DSMa9qRHXbW9REfOAml1Q+Ozi/C0xXdvRCLJ31dq8A8mFDqpGQA5tuX7hcVDRsQj4pKH30=
-X-Received: by 2002:a05:6102:2051:: with SMTP id q17mr16732708vsr.165.1584979089841;
- Mon, 23 Mar 2020 08:58:09 -0700 (PDT)
+        Mon, 23 Mar 2020 11:58:53 -0400
+Received: from mga04.intel.com ([192.55.52.120]:33737 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725893AbgCWP6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:58:52 -0400
+IronPort-SDR: qrSIRuBD+kGkzCEdXN+TKnyDfCPQvCndvexHZQF2XSlG1vsdjlPHaDGMXcfj9jdzBJQIqQyXMp
+ R1f5nz2gUVpg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 08:58:52 -0700
+IronPort-SDR: bI9P+fHyYLdwddyK+pMPp46wvpxE2Ltt8PZPS9R7aAbJZ15TEHI3AEbdaQqcB+T+E7x4GkkDnl
+ INLthoolOXDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,296,1580803200"; 
+   d="scan'208";a="292609073"
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by FMSMGA003.fm.intel.com with ESMTP; 23 Mar 2020 08:58:51 -0700
+Received: from orsmsx124.amr.corp.intel.com (10.22.240.120) by
+ ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 23 Mar 2020 08:58:51 -0700
+Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX124.amr.corp.intel.com (10.22.240.120) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 23 Mar 2020 08:58:51 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.175)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 23 Mar 2020 08:58:51 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IT5O3erJIRMaxdqai5EcSNyYkejbFJ3lTJCw/7ktpsUcRCspKMpodTjO28XskifWpt7xF73aBbySAoh1iFkdeROhTgAkCutCRn9EWNTIRMxiBlLu8lpFF351NT1vhUMlny9vj4QjyoPd8NTc/88merb372YiQgSCZ8DkNjF+VKJ9EXtiKFodVFQl/+yuM3U+53WdyhyvpB2huzfzD/O0cs/fCoCQxtv02QtTyxFbI4tm8OLCpyymnK4XqAQG3etDZLRzpdQnp+XA5dJ1ghc16XjVEkkKIz6SCvuEE1/FWPBhk28utO0vkiotJxDdq46Szqk4jlbEins5SQLW3q4k5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7McYHirRbfi1U8D3cbUBi8pKGjOrvig5EdA8G3uT6oQ=;
+ b=jT6WWldRl0TlgaJ/kD9yn0oQVXnlrpz7L0dlQkAjjuMyyp8msIy/2frGd7aRnhHsSIp7PWlaPW39gmGo06fx0ZX8+lY9dY/VY9UGugk/102PSH82kd0/KAqmpQ7LX+Vm9mYXWpvtAe97LL5PT8IgdRGkDJ3H+sWjjfYVs7ya/bM2V2yEF98f4SdW+ONP43vsbS0Ljzt1V5V4tUX8rk7dMTJ4aBHYAIoVxCHM+2dE//ftuv5QXSEIoF+g4r76G7AIXm/af9jgBMm4FueKqUbF8Ihj00NLIeHBhPexYpZMjMdMhSJmBBIhLFkoz1pXWYw9U151M7S/rQ4ube7R+AwZ8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7McYHirRbfi1U8D3cbUBi8pKGjOrvig5EdA8G3uT6oQ=;
+ b=AQehhYNvlkNw7mN5qzOQz11W0WEtvY6r1NOPEp5XCdDs/fDX+dwPjajC84h+7KfPjgS5EnSLMFRMgQauZsVtzG43nsSYR+xOZKB8H2V9jxdYc/jt9Zy1spYrN+Hf3BfNhk+PJEN+QsXPzFo2Mp/Y+WwEaAEvTD8gVnhK4QjaUOY=
+Received: from BYAPR11MB2757.namprd11.prod.outlook.com (2603:10b6:a02:cb::16)
+ by BYAPR11MB3541.namprd11.prod.outlook.com (2603:10b6:a03:f5::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Mon, 23 Mar
+ 2020 15:58:49 +0000
+Received: from BYAPR11MB2757.namprd11.prod.outlook.com
+ ([fe80::f8aa:496b:6423:f5fc]) by BYAPR11MB2757.namprd11.prod.outlook.com
+ ([fe80::f8aa:496b:6423:f5fc%4]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
+ 15:58:49 +0000
+From:   "Voon, Weifeng" <weifeng.voon@intel.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>
+Subject: RE: [net-next,v1, 0/3] Add additional EHL PCI info and PCI ID
+Thread-Topic: [net-next,v1, 0/3] Add additional EHL PCI info and PCI ID
+Thread-Index: AQHV/td4enDl9+8HrUO1gB7pWXIGI6hV9HGAgABj8vA=
+Date:   Mon, 23 Mar 2020 15:58:49 +0000
+Message-ID: <BYAPR11MB27572653F861E6015D14D32588F00@BYAPR11MB2757.namprd11.prod.outlook.com>
+References: <20200320164825.14200-1-weifeng.voon@intel.com>
+ <BN8PR12MB3266C3C3CE39D141DF15AA76D3F00@BN8PR12MB3266.namprd12.prod.outlook.com>
+In-Reply-To: <BN8PR12MB3266C3C3CE39D141DF15AA76D3F00@BN8PR12MB3266.namprd12.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=weifeng.voon@intel.com; 
+x-originating-ip: [134.134.136.203]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 49bfd803-c872-4752-8224-08d7cf43137c
+x-ms-traffictypediagnostic: BYAPR11MB3541:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR11MB3541E30F00E0CBDC43AB5FA488F00@BYAPR11MB3541.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0351D213B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(346002)(376002)(366004)(136003)(199004)(6506007)(26005)(186003)(71200400001)(316002)(54906003)(110136005)(7696005)(86362001)(76116006)(52536014)(66946007)(66446008)(64756008)(66476007)(66556008)(4326008)(107886003)(5660300002)(9686003)(55016002)(2906002)(4744005)(33656002)(81156014)(8676002)(478600001)(8936002)(81166006)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR11MB3541;H:BYAPR11MB2757.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: t/X7uErNXYmANdKbaffMdvm+MX/gGWgZzGiEGZoYvw9Q/WgVDSg19e2v2L52DI+cBa8chcVUKjlSj22qtRSrms2D+Uyoj70UgNg95vghCPlPPEvYO7W57Gr/jk5xFsWvx8psUPymMG+2e0wiVampaqWLDMmA4NQtGwcs1mXVvpWpBefiSViT61poiRaYe7CvHX2I+H5D8O4SemZs1UDP4NKToezPh+/dlfb1P9nZ1ouUQ6rmCrH+VhUV3+AXVFI3hO8n3yrJOj+1P0YChN6XntU1SxlR/HxWqxDagCf4LIS1g/NT6c9cLh5Z0t1y6MmKE08mwxGTygvLjAIl4tzERyV+fH571yh3yv5udfdnLNtqhqtkcK1Dp5qjK+QszxqYOwsxpUyKFbtq4GA53Df2K5+uW6i0LawZ+ka2fojBEEw8HcufILwfFCz7scErCIRuTiiV60sOqsjUi9UVQLSFwQsMmKcoa0MatMXuSDWHvncplDIt2GfG7RRH6XCq5jnn
+x-ms-exchange-antispam-messagedata: pDauFUVR/BSnUKvMZHfCJ8CeiEKifzX8h8LGqEf9x8JqWtbpoKnDLFaFY24lcsi1TpBzE1Bvf+mCBhgmaVGuUDUdTQKT1xGUPIL28mmlzbFDu5DrpGuXUkpX5IehJiVQ3kJX7RMDXp9lvu2M8LYyPg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200320014107.26087-1-thara.gopinath@linaro.org> <20200320014107.26087-4-thara.gopinath@linaro.org>
-In-Reply-To: <20200320014107.26087-4-thara.gopinath@linaro.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 23 Mar 2020 16:57:33 +0100
-Message-ID: <CAPDyKFqn0E=-sNZy=09tLZn=6VxEfiXL-vUNwb9HK8+WLDBiPw@mail.gmail.com>
-Subject: Re: [Patch v5 3/6] thermal: Add generic power domain warming device driver.
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, Rob Herring <robh@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49bfd803-c872-4752-8224-08d7cf43137c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2020 15:58:49.1590
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uaBIrwXmuv80XUQyZYmeRLRDY1Fw2slnENSoyJaPuxcKfGZ0QD/gak+8g1GRu4tRcOSCbHGa6h7g9B45TUiH2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3541
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Mar 2020 at 02:41, Thara Gopinath <thara.gopinath@linaro.org> wrote:
->
-> Resources modeled as power domains in linux kernel can  be used to warm the
-> SoC(eg. mx power domain on sdm845).  To support this feature, introduce a
-> generic power domain warming device driver that can be plugged into the
-> thermal framework (The thermal framework itself requires further
-> modifiction to support a warming device in place of a cooling device.
-> Those extensions are not introduced in this patch series).
->
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> > Intel EHL consist of 3 identical MAC. 2 are located in the Intel(R)
+> > Programmable Services Engine (Intel(R) PSE) and 1 is located in the
+> > platform Controller Hub (PCH). Each MAC consist of 3 PCI IDs which are
+> > differentiated by MII and speed.
+>=20
+> This stmmac_pci.c is getting bigger and bigger ... Can you consider
+> adding your own PCI driver (dwmac-intel.c) to stmmac tree ?
+
+Good idea. I will rework on this and submit as v2. Thanks.=20
+
+>=20
+> You could even submit a patch for MAINTAINERS for this particular driver
+> as it's already done for others.
+
+Do you mean becoming the maintainer for this particular file?
+
+Regards,
+Weifeng
+
+>=20
 > ---
->
-> v3->v4:
->         - Removed late_init hook pd_warming_device_ops.
->         - Use of_genpd_add_device instead of pm_genpd_add_device to attach
->           device to the generic power domain.
->         - Use thermal_of_cooling_device_parent_register to register the
->           cooling device so that the device with genpd attached can be
->           made parent of the cooling device.
->         - With above changes, remove reference to generic_pm_domain in
->           pd_warming_device.
->
-> v4->v5:
->         - All the below changes are as per Ulf's review comments.
->         - Renamed pwr_domain_warming.c and pwr_domain_warming.h to
->           pd_warming.c and pd_warming.h.
->         - Renamed pwr_domain_warming_register API to
->           of_pd_warming_register.
->         - Dropped in-param pd_name to of_pd_warming_register.
->         - Introduced ID allocator to uniquely identify each power domain
->           warming device.
->         - Introduced pd_warming_release to handle device kfree for
->           pd_warming_device.
->         - Introduced pm_genpd_remove_device in the error exit path
->           of of_pd_warming_register.
->
->  drivers/thermal/Kconfig      |  10 +++
->  drivers/thermal/Makefile     |   2 +
->  drivers/thermal/pd_warming.c | 168 +++++++++++++++++++++++++++++++++++
->  include/linux/pd_warming.h   |  29 ++++++
->  4 files changed, 209 insertions(+)
->  create mode 100644 drivers/thermal/pd_warming.c
->  create mode 100644 include/linux/pd_warming.h
->
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 4d6753f2b18f..92522d541d0e 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -206,6 +206,16 @@ config DEVFREQ_THERMAL
->
->           If you want this support, you should say Y here.
->
-> +config PWR_DOMAIN_WARMING_THERMAL
-> +       bool "Power Domain based warming device"
-> +       depends on PM_GENERIC_DOMAINS_OF
-> +       help
-> +         This implements the generic power domain based warming
-> +         mechanism through increasing the performance state of
-> +         a power domain.
-> +
-> +         If you want this support, you should say Y here.
-> +
->  config THERMAL_EMULATION
->         bool "Thermal emulation mode support"
->         help
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 8c8ed7b79915..7db87a779126 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -28,6 +28,8 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)   += clock_cooling.o
->  # devfreq cooling
->  thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
->
-> +thermal_sys-$(CONFIG_PWR_DOMAIN_WARMING_THERMAL)       += pd_warming.o
-> +
->  # platform thermal drivers
->  obj-y                          += broadcom/
->  obj-$(CONFIG_THERMAL_MMIO)             += thermal_mmio.o
-> diff --git a/drivers/thermal/pd_warming.c b/drivers/thermal/pd_warming.c
-> new file mode 100644
-> index 000000000000..c0854d2e4b92
-> --- /dev/null
-> +++ b/drivers/thermal/pd_warming.c
-> @@ -0,0 +1,168 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, Linaro Ltd
-> + */
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/slab.h>
-> +#include <linux/pd_warming.h>
-> +
-> +struct pd_warming_device {
-> +       struct thermal_cooling_device *cdev;
-> +       struct device dev;
-> +       int id;
-> +       int max_state;
-> +       int cur_state;
-> +       bool runtime_resumed;
-> +};
-> +
-> +static DEFINE_IDA(pd_ida);
-> +
-> +static int pd_wdev_get_max_state(struct thermal_cooling_device *cdev,
-> +                                unsigned long *state)
-> +{
-> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> +
-> +       *state = pd_wdev->max_state;
-> +       return 0;
-> +}
-> +
-> +static int pd_wdev_get_cur_state(struct thermal_cooling_device *cdev,
-> +                                unsigned long *state)
-> +{
-> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> +
-> +       *state = dev_pm_genpd_get_performance_state(&pd_wdev->dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static int pd_wdev_set_cur_state(struct thermal_cooling_device *cdev,
-> +                                unsigned long state)
-> +{
-> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> +       struct device *dev = &pd_wdev->dev;
-> +       int ret;
-> +
-> +       ret = dev_pm_genpd_set_performance_state(dev, state);
-> +
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (state && !pd_wdev->runtime_resumed) {
-> +               ret = pm_runtime_get_sync(dev);
-> +               pd_wdev->runtime_resumed = true;
-> +       } else if (!state && pd_wdev->runtime_resumed) {
-> +               ret = pm_runtime_put(dev);
-> +               pd_wdev->runtime_resumed = false;
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static struct thermal_cooling_device_ops pd_warming_device_ops = {
-> +       .get_max_state  = pd_wdev_get_max_state,
-> +       .get_cur_state  = pd_wdev_get_cur_state,
-> +       .set_cur_state  = pd_wdev_set_cur_state,
-> +};
-> +
-> +static void pd_warming_release(struct device *dev)
-> +{
-> +       kfree(dev);
-
-This is wrong, you should free a "struct pd_warming_device *". Use the
-"container of" macro to get it from 'dev'.
-
-> +}
-> +
-> +struct thermal_cooling_device *
-> +of_pd_warming_register(struct device *parent, int pd_id)
-> +{
-> +       struct pd_warming_device *pd_wdev;
-> +       struct of_phandle_args pd_args;
-> +       char cdev_name[THERMAL_NAME_LENGTH];
-> +       int ret;
-> +
-> +       pd_wdev = kzalloc(sizeof(*pd_wdev), GFP_KERNEL);
-> +       if (!pd_wdev)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       dev_set_name(&pd_wdev->dev, "%s_%d_warming_dev",
-> +                    dev_name(parent), pd_id);
-> +       pd_wdev->dev.parent = parent;
-> +       pd_wdev->dev.release = pd_warming_release;
-> +
-> +       ret = device_register(&pd_wdev->dev);
-> +       if (ret) {
-> +               put_device(&pd_wdev->dev);
-> +               goto free_pd_wdev;
-> +       }
-> +
-> +       ret = ida_simple_get(&pd_ida, 0, 0, GFP_KERNEL);
-> +       if (ret < 0)
-> +               goto unregister_device;
-
-If you use and ida, you might as well use it as a part of the
-dev_set_name() above.
-
-That should give you a unique name, similar to how you use it for the
-cdev_name below.
-
-> +
-> +       pd_wdev->id = ret;
-> +
-> +       pd_args.np = parent->of_node;
-> +       pd_args.args[0] = pd_id;
-> +       pd_args.args_count = 1;
-> +
-> +       ret = of_genpd_add_device(&pd_args, &pd_wdev->dev);
-> +
-> +       if (ret)
-> +               goto remove_ida;
-> +
-> +       ret = dev_pm_genpd_performance_state_count(&pd_wdev->dev);
-> +       if (ret < 0)
-> +               goto out_genpd;
-> +
-> +       pd_wdev->max_state = ret - 1;
-> +       pm_runtime_enable(&pd_wdev->dev);
-> +       pd_wdev->runtime_resumed = false;
-> +
-> +       snprintf(cdev_name, sizeof(cdev_name), "thermal-pd-%d", pd_wdev->id);
-> +       pd_wdev->cdev = thermal_of_cooling_device_register
-> +                                       (NULL, cdev_name, pd_wdev,
-> +                                        &pd_warming_device_ops);
-> +       if (IS_ERR(pd_wdev->cdev)) {
-> +               pr_err("unable to register %s cooling device\n", cdev_name);
-> +               ret = PTR_ERR(pd_wdev->cdev);
-> +               goto out_runtime_disable;
-> +       }
-> +
-> +       return pd_wdev->cdev;
-> +
-> +out_runtime_disable:
-> +       pm_runtime_disable(&pd_wdev->dev);
-> +out_genpd:
-> +       pm_genpd_remove_device(&pd_wdev->dev);
-> +remove_ida:
-> +       ida_simple_remove(&pd_ida, pd_wdev->id);
-> +unregister_device:
-> +       device_unregister(&pd_wdev->dev);
-> +       pd_warming_release(&pd_wdev->dev);
-
-This is wrong, drop this.
-
-> +free_pd_wdev:
-> +       kfree(pd_wdev);
-
-Since you should free this from the ->release() callback, there is no
-need to do this here.
-
-> +       return ERR_PTR(ret);
-> +}
-> +EXPORT_SYMBOL_GPL(of_pd_warming_register);
-> +
-> +void pd_warming_unregister(struct thermal_cooling_device *cdev)
-> +{
-> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> +       struct device *dev = &pd_wdev->dev;
-> +
-> +       if (pd_wdev->runtime_resumed) {
-> +               dev_pm_genpd_set_performance_state(dev, 0);
-> +               pm_runtime_put(dev);
-> +               pd_wdev->runtime_resumed = false;
-> +       }
-> +       pm_runtime_disable(dev);
-> +       pm_genpd_remove_device(dev);
-> +       ida_simple_remove(&pd_ida, pd_wdev->id);
-> +       thermal_cooling_device_unregister(cdev);
-> +       kfree(pd_wdev);
-
-Don't use kfree here, but instead device_unregister(dev);
-
-> +}
-> +EXPORT_SYMBOL_GPL(pd_warming_unregister);
-> diff --git a/include/linux/pd_warming.h b/include/linux/pd_warming.h
-> new file mode 100644
-> index 000000000000..550a5683b56d
-> --- /dev/null
-> +++ b/include/linux/pd_warming.h
-> @@ -0,0 +1,29 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, Linaro Ltd.
-> + */
-> +#ifndef __PWR_DOMAIN_WARMING_H__
-> +#define __PWR_DOMAIN_WARMING_H__
-> +
-> +#include <linux/pm_domain.h>
-> +#include <linux/thermal.h>
-> +
-> +#ifdef CONFIG_PWR_DOMAIN_WARMING_THERMAL
-> +struct thermal_cooling_device *
-> +of_pd_warming_register(struct device *parent, int pd_id);
-> +
-> +void pd_warming_unregister(struct thermal_cooling_device *cdev);
-> +
-> +#else
-> +static inline struct thermal_cooling_device *
-> +of_pd_warming_register(struct device *parent, int pd_id)
-> +{
-> +       return ERR_PTR(-ENOSYS);
-> +}
-> +
-> +static inline void
-> +pd_warming_unregister(struct thermal_cooling_device *cdev)
-> +{
-> +}
-> +#endif /* CONFIG_PWR_DOMAIN_WARMING_THERMAL */
-> +#endif /* __PWR_DOMAIN_WARMING_H__ */
-> --
-> 2.20.1
->
-
-Besides the few things above, this looks good to me.
-
-Kind regards
-Uffe
+> Thanks,
+> Jose Miguel Abreu
