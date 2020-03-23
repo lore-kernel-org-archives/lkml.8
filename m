@@ -2,129 +2,118 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF19FC1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C3DC1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A875520774
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A23CC2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:11:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584929489;
+	bh=pr6AtLlgKDBZy78fBf/+KjGfG2Q9GXU5Ja4T5hoPs2s=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=AO0JLT575uWzvuMpDVRDKvrlW64sWvm6P16VDBwDenMapCHburzs03jJxh5mHaVzL
+	 GurLZQZWr0T1zNi7F6y8Py38QaGzvCwcz9KU48pOOse7JpGORM4NKvUdhE1u1JTtGb
+	 ag3NVfldxavLxgI0tU1e6ArPp3zcGt2tTwBosOw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgCWCLI (ORCPT
+        id S1727133AbgCWCL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 22:11:08 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:45488 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726951AbgCWCLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 22:11:08 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 977822BEDAB46AD93768;
-        Mon, 23 Mar 2020 10:09:52 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 23 Mar
- 2020 10:09:49 +0800
-Subject: Re: [PATCH v3] f2fs: fix potential .flags overflow on 32bit
- architecture
-To:     =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megi@xff.cz>, <jaegeuk@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20200323012519.41536-1-yuchao0@huawei.com>
- <20200323015036.pniupuucfl3dug4m@core.my.home>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <1d861a2e-0045-af0c-1f5b-c45b774c83f6@huawei.com>
-Date:   Mon, 23 Mar 2020 10:09:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200323015036.pniupuucfl3dug4m@core.my.home>
-Content-Type: text/plain; charset="UTF-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+        Sun, 22 Mar 2020 22:11:28 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:45630 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbgCWCL2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 22:11:28 -0400
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 02N28urR002941;
+        Mon, 23 Mar 2020 11:08:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 02N28urR002941
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1584929338;
+        bh=H8Ul8qvy3/NjGlVWM0US24XZqkIoV6sumKhoWd9ALvU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QK1JkiQHss7CKQmUCCDhEmKxIkM/NXpU3k4+HCFbMgGvduOYvmPs6LbrIWByUf67v
+         mx8GHDFFWY6SV3/V0w2iVjIt/bmAad+rV0jjTvwer1CrexVtZ9zdP9Ud2h4xA9oWQu
+         cQFv7eJRpaXgjKIeYE2RTgBf+gFdImlDKE0Tl4GGQVAKOyTb+ysh6OCFOHb+79geL3
+         8mDRTUAzmuxa+PHF6ebp5z5K3v/2b3DrdhsJWXFfKOL0YXlwUJil+T4L82LMtY1+us
+         bE92TKWNjwHCk69ME3cR8bkjRL70rb/AI5/9m7dxsrdxYWqfHJ7hf2fU74OJBYfS13
+         r44+C0s9neTUg==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Song Liu <songliubraving@fb.com>,
+        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        clang-built-linux@googlegroups.com, linux-crypto@vger.kernel.org
+Subject: [PATCH 0/7] x86: remove always-defined CONFIG_AS_* options
+Date:   Mon, 23 Mar 2020 11:08:37 +0900
+Message-Id: <20200323020844.17064-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Ondřej,
+arch/x86/Makefile tests instruction code by $(call as-instr, ...)
 
-On 2020/3/23 9:50, Ondřej Jirman wrote:
-> Hello Chao Yu,
-> 
-> On Mon, Mar 23, 2020 at 09:25:19AM +0800, Chao Yu wrote:
->> [snip]
->>  
->> +static inline void __set_inode_flag(struct inode *inode, int flag)
->> +{
->> +	test_and_set_bit(flag % BITS_PER_LONG,
->> +			&F2FS_I(inode)->flags[BIT_WORD(flag)]);
-> 
-> This can simply be:
-> 
->     test_and_set_bit(flag, F2FS_I(inode)->flags);
-> 
-> all of these bitmap manipulation functions already will do the
-> right thing to access the correct location in the flags array:
-> 
->   https://elixir.bootlin.com/linux/latest/source/include/asm-generic/bitops/atomic.h#L32
-> 
-> see BIT_MASK and BIT_WORD use in that function.
+Some of them are very old.
+For example, the check for CONFIG_AS_CFI dates back to 2006.
 
-Oops, most f2fs bitmap check uses the same form, I missed this case....
+We raise GCC versions from time to time, and we clean old code away.
+The same policy applied to binutils.
 
-> 
->> +}
->> +
->>  static inline void set_inode_flag(struct inode *inode, int flag)
->>  {
->> -	if (!test_bit(flag, &F2FS_I(inode)->flags))
->> -		set_bit(flag, &F2FS_I(inode)->flags);
->> +	__set_inode_flag(inode, flag);
->>  	__mark_inode_dirty_flag(inode, flag, true);
->>  }
->>  
->>  static inline int is_inode_flag_set(struct inode *inode, int flag)
->>  {
->> -	return test_bit(flag, &F2FS_I(inode)->flags);
->> +	return test_bit(flag % BITS_PER_LONG,
->> +				&F2FS_I(inode)->flags[BIT_WORD(flag)]);
-> 
-> ditto
-> 
->>  }
->>  
->>  static inline void clear_inode_flag(struct inode *inode, int flag)
->>  {
->> -	if (test_bit(flag, &F2FS_I(inode)->flags))
->> -		clear_bit(flag, &F2FS_I(inode)->flags);
->> +	test_and_clear_bit(flag % BITS_PER_LONG,
->> +				&F2FS_I(inode)->flags[BIT_WORD(flag)]);
-> 
-> ditto
-> 
-> I'm going to test the patch. It looks like that this was really
-> the root cause of all those locking issues I was seeing on my
-> 32-bit tablet. It seems to explain why my 64-bit systems were
-> not affected, and why reverting compession fixed it too.
-> Great job figuring this out.
-> 
-> I'll let you know soon.
+The current minimal supported version of binutils is 2.21
 
-Great, hoping this patch can fix the issue this time.
+This is new enough to recognize the instruction in most of
+as-instr calls.
 
-Thanks anyway for supporting on troubleshooting this issue.
 
-Thanks,
 
-> 
-> thank you and regards,
-> 	o.
-> 
->>  	__mark_inode_dirty_flag(inode, flag, false);
->>  }
->>  
-> .
-> 
+Masahiro Yamada (7):
+  x86: remove unneeded defined(__ASSEMBLY__) check from asm/dwarf2.h
+  x86: remove always-defined CONFIG_AS_CFI
+  x86: remove always-defined CONFIG_AS_CFI_SIGNAL_FRAME
+  x86: remove always-defined CONFIG_AS_CFI_SECTIONS
+  x86: remove always-defined CONFIG_AS_SSSE3
+  x86: remove always-defined CONFIG_AS_AVX
+  x86: add comments about the binutils version to support code in
+    as-instr
+
+ arch/x86/Makefile                             | 21 +++------
+ arch/x86/crypto/Makefile                      | 32 ++++++--------
+ arch/x86/crypto/aesni-intel_avx-x86_64.S      |  3 --
+ arch/x86/crypto/aesni-intel_glue.c            | 14 +-----
+ arch/x86/crypto/blake2s-core.S                |  2 -
+ arch/x86/crypto/poly1305-x86_64-cryptogams.pl |  8 ----
+ arch/x86/crypto/poly1305_glue.c               |  6 +--
+ arch/x86/crypto/sha1_ssse3_asm.S              |  4 --
+ arch/x86/crypto/sha1_ssse3_glue.c             |  9 +---
+ arch/x86/crypto/sha256-avx-asm.S              |  3 --
+ arch/x86/crypto/sha256_ssse3_glue.c           |  8 +---
+ arch/x86/crypto/sha512-avx-asm.S              |  2 -
+ arch/x86/crypto/sha512_ssse3_glue.c           |  7 +--
+ arch/x86/include/asm/dwarf2.h                 | 43 -------------------
+ arch/x86/include/asm/xor_avx.h                |  9 ----
+ lib/raid6/algos.c                             |  2 -
+ lib/raid6/recov_ssse3.c                       |  6 ---
+ lib/raid6/test/Makefile                       |  3 --
+ 18 files changed, 26 insertions(+), 156 deletions(-)
+
+-- 
+2.17.1
+
