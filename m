@@ -2,101 +2,85 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D86E2C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B794C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD30220735
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:30:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584977444;
-	bh=c/BmuNMOcm2EFTJiFoXTh1Vq5RGJMcdEbf3sn15wFTs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BzAplZLnH8hcx5+UTZfTtiSLysYKY3A70kyis0vCYRnmGWBnpX1TA8upetpan0EIS
-	 yUYlLxWkS02QbsD+zwsQXrMagHk8EsIW1C1raRlhCROFA9UJLKzsOm7z9OBUelJNOo
-	 UwIdQre0SJ1t/fSyl3lYKkFTcTuHa+kfK/50nRQM=
+	by mail.kernel.org (Postfix) with ESMTP id 1CCA420409
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:30:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbgCWPan (ORCPT
+        id S1727333AbgCWPau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:30:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38732 "EHLO mail.kernel.org"
+        Mon, 23 Mar 2020 11:30:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:51102 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727176AbgCWPan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:30:43 -0400
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46A99206C3;
-        Mon, 23 Mar 2020 15:30:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584977442;
-        bh=c/BmuNMOcm2EFTJiFoXTh1Vq5RGJMcdEbf3sn15wFTs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UBZ7ZpqambbEgbhVe5WIcsu4UpeB10qjYzxwqgDEbXzE9XTQvb67iuULkW6UyWID5
-         f76NsPm8BzAZTrBUgF8MQHVNnUGchd/71x6SB9UUU0qDX3Q2yphEkGuu10cwduVZdL
-         u0Y7keuyEj4nEEo8AB21fb/hLskbkCTsjntSPjPA=
-Date:   Mon, 23 Mar 2020 16:30:40 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH 1/3] lockdep/irq: Be more strict about IRQ-threadable
- code end
-Message-ID: <20200323153039.GA5755@lenoir>
-References: <20200323033207.32370-1-frederic@kernel.org>
- <20200323033207.32370-2-frederic@kernel.org>
- <20200323135320.GJ2452@worktop.programming.kicks-ass.net>
+        id S1727163AbgCWPat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:30:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A9FD51FB;
+        Mon, 23 Mar 2020 08:30:48 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 206F43F7C3;
+        Mon, 23 Mar 2020 08:30:48 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 15:30:45 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: lockdep warning in sys_swapon
+Message-ID: <20200323153045.s7ag3lrvfe2cpiiw@e107158-lin.cambridge.arm.com>
+References: <20200323151725.gayvs5g6h5adwqkd@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200323135320.GJ2452@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200323151725.gayvs5g6h5adwqkd@e107158-lin.cambridge.arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 02:53:20PM +0100, Peter Zijlstra wrote:
-> On Mon, Mar 23, 2020 at 04:32:05AM +0100, Frederic Weisbecker wrote:
-> > --- a/kernel/irq/handle.c
-> > +++ b/kernel/irq/handle.c
-> > @@ -144,18 +144,24 @@ irqreturn_t __handle_irq_event_percpu(struct irq_desc *desc, unsigned int *flags
-> >  
-> >  	for_each_action_of_desc(desc, action) {
-> >  		irqreturn_t res;
-> > +		bool threadable;
-> >  
-> >  		/*
-> >  		 * If this IRQ would be threaded under force_irqthreads, mark it so.
-> >  		 */
-> > -		if (irq_settings_can_thread(desc) &&
-> > -		    !(action->flags & (IRQF_NO_THREAD | IRQF_PERCPU | IRQF_ONESHOT)))
-> > +		threadable = (irq_settings_can_thread(desc) &&
-> > +			      !(action->flags & (IRQF_NO_THREAD | IRQF_PERCPU | IRQF_ONESHOT)));
-> > +
-> > +		if (threadable)
-> >  			trace_hardirq_threaded();
-> >  
-> >  		trace_irq_handler_entry(irq, action);
-> >  		res = action->handler(irq, action->dev_id);
-> >  		trace_irq_handler_exit(irq, action, res);
-> >  
-> > +		if (threadable)
-> > +			trace_hardirq_unthreaded();
+On 03/23/20 15:17, Qais Yousef wrote:
+> Hi
 > 
-> AFAICT this doesn't work for nested IRQ handlers.
-
-So current->hardirq_threaded should be a counter perhaps?
-
+> I hit the following 2 warnings when running with LOCKDEP=y on arm64 platform
+> (juno-r2), running on v5.6-rc6
 > 
-> >  		if (WARN_ONCE(!irqs_disabled(),"irq %u handler %pS enabled interrupts\n",
-> >  			      irq, action->handler))
-> >  			local_irq_disable();
-> > -- 
-> > 2.25.0
-> > 
+> The 1st one is when I execute `swapon -a`. The 2nd one happens at boot. I have
+> /dev/sda2 as my swap in /etc/fstab
+> 
+> Note that I either hit 1 OR 2, but didn't hit both warnings at the same time,
+> yet at least.
+> 
+> /dev/sda2 is a usb flash drive, in case it matters somehow.
+
+By the way, I noticed that in claim_swapfile() if we fail we don't release the
+lock. Shouldn't we release the lock here?
+
+I tried with that FWIW, but it had no effect on the warnings.
+
+
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index b2a2e45c9a36..0293e8c7b472 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -2900,8 +2900,10 @@ static int claim_swapfile(struct swap_info_struct *p, struct inode *inode)
+        }
+
+        inode_lock(inode);
+-       if (IS_SWAPFILE(inode))
++       if (IS_SWAPFILE(inode)) {
++               inode_unlock(inode);
+                return -EBUSY;
++       }
+
+        return 0;
+ }
+
+
+Thanks
+
+--
+Qais Yousef
