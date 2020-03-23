@@ -2,202 +2,137 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 885FAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1337AC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 461E320714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB25F20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:47:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BqgLw6YK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Bilf5AvS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbgCWQpb (ORCPT
+        id S1727654AbgCWQrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:45:31 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33912 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgCWQpa (ORCPT
+        Mon, 23 Mar 2020 12:47:09 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:19385 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727402AbgCWQrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:45:30 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t3so7484137pgn.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 09:45:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h7erQfF+qqDwND3ylPP5gvL50DvRnfbR+337QCSJOWg=;
-        b=BqgLw6YK0fCGmlwlUq2U9m5+BOnoOGb6uxfB82uNv6pmtyYEaPi0S1mut35YyDOtYI
-         2vSEcewRapTVqZFCXC9RC9e8FbE8vDjXx+YSvEeN24OP1vqqWDfstdguHqkNXcsKZAZ0
-         WDSQ5jersECj9ahOpLS6P8bWpxmEWsvKAUQJO0OxwUQIqg6X0DxibRZqfgyvIf331wlZ
-         NnWsJwnkyF6sMoENhS3aQU8IrOiINR1oLjjhsBJFloY9kgOtWRjd0LoQGeXUexLO+wBv
-         jV5stIOKNeLXoKd3vN3gp2YaKa61QIfyjsctE50OHAeAtAIkn8fU+PuvHjQl7LpDmwAu
-         fj+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h7erQfF+qqDwND3ylPP5gvL50DvRnfbR+337QCSJOWg=;
-        b=C9JoZQVA/dgWFsern6iEiy/uAbZRx51m8fjZd5hnguDJHxO9/59TIMFKui5Q3WoiEU
-         RcWN7kQzJfM7xEYhA+x3m5ScBtfljOgmBonuwYCgwMrGDrzLUyoQWz3v22VlWcWIQGMB
-         wXIDsMKdIX3vFXVLAuuWnh2GaF/epGIzkCzvmTso/jiuWSdyBKFtMl4LrkJn2o8OUzHQ
-         /QAUVjbmLNXMRlg28WoIUZ28v3yAMSEL5gZ4ofHkOV0bW+yqjBhUppPuf4z2LWf3af8c
-         Tf7CfqOmfsyJm5nU2RWJ0dA/pnUUUlq3gW0H9L2n7z/gpRPbEIYuimvcJ0XFsgFpK50P
-         Efmg==
-X-Gm-Message-State: ANhLgQ2d8AgAH8gKzY4P/TautmhqqvxaTIM3eYjrnFSQOwaJXcuTpdA7
-        Xty9TF1Ts1taKy8xMHHtIBx4GW9Ii0TWEk7IiUKRig==
-X-Google-Smtp-Source: ADFU+vtTWC+3e0hgu5sR7c8nsBElA/8yhjLWg38EN0vSS/iqghwtAHQPjULAOsoEZirveksBfESFwrkb4loUrz50q9A=
-X-Received: by 2002:aa7:8b15:: with SMTP id f21mr5875990pfd.306.1584981928768;
- Mon, 23 Mar 2020 09:45:28 -0700 (PDT)
+        Mon, 23 Mar 2020 12:47:09 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584982028; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=Xb2zinDQGO+onzyW77lJl6Bc9KqowAWzCfieud9lBEI=; b=Bilf5AvSZWDj8ekm8Z1CD5wvD26RGlsKu4jtWrMj5eOQHDFf8w8UmIykAlj17KPZlIRx/3pV
+ lPL1z/8x33M94bL8IMKRYgBwxIansXs3OFc+xUGzyQ7evKpcIMx9pJIgw/G4H35YtjSwusWI
+ Z4VYWr1TkKAOJTGfBSJnYt370CI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e78e7fa.7fb8e14e5768-smtp-out-n03;
+ Mon, 23 Mar 2020 16:46:50 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5EAC4C4478C; Mon, 23 Mar 2020 16:46:50 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 39E75C433CB;
+        Mon, 23 Mar 2020 16:46:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 39E75C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Jes Sorensen <jes.sorensen@gmail.com>,
+        Joe Perches <joe@perches.com>,
+        Ulrich Kunitz <kune@deine-taler.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with flexible-array member
+References: <20200305111216.GA24982@embeddedor>
+        <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
+        <256881484c5db07e47c611a56550642a6f6bd8e9.camel@perches.com>
+        <87blpapyu5.fsf@kamboji.qca.qualcomm.com>
+        <1bb7270f-545b-23ca-aa27-5b3c52fba1be@embeddedor.com>
+        <87r1y0nwip.fsf@kamboji.qca.qualcomm.com>
+        <48ff1333-0a14-36d8-9565-a7f13a06c974@embeddedor.com>
+        <021d1125-3ffd-39ef-395a-b796c527bde4@gmail.com>
+        <fb3395d7-e932-10ac-1feb-ab2ceb63424e@embeddedor.com>
+        <361da904-5adf-eb0c-e937-c5d2f69ac8be@gmail.com>
+        <e4cfda6c-37f0-3c28-f50b-32200a67d856@embeddedor.com>
+        <9700b2c9-1029-60b0-c5d2-684bdcede354@gmail.com>
+        <948ec681-c4ee-3479-8d8b-5aa1e358ec04@embeddedor.com>
+Date:   Mon, 23 Mar 2020 18:46:45 +0200
+In-Reply-To: <948ec681-c4ee-3479-8d8b-5aa1e358ec04@embeddedor.com> (Gustavo A.
+        R. Silva's message of "Tue, 10 Mar 2020 17:36:39 -0500")
+Message-ID: <87h7yfauiy.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-References: <CAEAjamtb2Kbn0He5O++=d_HCG1eQvLnGGbcVUOQ76+NfDiNybQ@mail.gmail.com>
-In-Reply-To: <CAEAjamtb2Kbn0He5O++=d_HCG1eQvLnGGbcVUOQ76+NfDiNybQ@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 23 Mar 2020 17:45:17 +0100
-Message-ID: <CAAeHK+zy+seoWm7avxGSEXwoR1tuqHyO00eA_SWk3CC-ngbmLQ@mail.gmail.com>
-Subject: Re: BUG: KASAN: use-after-free in usb_hcd_unlink_urb+0x5f/0x170 drivers/usb/core/hcd.c
-To:     Kyungtae Kim <kt0755@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, laurentiu.tudor@nxp.com,
-        noring@nocrew.org, Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>,
-        tony@atomide.com, rrangel@chromium.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Dave Tian <dave.jing.tian@gmail.com>, linux-usb@vger.kernel.og,
-        syzkaller <syzkaller@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 7:16 AM Kyungtae Kim <kt0755@gmail.com> wrote:
->
-> We report a bug (in linux-5.5.11) found by FuzzUSB (a modified version
-> of syzkaller)
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
 
-Hi Kyungtae,
+> On 3/10/20 5:34 PM, Jes Sorensen wrote:
+>> On 3/10/20 6:31 PM, Gustavo A. R. Silva wrote:
+>>>
+>>>
+>>> On 3/10/20 5:20 PM, Jes Sorensen wrote:
+>>>> On 3/10/20 6:13 PM, Gustavo A. R. Silva wrote:
+>>>>>
+>>>>>
+>>>>> On 3/10/20 5:07 PM, Jes Sorensen wrote:
+>>>>>> As I stated in my previous answer, this seems more code churn than an
+>>>>>> actual fix. If this is a real problem, shouldn't the work be put into
+>>>>>> fixing the compiler to handle foo[0] instead? It seems that is where the
+>>>>>> real value would be.
+>>>>>
+>>>>> Yeah. But, unfortunately, I'm not a compiler guy, so I'm not able to fix the
+>>>>> compiler as you suggest. And I honestly don't see what is so annoying/disturbing
+>>>>> about applying a patch that removes the 0 from foo[0] when it brings benefit
+>>>>> to the whole codebase.
+>>>>
+>>>> My point is that it adds what seems like unnecessary churn, which is not
+>>>> a benefit, and it doesn't improve the generated code.
+>>>>
+>>>
+>>> As an example of one of the benefits of this is that the compiler won't trigger
+>>> a warning in the following case:
+>>>
+>>> struct boo {
+>>> 	int stuff;
+>>> 	struct foo array[0];
+>>> 	int morestuff;
+>>> };
+>>>
+>>> The result of the code above is an undefined behavior.
+>>>
+>>> On the other hand in the case below, the compiles does trigger a warning:
+>>>
+>>> struct boo {
+>>> 	int stuff;
+>>> 	struct foo array[];
+>>> 	int morestuff;
+>>> };
+>> 
+>> Right, this just underlines my prior argument, that this should be fixed
+>> in the compiler.
+>> 
+>
+> In the meantime it's not at all harmful to do something about it in the codebase.
 
-Sounds interesting! Could you share what approach to USB fuzzing you
-have taken? Based on the stack trace I see you're fuzzing the USB
-storage layer, for which we don't yet have any descriptions in
-syzkaller's USB fuzzer itself [1].
+Cleanup patches are not always harmful, at least they can create bugs
+and conflicts. But I think in this case there are clear benefits for the
+churn so I'm going to apply these.
 
-Thanks!
+Sorry Jes :)
 
-[1] https://github.com/google/syzkaller/blob/master/docs/linux/external_fuzzing_usb.md
-
->
-> In function usb_hcd_unlink_urb (driver/usb/core/hcd.c:1607), it tries to
-> read "urb->use_count". But it seems the instance "urb" was
-> already freed (right after urb->dev at line 1597) by the function "urb_destroy"
-> in a different thread, which caused memory access violation.
-> To solve, it may need to check if urb is valid before urb->use_count,
-> to avoid such freed memory access.
->
-> kernel config: https://kt0755.github.io/etc/config_v5.5.11
->
-> ==================================================================
-> BUG: KASAN: use-after-free in atomic_read
-> include/asm-generic/atomic-instrumented.h:26 [inline]
-> BUG: KASAN: use-after-free in usb_hcd_unlink_urb+0x5f/0x170
-> drivers/usb/core/hcd.c:1607
-> Read of size 4 at addr ffff888065379610 by task kworker/u4:1/27
->
-> CPU: 1 PID: 27 Comm: kworker/u4:1 Not tainted 5.5.11 #2
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> 1.10.2-1ubuntu1 04/01/2014
-> Workqueue: scsi_tmf_2 scmd_eh_abort_handler
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0xce/0x128 lib/dump_stack.c:118
->  print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
->  __kasan_report+0x153/0x1cb mm/kasan/report.c:506
->  kasan_report+0x12/0x20 mm/kasan/common.c:639
->  check_memory_region_inline mm/kasan/generic.c:185 [inline]
->  check_memory_region+0x152/0x1b0 mm/kasan/generic.c:192
->  __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
->  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
->  usb_hcd_unlink_urb+0x5f/0x170 drivers/usb/core/hcd.c:1607
->  usb_unlink_urb+0x72/0xb0 drivers/usb/core/urb.c:657
->  usb_sg_cancel+0x14e/0x290 drivers/usb/core/message.c:602
->  usb_stor_stop_transport+0x5e/0xa0 drivers/usb/storage/transport.c:937
->  command_abort+0x19d/0x200 drivers/usb/storage/scsiglue.c:439
->  scsi_try_to_abort_cmd drivers/scsi/scsi_error.c:927 [inline]
->  scmd_eh_abort_handler+0x18e/0x410 drivers/scsi/scsi_error.c:145
->  process_one_work+0x9dd/0x1710 kernel/workqueue.c:2266
->  worker_thread+0x8b/0xc40 kernel/workqueue.c:2412
->  kthread+0x35f/0x440 kernel/kthread.c:255
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> Allocated by task 2532:
->  save_stack+0x21/0x90 mm/kasan/common.c:72
->  set_track mm/kasan/common.c:80 [inline]
->  __kasan_kmalloc.constprop.3+0xa7/0xd0 mm/kasan/common.c:513
->  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
->  __kmalloc+0x148/0x380 mm/slub.c:3812
->  kmalloc include/linux/slab.h:561 [inline]
->  usb_alloc_urb+0x42/0x90 drivers/usb/core/urb.c:74
->  usb_sg_init+0x323/0xa00 drivers/usb/core/message.c:406
->  usb_stor_bulk_transfer_sglist+0xbe/0x280 drivers/usb/storage/transport.c:423
->  usb_stor_bulk_srb+0x10d/0x230 drivers/usb/storage/transport.c:465
->  usb_stor_Bulk_transport+0x55f/0x1060 drivers/usb/storage/transport.c:1161
->  usb_stor_invoke_transport+0xef/0x15f0 drivers/usb/storage/transport.c:606
->  usb_stor_transparent_scsi_command+0x1d/0x30 drivers/usb/storage/protocol.c:108
->  usb_stor_control_thread+0x6d8/0xa80 drivers/usb/storage/usb.c:380
->  kthread+0x35f/0x440 kernel/kthread.c:255
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> Freed by task 2532:
->  save_stack+0x21/0x90 mm/kasan/common.c:72
->  set_track mm/kasan/common.c:80 [inline]
->  kasan_set_free_info mm/kasan/common.c:335 [inline]
->  __kasan_slab_free+0x135/0x190 mm/kasan/common.c:474
->  kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
->  slab_free_hook mm/slub.c:1425 [inline]
->  slab_free_freelist_hook mm/slub.c:1458 [inline]
->  slab_free mm/slub.c:3005 [inline]
->  kfree+0xf7/0x410 mm/slub.c:3966
->  urb_destroy drivers/usb/core/urb.c:26 [inline]
->  kref_put include/linux/kref.h:65 [inline]
->  usb_free_urb.part.0+0x95/0x100 drivers/usb/core/urb.c:96
->  usb_free_urb+0x1f/0x30 drivers/usb/core/urb.c:95
->  sg_clean+0x111/0x270 drivers/usb/core/message.c:263
->  usb_sg_wait+0x26d/0x440 drivers/usb/core/message.c:573
->  usb_stor_bulk_transfer_sglist+0x127/0x280 drivers/usb/storage/transport.c:447
->  usb_stor_bulk_srb+0x10d/0x230 drivers/usb/storage/transport.c:465
->  usb_stor_Bulk_transport+0x55f/0x1060 drivers/usb/storage/transport.c:1161
->  usb_stor_invoke_transport+0xef/0x15f0 drivers/usb/storage/transport.c:606
->  usb_stor_transparent_scsi_command+0x1d/0x30 drivers/usb/storage/protocol.c:108
->  usb_stor_control_thread+0x6d8/0xa80 drivers/usb/storage/usb.c:380
->  kthread+0x35f/0x440 kernel/kthread.c:255
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> The buggy address belongs to the object at ffff888065379600
->  which belongs to the cache kmalloc-192 of size 192
-> The buggy address is located 16 bytes inside of
->  192-byte region [ffff888065379600, ffff8880653796c0)
-> The buggy address belongs to the page:
-> page:ffffea000194de40 refcount:1 mapcount:0 mapping:ffff88806c002a00 index:0x0
-> flags: 0x100000000000200(slab)
-> raw: 0100000000000200 ffffea0000ee7a00 0000000500000005 ffff88806c002a00
-> raw: 0000000000000000 0000000080100010 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->  ffff888065379500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->  ffff888065379580: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-> >ffff888065379600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                          ^
->  ffff888065379680: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
->  ffff888065379700: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> ==================================================================
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller/CAEAjamtb2Kbn0He5O%2B%2B%3Dd_HCG1eQvLnGGbcVUOQ76%2BNfDiNybQ%40mail.gmail.com.
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
