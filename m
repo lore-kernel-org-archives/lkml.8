@@ -2,219 +2,92 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA0AC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D6DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38FE92074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:08:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584986897;
-	bh=H1L2CejU9iakS/DTwSHIerZWRkzwEkjwxc6vOGPfR6c=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=fH6gDOjpe6kbKdOqsEMyYBJmHEt+5gYtM1+5PXod6Rfb9NtbxOWxe9cyh8bWCA7Fp
-	 EnLgqLEnYYna5pNDnEVjNn+sRLFvKqTyraX1lybz8POpoGGnIT0GffgaW9IRNwfszG
-	 3tEh22aV1S4NBedFgSdTdhKmtMEpVsssnIXGAmKI=
+	by mail.kernel.org (Postfix) with ESMTP id 5AB0720735
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:08:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgCWSIQ (ORCPT
+        id S1728049AbgCWSIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:08:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727558AbgCWSIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:08:15 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AAB62072D;
-        Mon, 23 Mar 2020 18:08:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584986894;
-        bh=H1L2CejU9iakS/DTwSHIerZWRkzwEkjwxc6vOGPfR6c=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=gBisDOcPBOsgl3GbhS00yy4Re04wnLc884SQMrSXTKc1pd7uYKtKsY87Ow6hPEpaF
-         BKirCfa/p61Rr81c+70/0WyTqnNFpA/R6Jdgfffu1TL7WINVdaqNCCbyO1OsiJEi3+
-         j68jSFhUhq1TjnGM4o3FPd+U3m6pg6X5iYlKNKoE=
-Subject: Re: [PATCH v2 1/2] selftests/harness: Move test child waiting logic
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20200313231252.64999-1-keescook@chromium.org>
- <20200313231252.64999-2-keescook@chromium.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <0df3a446-cbdf-ed6b-9567-b137ec2138f7@kernel.org>
-Date:   Mon, 23 Mar 2020 12:08:13 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 23 Mar 2020 14:08:21 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:37692 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727558AbgCWSIU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 14:08:20 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id F307E80307CA;
+        Mon, 23 Mar 2020 18:08:17 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id EgG4UKARys4S; Mon, 23 Mar 2020 21:08:17 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-gpio@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 6/6] MAINTAINERS: Add Segey Semin to maintainers of DW APB GPIO driver
+Date:   Mon, 23 Mar 2020 21:06:32 +0300
+Message-ID: <20200323180632.14119-7-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
+ <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <20200313231252.64999-2-keescook@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kees,
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-On 3/13/20 5:12 PM, Kees Cook wrote:
-> In order to better handle timeout failures, rearrange the child waiting
-> logic into a separate function. This is mostly a copy/paste with an
-> indentation change. To handle pid tracking, a new field is added for
-> the child pid. Also move the alarm() pairing into the function.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Add myself as a co-maintainer of the Synopsis DesignWare APB GPIO driver.
 
-Sorry for the delay. I was on vacation all of last week
-and totally trying to stay away from checking email.
+Suggested-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Hoan Tran <hoan@os.amperecomputing.com>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-gpio@vger.kernel.org
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-My commit scripts falied on checkpatch warnings.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6158a143a13e..1940862de204 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16084,6 +16084,7 @@ F:	drivers/tty/serial/8250/8250_dw.c
+ 
+ SYNOPSYS DESIGNWARE APB GPIO DRIVER
+ M:	Hoan Tran <hoan@os.amperecomputing.com>
++S:	Serge Semin <fancer.lancer@gmail.com>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+-- 
+2.25.1
 
-A couple of comments below:
-
-
-> ---
->   tools/testing/selftests/kselftest_harness.h | 93 +++++++++++----------
->   1 file changed, 49 insertions(+), 44 deletions(-)
->  > diff --git a/tools/testing/selftests/kselftest_harness.h 
-b/tools/testing/selftests/kselftest_harness.h
-> index 5336b26506ab..c7b67e379219 100644
-> --- a/tools/testing/selftests/kselftest_harness.h
-> +++ b/tools/testing/selftests/kselftest_harness.h
-> @@ -635,6 +635,7 @@
->   struct __test_metadata {
->   	const char *name;
->   	void (*fn)(struct __test_metadata *);
-> +	pid_t pid;	/* pid of test when being run */
->   	int termsig;
->   	int passed;
->   	int trigger; /* extra handler after the evaluation */
-> @@ -695,64 +696,68 @@ static inline int __bail(int for_realz, bool no_print, __u8 step)
->   	return 0;
->   }
->   
-> -void __run_test(struct __test_metadata *t)
-> +void __wait_for_test(struct __test_metadata *t)
->   {
-> -	pid_t child_pid;
->   	int status;
->   
-> +	alarm(t->timeout);
-> +	waitpid(t->pid, &status, 0);
-> +	alarm(0);
-> +
-> +	if (WIFEXITED(status)) {
-> +		t->passed = t->termsig == -1 ? !WEXITSTATUS(status) : 0;
-> +		if (t->termsig != -1) {
-> +			fprintf(TH_LOG_STREAM,
-> +				"%s: Test exited normally "
-> +				"instead of by signal (code: %d)\n",
-> +				t->name,
-> +				WEXITSTATUS(status));
-
-This one isn't an error and gets printed to stderr? Except for
-this one message, all other messages in this routine are indeed
-errors. It makes sense to print this out to stdout instead.
-
-> +		} else if (!t->passed) {
-> +			fprintf(TH_LOG_STREAM,
-> +				"%s: Test failed at step #%d\n",
-> +				t->name,
-> +				WEXITSTATUS(status));
-> +		}
-> +	} else if (WIFSIGNALED(status)) {
-> +		t->passed = 0;
-> +		if (WTERMSIG(status) == SIGABRT) {
-> +			fprintf(TH_LOG_STREAM,
-> +				"%s: Test terminated by assertion\n",
-> +				t->name);
-> +		} else if (WTERMSIG(status) == t->termsig) {
-> +			t->passed = 1;
-> +		} else {
-> +			fprintf(TH_LOG_STREAM,
-> +				"%s: Test terminated unexpectedly "
-> +				"by signal %d\n",
-> +				t->name,
-> +				WTERMSIG(status));
-> +		}
-> +	} else {
-> +		fprintf(TH_LOG_STREAM,
-> +			"%s: Test ended in some other way [%u]\n",
-> +			t->name,
-> +			status);
-> +	}
-> +}
-> +
-> +void __run_test(struct __test_metadata *t)
-> +{
->   	t->passed = 1;
->   	t->trigger = 0;
->   	printf("[ RUN      ] %s\n", t->name);
-> -	alarm(t->timeout);
-> -	child_pid = fork();
-> -	if (child_pid < 0) {
-> +	t->pid = fork();
-> +	if (t->pid < 0) {
->   		printf("ERROR SPAWNING TEST CHILD\n");
->   		t->passed = 0;
-> -	} else if (child_pid == 0) {
-> +	} else if (t->pid == 0) {
->   		t->fn(t);
->   		/* return the step that failed or 0 */
->   		_exit(t->passed ? 0 : t->step);
->   	} else {
-> -		/* TODO(wad) add timeout support. */
-> -		waitpid(child_pid, &status, 0);
-> -		if (WIFEXITED(status)) {
-> -			t->passed = t->termsig == -1 ? !WEXITSTATUS(status) : 0;
-> -			if (t->termsig != -1) {
-> -				fprintf(TH_LOG_STREAM,
-> -					"%s: Test exited normally "
-> -					"instead of by signal (code: %d)\n",
-> -					t->name,
-> -					WEXITSTATUS(status));
-> -			} else if (!t->passed) {
-> -				fprintf(TH_LOG_STREAM,
-> -					"%s: Test failed at step #%d\n",
-> -					t->name,
-> -					WEXITSTATUS(status));
-> -			}
-> -		} else if (WIFSIGNALED(status)) {
-> -			t->passed = 0;
-> -			if (WTERMSIG(status) == SIGABRT) {
-> -				fprintf(TH_LOG_STREAM,
-> -					"%s: Test terminated by assertion\n",
-> -					t->name);
-> -			} else if (WTERMSIG(status) == t->termsig) {
-> -				t->passed = 1;
-> -			} else {
-> -				fprintf(TH_LOG_STREAM,
-> -					"%s: Test terminated unexpectedly "
-> -					"by signal %d\n",
-> -					t->name,
-> -					WTERMSIG(status));
-> -			}
-> -		} else {
-> -			fprintf(TH_LOG_STREAM,
-> -				"%s: Test ended in some other way [%u]\n",
-> -				t->name,
-> -				status);
-> -		}
-> +		__wait_for_test(t);
->   	}
->   	printf("[     %4s ] %s\n", (t->passed ? "OK" : "FAIL"), t->name);
-> -	alarm(0);
->   }
->   
->   static int test_harness_run(int __attribute__((unused)) argc,
-> 
-
-thanks,
--- Shuah
