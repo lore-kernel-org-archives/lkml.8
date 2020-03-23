@@ -2,79 +2,89 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A33BC4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579A7C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F397E2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25EDC20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:39:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="LmG/Cd1s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbgCWKjF (ORCPT
+        id S1727979AbgCWKjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 06:39:05 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:55629 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727810AbgCWKjF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 06:39:05 -0400
-Received: by mail-io1-f70.google.com with SMTP id k5so11194594ioa.22
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 03:39:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=E3FbehYY8mAkOJJQcLvCMQ904m/hZIJiIkOCeXRTCwQ=;
-        b=TnZjBewDWgYN1L/pPCTDftDcLX97dLwNTcm5CHQEEmF2DexBG9nz0fNJ+tHPGRzJqR
-         Htvboam5AOA7gZBpeFwoE/O9TPJJ7oHVSXJoicIMJzb27t1MBspnU2+d0WNWSuaIPMCv
-         lbXe9w41EA6vJEe8eEiF9+FOLnMNfjMZooZKWUu43Aw+wAiEHBmdl9xin88vxgF4vLb+
-         XnRniCxTEiB9v018GJdBgiijg+JIiXdvbseMbQls8h4Zrhro4O8WIGzdlLGYuaD6SF5Z
-         Uej3PuLcheHo1tittwBzmjUpTdfgFOM63M2mhz2m6/h+9ZNXtcwHrzHGN1kkj5r9KDpr
-         xRKw==
-X-Gm-Message-State: ANhLgQ0jj/CLaOSXeWKE+TvPER4hp/lBMt2LmWUsUzkLehVgxJKS/YUr
-        518+Qte7xjK9Ea5kOyPiCuNwXZyCZSL/BxPPuIQx/yJGUCM5
-X-Google-Smtp-Source: ADFU+vuCV647OHMwnKb02Ze7RBGdSa3A1fMxiZF+p+y1+XffxMam6T5V6B/LWpW4eBuh5XQ284LGQv6ZKqYyY6/0QzvRHGijREZz
+        Mon, 23 Mar 2020 06:39:42 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:36908 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727810AbgCWKjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 06:39:42 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 792B341288;
+        Mon, 23 Mar 2020 10:39:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1584959978; x=
+        1586774379; bh=eagB4KUTnJlPcxee0RaDm2zxKiEpRqIrcqJjc/b2DRo=; b=L
+        mG/Cd1swre8T+S6ylwH7Heek+yxLKKJBPNRjzcc8Vu+lLGCcwkIuboGga2TdKWwk
+        Lq24TlShSytYz090/Qvz/dcUOiBdFkLs3TE5CocPwqAlizfOPMxB+xAfneqZyyqd
+        UF9GRZlBPf2MOqHNfBTM4xyDl2fA8j9BwtUEbzCCtk=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 5Mh77tT9YfWv; Mon, 23 Mar 2020 13:39:38 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 14C2541268;
+        Mon, 23 Mar 2020 13:39:37 +0300 (MSK)
+Received: from localhost.yadro.com (10.199.2.66) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Mon, 23
+ Mar 2020 13:39:37 +0300
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH 0/2] iio: proximity: driver for vcnl3020
+Date:   Mon, 23 Mar 2020 13:39:24 +0300
+Message-ID: <20200323103926.21271-1-i.mikhaylov@yadro.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-X-Received: by 2002:a02:c85a:: with SMTP id r26mr20323367jao.74.1584959942803;
- Mon, 23 Mar 2020 03:39:02 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 03:39:02 -0700
-In-Reply-To: <000000000000b6da7b059c8110c4@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005fc4c505a1833ed3@google.com>
-Subject: Re: general protection fault in nf_flow_table_offload_setup
-From:   syzbot <syzbot+e93c1d9ae19a0236289c@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        kadlec@netfilter.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.199.2.66]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+Add proximity sensor driver for Vishay vcnl3020. Only on-demand
+measurement is supported for now.
 
-commit a7da92c2c8a1faf253a3b3e292fda6910deba540
-Author: Florian Westphal <fw@strlen.de>
-Date:   Mon Feb 3 12:06:18 2020 +0000
+Ivan Mikhaylov (2):
+  iio: proximity: provide device tree binding document
+  iio: proximity: Add driver support for vcnl3020 proximity sensor
 
-    netfilter: flowtable: skip offload setup if disabled
+ .../bindings/iio/proximity/vcnl3020.yaml      |  47 ++++
+ drivers/iio/proximity/Kconfig                 |  10 +
+ drivers/iio/proximity/Makefile                |   1 +
+ drivers/iio/proximity/vcnl3020.c              | 233 ++++++++++++++++++
+ 4 files changed, 291 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+ create mode 100644 drivers/iio/proximity/vcnl3020.c
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1522646be00000
-start commit:   0a44cac8 Merge tag 'dma-mapping-5.6' of git://git.infradea..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=31018567b8f0fc70
-dashboard link: https://syzkaller.appspot.com/bug?extid=e93c1d9ae19a0236289c
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=126c7e09e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1208fdd9e00000
+-- 
+2.21.1
 
-If the result looks correct, please mark the bug fixed by replying with:
-
-#syz fix: netfilter: flowtable: skip offload setup if disabled
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
