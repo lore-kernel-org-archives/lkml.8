@@ -2,115 +2,156 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505B4C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84384C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 311CE20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223D920722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:39:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="bnhCG/VM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbgCWQit (ORCPT
+        id S1727601AbgCWQjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:38:49 -0400
-Received: from mga12.intel.com ([192.55.52.136]:30481 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727234AbgCWQis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:38:48 -0400
-IronPort-SDR: Rriv0Z8hJsGqsw3IoOkPAtgtiPO6JHB23PHs7p4zPBv+48a/GJlbM73vt8QMk6fMAwnqRW4mjh
- p3JleAiIVMMg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 09:38:46 -0700
-IronPort-SDR: BNtv86v3w8JwvH4wJojnjAtNBR5zND3RBh/ddNAj1/0KWdAuOS7J1X36McxoHrFDWlrsVZa05+
- xW30ri8rHyMA==
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="269933222"
-Received: from smtp.ostc.intel.com ([10.54.29.231])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 09:38:45 -0700
-Received: from localhost (mtg-dev.jf.intel.com [10.54.74.10])
-        by smtp.ostc.intel.com (Postfix) with ESMTP id E3150636B;
-        Mon, 23 Mar 2020 16:38:43 +0000 (UTC)
-Date:   Mon, 23 Mar 2020 09:38:44 -0700
-From:   mark gross <mgross@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        linux-edac@vger.kernel.org,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto <linux-crypto@vger.kernel.org>
-Subject: Re: [patch 08/22] ACPI: Convert to new X86 CPU match macros
-Message-ID: <20200323163844.GB123290@mtg-dev.jf.intel.com>
-Reply-To: mgross@linux.intel.com
-References: <20200320131345.635023594@linutronix.de>
- <20200320131509.467730627@linutronix.de>
- <CAHp75VcK3tL0YayjF=CSkSkHiOpg2zOV3rdkXQWJmLZ9fmevpg@mail.gmail.com>
- <87bloqpy1x.fsf@nanos.tec.linutronix.de>
+        Mon, 23 Mar 2020 12:39:04 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:60734 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727234AbgCWQjD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 12:39:03 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 607A92E152E;
+        Mon, 23 Mar 2020 19:39:00 +0300 (MSK)
+Received: from myt5-70c90f7d6d7d.qloud-c.yandex.net (myt5-70c90f7d6d7d.qloud-c.yandex.net [2a02:6b8:c12:3e2c:0:640:70c9:f7d])
+        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id jWwzoNdhbo-d0j4RkDT;
+        Mon, 23 Mar 2020 19:39:00 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1584981540; bh=zTTQKR+VKnK5VPfkvW5AiK8AFpqm3pZyCRE1yhsG6C4=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=bnhCG/VMk2kQlBnbzL9B5P3h2UEOaulch82QuJyuPsryKJkl37OGU8PhOu4NDvdar
+         sQWw1cwiz1iUot5HtsjkgeuaI7U+ZU9KUnorAYy9/WJq2yZdSQkwsR2q7x+t2sxZj3
+         uRs/nMnx6l1T6XXgQ1al+lLIbIKeNilKxHaCcU28=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:6803::1:2])
+        by myt5-70c90f7d6d7d.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 15DoWmPvFf-cxbO6bfO;
+        Mon, 23 Mar 2020 19:38:59 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH] lib/test_lockup: add parameters for locking generic vfs
+ locks
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org
+Date:   Mon, 23 Mar 2020 19:38:59 +0300
+Message-ID: <158498153964.5621.83061779039255681.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87bloqpy1x.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 09:32:26PM +0100, Thomas Gleixner wrote:
-> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
-> 
-> > On Fri, Mar 20, 2020 at 3:19 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >>
-> >> The new macro set has a consistent namespace and uses C99 initializers
-> >> instead of the grufty C89 ones.
-> >>
-> >> Rename the local macro wrapper to X86_MATCH for consistency. It stays for
-> >> readability sake.
-> >
-> >> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,     NULL),
-> >> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,        NULL),
-> >
-> >> -#define ICPU(model)    { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
-> >> +#define X86_MATCH(model)       X86_MATCH_INTEL_FAM6_MODEL(model, NULL)
-> >
-> > Maybe we can do a generic macro to avoid all these ', NULL' repetitions?
-> 
-> I opted for having the data argument everywhere to keep the macro maze
-> small. And we have enough places where data is actually used.
-+1
+file_path=<path>	defines file or directory to open
+lock_inode=Y		set lock_rwsem_ptr to inode->i_rwsem
+lock_mapping=Y		set lock_rwsem_ptr to mapping->i_mmap_rwsem
+lock_sb_umount=Y	set lock_rwsem_ptr to sb->s_umount
 
---mark
+This gives safe and simple way to see how system reacts to contention of
+common vfs locks and how syscalls depend on them directly or indirectly.
 
-> Thanks,
-> 
->         tglx
+For example to block s_umount for 60 seconds:
+# modprobe test_lockup file_path=. lock_sb_umount time_secs=60 state=S
+
+This is useful for checking/testing scalability issues like this:
+https://lore.kernel.org/lkml/158497590858.7371.9311902565121473436.stgit@buzz/
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ lib/test_lockup.c |   45 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/lib/test_lockup.c b/lib/test_lockup.c
+index 83683ec1f429..ea09ca335b21 100644
+--- a/lib/test_lockup.c
++++ b/lib/test_lockup.c
+@@ -14,6 +14,7 @@
+ #include <linux/nmi.h>
+ #include <linux/mm.h>
+ #include <linux/uaccess.h>
++#include <linux/file.h>
+ 
+ static unsigned int time_secs;
+ module_param(time_secs, uint, 0600);
+@@ -140,6 +141,24 @@ static bool reallocate_pages;
+ module_param(reallocate_pages, bool, 0400);
+ MODULE_PARM_DESC(reallocate_pages, "free and allocate pages between iterations");
+ 
++struct file *test_file;
++struct inode *test_inode;
++static char test_file_path[256];
++module_param_string(file_path, test_file_path, sizeof(test_file_path), 0400);
++MODULE_PARM_DESC(file_path, "file path to test");
++
++static bool test_lock_inode;
++module_param_named(lock_inode, test_lock_inode, bool, 0400);
++MODULE_PARM_DESC(lock_inode, "lock file -> inode -> i_rwsem");
++
++static bool test_lock_mapping;
++module_param_named(lock_mapping, test_lock_mapping, bool, 0400);
++MODULE_PARM_DESC(lock_mapping, "lock file -> mapping -> i_mmap_rwsem");
++
++static bool test_lock_sb_umount;
++module_param_named(lock_sb_umount, test_lock_sb_umount, bool, 0400);
++MODULE_PARM_DESC(lock_sb_umount, "lock file -> sb -> s_umount");
++
+ static atomic_t alloc_pages_failed = ATOMIC_INIT(0);
+ 
+ static atomic64_t max_lock_wait = ATOMIC64_INIT(0);
+@@ -490,6 +509,29 @@ static int __init test_lockup_init(void)
+ 		return -EINVAL;
+ 	}
+ 
++	if (test_file_path[0]) {
++		test_file = filp_open(test_file_path, O_RDONLY, 0);
++		if (IS_ERR(test_file)) {
++			pr_err("cannot find file_path\n");
++			return -EINVAL;
++		}
++		test_inode = file_inode(test_file);
++	} else if (test_lock_inode ||
++		   test_lock_mapping ||
++		   test_lock_sb_umount) {
++		pr_err("no file to lock\n");
++		return -EINVAL;
++	}
++
++	if (test_lock_inode && test_inode)
++		lock_rwsem_ptr = (unsigned long)&test_inode->i_rwsem;
++
++	if (test_lock_mapping && test_file && test_file->f_mapping)
++		lock_rwsem_ptr = (unsigned long)&test_file->f_mapping->i_mmap_rwsem;
++
++	if (test_lock_sb_umount && test_inode)
++		lock_rwsem_ptr = (unsigned long)&test_inode->i_sb->s_umount;
++
+ 	pr_notice("START pid=%d time=%u +%u ns cooldown=%u +%u ns iterations=%u state=%s %s%s%s%s%s%s%s%s%s%s%s\n",
+ 		  main_task->pid, time_secs, time_nsecs,
+ 		  cooldown_secs, cooldown_nsecs, iterations, state,
+@@ -542,6 +584,9 @@ static int __init test_lockup_init(void)
+ 
+ 	pr_notice("FINISH in %llu ns\n", local_clock() - test_start);
+ 
++	if (test_file)
++		fput(test_file);
++
+ 	if (signal_pending(main_task))
+ 		return -EINTR;
+ 
+
