@@ -2,103 +2,94 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EBEC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCD9C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A54E420870
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:18:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584965903;
-	bh=hxcrz2tO+N8anTbgxKJo/lWuzhD01NFnXAyUAjiHza4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vx/n/GVoCXXK8VEOO32fh50uj3vNYBCjNCnDEYdMI95kJi2UtycZiGyUD/Z4VUeFg
-	 DmXL+XAeYUmdoHa+2ofwleh0WOWVO8N/18gK2v7gY2Ap/1aWZcpk4tTZOZ0qsbjbZH
-	 wFUNiHInFzP+s/DKz3f/e2qFxCzpkIEkDVrh2Axo=
+	by mail.kernel.org (Postfix) with ESMTP id 2579320637
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:19:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L4KNQOE9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbgCWMSW (ORCPT
+        id S1727826AbgCWMTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:18:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46642 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727381AbgCWMSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 08:18:22 -0400
-Received: from localhost (unknown [122.178.205.141])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E63E520788;
-        Mon, 23 Mar 2020 12:18:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584965901;
-        bh=hxcrz2tO+N8anTbgxKJo/lWuzhD01NFnXAyUAjiHza4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PI/1uCxozIzKRx7vhHJPe0CsTSpO3XsKw9Sgd+LFaJn3Ln0JiFczyNebpU4XmLahd
-         9k2Jsj9Y9e6Vi6VVRWE8rmYkHk7u/wYVR2cGXT9q7MejalmAbv5lilBEiRO4MKJcu9
-         rTiJ3RLUkcFlToDqkbg1zA0SKTiB/OAXgLwUGy1Q=
-Date:   Mon, 23 Mar 2020 17:48:17 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH 3/7] soundwire: intel: add mutex to prevent concurrent
- access to SHIM registers
-Message-ID: <20200323121817.GK72691@vkoul-mobl>
-References: <20200311221026.18174-1-pierre-louis.bossart@linux.intel.com>
- <20200311221026.18174-4-pierre-louis.bossart@linux.intel.com>
- <20200320134112.GC4885@vkoul-mobl>
- <a989368c-5a57-a726-0816-2e389d733ae0@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a989368c-5a57-a726-0816-2e389d733ae0@linux.intel.com>
+        Mon, 23 Mar 2020 08:19:23 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43819 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727401AbgCWMTW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 08:19:22 -0400
+Received: by mail-pf1-f196.google.com with SMTP id f206so7408816pfa.10
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 05:19:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Dt6PjsXXkmjyYjxHswpt9KD4Aj8ipQbf1fRd+H4wNcg=;
+        b=L4KNQOE9x5PNNVZC6xAz5XleH+XgwKJnZJkjMlyN/wAdzyjCN0iSke2DqB3e0WdQ0U
+         aUtoO/z/CTgo920Vkf7jQJmwySDBgTk0qIAUASia7rdXOEEwd7x2sDSRBfZWGNDtjU27
+         xVxNe5Na/4LY1Waf2peIEzYRXv0MlPyr/fl+NEvhfwRD3AG1f7uoTrz/WcxxHOuNZH91
+         37GBhxqQiRJAS8oRScZ8oiwy4uEvAdazxIucGtrNe2n6Mi2zQf1Rr+3eSIdEIYmq96gT
+         c/4sZcYOgAgNMNfPgsGYhV/PkvQ3VD1V2cdnFYldVxKkK/TVTmEdWKawwpeVcczpl+xS
+         3B+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Dt6PjsXXkmjyYjxHswpt9KD4Aj8ipQbf1fRd+H4wNcg=;
+        b=nQNVTaRIUckacKC0jl0Fry+N9axnmjS0dDaWk+Uqp3fy1qSOrcm7lRZfB63TwFCTyx
+         Q6lN/wfr/1lUEkYmqExa2jVLbUU7hGBP1jHrjgVth0K7EpeDG5c5fa2PNEgBlzgFvlwp
+         7fyvtHmgqvhh7wNlms/sHZ3L+KTKA9gsY9L/lNhyAjRe9KoHPcTlQjNDPtDV/eAaiosw
+         F8QUQWZcK0kVda5rr0HlZ0hjOZ84zaKwKSLOVeUj/5x6k1xq+SssHZBiK1ORaDfMSccW
+         L+5KOFokRMd/PdRHMe+U7kgzoGP4eLLxXK4EKsyHJIGzihE+myLb7dDH+jp7rEmzhPzl
+         9lhQ==
+X-Gm-Message-State: ANhLgQ2P0dOb4MC2s7y9Z6bzJsLx65XpFcBneoOAhP8SOE2Q8bIrbG7P
+        6fJ6u459tHrjVVXUO8BwPGQvHQ==
+X-Google-Smtp-Source: ADFU+vu9j5S5tKK6JQyIfS0EJ9iA4nTbNufYMspfuT+/fQY/nHNkHSdl9NTbkMMHKU0KlX7TVcAtNQ==
+X-Received: by 2002:a63:2fc1:: with SMTP id v184mr20863695pgv.97.1584965961521;
+        Mon, 23 Mar 2020 05:19:21 -0700 (PDT)
+Received: from localhost.localdomain ([117.210.211.37])
+        by smtp.gmail.com with ESMTPSA id f15sm2964597pfd.215.2020.03.23.05.19.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 23 Mar 2020 05:19:20 -0700 (PDT)
+From:   Sumit Garg <sumit.garg@linaro.org>
+To:     jens.wiklander@linaro.org
+Cc:     tee-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
+        stuart.yoder@arm.com, daniel.thompson@linaro.org,
+        Sumit Garg <sumit.garg@linaro.org>
+Subject: [PATCH v4 0/2] Enhance TEE kernel client interface
+Date:   Mon, 23 Mar 2020 17:48:28 +0530
+Message-Id: <1584965910-19068-1-git-send-email-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-03-20, 09:07, Pierre-Louis Bossart wrote:
-> 
-> > > diff --git a/drivers/soundwire/intel.h b/drivers/soundwire/intel.h
-> > > index 38b7c125fb10..568c84a80d79 100644
-> > > --- a/drivers/soundwire/intel.h
-> > > +++ b/drivers/soundwire/intel.h
-> > > @@ -15,6 +15,7 @@
-> > >    * @irq: Interrupt line
-> > >    * @ops: Shim callback ops
-> > >    * @dev: device implementing hw_params and free callbacks
-> > > + * @shim_lock: mutex to handle access to shared SHIM registers
-> > >    */
-> > >   struct sdw_intel_link_res {
-> > >   	struct platform_device *pdev;
-> > > @@ -25,6 +26,7 @@ struct sdw_intel_link_res {
-> > >   	int irq;
-> > >   	const struct sdw_intel_ops *ops;
-> > >   	struct device *dev;
-> > > +	struct mutex *shim_lock; /* protect shared registers */
-> > 
-> > Where is this mutex initialized? Did you test this...
-> 
-> Dude, we've been testing the heck out of SoundWire.
-> 
-> If you want to see the actual initialization it's in the intel_init.c code:
-> 
-> https://github.com/thesofproject/linux/blob/9c7487b33072040ab755d32ca173b75151c0160c/drivers/soundwire/intel_init.c#L231
+Earlier this patch-set was part of TEE Trusted keys patch-set [1]. But
+since these are completely independent enhancements for TEE kernel
+client interface which can be merged separately while TEE Trusted keys
+discussions are ongoing.
 
-Which doesn't make much sense. A patch should do complete thing. I don't
-see a reason why you cannot pull this single line into this patch.
+Patch #1 enables support for registered kernel shared memory with TEE.
 
-It belongs here, not anywhere else.
+Patch #2 enables support for private kernel login method required for
+cases like trusted keys where we don't wan't user-space to directly
+access TEE service.
+
+[1] https://lkml.org/lkml/2019/10/31/430
+
+Sumit Garg (2):
+  tee: enable support to register kernel memory
+  tee: add private login method for kernel clients
+
+ drivers/tee/tee_core.c   |  6 ++++++
+ drivers/tee/tee_shm.c    | 26 ++++++++++++++++++++++++--
+ include/linux/tee_drv.h  |  1 +
+ include/uapi/linux/tee.h |  8 ++++++++
+ 4 files changed, 39 insertions(+), 2 deletions(-)
 
 -- 
-~Vinod
+2.7.4
+
