@@ -2,90 +2,77 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F24AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC779C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA4220722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA8B20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:30:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OYj6oPFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbgCWQ2J (ORCPT
+        id S1727479AbgCWQab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:28:09 -0400
-Received: from mga14.intel.com ([192.55.52.115]:19414 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727411AbgCWQ2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:28:09 -0400
-IronPort-SDR: PemWAPFAARcZfG57unigBTJa7mROMKjtmRzVQNAuc8iItqWr02lOdbCCo0097sniHLeBZQ5NaL
- VbZKqsfT+UtA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 09:28:08 -0700
-IronPort-SDR: XPZx971dDGnd9cKSbQiWD0/HHL19uFvggUQ2Hst80Tdn9KI/0UgJ/II+SVwVpelPbl4X/UNJG0
- Pg7JNSBGD3Yg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="237948059"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Mar 2020 09:28:07 -0700
-Date:   Mon, 23 Mar 2020 09:28:07 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ben Gardon <bgardon@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        John Haxby <john.haxby@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH v3 03/37] KVM: nVMX: Invalidate all EPTP contexts when
- emulating INVEPT for L1
-Message-ID: <20200323162807.GN28711@linux.intel.com>
-References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
- <20200320212833.3507-4-sean.j.christopherson@intel.com>
- <CALMp9eR5Uu7nRDOS2nQHGzb+Gi6vjDEk1AmuiqkkGWFjKNG+sA@mail.gmail.com>
+        Mon, 23 Mar 2020 12:30:31 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:44399 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727391AbgCWQab (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 12:30:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584981030; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=c4JttsfXGBMaNrukutMhRZE1w7upJvToGQQ3kuVR83A=; b=OYj6oPFl0RYDxpc1ZmPkcS25B9w7AV7Pa7mtDn9rTDosHAGFcK0yyTxuur7YT6rV7jBvGtWl
+ I39h0YJwBkovbiLxVvL1fRA9zxL3YaoooQwoVsZ+nYtWwPT3oVHeXZierbMYRqQxuvIVeHFB
+ U603d5qmJLRuBTNO4E5ykEmdcWw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e78e415.7f65746ef848-smtp-out-n02;
+ Mon, 23 Mar 2020 16:30:13 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 94026C433CB; Mon, 23 Mar 2020 16:30:13 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8E405C433D2;
+        Mon, 23 Mar 2020 16:30:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8E405C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     gregkh@linuxfoundation.org, davem@davemloft.net,
+        smohanad@codeaurora.org, jhugo@codeaurora.org,
+        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v2 7/7] net: qrtr: Do not depend on ARCH_QCOM
+References: <20200323123102.13992-1-manivannan.sadhasivam@linaro.org>
+        <20200323123102.13992-8-manivannan.sadhasivam@linaro.org>
+Date:   Mon, 23 Mar 2020 18:30:07 +0200
+In-Reply-To: <20200323123102.13992-8-manivannan.sadhasivam@linaro.org>
+        (Manivannan Sadhasivam's message of "Mon, 23 Mar 2020 18:01:02 +0530")
+Message-ID: <87lfnravao.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALMp9eR5Uu7nRDOS2nQHGzb+Gi6vjDEk1AmuiqkkGWFjKNG+sA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 09:24:25AM -0700, Jim Mattson wrote:
-> On Fri, Mar 20, 2020 at 2:29 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > Free all L2 (guest_mmu) roots when emulating INVEPT for L1.  Outstanding
-> > changes to the EPT tables managed by L1 need to be recognized, and
-> > relying on KVM to always flush L2's EPTP context on nested VM-Enter is
-> > dangerous.
-> >
-> > Similar to handle_invpcid(), rely on kvm_mmu_free_roots() to do a remote
-> > TLB flush if necessary, e.g. if L1 has never entered L2 then there is
-> > nothing to be done.
-> >
-> > Nuking all L2 roots is overkill for the single-context variant, but it's
-> > the safe and easy bet.  A more precise zap mechanism will be added in
-> > the future.  Add a TODO to call out that KVM only needs to invalidate
-> > affected contexts.
-> >
-> > Fixes: b119019847fbc ("kvm: nVMX: Remove unnecessary sync_roots from handle_invept")
-> 
-> The bug existed well before the commit indicated in the "Fixes" line.
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> writes:
 
-Ah, my bad.  A cursory glance at commit b119019847fbc makes that quite
-obvious.  This should be
+> IPC Router protocol is also used by external modems for exchanging the QMI
+> messages. Hence, it doesn't always depend on Qualcomm platforms. One such
+> instance is the QCA6390 modem connected to x86 machine.
 
-  Fixes: bfd0a56b9000 ("nEPT: Nested INVEPT")
+QCA6390 is not a modem, it's a Wi-Fi 6 (802.11ax) device :)
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
