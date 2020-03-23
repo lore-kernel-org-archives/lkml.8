@@ -4,56 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA15C4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8E0C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F942076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC932077D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584966333;
-	bh=cJrWnnhGdMKzOVrhrivtwKbakzXPQqYKic/Z9uflpcc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z/TbK3EI83jdaoe2P/pGEcHOkttSSCoelYfe8ADDC6Js8d9FKzdrjKB+TxmcbFntN
-	 mMJA4ZxqOHVFlyiirjm5NZoKNfytz5X2BOXkimJwn8qTio4lYrIt2+g83zt1HgqqSj
-	 JtnaNMqt8XnJ61Y+xxiBQdFyRqGyJGHLW1nox7Mw=
+	s=default; t=1584966334;
+	bh=4n4sTcilQXV6g0qMlbr72FB9JX6uR71p2LA7YpKB4rs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=PnZ0XZs/pDSa2TRnxefkpJmDTE/2jOha7Zue0imSHIol7Pu9TVE9hWRZkcYpE9Y0Y
+	 oAmTJ7Lhb/3OkrJLBC6Yb4//N59Vl9Yemn6KdfWRsXTptrfibZABqSS1ePPXV13XB3
+	 EBjjywb7sqqhQwFvsg2rK9fLFRwcqv6OAtjE2EWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbgCWMZc (ORCPT
+        id S1728110AbgCWMZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:25:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50384 "EHLO mail.kernel.org"
+        Mon, 23 Mar 2020 08:25:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727508AbgCWMZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 08:25:32 -0400
+        id S1727126AbgCWMZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 08:25:33 -0400
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9B622076A;
+        by mail.kernel.org (Postfix) with ESMTPSA id B9DB02077D;
         Mon, 23 Mar 2020 12:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1584966332;
-        bh=cJrWnnhGdMKzOVrhrivtwKbakzXPQqYKic/Z9uflpcc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mqy/f2MqsBjXth4huluecP7CD/MJ5dCej6PnH4YEMoVDQL544QTsMtrq77Too++Pw
-         i1kNbky+Yi1I6GleLfHVwKuyXdZgOv/HLCNslm02ngKiokBFzPNVNzBuhhE/KO5VhM
-         RMssZzEtHJ6OfNVoUQ5/4CIYJiSA2oGl43JDeeQ0=
+        bh=4n4sTcilQXV6g0qMlbr72FB9JX6uR71p2LA7YpKB4rs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LUG1jJAjVwQNPEYwayR+w3TJhQ8iKUQ2YmeQFdq0BublA88mGbuGCnxJTyk4BHmOk
+         YzmUsD7FaBlWmKe1k3SpjvGpuDOltd/7Qhsk2ElPAIhqMevAAWLcywcajUi+JfV8N/
+         +EwCGw20J2CcSLr8moYEy6HinZu4UIUz3oZEJmdI=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jGM93-001TrL-IH; Mon, 23 Mar 2020 13:25:29 +0100
+        id 1jGM93-001TrI-GR; Mon, 23 Mar 2020 13:25:29 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/2] MAINTAINERS: dt: update reference for arm-integrator.txt
-Date:   Mon, 23 Mar 2020 13:25:28 +0100
-Message-Id: <491d2928a47f59da3636bc63103a5f63fec72b1a.1584966325.git.mchehab+huawei@kernel.org>
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 1/2] docs: dt: qcom,dwc3.txt: fix cross-reference for a converted file
+Date:   Mon, 23 Mar 2020 13:25:27 +0100
+Message-Id: <66b8da28bbf0af6d8bd23953936e7feb6a7ed0c2.1584966325.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <66b8da28bbf0af6d8bd23953936e7feb6a7ed0c2.1584966325.git.mchehab+huawei@kernel.org>
-References: <66b8da28bbf0af6d8bd23953936e7feb6a7ed0c2.1584966325.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,28 +67,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This file was renamed. Update references accordingly.
+The qcom-qusb2-phy.txt file was converted and renamed to yaml.
+Update cross-reference accordingly.
 
-Fixes: 78c7d8f96b6f ("dt-bindings: clock: Create YAML schema for ICST clocks")
-
+Fixes: 8ce65d8d38df ("dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b0bbce296002..4875813e52c0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1297,7 +1297,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	Documentation/devicetree/bindings/arm/arm-boards
- F:	Documentation/devicetree/bindings/auxdisplay/arm-charlcd.txt
--F:	Documentation/devicetree/bindings/clock/arm-integrator.txt
-+F:	Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml
- F:	Documentation/devicetree/bindings/i2c/i2c-versatile.txt
- F:	Documentation/devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt
- F:	Documentation/devicetree/bindings/mtd/arm-versatile.txt
+diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+index cb695aa3fba4..fbdd01756752 100644
+--- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+@@ -52,8 +52,8 @@ A child node must exist to represent the core DWC3 IP block. The name of
+ the node is not important. The content of the node is defined in dwc3.txt.
+ 
+ Phy documentation is provided in the following places:
+-Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
+-Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 PHY
++Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt    - USB3 QMP PHY
++Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml - USB2 QUSB2 PHY
+ 
+ Example device nodes:
+ 
 -- 
 2.24.1
 
