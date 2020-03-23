@@ -2,128 +2,154 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E12B1C10F26
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B6FC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6CC120736
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD35120722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:42:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GKrxJvbJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VVQvLgWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbgCWHiK (ORCPT
+        id S1727478AbgCWHmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 03:38:10 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:55203 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727440AbgCWHiJ (ORCPT
+        Mon, 23 Mar 2020 03:42:51 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38619 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727430AbgCWHmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 03:38:09 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584949089; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=qD6MdWpyeM1qFTA64jlmNgu6EXEHLcXXCvElH53FoOg=;
- b=GKrxJvbJV5NdnjQA74z4t1lyTyeFdPlNVGtimQ4Id0NyS/9DhyJa2zxF+3pt5Zlz3CoIzTxU
- xf6hwiQqvm3/RBdKuQzQ3IbQjNBM8kp/e3oZtHS4K40N2qIuWCAhIAPJ7sj0QftxHD5eXu0a
- DkJ1VXTR/JB3C8TLb4n+XOvkwD4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e786754.7efcbe51f8f0-smtp-out-n05;
- Mon, 23 Mar 2020 07:37:56 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 733AFC43637; Mon, 23 Mar 2020 07:37:56 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BC68CC433CB;
-        Mon, 23 Mar 2020 07:37:55 +0000 (UTC)
+        Mon, 23 Mar 2020 03:42:51 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s1so15619593wrv.5;
+        Mon, 23 Mar 2020 00:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UZh37ycoXEQPJvIa8TQQD4wS32qVanpxbiaipTPYPv4=;
+        b=VVQvLgWT8eeBqcR18iurqJfr5XafnB3FvZhL24uObshAdADJo6ReTy467QzsXVgXJi
+         uyg/c7WimX6uOBVdq3J79hkpu4KM84XT1MLjiUhTCggHFO5cjZZX7WVjXAaGq/IOcRgH
+         lQL6tH4h6mItv8MJ5O/5cOeBjbNaZ+xAPQ81qpIG0p7GPBXbQJ9PuIK3X2KFykT96N4c
+         9wblwjAzlTysTBvlUo7yrkpOK+ofL9/sCglExcYwgdoFQr1rtX0O7DOsK9VHyYygN9dV
+         lRVKnItn8J3EIEvGoA85GpVVeXxLZct4suN75z8zbXbZFOj/0xlH8QJJj8AKrihMZocA
+         EM2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UZh37ycoXEQPJvIa8TQQD4wS32qVanpxbiaipTPYPv4=;
+        b=HwOHjaNrLUQRt6B6m4gQyiUa29F4+Fg32+Zybx/LZ4i5Bk7obxyogo0/GBP1qNsXcf
+         465Rj+02CnGkwJOLngvQrPd9YnFR0HDZAZ+62bmr7N1xav4pZWGUDGKixMf/ryvYPAgu
+         BlOvKoVKMz5SxBgyG20dTKlHVG9k9JBBaQEoLQVOdBK899HhuzF2XRlGbh2ps0Xy/qnu
+         f9vpJFxNggQAg2hXwJWxccxQKgEVhrz3Oqqu6NKXc12jmeza2guoxNyE3UyfzjMQ0CYI
+         6UsxsMnk2niYzVPs+Q50M0oWMkSy53OVtvIwnPlck4BaRIOmp0wk6Xr9QRsnoUVyJAvK
+         zhzQ==
+X-Gm-Message-State: ANhLgQ1YsZQKhnwXvuToIWXbQlaTMOj+5SiE9vpsqs2v1KY0F+LNuLNS
+        FwOYXE9SDxHzB4YcnzyQOjg=
+X-Google-Smtp-Source: ADFU+vvFxqhBpEkdLzntmJHaBKuQ5PAxGVV3+E6+Y/U7zr7en2fbwBanlcdD4rH097js1JSaE/37og==
+X-Received: by 2002:a5d:63d2:: with SMTP id c18mr6797923wrw.385.1584949368405;
+        Mon, 23 Mar 2020 00:42:48 -0700 (PDT)
+Received: from localhost ([2a02:21b0:9002:6131:e6f7:db0e:d6e9:e56e])
+        by smtp.gmail.com with ESMTPSA id b7sm1569052wrn.67.2020.03.23.00.42.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 00:42:47 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 08:42:47 +0100
+From:   Jean-Philippe Menil <jpmenil@gmail.com>
+To:     Yonghong Song <yhs@fb.com>
+Cc:     netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bpf: fix build warning - missing prototype
+Message-ID: <20200323074247.wdkfualyvf3n6vlo@macbook>
+References: <20200322140844.4674-1-jpmenil@gmail.com>
+ <b08375c6-81ce-b96d-0b87-299f966f4d84@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 23 Mar 2020 13:07:55 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sc7180: Add Coresight support
-In-Reply-To: <158482865109.125146.10520179077419628836@swboyd.mtv.corp.google.com>
-References: <cover.1584689229.git.saiprakash.ranjan@codeaurora.org>
- <351f1091af0b6d6e0537382fad0c1c51db45edc5.1584689229.git.saiprakash.ranjan@codeaurora.org>
- <158482865109.125146.10520179077419628836@swboyd.mtv.corp.google.com>
-Message-ID: <de3d226dbd7b00f9c4b7cd6c86db97e0@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <b08375c6-81ce-b96d-0b87-299f966f4d84@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-22 03:40, Stephen Boyd wrote:
-> Quoting Sai Prakash Ranjan (2020-03-20 00:44:29)
->> Add coresight components found on Qualcomm SC7180 SoC.
->> 
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
-> 
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> Tested-by: Stephen Boyd <swboyd@chromium.org>
-> 
-> One nit below.
-> 
->>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 507 
->> +++++++++++++++++++++++++++
->>  1 file changed, 507 insertions(+)
->> 
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
->> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index 998f101ad623..d8fe960d6ace 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -1294,6 +1294,513 @@
->>                         };
->>                 };
->> 
->> +               stm@6002000 {
->> +                       compatible = "arm,coresight-stm", 
->> "arm,primecell";
->> +                       reg = <0 0x06002000 0 0x1000>,
->> +                             <0 0x16280000 0 0x180000>;
->> +                       reg-names = "stm-base", "stm-stimulus-base";
->> +
->> +                       clocks = <&aoss_qmp>;
->> +                       clock-names = "apb_pclk";
->> +
->> +                       out-ports {
->> +                               port {
->> +                                       stm_out: endpoint {
->> +                                               remote-endpoint =
->> +                                                 <&funnel0_in7>;
-> 
-> Given that this is DT I'd say we just put this remote-endpoint all on
-> one line. Makes it more readable and I don't think we really care about
-> the line length in these cases. We're nested pretty deep because it's a
-> graph binding.
-> 
+On 22/03/20 at 10:32pm, Yonghong Song wrote:
+>
+>
+>On 3/22/20 7:08 AM, Jean-Philippe Menil wrote:
+>>Fix build warning when building net/bpf/test_run.o with W=1 due
+>>to missing prototype for bpf_fentry_test{1..6}.
+>>
+>>These functions are only used in test_run.c so just make them static.
+>>Therefore inline keyword should sit between storage class and type.
+>
+>This won't work. These functions are intentionally global functions
+>so that their definitions will be in vmlinux BTF and fentry/fexit kernel
+>selftests can run against them.
+>
+>See file 
+>linux/tools/testing/selftests/bpf/progs/{fentry_test.c,fexit_test.c}.
+>
 
-Thanks for the review and test, I will make this change.
+I can see now, thanks for the pointer.
+I totally missed that.
 
--Sai
+So, in order to fix the warnings, better to declare the prototypes?
+(compiling with W=1 may be a bit unusual).
+
+>>
+>>Signed-off-by: Jean-Philippe Menil <jpmenil@gmail.com>
+>>---
+>>  net/bpf/test_run.c | 12 ++++++------
+>>  1 file changed, 6 insertions(+), 6 deletions(-)
+>>
+>>diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+>>index d555c0d8657d..c0dcd29f682c 100644
+>>--- a/net/bpf/test_run.c
+>>+++ b/net/bpf/test_run.c
+>>@@ -113,32 +113,32 @@ static int bpf_test_finish(const union bpf_attr *kattr,
+>>   * architecture dependent calling conventions. 7+ can be supported in the
+>>   * future.
+>>   */
+>>-int noinline bpf_fentry_test1(int a)
+>>+static noinline int bpf_fentry_test1(int a)
+>>  {
+>>  	return a + 1;
+>>  }
+>>-int noinline bpf_fentry_test2(int a, u64 b)
+>>+static noinline int bpf_fentry_test2(int a, u64 b)
+>>  {
+>>  	return a + b;
+>>  }
+>>-int noinline bpf_fentry_test3(char a, int b, u64 c)
+>>+static noinline int bpf_fentry_test3(char a, int b, u64 c)
+>>  {
+>>  	return a + b + c;
+>>  }
+>>-int noinline bpf_fentry_test4(void *a, char b, int c, u64 d)
+>>+static noinline int bpf_fentry_test4(void *a, char b, int c, u64 d)
+>>  {
+>>  	return (long)a + b + c + d;
+>>  }
+>>-int noinline bpf_fentry_test5(u64 a, void *b, short c, int d, u64 e)
+>>+static noinline int bpf_fentry_test5(u64 a, void *b, short c, int d, u64 e)
+>>  {
+>>  	return a + (long)b + c + d + e;
+>>  }
+>>-int noinline bpf_fentry_test6(u64 a, void *b, short c, int d, void *e, u64 f)
+>>+static noinline int bpf_fentry_test6(u64 a, void *b, short c, int d, void *e, u64 f)
+>>  {
+>>  	return a + (long)b + c + d + (long)e + f;
+>>  }
+>>
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Jean-Philippe Menil
