@@ -2,153 +2,260 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CA1C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB9AC1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D59D820722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:30:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QT8qxzDl"
+	by mail.kernel.org (Postfix) with ESMTP id 114AA20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgCWCaw (ORCPT
+        id S1727061AbgCWClb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 22:30:52 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:23800 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbgCWCaw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 22:30:52 -0400
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200323023050epoutp0133832c6b5f623500417f195aba97feb4~_zgeHchNI0499904999epoutp01z
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 02:30:50 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200323023050epoutp0133832c6b5f623500417f195aba97feb4~_zgeHchNI0499904999epoutp01z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1584930650;
-        bh=PBdhHhXowl9TplAif7mn+5bR6K1fB0LE7KtzAtp1XqA=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=QT8qxzDl6E6RjJAKWAzdZijI4FdXcAKGBRcwlro8wn01s7bGCeL/t2b/Lyqd37n6e
-         Bv6rEdNYf6H6S0zHvL9++PRLXthhelzZHnxoaJJXXZ3Nyb4/eOSEapZ91e3nSGoNzv
-         Qt9c1qpOV1b03AkGuqje/6GpdaZaoN8W1N9kXdz4=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20200323023050epcas2p1e7593128df93926c14d60253e176f250~_zgdvC67k1497414974epcas2p1v;
-        Mon, 23 Mar 2020 02:30:50 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.40.190]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 48lyzW4x0rzMqYm9; Mon, 23 Mar
-        2020 02:30:47 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1F.35.04142.55F187E5; Mon, 23 Mar 2020 11:30:45 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200323023045epcas2p12007502edd2a65efcccb00eb899d5532~_zgZOZXOw1498614986epcas2p1N;
-        Mon, 23 Mar 2020 02:30:45 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200323023045epsmtrp14233112b63828a31209e55a44180f1d3~_zgZNx__71324713247epsmtrp1O;
-        Mon, 23 Mar 2020 02:30:45 +0000 (GMT)
-X-AuditID: b6c32a46-84f7f9c00000102e-61-5e781f556cfa
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A7.D8.04158.55F187E5; Mon, 23 Mar 2020 11:30:45 +0900 (KST)
-Received: from KORDO036463 (unknown [12.36.155.134]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200323023045epsmtip1dc906dad6e779b43eb7c81110daaa27c~_zgZCnrVt1148611486epsmtip12;
-        Mon, 23 Mar 2020 02:30:45 +0000 (GMT)
-From:   "Seungchul Kim" <sc377.kim@samsung.com>
-To:     <mchehab@kernel.org>
-Cc:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sc377.kim@samsung.com>
-In-Reply-To: 
-Subject: [PATCH] media: v4l2-fh: define v4l2_fh struct regardless of
- condition
-Date:   Mon, 23 Mar 2020 11:30:45 +0900
-Message-ID: <000601d600bb$0e2d4320$2a87c960$@samsung.com>
+        Sun, 22 Mar 2020 22:41:31 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12116 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726951AbgCWCla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 22:41:30 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 906DFA95CF0F26075FF3;
+        Mon, 23 Mar 2020 10:41:26 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 23 Mar 2020 10:41:17 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v4] f2fs: fix potential .flags overflow on 32bit architecture
+Date:   Mon, 23 Mar 2020 10:41:09 +0800
+Message-ID: <20200323024109.60967-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AdX+naBN45/Qp1YKQeqtNz/O47v16QCGcIMQAADYHZA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupik+LIzCtJLcpLzFFi42LZdljTXDdUviLO4NsTXYvLu+awWfRs2Mpq
-        sWzTHyaLaXcmMDqweGxa1cnm0bdlFaPH501yAcxROTYZqYkpqUUKqXnJ+SmZeem2St7B8c7x
-        pmYGhrqGlhbmSgp5ibmptkouPgG6bpk5QNuUFMoSc0qBQgGJxcVK+nY2RfmlJakKGfnFJbZK
-        qQUpOQWGhgV6xYm5xaV56XrJ+blWhgYGRqZAlQk5GYvXbWAqaOOsWNY5k7mB8TB7FyMnh4SA
-        icTTae8YQWwhgR2MEjPXinYxcgHZnxgl5i+fyALhfGOU+PBrKTNMx6QbjawQib2MEh23ZkM5
-        LxklVu64BFbFJqArMf/vf7C5IgISEn//fQTbxywQI7H38WugOAcHpwCvxIR/1iBhYYEAiTNd
-        99lAbBYBVYnnO6aA2bwClhKfn+5kgbAFJU7OfMICMUZeYvvbOVAHKUjsOPsaapWVxNkp+5gg
-        akQkZne2QdUcYJPYsNgdwnaReLBrMhOELSzx6vgWaFBISbzsb4OyyyU+PNrKBPKXhEAHo0TT
-        1ztsEAljiVnP2sHuZxbQlFi/Sx/ElBBQljhyC+o0PomOw3/ZIcK8Eh1tQhCNyhKr//ZDXSMp
-        sf/vCaYJjEqzkDw2C8ljs5A8MAth1wJGllWMYqkFxbnpqcVGBUbIUb2JEZwOtdx2MC4553OI
-        UYCDUYmH90ZveZwQa2JZcWXuIUYJDmYlEV61GKAQb0piZVVqUX58UWlOavEhRlNguE9klhJN
-        zgem6rySeENTIzMzA0tTC1MzIwslcd5N3DdjhATSE0tSs1NTC1KLYPqYODilGhgFg7ex/WIr
-        d+pfvdnN/fSu89te6z5iCOq6Iiy3v6IgImpyoX6Rfp3xvA182/KFgk56xKoKZt96fed75lLN
-        +Slzl8aVPvDNCMvY8Wt7nN7a3DOV57c/6pavWHchLMI2Rifk8jaHyC7hhneRR9WsEn//ihfP
-        kn0x9VpyN0ff2YRZWWfeWNbqOyuxFGckGmoxFxUnAgBL1O+nnQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrELMWRmVeSWpSXmKPExsWy7bCSnG6ofEWcwbMdfBaXd81hs+jZsJXV
-        YtmmP0wW0+5MYHRg8di0qpPNo2/LKkaPz5vkApijuGxSUnMyy1KL9O0SuDIWr9vAVNDGWbGs
-        cyZzA+Nh9i5GTg4JAROJSTcaWbsYuTiEBHYzSnx+/gAowQGUkJRoOVwAUSMscb/lCFTNc0aJ
-        vmt/WUESbAK6EvP//mcEsUUEJCT+/vsI1sssECdx75wBSFhIgEfi1Yb9jCBhTgFeiQn/rEHC
-        wgJ+EtPPdLCB2CwCqhLPd0wBs3kFLCU+P93JAmELSpyc+YQFYqKeRNtGsEXMAvIS29/OYYa4
-        TEFix9nXUAdYSZydso8JokZEYnZnG/MERuFZSCbNQpg0C8mkWUg6FjCyrGKUTC0ozk3PLTYs
-        MMpLLdcrTswtLs1L10vOz93ECI4JLa0djCdOxB9iFOBgVOLhvdFbHifEmlhWXJl7iFGCg1lJ
-        hFctBijEm5JYWZValB9fVJqTWnyIUZqDRUmcVz7/WKSQQHpiSWp2ampBahFMlomDU6qBUcUi
-        80grW+j543s+1X97Kv707/5/qgseH0iu51inO2lBkLHyXtmNM19xVi2PPPuBM/FtrfquwxMc
-        ridq7j+wxvu1ovHUtYsrnC3Edy0penp4ra7Lh0WWEl/l7O74RG17IMRn9/AMG2d+uE6Dho+N
-        V1ym7vwPnzcI3zOe62HCX3JwT/DM8oo50kosxRmJhlrMRcWJAOSu/yOFAgAA
-X-CMS-MailID: 20200323023045epcas2p12007502edd2a65efcccb00eb899d5532
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200323023045epcas2p12007502edd2a65efcccb00eb899d5532
-References: <CGME20200323023045epcas2p12007502edd2a65efcccb00eb899d5532@epcas2p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v4l2_fh struct define differently by CONFIG_V4L2_MEM2MEM_DEV.
-If some vendors use CONFIG_V4L2_MEM2MEM_DEV by module, it can make the
-mismatch of v4l2_fh sturct.
+f2fs_inode_info.flags is unsigned long variable, it has 32 bits
+in 32bit architecture, since we introduced FI_MMAP_FILE flag
+when we support data compression, we may access memory cross
+the border of .flags field, corrupting .i_sem field, result in
+below deadlock.
 
-By the mismatch, the following error occurs.
-===============================
-[    7.533506] v4l2_mem2mem: disagrees about version of symbol video_devdata
-[    7.533594] v4l2_mem2mem: Unknown symbol video_devdata (err -22)
-[    7.535319] v4l2_mem2mem: disagrees about version of symbol
-v4l2_event_pending
-[    7.542532] v4l2_mem2mem: Unknown symbol v4l2_event_pending (err -22)
-===============================
+To fix this issue, let's expand .flags as an array to grab enough
+space to store new flags.
 
-So v4l2_fh struct is modified to does not have dependency for
-CONFIG_V4L2_MEM2MEM_DEV.
+Call Trace:
+ __schedule+0x8d0/0x13fc
+ ? mark_held_locks+0xac/0x100
+ schedule+0xcc/0x260
+ rwsem_down_write_slowpath+0x3ab/0x65d
+ down_write+0xc7/0xe0
+ f2fs_drop_nlink+0x3d/0x600 [f2fs]
+ f2fs_delete_inline_entry+0x300/0x440 [f2fs]
+ f2fs_delete_entry+0x3a1/0x7f0 [f2fs]
+ f2fs_unlink+0x500/0x790 [f2fs]
+ vfs_unlink+0x211/0x490
+ do_unlinkat+0x483/0x520
+ sys_unlink+0x4a/0x70
+ do_fast_syscall_32+0x12b/0x683
+ entry_SYSENTER_32+0xaa/0x102
 
-Signed-off-by: Seungchul Kim <sc377.kim@samsung.com>
+Fixes: 4c8ff7095bef ("f2fs: support data compression")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- include/media/v4l2-fh.h | 2 --
- 1 file changed, 2 deletions(-)
+v4:
+- clean up codes when using bit operation functions.
+ fs/f2fs/f2fs.h  | 102 ++++++++++++++++++++++++------------------------
+ fs/f2fs/inode.c |   4 +-
+ 2 files changed, 55 insertions(+), 51 deletions(-)
 
-diff --git a/include/media/v4l2-fh.h b/include/media/v4l2-fh.h index
-53b4dbb..b5b3e00 100644
---- a/include/media/v4l2-fh.h
-+++ b/include/media/v4l2-fh.h
-@@ -53,9 +53,7 @@ struct v4l2_fh {
- 	unsigned int		navailable;
- 	u32			sequence;
- 
--#if IS_ENABLED(CONFIG_V4L2_MEM2MEM_DEV)
- 	struct v4l2_m2m_ctx	*m2m_ctx;
--#endif
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index fcafa68212eb..b0dc7bf44a54 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -682,6 +682,47 @@ enum {
+ 	MAX_GC_FAILURE
  };
  
- /**
---
-2.7.4
++/* used for f2fs_inode_info->flags */
++enum {
++	FI_NEW_INODE,		/* indicate newly allocated inode */
++	FI_DIRTY_INODE,		/* indicate inode is dirty or not */
++	FI_AUTO_RECOVER,	/* indicate inode is recoverable */
++	FI_DIRTY_DIR,		/* indicate directory has dirty pages */
++	FI_INC_LINK,		/* need to increment i_nlink */
++	FI_ACL_MODE,		/* indicate acl mode */
++	FI_NO_ALLOC,		/* should not allocate any blocks */
++	FI_FREE_NID,		/* free allocated nide */
++	FI_NO_EXTENT,		/* not to use the extent cache */
++	FI_INLINE_XATTR,	/* used for inline xattr */
++	FI_INLINE_DATA,		/* used for inline data*/
++	FI_INLINE_DENTRY,	/* used for inline dentry */
++	FI_APPEND_WRITE,	/* inode has appended data */
++	FI_UPDATE_WRITE,	/* inode has in-place-update data */
++	FI_NEED_IPU,		/* used for ipu per file */
++	FI_ATOMIC_FILE,		/* indicate atomic file */
++	FI_ATOMIC_COMMIT,	/* indicate the state of atomical committing */
++	FI_VOLATILE_FILE,	/* indicate volatile file */
++	FI_FIRST_BLOCK_WRITTEN,	/* indicate #0 data block was written */
++	FI_DROP_CACHE,		/* drop dirty page cache */
++	FI_DATA_EXIST,		/* indicate data exists */
++	FI_INLINE_DOTS,		/* indicate inline dot dentries */
++	FI_DO_DEFRAG,		/* indicate defragment is running */
++	FI_DIRTY_FILE,		/* indicate regular/symlink has dirty pages */
++	FI_NO_PREALLOC,		/* indicate skipped preallocated blocks */
++	FI_HOT_DATA,		/* indicate file is hot */
++	FI_EXTRA_ATTR,		/* indicate file has extra attribute */
++	FI_PROJ_INHERIT,	/* indicate file inherits projectid */
++	FI_PIN_FILE,		/* indicate file should not be gced */
++	FI_ATOMIC_REVOKE_REQUEST, /* request to drop atomic data */
++	FI_VERITY_IN_PROGRESS,	/* building fs-verity Merkle tree */
++	FI_COMPRESSED_FILE,	/* indicate file's data can be compressed */
++	FI_MMAP_FILE,		/* indicate file was mmapped */
++	FI_MAX,			/* max flag, never be used */
++};
++
++/* f2fs_inode_info.flags array size */
++#define FI_ARRAY_SIZE		(BITS_TO_LONGS(FI_MAX))
++
+ struct f2fs_inode_info {
+ 	struct inode vfs_inode;		/* serve a vfs inode */
+ 	unsigned long i_flags;		/* keep an inode flags for ioctl */
+@@ -694,7 +735,7 @@ struct f2fs_inode_info {
+ 	umode_t i_acl_mode;		/* keep file acl mode temporarily */
+ 
+ 	/* Use below internally in f2fs*/
+-	unsigned long flags;		/* use to pass per-file flags */
++	unsigned long flags[FI_ARRAY_SIZE];	/* use to pass per-file flags */
+ 	struct rw_semaphore i_sem;	/* protect fi info */
+ 	atomic_t dirty_pages;		/* # of dirty pages */
+ 	f2fs_hash_t chash;		/* hash value of given file name */
+@@ -2531,43 +2572,6 @@ static inline __u32 f2fs_mask_flags(umode_t mode, __u32 flags)
+ 		return flags & F2FS_OTHER_FLMASK;
+ }
+ 
+-/* used for f2fs_inode_info->flags */
+-enum {
+-	FI_NEW_INODE,		/* indicate newly allocated inode */
+-	FI_DIRTY_INODE,		/* indicate inode is dirty or not */
+-	FI_AUTO_RECOVER,	/* indicate inode is recoverable */
+-	FI_DIRTY_DIR,		/* indicate directory has dirty pages */
+-	FI_INC_LINK,		/* need to increment i_nlink */
+-	FI_ACL_MODE,		/* indicate acl mode */
+-	FI_NO_ALLOC,		/* should not allocate any blocks */
+-	FI_FREE_NID,		/* free allocated nide */
+-	FI_NO_EXTENT,		/* not to use the extent cache */
+-	FI_INLINE_XATTR,	/* used for inline xattr */
+-	FI_INLINE_DATA,		/* used for inline data*/
+-	FI_INLINE_DENTRY,	/* used for inline dentry */
+-	FI_APPEND_WRITE,	/* inode has appended data */
+-	FI_UPDATE_WRITE,	/* inode has in-place-update data */
+-	FI_NEED_IPU,		/* used for ipu per file */
+-	FI_ATOMIC_FILE,		/* indicate atomic file */
+-	FI_ATOMIC_COMMIT,	/* indicate the state of atomical committing */
+-	FI_VOLATILE_FILE,	/* indicate volatile file */
+-	FI_FIRST_BLOCK_WRITTEN,	/* indicate #0 data block was written */
+-	FI_DROP_CACHE,		/* drop dirty page cache */
+-	FI_DATA_EXIST,		/* indicate data exists */
+-	FI_INLINE_DOTS,		/* indicate inline dot dentries */
+-	FI_DO_DEFRAG,		/* indicate defragment is running */
+-	FI_DIRTY_FILE,		/* indicate regular/symlink has dirty pages */
+-	FI_NO_PREALLOC,		/* indicate skipped preallocated blocks */
+-	FI_HOT_DATA,		/* indicate file is hot */
+-	FI_EXTRA_ATTR,		/* indicate file has extra attribute */
+-	FI_PROJ_INHERIT,	/* indicate file inherits projectid */
+-	FI_PIN_FILE,		/* indicate file should not be gced */
+-	FI_ATOMIC_REVOKE_REQUEST, /* request to drop atomic data */
+-	FI_VERITY_IN_PROGRESS,	/* building fs-verity Merkle tree */
+-	FI_COMPRESSED_FILE,	/* indicate file's data can be compressed */
+-	FI_MMAP_FILE,		/* indicate file was mmapped */
+-};
+-
+ static inline void __mark_inode_dirty_flag(struct inode *inode,
+ 						int flag, bool set)
+ {
+@@ -2588,20 +2592,18 @@ static inline void __mark_inode_dirty_flag(struct inode *inode,
+ 
+ static inline void set_inode_flag(struct inode *inode, int flag)
+ {
+-	if (!test_bit(flag, &F2FS_I(inode)->flags))
+-		set_bit(flag, &F2FS_I(inode)->flags);
++	test_and_set_bit(flag, F2FS_I(inode)->flags);
+ 	__mark_inode_dirty_flag(inode, flag, true);
+ }
+ 
+ static inline int is_inode_flag_set(struct inode *inode, int flag)
+ {
+-	return test_bit(flag, &F2FS_I(inode)->flags);
++	return test_bit(flag, F2FS_I(inode)->flags);
+ }
+ 
+ static inline void clear_inode_flag(struct inode *inode, int flag)
+ {
+-	if (test_bit(flag, &F2FS_I(inode)->flags))
+-		clear_bit(flag, &F2FS_I(inode)->flags);
++	test_and_clear_bit(flag, F2FS_I(inode)->flags);
+ 	__mark_inode_dirty_flag(inode, flag, false);
+ }
+ 
+@@ -2692,19 +2694,19 @@ static inline void get_inline_info(struct inode *inode, struct f2fs_inode *ri)
+ 	struct f2fs_inode_info *fi = F2FS_I(inode);
+ 
+ 	if (ri->i_inline & F2FS_INLINE_XATTR)
+-		set_bit(FI_INLINE_XATTR, &fi->flags);
++		set_bit(FI_INLINE_XATTR, fi->flags);
+ 	if (ri->i_inline & F2FS_INLINE_DATA)
+-		set_bit(FI_INLINE_DATA, &fi->flags);
++		set_bit(FI_INLINE_DATA, fi->flags);
+ 	if (ri->i_inline & F2FS_INLINE_DENTRY)
+-		set_bit(FI_INLINE_DENTRY, &fi->flags);
++		set_bit(FI_INLINE_DENTRY, fi->flags);
+ 	if (ri->i_inline & F2FS_DATA_EXIST)
+-		set_bit(FI_DATA_EXIST, &fi->flags);
++		set_bit(FI_DATA_EXIST, fi->flags);
+ 	if (ri->i_inline & F2FS_INLINE_DOTS)
+-		set_bit(FI_INLINE_DOTS, &fi->flags);
++		set_bit(FI_INLINE_DOTS, fi->flags);
+ 	if (ri->i_inline & F2FS_EXTRA_ATTR)
+-		set_bit(FI_EXTRA_ATTR, &fi->flags);
++		set_bit(FI_EXTRA_ATTR, fi->flags);
+ 	if (ri->i_inline & F2FS_PIN_FILE)
+-		set_bit(FI_PIN_FILE, &fi->flags);
++		set_bit(FI_PIN_FILE, fi->flags);
+ }
+ 
+ static inline void set_raw_inline(struct inode *inode, struct f2fs_inode *ri)
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index 44e08bf2e2b4..5e441fdd4858 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -328,6 +328,7 @@ static int do_read_inode(struct inode *inode)
+ 	struct f2fs_inode *ri;
+ 	projid_t i_projid;
+ 	int err;
++	int i;
+ 
+ 	/* Check if ino is within scope */
+ 	if (f2fs_check_nid_range(sbi, inode->i_ino))
+@@ -362,7 +363,8 @@ static int do_read_inode(struct inode *inode)
+ 	fi->i_flags = le32_to_cpu(ri->i_flags);
+ 	if (S_ISREG(inode->i_mode))
+ 		fi->i_flags &= ~F2FS_PROJINHERIT_FL;
+-	fi->flags = 0;
++	for (i = 0; i < FI_ARRAY_SIZE; i++)
++		fi->flags[i] = 0;
+ 	fi->i_advise = ri->i_advise;
+ 	fi->i_pino = le32_to_cpu(ri->i_pino);
+ 	fi->i_dir_level = ri->i_dir_level;
+-- 
+2.18.0.rc1
 
