@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EFEC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3967FC54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3ABD20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06A0B20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pOe+nKCh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BAguYNia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgCWMba (ORCPT
+        id S1728281AbgCWMbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:31:30 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40116 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728257AbgCWMb3 (ORCPT
+        Mon, 23 Mar 2020 08:31:33 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37289 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728269AbgCWMbb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 08:31:29 -0400
-Received: by mail-pf1-f196.google.com with SMTP id l184so7424882pfl.7
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 05:31:27 -0700 (PDT)
+        Mon, 23 Mar 2020 08:31:31 -0400
+Received: by mail-pf1-f193.google.com with SMTP id h72so5220368pfe.4
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 05:31:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0WVYi5XJp4WaCaddQcy1HjEAG2je/Kk0d1P+LoVF1LU=;
-        b=pOe+nKChsCyDxA3kKu+UWucseGJUAw5AqsBo7ljLGWVFFRYvte4WaO9LHFWE0Jg6oq
-         bkTNuHlS3gKm4K6znOjFupC/LjpnV+C5RpZZcXDjI4cWKhdl5+gHpBHd9y11kEG1rH+v
-         7vpghAnkih8eRYbO8cIvU2LvMJKEedxIzaa2CuOrrsDrjKQuq8RW4osafGvRKxl8Fb2N
-         OOk/TF5UB2rG1Fkv60/+Iy3gFh5vQ201ZQ3Ejlqoy48orCYMTWCUC0Iyb+PV2jUceTDq
-         12T7QH3YbFRn+A9B8Xw/7ktl8sU2ZwiDc/4c5ikpW/ACjbAMdCkfAXUgHxeI6meWMa0C
-         iiBQ==
+        bh=Eaovk+x8P1gp02zFRjyjN8J0LaUiHMNc3qEJKITffoI=;
+        b=BAguYNiazMf7Bx5H4GHx2gcuSxeGN5Bz5oB4cCD04Uw6L7BNqpCtYTET3xXIztYaFP
+         DcjN815jn81IHO774Jhsw/CfHmVHyZCLlspPUUtQ6hMbtI2JRF5lKTxIl+XPG8trf2Jc
+         YMN0Qss1h6lc68v/05sM94RvuQgIOK4ZLtxpuHc3GnGwsLkVUBUjC6y3MfeqLafFlNcU
+         oue4KnQZ+yLe5EM+Vzjk0vSAU+Llxod/NjLoSiXhN9xgXPTkhADyHisgCO07h62m4qH9
+         09SBjc3YKC8zzbT8UhadFs/uNlZH6c11KCu4kYhvFBLtAmf2Z9MqmaTxjExDaa6itiv5
+         dAxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0WVYi5XJp4WaCaddQcy1HjEAG2je/Kk0d1P+LoVF1LU=;
-        b=hmPw39MdBpqQKHQ3Pj1a414tSBimQqnW9S/YtgKiq57QWTl4CBaDNfY8R87b6MtBjE
-         LpJGVXmLQ3GK1LItoUt8ovrBETIO/FMFq0REt4KZrdzgBXYrIpq6jW70mUm0X4PlyD0/
-         4WISJ5sgD/E3w2vr1bR7vkRx5xXYXJv8oa3WYUwzxSUxPFRGsSqP+Xzzcvrd7wTIX13D
-         UHM/xIi6JYwmGzQuPKzaEjhO9TGlLSV9nV0FrPUOaoxwfOzBM/wKPt91rftn2635xwyo
-         aomzbvhh6WGnpzQvqiI2plu6wjQGdt8ZOIITmuwTD+xcNX8TM07nWVeqlciqgqU14CZK
-         OOYg==
-X-Gm-Message-State: ANhLgQ1WCfCB3C/fF7E6hKVn/pd6/ZU3swRFgeiYc4mWWWWyu7sWnjYL
-        kd0ezRhKLW1eJeuuzXkxm6aT
-X-Google-Smtp-Source: ADFU+vt3DTLu/I5B2gbgbMVEzZd8OJT3CGLsgKm677pDzpkf1N2Iny5qvULAmixEzxzWgEH+t3ThnA==
-X-Received: by 2002:a63:a55d:: with SMTP id r29mr4326673pgu.248.1584966686708;
-        Mon, 23 Mar 2020 05:31:26 -0700 (PDT)
+        bh=Eaovk+x8P1gp02zFRjyjN8J0LaUiHMNc3qEJKITffoI=;
+        b=Hb0Avl/Eq4/20T7Bq7U9+GLb/giIyU2NTTOliYWevtfiKjegtG32lypo626uoZwjzN
+         dhBj9c7KFrG/KmDDZR3EAd1zEZzh0p80JNbIfrtyYBz5wPkAohEw5eWIqHFplE3oa8VN
+         4wuYpMo054G/rxQ5wbYRHsJkTCGkiQaWk3VYvCZuqB0O6CUzq7pHEVvdOi0HaYt9wvJF
+         5LWUzwTgcBiNawC7PXYzZVYSf31Jj09TceXAgn2S0gRA4A3vagNPb8zYcMwm8IPK+kuB
+         i/ZJSujIfTUW9pOl4olKVVCsxHS1VARfUt4uh0S/ZGHFc2RHUdymLSj/ozZXkiROQEds
+         wR9w==
+X-Gm-Message-State: ANhLgQ339qL8z25PyIQ5oCn+RPShehfTkLVJyaaWGhkF1ebgQB2xfi2P
+        l6WGkQe9//sSRR7MGsqkU3V7
+X-Google-Smtp-Source: ADFU+vslHJzFzyJcEJ7TfjNpDtxQZMphImrQ/oGTfdw7EJ0E8Z1p4/d8sdvv2fJWcnuSZORd6saOAg==
+X-Received: by 2002:a63:cf03:: with SMTP id j3mr21753040pgg.433.1584966690238;
+        Mon, 23 Mar 2020 05:31:30 -0700 (PDT)
 Received: from localhost.localdomain ([103.59.133.81])
-        by smtp.googlemail.com with ESMTPSA id 144sm3590131pgd.29.2020.03.23.05.31.23
+        by smtp.googlemail.com with ESMTPSA id 144sm3590131pgd.29.2020.03.23.05.31.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 05:31:25 -0700 (PDT)
+        Mon, 23 Mar 2020 05:31:29 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     gregkh@linuxfoundation.org, davem@davemloft.net
 Cc:     smohanad@codeaurora.org, jhugo@codeaurora.org,
@@ -62,9 +62,9 @@ Cc:     smohanad@codeaurora.org, jhugo@codeaurora.org,
         hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 4/7] bus: mhi: core: Drop the references to mhi_dev in mhi_destroy_device()
-Date:   Mon, 23 Mar 2020 18:00:59 +0530
-Message-Id: <20200323123102.13992-5-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 5/7] bus: mhi: core: Add support for MHI suspend and resume
+Date:   Mon, 23 Mar 2020 18:01:00 +0530
+Message-Id: <20200323123102.13992-6-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200323123102.13992-1-manivannan.sadhasivam@linaro.org>
 References: <20200323123102.13992-1-manivannan.sadhasivam@linaro.org>
@@ -73,71 +73,228 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For some scenarios like controller suspend and resume, mhi_destroy_device()
-will get called without mhi_unregister_controller(). In that case, the
-references to the mhi_dev created for the channels will not be dropped
-but the channels will be destroyed as per the spec. This will cause issue
-during resume as the channels will not be created due to the fact that
-mhi_dev is not NULL.
+Add support for MHI suspend and resume states. While at it, the
+mhi_notify() function needs to be exported as well.
 
-Hence, this change decrements the refcount for mhi_dev in
-mhi_destroy_device() for concerned channels and also sets mhi_dev to NULL
-in release_device().
-
-Reported-by: Carl Huang <cjhuang@codeaurora.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/bus/mhi/core/init.c | 12 ++++++++++++
- drivers/bus/mhi/core/main.c | 13 +++++++++++++
- 2 files changed, 25 insertions(+)
+ drivers/bus/mhi/core/main.c |   3 +-
+ drivers/bus/mhi/core/pm.c   | 143 ++++++++++++++++++++++++++++++++++++
+ include/linux/mhi.h         |  19 +++++
+ 3 files changed, 164 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
-index f6e3c16225a7..b38359c480ea 100644
---- a/drivers/bus/mhi/core/init.c
-+++ b/drivers/bus/mhi/core/init.c
-@@ -1028,6 +1028,18 @@ static void mhi_release_device(struct device *dev)
- {
- 	struct mhi_device *mhi_dev = to_mhi_device(dev);
- 
-+	/*
-+	 * We need to set the mhi_chan->mhi_dev to NULL here since the MHI
-+	 * devices for the channels will only get created if the mhi_dev
-+	 * associated with it is NULL. This scenario will happen during the
-+	 * controller suspend and resume.
-+	 */
-+	if (mhi_dev->ul_chan)
-+		mhi_dev->ul_chan->mhi_dev = NULL;
-+
-+	if (mhi_dev->dl_chan)
-+		mhi_dev->dl_chan->mhi_dev = NULL;
-+
- 	kfree(mhi_dev);
- }
- 
 diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-index fa1c9000fc6c..eb4256b81406 100644
+index eb4256b81406..3e9aa3b2da77 100644
 --- a/drivers/bus/mhi/core/main.c
 +++ b/drivers/bus/mhi/core/main.c
-@@ -244,6 +244,19 @@ int mhi_destroy_device(struct device *dev, void *data)
- 	if (mhi_dev->dev_type == MHI_DEVICE_CONTROLLER)
- 		return 0;
+@@ -267,7 +267,7 @@ int mhi_destroy_device(struct device *dev, void *data)
+ 	return 0;
+ }
  
-+	/*
-+	 * For the suspend and resume case, this function will get called
-+	 * without mhi_unregister_controller(). Hence, we need to drop the
-+	 * references to mhi_dev created for ul and dl channels. We can
-+	 * be sure that there will be no instances of mhi_dev left after
-+	 * this.
-+	 */
-+	if (mhi_dev->ul_chan)
-+		put_device(&mhi_dev->ul_chan->mhi_dev->dev);
-+
-+	if (mhi_dev->dl_chan)
-+		put_device(&mhi_dev->dl_chan->mhi_dev->dev);
-+
- 	dev_dbg(&mhi_cntrl->mhi_dev->dev, "destroy device for chan:%s\n",
- 		 mhi_dev->chan_name);
+-static void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason)
++void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason)
+ {
+ 	struct mhi_driver *mhi_drv;
  
+@@ -279,6 +279,7 @@ static void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason)
+ 	if (mhi_drv->status_cb)
+ 		mhi_drv->status_cb(mhi_dev, cb_reason);
+ }
++EXPORT_SYMBOL_GPL(mhi_notify);
+ 
+ /* Bind MHI channels to MHI devices */
+ void mhi_create_devices(struct mhi_controller *mhi_cntrl)
+diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+index 52690cb5c89c..3529419d076b 100644
+--- a/drivers/bus/mhi/core/pm.c
++++ b/drivers/bus/mhi/core/pm.c
+@@ -669,6 +669,149 @@ void mhi_pm_st_worker(struct work_struct *work)
+ 	}
+ }
+ 
++int mhi_pm_suspend(struct mhi_controller *mhi_cntrl)
++{
++	struct mhi_chan *itr, *tmp;
++	struct device *dev = &mhi_cntrl->mhi_dev->dev;
++	enum mhi_pm_state new_state;
++	int ret;
++
++	if (mhi_cntrl->pm_state == MHI_PM_DISABLE)
++		return -EINVAL;
++
++	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state))
++		return -EIO;
++
++	/* Return busy if there are any pending resources */
++	if (atomic_read(&mhi_cntrl->dev_wake))
++		return -EBUSY;
++
++	/* Take MHI out of M2 state */
++	read_lock_bh(&mhi_cntrl->pm_lock);
++	mhi_cntrl->wake_get(mhi_cntrl, false);
++	read_unlock_bh(&mhi_cntrl->pm_lock);
++
++	ret = wait_event_timeout(mhi_cntrl->state_event,
++				 mhi_cntrl->dev_state == MHI_STATE_M0 ||
++				 mhi_cntrl->dev_state == MHI_STATE_M1 ||
++				 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
++				 msecs_to_jiffies(mhi_cntrl->timeout_ms));
++
++	read_lock_bh(&mhi_cntrl->pm_lock);
++	mhi_cntrl->wake_put(mhi_cntrl, false);
++	read_unlock_bh(&mhi_cntrl->pm_lock);
++
++	if (!ret || MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
++		dev_err(dev,
++			"Could not enter M0/M1 state");
++		return -EIO;
++	}
++
++	write_lock_irq(&mhi_cntrl->pm_lock);
++
++	if (atomic_read(&mhi_cntrl->dev_wake)) {
++		write_unlock_irq(&mhi_cntrl->pm_lock);
++		return -EBUSY;
++	}
++
++	dev_info(dev, "Allowing M3 transition\n");
++	new_state = mhi_tryset_pm_state(mhi_cntrl, MHI_PM_M3_ENTER);
++	if (new_state != MHI_PM_M3_ENTER) {
++		write_unlock_irq(&mhi_cntrl->pm_lock);
++		dev_err(dev,
++			"Error setting to PM state: %s from: %s\n",
++			to_mhi_pm_state_str(MHI_PM_M3_ENTER),
++			to_mhi_pm_state_str(mhi_cntrl->pm_state));
++		return -EIO;
++	}
++
++	/* Set MHI to M3 and wait for completion */
++	mhi_set_mhi_state(mhi_cntrl, MHI_STATE_M3);
++	write_unlock_irq(&mhi_cntrl->pm_lock);
++	dev_info(dev, "Wait for M3 completion\n");
++
++	ret = wait_event_timeout(mhi_cntrl->state_event,
++				 mhi_cntrl->dev_state == MHI_STATE_M3 ||
++				 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
++				 msecs_to_jiffies(mhi_cntrl->timeout_ms));
++
++	if (!ret || MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
++		dev_err(dev,
++			"Did not enter M3 state, MHI state: %s, PM state: %s\n",
++			TO_MHI_STATE_STR(mhi_cntrl->dev_state),
++			to_mhi_pm_state_str(mhi_cntrl->pm_state));
++		return -EIO;
++	}
++
++	/* Notify clients about entering LPM */
++	list_for_each_entry_safe(itr, tmp, &mhi_cntrl->lpm_chans, node) {
++		mutex_lock(&itr->mutex);
++		if (itr->mhi_dev)
++			mhi_notify(itr->mhi_dev, MHI_CB_LPM_ENTER);
++		mutex_unlock(&itr->mutex);
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(mhi_pm_suspend);
++
++int mhi_pm_resume(struct mhi_controller *mhi_cntrl)
++{
++	struct mhi_chan *itr, *tmp;
++	struct device *dev = &mhi_cntrl->mhi_dev->dev;
++	enum mhi_pm_state cur_state;
++	int ret;
++
++	dev_info(dev, "Entered with PM state: %s, MHI state: %s\n",
++		 to_mhi_pm_state_str(mhi_cntrl->pm_state),
++		 TO_MHI_STATE_STR(mhi_cntrl->dev_state));
++
++	if (mhi_cntrl->pm_state == MHI_PM_DISABLE)
++		return 0;
++
++	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state))
++		return -EIO;
++
++	/* Notify clients about exiting LPM */
++	list_for_each_entry_safe(itr, tmp, &mhi_cntrl->lpm_chans, node) {
++		mutex_lock(&itr->mutex);
++		if (itr->mhi_dev)
++			mhi_notify(itr->mhi_dev, MHI_CB_LPM_EXIT);
++		mutex_unlock(&itr->mutex);
++	}
++
++	write_lock_irq(&mhi_cntrl->pm_lock);
++	cur_state = mhi_tryset_pm_state(mhi_cntrl, MHI_PM_M3_EXIT);
++	if (cur_state != MHI_PM_M3_EXIT) {
++		write_unlock_irq(&mhi_cntrl->pm_lock);
++		dev_info(dev,
++			 "Error setting to PM state: %s from: %s\n",
++			 to_mhi_pm_state_str(MHI_PM_M3_EXIT),
++			 to_mhi_pm_state_str(mhi_cntrl->pm_state));
++		return -EIO;
++	}
++
++	/* Set MHI to M0 and wait for completion */
++	mhi_set_mhi_state(mhi_cntrl, MHI_STATE_M0);
++	write_unlock_irq(&mhi_cntrl->pm_lock);
++
++	ret = wait_event_timeout(mhi_cntrl->state_event,
++				 mhi_cntrl->dev_state == MHI_STATE_M0 ||
++				 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
++				 msecs_to_jiffies(mhi_cntrl->timeout_ms));
++
++	if (!ret || MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
++		dev_err(dev,
++			"Did not enter M0 state, MHI state: %s, PM state: %s\n",
++			TO_MHI_STATE_STR(mhi_cntrl->dev_state),
++			to_mhi_pm_state_str(mhi_cntrl->pm_state));
++		return -EIO;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(mhi_pm_resume);
++
+ int __mhi_device_get_sync(struct mhi_controller *mhi_cntrl)
+ {
+ 	int ret;
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index b295de5b4ab4..b5f450420245 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -559,6 +559,13 @@ void mhi_driver_unregister(struct mhi_driver *mhi_drv);
+ void mhi_set_mhi_state(struct mhi_controller *mhi_cntrl,
+ 		       enum mhi_state state);
+ 
++/**
++ * mhi_notify - Notify the MHI client driver about client device status
++ * @mhi_dev: MHI device instance
++ * @cb_reason: MHI callback reason
++ */
++void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason);
++
+ /**
+  * mhi_prepare_for_power_up - Do pre-initialization before power up.
+  *                            This is optional, call this before power up if
+@@ -595,6 +602,18 @@ void mhi_power_down(struct mhi_controller *mhi_cntrl, bool graceful);
+  */
+ void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl);
+ 
++/**
++ * mhi_pm_suspend - Move MHI into a suspended state
++ * @mhi_cntrl: MHI controller
++ */
++int mhi_pm_suspend(struct mhi_controller *mhi_cntrl);
++
++/**
++ * mhi_pm_resume - Resume MHI from suspended state
++ * @mhi_cntrl: MHI controller
++ */
++int mhi_pm_resume(struct mhi_controller *mhi_cntrl);
++
+ /**
+  * mhi_download_rddm_img - Download ramdump image from device for
+  *                         debugging purpose.
 -- 
 2.17.1
 
