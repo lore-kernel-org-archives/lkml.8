@@ -3,112 +3,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CEDC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0865BC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC4D20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D35932074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584976174;
-	bh=e1uLIoKd9nU0TUs8bH6w5SBR5lZePgQittM/BJ+/UEo=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=wuy513hhdTF1pxlfAG9YbGfYaCZhkdFUqjl0UVhVC93gtUcbxKANL/d9v+OnEFFQ8
-	 NwU9qc6Vn7uZCGO2ZULsRo40UDES6Pm6R7QV+P6twUzQ2zvHEI4jBFCAhhQ7W/gBtx
-	 QhHdhxsEU5WmZ8cDkhePpPzRPKzrhXvqPdgmN+t8=
+	s=default; t=1584976229;
+	bh=DEot+U5aAhQnERI+yODgTb0Q/N9eQ71HwwOhlgIpZNg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xOteWfghfjFstXvHGRGh9D1jEuZYa0DOQZZkMjgh9WrkyBkBEy3lOyuZW1AOW9rwn
+	 MZYVVTu2haNwsW1SOFO4rOlotbZhhRX31cGwSch+zvzj8LX+ne4m7kgAXfoDN6Vqsa
+	 vHBOUKC0rybouYE6pO8suYMFpjsNuU0x57a9DKnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbgCWPJd (ORCPT
+        id S1727261AbgCWPK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:09:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60948 "EHLO mail.kernel.org"
+        Mon, 23 Mar 2020 11:10:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727024AbgCWPJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:09:32 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727064AbgCWPK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:10:28 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CADF206F8;
-        Mon, 23 Mar 2020 15:09:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89130206F8;
+        Mon, 23 Mar 2020 15:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584976172;
-        bh=e1uLIoKd9nU0TUs8bH6w5SBR5lZePgQittM/BJ+/UEo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=C7yGcjhXo9lKrTEOH/ZnJ/6Djb1/1+IJfe225w7DgazgeEfzuM2wLlxPw8j1Kd6gx
-         vW/bDWA8QdV9OVi+aIP9sCwvnDG4qtL1qsMhUGj1dzzmZNqaid60AB6Tw5xg9XljFY
-         ClrUEEwBjSnP8mLRL9ZmBzUJj/v2GLFTEPUXhjKw=
-Subject: Re: [PATCH] kunit: add --make_options
-To:     Greg Thelen <gthelen@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        shuah <shuah@kernel.org>
-References: <20200227063134.261636-1-gthelen@google.com>
- <20200229015350.GA26612@ubuntu-m2-xlarge-x86>
- <4bb8eeef-54ac-86a7-4bc4-8e16fc149c1a@kernel.org>
- <xr93y2s34fp7.fsf@gthelen.svl.corp.google.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <a4a1e84a-9cfd-312d-1048-04a5e525332b@kernel.org>
-Date:   Mon, 23 Mar 2020 09:09:18 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        s=default; t=1584976227;
+        bh=DEot+U5aAhQnERI+yODgTb0Q/N9eQ71HwwOhlgIpZNg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fp35Xy2S29GLP/ffijwK4fWsN+7zW24b/sRU3E5KJRjWgG2NDU9PL5qcUH5rARgsq
+         U/XhqJhFFnjVPTVydoGD1OUz86UQbWzlEmA/IJXfp1RWhT6z5RLNP6inFn/hEAWGja
+         x4PkJp+QG2cQ6qnZ7pz53hrZcikOl+4Q50CiCUls=
+Date:   Mon, 23 Mar 2020 08:10:27 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH v5] f2fs: fix potential .flags overflow on 32bit
+ architecture
+Message-ID: <20200323151027.GA123526@google.com>
+References: <20200323031807.94473-1-yuchao0@huawei.com>
+ <afa74570dacebb3b93d4b9c27d6c8a87186cef2d.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <xr93y2s34fp7.fsf@gthelen.svl.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <afa74570dacebb3b93d4b9c27d6c8a87186cef2d.camel@perches.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/14/20 12:24 AM, Greg Thelen wrote:
-> shuah <shuah@kernel.org> wrote:
+On 03/23, Joe Perches wrote:
+> On Mon, 2020-03-23 at 11:18 +0800, Chao Yu wrote:
+> > f2fs_inode_info.flags is unsigned long variable, it has 32 bits
+> > in 32bit architecture, since we introduced FI_MMAP_FILE flag
+> > when we support data compression, we may access memory cross
+> > the border of .flags field, corrupting .i_sem field, result in
+> > below deadlock.
+> []
+> > diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+> []
+> > @@ -362,7 +362,7 @@ static int do_read_inode(struct inode *inode)
+> >  	fi->i_flags = le32_to_cpu(ri->i_flags);
+> >  	if (S_ISREG(inode->i_mode))
+> >  		fi->i_flags &= ~F2FS_PROJINHERIT_FL;
+> > -	fi->flags = 0;
+> > +	bitmap_zero(fi->flags, BITS_TO_LONGS(FI_MAX));
 > 
->> On 2/28/20 6:53 PM, Nathan Chancellor wrote:
->>> On Wed, Feb 26, 2020 at 10:31:34PM -0800, 'Greg Thelen' via Clang Built Linux wrote:
->>>> The kunit.py utility builds an ARCH=um kernel and then runs it.  Add
->>>> optional --make_options flag to kunit.py allowing for the operator to
->>>> specify extra build options.
->>>>
->>>> This allows use of the clang compiler for kunit:
->>>>     tools/testing/kunit/kunit.py run --defconfig \
->>>>       --make_options CC=clang --make_options HOSTCC=clang
->>>>
->>>> Signed-off-by: Greg Thelen <gthelen@google.com>
->>>
->>> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
->>>
->>
->> Please rebase on Linux 5.6-rc5 and resend. I tried applying
->> on Linux 5.6-rc1 as well as 5.6-rc5 and both fail.
->>
->> thanks,
->> -- Shuah
+> Sorry, I misled you here, this should be
 > 
-> Rebased onto v5.6-rc5 below:
-> 
->>From 0517b2c8b481535fb52bd86e94be1fec9aaeead7 Mon Sep 17 00:00:00 2001
-> From: Greg Thelen <gthelen@google.com>
-> Date: Wed, 26 Feb 2020 22:31:34 -0800
-> Subject: [PATCH v2] kunit: add --make_options
-> 
-> The kunit.py utility builds an ARCH=um kernel and then runs it.  Add
-> optional --make_options flag to kunit.py allowing for the operator to
-> specify extra build options.
-> 
-> This allows use of the clang compiler for kunit:
->    tools/testing/kunit/kunit.py run --defconfig \
->      --make_options CC=clang --make_options HOSTCC=clang
-> 
-> Signed-off-by: Greg Thelen <gthelen@google.com>
+> 	bitmap_zero(fi->flags, FI_MAX);
 
-I can't apply this one.
-
-Please send a proper patch with either REBASE tag or v2.
-
-thanks,
--- Shuah
+Thanks, I applied this directly in the f2fs tree.
