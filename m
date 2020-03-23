@@ -2,179 +2,214 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AEBC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B8DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C63420409
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:15:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dAd67+xl"
+	by mail.kernel.org (Postfix) with ESMTP id C882F20409
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:15:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbgCWQPo (ORCPT
+        id S1727510AbgCWQPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:15:44 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34823 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgCWQPo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:15:44 -0400
-Received: by mail-pg1-f195.google.com with SMTP id 7so7441221pgr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 09:15:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=xLwD/FbGk+fl6Ia4f9QV2q2Qg8OF8NvDOb/WEjHeVu8=;
-        b=dAd67+xluNStPH4A7RmwpooNmZSRUGQuFCRPTWzplBUWQGqGTHYXGS0x4UgUGRPk4S
-         7jemSrJFWPrerO4slWOrrvl4D3Ys0T7iRHDq7j3ENWlAwU8YZa88zTCZvIHNfxhWTyIT
-         5qMWWhEZvj5mnQ2S1gTXn+UbWh7n0dNrnSHrZVfZhLE9OyEXsH1KE2N5YSbA6I9WK1FO
-         aUvGXoR1yXSDMSQ+f0P7QoxkYGsyAXitduZHvp+vN/KdZwH780uIMNSQgsL/KWJO+teY
-         4T1D4gV9SMYnABXrJuPSBiyp0bEBqHcC0PCHWU8PaVhBufcLNjevmwXtUZ5pdPfm9wrH
-         ei0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=xLwD/FbGk+fl6Ia4f9QV2q2Qg8OF8NvDOb/WEjHeVu8=;
-        b=IEUx51a8umuepys/zNPotjjBICexAPSDNX+JmxAKOF2T4FTRmyuw05l1FRny0wa3+G
-         6HKhF5Q7ucP9mFLxHnL26u2UStEDzIu9jczFq0xZi3Hw0HNhl4BHv3UosmKjzrpl+SnJ
-         d00lvC/JOsBAU26hXRdBfqlxsNHWqF/iNoeSHsrlW4XYIXbvO+MUf1fW7TPuWLpAsmtk
-         yXrJdEteXzVdE1dgF/U9/DiEbLwOarcu/al+kohzs+24gdHEUS86zWG6rY6MJsc+6CpB
-         +ACdKHPeOR87P4GNutjBn9MKF1NXXqDKikzeSm96Yy0g4J7y/28MwsvVtRDAS/W9RGb7
-         id3g==
-X-Gm-Message-State: ANhLgQ1T2k9t+f1hYyf2tK1camb0bTIi0dRIf+Y2x8FLIWaZC3mSlqJd
-        82I26SS27VsiPq3+HOHJn+tVtdEm
-X-Google-Smtp-Source: ADFU+vsKdeRG2+FWZrh+QHftQfkLCC4yjakXhIm+XlCBS92GBEchwHs7nwReUv42QcfZw5w9tXnFyw==
-X-Received: by 2002:a62:8202:: with SMTP id w2mr24688899pfd.117.1584980143016;
-        Mon, 23 Mar 2020 09:15:43 -0700 (PDT)
-Received: from mail.google.com ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id mq18sm44939pjb.6.2020.03.23.09.15.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 23 Mar 2020 09:15:42 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 16:15:40 +0000
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: Two questions about cache coherency on arm platforms
-Message-ID: <20200323161537.ptjrihqotgmon7tr@mail.google.com>
-References: <20200323123524.w67fici6oxzdo665@mail.google.com>
- <20200323131720.GE2597@C02TD0UTHF1T.local>
+        Mon, 23 Mar 2020 12:15:50 -0400
+Received: from mga12.intel.com ([192.55.52.136]:28213 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725861AbgCWQPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 12:15:50 -0400
+IronPort-SDR: OjbTXrk6PURKpjUR/UQPJB31N82uOlZUbmbYHESiuWryBpwE/KD2HZcX2QfD44pHPf6Ll4iNEV
+ WxWBmPMcRFHg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 09:15:49 -0700
+IronPort-SDR: 1GoJJW5BB6+ghdYnzWJeuXbULUbAbPeBE4iNonwr0JnWGt3TwjZbX9cgQwDcfl78rEWXYX52fJ
+ Tj8XSfbo33GA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
+   d="scan'208";a="237945216"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 23 Mar 2020 09:15:47 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jGPju-000DUq-NO; Tue, 24 Mar 2020 00:15:46 +0800
+Date:   Tue, 24 Mar 2020 00:15:34 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:WIP.x86/entry] BUILD SUCCESS
+ 953e73f4ea2753a4e84b214defb2a1160e0a83a9
+Message-ID: <5e78e0a6.hs9l/CXOxxznCFNR%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200323131720.GE2597@C02TD0UTHF1T.local>
-User-Agent: NeoMutt/20180716-508-7c9a6d
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
-Thanks for your answer. I still don't understand the first question.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  WIP.x86/entry
+branch HEAD: 953e73f4ea2753a4e84b214defb2a1160e0a83a9  x86/entry: Fix SYS_NI() build failure
 
-On Mon, Mar 23, 2020 at 01:17:20PM +0000, Mark Rutland wrote:
-> On Mon, Mar 23, 2020 at 08:35:26PM +0800, Changbin Du wrote:
-> > Hi, All,
-> > I am not very familiar with ARM processors. I have two questions about
-> > cache coherency. Could anyone help me?
-> > 
-> > 1. How is cache coherency maintenanced on ARMv8 big.LITTLE system?
-> > As far as I know, big cores and little cores are in seperate clusters on
-> > big.LITTLE system.
-> 
-> This is often true, but not always the case. For example, with DSU big
-> and little cores can be placed within the same cluster.
->
-Yes, it is ture for DynamIQ that bl cores can be placed within the same cluster.
-But I don't understand how linux support big.LITTLE before DynamIQ.
+elapsed time: 480m
 
-I read below description in ARM Cortex-A Series Programmer’s Guide for
-ARMv8-A.
- | big.LITTLE software models require transparent and efficient transfer of data between big and LITTLE clusters.
- | Coherency between clusters is provided by a cache-coherent interconnect such as the ARM CoreLink CCI-400 described in Chapter 14.
+configs tested: 147
+configs skipped: 106
 
-So I think  big cores and little cores are in different clusters in this
-case. Then we are not within the same Inner Shareable domain?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> > And cache coherence betwwen clusters requires the
-> > memory regions are marked as 'Outer Shareable' and is very expensive.
-> 
-> This is not correct.
-> 
-> Linux requires that all cores it uses are within the same Inner
-> Shareable domain, regardless of whether they are in distinct clusters.
-> Linux does not support systems where cores are in distinct Inner
-> Shareable domains.
->
-I see. Thanks.
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+ia64                                defconfig
+powerpc                             defconfig
+arm64                            allmodconfig
+xtensa                          iss_defconfig
+h8300                       h8s-sim_defconfig
+i386                             allyesconfig
+m68k                       m5475evb_defconfig
+i386                             alldefconfig
+i386                              allnoconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+m68k                             allmodconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200322
+x86_64               randconfig-a002-20200322
+x86_64               randconfig-a003-20200322
+i386                 randconfig-a001-20200322
+i386                 randconfig-a002-20200322
+i386                 randconfig-a003-20200322
+x86_64               randconfig-a001-20200323
+x86_64               randconfig-a002-20200323
+x86_64               randconfig-a003-20200323
+i386                 randconfig-a001-20200323
+i386                 randconfig-a002-20200323
+i386                 randconfig-a003-20200323
+c6x                  randconfig-a001-20200323
+h8300                randconfig-a001-20200323
+microblaze           randconfig-a001-20200323
+nios2                randconfig-a001-20200323
+sparc64              randconfig-a001-20200323
+csky                 randconfig-a001-20200323
+openrisc             randconfig-a001-20200323
+s390                 randconfig-a001-20200323
+sh                   randconfig-a001-20200323
+xtensa               randconfig-a001-20200323
+i386                 randconfig-b003-20200323
+i386                 randconfig-b001-20200323
+x86_64               randconfig-b003-20200323
+i386                 randconfig-b002-20200323
+x86_64               randconfig-b002-20200323
+x86_64               randconfig-b001-20200323
+x86_64               randconfig-c003-20200323
+x86_64               randconfig-c001-20200323
+i386                 randconfig-c002-20200323
+x86_64               randconfig-c002-20200323
+i386                 randconfig-c003-20200323
+i386                 randconfig-c001-20200323
+x86_64               randconfig-d001-20200323
+x86_64               randconfig-d002-20200323
+x86_64               randconfig-d003-20200323
+i386                 randconfig-d001-20200323
+i386                 randconfig-d002-20200323
+i386                 randconfig-d003-20200323
+x86_64               randconfig-e001-20200323
+x86_64               randconfig-e002-20200323
+x86_64               randconfig-e003-20200323
+i386                 randconfig-e001-20200323
+i386                 randconfig-e002-20200323
+i386                 randconfig-e003-20200323
+x86_64               randconfig-f001-20200323
+x86_64               randconfig-f002-20200323
+x86_64               randconfig-f003-20200323
+i386                 randconfig-f001-20200323
+i386                 randconfig-f002-20200323
+i386                 randconfig-f003-20200323
+x86_64               randconfig-g001-20200323
+x86_64               randconfig-g002-20200323
+x86_64               randconfig-g003-20200323
+i386                 randconfig-g001-20200323
+i386                 randconfig-g002-20200323
+i386                 randconfig-g003-20200323
+x86_64               randconfig-h001-20200323
+x86_64               randconfig-h002-20200323
+x86_64               randconfig-h003-20200323
+i386                 randconfig-h001-20200323
+i386                 randconfig-h002-20200323
+i386                 randconfig-h003-20200323
+arc                  randconfig-a001-20200323
+arm                  randconfig-a001-20200323
+arm64                randconfig-a001-20200323
+ia64                 randconfig-a001-20200323
+powerpc              randconfig-a001-20200323
+sparc                randconfig-a001-20200323
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
-> This is the intended use of the architecture. Per ARM DDI 0487E.a page
-> B2-144:
-> 
-> | This architecture assumes that all PEs that use the same operating
-> | system or hypervisor are in the same Inner Shareable shareability
-> | shareability
-> 
-> ... where a PE is a "Processing Element", which you can think of as a
-> single core.
-> 
-> > I have checked the kernel code, and seems it only requires coherence in
-> > 'Inner Shareable' domain. So my question is how can linux guarantees
-> > cache coherence in 'CPU migration' or 'Global Task Scheduling' models
-> > wich both clusters are active at the same time? For example, a thread
-> > ran in Cluster A and modified 'Inner Shareable' memory, then it migrates
-> > to Cluster B.
-> 
-> As above, this works because all the relevant cores are within the same
-> Inner Shareable domain.
-> 
-> > 2. ARM64 cache maintenance code sync_icache_aliases() for non-aliasing icache.
-> > In linux kernel on arm64 platform, the flow function sync_icache_aliases()
-> > is used to sync i-cache and d-cache. I understand the aliasing case. but
-> > for non-aliasing case why it just does "dc cvau" (in __flush_icache_range())
-> > whithout really invalidate the icache?
-> 
-> The __flush_icache_range/__flush_cache_user_range assembly function does
-> both the D-cache maintenance with DC CVAU, then the I-cache maintenance
-> with IC IVAU, so I think you have misread it.
->a
-Yes. I missed the IC IVAU instruction defined in macro
-invalidate_icache_by_line.
-
-> Thanks,
-> Mark.
-> 
-> > Will i-cache refill from L2 cache?
-> >
-> > void sync_icache_aliases(void *kaddr, unsigned long len)
-> > {
-> > 	unsigned long addr = (unsigned long)kaddr;
-> > 
-> > 	if (icache_is_aliasing()) {
-> > 		__clean_dcache_area_pou(kaddr, len);
-> > 		__flush_icache_all();
-> > 	} else {
-> > 		/*
-> > 		 * Don't issue kick_all_cpus_sync() after I-cache invalidation
-> > 		 * for user mappings.
-> > 		 */
-> > 		__flush_icache_range(addr, addr + len);
-> > 	}
-> > }
-> > 
-> > -- 
-> > Cheers,
-> > Changbin Du
-
--- 
-Cheers,
-Changbin Du
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
