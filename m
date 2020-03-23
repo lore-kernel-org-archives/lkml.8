@@ -2,199 +2,317 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BDCC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247E6C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5051A20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6FFA20769
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:55:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584932109;
+	bh=N0k6o8c8KvYw0g3jcUDhN/MPud7VOyTsnr0yHrUxgUw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=m7Mhit7/Z7+Kvhtpzouy04SQrMP8KFesHtSKgm1aOBUPu8LAtiBOHvxeuSOgEzdKS
+	 eFkIZw0c0MgyXfU+v860I1Ub9yDQmM8C7lU7AJjAacZKJxLoJAAZeek5zSXjIvVNfs
+	 u2T9r+wtIZyyv5VDc688Wd4MEQcng0NwPcaeheFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgCWCqw (ORCPT
+        id S1727131AbgCWCzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 22:46:52 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:33246 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbgCWCqv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 22:46:51 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id CB41180307CB;
-        Mon, 23 Mar 2020 02:46:47 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id UTjW9bYZDdnY; Mon, 23 Mar 2020 05:46:46 +0300 (MSK)
-From:   <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sun, 22 Mar 2020 22:55:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727050AbgCWCzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 22:55:03 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A325C20722;
+        Mon, 23 Mar 2020 02:55:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584932101;
+        bh=N0k6o8c8KvYw0g3jcUDhN/MPud7VOyTsnr0yHrUxgUw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=g9VPl4eajjddjNIOPzBfeSyOtL9KQiSn/FZzz7hTPVSKlmvRnqj3azUI4CLLkZJvc
+         uYirLjF1H+fdvZlmKyt2AxGT61givxo81nRhOvH91ViOca/11r46Ug+bKaoJ8lwwc0
+         hRh7PEZEFJGW9zuLBEKdZoD1kcl6jFPVucBD+M6Y=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 72D1C35226BE; Sun, 22 Mar 2020 19:55:01 -0700 (PDT)
+Date:   Sun, 22 Mar 2020 19:55:01 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        linux-pci@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] serial: 8250_dw: Fix common clocks usage race condition
-Date:   Mon, 23 Mar 2020 05:46:09 +0300
-Message-ID: <20200323024611.16039-1-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200306130231.05BBC8030795@mail.baikalelectronics.ru>
-References: 
+        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
+        Brian Cain <bcain@codeaurora.org>,
+        linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        Michal Simek <monstr@monstr.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geoff Levand <geoff@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [patch V3 13/20] Documentation: Add lock ordering and nesting
+ documentation
+Message-ID: <20200323025501.GE3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200321112544.878032781@linutronix.de>
+ <20200321113242.026561244@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200321113242.026561244@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On Sat, Mar 21, 2020 at 12:25:57PM +0100, Thomas Gleixner wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> The kernel provides a variety of locking primitives. The nesting of these
+> lock types and the implications of them on RT enabled kernels is nowhere
+> documented.
+> 
+> Add initial documentation.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: "Paul E . McKenney" <paulmck@kernel.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> ---
+> V3: Addressed review comments from Paul, Jonathan, Davidlohr
+> V2: Addressed review comments from Randy
+> ---
+>  Documentation/locking/index.rst     |    1 
+>  Documentation/locking/locktypes.rst |  299 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 300 insertions(+)
+>  create mode 100644 Documentation/locking/locktypes.rst
+> 
+> --- a/Documentation/locking/index.rst
+> +++ b/Documentation/locking/index.rst
+> @@ -7,6 +7,7 @@ locking
+>  .. toctree::
+>      :maxdepth: 1
+>  
+> +    locktypes
+>      lockdep-design
+>      lockstat
+>      locktorture
+> --- /dev/null
+> +++ b/Documentation/locking/locktypes.rst
+> @@ -0,0 +1,299 @@
 
-There are races possible in the dw8250_set_termios() callback method
-and while the device is in PM suspend state. A race condition may
-happen if the baudrate clock source device is shared with some other
-device (in our machine it's another DW UART port). In this case if that
-device changes the clock rate while serial console is using it the
-DW 8250 UART port might not only end up with an invalid uartclk value
-saved, but may also experience a distorted output data since baud-clock
-could have been changed. In order to fix this lets enable an exclusive
-reference clock rate access in case if "baudclk" device is specified.
+[ . . . Adding your example execution sequences . . . ]
 
-So if some other device also acquires the rate exclusivity during the
-time of a DW UART 8250 port being opened, then DW UART 8250 driver
-won't be able to alter the baud-clock. It shall just use the available
-clock rate. Similarly another device also won't manage to change the
-rate at that time. If nothing else have the exclusive rate access
-acquired except DW UART 8250 driver, then the driver will be able to
-alter the rate as much as it needs to in accordance with the currently
-implemented logic.
+> +PREEMPT_RT kernels preserve all other spinlock_t semantics:
+> +
+> + - Tasks holding a spinlock_t do not migrate.  Non-PREEMPT_RT kernels
+> +   avoid migration by disabling preemption.  PREEMPT_RT kernels instead
+> +   disable migration, which ensures that pointers to per-CPU variables
+> +   remain valid even if the task is preempted.
+> +
+> + - Task state is preserved across spinlock acquisition, ensuring that the
+> +   task-state rules apply to all kernel configurations.  Non-PREEMPT_RT
+> +   kernels leave task state untouched.  However, PREEMPT_RT must change
+> +   task state if the task blocks during acquisition.  Therefore, it saves
+> +   the current task state before blocking and the corresponding lock wakeup
+> +   restores it.
+> +
+> +   Other types of wakeups would normally unconditionally set the task state
+> +   to RUNNING, but that does not work here because the task must remain
+> +   blocked until the lock becomes available.  Therefore, when a non-lock
+> +   wakeup attempts to awaken a task blocked waiting for a spinlock, it
+> +   instead sets the saved state to RUNNING.  Then, when the lock
+> +   acquisition completes, the lock wakeup sets the task state to the saved
+> +   state, in this case setting it to RUNNING.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>
-CC: Ray Jui <rjui@broadcom.com>
-Cc: Scott Branden <sbranden@broadcom.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Wei Xu <xuwei5@hisilicon.com>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Gregory Clement <gregory.clement@bootlin.com>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org
+In the normal case where the task sleeps through the entire lock
+acquisition, the sequence of events is as follows:
 
----
+     state = UNINTERRUPTIBLE
+     lock()
+       block()
+         real_state = state
+         state = SLEEPONLOCK
 
-Changelog v2:
-- Move exclusive ref clock lock/unlock precudures to the 8250 port
-  startup/shutdown methods.
-- The changelog message has also been slightly modified due to the
-  alteration.
-- Remove Alexey' SoB tag.
-- Cc someone from ARM who might be concerned regarding this change.
-- Cc someone from Clocks Framework to get their comments on this patch.
----
- drivers/tty/serial/8250/8250_dw.c | 36 +++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+                               lock wakeup
+                                 state = real_state == UNINTERRUPTIBLE
 
-diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
-index aab3cccc6789..08f3f745ed54 100644
---- a/drivers/tty/serial/8250/8250_dw.c
-+++ b/drivers/tty/serial/8250/8250_dw.c
-@@ -319,6 +319,40 @@ static void dw8250_set_ldisc(struct uart_port *p, struct ktermios *termios)
- 	serial8250_do_set_ldisc(p, termios);
- }
- 
-+static int dw8250_startup(struct uart_port *p)
-+{
-+	struct dw8250_data *d = to_dw8250_data(p->private_data);
-+
-+	/*
-+	 * Some platforms may provide a reference clock shared between several
-+	 * devices. In this case before using the serial port first we have to
-+	 * make sure nothing will change the rate behind our back and second
-+	 * the tty/serial subsystem knows the actual reference clock rate of
-+	 * the port.
-+	 */
-+	if (clk_rate_exclusive_get(d->clk)) {
-+		dev_warn(p->dev, "Couldn't lock the clock rate\n");
-+	} else if (d->clk) {
-+		p->uartclk = clk_get_rate(d->clk);
-+		if (!p->uartclk) {
-+			clk_rate_exclusive_put(d->clk);
-+			dev_err(p->dev, "Clock rate not defined\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return serial8250_do_startup(p);
-+}
-+
-+static void dw8250_shutdown(struct uart_port *p)
-+{
-+	struct dw8250_data *d = to_dw8250_data(p->private_data);
-+
-+	serial8250_do_shutdown(p);
-+
-+	clk_rate_exclusive_put(d->clk);
-+}
-+
- /*
-  * dw8250_fallback_dma_filter will prevent the UART from getting just any free
-  * channel on platforms that have DMA engines, but don't have any channels
-@@ -414,6 +448,8 @@ static int dw8250_probe(struct platform_device *pdev)
- 	p->serial_out	= dw8250_serial_out;
- 	p->set_ldisc	= dw8250_set_ldisc;
- 	p->set_termios	= dw8250_set_termios;
-+	p->startup	= dw8250_startup;
-+	p->shutdown	= dw8250_shutdown;
- 
- 	p->membase = devm_ioremap(dev, regs->start, resource_size(regs));
- 	if (!p->membase)
--- 
-2.25.1
+This sequence of events can occur when the task acquires spinlocks
+on its way to sleeping, for example, in a call to wait_event().
 
+The non-lock wakeup can occur when a wakeup races with this wait_event(),
+which can result in the following sequence of events:
+
+     state = UNINTERRUPTIBLE
+     lock()
+       block()
+         real_state = state
+         state = SLEEPONLOCK
+
+                             non lock wakeup
+                                 real_state = RUNNING
+
+                               lock wakeup
+                                 state = real_state == RUNNING
+
+Without this real_state subterfuge, the wakeup might be lost.
+
+[ . . . and continuing where I left off earlier . . . ]
+
+> +bit spinlocks
+> +-------------
+> +
+> +Bit spinlocks are problematic for PREEMPT_RT as they cannot be easily
+> +substituted by an RT-mutex based implementation for obvious reasons.
+> +
+> +The semantics of bit spinlocks are preserved on PREEMPT_RT kernels and the
+> +caveats vs. raw_spinlock_t apply.
+> +
+> +Some bit spinlocks are substituted by regular spinlock_t for PREEMPT_RT but
+> +this requires conditional (#ifdef'ed) code changes at the usage site while
+> +the spinlock_t substitution is simply done by the compiler and the
+> +conditionals are restricted to header files and core implementation of the
+> +locking primitives and the usage sites do not require any changes.
+
+PREEMPT_RT cannot substitute bit spinlocks because a single bit is
+too small to accommodate an RT-mutex.  Therefore, the semantics of bit
+spinlocks are preserved on PREEMPT_RT kernels, so that the raw_spinlock_t
+caveats also apply to bit spinlocks.
+
+Some bit spinlocks are replaced with regular spinlock_t for PREEMPT_RT
+using conditional (#ifdef'ed) code changes at the usage site.
+In contrast, usage-site changes are not needed for the spinlock_t
+substitution.  Instead, conditionals in header files and the core locking
+implemementation enable the compiler to do the substitution transparently.
+
+
+> +Lock type nesting rules
+> +=======================
+> +
+> +The most basic rules are:
+> +
+> +  - Lock types of the same lock category (sleeping, spinning) can nest
+> +    arbitrarily as long as they respect the general lock ordering rules to
+> +    prevent deadlocks.
+
+  - Lock types in the same category (sleeping, spinning) can nest
+     arbitrarily as long as they respect the general deadlock-avoidance
+     ordering rules.
+
+[ Give or take lockdep eventually complaining about too-deep nesting,
+  but that is probably not worth mentioning here.  Leave that caveat
+  to the lockdep documentation. ]
+
+> +  - Sleeping lock types cannot nest inside spinning lock types.
+> +
+> +  - Spinning lock types can nest inside sleeping lock types.
+> +
+> +These rules apply in general independent of CONFIG_PREEMPT_RT.
+
+These constraints apply both in CONFIG_PREEMPT_RT and otherwise.
+
+> +As PREEMPT_RT changes the lock category of spinlock_t and rwlock_t from
+> +spinning to sleeping this has obviously restrictions how they can nest with
+> +raw_spinlock_t.
+> +
+> +This results in the following nest ordering:
+
+The fact that PREEMPT_RT changes the lock category of spinlock_t and
+rwlock_t from spinning to sleeping means that they cannot be acquired
+while holding a raw spinlock.  This results in the following nesting
+ordering:
+
+> +  1) Sleeping locks
+> +  2) spinlock_t and rwlock_t
+> +  3) raw_spinlock_t and bit spinlocks
+> +
+> +Lockdep is aware of these constraints to ensure that they are respected.
+
+Lockdep will complain if these constraints are violated, both in
+CONFIG_PREEMPT_RT and otherwise.
+
+
+> +Owner semantics
+> +===============
+> +
+> +Most lock types in the Linux kernel have strict owner semantics, i.e. the
+> +context (task) which acquires a lock has to release it.
+
+The aforementioned lock types have strict owner semantics: The context
+(task) that acquired the lock must release it.
+
+> +There are two exceptions:
+> +
+> +  - semaphores
+> +  - rwsems
+> +
+> +semaphores have no owner semantics for historical reason, and as such
+> +trylock and release operations can be called from any context. They are
+> +often used for both serialization and waiting purposes. That's generally
+> +discouraged and should be replaced by separate serialization and wait
+> +mechanisms, such as mutexes and completions.
+
+semaphores lack owner semantics for historical reasons, so their trylock
+and release operations may be called from any context. They are often
+used for both serialization and waiting, but new use cases should
+instead use separate serialization and wait mechanisms, such as mutexes
+and completions.
+
+> +rwsems have grown interfaces which allow non owner release for special
+> +purposes. This usage is problematic on PREEMPT_RT because PREEMPT_RT
+> +substitutes all locking primitives except semaphores with RT-mutex based
+> +implementations to provide priority inheritance for all lock types except
+> +the truly spinning ones. Priority inheritance on ownerless locks is
+> +obviously impossible.
+> +
+> +For now the rwsem non-owner release excludes code which utilizes it from
+> +being used on PREEMPT_RT enabled kernels. In same cases this can be
+> +mitigated by disabling portions of the code, in other cases the complete
+> +functionality has to be disabled until a workable solution has been found.
+
+rwsems have grown special-purpose interfaces that allow non-owner release.
+This non-owner release prevents PREEMPT_RT from substituting RT-mutex
+implementations, for example, by defeating priority inheritance.
+After all, if the lock has no owner, whose priority should be boosted?
+As a result, PREEMPT_RT does not currently support rwsem, which in turn
+means that code using it must therefore be disabled until a workable
+solution presents itself.
+
+[ Note: Not as confident as I would like to be in the above. ]
+
+							Thanx, Paul
