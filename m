@@ -2,167 +2,137 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBD6C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F703C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0397F20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A11120719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:50:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbgCWQtt (ORCPT
+        id S1727717AbgCWQuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:49:49 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:58558 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbgCWQts (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:49:48 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jGQGp-0000hN-4P; Mon, 23 Mar 2020 10:49:47 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jGQGl-0002wd-IJ; Mon, 23 Mar 2020 10:49:46 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Yoji <yoji.fujihar.min@gmail.com>, linux-kernel@vger.kernel.org
-References: <20200322110901.GA25108@redhat.com>
-        <87lfnsh3tm.fsf@x220.int.ebiederm.org>
-        <20200322202929.GA1614@redhat.com>
-Date:   Mon, 23 Mar 2020 11:47:12 -0500
-In-Reply-To: <20200322202929.GA1614@redhat.com> (Oleg Nesterov's message of
-        "Sun, 22 Mar 2020 21:29:29 +0100")
-Message-ID: <87imivc92n.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 23 Mar 2020 12:50:03 -0400
+Received: from mga02.intel.com ([134.134.136.20]:36306 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727067AbgCWQuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 12:50:03 -0400
+IronPort-SDR: AuCpJwR6e+ND5waOSVyALQJStdbEozrPuOUoz/2Mxvlrcu1zQ1eQBxNe6dslk0xrCuFupYLwkT
+ TTZ8E36hxLXg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 09:50:02 -0700
+IronPort-SDR: YOjnM1lhGB6aAHFakbm39vv7nwcKvrPIL1qKbD+3OLR+h+dn9jhdjj/+lZlvnev8270tbaFZmK
+ d5gqoSd7NAcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
+   d="scan'208";a="447452716"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga006.fm.intel.com with ESMTP; 23 Mar 2020 09:50:01 -0700
+Date:   Mon, 23 Mar 2020 09:50:01 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        John Haxby <john.haxby@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH v3 04/37] KVM: nVMX: Invalidate all roots when emulating
+ INVVPID without EPT
+Message-ID: <20200323165001.GR28711@linux.intel.com>
+References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
+ <20200320212833.3507-5-sean.j.christopherson@intel.com>
+ <87v9mv84qu.fsf@vitty.brq.redhat.com>
+ <20200323160432.GJ28711@linux.intel.com>
+ <87lfnr820r.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jGQGl-0002wd-IJ;;;mid=<87imivc92n.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/UEZwbnQBg29S5yKyQ6nXK8u3mucJOtHA=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] ipc/mqueue.c: change __do_notify() to bypass check_kill_permission()
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87lfnr820r.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oleg Nesterov <oleg@redhat.com> writes:
+On Mon, Mar 23, 2020 at 05:33:08PM +0100, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> 
+> > On Mon, Mar 23, 2020 at 04:34:17PM +0100, Vitaly Kuznetsov wrote:
+> >> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> >> 
+> >> > From: Junaid Shahid <junaids@google.com>
+> >> >
+> >> > Free all roots when emulating INVVPID for L1 and EPT is disabled, as
+> >> > outstanding changes to the page tables managed by L1 need to be
+> >> > recognized.  Because L1 and L2 share an MMU when EPT is disabled, and
+> >> > because VPID is not tracked by the MMU role, all roots in the current
+> >> > MMU (root_mmu) need to be freed, otherwise a future nested VM-Enter or
+> >> > VM-Exit could do a fast CR3 switch (without a flush/sync) and consume
+> >> > stale SPTEs.
+> >> >
+> >> > Fixes: 5c614b3583e7b ("KVM: nVMX: nested VPID emulation")
+> >> > Signed-off-by: Junaid Shahid <junaids@google.com>
+> >> > [sean: ported to upstream KVM, reworded the comment and changelog]
+> >> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >> > ---
+> >> >  arch/x86/kvm/vmx/nested.c | 14 ++++++++++++++
+> >> >  1 file changed, 14 insertions(+)
+> >> >
+> >> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> >> > index 9624cea4ed9f..bc74fbbf33c6 100644
+> >> > --- a/arch/x86/kvm/vmx/nested.c
+> >> > +++ b/arch/x86/kvm/vmx/nested.c
+> >> > @@ -5250,6 +5250,20 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
+> >> >  		return kvm_skip_emulated_instruction(vcpu);
+> >> >  	}
+> >> >  
+> >> > +	/*
+> >> > +	 * Sync the shadow page tables if EPT is disabled, L1 is invalidating
+> >> > +	 * linear mappings for L2 (tagged with L2's VPID).  Free all roots as
+> >> > +	 * VPIDs are not tracked in the MMU role.
+> >> > +	 *
+> >> > +	 * Note, this operates on root_mmu, not guest_mmu, as L1 and L2 share
+> >> > +	 * an MMU when EPT is disabled.
+> >> > +	 *
+> >> > +	 * TODO: sync only the affected SPTEs for INVDIVIDUAL_ADDR.
+> >> > +	 */
+> >> > +	if (!enable_ept)
+> >> > +		kvm_mmu_free_roots(vcpu, &vcpu->arch.root_mmu,
+> >> > +				   KVM_MMU_ROOTS_ALL);
+> >> > +
+> >> 
+> >> This is related to my remark on the previous patch; the comment above
+> >> makes me think I'm missing something obvious, enlighten me please)
+> >> 
+> >> My understanding is that L1 and L2 will share arch.root_mmu not only
+> >> when EPT is globally disabled, we seem to switch between
+> >> root_mmu/guest_mmu only when nested_cpu_has_ept(vmcs12) but different L2
+> >> guests may be different on this. Do we need to handle this somehow?
+> >
+> > guest_mmu is used iff nested EPT is enabled, which requires enable_ept=1.
+> > enable_ept is global and cannot be changed without reloading kvm_intel.
+> >
+> > This most definitely over-invalidates, e.g. it blasts away L1's page
+> > tables.  But, fixing that requires tracking VPID in mmu_role and/or adding
+> > support for using guest_mmu when L1 isn't using TDP, i.e. nested EPT is
+> > disabled.  Assuming the vast majority of nested deployments enable EPT in
+> > L0, the cost of both options likely outweighs the benefits.
+> >
+> 
+> Yes but my question rather was: what if global 'enable_ept' is true but
+> nested EPT is not being used by L1, don't we still need to do
+> kvm_mmu_free_roots(&vcpu->arch.root_mmu) here?
 
-> On 03/22, Eric W. Biederman wrote:
->>
->> Oleg Nesterov <oleg@redhat.com> writes:
->>
->> > Commit cc731525f26a ("signal: Remove kernel interal si_code magic")
->> > changed the value of SI_FROMUSER(SI_MESGQ), this means that mq_notify()
->> > no longer works if the sender doesn't have rights to send a signal.
->> >
->> > Change __do_notify() to use do_send_sig_info() instead of kill_pid_info()
->> > to avoid check_kill_permission().
->>
->> I totally see why you are doing this.  To avoid the permission check,
->> and since this process requested the signal it makes sense to bypass the
->> permission checks.
->
-> And this is what we had before cc731525f26a, so this patch tries to fix
-> the regression.
-
-I was intending to suggest a new function that took a pid and did not do
-the permission checks.
-
-Looking a little further I think there is a reasonbly strong argument
-that this code should be using send_sigqueue with a preallocated signal,
-just like timers do.
-
->> The code needs to make certain that this signal is
->> canceled or otherwise won't be sent after an exec.
->
-> not sure I understand this part, but see below.
->
->> That said I don't like it.  I would really like to remove the signal
->> sending interfaces that take a task_struct.
->
-> Oh, can we discuss the possible cleanups separately? On top of this fix,
-> if possible.
-
-I was saying that from my perspective your proposed fix appears to make
-the code more of a mess, and harder to maintain.
-
-That is relevant, because if we can't maintain the code it will just
-break again or perhaps get worse.
-
->> Looking at the code I currently see several places where we have this
->> kind of semantic (sending a requested signal to a process from the
->> context of another process): do_notify_parent, pdeath_signal, f_setown,
->> and mq_notify.
->
-> To me they all differ, I am not sure I understand how exactly you want
-> to unify them...
-
-The common thread is they all are requested by the receiver of the
-signal (so don't need permission checks) and thus need to be canceled by
-appropriate versions of exec.
-
-
->> Especially with the concerns about being able to send a signal after
->> exec, and cause havoc.
-> ...
->> Espeically
->> with concerns about being able to send signals to a suid process that
->> would normally fail I think there is an issue here.
->
-> I can easily misread this code, never looked into ipc/mqueue.c before.
-> But it seems that it is not possible to send a signal after exec, suid
-> or not,
->
-> 	- sys_mq_open() uses O_CLOEXEC
->
-> 	- mqueue_flush_file() does
-> 	
-> 		if (task_tgid(current) == info->notify_owner)
-> 			remove_notification(info);
-
-That is weird.  It looks like we are attempt to handle file descriptor
-passing.  The unix98 description of exec says all mq file descriptors
-shall be closed, but I can't find a word about file descriptor passing
-with af_unix sockets.
-
->> At the very least can you add a big fat comment about the semantics
->> that userspace expects in this case?
->
-> Me? You are kidding ;)
->
-> I know absolutely nothing about ipc/mqueue, and when I read this code
-> or manpage I find the semantics of mq_notify is very strange.
-
-Well at least a small comment please that says the code started
-performing the permission check and userspace code regressed.
-
-Perhaps with the description of the userspace code in the commit log.
-Perhaps a test case?
-
-While someone knows what broke I would very much like to capture as much
-detail as we can avoid breaking things again in the future.  If we don't
-do that now we risk breaking something the next time that code is
-changed.
-
-My old copy of unix98 shows no permission checking, and permission
-checking does not make sense to me.  So I think it is very much a
-problem that I added permission checking by accident.
-
-I really just want to be certain that things are fixed well enough that
-we don't risk a regressing again the next time someone touches the code.
-
-Eric
+No, because L0 isn't shadowing the L1->L2 page tables, i.e. there can't be
+unsync'd SPTEs for L2.  The vpid_sync_*() above flushes the TLB for L2's
+effective VPID, which is all that's required.
