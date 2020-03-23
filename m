@@ -2,113 +2,155 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9603AC4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA6DC4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3502070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EEDF20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:46:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LmlNw6qh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vgXynoJT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbgCWTpR (ORCPT
+        id S1726009AbgCWTqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:45:17 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39799 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727093AbgCWTpQ (ORCPT
+        Mon, 23 Mar 2020 15:46:10 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43748 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbgCWTqJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:45:16 -0400
-Received: by mail-pf1-f195.google.com with SMTP id d25so8002770pfn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 12:45:14 -0700 (PDT)
+        Mon, 23 Mar 2020 15:46:09 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u12so7727239pgb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 12:46:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=80B/TTFy4vFKz8L9+3RjvU1r3boBA5t0X4WLtGJoAss=;
-        b=LmlNw6qhloEXhNPwTTRoJnnY1RRSyI1vukop6LWemBIZ7WiAYP8MMBU/tDoetPZ7Ic
-         DnB+YTC9QVV0DcZQDAHwAIeiGxDBVqSHVfMD45MqIJtHOtVLZ1vD1QURpLlWad+NBdQF
-         l49NVuqzu4uUXjB25TU+fNg80eeNR+Qh0jwHU=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TtqwWatKpD7SofVT0EoTqpDu0ZUD5i4Sz54oEJu3/Dw=;
+        b=vgXynoJTySUcoHgVdDm+LazyPhMM1Y197xQjVT9YozDU8bvD3JlxvxI5QtTeUoOVmR
+         PQ0ygD2K5NGp67x0Rc4Lyeb9ZhnN5yxMpTgnjXiRqoVLScrYlM+VDqc3WE9uQveI/1P8
+         2znax2dxzmK1WFcFCb3ZvCGcY9chG6Xi5JyzXjHypU3WGqqp/J9WpSOmbxcYLBxsZJ8e
+         FmRbscZdwxmnn1DfXwA6mTR5ywoEQwAacX608dJoUQKc7k/WBAbu/6b6EUd9pqt0iLjl
+         i9sym3PfZv7MXeAKD/8/XGfqPg1atQkXVky/ji8FG2SkwmN+VBr6I7aJoqRXqB0mhvtM
+         tj1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=80B/TTFy4vFKz8L9+3RjvU1r3boBA5t0X4WLtGJoAss=;
-        b=m3d/IJksLPgYCf1yLMggC49Ogs+O1b7z8AqaLyK9aAASBc3IvFyZUoveuUwy5PZNYL
-         TQt5nXoSMjcqzgZHkssFNa0cfErDleJg2tlRUoApvaD37N9YUh3qfclxi35PqrQiuGni
-         eKN8/bEPRHD94mZ4V8DBA7c9pHOFHo2pp2gJzRfdzak8yMiBRP/99yaJO3MzeIlUBiXT
-         EtEjYMLXNLkOZVVtDzkZ499J7gOOqmc63M8hfM9NfOaZd9e/TWX6qh7Ss8ZZn1wbRoKo
-         xKPA7y1Eomtxo8uECOmZFfdu2ek0f+jYbUAjMKK54EXerBpwwarqLhMMF1GuQbTNt9TH
-         HOEw==
-X-Gm-Message-State: ANhLgQ1RR/dTBRzM4s3IgfvJmWxKDccpJjvma42BaFJOquIOdzyZUkFP
-        pXk9VfmNPaEhutD4dKb7ud5nhQ==
-X-Google-Smtp-Source: ADFU+vuCb3AKe+oRCHKCUOWWRUML5CHZGIql4EX16aeiRa+xpJXnbDTvnZaB6ZCXbvbldXkAHeB48A==
-X-Received: by 2002:aa7:84cc:: with SMTP id x12mr7601806pfn.82.1584992714004;
-        Mon, 23 Mar 2020 12:45:14 -0700 (PDT)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id s98sm344857pjb.46.2020.03.23.12.45.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 12:45:13 -0700 (PDT)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     marcel@holtmann.org, linux-bluetooth@vger.kernel.org
-Cc:     chromeos-bluetooth-upstreaming@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH v3 0/1] Bluetooth: Prioritize sco traffic on slow interfaces
-Date:   Mon, 23 Mar 2020 12:45:06 -0700
-Message-Id: <20200323194507.90944-1-abhishekpandit@chromium.org>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TtqwWatKpD7SofVT0EoTqpDu0ZUD5i4Sz54oEJu3/Dw=;
+        b=WUvbQJ0emfrd1/peactjK6FwjMWNWPqrUBHJlp7cEbFwm8gUpnS17xb7VgW0ff8oCo
+         56TCO62bsIz+YNfP/TY0h6p+tTzA4VC4xP0hlUh4yil/foiz+Jo69yeymnl5yFlMLSwx
+         cgHMpmkA0GVZCR6CRzhHUbxhuEd4yg8v+aeOfiIcbX1uX8ANJ0LM/iTcIuIlkcL/hCtg
+         7fn0b7ZQMkE4iHHuM07TQ9+yeyIU3kCL+VoOj4rYtyEZAFEvf0wcGw6BEKV2lS5Mr6F4
+         +9kwoxhKSWqu0MtmRvPsLKg+KGnDvl2UWoeJtQy10IRRSPhObrzCfK7mB3aoZSWJWoa/
+         gj6g==
+X-Gm-Message-State: ANhLgQ1g/fW1V5Tpc2rvLSZcfTOl8xlzD2B7NejIFhX0zuvwfveEQyXs
+        jvUvf7RHX/3OLf1deFLN+KGzeZB4LBL1sm5fyWRIZg==
+X-Google-Smtp-Source: ADFU+vshC7+kzkmu2zUDZAt4WA6bUsvpCEOCvNCXQOT/vtxbuGNUMhtlqdiIfBnsJCSlpdv8McZrNQlT5LxKHpC0owo=
+X-Received: by 2002:a63:4453:: with SMTP id t19mr22402443pgk.381.1584992768425;
+ Mon, 23 Mar 2020 12:46:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200323020844.17064-1-masahiroy@kernel.org>
+In-Reply-To: <20200323020844.17064-1-masahiroy@kernel.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 23 Mar 2020 12:45:56 -0700
+Message-ID: <CAKwvOdm1B=Wc6zcxpapcbeReX0_2V3AiqxGUgikL4ypztZkUEg@mail.gmail.com>
+Subject: Re: [PATCH 0/7] x86: remove always-defined CONFIG_AS_* options
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Allison Randal <allison@lohutok.net>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Song Liu <songliubraving@fb.com>,
+        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Mar 22, 2020 at 7:09 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> arch/x86/Makefile tests instruction code by $(call as-instr, ...)
+>
+> Some of them are very old.
+> For example, the check for CONFIG_AS_CFI dates back to 2006.
+>
+> We raise GCC versions from time to time, and we clean old code away.
+> The same policy applied to binutils.
+>
+> The current minimal supported version of binutils is 2.21
+>
+> This is new enough to recognize the instruction in most of
+> as-instr calls.
 
-Hi Marcel,
+I'm quite happy to see this series; a few weekends ago I was playing
+around with adding dwarf-5 support to the Linux kernel, and was
+looking at these noticing there was quite a bit of cruft.
+Unfortunately, I got detoured filing bugs against GNU as for dwarf-5
+bugs, but the developers were very responsive and fixed them all.  I
+should go find and dust off that patchset.  In the meantime, I'll try
+to help review these patches. Thank you for sending them.
 
-While investigating supporting Voice over HCI/UART, we discovered that
-it is possible for SCO packet deadlines to be missed in some conditions
-where large ACL packets are being transferred. For UART, at a baudrate
-of 3000000, a single 1024 byte packet will take ~3.4ms to transfer.
-Sending two ACL packets of max size would cause us to miss the timing
-for SCO (which is 3.75ms) in the worst case.
+>
+>
+>
+> Masahiro Yamada (7):
+>   x86: remove unneeded defined(__ASSEMBLY__) check from asm/dwarf2.h
+>   x86: remove always-defined CONFIG_AS_CFI
+>   x86: remove always-defined CONFIG_AS_CFI_SIGNAL_FRAME
+>   x86: remove always-defined CONFIG_AS_CFI_SECTIONS
+>   x86: remove always-defined CONFIG_AS_SSSE3
+>   x86: remove always-defined CONFIG_AS_AVX
+>   x86: add comments about the binutils version to support code in
+>     as-instr
+>
+>  arch/x86/Makefile                             | 21 +++------
+>  arch/x86/crypto/Makefile                      | 32 ++++++--------
+>  arch/x86/crypto/aesni-intel_avx-x86_64.S      |  3 --
+>  arch/x86/crypto/aesni-intel_glue.c            | 14 +-----
+>  arch/x86/crypto/blake2s-core.S                |  2 -
+>  arch/x86/crypto/poly1305-x86_64-cryptogams.pl |  8 ----
+>  arch/x86/crypto/poly1305_glue.c               |  6 +--
+>  arch/x86/crypto/sha1_ssse3_asm.S              |  4 --
+>  arch/x86/crypto/sha1_ssse3_glue.c             |  9 +---
+>  arch/x86/crypto/sha256-avx-asm.S              |  3 --
+>  arch/x86/crypto/sha256_ssse3_glue.c           |  8 +---
+>  arch/x86/crypto/sha512-avx-asm.S              |  2 -
+>  arch/x86/crypto/sha512_ssse3_glue.c           |  7 +--
+>  arch/x86/include/asm/dwarf2.h                 | 43 -------------------
+>  arch/x86/include/asm/xor_avx.h                |  9 ----
+>  lib/raid6/algos.c                             |  2 -
+>  lib/raid6/recov_ssse3.c                       |  6 ---
+>  lib/raid6/test/Makefile                       |  3 --
+>  18 files changed, 26 insertions(+), 156 deletions(-)
+>
+> --
+> 2.17.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200323020844.17064-1-masahiroy%40kernel.org.
 
-To mitigate this, we change hci_tx_work to prefer scheduling SCO/eSCO
-over ACL/LE and modify the hci_sched_{acl,le} routines so that they will
-only send one packet before checking whether a SCO packet is queued. ACL
-packets should still get sent at a similar rate (depending on number of
-ACL packets supported by controller) since the loop will continue until
-there is no more quota left for ACL and LE packets.
 
-To test this patch, I played some music over SCO (open youtube and
-a video conference page at the same time) while using an LE keyboard and
-mouse.  There were no discernible slowdowns caused by this change.
-
-Thanks
-Abhishek
-
-Changes in v3:
-* Removed hci_sched_sync
-
-Changes in v2:
-* Refactor to check for SCO/eSCO after each ACL/LE packet sent
-* Enabled SCO priority all the time and removed the sched_limit variable
-
-Abhishek Pandit-Subedi (1):
-  Bluetooth: Prioritize SCO traffic
-
- net/bluetooth/hci_core.c | 106 +++++++++++++++++++++------------------
- 1 file changed, 57 insertions(+), 49 deletions(-)
 
 -- 
-2.25.1.696.g5e7596f4ac-goog
-
+Thanks,
+~Nick Desaulniers
