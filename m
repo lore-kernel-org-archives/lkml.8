@@ -2,162 +2,147 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79457C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0144BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 467F220753
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:51:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584975077;
-	bh=6zE+MNsjghGvf/vD2ixcAXgqf9N1ANG7/Yb/Ilg0ooU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yP+OdSPnvKiDp4YTTZYD5j2lfHfPU+fkpZgDSRSFNuHIL0ZQTcfXDg5Xh6LR7Ebca
-	 1/J1mSPh8c+c1xmN4VyqA41Isgp+b74upZb0roG4veufxxYUMAgDHe1P1YHMw/wxGh
-	 gQPc0l6IxoK3jGxUYObBAW5Bq2tRQtjUv2VaiiwE=
+	by mail.kernel.org (Postfix) with ESMTP id CA66A20786
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:51:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DtWQ1WCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgCWOvQ (ORCPT
+        id S1727046AbgCWOvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:51:16 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37349 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgCWOvP (ORCPT
+        Mon, 23 Mar 2020 10:51:25 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:30750 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727011AbgCWOvZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:51:15 -0400
-Received: by mail-wm1-f65.google.com with SMTP id d1so15131700wmb.2;
-        Mon, 23 Mar 2020 07:51:13 -0700 (PDT)
+        Mon, 23 Mar 2020 10:51:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584975084;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5hQzIwtp3bgtyhedyuAt37bjmJHfQ80rOAEIpq2q59s=;
+        b=DtWQ1WChViEzBXmBkyO11LN9ssTwCcNkb8H7GtTFkpeuleFgKCkzB7ly0jZv/SiNdrzrJ9
+        GJEj5cX3TxqtjYFhBiDKdr5BV7wl3h+Et/OLG0k60ofWRAt7YQYjv7XoHdyN6s4OUDilqb
+        7Djn2Z2rhl2wZWZ7EDy7DElDUSHvgwQ=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-291--_NsWapKPS2Q-94MfDhtXQ-1; Mon, 23 Mar 2020 10:51:23 -0400
+X-MC-Unique: -_NsWapKPS2Q-94MfDhtXQ-1
+Received: by mail-wr1-f70.google.com with SMTP id y1so2491590wrn.10
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 07:51:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6p44xGwV8r9hc9Uqd5WPQ5phNN16MgM5x4v+o5mOS6U=;
-        b=XyQwvJ6anCbzIRyAA7M+eMaVsdn9MGlBGQP8IRpD8QCqgYK+GM4oEGShYwuSTVy9q4
-         17Bt8aghls7M3FXJ74jfwX3tog7rmRFnJp52ZMGTfEfF14EC0OlZS3GHxZK1M/fvVHgR
-         +nQzSQFL5UAwMaGlOCUWkZNtwTjI9CtiRk5KvAH/pfXafc/ejgPhbnIyZxkTYSPtXS1e
-         gY0Rs4wZbHbC+Zjl/mc3yQ279tZqz1rI5afxREfvayCC85fDpsKbVIiZorVCZ9FxQhTg
-         RachXiyQzrGBwDOatErUv+jKgwpn9Mmu9GqBpaG6AXtz1hrNEaelKHQu660pv0humh+h
-         Ztzw==
-X-Gm-Message-State: ANhLgQ1omInGi0JObneZ/8EAWWwpMDrJ98g9Nm6EbyHehywTj25OU8RW
-        2aAT9MLgRSBMtqZNpK1Osns=
-X-Google-Smtp-Source: ADFU+vs1QCZ8mprUzpnIwn0V7v7uPGzQF2aNNIK0lD5/s6jZbaVReZ7/bEP7h33glQ0k1aRiTKO4mg==
-X-Received: by 2002:a05:600c:2283:: with SMTP id 3mr25533395wmf.157.1584975071478;
-        Mon, 23 Mar 2020 07:51:11 -0700 (PDT)
-Received: from localhost (ip-37-188-135-150.eurotel.cz. [37.188.135.150])
-        by smtp.gmail.com with ESMTPSA id x24sm21883617wmc.36.2020.03.23.07.51.08
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=5hQzIwtp3bgtyhedyuAt37bjmJHfQ80rOAEIpq2q59s=;
+        b=fNpRKqa+JS8UL/KedBUgfL2xDZTiKntUWL0dCmKLP/LpYmHHgq0fwqPKqKJQ3V8OXT
+         dG8f22N2kJWbwt9TvSsAYfd+zNsqN28SZIDO0xBZAvxpMv8DIblt0H1/wlcpnWiXV+oa
+         GmJDrNsNFiUvanUEQeFaIA6nr9XdAPUaDKek6JlnXwKHfx3QI1jAhNn68rj7wcFdkYje
+         Tu2g1Eu4NXdw4k6hwjQjccXOvi+FGn5Xh+1yAMJGOo/3FwGas2ZelsjI+ZDrDcE1rRT3
+         mXwLxdYCglHq/cXZFkHN8D1SeaQ53YKEz83ByYCG21HK9iO64dP5ojbmjSmsOgFCdY75
+         kdCw==
+X-Gm-Message-State: ANhLgQ1JWABTD3RoNoFfVQPT59SJ4LERKL6/3EfGh0tUYFOtQB4c1mfE
+        YmdWCXloHzyu1loYFjXvoFIhQlLshx3J5B8w+iWVqEwsFwZxjlRz1WxGs4Xlw4pYeSxcApy7izJ
+        +sRHB6/Gsw7pnhiDwJR4DlUO2
+X-Received: by 2002:adf:97c1:: with SMTP id t1mr30336567wrb.365.1584975080145;
+        Mon, 23 Mar 2020 07:51:20 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtv6CLGR/t9FJRgX3W/NJupPEZxVu8xP0RF001TVuZsrbyXW03jsERApw0prry/p+1nC0pqdg==
+X-Received: by 2002:adf:97c1:: with SMTP id t1mr30336537wrb.365.1584975079843;
+        Mon, 23 Mar 2020 07:51:19 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id t21sm9456865wmt.43.2020.03.23.07.51.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 07:51:10 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 15:51:06 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Rafael Aquini <aquini@redhat.com>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org
-Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
- false-negative errors
-Message-ID: <20200323145106.GM7524@dhcp22.suse.cz>
-References: <20200322013525.1095493-1-aquini@redhat.com>
- <20200321184352.826d3dba38aecc4ff7b32e72@linux-foundation.org>
- <20200322020326.GB1068248@t490s>
- <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
- <CALvZod7LiMiK1JtfdvvU3W36cGSUKhhKf6dMZpsNZv6nMiJ5=g@mail.gmail.com>
- <20200323075208.GC7524@dhcp22.suse.cz>
- <20200323144240.GB23364@optiplex-lnx>
+        Mon, 23 Mar 2020 07:51:19 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        John Haxby <john.haxby@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH v3 02/37] KVM: nVMX: Validate the EPTP when emulating INVEPT(EXTENT_CONTEXT)
+In-Reply-To: <20200320212833.3507-3-sean.j.christopherson@intel.com>
+References: <20200320212833.3507-1-sean.j.christopherson@intel.com> <20200320212833.3507-3-sean.j.christopherson@intel.com>
+Date:   Mon, 23 Mar 2020 15:51:17 +0100
+Message-ID: <871rpj9lay.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323144240.GB23364@optiplex-lnx>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 23-03-20 10:42:40, Rafael Aquini wrote:
-> On Mon, Mar 23, 2020 at 08:52:08AM +0100, Michal Hocko wrote:
-> > On Sun 22-03-20 09:36:49, Shakeel Butt wrote:
-> > > On Sat, Mar 21, 2020 at 9:31 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > > >
-> > > > On Sat, 21 Mar 2020 22:03:26 -0400 Rafael Aquini <aquini@redhat.com> wrote:
-> > > >
-> > > > > > > + * In order to sort out that race, and get the after fault checks consistent,
-> > > > > > > + * the "quick and dirty" trick below is required in order to force a call to
-> > > > > > > + * lru_add_drain_all() to get the recently MLOCK_ONFAULT pages moved to
-> > > > > > > + * the unevictable LRU, as expected by the checks in this selftest.
-> > > > > > > + */
-> > > > > > > +static void force_lru_add_drain_all(void)
-> > > > > > > +{
-> > > > > > > + sched_yield();
-> > > > > > > + system("echo 1 > /proc/sys/vm/compact_memory");
-> > > > > > > +}
-> > > > > >
-> > > > > > What is the sched_yield() for?
-> > > > > >
-> > > > >
-> > > > > Mostly it's there to provide a sleeping gap after the fault, whithout
-> > > > > actually adding an arbitrary value with usleep().
-> > > > >
-> > > > > It's not a hard requirement, but, in some of the tests I performed
-> > > > > (whithout that sleeping gap) I would still see around 1% chance
-> > > > > of hitting the false-negative. After adding it I could not hit
-> > > > > the issue anymore.
-> > > >
-> > > > It's concerning that such deep machinery as pagevec draining is visible
-> > > > to userspace.
-> > > >
-> > > 
-> > > We already have other examples like memcg stats where the
-> > > optimizations like batching per-cpu stats collection exposes
-> > > differences to the userspace. I would not be that worried here.
-> > 
-> > Agreed! Tests should be more tolerant for counters imprecision.
-> > Unevictable LRU is an optimization and transition to that list is a
-> > matter of an internal implementation detail.
-> >
-> > > > I suppose that for consistency and correctness we should perform a
-> > > > drain prior to each read from /proc/*/pagemap.  Presumably this would
-> > > > be far too expensive.
-> > > >
-> > > > Is there any other way?  One such might be to make the MLOCK_ONFAULT
-> > > > pages bypass the lru_add_pvecs?
-> > > >
-> > > 
-> > > I would rather prefer to have something similar to
-> > > /proc/sys/vm/stat_refresh which drains the pagevecs.
-> > 
-> > No, please don't. Pagevecs draining is by far not the only batching
-> > scheme we use and an interface like this would promise users to
-> > effectivelly force flushing all of them.
-> > 
-> > Can we simply update the test to be more tolerant to imprecisions
-> > instead?
-> > 
-> 
-> I don't think, thouhg, that this particular test case can be entirely
-> reduced as "counter imprecison".
-> 
-> The reason I think this is a different beast, is that having the page
-> being flagged as PG_unevictable is expected part of the aftermath of
-> a mlock* call. This selftest is, IMO, correctly verifying that fact,
-> as it checks the functionality correctness.
-> 
-> The problem boils down to the fact that the page would immediately
-> be flagged as PG_unevictable after the mlock (under MCL_FUTURE|MCL_ONFAULT
-> semantics) call, and the test was expecting it, and commit 9c4e6b1a7027f
-> changed that by "delaying" that flag setting.
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-As I've tried to explain in other email in this email thread. The test
-was exploiting a certain user visible side effect. The unevictable flag
-or the placement on the unevictable LRU list is are not really needed
-for the user contract correctness. That means that the test is not
-really correct. Working around that by trying to enforce kernel to
-comply with the test expectations is just plain wrong at least for two
-reasons 1) you cannot expect or event do not want userspace to do the
-same because the behavior might change in the future 2) the test is not
-really testing for correctness in the first place.
+> Signal VM-Fail for the single-context variant of INVEPT if the specified
+> EPTP is invalid.  Per the INEVPT pseudocode in Intel's SDM, it's subject
+> to the standard EPT checks:
+>
+>   If VM entry with the "enable EPT" VM execution control set to 1 would
+>   fail due to the EPTP value then VMfail(Invalid operand to INVEPT/INVVPID);
+>
+> Fixes: bfd0a56b90005 ("nEPT: Nested INVEPT")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/vmx/nested.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 8578513907d7..f3774cef4fd4 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -5156,8 +5156,12 @@ static int handle_invept(struct kvm_vcpu *vcpu)
+>  	}
+>  
+>  	switch (type) {
+> -	case VMX_EPT_EXTENT_GLOBAL:
+>  	case VMX_EPT_EXTENT_CONTEXT:
+> +		if (!nested_vmx_check_eptp(vcpu, operand.eptp))
+> +			return nested_vmx_failValid(vcpu,
+> +				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
+
+I was going to ask "and we don't seem to check that current nested VMPTR
+is valid, how can we know that nested_vmx_failValid() is the right
+VMfail() to use" but then I checked our nested_vmx_failValid() and there
+is a fallback there:
+
+	if (vmx->nested.current_vmptr == -1ull && !vmx->nested.hv_evmcs)
+		return nested_vmx_failInvalid(vcpu);
+
+so this is a non-issue. My question, however, transforms into "would it
+make sense to introduce nested_vmx_fail() implementing the logic from
+SDM:
+
+VMfail(ErrorNumber):
+	IF VMCS pointer is valid
+		THEN VMfailValid(ErrorNumber);
+	ELSE VMfailInvalid;
+	FI;
+
+to assist an innocent reader of the code?"
+
+> +		fallthrough;
+> +	case VMX_EPT_EXTENT_GLOBAL:
+>  	/*
+>  	 * TODO: Sync the necessary shadow EPT roots here, rather than
+>  	 * at the next emulated VM-entry.
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
 -- 
-Michal Hocko
-SUSE Labs
+Vitaly
+
