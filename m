@@ -2,146 +2,92 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD38C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF61BC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60E52076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D1C20786
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585001073;
-	bh=mUDxCrCIVFUi1cXQXpTp5QzjQ5KGrUdk1lH1SYe0K7M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eO42SnbMxAXj7AMKzDHFLte3G9IyviRXlz/0W+uSYC4baZVWzr+PF7luGN6YrjaFh
-	 CcofI1taadqWBCXbB1j9LGvG9f43/67aIS47gm9FNHeH299IwsSuRfcGd5F2fswZ4e
-	 +gwEERTRFHS0VWgwVKJUFOVxY7pPhFuxmONnrG4M=
+	s=default; t=1585001077;
+	bh=AOPBox0FGNwadNDBx5AibYFv7qRynIoProGlTcDXSJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dSuhrCWqOvpUck+ujrKKqZ/LKTZ5kNhi6G/1J/2OhudFBLgalOh3f7QhvrEp/hZeo
+	 MQrgAdGMK7rFB0VjidWX0wBDntZrmzVoFlq8GuxTfPyRLUqFuG2ov2gh86Q0/8Uf/F
+	 NjdKcbhnhNCdj6fDDPH+QK9fRpgrbdz6MohrC7Hk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgCWWEb (ORCPT
+        id S1727050AbgCWWEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:04:31 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:45673 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgCWWEb (ORCPT
+        Mon, 23 Mar 2020 18:04:36 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38607 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727025AbgCWWEg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 18:04:31 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 02NM4RO3022840;
-        Tue, 24 Mar 2020 07:04:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 02NM4RO3022840
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585001067;
-        bh=h6nm2Hiq/kZPXDtve+y+JyahA5CoO2EzrLNaMh8pB0U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0NvQzc9vpf3i4w59OBql2bUA3fFv02GNg4qxwWwcd9IH33rrIsUo08Z3wwnqVWojs
-         qTM2YaSHnKx5QmVLvDHW7wHshy511sa2W37eg8hjTC+XH/mA6Nnw8Ab//L20qZX7kv
-         Is0J5qix6D04C7G6B5Fp46SjOrayLGPZW9qNtAfWhSQ1Nhjz5ukCtsEB21lY1spOrq
-         bgcoKo0AB9CY9jXfZwVhqAchWtqq67aGINp+lg0IsRdbByJnGosJZkStVrmIBRuiNe
-         cfsjbzUZDvNRw3D9UPLnSlNxD2CbDAYoOv4WlrYzV6OcxSjuxWq+h1iksn2oeaPqfk
-         UHaI+ssapgr2w==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id o3so9897821vsd.4;
-        Mon, 23 Mar 2020 15:04:27 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3VVysrzTdO4zJlR1dX2vFmRsl7kjBL85RNgPVwrYKm4tTs3IbY
-        QGOrY5ncEXFhoYgsGM6H0fXVjZnvNrJoFxlh+Vk=
-X-Google-Smtp-Source: ADFU+vtPNIJCULsC2ckgQesaum0yAU1a8tkGRLL3Tmcwq7vScG0ATcz09kWyiVeYSrqPbj0n0fZXgJPCEyMKTqIqwsg=
-X-Received: by 2002:a67:3201:: with SMTP id y1mr17991619vsy.54.1585001066297;
- Mon, 23 Mar 2020 15:04:26 -0700 (PDT)
+        Mon, 23 Mar 2020 18:04:36 -0400
+Received: by mail-io1-f66.google.com with SMTP id m15so10982364iob.5;
+        Mon, 23 Mar 2020 15:04:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OxmWLYX7moIPVGiIwbbFxtiUZQmEPG+TJ66GSCPnfpE=;
+        b=hEzLAQh429bRt5qFBFddLX4wUIPoTFol5g1/1nunTlcI3TRNGYkyI8tUXp3khlv5QH
+         +vbd7H/k1yuGS4iUrwUYa0RB+Vpwop737tDa2S4ZC9HngJp2VRkF8qK77zK5aaLsZuDf
+         vGDoXGqBBL7FsbED6RWOXvoRHg6Nvirv/euDFUtqYjoHX/Vgyjt4VFeTAol8XfOb16el
+         kEAllQ25A8l9QR/fOdh9IHktLqsMMfzlStjeXA8lWfKbleVq2CtbxJwrzvu5sNp1Lz2F
+         BaDQGJhw6X6zAv52Zj8h/Oq77o+fZ4DR0XlNhmFi9anE8W3ke44vANOUwD6c3hQqa+ig
+         ABkw==
+X-Gm-Message-State: ANhLgQ2fvm1QQ1segwMH3cw3tzuezrhpFMcrG5vCxuYWJ9JncIOcWEQV
+        6R0a60JUFatqwnseeoT1Yg==
+X-Google-Smtp-Source: ADFU+vvj1yTP/dxc/c85bcfJYJQxOiDFkLfIs3nP/BoYkiG+qoSkVWyO+SkPv3v6lQjXgahyel2PfA==
+X-Received: by 2002:a02:390b:: with SMTP id l11mr7659387jaa.111.1585001075011;
+        Mon, 23 Mar 2020 15:04:35 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id c28sm5728899ilf.26.2020.03.23.15.04.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 15:04:34 -0700 (PDT)
+Received: (nullmailer pid 17421 invoked by uid 1000);
+        Mon, 23 Mar 2020 22:04:33 -0000
+Date:   Mon, 23 Mar 2020 16:04:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Phong LE <ple@baylibre.com>
+Cc:     narmstrong@baylibre.com, airlied@linux.ie, daniel@ffwll.ch,
+        mark.rutland@arm.com, a.hajda@samsung.com,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@siol.net, sam@ravnborg.org, mripard@kernel.org,
+        heiko.stuebner@theobroma-systems.com, linus.walleij@linaro.org,
+        stephan@gerhold.net, icenowy@aosc.io, broonie@kernel.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        andriy.shevchenko@linux.intel.com, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: add ITE vendor
+Message-ID: <20200323220432.GA16431@bogus>
+References: <20200311125135.30832-1-ple@baylibre.com>
+ <20200311125135.30832-2-ple@baylibre.com>
 MIME-Version: 1.0
-References: <20200323020844.17064-1-masahiroy@kernel.org> <CAHmME9p=ECJ15uyPH79bF0tuzEksdxoUsjGQSyz74FfdEJxTpQ@mail.gmail.com>
- <CAHmME9q4egN7_KeYB-ZHCFPfXs-virgTv4iz9jW2SVOM7dTnLw@mail.gmail.com>
- <CAK7LNAR07vZFzh1Bbpq4CoJ4zmsc+p5rxpkO1Zv8QVfqhfvr2w@mail.gmail.com> <CAHmME9qCjo4kOQM3Dw6PDjEebmb6rvXajqhK-m-=vKcHWqNhAw@mail.gmail.com>
-In-Reply-To: <CAHmME9qCjo4kOQM3Dw6PDjEebmb6rvXajqhK-m-=vKcHWqNhAw@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 24 Mar 2020 07:03:50 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQgKgKgOpQ2bgHrB5h=LTffs2khbYRrBhrxFM44gS88KQ@mail.gmail.com>
-Message-ID: <CAK7LNAQgKgKgOpQ2bgHrB5h=LTffs2khbYRrBhrxFM44gS88KQ@mail.gmail.com>
-Subject: Re: [PATCH 0/7] x86: remove always-defined CONFIG_AS_* options
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     X86 ML <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Song Liu <songliubraving@fb.com>,
-        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311125135.30832-2-ple@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+On Wed, Mar 11, 2020 at 01:51:32PM +0100, Phong LE wrote:
+> Add ITE Tech Inc. prefix "ite" in vendor-prefixes. More information on:
+> http://www.ite.com.tw/
+> 
+> Signed-off-by: Phong LE <ple@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 
-On Mon, Mar 23, 2020 at 3:53 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> On Mon, Mar 23, 2020 at 12:36 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > Hi Jason,
-> >
-> > On Mon, Mar 23, 2020 at 1:28 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> > >
-> > > Hi again,
-> > >
-> > > I've consolidated your patches and rebased mine on top, and
-> > > incorporated your useful binutils comments. The result lives here:
-> > >
-> > > https://git.zx2c4.com/linux-dev/log/?h=jd/kconfig-assembler-support
-> > >
-> > > I can submit all of those to the list, if you want, or maybe you can
-> > > just pull them out of there, include them in your v2, and put them in
-> > > your tree for 5.7? However you want is fine with me.
-> >
-> >
-> > Your series does not work correctly.
-> >
-> > I will comment why later.
->
-> Bummer, okay. Looking forward to learning what's up. Also, if some
-> parts of it are useful (like the resorting and organizing of
-> arch/x86/crypto/Makefile), feel free to cannibalize it, keeping what's
-> useful and discarding what's not.
->
+Already have a patch for this queued for 5.7.
 
-
-The answer is mostly in my previous reply to Linus:
-https://lkml.org/lkml/2020/3/13/27
-
-
-I think this problem would happen
-for CONFIG_AS_CFI and CONFIG_AS_ADX
-since the register in instruction code
-is machine-bit dependent.
-
-The former is OK wince we are planning to
-remove it.
-
-We need to handle -m64 for the latter.
-Otherwise, a problem like commit
-3a7c733165a4799fa1 would happen.
-
-
-So, I think we should merge this
-https://lore.kernel.org/patchwork/patch/1214332/
-then, fix-up CONFIG_AS_ADX on top of it.
-
-(Or, if we do not need to rush,
-we can delete CONFIG_AS_ADX entirely after
-we bump the binutils version to 2.23)
-
-Thanks.
-
--- 
-Best Regards
-Masahiro Yamada
+Rob
