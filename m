@@ -2,201 +2,138 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB86CC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615A1C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A300C2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:38:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K+DhuU8d"
+	by mail.kernel.org (Postfix) with ESMTP id 35BCC2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgCWUiN (ORCPT
+        id S1726067AbgCWUme convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 16:38:13 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37278 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbgCWUiN (ORCPT
+        Mon, 23 Mar 2020 16:42:34 -0400
+Received: from poy.remlab.net ([94.23.215.26]:35310 "EHLO
+        ns207790.ip-94-23-215.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbgCWUme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 16:38:13 -0400
-Received: by mail-pf1-f196.google.com with SMTP id h72so5886551pfe.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 13:38:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R6pN4SWBJOjZo3UJffcVW9yRBd1JF8EC9ixzWT1pjmw=;
-        b=K+DhuU8dlXMKgXJ92kIMOfFFEgaC4sW5aC0ZZwKW68C8DRqrkdB9t53ZSsfe3+fsCK
-         khBT8jBv7JTVyjlKAEAHfkrNFpQVkNpyhH1yNklR986TFvQsvnsYXAI8xCIG/29PRxPA
-         VJBH3pEifoXdFThCt+1BkEwCzZ0V8Ci8Dmmb52w2WYyuibzN22dEKjdHnXcR67zsSCjz
-         1+iVTKSBmqb0wjTlRPpRzrEmA91FYXV6Lw677msLzlQjKHICJtZMr3PZYSfs5pgeWUd5
-         9uTYINdyP1UNvvg8oC4Y7CG+FWYk3BROlj4EgchyLBYc1cJu6CLp3cRTQ/Ub4P7KlSXT
-         NsnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R6pN4SWBJOjZo3UJffcVW9yRBd1JF8EC9ixzWT1pjmw=;
-        b=TK7wyHwE2iHvzUAP1EZd3OamrFBMJdb/98BjFny7q35Vn507N4HaSMbbVBznwNUkgj
-         +aZc5+kgHldilWchCa33uz34xmIDi1vpbWyUVpp5d7fhiYOaYWrXBWAREYkzjd87kNhP
-         H1Tv2/iZQG6uOIkONzlBHynIfMnYVw6g9qnWJl22h7iq54VZPVcpOUtRFK/JcME6eKxp
-         /k1EUO3CpNa6Vf0VMlielIvmTQXSh04nLbZYUEaSrZH9h/dg2GF0GnrZKS0ftPu15TzE
-         BJufaFnCGZS78sTWgcLtf5lFFlTNSlaWkTCFNtyv473JxU0SNo3Ut23fTbjIVBl28soA
-         VfAQ==
-X-Gm-Message-State: ANhLgQ2aUL8w7lqlCUTTYwFqaNejbtsiVAUP5g25Qei65M9iUuaVPkzu
-        X2zCOTRhbJ3ENF11k/do4KpfXI/jQXqXMETwBcPX4w==
-X-Google-Smtp-Source: ADFU+vtvMAzQAcr3Luisi+G3tvS/IXNndOqhddfXMTaSa62ObJ60HWc59xHqhvrrsZzUm71CCwAc9E/aB687q7b5tyc=
-X-Received: by 2002:a63:a34d:: with SMTP id v13mr2687909pgn.10.1584995890392;
- Mon, 23 Mar 2020 13:38:10 -0700 (PDT)
+        Mon, 23 Mar 2020 16:42:34 -0400
+Received: from basile.remlab.net (87-92-31-51.bb.dnainternet.fi [87.92.31.51])
+        (Authenticated sender: remi)
+        by ns207790.ip-94-23-215.eu (Postfix) with ESMTPSA id 991185FB11;
+        Mon, 23 Mar 2020 21:42:31 +0100 (CET)
+From:   =?ISO-8859-1?Q?R=E9mi?= Denis-Courmont <remi@remlab.net>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, will@kernel.org,
+        james.morse@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] arm64: clean up trampoline vector loads
+Date:   Mon, 23 Mar 2020 22:42:30 +0200
+Message-ID: <2067644.cOvikPKVsA@basile.remlab.net>
+Organization: Remlab
+In-Reply-To: <20200323190408.GE4892@mbp>
+References: <1938400.7m7sAWtiY1@basile.remlab.net> <20200323121437.GC2597@C02TD0UTHF1T.local> <20200323190408.GE4892@mbp>
 MIME-Version: 1.0
-References: <20200323020844.17064-1-masahiroy@kernel.org> <20200323020844.17064-3-masahiroy@kernel.org>
-In-Reply-To: <20200323020844.17064-3-masahiroy@kernel.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 23 Mar 2020 13:37:57 -0700
-Message-ID: <CAKwvOd=at2WhPCmgChSTPm1Du6nD09N=JSUmKU2r86+nVYRrLA@mail.gmail.com>
-Subject: Re: [PATCH 2/7] x86: remove always-defined CONFIG_AS_CFI
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 7:09 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> CONFIG_AS_CFI was introduced by commit e2414910f212 ("[PATCH] x86:
-> Detect CFI support in the assembler at runtime"), and extended by
-> commit f0f12d85af85 ("x86_64: Check for .cfi_rel_offset in CFI probe").
->
-> We raise the minimal supported binutils version from time to time.
-> The last bump was commit 1fb12b35e5ff ("kbuild: Raise the minimum
-> required binutils version to 2.21").
+Le maanantaina 23. maaliskuuta 2020, 21.04.09 EET Catalin Marinas a écrit :
+> On Mon, Mar 23, 2020 at 12:14:37PM +0000, Mark Rutland wrote:
+> > On Mon, Mar 23, 2020 at 02:08:53PM +0200, Rémi Denis-Courmont wrote:
+> > > Le maanantaina 23. maaliskuuta 2020, 14.07.00 EET Mark Rutland a écrit :
+> > > > On Thu, Mar 19, 2020 at 11:14:05AM +0200, Rémi Denis-Courmont wrote:
+> > > > > From: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
+> > > > > 
+> > > > > This switches from custom instruction patterns to the regular large
+> > > > > memory model sequence with ADRP and LDR. In doing so, the ADD
+> > > > > instruction can be eliminated in the SDEI handler, and the code no
+> > > > > longer assumes that the trampoline vectors and the vectors address
+> > > > > both
+> > > > > start on a page boundary.
+> > > > > 
+> > > > > Signed-off-by: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
+> > > > > ---
+> > > > > 
+> > > > >  arch/arm64/kernel/entry.S | 9 ++++-----
+> > > > >  1 file changed, 4 insertions(+), 5 deletions(-)
+> > > > > 
+> > > > > diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+> > > > > index e5d4e30ee242..24f828739696 100644
+> > > > > --- a/arch/arm64/kernel/entry.S
+> > > > > +++ b/arch/arm64/kernel/entry.S
+> > > > > @@ -805,9 +805,9 @@ alternative_else_nop_endif
+> > > > > 
+> > > > >  2:
+> > > > >  	tramp_map_kernel	x30
+> > > > >  
+> > > > >  #ifdef CONFIG_RANDOMIZE_BASE
+> > > > > 
+> > > > > -	adr	x30, tramp_vectors + PAGE_SIZE
+> > > > > +	adrp	x30, tramp_vectors + PAGE_SIZE
+> > > > > 
+> > > > >  alternative_insn isb, nop, ARM64_WORKAROUND_QCOM_FALKOR_E1003
+> > > > > 
+> > > > > -	ldr	x30, [x30]
+> > > > > +	ldr	x30, [x30, #:lo12:__entry_tramp_data_start]
+> > > > 
+> > > > I think this is busted for !4K kernels once we reduce the alignment of
+> > > > __entry_tramp_data_start.
+> > > > 
+> > > > The ADRP gives us a 64K aligned address (with bits 15:0 clear). The
+> > > > lo12
+> > > > relocation gives us bits 11:0, so we haven't accounted for bits 15:12.
+> > > 
+> > > IMU, ADRP gives a 4K aligned value, regardless of MMU (TCR) settings.
+> > 
+> > Sorry, I had erroneously assumed tramp_vectors was page aligned. The
+> > issue still stands -- we haven't accounted for bits 15:12, as those can
+> > differ between tramp_vectors and __entry_tramp_data_start.
 
-Yep, looks like 2.21 was released in 2010, while CFI_rel_offset was
-added to binutils back in 2003.  LGTM, thanks for the patch (2 less
-assembler invocations during a build).
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Does that mean that the SDEI code never worked with page size > 4 KiB?
 
->
-> I confirmed the code in $(call as-instr,...) can be assembled by the
-> binutils 2.21 assembler and also by LLVM integrated assembler.
->
-> Remove CONFIG_AS_CFI, which is always defined.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
-> If this series is OK, we can do follwup cleanups.
-> We can hard-code the assembler code, and delete CFI_* macros entirely.
->
->
->  arch/x86/Makefile             | 10 ++--------
->  arch/x86/include/asm/dwarf2.h | 36 -----------------------------------
->  2 files changed, 2 insertions(+), 44 deletions(-)
->
-> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-> index 513a55562d75..72f8f744ebd7 100644
-> --- a/arch/x86/Makefile
-> +++ b/arch/x86/Makefile
-> @@ -177,12 +177,6 @@ ifeq ($(ACCUMULATE_OUTGOING_ARGS), 1)
->         KBUILD_CFLAGS += $(call cc-option,-maccumulate-outgoing-args,)
->  endif
->
-> -# Stackpointer is addressed different for 32 bit and 64 bit x86
-> -sp-$(CONFIG_X86_32) := esp
-> -sp-$(CONFIG_X86_64) := rsp
-> -
-> -# do binutils support CFI?
-> -cfi := $(call as-instr,.cfi_startproc\n.cfi_rel_offset $(sp-y)$(comma)0\n.cfi_endproc,-DCONFIG_AS_CFI=1)
->  # is .cfi_signal_frame supported too?
->  cfi-sigframe := $(call as-instr,.cfi_startproc\n.cfi_signal_frame\n.cfi_endproc,-DCONFIG_AS_CFI_SIGNAL_FRAME=1)
->  cfi-sections := $(call as-instr,.cfi_sections .debug_frame,-DCONFIG_AS_CFI_SECTIONS=1)
-> @@ -196,8 +190,8 @@ sha1_ni_instr :=$(call as-instr,sha1msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA1_NI=
->  sha256_ni_instr :=$(call as-instr,sha256msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA256_NI=1)
->  adx_instr := $(call as-instr,adox %r10$(comma)%r10,-DCONFIG_AS_ADX=1)
->
-> -KBUILD_AFLAGS += $(cfi) $(cfi-sigframe) $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
-> -KBUILD_CFLAGS += $(cfi) $(cfi-sigframe) $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
-> +KBUILD_AFLAGS += $(cfi-sigframe) $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
-> +KBUILD_CFLAGS += $(cfi-sigframe) $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
->
->  KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
->
-> diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
-> index 5a0502212bc5..90807583cad7 100644
-> --- a/arch/x86/include/asm/dwarf2.h
-> +++ b/arch/x86/include/asm/dwarf2.h
-> @@ -6,15 +6,6 @@
->  #warning "asm/dwarf2.h should be only included in pure assembly files"
->  #endif
->
-> -/*
-> - * Macros for dwarf2 CFI unwind table entries.
-> - * See "as.info" for details on these pseudo ops. Unfortunately
-> - * they are only supported in very new binutils, so define them
-> - * away for older version.
-> - */
-> -
-> -#ifdef CONFIG_AS_CFI
-> -
->  #define CFI_STARTPROC          .cfi_startproc
->  #define CFI_ENDPROC            .cfi_endproc
->  #define CFI_DEF_CFA            .cfi_def_cfa
-> @@ -55,31 +46,4 @@
->  #endif
->  #endif
->
-> -#else
-> -
-> -/*
-> - * Due to the structure of pre-exisiting code, don't use assembler line
-> - * comment character # to ignore the arguments. Instead, use a dummy macro.
-> - */
-> -.macro cfi_ignore a=0, b=0, c=0, d=0
-> -.endm
-> -
-> -#define CFI_STARTPROC          cfi_ignore
-> -#define CFI_ENDPROC            cfi_ignore
-> -#define CFI_DEF_CFA            cfi_ignore
-> -#define CFI_DEF_CFA_REGISTER   cfi_ignore
-> -#define CFI_DEF_CFA_OFFSET     cfi_ignore
-> -#define CFI_ADJUST_CFA_OFFSET  cfi_ignore
-> -#define CFI_OFFSET             cfi_ignore
-> -#define CFI_REL_OFFSET         cfi_ignore
-> -#define CFI_REGISTER           cfi_ignore
-> -#define CFI_RESTORE            cfi_ignore
-> -#define CFI_REMEMBER_STATE     cfi_ignore
-> -#define CFI_RESTORE_STATE      cfi_ignore
-> -#define CFI_UNDEFINED          cfi_ignore
-> -#define CFI_ESCAPE             cfi_ignore
-> -#define CFI_SIGNAL_FRAME       cfi_ignore
-> -
-> -#endif
-> -
->  #endif /* _ASM_X86_DWARF2_H */
-> --
-> 2.17.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200323020844.17064-3-masahiroy%40kernel.org.
+> Should we just use adrp on __entry_tramp_data_start? Anyway, the diff
+> below doesn't solve the issue I'm seeing (only reverting patch 3).
 
+AFAIU, the preexisting code uses the manual PAGE_SIZE offset because the offset 
+in the main vmlinux does not match the architected offset inside the fixmap. If 
+so, then using the symbol directly will not work at all.
+
+
+
+
+> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+> index ca1340eb46d8..4cc9d1df3985 100644
+> --- a/arch/arm64/kernel/entry.S
+> +++ b/arch/arm64/kernel/entry.S
+> @@ -810,7 +810,7 @@ alternative_else_nop_endif
+>  2:
+>  	tramp_map_kernel	x30
+>  #ifdef CONFIG_RANDOMIZE_BASE
+> -	adrp	x30, tramp_vectors + PAGE_SIZE
+> +	adrp	x30, __entry_tramp_data_start
+>  alternative_insn isb, nop, ARM64_WORKAROUND_QCOM_FALKOR_E1003
+>  	ldr	x30, [x30, #:lo12:__entry_tramp_data_start]
+>  #else
+> @@ -964,7 +964,7 @@ SYM_CODE_START(__sdei_asm_entry_trampoline)
+>  1:	str	x4, [x1, #(SDEI_EVENT_INTREGS + S_ORIG_ADDR_LIMIT)]
+> 
+>  #ifdef CONFIG_RANDOMIZE_BASE
+> -	adrp	x4, tramp_vectors + PAGE_SIZE
+> +	adrp	x4, __sdei_asm_trampoline_next_handler
+>  	ldr	x4, [x4, #:lo12:__sdei_asm_trampoline_next_handler]
+>  #else
+>  	ldr	x4, =__sdei_asm_handler
 
 
 -- 
-Thanks,
-~Nick Desaulniers
+雷米‧德尼-库尔蒙
+http://www.remlab.net/
+
+
+
