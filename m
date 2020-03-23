@@ -2,97 +2,106 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5DFC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEB6C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7841820753
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9781820753
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbgCWSe1 (ORCPT
+        id S1727455AbgCWSgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:34:27 -0400
-Received: from mga09.intel.com ([134.134.136.24]:30763 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbgCWSe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:34:27 -0400
-IronPort-SDR: anCU9mDSm8x9mp6F0SlD0a1KMRPJwEvzBAZjPVUQidojPIIAi28FYFtlOb4Zw1feHbmPlmFs3U
- kC3ujQHwfqtA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 11:34:26 -0700
-IronPort-SDR: fcnOiKx5CD2lQDtzXqai7u53Hpm0UfTO77ZXZRNuNg25UkLxUihSYGieAJfgAJHi+JbFa99q0+
- hwLdlkwGsAmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="237980140"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Mar 2020 11:34:23 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jGRu4-00CJSQ-VZ; Mon, 23 Mar 2020 20:34:24 +0200
-Date:   Mon, 23 Mar 2020 20:34:24 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-gpio@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mon, 23 Mar 2020 14:36:35 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:46590 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgCWSgf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 14:36:35 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGRvw-0012xt-N1; Mon, 23 Mar 2020 18:36:20 +0000
+Date:   Mon, 23 Mar 2020 18:36:20 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add Segey Semin to maintainers of DW
- APB GPIO driver
-Message-ID: <20200323183424.GT1922688@smile.fi.intel.com>
-References: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
- <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
- <20200323180632.14119-7-Sergey.Semin@baikalelectronics.ru>
+Subject: [RFC][PATCHSET] x86 uaccess cleanups
+Message-ID: <20200323183620.GD23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200323180632.14119-7-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 09:06:32PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> Add myself as a co-maintainer of the Synopsis DesignWare APB GPIO driver.
+        Beginning of uaccess series; there's more already linearized, but
+I'll be posting that separately.  This stuff lives in
+git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git #next.uaccess-2
+Individual patches will be in followups.  Please, review.  It's 5.6-rc1-based;
+diffstat is:
+ Documentation/x86/exception-tables.rst |   6 -
+ arch/x86/events/core.c                 |  27 +--
+ arch/x86/ia32/ia32_signal.c            | 288 +++++++++++-------------
+ arch/x86/include/asm/asm.h             |   6 -
+ arch/x86/include/asm/processor.h       |   1 -
+ arch/x86/include/asm/sigframe.h        |   6 +-
+ arch/x86/include/asm/sighandling.h     |   3 -
+ arch/x86/include/asm/uaccess.h         | 140 ------------
+ arch/x86/include/asm/uaccess_32.h      |  27 ---
+ arch/x86/include/asm/uaccess_64.h      | 108 +--------
+ arch/x86/kernel/signal.c               | 394 +++++++++++++++------------------
+ arch/x86/kernel/stacktrace.c           |   6 +-
+ arch/x86/kernel/vm86_32.c              | 115 +++++-----
+ arch/x86/kvm/mmu/paging_tmpl.h         |   2 +-
+ arch/x86/mm/extable.c                  |  12 -
+ include/linux/compat.h                 |   9 +-
+ include/linux/signal.h                 |   8 +-
+ 17 files changed, 388 insertions(+), 770 deletions(-)
 
-I see neither cover letter, nor first three patches. What's going on?
+part 1: getting rid of constant size cases in raw_copy_{to,from}_user() (x86)
 
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -16084,6 +16084,7 @@ F:	drivers/tty/serial/8250/8250_dw.c
->  
->  SYNOPSYS DESIGNWARE APB GPIO DRIVER
->  M:	Hoan Tran <hoan@os.amperecomputing.com>
+        raw_copy_{to,from}_user() recognizes some small constant sizes
+and turns those into a sequence of __get_user()/__put_user().  Very few
+call chains these days hit those - most are not getting the constant
+sizes or get the size not among the recognized sets.  And out of the
+few that do hit those cases, not all are hot enough to bother.
+So let's convert those that are to explicit __get_user()/__put_user()
+and drop that logics in raw_copy_{to,from}_user().  That gets rid of
+quite a bit of complexity in there.
+        Note: I'm not sure about one chain - vhost_scsi_do_evt_work()
+copyout of 16byte struct virtio_scsi_event; if we see slowdowns there,
+we probably ought to switch it to unsafe_put_user().
 
-> +S:	Serge Semin <fancer.lancer@gmail.com>
+1/22	x86 user stack frame reads: switch to explicit __get_user()
+2/22	x86 kvm page table walks: switch to explicit __get_user()
+3/22	x86: switch sigframe sigset handling to explict __get_user()/__put_user()
+4/22	x86: get rid of small constant size cases in raw_copy_{to,from}_user()
 
-Are you sure you used a correct letter?
+part 2: getting rid of get_user_ex/put_user_ex mess.
 
->  L:	linux-gpio@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-
-Had you chance to run parse-maintainers.pl to see if other fields are in order?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+        copyin side is easy - we are on shallow stack in all cases,
+and we can just do a bulk copyin instead.  copyout is more interesting.
+In principle, it's all straightforward - those put_user_{try,catch}
+blocks turn into user_access_{begin,end}() ones, with unsafe_put_user()
+used instead of put_user_ex().  It does take some massage, though.
+5/22	vm86: get rid of get_user_ex() use
+6/22	x86: get rid of get_user_ex() in ia32_restore_sigcontext()
+7/22	x86: get rid of get_user_ex() in restore_sigcontext()
+8/22	x86: kill get_user_{try,catch,ex}
+9/22	x86: switch save_v86_state() to unsafe_put_user()
+10/22	x86: switch setup_sigcontext() to unsafe_put_user()
+11/22	x86: switch ia32_setup_sigcontext() to unsafe_put_user()
+12/22	x86: get rid of put_user_try in {ia32,x32}_setup_rt_frame()
+13/22	x86: ia32_setup_sigcontext(): lift user_access_{begin,end}() into the callers
+14/22	x86: ia32_setup_frame(): consolidate uaccess areas
+15/22	x86: ia32_setup_rt_frame(): consolidate uaccess areas
+16/22	x86: get rid of put_user_try in __setup_rt_frame() (both 32bit and 64bit)
+17/22	x86: setup_sigcontext(): list user_access_{begin,end}() into callers
+18/22	x86: __setup_frame(): consolidate uaccess areas
+19/22	x86: __setup_rt_frame(): consolidate uaccess areas
+20/22	x86: x32_setup_rt_frame(): consolidate uaccess areas
+21/22	x86: unsafe_put_... macros for sigcontext and sigmask
+22/22   kill uaccess_try()
