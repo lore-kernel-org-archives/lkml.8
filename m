@@ -2,126 +2,96 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17FFC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB18EC54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6C5B20753
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:51:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z8HvqyfM"
+	by mail.kernel.org (Postfix) with ESMTP id A47DA20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:55:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584996901;
+	bh=J3z4fHTlGspGffQkOS4tS51NgTWIS232/n73+V6i8wU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zNpU2UbJuTfNoY5RF99DRlLXmwpjXChgviDt6EBnPTcSGkwa6GDtVXb8BYryFiMl2
+	 Xl6FbpF1fZOZf7/lF5RENjsC/tiRTsX8IEgFeEqghKX+PfnAI7wAhwaiu+bBOGjiiT
+	 7ubjUSiMos1dpKKKtoQb5oAAYqAXldJCSX4vkyT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbgCWUvW (ORCPT
+        id S1726560AbgCWUzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 16:51:22 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40619 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbgCWUvV (ORCPT
+        Mon, 23 Mar 2020 16:55:00 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38960 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbgCWUzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 16:51:21 -0400
-Received: by mail-pl1-f196.google.com with SMTP id h11so6433646plk.7
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 13:51:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mMMdJaa4bONzNf5mDBwmnm5Rm9aUThaT2F27qU30gBI=;
-        b=Z8HvqyfM6Z+09cHtpfoWtr7wIJ0l84l8MGsKJ/sLOm775g9Y69xIX+Ri1HVvXvdHRC
-         Ku2vkY4chmdk99FHBAD5T6crSfO/EgNGFuSqYYSwlXP2K/PVH3RoxzWQzjJrgOh9+q9H
-         aZajNf3FrKBBYgSc23W/Z3bbSfR9myeEgqOdo=
+        Mon, 23 Mar 2020 16:55:00 -0400
+Received: by mail-io1-f67.google.com with SMTP id c19so15868588ioo.6;
+        Mon, 23 Mar 2020 13:54:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mMMdJaa4bONzNf5mDBwmnm5Rm9aUThaT2F27qU30gBI=;
-        b=Sy3WvI1+KeVdpeQDWduMFh/Tqn5xE/b4bOkTxS5pJJtr/Ow8Y+aU3f3nGmPUwhsUS8
-         1aNGvylvAa8ePCD/JjDA9LXqR0bZTuWXK5eVx1q9VXojWu3wjx0KfxFrGSGhvnNnePo8
-         h+jOZvx9R9Us199gxdyreo3IgoI1nb55+xzcWdhNdxUOGdQc8tfiFzENZOtGVLRPdWnd
-         Nl02MEdzZCFsGFiwGxvYJVz1Do84PHbDvfiTa8jfJb+wkCoSBDdBHXfNFwbBb1c7H6NS
-         RTOnsAb2F4phHo7Krvu5xQtW5dlTqDauXJZF4njuQQgKnG3l7uaIE8kx7oyDCBoTFdrI
-         ZiBA==
-X-Gm-Message-State: ANhLgQ1m/5Q1VTNMpz3aLh7VNGxZhjmZDal0FvX9Kmi4As0wN0G0XPE4
-        1El4CyjmI3ZbeKJJh8BG2O/img==
-X-Google-Smtp-Source: ADFU+vvt3wkoTHMkwng+ZSgKCdf7yKNUmOGtHXTcau2DC27wuHHhjLUh+ushdvDqdjzT0My0MtaA5g==
-X-Received: by 2002:a17:90a:3702:: with SMTP id u2mr1264975pjb.191.1584996680281;
-        Mon, 23 Mar 2020 13:51:20 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l6sm13530398pff.173.2020.03.23.13.51.18
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DthQLy3F8qE76ytI2zl/5lwXeMISv0a2pxgdAol7tec=;
+        b=L0lwa02M8o0aqkltHpMooE+pIvSwFb0YJYkMvlARcdeZQ/hLyzas3ThVvQFb1Ee6wl
+         29jil+m/IIxmaDc8NbNIYiHgcCEO+yTDo2x5i6xscTiNzdt75AAuMzch1kHDIu8JQmNL
+         XzllWhDgKuZcBhU/AKZs1R8irempeJ1dLEoC+FulSsxom8YTV9eS6+pHg7uynkTnAaFg
+         5wk07SRri7T5l285RRWGNhw5W4rO74N/NwsaXoq5U+eIJP1+IePTyeVWafgKdE8Wcvus
+         aBxBp8kzdEjnKv6cqxRKInwQRE9m+kmstPQdfLr1TaxPakJKKzVJLcF5Z1hE3Zh04Tiz
+         zTCw==
+X-Gm-Message-State: ANhLgQ3x7mx8F0CN6N41htIwDyuKc5nhNYgY4j4VNmp1CDaR/zFM6fdH
+        bs7/Orz8sGozMDuaFYvxug==
+X-Google-Smtp-Source: ADFU+vtrhUVYqN1aOaxp7RFvExInjLlbsAQVfpxCIKQEGANpOkD7aj+FHIuMpPOcPDre12GkBmh6IA==
+X-Received: by 2002:a5d:85d4:: with SMTP id e20mr21710130ios.140.1584996899210;
+        Mon, 23 Mar 2020 13:54:59 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id f5sm4591504ion.29.2020.03.23.13.54.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 13:51:19 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 13:51:18 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     bp@alien8.de, Arvind Sankar <nivedita@alum.mit.edu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        Mon, 23 Mar 2020 13:54:58 -0700 (PDT)
+Received: (nullmailer pid 3932 invoked by uid 1000);
+        Mon, 23 Mar 2020 20:54:56 -0000
+Date:   Mon, 23 Mar 2020 14:54:56 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Mauro Rossi <issor.oruam@gmail.com>,
-        Michael Matz <matz@suse.de>
-Subject: Re: [PATCH] Documentation/changes: Raise minimum supported binutils
- version to 2.23
-Message-ID: <202003231350.7D35351@keescook>
-References: <20200113161310.GA191743@rani.riverdale.lan>
- <20200113195337.604646-1-nivedita@alum.mit.edu>
- <202001131750.C1B8468@keescook>
- <20200114165135.GK31032@zn.tnic>
- <20200115002131.GA3258770@rani.riverdale.lan>
- <20200115122458.GB20975@zn.tnic>
- <20200316160259.GN26126@zn.tnic>
- <20200323204454.GA2611336@zx2c4.com>
+        ~postmarketos/upstreaming@lists.sr.ht, Luca Weiss <luca@z3ntu.xyz>
+Subject: Re: [PATCH 1/3] dt-bindings: Add vendor prefix for SG Micro Corp
+Message-ID: <20200323205456.GA3795@bogus>
+References: <20200309203558.305725-1-luca@z3ntu.xyz>
+ <20200309203558.305725-2-luca@z3ntu.xyz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200323204454.GA2611336@zx2c4.com>
+In-Reply-To: <20200309203558.305725-2-luca@z3ntu.xyz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 02:44:54PM -0600, Jason A. Donenfeld wrote:
-> On Mon, Mar 16, 2020 at 05:02:59PM +0100, Borislav Petkov wrote:
-> > Long overdue patch, see below.
-> > 
-> > Plan is to queue it after 5.7-rc1.
-> > 
-> > ---
-> > From: Borislav Petkov <bp@suse.de>
-> > Date: Mon, 16 Mar 2020 16:28:36 +0100
-> > Subject: [PATCH] Documentation/changes: Raise minimum supported binutilsa version to 2.23
-> > 
-> > The currently minimum-supported binutils version 2.21 has the problem of
-> > promoting symbols which are defined outside of a section into absolute.
-> > According to Arvind:
-> > 
-> >   binutils-2.21 and -2.22. An x86-64 defconfig will fail with
-> >           Invalid absolute R_X86_64_32S relocation: _etext
-> >   and after fixing that one, with
-> >           Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
-> > 
-> > Those two versions of binutils have a bug when it comes to handling
-> > symbols defined outside of a section and binutils 2.23 has the proper
-> > fix, see: https://sourceware.org/legacy-ml/binutils/2012-06/msg00155.html
-> > 
-> > Therefore, up to the fixed version directly, skipping the broken ones.
-> > 
-> > Currently shipping distros already have the fixed binutils version so
-> > there should be no breakage resulting from this.
-> > 
-> > For more details about the whole thing, see the thread in Link.
+On Mon,  9 Mar 2020 21:35:56 +0100, Luca Weiss wrote:
+> "SG Micro Corp (SGMICRO) specializes in high performance, high quality
+> analog IC design, marketing and sales." (http://www.sg-micro.com/)
 > 
-> That sounds very good to me. Then we'll be able to use ADX instructions
-> without ifdefs.
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> ---
+> Changes since RFC:
+> - new patch
 > 
-> Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-Can you send these now and we can land in 5.7 with the doc change?
+Applied, thanks.
 
--Kees
-
--- 
-Kees Cook
+Rob
