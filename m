@@ -2,170 +2,184 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B150C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DD8C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8A22076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C33492072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:57:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LJJI9X25"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B39b0zc2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgCWQ5Y (ORCPT
+        id S1727872AbgCWQ5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:57:24 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:49339 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727067AbgCWQ5Y (ORCPT
+        Mon, 23 Mar 2020 12:57:47 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45041 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbgCWQ5r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:57:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584982642;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oCiKY/awUsZ/73HEBO+Ebhw+NCIAIbZULxjjUGIv5cM=;
-        b=LJJI9X25he9ww4l+OQss/9RcD/lk9pTk1/Q2Fp1rz6tKTMq1ipazhszEBaPIowI3OZEdcF
-        wdMiFAYRXAiE8x6/c410S5MOvO2rplqB/Kd7ofq0Q7AaQsXkAMbpawhd9BoPJRhBp8qzJo
-        pLgHsP1COixqFXs+3/cIx+wwl5Tl22c=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-440-E7kXS4UQN3KIx_b4ACReAw-1; Mon, 23 Mar 2020 12:57:20 -0400
-X-MC-Unique: E7kXS4UQN3KIx_b4ACReAw-1
-Received: by mail-wr1-f70.google.com with SMTP id h17so7662691wru.16
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 09:57:20 -0700 (PDT)
+        Mon, 23 Mar 2020 12:57:47 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 142so2241636pgf.11
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 09:57:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tkNJ2UmLjV4ApEsFFknqUQDdSIA2E0Fh+l4Y3g/LsCM=;
+        b=B39b0zc2oZZ5Gh0Ng85cQRtN1NaIkQzxq1N2LCaTr46l4HzUnn99DPUrggBOS6EP7q
+         I78k8ss2qJvNARogQHChpSGHrI/bRnIRniHWxTkuXY7ryAOMSAWxMoMtSgfo4WZxduxe
+         lnNlLOv+bEUyt47nbZ27SMg2titwDw0hRS+CCusOcrocy2/5CvJDAmU5s0gPxHD+OJ6K
+         JvCqxtE4ybaT2rbh01S1qEI+CzkFXjYNe3NLD9VlQ0sbXni2GIx089dFEZEWs6DB0Sx1
+         6L7mINAkMk+bs1aLvy0iciKtEhokUxJcpXzqoJEsONw8ZHwjvGbqgM4PGVfCZXzIAyJt
+         UhYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=oCiKY/awUsZ/73HEBO+Ebhw+NCIAIbZULxjjUGIv5cM=;
-        b=O4Xt0oflkI8WszNFFieiJK5RgKrLQ1jEdRf0vKOqPrGL3g3vEx5PQaYkJZXrG3R6YY
-         m6wLe5GqGfYK79oODVxpAiFfHPximRAfBA601AKGoIDsP+METviJy80vrX1wPx/Fk92o
-         Q5ZSyMmGj/F4Rf7MDsMxl+ncPTV1YPrFFJrxoeKzm0iMs1uHgpZ0IcPeclGsIQ+dv+GD
-         GT6XhRxWjMHKaPd9bzlgr1DO738+SfO1vj2MFJ8SaT3pVYSx1AmdOQXTcruyPEF49vHx
-         CdhQk7EEed+XFQnfwmAxMkZ+6wAIeegT8LvArRJl9tPL/us2egBiVNDvy1VrXSNF/IQO
-         7NNg==
-X-Gm-Message-State: ANhLgQ0vuCceXCs45ZtEu6QyQVUMAu4VnvJ4cmk28NX4CPC1XHYtwYYJ
-        d5ubhOTf4n1hIJJuDMc10a795fKtaWy6PzuT6FWVvQfYOSz+nhn/wWFOVe3JLSgMTSO/OSJOjo7
-        KScShdn/3n5AU9X8aR86nDwEy
-X-Received: by 2002:a1c:6146:: with SMTP id v67mr243977wmb.78.1584982639607;
-        Mon, 23 Mar 2020 09:57:19 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vuYr+N5szRZN8Ecp0oqemkBbyB46OZWdhGgHWaAh5uIJPuxPPLf/flCu7R0yuGcHI7dDq2oOg==
-X-Received: by 2002:a1c:6146:: with SMTP id v67mr243861wmb.78.1584982638429;
-        Mon, 23 Mar 2020 09:57:18 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id i4sm25236470wrm.32.2020.03.23.09.57.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 09:57:17 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        John Haxby <john.haxby@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH v3 04/37] KVM: nVMX: Invalidate all roots when emulating INVVPID without EPT
-In-Reply-To: <20200323165001.GR28711@linux.intel.com>
-References: <20200320212833.3507-1-sean.j.christopherson@intel.com> <20200320212833.3507-5-sean.j.christopherson@intel.com> <87v9mv84qu.fsf@vitty.brq.redhat.com> <20200323160432.GJ28711@linux.intel.com> <87lfnr820r.fsf@vitty.brq.redhat.com> <20200323165001.GR28711@linux.intel.com>
-Date:   Mon, 23 Mar 2020 17:57:16 +0100
-Message-ID: <87imiv80wj.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tkNJ2UmLjV4ApEsFFknqUQDdSIA2E0Fh+l4Y3g/LsCM=;
+        b=fl+VQiyhOtwtcad1q4VxJFEnNcDBDI+4Y7mq2Mvweu6EHyyLpaPtg4H+xCOivykw06
+         20m19IojOVW4oMEg0YNV8kdMgYKMt3j065RL7Mz9ey58+h8qgem7bgqW+DLBCrl6RdJr
+         dNJdWjR8RTyOa2rI/5amu12cowEmjYaWWp7YNdIDG00GXIWBSNyahNaK03NF6iqX5NaR
+         0hZWIxRKMWuDvpG04TGQW5vCNykIZ4tlemw2qMEcObA0vJ9Lg+CwfeSevPYoO8id7Afd
+         cb0/PHn+AXybN+SwWr1rpPHw26DPFkXmtlqUmYTUFoAM89XLF4tkeYn2gmmW/4+tVMvt
+         T24Q==
+X-Gm-Message-State: ANhLgQ2SiY2awbEKBTcV/6GNNOYXBCmeYRwL/6ye7ztyt8HmivKx59wt
+        Gh1ow0VNyrfKDCQkzwPVwUXn0meq4iimGwIt5tUIQg==
+X-Google-Smtp-Source: ADFU+vvIOUp1V6KsMC/3na/2JsKBqlMueF1nZsdGXm5tMw0c2pQvaZDOD8yMa9n7Zm6XKP1Q/Os5aAwOti3QeyDL+lg=
+X-Received: by 2002:aa7:8b54:: with SMTP id i20mr24735682pfd.39.1584982663685;
+ Mon, 23 Mar 2020 09:57:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <000000000000277a0405a16bd5c9@google.com> <CACT4Y+b1WFT87pWQaXD3CWjyjoQaP1jcycHdHF+rtxoR5xW1ww@mail.gmail.com>
+ <5058aabe-f32d-b8ef-57ed-f9c0206304c5@redhat.com> <CAG_fn=WYtSoyi63ACaz-ya=Dbi+BFU-_mADDpL6gQvDimQscmw@mail.gmail.com>
+ <20200323163925.GP28711@linux.intel.com>
+In-Reply-To: <20200323163925.GP28711@linux.intel.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 23 Mar 2020 09:57:32 -0700
+Message-ID: <CAKwvOdkE8OAu=Gj4MKWwpctka6==6EtrbF3e1tvF=jS2hBB3Ow@mail.gmail.com>
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in handle_external_interrupt_irqoff
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
-
-> On Mon, Mar 23, 2020 at 05:33:08PM +0100, Vitaly Kuznetsov wrote:
->> Sean Christopherson <sean.j.christopherson@intel.com> writes:
->> 
->> > On Mon, Mar 23, 2020 at 04:34:17PM +0100, Vitaly Kuznetsov wrote:
->> >> Sean Christopherson <sean.j.christopherson@intel.com> writes:
->> >> 
->> >> > From: Junaid Shahid <junaids@google.com>
->> >> >
->> >> > Free all roots when emulating INVVPID for L1 and EPT is disabled, as
->> >> > outstanding changes to the page tables managed by L1 need to be
->> >> > recognized.  Because L1 and L2 share an MMU when EPT is disabled, and
->> >> > because VPID is not tracked by the MMU role, all roots in the current
->> >> > MMU (root_mmu) need to be freed, otherwise a future nested VM-Enter or
->> >> > VM-Exit could do a fast CR3 switch (without a flush/sync) and consume
->> >> > stale SPTEs.
->> >> >
->> >> > Fixes: 5c614b3583e7b ("KVM: nVMX: nested VPID emulation")
->> >> > Signed-off-by: Junaid Shahid <junaids@google.com>
->> >> > [sean: ported to upstream KVM, reworded the comment and changelog]
->> >> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
->> >> > ---
->> >> >  arch/x86/kvm/vmx/nested.c | 14 ++++++++++++++
->> >> >  1 file changed, 14 insertions(+)
->> >> >
->> >> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
->> >> > index 9624cea4ed9f..bc74fbbf33c6 100644
->> >> > --- a/arch/x86/kvm/vmx/nested.c
->> >> > +++ b/arch/x86/kvm/vmx/nested.c
->> >> > @@ -5250,6 +5250,20 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
->> >> >  		return kvm_skip_emulated_instruction(vcpu);
->> >> >  	}
->> >> >  
->> >> > +	/*
->> >> > +	 * Sync the shadow page tables if EPT is disabled, L1 is invalidating
->> >> > +	 * linear mappings for L2 (tagged with L2's VPID).  Free all roots as
->> >> > +	 * VPIDs are not tracked in the MMU role.
->> >> > +	 *
->> >> > +	 * Note, this operates on root_mmu, not guest_mmu, as L1 and L2 share
->> >> > +	 * an MMU when EPT is disabled.
->> >> > +	 *
->> >> > +	 * TODO: sync only the affected SPTEs for INVDIVIDUAL_ADDR.
->> >> > +	 */
->> >> > +	if (!enable_ept)
->> >> > +		kvm_mmu_free_roots(vcpu, &vcpu->arch.root_mmu,
->> >> > +				   KVM_MMU_ROOTS_ALL);
->> >> > +
->> >> 
->> >> This is related to my remark on the previous patch; the comment above
->> >> makes me think I'm missing something obvious, enlighten me please)
->> >> 
->> >> My understanding is that L1 and L2 will share arch.root_mmu not only
->> >> when EPT is globally disabled, we seem to switch between
->> >> root_mmu/guest_mmu only when nested_cpu_has_ept(vmcs12) but different L2
->> >> guests may be different on this. Do we need to handle this somehow?
->> >
->> > guest_mmu is used iff nested EPT is enabled, which requires enable_ept=1.
->> > enable_ept is global and cannot be changed without reloading kvm_intel.
->> >
->> > This most definitely over-invalidates, e.g. it blasts away L1's page
->> > tables.  But, fixing that requires tracking VPID in mmu_role and/or adding
->> > support for using guest_mmu when L1 isn't using TDP, i.e. nested EPT is
->> > disabled.  Assuming the vast majority of nested deployments enable EPT in
->> > L0, the cost of both options likely outweighs the benefits.
->> >
->> 
->> Yes but my question rather was: what if global 'enable_ept' is true but
->> nested EPT is not being used by L1, don't we still need to do
->> kvm_mmu_free_roots(&vcpu->arch.root_mmu) here?
+On Mon, Mar 23, 2020 at 9:39 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
 >
-> No, because L0 isn't shadowing the L1->L2 page tables, i.e. there can't be
-> unsync'd SPTEs for L2.  The vpid_sync_*() above flushes the TLB for L2's
-> effective VPID, which is all that's required.
+> On Mon, Mar 23, 2020 at 05:31:15PM +0100, Alexander Potapenko wrote:
+> > On Mon, Mar 23, 2020 at 9:18 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> > >
+> > > On 22/03/20 07:59, Dmitry Vyukov wrote:
+> > > >
+> > > > The commit range is presumably
+> > > > fb279f4e238617417b132a550f24c1e86d922558..63849c8f410717eb2e6662f3953ff674727303e7
+> > > > But I don't see anything that says "it's me". The only commit that
+> > > > does non-trivial changes to x86/vmx seems to be "KVM: VMX: check
+> > > > descriptor table exits on instruction emulation":
+> > >
+> > > That seems unlikely, it's a completely different file and it would only
+> > > affect the outside (non-nested) environment rather than your own kernel.
+> > >
+> > > The only instance of "0x86" in the registers is in the flags:
+> > >
+> > > > RSP: 0018:ffffc90001ac7998 EFLAGS: 00010086
+> > > > RAX: ffffc90001ac79c8 RBX: fffffe0000000000 RCX: 0000000000040000
+> > > > RDX: ffffc9000e20f000 RSI: 000000000000b452 RDI: 000000000000b453
+> > > > RBP: 0000000000000ec0 R08: ffffffff83987523 R09: ffffffff811c7eca
+> > > > R10: ffff8880a4e94200 R11: 0000000000000002 R12: dffffc0000000000
+> > > > R13: fffffe0000000ec8 R14: ffffffff880016f0 R15: fffffe0000000ecb
+> > > > FS:  00007fb50e370700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > CR2: 000000000000005c CR3: 0000000092fc7000 CR4: 00000000001426f0
+> > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > >
+> > > That would suggest a miscompilation of the inline assembly, which does
+> > > push the flags:
+> > >
+> > > #ifdef CONFIG_X86_64
+> > >                 "mov %%" _ASM_SP ", %[sp]\n\t"
+> > >                 "and $0xfffffffffffffff0, %%" _ASM_SP "\n\t"
+> > >                 "push $%c[ss]\n\t"
+> > >                 "push %[sp]\n\t"
+> > > #endif
+> > >                 "pushf\n\t"
+> > >                 __ASM_SIZE(push) " $%c[cs]\n\t"
+> > >                 CALL_NOSPEC
+> > >
+> > >
+> > > It would not explain why it suddenly started to break, unless the clang
+> > > version also changed, but it would be easy to ascertain and fix (in
+> > > either KVM or clang).  Dmitry, can you send me the vmx.o and
+> > > kvm-intel.ko files?
+> >
+> > On a quick glance, Clang does not miscompile this part.
+>
+> Clang definitely miscompiles the asm, the indirect call operates on the
+> EFLAGS value, not on @entry as expected.  It looks like clang doesn't honor
+> ASM_CALL_CONSTRAINT, which effectively tells the compiler that %rsp is
+> getting clobbered, e.g. the "mov %r14,0x8(%rsp)" is loading @entry for
+> "callq *0x8(%rsp)", which breaks because of asm's pushes.
+>
+> clang:
+>
+>         kvm_before_interrupt(vcpu);
+>
+>         asm volatile(
+> ffffffff811b798e:       4c 89 74 24 08          mov    %r14,0x8(%rsp)
+> ffffffff811b7993:       48 89 e0                mov    %rsp,%rax
+> ffffffff811b7996:       48 83 e4 f0             and    $0xfffffffffffffff0,%rsp
+> ffffffff811b799a:       6a 18                   pushq  $0x18
+> ffffffff811b799c:       50                      push   %rax
+> ffffffff811b799d:       9c                      pushfq
+> ffffffff811b799e:       6a 10                   pushq  $0x10
+> ffffffff811b79a0:       ff 54 24 08             callq  *0x8(%rsp) <--------- calls the EFLAGS value
+> kvm_after_interrupt():
+>
+>
+> gcc:
+>         kvm_before_interrupt(vcpu);
+>
+>         asm volatile(
+> ffffffff8118e17c:       48 89 e0                mov    %rsp,%rax
+> ffffffff8118e17f:       48 83 e4 f0             and    $0xfffffffffffffff0,%rsp
+> ffffffff8118e183:       6a 18                   pushq  $0x18
+> ffffffff8118e185:       50                      push   %rax
+> ffffffff8118e186:       9c                      pushfq
+> ffffffff8118e187:       6a 10                   pushq  $0x10
+> ffffffff8118e189:       ff d3                   callq  *%rbx <-------- calls @entry
+> kvm_after_interrupt():
 
-Ah, stupid me, it's actually EPT and not nested EPT which we care about
-here. Thank you for the clarification!
+Thanks for this analysis, it looks like this is dependent on some
+particular configuration; here's clang+defconfig+CONFIG_KVM_INTEL=y:
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+   0x000000000000528f <+127>:   pushq  $0x18
+   0x0000000000005291 <+129>:   push   %rcx
+   0x0000000000005292 <+130>:   pushfq
+   0x0000000000005293 <+131>:   pushq  $0x10
+   0x0000000000005295 <+133>:   callq  *%rax
 
 -- 
-Vitaly
-
+Thanks,
+~Nick Desaulniers
