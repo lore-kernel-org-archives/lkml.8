@@ -2,156 +2,150 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84384C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D5BC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 223D920722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:39:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="bnhCG/VM"
+	by mail.kernel.org (Postfix) with ESMTP id 5392420722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbgCWQjE (ORCPT
+        id S1727650AbgCWQj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:39:04 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:60734 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727234AbgCWQjD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:39:03 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 607A92E152E;
-        Mon, 23 Mar 2020 19:39:00 +0300 (MSK)
-Received: from myt5-70c90f7d6d7d.qloud-c.yandex.net (myt5-70c90f7d6d7d.qloud-c.yandex.net [2a02:6b8:c12:3e2c:0:640:70c9:f7d])
-        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id jWwzoNdhbo-d0j4RkDT;
-        Mon, 23 Mar 2020 19:39:00 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1584981540; bh=zTTQKR+VKnK5VPfkvW5AiK8AFpqm3pZyCRE1yhsG6C4=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=bnhCG/VMk2kQlBnbzL9B5P3h2UEOaulch82QuJyuPsryKJkl37OGU8PhOu4NDvdar
-         sQWw1cwiz1iUot5HtsjkgeuaI7U+ZU9KUnorAYy9/WJq2yZdSQkwsR2q7x+t2sxZj3
-         uRs/nMnx6l1T6XXgQ1al+lLIbIKeNilKxHaCcU28=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:6803::1:2])
-        by myt5-70c90f7d6d7d.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 15DoWmPvFf-cxbO6bfO;
-        Mon, 23 Mar 2020 19:38:59 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH] lib/test_lockup: add parameters for locking generic vfs
- locks
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org
-Date:   Mon, 23 Mar 2020 19:38:59 +0300
-Message-ID: <158498153964.5621.83061779039255681.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Mon, 23 Mar 2020 12:39:27 -0400
+Received: from mga09.intel.com ([134.134.136.24]:20398 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727479AbgCWQj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 12:39:27 -0400
+IronPort-SDR: YQD3g7pZTFbkZtaxU6+O1FOEqGnvMkziwgZwnUpar6yJxQ4Q2eWUhG2KxxHnYainQmqfdLGsfV
+ fnBhqoUQrfUg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 09:39:26 -0700
+IronPort-SDR: CbB0ngl3XhoDgFa+je1ygSyt/uHRvif4A2KEUIoYhgEeWnTyYSiYMqs3zRyRyuhEtk4MF8sbae
+ 3iVvhMFf35uw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
+   d="scan'208";a="419559426"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 23 Mar 2020 09:39:25 -0700
+Date:   Mon, 23 Mar 2020 09:39:25 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Alexander Potapenko <glider@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, wanpengli@tencent.com,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
+ handle_external_interrupt_irqoff
+Message-ID: <20200323163925.GP28711@linux.intel.com>
+References: <000000000000277a0405a16bd5c9@google.com>
+ <CACT4Y+b1WFT87pWQaXD3CWjyjoQaP1jcycHdHF+rtxoR5xW1ww@mail.gmail.com>
+ <5058aabe-f32d-b8ef-57ed-f9c0206304c5@redhat.com>
+ <CAG_fn=WYtSoyi63ACaz-ya=Dbi+BFU-_mADDpL6gQvDimQscmw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG_fn=WYtSoyi63ACaz-ya=Dbi+BFU-_mADDpL6gQvDimQscmw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-file_path=<path>	defines file or directory to open
-lock_inode=Y		set lock_rwsem_ptr to inode->i_rwsem
-lock_mapping=Y		set lock_rwsem_ptr to mapping->i_mmap_rwsem
-lock_sb_umount=Y	set lock_rwsem_ptr to sb->s_umount
+On Mon, Mar 23, 2020 at 05:31:15PM +0100, Alexander Potapenko wrote:
+> On Mon, Mar 23, 2020 at 9:18 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >
+> > On 22/03/20 07:59, Dmitry Vyukov wrote:
+> > >
+> > > The commit range is presumably
+> > > fb279f4e238617417b132a550f24c1e86d922558..63849c8f410717eb2e6662f3953ff674727303e7
+> > > But I don't see anything that says "it's me". The only commit that
+> > > does non-trivial changes to x86/vmx seems to be "KVM: VMX: check
+> > > descriptor table exits on instruction emulation":
+> >
+> > That seems unlikely, it's a completely different file and it would only
+> > affect the outside (non-nested) environment rather than your own kernel.
+> >
+> > The only instance of "0x86" in the registers is in the flags:
+> >
+> > > RSP: 0018:ffffc90001ac7998 EFLAGS: 00010086
+> > > RAX: ffffc90001ac79c8 RBX: fffffe0000000000 RCX: 0000000000040000
+> > > RDX: ffffc9000e20f000 RSI: 000000000000b452 RDI: 000000000000b453
+> > > RBP: 0000000000000ec0 R08: ffffffff83987523 R09: ffffffff811c7eca
+> > > R10: ffff8880a4e94200 R11: 0000000000000002 R12: dffffc0000000000
+> > > R13: fffffe0000000ec8 R14: ffffffff880016f0 R15: fffffe0000000ecb
+> > > FS:  00007fb50e370700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > CR2: 000000000000005c CR3: 0000000092fc7000 CR4: 00000000001426f0
+> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> >
+> > That would suggest a miscompilation of the inline assembly, which does
+> > push the flags:
+> >
+> > #ifdef CONFIG_X86_64
+> >                 "mov %%" _ASM_SP ", %[sp]\n\t"
+> >                 "and $0xfffffffffffffff0, %%" _ASM_SP "\n\t"
+> >                 "push $%c[ss]\n\t"
+> >                 "push %[sp]\n\t"
+> > #endif
+> >                 "pushf\n\t"
+> >                 __ASM_SIZE(push) " $%c[cs]\n\t"
+> >                 CALL_NOSPEC
+> >
+> >
+> > It would not explain why it suddenly started to break, unless the clang
+> > version also changed, but it would be easy to ascertain and fix (in
+> > either KVM or clang).  Dmitry, can you send me the vmx.o and
+> > kvm-intel.ko files?
+> 
+> On a quick glance, Clang does not miscompile this part.
 
-This gives safe and simple way to see how system reacts to contention of
-common vfs locks and how syscalls depend on them directly or indirectly.
+Clang definitely miscompiles the asm, the indirect call operates on the
+EFLAGS value, not on @entry as expected.  It looks like clang doesn't honor
+ASM_CALL_CONSTRAINT, which effectively tells the compiler that %rsp is
+getting clobbered, e.g. the "mov %r14,0x8(%rsp)" is loading @entry for
+"callq *0x8(%rsp)", which breaks because of asm's pushes.
 
-For example to block s_umount for 60 seconds:
-# modprobe test_lockup file_path=. lock_sb_umount time_secs=60 state=S
+clang:
 
-This is useful for checking/testing scalability issues like this:
-https://lore.kernel.org/lkml/158497590858.7371.9311902565121473436.stgit@buzz/
+	kvm_before_interrupt(vcpu);
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
----
- lib/test_lockup.c |   45 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+	asm volatile(
+ffffffff811b798e:	4c 89 74 24 08       	mov    %r14,0x8(%rsp)
+ffffffff811b7993:	48 89 e0             	mov    %rsp,%rax
+ffffffff811b7996:	48 83 e4 f0          	and    $0xfffffffffffffff0,%rsp
+ffffffff811b799a:	6a 18                	pushq  $0x18
+ffffffff811b799c:	50                   	push   %rax
+ffffffff811b799d:	9c                   	pushfq 
+ffffffff811b799e:	6a 10                	pushq  $0x10
+ffffffff811b79a0:	ff 54 24 08          	callq  *0x8(%rsp) <--------- calls the EFLAGS value
+kvm_after_interrupt():
 
-diff --git a/lib/test_lockup.c b/lib/test_lockup.c
-index 83683ec1f429..ea09ca335b21 100644
---- a/lib/test_lockup.c
-+++ b/lib/test_lockup.c
-@@ -14,6 +14,7 @@
- #include <linux/nmi.h>
- #include <linux/mm.h>
- #include <linux/uaccess.h>
-+#include <linux/file.h>
- 
- static unsigned int time_secs;
- module_param(time_secs, uint, 0600);
-@@ -140,6 +141,24 @@ static bool reallocate_pages;
- module_param(reallocate_pages, bool, 0400);
- MODULE_PARM_DESC(reallocate_pages, "free and allocate pages between iterations");
- 
-+struct file *test_file;
-+struct inode *test_inode;
-+static char test_file_path[256];
-+module_param_string(file_path, test_file_path, sizeof(test_file_path), 0400);
-+MODULE_PARM_DESC(file_path, "file path to test");
-+
-+static bool test_lock_inode;
-+module_param_named(lock_inode, test_lock_inode, bool, 0400);
-+MODULE_PARM_DESC(lock_inode, "lock file -> inode -> i_rwsem");
-+
-+static bool test_lock_mapping;
-+module_param_named(lock_mapping, test_lock_mapping, bool, 0400);
-+MODULE_PARM_DESC(lock_mapping, "lock file -> mapping -> i_mmap_rwsem");
-+
-+static bool test_lock_sb_umount;
-+module_param_named(lock_sb_umount, test_lock_sb_umount, bool, 0400);
-+MODULE_PARM_DESC(lock_sb_umount, "lock file -> sb -> s_umount");
-+
- static atomic_t alloc_pages_failed = ATOMIC_INIT(0);
- 
- static atomic64_t max_lock_wait = ATOMIC64_INIT(0);
-@@ -490,6 +509,29 @@ static int __init test_lockup_init(void)
- 		return -EINVAL;
- 	}
- 
-+	if (test_file_path[0]) {
-+		test_file = filp_open(test_file_path, O_RDONLY, 0);
-+		if (IS_ERR(test_file)) {
-+			pr_err("cannot find file_path\n");
-+			return -EINVAL;
-+		}
-+		test_inode = file_inode(test_file);
-+	} else if (test_lock_inode ||
-+		   test_lock_mapping ||
-+		   test_lock_sb_umount) {
-+		pr_err("no file to lock\n");
-+		return -EINVAL;
-+	}
-+
-+	if (test_lock_inode && test_inode)
-+		lock_rwsem_ptr = (unsigned long)&test_inode->i_rwsem;
-+
-+	if (test_lock_mapping && test_file && test_file->f_mapping)
-+		lock_rwsem_ptr = (unsigned long)&test_file->f_mapping->i_mmap_rwsem;
-+
-+	if (test_lock_sb_umount && test_inode)
-+		lock_rwsem_ptr = (unsigned long)&test_inode->i_sb->s_umount;
-+
- 	pr_notice("START pid=%d time=%u +%u ns cooldown=%u +%u ns iterations=%u state=%s %s%s%s%s%s%s%s%s%s%s%s\n",
- 		  main_task->pid, time_secs, time_nsecs,
- 		  cooldown_secs, cooldown_nsecs, iterations, state,
-@@ -542,6 +584,9 @@ static int __init test_lockup_init(void)
- 
- 	pr_notice("FINISH in %llu ns\n", local_clock() - test_start);
- 
-+	if (test_file)
-+		fput(test_file);
-+
- 	if (signal_pending(main_task))
- 		return -EINTR;
- 
 
+gcc:
+	kvm_before_interrupt(vcpu);
+
+	asm volatile(
+ffffffff8118e17c:	48 89 e0             	mov    %rsp,%rax
+ffffffff8118e17f:	48 83 e4 f0          	and    $0xfffffffffffffff0,%rsp
+ffffffff8118e183:	6a 18                	pushq  $0x18
+ffffffff8118e185:	50                   	push   %rax
+ffffffff8118e186:	9c                   	pushfq 
+ffffffff8118e187:	6a 10                	pushq  $0x10
+ffffffff8118e189:	ff d3                	callq  *%rbx <-------- calls @entry
+kvm_after_interrupt():
