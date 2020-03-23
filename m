@@ -2,235 +2,234 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 122ECC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C785CC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6D32076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928DD20780
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:24:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WtB9jrC9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727726AbgCWUZB (ORCPT
+        id S1727275AbgCWUXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 16:25:01 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42768 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbgCWUY5 (ORCPT
+        Mon, 23 Mar 2020 16:23:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36814 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgCWUXC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 16:24:57 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jGTcm-0006Yi-2v; Mon, 23 Mar 2020 21:24:40 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 2D0391040AA; Mon, 23 Mar 2020 21:24:39 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH v5 1/9] x86/split_lock: Rework the initialization flow of split lock detection
-In-Reply-To: <87zhc7ovhj.fsf@nanos.tec.linutronix.de>
-References: <20200315050517.127446-1-xiaoyao.li@intel.com> <20200315050517.127446-2-xiaoyao.li@intel.com> <87zhc7ovhj.fsf@nanos.tec.linutronix.de>
-Date:   Mon, 23 Mar 2020 21:24:39 +0100
-Message-ID: <87lfnqq0oo.fsf@nanos.tec.linutronix.de>
+        Mon, 23 Mar 2020 16:23:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=vyElWKU1zfCiLUTPH8gs8z9Mck1LnRKWxy/aI6BlYH8=; b=WtB9jrC97XVcAq9iRil82wdC80
+        pAUvzGDXlj9cNn321EgZ5Iqwk63pO2fYudHXTUbTjYm11cGEK46Ipfi2glogbgHIZOgGxPrfmrYbh
+        d7JAWLSTOa1MlInNXJfLUBoiM33VAM+MGLOi6GaFTNeJlAocsWPh8Jly9Hk33YuiTXSTZ5p0/7Fjg
+        +GqfdaIaLFtB/zvSScPaFJh65GNlLvCeSsZ9RMLCXIWp/rN/ubDGF6Xx+i7BswpBkaANYuQNQSwBi
+        B8V9MZCRpsliLY1hiThvX+kNzOIPmRYbAf39x7hoY6L1TQA/Y/S/DRMX+lLyUbyQMLhVQ99GsM+Bl
+        VH8a+ijg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGTbB-0003UZ-ED; Mon, 23 Mar 2020 20:23:01 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        Dave Chinner <dchinner@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        William Kucharski <william.kucharski@oracle.com>
+Subject: [PATCH v10 02/25] mm: Return void from various readahead functions
+Date:   Mon, 23 Mar 2020 13:22:36 -0700
+Message-Id: <20200323202259.13363-3-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200323202259.13363-1-willy@infradead.org>
+References: <20200323202259.13363-1-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas Gleixner <tglx@linutronix.de> writes:
-> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->
->> Current initialization flow of split lock detection has following issues:
->> 1. It assumes the initial value of MSR_TEST_CTRL.SPLIT_LOCK_DETECT to be
->>    zero. However, it's possible that BIOS/firmware has set it.
->
-> Ok.
->
->> 2. X86_FEATURE_SPLIT_LOCK_DETECT flag is unconditionally set even if
->>    there is a virtualization flaw that FMS indicates the existence while
->>    it's actually not supported.
->>
->> 3. Because of #2, KVM cannot rely on X86_FEATURE_SPLIT_LOCK_DETECT flag
->>    to check verify if feature does exist, so cannot expose it to
->>    guest.
->
-> Sorry this does not make anny sense. KVM is the hypervisor, so it better
-> can rely on the detect flag. Unless you talk about nested virt and a
-> broken L1 hypervisor.
->
->> To solve these issues, introducing a new sld_state, "sld_not_exist",
->> as
->
-> The usual naming convention is sld_not_supported.
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-But this extra state is not needed at all, it already exists:
+ondemand_readahead has two callers, neither of which use the return value.
+That means that both ra_submit and __do_page_cache_readahead() can return
+void, and we don't need to worry that a present page in the readahead
+window causes us to return a smaller nr_pages than we ought to have.
 
-    X86_FEATURE_SPLIT_LOCK_DETECT
+Similarly, no caller uses the return value from force_page_cache_readahead().
 
-You just need to make split_lock_setup() a bit smarter. Soemthing like
-the below. It just wants to be split into separate patches.
-
-Thanks,
-
-        tglx
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
 ---
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -45,6 +45,7 @@ enum split_lock_detect_state {
-  * split lock detect, unless there is a command line override.
-  */
- static enum split_lock_detect_state sld_state = sld_off;
-+static DEFINE_PER_CPU(u64, msr_test_ctrl_cache);
+ mm/fadvise.c   |  4 ----
+ mm/internal.h  | 12 ++++++------
+ mm/readahead.c | 31 +++++++++++++------------------
+ 3 files changed, 19 insertions(+), 28 deletions(-)
+
+diff --git a/mm/fadvise.c b/mm/fadvise.c
+index 3efebfb9952c..0e66f2aaeea3 100644
+--- a/mm/fadvise.c
++++ b/mm/fadvise.c
+@@ -104,10 +104,6 @@ int generic_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
+ 		if (!nrpages)
+ 			nrpages = ~0UL;
+ 
+-		/*
+-		 * Ignore return value because fadvise() shall return
+-		 * success even if filesystem can't retrieve a hint,
+-		 */
+ 		force_page_cache_readahead(mapping, file, start_index, nrpages);
+ 		break;
+ 	case POSIX_FADV_NOREUSE:
+diff --git a/mm/internal.h b/mm/internal.h
+index 25fee17c7334..f762a34b0c57 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -49,20 +49,20 @@ void unmap_page_range(struct mmu_gather *tlb,
+ 			     unsigned long addr, unsigned long end,
+ 			     struct zap_details *details);
+ 
+-int force_page_cache_readahead(struct address_space *, struct file *,
++void force_page_cache_readahead(struct address_space *, struct file *,
+ 		pgoff_t index, unsigned long nr_to_read);
+-extern unsigned int __do_page_cache_readahead(struct address_space *mapping,
+-		struct file *filp, pgoff_t offset, unsigned long nr_to_read,
++void __do_page_cache_readahead(struct address_space *, struct file *,
++		pgoff_t index, unsigned long nr_to_read,
+ 		unsigned long lookahead_size);
  
  /*
-  * Processors which have self-snooping capability can handle conflicting
-@@ -984,11 +985,32 @@ static inline bool match_option(const ch
- 	return len == arglen && !strncmp(arg, opt, len);
- }
- 
-+static bool __init split_lock_verify_msr(bool on)
-+{
-+	u64 ctrl, tmp;
-+
-+	if (rdmsrl_safe(MSR_TEST_CTRL, &ctrl))
-+		return false;
-+	if (on)
-+		ctrl |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-+	else
-+		ctrl &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-+	if (wrmsrl_safe(MSR_TEST_CTRL, ctrl))
-+		return false;
-+	rdmsrl(MSR_TEST_CTRL, tmp);
-+	return ctrl == tmp;
-+}
-+
- static void __init split_lock_setup(void)
- {
- 	char arg[20];
- 	int i, ret;
- 
-+	if (!split_lock_verify_msr(true) || !split_lock_verify_msr(false)) {
-+		pr_info("MSR access failed: Disabled\n");
-+		return;
-+	}
-+
- 	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
- 	sld_state = sld_warn;
- 
-@@ -1007,7 +1029,6 @@ static void __init split_lock_setup(void
- 	case sld_off:
- 		pr_info("disabled\n");
- 		break;
--
- 	case sld_warn:
- 		pr_info("warning about user-space split_locks\n");
- 		break;
-@@ -1018,44 +1039,40 @@ static void __init split_lock_setup(void
- 	}
- }
- 
--/*
-- * Locking is not required at the moment because only bit 29 of this
-- * MSR is implemented and locking would not prevent that the operation
-- * of one thread is immediately undone by the sibling thread.
-- * Use the "safe" versions of rdmsr/wrmsr here because although code
-- * checks CPUID and MSR bits to make sure the TEST_CTRL MSR should
-- * exist, there may be glitches in virtualization that leave a guest
-- * with an incorrect view of real h/w capabilities.
-- */
--static bool __sld_msr_set(bool on)
-+static void split_lock_init(void)
- {
--	u64 test_ctrl_val;
-+	u64 ctrl;
- 
--	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
--		return false;
-+	if (!boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
-+		return;
- 
--	if (on)
--		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-+	rdmsrl(MSR_TEST_CTRL, ctrl);
-+	if (sld_state == sld_off)
-+		ctrl &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
- 	else
--		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
--
--	return !wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val);
-+		ctrl |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-+	wrmsrl(MSR_TEST_CTRL, ctrl);
-+	this_cpu_write(msr_test_ctrl_cache, ctrl);
- }
- 
--static void split_lock_init(void)
-+/*
-+ * MSR_TEST_CTRL is per core, but we treat it like a per CPU MSR. Locking
-+ * is not implemented as one thread could undo the setting of the other
-+ * thread immediately after dropping the lock anyway.
-+ */
-+static void msr_test_ctrl_update(bool on, u64 mask)
- {
--	if (sld_state == sld_off)
--		return;
-+	u64 tmp, ctrl = this_cpu_read(msr_test_ctrl_cache);
- 
--	if (__sld_msr_set(true))
--		return;
-+	if (on)
-+		tmp = ctrl | mask;
-+	else
-+		tmp = ctrl & ~mask;
- 
--	/*
--	 * If this is anything other than the boot-cpu, you've done
--	 * funny things and you get to keep whatever pieces.
--	 */
--	pr_warn("MSR fail -- disabled\n");
--	sld_state = sld_off;
-+	if (tmp != ctrl) {
-+		wrmsrl(MSR_TEST_CTRL, ctrl);
-+		this_cpu_write(msr_test_ctrl_cache, ctrl);
-+	}
- }
- 
- bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-@@ -1071,7 +1088,7 @@ bool handle_user_split_lock(struct pt_re
- 	 * progress and set TIF_SLD so the detection is re-enabled via
- 	 * switch_to_sld() when the task is scheduled out.
- 	 */
--	__sld_msr_set(false);
-+	msr_test_ctrl_update(false, MSR_TEST_CTRL_SPLIT_LOCK_DETECT);
- 	set_tsk_thread_flag(current, TIF_SLD);
- 	return true;
- }
-@@ -1085,7 +1102,7 @@ bool handle_user_split_lock(struct pt_re
+  * Submit IO for the read-ahead request in file_ra_state.
   */
- void switch_to_sld(unsigned long tifn)
+-static inline unsigned long ra_submit(struct file_ra_state *ra,
++static inline void ra_submit(struct file_ra_state *ra,
+ 		struct address_space *mapping, struct file *filp)
  {
--	__sld_msr_set(!(tifn & _TIF_SLD));
-+	msr_test_ctrl_update(!(tifn & _TIF_SLD), MSR_TEST_CTRL_SPLIT_LOCK_DETECT);
+-	return __do_page_cache_readahead(mapping, filp,
+-					ra->start, ra->size, ra->async_size);
++	__do_page_cache_readahead(mapping, filp,
++			ra->start, ra->size, ra->async_size);
  }
  
- #define SPLIT_LOCK_CPU(model) {X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY}
-
+ /**
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 2fe72cd29b47..41a592886da7 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -149,10 +149,8 @@ static int read_pages(struct address_space *mapping, struct file *filp,
+  * the pages first, then submits them for I/O. This avoids the very bad
+  * behaviour which would occur if page allocations are causing VM writeback.
+  * We really don't want to intermingle reads and writes like that.
+- *
+- * Returns the number of pages requested, or the maximum amount of I/O allowed.
+  */
+-unsigned int __do_page_cache_readahead(struct address_space *mapping,
++void __do_page_cache_readahead(struct address_space *mapping,
+ 		struct file *filp, pgoff_t offset, unsigned long nr_to_read,
+ 		unsigned long lookahead_size)
+ {
+@@ -166,7 +164,7 @@ unsigned int __do_page_cache_readahead(struct address_space *mapping,
+ 	gfp_t gfp_mask = readahead_gfp_mask(mapping);
+ 
+ 	if (isize == 0)
+-		goto out;
++		return;
+ 
+ 	end_index = ((isize - 1) >> PAGE_SHIFT);
+ 
+@@ -211,23 +209,21 @@ unsigned int __do_page_cache_readahead(struct address_space *mapping,
+ 	if (nr_pages)
+ 		read_pages(mapping, filp, &page_pool, nr_pages, gfp_mask);
+ 	BUG_ON(!list_empty(&page_pool));
+-out:
+-	return nr_pages;
+ }
+ 
+ /*
+  * Chunk the readahead into 2 megabyte units, so that we don't pin too much
+  * memory at once.
+  */
+-int force_page_cache_readahead(struct address_space *mapping, struct file *filp,
+-			       pgoff_t offset, unsigned long nr_to_read)
++void force_page_cache_readahead(struct address_space *mapping,
++		struct file *filp, pgoff_t offset, unsigned long nr_to_read)
+ {
+ 	struct backing_dev_info *bdi = inode_to_bdi(mapping->host);
+ 	struct file_ra_state *ra = &filp->f_ra;
+ 	unsigned long max_pages;
+ 
+ 	if (unlikely(!mapping->a_ops->readpage && !mapping->a_ops->readpages))
+-		return -EINVAL;
++		return;
+ 
+ 	/*
+ 	 * If the request exceeds the readahead window, allow the read to
+@@ -245,7 +241,6 @@ int force_page_cache_readahead(struct address_space *mapping, struct file *filp,
+ 		offset += this_chunk;
+ 		nr_to_read -= this_chunk;
+ 	}
+-	return 0;
+ }
+ 
+ /*
+@@ -378,11 +373,10 @@ static int try_context_readahead(struct address_space *mapping,
+ /*
+  * A minimal readahead algorithm for trivial sequential/random reads.
+  */
+-static unsigned long
+-ondemand_readahead(struct address_space *mapping,
+-		   struct file_ra_state *ra, struct file *filp,
+-		   bool hit_readahead_marker, pgoff_t offset,
+-		   unsigned long req_size)
++static void ondemand_readahead(struct address_space *mapping,
++		struct file_ra_state *ra, struct file *filp,
++		bool hit_readahead_marker, pgoff_t offset,
++		unsigned long req_size)
+ {
+ 	struct backing_dev_info *bdi = inode_to_bdi(mapping->host);
+ 	unsigned long max_pages = ra->ra_pages;
+@@ -428,7 +422,7 @@ ondemand_readahead(struct address_space *mapping,
+ 		rcu_read_unlock();
+ 
+ 		if (!start || start - offset > max_pages)
+-			return 0;
++			return;
+ 
+ 		ra->start = start;
+ 		ra->size = start - offset;	/* old async_size */
+@@ -464,7 +458,8 @@ ondemand_readahead(struct address_space *mapping,
+ 	 * standalone, small random read
+ 	 * Read as is, and do not pollute the readahead state.
+ 	 */
+-	return __do_page_cache_readahead(mapping, filp, offset, req_size, 0);
++	__do_page_cache_readahead(mapping, filp, offset, req_size, 0);
++	return;
+ 
+ initial_readahead:
+ 	ra->start = offset;
+@@ -489,7 +484,7 @@ ondemand_readahead(struct address_space *mapping,
+ 		}
+ 	}
+ 
+-	return ra_submit(ra, mapping, filp);
++	ra_submit(ra, mapping, filp);
+ }
+ 
+ /**
+-- 
+2.25.1
 
