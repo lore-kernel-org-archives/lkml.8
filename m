@@ -2,117 +2,134 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB68C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB10CC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0138020637
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:05:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OnrXSUpt"
+	by mail.kernel.org (Postfix) with ESMTP id CE5E420637
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbgCWQF2 (ORCPT
+        id S1727498AbgCWQFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:05:28 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36775 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727194AbgCWQF2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:05:28 -0400
-Received: by mail-lj1-f194.google.com with SMTP id g12so15212597ljj.3;
-        Mon, 23 Mar 2020 09:05:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=E5FPfWElFKdMpZuvQ9h2jaYCgsUPtm/4IuEU5E0aiwA=;
-        b=OnrXSUptfAUolkAuOXhiZeTpTm8ihay0iQKBsP3Kd/dLGggrA1xtTPVI0Rgw2fCYXE
-         iFEnxMki/UGXNKKOKs80goGAZ65RfvVxSUrMwyPb5KDSnpvFUrQ/Bw8s9qouc3OCVbJC
-         /8oF4FV+HiB+E5d4Q7gHX2DktkCNR0wrHs6x5arcC319JecRoRLS4tHpvgxsNmLFDntZ
-         A/bbpAx25k+hhK0qucX+RFWPbHGvxI3+IBY3r6+VFWKCYzxKxUjumeMgmMYzGYHerZ5Q
-         g95YVOMXMz9d+h+yAwwY6FW8t0yTs3jSmYaJH5ziagHNeik+wYpuNASDNwBPkQUMjON0
-         kWlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=E5FPfWElFKdMpZuvQ9h2jaYCgsUPtm/4IuEU5E0aiwA=;
-        b=nTUJl7BqG5Ef6sMp7GMmNMNnjQcrTzSgRxFgh0GoyCQBSy1uLC3O7Di8C7Q4FvOxeB
-         BpHk11x8iq3uTNs9BiKHmud7Jqb6Rpc9shyC5eazFeYiReu1D17kEZWygWvkv2luTdbe
-         7QWV30BtXpexpUi/OQQ1Y8CPV6yJVj9q4vvBK1RFd8DrSiME1UK5NRuEm8ujZaygH2x2
-         OEcpplrjWPCaGCxvzu6BXS6zaK0eqM94wXostRZFg5EALStR3X91Atfk+bbRXPmXpzJh
-         LzfN2ZIae47QFYLeuwNZ/MZDY60JU2JjcT3cb6iqhnut3KndD9ezkQtGc1yHLubyuuk5
-         OTJw==
-X-Gm-Message-State: ANhLgQ2DS05uJWPaOWR4DZz/MqUeKhAtHwzP7GJnUq31ceAjdvZBEC2z
-        L/gKqrmyExZWVKik/7mhL3Rtq0HJ
-X-Google-Smtp-Source: ADFU+vs/52TdNiAJfdd41fBWuyLzmoaHbR0mqPud/4CTPhvMMKxvtjN9OkjWJMiXDjzMGMQp1+xibg==
-X-Received: by 2002:a2e:9982:: with SMTP id w2mr14229389lji.11.1584979525397;
-        Mon, 23 Mar 2020 09:05:25 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id c13sm941220ljj.37.2020.03.23.09.05.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2020 09:05:24 -0700 (PDT)
-Subject: Re: [PATCH v1 0/2] Support built-in Mic on Tegra boards that use
- WM8903
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Stephen Warren <swarren@wwwdotorg.org>
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>, linux-tegra@vger.kernel.org
-References: <20200320205504.30466-1-digetx@gmail.com>
- <c27c2087-14cf-614d-a8c0-05072a54f24b@wwwdotorg.org>
- <da88ddff-e665-8cee-6f03-1a396602b076@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8b7a8eb3-98ed-71cb-5bd7-9c784ec24d68@gmail.com>
-Date:   Mon, 23 Mar 2020 19:05:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 23 Mar 2020 12:05:34 -0400
+Received: from mga07.intel.com ([134.134.136.100]:46754 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727479AbgCWQFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 12:05:34 -0400
+IronPort-SDR: t/H1DBiayEHmqAkdDEAoeAGIG4Ez1Aax5SU24Fn9IRHigGJ0q7+WqNXxwASdxg6cxohpjejQun
+ +NBivTErJfBA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 09:05:33 -0700
+IronPort-SDR: 7O/Nrp0ZmN2eUWqYaSNVfMn+7z3XKsjRcZ2D6zOChIXsFrixHltSjKSGQKeMNLmc6hj0/jdKmS
+ lWbogD1KkJLA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
+   d="scan'208";a="246241169"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 23 Mar 2020 09:05:30 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jGPa0-00CHXi-RE; Mon, 23 Mar 2020 18:05:32 +0200
+Date:   Mon, 23 Mar 2020 18:05:32 +0200
+From:   'Andy Shevchenko' <andy.shevchenko@gmail.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     Rohit Sarkar <rohitsarkar5398@gmail.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        "dragos.bogdan@analog.com" <dragos.bogdan@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>
+Subject: Re: [PATCH] iio: gyro: adis16136: use scnprintf instead of snprintf
+Message-ID: <20200323160532.GS1922688@smile.fi.intel.com>
+References: <5e723666.1c69fb81.3545b.79c3@mx.google.com>
+ <20200322002542.GA2826015@smile.fi.intel.com>
+ <5e77017a.1c69fb81.dc341.8ab9@mx.google.com>
+ <CAHp75VddtJs1ZCk1XAZ2WJLhWQDcVwiiN5gDpK9oYPEOS=c_ZQ@mail.gmail.com>
+ <81821e142e3c48febb7ab357dd200992@AcuMS.aculab.com>
 MIME-Version: 1.0
-In-Reply-To: <da88ddff-e665-8cee-6f03-1a396602b076@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <81821e142e3c48febb7ab357dd200992@AcuMS.aculab.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-23.03.2020 18:59, Jon Hunter пишет:
+On Mon, Mar 23, 2020 at 03:04:23PM +0000, David Laight wrote:
+> From: Andy Shevchenko
+> > Sent: 22 March 2020 10:27
+> > On Sun, Mar 22, 2020 at 8:11 AM Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
+> > >
+> > > On Sun, Mar 22, 2020 at 02:25:42AM +0200, Andy Shevchenko wrote:
+> > > > On Wed, Mar 18, 2020 at 08:25:22PM +0530, Rohit Sarkar wrote:
+> > > > > scnprintf returns the actual number of bytes written into the buffer as
+> > > > > opposed to snprintf which returns the number of bytes that would have
+> > > > > been written if the buffer was big enough. Using the output of snprintf
+> > > > > may lead to difficult to detect bugs.
+> > > >
+> > > > Nice. Have you investigate the code?
+> > > >
+> > > > > @@ -96,7 +96,7 @@ static ssize_t adis16136_show_serial(struct file *file,
+> > > > >     if (ret)
+> > > > >             return ret;
+> > > > >
+> > > > > -   len = snprintf(buf, sizeof(buf), "%.4x%.4x%.4x-%.4x\n", lot1, lot2,
+> > > > > +   len = scnprintf(buf, sizeof(buf), "%.4x%.4x%.4x-%.4x\n", lot1, lot2,
+> > > > >             lot3, serial);
+> > > > >
+> > > > >     return simple_read_from_buffer(userbuf, count, ppos, buf, len);
+> > > >
+> > > > The buffer size is 20, the pattern size I count to 19. Do you think snprintf()
+> > > > can fail?
+> > > That might be the case, but IMO using scnprintf can be considered as a
+> > > best practice. There is no overhead with this change and further if the
+> > > pattern is changed by someone in the future they might overlook the
+> > > buffersize
+> > 
+> > If we cut the string above we will give wrong information to the user space.
+> > I think scnprintf() change is a noise and does not improve the situation anyhow.
 > 
-> 
-> On 20/03/2020 22:30, Stephen Warren wrote:
->> On 3/20/20 2:55 PM, Dmitry Osipenko wrote:
->>> Hello,
->>>
->>> This small series adds audio route for built-in microphone on NVIDIA Tegra
->>> boards that use WM8903 CODEC. In particular this is needed in order to unmute
->>> internal microphone on Acer A500 tablet device. I'm planning to send out the
->>> device tree for the A500 for 5.8, so will be nice to get the microphone
->>> sorted out. Please review and apply, thanks in advance.
->>
->> It's been a long time since I looked at this code, but the series looks
->> plausible,
->> Acked-by: Stephen Warren <swarren@nvidia.com>
->>
->> (I wonder why machine->gpio_int_mic_en was already parse but never used!)
-> 
-> Looking at the ventana schematics, it appears that the internal-mic
-> signals was connected to a header and not an actual mic, so maybe we
-> never had a proper internal-mic on any board but allowed one to be
-> connected.
+> If, for any reason, any of the values are large the user will get
+> corrupt data.
 
-I guess cardhu may have a mic, judging by downstream kernel sources (I
-don't have cardhu schematics).
+> But you don't want to leak random kernel memory to the user.
 
-> Anyway, looks good to me as well.
+How? Kernel already got crashed at this point.
+
 > 
-> Acked-by: Jon Hunter <jonathanh@nvidia.com>
+> So while you may be able to prove that this particular snprintf()
+> can't overflow, in general checking it requires knowledge of the code.
 
-Thanks
+Here it's still a noise.
+
+> With scnprintf() you know nothing odd will happen.
+
+...and quite likely hide a lot of issues.
+
+Really any "micro" / "small" correction / optimization to be very carefully
+thought through.
+
+> FWIW I suspect the 'standard' return value from snprintf() comes
+> from the return value of the original user-space implementations
+> which faked-up a FILE structure on stack and just silently discarded
+> the output bytes that wouldn't fit in the buffer (they'd usually
+> by flushed to a real file).
+> The original sprintf() just specified a very big length so the
+> flush would never be requested.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
