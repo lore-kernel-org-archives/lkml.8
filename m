@@ -2,82 +2,120 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C84FC54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545D3C10F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 015E3206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:08:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="MnsNQtMa"
+	by mail.kernel.org (Postfix) with ESMTP id 293B220732
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:16:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584936984;
+	bh=2VPoavb3/Nh65+u7sn+FxjbORv9J9qX5wWi4UPuIvng=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p0pR5oB0mpYn7IkXvjWi2DSFlimZuJlZC1ALmO6FzETjw2qEFd2LAQJDxUrgrEUKw
+	 vrzl8YjiPH8hjJjEJ4GtchziHLlffhwDK5XCANIhljaapmY+aal7c2VSX05WfLWADZ
+	 Yf8CkW6QkBUYWvKRWKg0EkeF3dvuMQRy82t0jAyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725861AbgCWEIG (ORCPT
+        id S1725844AbgCWEQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 00:08:06 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:56335 "EHLO frisell.zx2c4.com"
+        Mon, 23 Mar 2020 00:16:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725208AbgCWEIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 00:08:06 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 56bf3ff2;
-        Mon, 23 Mar 2020 04:01:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=l8iAyJ+K01K7Ry6hfLApfgsmmCk=; b=MnsNQt
-        Ma0aqGANqQPdmI6JpO51x/MhbXk40VIzVt9efr07y+nzih8urCCcGTnoOafMhaTW
-        DmVyky6HL/ME43qa7sds3VfllcAXsEzGcvC0aPyWzoCXTJ17XUEOE2wkvpwN+FCN
-        jVw9EcYq96X/RxeEyjb2552akQqCsPK16XiPS4mdeJDn8rJlyivDpjt7PY3oCYPr
-        pJn19ae+qcqGdWGehZuJEY7dzZRF57pakkzHIqZBEmZila+282Uy/lPxTCi0L4YS
-        PlplI2XV4nhuAa8AFU+1iYTmvH2gf0V5YhuA3helY7UxAR1PTNJGf3o15Gznxfcx
-        DY7ftlEo+EoRDS8g==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 05493092 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Mon, 23 Mar 2020 04:01:06 +0000 (UTC)
-Received: by mail-io1-f50.google.com with SMTP id n21so12692659ioo.10;
-        Sun, 22 Mar 2020 21:08:02 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ27C2aW47PEJYmMm3vmfVQGc/YiqtrnhWPqBOV36s8RawzJRduG
-        VX05UE08CvUjLhe4lrm8t5tcyL8/57dbAY5eoko=
-X-Google-Smtp-Source: ADFU+vve1M8meLuonUdW1BMBX+ggaNqG5j94K+EgtJtEvjoWd9qbODtfHBZwqVNOuzYNm0X1q9NY2r9Nt12yu/iFdEM=
-X-Received: by 2002:a05:6602:b:: with SMTP id b11mr15291684ioa.79.1584936481619;
- Sun, 22 Mar 2020 21:08:01 -0700 (PDT)
+        id S1725208AbgCWEQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 00:16:21 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4345620719;
+        Mon, 23 Mar 2020 04:16:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584936980;
+        bh=2VPoavb3/Nh65+u7sn+FxjbORv9J9qX5wWi4UPuIvng=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WUCqFrmJGJ1z6rhNT/5V4ZIUm7ipQ7z18II1tlu9mk47y39o93IYNZvPKW49oB+Y6
+         DrH3W2AubwKpH1D9rhGw5sikGCHIczjXruck9FdRpYrS4OgYMjWsRvC35ivB2csZYD
+         MKn2DrUYWjISPK69Iz6nh9jvAMJb+kHY9bsheJ30=
+Date:   Sun, 22 Mar 2020 21:16:19 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Ju Hyung Park <qkrwngud825@gmail.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Chao Yu <chao@kernel.org>
+Subject: Re: [PATCH v2] f2fs: use kmem_cache pool during inline xattr lookups
+Message-ID: <20200323041619.GD147648@google.com>
+References: <20200225101710.40123-1-yuchao0@huawei.com>
+ <CAD14+f3pi331-V0gzjtxcMRVaEn3tPacrC20wtRq9+6JY9_HVA@mail.gmail.com>
+ <08d03473-9871-ba10-4626-58c4479ef9d1@huawei.com>
 MIME-Version: 1.0
-References: <20200323020844.17064-1-masahiroy@kernel.org>
-In-Reply-To: <20200323020844.17064-1-masahiroy@kernel.org>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Sun, 22 Mar 2020 22:07:50 -0600
-X-Gmail-Original-Message-ID: <CAHmME9p=ECJ15uyPH79bF0tuzEksdxoUsjGQSyz74FfdEJxTpQ@mail.gmail.com>
-Message-ID: <CAHmME9p=ECJ15uyPH79bF0tuzEksdxoUsjGQSyz74FfdEJxTpQ@mail.gmail.com>
-Subject: Re: [PATCH 0/7] x86: remove always-defined CONFIG_AS_* options
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     X86 ML <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Song Liu <songliubraving@fb.com>,
-        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        clang-built-linux@googlegroups.com,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <08d03473-9871-ba10-4626-58c4479ef9d1@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Masahrio,
+On 03/19, Chao Yu wrote:
+> Hi Ju Hyung,
+> 
+> On 2020/3/18 20:14, Ju Hyung Park wrote:
+> > Hi Chao.
+> > 
+> > I got the time around to test this patch.
+> > The v2 patch seems to work just fine, and the code looks good.
+> 
+> Thanks a lot for the review and test.
+> 
+> > 
+> > On Tue, Feb 25, 2020 at 7:17 PM Chao Yu <yuchao0@huawei.com> wrote:
+> >> diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+> >> index a3360a97e624..e46a10eb0e42 100644
+> >> --- a/fs/f2fs/xattr.c
+> >> +++ b/fs/f2fs/xattr.c
+> >> @@ -23,6 +23,25 @@
+> >>  #include "xattr.h"
+> >>  #include "segment.h"
+> >>
+> >> +static void *xattr_alloc(struct f2fs_sb_info *sbi, int size, bool *is_inline)
+> >> +{
+> >> +       *is_inline = (size == sbi->inline_xattr_slab_size);
+> > 
+> > Would it be meaningless to change this to the following code?
+> > if (likely(size == sbi->inline_xattr_slab_size))
+> >     *is_inline = true;
+> > else
+> >     *is_inline = false;
+> 
+> Yup, I guess it's very rare that user will change inline xattr size via remount,
+> so I'm okay with this change.
 
-Thanks for this series. I'll rebase my recent RFC on top of these
-changes, which makes the work I was doing slightly easier, as there
-are now fewer flags to deal with.
+Applied like this. Thanks,
 
-Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
+ 26 static void *xattr_alloc(struct f2fs_sb_info *sbi, int size, bool *is_inline)
+ 27 {
+ 28         if (likely(size == sbi->inline_xattr_slab_size)) {
+ 29                 *is_inline = true;
+ 30                 return kmem_cache_zalloc(sbi->inline_xattr_slab, GFP_NOFS);
+ 31         }
+ 32         *is_inline = false;
+ 33         return f2fs_kzalloc(sbi, size, GFP_NOFS);
+ 34 }
 
-Jason
+> 
+> Jaegeuk,
+> 
+> Could you please help to update the patch in your git tree directly?
+> 
+> Thanks,
+> 
+> > 
+> > The above statement seems to be only false during the initial mount
+> > and the rest(millions) seems to be always true.
+> > 
+> > Thanks.
+> > .
+> > 
