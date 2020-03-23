@@ -2,99 +2,74 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7AEC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45763C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A627320787
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:28:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584966512;
-	bh=AexYx5wOc1U061eltXUm1TbpFydE45ePZ/s/WCxM2RA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vwoRUe8UryrRCo2BQf/dC1BK5Nb5+w+X/glKaJiFlEnaXT5QnGw2uScfCaFaSC6zX
-	 nNi5vDDghA68CBRvvprnHg38tOtf2T1kTpBthkmVCC3vwkQcEG0YiyWy8hzpBKzkJ+
-	 Z3d/89rqmIuITMK3xl80jIGR/DJNE3JfW5RMtePw=
+	by mail.kernel.org (Postfix) with ESMTP id 118262077D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:29:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ahWQT4oR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbgCWM2b (ORCPT
+        id S1728183AbgCWM3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:28:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51480 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727380AbgCWM2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 08:28:31 -0400
-Received: from localhost (unknown [122.178.205.141])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 163262076A;
-        Mon, 23 Mar 2020 12:28:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584966510;
-        bh=AexYx5wOc1U061eltXUm1TbpFydE45ePZ/s/WCxM2RA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IkCzc8kP3xbTKjWOGHgTW58ayOwIG6rpOGVwZ/LzBxVOavqRcL+6GE2Mnw6TUk3Dl
-         JOS765Ghx8YoEAP2AQ3Pg75nUErlfZzcO+IkMIiqXwX267yNeCRZ2Iige1pkNoP3um
-         nenJh5yv5aLPtJqOHMczXQVWvhLbOCfgo7ncwbG4=
-Date:   Mon, 23 Mar 2020 17:58:26 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH 4/7] soundwire: intel: add definitions for shim_mask
-Message-ID: <20200323122826.GL72691@vkoul-mobl>
-References: <20200311221026.18174-1-pierre-louis.bossart@linux.intel.com>
- <20200311221026.18174-5-pierre-louis.bossart@linux.intel.com>
- <20200320134257.GD4885@vkoul-mobl>
- <deeb3af8-e950-651c-50d6-6223e75801e9@linux.intel.com>
+        Mon, 23 Mar 2020 08:29:33 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34704 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbgCWM3c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 08:29:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=x2GYiYbIlLLJAd/cDAIRQqv1UKwDNeF6qS0RKGALnxs=; b=ahWQT4oRunLOQfWx+/YgU7BuKf
+        r2STLJjPL8AJuAece++T+Ran8pvzOsr1R3KPx/HrXqrAkyFJRZGl2q+ZiLn9FN3AJzaXEwVsHFNlf
+        OGh2ONFrC43Q/x65YarB/rclZuXPiGEFjQ05zr0Qo7ADv1GUE6lnN/Ou5xFkqcikB0wDvn+pRytPh
+        dGorFvFJK7rPc82mffHuc7WA/ZjmzDksPSUb4iPLIJmVG9lzJ61HUQEOEvXa45vwF3trnsj9Jbumn
+        rKdNxUgBVNTBAiFheYS/JXGH9pr2eZH7742vl2NV0N43a+eHi7HsoQiF22EvjxRrsyesYZbSNKcRK
+        HoBZfSbg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGMCt-00052M-Rr; Mon, 23 Mar 2020 12:29:28 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 41683983504; Mon, 23 Mar 2020 13:29:25 +0100 (CET)
+Date:   Mon, 23 Mar 2020 13:29:25 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2] perf test x86: address multiplexing in rdpmc test
+Message-ID: <20200323122925.GH2452@worktop.programming.kicks-ass.net>
+References: <20200321173710.127770-1-irogers@google.com>
+ <20200322101848.GF2452@worktop.programming.kicks-ass.net>
+ <20200322231820.GB267978@tassilo.jf.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <deeb3af8-e950-651c-50d6-6223e75801e9@linux.intel.com>
+In-Reply-To: <20200322231820.GB267978@tassilo.jf.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-03-20, 09:13, Pierre-Louis Bossart wrote:
+On Sun, Mar 22, 2020 at 04:18:20PM -0700, Andi Kleen wrote:
+> > Here's something a little better. Much of it copied from linux/math64.h
+> > and asm/div64.h.
 > 
-> > > diff --git a/drivers/soundwire/intel.h b/drivers/soundwire/intel.h
-> > > index 568c84a80d79..cfc83120b8f9 100644
-> > > --- a/drivers/soundwire/intel.h
-> > > +++ b/drivers/soundwire/intel.h
-> > > @@ -16,6 +16,7 @@
-> > >    * @ops: Shim callback ops
-> > >    * @dev: device implementing hw_params and free callbacks
-> > >    * @shim_lock: mutex to handle access to shared SHIM registers
-> > > + * @shim_mask: global pointer to check SHIM register initialization
-> > >    */
-> > >   struct sdw_intel_link_res {
-> > >   	struct platform_device *pdev;
-> > > @@ -27,6 +28,7 @@ struct sdw_intel_link_res {
-> > >   	const struct sdw_intel_ops *ops;
-> > >   	struct device *dev;
-> > >   	struct mutex *shim_lock; /* protect shared registers */
-> > > +	u32 *shim_mask;
-> > 
-> > You have a pointer, okay where is it initialized
+> Not sure what the point is of micro optimizing a unit test?
 > 
-> same answer as shim_lock, it's initialized at the higher level
-> 
-> https://github.com/thesofproject/linux/blob/9c7487b33072040ab755d32ca173b75151c0160c/drivers/soundwire/intel_init.c#L252
+> This is never run in production.
 
-Why can't it be done here, what stops you?
-
-You really need to keep initialzation and usage in same patch :(
-
--- 
-~Vinod
+People might use it as an example of how to use the stuff.. and then
+copy horrendous crap code.
