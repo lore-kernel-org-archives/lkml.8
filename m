@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E74ECC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB8EC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1CDB20637
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C6E2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:06:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="soYPO72n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iPDxZW5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbgCWQG2 (ORCPT
+        id S1727537AbgCWQGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:06:28 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33745 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727499AbgCWQG2 (ORCPT
+        Mon, 23 Mar 2020 12:06:37 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37030 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727408AbgCWQGh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:06:28 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d17so6846130pgo.0;
-        Mon, 23 Mar 2020 09:06:27 -0700 (PDT)
+        Mon, 23 Mar 2020 12:06:37 -0400
+Received: by mail-pl1-f193.google.com with SMTP id x1so2072614plm.4;
+        Mon, 23 Mar 2020 09:06:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+vadeapgvAVIS4ucGk0m/TsoQZJykoxM6aQhRpzbLpw=;
-        b=soYPO72n5SO8kgJCLxgG8itEzeFgkOfpEXVZxPLFCzKRDrbdeJx1GcM8Dm5Chce4uX
-         CqtHHc3BPOecv71LBZ7J543GBadGiOi758/nbdK23igXDSYorWRLUeaD7tnXnLxc6XmJ
-         WtEkSIYWe3LgANdjX9wCaITuqQanE4YG/InEHtc7S5DFdxFZYi5C2/qFgBHnqNWj/iLi
-         4PsiqmfJuaZEaxQIH3Cp+/j0tPqi3J6aEJccVrv1E+GswGryK1nV5h1UdRB2FNRHAlGK
-         /EXFuf8cNFMpmaISK+XlrWmXHnzBNRenB0Hmw+DcD86fvjf7kc3Iy26QCwfjO8U+Hacw
-         99gA==
+        bh=o6myrbcP2wFpIJAA9gt9TKv02zj8RjNJVtTVH5Hy4EQ=;
+        b=iPDxZW5gynXS7qL2nxO/6PsxG5rcS8dWADROTCw7IalP/icc7wGyAX6KBI+Rbzjl/S
+         fmpzB+AKXILNq2M0fJ65oYArUzOqLNm7jEl+V9pZHBaxfVsTuB2ggrp45nI1xBm5xfnn
+         IRLc+BT8+90od+y38SHq1W2e3194m5bvqree8cABWy98nqTBvP2P477/ER5Fa1Dequq0
+         EoRvN1DGIsV45lQ5BUeE16MSYuTJMo5Buf6iP1vyupAjBQMtg4MVswqD4S0CKCplO67p
+         KhGGrSTqhtpvOBO6DhXeG8Mk0lXcbV+UnWNqIzW2QTWMZLUN+rQObz+nfXkaV0BC7B71
+         SHFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+vadeapgvAVIS4ucGk0m/TsoQZJykoxM6aQhRpzbLpw=;
-        b=b8L73q0PW4tL1dEgmOlqr9FyuFzgWBzLhYqoUF94RKisjyqp5MJkJ4TsIyqLDl+asf
-         aTYuVZ1N4SGoD8vGT2enXl0YN5fudYt9VuzdJDS+wCFwFwKgGtNX7qK4MrOsUxtVBgmy
-         i+P1NIny6c5E0yV7YImTJWdTwQKz951rMiw5iQrbgOhFMuNjKKNrDf5eNdVgHloT8rm6
-         yN9p7YjHuzJansRzxs3N0naTmRNPGIrJLL75qV4UIfZsiHSm8TfPckSrqWCBjvrq7Ezv
-         DvFTbVVvIghzr2SI+qczPTS6XKMV+oLkm9H5U5BOidlQBTk0S873/Y84EUv1F6hWDqQj
-         UZHw==
-X-Gm-Message-State: ANhLgQ07C73q8Z0uigGqFU7Fw+tNqAymDk8s6ZMy5lk2pD82gNZ7qTKP
-        0+MeJ7VaZLPWcadA+NvqHuI=
-X-Google-Smtp-Source: ADFU+vvYMzvc0GXLzvLyRT7VWz418J6d/bFrjdluY2NCNGq2loprCmphIcNLM4Z6hVXEByZiL6HKfw==
-X-Received: by 2002:a63:7e1a:: with SMTP id z26mr22236847pgc.226.1584979587402;
-        Mon, 23 Mar 2020 09:06:27 -0700 (PDT)
+        bh=o6myrbcP2wFpIJAA9gt9TKv02zj8RjNJVtTVH5Hy4EQ=;
+        b=HfyGquEknS0+eT3OTheA5beeUyfYfmJyB9gCrqKOMZMubB0DRYV2KLzkPhVHpge6En
+         k3l0tSt7Hkd79esRnZJqQ0AbrTAI8lsDnhYtLZy6/+kB/ZWtEjTtN4JZ+uLZ/OYhO9bo
+         pF+8BG9E0+yQoolXzhbhivkEBuYfigenKWy7J1h1mO3dLhh82sBTMVvMbEv+ALumtXMX
+         v80zdElyImM+2yBC+10L/33Du9P9kND7P34Pfhg/1p7rAysrSMBkGptH6uQsLAxsdFJb
+         m3+j+UvWDVDSUH1KsK5fuPpO5cRjnq/QSXIbLOWXoqRI+HekhzIcYg0ZKJhAjKQ66j2G
+         sfKg==
+X-Gm-Message-State: ANhLgQ1rVv9jgkPQw8ko3ASFzUzHLJ/9HsR9W3nSHdDXwDXcINLa9yhc
+        5NUpQBlQeFjb9rSf4EcHEBU=
+X-Google-Smtp-Source: ADFU+vsWrn+Tdam6ubw6nKp82rtGimANdOulS0rXh4M8tmN7SAY7E3UPzXLDMzhhzNsXYcCSEyAIpA==
+X-Received: by 2002:a17:90a:240f:: with SMTP id h15mr29115pje.176.1584979595869;
+        Mon, 23 Mar 2020 09:06:35 -0700 (PDT)
 Received: from localhost (176.122.158.203.16clouds.com. [176.122.158.203])
-        by smtp.gmail.com with ESMTPSA id a13sm20660pjh.7.2020.03.23.09.06.26
+        by smtp.gmail.com with ESMTPSA id nk12sm531pjb.41.2020.03.23.09.06.34
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 23 Mar 2020 09:06:26 -0700 (PDT)
+        Mon, 23 Mar 2020 09:06:35 -0700 (PDT)
 From:   Dejin Zheng <zhengdejin5@gmail.com>
 To:     gregkh@linuxfoundation.org, rafael@kernel.org, hminas@synopsys.com,
         mathias.nyman@intel.com, bgolaszewski@baylibre.com, arnd@arndb.de,
@@ -65,11 +65,10 @@ To:     gregkh@linuxfoundation.org, rafael@kernel.org, hminas@synopsys.com,
         suzuki.poulose@arm.com
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         Dejin Zheng <zhengdejin5@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v4 1/5] drivers: provide devm_platform_get_and_ioremap_resource()
-Date:   Tue, 24 Mar 2020 00:06:08 +0800
-Message-Id: <20200323160612.17277-2-zhengdejin5@gmail.com>
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH v4 2/5] usb: host: xhci-plat: convert to devm_platform_get_and_ioremap_resource
+Date:   Tue, 24 Mar 2020 00:06:09 +0800
+Message-Id: <20200323160612.17277-3-zhengdejin5@gmail.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200323160612.17277-1-zhengdejin5@gmail.com>
 References: <20200323160612.17277-1-zhengdejin5@gmail.com>
@@ -80,80 +79,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit "drivers: provide devm_platform_ioremap_resource()",
-it was wrap platform_get_resource() and devm_ioremap_resource() as
-single helper devm_platform_ioremap_resource(). but now, many drivers
-still used platform_get_resource() and devm_ioremap_resource()
-together in the kernel tree. The reason can not be replaced is they
-still need use the resource variables obtained by platform_get_resource().
-so provide this helper.
+Use devm_platform_get_and_ioremap_resource() to simplify code, which
+contains platform_get_resource() and devm_ioremap_resource(), it also
+get the resource for use by the following code.
 
-Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Suggested-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 ---
 v3 -> v4:
-	- modified the description of the parameter res in this patch.
+	- no changed.
 v2 -> v3:
-	- rename the function to
-	  devm_platform_get_and_ioremap_resource() by Sergei's suggestion.
-	- make the last parameter res as optional by Geert's suggestion.
-
+	- call the rename function devm_platform_get_and_ioremap_resource()
 v1 -> v2:
-	- No change.
-
- drivers/base/platform.c         | 22 ++++++++++++++++++++++
- include/linux/platform_device.h |  3 +++
- 2 files changed, 25 insertions(+)
-
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 7fa654f1288b..3e8a9fb91dcd 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -62,6 +62,28 @@ struct resource *platform_get_resource(struct platform_device *dev,
- EXPORT_SYMBOL_GPL(platform_get_resource);
+	- add this patch for add some real users of this function. 
  
- #ifdef CONFIG_HAS_IOMEM
-+/**
-+ * devm_platform_get_and_ioremap_resource - call devm_ioremap_resource() for a
-+ *					    platform device and get resource
-+ *
-+ * @pdev: platform device to use both for memory resource lookup as well as
-+ *        resource management
-+ * @index: resource index
-+ * @res: optional output parameter to store a pointer to the obtained resource.
-+ */
-+void __iomem *
-+devm_platform_get_and_ioremap_resource(struct platform_device *pdev,
-+				unsigned int index, struct resource **res)
-+{
-+	struct resource *r;
-+
-+	r = platform_get_resource(pdev, IORESOURCE_MEM, index);
-+	if (res)
-+		*res = r;
-+	return devm_ioremap_resource(&pdev->dev, r);
-+}
-+EXPORT_SYMBOL_GPL(devm_platform_get_and_ioremap_resource);
-+
- /**
-  * devm_platform_ioremap_resource - call devm_ioremap_resource() for a platform
-  *				    device
-diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
-index 8e83c6ff140d..8aa6b448450f 100644
---- a/include/linux/platform_device.h
-+++ b/include/linux/platform_device.h
-@@ -55,6 +55,9 @@ extern struct device *
- platform_find_device_by_driver(struct device *start,
- 			       const struct device_driver *drv);
- extern void __iomem *
-+devm_platform_get_and_ioremap_resource(struct platform_device *pdev,
-+				unsigned int index, struct resource **res);
-+extern void __iomem *
- devm_platform_ioremap_resource(struct platform_device *pdev,
- 			       unsigned int index);
- extern void __iomem *
+ drivers/usb/host/xhci-plat.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index d90cd5ec09cf..dcc0bfe04c43 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -219,8 +219,7 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 		goto disable_runtime;
+ 	}
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	hcd->regs = devm_ioremap_resource(&pdev->dev, res);
++	hcd->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+ 	if (IS_ERR(hcd->regs)) {
+ 		ret = PTR_ERR(hcd->regs);
+ 		goto put_hcd;
 -- 
 2.25.0
 
