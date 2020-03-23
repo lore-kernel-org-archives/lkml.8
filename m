@@ -2,103 +2,155 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DD7C10F26
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88265C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD148206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EDCD206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:13:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QaI7uUBd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nb+zKKAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbgCWGLd (ORCPT
+        id S1727265AbgCWGN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 02:11:33 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35712 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgCWGLd (ORCPT
+        Mon, 23 Mar 2020 02:13:57 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40813 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgCWGN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 02:11:33 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u68so7009175pfb.2
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 23:11:32 -0700 (PDT)
+        Mon, 23 Mar 2020 02:13:57 -0400
+Received: by mail-pf1-f195.google.com with SMTP id l184so7007830pfl.7;
+        Sun, 22 Mar 2020 23:13:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vfoKLrcgOv8lhgFhm678nBtvyoCad1xXGEKxp5I8sOk=;
-        b=QaI7uUBdCw4wZBiXNO3VSb6ctt4H+hKvJZS3YpFOkrcOAF+JPD7hQbL/gOrRNsJ/xT
-         Jsh8atyEeeJSPZyAzzPnYjl7AzENbxmf5ZzGnWCC21gEvC+sPttjlKcI1vYstKmT4LeY
-         scPRUe1+9P4c+xkI2KFFXiFX9yB6Zvz2In4w57qhuxfDz6s+QSsnhl15EAf9e6L5drzY
-         iH16L/9MKrDBwqiHWIiOp0dMoft1Yd73SxjMfq+kUgzDqSJQ334qKv+4fpcqyKjRF1+m
-         Ukw35ivToU/Jsay1QQSLiIa57423ob8aebixDsanGI5JQqbMoeTEepMOBVyE+3FqeUI7
-         Q8Og==
+        h=from:to:cc:subject:date:message-id;
+        bh=6RunR6reW/rdha4XOFLo/23SuT6oFo6osITud1hxX5Y=;
+        b=nb+zKKADfvG58zZQgBqsCUfbzB974vH7CsHBQk/LeoCSEFdn0+Nnbs75pJ8xLEyUxN
+         JLZfC6JTVuBWoZkcvtaeI2WUSUjSYonkMFK3HP5LKsOKWciYXmCIRQ/K4O8esW7W9wlq
+         5c1PmZe7i5qw7N5C7bbrRIU1j5VqECEn5F/2VgW/km437hskRZRBWbmcUNzp5ZS3xjDX
+         Q3x/TiKFyWzJJuhyI81XWMN5oVkgHuR0sX6BTrVelNobWglhgJhkDVVN2hIQVJJAiDIL
+         A2mstRgUlJHTt4xYtAePm2OVqfoeMd3xjyvpHb8EyoDSKJm8v+pP2oAU9h/TCDVmTzq4
+         HZHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vfoKLrcgOv8lhgFhm678nBtvyoCad1xXGEKxp5I8sOk=;
-        b=UwQJyvd2XNGXsLimIS7aFwCP+dootufly4N2vcmU3sr0RR2piKuSaufhE8gZ0cpoeP
-         vkP2Kb3a8X5RDHbfF2+K5KFRkN1YkbkJaJFbpK/Nh1Ixl9KPEkboPVsnPszTSvDIX7yY
-         B1M/430O3W0ypIoOgIzGZ4XxsYpvFincQBDJKz9sJEv8Mfe31qPZGUiDOYgzOgYlfj1B
-         MDxhpl8lELrH1RRaSxoSnyyXp6pHqjNhpz5c9aoTYw1NYvEicJk4sRIrJv/2QGIJaVGQ
-         WbVN//bm5KCx8NpHHuOM+npIYLTRIk3UPAWomO8F8n2kOWUlW6+hmrBntnPimsPclrNa
-         NhCQ==
-X-Gm-Message-State: ANhLgQ0irIeXxCQyRNFALFpCYbqjXmr6D5SN7snrn9IgyexUkfvqmlqM
-        Mb4wvWPuvqzSEAUtzxmZY5Q=
-X-Google-Smtp-Source: ADFU+vvH2XMMCavwjfL57o367bU1E5OGljDM7FxDqXkhqUg/AKVp+CwZMLa1nPEBn1m98X9gJbitOA==
-X-Received: by 2002:a62:4e4c:: with SMTP id c73mr23200170pfb.254.1584943892655;
-        Sun, 22 Mar 2020 23:11:32 -0700 (PDT)
-Received: from localhost ([49.207.51.24])
-        by smtp.gmail.com with ESMTPSA id b25sm12268960pfd.185.2020.03.22.23.11.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 22 Mar 2020 23:11:32 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 11:41:30 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] clocksource/drivers/timer-vf-pit: Fix build error
-Message-ID: <20200323061130.GA6286@afzalpc>
-References: <202003230153.VzOyvdbR%lkp@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202003230153.VzOyvdbR%lkp@intel.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6RunR6reW/rdha4XOFLo/23SuT6oFo6osITud1hxX5Y=;
+        b=PVE2d5LeGMYMY8isIrUWsEpdSaXXbQM7lRuRZq0/p3Jv8kp1oUQcKS4l9/wsCzxP3/
+         41tzE7NX2lQrhbfgENnoGX2zpHu1pfSYwuy91hJlnfK6jdrNWFAtCKoO6XHQfaoV4uzF
+         y0gGDSh+L2g0GDFShT5L3AihOsodrWOSCkP6rlwgDxrT5HB+YNoUwgeQXz2Jcpy309f9
+         CW+v2IfNzyYavD76xTM8qiLOguXLT2z+7w7V7FbnF5hplJwP5Lla4lDKffmV7KR08+sj
+         sRLC7EB2KB3/P47yOudvzNuk5xKMddWb1hCRdioqP0B4c/9v1MzZpzytw5ghB7Ewcgb8
+         Efdg==
+X-Gm-Message-State: ANhLgQ1b0R9by4YlALlnfbPG9bGsnzHYT+X4pDXf1n6Sx1JBpD+WZpal
+        vj87MW4EWitYVq83rJ85F3Q=
+X-Google-Smtp-Source: ADFU+vvgKLpr2Zg/O4HQWAHsJwfSiSdJMSKiaGomL4mu93OT8Ti7hK3cSqVzKOAVvhz6L/iHCCaG0Q==
+X-Received: by 2002:a65:5905:: with SMTP id f5mr19326629pgu.87.1584944036066;
+        Sun, 22 Mar 2020 23:13:56 -0700 (PDT)
+Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id l1sm11458625pje.9.2020.03.22.23.13.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 22 Mar 2020 23:13:55 -0700 (PDT)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] dt-bindings: mailbox: Add the Spreadtrum mailbox documentation
+Date:   Mon, 23 Mar 2020 14:13:46 +0800
+Message-Id: <600e0b027a4e62a4aea8900e5a1e95e3e14b10f0.1584943873.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recently all usages of setup_irq() was replaced by request_irq(). The
-replacement in timer-vf-pit.c missed closing parentheses resulting in
-build error (vf610m4_defconfig). Fix it.
+From: Baolin Wang <baolin.wang@unisoc.com>
 
-Fixes: cc2550b421aa ("clocksource: Replace setup_irq() by request_irq()")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+Add the Spreadtrum mailbox documentation.
+
+Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 ---
- drivers/clocksource/timer-vf-pit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes from v1:
+ - Add 'additionalProperties'.
+ - Split description for each entry.
+---
+ .../devicetree/bindings/mailbox/sprd-mailbox.yaml  | 62 ++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
 
-diff --git a/drivers/clocksource/timer-vf-pit.c b/drivers/clocksource/timer-vf-pit.c
-index 7ad4a8b008c2..1a86a4e7e344 100644
---- a/drivers/clocksource/timer-vf-pit.c
-+++ b/drivers/clocksource/timer-vf-pit.c
-@@ -129,7 +129,7 @@ static int __init pit_clockevent_init(unsigned long rate, int irq)
- 	__raw_writel(PITTFLG_TIF, clkevt_base + PITTFLG);
- 
- 	BUG_ON(request_irq(irq, pit_timer_interrupt, IRQF_TIMER | IRQF_IRQPOLL,
--			   "VF pit timer", &clockevent_pit);
-+			   "VF pit timer", &clockevent_pit));
- 
- 	clockevent_pit.cpumask = cpumask_of(0);
- 	clockevent_pit.irq = irq;
+diff --git a/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
+new file mode 100644
+index 0000000..0848b18
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/mailbox/sprd-mailbox.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Spreadtrum mailbox controller bindings
++
++maintainers:
++  - Orson Zhai <orsonzhai@gmail.com>
++  - Baolin Wang <baolin.wang7@gmail.com>
++  - Chunyan Zhang <zhang.lyra@gmail.com>
++
++properties:
++  compatible:
++    enum:
++      - sprd,sc9860-mailbox
++
++  reg:
++    items:
++      - description: inbox registers' base address
++      - description: outbox registers' base address
++    minItems: 2
++
++  interrupts:
++    items:
++      - description: inbox interrupt
++      - description: outbox interrupt
++    minItems: 2
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: enable
++
++  "#mbox-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#mbox-cells"
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    mailbox: mailbox@400a0000 {
++      compatible = "sprd,sc9860-mailbox";
++      reg = <0 0x400a0000 0 0x8000>, <0 0x400a8000 0 0x8000>;
++      #mbox-cells = <1>;
++      clock-names = "enable";
++      clocks = <&aon_gate 53>;
++      interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
++    };
++...
 -- 
-2.25.1
+1.9.1
 
