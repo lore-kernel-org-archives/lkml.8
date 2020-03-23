@@ -2,173 +2,144 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5126FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95274C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2AF20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 643EE20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:57:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="kGEr2PRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbgCWR4z convert rfc822-to-8bit (ORCPT
+        id S1727576AbgCWR5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:56:55 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:59036 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbgCWR4y (ORCPT
+        Mon, 23 Mar 2020 13:57:24 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:21003 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727011AbgCWR5Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:56:54 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 68D5ECECFF;
-        Mon, 23 Mar 2020 19:06:24 +0100 (CET)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH v1 1/2] Bluetooth: btusb: Indicate Microsoft vendor
- extension for Intel 9460/9560 and 9160/9260
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200323002820.v1.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
-Date:   Mon, 23 Mar 2020 18:56:52 +0100
-Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Alain Michaud <alainm@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <04021BE3-63F7-4B19-9F0E-145785594E8C@holtmann.org>
-References: <20200323072824.254495-1-mcchou@chromium.org>
- <20200323002820.v1.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
-To:     Miao-chen Chou <mcchou@chromium.org>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Mon, 23 Mar 2020 13:57:24 -0400
+IronPort-SDR: XSmrdQYMRxakr+UvHi122eqauWoMR4pXbbndVHt6vB3kYU/9UItnUUmUCipqFTeQDZJX+gkbpl
+ Cm8J7EZk28qxIPjf1L9q7fbbOAppZUduCBl+kSZ6iJ3TWHokn/iQYLHx5Wr8KZI03HcMhxINpM
+ 23gCZdb5jfZKrB+TdcdIUGBTfqP0GnLeNPYvDYHlsI32cKRiHUeAPvOm+MiSSXC5hMz6y46git
+ wK6OnCPwSayBsjUliSP8mbPlvX/aSwXCFfyAViNLVfIykCEvinruwrpPKFEUIgzISdoVMtGGBA
+ rt4=
+X-IronPort-AV: E=Sophos;i="5.72,297,1580799600"; 
+   d="scan'208";a="70964770"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Mar 2020 10:57:02 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 23 Mar 2020 10:57:02 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 23 Mar 2020 10:57:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UzQskDdqYA5sr7bZEOSVlrMOcPEZa8d1g/yHgUxVOoFz/5d8DbhwHzPDU6TC+Epvj8lIrYDiXUaYEAo3mwo01Atb0XbtsOXlhx+3VBS3ZYS8yATawpDYnwTiTPxSU0RYuVSUA7Mio1jAHUT58flF+bVbmSLn7q4nRi+j7AFdK5EsTZiVgEydejczoJeSMkuCw8yX+GSaIkgwuV7XO4S2YXIVkU8dhIaj/FWzmZAqtxXPGynlXgS4v9hW7q4hSnrVFi2x2bRwa43LWVpxP4E6pv+RZy75HRh6/cJGrkqNnRrJIPsqalgutrpJhFYHKljArxbrKdeHC/3MsCjdk3jGnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RLknpR8qIUH/NTM48rvSJn8ntHIYvx69fE0ZrHkOEiA=;
+ b=RunMgiJik9Oy3LMYiLiYEjiIz1anBe9ace2dHcIPdQdSHdEbciuvII1/gxncAskAcxkH09FB+4Lnt9iO8TK0wjsYaSXza9rdJrWzYiUvfhtrm8svBGrhXIDfVcll3s/QzfLwzf6RnbsqlUk0d2f8NG5N3Vhe2bwSC6siVZY2Yuk5f8i++yxY3idGfVON/sdtuKXWCGyQi66K3T36LpamVuStbEGUgeNHwfA4CQC39OfHrXefLRUzkUe/ByMR/EdmosgXbdgFjXazVhZjT43zRDgnIOs7jFhqpxbUm5yR6p0OK+slF59+DrjQC+ZUTqueVlaV+ghBZMSXBNua6RPu5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RLknpR8qIUH/NTM48rvSJn8ntHIYvx69fE0ZrHkOEiA=;
+ b=kGEr2PRuVPcMSIIiyG3vVn3rlL2QObipJynvmsc0FNFdeVuO/ZHDXYCraDi/vlAZisCLKYotkXFvzuSr3Tha5qqwh0ewDA4ZTAh71GFtks5dVQT0EQQ2K4sFdtiJCg+ARu7wUJq9Fs74bTCL8Xas6nkcat6cH2G6CnmYKw7JkJk=
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com (2603:10b6:a03:1c8::13)
+ by BY5PR11MB3925.namprd11.prod.outlook.com (2603:10b6:a03:182::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.22; Mon, 23 Mar
+ 2020 17:57:00 +0000
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::e918:9196:b47e:9692]) by BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::e918:9196:b47e:9692%3]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
+ 17:57:00 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <lukas.bulwahn@gmail.com>
+CC:     <bbrezillon@kernel.org>, <vigneshr@ti.com>, <vz@mleia.com>,
+        <linux-mtd@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <joe@perches.com>,
+        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: update entry after SPI NOR controller move
+Thread-Topic: [PATCH] MAINTAINERS: update entry after SPI NOR controller move
+Thread-Index: AQHWATxzB3pzaldLS0q/vR8lNGgubg==
+Date:   Mon, 23 Mar 2020 17:57:00 +0000
+Message-ID: <22897927.UjJTgWM9OM@192.168.0.120>
+References: <20200321064217.6179-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20200321064217.6179-1-lukas.bulwahn@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Tudor.Ambarus@microchip.com; 
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b028224b-4a9d-4421-0995-08d7cf53966a
+x-ms-traffictypediagnostic: BY5PR11MB3925:
+x-microsoft-antispam-prvs: <BY5PR11MB3925F42478085D27C38119BFF0F00@BY5PR11MB3925.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0351D213B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(136003)(366004)(396003)(39860400002)(199004)(6512007)(53546011)(9686003)(81166006)(8936002)(86362001)(316002)(478600001)(2906002)(54906003)(186003)(26005)(66946007)(66476007)(66556008)(66446008)(76116006)(64756008)(91956017)(6916009)(6506007)(71200400001)(14286002)(6486002)(8676002)(81156014)(15650500001)(4326008)(5660300002)(4744005)(39026012);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB3925;H:BY5PR11MB4419.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Xg08fyhdEMqHemeyiNoWogOeosi6S1sxlipGFR/XemRX2asRWB1OlvTiM440G+wrCideQnUE00k2Vj4MobwQLHFfpMHT79A8lmzg4j2B3IxpR0F2f5JuDCvNsLMSPvZo8laZVguNFk3pst701V47YvJL+jKlr+lcl/ey+lNlwyE+FGGCxOuFqKbFaCWobJBTpdYSQXj1xLe5jyd8GI/xqQDQid1R3SyTxp8vJF7GODkW63jga7aaG/JRRH9vG73KBa008CIzehecqNc9FCn4NVv8uehv7487yGREgeMPINdsKMyT/wqM0jCwXmP0MgmrUrRZj12SJDojfb9hAHkYf5azF0iF1mu+mECsLij3ucPV0la+hFuMlu2ARg3fGEzCTgqU7T4/rrtzJX+CdFVRDrHySGelm7MqlFtzAsM1Ww1tFosVmBJiS6ibXRdSqr31nL+1lNEI+LY3VC6GQIouJaSb3L/j/AtpQoOAbvg0pV9HlFpSwFBPL2sSMBSGMEFN
+x-ms-exchange-antispam-messagedata: qywx5mUZD0KrZXMejv1SPDaQS/mFltBrWgbbT8O9zDin/DyCPl17PBLUjW81De60sA/tmVP4C2zZ9k7LG6BpvLXJ+zc6o4+6mvIlGi2R5HqTT9LwndqbhZWQsdC+M/Q1RKw7Fc5lIfNpCfNmSj46JQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <253F337988CC1D479FB10CD757D5D7BC@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: b028224b-4a9d-4421-0995-08d7cf53966a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2020 17:57:00.7392
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: F6a2Yi0lm1uUc/GOoEe0dxatx2ZXFuCXcrLoEDOcAl+I/rBVnghnxrkfWE+Q+upiNSFq0iVYt+YAlBsUfUma1G5wcUgFepXfftsKqLXutcE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB3925
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miao-chen,
-
-> This adds a bit mask of driver_info for Microsoft vendor extension and
-> indicates the support for Intel 9460/9560 and 9160/9260. See
-> https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
-> microsoft-defined-bluetooth-hci-commands-and-events for more information
-> about the extension. This was verified with Intel ThunderPeak BT controller
-> where msft_vnd_ext_opcode is 0xFC1E.
-> 
-> Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
+On Saturday, March 21, 2020 8:42:17 AM EET Lukas Bulwahn wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know th=
+e
+> content is safe
+>=20
+> Commit a0900d0195d2 ("mtd: spi-nor: Prepare core / manufacturer code
+> split") moved all SPI NOR controller drivers to a controllers/
+> sub-directory. However, the moved nxp-spifi.c file was referenced in the
+> ARM/LPC18XX ARCHITECTURE entry in MAINTAINERS.
+>=20
+> Hence, since then, ./scripts/get_maintainer.pl --self-test complains:
+>=20
+>   warning: no file matches F: drivers/mtd/spi-nor/nxp-spifi.c
+>=20
+> Update the file entry in MAINTAINERS to its new location.
+>=20
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 > ---
-> 
-> Changes in v1:
-> - Add a bit mask of driver_info for Microsoft vendor extension.
-> - Indicates the support of Microsoft vendor extension for Intel
-> 9460/9560 and 9160/9260.
-> - Add fields to struct hci_dev to facilitate the support of Microsoft
-> vendor extension.
-> 
-> drivers/bluetooth/btusb.c        | 18 ++++++++++++++++--
-> include/net/bluetooth/hci.h      |  2 ++
-> include/net/bluetooth/hci_core.h |  4 ++++
-> 3 files changed, 22 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> index 3bdec42c9612..5eb27d1c4ac7 100644
-> --- a/drivers/bluetooth/btusb.c
-> +++ b/drivers/bluetooth/btusb.c
-> @@ -58,6 +58,7 @@ static struct usb_driver btusb_driver;
-> #define BTUSB_CW6622		0x100000
-> #define BTUSB_MEDIATEK		0x200000
-> #define BTUSB_WIDEBAND_SPEECH	0x400000
-> +#define BTUSB_MSFT_VND_EXT	0x800000
-> 
-> static const struct usb_device_id btusb_table[] = {
-> 	/* Generic Bluetooth USB device */
-> @@ -335,7 +336,8 @@ static const struct usb_device_id blacklist_table[] = {
-> 
-> 	/* Intel Bluetooth devices */
-> 	{ USB_DEVICE(0x8087, 0x0025), .driver_info = BTUSB_INTEL_NEW |
-> -						     BTUSB_WIDEBAND_SPEECH },
-> +						     BTUSB_WIDEBAND_SPEECH |
-> +						     BTUSB_MSFT_VND_EXT },
-> 	{ USB_DEVICE(0x8087, 0x0026), .driver_info = BTUSB_INTEL_NEW |
-> 						     BTUSB_WIDEBAND_SPEECH },
-> 	{ USB_DEVICE(0x8087, 0x0029), .driver_info = BTUSB_INTEL_NEW |
-> @@ -348,7 +350,8 @@ static const struct usb_device_id blacklist_table[] = {
-> 	{ USB_DEVICE(0x8087, 0x0aa7), .driver_info = BTUSB_INTEL |
-> 						     BTUSB_WIDEBAND_SPEECH },
-> 	{ USB_DEVICE(0x8087, 0x0aaa), .driver_info = BTUSB_INTEL_NEW |
-> -						     BTUSB_WIDEBAND_SPEECH },
-> +						     BTUSB_WIDEBAND_SPEECH |
-> +						     BTUSB_MSFT_VND_EXT },
-> 
-> 	/* Other Intel Bluetooth devices */
-> 	{ USB_VENDOR_AND_INTERFACE_INFO(0x8087, 0xe0, 0x01, 0x01),
-> @@ -3734,6 +3737,11 @@ static int btusb_probe(struct usb_interface *intf,
-> 	hdev->send   = btusb_send_frame;
-> 	hdev->notify = btusb_notify;
-> 
-> +	hdev->msft_vnd_ext_opcode = HCI_OP_NOP;
-> +	hdev->msft_vnd_ext_features = 0;
-> +	hdev->msft_vnd_ext_evt_prefix_len = 0;
-> +	hdev->msft_vnd_ext_evt_prefix = NULL;
-> +
+> applies cleanly on next-20200320
+> Boris, Tudor, please pick this trivial patch. Not urgent.
+>=20
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Add the extra parameters when you start using them. Keep this patch for just the opcode.
-
-> #ifdef CONFIG_PM
-> 	err = btusb_config_oob_wake(hdev);
-> 	if (err)
-> @@ -3800,6 +3808,12 @@ static int btusb_probe(struct usb_interface *intf,
-> 		set_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks);
-> 		set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
-> 		set_bit(HCI_QUIRK_NON_PERSISTENT_DIAG, &hdev->quirks);
-> +
-> +		if (id->driver_info & BTUSB_MSFT_VND_EXT &&
-> +			(id->idProduct == 0x0025 || id->idProduct == 0x0aaa)) {
-
-I don’t get the extra check here. It is not needed. Just rely on id->driver_info.
-
-> +			hdev->msft_vnd_ext_opcode =
-> +				hci_opcode_pack(HCI_VND_DEBUG_CMD_OGF, 0x001E);
-
-Don’t bother with opcode_pack here. Just assign it 0xFC1E.
-
-> +		}
-> 	}
-> 
-> 	if (id->driver_info & BTUSB_MARVELL)
-> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-> index 5f60e135aeb6..b85e95454367 100644
-> --- a/include/net/bluetooth/hci.h
-> +++ b/include/net/bluetooth/hci.h
-> @@ -38,6 +38,8 @@
-> 
-> #define HCI_MAX_CSB_DATA_SIZE	252
-> 
-> +#define HCI_VND_DEBUG_CMD_OGF	0x3f
-> +
-> /* HCI dev events */
-> #define HCI_DEV_REG			1
-> #define HCI_DEV_UNREG			2
-> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-> index d4e28773d378..15daf3b2d4f0 100644
-> --- a/include/net/bluetooth/hci_core.h
-> +++ b/include/net/bluetooth/hci_core.h
-> @@ -315,6 +315,10 @@ struct hci_dev {
-> 	__u8		ssp_debug_mode;
-> 	__u8		hw_error_code;
-> 	__u32		clock;
-> +	__u16		msft_vnd_ext_opcode;
-> +	__u64		msft_vnd_ext_features;
-> +	__u8		msft_vnd_ext_evt_prefix_len;
-> +	void		*msft_vnd_ext_evt_prefix;
-> 
-> 	__u16		devid_source;
-> 	__u16		devid_vendor;
-
-Regards
-
-Marcel
+Applied to spi-nor/next, thanks.
+ta
 
