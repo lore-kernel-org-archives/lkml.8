@@ -2,242 +2,110 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816A4C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A58C4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 499E920719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE99820719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:31:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VVht3xDQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HYj9wy3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgCWMbB (ORCPT
+        id S1728206AbgCWMbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:31:01 -0400
-Received: from mail-eopbgr30040.outbound.protection.outlook.com ([40.107.3.40]:22177
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727457AbgCWMbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 08:31:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AkQwYLKjRtUudNx7vmJG2h2w8FQ/AfF1Q1PjCx0/piB60146DkePsm2flb5GFDcHo0QDFSuNnIwQAjawvhU8pRtIYJHoz0uTQf6DTTc2q4hvzugWlWdG66dMiiT6P9RppfTlwbrIzrEqNLex7tdKKEtTbMPuM6Qtg3w6qx6+MFSz/+WhUwE2ZoBxfU54Z1K2ZykRXyVgOwfTWjtJFpZ7SWzKrSbnMo4Ycbll0SBRDU2xqicTBG/WxGOqqiHPVVzzU4YLeHoMnw9ZLxaLmpgVguSk/vLlmDDM9XeqPPeitPS7qkwwfOrHys0n5lbgx+aT/MejtglSbTYlOCYgBAnCdA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5so9viG1dd8HI/hADL7eqqQfiAxBST22N/GIJ+2T2Ds=;
- b=AxexCIsk7boQPkZFKGlfpJ96J1rVxXL0x3qIjYQdD7i5Osx3gCZtX7PMjnHXKT7mqTi1wGTNskgFGM/NgoKKPzu2jkIdqnws7XrAJ90quN+ttuG9wdd8APtJSSEFDm2xaoceZsfe5BdOCxgZHNl5A534l+iAnYXwoeboUzhARyXqi5ZYp7HZU6kCrjkMc/6g2qwePlkDxldZuVG6z2Ph1U0pS4+1JpGQzbsY6fV+o2FBUIcgjWHCeQdis5+kCkJwm07hHHMoeeUo+qrRhcpKtPrfd1/hWHkS8WHlGxqcFBKFgTfRfVYylenPMIkHzVjrPqaPRX0FqDyOxr5ga/woxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5so9viG1dd8HI/hADL7eqqQfiAxBST22N/GIJ+2T2Ds=;
- b=VVht3xDQ0PRYH6ldsJzGbQ4+5/ZTRVQ6zekTrQEFYC+bX6T++ZJRSU8dhtIHdco5qtEl46JkrdQc0bDPAdoGKYkkF7uI+kzem20zk2niXfo+4ykbQhz5SDct17IilecPMtxZ4AfSjOjifJXYMzWt2U+kT437NN1h/iFSR/i7TMI=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-Received: from AM6PR04MB5925.eurprd04.prod.outlook.com (20.179.2.147) by
- AM6PR04MB4280.eurprd04.prod.outlook.com (52.135.162.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.20; Mon, 23 Mar 2020 12:30:56 +0000
-Received: from AM6PR04MB5925.eurprd04.prod.outlook.com
- ([fe80::dd71:5f33:1b21:cd9e]) by AM6PR04MB5925.eurprd04.prod.outlook.com
- ([fe80::dd71:5f33:1b21:cd9e%5]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
- 12:30:56 +0000
-Subject: Re: [PATCH 03/10] bus/fsl-mc: add support for 'driver_override' in
- the mc-bus
-To:     Diana Craciun <diana.craciun@oss.nxp.com>,
-        linux-kernel@vger.kernel.org, stuyoder@gmail.com,
-        leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org,
-        bharatb.yadav@gmail.com
-Cc:     Bharat Bhushan <Bharat.Bhushan@nxp.com>
-References: <20200319154051.30609-1-diana.craciun@oss.nxp.com>
- <20200319154051.30609-4-diana.craciun@oss.nxp.com>
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Message-ID: <99ef2746-6be8-5427-26af-0a34c17f8fd2@nxp.com>
-Date:   Mon, 23 Mar 2020 14:30:44 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-In-Reply-To: <20200319154051.30609-4-diana.craciun@oss.nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR03CA0028.namprd03.prod.outlook.com
- (2603:10b6:a03:1e0::38) To AM6PR04MB5925.eurprd04.prod.outlook.com
- (2603:10a6:20b:ab::19)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.213.175.155] (192.88.158.246) by BY5PR03CA0028.namprd03.prod.outlook.com (2603:10b6:a03:1e0::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20 via Frontend Transport; Mon, 23 Mar 2020 12:30:52 +0000
-X-Originating-IP: [192.88.158.246]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 97ddb2cb-47fe-4f04-3bbf-08d7cf260892
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4280:|AM6PR04MB4280:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR04MB428008BEE8D3D83077FB3259ECF00@AM6PR04MB4280.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 0351D213B3
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(376002)(136003)(396003)(199004)(36756003)(186003)(4326008)(16526019)(5660300002)(316002)(16576012)(31686004)(2906002)(66476007)(44832011)(6666004)(66556008)(53546011)(6486002)(86362001)(26005)(52116002)(2616005)(956004)(478600001)(31696002)(8676002)(81166006)(81156014)(66946007)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4280;H:AM6PR04MB5925.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qGvRSmDlL3yAMjMthxoHNh3NLzNZJR/YHDCEXSwHjHUU/rTl20tJwGNO37TGgjMGyfSF7wvSWdEh3XhcDHxn8LhENXY1GBHzbVJsB1ZlNKJFk1F0mWGf6DSvRPlONwFMzSWqb621Us1FQSOBkquUo2EtNoampe0rggL9qwQI/wpSUc4vG12N+zsMQDQc9qItosu7RR0pQ4iYmV/7RjnNhBpRgFmabAflBlLvqMJzt2zXTaqYhYzUeCpnqLoTVipq7fO4rGtPWyLcXSoCDI3St0IoBymzrcF5risxznTps71Zy6ieC78zKp8TviIB0DMa73+GcIhexvkBxEyPP1o26y4M5rR9b34rdGd33vl9kQ9x6RH4J5SE4MH5eeJtz9fF5WSsfXcoL3+hgq4V3oPrJSDYAqI4VMdMmlE8um1FPALXWRDzbTZWg6qsUYSuf6oe
-X-MS-Exchange-AntiSpam-MessageData: bwn0Q8ezTbWLQH0xF9xaXR6THiG0pToFENrhsiEx1CAg7O2oCup6LDk96lFbuOPVJ/HpfnmVr0s+tQpPRK+0tZhzdwNvliidZQ3pC3XjEsNAn+h1sQju/QeyYAHSI2uVBJGmKLZFhsvii4YDaLOI3w==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97ddb2cb-47fe-4f04-3bbf-08d7cf260892
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2020 12:30:55.8491
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: INVMLx/O81ypnF8knnoA6QdBXGp1WphXsfUMMRhmsC5FA69OXcXM2qlcv3KcD/lglF9Vd9GHHflDU72wQBNC+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4280
+        Mon, 23 Mar 2020 08:31:13 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40722 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbgCWMbM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 08:31:12 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t24so7120634pgj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 05:31:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=1hKoKjYAa83kZKJ+z+0OSvFKkQP5CN6ABLYmW5E76dM=;
+        b=HYj9wy3b7npggr4LRib8zleVqiX2+pD1OMRNp/+ItCXUAMV9rdmQVT5H0EB+t6PKJ+
+         dzvieYx/+pBrC9PV/2oJlkggVyMW0YVAHcX/hYRWjYgSiGx1IVOEwKysm5Avg6FQ6foL
+         pqMKZDcPvdoTe4cFQKulZglRLW7r4MIZyELkpW8++Mwp1uWbaB50zgXwvng1bFh+GCeH
+         fQ4jg1ZOtK7vgBz2uSKC0FLX7LEd3OamrrnoMto1i+OX9jQyrS2YAheoaTXO5az8PS/o
+         Z7KhdEdUluZX62L05LVYoKvJMXVbr89K21bzDyIDm36Nz8OR/HLsUUcY4ejkb28egyut
+         q+0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1hKoKjYAa83kZKJ+z+0OSvFKkQP5CN6ABLYmW5E76dM=;
+        b=FEezH92PIruHV7dks/QF4cLRe8Kfigq1RN7+DLpWedXfkXGyLFkPPBhgkdJC/pS05o
+         rQRKhILOorgGqpHkFf08PQ7DJAzPoMPZYWx5uSYNfh/IEzfKql1UWsNFEiBCqZEq64ta
+         xOz0SCguH97VkBAJsWpFDfvw1kBEVG8KAllr+v95Gvms8kafiYtw7XbXW0ZrO3MjF4kZ
+         YFKtMNz49qKXQ8Idrn0j3tQL/TkjFla+CwnXkyuR/V0O+AjgmdI8kD5OqX93ExsLcwwF
+         w1CN0vkHixQaYGWbIEFvJVdj5Ssd+XSaVbAAJiRaMkU0rWFXC1I5/3ob1myLQtwPjnoH
+         56dw==
+X-Gm-Message-State: ANhLgQ35fFBAX61LlK21o4pPMK51GJfXRd0iKtP5XEcKHBbUG5j/QVmM
+        oXtzLfHLpI5h6uaw+yDFrKC3
+X-Google-Smtp-Source: ADFU+vvRoIlKNNcsBxsyQ5LVCw+2vHvo2nMFTgL0roDI8UCPMsKZ9hA+jk8TaE3aDgs29RT/9S4ypQ==
+X-Received: by 2002:a63:be0f:: with SMTP id l15mr21502263pgf.451.1584966671650;
+        Mon, 23 Mar 2020 05:31:11 -0700 (PDT)
+Received: from localhost.localdomain ([103.59.133.81])
+        by smtp.googlemail.com with ESMTPSA id 144sm3590131pgd.29.2020.03.23.05.31.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 05:31:10 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     gregkh@linuxfoundation.org, davem@davemloft.net
+Cc:     smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/7] Improvements to MHI Bus
+Date:   Mon, 23 Mar 2020 18:00:55 +0530
+Message-Id: <20200323123102.13992-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Greg,
 
+Here is the patchset for improving the MHI bus support. One of the patch
+is suggested by you for adding the driver owner field and rest are additional
+improvements and some fixes.
 
-On 3/19/2020 5:40 PM, Diana Craciun wrote:
-> From: Bharat Bhushan <Bharat.Bhushan@nxp.com>
-> 
-> This patch is required for vfio-fsl-mc meta driver to successfully bind
-> layerscape container devices for device passthrough. This patch adds
-> a mechanism to allow a layerscape device to specify a driver rather than
-> a layerscape driver provide a device match.
-> 
-> Example to allow a device (dprc.1) to specifically bind
-> with driver (vfio-fsl-mc):-
->  - echo vfio-fsl-mc > /sys/bus/fsl-mc/devices/dprc.1/driver_override
->  - echo dprc.1 > /sys/bus/fsl-mc/drivers/fsl_mc_dprc/unbind
->  - echo dprc.1 > /sys/bus/fsl-mc/drivers/vfio-fsl-mc/bind
-> 
-> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
-> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
-> ---
->  drivers/bus/fsl-mc/fsl-mc-bus.c | 54 +++++++++++++++++++++++++++++++++
->  include/linux/fsl/mc.h          |  1 +
->  2 files changed, 55 insertions(+)
-> 
-> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
-> index c78d10ea641f..baf8259262a9 100644
-> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
-> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
-> @@ -3,6 +3,7 @@
->   * Freescale Management Complex (MC) bus driver
->   *
->   * Copyright (C) 2014-2016 Freescale Semiconductor, Inc.
-> + * Copyright 2019-2020 NXP
->   * Author: German Rivera <German.Rivera@freescale.com>
->   *
->   */
-> @@ -83,6 +84,12 @@ static int fsl_mc_bus_match(struct device *dev, struct device_driver *drv)
->  	struct fsl_mc_driver *mc_drv = to_fsl_mc_driver(drv);
->  	bool found = false;
->  
-> +	/* When driver_override is set, only bind to the matching driver */
-> +	if (mc_dev->driver_override) {
-> +		found = !strcmp(mc_dev->driver_override, mc_drv->driver.name);
+I've also included the remaining networking patches from previous patch series
+which needs review from Dave. Dave could you please look into those 2 patches
+which falls under net subsystem? Greg can take those 2 if an Ack is provided.
 
-I think we can use sysfs_streq() here and ...
+Thanks,
+Mani
 
+Changes in v2:
 
-> +		goto out;
-> +	}
-> +
->  	if (!mc_drv->match_id_table)
->  		goto out;
->  
-> @@ -147,8 +154,52 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR_RO(modalias);
->  
-> +static ssize_t driver_override_store(struct device *dev,
-> +				     struct device_attribute *attr,
-> +				     const char *buf, size_t count)
-> +{
-> +	struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
-> +	const char *driver_override, *old = mc_dev->driver_override;
-> +	char *cp;
-> +
-> +	if (WARN_ON(dev->bus != &fsl_mc_bus_type))
-> +		return -EINVAL;
-> +
-> +	if (count >= (PAGE_SIZE - 1))
-> +		return -EINVAL;
-> +
-> +	driver_override = kstrndup(buf, count, GFP_KERNEL);
-> +	if (!driver_override)
-> +		return -ENOMEM;
-> +
-> +	cp = strchr(driver_override, '\n');
-> +	if (cp)
-> +		*cp = '\0';
+* Fixed some minor comments in mhi.h
 
-drop this strchr() ...
+Manivannan Sadhasivam (7):
+  bus: mhi: core: Pass module owner during client driver registration
+  bus: mhi: core: Add support for reading MHI info from device
+  bus: mhi: core: Initialize bhie field in mhi_cntrl for RDDM capture
+  bus: mhi: core: Drop the references to mhi_dev in mhi_destroy_device()
+  bus: mhi: core: Add support for MHI suspend and resume
+  net: qrtr: Add MHI transport layer
+  net: qrtr: Do not depend on ARCH_QCOM
 
-> +	if (strlen(driver_override)) {
-> +		mc_dev->driver_override = driver_override;
-> +	} else {
-> +		kfree(driver_override);
-> +		mc_dev->driver_override = NULL;
-> +	}
-> +
-> +	kfree(old);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t driver_override_show(struct device *dev,
-> +				    struct device_attribute *attr, char *buf)
-> +{
-> +	struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%s\n", mc_dev->driver_override);
+ drivers/bus/mhi/core/init.c     |  39 +++++-
+ drivers/bus/mhi/core/internal.h |  10 ++
+ drivers/bus/mhi/core/main.c     |  16 ++-
+ drivers/bus/mhi/core/pm.c       | 143 ++++++++++++++++++++++
+ include/linux/mhi.h             |  48 +++++++-
+ net/qrtr/Kconfig                |   8 +-
+ net/qrtr/Makefile               |   2 +
+ net/qrtr/mhi.c                  | 208 ++++++++++++++++++++++++++++++++
+ 8 files changed, 465 insertions(+), 9 deletions(-)
+ create mode 100644 net/qrtr/mhi.c
 
-and also the terminating '\n' here.
+-- 
+2.17.1
 
-> +}
-> +static DEVICE_ATTR_RW(driver_override);
-> +
->  static struct attribute *fsl_mc_dev_attrs[] = {
->  	&dev_attr_modalias.attr,
-> +	&dev_attr_driver_override.attr,
->  	NULL,
->  };
->  
-> @@ -704,6 +755,9 @@ EXPORT_SYMBOL_GPL(fsl_mc_device_add);
->   */
->  void fsl_mc_device_remove(struct fsl_mc_device *mc_dev)
->  {
-> +	kfree(mc_dev->driver_override);
-> +	mc_dev->driver_override = NULL;
-> +
->  	/*
->  	 * The device-specific remove callback will get invoked by device_del()
->  	 */
-> diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
-> index 54d9436600c7..88095fd30c80 100644
-> --- a/include/linux/fsl/mc.h
-> +++ b/include/linux/fsl/mc.h
-> @@ -194,6 +194,7 @@ struct fsl_mc_device {
->  	struct fsl_mc_device_irq **irqs;
->  	struct fsl_mc_resource *resource;
->  	struct device_link *consumer_link;
-> +	const char *driver_override;
-
-We probably don't want const here.
-
----
-Best Regards, Laurentiu
-
->  };
->  
->  #define to_fsl_mc_device(_dev) \
-> 
