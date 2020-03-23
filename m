@@ -2,150 +2,126 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D5BC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26205C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5392420722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0857420722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbgCWQj1 (ORCPT
+        id S1727560AbgCWQlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:39:27 -0400
-Received: from mga09.intel.com ([134.134.136.24]:20398 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727479AbgCWQj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:39:27 -0400
-IronPort-SDR: YQD3g7pZTFbkZtaxU6+O1FOEqGnvMkziwgZwnUpar6yJxQ4Q2eWUhG2KxxHnYainQmqfdLGsfV
- fnBhqoUQrfUg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 09:39:26 -0700
-IronPort-SDR: CbB0ngl3XhoDgFa+je1ygSyt/uHRvif4A2KEUIoYhgEeWnTyYSiYMqs3zRyRyuhEtk4MF8sbae
- 3iVvhMFf35uw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="419559426"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 23 Mar 2020 09:39:25 -0700
-Date:   Mon, 23 Mar 2020 09:39:25 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Alexander Potapenko <glider@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, wanpengli@tencent.com,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
- handle_external_interrupt_irqoff
-Message-ID: <20200323163925.GP28711@linux.intel.com>
-References: <000000000000277a0405a16bd5c9@google.com>
- <CACT4Y+b1WFT87pWQaXD3CWjyjoQaP1jcycHdHF+rtxoR5xW1ww@mail.gmail.com>
- <5058aabe-f32d-b8ef-57ed-f9c0206304c5@redhat.com>
- <CAG_fn=WYtSoyi63ACaz-ya=Dbi+BFU-_mADDpL6gQvDimQscmw@mail.gmail.com>
+        Mon, 23 Mar 2020 12:41:11 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2585 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727494AbgCWQlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 12:41:10 -0400
+Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id D63237D085BF1E6A7091;
+        Mon, 23 Mar 2020 16:41:08 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 23 Mar 2020 16:41:08 +0000
+Received: from localhost (10.47.90.106) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 23 Mar
+ 2020 16:41:07 +0000
+Date:   Mon, 23 Mar 2020 16:41:02 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Mike Looijmans <mike.looijmans@topic.nl>
+CC:     Jonathan Cameron <jic23@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+Subject: Re: [PATCH] dt-bindings: iio: accel: Add bmi088 accelerometer
+ bindings
+Message-ID: <20200323164102.00005abb@Huawei.com>
+In-Reply-To: <d9105fb7-fe0b-d432-fb12-d595c364f83b@topic.nl>
+References: <20200316065218.4103-1-mike.looijmans@topic.nl>
+        <20200322173704.5cc497c1@archlinux>
+        <d9105fb7-fe0b-d432-fb12-d595c364f83b@topic.nl>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG_fn=WYtSoyi63ACaz-ya=Dbi+BFU-_mADDpL6gQvDimQscmw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.90.106]
+X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 05:31:15PM +0100, Alexander Potapenko wrote:
-> On Mon, Mar 23, 2020 at 9:18 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
-> >
-> > On 22/03/20 07:59, Dmitry Vyukov wrote:
-> > >
-> > > The commit range is presumably
-> > > fb279f4e238617417b132a550f24c1e86d922558..63849c8f410717eb2e6662f3953ff674727303e7
-> > > But I don't see anything that says "it's me". The only commit that
-> > > does non-trivial changes to x86/vmx seems to be "KVM: VMX: check
-> > > descriptor table exits on instruction emulation":
-> >
-> > That seems unlikely, it's a completely different file and it would only
-> > affect the outside (non-nested) environment rather than your own kernel.
-> >
-> > The only instance of "0x86" in the registers is in the flags:
-> >
-> > > RSP: 0018:ffffc90001ac7998 EFLAGS: 00010086
-> > > RAX: ffffc90001ac79c8 RBX: fffffe0000000000 RCX: 0000000000040000
-> > > RDX: ffffc9000e20f000 RSI: 000000000000b452 RDI: 000000000000b453
-> > > RBP: 0000000000000ec0 R08: ffffffff83987523 R09: ffffffff811c7eca
-> > > R10: ffff8880a4e94200 R11: 0000000000000002 R12: dffffc0000000000
-> > > R13: fffffe0000000ec8 R14: ffffffff880016f0 R15: fffffe0000000ecb
-> > > FS:  00007fb50e370700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 000000000000005c CR3: 0000000092fc7000 CR4: 00000000001426f0
-> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >
-> > That would suggest a miscompilation of the inline assembly, which does
-> > push the flags:
-> >
-> > #ifdef CONFIG_X86_64
-> >                 "mov %%" _ASM_SP ", %[sp]\n\t"
-> >                 "and $0xfffffffffffffff0, %%" _ASM_SP "\n\t"
-> >                 "push $%c[ss]\n\t"
-> >                 "push %[sp]\n\t"
-> > #endif
-> >                 "pushf\n\t"
-> >                 __ASM_SIZE(push) " $%c[cs]\n\t"
-> >                 CALL_NOSPEC
-> >
-> >
-> > It would not explain why it suddenly started to break, unless the clang
-> > version also changed, but it would be easy to ascertain and fix (in
-> > either KVM or clang).  Dmitry, can you send me the vmx.o and
-> > kvm-intel.ko files?
+On Mon, 23 Mar 2020 10:56:41 +0100
+Mike Looijmans <mike.looijmans@topic.nl> wrote:
+
+> On 22-03-2020 18:37, Jonathan Cameron wrote:
+> > On Mon, 16 Mar 2020 07:52:18 +0100
+> > Mike Looijmans <mike.looijmans@topic.nl> wrote:
+> >   
+> >> This adds the device-tree bindings for the Bosch Sensortec BMI088 IMU,
+> >> the accelerometer part.
+> >>
+> >> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> >> ---
+> >>   .../devicetree/bindings/iio/accel/bmi088.txt  | 23 +++++++++++++++++++  
+> > 
+> > Sorry.  All new DT bindings need to be in yaml format.
+> > 
+> > Please put this in the same series as the driver.  
 > 
-> On a quick glance, Clang does not miscompile this part.
+> sooy, I noticed this too late, patches are underway in separate mails 
+> now. Hope that isn't a blocking issue?
 
-Clang definitely miscompiles the asm, the indirect call operates on the
-EFLAGS value, not on @entry as expected.  It looks like clang doesn't honor
-ASM_CALL_CONSTRAINT, which effectively tells the compiler that %rsp is
-getting clobbered, e.g. the "mov %r14,0x8(%rsp)" is loading @entry for
-"callq *0x8(%rsp)", which breaks because of asm's pushes.
+For next version of either pull them together.
 
-clang:
+Jonathan
 
-	kvm_before_interrupt(vcpu);
+> 
+> > 
+> > Thanks,
+> > 
+> > Jonathan
+> >   
+> >>   1 file changed, 23 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/iio/accel/bmi088.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/iio/accel/bmi088.txt b/Documentation/devicetree/bindings/iio/accel/bmi088.txt
+> >> new file mode 100644
+> >> index 000000000000..691a47726dbc
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/iio/accel/bmi088.txt
+> >> @@ -0,0 +1,23 @@
+> >> +* Bosch BMI088 IMU combining accelerometer and gyroscope
+> >> +
+> >> +https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf
+> >> +
+> >> +Required properties:
+> >> +
+> >> +  - compatible : should be "bosch,bmi088_accel"
+> >> +  - reg : the I2C address of the sensor or the SPI chip select number
+> >> +
+> >> +Optional properties:
+> >> +
+> >> +  - interrupts : interrupt mapping for GPIO IRQ, it should be configured with
+> >> +		 IRQ_TYPE_EDGE_RISING
+> >> +
+> >> +Example:
+> >> +
+> >> +bmi088_accel@1 {
+> >> +	compatible = "bosch,bmi088_accel";
+> >> +	reg = <1>;
+> >> +	spi-max-frequency = <10000000>;
+> >> +	interrupt-parent = <&gpio>;
+> >> +	interrupts = <90 IRQ_TYPE_EDGE_RISING>;
+> >> +};  
+> >   
+> 
+> 
 
-	asm volatile(
-ffffffff811b798e:	4c 89 74 24 08       	mov    %r14,0x8(%rsp)
-ffffffff811b7993:	48 89 e0             	mov    %rsp,%rax
-ffffffff811b7996:	48 83 e4 f0          	and    $0xfffffffffffffff0,%rsp
-ffffffff811b799a:	6a 18                	pushq  $0x18
-ffffffff811b799c:	50                   	push   %rax
-ffffffff811b799d:	9c                   	pushfq 
-ffffffff811b799e:	6a 10                	pushq  $0x10
-ffffffff811b79a0:	ff 54 24 08          	callq  *0x8(%rsp) <--------- calls the EFLAGS value
-kvm_after_interrupt():
 
-
-gcc:
-	kvm_before_interrupt(vcpu);
-
-	asm volatile(
-ffffffff8118e17c:	48 89 e0             	mov    %rsp,%rax
-ffffffff8118e17f:	48 83 e4 f0          	and    $0xfffffffffffffff0,%rsp
-ffffffff8118e183:	6a 18                	pushq  $0x18
-ffffffff8118e185:	50                   	push   %rax
-ffffffff8118e186:	9c                   	pushfq 
-ffffffff8118e187:	6a 10                	pushq  $0x10
-ffffffff8118e189:	ff d3                	callq  *%rbx <-------- calls @entry
-kvm_after_interrupt():
