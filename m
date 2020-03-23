@@ -2,319 +2,242 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AF5C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816A4C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E695120753
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499E920719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gIuqhKNE"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VVht3xDQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgCWM3q (ORCPT
+        id S1728056AbgCWMbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:29:46 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33633 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727663AbgCWM3p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 08:29:45 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a25so16858724wrd.0;
-        Mon, 23 Mar 2020 05:29:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=jyZpX9epTT5FK26pIiLWMLzpnn3Jdo8Hr6anKqJcGcw=;
-        b=gIuqhKNEOVf/0ds6bvlJfibBZ/uq8oeegLDsjM8ysEkzss60Sj7NW02h+CzV7R7YtO
-         NorILoY3Lsr2cWfYI6u7F22pRI2f2hJQXrNY+gDmnJLA9wzIJsaApD7qtmFdWquFjyNF
-         jh8DUlHRTuUmdw5LcF5TWfTUizHi2vUecaflIqcW3xsF4s/c4sexXjOVBZ7fniI2S+O8
-         oukUIZAE4f/TgvmXS+H40SZkpjcACUS1Qf/4G9T1DgHM8EONOOXqoxso6PikIdATjLFV
-         LvmR8bN4zrx6HvxUpzCNKFtW4tWh261SWti2Ks9xzb9c9Vp5KA0Z+ZoCyA3NLxP5m9//
-         XZQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=jyZpX9epTT5FK26pIiLWMLzpnn3Jdo8Hr6anKqJcGcw=;
-        b=Dl7LfKy536bhYySdQ5HQjVGF15gIJtBTmIApXvlpxidbCK964TZVwevulqxA/+IdUN
-         pHK8flQoLxpSQ18Fvxy5o8ib6lcsGMZYH1/WVSmZ1CG39UTUAzfkpB/72RZ8Q1Kb6KdS
-         uzh2DUTSRqkWkzRyrZl2nb2gr70Ps1l3GOx20RciHvTLBBFVNYkFVTeMv2N6BP//qDuF
-         hgozuuvN6eXbLsL2849l92fh8hEbGS7/FEuKas/tOpBohhRidEbU6vZGaeEcRzTZxW5s
-         lnu4SOsgMrCOpm8addmafiKKR4iCtJB5XN+1iMKSQhhSwhmbd7eDe95+cmKh13a2coxk
-         Aexw==
-X-Gm-Message-State: ANhLgQ0fbqrWYZrTxdKbsSZO4SqmeJMeJJd1HaNopbAc5BVXEU4+DOxm
-        bJW1PLqRIGjq7ONwdZ5n1nl+vcwF89A=
-X-Google-Smtp-Source: ADFU+vtQGEjlFOAt2D+GeG74pcl8SIAg2SZC4JDLC+7uS/LmizkLIzwEdaebDvPhBOHnpAEgP0VACw==
-X-Received: by 2002:adf:ea03:: with SMTP id q3mr29035890wrm.267.1584966582764;
-        Mon, 23 Mar 2020 05:29:42 -0700 (PDT)
-Received: from [192.168.0.104] (p5B3F66B0.dip0.t-ipconnect.de. [91.63.102.176])
-        by smtp.gmail.com with ESMTPSA id j2sm7049484wrs.64.2020.03.23.05.29.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2020 05:29:41 -0700 (PDT)
-Subject: Re: [PATCH v4 4/5] power: supply: Add support for mps mp2629 battery
- charger
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-References: <20200322224626.13160-1-sravanhome@gmail.com>
- <20200322224626.13160-5-sravanhome@gmail.com>
- <CAHp75Vf0iAV1g5GV8XoewNEMnGee=_Wkgz=8Y_ym8UPdsb6eFQ@mail.gmail.com>
-From:   saravanan sekar <sravanhome@gmail.com>
-Message-ID: <9e105e70-a572-aff4-df91-a620e82d3436@gmail.com>
-Date:   Mon, 23 Mar 2020 13:29:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAHp75Vf0iAV1g5GV8XoewNEMnGee=_Wkgz=8Y_ym8UPdsb6eFQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 23 Mar 2020 08:31:01 -0400
+Received: from mail-eopbgr30040.outbound.protection.outlook.com ([40.107.3.40]:22177
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727457AbgCWMbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 08:31:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AkQwYLKjRtUudNx7vmJG2h2w8FQ/AfF1Q1PjCx0/piB60146DkePsm2flb5GFDcHo0QDFSuNnIwQAjawvhU8pRtIYJHoz0uTQf6DTTc2q4hvzugWlWdG66dMiiT6P9RppfTlwbrIzrEqNLex7tdKKEtTbMPuM6Qtg3w6qx6+MFSz/+WhUwE2ZoBxfU54Z1K2ZykRXyVgOwfTWjtJFpZ7SWzKrSbnMo4Ycbll0SBRDU2xqicTBG/WxGOqqiHPVVzzU4YLeHoMnw9ZLxaLmpgVguSk/vLlmDDM9XeqPPeitPS7qkwwfOrHys0n5lbgx+aT/MejtglSbTYlOCYgBAnCdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5so9viG1dd8HI/hADL7eqqQfiAxBST22N/GIJ+2T2Ds=;
+ b=AxexCIsk7boQPkZFKGlfpJ96J1rVxXL0x3qIjYQdD7i5Osx3gCZtX7PMjnHXKT7mqTi1wGTNskgFGM/NgoKKPzu2jkIdqnws7XrAJ90quN+ttuG9wdd8APtJSSEFDm2xaoceZsfe5BdOCxgZHNl5A534l+iAnYXwoeboUzhARyXqi5ZYp7HZU6kCrjkMc/6g2qwePlkDxldZuVG6z2Ph1U0pS4+1JpGQzbsY6fV+o2FBUIcgjWHCeQdis5+kCkJwm07hHHMoeeUo+qrRhcpKtPrfd1/hWHkS8WHlGxqcFBKFgTfRfVYylenPMIkHzVjrPqaPRX0FqDyOxr5ga/woxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5so9viG1dd8HI/hADL7eqqQfiAxBST22N/GIJ+2T2Ds=;
+ b=VVht3xDQ0PRYH6ldsJzGbQ4+5/ZTRVQ6zekTrQEFYC+bX6T++ZJRSU8dhtIHdco5qtEl46JkrdQc0bDPAdoGKYkkF7uI+kzem20zk2niXfo+4ykbQhz5SDct17IilecPMtxZ4AfSjOjifJXYMzWt2U+kT437NN1h/iFSR/i7TMI=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+Received: from AM6PR04MB5925.eurprd04.prod.outlook.com (20.179.2.147) by
+ AM6PR04MB4280.eurprd04.prod.outlook.com (52.135.162.31) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.20; Mon, 23 Mar 2020 12:30:56 +0000
+Received: from AM6PR04MB5925.eurprd04.prod.outlook.com
+ ([fe80::dd71:5f33:1b21:cd9e]) by AM6PR04MB5925.eurprd04.prod.outlook.com
+ ([fe80::dd71:5f33:1b21:cd9e%5]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
+ 12:30:56 +0000
+Subject: Re: [PATCH 03/10] bus/fsl-mc: add support for 'driver_override' in
+ the mc-bus
+To:     Diana Craciun <diana.craciun@oss.nxp.com>,
+        linux-kernel@vger.kernel.org, stuyoder@gmail.com,
+        leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org,
+        bharatb.yadav@gmail.com
+Cc:     Bharat Bhushan <Bharat.Bhushan@nxp.com>
+References: <20200319154051.30609-1-diana.craciun@oss.nxp.com>
+ <20200319154051.30609-4-diana.craciun@oss.nxp.com>
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Message-ID: <99ef2746-6be8-5427-26af-0a34c17f8fd2@nxp.com>
+Date:   Mon, 23 Mar 2020 14:30:44 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+In-Reply-To: <20200319154051.30609-4-diana.craciun@oss.nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-ClientProxiedBy: BY5PR03CA0028.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::38) To AM6PR04MB5925.eurprd04.prod.outlook.com
+ (2603:10a6:20b:ab::19)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.213.175.155] (192.88.158.246) by BY5PR03CA0028.namprd03.prod.outlook.com (2603:10b6:a03:1e0::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20 via Frontend Transport; Mon, 23 Mar 2020 12:30:52 +0000
+X-Originating-IP: [192.88.158.246]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 97ddb2cb-47fe-4f04-3bbf-08d7cf260892
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4280:|AM6PR04MB4280:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR04MB428008BEE8D3D83077FB3259ECF00@AM6PR04MB4280.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 0351D213B3
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(376002)(136003)(396003)(199004)(36756003)(186003)(4326008)(16526019)(5660300002)(316002)(16576012)(31686004)(2906002)(66476007)(44832011)(6666004)(66556008)(53546011)(6486002)(86362001)(26005)(52116002)(2616005)(956004)(478600001)(31696002)(8676002)(81166006)(81156014)(66946007)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4280;H:AM6PR04MB5925.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qGvRSmDlL3yAMjMthxoHNh3NLzNZJR/YHDCEXSwHjHUU/rTl20tJwGNO37TGgjMGyfSF7wvSWdEh3XhcDHxn8LhENXY1GBHzbVJsB1ZlNKJFk1F0mWGf6DSvRPlONwFMzSWqb621Us1FQSOBkquUo2EtNoampe0rggL9qwQI/wpSUc4vG12N+zsMQDQc9qItosu7RR0pQ4iYmV/7RjnNhBpRgFmabAflBlLvqMJzt2zXTaqYhYzUeCpnqLoTVipq7fO4rGtPWyLcXSoCDI3St0IoBymzrcF5risxznTps71Zy6ieC78zKp8TviIB0DMa73+GcIhexvkBxEyPP1o26y4M5rR9b34rdGd33vl9kQ9x6RH4J5SE4MH5eeJtz9fF5WSsfXcoL3+hgq4V3oPrJSDYAqI4VMdMmlE8um1FPALXWRDzbTZWg6qsUYSuf6oe
+X-MS-Exchange-AntiSpam-MessageData: bwn0Q8ezTbWLQH0xF9xaXR6THiG0pToFENrhsiEx1CAg7O2oCup6LDk96lFbuOPVJ/HpfnmVr0s+tQpPRK+0tZhzdwNvliidZQ3pC3XjEsNAn+h1sQju/QeyYAHSI2uVBJGmKLZFhsvii4YDaLOI3w==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 97ddb2cb-47fe-4f04-3bbf-08d7cf260892
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2020 12:30:55.8491
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: INVMLx/O81ypnF8knnoA6QdBXGp1WphXsfUMMRhmsC5FA69OXcXM2qlcv3KcD/lglF9Vd9GHHflDU72wQBNC+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4280
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
-
-On 23/03/20 12:26 am, Andy Shevchenko wrote:
-> On Mon, Mar 23, 2020 at 12:47 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
->> The mp2629 provides switching-mode battery charge management for
->> single-cell Li-ion or Li-polymer battery. Driver supports the
->> access/control input source and battery charging parameters.
-> ...
->
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/of_device.h>
-> Do you need this one?
->
->> +#include <linux/interrupt.h>
->> +#include <linux/iio/consumer.h>
->> +#include <linux/iio/types.h>
->> +#include <linux/power_supply.h>
->> +#include <linux/workqueue.h>
->> +#include <linux/regmap.h>
-> Perhaps put them in order?
->
->> +#include <linux/mfd/core.h>
-> How this is being used?
->
->> +#include <linux/mfd/mp2629.h>
-> ...
->
->> +#define MP2629_MASK_INPUT_TYPE         0xe0
->> +#define MP2629_MASK_CHARGE_TYPE                0x18
->> +#define MP2629_MASK_CHARGE_CTRL                0x30
->> +#define MP2629_MASK_WDOG_CTRL          0x30
->> +#define MP2629_MASK_IMPEDANCE          0xf0
-> GENMASK()?
->
-> ...
->
->> +       struct regmap_field *regmap_fields[TERM_CURRENT + 1];
-> Hmm... Why not to have a definition to cover + 1?
->
-> ...
->
->> +static int mp2629_get_prop(struct mp2629_charger *charger,
->> +                          enum mp2629_field fld,
->> +                          union power_supply_propval *val)
->> +{
->> +       int ret;
->> +       unsigned int rval;
->> +
->> +       ret = regmap_field_read(charger->regmap_fields[fld], &rval);
->> +       if (!ret)
->> +               val->intval = (rval * props[fld].step) + props[fld].min;
->> +
->> +       return ret;
-> Why not to use standard pattern, i.e.
->
->    if (ret)
->      return ret;
->    ...
->    return 0;
->
-> ?
->
->> +}
-> ...
->
->> +static int mp2629_charger_battery_set_prop(struct power_supply *psy,
->> +                                       enum power_supply_property psp,
->> +                                       const union power_supply_propval *val)
->> +{
->> +       struct mp2629_charger *charger = dev_get_drvdata(psy->dev.parent);
->> +       int ret;
-> You may replace it with in-place return statements.
->
->> +
->> +       switch (psp) {
->> +       case POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT:
->> +               ret = mp2629_set_prop(charger, TERM_CURRENT, val);
->> +               break;
->> +
->> +       case POWER_SUPPLY_PROP_PRECHARGE_CURRENT:
->> +               ret = mp2629_set_prop(charger, PRECHARGE, val);
->> +               break;
->> +
->> +       case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
->> +               ret = mp2629_set_prop(charger, CHARGE_VLIM, val);
->> +               break;
->> +
->> +       case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
->> +               ret = mp2629_set_prop(charger, CHARGE_ILIM, val);
->> +               break;
->> +
->> +       default:
->> +               return -EINVAL;
->> +       }
->> +
->> +       return ret;
-> ...and drop this completely.
->
->> +}
-> ...
->
->> +       case POWER_SUPPLY_PROP_ONLINE:
->> +               ret = regmap_read(charger->regmap, MP2629_REG_STATUS, &rval);
->> +               if (!ret)
->> +                       val->intval = !!(rval & MP2629_MASK_INPUT_TYPE);
->> +               break;
-> Traditional pattern?
->
-> ...
->
->> +static int mp2629_charger_usb_set_prop(struct power_supply *psy,
->> +                               enum power_supply_property psp,
->> +                               const union power_supply_propval *val)
->> +{
->> +       struct mp2629_charger *charger = dev_get_drvdata(psy->dev.parent);
->> +       int ret;
-> No need to have it.
->
->> +       switch (psp) {
->> +       case POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT:
->> +               ret = mp2629_set_prop(charger, INPUT_VLIM, val);
->> +               break;
->> +
->> +       case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
->> +               ret = mp2629_set_prop(charger, INPUT_ILIM, val);
->> +               break;
->> +
->> +       default:
->> +               return -EINVAL;
->> +       }
->> +
->> +       return ret;
->> +}
-> ...
->
->> +       return (psp == POWER_SUPPLY_PROP_PRECHARGE_CURRENT ||
->> +               psp == POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT ||
->> +               psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT ||
->> +               psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE);
-> Redundant parentheses.
-> Ditto for similar cases in the driver.
->
-> ...
->
->> +static ssize_t batt_impedance_compensation_show(struct device *dev,
->> +                                          struct device_attribute *attr,
->> +                                          char *buf)
->> +{
->> +       struct mp2629_charger *charger = dev_get_drvdata(dev->parent);
->> +       unsigned int rval;
->> +       int ret;
->> +
->> +       ret = regmap_read(charger->regmap, MP2629_REG_IMPEDANCE_COMP, &rval);
->> +       if (ret < 0)
-> ' < 0' is not needed.
-> Ditto for other cases.
->
->> +               return ret;
->> +
->> +       rval = (rval >> 4) * 10;
->> +
->> +       return scnprintf(buf, PAGE_SIZE, "%d mohm\n", rval);
-> Simple sprintf().
->
->> +}
-> ...
->
->> +static ssize_t batt_impedance_compensation_store(struct device *dev,
->> +                                           struct device_attribute *attr,
->> +                                           const char *buf,
->> +                                           size_t count)
->> +{
->> +       struct mp2629_charger *charger = dev_get_drvdata(dev->parent);
->> +       long val;
->> +       int ret;
->> +
->> +       ret = kstrtol(buf, 10, &val);
->> +       if (ret < 0)
-> No need to check for negative only.
->
->> +               return ret;
->> +
->> +       if (val < 0 && val > 140)
->> +               return -ERANGE;
-> And what the point then to use l instead of ul or even uint variant of
-> the conversion above?
->
->> +       /* multiples of 10 mohm so round off */
->> +       val = val / 10;
->> +       ret = regmap_update_bits(charger->regmap, MP2629_REG_IMPEDANCE_COMP,
->> +                                       MP2629_MASK_IMPEDANCE, val << 4);
->> +       if (ret < 0)
->> +               return ret;
->> +
->> +       return count;
->> +}
-> ...
->
->> +static int mp2629_charger_probe(struct platform_device *pdev)
->> +{
->> +       struct device *dev = &pdev->dev;
->> +       void **pdata = pdev->dev.platform_data;
-> Why void?
-> Why **?
-> Why not to use dev_get_platdata()?
-> Why do we need platform data at all?
 
 
-I have to pass regmap (address) from mfd driver to its children, as per 
-review comment previous patch, mfd driver structure should not be 
-directly accessed in children.
-Please suggest if any other better way
+On 3/19/2020 5:40 PM, Diana Craciun wrote:
+> From: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+> 
+> This patch is required for vfio-fsl-mc meta driver to successfully bind
+> layerscape container devices for device passthrough. This patch adds
+> a mechanism to allow a layerscape device to specify a driver rather than
+> a layerscape driver provide a device match.
+> 
+> Example to allow a device (dprc.1) to specifically bind
+> with driver (vfio-fsl-mc):-
+>  - echo vfio-fsl-mc > /sys/bus/fsl-mc/devices/dprc.1/driver_override
+>  - echo dprc.1 > /sys/bus/fsl-mc/drivers/fsl_mc_dprc/unbind
+>  - echo dprc.1 > /sys/bus/fsl-mc/drivers/vfio-fsl-mc/bind
+> 
+> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+> ---
+>  drivers/bus/fsl-mc/fsl-mc-bus.c | 54 +++++++++++++++++++++++++++++++++
+>  include/linux/fsl/mc.h          |  1 +
+>  2 files changed, 55 insertions(+)
+> 
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> index c78d10ea641f..baf8259262a9 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
+> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> @@ -3,6 +3,7 @@
+>   * Freescale Management Complex (MC) bus driver
+>   *
+>   * Copyright (C) 2014-2016 Freescale Semiconductor, Inc.
+> + * Copyright 2019-2020 NXP
+>   * Author: German Rivera <German.Rivera@freescale.com>
+>   *
+>   */
+> @@ -83,6 +84,12 @@ static int fsl_mc_bus_match(struct device *dev, struct device_driver *drv)
+>  	struct fsl_mc_driver *mc_drv = to_fsl_mc_driver(drv);
+>  	bool found = false;
+>  
+> +	/* When driver_override is set, only bind to the matching driver */
+> +	if (mc_dev->driver_override) {
+> +		found = !strcmp(mc_dev->driver_override, mc_drv->driver.name);
 
->> +       struct mp2629_charger *charger;
->> +       struct power_supply_config psy_cfg = {0};
->> +       int ret, i;
->> +       charger->regmap = *pdata;
->> +       regmap_update_bits(charger->regmap, MP2629_REG_INTERRUPT,
->> +                               GENMASK(6, 5), (BIT(6) | BIT(5)));
-> Too many parentheses.
->
->> +}
-> --
-> With Best Regards,
-> Andy Shevchenko
+I think we can use sysfs_streq() here and ...
 
-Thanks,
-Saravanan
 
+> +		goto out;
+> +	}
+> +
+>  	if (!mc_drv->match_id_table)
+>  		goto out;
+>  
+> @@ -147,8 +154,52 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+>  }
+>  static DEVICE_ATTR_RO(modalias);
+>  
+> +static ssize_t driver_override_store(struct device *dev,
+> +				     struct device_attribute *attr,
+> +				     const char *buf, size_t count)
+> +{
+> +	struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
+> +	const char *driver_override, *old = mc_dev->driver_override;
+> +	char *cp;
+> +
+> +	if (WARN_ON(dev->bus != &fsl_mc_bus_type))
+> +		return -EINVAL;
+> +
+> +	if (count >= (PAGE_SIZE - 1))
+> +		return -EINVAL;
+> +
+> +	driver_override = kstrndup(buf, count, GFP_KERNEL);
+> +	if (!driver_override)
+> +		return -ENOMEM;
+> +
+> +	cp = strchr(driver_override, '\n');
+> +	if (cp)
+> +		*cp = '\0';
+
+drop this strchr() ...
+
+> +	if (strlen(driver_override)) {
+> +		mc_dev->driver_override = driver_override;
+> +	} else {
+> +		kfree(driver_override);
+> +		mc_dev->driver_override = NULL;
+> +	}
+> +
+> +	kfree(old);
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t driver_override_show(struct device *dev,
+> +				    struct device_attribute *attr, char *buf)
+> +{
+> +	struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
+> +
+> +	return snprintf(buf, PAGE_SIZE, "%s\n", mc_dev->driver_override);
+
+and also the terminating '\n' here.
+
+> +}
+> +static DEVICE_ATTR_RW(driver_override);
+> +
+>  static struct attribute *fsl_mc_dev_attrs[] = {
+>  	&dev_attr_modalias.attr,
+> +	&dev_attr_driver_override.attr,
+>  	NULL,
+>  };
+>  
+> @@ -704,6 +755,9 @@ EXPORT_SYMBOL_GPL(fsl_mc_device_add);
+>   */
+>  void fsl_mc_device_remove(struct fsl_mc_device *mc_dev)
+>  {
+> +	kfree(mc_dev->driver_override);
+> +	mc_dev->driver_override = NULL;
+> +
+>  	/*
+>  	 * The device-specific remove callback will get invoked by device_del()
+>  	 */
+> diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
+> index 54d9436600c7..88095fd30c80 100644
+> --- a/include/linux/fsl/mc.h
+> +++ b/include/linux/fsl/mc.h
+> @@ -194,6 +194,7 @@ struct fsl_mc_device {
+>  	struct fsl_mc_device_irq **irqs;
+>  	struct fsl_mc_resource *resource;
+>  	struct device_link *consumer_link;
+> +	const char *driver_override;
+
+We probably don't want const here.
+
+---
+Best Regards, Laurentiu
+
+>  };
+>  
+>  #define to_fsl_mc_device(_dev) \
+> 
