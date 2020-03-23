@@ -2,89 +2,101 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBA9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86E2C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 288F920409
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD30220735
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:30:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584977444;
+	bh=c/BmuNMOcm2EFTJiFoXTh1Vq5RGJMcdEbf3sn15wFTs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BzAplZLnH8hcx5+UTZfTtiSLysYKY3A70kyis0vCYRnmGWBnpX1TA8upetpan0EIS
+	 yUYlLxWkS02QbsD+zwsQXrMagHk8EsIW1C1raRlhCROFA9UJLKzsOm7z9OBUelJNOo
+	 UwIdQre0SJ1t/fSyl3lYKkFTcTuHa+kfK/50nRQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbgCWP36 (ORCPT
+        id S1727277AbgCWPan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:29:58 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36175 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgCWP35 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:29:57 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1jGP1X-00020E-7M; Mon, 23 Mar 2020 16:29:55 +0100
-Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1jGP1W-00007c-JR; Mon, 23 Mar 2020 16:29:54 +0100
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     kernel@pengutronix.de, Christian Eggers <CEggers@arri.de>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] nvmem: core: don't consider subnodes not matching binding
-Date:   Mon, 23 Mar 2020 16:28:50 +0100
-Message-Id: <20200323152850.32657-1-a.fatoum@pengutronix.de>
-X-Mailer: git-send-email 2.25.1
+        Mon, 23 Mar 2020 11:30:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727176AbgCWPan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:30:43 -0400
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46A99206C3;
+        Mon, 23 Mar 2020 15:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584977442;
+        bh=c/BmuNMOcm2EFTJiFoXTh1Vq5RGJMcdEbf3sn15wFTs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UBZ7ZpqambbEgbhVe5WIcsu4UpeB10qjYzxwqgDEbXzE9XTQvb67iuULkW6UyWID5
+         f76NsPm8BzAZTrBUgF8MQHVNnUGchd/71x6SB9UUU0qDX3Q2yphEkGuu10cwduVZdL
+         u0Y7keuyEj4nEEo8AB21fb/hLskbkCTsjntSPjPA=
+Date:   Mon, 23 Mar 2020 16:30:40 +0100
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH 1/3] lockdep/irq: Be more strict about IRQ-threadable
+ code end
+Message-ID: <20200323153039.GA5755@lenoir>
+References: <20200323033207.32370-1-frederic@kernel.org>
+ <20200323033207.32370-2-frederic@kernel.org>
+ <20200323135320.GJ2452@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: afa@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323135320.GJ2452@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The nvmem cell binding applies to objects which match "^.*@[0-9a-f]+$",
-but so far the driver has matched all objects and failed if they didn't
-have the expected properties.
+On Mon, Mar 23, 2020 at 02:53:20PM +0100, Peter Zijlstra wrote:
+> On Mon, Mar 23, 2020 at 04:32:05AM +0100, Frederic Weisbecker wrote:
+> > --- a/kernel/irq/handle.c
+> > +++ b/kernel/irq/handle.c
+> > @@ -144,18 +144,24 @@ irqreturn_t __handle_irq_event_percpu(struct irq_desc *desc, unsigned int *flags
+> >  
+> >  	for_each_action_of_desc(desc, action) {
+> >  		irqreturn_t res;
+> > +		bool threadable;
+> >  
+> >  		/*
+> >  		 * If this IRQ would be threaded under force_irqthreads, mark it so.
+> >  		 */
+> > -		if (irq_settings_can_thread(desc) &&
+> > -		    !(action->flags & (IRQF_NO_THREAD | IRQF_PERCPU | IRQF_ONESHOT)))
+> > +		threadable = (irq_settings_can_thread(desc) &&
+> > +			      !(action->flags & (IRQF_NO_THREAD | IRQF_PERCPU | IRQF_ONESHOT)));
+> > +
+> > +		if (threadable)
+> >  			trace_hardirq_threaded();
+> >  
+> >  		trace_irq_handler_entry(irq, action);
+> >  		res = action->handler(irq, action->dev_id);
+> >  		trace_irq_handler_exit(irq, action, res);
+> >  
+> > +		if (threadable)
+> > +			trace_hardirq_unthreaded();
+> 
+> AFAICT this doesn't work for nested IRQ handlers.
 
-The driver's behavior in this regard precludes future extension of
-EEPROMs by child nodes other than nvmem and clashes with the barebox
-bootloader binding that extends the fixed-partitions MTD binding to
-EEPROMs as it tries to interpret the "fixed-partitions"-compatible
-partitions node as a nvmem cell.
+So current->hardirq_threaded should be a counter perhaps?
 
-Solve this issue by skipping all subnodes that don't contain an @.
-
-This still allows for cell names like `partitions@0,0', but this
-is much less likely to cause future collisions.
-
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
----
-v1 -> v2:
-  use ->full_name instead of ->name as to not break existing correct
-  cells (Christian)
----
- drivers/nvmem/core.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index ef326f243f36..f051051fb1a8 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -278,6 +278,8 @@ static int nvmem_add_cells_from_of(struct nvmem_device *nvmem)
- 	parent = dev->of_node;
- 
- 	for_each_child_of_node(parent, child) {
-+		if (!strchr(kbasename(child->full_name), '@'))
-+			continue;
- 		addr = of_get_property(child, "reg", &len);
- 		if (!addr || (len < 2 * sizeof(u32))) {
- 			dev_err(dev, "nvmem: invalid reg on %pOF\n", child);
--- 
-2.25.1
-
+> 
+> >  		if (WARN_ONCE(!irqs_disabled(),"irq %u handler %pS enabled interrupts\n",
+> >  			      irq, action->handler))
+> >  			local_irq_disable();
+> > -- 
+> > 2.25.0
+> > 
