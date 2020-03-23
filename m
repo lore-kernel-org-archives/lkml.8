@@ -2,121 +2,97 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0A9C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C54C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01EAD2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148612072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:26:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbgCWIZs (ORCPT
+        id S1727605AbgCWI0Q convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 04:25:48 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37899 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727565AbgCWIZr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 04:25:47 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jGIOz-0004Ux-QJ; Mon, 23 Mar 2020 09:25:41 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jGIOy-0007Z4-UY; Mon, 23 Mar 2020 09:25:40 +0100
-Date:   Mon, 23 Mar 2020 09:25:40 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Yendapally Reddy Dhananjaya Reddy 
-        <yendapally.reddy@broadcom.com>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] pwm: bcm-iproc: handle clk_get_rate() return
-Message-ID: <20200323082540.2gvbbxtwadvzeeos@pengutronix.de>
-References: <20200323065318.16533-1-rayagonda.kokatanur@broadcom.com>
- <20200323065318.16533-2-rayagonda.kokatanur@broadcom.com>
+        Mon, 23 Mar 2020 04:26:16 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:46924 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727451AbgCWI0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 04:26:15 -0400
+Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jGIPH-0001s8-19; Mon, 23 Mar 2020 09:25:59 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        gregkh@linuxfoundation.org, jslaby@suse.com,
+        matwey.kornilov@gmail.com, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] serial: 8250: Add rs485 emulation to 8250_dw
+Date:   Mon, 23 Mar 2020 09:25:57 +0100
+Message-ID: <6241816.LpgjcNKrfa@diego>
+In-Reply-To: <20200319054034.dyq7yydqi6yg7jhf@wunner.de>
+References: <20200318142640.982763-1-heiko@sntech.de> <5640842.EtOnNDtpGh@diego> <20200319054034.dyq7yydqi6yg7jhf@wunner.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200323065318.16533-2-rayagonda.kokatanur@broadcom.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 12:23:17PM +0530, Rayagonda Kokatanur wrote:
-> Handle clk_get_rate() returning <= 0 condition to avoid
-> possible division by zero.
+Hi,
 
-Was this noticed during a review and is more theoretic. Or does this
-(depending on pre-boot state) result in a kernel crash?
-
-> Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> ---
->  drivers/pwm/pwm-bcm-iproc.c | 32 +++++++++++++++++++-------------
->  1 file changed, 19 insertions(+), 13 deletions(-)
+Am Donnerstag, 19. März 2020, 06:40:34 CET schrieb Lukas Wunner:
+> On Wed, Mar 18, 2020 at 07:49:08PM +0100, Heiko Stübner wrote:
+> > Looking at tty-next I notice that you're right. When I started working
+> > on this I only found the stuff from 2018 I linked to but didn't imagine
+> > that in that exact moment someone else would also work on that area.
 > 
-> diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
-> index 1f829edd8ee7..8bbd2a04fead 100644
-> --- a/drivers/pwm/pwm-bcm-iproc.c
-> +++ b/drivers/pwm/pwm-bcm-iproc.c
-> @@ -99,19 +99,25 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->  	else
->  		state->polarity = PWM_POLARITY_INVERSED;
->  
-> -	value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
-> -	prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
-> -	prescale &= IPROC_PWM_PRESCALE_MAX;
-> -
-> -	multi = NSEC_PER_SEC * (prescale + 1);
-> -
-> -	value = readl(ip->base + IPROC_PWM_PERIOD_OFFSET(pwm->hwpwm));
-> -	tmp = (value & IPROC_PWM_PERIOD_MAX) * multi;
-> -	state->period = div64_u64(tmp, rate);
-> -
-> -	value = readl(ip->base + IPROC_PWM_DUTY_CYCLE_OFFSET(pwm->hwpwm));
-> -	tmp = (value & IPROC_PWM_PERIOD_MAX) * multi;
-> -	state->duty_cycle = div64_u64(tmp, rate);
-> +	if (rate == 0) {
-> +		state->period = 0;
-> +		state->duty_cycle = 0;
-> +	} else {
-> +		value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
-> +		prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
-> +		prescale &= IPROC_PWM_PRESCALE_MAX;
-> +
-> +		multi = NSEC_PER_SEC * (prescale + 1);
-> +
-> +		value = readl(ip->base + IPROC_PWM_PERIOD_OFFSET(pwm->hwpwm));
-> +		tmp = (value & IPROC_PWM_PERIOD_MAX) * multi;
-> +		state->period = div64_u64(tmp, rate);
-> +
-> +		value = readl(ip->base +
-> +			      IPROC_PWM_DUTY_CYCLE_OFFSET(pwm->hwpwm));
-> +		tmp = (value & IPROC_PWM_PERIOD_MAX) * multi;
-> +		state->duty_cycle = div64_u64(tmp, rate);
-> +	}
+> There are some more patches in the pipeline for the next cycle
+> to add support for an rs485 bus termination GPIO.  They're on
+> the tip of this branch:
+> 
+> https://github.com/RevolutionPi/linux/commits/revpi-4.19
+> 
+> Just so you know in advance and duplicate work is avoided.
 
-The change looks fine.
+do you plan on submitting these soonish? Because looking at your
+termination-gpio change makes me want to do something similar for
+my RE-gpio ... instead of trying to mangle this into the DTR thingy.
 
-Best regards
-Uwe
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> > > The DTR-for-RE thing seems a bit nonstandard, I'm not sure if this is
+> > > eligible for mainline or if it's something that should be kept in your
+> > > downstream tree.  But no harm in submitting it to the list.
+> > 
+> > I'm fine either way - maybe I also get a pointer on what may be a better
+> > approach ;-)
+> > 
+> > At least DTR as "Data Terminal Ready" did sound somewhat matching for
+> > the "Receive Enable" of RS485 (and it's also the only other output pin
+> > in the mctrl gpio list).
+> 
+> Some UARTs allow disabling the receiver, this can be taken advantage of
+> to implement half-duplex mode.  It's what I did in 8250_bcm2835aux.c.
+> 
+> On the Revolution Pi devices, !RE is usually connected to ground, so
+> reception is always enabled and it cannot be disabled in software
+> except by turning off the UART receiver.
+> 
+> There are also boards out there which connect !RE to RTS.  Then only
+> half-duplex mode is supported by the hardware and there's no way for
+> software to work around it.
+
+yep and on our board we have DE and RE on separate gpios, so I guess
+it makes sense to use that pin how it was intended ;-) .
+
+So I guess having that as rs485-re-gpios property might be the best way.
+
+
+Heiko
+
+
+
