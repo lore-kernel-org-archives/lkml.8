@@ -2,142 +2,102 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26C6C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D29C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 775F020753
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:00:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584972033;
-	bh=exgRrTmUoY/hOqEmhXYfHo51IME1kdaFE/gpQs547BQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=m8NohP/NCbPKO57kdm1jFb1y/6zkiJ+pPPlcpcszBHXVIMN5lRnWF2HzBHB2hkfj/
-	 1dpQYWWVMVXz+4y0B+Y4RLGjtDTcZXesWZOaidAVpIn/QtaLctc3YfDXMrzxR0fRbX
-	 xYLpC8aZkrDwqQrNc8s3d91y/3hll9VV/Z9YFjMI=
+	by mail.kernel.org (Postfix) with ESMTP id A696F2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgCWOAc (ORCPT
+        id S1728575AbgCWOBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:00:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728446AbgCWOAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:00:32 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D4B62076A;
-        Mon, 23 Mar 2020 14:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584972031;
-        bh=exgRrTmUoY/hOqEmhXYfHo51IME1kdaFE/gpQs547BQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hnN9lgoAuW0Z0z4uYsyccACHjB7hMDgg0zDpdxxyjn+4FQjkPt6C0mkYPRdZJptVx
-         xIVFqCMvP6ZmfZPVCFlrpwd3cppNwBn1MsB4+J+MxhaCaA3v/HOvYmqmsJukLTlwFX
-         A9l318vlJup0XGMIYVxwdQTcG+nAbad5kTN0i0b4=
-Date:   Mon, 23 Mar 2020 23:00:25 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Paul McKenney <paulmck@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [patch V3 04/23] kprobes: Prevent probes in .noinstr.text
- section
-Message-Id: <20200323230025.a24f949a2143dbd5f208f00c@kernel.org>
-In-Reply-To: <20200320180032.799569116@linutronix.de>
-References: <20200320175956.033706968@linutronix.de>
-        <20200320180032.799569116@linutronix.de>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 23 Mar 2020 10:01:30 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36360 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728446AbgCWOBa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 10:01:30 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 76A18296394
+Subject: Re: [PATCH][next] chrome: cros_ec_chardev: Replace zero-length array
+ with flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <20200320231542.GA19872@embeddedor.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <71aa855b-54b8-5fef-0d10-b9f132536af2@collabora.com>
+Date:   Mon, 23 Mar 2020 15:01:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200320231542.GA19872@embeddedor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+Hi Gustavo,
 
-On Fri, 20 Mar 2020 19:00:00 +0100
-Thomas Gleixner <tglx@linutronix.de> wrote:
-
-> Instrumentation is forbidden in the .noinstr.text section. Make kprobes
-> respect this.
+On 21/3/20 0:15, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
-> This lacks support for .noinstr.text sections in modules, which is required
-> to handle VMX and SVM.
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 > 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Would you have any plan to list or mark the noinstr symbols on
-some debugfs interface? I need a blacklist of those symbols so that
-user (and perf-probe) can check which function can not be probed.
+Queued for 5.7. Thanks!
 
-It is just calling kprobe_add_area_blacklist() like below.
+~ Enric
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 2625c241ac00..4835b644bd2b 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -2212,6 +2212,10 @@ static int __init populate_kprobe_blacklist(unsigned long *start,
- 	ret = kprobe_add_area_blacklist((unsigned long)__kprobes_text_start,
- 					(unsigned long)__kprobes_text_end);
- 
-+	/* Symbols in noinstr section are blacklisted */
-+	ret = kprobe_add_area_blacklist((unsigned long)__noinstr_text_start,
-+					(unsigned long)__noinstr_text_end);
-+
- 	return ret ? : arch_populate_kprobe_blacklist();
- }
- 
-Thank you,
-
-
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 > ---
->  kernel/kprobes.c |   11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  drivers/platform/chrome/cros_ec_chardev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1443,10 +1443,21 @@ static bool __within_kprobe_blacklist(un
->  	return false;
->  }
+> diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform/chrome/cros_ec_chardev.c
+> index b51ab24055f3..e0bce869c49a 100644
+> --- a/drivers/platform/chrome/cros_ec_chardev.c
+> +++ b/drivers/platform/chrome/cros_ec_chardev.c
+> @@ -48,7 +48,7 @@ struct ec_event {
+>  	struct list_head node;
+>  	size_t size;
+>  	u8 event_type;
+> -	u8 data[0];
+> +	u8 data[];
+>  };
 >  
-> +/* Functions in .noinstr.text must not be probed */
-> +static bool within_noinstr_text(unsigned long addr)
-> +{
-> +	/* FIXME: Handle module .noinstr.text */
-> +	return addr >= (unsigned long)__noinstr_text_start &&
-> +	       addr < (unsigned long)__noinstr_text_end;
-> +}
-> +
->  bool within_kprobe_blacklist(unsigned long addr)
->  {
->  	char symname[KSYM_NAME_LEN], *p;
->  
-> +	if (within_noinstr_text(addr))
-> +		return true;
-> +
->  	if (__within_kprobe_blacklist(addr))
->  		return true;
->  
+>  static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
 > 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
