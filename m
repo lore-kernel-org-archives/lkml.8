@@ -2,63 +2,63 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6703EC54FD3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468FFC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3550420736
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13EA820736
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:05:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PYxYnDuk"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="c/Cq70Xu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbgCWIFW (ORCPT
+        id S1727552AbgCWIFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 04:05:22 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:10993 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727497AbgCWIFP (ORCPT
+        Mon, 23 Mar 2020 04:05:19 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:46310 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727495AbgCWIFP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Mar 2020 04:05:15 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200323080511epoutp03f5227dd6dd1e0666fed121d20e49319e~_4EZiRpmY1284012840epoutp03s
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200323080511epoutp015828bf8ecb3a901b887a4e43c687f88e~_4EZpYkzm0938709387epoutp01h
         for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 08:05:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200323080511epoutp03f5227dd6dd1e0666fed121d20e49319e~_4EZiRpmY1284012840epoutp03s
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200323080511epoutp015828bf8ecb3a901b887a4e43c687f88e~_4EZpYkzm0938709387epoutp01h
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
         s=mail20170921; t=1584950711;
-        bh=ykVbZIJ/4zPTvXN/17saU6Lgow62XEKLfWMfKVPs444=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=PYxYnDukUE/mhxHhKmnRyMEUH6wWDLu+MSMbpfVyh9bVNG/2VUUE6BxiiYlv8+QBJ
-         VCSjUsxSWs0y/f3Dl1MmJ2c/FiPWS/OpSN+iz5dUQ3tZkkeV8bgMcPI8t4SBVd7obB
-         ApyqIbqjuL0nhuScbrvV4ovNGVZJ+4OvjHLqiLtE=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200323080510epcas1p45d75c9ffd58750ec792de3c4e171ad9f~_4EYpd_oX1773617736epcas1p4u;
-        Mon, 23 Mar 2020 08:05:10 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.163]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 48m6PJ4YhyzMqYkp; Mon, 23 Mar
+        bh=dSYUW03bHzrs9o67DnwnF349vBuzWA6AMzTlkUXfLWo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=c/Cq70XueTavKVS2yaajtyGQISate4WyZ7oZSqtZQFwf4a6DvwjItBfnkm0OR2LVw
+         2VX/3auCyY7O2C7mw8yH5jkZ7Hswc50BfXw6jn/HRihKV0o0yrU0hAWDq5zfoShaHe
+         krQpzu0Er2Cio6ru0MQmbAPIkhGgH0m+j9xLR008=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200323080511epcas1p1e045fa882c46a59520affd8470248956~_4EZAIXBi2159621596epcas1p1G;
+        Mon, 23 Mar 2020 08:05:11 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.163]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 48m6PJ58TyzMqYkg; Mon, 23 Mar
         2020 08:05:08 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DB.49.04140.4BD687E5; Mon, 23 Mar 2020 17:05:08 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200323080507epcas1p44cdb9ecb70a7a7395b3acddeda3cfd89~_4EV8G1Lz1502515025epcas1p47;
-        Mon, 23 Mar 2020 08:05:07 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200323080507epsmtrp28c4b875b8eb660b709229a54f0557a32~_4EV7FeiX0358503585epsmtrp2z;
-        Mon, 23 Mar 2020 08:05:07 +0000 (GMT)
-X-AuditID: b6c32a36-fa3ff7000000102c-29-5e786db4b76d
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E1.70.04145.4BD687E5; Mon, 23 Mar 2020 17:05:08 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200323080508epcas1p2dfe6517169a65936e5ab10c4e63a19a7~_4EWKChal2331623316epcas1p28;
+        Mon, 23 Mar 2020 08:05:08 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200323080508epsmtrp1e95a6cc4a2e1e35601c95ad2b01b48c9~_4EWIopZ50063700637epsmtrp1f;
+        Mon, 23 Mar 2020 08:05:08 +0000 (GMT)
+X-AuditID: b6c32a35-2a5ff70000001031-37-5e786db4bb01
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        36.15.04158.3BD687E5; Mon, 23 Mar 2020 17:05:07 +0900 (KST)
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C7.73.04024.4BD687E5; Mon, 23 Mar 2020 17:05:08 +0900 (KST)
 Received: from jaewon-linux.10.32.193.11 (unknown [10.253.104.82]) by
         epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200323080507epsmtip19cc9783e8c5f665b0e45a27cc3c34d3c~_4EVs_MxA0126101261epsmtip1M;
+        20200323080507epsmtip1af2b09b7d835e20c46018369fa326f2f~_4EV5mw5Z3157831578epsmtip1N;
         Mon, 23 Mar 2020 08:05:07 +0000 (GMT)
 From:   Jaewon Kim <jaewon31.kim@samsung.com>
 To:     gregkh@linuxfoundation.org, leon@kernel.org, vbabka@suse.cz,
@@ -69,118 +69,101 @@ To:     gregkh@linuxfoundation.org, leon@kernel.org, vbabka@suse.cz,
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         jaewon31.kim@gmail.com, linux-api@vger.kernel.org,
         kexec@lists.infradead.org, Jaewon Kim <jaewon31.kim@samsung.com>
-Subject: [RFC PATCH v2 0/3] meminfo_extra: introduce meminfo extra
-Date:   Mon, 23 Mar 2020 17:05:00 +0900
-Message-Id: <20200323080503.6224-1-jaewon31.kim@samsung.com>
+Subject: [RFC PATCH v2 2/3] mm: zsmalloc: include zs page size in meminfo
+ extra
+Date:   Mon, 23 Mar 2020 17:05:02 +0900
+Message-Id: <20200323080503.6224-3-jaewon31.kim@samsung.com>
 X-Mailer: git-send-email 2.13.7
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBJsWRmVeSWpSXmKPExsWy7bCmnu6W3Io4gy3tqhbTG70s5qxfw2Zx
-        /sEvNovmxevZLLo3z2S06H3/isli+bvTjBa7T39lsli55weTxZRfS5ktNn/vYLO4vGsOm8W9
-        Nf9ZLZZ9fc9usaFlFrvFowmTmCxO3f3MbjG7sY/RQchj56y77B6bVnWyeWz6NInd4861PWwe
-        J2b8ZvHYP3cNu8fmJfUe7/ddZfPo27KK0ePMgiPsHjs/bWb1+LxJLoAnKscmIzUxJbVIITUv
-        OT8lMy/dVsk7ON453tTMwFDX0NLCXEkhLzE31VbJxSdA1y0zB+g9JYWyxJxSoFBAYnGxkr6d
-        TVF+aUmqQkZ+cYmtUmpBSk6BoUGBXnFibnFpXrpecn6ulaGBgZEpUGVCTsbDTR1MBf/EKmad
-        /cXYwHhZsIuRk0NCwERi2ultrF2MXBxCAjsYJV6//cAI4XxilLh8dQOU841R4vn2HpYuRg6w
-        lqWTkyHiexklvhzawg7hfGeUeHvnERvIXDYBbYn3CyaBzRUR6GeSWHR3EQuIwyywllFiVddd
-        JpAqYQEnic/7zrGC2CwCqhKz5vWwg9i8AjYSV37eYYRYJy+x8D8zSK+EQDe7xOQT3UwQl7tI
-        vH93lAXCFpZ4dXwLO4QtJfH53V42iIZmoJNmbmaEcFoYJe5u6mWEqDKW6O25wAyygVlAU2L9
-        Ln2IsKLEzt9zwUqYBfgk3n3tYYU4gleio00IokRNouXZV1YIW0bi779nULaHxN7HO8HuERKI
-        ldi64hT7BEbZWQgLFjAyrmIUSy0ozk1PLTYsMEKOp02M4FSrZbaDcdE5n0OMAhyMSjy8Dd3l
-        cUKsiWXFlbmHGCU4mJVEeDenVsQJ8aYkVlalFuXHF5XmpBYfYjQFht5EZinR5HxgHsgriTc0
-        NTI2NrYwMTM3MzVWEuedej0nTkggPbEkNTs1tSC1CKaPiYNTqoGRudpAU+TkTP+i7lUsHjtD
-        q8ps52x4t21WJD9fCKfImdiyxnVlmztPScm2WTXmZFrMW/V+6j+fRQwvtr2IcfT0WFdRLMz8
-        oLZoccMV7dUTg+JWPmD4vVC/40PXx6ePRXIqJjfUXC68elhBks+6YFlnVFHa7XWP2JL0vvPs
-        6paLnMoVFdE5zUyJpTgj0VCLuag4EQAOMLjYywMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrILMWRmVeSWpSXmKPExsWy7bCSnO7m3Io4g1VzjSymN3pZzFm/hs3i
+In-Reply-To: <20200323080503.6224-1-jaewon31.kim@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TbUxTVxjOube994J23FzdPEHC2E1mgkuhtbScTViWaLabQRRjJHFZYDfl
+        hBJvP9JbFPWHVAmyQqUSDaPSBT9QqRBMSwYodqaSjAzn5xgTrVF/qJhAFYcayOZabs3273nf
+        93nO877vOYchuVEqk6mxubDTJko8la766UquVjtgravQ9UVzUbv7a9TZ30uh6w8WKHTgZD+F
+        msMdAHnjzwh0ZnYcoIvj8wTqGXlDoCML3SQKv26i0O0LnRS63/tWjU7Px2l0vsFPo0e+NgL9
+        GntJo2PuQ+ALThj2x2ghFPyeEkJzbbRw748RShj7YVEl/BzopYXwqX1CPDJBCYcGgkC42jVK
+        C8NzYbXwMpRdtvwbqciCxSrszME2s72qxlZdzJdsrdxQaTTp9Fr9p6iQz7GJVlzMbywt035Z
+        IyXG43N2ilJtIlUmyjKf/3mR017rwjkWu+wq5rGjSnLodY48WbTKtbbqPLPd+plep1tnTDC/
+        kyyNU09phy+97vn0qKoe+BkPSGMgWwAPejoJD0hnOHYIwOGLbiJZ4Ng5AA9PqJXCKwC9U63g
+        neJFrDNVuATg/vHrKiV4DWD97BMqyaLYT2C8q22JtZJtJeCJ2IklFsn2ARj0xBImDLOC3QJv
+        +oxJgYr9GPqaB1VJrGGLYE/PPVWSAtkP4fG3ZDKdxhbDyK0pKnkMZE/TcLTPSygtbYTT4XgK
+        r4DPfhmgFZwJp1sbaUVwAMCZjjBQggYAYyFvaiAD9LbcIJNuJJsL+y/kK+mP4PBiYIlCsu/B
+        2fkWtdKQBjY1cgplDWx4PK9WcBb8+5/HKSzAxdlQakU+AM/NdRM+kO3/z6ELgCD4ADtkazWW
+        9Q79/+8sBJZe8FrjEDhyrTQKWAbwyzX1zbsqOLW4U95tjQLIkPxKTRjXVXCaKnH3Huy0Vzpr
+        JSxHgTGxysNk5vtme+I/2FyVeuM6g8GACkyFJqOBX6U5OilVcGy16MI7MHZg5zsdwaRl1oOj
+        sa82ZbU8dEz8uHDwxeWSZXvLs65uXVVwNyCdyXgzacLrh8rkSx3b1U+ORcby71vcm7f9XhKM
+        lP95xx8wB/ZM0Z5vm0YGTv11Zf/g5l3tbq7UTOS96mhvHrycPrHBGiHLjzeYMnonM8gZnpnZ
+        d3fHpq5u9W9j0ezpG/Tq8kItc5ZXyRZRv5Z0yuK/EJa4iNcDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFLMWRmVeSWpSXmKPExsWy7bCSnO6W3Io4g5f3mC2mN3pZzFm/hs3i
         /INfbBbNi9ezWXRvnslo0fv+FZPF8nenGS12n/7KZLFyzw8miym/ljJbbP7ewWZxedccNot7
         a/6zWiz7+p7dYkPLLHaLRxMmMVmcuvuZ3WJ2Yx+jg5DHzll32T02repk89j0aRK7x51re9g8
         Tsz4zeKxf+4ado/NS+o93u+7yubRt2UVo8eZBUfYPXZ+2szq8XmTXABPFJdNSmpOZllqkb5d
-        AlfGw00dTAX/xCpmnf3F2MB4WbCLkYNDQsBEYunk5C5GLg4hgd2MEvdvXWPrYuQEistIvDn/
-        lAWiRlji8OFikLCQwFdGie5r1iA2m4C2xPsFk1hBbBGB+UwS/e38IHOYBTYzSkxc2swCkhAW
-        cJL4vO8cWBGLgKrErHk97CA2r4CNxJWfdxgh5stLLPzPPIGRZwEjwypGydSC4tz03GLDAqO8
-        1HK94sTc4tK8dL3k/NxNjOCA19LawXjiRPwhRgEORiUe3hu95XFCrIllxZW5hxglOJiVRHg3
-        p1bECfGmJFZWpRblxxeV5qQWH2KU5mBREueVzz8WKSSQnliSmp2aWpBaBJNl4uCUamAsDvzz
-        8UTvZqeMrZ4zBdeZmb3Zuof/w5S3ExfcdNTlNuzs+L+N00Kcyfjw9uO+zG88me3E9jrPmRr0
-        XNh4ykFLoT3lttMk1j+ovmdmH6b65fgHiRtnDjDf8v/aud3koEl0lZJ7yfqdk/hCNnP+/pCz
-        pdUtLEBtVpHi1JwdcWuFhe49PHXpB7OVEktxRqKhFnNRcSIAV4zkQHQCAAA=
-X-CMS-MailID: 20200323080507epcas1p44cdb9ecb70a7a7395b3acddeda3cfd89
+        AldG260X7AUTuCo+vDzC0sA4i6OLkZNDQsBE4uPdOaxdjFwcQgK7GSWebX3NBpGQkXhz/ilL
+        FyMHkC0scfhwMUhYSOAro8Tcy/EgNpuAtsT7BZNYQWwRgflMEv3t/CBzmAU2M0pMXNrMApIQ
+        FvCXmDJpITOIzSKgKjGheztYnFfARmLlyjtQ8+UlFv4HK+EUsJXYd+kWG8QuG4mt3c+YJzDy
+        LWBkWMUomVpQnJueW2xYYJiXWq5XnJhbXJqXrpecn7uJERwjWpo7GC8viT/EKMDBqMTDe6O3
+        PE6INbGsuDL3EKMEB7OSCO/m1Io4Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxP845FCgmkJ5ak
+        ZqemFqQWwWSZODilGhgdq2s3egb8jnmwbmcVnwPrn7bpync2HNa5MafyhfgS6edT4ltYw5nm
+        zBU/Yb5BoDM7bEOEDW9Jz3f/Le90Nk2pOv774ZETNY5uDx62PYg9qRaYsfd19sGqubEuNxW1
+        nBp7zT2bEjTnK2jOZWzY9tp2upARu4BGpjXD8hWmHksYlxU3We7U7VRiKc5INNRiLipOBACx
+        /fqvjQIAAA==
+X-CMS-MailID: 20200323080508epcas1p2dfe6517169a65936e5ab10c4e63a19a7
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: SVC_REQ_APPROVE
 CMS-TYPE: 101P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200323080507epcas1p44cdb9ecb70a7a7395b3acddeda3cfd89
-References: <CGME20200323080507epcas1p44cdb9ecb70a7a7395b3acddeda3cfd89@epcas1p4.samsung.com>
+X-CMS-RootMailID: 20200323080508epcas1p2dfe6517169a65936e5ab10c4e63a19a7
+References: <20200323080503.6224-1-jaewon31.kim@samsung.com>
+        <CGME20200323080508epcas1p2dfe6517169a65936e5ab10c4e63a19a7@epcas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-/proc/meminfo or show_free_areas does not show full system wide memory
-usage status because memory stats do not track all memory allocations.
-There seems to be huge hidden memory especially on embedded system. It
-is because some HW IPs in the system use common DRAM memory instead of
-internal memory. Device drivers directly request huge pages from the
-page allocator with alloc_pages.
+On most of recent Android device use DRAM memory based compressed swap
+to save free memory. And the swap device size is also big enough.
 
-In Android system, most of those hidden memory seems to be vmalloc
-pages, ion system heap memory, graphics memory, and memory for DRAM
-based compressed swap storage. They may be shown in other node but it
-seems to be useful if /proc/meminfo_extra shows all those extra memory
-information. And show_mem also need to print the info in oom situation.
+The zsmalloc page size is alread shown on vmstat by commit 91537fee0013
+("mm: add NR_ZSMALLOC to vmstat"). If the size is also shown in
+/proc/meminfo_extra, it will be better to see system wide memory usage at a
+glance.
 
-Fortunately vmalloc pages is already shown by commit 97105f0ab7b8
-("mm: vmalloc: show number of vmalloc pages in /proc/meminfo"). Swap
-memory using zsmalloc can be seen through vmstat by commit 91537fee0013
-("mm: add NR_ZSMALLOC to vmstat") but not on /proc/meminfo.
+To include heap size, use register_meminfo_extra introduced in previous
+patch.
 
-Memory usage of specific driver can be various so that showing the usage
-through upstream meminfo.c is not easy. To print the extra memory usage
-of a driver, introduce following APIs. Each driver needs to count as
-atomic_long_t.
-
-int register_meminfo_extra(atomic_long_t *val, int shift,
-			   const char *name);
-int unregister_meminfo_extra(atomic_long_t *val);
-
-Currently register ION system heap allocator and zsmalloc pages.
-Additionally tested on local graphics driver.
-
-i.e) cat /proc/meminfo_extra | tail -3
+i.e) cat /proc/meminfo_extra | grep ZsPages
 IonSystemHeap:    242620 kB
 ZsPages:          203860 kB
-GraphicDriver:    196576 kB
 
 i.e.) show_mem on oom
 <6>[  420.856428]  Mem-Info:
-<6>[  420.856433]  IonSystemHeap:32813kB ZsPages:44114kB GraphicDriver::13091kB
-<6>[  420.856450]  active_anon:957205 inactive_anon:159383 isolated_anon:0
+<6>[  420.856433]  ZsPages:44114kB
 
+Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
 ---
-v2: move to /proc/meminfo_extra, and use rcu
-v1: print info at /proc/meminfo
-On v1 patch, there was not resolved discussion about the logic. There
-seems to be agreement on showing memory usage, but there was a lack of
-consensus on way of showing the information. Other opinion is using
-/sys/ as separate file for each driver.
----
+ mm/zsmalloc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Jaewon Kim (3):
-  meminfo_extra: introduce meminfo extra
-  mm: zsmalloc: include zs page size in meminfo extra
-  android: ion: include system heap size in meminfo extra
-
- drivers/staging/android/ion/ion.c             |   2 +
- drivers/staging/android/ion/ion.h             |   1 +
- drivers/staging/android/ion/ion_system_heap.c |   2 +
- fs/proc/Makefile                              |   1 +
- fs/proc/meminfo_extra.c                       | 123 ++++++++++++++++++++++++++
- include/linux/mm.h                            |   4 +
- mm/page_alloc.c                               |   1 +
- mm/zsmalloc.c                                 |   2 +
- 8 files changed, 136 insertions(+)
- create mode 100644 fs/proc/meminfo_extra.c
-
+diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+index 22d17ecfe7df..9d5682aa44ac 100644
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -2566,6 +2566,7 @@ static int __init zs_init(void)
+ 
+ 	zs_stat_init();
+ 
++	register_meminfo_extra(&vm_zone_stat[NR_ZSPAGES], 0, "ZsPages");
+ 	return 0;
+ 
+ hp_setup_fail:
+@@ -2583,6 +2584,7 @@ static void __exit zs_exit(void)
+ 	cpuhp_remove_state(CPUHP_MM_ZS_PREPARE);
+ 
+ 	zs_stat_exit();
++	unregister_meminfo_extra(&vm_zone_stat[NR_ZSPAGES]);
+ }
+ 
+ module_init(zs_init);
 -- 
 2.13.7
 
