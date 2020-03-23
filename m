@@ -2,151 +2,119 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CA5C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3730DC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8FF20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E8A206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:28:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eZ+RTdv1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SCUPXLUw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgCWLSc (ORCPT
+        id S1728156AbgCWL2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 07:18:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57062 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728011AbgCWLSc (ORCPT
+        Mon, 23 Mar 2020 07:28:12 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33363 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728115AbgCWL2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 07:18:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Ymr0e7RdICUQwi0ZH+vMEGmBcUKM1ZDzJV85bLwglDU=; b=eZ+RTdv1H6xqPbfAS5/8rHuqVZ
-        15rJQh7FfZkLsfln33wyeV6Z2Xlmw3T0F6ind95TyJmfdgD+gTd/EFLiTCdwmdcs238aprNM3XCok
-        hjKNBo+NHaa+O4CHHmjdm4EJsDGJ6dCYKaazvc+DszgIxMfNv+GUIhzuJwpFn18tcdDXVTfgdqjuZ
-        rlrQeAqiRkoGMYhq30q/1GwAaBp6qRX1P+4UU/DK6qzkBy2TggeFMe9O7jsxbvYYixpJVI1SjhlO2
-        bRIDuBmA40z249zQQwcvygk+K3pzdThXL9AfRtGBnBdMfmxV6/7OxnYd8rkpNC926D6snCd9jKeQ0
-        PgaNBQhw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGL6C-0003IJ-2x; Mon, 23 Mar 2020 11:18:28 +0000
-Date:   Mon, 23 Mar 2020 04:18:28 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Salman Qazi <sqazi@google.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bdev: Reduce time holding bd_mutex in sync in
- blkdev_close()
-Message-ID: <20200323111828.GB4554@infradead.org>
-References: <20200320110321.1.I9df0264e151a740be292ad3ee3825f31b5997776@changeid>
+        Mon, 23 Mar 2020 07:28:11 -0400
+Received: by mail-wr1-f67.google.com with SMTP id a25so16601379wrd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 04:28:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hw2/ohwzvhdDAwTeOPYmsLkFpaTkgjXMGVp6G44h3PI=;
+        b=SCUPXLUw/uicEQqC2yi+8megAkqOkf+9OKn4NIu/93ohMq8xiPzCItbINGWJlS9JI2
+         6jl6HgXpuxawRuG5YtcT4Xj8qypZfmst+TP5C6IXyQlnqo90oOHI3QeKfqOc8+ODWDH7
+         bV/lq4EcxwGI+1P0Toc5KZczWbtsehyOc/5zCgpyv4XcYw0Ay92LchAzDj8SzSkp+Hv5
+         /8lA22jOUI4/sZFR/hlJRvFpl1DrUELX3w5BYp0pwNviujN065xrah7N7ZpFDJcodGhN
+         S339MsktCXEOpIf8A6U6V0YTX93mqF0GOlGElvnrpYE19ncHEO7PTbZXt1UpgN3mKh8e
+         raCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hw2/ohwzvhdDAwTeOPYmsLkFpaTkgjXMGVp6G44h3PI=;
+        b=mzk5Ool06LbgLBjt66li6eyloNziEUglQR76Y4+2+vbRvOwpotGum3ZAMYUjbTHp1M
+         Boj3m9AbzOy0wOvHZVPofI71XlatQMYemTVBPfIdRgwy/IjwFh2uADbm/qIdABmGFERd
+         q/fWBocFivUBMbqiXd1Nhgest7QvVsm7iXCES82YsunlSLbIO5bL1bAM9i6IEhWzgV8Q
+         p1VpL2T2CX4+4vOHbay+b2d70x1hkeICX2HRWGvXdpDOCCO7LjXsMBdwcqg4eFJhFb2l
+         Jm4YeOC6SAvZahx8cpnqizURrVI5QPKAdT8jIP8kyx71lfcM8HyhnwCJe/w2vbWoJzYv
+         2sfQ==
+X-Gm-Message-State: ANhLgQ3RmTqrISZWL+CHvljQkmeygA7ZL5t0V+5mES/xbV5JwmuNuIbO
+        p6+ypsyDzh3UYyme7d9KYHQ=
+X-Google-Smtp-Source: ADFU+vtQPSS6AllqJvb5//lTd0+Eq5uJsrK3kd4PejlM7cu+aEmdFUqp0c8a4/FGUOtoiEAlGF165g==
+X-Received: by 2002:a5d:540c:: with SMTP id g12mr24543560wrv.178.1584962889945;
+        Mon, 23 Mar 2020 04:28:09 -0700 (PDT)
+Received: from wambui.zuku.co.ke ([197.237.61.225])
+        by smtp.googlemail.com with ESMTPSA id s22sm19731666wmc.16.2020.03.23.04.28.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 04:28:09 -0700 (PDT)
+From:   Wambui Karuga <wambui.karugax@gmail.com>
+To:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org
+Subject: [PATCH] drm/vram-helper: remove unneeded #if defined/endif guards.
+Date:   Mon, 23 Mar 2020 14:28:02 +0300
+Message-Id: <20200323112802.228214-1-wambui.karugax@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320110321.1.I9df0264e151a740be292ad3ee3825f31b5997776@changeid>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 11:07:16AM -0700, Douglas Anderson wrote:
-> While trying to "dd" to the block device for a USB stick, I
-> encountered a hung task warning (blocked for > 120 seconds).  I
-> managed to come up with an easy way to reproduce this on my system
-> (where /dev/sdb is the block device for my USB stick) with:
-> 
->   while true; do dd if=/dev/zero of=/dev/sdb bs=4M; done
-> 
-> With my reproduction here are the relevant bits from the hung task
-> detector:
-> 
->  INFO: task udevd:294 blocked for more than 122 seconds.
->  ...
->  udevd           D    0   294      1 0x00400008
->  Call trace:
->   ...
->   mutex_lock_nested+0x40/0x50
->   __blkdev_get+0x7c/0x3d4
->   blkdev_get+0x118/0x138
->   blkdev_open+0x94/0xa8
->   do_dentry_open+0x268/0x3a0
->   vfs_open+0x34/0x40
->   path_openat+0x39c/0xdf4
->   do_filp_open+0x90/0x10c
->   do_sys_open+0x150/0x3c8
->   ...
-> 
->  ...
->  Showing all locks held in the system:
->  ...
->  1 lock held by dd/2798:
->   #0: ffffff814ac1a3b8 (&bdev->bd_mutex){+.+.}, at: __blkdev_put+0x50/0x204
->  ...
->  dd              D    0  2798   2764 0x00400208
->  Call trace:
->   ...
->   schedule+0x8c/0xbc
->   io_schedule+0x1c/0x40
->   wait_on_page_bit_common+0x238/0x338
->   __lock_page+0x5c/0x68
->   write_cache_pages+0x194/0x500
->   generic_writepages+0x64/0xa4
->   blkdev_writepages+0x24/0x30
->   do_writepages+0x48/0xa8
->   __filemap_fdatawrite_range+0xac/0xd8
->   filemap_write_and_wait+0x30/0x84
->   __blkdev_put+0x88/0x204
->   blkdev_put+0xc4/0xe4
->   blkdev_close+0x28/0x38
->   __fput+0xe0/0x238
->   ____fput+0x1c/0x28
->   task_work_run+0xb0/0xe4
->   do_notify_resume+0xfc0/0x14bc
->   work_pending+0x8/0x14
-> 
-> The problem appears related to the fact that my USB disk is terribly
-> slow and that I have a lot of RAM in my system to cache things.
-> Specifically my writes seem to be happening at ~15 MB/s and I've got
-> ~4 GB of RAM in my system that can be used for buffering.  To write 4
-> GB of buffer to disk thus takes ~4000 MB / ~15 MB/s = ~267 seconds.
-> 
-> The 267 second number is a problem because in __blkdev_put() we call
-> sync_blockdev() while holding the bd_mutex.  Any other callers who
-> want the bd_mutex will be blocked for the whole time.
-> 
-> The problem is made worse because I believe blkdev_put() specifically
-> tells other tasks (namely udev) to go try to access the device at right
-> around the same time we're going to hold the mutex for a long time.
-> 
-> Putting some traces around this (after disabling the hung task detector),
-> I could confirm:
->  dd:    437.608600: __blkdev_put() right before sync_blockdev() for sdb
->  udevd: 437.623901: blkdev_open() right before blkdev_get() for sdb
->  dd:    661.468451: __blkdev_put() right after sync_blockdev() for sdb
->  udevd: 663.820426: blkdev_open() right after blkdev_get() for sdb
-> 
-> A simple fix for this is to realize that sync_blockdev() works fine if
-> you're not holding the mutex.  Also, it's not the end of the world if
-> you sync a little early (though it can have performance impacts).
-> Thus we can make a guess that we're going to need to do the sync and
-> then do it without holding the mutex.  We still do one last sync with
-> the mutex but it should be much, much faster.
-> 
-> With this, my hung task warnings for my test case are gone.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> I didn't put a "Fixes" annotation here because, as far as I can tell,
-> this issue has been here "forever" unless someone knows of something
-> else that changed that made this possible to hit.  This could probably
-> get picked back to any stable tree that anyone is still maintaining.
+Remove unneeded #if/#endif guards for checking whether the
+CONFIG_DEBUG_FS option is set or not. If the option is not set, the
+compiler optimizes the functions making the guards
+unnecessary.
 
-The idea ok, but I see no point in even taking the lock to check
-bd_openers given that it is going to be racy anyway.
+Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+---
+ drivers/gpu/drm/drm_gem_vram_helper.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
+index 76506bedac11..b3201a70cbfc 100644
+--- a/drivers/gpu/drm/drm_gem_vram_helper.c
++++ b/drivers/gpu/drm/drm_gem_vram_helper.c
+@@ -1018,7 +1018,6 @@ static struct ttm_bo_driver bo_driver = {
+  * struct drm_vram_mm
+  */
+ 
+-#if defined(CONFIG_DEBUG_FS)
+ static int drm_vram_mm_debugfs(struct seq_file *m, void *data)
+ {
+ 	struct drm_info_node *node = (struct drm_info_node *) m->private;
+@@ -1035,7 +1034,6 @@ static int drm_vram_mm_debugfs(struct seq_file *m, void *data)
+ static const struct drm_info_list drm_vram_mm_debugfs_list[] = {
+ 	{ "vram-mm", drm_vram_mm_debugfs, 0, NULL },
+ };
+-#endif
+ 
+ /**
+  * drm_vram_mm_debugfs_init() - Register VRAM MM debugfs file.
+@@ -1045,11 +1043,9 @@ static const struct drm_info_list drm_vram_mm_debugfs_list[] = {
+  */
+ void drm_vram_mm_debugfs_init(struct drm_minor *minor)
+ {
+-#if defined(CONFIG_DEBUG_FS)
+ 	drm_debugfs_create_files(drm_vram_mm_debugfs_list,
+ 				 ARRAY_SIZE(drm_vram_mm_debugfs_list),
+ 				 minor->debugfs_root, minor);
+-#endif
+ }
+ EXPORT_SYMBOL(drm_vram_mm_debugfs_init);
+ 
+-- 
+2.25.1
+
