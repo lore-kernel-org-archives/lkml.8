@@ -2,112 +2,296 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B032C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC8AC4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48EF0206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEABC20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:35:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YUvXg8Je"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DEf6112D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgCWMfb (ORCPT
+        id S1728322AbgCWMfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:35:31 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:36303 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728289AbgCWMfa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 08:35:30 -0400
-Received: by mail-pj1-f65.google.com with SMTP id nu11so6039056pjb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 05:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=VzwPSZbs06tTKNRZDvRedEakK8DwlP6wfcMOmcIPDiQ=;
-        b=YUvXg8JeKwhErLrKCF1xiN6mn9vENO+w+J9yWrzvE/FIO5ls7p5oPerFSlcD3H9sIq
-         OeZO23NJjY60VCwo3rzZoSPD5vd3kltarou47rqy8q5xQqCTAP9qjSFBj7lOaHFxvSfu
-         SWz8JCaZ8U+bplzJApgAtEp2CHp8wXVn1/Jw5R9fippvB0z0W7muyKthEPT1KyPx3gWG
-         agHVqpB5uF2qG69Q6GfUydSdoKsRMjmtxMMometkHMxsBLyvc0D+BCC47GnzJIXbClNW
-         HsuJt1bCdMWbDk+gglWuybD2XbIPLc1irLXl4Xjz0yosrfyTQEuCNH230M0aqu2upHEN
-         ptFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=VzwPSZbs06tTKNRZDvRedEakK8DwlP6wfcMOmcIPDiQ=;
-        b=C0nx4dSux+mHYRczB+RiCfLjYClBWhjTWSaZs4+Q8mGloaQOPlE3ZplBR4ug+eUmCa
-         XJbdpDQ9fF4f8oYqwqw0jM5d+oZp9wHxn+M6sS0HDDSCfF76G8azJTygtpR4FtBp/I5C
-         bx435VBu3dW5Ys+cIZeR0VkQOCk7jsHa2BcrfsgXO+3HSi8bWk7tmF55cW8kiiGC6cVO
-         0SQBUaErFsilxQYl0Enifz85lbIlGRpQObwJSQq13honrgWsUt5JzqMW0P7+PEIucovE
-         OrUU0CITo1rK9IpsHqSNAjPYMCCArHKFh9xVd7xWBD0hjfqDu/clm6RzfUFOjSBVuD7q
-         aauA==
-X-Gm-Message-State: ANhLgQ3nJypTt2vEqoIjq0ooseeemXki015SsRoxCM7Uj4tVqNa2unFv
-        yeSxnu0Pjs+eECb0FUD+UNY=
-X-Google-Smtp-Source: ADFU+vtarkTB9uyKT4ILRH3RXgRnkAP3/KXJ7VJXqWayfL97rEDtMrQGje9p4tznojK1PkeJy3F5/A==
-X-Received: by 2002:a17:90b:908:: with SMTP id bo8mr24900638pjb.74.1584966929847;
-        Mon, 23 Mar 2020 05:35:29 -0700 (PDT)
-Received: from mail.google.com ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id a2sm12229487pjq.20.2020.03.23.05.35.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 23 Mar 2020 05:35:29 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 20:35:26 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     changbin.du@gmail.com, linux-kernel@vger.kernel.org
-Subject: Two questions about cache coherency on arm platforms
-Message-ID: <20200323123524.w67fici6oxzdo665@mail.google.com>
+        Mon, 23 Mar 2020 08:35:33 -0400
+Received: from mail-am6eur05on2072.outbound.protection.outlook.com ([40.107.22.72]:6080
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728282AbgCWMfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 08:35:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FyWp+VkZJCBxCbNUUNta4F5tTXPITADoUKW0PWITs6rPQgtaH98WGEFcqCsqKPP5giYSkNLJf0LHtZH0IwgAXi0wADAKM1nTgB/vsC8jww++NizX728iIIWUBbsQ10+stFDY5TYNXxmvtt95EhJeH1u3Ckwow9ysO10aA6+PjGuudV9mEudy9nKGO4BGXyTIfyn1SYkh2JVh0fSvltKnijFwOCuNRPuhl3PunSp4OJUzp8zAf8YONL8Mzrh1mNAM5vW7uucbD0jprVgQNNL8sAZ8od7R1byjZiu5nQ9dZSh49Z/EJaBhuajLc8kHrBaiphzjBNzGBgyr1sTJ9v+2hg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ktw219g+OxMw4kG2PwLtXK8I/Pq2MPgNezkWwmEIVpQ=;
+ b=B6+XDSOduHByCVew+iJqbxbvHjRdNCJwaAIsbZS6cb1lxrKQyHYQ9laxL90FQHnyP7XeKcczLNwNPJZMVyXgMz5nATossnfA1kYJcO+KW5+F26kAGxEwXYN1q6/WnthPGlsLsnIMLk4hPSUBsyU1WdJUrVliJitMXvJEOHJJcBEvTuBsenTFeWkCJvTNQ/Jnfb83EVmxbDMK3m91q8mj+1XhswfL0+lzpyzIuy8gasy81cuw3lUa8s3UxyWXmR5E0wLH4j7rJRRBsibdiFtKoHIRZqVnIG7frDpAKe+Jd9SyKha1aKB68cV9I8b+oQcSTkvIpbHwUK0OBbnbVtW1mg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ktw219g+OxMw4kG2PwLtXK8I/Pq2MPgNezkWwmEIVpQ=;
+ b=DEf6112DN4KnCnoSQitU1i/llyVqpbtPB0yDXQl13CfIwtItzBG0R8fTdBS48laJ9K4kOmdqQDO9ACHL2RbhZpMokuY7LswVnpWh95XmAgnh0f3SmNo+0yrgZav89iwQLaH1Z0pX36H7EmBIJsB+VzdAFAtxkTBMLjdybuJasNo=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+Received: from AM6PR04MB5925.eurprd04.prod.outlook.com (20.179.2.147) by
+ AM6PR04MB4280.eurprd04.prod.outlook.com (52.135.162.31) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.20; Mon, 23 Mar 2020 12:35:28 +0000
+Received: from AM6PR04MB5925.eurprd04.prod.outlook.com
+ ([fe80::dd71:5f33:1b21:cd9e]) by AM6PR04MB5925.eurprd04.prod.outlook.com
+ ([fe80::dd71:5f33:1b21:cd9e%5]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
+ 12:35:28 +0000
+Subject: Re: [PATCH 04/10] bus/fsl-mc: Propagate driver_override for a child
+ DPRC's children
+To:     Diana Craciun <diana.craciun@oss.nxp.com>,
+        linux-kernel@vger.kernel.org, stuyoder@gmail.com,
+        leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org,
+        bharatb.yadav@gmail.com
+Cc:     Bharat Bhushan <Bharat.Bhushan@nxp.com>,
+        "J . German Rivera" <German.Rivera@freescale.com>,
+        Stuart Yoder <stuart.yoder@nxp.com>
+References: <20200319154051.30609-1-diana.craciun@oss.nxp.com>
+ <20200319154051.30609-5-diana.craciun@oss.nxp.com>
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Message-ID: <7ac6caed-d467-790c-7b40-c40f33d69435@nxp.com>
+Date:   Mon, 23 Mar 2020 14:35:14 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+In-Reply-To: <20200319154051.30609-5-diana.craciun@oss.nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY5PR13CA0033.namprd13.prod.outlook.com
+ (2603:10b6:a03:180::46) To AM6PR04MB5925.eurprd04.prod.outlook.com
+ (2603:10a6:20b:ab::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20171215
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.213.175.155] (192.88.158.246) by BY5PR13CA0033.namprd13.prod.outlook.com (2603:10b6:a03:180::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.12 via Frontend Transport; Mon, 23 Mar 2020 12:35:23 +0000
+X-Originating-IP: [192.88.158.246]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ce574ad2-d13f-451c-8dd0-08d7cf26aab1
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4280:|AM6PR04MB4280:|AM6PR04MB4280:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR04MB42809C64B6CA4F5B6281C330ECF00@AM6PR04MB4280.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0351D213B3
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(376002)(136003)(396003)(199004)(36756003)(186003)(4326008)(16526019)(5660300002)(316002)(16576012)(31686004)(54906003)(2906002)(66476007)(44832011)(6666004)(66556008)(53546011)(6486002)(86362001)(26005)(52116002)(2616005)(956004)(478600001)(31696002)(8676002)(81166006)(81156014)(66946007)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4280;H:AM6PR04MB5925.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JTFrLaPkV5CbnvGX+t2NOoK2nAwV6XhZb+MJZNEhig6u/4x5QT4wBTCAnnL5q1f2icReDZYu8ONzWegic18zzBDrlGAi9PlzvWUcJkr4/n07drwNajo6aIAYzedPVlTJLi8y6Zsw+2X8aQN1Yy6JZKzlxZhqYk1MSCjuXbZFhgL02xd0lzj+WG3pddDyUccliKRClft/9V1C+EelrhiGoEaGTN6b9/0n2Hem/CU7SChYkYxxL5Ib3DWjaBlrv/mlRWYj87oDzZ7QbWqQpIAKGTTw1Lurm2PojQBLsC9Vqx7cj8LMJ1+P6u2pAqzb0D9o9xte6rb93Cr2FlczY1HO0R/z7Xgo6GGdwt+Y9ISqsq1fONESkOijNIJRv+Jrsuf9lpYj8Iy9p1rNpohIxPkWzKlZfZ4HGqF0aKkCOUe9VuwYnZRzmkoht+F1IaNQyTex
+X-MS-Exchange-AntiSpam-MessageData: sh25wau22PybfVz3hDwVg6jA7/wgCsP9tOSVnmO6YEyj0DTCsQf64RWreTiVfJnlO7ubDXsEh1PwJITDAugo09aziCCl3GOoOz1NekAXuPwNuHjebBIi2Ti5afpKy+CFsCGdr3ZYgCZfCqykx92rIQ==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce574ad2-d13f-451c-8dd0-08d7cf26aab1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2020 12:35:28.0421
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6OkuLwjxwzf+kCfhI+5Zr8f4MtGZMNDKbzwS1Z420JlfnKMnaygs92qU4RO8uhjkWSv4Gcf0ae/bXoaQbNElfQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4280
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, All,
-I am not very familiar with ARM processors. I have two questions about
-cache coherency. Could anyone help me?
 
-1. How is cache coherency maintenanced on ARMv8 big.LITTLE system?
-As far as I know, big cores and little cores are in seperate clusters on
-big.LITTLE system. And cache coherence betwwen clusters requires the
-memory regions are marked as 'Outer Shareable' and is very expensive.
-I have checked the kernel code, and seems it only requires coherence in
-'Inner Shareable' domain. So my question is how can linux guarantees
-cache coherence in 'CPU migration' or 'Global Task Scheduling' models
-wich both clusters are active at the same time? For example, a thread
-ran in Cluster A and modified 'Inner Shareable' memory, then it migrates
-to Cluster B.
 
-2. ARM64 cache maintenance code sync_icache_aliases() for non-aliasing icache.
-In linux kernel on arm64 platform, the flow function sync_icache_aliases()
-is used to sync i-cache and d-cache. I understand the aliasing case. but
-for non-aliasing case why it just does "dc cvau" (in __flush_icache_range())
-whithout really invalidate the icache? Will i-cache refill from L2 cache?
+On 3/19/2020 5:40 PM, Diana Craciun wrote:
+> From: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+> 
+> When a child DPRC is bound to the vfio_fsl_mc driver via
+> driver_override, its own children should not be bound to corresponding
+> host kernel drivers, but instead should be bound to the vfio_fsl_mc
+> driver as well.
+> 
+> Currently, when a child container is scanned by the vfio_fsl_mc
+> driver, child devices found are automatically bound to corresponding
+> host kernel drivers (e.g., DPMCP and DPBP objects are bound to the
+> fsl_mc_allocator driver, DPNI objects are bound to the ldpaa_eth
+> driver, etc), Then, the user has to manually unbind these child
+> devices from their drivers, set the driver_override sysfs attribute
+> to vfio_fsl_mc driver, for each of them and rebind them.
+> 
+> Signed-off-by: J. German Rivera <German.Rivera@freescale.com>
+> Signed-off-by: Stuart Yoder <stuart.yoder@nxp.com>
+> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+> ---
+>  drivers/bus/fsl-mc/dprc-driver.c    | 12 ++++++++----
+>  drivers/bus/fsl-mc/fsl-mc-bus.c     | 18 +++++++++++++++++-
+>  drivers/bus/fsl-mc/fsl-mc-private.h |  2 ++
+>  include/linux/fsl/mc.h              |  2 ++
+>  4 files changed, 29 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/bus/fsl-mc/dprc-driver.c b/drivers/bus/fsl-mc/dprc-driver.c
+> index d373b28abe2d..7eaf78900dfc 100644
+> --- a/drivers/bus/fsl-mc/dprc-driver.c
+> +++ b/drivers/bus/fsl-mc/dprc-driver.c
+> @@ -155,6 +155,8 @@ static void check_plugged_state_change(struct fsl_mc_device *mc_dev,
+>   * dprc_add_new_devices - Adds devices to the logical bus for a DPRC
+>   *
+>   * @mc_bus_dev: pointer to the fsl-mc device that represents a DPRC object
+> + * @driver_override: driver override to apply to new objects found in the
+> + * DPRC, or NULL, if none.
+>   * @obj_desc_array: array of device descriptors for child devices currently
+>   * present in the physical DPRC.
+>   * @num_child_objects_in_mc: number of entries in obj_desc_array
+> @@ -164,6 +166,7 @@ static void check_plugged_state_change(struct fsl_mc_device *mc_dev,
+>   * in the physical DPRC.
+>   */
+>  static void dprc_add_new_devices(struct fsl_mc_device *mc_bus_dev,
+> +				 const char *driver_override,
+>  				 struct fsl_mc_obj_desc *obj_desc_array,
+>  				 int num_child_objects_in_mc)
+>  {
+> @@ -188,7 +191,7 @@ static void dprc_add_new_devices(struct fsl_mc_device *mc_bus_dev,
+>  		}
+>  
+>  		error = fsl_mc_device_add(obj_desc, NULL, &mc_bus_dev->dev,
+> -					  &child_dev);
+> +					  driver_override, &child_dev);
+>  		if (error < 0)
+>  			continue;
+>  	}
+> @@ -214,6 +217,7 @@ static void dprc_add_new_devices(struct fsl_mc_device *mc_bus_dev,
+>   * of the device drivers for the non-allocatable devices.
+>   */
+>  static int dprc_scan_objects(struct fsl_mc_device *mc_bus_dev,
+> +			    const char *driver_override,
+>  			    bool alloc_interrupts)
+>  {
+>  	int num_child_objects;
+> @@ -313,7 +317,7 @@ static int dprc_scan_objects(struct fsl_mc_device *mc_bus_dev,
+>  	dprc_remove_devices(mc_bus_dev, child_obj_desc_array,
+>  			    num_child_objects);
+>  
+> -	dprc_add_new_devices(mc_bus_dev, child_obj_desc_array,
+> +	dprc_add_new_devices(mc_bus_dev, driver_override, child_obj_desc_array,
+>  			     num_child_objects);
+>  
+>  	if (child_obj_desc_array)
+> @@ -342,7 +346,7 @@ static int dprc_scan_container(struct fsl_mc_device *mc_bus_dev)
+>  	 * Discover objects in the DPRC:
+>  	 */
+>  	mutex_lock(&mc_bus->scan_mutex);
+> -	error = dprc_scan_objects(mc_bus_dev, true);
+> +	error = dprc_scan_objects(mc_bus_dev, NULL, true);
+>  	mutex_unlock(&mc_bus->scan_mutex);
+>  	if (error < 0) {
+>  		fsl_mc_cleanup_all_resource_pools(mc_bus_dev);
+> @@ -412,7 +416,7 @@ static irqreturn_t dprc_irq0_handler_thread(int irq_num, void *arg)
+>  		      DPRC_IRQ_EVENT_OBJ_DESTROYED |
+>  		      DPRC_IRQ_EVENT_OBJ_CREATED)) {
+>  
+> -		error = dprc_scan_objects(mc_dev, true);
+> +		error = dprc_scan_objects(mc_dev, NULL, true);
+>  		if (error < 0) {
+>  			/*
+>  			 * If the error is -ENXIO, we ignore it, as it indicates
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> index baf8259262a9..b9ccac9862b7 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
+> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> @@ -617,6 +617,7 @@ static void fsl_mc_device_release(struct device *dev)
+>  int fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
+>  		      struct fsl_mc_io *mc_io,
+>  		      struct device *parent_dev,
+> +		      const char *driver_override,
+>  		      struct fsl_mc_device **new_mc_dev)
+>  {
+>  	int error;
+> @@ -649,6 +650,19 @@ int fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
+>  
+>  	mc_dev->obj_desc = *obj_desc;
+>  	mc_dev->mc_io = mc_io;
+> +
+> +	if (driver_override) {
+> +		/*
+> +		 * We trust driver_override, so we don't need to use
+> +		 * kstrndup() here
+> +		 */
+> +		mc_dev->driver_override = kstrdup(driver_override, GFP_KERNEL);
+> +		if (!mc_dev->driver_override) {
+> +			error = -ENOMEM;
+> +			goto error_cleanup_dev;
+> +		}
+> +	}
+> +
+>  	device_initialize(&mc_dev->dev);
+>  	mc_dev->dev.parent = parent_dev;
+>  	mc_dev->dev.bus = &fsl_mc_bus_type;
+> @@ -740,6 +754,7 @@ int fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
+>  
+>  error_cleanup_dev:
+>  	kfree(mc_dev->regions);
+> +	kfree(mc_dev->driver_override);
+>  	kfree(mc_bus);
+>  	kfree(mc_dev);
+>  
+> @@ -980,7 +995,8 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
+>  	obj_desc.irq_count = 1;
+>  	obj_desc.region_count = 0;
+>  
+> -	error = fsl_mc_device_add(&obj_desc, mc_io, &pdev->dev, &mc_bus_dev);
+> +	error = fsl_mc_device_add(&obj_desc, mc_io, &pdev->dev, NULL,
+> +				 &mc_bus_dev);
+>  	if (error < 0)
+>  		goto error_cleanup_mc_io;
+>  
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-private.h b/drivers/bus/fsl-mc/fsl-mc-private.h
+> index 21ca8c756ee7..be6bb0fb4603 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-private.h
+> +++ b/drivers/bus/fsl-mc/fsl-mc-private.h
+> @@ -3,6 +3,7 @@
+>   * Freescale Management Complex (MC) bus private declarations
+>   *
+>   * Copyright (C) 2016 Freescale Semiconductor, Inc.
+> + * Copyright 2019-2020 NXP
+>   *
+>   */
+>  #ifndef _FSL_MC_PRIVATE_H_
+> @@ -567,6 +568,7 @@ struct fsl_mc_bus {
+>  int __must_check fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
+>  				   struct fsl_mc_io *mc_io,
+>  				   struct device *parent_dev,
+> +				   const char *driver_override,
+>  				   struct fsl_mc_device **new_mc_dev);
+>  
+>  void fsl_mc_device_remove(struct fsl_mc_device *mc_dev);
+> diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
+> index 88095fd30c80..f997f8091408 100644
+> --- a/include/linux/fsl/mc.h
+> +++ b/include/linux/fsl/mc.h
+> @@ -3,6 +3,7 @@
+>   * Freescale Management Complex (MC) bus public interface
+>   *
+>   * Copyright (C) 2014-2016 Freescale Semiconductor, Inc.
+> + * Copyright 2019-2020 NXP
+>   * Author: German Rivera <German.Rivera@freescale.com>
+>   *
+>   */
+> @@ -161,6 +162,7 @@ struct fsl_mc_obj_desc {
+>   * @regions: pointer to array of MMIO region entries
+>   * @irqs: pointer to array of pointers to interrupts allocated to this device
+>   * @resource: generic resource associated with this MC object device, if any.
+> + * @driver_override: Driver name to force a match
 
-void sync_icache_aliases(void *kaddr, unsigned long len)
-{
-	unsigned long addr = (unsigned long)kaddr;
+This was probably meant to go in the previous patch.
 
-	if (icache_is_aliasing()) {
-		__clean_dcache_area_pou(kaddr, len);
-		__flush_icache_all();
-	} else {
-		/*
-		 * Don't issue kick_all_cpus_sync() after I-cache invalidation
-		 * for user mappings.
-		 */
-		__flush_icache_range(addr, addr + len);
-	}
-}
+---
+Best Regards, Laurentiu
 
--- 
-Cheers,
-Changbin Du
+>   *
+>   * Generic device object for MC object devices that are "attached" to a
+>   * MC bus.
+> 
