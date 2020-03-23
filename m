@@ -2,73 +2,123 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD26C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02489C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C211420719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD90C206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:00:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QzU9cFza"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bCuqD3sY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgCWUAW (ORCPT
+        id S1727116AbgCWUA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 16:00:22 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:52636 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbgCWUAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 16:00:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=lxbeXd7qfEIcZ8FcwoMUDpryQyiTOzAl8/EY8KwHWEg=; b=QzU9cFzahaXHJ8OxJmKUwdm6z/
-        /pgm4+bXwB3kKvGQoL1ekYgxXnTdgm/oGzrRudzf552jvXV/bu0NKR1AAY2wL7FggEw0VpSObrDvZ
-        rPNsRnp2Z815/dIntRPFys8ild+OchWYiGws9VuQkAh/bhNs1V/I17BqESMJzhKeZEV8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jGTF3-0002zq-5U; Mon, 23 Mar 2020 21:00:09 +0100
-Date:   Mon, 23 Mar 2020 21:00:09 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Dan Murphy <dmurphy@ti.com>, kbuild-all@lists.01.org,
-        netdev@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: phy: dp83867: fix semicolon.cocci warnings
-Message-ID: <20200323200009.GF32387@lunn.ch>
-References: <202003240333.9w4m8TaM%lkp@intel.com>
- <20200323195141.GA142065@b4e372e8fdf0>
+        Mon, 23 Mar 2020 16:00:58 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:34225 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725899AbgCWUA6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 16:00:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584993656;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cY+H9r1hyt0W+F/eh6c6o3kR9Aied7i4vmIsTGqyvm8=;
+        b=bCuqD3sYav/rMPCtGTKmvRTbkWfGL+KXpOCXCfCiTeEhBXM9CZ0WIF/teLROpnsjgWdZ4U
+        frAMcZHC/7hTIYU+qebt/GOdNAVTS8ITKwVZmNGnl9Ss2kD87mV6FkHAeanZRuK6vLvbLl
+        mpMC6O2gDuG4tTDAc6t3sXjqnik1UuA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-113-81WvkUxJPF-3OxYYqOIRSg-1; Mon, 23 Mar 2020 16:00:55 -0400
+X-MC-Unique: 81WvkUxJPF-3OxYYqOIRSg-1
+Received: by mail-wr1-f70.google.com with SMTP id o9so7905801wrw.14
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 13:00:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cY+H9r1hyt0W+F/eh6c6o3kR9Aied7i4vmIsTGqyvm8=;
+        b=R+Fd92hTrLDNkrngtrwewoYkNfdFdQ4mOrCYIdYX/mu67rGe3auSIYoXhxiKi4ZYNX
+         oH/buxtUo0SijDSvaxsGH+iUuaXh6TSlIjfDqbC4Nr7+vfkXc+DmROpM8B0XV/iYgirZ
+         Wu01Y+AKsvrN+psHo7+T31NcSIZ91lE9ZqjFEzM5v8EjGllspr3CsmXwWZYvpQVs/ebh
+         ZrTstFTWyIndouWr1J67z5OQXvX+VLR2hbL7p2hFrg3Bw40dDgbVMVwqGkvRW0ltMl9J
+         RlafbgR2PDz+6xyirBgUEnCrasa3eDw2LN1VPCl7Sr4lwkcwbhD9xewFITtN5wuNGHI0
+         4dNw==
+X-Gm-Message-State: ANhLgQ0IgnhTxoposPSb9PcnCc9sPM/YUqg4pAihOvJELh0IX9MzodOJ
+        rMe3EiUu9FQXHiSsYx9iuct1/8zzNlHeCRikXyVieD22a2sUvui84h4wX7iX/taRHhwgfvgXwbU
+        R7V1rsP18YNerL841wOgUWTMu
+X-Received: by 2002:adf:f3c5:: with SMTP id g5mr26655838wrp.230.1584993653905;
+        Mon, 23 Mar 2020 13:00:53 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vvXyqIbkkktOwq1/2ooUCj01kGPzulVzA6RfK1uS8wG/GOec0veo7shFCpnK1NWAqj8WTc9EQ==
+X-Received: by 2002:adf:f3c5:: with SMTP id g5mr26655802wrp.230.1584993653686;
+        Mon, 23 Mar 2020 13:00:53 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:24d8:ed40:c82a:8a01? ([2001:b07:6468:f312:24d8:ed40:c82a:8a01])
+        by smtp.gmail.com with ESMTPSA id 98sm25182715wrk.52.2020.03.23.13.00.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Mar 2020 13:00:53 -0700 (PDT)
+Subject: Re: [PATCH v3 4/9] KVM: VMX: Configure runtime hooks using
+ vmx_x86_ops
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+References: <20200321202603.19355-1-sean.j.christopherson@intel.com>
+ <20200321202603.19355-5-sean.j.christopherson@intel.com>
+ <87ftdz9ryn.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <c7915319-8795-e466-e2df-478b1bf9734c@redhat.com>
+Date:   Mon, 23 Mar 2020 21:00:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323195141.GA142065@b4e372e8fdf0>
+In-Reply-To: <87ftdz9ryn.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 03:51:41AM +0800, kbuild test robot wrote:
-> From: kbuild test robot <lkp@intel.com>
+On 23/03/20 13:27, Vitaly Kuznetsov wrote:
+>> -	kvm_x86_ops->check_nested_events = vmx_check_nested_events;
+>> -	kvm_x86_ops->get_nested_state = vmx_get_nested_state;
+>> -	kvm_x86_ops->set_nested_state = vmx_set_nested_state;
+>> -	kvm_x86_ops->get_vmcs12_pages = nested_get_vmcs12_pages;
+>> -	kvm_x86_ops->nested_enable_evmcs = nested_enable_evmcs;
+>> -	kvm_x86_ops->nested_get_evmcs_version = nested_get_evmcs_version;
+>> +	ops->check_nested_events = vmx_check_nested_events;
+>> +	ops->get_nested_state = vmx_get_nested_state;
+>> +	ops->set_nested_state = vmx_set_nested_state;
+>> +	ops->get_vmcs12_pages = nested_get_vmcs12_pages;
+>> +	ops->nested_enable_evmcs = nested_enable_evmcs;
+>> +	ops->nested_get_evmcs_version = nested_get_evmcs_version;
 > 
-> drivers/net/phy/dp83867.c:363:2-3: Unneeded semicolon
-> drivers/net/phy/dp83867.c:398:2-3: Unneeded semicolon
+> A lazy guy like me would appreciate 'ops' -> 'vmx_x86_ops' rename as it
+> would make 'git grep vmx_x86_ops' output more complete.
 > 
-> 
->  Remove unneeded semicolon.
-> 
-> Generated by: scripts/coccinelle/misc/semicolon.cocci
-> 
-> Fixes: cd26d72d4d43 ("net: phy: dp83867: Add speed optimization feature")
-> CC: Dan Murphy <dmurphy@ti.com>
-> Signed-off-by: kbuild test robot <lkp@intel.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+I would prefer even more a kvm_x86_ops.nested struct but I would be okay
+with a separate patch.
 
-    Andrew
+Paolo
+
