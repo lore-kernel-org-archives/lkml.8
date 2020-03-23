@@ -2,208 +2,151 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC4AC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB06C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4218F20753
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:09:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585001353;
-	bh=xQT8swUoLwKV5Y2meayMOiwAHXpbKeGXizKxTn6kaIg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZtpiMjo+IdRv6S2DnYWx2dU6a8+oMMf35OCQ3mvR8urH3WJ+OQgxUyruWgvx3Xocl
-	 TcKa3Snv54BNHY3SwfPI8VaYG8G5KN9LsAEXXaK8BpoBZfOvbU0HXR36dPCrsUFdcK
-	 qO0SGgN9qDdD/Eh3m2LDEIVBReYjyTg3Vxyjsi9o=
+	by mail.kernel.org (Postfix) with ESMTP id E99C720719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:11:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Bn4ZMdB1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgCWWJM (ORCPT
+        id S1727046AbgCWWLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:09:12 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:37594 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbgCWWJL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 18:09:11 -0400
-Received: by mail-il1-f196.google.com with SMTP id a6so2506599ilr.4;
-        Mon, 23 Mar 2020 15:09:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vZ81zxCZMIgmSeBafIK/lYfMctImcol2Rgukq3RX2VQ=;
-        b=Nekm2bO6tM/m8Uwi3xip+7HE3c9F+IZ0H80k0U6gRp9BVaSDVrWqZHnyv/T8t9mb46
-         UvAcqRbZH9Ts/Z5OhOAXQkADQPDUBMW51HUe6uSNo86JQHhFCKD1bqdO3EmSl/2AAL7r
-         27nFuDWCe/dlasExaGMwIOrQqW1uV378Bi9ciNk3AepM7PpFEF1RHFnHfnR5dtXzj70p
-         fUTzvJi2yxTgOHzyZ+YOpqobuXWjE+m8GClWhMK7rvEKnOvXNeNny/8/RIBWsAAynnG8
-         d7h+jXKojawp58DbKJyNvid8JObjpN6mPI5vHMZY6aJNvmDIcLxJWGLOQgDqQaeXO2X8
-         yw8A==
-X-Gm-Message-State: ANhLgQ15/5JnaRM1gFXr1Zq4RqG6rGUhUoYOQWrWGCzrp2XQvsDvk47b
-        xLDTuuLHwFCIdRxtTQeSLA==
-X-Google-Smtp-Source: ADFU+vsd05AO0Mnjm8m1n+SJIbnJIylZaJUIeQ09QPhBI7256Cv2qE4OXA4s9daeooy1ivHTyfr2Uw==
-X-Received: by 2002:a92:8510:: with SMTP id f16mr23770430ilh.208.1585001350772;
-        Mon, 23 Mar 2020 15:09:10 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id 82sm920263iou.54.2020.03.23.15.09.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 15:09:10 -0700 (PDT)
-Received: (nullmailer pid 24507 invoked by uid 1000);
-        Mon, 23 Mar 2020 22:09:05 -0000
-Date:   Mon, 23 Mar 2020 16:09:05 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Phong LE <ple@baylibre.com>
-Cc:     narmstrong@baylibre.com, airlied@linux.ie, daniel@ffwll.ch,
-        mark.rutland@arm.com, a.hajda@samsung.com,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, sam@ravnborg.org, mripard@kernel.org,
-        heiko.stuebner@theobroma-systems.com, linus.walleij@linaro.org,
-        stephan@gerhold.net, icenowy@aosc.io, broonie@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        andriy.shevchenko@linux.intel.com, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: display: bridge: add it66121 bindings
-Message-ID: <20200323220905.GA17573@bogus>
-References: <20200311125135.30832-1-ple@baylibre.com>
- <20200311125135.30832-3-ple@baylibre.com>
+        Mon, 23 Mar 2020 18:11:04 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:48721 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726643AbgCWWLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 18:11:04 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 9c3939ec;
+        Mon, 23 Mar 2020 22:04:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=du1Xi2cJwvyAEA0LnnfUIYXiBFE=; b=Bn4ZMd
+        B1myZuRZfOPybIza1CaPghEjwXkG/Vq+8+3muxbgDuMvoQbKwb0QMxkCnmLO2aKG
+        6QmvTgmlJ9vt1WI4odD9mueaXwe5aGGKPwmgNF7pA5CMQq1Yrrdxuv77KutE4nu4
+        2D6C5i5ntwp2kJCfWyx8sRcB49zDs8dMEBecVtSh/AyMiUTNz79GgbJ9RugIUJoM
+        dcgkHuH5oZ74lXY5ZmvtJQYL7Ry0KkMkOKnambR7tKUQ4wx3WyWV2Ui+wDhv3nLe
+        LGw6CYXp2grS9dQdVfMeJwWi8TI8ZHA1vPJd/z7UPBw2AhYlQAtjnAGyyB4GCqjd
+        KTyR7Ec14x4WSkLg==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 97ca2ba1 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Mon, 23 Mar 2020 22:03:59 +0000 (UTC)
+Received: by mail-il1-f176.google.com with SMTP id f16so5509154ilj.9;
+        Mon, 23 Mar 2020 15:11:01 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3VAf8AngCaPI44pBgJZTf+G6+QfuH3yiqx8bjnZtwck8PmIs6t
+        iZr1xCUnJrTETnv6Y1enL1UgmSX+70arG+QcFPE=
+X-Google-Smtp-Source: ADFU+vtKxW8+wIo2evA9dEZmdKot1mmMyNY7t0WeeWDY74vjHLbsz9Exe56Jz1LOd3H5thx7nTAdiENmTb5nMZ15f38=
+X-Received: by 2002:a92:cd4e:: with SMTP id v14mr24213070ilq.231.1585001460661;
+ Mon, 23 Mar 2020 15:11:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311125135.30832-3-ple@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200323020844.17064-1-masahiroy@kernel.org> <CAHmME9p=ECJ15uyPH79bF0tuzEksdxoUsjGQSyz74FfdEJxTpQ@mail.gmail.com>
+ <CAHmME9q4egN7_KeYB-ZHCFPfXs-virgTv4iz9jW2SVOM7dTnLw@mail.gmail.com>
+ <CAK7LNAR07vZFzh1Bbpq4CoJ4zmsc+p5rxpkO1Zv8QVfqhfvr2w@mail.gmail.com>
+ <CAHmME9qCjo4kOQM3Dw6PDjEebmb6rvXajqhK-m-=vKcHWqNhAw@mail.gmail.com> <CAK7LNAQgKgKgOpQ2bgHrB5h=LTffs2khbYRrBhrxFM44gS88KQ@mail.gmail.com>
+In-Reply-To: <CAK7LNAQgKgKgOpQ2bgHrB5h=LTffs2khbYRrBhrxFM44gS88KQ@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Mon, 23 Mar 2020 16:10:49 -0600
+X-Gmail-Original-Message-ID: <CAHmME9rgNB5L_x9rRcW4RDHJnPuAZMUtJ+7HNK3302nwb9Y0OQ@mail.gmail.com>
+Message-ID: <CAHmME9rgNB5L_x9rRcW4RDHJnPuAZMUtJ+7HNK3302nwb9Y0OQ@mail.gmail.com>
+Subject: Re: [PATCH 0/7] x86: remove always-defined CONFIG_AS_* options
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     X86 ML <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Song Liu <songliubraving@fb.com>,
+        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 01:51:33PM +0100, Phong LE wrote:
-> Add the ITE bridge HDMI it66121 bindings.
-> 
-> Signed-off-by: Phong LE <ple@baylibre.com>
-> ---
->  .../bindings/display/bridge/ite,it66121.yaml  | 98 +++++++++++++++++++
->  1 file changed, 98 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
-> new file mode 100644
-> index 000000000000..1717e880d130
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
-> @@ -0,0 +1,98 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/ite,it66121.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ITE it66121 HDMI bridge Device Tree Bindings
-> +
-> +maintainers:
-> +  - Phong LE <ple@baylibre.com>
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +
-> +description: |
-> +  The IT66121 is a high-performance and low-power single channel HDMI
-> +  transmitter, fully compliant with HDMI 1.3a, HDCP 1.2 and backward compatible
-> +  to DVI 1.0 specifications.
-> +
-> +properties:
-> +  compatible:
-> +    const: ite,it66121
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: base I2C address of the device
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: GPIO connected to active low reset
-> +
-> +  vrf12-supply:
-> +    maxItems: 1
+On Mon, Mar 23, 2020 at 4:04 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Hi Jason,
+>
+> On Mon, Mar 23, 2020 at 3:53 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> >
+> > On Mon, Mar 23, 2020 at 12:36 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >
+> > > Hi Jason,
+> > >
+> > > On Mon, Mar 23, 2020 at 1:28 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> > > >
+> > > > Hi again,
+> > > >
+> > > > I've consolidated your patches and rebased mine on top, and
+> > > > incorporated your useful binutils comments. The result lives here:
+> > > >
+> > > > https://git.zx2c4.com/linux-dev/log/?h=jd/kconfig-assembler-support
+> > > >
+> > > > I can submit all of those to the list, if you want, or maybe you can
+> > > > just pull them out of there, include them in your v2, and put them in
+> > > > your tree for 5.7? However you want is fine with me.
+> > >
+> > >
+> > > Your series does not work correctly.
+> > >
+> > > I will comment why later.
+> >
+> > Bummer, okay. Looking forward to learning what's up. Also, if some
+> > parts of it are useful (like the resorting and organizing of
+> > arch/x86/crypto/Makefile), feel free to cannibalize it, keeping what's
+> > useful and discarding what's not.
+> >
+>
+>
+> The answer is mostly in my previous reply to Linus:
+> https://lkml.org/lkml/2020/3/13/27
+>
+>
+> I think this problem would happen
+> for CONFIG_AS_CFI and CONFIG_AS_ADX
+> since the register in instruction code
+> is machine-bit dependent.
+>
+> The former is OK wince we are planning to
+> remove it.
+>
+> We need to handle -m64 for the latter.
+> Otherwise, a problem like commit
+> 3a7c733165a4799fa1 would happen.
+>
+>
+> So, I think we should merge this
+> https://lore.kernel.org/patchwork/patch/1214332/
+> then, fix-up CONFIG_AS_ADX on top of it.
+>
+> (Or, if we do not need to rush,
+> we can delete CONFIG_AS_ADX entirely after
+> we bump the binutils version to 2.23)
 
-Drop this. Supplies are always a single item.
+Oh, gotcha. The easiest thing to do for that case would actually be
+passing 32-bit registers to adox, which are valid. I'll fix that up in
+my tree.
 
-> +    description: Regulator for 1.2V analog core power.
-> +
-> +  vcn33-supply:
-> +    maxItems: 1
-> +    description: Regulator for 3.3V digital core power.
-> +
-> +  vcn18-supply:
-> +    maxItems: 1
-> +    description: Regulator for 1.8V IO core power.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  pclk-dual-edge:
-> +    maxItems: 1
+And then indeed it looks like the binutils bump is coming anyway for 5.7.
 
-Not a valid property if this is boolean.
+Your flags patch looks fine and potentially useful for other things
+down the line though. I suppose you had in mind something like:
 
-> +    description: enable pclk dual edge mode.
-> +
-> +  port:
+def_bool $(as-instr,...,-m64) if 64BIT
+def_bool $(as-instr,...,-m32) if !64BIT
 
-You should have an output port to a connector node.
+Anyway, I'll fix up the ADX code to be biarch like the AVX test code.
 
-> +    type: object
-> +
-> +    properties:
-> +      endpoint:
-> +        type: object
-> +        description: |
-> +          Input endpoints of the bridge.
-> +
-> +    required:
-> +      - endpoint
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reset-gpios
-> +  - vrf12-supply
-> +  - vcn33-supply
-> +  - vcn18-supply
-> +  - interrupts
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c6 {
-
-i2c {
-
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      it66121hdmitx: it66121hdmitx@4c {
-> +        compatible = "ite,it66121";
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&ite_pins_default>;
-> +        vcn33-supply = <&mt6358_vcn33_wifi_reg>;
-> +        vcn18-supply = <&mt6358_vcn18_reg>;
-> +        vrf12-supply = <&mt6358_vrf12_reg>;
-> +        reset-gpios = <&pio 160 1 /* GPIO_ACTIVE_LOW */>;
-> +        interrupt-parent = <&pio>;
-> +        interrupts = <4 8 /* IRQ_TYPE_LEVEL_LOW */>;
-> +        reg = <0x4c>;
-> +        pclk-dual-edge;
-> +
-> +        port {
-> +          it66121_in: endpoint {
-> +            remote-endpoint = <&display_out>;
-> +          };
-> +        };
-> +      };
-> +    };
-> -- 
-> 2.17.1
-> 
+Jason
