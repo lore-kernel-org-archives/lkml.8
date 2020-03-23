@@ -2,100 +2,203 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D93D9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73865C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A259020722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584980072;
-	bh=Zg2e1snHSH8ktLGWD4LUyssRH+/UT99zD4nAQ3YXUnQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Uq1bAjBAGOFYRNNPS8pV4fQ7ZFYuIV9/HfvVr+4XgDeavdYAzxApiHdP/SuDqQEN3
-	 ZqD+9cN/aKdgalK1XFcEQvaBf9l1gPPz8IG2DcFOjiuL6dEgSjuHFur4AxWy1xp7oM
-	 ixD1NX2rMA8ewqgGbpD93hFH+FfHWcJ3GxarHt5I=
+	by mail.kernel.org (Postfix) with ESMTP id 405EF20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:14:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R7cXqTjH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbgCWQOb (ORCPT
+        id S1727439AbgCWQOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:14:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbgCWQOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:14:31 -0400
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0166320409;
-        Mon, 23 Mar 2020 16:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584980070;
-        bh=Zg2e1snHSH8ktLGWD4LUyssRH+/UT99zD4nAQ3YXUnQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=z4DWWl5m1bRIcSDjDwLnClsrzodADOWm3mSM76gNb4XwKLy//Lkupgj34JYUJZMu1
-         x2DzzpqURsP7rkN1Ud0hbHD6d8HNwUf97qCDsZEucNNMKrGPrD8Ni073Ousjq8ibgU
-         +o92qLGOEiDlCteuTnbnM2m3A0f1M04v/yactSIs=
-Date:   Mon, 23 Mar 2020 17:14:28 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH 2/3] lockdep: Merge hardirq_threaded and irq_config
- together
-Message-ID: <20200323161427.GB5755@lenoir>
-References: <20200323033207.32370-1-frederic@kernel.org>
- <20200323033207.32370-3-frederic@kernel.org>
- <20200323140220.GK2452@worktop.programming.kicks-ass.net>
- <20200323145314.v57acriqj2s6wry2@linutronix.de>
+        Mon, 23 Mar 2020 12:14:41 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40120 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgCWQOk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 12:14:40 -0400
+Received: by mail-wr1-f66.google.com with SMTP id f3so17812917wrw.7
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 09:14:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YvVdcIC9BfVyhLOPvUYqb9CjA7osmNN6D8+8S+xfy50=;
+        b=R7cXqTjH+yD48QX8CkkD0dhPOCRPhFyBhr94VEBl0nhx6DrqPDWGsfy4jqMxAofqXO
+         R2z/EiStJQD7DJoYs16jTDbl+HE1mG1+fDjkoPpZULbYVklYRoWM8o0C8Fdv1N6htU1v
+         v1odkxoUVd5Om2FA7bFKAYL4yUfo3Kc39SG7I3Oj76yVK3j5ARjcBx93LKGqvoVYlkSR
+         3M2a+QuCKDzjnidq7/K4aCz7HyM9P3A7O/aTko9J03+FlmUxL7OhVEjk6YW4MsqNXZoJ
+         gUs8I/ZDGGeHWyiPH2tVZTkeeidVmUl0zzI5aRmpUZcF8RFFe6Bw3iW+2Bwhwg6e4svu
+         +vXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=YvVdcIC9BfVyhLOPvUYqb9CjA7osmNN6D8+8S+xfy50=;
+        b=WbonT3f06YzKq+s4YO8k+/ShDKL2FrqbFotqho0oWrDo6mfGPblx0NtlZt921FIIzP
+         MvXxettwu+y+xU7HedAu/vgSYiWfcSIwL40VMtVedRjJcVnFfYi1k4uJvWaFAApNY8Cs
+         lIABGNGtHItHYeeJT60mJk+gxC2ySpY2jHm/aIOPpvvyUHHGnUDkSslSEK68ixkYgk5I
+         zZOIPxIZ2fqHKStVLHAXwSbpc6CKtCbe5YMDkp7yNLbi5P+lPMgxJfsSe2M/T5Zr3KJ8
+         lg8yJFJWko2Z1xO+I5Il3ihvdY35fRwAkE0mxll2wGU4mOE6wONlemA14q2nzdf2yMuG
+         AoDw==
+X-Gm-Message-State: ANhLgQ3n29fATB3dxddFI4Ly/Ix8R7K+2VsbhHc8q2E1F7faboPaViTQ
+        ODDfZX8/wOQs5dLbEJ8JxtY4Kg==
+X-Google-Smtp-Source: ADFU+vufaFWV3B6+iSowCSx2iHYSXH1e8i85W/GcQHYZJGVR9gaySUbgUVEr0CCHyejSJpnLV+GfzA==
+X-Received: by 2002:adf:afd4:: with SMTP id y20mr32672488wrd.57.1584980078078;
+        Mon, 23 Mar 2020 09:14:38 -0700 (PDT)
+Received: from [192.168.0.43] (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
+        by smtp.googlemail.com with ESMTPSA id f23sm98293wmf.1.2020.03.23.09.14.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Mar 2020 09:14:37 -0700 (PDT)
+Subject: Re: [PATCH] thermal: imx8mm: Fix build warning of incorrect argument
+ type
+To:     Anson Huang <anson.huang@nxp.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+References: <1584973156-25734-1-git-send-email-Anson.Huang@nxp.com>
+ <8f1f2d2b-33bc-b5e0-ad06-78f7ce54f2b7@linaro.org>
+ <DB3PR0402MB39164815DDDB8F94507E36B4F5F00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <103ffda2-2fc5-2918-a486-ab3bbf60e614@linaro.org>
+Date:   Mon, 23 Mar 2020 17:14:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323145314.v57acriqj2s6wry2@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <DB3PR0402MB39164815DDDB8F94507E36B4F5F00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 03:53:14PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2020-03-23 15:02:20 [+0100], Peter Zijlstra wrote:
-> > On Mon, Mar 23, 2020 at 04:32:06AM +0100, Frederic Weisbecker wrote:
-> > > These fields describe the same state: a code block running in hardirq
-> > > that might be threaded under specific configurations.
-> > > 
-> > > Merge them together in the same field. Also rename the result as
-> > > "hardirq_threadable" as we are talking about a possible state and not
-> > > an actual one.
-> > 
-> > What isn't instantly obvious is that they cannot overlap. For instance
-> > mainline with force threaded interrupt handlers on, can't that have the
-> > irq_work nest inside a threaded handler ?
+On 23/03/2020 15:53, Anson Huang wrote:
+> Hi, Daniel
 > 
-> I remember we kept them due to the nesting. A threaded-interrupt can be
-> interrupted by irq_work/hrtimer/posix-timer. 
-> So in a threaded interrupt it is okay to use a sleeping lock. It is not
-> okay with irq_work on-top - unless it is the non-atomic one.
-
-Hmm, with the current layout which is:
-
-    if (curr->hardirq_threaded || curr->irq_config)
-        curr_inner = LD_WAIT_CONFIG;
-    else
-        curr_inner = LD_WAIT_SPIN;
-
-you are not protected against that.
-
-But anyway none of that should happen if hardirq_threaded and irq_config
-are respectively only used when hardirq threads are disabled and irq_work
-is always hardirq, right?
-
+>> Subject: Re: [PATCH] thermal: imx8mm: Fix build warning of incorrect
+>> argument type
+>>
+>> On 23/03/2020 15:19, Anson Huang wrote:
+>>> Fix below sparse warning:
+>>>
+>>> drivers/thermal/imx8mm_thermal.c:82:36: sparse: sparse: incorrect type
+>>> in argument 2 (different address spaces), expected unsigned long const
+>>> volatile *addr
+>>> drivers/thermal/imx8mm_thermal.c:82:36: sparse: expected unsigned long
+>>> const volatile *addr
+>>>
+>>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+>>> ---
+>>>  drivers/thermal/imx8mm_thermal.c | 7 +++----
+>>>  1 file changed, 3 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/thermal/imx8mm_thermal.c
+>>> b/drivers/thermal/imx8mm_thermal.c
+>>> index c32308b..0d60f8d 100644
+>>> --- a/drivers/thermal/imx8mm_thermal.c
+>>> +++ b/drivers/thermal/imx8mm_thermal.c
+>>> @@ -75,15 +75,14 @@ static int imx8mp_tmu_get_temp(void *data, int
+>>> *temp)  {
+>>>  	struct tmu_sensor *sensor = data;
+>>>  	struct imx8mm_tmu *tmu = sensor->priv;
+>>> +	unsigned long val;
+>>>  	bool ready;
+>>> -	u32 val;
+>>>
+>>> -	ready = test_bit(probe_status_offset(sensor->hw_id),
+>>> -			 tmu->base + TRITSR);
+>>> +	val = readl_relaxed(tmu->base + TRITSR);
+>>> +	ready = test_bit(probe_status_offset(sensor->hw_id), &val);
+>>>  	if (!ready)
+>>>  		return -EAGAIN;
+>>
+>> Doesn't this patch also fix a bug because the read was done after testing the
+>> bit? :)
 > 
-> > I *think* it just about works out, but it definitely wants a little more
-> > than this.
+> Yes😊 Previous patch reads the register twice at different time, may cause a
+> sync issue of checking the ready bit and reading the temperature using register
+> values read at different time.
 > 
-> Sebastian
+> Do I need to improve the commit log? I guess no need?
+
+No need, it is fine.
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
