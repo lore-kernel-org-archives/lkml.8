@@ -2,121 +2,152 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE74C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E1DC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205A3206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 984DB206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:21:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="frWZZr05"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="nUiOjHHh";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="kRv5rTrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbgCWTUI (ORCPT
+        id S1727792AbgCWTVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:20:08 -0400
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:52372 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727179AbgCWTUH (ORCPT
+        Mon, 23 Mar 2020 15:21:53 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:9796 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727479AbgCWTVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:20:07 -0400
-Received: by mail-qk1-f201.google.com with SMTP id w124so13382066qkd.19
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 12:20:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=EuEgHEvOOlLZGILEOt39luhrShhjhA+dXySCvlN5S/w=;
-        b=frWZZr05u+jNrEcB3GH0499Ea350wyE93JmIJPfup0N2Iea+YPd3q6/qiz0WC7FuIP
-         WBoyPuMVzyQ4O0/YDSAKhAYkgwpj2nq/kGj7IXWW8nzOpSAWmDkEmkHZBHhOdIb7x4pd
-         qlvurUUNUqAF0ALylfTDWTBWNPTw17zbfsbVbCkiBao+3wRoTcRnmjsmmCReJ48hIwth
-         B68OT7qccAkZcNrdsb1H/LUCmoznz/xEpUxBHTQXSMH4jktAFRqwWvBTNfrNypJtUtaF
-         YcA+zNaafJAhGeMyIFSuEJaN92/9bAes2ovUyOw85AoB7NNsikFkTqC7SY5py2h97KEV
-         vWNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=EuEgHEvOOlLZGILEOt39luhrShhjhA+dXySCvlN5S/w=;
-        b=fyuOJ7a9OXFzZGlah13Un8wZVkUaeMhL7meiA8bflYL1D3DbMOVYPbbG8mZrUx4Y8u
-         VGOpWUiUQdl65YGx2DYaS6FVw52ah/Emf+bm1t8iYlYip/IReYSrcB578gpdamGgL8B1
-         p8p/Lpuu2Kc5lI+sDLZtQX0UOdEQ2Q2G5OCWidmOOfwnshd4JuzgeQoq3vxqzwTNq1t/
-         1KNgqSby/mj5b1UBwIk/CGzJhAgttTBN82tf/2P9JK5L1i+KTG9D576jPXbXLWJ+NelR
-         J7Ni4tZl/PIp2W/fYzXZ6R+0MAdJzWpm5QCjK2HiwDNi7sUdOBPUgxbicefOzgmr7vsm
-         Ao2w==
-X-Gm-Message-State: ANhLgQ2axfDI0qpxzsdHd5RJ+9n8b+VWPorIjhRGRBiOUoTqU1LLzGgD
-        DUN0SoIYCG33xwbhd8N+eAafOfAhDj1oISsQXeE=
-X-Google-Smtp-Source: ADFU+vvHiSEJBBT42wVNqrw/x1QVUgfHCyw0l5oYHfNcWj0WqOy/M8fE1DC3Ojv4iFuGiQeAk5S8n+b6TA1pOtTBh1A=
-X-Received: by 2002:a0c:fd85:: with SMTP id p5mr6095302qvr.205.1584991205290;
- Mon, 23 Mar 2020 12:20:05 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 12:12:43 -0700
-In-Reply-To: <CAKwvOdn10Ts_AU6i+7toj7NkMwK-+0yr5wTrN0XEDudBWS0sPQ@mail.gmail.com>
-Message-Id: <20200323191243.30002-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <CAKwvOdn10Ts_AU6i+7toj7NkMwK-+0yr5wTrN0XEDudBWS0sPQ@mail.gmail.com>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH] KVM: VMX: don't allow memory operands for inline asm that
- modifies SP
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     pbonzini@redhat.com, sean.j.christopherson@intel.com
-Cc:     ndesaulniers@google.com, bp@alien8.de,
-        clang-built-linux@googlegroups.com, dvyukov@google.com,
-        glider@google.com, hpa@zytor.com, jmattson@google.com,
-        joro@8bytes.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com,
-        syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        vkuznets@redhat.com, wanpengli@tencent.com, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 23 Mar 2020 15:21:53 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 02NJLKNY023310;
+        Mon, 23 Mar 2020 12:21:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=kspl+/Vr3R+euAZFlRMaJNG6sb6mhZKWN3GWnLtSr78=;
+ b=nUiOjHHhumBpHSAn7n9ih6K2HI4pmm2xuiU80DZlsetvhDn3dD0uA26aYnP3qplkEwqY
+ k2DIT9Y8EZxpKV2nroHo1Ui7yrNwn/tmiLEwugIA4RcXD7Jz8LL+CVT8wouLk6U+wjdk
+ Qi2qpnyAbkkLwgIbVEfPqNxK1DRBCZ9p2tk= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 2ywedxsyjf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 23 Mar 2020 12:21:36 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Mon, 23 Mar 2020 12:21:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=msD1lB3X4FxL3XXrXt3JWTJlZmlK8RRU67/wj6dvlxoh5tSTjlbC83ZetDSftHXlp3OBnGYdHKMlpNt7Ii7A4fIwIQJiJN5OXlxyIeTQy3GP6KfZTllaOQ4QxVithu2PQhCc42yhhsE982+xY/oTaZx25U2Q3hG0/2fLAgwzsI7+7jHfe275NXYexsNR3WS/jAFlk//zylOpI9EDgBp5czpXmJ4+PFAToqh7R1Gb8oF7RUan0XvIUwSz/gKLz4cuqff7n+JKl6gpTqgNKtMEpkJHrbjAyNvjg5NOKEL7wLTvczGUUL1rdaqOJOsvkXU+UIAVY87B5TNf9ftiVdyWkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kspl+/Vr3R+euAZFlRMaJNG6sb6mhZKWN3GWnLtSr78=;
+ b=SRB0z2hc6da3ZjHjjYFEDv23Gh0COIZbcZtstVq8c55AdZ0jCf/DpznWuSttnP/SJRGnv1dFg3gOdTs04Qef5hqYH4RZe8ItcFsWb0AGrxXfzaSrWRarkA54+OU+QmHzlE4BVlgQYfUK3BS0GfXjuf6lbcu6Nwb8sSu/QsR6GWKLQwClKUzWERVCzuEAA++SV46BDxJv0/UCZ9PbcrmpVyUBrFn3Tnq8hIuBLS0LA7HHYqwLtEA22M4vW0lKqjwMOIXHPYo3IWwdiDa9htMFoWRwLH5QkiLFJyQ5im2Do0H0TD04MMcPphZ/jPKF23H00lyrJ081JVUtS1ogA9+vCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kspl+/Vr3R+euAZFlRMaJNG6sb6mhZKWN3GWnLtSr78=;
+ b=kRv5rTrRLTzerEVXEgLFFCdLtwzY6eqK9XwRbzNvrQjmjLCX+mKxtE7ghmebZ3tqcTo00tpvnH5N5p4PoSZnbZQ+SuKY78YO3tDDiqzQTv9d0mPGmW0Ig/QNRLurjUhibcxma5Q4lnwVXBPPTIjsWR7aNNbw5QTYsHr2loFGt44=
+Received: from MW3PR15MB3883.namprd15.prod.outlook.com (2603:10b6:303:51::22)
+ by MW3PR15MB3915.namprd15.prod.outlook.com (2603:10b6:303:4a::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.22; Mon, 23 Mar
+ 2020 19:21:34 +0000
+Received: from MW3PR15MB3883.namprd15.prod.outlook.com
+ ([fe80::a49b:8546:912f:dd98]) by MW3PR15MB3883.namprd15.prod.outlook.com
+ ([fe80::a49b:8546:912f:dd98%5]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
+ 19:21:34 +0000
+Subject: Re: [PATCH bpf-next v5 6/7] tools/libbpf: Add support for
+ BPF_PROG_TYPE_LSM
+To:     KP Singh <kpsingh@chromium.org>, <linux-kernel@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <linux-security-module@vger.kernel.org>
+CC:     Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20200323164415.12943-1-kpsingh@chromium.org>
+ <20200323164415.12943-7-kpsingh@chromium.org>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <5790d135-1a66-eb33-4eca-3f710e08a675@fb.com>
+Date:   Mon, 23 Mar 2020 12:21:31 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
+In-Reply-To: <20200323164415.12943-7-kpsingh@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MWHPR22CA0046.namprd22.prod.outlook.com
+ (2603:10b6:300:69::32) To MW3PR15MB3883.namprd15.prod.outlook.com
+ (2603:10b6:303:51::22)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from MacBook-Pro-52.local (2620:10d:c090:400::5:2131) by MWHPR22CA0046.namprd22.prod.outlook.com (2603:10b6:300:69::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.19 via Frontend Transport; Mon, 23 Mar 2020 19:21:33 +0000
+X-Originating-IP: [2620:10d:c090:400::5:2131]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 788c2215-64de-489a-1102-08d7cf5f6681
+X-MS-TrafficTypeDiagnostic: MW3PR15MB3915:
+X-Microsoft-Antispam-PRVS: <MW3PR15MB3915F4662EC25B2EF27B27BBD3F00@MW3PR15MB3915.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:1332;
+X-Forefront-PRVS: 0351D213B3
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(396003)(39860400002)(136003)(376002)(346002)(199004)(316002)(4326008)(52116002)(31696002)(4744005)(66476007)(81166006)(8936002)(53546011)(66946007)(66556008)(8676002)(6506007)(81156014)(478600001)(6486002)(2616005)(36756003)(6512007)(2906002)(86362001)(54906003)(186003)(31686004)(7416002)(5660300002)(16526019);DIR:OUT;SFP:1102;SCL:1;SRVR:MW3PR15MB3915;H:MW3PR15MB3883.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: wDsVsOwVCXd9/0KtBhNc+FciF2UAY60wdn6rfQ9m5IkWMWn0d1pv/IDLA95cHmrHoRMAP6EtMo7zv3+4Fm/KiGcDPPT16+sXKMh1tzpQxwfohbuhi/4E8nHLsflL+l9h8ET2pbe8ezgGQJjZI9BwuvhgXKtdoRjQfbJ59z/wX0zwjSvo6HoGmdbawZsju6asyawuVKQfqNr0uGkSpAdwm2JBVqi2JTODpVAiYw9Ha/9q3w9m08MVYargnUHypN5YkZIIxdLf4CqZKtsMxy6aFNulVqnbutGDalO5+0xw8Ukn5PDw+KM5XXBgBmeNqFMUy5IvPCTwNbvMq4T7w/fhQ+RNPb3VN2O4OePLYdmc4loogLhCrLsLgwIUNmg+d8fC44c5Gzli4vMkUHeeZLaBSfeObpyUiaof+Q4t02OyPsOOwZVikj/tt60aDMIBvBWx
+X-MS-Exchange-AntiSpam-MessageData: KoP3kHJdkwz7CYKa3dnyvtjbDynq9pn+tz2MDEgyOnU5BTzkUBbJg7eJ0oltYp1bmn9JcR9DilLBeVOXJC2GzwAvjgcwrl8afz0aRJrjG6lueIOMOl+MlSwmEJ9m+csxHganv6bSBZ+vEzk5pZWf7PGl2nWNOnc5cLu4rYD3AXeo6X0l5eJox8UJih1M/KX0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 788c2215-64de-489a-1102-08d7cf5f6681
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2020 19:21:34.7251
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WQJuTfrVYeCxV0akOSZ8PJuuS1ynQtax8kgVDdo5Rw2Hf+6sVcjitbiREvFCp8I0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB3915
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-23_08:2020-03-23,2020-03-23 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
+ suspectscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
+ mlxlogscore=927 impostorscore=0 adultscore=0 mlxscore=0 priorityscore=1501
+ phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003230097
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-THUNK_TARGET defines [thunk_target] as having "rm" input constraints
-when CONFIG_RETPOLINE is not set, which isn't constrained enough for
-this specific case.
 
-For inline assembly that modifies the stack pointer before using this
-input, the underspecification of constraints is dangerous, and results
-in an indirect call to a previously pushed flags register.
 
-In this case `entry`'s stack slot is good enough to satisfy the "m"
-constraint in "rm", but the inline assembly in
-handle_external_interrupt_irqoff() modifies the stack pointer via
-push+pushf before using this input, which in this case results in
-calling what was the previous state of the flags register, rather than
-`entry`.
+On 3/23/20 9:44 AM, KP Singh wrote:
+> From: KP Singh <kpsingh@google.com>
+> 
+> Since BPF_PROG_TYPE_LSM uses the same attaching mechanism as
+> BPF_PROG_TYPE_TRACING, the common logic is refactored into a static
+> function bpf_program__attach_btf.
+> 
+> A new API call bpf_program__attach_lsm is still added to avoid userspace
+> conflicts if this ever changes in the future.
+> 
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> Reviewed-by: Florent Revest <revest@google.com>
 
-Be more specific in the constraints by requiring `entry` be in a
-register, and not a memory operand.
-
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Reported-by: syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com
-Debugged-by: Alexander Potapenko <glider@google.com>
-Debugged-by: Paolo Bonzini <pbonzini@redhat.com>
-Debugged-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
- arch/x86/kvm/vmx/vmx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 4d22b1b5e822..310e8c1169b8 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6277,7 +6277,7 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu)
- #endif
- 		ASM_CALL_CONSTRAINT
- 		:
--		THUNK_TARGET(entry),
-+		[thunk_target]"r"(entry),
- 		[ss]"i"(__KERNEL_DS),
- 		[cs]"i"(__KERNEL_CS)
- 	);
--- 
-2.25.1.696.g5e7596f4ac-goog
-
+Acked-by: Yonghong Song <yhs@fb.com>
