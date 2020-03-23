@@ -2,134 +2,197 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CF8C10F26
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776B5C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 426C120732
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466C720736
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:05:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UcEXFM2W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbgCWIA3 convert rfc822-to-8bit (ORCPT
+        id S1727523AbgCWIFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 04:00:29 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43161 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727422AbgCWIA2 (ORCPT
+        Mon, 23 Mar 2020 04:05:14 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:34855 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727477AbgCWIFN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 04:00:28 -0400
-Received: by mail-lj1-f193.google.com with SMTP id g27so4611510ljn.10;
-        Mon, 23 Mar 2020 01:00:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nn3jGhr8uNWeITwAtUjp7FuShYd1eeyyePwVyNZWbwQ=;
-        b=KdyhA4LxbptrlfkY5fB6ViEDVaVfexWZnz01pi3THkzPXjPW5Cghfav7lJhH02d8zj
-         HMDODST5Zj6gNL87ZlJivpxzHHn1SCnx7G2iv1zggZeHgXL7L4ypgzfU0Lt4jxUuxnbl
-         5TankKqQtyHL3QrEIrYWYvwg1UfO6OQuuo3eYxhqBWOifsciMPrtRFuXVSIeVC8NquLx
-         J1w9jilWO+O0fXqw9wdR2PKRVeuH72ljendUI53LMi5fU40x3GXfqRW9z98vxQC7r3bo
-         HaBTDMQFyrr9vOVj3+yG+Gfnl/ImR8oydjtfD+wwjpHmuFJxRPYDuly2txuD54W3MR5/
-         oxFg==
-X-Gm-Message-State: ANhLgQ3S0aMEmitY/3xVJpehW3d64oMzq+Up6Ui0pEZhw6jgrbEp65Xb
-        zBAyvwkDlsZ+XhjEKzoSfgA=
-X-Google-Smtp-Source: ADFU+vu1Ai42/ka/sxlnk2Rib/+aMfnQsCfzDAsftUKEzVNNv/FrpkwB+zryC+afi57yS4g05T6XnQ==
-X-Received: by 2002:a2e:9852:: with SMTP id e18mr12883378ljj.249.1584950425030;
-        Mon, 23 Mar 2020 01:00:25 -0700 (PDT)
-Received: from vostro.wlan (dty2hzyyyyyyyyyyyyx9y-3.rev.dnainternet.fi. [2001:14ba:802c:6a00::4fa])
-        by smtp.gmail.com with ESMTPSA id 15sm7799287lfr.17.2020.03.23.01.00.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 01:00:24 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 10:00:21 +0200
-From:   Timo Teras <timo.teras@iki.fi>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] xfrm: policy: Fix doulbe free in xfrm_policy_timer
-Message-ID: <20200323100021.05d68204@vostro.wlan>
-In-Reply-To: <20200323073239.59000-1-yuehaibing@huawei.com>
-References: <20200318034839.57996-1-yuehaibing@huawei.com>
-        <20200323073239.59000-1-yuehaibing@huawei.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-alpine-linux-musl)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Mon, 23 Mar 2020 04:05:13 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200323080510epoutp041bbad08f31085032337e3f9fb3cbb289~_4EYV65nK1412914129epoutp044
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 08:05:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200323080510epoutp041bbad08f31085032337e3f9fb3cbb289~_4EYV65nK1412914129epoutp044
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1584950710;
+        bh=P4CavwZXkNCT7Ikw0Fe20I2u/uDn4BTxVIDGmLZRxuw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UcEXFM2WTcTtblyK758mlzUNgO3piXC6/70tFii6H5/ufSCHx6oWpXlZLJlgbZoNG
+         eVTjUqrc/dY3OsBESsu2TKTg/xk0l5sECj+0r4xbwQpPd5+9ZvNYi+7VUZmOMCMsd/
+         f/+51c541VgWwscBiShDwttLL95ifxl8Q39Ii10Q=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200323080509epcas1p188e0bb9b7848da53225cb7f3c86ec8ae~_4EXouD5b0465004650epcas1p1q;
+        Mon, 23 Mar 2020 08:05:09 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.162]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 48m6PJ5KSCzMqYl0; Mon, 23 Mar
+        2020 08:05:08 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DE.0E.04160.4BD687E5; Mon, 23 Mar 2020 17:05:08 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200323080508epcas1p3c68190cd46635b9ff026a4ae70fc7a3b~_4EWPvhKj3019030190epcas1p3D;
+        Mon, 23 Mar 2020 08:05:08 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200323080508epsmtrp1b7b626fbe636fd09f4fa64c04c8276d1~_4EWO2m150107001070epsmtrp1-;
+        Mon, 23 Mar 2020 08:05:08 +0000 (GMT)
+X-AuditID: b6c32a38-297ff70000001040-11-5e786db41e39
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        08.73.04024.4BD687E5; Mon, 23 Mar 2020 17:05:08 +0900 (KST)
+Received: from jaewon-linux.10.32.193.11 (unknown [10.253.104.82]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200323080508epsmtip1996987f173182e8893721e72705829c8~_4EWBdNZ70114401144epsmtip1O;
+        Mon, 23 Mar 2020 08:05:08 +0000 (GMT)
+From:   Jaewon Kim <jaewon31.kim@samsung.com>
+To:     gregkh@linuxfoundation.org, leon@kernel.org, vbabka@suse.cz,
+        adobriyan@gmail.com, akpm@linux-foundation.org, labbott@redhat.com,
+        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com, kasong@redhat.com,
+        bhe@redhat.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        jaewon31.kim@gmail.com, linux-api@vger.kernel.org,
+        kexec@lists.infradead.org, Jaewon Kim <jaewon31.kim@samsung.com>
+Subject: [RFC PATCH v2 3/3] android: ion: include system heap size in
+ meminfo extra
+Date:   Mon, 23 Mar 2020 17:05:03 +0900
+Message-Id: <20200323080503.6224-4-jaewon31.kim@samsung.com>
+X-Mailer: git-send-email 2.13.7
+In-Reply-To: <20200323080503.6224-1-jaewon31.kim@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCJsWRmVeSWpSXmKPExsWy7bCmru6W3Io4g/sz1C2mN3pZzFm/hs3i
+        /INfbBbNi9ezWXRvnslo0fv+FZPF8nenGS12n/7KZLFyzw8miym/ljJbbP7ewWZxedccNot7
+        a/6zWiz7+p7dYkPLLHaLRxMmMVmcuvuZ3WJ2Yx+jg5DHzll32T02repk89j0aRK7x51re9g8
+        Tsz4zeKxf+4ado/NS+o93u+7yubRt2UVo8eZBUfYPXZ+2szq8XmTXABPVI5NRmpiSmqRQmpe
+        cn5KZl66rZJ3cLxzvKmZgaGuoaWFuZJCXmJuqq2Si0+ArltmDtB7SgpliTmlQKGAxOJiJX07
+        m6L80pJUhYz84hJbpdSClJwCQ4MCveLE3OLSvHS95PxcK0MDAyNToMqEnIwrT6czFlwQrZh8
+        /S5rA+NCoS5GTg4JAROJT1emMYPYQgI7GCVuLiroYuQCsj8xSmzf+oUJwvnGKPF4ykVWmI6P
+        1zZAJfYySrzaeJ4dov07o8T+9lIQm01AW+L9gkmsIEUiAv1MEovuLmIBcZgF1jJKrOq6ywRS
+        JSwQKnFp5iUWEJtFQFVi8oaZYDavgI3EisuTgWwOoHXyEgv/g93HKWArse/SLTaQORICi9gl
+        LmyYxQZxkovE8afzGSFsYYlXx7ewQ9hSEi/729ghGpoZJd7O3MwI4bQwStzd1AvVYSzR23OB
+        GWQbs4CmxPpd+hBhRYmdv+eClTAL8Em8+9rDCnEQr0RHGzTw1CRann2FBouMxN9/z6BsD4kF
+        89+xQoJoAqPEoZsvWScwys1C2LCAkXEVo1hqQXFuemqxYYEJcpxtYgSnYC2LHYx7zvkcYhTg
+        YFTi4b3RWx4nxJpYVlyZe4hRgoNZSYR3c2pFnBBvSmJlVWpRfnxRaU5q8SFGU2BQTmSWEk3O
+        B+aHvJJ4Q1MjY2NjCxMzczNTYyVx3qnXc+KEBNITS1KzU1MLUotg+pg4OKUaGMWv2NjONrv7
+        o9X3Mkcn5zvFf5tS/Ha1t+v8c5Y771wTPqVj0vuaN2tzmk65pD1+YWG65KLGrn1xMtz8eQxr
+        zivsZl9qXzT9xhy7ywIsEn33X0euFkvaFjS7SDh4xd7nogGR7eWnFJ/whrueWV14WC1X/1XD
+        7avnLJ4ERidLngy4abm401ZvpxJLcUaioRZzUXEiAPhoS1HXAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNLMWRmVeSWpSXmKPExsWy7bCSnO6W3Io4g1m7OC2mN3pZzFm/hs3i
+        /INfbBbNi9ezWXRvnslo0fv+FZPF8nenGS12n/7KZLFyzw8miym/ljJbbP7ewWZxedccNot7
+        a/6zWiz7+p7dYkPLLHaLRxMmMVmcuvuZ3WJ2Yx+jg5DHzll32T02repk89j0aRK7x51re9g8
+        Tsz4zeKxf+4ado/NS+o93u+7yubRt2UVo8eZBUfYPXZ+2szq8XmTXABPFJdNSmpOZllqkb5d
+        AlfGlafTGQsuiFZMvn6XtYFxoVAXIyeHhICJxMdrG5i6GLk4hAR2M0r0LexghkjISLw5/5Sl
+        i5EDyBaWOHy4GKLmK6PEul0/WUFq2AS0Jd4vmARmiwjMZ5Lob+cHKWIW2MwoMXFpMwtIQlgg
+        WGLu8X2MIDaLgKrE5A0zweK8AjYSKy5PhlogL7HwP9heTgFbiX2XbrGB2EJAJVu7nzFPYORb
+        wMiwilEytaA4Nz232LDAMC+1XK84Mbe4NC9dLzk/dxMjOEq0NHcwXl4Sf4hRgINRiYf3Rm95
+        nBBrYllxZe4hRgkOZiUR3s2pFXFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeZ/mHYsUEkhPLEnN
+        Tk0tSC2CyTJxcEo1MBovOqR8+WWsncxxd1+XvQYMhcK/OQ4+vlhzaWPopNxSkaqt56vep2aX
+        POpNsr76QvGH0NJ/L/oks54niubs/J/y6PnsJGbhw7Gtui6XxJQfL+r/2Zl+LzwlxD/h7Nen
+        M3gWibzpKPFeM0eWqYp3B+fDW1msS58kiLStmaDRLzNhsthi0b+sv5VYijMSDbWYi4oTAT2/
+        SM2OAgAA
+X-CMS-MailID: 20200323080508epcas1p3c68190cd46635b9ff026a4ae70fc7a3b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200323080508epcas1p3c68190cd46635b9ff026a4ae70fc7a3b
+References: <20200323080503.6224-1-jaewon31.kim@samsung.com>
+        <CGME20200323080508epcas1p3c68190cd46635b9ff026a4ae70fc7a3b@epcas1p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Mar 2020 15:32:39 +0800
-YueHaibing <yuehaibing@huawei.com> wrote:
+In Android system ion system heap size is huge like hundreds of MB. To
+know overal system memory usage, include ion system heap size in
+proc/meminfo_extra.
 
-> After xfrm_add_policy add a policy, its ref is 2, then
-> 
->                              xfrm_policy_timer
->                                read_lock
->                                xp->walk.dead is 0
->                                ....
->                                mod_timer()
-> xfrm_policy_kill
->   policy->walk.dead = 1
->   ....
->   del_timer(&policy->timer)
->     xfrm_pol_put //ref is 1
->   xfrm_pol_put  //ref is 0
->     xfrm_policy_destroy
->       call_rcu
->                                  xfrm_pol_hold //ref is 1
->                                read_unlock
->                                xfrm_pol_put //ref is 0
->                                  xfrm_policy_destroy
->                                   call_rcu
-> 
-> xfrm_policy_destroy is called twice, which may leads to
-> double free.
-> 
-> Call Trace:
-> RIP: 0010:refcount_warn_saturate+0x161/0x210
-> ...
->  xfrm_policy_timer+0x522/0x600
->  call_timer_fn+0x1b3/0x5e0
->  ? __xfrm_decode_session+0x2990/0x2990
->  ? msleep+0xb0/0xb0
->  ? _raw_spin_unlock_irq+0x24/0x40
->  ? __xfrm_decode_session+0x2990/0x2990
->  ? __xfrm_decode_session+0x2990/0x2990
->  run_timer_softirq+0x5c5/0x10e0
-> 
-> Fix this by use write_lock_bh in xfrm_policy_kill.
-> 
-> Fixes: ea2dea9dacc2 ("xfrm: remove policy lock when accessing policy->walk.dead")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+To include heap size, use register_meminfo_extra introduced in previous
+patch.
 
-Acked-by: Timo Teräs <timo.teras@iki.fi>
+Prior to register we need to add stats to show the ion heap usage. Add
+total_allocated into ion heap and count it on allocation and freeing. In
+a ion heap using ION_HEAP_FLAG_DEFER_FREE, a buffer can be freed from
+user but still live on deferred free list. Keep stats until the buffer
+is finally freed so that we can cover situation of deferred free thread
+stuck problem.
 
-> ---
-> v3: Only lock 'policy->walk.dead'
-> v2: Fix typo 'write_lock_bh'--> 'write_unlock_bh' while unlocking
-> ---
->  net/xfrm/xfrm_policy.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
-> index dbda08ec566e..8a4af86a285e 100644
-> --- a/net/xfrm/xfrm_policy.c
-> +++ b/net/xfrm/xfrm_policy.c
-> @@ -434,7 +434,9 @@ EXPORT_SYMBOL(xfrm_policy_destroy);
->  
->  static void xfrm_policy_kill(struct xfrm_policy *policy)
->  {
-> +	write_lock_bh(&policy->lock);
->  	policy->walk.dead = 1;
-> +	write_unlock_bh(&policy->lock);
->  
->  	atomic_inc(&policy->genid);
->  
-> -- 
-> 2.17.1
-> 
-> 
+i.e) cat /proc/meminfo_extra | grep IonSystemHeap
+IonSystemHeap:    242620 kB
+
+i.e.) show_mem on oom
+<6>[  420.856428]  Mem-Info:
+<6>[  420.856433]  IonSystemHeap:32813kB
+
+Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
+---
+ drivers/staging/android/ion/ion.c             | 2 ++
+ drivers/staging/android/ion/ion.h             | 1 +
+ drivers/staging/android/ion/ion_system_heap.c | 2 ++
+ 3 files changed, 5 insertions(+)
+
+diff --git a/drivers/staging/android/ion/ion.c b/drivers/staging/android/ion/ion.c
+index 38b51eace4f9..76db91a9f26a 100644
+--- a/drivers/staging/android/ion/ion.c
++++ b/drivers/staging/android/ion/ion.c
+@@ -74,6 +74,7 @@ static struct ion_buffer *ion_buffer_create(struct ion_heap *heap,
+ 
+ 	INIT_LIST_HEAD(&buffer->attachments);
+ 	mutex_init(&buffer->lock);
++	atomic_long_add(len, &heap->total_allocated);
+ 	return buffer;
+ 
+ err1:
+@@ -95,6 +96,7 @@ void ion_buffer_destroy(struct ion_buffer *buffer)
+ 	buffer->heap->num_of_buffers--;
+ 	buffer->heap->num_of_alloc_bytes -= buffer->size;
+ 	spin_unlock(&buffer->heap->stat_lock);
++	atomic_long_sub(buffer->size, &buffer->heap->total_allocated);
+ 
+ 	kfree(buffer);
+ }
+diff --git a/drivers/staging/android/ion/ion.h b/drivers/staging/android/ion/ion.h
+index 74914a266e25..10867a2e5728 100644
+--- a/drivers/staging/android/ion/ion.h
++++ b/drivers/staging/android/ion/ion.h
+@@ -157,6 +157,7 @@ struct ion_heap {
+ 	u64 num_of_buffers;
+ 	u64 num_of_alloc_bytes;
+ 	u64 alloc_bytes_wm;
++	atomic_long_t total_allocated;
+ 
+ 	/* protect heap statistics */
+ 	spinlock_t stat_lock;
+diff --git a/drivers/staging/android/ion/ion_system_heap.c b/drivers/staging/android/ion/ion_system_heap.c
+index b83a1d16bd89..f7882fb7505d 100644
+--- a/drivers/staging/android/ion/ion_system_heap.c
++++ b/drivers/staging/android/ion/ion_system_heap.c
+@@ -259,6 +259,8 @@ static struct ion_heap *__ion_system_heap_create(void)
+ 	if (ion_system_heap_create_pools(heap->pools))
+ 		goto free_heap;
+ 
++	register_meminfo_extra(&heap->heap.total_allocated, PAGE_SHIFT,
++			       "IonSystemHeap");
+ 	return &heap->heap;
+ 
+ free_heap:
+-- 
+2.13.7
+
