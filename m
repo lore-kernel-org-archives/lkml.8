@@ -2,143 +2,102 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 606E5C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2A1C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3254D2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0381E2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:20:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="senVKjhc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgCWJUP (ORCPT
+        id S1727718AbgCWJU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 05:20:15 -0400
-Received: from mga09.intel.com ([134.134.136.24]:51869 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727650AbgCWJUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:20:15 -0400
-IronPort-SDR: BMI2jGWvrg7wszD5Eqv5IVTmjk+hEtUrh1VDn2nEyHIVkl7N4rnofNwESQWtae29gyQM4tnm/O
- jP9nbZFcn5aQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 02:20:11 -0700
-IronPort-SDR: LKQNZLB1BZUqh/ypIKhHHHsV6NuYtcEoozkqRUqIjaIUiOjfbaUXJDu/s6ZPZeShBB6uy2EtzA
- TfaLrMQLhbcg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,295,1580803200"; 
-   d="scan'208";a="249556906"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga006.jf.intel.com with ESMTP; 23 Mar 2020 02:20:10 -0700
-Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 23 Mar 2020 02:20:10 -0700
-Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 23 Mar 2020 02:20:04 -0700
-Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 23 Mar 2020 02:20:03 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.206]) by
- SHSMSX106.ccr.corp.intel.com ([169.254.10.86]) with mapi id 14.03.0439.000;
- Mon, 23 Mar 2020 17:20:02 +0800
-From:   "Kang, Luwei" <luwei.kang@intel.com>
-To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>
-Subject: RE: [PATCH] KVM: VMX: Disable Intel PT before VM-entry
-Thread-Topic: [PATCH] KVM: VMX: Disable Intel PT before VM-entry
-Thread-Index: AQHV/Nh9FI7fbfgIUkqDZ3DrcNQ1xKhN+YUAgAfwusA=
-Date:   Mon, 23 Mar 2020 09:20:01 +0000
-Message-ID: <82D7661F83C1A047AF7DC287873BF1E1738A9724@SHSMSX104.ccr.corp.intel.com>
-References: <1584503298-18731-1-git-send-email-luwei.kang@intel.com>
- <20200318154826.GC24357@linux.intel.com>
-In-Reply-To: <20200318154826.GC24357@linux.intel.com>
-Accept-Language: en-US
+        Mon, 23 Mar 2020 05:20:26 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:7410 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727704AbgCWJUZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 05:20:25 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02N987et024548;
+        Mon, 23 Mar 2020 10:20:13 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=Dudl/6ic43fwYciD6uXT4+SGztEtn/oENuWytjVm2+Y=;
+ b=senVKjhcdhef1B/iQcKpUgJkG8zt/RUJCmd393A32hibCC31Lnchr45p1FmQqfPGP2XD
+ PLaXyKRA3Losj2q/XVq6qqDFzNvj2OTy5Y354FKVSqKBAJGTrrwTUhyK+fE9Cx7/MEi+
+ 0n3XM/Bhwpkn4POL/Q9e5w+YO0Rm8h+5rHL5G59jZvuUNyagdfbeQ2TMLL1PPAsPaLUe
+ cV+HXglAkZi8XuQzgzxBt79akZXmBNUt0k9dywHnkgBcZjjqLYxhflAE8T06uWfApmg3
+ HyeYN7/gw2qhvk5WM6FBV1lHh2DRiaFqSI96M8DBz77P8wxl5cj5CnokhaWAMMuQ9kF7 /w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yw8xds6dj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Mar 2020 10:20:13 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3340810002A;
+        Mon, 23 Mar 2020 10:20:09 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1D8B22AAA80;
+        Mon, 23 Mar 2020 10:20:09 +0100 (CET)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 23 Mar
+ 2020 10:20:08 +0100
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1473.003; Mon, 23 Mar 2020 10:20:08 +0100
+From:   Patrice CHOTARD <patrice.chotard@st.com>
+To:     Alain Volmat <avolmat@me.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] clk: clk-flexgen: fix clock-critical handling
+Thread-Topic: [PATCH] clk: clk-flexgen: fix clock-critical handling
+Thread-Index: AQHWAFNHkLAqe43qQkuc3T0nvLdzvahV1xEA
+Date:   Mon, 23 Mar 2020 09:20:08 +0000
+Message-ID: <f053f9c4-557c-d32b-7bc6-c3ff2c6fa966@st.com>
+References: <20200322140740.3970-1-avolmat@me.com>
+In-Reply-To: <20200322140740.3970-1-avolmat@me.com>
+Accept-Language: fr-FR, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
 Content-Type: text/plain; charset="utf-8"
+Content-ID: <D8E9D270121A0745ABFB28C37B2BC1A0@st.com>
 Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-23_02:2020-03-21,2020-03-23 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBXZWQsIE1hciAxOCwgMjAyMCBhdCAxMTo0ODoxOEFNICswODAwLCBMdXdlaSBLYW5nIHdy
-b3RlOg0KPiA+IElmIHRoZSBsb2dpY2FsIHByb2Nlc3NvciBpcyBvcGVyYXRpbmcgd2l0aCBJbnRl
-bCBQVCBlbmFibGVkICgNCj4gPiBJQTMyX1JUSVRfQ1RMLlRyYWNlRW4gPSAxKSBhdCB0aGUgdGlt
-ZSBvZiBWTSBlbnRyeSwgdGhlIOKAnGxvYWQNCj4gPiBJQTMyX1JUSVRfQ1RM4oCdIFZNLWVudHJ5
-IGNvbnRyb2wgbXVzdCBiZSAwKFNETSAyNi4yLjEuMSkuDQo+ID4NCj4gPiBUaGUgZmlyc3QgZGlz
-YWJsZWQgdGhlIGhvc3QgSW50ZWwgUFQoQ2xlYXIgVHJhY2VFbikgd2lsbCBtYWtlIGFsbCB0aGUN
-Cj4gPiBidWZmZXJlZCBwYWNrZXRzIGFyZSBmbHVzaGVkIG91dCBvZiB0aGUgcHJvY2Vzc29yIGFu
-ZCBpdCBtYXkgY2F1c2UgYW4NCj4gPiBJbnRlbCBQVCBQTUkuIFRoZSBob3N0IEludGVsIFBUIHdp
-bGwgYmUgcmUtZW5hYmxlZCBpbiB0aGUgaG9zdCBJbnRlbA0KPiA+IFBUIFBNSSBoYW5kbGVyLg0K
-PiA+DQo+ID4gaGFuZGxlX3BtaV9jb21tb24oKQ0KPiA+ICAgICAtPiBpbnRlbF9wdF9pbnRlcnJ1
-cHQoKQ0KPiA+ICAgICAgICAgICAgIC0+IHB0X2NvbmZpZ19zdGFydCgpDQo+IA0KPiBJSVVDLCB0
-aGlzIGlzIG9ubHkgcG9zc2libGUgd2hlbiBQVCAicGxheXMgbmljZSIgd2l0aCBWTVgsIGNvcnJl
-Y3Q/DQo+IE90aGVyd2lzZSBwdC0+dm14X29uIHdpbGwgYmUgdHJ1ZSBhbmQgcHRfY29uZmlnX3N0
-YXJ0KCkgd291bGQgc2tpcCB0aGUNCj4gV1JNU1IuDQo+IA0KPiBBbmQgSVBUIFBNSSBtdXN0IGJl
-IGRlbGl2ZXJlZCB2aWEgTk1JICh0aG91Z2ggbWF5YmUgdGhleSdyZSBhbHdheXMNCj4gZGVsaXZl
-cmVkIHZpYSBOTUk/KS4NCj4gDQo+IEluIGFueSBjYXNlLCByZWRvaW5nIFdSTVNSIGRvZXNuJ3Qg
-c2VlbSBzYWZlLCBhbmQgaXQgY2VydGFpbmx5IGlzbid0DQo+IHBlcmZvcm1hbnQsIGUuZy4gd2hh
-dCBwcmV2ZW50cyB0aGUgc2Vjb25kIFdSTVNSIGZyb20gdHJpZ2dlcmluZyBhIHNlY29uZA0KPiBJ
-UFQgUE1JPw0KPiANCj4gcHRfZ3Vlc3RfZW50ZXIoKSBpcyBjYWxsZWQgYWZ0ZXIgdGhlIHN3aXRj
-aCB0byB0aGUgdkNQVSBoYXMgYWxyZWFkeSBiZWVuDQo+IHJlY29yZGVkLCBjYW4ndCB0aGlzIGJl
-IGhhbmRsZWQgaW4gdGhlIElQVCBjb2RlLCBlLmcuIHNvbWV0aGluZyBsaWtlIHRoaXM/DQo+IA0K
-PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvZXZlbnRzL2ludGVsL3B0LmMgYi9hcmNoL3g4Ni9ldmVu
-dHMvaW50ZWwvcHQuYyBpbmRleA0KPiAxZGI3YTUxZDk3OTIuLmUzOGRkYWU5ZjBkMSAxMDA2NDQN
-Cj4gLS0tIGEvYXJjaC94ODYvZXZlbnRzL2ludGVsL3B0LmMNCj4gKysrIGIvYXJjaC94ODYvZXZl
-bnRzL2ludGVsL3B0LmMNCj4gQEAgLTQwNSw3ICs0MDUsNyBAQCBzdGF0aWMgdm9pZCBwdF9jb25m
-aWdfc3RhcnQoc3RydWN0IHBlcmZfZXZlbnQgKmV2ZW50KQ0KPiAgICAgICAgIGN0bCB8PSBSVElU
-X0NUTF9UUkFDRUVOOw0KPiAgICAgICAgIGlmIChSRUFEX09OQ0UocHQtPnZteF9vbikpDQo+ICAg
-ICAgICAgICAgICAgICBwZXJmX2F1eF9vdXRwdXRfZmxhZygmcHQtPmhhbmRsZSwgUEVSRl9BVVhf
-RkxBR19QQVJUSUFMKTsNCj4gLSAgICAgICBlbHNlDQo+ICsgICAgICAgZWxzZSAoIShjdXJyZW50
-LT5mbGFncyAmIFBGX1ZDUFUpKQ0KPiAgICAgICAgICAgICAgICAgd3Jtc3JsKE1TUl9JQTMyX1JU
-SVRfQ1RMLCBjdGwpOw0KDQpJbnRlbCBQVCBjYW4gd29yayBpbiBTWVNURU0gYW5kIEhPU1RfR1VF
-U1QgbW9kZSBieSBzZXR0aW5nIHRoZSBrdm0taW50ZWwua28gcGFyYW1ldGVyICJwdF9tb2RlIi4N
-CkluIFNZU1RFTSBtb2RlLCB0aGUgaG9zdCBhbmQgZ3Vlc3QgUFQgdHJhY2Ugd2lsbCBiZSBzYXZl
-ZCBpbiB0aGUgaG9zdCBidWZmZXIuIFRoZSBLVk0gZG8gbm90aGluZyBkdXJpbmcgVk0tZW50cnkv
-ZXhpdCBpbiBTWVNURU0gbW9kZSBhbmQgSW50ZWwgUFQgUE1JIG1heSBoYXBwZW5lZCBvbiBhbnkg
-cGxhY2UuIFRoZSBQVCB0cmFjZSBtYXkgYmUgZGlzYWJsZWQgd2hlbiBydW5uaW5nIGluIEtWTShQ
-VCBvbmx5IG5lZWRzIHRvIGJlIGRpc2FibGVkIGJlZm9yZSBWTS1lbnRyeSBpbiBIT1NUX0dVRVNU
-IG1vZGUpLg0KDQpUaGFua3MsDQpMdXdlaSBLYW5nDQoNCj4gDQo+ICAgICAgICAgV1JJVEVfT05D
-RShldmVudC0+aHcuY29uZmlnLCBjdGwpOw0KPiANCj4gPiBUaGlzIHBhdGNoIHdpbGwgZGlzYWJs
-ZSB0aGUgSW50ZWwgUFQgdHdpY2UgdG8gbWFrZSBzdXJlIHRoZSBJbnRlbCBQVA0KPiA+IGlzIGRp
-c2FibGVkIGJlZm9yZSBWTS1FbnRyeS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEx1d2VpIEth
-bmcgPGx1d2VpLmthbmdAaW50ZWwuY29tPg0KPiA+IC0tLQ0KPiA+ICBhcmNoL3g4Ni9rdm0vdm14
-L3ZteC5jIHwgMTAgKysrKysrKysrLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25z
-KCspLCAxIGRlbGV0aW9uKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3ZtL3Zt
-eC92bXguYyBiL2FyY2gveDg2L2t2bS92bXgvdm14LmMgaW5kZXgNCj4gPiAyNmY4ZjMxLi5kOTM2
-YTkxIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gveDg2L2t2bS92bXgvdm14LmMNCj4gPiArKysgYi9h
-cmNoL3g4Ni9rdm0vdm14L3ZteC5jDQo+ID4gQEAgLTEwOTUsNiArMTA5NSw4IEBAIHN0YXRpYyBp
-bmxpbmUgdm9pZCBwdF9zYXZlX21zcihzdHJ1Y3QgcHRfY3R4DQo+ID4gKmN0eCwgdTMyIGFkZHJf
-cmFuZ2UpDQo+ID4NCj4gPiAgc3RhdGljIHZvaWQgcHRfZ3Vlc3RfZW50ZXIoc3RydWN0IHZjcHVf
-dm14ICp2bXgpICB7DQo+ID4gKwl1NjQgcnRpdF9jdGw7DQo+ID4gKw0KPiA+ICAJaWYgKHB0X21v
-ZGUgPT0gUFRfTU9ERV9TWVNURU0pDQo+ID4gIAkJcmV0dXJuOw0KPiA+DQo+ID4gQEAgLTExMDMs
-OCArMTEwNSwxNCBAQCBzdGF0aWMgdm9pZCBwdF9ndWVzdF9lbnRlcihzdHJ1Y3QgdmNwdV92bXgg
-KnZteCkNCj4gPiAgCSAqIFNhdmUgaG9zdCBzdGF0ZSBiZWZvcmUgVk0gZW50cnkuDQo+ID4gIAkg
-Ki8NCj4gPiAgCXJkbXNybChNU1JfSUEzMl9SVElUX0NUTCwgdm14LT5wdF9kZXNjLmhvc3QuY3Rs
-KTsNCj4gPiAtCWlmICh2bXgtPnB0X2Rlc2MuZ3Vlc3QuY3RsICYgUlRJVF9DVExfVFJBQ0VFTikg
-ew0KPiA+ICsJaWYgKHZteC0+cHRfZGVzYy5ob3N0LmN0bCAmIFJUSVRfQ1RMX1RSQUNFRU4pIHsN
-Cj4gPiAgCQl3cm1zcmwoTVNSX0lBMzJfUlRJVF9DVEwsIDApOw0KPiA+ICsJCXJkbXNybChNU1Jf
-SUEzMl9SVElUX0NUTCwgcnRpdF9jdGwpOw0KPiA+ICsJCWlmIChydGl0X2N0bCkNCj4gPiArCQkJ
-d3Jtc3JsKE1TUl9JQTMyX1JUSVRfQ1RMLCAwKTsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlpZiAo
-dm14LT5wdF9kZXNjLmd1ZXN0LmN0bCAmIFJUSVRfQ1RMX1RSQUNFRU4pIHsNCj4gPiAgCQlwdF9z
-YXZlX21zcigmdm14LT5wdF9kZXNjLmhvc3QsIHZteC0NCj4gPnB0X2Rlc2MuYWRkcl9yYW5nZSk7
-DQo+ID4gIAkJcHRfbG9hZF9tc3IoJnZteC0+cHRfZGVzYy5ndWVzdCwgdm14LQ0KPiA+cHRfZGVz
-Yy5hZGRyX3JhbmdlKTsNCj4gPiAgCX0NCj4gPiAtLQ0KPiA+IDEuOC4zLjENCj4gPg0K
+SGkgQWxhaW4NCg0KT24gMy8yMi8yMCAzOjA3IFBNLCBBbGFpbiBWb2xtYXQgd3JvdGU6DQo+IEZp
+eGVzIGFuIGlzc3VlIGxlYWRpbmcgdG8gaGF2aW5nIGFsbCBjbG9ja3MgZm9sbG93aW5nIGEgY3Jp
+dGljYWwNCj4gY2xvY2tzIG1hcmtlZCBhcyB3ZWxsIGFzIGNyaXRpY2Fscy4NCj4NCj4gRml4ZXM6
+IGZhNjQxNWFmZmUyMCAoImNsazogc3Q6IGNsay1mbGV4Z2VuOiBEZXRlY3QgY3JpdGljYWwgY2xv
+Y2tzIikNCj4NCj4gU2lnbmVkLW9mZi1ieTogQWxhaW4gVm9sbWF0IDxhdm9sbWF0QG1lLmNvbT4N
+Cj4gLS0tDQo+ICBkcml2ZXJzL2Nsay9zdC9jbGstZmxleGdlbi5jIHwgMSArDQo+ICAxIGZpbGUg
+Y2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL3N0
+L2Nsay1mbGV4Z2VuLmMgYi9kcml2ZXJzL2Nsay9zdC9jbGstZmxleGdlbi5jDQo+IGluZGV4IDQ0
+MTNiNmUwNGE4ZS4uNTU4NzNkNGI3NjAzIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2Nsay9zdC9j
+bGstZmxleGdlbi5jDQo+ICsrKyBiL2RyaXZlcnMvY2xrL3N0L2Nsay1mbGV4Z2VuLmMNCj4gQEAg
+LTM3NSw2ICszNzUsNyBAQCBzdGF0aWMgdm9pZCBfX2luaXQgc3Rfb2ZfZmxleGdlbl9zZXR1cChz
+dHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQ0KPiAgCQkJYnJlYWs7DQo+ICAJCX0NCj4gIA0KPiArCQlm
+bGV4X2ZsYWdzICY9IH5DTEtfSVNfQ1JJVElDQUw7DQo+ICAJCW9mX2Nsa19kZXRlY3RfY3JpdGlj
+YWwobnAsIGksICZmbGV4X2ZsYWdzKTsNCj4gIA0KPiAgCQkvKg0KDQoNClJldmlld2VkLWJ5OiBQ
+YXRyaWNlIENob3RhcmQgPHBhdHJpY2UuY2hvdGFyZEBzdC5jb20+DQoNClRoYW5rcw0KDQpQYXRy
+aWNlDQo=
