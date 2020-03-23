@@ -6,106 +6,161 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4005C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7444C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC0422076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F152072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:21:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbgCWJUr (ORCPT
+        id S1727744AbgCWJVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 05:20:47 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:35163 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727704AbgCWJUr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:20:47 -0400
-Received: from mail-lf1-f47.google.com ([209.85.167.47]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MKsax-1ixnpw25sr-00LEkK for <linux-kernel@vger.kernel.org>; Mon, 23 Mar
- 2020 10:20:45 +0100
-Received: by mail-lf1-f47.google.com with SMTP id j15so9609984lfk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 02:20:45 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0GpTDuBRNUkabkFbCbr+SjEjrn1KfpVUB+A9nbpR+bj7PO9ZeD
-        Zn/HE9gzd7qx0pUkZtO3Bk4gAy5ibjqRM0ril2s=
-X-Google-Smtp-Source: ADFU+vsdfIBKS2d397GWz/e6Dj/KQ1NxFjX2XKa6jOj+clU+bcm32wKXYAFLvIyGO6eG9h+HkWksvEjX56gMdEOJx7I=
-X-Received: by 2002:ac2:57c5:: with SMTP id k5mr12166961lfo.207.1584955244957;
- Mon, 23 Mar 2020 02:20:44 -0700 (PDT)
+        Mon, 23 Mar 2020 05:21:00 -0400
+Received: from mga05.intel.com ([192.55.52.43]:20348 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727650AbgCWJVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 05:21:00 -0400
+IronPort-SDR: WEXzNihlEXtyDYoBPhEtrtRWaHqYjryxPhdw/OUSP4q3Hzgq0c3lOhzbPidJgRiUctiPyYoJor
+ RuSNzm5jcx1g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 02:20:58 -0700
+IronPort-SDR: NXZmagiSdrqKSbmt0vSeK1caYhZUJdpRy1VNqw/fs6h11L6MFR3KCibk2GOh3bYY+mYvl5cexF
+ nNhcReiFjm9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,295,1580803200"; 
+   d="scan'208";a="239873817"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 23 Mar 2020 02:20:50 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jGJGN-00CCZd-2B; Mon, 23 Mar 2020 11:20:51 +0200
+Date:   Mon, 23 Mar 2020 11:20:51 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] serial: 8250_dw: Fix common clocks usage race
+ condition
+Message-ID: <20200323092051.GB1922688@smile.fi.intel.com>
+References: <20200306130231.05BBC8030795@mail.baikalelectronics.ru>
+ <20200323024611.16039-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <1584426607-89366-1-git-send-email-xiyuyang19@fudan.edu.cn>
- <20200318110204.GB2305113@kroah.com> <20200323045302.GA117440@sherlly> <20200323065506.GA131098@kroah.com>
-In-Reply-To: <20200323065506.GA131098@kroah.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 23 Mar 2020 10:20:28 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a29230XO8W2SWMQ-5z0nrtfWjPmh_4jrhjew+C=Qoaw-Q@mail.gmail.com>
-Message-ID: <CAK8P3a29230XO8W2SWMQ-5z0nrtfWjPmh_4jrhjew+C=Qoaw-Q@mail.gmail.com>
-Subject: Re: Re: [PATCH] VMCI: Fix NULL pointer dereference on context ptr
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Vishnu DASA <vdasa@vmware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        yuanxzhang@fudan.edu.cn, kjlu@umn.edu
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:MAORhoA9uP5z6XPyNpl06IJ/5GMz+T36o3IV2Q4MOXn8uinSYKe
- C9diJ6ylridRej1w1L3zymbRSXYHJTXqqIuKDWpi6Jcy2MOQQCYyC0MUn0BYSaE6lmqH7Rb
- Mz/3d6g7ocGVmgZd5QZr0a2urso8J3QDe+5Y1Vm4cNrJIJbKgaZHfVOPJbZYCSKOjqO97l2
- QVpveyJyfrCW/3wjtDEVA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:JdF/Fd2FbLs=:nDU4lZS3E0qxBjXjoSUP58
- 8XxjEprwW4F1KBqN+VhwVixHsNXk+RxieywCpmwEN33Ex77nSWl0QXVVQ1kyPE2dhYvLJOuHB
- Q23zaWPb7lwIpz9SmeALdxl3x2x48qUSe5x6M72TyHrFlJKNfk30qwpx1IGfu2OxmNguOmD67
- Kn+lIyYLiGez91rFJ9Ql+6/xFQ1SvUQjUmPLiHMlckxzrb2k3eFISMosD0yD4TkEiU3kIQhMu
- v8llHRe81aBXL2SlM2hf9DTCy+JQJ5znaAhu8igF0KkncsnXBfJ2YGkfGMV9BKx6J0vW+/sKc
- TKBidrZo9FXMT7fAfNQWK6ohlQqRAP+lbIcWca38N0dXJBMIa0Q/MBkql9x2g5ZdcATKmHs29
- n7ZjuWSKGwU6iVD3JjQMQ3SAOC0kj5GkChRcTuf4KWS9ohAGxIoIVhv9n7uoA4RpImyNcpnZp
- 9rd19bOy/oIF4O30+7LvEOk+zbR2apW1a5UPODXH9ucbdIc/njFVLaTGVmmtD2LJg2rkbrFnC
- OU8+JRSzvU0uF69DJizN04s7QGmOUZDQAQ82tza4pvzIcnWQuRkWmY9iwtNOq9kRZ++imkhGw
- OsmYLLg0xLj/ecIv82K0M68lkfrV+QdJ7kdsVB/Qic8R5LqSzsj1+sSCXokfLZXt99fFo4nWQ
- 9WhZtQVFrvc8SG1C3FOaH1JzbVpwlFCs/K0gAmqPGN70KHHKRhlKod0N958eAHDm22owmj3jT
- /JKruNMQnl7uNvlLttFQWzc2QSSb9JhOjPZ5/I/eh9wyllATCcuFxv2KA1dNH6OX80y2zdECb
- nQg9u/Zwf14e+ny57Z8+840MuBw3p5P8dI22c8CCePepZeBQVI=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323024611.16039-1-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 7:55 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> On Mon, Mar 23, 2020 at 12:53:02PM +0800, Xiyu Yang wrote:
-> > On Wed, Mar 18, 2020 at 12:02:04PM +0100, Greg Kroah-Hartman wrote:
-> > > On Tue, Mar 17, 2020 at 02:29:57PM +0800, Xiyu Yang wrote:
-> > >
-> > > Same comment as on your other patch.
-> > >
-> > > And is this a v2?
-> >
-> > Thanks! Yes, this is a v2.
-> >
-> > According  to our observation, vmci_ctx_rcv_notifications_release()
-> > currently is only called by vmci_host_do_recv_notifications() which
-> > guarantees a valid context object can be acquired with this context_id.
-> >
-> > However, we argue that a NULL-check here is still necessary because
-> > this function may be called by other functions in the future who may
-> > fail/forget to provide such guarantee.
->
-> No, that's not how we write code in the kernel, if it does not need to
-> be checked for because this can not happen, then do not check for it.
->
-> Don't try to plan for random users of your code in the future when you
-> control those users directly :)
+On Mon, Mar 23, 2020 at 05:46:09AM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Just saw this reply after replying to the other mail. I guess I picked
-a bad example ;-)
+The question to CLK framework maintainers, is it correct approach in general
+for this case?
 
-If there was in fact a report about a NULL pointer at put() time
-somewhere, that would be the first thing to fix, and it may still
-make sense to review the other code paths to see if there
-are additional cases that can go wrong.
+> There are races possible in the dw8250_set_termios() callback method
+> and while the device is in PM suspend state. A race condition may
+> happen if the baudrate clock source device is shared with some other
+> device (in our machine it's another DW UART port). In this case if that
+> device changes the clock rate while serial console is using it the
+> DW 8250 UART port might not only end up with an invalid uartclk value
+> saved, but may also experience a distorted output data since baud-clock
+> could have been changed. In order to fix this lets enable an exclusive
+> reference clock rate access in case if "baudclk" device is specified.
+> 
+> So if some other device also acquires the rate exclusivity during the
+> time of a DW UART 8250 port being opened, then DW UART 8250 driver
+> won't be able to alter the baud-clock. It shall just use the available
+> clock rate. Similarly another device also won't manage to change the
+> rate at that time. If nothing else have the exclusive rate access
+> acquired except DW UART 8250 driver, then the driver will be able to
+> alter the rate as much as it needs to in accordance with the currently
+> implemented logic.
 
-      Arnd
+Thank you for an update, my comments below.
+
+...
+
+> +static int dw8250_startup(struct uart_port *p)
+> +{
+> +	struct dw8250_data *d = to_dw8250_data(p->private_data);
+> +
+> +	/*
+> +	 * Some platforms may provide a reference clock shared between several
+> +	 * devices. In this case before using the serial port first we have to
+> +	 * make sure nothing will change the rate behind our back and second
+> +	 * the tty/serial subsystem knows the actual reference clock rate of
+> +	 * the port.
+> +	 */
+
+> +	if (clk_rate_exclusive_get(d->clk)) {
+> +		dev_warn(p->dev, "Couldn't lock the clock rate\n");
+
+So, if this fails, in ->shutdown you will disbalance reference count, or did I
+miss something?
+
+> +	} else if (d->clk) {
+
+> +		p->uartclk = clk_get_rate(d->clk);
+> +		if (!p->uartclk) {
+> +			clk_rate_exclusive_put(d->clk);
+> +			dev_err(p->dev, "Clock rate not defined\n");
+> +			return -EINVAL;
+> +		}
+
+This operations I didn't get. If we have d->clk and suddenly get 0 as a rate
+(and note, that we still update uartclk member!), we try to put (why?) the
+exclusiveness of rate.
+
+> +	}
+> +
+> +	return serial8250_do_startup(p);
+> +}
+> +
+> +static void dw8250_shutdown(struct uart_port *p)
+> +{
+> +	struct dw8250_data *d = to_dw8250_data(p->private_data);
+> +
+> +	serial8250_do_shutdown(p);
+> +
+> +	clk_rate_exclusive_put(d->clk);
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
