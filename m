@@ -2,94 +2,89 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6567C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E754C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C682072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FDDB2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbgCWI22 (ORCPT
+        id S1727601AbgCWI23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 23 Mar 2020 04:28:29 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.10]:50384 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727544AbgCWI22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Mar 2020 04:28:28 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52751 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727451AbgCWI22 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 04:28:28 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jGIRc-0004iF-7Y; Mon, 23 Mar 2020 09:28:24 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jGIRb-0007aD-TB; Mon, 23 Mar 2020 09:28:23 +0100
-Date:   Mon, 23 Mar 2020 09:28:23 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Yendapally Reddy Dhananjaya Reddy 
-        <yendapally.reddy@broadcom.com>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] pwm: bcm-iproc: remove unnecessary check of 'duty'
-Message-ID: <20200323082823.twvpagq7tvrt76ws@pengutronix.de>
-References: <20200323065318.16533-1-rayagonda.kokatanur@broadcom.com>
- <20200323065318.16533-3-rayagonda.kokatanur@broadcom.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200323065318.16533-3-rayagonda.kokatanur@broadcom.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Received: from localhost.localdomain (unknown [120.229.255.251])
+        by app1 (Coremail) with SMTP id XAUFCgCXnysVc3he4fcPAA--.9465S3;
+        Mon, 23 Mar 2020 16:28:08 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Adit Ranadive <aditr@vmware.com>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vishnu DASA <vdasa@vmware.com>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH v2] VMCI: Fix NULL pointer dereference on context ptr
+Date:   Mon, 23 Mar 2020 16:22:33 +0800
+Message-Id: <1584951832-120773-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XAUFCgCXnysVc3he4fcPAA--.9465S3
+X-Coremail-Antispam: 1UD129KBjvdXoWruF45WFy7ZF1rWr4kXrWfGrg_yoW3uFX_Ca
+        43XrsrArWjyasI93Z2yr13ZryFy398urn7Zw17trW5JFy7Z3Z3Gr1jqrnxXFyrurZrCF9r
+        Jw1DAFW0vw17tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb3kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_GcCE
+        3s1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
+        1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
+        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v
+        4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+        v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+        1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+        AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0D
+        MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+        VFxhVjvjDU0xZFpf9x0JUQZ23UUUUU=
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 12:23:18PM +0530, Rayagonda Kokatanur wrote:
-> Variable 'duty' is u32. Hence the less-than zero
-> comparison is never true, remove the check.
+A NULL vmci_ctx object may pass to vmci_ctx_put() from its callers.
+Add a NULL check to prevent NULL pointer dereference.
 
-How did you find that one? I assume it was a compiler warning you fixed
-here? In this case quoting the warning improves the commit log.
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+ drivers/misc/vmw_vmci/vmci_context.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Also the commit log suggests that IPROC_PWM_DUTY_CYCLE_MIN is zero.
-Maybe mentioning that explicitly is a nice addition, too.
-
-> Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> ---
->  drivers/pwm/pwm-bcm-iproc.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
-> index 8bbd2a04fead..1bb66721f985 100644
-> --- a/drivers/pwm/pwm-bcm-iproc.c
-> +++ b/drivers/pwm/pwm-bcm-iproc.c
-> @@ -149,8 +149,7 @@ static int iproc_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  		value = rate * state->duty_cycle;
->  		duty = div64_u64(value, div);
->  
-> -		if (period < IPROC_PWM_PERIOD_MIN ||
-> -		    duty < IPROC_PWM_DUTY_CYCLE_MIN)
-> +		if (period < IPROC_PWM_PERIOD_MIN)
->  			return -EINVAL;
-
-Best regards
-Uwe
-
+diff --git a/drivers/misc/vmw_vmci/vmci_context.c b/drivers/misc/vmw_vmci/vmci_context.c
+index 16695366ec92..2f4963ab51bd 100644
+--- a/drivers/misc/vmw_vmci/vmci_context.c
++++ b/drivers/misc/vmw_vmci/vmci_context.c
+@@ -494,7 +494,8 @@ static void ctx_free_ctx(struct kref *kref)
+  */
+ void vmci_ctx_put(struct vmci_ctx *context)
+ {
+-	kref_put(&context->kref, ctx_free_ctx);
++	if (context)
++		kref_put(&context->kref, ctx_free_ctx);
+ }
+ 
+ /*
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.7.4
+
