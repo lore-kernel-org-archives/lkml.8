@@ -2,77 +2,76 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6931EC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED8AC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 495ED206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550F9206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:25:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbgCWPZO (ORCPT
+        id S1727411AbgCWPZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:25:14 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:59027 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727228AbgCWPZO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:25:14 -0400
-Received: (qmail 24985 invoked by uid 500); 23 Mar 2020 11:25:13 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 23 Mar 2020 11:25:13 -0400
-Date:   Mon, 23 Mar 2020 11:25:13 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Vinod Koul <vkoul@kernel.org>
-cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        =?UTF-8?q?Andreas=20B=C3=B6hler?= <dev@aboehler.at>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [PATCH v7 1/5] usb: hci: add hc_driver as argument for
- usb_hcd_pci_probe
-In-Reply-To: <20200323101121.243906-2-vkoul@kernel.org>
-Message-ID: <Pine.LNX.4.44L0.2003231124190.24254-100000@netrider.rowland.org>
+        Mon, 23 Mar 2020 11:25:57 -0400
+Received: from elvis.franken.de ([193.175.24.41]:58633 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727388AbgCWPZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:25:56 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jGOxd-0007im-00; Mon, 23 Mar 2020 16:25:53 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 08279C0955; Mon, 23 Mar 2020 15:46:41 +0100 (CET)
+Date:   Mon, 23 Mar 2020 15:46:40 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        Paul Boddie <paul@boddie.org.uk>
+Subject: Re: [PATCH v7 0/3] MIPS: Fixes and improvements for CI20 board
+ (JZ4780)
+Message-ID: <20200323144640.GA10431@alpha.franken.de>
+References: <cover.1583528793.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1583528793.git.hns@goldelico.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Mar 2020, Vinod Koul wrote:
-
-> usb_hcd_pci_probe expects users to call this with driver_data set as
-> hc_driver, that limits the possibility of using the driver_data for
-> driver data.
+On Fri, Mar 06, 2020 at 10:06:30PM +0100, H. Nikolaus Schaller wrote:
 > 
-> Add hc_driver as argument to usb_hcd_pci_probe and modify the callers
-> ehci/ohci/xhci/uhci to pass hc_driver as argument and freeup the
-> driver_data used
+> Signed-off-by: Paul Boddie <paul@boddie.org.uk>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > 
-> Tested xhci driver on Dragon-board RB3, compile tested ehci and ohci.
-> Couldn't compile uhci
 > 
-> Suggested-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  drivers/usb/core/hcd-pci.c  |  7 ++++---
->  drivers/usb/host/ehci-pci.c |  6 ++----
->  drivers/usb/host/ohci-pci.c |  9 ++++++---
->  drivers/usb/host/uhci-pci.c |  8 ++++++--
->  drivers/usb/host/xhci-pci.c | 14 +++++---------
->  include/linux/usb/hcd.h     |  3 ++-
->  6 files changed, 25 insertions(+), 22 deletions(-)
+> Alex Smith (1):
+>   MIPS: DTS: CI20: add DT node for IR sensor
+> 
+> H. Nikolaus Schaller (2):
+>   MIPS: DTS: CI20: multiple DTS improvements
+>   MIPS: CI20: defconfig: multiple improvements
+> 
+>  arch/mips/boot/dts/ingenic/ci20.dts | 19 +++++++++++++++++++
+>  arch/mips/configs/ci20_defconfig    | 21 +++++++++++++++++++++
+>  2 files changed, 40 insertions(+)
 
-For all but the xHCI parts:
+series applied to mips-next.
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Thomas.
 
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
