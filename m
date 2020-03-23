@@ -2,129 +2,387 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711FDC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B073C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D8E2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D641C2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:12:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="Psk+1MVW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="r+acbKxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbgCWJJE (ORCPT
+        id S1727682AbgCWJM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 05:09:04 -0400
-Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:42440 "EHLO
-        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727477AbgCWJJE (ORCPT
+        Mon, 23 Mar 2020 05:12:28 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:34009 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727655AbgCWJM2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:09:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1584954543; x=1616490543;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=kWoC1leUNK9JRF/0QALqY23saxkCofgIQaeLbyoc78E=;
-  b=Psk+1MVWc4bhVJYr78VLwkOPpOjfcvRaDhXwTCAmWuMduvP3OWpsZCU0
-   Vari6V227REyHM06x2L0J1JAULHEUEobbZkKXji15Fq4nm6jhvlko5Sw6
-   maYaqzQNjp/BbiSOQ9hzFlNYhdE4Y4NbT50iF0+QtGmSsXDMuPXNFBjDX
-   +/83G7iLt7vNJKQiiFHxS/TBS2QUJ71/BeO4NDedEmqwwbR62QGl2DFIP
-   NHvPIY3aWtZ0ve21FuITLUApNYbD3rVG/QtgK9ybdMvnaSwBszIFMl9TB
-   lxQ4+TvJrdKOUa8jxuHCtHiAAy7C0VFjH86oXPMC6MwxPuZaipgOWM51Q
-   A==;
-IronPort-SDR: yvh7WG9BtynCxvXyJEWoDsNkNGwDh9LL7TV9C7CgjOIuHx1YlyltGqABG6pQOtMsdIiKaZsTcp
- Vt26TofAdnPQ==
-From:   Denis Osterland-Heim <denis.osterland@diehl.com>
-To:     "pavel@ucw.cz" <pavel@ucw.cz>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
-Subject: Re: [PATCH v4 3/5] leds: pwm: check result of led_pwm_set() in
- led_pwm_add()
-Thread-Topic: [PATCH v4 3/5] leds: pwm: check result of led_pwm_set() in
- led_pwm_add()
-Thread-Index: AQHV/1jvS39qjeoyFEyBmW+H8QD2bqhTGRaAgAGLqoCAAP7igIAAMkiA
-Date:   Mon, 23 Mar 2020 09:08:59 +0000
-Message-ID: <a23386dcb217d1385cb3cd5d7aacc964f33b11d2.camel@diehl.com>
-References: <20200321081321.15614-1-Denis.Osterland@diehl.com>
-         <20200321081321.15614-4-Denis.Osterland@diehl.com>
-         <20200321152037.GB8386@duo.ucw.cz>
-         <566ac991-2e38-6c70-4b07-c8dd78d47a06@gmail.com>
-         <ca8f7ca4226de19c910440fde0c6f1e34a807fc6.camel@diehl.com>
-In-Reply-To: <ca8f7ca4226de19c910440fde0c6f1e34a807fc6.camel@diehl.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <83D0B95E4698FE4CB81218B14FB80257@diehl.internal>
-Content-Transfer-Encoding: base64
+        Mon, 23 Mar 2020 05:12:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584954747; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=SoK1G4xKcKDpUeUvLPp2R79L97dcvrVTXnYs55SSTm8=;
+ b=r+acbKxZoUgYbU2QIx7jKlwLUWkqt83Dav+eBJM0YkZjTInmesquNSby3K6+C/jiy1JP4tg7
+ oAG8e2DGyCgRNs6qfoZCw5RK0XL01Hm5x11SE2hEf2vxMFxgvmME+29IN1Z3CbYpjB49FISY
+ jXFh+ysMJll/qVdUUKOpbE23xf4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e787d76.7f87b1b51fb8-smtp-out-n03;
+ Mon, 23 Mar 2020 09:12:22 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DE840C43637; Mon, 23 Mar 2020 09:12:21 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: rjliao)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AE0ABC433CB;
+        Mon, 23 Mar 2020 09:12:20 +0000 (UTC)
 MIME-Version: 1.0
-X-TrailerSkip: 1
-X-GBS-PROC: byQFdw3ukCM+zy1/poiPc2zbCejfrbnpT48LiMMyht2MA8QFDI1cTUtJa91ZV4bq
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 23 Mar 2020 17:12:20 +0800
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     bgodavar@codeaurora.org
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, c-hbandi@codeaurora.org,
+        hemantg@codeaurora.org, mka@chromium.org
+Subject: Re: [PATCH v1 1/2] Bluetooth: hci_qca: Add support for Qualcomm
+ Bluetooth SoC QCA6390
+In-Reply-To: <77f651b52dbaae4d30aabfa361915eda@codeaurora.org>
+References: <20200314094328.3331-1-rjliao@codeaurora.org>
+ <77f651b52dbaae4d30aabfa361915eda@codeaurora.org>
+Message-ID: <5a2b7eea5d4755d06605dc0ba2e8e802@codeaurora.org>
+X-Sender: rjliao@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgYWdhaW4sDQoNCkFtIE1vbnRhZywgZGVuIDIzLjAzLjIwMjAsIDA3OjA5ICswMTAwIHNj
-aHJpZWIgRGVuaXMgT3N0ZXJsYW5kLUhlaW06DQo+IEhpLA0KPiANCj4gQW0gU29ubnRhZywg
-ZGVuIDIyLjAzLjIwMjAsIDE1OjU2ICswMTAwIHNjaHJpZWIgSmFjZWsgQW5hc3pld3NraToN
-Cj4gPiBPbiAzLzIxLzIwIDQ6MjAgUE0sIFBhdmVsIE1hY2hlayB3cm90ZToNCj4gPiA+IEhp
-IQ0KPiA+ID4gDQo+ID4gPiA+IGxlZF9wd21fc2V0KCkgbm93IHJldHVybnMgYW4gZXJyb3Ig
-d2hlbiBzZXR0aW5nIHRoZSBQV00gZmFpbHMuDQo+ID4gPiA+IA0KPiA+ID4gPiBDYzogVXdl
-IEtsZWluZS1Lw7ZuaWcgPHV3ZUBrbGVpbmUta29lbmlnLm9yZz4NCj4gPiA+ID4gU2lnbmVk
-LW9mZi1ieTogRGVuaXMgT3N0ZXJsYW5kLUhlaW0gPERlbmlzLk9zdGVybGFuZEBkaWVobC5j
-b20+DQo+ID4gPiANCj4gPiA+IEkgYXBwbGllZCAxIGFuZCAyLCBidXQgMyBmYWlsZWQgZm9y
-IG1lLiBJJ2xsIHB1c2ggdXBkYXRlZCAtbmV4dCwgY2FuDQo+ID4gPiB5b3Ugc2VlIHdoYXQg
-aXMgZ29pbmcgb24gdGhlcmU/DQo+ID4gDQo+ID4gQ2hlY2sgdGhlIGNvbnRlbnRzIG9mIHRo
-ZSBwYXRjaCBhZnRlciB3cml0aW5nIGl0IG9uIGEgZGlzay4NCj4gPiBJbiBteSBjYXNlIGl0
-IGNvbnRhaW5zIGEgYmxvY2sgb2YgcmFuZG9tIGNoYXJhY3RlcnMuDQo+ID4gSXQgaXMgcHJv
-YmFibHkgZHVlIHRvIENvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IGJhc2U2NC4NCj4gPiAN
-Cj4gDQo+IHN0cmFuZ2UuDQo+IEluIHRoZSB2ZXJzaW9uIEkgcmVjZWl2ZWQgYnkgQ0MsIHRo
-ZXJlIGlzIG5vIGdhcmJhZ2UsIGJ1dCBhbHNvIG5vIGF1dG8gYXBwZW5kZWQgZm9vdGVyLg0K
-PiANCj4gSSB3aWxsIHNlbmQgdGhlIG1haWwganVzdCB0byBsaW51eC1sZWRzIHNvIHdlIHNo
-b3VsZCBhbGwgcmVjZWl2ZSB0aGUgc2FtZSBtYWlsLg0KSSByZWNlaXZlZCBubyBtYWlsIDov
-IGFuZCB3aGVuIEkgbG9vayBhdCBodHRwczovL3BhdGNoZXMubGluYXJvLm9yZy9wcm9qZWN0
-L2xpbnV4LWxlZHMvbGlzdC8NCkkgd291bGQgZXhwZWN0IHRoYXQgeW91IHJlY2VpdmVkIG5v
-dGhpbmcsIHRvby4NCg0KPiANCj4gSSB3b25kZXIgaWYgdGhlICfDticgaW4gS8O2bmlnIGNh
-dXNlcyB0aGlzIHRyb3VibGUgaW4gbXkgc2VuZCBwYXRoLg0KSSB3aWxsIHNlbmQgdGhlIHBh
-dGNoIHdpdGhvdXQgdGhlIENjIGxpbmUsIG1heWJlIHRoaXMgZml4ZXMgdGhlIHByb2JsZW0g
-YXQgeW91ciBzaWRlLg0KDQpSZWdhcmRzIERlbmlzDQoNCj4gDQo+IFJlZ2FyZHMgRGVuaXMN
-Cg0KDQpEaWVobCBDb25uZWN0aXZpdHkgU29sdXRpb25zIEdtYkgNCkdlc2Now6RmdHNmw7xo
-cnVuZzogSG9yc3QgTGVvbmJlcmdlcg0KU2l0eiBkZXIgR2VzZWxsc2NoYWZ0OiBOw7xybmJl
-cmcgLSBSZWdpc3RlcmdlcmljaHQ6IEFtdHNnZXJpY2h0DQpOw7xybmJlcmc6IEhSQiAzMjMx
-NQ0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQoNCkRl
-ciBJbmhhbHQgZGVyIHZvcnN0ZWhlbmRlbiBFLU1haWwgaXN0IG5pY2h0IHJlY2h0bGljaCBi
-aW5kZW5kLiBEaWVzZSBFLU1haWwgZW50aGFlbHQgdmVydHJhdWxpY2hlIHVuZC9vZGVyIHJl
-Y2h0bGljaCBnZXNjaHVldHp0ZSBJbmZvcm1hdGlvbmVuLg0KSW5mb3JtaWVyZW4gU2llIHVu
-cyBiaXR0ZSwgd2VubiBTaWUgZGllc2UgRS1NYWlsIGZhZWxzY2hsaWNoZXJ3ZWlzZSBlcmhh
-bHRlbiBoYWJlbi4gQml0dGUgbG9lc2NoZW4gU2llIGluIGRpZXNlbSBGYWxsIGRpZSBOYWNo
-cmljaHQuDQpKZWRlIHVuZXJsYXVidGUgRm9ybSBkZXIgUmVwcm9kdWt0aW9uLCBCZWthbm50
-Z2FiZSwgQWVuZGVydW5nLCBWZXJ0ZWlsdW5nIHVuZC9vZGVyIFB1Ymxpa2F0aW9uIGRpZXNl
-ciBFLU1haWwgaXN0IHN0cmVuZ3N0ZW5zIHVudGVyc2FndC4NCi0gSW5mb3JtYXRpb25lbiB6
-dW0gRGF0ZW5zY2h1dHosIGluc2Jlc29uZGVyZSB6dSBJaHJlbiBSZWNodGVuLCBlcmhhbHRl
-biBTaWUgdW50ZXIgaHR0cHM6Ly93d3cuZGllaGwuY29tL2dyb3VwL2RlL3RyYW5zcGFyZW56
-LXVuZC1pbmZvcm1hdGlvbnNwZmxpY2h0ZW4vDQoNClRoZSBjb250ZW50cyBvZiB0aGUgYWJv
-dmUgbWVudGlvbmVkIGUtbWFpbCBpcyBub3QgbGVnYWxseSBiaW5kaW5nLiBUaGlzIGUtbWFp
-bCBjb250YWlucyBjb25maWRlbnRpYWwgYW5kL29yIGxlZ2FsbHkgcHJvdGVjdGVkIGluZm9y
-bWF0aW9uLiBQbGVhc2UgaW5mb3JtIHVzIGlmIHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1t
-YWlsIGJ5DQptaXN0YWtlIGFuZCBkZWxldGUgaXQgaW4gc3VjaCBhIGNhc2UuIEVhY2ggdW5h
-dXRob3JpemVkIHJlcHJvZHVjdGlvbiwgZGlzY2xvc3VyZSwgYWx0ZXJhdGlvbiwgZGlzdHJp
-YnV0aW9uIGFuZC9vciBwdWJsaWNhdGlvbiBvZiB0aGlzIGUtbWFpbCBpcyBzdHJpY3RseSBw
-cm9oaWJpdGVkLiANCi0gRm9yIGdlbmVyYWwgaW5mb3JtYXRpb24gb24gZGF0YSBwcm90ZWN0
-aW9uIGFuZCB5b3VyIHJlc3BlY3RpdmUgcmlnaHRzIHBsZWFzZSB2aXNpdCBodHRwczovL3d3
-dy5kaWVobC5jb20vZ3JvdXAvZW4vdHJhbnNwYXJlbmN5LWFuZC1pbmZvcm1hdGlvbi1vYmxp
-Z2F0aW9ucy8NCg==
+在 2020-03-16 23:04，bgodavar@codeaurora.org 写道：
+> On 2020-03-14 15:13, Rocky Liao wrote:
+>> This patch adds support for QCA6390, including the devicetree and acpi
+>> compatible hwid matching, and patch/nvm downloading.
+>> 
+>> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+>> ---
+>>  drivers/bluetooth/btqca.c   | 44 +++++++++++++++++++++++++++++++----
+>>  drivers/bluetooth/btqca.h   |  8 +++++++
+>>  drivers/bluetooth/hci_qca.c | 46 
+>> +++++++++++++++++++++++++++++++------
+>>  3 files changed, 86 insertions(+), 12 deletions(-)
+>> 
+>> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+>> index a16845c0751d..ca126e499c58 100644
+>> --- a/drivers/bluetooth/btqca.c
+>> +++ b/drivers/bluetooth/btqca.c
+>> @@ -14,6 +14,9 @@
+>> 
+>>  #define VERSION "0.1"
+>> 
+>> +#define QCA_IS_3991_6390(soc_type)    \
+>> +	(soc_type == QCA_WCN3991 || soc_type == QCA_QCA6390)
+>> +
+> 
+> [Bala]: Why don't we do >= QCA_WCN3991 (mostly both the devices
+> support same features)
+> 
+OK
+
+>>  int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version,
+>>  			 enum qca_btsoc_type soc_type)
+>>  {
+>> @@ -32,7 +35,7 @@ int qca_read_soc_version(struct hci_dev *hdev, u32
+>> *soc_version,
+>>  	 * VSE event. WCN3991 sends version command response as a payload to
+>>  	 * command complete event.
+>>  	 */
+>> -	if (soc_type == QCA_WCN3991) {
+>> +	if (QCA_IS_3991_6390(soc_type)) {
+>>  		event_type = 0;
+>>  		rlen += 1;
+>>  		rtype = EDL_PATCH_VER_REQ_CMD;
+>> @@ -69,7 +72,7 @@ int qca_read_soc_version(struct hci_dev *hdev, u32
+>> *soc_version,
+>>  		goto out;
+>>  	}
+>> 
+>> -	if (soc_type == QCA_WCN3991)
+>> +	if (QCA_IS_3991_6390(soc_type))
+>>  		memmove(&edl->data, &edl->data[1], sizeof(*ver));
+>> 
+>>  	ver = (struct qca_btsoc_version *)(edl->data);
+>> @@ -138,6 +141,29 @@ int qca_send_pre_shutdown_cmd(struct hci_dev 
+>> *hdev)
+>>  }
+>>  EXPORT_SYMBOL_GPL(qca_send_pre_shutdown_cmd);
+>> 
+>> +int qca_send_enhancelog_enable_cmd(struct hci_dev *hdev)
+>> +{
+>> +	struct sk_buff *skb;
+>> +	int err;
+>> +	const u8 param[2] = {0x14, 0x01};
+> 
+> [Bala]: advisable to use MACRO's
+> 
+This func will be removed, we don't need to enable enhanced log by 
+default. It can be done by hcitool whenever needed.
+>> +
+>> +	bt_dev_dbg(hdev, "QCA enhanced log enable cmd");
+>> +
+>> +	skb = __hci_cmd_sync_ev(hdev, QCA_ENHANCED_LOG_ENABLE_CMD, 2,
+>> +				param, HCI_EV_CMD_COMPLETE, HCI_INIT_TIMEOUT);
+>> +
+>> +	if (IS_ERR(skb)) {
+>> +		err = PTR_ERR(skb);
+>> +		bt_dev_err(hdev, "Enhanced log enable cmd failed (%d)", err);
+>> +		return err;
+>> +	}
+>> +
+>> +	kfree_skb(skb);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(qca_send_enhancelog_enable_cmd);
+>> +
+>>  static void qca_tlv_check_data(struct qca_fw_config *config,
+>>  		const struct firmware *fw, enum qca_btsoc_type soc_type)
+>>  {
+>> @@ -217,7 +243,7 @@ static void qca_tlv_check_data(struct 
+>> qca_fw_config *config,
+>>  				tlv_nvm->data[0] |= 0x80;
+>> 
+>>  				/* UART Baud Rate */
+>> -				if (soc_type == QCA_WCN3991)
+>> +				if (QCA_IS_3991_6390(soc_type))
+>>  					tlv_nvm->data[1] = nvm_baud_rate;
+>>  				else
+>>  					tlv_nvm->data[2] = nvm_baud_rate;
+>> @@ -268,7 +294,7 @@ static int qca_tlv_send_segment(struct hci_dev
+>> *hdev, int seg_size,
+>>  	 * VSE event. WCN3991 sends version command response as a payload to
+>>  	 * command complete event.
+>>  	 */
+>> -	if (soc_type == QCA_WCN3991) {
+>> +	if (QCA_IS_3991_6390(soc_type)) {
+>>  		event_type = 0;
+>>  		rlen = sizeof(*edl);
+>>  		rtype = EDL_PATCH_TLV_REQ_CMD;
+>> @@ -301,7 +327,7 @@ static int qca_tlv_send_segment(struct hci_dev
+>> *hdev, int seg_size,
+>>  		err = -EIO;
+>>  	}
+>> 
+>> -	if (soc_type == QCA_WCN3991)
+>> +	if (QCA_IS_3991_6390(soc_type))
+>>  		goto out;
+>> 
+>>  	tlv_resp = (struct tlv_seg_resp *)(edl->data);
+>> @@ -442,6 +468,11 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
+>> baudrate,
+>>  			    (soc_ver & 0x0000000f);
+>>  		snprintf(config.fwname, sizeof(config.fwname),
+>>  			 "qca/crbtfw%02x.tlv", rom_ver);
+>> +	} else if (soc_type == QCA_QCA6390) {
+>> +		rom_ver = ((soc_ver & 0x00000f00) >> 0x04) |
+>> +			    (soc_ver & 0x0000000f);
+>> +		snprintf(config.fwname, sizeof(config.fwname),
+>> +			 "qca/htbtfw%02x.tlv", rom_ver);
+> 
+> [Bala]: This part we need to rethink to having to optimize.
+> 
+> ROME use: rampatch<>.tlv
+> WCN399x: uses cr<>.tlv
+> QCA6390: uses ht
+> tomorrow if some new chipset comes, it uses different name again a we
+> need to handle this part.
+> i would suggest add this prefix to  "qca_bluetooth_of_match"
+> which can be passed as argument
+> 
+I would like to do this in a separate patch.
+>>  	} else {
+>>  		snprintf(config.fwname, sizeof(config.fwname),
+>>  			 "qca/rampatch_%08x.bin", soc_ver);
+>> @@ -464,6 +495,9 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
+>> baudrate,
+>>  	else if (qca_is_wcn399x(soc_type))
+>>  		snprintf(config.fwname, sizeof(config.fwname),
+>>  			 "qca/crnv%02x.bin", rom_ver);
+>> +	else if (soc_type == QCA_QCA6390)
+>> +		snprintf(config.fwname, sizeof(config.fwname),
+>> +			 "qca/htnv%02x.bin", rom_ver);
+>>  	else
+>>  		snprintf(config.fwname, sizeof(config.fwname),
+>>  			 "qca/nvm_%08x.bin", soc_ver);
+>> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
+>> index e16a4d650597..bc703817c3d7 100644
+>> --- a/drivers/bluetooth/btqca.h
+>> +++ b/drivers/bluetooth/btqca.h
+>> @@ -14,6 +14,7 @@
+>>  #define EDL_NVM_ACCESS_SET_REQ_CMD	(0x01)
+>>  #define MAX_SIZE_PER_TLV_SEGMENT	(243)
+>>  #define QCA_PRE_SHUTDOWN_CMD		(0xFC08)
+>> +#define QCA_ENHANCED_LOG_ENABLE_CMD     (0xFC17)
+>> 
+>>  #define EDL_CMD_REQ_RES_EVT		(0x00)
+>>  #define EDL_PATCH_VER_RES_EVT		(0x19)
+>> @@ -127,6 +128,7 @@ enum qca_btsoc_type {
+>>  	QCA_WCN3990,
+>>  	QCA_WCN3991,
+>>  	QCA_WCN3998,
+>> +	QCA_QCA6390,
+>>  };
+>> 
+>>  #if IS_ENABLED(CONFIG_BT_QCA)
+>> @@ -139,6 +141,7 @@ int qca_read_soc_version(struct hci_dev *hdev, u32
+>> *soc_version,
+>>  			 enum qca_btsoc_type);
+>>  int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
+>>  int qca_send_pre_shutdown_cmd(struct hci_dev *hdev);
+>> +int qca_send_enhancelog_enable_cmd(struct hci_dev *hdev);
+>>  static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
+>>  {
+>>  	return soc_type == QCA_WCN3990 || soc_type == QCA_WCN3991 ||
+>> @@ -178,4 +181,9 @@ static inline int qca_send_pre_shutdown_cmd(struct
+>> hci_dev *hdev)
+>>  {
+>>  	return -EOPNOTSUPP;
+>>  }
+>> +
+>> +static inline int qca_send_enhancelog_enable_cmd(struct hci_dev 
+>> *hdev)
+>> +{
+>> +	return -EOPNOTSUPP;
+>> +}
+>>  #endif
+>> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+>> index 439392b1c043..0176264b0828 100644
+>> --- a/drivers/bluetooth/hci_qca.c
+>> +++ b/drivers/bluetooth/hci_qca.c
+>> @@ -26,6 +26,7 @@
+>>  #include <linux/mod_devicetable.h>
+>>  #include <linux/module.h>
+>>  #include <linux/of_device.h>
+>> +#include <linux/acpi.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/regulator/consumer.h>
+>>  #include <linux/serdev.h>
+>> @@ -1596,7 +1597,7 @@ static int qca_setup(struct hci_uart *hu)
+>>  	set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
+>> 
+>>  	bt_dev_info(hdev, "setting up %s",
+>> -		qca_is_wcn399x(soc_type) ? "wcn399x" : "ROME");
+>> +		qca_is_wcn399x(soc_type) ? "wcn399x" : "ROME/QCA6390");
+>> 
+>>  retry:
+>>  	ret = qca_power_on(hdev);
+>> @@ -1639,6 +1640,12 @@ static int qca_setup(struct hci_uart *hu)
+>>  		qca_debugfs_init(hdev);
+>>  		hu->hdev->hw_error = qca_hw_error;
+>>  		hu->hdev->cmd_timeout = qca_cmd_timeout;
+>> +
+>> +		/* QCA6390 FW doesn't enable enhanced log by default
+>> +		 * need to send VSC to enable it
+>> +		 */
+>> +		if (soc_type == QCA_QCA6390)
+>> +			qca_send_enhancelog_enable_cmd(hdev);
+>>  	} else if (ret == -ENOENT) {
+>>  		/* No patch/nvm-config found, run with original fw/config */
+>>  		ret = 0;
+>> @@ -1665,10 +1672,10 @@ static int qca_setup(struct hci_uart *hu)
+>>  	}
+>> 
+>>  	/* Setup bdaddr */
+>> -	if (qca_is_wcn399x(soc_type))
+>> -		hu->hdev->set_bdaddr = qca_set_bdaddr;
+>> -	else
+>> +	if (soc_type == QCA_ROME)
+>>  		hu->hdev->set_bdaddr = qca_set_bdaddr_rome;
+>> +	else
+>> +		hu->hdev->set_bdaddr = qca_set_bdaddr;
+>> 
+>>  	return ret;
+>>  }
+>> @@ -1721,6 +1728,11 @@ static const struct qca_vreg_data
+>> qca_soc_data_wcn3998 = {
+>>  	.num_vregs = 4,
+>>  };
+>> 
+>> +static const struct qca_vreg_data qca_soc_data_qca6390 = {
+>> +	.soc_type = QCA_QCA6390,
+>> +	.num_vregs = 0,
+>> +};
+>> +
+>>  static void qca_power_shutdown(struct hci_uart *hu)
+>>  {
+>>  	struct qca_serdev *qcadev;
+>> @@ -1764,7 +1776,7 @@ static int qca_power_off(struct hci_dev *hdev)
+>>  	enum qca_btsoc_type soc_type = qca_soc_type(hu);
+>> 
+>>  	/* Stop sending shutdown command if soc crashes. */
+>> -	if (qca_is_wcn399x(soc_type)
+>> +	if (soc_type != QCA_ROME
+>>  		&& qca->memdump_state == QCA_MEMDUMP_IDLE) {
+>>  		qca_send_pre_shutdown_cmd(hdev);
+>>  		usleep_range(8000, 10000);
+>> @@ -1900,7 +1912,11 @@ static int qca_serdev_probe(struct 
+>> serdev_device *serdev)
+>>  			return err;
+>>  		}
+>>  	} else {
+>> -		qcadev->btsoc_type = QCA_ROME;
+>> +		if (data)
+>> +			qcadev->btsoc_type = data->soc_type;
+>> +		else
+>> +			qcadev->btsoc_type = QCA_ROME;
+>> +
+>>  		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
+>>  					       GPIOD_OUT_LOW);
+>>  		if (!qcadev->bt_en) {
+>> @@ -2044,21 +2060,37 @@ static int __maybe_unused qca_resume(struct 
+>> device *dev)
+>> 
+>>  static SIMPLE_DEV_PM_OPS(qca_pm_ops, qca_suspend, qca_resume);
+>> 
+>> +#ifdef CONFIG_OF
+>>  static const struct of_device_id qca_bluetooth_of_match[] = {
+>>  	{ .compatible = "qcom,qca6174-bt" },
+>> +	{ .compatible = "qcom,qca6390-bt", .data = &qca_soc_data_qca6390},
+>>  	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data_wcn3990},
+>>  	{ .compatible = "qcom,wcn3991-bt", .data = &qca_soc_data_wcn3991},
+>>  	{ .compatible = "qcom,wcn3998-bt", .data = &qca_soc_data_wcn3998},
+>>  	{ /* sentinel */ }
+>>  };
+>>  MODULE_DEVICE_TABLE(of, qca_bluetooth_of_match);
+>> +#endif
+>> +
+>> +#ifdef CONFIG_ACPI
+>> +static const struct acpi_device_id qca_bluetooth_acpi_match[] = {
+>> +	{ "QCOM6390", (kernel_ulong_t)&qca_soc_data_qca6390 },
+>> +	{ "DLA16390", (kernel_ulong_t)&qca_soc_data_qca6390 },
+>> +	{ "DLB16390", (kernel_ulong_t)&qca_soc_data_qca6390 },
+>> +	{ "DLB26390", (kernel_ulong_t)&qca_soc_data_qca6390 },
+>> +	{ },
+>> +};
+>> +MODULE_DEVICE_TABLE(acpi, qca_bluetooth_acpi_match);
+>> +#endif
+>> +
+>> 
+>>  static struct serdev_device_driver qca_serdev_driver = {
+>>  	.probe = qca_serdev_probe,
+>>  	.remove = qca_serdev_remove,
+>>  	.driver = {
+>>  		.name = "hci_uart_qca",
+>> -		.of_match_table = qca_bluetooth_of_match,
+>> +		.of_match_table = of_match_ptr(qca_bluetooth_of_match),
+>> +		.acpi_match_table = ACPI_PTR(qca_bluetooth_acpi_match),
+>>  		.pm = &qca_pm_ops,
+>>  	},
+>>  };
