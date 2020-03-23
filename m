@@ -2,144 +2,111 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42569C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B45FC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1509B20780
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:34:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AHC/BCDc"
+	by mail.kernel.org (Postfix) with ESMTP id 294C320714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584977679;
+	bh=DInxYfQiqRHYOI49FnJU7I3F0DNh7c3v5Bpu42/3e3I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uczR8jp+qlvJ1kJZtMojHDW2U1ZxoXEbsEYlTlV9O6P04b/3UEwur6JC7P0Ds+ltg
+	 cHn4n0Y33TW8YwWN4iqtt1RMb5VpiHm7b8u8gufRBYCl01+8F4VJrJjq6mhDUS3mEC
+	 JnBxsyBdgAKUeG0xmnfDm59VSL1qwQAZr+HhIvr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgCWPe0 (ORCPT
+        id S1727348AbgCWPei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:34:26 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:52101 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727067AbgCWPeY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:34:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584977662;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Xr99nHdAHx1m/gl45KeTdKghaJy0+26o7n9Cjks2514=;
-        b=AHC/BCDcdPgNrUKAC7CK3ZcnWCEAha1LPA3n+eyq+VXPq7+Sf4/yShowJfEUKsfhewxs2E
-        lL3jOB58t2MJk89jvduPIZdm91grcBe5MUqbjCVpZlC/eifya2Bl+G74txVv4JzC9R87fj
-        MRljG9oL8C0fIqBqM4msisJz8AhlNHo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-321-ubTvAdNPPlOdlmHbNBB6Ww-1; Mon, 23 Mar 2020 11:34:20 -0400
-X-MC-Unique: ubTvAdNPPlOdlmHbNBB6Ww-1
-Received: by mail-wm1-f70.google.com with SMTP id n25so4136883wmi.5
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 08:34:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Xr99nHdAHx1m/gl45KeTdKghaJy0+26o7n9Cjks2514=;
-        b=Bg5ojUs1l5VJdnCThRXDizZivtWcB0gAP1wTz7ZynM9ebceGjepQHvCiR3aULPqg7u
-         hmwBrsUrn++M2ClBjarDoP/LWfBla54uUKd+K2wTvj2LvNBoT72rOoJuaeFJFAjOlfXu
-         fhdRL3ELX6DzUpZmihBSVuvnx+mUWevjRaxmxyCYsMHdQ0OdygL9ngmK51msQvK47Fyp
-         MI6UNv3IPYbv2msFzxfkeNxsFFWX3JGM0+NHA21Am2lQ25VY2L1sqZJ0ajkFn8SrWD0k
-         As9epx3Z2Mb6X3BL0x1xWDg3QvvsUPVKZdDAAz7X/f69Uumwd0ZMc1hUzvooUE1F4Q6E
-         //Zg==
-X-Gm-Message-State: ANhLgQ2D3ArH1DPUc2vTIn2NX7Bi043uICnvN+nK4B8YcyYab2Mjw2SG
-        YGbYS8yotVLt766caNUqhfdfJruYzO7tD07MbVs8/yZxY/5lG9+2+DBmxDEZAwC+bslowcrTQJD
-        jeR6O56XfcetXIhzwZoDFSrsS
-X-Received: by 2002:adf:dd10:: with SMTP id a16mr22183248wrm.26.1584977659807;
-        Mon, 23 Mar 2020 08:34:19 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vsn0blaF1NsqRTvFWk7zIcpKejElkKMygTmVWdGtZamYIPseay1+YqWuE1p11Vk+CheUdYCPQ==
-X-Received: by 2002:adf:dd10:: with SMTP id a16mr22183233wrm.26.1584977659610;
-        Mon, 23 Mar 2020 08:34:19 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id d16sm1757012wrp.91.2020.03.23.08.34.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 08:34:19 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        John Haxby <john.haxby@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH v3 04/37] KVM: nVMX: Invalidate all roots when emulating INVVPID without EPT
-In-Reply-To: <20200320212833.3507-5-sean.j.christopherson@intel.com>
-References: <20200320212833.3507-1-sean.j.christopherson@intel.com> <20200320212833.3507-5-sean.j.christopherson@intel.com>
-Date:   Mon, 23 Mar 2020 16:34:17 +0100
-Message-ID: <87v9mv84qu.fsf@vitty.brq.redhat.com>
+        Mon, 23 Mar 2020 11:34:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727313AbgCWPeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:34:37 -0400
+Received: from localhost (unknown [122.178.205.141])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BD3420409;
+        Mon, 23 Mar 2020 15:34:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584977677;
+        bh=DInxYfQiqRHYOI49FnJU7I3F0DNh7c3v5Bpu42/3e3I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ajtBK9vv0Y1kOS5LD73f0LwYvfdJazjc48yA+RBjA3u0z4XYGlBcdSv30C5jS8pHF
+         aRSLe27s3d07J1yjI1zuKf/bEkTtRHIrbI1aDwbF1+mJnFkhadh3x1BKg6MQdmOUYQ
+         kTbeFrvz44s25BzjcYDv1V1GWwJ6E8gztCdGC+6M=
+Date:   Mon, 23 Mar 2020 21:04:29 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-arm-msm@vger.kernel.org, Bjorn Andersson" 
+        <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: [PATCH v7 1/5] usb: hci: add hc_driver as argument for
+ usb_hcd_pci_probe
+Message-ID: <20200323153429.GR72691@vkoul-mobl>
+References: <20200323101121.243906-2-vkoul@kernel.org>
+ <202003232207.IGeWbiPn%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202003232207.IGeWbiPn%lkp@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On 23-03-20, 22:49, kbuild test robot wrote:
+> Hi Vinod,
+> 
+> I love your patch! Yet something to improve:
 
-> From: Junaid Shahid <junaids@google.com>
->
-> Free all roots when emulating INVVPID for L1 and EPT is disabled, as
-> outstanding changes to the page tables managed by L1 need to be
-> recognized.  Because L1 and L2 share an MMU when EPT is disabled, and
-> because VPID is not tracked by the MMU role, all roots in the current
-> MMU (root_mmu) need to be freed, otherwise a future nested VM-Enter or
-> VM-Exit could do a fast CR3 switch (without a flush/sync) and consume
-> stale SPTEs.
->
-> Fixes: 5c614b3583e7b ("KVM: nVMX: nested VPID emulation")
-> Signed-off-by: Junaid Shahid <junaids@google.com>
-> [sean: ported to upstream KVM, reworded the comment and changelog]
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/vmx/nested.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 9624cea4ed9f..bc74fbbf33c6 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -5250,6 +5250,20 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
->  		return kvm_skip_emulated_instruction(vcpu);
->  	}
->  
-> +	/*
-> +	 * Sync the shadow page tables if EPT is disabled, L1 is invalidating
-> +	 * linear mappings for L2 (tagged with L2's VPID).  Free all roots as
-> +	 * VPIDs are not tracked in the MMU role.
-> +	 *
-> +	 * Note, this operates on root_mmu, not guest_mmu, as L1 and L2 share
-> +	 * an MMU when EPT is disabled.
-> +	 *
-> +	 * TODO: sync only the affected SPTEs for INVDIVIDUAL_ADDR.
-> +	 */
-> +	if (!enable_ept)
-> +		kvm_mmu_free_roots(vcpu, &vcpu->arch.root_mmu,
-> +				   KVM_MMU_ROOTS_ALL);
-> +
+Thanks for the report.
 
-This is related to my remark on the previous patch; the comment above
-makes me think I'm missing something obvious, enlighten me please)
+> [auto build test ERROR on v5.6-rc7]
+> [also build test ERROR on next-20200323]
+> [cannot apply to usb/usb-testing]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Vinod-Koul/usb-xhci-Add-support-for-Renesas-USB-controllers/20200323-203447
+> base:    16fbf79b0f83bc752cee8589279f1ebfe57b3b6e
+> config: x86_64-defconfig (attached as .config)
+> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 006244152d6c7dd6a390ff89b236cc7801834b46)
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         COMPILER=clang make.cross ARCH=x86_64 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from drivers/usb/host/uhci-hcd.c:847:
+> >> drivers/usb/host/uhci-pci.c:297:36: error: passing 'const struct hc_driver *' to parameter of type 'struct hc_driver *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+>            return usb_hcd_pci_probe(dev, id, &uhci_driver);
+>                                              ^~~~~~~~~~~~
+>    include/linux/usb/hcd.h:483:27: note: passing argument to parameter 'driver' here
+>                                 struct hc_driver *driver);
 
-My understanding is that L1 and L2 will share arch.root_mmu not only
-when EPT is globally disabled, we seem to switch between
-root_mmu/guest_mmu only when nested_cpu_has_ept(vmcs12) but different L2
-guests may be different on this. Do we need to handle this somehow?
+I need to drop the const qualifiers for uhci_driver, I have checked that
+and will send v8 with this fix
 
->  	return nested_vmx_succeed(vcpu);
->  }
 
 -- 
-Vitaly
-
+~Vinod
