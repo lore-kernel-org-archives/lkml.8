@@ -2,120 +2,159 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2CFC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC4EC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B5F206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA49720732
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:17:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oy7AW0C4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GSd8CU4x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgCWDRi (ORCPT
+        id S1727202AbgCWDRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 23:17:38 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41660 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbgCWDRh (ORCPT
+        Sun, 22 Mar 2020 23:17:55 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37283 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726979AbgCWDRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 23:17:37 -0400
-Received: by mail-pg1-f195.google.com with SMTP id b1so6462259pgm.8
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 20:17:36 -0700 (PDT)
+        Sun, 22 Mar 2020 23:17:55 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w10so15201513wrm.4;
+        Sun, 22 Mar 2020 20:17:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=S4TZKS6d2y1eHYS1jppzyvKAfOVpYJMMu/Ehs0CdOMQ=;
-        b=oy7AW0C4+1A9gMD6L/aMJGFCcFb+ub8nHaXwstcdSZj5UK6Y9WQ+dSQInkxvWPGAPd
-         atYUGcC2fqdoRJ5YsVK179OZ8nyM4/echB2BWEutHssW5MMyq+XlnYsUpmOhpLTqfDe0
-         nZdhu3YAprzsDcw9cwUm4ew/BH48l3O8LeP5Z98f/MBoKh9wzaJAVlX81QDORw+nHcly
-         oD8AtOmIWuqEKOsIQjTVUuvkn8DmmB9MmBjHGq26desmsW8C2XiUVKTM9o8W2INzwbNI
-         9ywlGUZukQU4tME2lDsrM9IwxRuRXqyaj/L/y08Dom3IA9VSqBYnFVfekVnEPpbR4srm
-         wnuA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ADbIUm07Jo+6o0WZFLpwcGFfQa7iZ4Cd0fx6zgYPrcE=;
+        b=GSd8CU4xIgZTbRom4yNM0u0nYg8ZNSgGsedl5NQLSk5EpnbkpcU/afXPMjB9WPXIL+
+         cRnsXo4QvRVNtbOIt4P9k5a6WyrSFEbyOAW1QMhDhoCJe+gqOwJibDwEiC3nnCx3vze0
+         2ehY1aA1o4vDtLpXGmagerNQJYUw2iqJSgFFq5M4WvEjTTWqbO0O7Xz+LUqpv7zlc1e3
+         Ckq8nRSFELORWjOORxTUib8qcY+LvE2LJFHM2g8Sl4fv1CrRrqMd8afDmE++G4eMDROK
+         TXWMMZkuTNYpeJOfbmtchf+1xDmAvbs3c4nZg4qzYfa8EpCkR6hPehYEAwciSBs2D/7D
+         QqPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=S4TZKS6d2y1eHYS1jppzyvKAfOVpYJMMu/Ehs0CdOMQ=;
-        b=IYn2WEjJG4SfC7+CF7I+kFkLLqZR1ILyC5YWa+z7mKEUpSEnWeVt2qxDYttk9WT2dS
-         kqFJMDSyAplrJnluIQXu06VDOvxvRJjEm8br3B5k6YlZZIWwNLaGGuPtqDSmwYfmgB+S
-         DB3xoCHSeK2+asvbHSPpFc8jc7cq9yP6sFGTiyiWsatzW1VfMX8sVVv5Zu+whCGBJRPm
-         8w/DP6vv73W/b2/r3EKv3en7FHH+W6uhJDUHrR/0aJitLPBOr0xCidEZk6k/nEY9+ME4
-         OKU09YrWuAjak63e/w/SlEZsJSIukh6Xrrq2aZRK4yHO4LjgmS6m7/a+Rnyope74bnKv
-         ifsw==
-X-Gm-Message-State: ANhLgQ0vO5/VM5pafkDUhoHSgdp8VxdCEFyF4DrETYzgY92BoXISRd8I
-        s2ax5AJ+Z+7I4iTnoH/I2Gvwqw==
-X-Google-Smtp-Source: ADFU+vves3/aQr7oLsJhGchZWXzKMdM3mh+P/th94kW7rLjU1R6jxUU6OV6sQnzpH/J+h5YTyQdu4g==
-X-Received: by 2002:aa7:988f:: with SMTP id r15mr22672571pfl.252.1584933455399;
-        Sun, 22 Mar 2020 20:17:35 -0700 (PDT)
-Received: from localhost ([122.171.118.46])
-        by smtp.gmail.com with ESMTPSA id i4sm2741719pjg.4.2020.03.22.20.17.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 22 Mar 2020 20:17:34 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 08:47:24 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Willy Wolff <willy.mh.wolff.ml@gmail.com>
-Cc:     Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Rafael J.Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] thermal/drivers/cpufreq_cooling: Fix return of
- cpufreq_set_cur_state
-Message-ID: <20200323031724.xnbr6wmbzwpwutn4@vireshk-i7>
-References: <20200321092740.7vvwfxsebcrznydh@macmini.local>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ADbIUm07Jo+6o0WZFLpwcGFfQa7iZ4Cd0fx6zgYPrcE=;
+        b=GsY/tqJ3algSB+7d1VSDCh5YvAloUb5FANpIANTgQyKtFUwwA5J5kQsLXxfuEdTVUP
+         U0Dfrl3TJ0B4tBWDFRVp6vSzC5TlihDbNTbkFfIuB8M9kinydc6oJPEcrNbZzcuZ0gL5
+         NXlnhmaojFWt88waZ3Ww20As4RF3BhsPqfUOgdZQyRAXryHkPIh+FQK0aljpTeV83li1
+         6aMkietNOYUbqwNShS83L4wHR+/4b2MU0mbq1S3Txzrib4yvOnfKdfI0CmKfZ2fUIV8a
+         9JPvue57FgR+vDV3Pz9185esIJLITJr0t3x/eTAge1BTJ9B9syiapdubIESiDOYDrjLP
+         /X/g==
+X-Gm-Message-State: ANhLgQ1hAzHR2IBaQ1GFrjs0nvA1JaP93XrJ2Ho1LfuElIo+bRhiWOPC
+        RxexlVNsWxWMNFcPD/HRksXf90OA
+X-Google-Smtp-Source: ADFU+vsl9d9NgucvDrZzhZ67r6uCRFI61d07LglGRlahh2yGlE1aGsP9U5PM9dcPxVHT17ummrLhtw==
+X-Received: by 2002:adf:90ee:: with SMTP id i101mr26498989wri.417.1584933472045;
+        Sun, 22 Mar 2020 20:17:52 -0700 (PDT)
+Received: from [10.230.186.223] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id f10sm21366023wrw.96.2020.03.22.20.17.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Mar 2020 20:17:51 -0700 (PDT)
+Subject: Re: [PATCH net-next v6 09/10] net: phy: smsc: use
+ phy_read_poll_timeout() to simplify the code
+To:     Dejin Zheng <zhengdejin5@gmail.com>, andrew@lunn.ch,
+        hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+        mchehab+samsung@kernel.org, gregkh@linuxfoundation.org,
+        broonie@kernel.org, tglx@linutronix.de, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20200323025633.6069-1-zhengdejin5@gmail.com>
+ <20200323025633.6069-10-zhengdejin5@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <50e68879-adf3-52f4-1b0b-334dd02ef85a@gmail.com>
+Date:   Sun, 22 Mar 2020 20:17:47 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200321092740.7vvwfxsebcrznydh@macmini.local>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200323025633.6069-10-zhengdejin5@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21-03-20, 09:27, Willy Wolff wrote:
-> The function freq_qos_update_request returns 0 or 1 describing update
-> effectiveness, and a negative error code on failure. However,
-> cpufreq_set_cur_state returns 0 on success or an error code otherwise.
-> 
-> Signed-off-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
-> ---
->  drivers/thermal/cpufreq_cooling.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
-> index fe83d7a210d4..af55ac08e1bd 100644
-> --- a/drivers/thermal/cpufreq_cooling.c
-> +++ b/drivers/thermal/cpufreq_cooling.c
-> @@ -431,6 +431,7 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
->  				 unsigned long state)
->  {
->  	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
-> +	int ret;
->  
->  	/* Request state should be less than max_level */
->  	if (WARN_ON(state > cpufreq_cdev->max_level))
-> @@ -442,8 +443,9 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
->  
->  	cpufreq_cdev->cpufreq_state = state;
->  
-> -	return freq_qos_update_request(&cpufreq_cdev->qos_req,
-> -				get_state_freq(cpufreq_cdev, state));
-> +	ret = freq_qos_update_request(&cpufreq_cdev->qos_req,
-> +				      get_state_freq(cpufreq_cdev, state));
-> +	return ret < 0 ? ret : 0;
->  }
->  
->  /* Bind cpufreq callbacks to thermal cooling device ops */
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
+On 3/22/2020 7:56 PM, Dejin Zheng wrote:
+> use phy_read_poll_timeout() to replace the poll codes for
+> simplify lan87xx_read_status() function.
+> 
+> it should be add msleep(10) before call phy_read_poll_timeout()
+> to keep the code more similar, but it will report that warning, so
+> modify it to msleep(20).
+> 
+> ./scripts/checkpatch.pl
+> v5-0009-net-phy-smsc-use-phy_read_poll_timeout-to-simplif.patch
+> WARNING: msleep < 20ms can sleep for up to 20ms; see Documentation/timers/timers-howto.rst
+> #42: FILE: drivers/net/phy/smsc.c:126:
+> +		msleep(10);
+> 
+> Suggested-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-viresh
+Florian
