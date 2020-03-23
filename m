@@ -2,107 +2,108 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24053C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45818C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6ED12072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F39D20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:22:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xNUiB0i2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="h1V8EzhO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgCWRU6 (ORCPT
+        id S1727851AbgCWRWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:20:58 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37234 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727890AbgCWRU6 (ORCPT
+        Mon, 23 Mar 2020 13:22:03 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:37975 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727372AbgCWRWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:20:58 -0400
-Received: by mail-pf1-f193.google.com with SMTP id h72so5591061pfe.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 10:20:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=G33GucGUpf7/OJos6cI68PxFAvCJCakeR7MrrB4yhOw=;
-        b=xNUiB0i24A5k9G3lHwcmrEALWU/30OU8yRFBTjXBtxtlZlecmkO2n/QMaQk4YDIDxe
-         NX+nI3XZ+2WAoZ09W9VFzkQ/jh65ai/HRmNlB9JmEDAe0lsphW/ILAJ2RE4xAL/UjPC3
-         5wWoUeNhVG6ZzM8ee35Jhm11rYpF2JxhcOW5HOxiUc7dVosv0x3k8FDFM18uQJDHIXsn
-         m+oQCE6MKpSmxTnDnpG6JGp6dvJL4CQ6eEi9o+GOT9dJlfdFTbnj62iybAJGH+1aSimD
-         unHEckswTkURF+PuQ5yvD32DToVbjyatqABBmTwVYhI9+uJXcQbjwhFmDUtDaoDCYTY4
-         DdjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G33GucGUpf7/OJos6cI68PxFAvCJCakeR7MrrB4yhOw=;
-        b=s4dqgsLBb6qEA/TjCLsmF/voSZmknO2MgJu4QGXhyHd3jauZTI7RYRWR1xkt+aPsjo
-         tuD/8qFYwy/RguF8bUarG6o5ZqI5YB6Cb+mepB5EMJUd883KfUFg7Cq9Grds4YGKMRH+
-         ln22cVgbEawg8Sepc1NgQub/3U90z4y5J8bF3DmOaZz4ky4jsyXGMN6p6iPN9dWb1lci
-         dxWK5H+4f3F6hI+7Fm/noyO8U9MSLJHmuYrtW3xoFP5lxpVA8JQcsRExYUycl4pMRTLf
-         JLqdGu2+7+Gioq9OluX08V6dewSmDdxky8aP1k8JHHO21BdmM50+MSYMqg1sIYnN2BpM
-         ln7g==
-X-Gm-Message-State: ANhLgQ0RuqoVv3MK9bMMFNKMghGg5MVJrJu/Em7hgxiEvj9V6yrWN04O
-        zmL+J4HcgrivIyG31p9eMbdLIg==
-X-Google-Smtp-Source: ADFU+vsT0+leS6MTUQxm8jSGA6B0eQIlUuhjTWMLPX1oVxqTf1CjesLTnnNqVmZDjDft3w7IYcKtzQ==
-X-Received: by 2002:aa7:9566:: with SMTP id x6mr3236287pfq.104.1584984056928;
-        Mon, 23 Mar 2020 10:20:56 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id na18sm154599pjb.31.2020.03.23.10.20.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 10:20:56 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 11:20:54 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] docs: trace: coresight-ect.rst: fix a build warning
-Message-ID: <20200323172054.GA25141@xps15>
-References: <049f74b1db84cf08a02d0922bfa7567a895d46f1.1584966380.git.mchehab+huawei@kernel.org>
+        Mon, 23 Mar 2020 13:22:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584984122; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=Sc6fmyDj78JCWjL0wfEO7IdRbQ+sKfyO82uVXKA2cDk=;
+ b=h1V8EzhOZRfPWEEus1TFiFGaHZ2GmrBcOjqogPyU70SVRP06XjCLs8VcgD3mpqnn9JTJulCz
+ NhESv6b3fClhuGF9IGCb9UtRJaLs84Sm8/0MikHPlI5wFVj47rCVudY8x69rG+7wmrQuTky9
+ 0QCd3JNj5DW0inOp2c6K9RXV7S4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e78f02a.7fd7e5908308-smtp-out-n04;
+ Mon, 23 Mar 2020 17:21:46 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7CD8FC432C2; Mon, 23 Mar 2020 17:21:45 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9D4C9C44788;
+        Mon, 23 Mar 2020 17:21:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9D4C9C44788
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <049f74b1db84cf08a02d0922bfa7567a895d46f1.1584966380.git.mchehab+huawei@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] wl3501_cs: Replace zero-length array with
+ flexible-array member
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200319230617.GA15035@embeddedor.com>
+References: <20200319230617.GA15035@embeddedor.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200323172145.7CD8FC432C2@smtp.codeaurora.org>
+Date:   Mon, 23 Mar 2020 17:21:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 01:26:24PM +0100, Mauro Carvalho Chehab wrote:
-> Sphinx wants a line after "..", as otherwise it complains with:
-> 
-> 	Documentation/trace/coresight/coresight-ect.rst:2: WARNING: Explicit markup ends without a blank line; unexpected unindent.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/trace/coresight/coresight-ect.rst | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/trace/coresight/coresight-ect.rst b/Documentation/trace/coresight/coresight-ect.rst
-> index ecc1e57012ef..a93e52abcf46 100644
-> --- a/Documentation/trace/coresight/coresight-ect.rst
-> +++ b/Documentation/trace/coresight/coresight-ect.rst
-> @@ -1,4 +1,5 @@
->  .. SPDX-License-Identifier: GPL-2.0
-> +
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 
-Applied.
-
-Thanks,
-Mathieu
-
->  =============================================
->  CoreSight Embedded Cross Trigger (CTI & CTM).
->  =============================================
-> -- 
-> 2.24.1
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+Patch applied to wireless-drivers-next.git, thanks.
+
+53efdc9cb9e6 wl3501_cs: Replace zero-length array with flexible-array member
+
+-- 
+https://patchwork.kernel.org/patch/11448183/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
