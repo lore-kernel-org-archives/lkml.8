@@ -2,163 +2,150 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA8FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBD6C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A85232051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77EF206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:05:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ULCTdGYa"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="qelVB0EH";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="RhzOubAm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgCWTFP (ORCPT
+        id S1727915AbgCWTF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:05:15 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:39047 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727869AbgCWTFM (ORCPT
+        Mon, 23 Mar 2020 15:05:28 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:2090 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727624AbgCWTF1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:05:12 -0400
-Received: by mail-pj1-f68.google.com with SMTP id ck23so263899pjb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 12:05:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2fG9H5eoXdycQoQZNrJnabanTjIbabhsOmyO2vTW0Qc=;
-        b=ULCTdGYaRnUW3TAkI2l1l6dqbs5e4hV+SJAAgt7Qj+zm8rTBzJ5an1mE4YfgCqphqf
-         w4Y6Y1zyKBlUONTUVx+BRLqxC9o3uD+F6XVqzL3V/AWEkh5+i4oWCgrqy/XfRMsp4pTy
-         WHBpseWaIpSe5W1P7ffAQcQqccVJWSUy+D2ymeixpOEwjpZXZ/xr3cU9F24nqcRY1JMS
-         v19aP4WicgYQwd5HzUZuYDn3IXhcHI7ecRc3NQLv9bSQFchVGqoe1xYR0wmeVPFDR/+z
-         10t+AFUc8tGNTPKjyQRI2paTSkPzBaJbT2RvtLzap5MGg2/kAZmZhtImv0yCiDJ+w2HK
-         VSfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2fG9H5eoXdycQoQZNrJnabanTjIbabhsOmyO2vTW0Qc=;
-        b=c11MNtwV/uLrScas5RTavFRYy4FinVoqgM6vR20XpXNk2pJJtEdLzpd+K1kbfgK4Uw
-         jh25KkD1m3jdqzhFw3RqsfYCG4xiuTd7n6nbyvQxYq0jtM7mhIQ2+ZN78H6u/ReajJcq
-         Ah985HNInLAsx2R1wroNnG5O0Ipqq5FoLga8QIZV3WPlw0p3IuAvl175r842qS/KcKYL
-         3fOJdu0GmLS+9gWyrY4gmU9kHbbfHC5x+zhwbsNfxQJ/fuDCuia2lhKku1HutCxt9WTl
-         R4NmvpJUdCn8RcniwVEGpJwjeTut4c6PqVMU2iK6Sr9zh4DuQvoCCUn1EVgjYbJPiZ1I
-         0tWQ==
-X-Gm-Message-State: ANhLgQ2yHRNv1Iur4twsqIw6+0449c9a+tN1fd7u9UeVB2QOkYuW3F7n
-        ErQgRm43Whx4kFBMhMBLn+/xpw==
-X-Google-Smtp-Source: ADFU+vtRpFfD90HBITTvBcmhzzZwkmWFUae0+E0TWgZEUq5uZU7LqUIzvkKha49ShXRkmBPkKxQsDQ==
-X-Received: by 2002:a17:90a:71c5:: with SMTP id m5mr835384pjs.193.1584990310063;
-        Mon, 23 Mar 2020 12:05:10 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x11sm11535091pgq.48.2020.03.23.12.05.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 12:05:09 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 12:05:06 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     gregkh@linuxfoundation.org, davem@davemloft.net,
-        smohanad@codeaurora.org, jhugo@codeaurora.org,
-        kvalo@codeaurora.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] bus: mhi: core: Pass module owner during client
- driver registration
-Message-ID: <20200323190506.GB119913@minitux>
-References: <20200323122108.12851-1-manivannan.sadhasivam@linaro.org>
- <20200323122108.12851-2-manivannan.sadhasivam@linaro.org>
+        Mon, 23 Mar 2020 15:05:27 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02NIus6Y008960;
+        Mon, 23 Mar 2020 12:05:07 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=aWI0ufuT2jljY7C07J2YbCR3c+JaS8oFlDcenGBsKKQ=;
+ b=qelVB0EHQ7uJcUsEdiJoVQZ/T0tWfQQpUriBWyYVIacLBs1/acYzIKkt6jJR9j1lp2n+
+ +ncwHQyplUPlcjby7jMkjwuayLA4TipXgk8SOqY66k+CwLXyJT77vACrgtAsRblKWfQf
+ s4vtlMlettQx11blNEm1Y/dZLLVzW9p+cPs= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yx32wen7e-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 23 Mar 2020 12:05:07 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.230) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Mon, 23 Mar 2020 12:05:06 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ib3B1i/HQL+vvmTWpRWmMpSQuyLhVqaiPsWOWHPTB6u8dgYA4lDgEC68/2JEkoALMiO1b2nhYxtuj6Lt7WYdOdA0zM8DT6nRO6oB9fpss1uOQceDp0tcwq9WIP9iZYGyrfDLPbCU0mXCoe+1ivKWhoTS2bNT2g6N7s946CEFzW+eFD+jm8CO/6WeG9nUu/nvaSyvCqUtwzQ88uiQwAfZWgc6Ei9Yj4UD06JqZV1vjxxOEzR3P4nL78HVlp62fEUNkwGFp5seOSRw8WVavitOTDkJ7t0448tXy1ksqHHYW0GnohQsLXk3waA/datBhpSe9t3qS/7JP8xFSVHuSPKNsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aWI0ufuT2jljY7C07J2YbCR3c+JaS8oFlDcenGBsKKQ=;
+ b=D7n1hN8zSGWerxp9mTtxK3rsrorkov/vqZ5IkkNUR2WMft6cvjL2JmKxVQY2MDy9qGvRye6oScOY/1RsIDQmGUQMND0G2PqCP5wxXDQIaKrWLqmG+UDasbMVe2zjAj5zPPgMeD3qW4UZ7iVuT6i1dT23k6Kl0eNXWp51hTYvy6rEjiSiDV40RXn915Ml9I2kbIrhfJpGsdnNPHckUpYI3cdBGnOXDJYGGF99jysOucWzMKsIuOmrQfe9aXcK0Q15kPLGC+dNP8MM2xB6a8b/v1qB60J+cRCxlJN6SihDvrn/2UISBmekcnRyzAE9ykwfSTV+flhRxObJP7i6G6FEfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aWI0ufuT2jljY7C07J2YbCR3c+JaS8oFlDcenGBsKKQ=;
+ b=RhzOubAmHtK5ZqGznf7hYKhzXA4/W/6dlVAql/8hw3KPmzU718Gk0BOf1e4V62qzbCUdVjYmeNppTwg22zWLWgvouuIH9eLVKN8lQNO9TT/B2qDo5GQKOHXIWOE+jX9S7FyQl3PUx2b6N6FujAkEgqqv86o1WCG/x5E1R1Ogtls=
+Received: from MW3PR15MB3883.namprd15.prod.outlook.com (2603:10b6:303:51::22)
+ by MW3PR15MB3882.namprd15.prod.outlook.com (2603:10b6:303:49::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Mon, 23 Mar
+ 2020 19:04:52 +0000
+Received: from MW3PR15MB3883.namprd15.prod.outlook.com
+ ([fe80::a49b:8546:912f:dd98]) by MW3PR15MB3883.namprd15.prod.outlook.com
+ ([fe80::a49b:8546:912f:dd98%5]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
+ 19:04:52 +0000
+Subject: Re: [PATCH bpf-next v5 3/7] bpf: lsm: provide attachment points for
+ BPF LSM programs
+To:     KP Singh <kpsingh@chromium.org>, <linux-kernel@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <linux-security-module@vger.kernel.org>
+CC:     Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20200323164415.12943-1-kpsingh@chromium.org>
+ <20200323164415.12943-4-kpsingh@chromium.org>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <5ce03d5b-fef6-c48d-0d9a-3ea6bc4e1401@fb.com>
+Date:   Mon, 23 Mar 2020 12:04:48 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
+In-Reply-To: <20200323164415.12943-4-kpsingh@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MWHPR18CA0033.namprd18.prod.outlook.com
+ (2603:10b6:320:31::19) To MW3PR15MB3883.namprd15.prod.outlook.com
+ (2603:10b6:303:51::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323122108.12851-2-manivannan.sadhasivam@linaro.org>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from MacBook-Pro-52.local (2620:10d:c090:400::5:2131) by MWHPR18CA0033.namprd18.prod.outlook.com (2603:10b6:320:31::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20 via Frontend Transport; Mon, 23 Mar 2020 19:04:50 +0000
+X-Originating-IP: [2620:10d:c090:400::5:2131]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7feb8bd6-0dbf-432d-3e12-08d7cf5d1107
+X-MS-TrafficTypeDiagnostic: MW3PR15MB3882:
+X-Microsoft-Antispam-PRVS: <MW3PR15MB3882C0BF1936D519D1F721CAD3F00@MW3PR15MB3882.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:302;
+X-Forefront-PRVS: 0351D213B3
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(136003)(396003)(376002)(366004)(39860400002)(346002)(199004)(4744005)(31686004)(2616005)(54906003)(86362001)(316002)(31696002)(2906002)(16526019)(4326008)(7416002)(186003)(8936002)(81156014)(81166006)(8676002)(52116002)(6486002)(478600001)(36756003)(66556008)(66946007)(5660300002)(66476007)(6506007)(6512007)(53546011);DIR:OUT;SFP:1102;SCL:1;SRVR:MW3PR15MB3882;H:MW3PR15MB3883.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: oDN1cc9/a7UksVj4UoSFVZ3+HOsw8LzYtVZd36Hyb0xAHIHPPXAxwSq3YMC+yXcDHJVnmqxPh6lpwPB9dO2a4dX+VbrMvwuU2rgz+CBH4wwO4pbrRWphe8805WsTwi/Umw66OnQXKMic3eRDEjsD2fogcv7ma4eM/EQuvj9MGLsp8Kz87XTkKzHvluDu2LgZfXtOhdGLClbHXh+/2dB/GT1zlTamlj/sWKHSFm3K3OG7QFzJ3ryKIgDr958C22OSEZw7sH5UOb7tTLg9+S6xASnSHYuOX5BG3YTHWtCyh1D2/sYXRFApx9bPs3gFLov6MfddlgjVnTVYeyc2y9Oymht2saKDYemEKYtPBUy/+CxqdSbg0zmNeBn4T5Kw9O0vOj3fubhodPfyKJwxTgFCPKkp7HAbrCmwMVsEW35qSX3dSis8Y6P5ePxH8b7TWdSr
+X-MS-Exchange-AntiSpam-MessageData: AyP5NkOSOHWqpI9e+2I0hUQC/Ytht22Ns+cl6yQ5KzT4gfNVIbOXyackrXN4/VC+8K+Y93qo2WtnS+YUwCWkNBNkrJNXP/oLoJHXNcwPgzJ8BWGGZ+wHvrIeR/KJUw8dO7G0bt/pV5z53afBBeF6nD+WpbjzsqMQbl1eMpjtAjCrZO91cezBEu2IFRWqQSVE
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7feb8bd6-0dbf-432d-3e12-08d7cf5d1107
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2020 19:04:52.2542
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ih1cUTI1BEHEzb1/g15b0hgxO3EFEN3XOSc+Z31Wnr7ITggpzS2eyHoadcqY9915
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB3882
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-23_07:2020-03-23,2020-03-23 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
+ impostorscore=0 mlxlogscore=686 spamscore=0 suspectscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 lowpriorityscore=0
+ adultscore=0 clxscore=1015 phishscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003230096
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 23 Mar 05:21 PDT 2020, Manivannan Sadhasivam wrote:
 
-> The module owner field can be used to prevent the removal of kernel
-> modules when there are any device files associated with it opened in
-> userspace. Hence, modify the API to pass module owner field. For
-> convenience, module_mhi_driver() macro is used which takes care of
-> passing the module owner through THIS_MODULE of the module of the
-> driver and also avoiding the use of specifying the default MHI client
-> driver register/unregister routines.
-> 
-> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On 3/23/20 9:44 AM, KP Singh wrote:
+> From: KP Singh <kpsingh@google.com>
+> 
+> When CONFIG_BPF_LSM is enabled, nops functions, bpf_lsm_<hook_name>, are
+> generated for each LSM hook. These nops are initialized as LSM hooks in
+> a subsequent patch.
+> 
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> Reviewed-by: Florent Revest <revest@google.com>
 
-> ---
->  drivers/bus/mhi/core/init.c |  5 +++--
->  include/linux/mhi.h         | 19 ++++++++++++++++++-
->  2 files changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
-> index 5fb756ca335e..eb7f556a8531 100644
-> --- a/drivers/bus/mhi/core/init.c
-> +++ b/drivers/bus/mhi/core/init.c
-> @@ -1189,7 +1189,7 @@ static int mhi_driver_remove(struct device *dev)
->  	return 0;
->  }
->  
-> -int mhi_driver_register(struct mhi_driver *mhi_drv)
-> +int __mhi_driver_register(struct mhi_driver *mhi_drv, struct module *owner)
->  {
->  	struct device_driver *driver = &mhi_drv->driver;
->  
-> @@ -1197,12 +1197,13 @@ int mhi_driver_register(struct mhi_driver *mhi_drv)
->  		return -EINVAL;
->  
->  	driver->bus = &mhi_bus_type;
-> +	driver->owner = owner;
->  	driver->probe = mhi_driver_probe;
->  	driver->remove = mhi_driver_remove;
->  
->  	return driver_register(driver);
->  }
-> -EXPORT_SYMBOL_GPL(mhi_driver_register);
-> +EXPORT_SYMBOL_GPL(__mhi_driver_register);
->  
->  void mhi_driver_unregister(struct mhi_driver *mhi_drv)
->  {
-> diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-> index 79cb9f898544..0e7071dbf2c3 100644
-> --- a/include/linux/mhi.h
-> +++ b/include/linux/mhi.h
-> @@ -514,11 +514,28 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
->   */
->  void mhi_unregister_controller(struct mhi_controller *mhi_cntrl);
->  
-> +/*
-> + * module_mhi_driver() - Helper macro for drivers that don't do
-> + * anything special in module init/exit.  This eliminates a lot of
-> + * boilerplate.  Each module may only use this macro once, and
-> + * calling it replaces module_init() and module_exit()
-> + */
-> +#define module_mhi_driver(mhi_drv) \
-> +	module_driver(mhi_drv, mhi_driver_register, \
-> +		      mhi_driver_unregister)
-> +
-> +/*
-> + * Macro to avoid include chaining to get THIS_MODULE
-> + */
-> +#define mhi_driver_register(mhi_drv) \
-> +	__mhi_driver_register(mhi_drv, THIS_MODULE)
-> +
->  /**
->   * mhi_driver_register - Register driver with MHI framework
->   * @mhi_drv: Driver associated with the device
-> + * @owner: The module owner
->   */
-> -int mhi_driver_register(struct mhi_driver *mhi_drv);
-> +int __mhi_driver_register(struct mhi_driver *mhi_drv, struct module *owner);
->  
->  /**
->   * mhi_driver_unregister - Unregister a driver for mhi_devices
-> -- 
-> 2.17.1
-> 
+Acked-by: Yonghong Song <yhs@fb.com>
