@@ -2,141 +2,149 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D82C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96382C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3022C2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6210F2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:05:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="waSIN8+A"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gj67rIhc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbgCWJEB (ORCPT
+        id S1727657AbgCWJFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 05:04:01 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51484 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727587AbgCWJEB (ORCPT
+        Mon, 23 Mar 2020 05:05:42 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35476 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727587AbgCWJFm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:04:01 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c187so13673107wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 02:03:58 -0700 (PDT)
+        Mon, 23 Mar 2020 05:05:42 -0400
+Received: by mail-lj1-f194.google.com with SMTP id u12so13655653ljo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 02:05:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=lPutVzS3Ynb1eSmgIsa4JmohPw4ZclRrh1KFVq8nWQ0=;
-        b=waSIN8+ApYqW/LXnPGRL/NvneWe4/UMrJ9lHgLm+ihlGugDYOwJ6NZkrFpWxvP6MC8
-         GNsIhdx1sE0PQNevvLnFU8JLGhBZQCcM2iuXOWZHDd6af+85XDnWTjRVbwkVfZgA6PeF
-         l0e1vdhqnc8FBwWg8vUGp27gtAkcfvVU/5tktj+zX+p8+lBs6MC90BoMyIOLPH2MhaTo
-         45RTZrMkvxEjep4JO6e+BufQZJamczxfLM8nme9e6rCkqkb9C0FBnOjVf9PxprElx5Zj
-         rmrlPd6yS7hTFWmy4oW4XCTX9u6yeSNaotUzdicCYqM0JaLIz/ug+LCBJ9x1OWwCwopN
-         OKDA==
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UeQUAcdMZxn26RtbUmldtq49KvGfHbMzwTxg6ahzu8Q=;
+        b=gj67rIhc9xmtkaXHqF2aKuKpPzYsq6nRprfC6gX/IIfe2bFxncqRx4LENZfh1WRp3Q
+         OD6IItiqpkArFZmgK3PCQKt0vuhkduXH9aRT1J30TeWACtsHmjVjB+jefTtkmyXe/svS
+         IUOwswoEXf+4gP8/NR1KJqeG6PZs1vnX1Q6KI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=lPutVzS3Ynb1eSmgIsa4JmohPw4ZclRrh1KFVq8nWQ0=;
-        b=lKrWhrfk9zNLaLkxfkBDbQQRI7t0Ysu3IrFN0Lc4HCMJFh2D3C6qDyqsyPqGvV+OAl
-         mOVbjKBZkk636XsEJKR/jyBkckpffNSsKd0aDzOOWRLPBDQ30MJ8CAFoQqXGRy6RcUjp
-         X3uzXrd5ojyeiDmQWWsSw2g7ywoRYwcMQ+371/CJN7qigVJC+7djQeuf926+JyMxdLDR
-         NmgCGOmFTuiTtUHn3cDrn6ASJMH904sYh6pQ4nGHt9CkoJ5MaONe4v1we5ClqxsC0hbr
-         kKwtUvKW+gnNACKKLqBgXe7Nwm/bzD5PCHSzGjOhxAkgP/QQ1M3Z7Z6SUl0XFSG3BZFY
-         PORQ==
-X-Gm-Message-State: ANhLgQ1W6V2DFS1rj+YrRRgHhNqcVVG75f7sWibPtOprTg1lAQA5+Wm4
-        tTTwk8TvkS+lWzGerxfrEFIyQQ==
-X-Google-Smtp-Source: ADFU+vta0fIyRtESZphpxuC88pwvr1xjRflNRJ4U+UNesyEuY+m+xd0K3+8cVkrJCyM2KNvZ6DRGtA==
-X-Received: by 2002:a1c:b144:: with SMTP id a65mr27313095wmf.54.1584954237568;
-        Mon, 23 Mar 2020 02:03:57 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id f15sm22881505wru.83.2020.03.23.02.03.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 02:03:56 -0700 (PDT)
-References: <20200302125310.742-1-linux.amoon@gmail.com> <20200302125310.742-3-linux.amoon@gmail.com> <7hlfoir8rj.fsf@baylibre.com> <CAFBinCB2WXZNRg4wdFD0RJ5k4hHqcfAOCHemvHzZE42-Mo5vzA@mail.gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     Anand Moon <linux.amoon@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCHv2 2/2] clk: meson: g12a: set cpub_clk flags to CLK_IS_CRITICAL
-In-reply-to: <CAFBinCB2WXZNRg4wdFD0RJ5k4hHqcfAOCHemvHzZE42-Mo5vzA@mail.gmail.com>
-Date:   Mon, 23 Mar 2020 10:03:55 +0100
-Message-ID: <1jr1xjcuis.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UeQUAcdMZxn26RtbUmldtq49KvGfHbMzwTxg6ahzu8Q=;
+        b=GtaqNozDWSmsLoAXvMgHQ34RJ7jqPAyMs1AAohrqfzfgjE2+fay/hu5DJji/v8rQKX
+         pyN4/nK22FM2cn21fCk0C6TO+uixZWEv4PEDXbN+JOcw+jLqLHVTPJBlqf+2lYdzuPP0
+         OngV4esZquZxpTpPx0GUM+nQgPdNlCnC7bo9bTTJmbsduzJZ8jnFWaodgaerGluzz3Gz
+         dAx4QnS8E62cM0vWi2B6lRf6u03TKA1YMp6JU9O+pHBXOUWbZsJ+1FCoW9TF7gYnwCjk
+         DXF/jl7f7c61WNVvTEye9ZwhHf7o+CBYvkC/UT3pYQzteBOZIq04n4wNXmfC2wU/QRQK
+         wi9w==
+X-Gm-Message-State: ANhLgQ1dkyWDDL7CI2w1StJw8MrSjTYTOO84Tc5A+ykl/UDODldWYwy2
+        fMoQKcwIPNm6EtdDrVdFgESxamvhvcFu9RGqWPYOTg==
+X-Google-Smtp-Source: ADFU+vsThDf7qqsHDVU9kt7C92bwqzK+m2HTPz3VsgWRN3a2xVl/c7U7hQNsOxfPHdo8nHSIOPur05m8x4B3/bbbdgs=
+X-Received: by 2002:a2e:a483:: with SMTP id h3mr8739201lji.264.1584954338871;
+ Mon, 23 Mar 2020 02:05:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200323065318.16533-1-rayagonda.kokatanur@broadcom.com>
+ <20200323065318.16533-2-rayagonda.kokatanur@broadcom.com> <20200323082540.2gvbbxtwadvzeeos@pengutronix.de>
+In-Reply-To: <20200323082540.2gvbbxtwadvzeeos@pengutronix.de>
+From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Date:   Mon, 23 Mar 2020 14:35:27 +0530
+Message-ID: <CAHO=5PFBcgmnpA8D6prEo4WCu235Mr9jh8=_Y6pdM8R9=ShfXw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] pwm: bcm-iproc: handle clk_get_rate() return
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Yendapally Reddy Dhananjaya Reddy 
+        <yendapally.reddy@broadcom.com>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On Fri 20 Mar 2020 at 00:39, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
-
-> Hi Kevin,
+On Mon, Mar 23, 2020 at 1:55 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 >
-> On Mon, Mar 2, 2020 at 6:01 PM Kevin Hilman <khilman@baylibre.com> wrote:
-> [...]
->> > updating flags to CLK_IS_CRITICAL which help enable all the parent for
->> > cpub_clk.
->>
->> With current mainline, I've tested DVFS using CPUfreq on both clusters
->> on odroid-n2, and both clusters are booting, so I don't understand the
->> need for this patch.
-> I *think* there is a race condition at kernel boot between cpufreq and
-> disabling orphaned clocks
-> I'm not sure I fully understand it though and I don't have any G12B
-> board to verify it
+> On Mon, Mar 23, 2020 at 12:23:17PM +0530, Rayagonda Kokatanur wrote:
+> > Handle clk_get_rate() returning <=3D 0 condition to avoid
+> > possible division by zero.
 >
-> my understanding is that u-boot runs Linux off CPU0 which is clocked by cpub_clk
-> this means we need to keep cpub_clk enabled as long as Linux wants the
-> CPU0 processor to be enabled (on 32-bit ARM platforms that would be
-> smp_operations.cpu_{kill,die})
-> cpufreq does not call clk_prepare_enable on the CPU clocks so this
-> means that the orphaned clock cleanup mechanism can disable it "at any
-> time",
+> Was this noticed during a review and is more theoretic. Or does this
+> (depending on pre-boot state) result in a kernel crash?
 
-If nothing calls enable the cpu clock while it is managed by Linux
-(cpufreq), there might something worth fixing. Adding CLK_IS_CRITICAL
-will mask an issue that is still not explained.
-
-"at any time": absolutely not.
-Disabling unused clocks, is done only once, at during the late_init
-stage.
-
-If your clock gets disabled later on, it means it has been turned on and
-off by another driver (possibly due to probe deferral)
-
-> killing everything running on CPU0 and CPU1 (which are both
-> clocked by cpub_clk)
+This is reported by internal coverity tool.
 >
-> I have no explanation why this depends on booting from SD or eMMC.
+> > Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controlle=
+r")
+> > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> > ---
+> >  drivers/pwm/pwm-bcm-iproc.c | 32 +++++++++++++++++++-------------
+> >  1 file changed, 19 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
+> > index 1f829edd8ee7..8bbd2a04fead 100644
+> > --- a/drivers/pwm/pwm-bcm-iproc.c
+> > +++ b/drivers/pwm/pwm-bcm-iproc.c
+> > @@ -99,19 +99,25 @@ static void iproc_pwmc_get_state(struct pwm_chip *c=
+hip, struct pwm_device *pwm,
+> >       else
+> >               state->polarity =3D PWM_POLARITY_INVERSED;
+> >
+> > -     value =3D readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
+> > -     prescale =3D value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
+> > -     prescale &=3D IPROC_PWM_PRESCALE_MAX;
+> > -
+> > -     multi =3D NSEC_PER_SEC * (prescale + 1);
+> > -
+> > -     value =3D readl(ip->base + IPROC_PWM_PERIOD_OFFSET(pwm->hwpwm));
+> > -     tmp =3D (value & IPROC_PWM_PERIOD_MAX) * multi;
+> > -     state->period =3D div64_u64(tmp, rate);
+> > -
+> > -     value =3D readl(ip->base + IPROC_PWM_DUTY_CYCLE_OFFSET(pwm->hwpwm=
+));
+> > -     tmp =3D (value & IPROC_PWM_PERIOD_MAX) * multi;
+> > -     state->duty_cycle =3D div64_u64(tmp, rate);
+> > +     if (rate =3D=3D 0) {
+> > +             state->period =3D 0;
+> > +             state->duty_cycle =3D 0;
+> > +     } else {
+> > +             value =3D readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
+> > +             prescale =3D value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm=
+);
+> > +             prescale &=3D IPROC_PWM_PRESCALE_MAX;
+> > +
+> > +             multi =3D NSEC_PER_SEC * (prescale + 1);
+> > +
+> > +             value =3D readl(ip->base + IPROC_PWM_PERIOD_OFFSET(pwm->h=
+wpwm));
+> > +             tmp =3D (value & IPROC_PWM_PERIOD_MAX) * multi;
+> > +             state->period =3D div64_u64(tmp, rate);
+> > +
+> > +             value =3D readl(ip->base +
+> > +                           IPROC_PWM_DUTY_CYCLE_OFFSET(pwm->hwpwm));
+> > +             tmp =3D (value & IPROC_PWM_PERIOD_MAX) * multi;
+> > +             state->duty_cycle =3D div64_u64(tmp, rate);
+> > +     }
 >
-> for the 32-bit SoCs we have CLK_IS_CRITICAL on the CPU clock as well
-> since commit 0dad1ec65bc30a
-> on G12A we have CLK_IS_CRITICAL on the sys_pll clocks, however my
-> understanding is that cpub_clk could also be fed by one of the
-> fixed_pll derived clocks (which have a gate as well, which may or may
-> not be turned off by the orphaned clock cleanup - that is pure
-> speculation from my side though).
-
-Yes there are other critical clocks on Amlogic, mostly because the SCP Fw
-driver does not claim the clocks it depends on. At least we know why
-this flag is set and there should be a comment associated with it.
-
-ATM, the issue reported by Anand (anyone else ?) is not explained. 
-
+> The change looks fine.
 >
+> Best regards
+> Uwe
 >
-> Martin
-
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
