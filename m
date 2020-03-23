@@ -2,148 +2,122 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F0AC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAEDC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F7D2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A1082073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:38:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LEc0lIvc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jOQyT2Hh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgCWWg2 (ORCPT
+        id S1727047AbgCWWi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:36:28 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37355 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgCWWg2 (ORCPT
+        Mon, 23 Mar 2020 18:38:27 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46126 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgCWWi0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 18:36:28 -0400
-Received: by mail-pf1-f195.google.com with SMTP id h72so6039181pfe.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 15:36:27 -0700 (PDT)
+        Mon, 23 Mar 2020 18:38:26 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 111so15180394oth.13
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 15:38:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ACuUasvqtN3uO6yrwsX1eOuus0lzP1y4to8YPIyRRRk=;
-        b=LEc0lIvcUiVP04UL4F+kP9+DFW+U6/rZcNdd2Wsub+v9ElcnKjfl00yxZOM9jbckr0
-         AbOYdFQc/HY3vn1pznkiQpcdUjpBgPOS93HJ7+MdOkkwHiv/ZqWb7NO44QQFFllHrX/Q
-         tg9Iz22QRPfnMkJegjTdoDSrlfqGfWC2T6owvXt1ALP/szEQXRoLUVz1+r3sUOUQg3d7
-         RCM4GtfKvbLBvNUSlavjfpSqwAGzZS12impU7JTqQAdA+NKlPmCs9d3wtgFgjQbxys+k
-         hcSUOGRvUY/Qj3+FL51CVfVjSS0Hk+SR0hGrtq4RqqD7CQa40QAiZKX6aoG1hP2iC76t
-         ZByA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gu80lHMEhTHjncO4g/gq1vFZP4xk7NOR08ZBWiLNNKo=;
+        b=jOQyT2HhWKETiqswng1tiRgCPcdF9YcWLzhqPU986HJUtdHE/mL6THRWTt/v4I6pHG
+         P603qVCd0pOoV+ZC7BgJaydSndeJC1obn8+MBb+SVYNnzSYr2GZ7aR5h3FYfIRa6xHhc
+         RYxRmdPMc4aVFu1QlxHyJpvctdV5fzrDU/DAdqNsDkbIhzodW5GhHPeUnV1jnl9uUKao
+         Vf1a6InlSlaPA0mrHfR9EpJunh382SD1wOcqsxpfJ2mOtw9lkxGNOui2F6VN9tatq6vU
+         sbR2ZqhSyy6BKVDoKNlZ40iGML0/6st7dKw9+lkq3hoeAnr9Pif4JvpvjibCq++9EZc8
+         YWdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ACuUasvqtN3uO6yrwsX1eOuus0lzP1y4to8YPIyRRRk=;
-        b=QDSL/dgEjUQsYljd1ThWBf87KT+BFzGtytcPHVVVc0yBcOg1AB7So3+U4CGlZuEc1k
-         yMGf7m6ox+ucLapwJKVpIhTMad88+fE7U5zzAaQo5ceFoTHqmsT3mUTulccwhV1Yj9/c
-         jkz7K7D5aiQrFsHcD/NElv/u+yhkEX8D+cYLZgWsMLSVJujEostH1VmNp/GUXC/5eSq7
-         JCz/b+uFg0USREhaPjJZxCTvb21AudpR12aAe0N71Zv6om6dumhM5PwEEowsfm1lavLJ
-         oSccR/R3xPsLg/HWIhy4h0KBUge3pGl4LOB0sV7ESMIJFnApO2gWX5zo/NBh9stomDoD
-         0Leg==
-X-Gm-Message-State: ANhLgQ0Y7o/atpiuEAYoGPq2SHjnJ2O5gzCepMwL2SaGfPbN+h2VtJou
-        KeYgU0VlMKKHo6ExJ5+pLmxBTg==
-X-Google-Smtp-Source: ADFU+vvmsgG9yaJYioNcJnCg7Tybo7TDvg579J73yNP3NsjkCQSMc9oSTdA7qpXjc2Imrb4DJO+4AA==
-X-Received: by 2002:a63:ff20:: with SMTP id k32mr23724220pgi.371.1585002987050;
-        Mon, 23 Mar 2020 15:36:27 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id r17sm2328604pgl.80.2020.03.23.15.36.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 15:36:26 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 16:36:24 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/4] remoteproc: qcom: q6v5: Add common panic handler
-Message-ID: <20200323223624.GD30464@xps15>
-References: <20200310063817.3344712-1-bjorn.andersson@linaro.org>
- <20200310063817.3344712-4-bjorn.andersson@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gu80lHMEhTHjncO4g/gq1vFZP4xk7NOR08ZBWiLNNKo=;
+        b=NG6Rfd3XXPKZVyaJRMYHcm3wfk/ZSLwHdUueA83+QfvjTBSj2gOVxJG8+KrTitcsG1
+         wrzbYqwDdDkpYAGnx9e8ky8aQN/aCQFvESwB+C4qH3WacsqvP91HxGMiiX7furGst8bn
+         ODR+ky/mDmzwIrClXR4QLESUwOjjCiol9+Jc8jUvPeiHvi5x4RyDNoPnJymwLm1KQNR4
+         Nu9BZzljR8yRFO6Ob6Pw/fOCB4cYVpZdCc9id7Q7AVccFehpP+vxa/brnW8DoweU7dKS
+         iUnCoaNtiiKjTFvWAKy/vZZ6FYmo9Z+atS5OMbiI+gjdlGpIOKme/rVnYHn0py7vpfih
+         MSIA==
+X-Gm-Message-State: ANhLgQ1KJQoCT/dqoCc3KFp1ohi7n7P7nsxTSYhwVA/v1MejIF7xeb6T
+        Hn7Aa3W9Og7KlC8Ic/Ty5XHhRpF+Sn0fUFKiR3s=
+X-Google-Smtp-Source: ADFU+vs6gYNhEuSaOtN3tbOtrPOFhNGCoZyD6ZzgKMo7ZKhWCTQ32v4pwuhGPfKBssy2QAI2ZOx3kjGVmfwlI3kk3mk=
+X-Received: by 2002:a9d:412:: with SMTP id 18mr19172704otc.134.1585003106203;
+ Mon, 23 Mar 2020 15:38:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310063817.3344712-4-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAP6exY+LnUXaOVRZUXmi2wajCPZoJVMFFAwbCzN3YywWyhi8ZA@mail.gmail.com>
+ <D31718CF-1755-4846-8043-6E62D57E4937@zytor.com> <CAP6exYJHgqsNq84DCjgNP=nOjp1Aud9J5JAiEZMXe=+dtm-QGA@mail.gmail.com>
+ <8E80838A-7A3F-4600-AF58-923EDA3DE91D@zytor.com> <CACdnJusmAHJYauKvHEXNZKaUWPqZoabB_pSn5WokSy_gOnRtTw@mail.gmail.com>
+ <A814A71D-0450-4724-885B-859BCD2B7CBD@zytor.com> <CAP6exYJdCzG5EOPB9uaWz+uG-KKt+j7aJMGMfqqD3vthco_Y_g@mail.gmail.com>
+ <CF1457CD-0BE2-4806-9703-E99146218BEC@zytor.com> <CAP6exYJj5n8tLibwnAPA554ax9gjUFvyMntCx4OYULUOknWQ0g@mail.gmail.com>
+ <C2B3BE61-665A-47FD-87E0-BDB5C30CEFF4@zytor.com> <CAP6exY+avh0G3nuqbxJj2ZgKkRdvwGTKeWyazqXJHbp+X-2u+A@mail.gmail.com>
+In-Reply-To: <CAP6exY+avh0G3nuqbxJj2ZgKkRdvwGTKeWyazqXJHbp+X-2u+A@mail.gmail.com>
+From:   ron minnich <rminnich@gmail.com>
+Date:   Mon, 23 Mar 2020 15:38:15 -0700
+Message-ID: <CAP6exYLEg+iu4Hs0+vdk0b6rgB5ZT7ZTvuhe--biCg9dGbNCTQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] x86 support for the initrd= command line option
+To:     "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Matthew Garrett <mjg59@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 11:38:16PM -0700, Bjorn Andersson wrote:
-> Add a common panic handler that invokes a stop request and sleep enough
-> to let the remoteproc flush it's caches etc in order to aid post mortem
-> debugging. For now a hard coded 200ms is returned to the remoteproc
-> core, this value is taken from the downstream kernel.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Change since v3:
->  - Change return type to unsigned long
-> 
->  drivers/remoteproc/qcom_q6v5.c | 20 ++++++++++++++++++++
->  drivers/remoteproc/qcom_q6v5.h |  1 +
->  2 files changed, 21 insertions(+)
-> 
-> diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
-> index cb0f4a0be032..111a442c993c 100644
-> --- a/drivers/remoteproc/qcom_q6v5.c
-> +++ b/drivers/remoteproc/qcom_q6v5.c
-> @@ -15,6 +15,8 @@
->  #include <linux/remoteproc.h>
->  #include "qcom_q6v5.h"
->  
-> +#define Q6V5_PANIC_DELAY_MS	200
-> +
->  /**
->   * qcom_q6v5_prepare() - reinitialize the qcom_q6v5 context before start
->   * @q6v5:	reference to qcom_q6v5 context to be reinitialized
-> @@ -162,6 +164,24 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5)
->  }
->  EXPORT_SYMBOL_GPL(qcom_q6v5_request_stop);
->  
-> +/**
-> + * qcom_q6v5_panic() - panic handler to invoke a stop on the remote
-> + * @q6v5:	reference to qcom_q6v5 context
-> + *
-> + * Set the stop bit and sleep in order to allow the remote processor to flush
-> + * its caches etc for post mortem debugging.
-> + *
-> + * Return: 200ms
-> + */
-> +unsigned long qcom_q6v5_panic(struct qcom_q6v5 *q6v5)
-> +{
-> +	qcom_smem_state_update_bits(q6v5->state,
-> +				    BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
-> +
-> +	return Q6V5_PANIC_DELAY_MS;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_q6v5_panic);
-> +
->  /**
->   * qcom_q6v5_init() - initializer of the q6v5 common struct
->   * @q6v5:	handle to be initialized
-> diff --git a/drivers/remoteproc/qcom_q6v5.h b/drivers/remoteproc/qcom_q6v5.h
-> index 7ac92c1e0f49..c4ed887c1499 100644
-> --- a/drivers/remoteproc/qcom_q6v5.h
-> +++ b/drivers/remoteproc/qcom_q6v5.h
-> @@ -42,5 +42,6 @@ int qcom_q6v5_prepare(struct qcom_q6v5 *q6v5);
->  int qcom_q6v5_unprepare(struct qcom_q6v5 *q6v5);
->  int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5);
->  int qcom_q6v5_wait_for_start(struct qcom_q6v5 *q6v5, int timeout);
-> +unsigned long qcom_q6v5_panic(struct qcom_q6v5 *q6v5);
+nvm, it's only mentioned as a parameter for bootloaders.
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Testing this change now.
 
->  
->  #endif
-> -- 
-> 2.24.0
-> 
+On Mon, Mar 23, 2020 at 3:29 PM ron minnich <rminnich@gmail.com> wrote:
+>
+> sounds good, I'm inclined to want to mention only initrdmem= in
+> Documentation? or just say initrd is discouraged or deprecated?
+>
+> On Mon, Mar 23, 2020 at 2:41 PM <hpa@zytor.com> wrote:
+> >
+> > On March 23, 2020 12:40:15 PM PDT, ron minnich <rminnich@gmail.com> wrote:
+> > >I'm wondering -- adding initrdmem= is easy, do you think we'll ever be
+> > >able to end uses of initrd= in the ARM and MIPS world? Is it ok to
+> > >have these two identical command line parameters? I'm guessing just
+> > >changing initrd= would be hard.
+> > >
+> > >Do we just accept initrd= from this day forward, as well as initrdmem=?
+> > >
+> > >On Mon, Mar 23, 2020 at 12:06 PM <hpa@zytor.com> wrote:
+> > >>
+> > >> On March 23, 2020 11:54:28 AM PDT, ron minnich <rminnich@gmail.com>
+> > >wrote:
+> > >> >On Mon, Mar 23, 2020 at 11:19 AM <hpa@zytor.com> wrote:
+> > >> >> Pointing to any number of memory chunks via setup_data works and
+> > >> >doesn't need to be exposed to the user, but I guess the above is
+> > >> >reasonable.
+> > >> >
+> > >> >so, good to go?
+> > >> >
+> > >> >>
+> > >> >> *However*, I would also suggest adding "initrdmem=" across
+> > >> >architectures that doesn't have the ambiguity.
+> > >> >
+> > >> >agreed. I can look at doing that next.
+> > >> >
+> > >> >ron
+> > >>
+> > >> I would prefer if we could put both into the same patchset.
+> > >> --
+> > >> Sent from my Android device with K-9 Mail. Please excuse my brevity.
+> >
+> > Yes, accept both.
+> > --
+> > Sent from my Android device with K-9 Mail. Please excuse my brevity.
