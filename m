@@ -2,74 +2,92 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6EFC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6037AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0669220753
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E6CD20753
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:01:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585000877;
+	bh=baxPZ3dsISS5PswIyO+sxiLEKJ/81dtCQ0sAr8ICJ3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HpD/PUhIg25xXsWmBqcbC3r06hXIDiXJhy/wXR2J4xopQ8m6dJevz6oFjHpp5BpJn
+	 UlHkivw4j27nwpaXMQ+/RBNy0X3Q+Ysb0NKuZayBZ1749kfOXAJH3FYUTM0c7urDvC
+	 8Djgpt+8Ds0dONRzvnLCNMr7MRkJQ40f8irnfQjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgCWWBI (ORCPT
+        id S1727135AbgCWWBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:01:08 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:28952 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbgCWWBI (ORCPT
+        Mon, 23 Mar 2020 18:01:16 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44160 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbgCWWBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 18:01:08 -0400
-IronPort-SDR: UbZiZEzjDpL9B+hpsdp1UWEyBg8iMEQP6t7DBoT6pYpIkALAOcpRmL3iEOEhe1FG8IXweQmw5b
- imsU3t9qtlStb0m18qdCYZ++GoGht+RjDZnEPWyxIdFsie9ZI5gkE5JKeiQSy6IEYXW2UzCfdd
- i0Xe8EzxxLY6qMaMhUXZtPQFRXnU8rygOpHy6RS6MROvnC8pmE3D4VnVRybIsNxc4sPaAOoVuG
- QIobntBjlICue3igQdTa+JWnpPFPd+R4sVdpubOJxKOdr2Geh9zTHBT317ywKTnwZMAah6STNH
- NnE=
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="47063343"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa4.mentor.iphmx.com with ESMTP; 23 Mar 2020 14:01:08 -0800
-IronPort-SDR: Fzhw1yRT7C2W0xhbIVsOr6jpMwWZ+k+MPOS1UzYeVKmCPpMa2QQ8bpDvg7G5EvbMktE4zE2VpW
- shL4GWT+hYGPuhwhFcbN9B5UpjlMj/l2hjXJFTrFhtCo21k/4eUJWxfD/3C6+JNkt2PPE+vr3p
- stcj7/0pDOdwqDc01aOofY0UCjPp4vtgANdPQVx+F5+lDT5rnBjKNQkj+GKk/YO5q5tC2Y8sX9
- fCuxdsqy2kFL5wq6OiLvg556fsOMNcCOTM9s+Qm5Ajz1mZoXL7dR8qJp0fgsaadUI3UrdNxObU
- 9q8=
-Date:   Mon, 23 Mar 2020 22:01:00 +0000
-From:   Joseph Myers <joseph@codesourcery.com>
-X-X-Sender: jsm28@digraph.polyomino.org.uk
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-CC:     Carlos O'Donell <carlos@redhat.com>, Rich Felker <dalias@libc.org>,
-        <libc-alpha@sourceware.org>, <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Paul Turner <pjt@google.com>
-Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C
- startup and thread creation (v16)
-In-Reply-To: <20200323131607.15185-5-mathieu.desnoyers@efficios.com>
-Message-ID: <alpine.DEB.2.21.2003232159310.13609@digraph.polyomino.org.uk>
-References: <20200323131607.15185-1-mathieu.desnoyers@efficios.com> <20200323131607.15185-5-mathieu.desnoyers@efficios.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 23 Mar 2020 18:01:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id v3so16013733iot.11;
+        Mon, 23 Mar 2020 15:01:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=moatfj5jRXvxhlq8xo+ssOSqLVqKCjMat/spioxEHRQ=;
+        b=guJKDC9Fnb9SiWQhXyXlkQ9PC1WigIrfAgwlU5mi8frn0JyAy+uAbrJTQ4NhwmiODs
+         sdoi+zWrooPc1B3ubteJJ7ZIPQw5Y90wLWW3UWKAPOobdXn1It2759xV/zfcFzxvTA+K
+         RqrpGtpNZFxkjuxRCgovVl9ewMY4MpvlF5Tm3ZbJOnB0RUHaXGQ3h/rApEmFCQRIHkYg
+         wJwGa7ihkcisATqgarxp0kGKwaLDitmdrrstR+VMNj2avGE5wLAc0XX1kKhnsmSSblRF
+         8A8PpbaC2V9r6j38dPy6oY1tVTOsKTvndsK+OfrGIQop/kviH6VoRJXAVgjxVwTJ/tkD
+         vwwQ==
+X-Gm-Message-State: ANhLgQ1DDcTS+wVicWE0ligYyEYcBE9u8bKGm4KkEuxo+XZeX0ppg8/y
+        mzNc0ENilp2JGPAWUWzcbQ==
+X-Google-Smtp-Source: ADFU+vs3cAIQeBmF64VbdwUuHkyB7YPqQzyPHXQtO+XeMGCPFEMA01amQdtzhjE6hL2OYktO6iZcHA==
+X-Received: by 2002:a5d:9f4f:: with SMTP id u15mr20642459iot.87.1585000874691;
+        Mon, 23 Mar 2020 15:01:14 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id p70sm5645056ilk.53.2020.03.23.15.01.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 15:01:14 -0700 (PDT)
+Received: (nullmailer pid 11664 invoked by uid 1000);
+        Mon, 23 Mar 2020 22:01:12 -0000
+Date:   Mon, 23 Mar 2020 16:01:12 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: Re: [PATCH v3 2/4] dt-bindings: display: mediatek: get mipitx
+ calibration data from nvmem
+Message-ID: <20200323220112.GA11622@bogus>
+References: <20200311074032.119481-1-jitao.shi@mediatek.com>
+ <20200311074032.119481-3-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3) To
- SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311074032.119481-3-jitao.shi@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Note that we no longer use manually-written ChangeLog-format logs.
+On Wed, 11 Mar 2020 15:40:30 +0800, Jitao Shi wrote:
+> Add properties to get get mipitx calibration data.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt    | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
 
-The NEWS entry needs to move under the 2.32 header.
-
-The new symbol needs to move to GLIBC_2.32 symbol version.
-
--- 
-Joseph S. Myers
-joseph@codesourcery.com
+Reviewed-by: Rob Herring <robh@kernel.org>
