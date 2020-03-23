@@ -2,112 +2,180 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E94C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FF3C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40DC7206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D74206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbgCWC71 (ORCPT
+        id S1727163AbgCWC7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 22:59:27 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:56006 "EHLO loongson.cn"
+        Sun, 22 Mar 2020 22:59:25 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:56012 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727050AbgCWC70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 22:59:26 -0400
+        id S1726983AbgCWC7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 22:59:24 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxP+gDJnhedaseAA--.407S2;
-        Mon, 23 Mar 2020 10:59:15 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxP+gDJnhedaseAA--.407S4;
+        Mon, 23 Mar 2020 10:59:18 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Huacai Chen <chenhc@lemote.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>
 Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
         Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v2 0/3] Add basic support for Loongson 7A1000 bridge chip
-Date:   Mon, 23 Mar 2020 10:59:12 +0800
-Message-Id: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v2 2/3] MIPS: Loongson: Add DMA support for 7A1000
+Date:   Mon, 23 Mar 2020 10:59:14 +0800
+Message-Id: <1584932355-3642-3-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9AxP+gDJnhedaseAA--.407S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4UGr4xXFW7tryfGF48WFg_yoW8KFW7pF
-        WF9a1rWrs8Wry7Aasxur48ur4rArn3JrZrWa17Gr1kAa98XF10qr929a15t3W29r9a9a1U
-        Xry8WrWDKa15CaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
-        4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_
-        Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
-        WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
-        7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-        1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1l
-        IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjg_-DUUUU
-        U==
+In-Reply-To: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9AxP+gDJnhedaseAA--.407S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxGr4kXFykCry8XrW7KrWruFg_yoWrXrWkpa
+        9xA3WkGr45WF13Cr93Ary8uryrAa9xKFs2qF429r1j9asFv34FvFs7GFn5Jr12yr4DGa48
+        ZFWFgr1xGF1xCaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+        x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+        Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
+        8EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxd
+        M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
+        v20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
+        F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8JwCF04
+        k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+        MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr4
+        1lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+        IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4
+        A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUnqXdUUUUU=
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Loongson 7A1000 bridge chip has been released for several years
-since the second half of 2017, but it is not supported by the Linux
-mainline kernel while it only works well with the Loongson internal
-kernel version. When I update the latest version of Linux mainline
-kernel on the Loongson 3A3000 CPU and 7A1000 bridge chip system,
-the boot process failed and I feel depressed.
+Implement __phys_to_dma() and __dma_to_phys() according to the
+node id offset in the 7A1000 DMA route config register.
 
-The 7A1000 bridge chip is used a lot with 3A3000 or 3A4000 CPU in
-the most Loongson desktop and sever products, it is important to
-support Loongson 7A1000 bridge chip by the Linux mainline kernel.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/mips/include/asm/mach-loongson64/boot_param.h |  5 +++++
+ arch/mips/loongson64/dma.c                         |  9 ++++++---
+ arch/mips/loongson64/env.c                         |  2 ++
+ arch/mips/loongson64/init.c                        | 17 +++++++++++++++++
+ 4 files changed, 30 insertions(+), 3 deletions(-)
 
-This patch series adds the basic support for the Loongson 7A1000
-bridge chip, when apply these patches based on linux-5.6-rc7, the
-boot process is successful and we can login normally used with the
-latest firmware and discrete graphics card, the next work to do is
-power management and some other controller device drivers.
-
-Additionally, when I git clone mips code [1], the speed is too slow
-and clone always failed, so this patch series is based on the latest
-linux-5.6-rc7 [2].
-
-If you have any questions and suggestions, please let me know.
-
-Thanks,
-
-Tiezhu Yang
-
-v2:
-  - The split patch series about Loongson vendor ID and SATA controller
-    has been merged into the linux-block.git by Jens Axboe [3].
-
-  - Think about using hierarchy IRQ domain in the patch of interrupt
-    controller, and this maybe depend on the patch series by Jiaxun
-    ("Modernize Loongson64 Machine"), so the patch about interrupt is
-    not included in this v2 patch series.
-
-[1] git clone https://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git
-[2] git clone https://github.com/torvalds/linux.git
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=9acb9fe18d86
-    https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=e49bd683e00b
-
-Tiezhu Yang (3):
-  MIPS: Loongson: Get host bridge information
-  MIPS: Loongson: Add DMA support for 7A1000
-  MIPS: Loongson: Add PCI support for 7A1000
-
- arch/mips/include/asm/mach-loongson64/boot_param.h | 20 ++++++
- arch/mips/loongson64/dma.c                         |  9 ++-
- arch/mips/loongson64/env.c                         | 20 ++++++
- arch/mips/loongson64/init.c                        | 17 +++++
- arch/mips/pci/ops-loongson3.c                      | 72 ++++++++++++++++++++--
- 5 files changed, 131 insertions(+), 7 deletions(-)
-
+diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
+index 5e8c70d..c759b7c 100644
+--- a/arch/mips/include/asm/mach-loongson64/boot_param.h
++++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
+@@ -219,9 +219,14 @@ struct loongson_system_configuration {
+ 	u32 nr_sensors;
+ 	struct sensor_device sensors[MAX_SENSORS];
+ 	u64 workarounds;
++	void (*early_config)(void);
+ };
+ 
+ extern struct efi_memory_map_loongson *loongson_memmap;
+ extern struct loongson_system_configuration loongson_sysconf;
+ 
++extern u32 node_id_offset;
++extern void rs780e_early_config(void);
++extern void ls7a1000_early_config(void);
++
+ #endif
+diff --git a/arch/mips/loongson64/dma.c b/arch/mips/loongson64/dma.c
+index 5e86635..dbfe6e8 100644
+--- a/arch/mips/loongson64/dma.c
++++ b/arch/mips/loongson64/dma.c
+@@ -2,21 +2,24 @@
+ #include <linux/dma-direct.h>
+ #include <linux/init.h>
+ #include <linux/swiotlb.h>
++#include <boot_param.h>
+ 
+ dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
+ {
+ 	/* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
+ 	 * Loongson-3's 48bit address space and embed it into 40bit */
+ 	long nid = (paddr >> 44) & 0x3;
+-	return ((nid << 44) ^ paddr) | (nid << 37);
++
++	return ((nid << 44) ^ paddr) | (nid << node_id_offset);
+ }
+ 
+ phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr)
+ {
+ 	/* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
+ 	 * Loongson-3's 48bit address space and embed it into 40bit */
+-	long nid = (daddr >> 37) & 0x3;
+-	return ((nid << 37) ^ daddr) | (nid << 44);
++	long nid = (daddr >> node_id_offset) & 0x3;
++
++	return ((nid << node_id_offset) ^ daddr) | (nid << 44);
+ }
+ 
+ void __init plat_swiotlb_setup(void)
+diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
+index 42542c7..32a3822 100644
+--- a/arch/mips/loongson64/env.c
++++ b/arch/mips/loongson64/env.c
+@@ -167,8 +167,10 @@ void __init prom_init_env(void)
+ 	if (vendor == 0x0014 && device == 0x7a00) {
+ 		pr_info("The bridge chip is Loongson 7A1000\n");
+ 		loongson_sysconf.bridgetype = LS7A1000;
++		loongson_sysconf.early_config = ls7a1000_early_config;
+ 	} else {
+ 		pr_info("The bridge chip is AMD RS780E or SR5690\n");
+ 		loongson_sysconf.bridgetype = RS780E;
++		loongson_sysconf.early_config = rs780e_early_config;
+ 	}
+ }
+diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
+index 5ac1a0f..0b6493b 100644
+--- a/arch/mips/loongson64/init.c
++++ b/arch/mips/loongson64/init.c
+@@ -12,6 +12,11 @@
+ #include <asm/fw/fw.h>
+ 
+ #include <loongson.h>
++#include <boot_param.h>
++
++#define NODE_ID_OFFSET_ADDR     0x90000e001001041c
++
++u32 node_id_offset;
+ 
+ static void __init mips_nmi_setup(void)
+ {
+@@ -23,6 +28,16 @@ static void __init mips_nmi_setup(void)
+ 	flush_icache_range((unsigned long)base, (unsigned long)base + 0x80);
+ }
+ 
++void rs780e_early_config(void)
++{
++	node_id_offset = 37;
++}
++
++void ls7a1000_early_config(void)
++{
++	node_id_offset = ((readl((u32 *)NODE_ID_OFFSET_ADDR) >> 8) & 0x1f) + 36;
++}
++
+ void __init prom_init(void)
+ {
+ 	fw_init_cmdline();
+@@ -32,6 +47,8 @@ void __init prom_init(void)
+ 	set_io_port_base((unsigned long)
+ 		ioremap(LOONGSON_PCIIO_BASE, LOONGSON_PCIIO_SIZE));
+ 
++	loongson_sysconf.early_config();
++
+ 	prom_init_numa_memory();
+ 
+ 	/* Hardcode to CPU UART 0 */
 -- 
 2.1.0
 
