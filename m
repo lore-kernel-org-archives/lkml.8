@@ -2,124 +2,120 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF48C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4487C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A599920735
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A8FC2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:30:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="rW9Z8fL1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgCWNaT (ORCPT
+        id S1728506AbgCWNa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 09:30:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:49042 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728355AbgCWNaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 09:30:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E36881FB;
-        Mon, 23 Mar 2020 06:30:18 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07D413F52E;
-        Mon, 23 Mar 2020 06:30:17 -0700 (PDT)
-References: <20200320151245.21152-1-mgorman@techsingularity.net> <20200320151245.21152-2-mgorman@techsingularity.net>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Phil Auld <pauld@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] sched/fair: Track efficiency of select_idle_sibling
-In-reply-to: <20200320151245.21152-2-mgorman@techsingularity.net>
-Date:   Mon, 23 Mar 2020 13:30:10 +0000
-Message-ID: <jhj369zmc65.mognet@arm.com>
+        Mon, 23 Mar 2020 09:30:26 -0400
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:59270 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728355AbgCWNaZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 09:30:25 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 8A3273F571;
+        Mon, 23 Mar 2020 14:30:22 +0100 (CET)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=rW9Z8fL1;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jYeB1Hkf84eV; Mon, 23 Mar 2020 14:30:18 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 24C7D3F44A;
+        Mon, 23 Mar 2020 14:30:17 +0100 (CET)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 5CF2636019D;
+        Mon, 23 Mar 2020 14:30:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1584970217; bh=o74YyBwiZy95kxk4hXa0iDzbeSVNayzuvbQ1L06JVbc=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=rW9Z8fL1az+mx6uWgRduFzR6TBjcsdAMKq/Iq7w9t3SguJbC4fgRHqXfw6dXqnOrM
+         eAS7pHPMo7G4CBHLZs+7hVv9fTV2nmC7f9zyS2K9vJ/IYWhH8O1HVAyPGbHzlwKPwA
+         uT9DOohKtTQnFITtAQktqCiWQYUriRYZpN5ezs+E=
+Subject: Re: Ack to merge through DRM? WAS [PATCH v5 1/9] fs: Constify vma
+ argument to vma_is_dax
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200303102247.4635-1-thomas_os@shipmail.org>
+ <4a49f27b-71a6-0e61-70d9-5fcb6cd58c3f@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <0b19b68b-0bbd-f51c-67da-bd6983ae45b2@shipmail.org>
+Date:   Mon, 23 Mar 2020 14:30:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <4a49f27b-71a6-0e61-70d9-5fcb6cd58c3f@shipmail.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Ping?
 
-Hi Mel,
 
-On Fri, Mar 20 2020, Mel Gorman wrote:
-> SIS Search: Number of calls to select_idle_sibling
+On 3/3/20 11:28 AM, Thomas Hellström (VMware) wrote:
+> Alexander,
 >
-> SIS Domain Search: Number of times the domain was searched because the
->       fast path failed.
+> Could you ack merging the below patch through a DRM tree?
 >
-> SIS Scanned: Generally the number of runqueues scanned but the fast
->       path counts as 1 regardless of the values for target, prev
->       and recent.
+> Thanks,
 >
-> SIS Domain Scanned: Number of runqueues scanned during a search of the
->       LLC domain.
+> Thomas Hellstrom
 >
-> SIS Failures: Number of SIS calls that failed to find an idle CPU
 >
-
-Let me put my changelog pedant hat on; it would be nice to explicitely
-separate the 'raw' stats (i.e. those that you are adding to sis()) to
-the downstream ones.
-
-AIUI the ones above here are the 'raw' stats (except "SIS Domain
-Scanned", I'm not sure I get where this one comes from?), and the ones
-below are the downstream, post-processed ones.
-
-> SIS Search Efficiency: A ratio expressed as a percentage of runqueues
->       scanned versus idle CPUs found. A 100% efficiency indicates that
->       the target, prev or recent CPU of a task was idle at wakeup. The
->       lower the efficiency, the more runqueues were scanned before an
->       idle CPU was found.
+> From: Thomas Hellstrom <thellstrom@vmware.com>
 >
-> SIS Domain Search Efficiency: Similar, except only for the slower SIS
->       patch.
 >
-> SIS Fast Success Rate: Percentage of SIS that used target, prev or
->       recent CPUs.
+> The function is used by upcoming vma_is_special_huge() with which we want
+> to use a const vma argument. Since for vma_is_dax() the vma argument is
+> only dereferenced for reading, constify it.
 >
-> SIS Success rate: Percentage of scans that found an idle CPU.
->
-> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-
-With the nits taken into account:
-
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Ralph Campbell <rcampbell@nvidia.com>
+> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> Cc: "Christian König" <christian.koenig@amd.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+> Reviewed-by: Roland Scheidegger <sroland@vmware.com>
+> Acked-by: Christian König <christian.koenig@amd.com>
 > ---
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 1dea8554ead0..9d32a81ece08 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -6150,6 +6153,15 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
->       struct sched_domain *sd;
->       int i, recent_used_cpu;
+> include/linux/fs.h | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> +	schedstat_inc(this_rq()->sis_search);
-> +
-> +	/*
-> +	 * Checking if prev, target and recent is treated as one scan. A
-> +	 * perfect hit on one of those is considered 100% efficiency.
-> +	 * Further scanning impairs efficiency.
-> +	 */
-> +	schedstat_inc(this_rq()->sis_scanned);
-> +
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 3cd4fe6b845e..2b38ce5b73ad 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -3391,7 +3391,7 @@ static inline bool io_is_direct(struct file *filp)
+> return (filp->f_flags & O_DIRECT) || IS_DAX(filp->f_mapping->host);
+> }
+> -static inline bool vma_is_dax(struct vm_area_struct *vma)
+> +static inline bool vma_is_dax(const struct vm_area_struct *vma)
+> {
+> return vma->vm_file && IS_DAX(vma->vm_file->f_mapping->host);
+> }
+>
 
-You may want to move that sis_scanned increment to below the 'symmetric'
-label. Also, you should instrument select_idle_capacity() with
-sis_scanned increments, if only for the sake of completeness.
-
-One last thing: each of the new schedstat_inc() callsites use this_rq();
-IIRC because of the RELOC_HIDE() hiding underneath there's very little
-chance of the compiler caching this. However, this depends on schedstat,
-so I suppose that is fine.
-
->       /*
->        * For asymmetric CPU capacity systems, our domain of interest is
->        * sd_asym_cpucapacity rather than sd_llc.
