@@ -2,157 +2,166 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24AFC4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4FAC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C9420736
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B5C20736
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584951083;
+	bh=dWOOiVZtGZ96dq5jw1pcpJBKWTobiKVkk1kTGU/Kux0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aYQ5ca8jdy6JDrhXOCjGHbbtWJr+ImGKPQgm46Y6OX5HmJzSgvZfwxBKLMWV+Wnsc
+	 C1aBXGTiciDR1e00rBbrZzzQFDPRVgSv63fIxyHCWyoZ81pNmNsaYm27hG/LUrnYUJ
+	 4l5g+/E9ajckXDhmYGNr1rQIvqyXoBLexlL3IfvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbgCWILT (ORCPT
+        id S1727551AbgCWILW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 04:11:19 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35004 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727422AbgCWILT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 04:11:19 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CDDB242FB3B17C38F76B;
-        Mon, 23 Mar 2020 16:11:09 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Mon, 23 Mar 2020
- 16:11:02 +0800
-Subject: Re: [PATCH v5 20/23] KVM: arm64: GICv4.1: Plumb SGI implementation
- selection in the distributor
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Robert Richter" <rrichter@marvell.com>,
+        Mon, 23 Mar 2020 04:11:22 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36297 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727486AbgCWILU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 04:11:20 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 31so9687523wrs.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 01:11:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AHIW+QVtzE1xcLJp+3O/as7HmyD4LesHaV7anw/Educ=;
+        b=m3oUZGC9q7A+ysv0gd2/sfYMwLniBPqKUtSy7BD+cR4lGMmdt6P6G3K9m/ZpH1Nndn
+         Mn1VcOYgWZ2mhxevDXBJtDx+ooigKyUDnbV+Wwv9OOmo9mV6Tmi/4Pqr3F2bZ7uWvgYo
+         lrC3+7kbRPgq5sF8RdE6VRBRYnyHsoHon15lvaHHeASxdx5ZimuAZZ/scPaDpuqnhP0C
+         0m01wnnN+NSY5n652EXucbm8lxviLV04gJXHkhUgEtTCjvjyCQuP9tHOAhce6LW1Fn06
+         aD8F8cX3tuWQJ21kV3/4MB1edFrqE7vuLjkmspBMQU9MfSLwHftuBugtzBVeWjo+w1If
+         EyIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AHIW+QVtzE1xcLJp+3O/as7HmyD4LesHaV7anw/Educ=;
+        b=om/CPY8/3jFnSIdJKtQ0WzxI+b4nYM6+YJSiwub0VuqA9vT7DCwC0eUP3giZV9eNPM
+         o7tmzAJ3DYun4sbF5qUxP7R9fsD5M41rLAWVxJ2cLkKXKU0yVOLNkm5w/mVoAK/PxCEU
+         yNOs8esuz9Hfo8NUSqtTkwdAOyzGmqW+st/YMBpQWy9wcWwXbgZCtTIjpEd3oyCgGZRs
+         QclquRe04VMS4JZ0Args6JfLC2xypP4fRmPvJasEv2EtNXY2uCpju940isVD3OsVOlsy
+         pI9lwGXK4+FcLYoUz/+67gC3N8wCSzV6NMQaYhVQIZGs0fzPnG6FuI/IZ9pERRPdiJ5X
+         ue4Q==
+X-Gm-Message-State: ANhLgQ1N7bIvmwYkBMc2EjxmnGSCzS/pvju7SbpTipWGH6EffK5Fczi0
+        uWSFikJcCwzJKzdTl+04VKs=
+X-Google-Smtp-Source: ADFU+vsw8k7f1Tlx4jRdx1UhV7xBebSKrI5+IoBzB1vw38QH3193rvLJSRVMegUm4Y1HWnEqGhs4RQ==
+X-Received: by 2002:adf:efc9:: with SMTP id i9mr8017841wrp.23.1584951078153;
+        Mon, 23 Mar 2020 01:11:18 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id i19sm11493967wmb.44.2020.03.23.01.11.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 01:11:17 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 09:11:14 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Brian Gerst <brgerst@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
-        "Eric Auger" <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        "Julien Thierry" <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-21-maz@kernel.org>
- <72832f51-bbde-8502-3e03-189ac20a0143@huawei.com>
- <4a06fae9c93e10351276d173747d17f4@kernel.org>
- <1c9fdfc8-bdb2-88b6-4bdc-2b9254dfa55c@huawei.com>
- <256b58a9679412c96600217f316f424f@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <cf5d7cf3-076f-47a7-83cf-717a619dc13e@huawei.com>
-Date:   Mon, 23 Mar 2020 16:11:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>
+Subject: [PATCH] x86/entry: Fix SYS_NI() build failure
+Message-ID: <20200323081114.GA10796@gmail.com>
+References: <20200313195144.164260-1-brgerst@gmail.com>
+ <20200313195144.164260-5-brgerst@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <256b58a9679412c96600217f316f424f@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313195144.164260-5-brgerst@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
 
-On 2020/3/20 17:01, Marc Zyngier wrote:
-> Hi Zenghui,
-> 
-> On 2020-03-20 03:53, Zenghui Yu wrote:
->> Hi Marc,
->>
->> On 2020/3/19 20:10, Marc Zyngier wrote:
->>>> But I wonder that should we use nassgireq to *only* keep track what
->>>> the guest had written into the GICD_CTLR.nASSGIreq.  If not, we may
->>>> lose the guest-request bit after migration among hosts with different
->>>> has_gicv4_1 settings.
->>>
->>> I'm unsure of what you're suggesting here. If userspace tries to set
->>> GICD_CTLR.nASSGIreq on a non-4.1 host, this bit will not latch.
->>
->> This is exactly what I *was* concerning about.
->>
->>> Userspace can check that at restore time. Or we could fail the
->>> userspace write, which is a bit odd (the bit is otherwise RES0).
->>>
->>> Could you clarify your proposal?
->>
->> Let's assume two hosts below. 'has_gicv4_1' is true on host-A while
->> it is false on host-B because of lack of HW support or the kernel
->> parameter "kvm-arm.vgic_v4_enable=0".
->>
->> If we migrate guest through A->B->A, we may end-up lose the initial
->> guest-request "nASSGIreq=1" and don't use direct vSGI delivery for
->> this guest when it's migrated back to host-A.
-> 
-> My point above is that we shouldn't allow the A->B migration the first
-> place, and fail it as quickly as possible. We don't know what the guest
-> has observed in terms of GIC capability, and it may not have enabled the
-> new flavour of SGIs just yet.
+* Brian Gerst <brgerst@gmail.com> wrote:
 
-Indeed. I didn't realize it.
+> Pull the common code out from the SYS_NI macros into a new __SYS_NI macro.
+> Also conditionalize the X64 version in preparation for enabling syscall
+> wrappers on 32-bit native kernels.
+>
+> Signed-off-by: Brian Gerst <brgerst@gmail.com>
+> Reviewed-by: Dominik Brodowski <linux@dominikbrodowski.net>
+> Reviewed-by: Andy Lutomirski <luto@kernel.org>
 
-> 
->> This can be "fixed" by keep track of what guest had written into
->> nASSGIreq. And we need to evaluate the need for using direct vSGI
->> for a specified guest by 'has_gicv4_1 && nassgireq'.
-> 
-> It feels odd. It means we have more state than the HW normally has.
-> I have an alternative proposal, see below.
-> 
->> But if it's expected that "if userspace tries to set nASSGIreq on
->> a non-4.1 host, this bit will not latch", then this shouldn't be
->> a problem at all.
-> 
-> Well, that is the semantics of the RES0 bit. It applies from both
-> guest and userspace.
-> 
-> And actually, maybe we can handle that pretty cheaply. If userspace
-> tries to restore GICD_TYPER2 to a value that isn't what KVM can
-> offer, we just return an error. Exactly like we do for GICD_IIDR.
-> Hence the following patch:
-> 
-> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c 
-> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> index 28b639fd1abc..e72dcc454247 100644
-> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> @@ -156,6 +156,7 @@ static int vgic_mmio_uaccess_write_v3_misc(struct 
-> kvm_vcpu *vcpu,
->       struct vgic_dist *dist = &vcpu->kvm->arch.vgic;
-> 
->       switch (addr & 0x0c) {
-> +    case GICD_TYPER2:
->       case GICD_IIDR:
->           if (val != vgic_mmio_read_v3_misc(vcpu, addr, len))
->               return -EINVAL;
-> 
-> Being a RO register, writing something that isn't compatible with the
-> possible behaviour of the hypervisor will just return an error.
+>  #define COMPAT_SYS_NI(name)						\
+> -	SYSCALL_ALIAS(__ia32_compat_sys_##name, sys_ni_posix_timers);	\
+> -	SYSCALL_ALIAS(__x32_compat_sys_##name, sys_ni_posix_timers)
+> +	__IA32_COMPAT_SYS_NI(name)					\
+> +	__X32_COMPAT_SYS_NI(name)
+>  
+>  #endif /* CONFIG_COMPAT */
+>  
+> @@ -231,9 +245,9 @@ struct pt_regs;
+>  	__X64_COND_SYSCALL(name)					\
+>  	__IA32_COND_SYSCALL(name)
+>  
+> -#ifndef SYS_NI
+> -#define SYS_NI(name) SYSCALL_ALIAS(__x64_sys_##name, sys_ni_posix_timers);
+> -#endif
+> +#define SYS_NI(name)							\
+> +	__X64_SYS_NI(name)						\
+> +	__IA32_SYS_NI(name)
 
-This is really a nice point to address my concern! I'm happy to see
-this in v6 now.
+This breaks the x86-64 build on !CONFIG_POSIX_TIMERS (and probably also 
+with some x32 build variants), because of a missing ';' between 
+__X64_SYS_NI() and __IA32_SYS_NI().
 
-> 
-> What do you think?
+I suspect testing didn't catch this because SYS_NI() is rarely used in 
+our x86-64 Kconfig space.
 
-I agreed with you, with a bit nervous though. Some old guests (which
-have no knowledge about GICv4.1 vSGIs and don't care about nASSGIcap
-at all) will also fail to migrate from A to B, just because now we
-present two different (unused) GICD_TYPER2 registers to them.
+Very lightly tested fix attached.
 
-Is it a little unfair to them :-) ?
-
+I didn't see the COND_SYSCALL_COMPAT() build failure, but seems to have a 
+similar bug.
 
 Thanks,
-Zenghui
 
+	Ingo
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+
+---
+ arch/x86/include/asm/syscall_wrapper.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
+index e10efa1454bc..8929419b9783 100644
+--- a/arch/x86/include/asm/syscall_wrapper.h
++++ b/arch/x86/include/asm/syscall_wrapper.h
+@@ -214,12 +214,12 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
+  * COND_SYSCALL_COMPAT in kernel/sys_ni.c and COMPAT_SYS_NI in
+  * kernel/time/posix-stubs.c to cover this case as well.
+  */
+-#define COND_SYSCALL_COMPAT(name) 					\
+-	__IA32_COMPAT_COND_SYSCALL(name)				\
++#define COND_SYSCALL_COMPAT(name)					\
++	__IA32_COMPAT_COND_SYSCALL(name);				\
+ 	__X32_COMPAT_COND_SYSCALL(name)
+ 
+ #define COMPAT_SYS_NI(name)						\
+-	__IA32_COMPAT_SYS_NI(name)					\
++	__IA32_COMPAT_SYS_NI(name);					\
+ 	__X32_COMPAT_SYS_NI(name)
+ 
+ #endif /* CONFIG_COMPAT */
+@@ -257,7 +257,7 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
+ 	__IA32_COND_SYSCALL(name)
+ 
+ #define SYS_NI(name)							\
+-	__X64_SYS_NI(name)						\
++	__X64_SYS_NI(name);						\
+ 	__IA32_SYS_NI(name)
+ 
+ 
