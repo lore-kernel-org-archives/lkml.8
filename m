@@ -2,92 +2,68 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDAAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C13B1C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA28820736
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E37720781
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:53:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgCWOwv (ORCPT
+        id S1727111AbgCWOxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:52:51 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:37190 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbgCWOwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:52:51 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id BCAB6FB03;
-        Mon, 23 Mar 2020 15:52:48 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id F-X3cVK12ioL; Mon, 23 Mar 2020 15:52:47 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id D9654412BE; Mon, 23 Mar 2020 15:52:46 +0100 (CET)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/mxsfb: Make supported modifiers explicit
-Date:   Mon, 23 Mar 2020 15:52:46 +0100
-Message-Id: <26877532e272c12a74c33188e2a72abafc9a2e1c.1584973664.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.23.0
+        Mon, 23 Mar 2020 10:53:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41630 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgCWOxR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 10:53:17 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jGOS3-0000Lp-0M; Mon, 23 Mar 2020 15:53:15 +0100
+Date:   Mon, 23 Mar 2020 15:53:14 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH 2/3] lockdep: Merge hardirq_threaded and irq_config
+ together
+Message-ID: <20200323145314.v57acriqj2s6wry2@linutronix.de>
+References: <20200323033207.32370-1-frederic@kernel.org>
+ <20200323033207.32370-3-frederic@kernel.org>
+ <20200323140220.GK2452@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200323140220.GK2452@worktop.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In contrast to other display controllers on imx like DCSS and ipuv3
-lcdif/mxsfb does not support detiling e.g. vivante tiled layouts.
-Since mesa might assume otherwise make it explicit that only
-DRM_FORMAT_MOD_LINEAR is supported.
+On 2020-03-23 15:02:20 [+0100], Peter Zijlstra wrote:
+> On Mon, Mar 23, 2020 at 04:32:06AM +0100, Frederic Weisbecker wrote:
+> > These fields describe the same state: a code block running in hardirq
+> > that might be threaded under specific configurations.
+> > 
+> > Merge them together in the same field. Also rename the result as
+> > "hardirq_threadable" as we are talking about a possible state and not
+> > an actual one.
+> 
+> What isn't instantly obvious is that they cannot overlap. For instance
+> mainline with force threaded interrupt handlers on, can't that have the
+> irq_work nest inside a threaded handler ?
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- drivers/gpu/drm/mxsfb/mxsfb_drv.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+I remember we kept them due to the nesting. A threaded-interrupt can be
+interrupted by irq_work/hrtimer/posix-timer. 
+So in a threaded interrupt it is okay to use a sleeping lock. It is not
+okay with irq_work on-top - unless it is the non-atomic one.
 
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index 762379530928..fc71e7a7a02e 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -73,6 +73,11 @@ static const uint32_t mxsfb_formats[] = {
- 	DRM_FORMAT_RGB565
- };
- 
-+static const uint64_t mxsfb_modifiers[] = {
-+	DRM_FORMAT_MOD_LINEAR,
-+	DRM_FORMAT_MOD_INVALID
-+};
-+
- static struct mxsfb_drm_private *
- drm_pipe_to_mxsfb_drm_private(struct drm_simple_display_pipe *pipe)
- {
-@@ -334,8 +339,8 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
- 	}
- 
- 	ret = drm_simple_display_pipe_init(drm, &mxsfb->pipe, &mxsfb_funcs,
--			mxsfb_formats, ARRAY_SIZE(mxsfb_formats), NULL,
--			mxsfb->connector);
-+			mxsfb_formats, ARRAY_SIZE(mxsfb_formats),
-+			mxsfb_modifiers, mxsfb->connector);
- 	if (ret < 0) {
- 		dev_err(drm->dev, "Cannot setup simple display pipe\n");
- 		goto err_vblank;
--- 
-2.23.0
+> I *think* it just about works out, but it definitely wants a little more
+> than this.
 
+Sebastian
