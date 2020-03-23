@@ -2,111 +2,123 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D492DC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF51C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72AC2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0DEC20781
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:06:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q81ARYit"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Mn7R6b0l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgCWLF0 (ORCPT
+        id S1728106AbgCWLGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 07:05:26 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:40949 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727987AbgCWLF0 (ORCPT
+        Mon, 23 Mar 2020 07:06:08 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37414 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbgCWLGI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 07:05:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584961525;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=00MKPbXZ63cfOilQO8B9I2vlOri+Kk2uF23onL/zrT4=;
-        b=Q81ARYitEhExoJZrAJuvIYYP09AUG2QEMm8j6e3OGpPDUvVIRVjelMvP3xKmZzBevGxK8f
-        Smc+HspILiPbdSwo4vAW6Nv0q+jHGdkbqepqzObwocA4Rko/qrU9N0ej1ARPPkZNLJQwsY
-        PJkqEdpnaPMJJZigXdygq1xN2FN0TnQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-214-lAwfkKudMR29QrahG7uVmA-1; Mon, 23 Mar 2020 07:05:21 -0400
-X-MC-Unique: lAwfkKudMR29QrahG7uVmA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC61F1137840;
-        Mon, 23 Mar 2020 11:05:19 +0000 (UTC)
-Received: from krava (unknown [10.40.192.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B845119C70;
-        Mon, 23 Mar 2020 11:05:17 +0000 (UTC)
-Date:   Mon, 23 Mar 2020 12:05:14 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v2 00/14] perf: Stream comparison
-Message-ID: <20200323110514.GG1534489@krava>
-References: <20200313071118.11983-1-yao.jin@linux.intel.com>
+        Mon, 23 Mar 2020 07:06:08 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NB349S019401;
+        Mon, 23 Mar 2020 11:05:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=w5K+Q/84iqNbz33/6C2NZu0Q3vAYsOs50DjnxAcgG1Y=;
+ b=Mn7R6b0l8wez1yAcZLSfpc2wrIhMuzIwnTi0DtAnf8n+KJJWKQeqrHu46og+68aFWP5o
+ UlNfC2u8vRgCUcQw+sT5NelWNsoTB2CtwLH/MVe1bQdl0y32RZY72hNojPZEPiYBrrc8
+ S3dxgQ50L9JIoialZaoweLgtoj/hidwCVju76UtCSHbvBwYILrom3gW9x0IAjqwGKhOS
+ 2cMWUfxtvB9b5Dq7Iv2zuxqOxLj/Cqi1oM4mR+hSuH1E2GlY8o97hOltmHXLS+GxIvlN
+ S1TSKze+GqbnJSzp7SDqIeegRc6yWOkw2+PIeEaCTE5uZNmUKaWfkqd509W0XibbdIdx Jg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2ywabqwx7c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Mar 2020 11:05:48 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NAvRWn067564;
+        Mon, 23 Mar 2020 11:03:47 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2ywwuht83f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Mar 2020 11:03:47 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02NB3igg014374;
+        Mon, 23 Mar 2020 11:03:45 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Mar 2020 04:03:44 -0700
+Date:   Mon, 23 Mar 2020 14:03:34 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, kan.liang@linux.intel.com,
+        zhe.he@windriver.com, dzickus@redhat.com, jstancek@redhat.com,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] perf cpumap: Use scnprintf instead of snprintf
+Message-ID: <20200323110334.GC26299@kadam>
+References: <20200322172523.2677-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200313071118.11983-1-yao.jin@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200322172523.2677-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9568 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 mlxscore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003230065
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9568 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
+ lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
+ clxscore=1011 adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003230065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 03:11:04PM +0800, Jin Yao wrote:
-> Sometimes, a small change in a hot function reducing the cycles of
-> this function, but the overall workload doesn't get faster. It is
-> interesting where the cycles are moved to.
+On Sun, Mar 22, 2020 at 06:25:23PM +0100, Christophe JAILLET wrote:
+> 'scnprintf' returns the number of characters written in the output buffer
+> excluding the trailing '\0', instead of the number of characters which
+> would be generated for the given input.
+> 
+> Both function return a number of characters, excluding the trailing '\0'.
+> So comparaison to check if it overflows, should be done against max_size-1.
+> Comparaison against max_size can never match.
+> 
+> Fixes: 7780c25bae59f ("perf tools: Allow ability to map cpus to nodes easily")
+> Fixes: a24020e6b7cf6 ("perf tools: Change cpu_map__fprintf output")
+> Fixes: 92a7e1278005b ("perf cpumap: Add cpu__max_present_cpu()")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>  tools/perf/util/cpumap.c | 39 ++++++++++++++++++++-------------------
+>  1 file changed, 20 insertions(+), 19 deletions(-)
+> 
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> index 983b7388f22b..b87e7ef4d130 100644
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
+> @@ -316,8 +316,8 @@ static void set_max_cpu_num(void)
+>  		goto out;
+>  
+>  	/* get the highest possible cpu number for a sparse allocation */
+> -	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
+> -	if (ret == PATH_MAX) {
+> +	ret = scnprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
+> +	if (ret == PATH_MAX-1) {
 
-I'm getting compilation fail:
+This should be a static analysis warning.
 
-	  BUILD:   Doing 'make -j1' parallel build
-	  CC       util/srclist.o
-	util/srclist.c: In function =E2=80=98srclist__node_new=E2=80=99:
-	util/srclist.c:388:35: error: =E2=80=98%s=E2=80=99 directive output may =
-be truncated writing up to 4095 bytes into a region of size 4091 [-Werror=
-=3Dformat-truncation=3D]
-	  388 |  snprintf(cmd, sizeof(cmd), "diff %s %s",
-	      |                                   ^~
-	......
-	  456 |  ret =3D init_src_info(b_path, a_path, rel_path, &node->info);
-	      |                      ~~~~~~       =20
-	In file included from /usr/include/stdio.h:867,
-			 from util/srclist.c:8:
-	/usr/include/bits/stdio2.h:67:10: note: =E2=80=98__builtin___snprintf_ch=
-k=E2=80=99 output between 7 and 8197 bytes into a destination of size 409=
-6
-	   67 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL=
- - 1,
-	      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~
-	   68 |        __bos (__s), __fmt, __va_arg_pack ());
-	      |        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	cc1: all warnings being treated as errors
-	mv: cannot stat 'util/.srclist.o.tmp': No such file or directory
-	make[4]: *** [/home/jolsa/kernel/linux-perf/tools/build/Makefile.build:9=
-7: util/srclist.o] Error 1
-	make[3]: *** [/home/jolsa/kernel/linux-perf/tools/build/Makefile.build:1=
-39: util] Error 2
-	make[2]: *** [Makefile.perf:617: perf-in.o] Error 2
-	make[1]: *** [Makefile.perf:225: sub-make] Error 2
-	make: *** [Makefile:70: all] Error 2
+But isn't this stuff userspace?  I can't figure out how to compile it on
+Debian so I'm not sure.  There is no scnprintf() in user space.
 
-
-[jolsa@krava ~]$ gcc --version
-gcc (GCC) 9.3.1 20200317 (Red Hat 9.3.1-1)
-
-jirka
+regards,
+dan carpenter
 
