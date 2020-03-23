@@ -2,134 +2,132 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB069C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BA7C10F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B261A20409
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:52:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584949933;
-	bh=tCr4FE+leu9sIrfPqv0jlOEy2+L6/r81Dfgz/EcmWyY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NqZevpy6jVWO2svkOr+gF44byhjdzXsV7Xip+P0ppF+ZS7XEgm83GlNlfHPbYySJc
-	 NXu88aGKF8cCiwA3EyGGG82YmeRcozubDRh4TDymB/sEnZoa+8DsoNwedpwiphYWWe
-	 8/ygJqQFf3B40FVq/7J1cZDg6+ABMlP+IsRBUSK4=
+	by mail.kernel.org (Postfix) with ESMTP id 41BE820409
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:56:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbgCWHwM (ORCPT
+        id S1727501AbgCWH4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 03:52:12 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37756 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727451AbgCWHwM (ORCPT
+        Mon, 23 Mar 2020 03:56:54 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39960 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727428AbgCWH4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 03:52:12 -0400
-Received: by mail-wm1-f68.google.com with SMTP id d1so13524045wmb.2;
-        Mon, 23 Mar 2020 00:52:10 -0700 (PDT)
+        Mon, 23 Mar 2020 03:56:54 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 19so13393245ljj.7;
+        Mon, 23 Mar 2020 00:56:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jOKDfoqRBe4k58qisxZytfR8oDaOcRrtygxWW35hmxQ=;
-        b=eMvAzVpLjccS/awY1GwiA75b8Hxq7/h1y+jeUIn2RaUPx5z6ptQj+AQU8Lhwtr9EgO
-         WeUw/Oe4VwyR/uS01Se60NU+l4qRtbyJYSiQruY+qLc1QrVuBzlDQgwVyf3nkIX5G1cG
-         aO9CrvTMvHY8HkywthHacSUJHpi/ygTI2fcCQFCWTtalXmaB7Lxk5nGW/744BZRJ6HhJ
-         n4F+DI/MkpTiRVQjg9alXl8PXs1WOmtlYpW29B4Fz7xpT5PYWZ5YLKR5JjT3K3lS1sOn
-         CicoHZdNILuA51VEoxMGJHNQ3PB9yN7PDjEHdavMKBOxpGSRcg+nieQsvmpBmNHPUKuX
-         D1rw==
-X-Gm-Message-State: ANhLgQ2MQ7q3DU8NWAK9BJWyB72OZVyAyEqwfNBtEVWrF20EJWmMqpVM
-        ymb2ehGzIZF/5uJqITIQIEk=
-X-Google-Smtp-Source: ADFU+vsUItBZCj529pyGAXMjTwrfq25uNWscZdXvQuumhHorAO+WpDKaHTBJXE7x+Zr0wdiJVB8K2w==
-X-Received: by 2002:a7b:c308:: with SMTP id k8mr26672662wmj.40.1584949930173;
-        Mon, 23 Mar 2020 00:52:10 -0700 (PDT)
-Received: from localhost (ip-37-188-135-150.eurotel.cz. [37.188.135.150])
-        by smtp.gmail.com with ESMTPSA id g3sm5291039wrm.66.2020.03.23.00.52.09
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RxozTuwl/55ffhZ3F6euP3e/uvA+foyXaasqGP7bLks=;
+        b=ua9pUQr58uwOlj6bUpsZjTfOj8sUfMPvzYRyXoOE3grAK1UJRxGmoElzuNf4gwo3r7
+         KleHWcM7f9DwMvH3EnZJsRbvZXYDRkQ2nhielpcXdUdLs7dqwzJkXcs4lTZJ4wdGa9oJ
+         jvrkAZUDOq4SbsxTNqxVftXRWwHyi5qKnCFtI9NV3CXweVGEUcgwFPJfWpadKsNevIZO
+         NHohR1V+6H+i1x9afidKKNd06xGDYzqmoUI/eC7gQwYYK54VwT6v19LEGDRDadWr+Nal
+         5iOaToYJ5u6pjMWeiwiVn9oXVmqSgGbQcHtDIpHgYNZD8lwyg0qcKUdcIDxPYHZvHVIj
+         wcjw==
+X-Gm-Message-State: ANhLgQ0sf2mxdoGmyvxigYgjL6kg4EGgcpNerpXA0ONRDJF1sGkxwHQc
+        qS16T5hHf94tyfOxZMY6nbw=
+X-Google-Smtp-Source: ADFU+vtod+jh8V/kDT8EsN3R9hoSknSBGekIOO1dtsQEEKSU+RJaK7NHTKerdyEzAWAwpinBCBKVAw==
+X-Received: by 2002:a2e:b804:: with SMTP id u4mr3537196ljo.159.1584950211373;
+        Mon, 23 Mar 2020 00:56:51 -0700 (PDT)
+Received: from vostro.wlan (dty2hzyyyyyyyyyyyyx9y-3.rev.dnainternet.fi. [2001:14ba:802c:6a00::4fa])
+        by smtp.gmail.com with ESMTPSA id f16sm8024546ljj.34.2020.03.23.00.56.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 00:52:09 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 08:52:08 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Rafael Aquini <aquini@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org
-Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
- false-negative errors
-Message-ID: <20200323075208.GC7524@dhcp22.suse.cz>
-References: <20200322013525.1095493-1-aquini@redhat.com>
- <20200321184352.826d3dba38aecc4ff7b32e72@linux-foundation.org>
- <20200322020326.GB1068248@t490s>
- <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
- <CALvZod7LiMiK1JtfdvvU3W36cGSUKhhKf6dMZpsNZv6nMiJ5=g@mail.gmail.com>
+        Mon, 23 Mar 2020 00:56:51 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 09:56:47 +0200
+From:   Timo Teras <timo.teras@iki.fi>
+To:     Yuehaibing <yuehaibing@huawei.com>
+Cc:     <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] xfrm: policy: Fix doulbe free in xfrm_policy_timer
+Message-ID: <20200323095647.5e93ffd2@vostro.wlan>
+In-Reply-To: <832e03ea-2511-eb7f-49d1-3cda6c9e6d18@huawei.com>
+References: <20200318034839.57996-1-yuehaibing@huawei.com>
+        <20200323014155.56376-1-yuehaibing@huawei.com>
+        <20200323085311.35aefe10@vostro.wlan>
+        <832e03ea-2511-eb7f-49d1-3cda6c9e6d18@huawei.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-alpine-linux-musl)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod7LiMiK1JtfdvvU3W36cGSUKhhKf6dMZpsNZv6nMiJ5=g@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 22-03-20 09:36:49, Shakeel Butt wrote:
-> On Sat, Mar 21, 2020 at 9:31 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> >
-> > On Sat, 21 Mar 2020 22:03:26 -0400 Rafael Aquini <aquini@redhat.com> wrote:
-> >
-> > > > > + * In order to sort out that race, and get the after fault checks consistent,
-> > > > > + * the "quick and dirty" trick below is required in order to force a call to
-> > > > > + * lru_add_drain_all() to get the recently MLOCK_ONFAULT pages moved to
-> > > > > + * the unevictable LRU, as expected by the checks in this selftest.
-> > > > > + */
-> > > > > +static void force_lru_add_drain_all(void)
-> > > > > +{
-> > > > > + sched_yield();
-> > > > > + system("echo 1 > /proc/sys/vm/compact_memory");
-> > > > > +}
-> > > >
-> > > > What is the sched_yield() for?
-> > > >
-> > >
-> > > Mostly it's there to provide a sleeping gap after the fault, whithout
-> > > actually adding an arbitrary value with usleep().
-> > >
-> > > It's not a hard requirement, but, in some of the tests I performed
-> > > (whithout that sleeping gap) I would still see around 1% chance
-> > > of hitting the false-negative. After adding it I could not hit
-> > > the issue anymore.
-> >
-> > It's concerning that such deep machinery as pagevec draining is visible
-> > to userspace.
-> >
+On Mon, 23 Mar 2020 15:21:45 +0800
+Yuehaibing <yuehaibing@huawei.com> wrote:
+
+> On 2020/3/23 14:53, Timo Teras wrote:
+> > Hi
+> > 
+> > On Mon, 23 Mar 2020 09:41:55 +0800
+> > YueHaibing <yuehaibing@huawei.com> wrote:
+> >   
+> >> After xfrm_add_policy add a policy, its ref is 2, then
+> >>
+> >>                              xfrm_policy_timer
+> >>                                read_lock
+> >>                                xp->walk.dead is 0
+> >>                                ....
+> >>                                mod_timer()
+> >> xfrm_policy_kill
+> >>   policy->walk.dead = 1
+> >>   ....
+> >>   del_timer(&policy->timer)
+> >>     xfrm_pol_put //ref is 1
+> >>   xfrm_pol_put  //ref is 0
+> >>     xfrm_policy_destroy
+> >>       call_rcu
+> >>                                  xfrm_pol_hold //ref is 1
+> >>                                read_unlock
+> >>                                xfrm_pol_put //ref is 0
+> >>                                  xfrm_policy_destroy
+> >>                                   call_rcu
+> >>
+> >> xfrm_policy_destroy is called twice, which may leads to
+> >> double free.  
+> > 
+> > I believe the timer changes were added later in commit e7d8f6cb2f
+> > which added holding a reference when timer is running. I think it
+> > fails to properly account for concurrently running timer in
+> > xfrm_policy_kill().  
 > 
-> We already have other examples like memcg stats where the
-> optimizations like batching per-cpu stats collection exposes
-> differences to the userspace. I would not be that worried here.
+> commit e7d8f6cb2f hold a reference when &pq->hold_timer is armed,
+> in my case, it's policy->timer, and hold_timer is not armed.
 
-Agreed! Tests should be more tolerant for counters imprecision.
-Unevictable LRU is an optimization and transition to that list is a
-matter of an internal implementation detail.
- 
-> > I suppose that for consistency and correctness we should perform a
-> > drain prior to each read from /proc/*/pagemap.  Presumably this would
-> > be far too expensive.
-> >
-> > Is there any other way?  One such might be to make the MLOCK_ONFAULT
-> > pages bypass the lru_add_pvecs?
-> >
-> 
-> I would rather prefer to have something similar to
-> /proc/sys/vm/stat_refresh which drains the pagevecs.
+Ah, misread. Should have waited until first cup of coffee of the
+morning..
 
-No, please don't. Pagevecs draining is by far not the only batching
-scheme we use and an interface like this would promise users to
-effectivelly force flushing all of them.
+I must have not understood del_timer() return value fully back then.
 
-Can we simply update the test to be more tolerant to imprecisions
-instead?
+I first thought a more robust fix would be to take an extra reference
+in the beginning of the timer function (and instead of using mod_timer()
+return to see if a new reference is needed, it could be used in the
+prologue to "keep" the reference). This would guarantee always proper
+reference count inside the timer function.
 
--- 
-Michal Hocko
-SUSE Labs
+But I suppose because of the above xfrm_policy_kill() is the only place
+supposed to delete the timer, and that's why it had the locking in the
+first place. And the above "fix" might still end up having timer armed
+after kill_policy called del_timer() which is wrong.
+
+So perhaps it's more straightforward to just have the lock as it was
+originally around policy->walk.dead only. Perhaps adding a comment that
+it's synchronizing with the timer function.
+
+Since xfrm_policy_timer() ends with policy unref already now, the above
+reference keeping tricking might be good to do even for the current
+code as separate patch to avoid atomic ops if possible.
+
+Thanks,
+Timo
