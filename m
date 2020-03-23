@@ -2,175 +2,179 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77239C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606ECC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1B020719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D93C20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:28:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C+EjHXiM"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nlvazGfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgCWRZ5 (ORCPT
+        id S1727636AbgCWR2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:25:57 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:42230 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727163AbgCWRZ4 (ORCPT
+        Mon, 23 Mar 2020 13:28:17 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50022 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727361AbgCWR2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:25:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584984355;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UNXvxtDhqBPk2mR0oo9iDMMgS94HHc3o9IyrbgMoY40=;
-        b=C+EjHXiMRHZbnUkCJfCi8btLxWKy5oVsZixel3YxSU3Mg8BrctfazjMIFrev9qfVzK3nk0
-        jbZXs2XLqtKd6hCdGMCkOUVsE9xxignlOprYD6CE91dkKjYtFvM8T99WKjTgUHw4Um3LU0
-        bP+97hYu9jMjoRQH15DcQ6ye2oQZjUw=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-340-WicShdodOl2EPtkz9HDEPA-1; Mon, 23 Mar 2020 13:25:45 -0400
-X-MC-Unique: WicShdodOl2EPtkz9HDEPA-1
-Received: by mail-il1-f199.google.com with SMTP id d2so13416931ilf.19
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 10:25:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UNXvxtDhqBPk2mR0oo9iDMMgS94HHc3o9IyrbgMoY40=;
-        b=tHDg7KDObLDsbD8BNsT5jQdY2M/5HhBtq6e47unzZ/pX2GaMouFmUhBMiCtI61Q4mi
-         ivfNas+wxuhgqA0jqHlvzkFFIyWZ6+lK+DJCfbe6XU2VrpA7JAqgJq/757hnVsb+Prlk
-         g5BUEnKfmzXYLdgi7eJQnh7rtA2um7GEVZtNi9jUNwojzUzUp47K6qGMz0MXtCyDl9pU
-         0kPke0ZZpt4V7E/SrRuIAvkygBBPS2mwB+pyXjZJTtuHQIL+5+Oyjd4uuM5TBmdSgR5K
-         jnz/0hEBkZ1N2n0eJJXZ6Uetsd8RUXOshg+ZD56Z/qNFZPZC/CnBrflRUWemxIl8l6v+
-         eoUQ==
-X-Gm-Message-State: ANhLgQ3Rfyu547Cmuqk6zePqJr6eNKeWVqY296429bH0q4EqY1ctN4M4
-        cZrmj4UWjD8zYv1DSfewTf8EZo/EHz5NskMi7HH0FE81bR5VvQxigHuDjmWPt1h3zWaIu7mJsl1
-        YR+D5lZ/ofd9Ubcob7PoBfWymwWBiapiYt/hQTvq1
-X-Received: by 2002:a92:3a0b:: with SMTP id h11mr22801955ila.4.1584984344361;
-        Mon, 23 Mar 2020 10:25:44 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vuLssj9JilIEDPc0RYnk8iR7JRUYsvTaAjk977L5hc3ijcNT/E6IHIANDwSpS4wfADQ9h4vY7jOVq4lf7clFSI=
-X-Received: by 2002:a92:3a0b:: with SMTP id h11mr22801940ila.4.1584984344100;
- Mon, 23 Mar 2020 10:25:44 -0700 (PDT)
+        Mon, 23 Mar 2020 13:28:16 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NHOM0A135226;
+        Mon, 23 Mar 2020 17:27:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=0W36mKXR8dI8W6580WJSeXTMIu4rnf7ZVMgMB4QK/yA=;
+ b=nlvazGfwrgieAp50GxGSPba1CgOnLmgI32F+ViNfApFCZweBCh2Ky/DZi0rhjippPRX5
+ IxqbvNJD6bjZAtSmxBbNtC+vUWIU313nPgImQ2uJQXtGfJ6lt45XvzK27xm+O2frN2It
+ WtKyjy6JSzJHOi/JZ+KvdpTCsEEh164PvarY9j99CccKghMEJYPma/ZKzd5yYokz/nRA
+ Gb+/nFuREBQemarlXWr9cq3PkA9jpFMFTo7HmMOKIgeUvMBxd5WSsDjhlHbdmp6Ocia8
+ Jrk/uTBuLZSA12Ev5HKUHlPUt6jIO9ui5m1bU1P7FnSyY8zDZ1o7EBZR2A7vbV/MvUkV TQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2yx8abvwtn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Mar 2020 17:27:52 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NHLO5q003163;
+        Mon, 23 Mar 2020 17:27:52 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2yxw915dxu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Mar 2020 17:27:51 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02NHRnYS000750;
+        Mon, 23 Mar 2020 17:27:50 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Mar 2020 10:27:49 -0700
+Subject: Re: [PATCH v2] mm/hugetlb: fix a addressing exception caused by
+ huge_pte_offset()
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     "Longpeng (Mike)" <longpeng2@huawei.com>,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        linux-kernel@vger.kernel.org, arei.gonglei@huawei.com,
+        weidong.huang@huawei.com, weifuqiang@huawei.com,
+        kvm@vger.kernel.org, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org
+References: <1582342427-230392-1-git-send-email-longpeng2@huawei.com>
+ <51a25d55-de49-4c0a-c994-bf1a8cfc8638@oracle.com>
+ <20200323160955.GY20941@ziepe.ca>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <69055395-e7e5-a8e2-7f3e-f61607149318@oracle.com>
+Date:   Mon, 23 Mar 2020 10:27:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200318140605.45273-1-jarod@redhat.com> <8a88d1c8-c6b1-ad85-7971-e6ae8c6fa0e4@gmail.com>
- <CAKfmpSc0yea5-OfE1rnVdErDTeOza=owbL00QQEaH-M-A6Za7g@mail.gmail.com>
- <25629.1584564113@famine> <CAKfmpScbzEZAEw=zOEwguQJvr6L2fQiGmAY60SqSBQ_g-+B4tw@mail.gmail.com>
- <3dbabf42-90e6-4c82-0b84-d1b1a9e8fadf@gmail.com> <CAKfmpScXTnnz6wQK3OZcqw4aM1PaLnBRfQL769JgyR7tgM-u5A@mail.gmail.com>
- <20200319154108.2de87e34@hermes.lan>
-In-Reply-To: <20200319154108.2de87e34@hermes.lan>
-From:   Jarod Wilson <jarod@redhat.com>
-Date:   Mon, 23 Mar 2020 13:25:33 -0400
-Message-ID: <CAKfmpSd_VQTwxy-gr-jNvQu_CMFf9F2enEjyQC3+W9+Y2WO1Dg@mail.gmail.com>
-Subject: Re: [PATCH net] ipv6: don't auto-add link-local address to lag ports
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Moshe Levi <moshele@mellanox.com>,
-        Marcelo Ricardo Leitner <mleitner@redhat.com>,
-        Netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200323160955.GY20941@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 bulkscore=0
+ adultscore=0 mlxscore=0 malwarescore=0 mlxlogscore=942 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003230091
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
+ mlxscore=0 adultscore=0 phishscore=0 impostorscore=0 mlxlogscore=981
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003230091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 6:41 PM Stephen Hemminger
-<stephen@networkplumber.org> wrote:
->
-> On Thu, 19 Mar 2020 15:29:51 -0400
-> Jarod Wilson <jarod@redhat.com> wrote:
->
-> > On Thu, Mar 19, 2020 at 1:06 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> > >
-> > > On 3/19/20 9:42 AM, Jarod Wilson wrote:
-> > >
-> > > > Interesting. We'll keep digging over here, but that's definitely not
-> > > > working for this particular use case with OVS for whatever reason.
-> > >
-> > > I did a quick test and confirmed that my bonding slaves do not have link-local addresses,
-> > > without anything done to prevent them to appear.
-> > >
-> > > You might add a selftest, if you ever find what is the trigger :)
-> >
-> > Okay, have a basic reproducer, courtesy of Marcelo:
-> >
-> > # ip link add name bond0 type bond
-> > # ip link set dev ens2f0np0 master bond0
-> > # ip link set dev ens2f1np2 master bond0
-> > # ip link set dev bond0 up
-> > # ip a s
-> > 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN
-> > group default qlen 1000
-> >     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-> >     inet 127.0.0.1/8 scope host lo
-> >        valid_lft forever preferred_lft forever
-> >     inet6 ::1/128 scope host
-> >        valid_lft forever preferred_lft forever
-> > 2: ens2f0np0: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc
-> > mq master bond0 state UP group default qlen 1000
-> >     link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-> > 5: ens2f1np2: <NO-CARRIER,BROADCAST,MULTICAST,SLAVE,UP> mtu 1500 qdisc
-> > mq master bond0 state DOWN group default qlen 1000
-> >     link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-> > 11: bond0: <BROADCAST,MULTICAST,MASTER,UP,LOWER_UP> mtu 1500 qdisc
-> > noqueue state UP group default qlen 1000
-> >     link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-> >     inet6 fe80::20f:53ff:fe2f:ea40/64 scope link
-> >        valid_lft forever preferred_lft forever
-> >
-> > (above trimmed to relevant entries, obviously)
-> >
-> > # sysctl net.ipv6.conf.ens2f0np0.addr_gen_mode=0
-> > net.ipv6.conf.ens2f0np0.addr_gen_mode = 0
-> > # sysctl net.ipv6.conf.ens2f1np2.addr_gen_mode=0
-> > net.ipv6.conf.ens2f1np2.addr_gen_mode = 0
-> >
-> > # ip a l ens2f0np0
-> > 2: ens2f0np0: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc
-> > mq master bond0 state UP group default qlen 1000
-> >     link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-> >     inet6 fe80::20f:53ff:fe2f:ea40/64 scope link tentative
-> >        valid_lft forever preferred_lft forever
-> > # ip a l ens2f1np2
-> > 5: ens2f1np2: <NO-CARRIER,BROADCAST,MULTICAST,SLAVE,UP> mtu 1500 qdisc
-> > mq master bond0 state DOWN group default qlen 1000
-> >     link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-> >     inet6 fe80::20f:53ff:fe2f:ea40/64 scope link tentative
-> >        valid_lft forever preferred_lft forever
-> >
-> > Looks like addrconf_sysctl_addr_gen_mode() bypasses the original "is
-> > this a slave interface?" check, and results in an address getting
-> > added, while w/the proposed patch added, no address gets added.
-> >
-> > Looking back through git history again, I see a bunch of 'Fixes:
-> > d35a00b8e33d ("net/ipv6: allow sysctl to change link-local address
-> > generation mode")' patches, and I guess that's where this issue was
-> > also introduced.
-> >
->
-> Yes the addrgen mode patches caused bad things to happen with hyper-v
-> sub devices.  Addrconf code is very tricky to get right.
-> If you look back there have been a large number of changes where
-> a patch looks good, gets reviewed, merged, and then breaks something
-> and has to be reverted.
->
-> Probably the original patch should just be reverted rather than
-> trying to add more here.
+On 3/23/20 9:09 AM, Jason Gunthorpe wrote:
+> On Sat, Mar 21, 2020 at 04:38:19PM -0700, Mike Kravetz wrote:
+> 
+>> Andrew dropped this patch from his tree which caused me to go back and
+>> look at the status of this patch/issue.
+>>
+>> It is pretty obvious that code in the current huge_pte_offset routine
+>> is racy.  I checked out the assembly code produced by my compiler and
+>> verified that the line,
+>>
+>> 	if (pud_huge(*pud) || !pud_present(*pud))
+>>
+>> does actually dereference *pud twice.  So, the value could change between
+>> those two dereferences.   Longpeng (Mike) could easlily recreate the issue
+>> if he put a delay between the two dereferences.  I believe the only
+>> reservations/concerns about the patch below was the use of READ_ONCE().
+>> Is that correct?
+> 
+> I'm looking at a similar situation in pagewalk.c right now with PUD,
+> and it is very confusing to see that locks are being held, memory
+> accessed without READ_ONCE, but actually it has concurrent writes.
+> 
+> I think it is valuable to annotate with READ_ONCE when the author
+> knows this is an unlocked data access, regardless of what the compiler
+> does.
+> 
+> pagewalk probably has the same racy bug you show here, I'm going to
+> send a very similar looking patch to pagewalk hopefully soon.
 
-I'm not prepared to do a full revert here myself, I don't know the
-code well enough, or what the ramifications might be. For v2, I was
-just going to propose a check-and-bail for devices with IFF_SLAVE set
-in addrconf_addr_gen(), to hopefully catch all the same devices the
-existing check from c2edacf80e15 caught, should they take this code
-pathway that skips that check.
+Thanks Jason.
+
+Unfortunately, I replied to the thread without full context for the discussion
+we were having.  The primary objection to this patch was the use of READ_ONCE
+in these two instances:
+
+>  	pgd = pgd_offset(mm, addr);
+> -	if (!pgd_present(*pgd))
+> +	if (!pgd_present(READ_ONCE(*pgd)))
+>  		return NULL;
+>  	p4d = p4d_offset(pgd, addr);
+> -	if (!p4d_present(*p4d))
+> +	if (!p4d_present(READ_ONCE(*p4d)))
+>  		return NULL;
+>  
+>       pud = pud_offset(p4d, addr);
+
+One would argue that pgd and p4d can not change from present to !present
+during the execution of this code.  To me, that seems like the issue which
+would cause an issue.  Of course, I could be missing something.
+
+> Also, the remark about pmd_offset() seems accurate. The
+> get_user_fast_pages() pattern seems like the correct one to emulate:
+> 
+>   pud = READ_ONCE(*pudp);
+>   if (pud_none(pud)) 
+>      ..
+>   if (!pud_'is a pmd pointer')
+>      ..
+>   pmdp = pmd_offset(&pud, address);
+>   pmd = READ_ONCE(*pmd);
+>   [...]
+> 
+> Passing &pud in avoids another de-reference of the pudp. Honestly all
+> these APIs that take in page table pointers and internally
+> de-reference them seem very hard to use correctly when the page table
+> access isn't fully locked against write.
+> 
+> This also relies on 'some kind of locking' to prevent the pmdp from
+> becoming freed concurrently while this is running.
+> 
+> .. also this only works if READ_ONCE() is atomic, ie the pud can't be
+> 64 bit on a 32 bit platform. At least pmd has this problem, I haven't
+> figured out if pud does??
+> 
+>> Are there any objections to the patch if the READ_ONCE() calls are removed?
+> 
+> I think if we know there is no concurrent data access then it makes
+> sense to keep the READ_ONCE.
+> 
+> It looks like at least the p4d read from the pgd is also unlocked here
+> as handle_mm_fault() writes to it??
+
+Yes, there is no locking required to call huge_pte_offset().
 
 -- 
-Jarod Wilson
-jarod@redhat.com
-
+Mike Kravetz
