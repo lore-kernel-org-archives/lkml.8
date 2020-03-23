@@ -2,87 +2,120 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04925C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 05:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC77C10F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 05:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5B2E2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 05:09:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xkZiJxn7"
+	by mail.kernel.org (Postfix) with ESMTP id EFAC120409
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 05:20:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgCWFJY (ORCPT
+        id S1726007AbgCWFSj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 01:09:24 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:21269 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725866AbgCWFJY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 01:09:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584940163; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=YwgqPRzi5A+j0qLDmgYbIu+o6KUyxQt47gBd1J1KNzA=; b=xkZiJxn7DoFBJzRpIgFFSyIiUBU6PIFojnz6+RQHG/VN9j0JcpPsDc4wk3ngBECEZrPST7sL
- vcsJuIwrFpfIFKwcjleyNkL09jzplc0+Fa1ottKcl/TjTsEW5hlC9Mrn5Bxe/pKhSnWh0d6u
- 06BqD4SSyiiOw7alii/tywYG+jI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e784470.7f5e12e18570-smtp-out-n01;
- Mon, 23 Mar 2020 05:09:04 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D2D89C433CB; Mon, 23 Mar 2020 05:09:03 +0000 (UTC)
-Received: from neeraju-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: neeraju)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0B71FC433D2;
-        Mon, 23 Mar 2020 05:08:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0B71FC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-To:     rjw@rjwysocki.net, pavel@ucw.cz, len.brown@intel.com,
-        gregkh@linuxfoundation.org, swboyd@chromium.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        irgeorgiev@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        Neeraj Upadhyay <neeraju@codeaurora.org>
-Subject: [PATCH] PM / wakeup: Skip wakeup_source_sysfs_remove if device is not added
-Date:   Mon, 23 Mar 2020 10:38:51 +0530
-Message-Id: <1584940131-1591-1-git-send-email-neeraju@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Mon, 23 Mar 2020 01:18:39 -0400
+Received: from mga03.intel.com ([134.134.136.65]:60909 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725858AbgCWFSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 01:18:39 -0400
+IronPort-SDR: STbwYfMLrHKV0pI/X1HDn2OQoIuCM+ENUnWcAHpYaI/m3dpjlb88twFzb7QNTvoafu/CCgBiT0
+ Tfj9xvU87YZg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2020 22:18:38 -0700
+IronPort-SDR: fts42I0y1TuKNVMM2x1NrRG1/XQgMfJPU8+xcVHSzopzA/cWRcLZx3o4YeiOAwWiCq3bkJp6+H
+ cgD1/N6jlhJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,295,1580803200"; 
+   d="scan'208";a="292471725"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Mar 2020 22:18:37 -0700
+Received: from orsmsx155.amr.corp.intel.com (10.22.240.21) by
+ ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 22 Mar 2020 22:18:37 -0700
+Received: from orsmsx102.amr.corp.intel.com ([169.254.3.165]) by
+ ORSMSX155.amr.corp.intel.com ([169.254.7.107]) with mapi id 14.03.0439.000;
+ Sun, 22 Mar 2020 22:18:36 -0700
+From:   "Park, Kyung Min" <kyung.min.park@intel.com>
+To:     Joe Perches <joe@perches.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>
+Subject: RE: [PATCH v2 2/2] x86/delay: Introduce TPAUSE delay
+Thread-Topic: [PATCH v2 2/2] x86/delay: Introduce TPAUSE delay
+Thread-Index: AQHV/m3yCORYmsI3CkqI0RgzexuEG6hRtyAAgAPw2LA=
+Date:   Mon, 23 Mar 2020 05:18:36 +0000
+Message-ID: <3658BA65DD26AF4BA909BEB2C6DF6181A2A624C9@ORSMSX102.amr.corp.intel.com>
+References: <1584677604-32707-1-git-send-email-kyung.min.park@intel.com>
+         <1584677604-32707-3-git-send-email-kyung.min.park@intel.com>
+ <b771dfc7409a99b35575c14cd4dd55d24f81ca98.camel@perches.com>
+In-Reply-To: <b771dfc7409a99b35575c14cd4dd55d24f81ca98.camel@perches.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Skip wakeup_source_sysfs_remove(), to fix null pinter access of
-ws->dev, if wakeup source is unregistered before wakeup class
-is registered from device_add().
+Hi Joe,
 
-Fixes: 2ca3d1ecb8c4 ("PM / wakeup: Register wakeup class kobj after device is added")
-Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
----
- drivers/base/power/wakeup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> -----Original Message-----
+> From: Joe Perches <joe@perches.com>
+> Sent: Friday, March 20, 2020 3:07 AM
+> To: Park, Kyung Min <kyung.min.park@intel.com>; x86@kernel.org; linux-
+> kernel@vger.kernel.org
+> Cc: tglx@linutronix.de; mingo@redhat.com; hpa@zytor.com;
+> gregkh@linuxfoundation.org; ak@linux.intel.com; Luck, Tony
+> <tony.luck@intel.com>; Raj, Ashok <ashok.raj@intel.com>; Shankar, Ravi V
+> <ravi.v.shankar@intel.com>; Yu, Fenghua <fenghua.yu@intel.com>
+> Subject: Re: [PATCH v2 2/2] x86/delay: Introduce TPAUSE delay
+> 
+> On Thu, 2020-03-19 at 21:13 -0700, Kyung Min Park wrote:
+> > TPAUSE instructs the processor to enter an implementation-dependent
+> > optimized state. The instruction execution wakes up when the
+> > time-stamp counter reaches or exceeds the implicit EDX:EAX 64-bit input value.
+> > The instruction execution also wakes up due to the expiration of the
+> > operating system time-limit or by an external interrupt or exceptions
+> > such as a debug exception or a machine check exception.
+> []
+> > diff --git a/arch/x86/lib/delay.c b/arch/x86/lib/delay.c
+> []
+> > @@ -97,6 +97,27 @@ static void delay_tsc(u64 cycles)  }
+> >
+> >  /*
+> > + * On Intel the TPAUSE instruction waits until any of:
+> > + * 1) the TSC counter exceeds the value provided in EAX:EDX
+> > + * 2) global timeout in IA32_UMWAIT_CONTROL is exceeded
+> > + * 3) an external interrupt occurs
+> > + */
+> > +static void delay_halt_tpause(u64 start, u64 cycles) {
+> > +	u64 until = start + cycles;
+> > +	unsigned int eax, edx;
+> > +
+> > +	eax = (unsigned int)(until & 0xffffffff);
+> > +	edx = (unsigned int)(until >> 32);
+> 
+> trivia:
+> 
+> perhaps lower_32_bits and upper_32_bits
 
-diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-index 27f3e60..f8f8c0a 100644
---- a/drivers/base/power/wakeup.c
-+++ b/drivers/base/power/wakeup.c
-@@ -241,7 +241,8 @@ void wakeup_source_unregister(struct wakeup_source *ws)
- {
- 	if (ws) {
- 		wakeup_source_remove(ws);
--		wakeup_source_sysfs_remove(ws);
-+		if (ws->dev)
-+			wakeup_source_sysfs_remove(ws);
- 		wakeup_source_destroy(ws);
- 	}
- }
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
+Thank you for your comment. I'll update in the next patch.
+
