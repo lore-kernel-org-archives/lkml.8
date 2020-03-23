@@ -2,150 +2,140 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933B5C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4C4C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63CC7206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D863F20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:54:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tWTwtLci"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="P5Dr6zoH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgCWVwJ (ORCPT
+        id S1727005AbgCWVyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 17:52:09 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39583 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgCWVwJ (ORCPT
+        Mon, 23 Mar 2020 17:54:05 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:49650 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgCWVyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 17:52:09 -0400
-Received: by mail-pf1-f195.google.com with SMTP id d25so8174336pfn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 14:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zzaojujfcls2hgFyVUn0hD1Rb+7tZyy+TgUJhbpUoN0=;
-        b=tWTwtLciVWGSxsbK51pBsm7+vZ073MLGRYvTY2C4gVsjjvEfn14hy7mCtlIsWT+LvQ
-         al5phEEv8sdIIHJnFOjBu5CNIfygJVjQbwKif/nBhzkXYzPt2NeARsXaQbO7sHjYl7Ho
-         IyuMyLSDe76UZsuPAvnYEFVGKNVGSkygCw+8o5OXo9RGlOSzkscK/JydAc5DUTMZO83W
-         03ohm0vE/DAPjcuZXljtjSbkdPHLTIyQmiBH6KTiDrfaisDWAPIrUN0bK7hUee01IuaS
-         2vh5bPwOmBCgwlmBoPM7NeRT3ejSr2KPgaJ3H/+g6hW07PbV15/ZheZ3OF+7xCrlsE1Y
-         pXqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zzaojujfcls2hgFyVUn0hD1Rb+7tZyy+TgUJhbpUoN0=;
-        b=YCVe5XP7Cyr/qPA3EQK3EYOA2m9HZCdFKW/ldCQKN111NSLJu9Vgh5diYszXNG7KxU
-         TYc3vr2wWov2Ae3JUIcpgrKyWhWd9w0CedItF0rEziGWGuH8xk5OTlLw+L+hkL6KjpW6
-         jmhET2bQgOwnieM5mqzZRBqHTuP15odwWGCmSX9/fzqxvz2JRVS7eixnyS7UFzQ0sen3
-         sHnj/6Pot3dCSyrzMN8Z7LftJyJOc7yVeVU0zhFMXk3Iir6QcBs0OzK1m0G0ZXPSvd0r
-         jW1yGHGGPIKePwzGTBvlR51ZFvUOLkVqtOgqiX4L/eXrt2zSUiAGwoTzOy+46Go6bhZ0
-         tkaQ==
-X-Gm-Message-State: ANhLgQ3N7R9otMucTo9y+JOvB/GV8g8vKY6MYbq110qy9eDgpxgwTV/1
-        gN+4OpnXID6DRitdsQiGdwOl+A==
-X-Google-Smtp-Source: ADFU+vvmkqQHQNARe/Cfqm5giF+9fLK7xjtj+Kr/nmczELP2SRPVq3XmEvxUAYfyJp75b2PX8eQsiQ==
-X-Received: by 2002:a63:ec50:: with SMTP id r16mr25369318pgj.274.1585000327853;
-        Mon, 23 Mar 2020 14:52:07 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id j12sm5499008pgs.0.2020.03.23.14.52.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 14:52:07 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 15:52:05 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] remoteproc: Traverse rproc_list under RCU read
- lock
-Message-ID: <20200323215205.GA30464@xps15>
-References: <20200310063817.3344712-1-bjorn.andersson@linaro.org>
- <20200310063817.3344712-2-bjorn.andersson@linaro.org>
+        Mon, 23 Mar 2020 17:54:05 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 354508364E
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:54:02 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1585000442;
+        bh=YF90OqhWLGXA4a5YAnTLbpCAqAANWVvf4rDFB17AIsI=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=P5Dr6zoHlp3ncfmE148ZLipXV1kzRF4ueHglhv5mQI7FsmKTG5pzDDl3Ewk/sGUuZ
+         JACS30xbd4fCIPC4mgfh+RsGqLiWIJKX1eIXmtg++FRsA4inody9R0AOC/GtyC+v55
+         O3qNQJT7EzZHKFkt6gL8CFVM3ziK/0IYuj8/bv4TZZj0ZxLzQG+xX4EPKagjpmwsrI
+         LkGScYLYtkH0QcMKcVAtNlIFv1zZTrfdSzf9NfOjBxmbw+lTzV/K3Xq1J7azoFGvit
+         5KMqh59bzEJ6yUndjgu3JTtfgyMLcuWMUwQowuTUS51j47iEfduNvhs88F/A0QKTsb
+         6hz0P4bwz3thA==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e792ffa0005>; Tue, 24 Mar 2020 10:54:02 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Tue, 24 Mar 2020 10:54:01 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Tue, 24 Mar 2020 10:54:01 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
+Subject: Re: [PATCH] powerpc/legacy_serial: Use early_ioremap()
+Thread-Topic: [PATCH] powerpc/legacy_serial: Use early_ioremap()
+Thread-Index: AQHWAVtyPT7uF8EyiECYlBR6HiNzIKhV3nkA
+Date:   Mon, 23 Mar 2020 21:54:01 +0000
+Message-ID: <d94f74c57112e002959143bb5ccdcd9be80ed8d2.camel@alliedtelesis.co.nz>
+References: <3df15946ed0c29663dc7928b31ca07576e1444f6.1580904214.git.christophe.leroy@c-s.fr>
+In-Reply-To: <3df15946ed0c29663dc7928b31ca07576e1444f6.1580904214.git.christophe.leroy@c-s.fr>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.14.96]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A5DFBFFD517DEC4A8B3F2C51E4C14FB8@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310063817.3344712-2-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 11:38:14PM -0700, Bjorn Andersson wrote:
-> In order to be able to traverse the mostly read-only rproc_list without
-> locking during panic migrate traversal to be done under rcu_read_lock().
-> 
-> Mutual exclusion for modifications of the list continues to be handled
-> by the rproc_list_mutex and a synchronization point is added before
-> releasing objects that are popped from the list.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Change v3:
-> - New patch
-> 
->  drivers/remoteproc/remoteproc_core.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 097f33e4f1f3..f0a77c30c6b1 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1854,8 +1854,8 @@ struct rproc *rproc_get_by_phandle(phandle phandle)
->  	if (!np)
->  		return NULL;
->  
-> -	mutex_lock(&rproc_list_mutex);
-> -	list_for_each_entry(r, &rproc_list, node) {
-> +	rcu_read_lock();
-> +	list_for_each_entry_rcu(r, &rproc_list, node) {
->  		if (r->dev.parent && r->dev.parent->of_node == np) {
->  			/* prevent underlying implementation from being removed */
->  			if (!try_module_get(r->dev.parent->driver->owner)) {
-> @@ -1868,7 +1868,7 @@ struct rproc *rproc_get_by_phandle(phandle phandle)
->  			break;
->  		}
->  	}
-> -	mutex_unlock(&rproc_list_mutex);
-> +	rcu_read_unlock();
->  
->  	of_node_put(np);
->  
-> @@ -1925,7 +1925,7 @@ int rproc_add(struct rproc *rproc)
->  
->  	/* expose to rproc_get_by_phandle users */
->  	mutex_lock(&rproc_list_mutex);
-> -	list_add(&rproc->node, &rproc_list);
-> +	list_add_rcu(&rproc->node, &rproc_list);
->  	mutex_unlock(&rproc_list_mutex);
->  
->  	return 0;
-> @@ -2140,9 +2140,12 @@ int rproc_del(struct rproc *rproc)
->  
->  	/* the rproc is downref'ed as soon as it's removed from the klist */
->  	mutex_lock(&rproc_list_mutex);
-> -	list_del(&rproc->node);
-> +	list_del_rcu(&rproc->node);
->  	mutex_unlock(&rproc_list_mutex);
->  
-> +	/* Ensure that no readers of rproc_list are still active */
-> +	synchronize_rcu();
-> +
-
-Please add linuc/rculist.h to include the RCU API.  With that:
-
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
->  	device_del(&rproc->dev);
->  
->  	return 0;
-> -- 
-> 2.24.0
-> 
+SGkgQ2hyaXN0b3BoZSwNCg0KT24gV2VkLCAyMDIwLTAyLTA1IGF0IDEyOjAzICswMDAwLCBDaHJp
+c3RvcGhlIExlcm95IHdyb3RlOg0KPiBbICAgIDAuMDAwMDAwXSBpb3JlbWFwKCkgY2FsbGVkIGVh
+cmx5IGZyb20NCj4gZmluZF9sZWdhY3lfc2VyaWFsX3BvcnRzKzB4M2NjLzB4NDc0LiBVc2UgZWFy
+bHlfaW9yZW1hcCgpIGluc3RlYWQNCj4gDQoNCkkgd2FzIGp1c3QgYWJvdXQgdG8gZGlnIGludG8g
+dGhpcyBlcnJvciBtZXNzYWdlIGFuZCBmb3VuZCB5b3UgcGF0Y2guIEkNCmFwcGxpZWQgaXQgdG8g
+YSB2NS41IGJhc2UuDQoNCj4gZmluZF9sZWdhY3lfc2VyaWFsX3BvcnRzKCkgaXMgY2FsbGVkIGVh
+cmx5IGZyb20gc2V0dXBfYXJjaCgpLCBiZWZvcmUNCj4gcGFnaW5nX2luaXQoKS4gdm1hbGxvYyBp
+cyBub3QgYXZhaWxhYmxlIHlldCwgaW9yZW1hcCBzaG91bGRuJ3QgYmUNCj4gdXNlZCB0aGF0IGVh
+cmx5Lg0KPiANCj4gVXNlIGVhcmx5X2lvcmVtYXAoKSBhbmQgc3dpdGNoIHRvIGEgcmVndWxhciBp
+b3JlbWFwKCkgbGF0ZXIuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDaHJpc3RvcGhlIExlcm95IDxj
+aHJpc3RvcGhlLmxlcm95QGMtcy5mcj4NCg0KT24gbXkgc3lzdGVtIChGcmVlc2NhbGUgVDIwODAg
+U09DKSB0aGlzIHNlZW1zIHRvIGNhdXNlIGEgY3Jhc2gvaGFuZyBpbg0KZWFybHkgYm9vdC4gVW5m
+b3J0dW5hdGVseSBiZWNhdXNlIHRoaXMgaXMgYWZmZWN0aW5nIHRoZSBib290IGNvbnNvbGUgSQ0K
+ZG9uJ3QgZ2V0IGFueSBlYXJseXByaW50ayBvdXRwdXQuDQoNCj4gLS0tDQo+ICBhcmNoL3Bvd2Vy
+cGMva2VybmVsL2xlZ2FjeV9zZXJpYWwuYyB8IDMzICsrKysrKysrKysrKysrKysrKysrKysrKysN
+Cj4gLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25z
+KC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2tlcm5lbC9sZWdhY3lfc2VyaWFs
+LmMNCj4gYi9hcmNoL3Bvd2VycGMva2VybmVsL2xlZ2FjeV9zZXJpYWwuYw0KPiBpbmRleCBmMDYx
+ZTA2ZTlmNTEuLjhiMmMxYTg1NTNhMCAxMDA2NDQNCj4gLS0tIGEvYXJjaC9wb3dlcnBjL2tlcm5l
+bC9sZWdhY3lfc2VyaWFsLmMNCj4gKysrIGIvYXJjaC9wb3dlcnBjL2tlcm5lbC9sZWdhY3lfc2Vy
+aWFsLmMNCj4gQEAgLTE1LDYgKzE1LDcgQEANCj4gICNpbmNsdWRlIDxhc20vdWRiZy5oPg0KPiAg
+I2luY2x1ZGUgPGFzbS9wY2ktYnJpZGdlLmg+DQo+ICAjaW5jbHVkZSA8YXNtL3BwYy1wY2kuaD4N
+Cj4gKyNpbmNsdWRlIDxhc20vZWFybHlfaW9yZW1hcC5oPg0KPiAgDQo+ICAjdW5kZWYgREVCVUcN
+Cj4gIA0KPiBAQCAtMzQsNiArMzUsNyBAQCBzdGF0aWMgc3RydWN0IGxlZ2FjeV9zZXJpYWxfaW5m
+byB7DQo+ICAJdW5zaWduZWQgaW50CQkJY2xvY2s7DQo+ICAJaW50CQkJCWlycV9jaGVja19wYXJl
+bnQ7DQo+ICAJcGh5c19hZGRyX3QJCQl0YWRkcjsNCj4gKwl2b2lkIF9faW9tZW0JCQkqZWFybHlf
+YWRkcjsNCj4gIH0gbGVnYWN5X3NlcmlhbF9pbmZvc1tNQVhfTEVHQUNZX1NFUklBTF9QT1JUU107
+DQo+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGxlZ2FjeV9zZXJpYWxf
+cGFyZW50c1tdIF9faW5pdGNvbnN0DQo+ID0gew0KPiBAQCAtMzI1LDE3ICszMjcsMTYgQEAgc3Rh
+dGljIHZvaWQgX19pbml0DQo+IHNldHVwX2xlZ2FjeV9zZXJpYWxfY29uc29sZShpbnQgY29uc29s
+ZSkNCj4gIHsNCj4gIAlzdHJ1Y3QgbGVnYWN5X3NlcmlhbF9pbmZvICppbmZvID0NCj4gJmxlZ2Fj
+eV9zZXJpYWxfaW5mb3NbY29uc29sZV07DQo+ICAJc3RydWN0IHBsYXRfc2VyaWFsODI1MF9wb3J0
+ICpwb3J0ID0NCj4gJmxlZ2FjeV9zZXJpYWxfcG9ydHNbY29uc29sZV07DQo+IC0Jdm9pZCBfX2lv
+bWVtICphZGRyOw0KPiAgCXVuc2lnbmVkIGludCBzdHJpZGU7DQo+ICANCj4gIAlzdHJpZGUgPSAx
+IDw8IHBvcnQtPnJlZ3NoaWZ0Ow0KPiAgDQo+ICAJLyogQ2hlY2sgaWYgYSB0cmFuc2xhdGVkIE1N
+SU8gYWRkcmVzcyBoYXMgYmVlbiBmb3VuZCAqLw0KPiAgCWlmIChpbmZvLT50YWRkcikgew0KPiAt
+CQlhZGRyID0gaW9yZW1hcChpbmZvLT50YWRkciwgMHgxMDAwKTsNCj4gLQkJaWYgKGFkZHIgPT0g
+TlVMTCkNCj4gKwkJaW5mby0+ZWFybHlfYWRkciA9IGVhcmx5X2lvcmVtYXAoaW5mby0+dGFkZHIs
+IDB4MTAwMCk7DQo+ICsJCWlmIChpbmZvLT5lYXJseV9hZGRyID09IE5VTEwpDQo+ICAJCQlyZXR1
+cm47DQo+IC0JCXVkYmdfdWFydF9pbml0X21taW8oYWRkciwgc3RyaWRlKTsNCj4gKwkJdWRiZ191
+YXJ0X2luaXRfbW1pbyhpbmZvLT5lYXJseV9hZGRyLCBzdHJpZGUpOw0KPiAgCX0gZWxzZSB7DQo+
+ICAJCS8qIENoZWNrIGlmIGl0J3MgUElPIGFuZCB3ZSBzdXBwb3J0IHVudHJhbnNsYXRlZCBQSU8g
+Ki8NCj4gIAkJaWYgKHBvcnQtPmlvdHlwZSA9PSBVUElPX1BPUlQgJiYgaXNhX2lvX3NwZWNpYWwp
+DQo+IEBAIC0zNTMsNiArMzU0LDMwIEBAIHN0YXRpYyB2b2lkIF9faW5pdA0KPiBzZXR1cF9sZWdh
+Y3lfc2VyaWFsX2NvbnNvbGUoaW50IGNvbnNvbGUpDQo+ICAJdWRiZ191YXJ0X3NldHVwKGluZm8t
+PnNwZWVkLCBpbmZvLT5jbG9jayk7DQo+ICB9DQo+ICANCj4gK3N0YXRpYyBpbnQgX19pbml0IGlv
+cmVtYXBfbGVnYWN5X3NlcmlhbF9jb25zb2xlKHZvaWQpDQo+ICt7DQo+ICsJc3RydWN0IGxlZ2Fj
+eV9zZXJpYWxfaW5mbyAqaW5mbyA9DQo+ICZsZWdhY3lfc2VyaWFsX2luZm9zW2xlZ2FjeV9zZXJp
+YWxfY29uc29sZV07DQo+ICsJc3RydWN0IHBsYXRfc2VyaWFsODI1MF9wb3J0ICpwb3J0ID0NCj4g
+JmxlZ2FjeV9zZXJpYWxfcG9ydHNbbGVnYWN5X3NlcmlhbF9jb25zb2xlXTsNCj4gKwl2b2lkIF9f
+aW9tZW0gKnZhZGRyOw0KPiArDQo+ICsJaWYgKGxlZ2FjeV9zZXJpYWxfY29uc29sZSA8IDApDQo+
+ICsJCXJldHVybiAwOw0KPiArDQo+ICsJaWYgKCFpbmZvLT5lYXJseV9hZGRyKQ0KPiArCQlyZXR1
+cm4gMDsNCj4gKw0KPiArCXZhZGRyID0gaW9yZW1hcChpbmZvLT50YWRkciwgMHgxMDAwKTsNCj4g
+KwlpZiAoV0FSTl9PTighdmFkZHIpKQ0KPiArCQlyZXR1cm4gLUVOT01FTTsNCj4gKw0KPiArCXVk
+YmdfdWFydF9pbml0X21taW8odmFkZHIsIDEgPDwgcG9ydC0+cmVnc2hpZnQpOw0KPiArCWVhcmx5
+X2lvdW5tYXAoaW5mby0+ZWFybHlfYWRkciwgMHgxMDAwKTsNCj4gKwlpbmZvLT5lYXJseV9hZGRy
+ID0gTlVMTDsNCj4gKw0KPiArCXJldHVybiAwOw0KPiArfQ0KPiArZWFybHlfaW5pdGNhbGwoaW9y
+ZW1hcF9sZWdhY3lfc2VyaWFsX2NvbnNvbGUpOw0KPiArDQo+ICAvKg0KPiAgICogVGhpcyBpcyBj
+YWxsZWQgdmVyeSBlYXJseSwgYXMgcGFydCBvZiBzZXR1cF9zeXN0ZW0oKSBvcg0KPiBldmVudHVh
+bGx5DQo+ICAgKiBzZXR1cF9hcmNoKCksIGJhc2ljYWxseSBiZWZvcmUgYW55dGhpbmcgZWxzZSBp
+biB0aGlzIGZpbGUuIFRoaXMNCj4gZnVuY3Rpb24NCg==
