@@ -2,112 +2,77 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 828A2C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A633FC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6245720409
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78682206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:05:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585004709;
+	bh=8Kbx+YuPM/kjl/gzSlFEWqeDnOrd7rW3lT6qNKD2TGE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=tk/WzvA6MyqZN3VPUklwCf148NvcDdSHLpdTR1Zj26FZTS570VH/TjmGs+QmWpi9p
+	 P6y/JeOJQBzDAP8DGwEsHJAN5aeKFcn1nF+9vG3Tdas3bTzj11CdyhFergLBMh+LWQ
+	 Heu8CxcwSc50g8mGskxvq1yeu9+pt57kIPg2dX+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgCWXBT (ORCPT
+        id S1726991AbgCWXFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 19:01:19 -0400
-Received: from mga05.intel.com ([192.55.52.43]:26246 "EHLO mga05.intel.com"
+        Mon, 23 Mar 2020 19:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgCWXBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 19:01:19 -0400
-IronPort-SDR: nZRcagTbDknFulPRrDVKGJ5vudG5DYN7RvYUNEdgVeqzlQnMOzi5amezxfTNA2O3DnjciLTmOu
- exPIHh4SD1pQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 16:01:13 -0700
-IronPort-SDR: 63L9BKLoOyhbYTG1gj60ZxljqPCG74hvFUzHVqHYkdYLU2uVX8C/WpO6r95vZtLh5lf/rZhpu+
- OBngCE5zvw1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,298,1580803200"; 
-   d="scan'208";a="419673469"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by orsmga005.jf.intel.com with ESMTP; 23 Mar 2020 16:01:13 -0700
-Date:   Mon, 23 Mar 2020 16:01:13 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        "Lu, Baolu" <baolu.lu@intel.com>
-Subject: Re: [PATCH 2/2] iommu/vt-d: Replace intel SVM APIs with generic SVA
- APIs
-Message-ID: <20200323230113.GA84386@otc-nc-03>
-References: <1582586797-61697-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1582586797-61697-4-git-send-email-jacob.jun.pan@linux.intel.com>
- <20200320092955.GA1702630@myrica>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320092955.GA1702630@myrica>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1725897AbgCWXFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 19:05:08 -0400
+Subject: Re: [GIT PULL] Crypto Fixes for 5.6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585004707;
+        bh=8Kbx+YuPM/kjl/gzSlFEWqeDnOrd7rW3lT6qNKD2TGE=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=gh9N4QYcxURA1vuQFp9X/9vN6jCysP/P03cueNfUJCEfemtKsTLS1covr9hYe6r7h
+         NQfwsSX792qAPbQquM/9UWdEVfXyco3VcCYWdSsmmdBPiS4dZBE9ajciSYACkz9zE/
+         NZNbOftpssAWUHRnxNxqsyOIMfrL9H1cw9BrvonA=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200323225403.GA10100@gondor.apana.org.au>
+References: <20190916084901.GA20338@gondor.apana.org.au>
+ <20190923050515.GA6980@gondor.apana.org.au>
+ <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
+ <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
+ <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
+ <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
+ <20200224060042.GA26184@gondor.apana.org.au>
+ <20200312115714.GA21470@gondor.apana.org.au>
+ <20200323225403.GA10100@gondor.apana.org.au>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200323225403.GA10100@gondor.apana.org.au>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+X-PR-Tracked-Commit-Id: c8cfcb78c65877313cda7bcbace624d3dbd1f3b3
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 979e52ca0469fb38646bc51d26a0263a740c9f03
+Message-Id: <158500470751.3923.15723237667884136785.pr-tracker-bot@kernel.org>
+Date:   Mon, 23 Mar 2020 23:05:07 +0000
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean
+The pull request you sent on Tue, 24 Mar 2020 09:54:03 +1100:
 
-On Fri, Mar 20, 2020 at 10:29:55AM +0100, Jean-Philippe Brucker wrote:
-> > +#define to_intel_svm_dev(handle) container_of(handle, struct intel_svm_dev, sva)
-> > +struct iommu_sva *
-> > +intel_svm_bind(struct device *dev, struct mm_struct *mm, void *drvdata)
-> > +{
-> > +	struct iommu_sva *sva = ERR_PTR(-EINVAL);
-> > +	struct intel_svm_dev *sdev = NULL;
-> > +	int flags = 0;
-> > +	int ret;
-> > +
-> > +	/*
-> > +	 * TODO: Consolidate with generic iommu-sva bind after it is merged.
-> > +	 * It will require shared SVM data structures, i.e. combine io_mm
-> > +	 * and intel_svm etc.
-> > +	 */
-> > +	if (drvdata)
-> > +		flags = *(int *)drvdata;
-> 
-> drvdata is more for storing device driver contexts that can be passed to
-> iommu_sva_ops, but I get that this is temporary.
-> 
-> As usual I'm dreading supervisor mode making it into the common API. What
-> are your plans regarding SUPERVISOR_MODE and PRIVATE_PASID flags?  The
-> previous discussion on the subject [1] had me hoping that you could
-> replace supervisor mode with normal mappings (auxiliary domains?)
-> I'm less worried about PRIVATE_PASID, it would just add complexity into
+> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
 
-We don't seem to have an immediate need for PRIVATE_PASID. There are some talks
-about potential usages, but nothing concrete. I think it might be good to
-get rid of it now and add when we really need.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/979e52ca0469fb38646bc51d26a0263a740c9f03
 
-For SUPERVISOR_MODE, the idea is to have aux domain. Baolu is working on
-something to replace. Certainly the entire kernel address is opening up 
-the whole kimono.. so we are looking at dynamically creating mappings on demand. 
-It might take some of the benefits of SVA in general with no need to create
-mappings, but for security somebody has to pay the price :-)
+Thank you!
 
-Cheers,
-Ashok
-
-
-> the API and iommu-sva implementation, but doesn't really have security
-> implications.
-> 
-> [1] https://lore.kernel.org/linux-iommu/20190228220449.GA12682@araj-mobl1.jf.intel.com/
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
