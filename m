@@ -2,299 +2,145 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E73BAC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8BEC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8F982072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAA762074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:06:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="agTtoD7/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbgCWSFf convert rfc822-to-8bit (ORCPT
+        id S1727581AbgCWSGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:05:35 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:44874 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726991AbgCWSFf (ORCPT
+        Mon, 23 Mar 2020 14:06:30 -0400
+Received: from mail-pg1-f172.google.com ([209.85.215.172]:46842 "EHLO
+        mail-pg1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726991AbgCWSGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:05:35 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id D48BFCECFF;
-        Mon, 23 Mar 2020 19:15:04 +0100 (CET)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH v1 2/2] Bluetooth: btusb: Read the supported features of
- Microsoft vendor extension
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200323002820.v1.2.I4e01733fa5b818028dc9188ca91438fc54aa5028@changeid>
-Date:   Mon, 23 Mar 2020 19:05:33 +0100
-Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Alain Michaud <alainm@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <2E8F0DD1-DB1E-40D7-9ACD-9900C5D65704@holtmann.org>
-References: <20200323072824.254495-1-mcchou@chromium.org>
- <20200323002820.v1.2.I4e01733fa5b818028dc9188ca91438fc54aa5028@changeid>
-To:     Miao-chen Chou <mcchou@chromium.org>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Mon, 23 Mar 2020 14:06:30 -0400
+Received: by mail-pg1-f172.google.com with SMTP id k191so6431620pgc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 11:06:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KXLJ6VFfxrFZrwSfkhbx8s/k+sv6GEa0mybadcnXPi4=;
+        b=agTtoD7/xmJ76Q4f/peu0SvnIjf7I/7ksbIm0Dq+4fUNxLcMT2a0PIU6yYxxb8P9XT
+         x5VOKrLwrBNTz8XRvlXqLlDqCejbirKNcUSVG7Axs25XUnNuk8nCuF1iabTudPDZG2Km
+         2jZqkUF4poz4tErZlCkaG8SOhPsXgB+P2LL3mqfQ1TWa23WKqaxTK5FD4HfYK6SuEHk0
+         H0vNjCupJ1MjHt8xYibjjBpqt7Bj2Uu6S6Y72fhZBgqw3+irZ90L6+Mw0kWKrm8EaJ18
+         Bzf5/J7NWIA1fESjMMHerWOoSNDpfKFjm1xe5KiarSpG2Ebfii/xr+wta77CMVsqXciN
+         z6ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KXLJ6VFfxrFZrwSfkhbx8s/k+sv6GEa0mybadcnXPi4=;
+        b=EPuzBha27KXhhOFCzh4Mm80JkXRkqnY+5TmlKkSrcTabrlzwoPGRMvqVOLOC6qFOC9
+         xCFumHS5/FEu214Prnu6mNITstvZePIoz1/XWOatnXNj8MvZen/Jn18nH9zq0ZbAahze
+         Smz3xsoIwoIjzUS8MViLVSMfrSZjytnZjOS9D9+ReXF6nj1kGOnR0sCcOl58NUdHKn42
+         gFNF3W8N9XtQ9Esv/eTG5SwzYqitJtmvKa5OScHovtBUK7fGuMrEIHuBsEf+9TBwCzh2
+         EJgMOOFzhLJ7F6hdmkS8ksKn+gCFu2kihmfNmGWpMxZZ4mt5L/ECy9LJ+1LeEqDpzbFV
+         cYvA==
+X-Gm-Message-State: ANhLgQ172cLNIElme8lemfrMT1jCsBJS+Xmg2JPm2SixqMlSOjDnvzPf
+        /w/d2qy+axySIWIzPXRvx6ny9etIndIBJ3TFLwAY2w==
+X-Google-Smtp-Source: ADFU+vtGnpMIgFHH3SOOLWJ9G91PYJwF/AxwafsOHarZSBsqA4YP+vmLIs/CLtKIK7wnnWINd78LJn5Kdc2Ha2nzYYQ=
+X-Received: by 2002:a63:4e22:: with SMTP id c34mr23785364pgb.263.1584986788735;
+ Mon, 23 Mar 2020 11:06:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <000000000000277a0405a16bd5c9@google.com> <CACT4Y+b1WFT87pWQaXD3CWjyjoQaP1jcycHdHF+rtxoR5xW1ww@mail.gmail.com>
+ <5058aabe-f32d-b8ef-57ed-f9c0206304c5@redhat.com> <CAG_fn=WYtSoyi63ACaz-ya=Dbi+BFU-_mADDpL6gQvDimQscmw@mail.gmail.com>
+ <20200323163925.GP28711@linux.intel.com> <CAKwvOdkE8OAu=Gj4MKWwpctka6==6EtrbF3e1tvF=jS2hBB3Ow@mail.gmail.com>
+ <CAKwvOdkXi1MN2Yqqoa6ghw14tQ25WYgyJkSv35-+1KRb=cmhZw@mail.gmail.com> <CAG_fn=WE0BmuHSxUoBJWQ9dnZ4X5ZpBqcT9rQaDE_6HAfTYKQA@mail.gmail.com>
+In-Reply-To: <CAG_fn=WE0BmuHSxUoBJWQ9dnZ4X5ZpBqcT9rQaDE_6HAfTYKQA@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 23 Mar 2020 11:06:16 -0700
+Message-ID: <CAKwvOdkfaSeXV5zd2unGAtPdzmS9N1Z7kSUB0g13aGHDg9fc8w@mail.gmail.com>
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in handle_external_interrupt_irqoff
+To:     Alexander Potapenko <glider@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        syzbot <syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miao-chen,
-
-> This adds a new header to facilitate the opcode and packet structures of
-> vendor extension(s). For now, we add only the
-> HCI_VS_MSFT_Read_Supported_Features command from Microsoft vendor
-> extension. See https://docs.microsoft.com/en-us/windows-hardware/drivers/
-> bluetooth/microsoft-defined-bluetooth-hci-commands-and-events#
-> microsoft-defined-bluetooth-hci-events for more details.
-> Upon initialization of a hci_dev, we issue a
-> HCI_VS_MSFT_Read_Supported_Features command to read the supported features
-> of Microsoft vendor extension if the opcode of Microsoft vendor extension
-> is valid. See https://docs.microsoft.com/en-us/windows-hardware/drivers/
-> bluetooth/microsoft-defined-bluetooth-hci-commands-and-events#
-> hci_vs_msft_read_supported_features for more details.
-> This was verified on a device with Intel ThhunderPeak BT controller where
-> the Microsoft vendor extension features are 0x000000000000003f.
-> 
-> Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
-> ---
-> 
-> Changes in v1:
-> - Add vendor_hci.h to facilitate opcodes and packet structures of vendor
-> extension(s).
-
-Put the structs directly into hci_msft.c and try to isolate all commands into that file. And prefix everything with msft_.
-
-> - Add opcode for the HCI_VS_MSFT_Read_Supported_Features command from
-> Microsoft vendor extension.
-> - Issue a HCI_VS_MSFT_Read_Supported_Features command upon
-> hci_dev_do_open and save the return values.
-> 
-> include/net/bluetooth/hci_core.h   |  1 +
-> include/net/bluetooth/vendor_hci.h | 51 ++++++++++++++++++++++++++++++
-> net/bluetooth/hci_core.c           | 30 ++++++++++++++++++
-> net/bluetooth/hci_event.c          | 49 +++++++++++++++++++++++++++-
-> 4 files changed, 130 insertions(+), 1 deletion(-)
-> create mode 100644 include/net/bluetooth/vendor_hci.h
-> 
-> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-> index 15daf3b2d4f0..941e71bdad42 100644
-> --- a/include/net/bluetooth/hci_core.h
-> +++ b/include/net/bluetooth/hci_core.h
-> @@ -30,6 +30,7 @@
-> 
-> #include <net/bluetooth/hci.h>
-> #include <net/bluetooth/hci_sock.h>
-> +#include <net/bluetooth/vendor_hci.h>
-> 
-> /* HCI priority */
-> #define HCI_PRIO_MAX	7
-> diff --git a/include/net/bluetooth/vendor_hci.h b/include/net/bluetooth/vendor_hci.h
-> new file mode 100644
-> index 000000000000..bd374a7bf976
-> --- /dev/null
-> +++ b/include/net/bluetooth/vendor_hci.h
-> @@ -0,0 +1,51 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * BlueZ - Bluetooth protocol stack for Linux
-> + * Copyright (C) 2020 Google Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation;
-> + *
-> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-> + * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-> + * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS.
-> + * IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) AND AUTHOR(S) BE LIABLE FOR ANY
-> + * CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES
-> + * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-> + * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-> + * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-> + *
-> + * ALL LIABILITY, INCLUDING LIABILITY FOR INFRINGEMENT OF ANY PATENTS,
-> + * COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS, RELATING TO USE OF THIS
-> + * SOFTWARE IS DISCLAIMED.
-> + */
-> +
-> +#ifndef __VENDOR_HCI_H
-> +#define __VENDOR_HCI_H
-> +
-> +#define MSFT_EVT_PREFIX_MAX_LEN				255
-> +
-> +struct msft_cmd_cmp_info {
-> +	__u8 status;
-> +	__u8 sub_opcode;
-> +} __packed;
-> +
-> +/* Microsoft Vendor HCI subcommands */
-> +#define MSFT_OP_READ_SUPPORTED_FEATURES			0x00
-> +#define MSFT_FEATURE_MASK_RSSI_MONITOR_BREDR_CONN	0x0000000000000001
-> +#define MSFT_FEATURE_MASK_RSSI_MONITOR_LE_CONN		0x0000000000000002
-> +#define MSFT_FEATURE_MASK_RSSI_MONITOR_LE_ADV		0x0000000000000004
-> +#define MSFT_FEATURE_MASK_ADV_MONITOR_LE_ADV		0x0000000000000008
-> +#define MSFT_FEATURE_MASK_VERIFY_CURVE_			0x0000000000000010
-> +#define MSFT_FEATURE_MASK_CONCURRENT_ADV_MONITOR	0x0000000000000020
-> +struct msft_cp_read_supported_features {
-> +	__u8 sub_opcode;
-> +} __packed;
-> +struct msft_rp_read_supported_features {
-> +	__u64 features;
-> +	__u8  msft_evt_prefix_len;
-> +	__u8  msft_evt_prefix[0];
-> +} __packed;
-> +
-> +#endif /* __VENDOR_HCI_H */
-> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> index dbd2ad3a26ed..3cec58ca0047 100644
-> --- a/net/bluetooth/hci_core.c
-> +++ b/net/bluetooth/hci_core.c
-> @@ -1407,6 +1407,32 @@ static void hci_dev_get_bd_addr_from_property(struct hci_dev *hdev)
-> 	bacpy(&hdev->public_addr, &ba);
+On Mon, Mar 23, 2020 at 10:55 AM Alexander Potapenko <glider@google.com> wrote:
+>
+> I've reduced the faulty test case to the following code:
+>
+> =================================
+> a;
+> long b;
+> register unsigned long current_stack_pointer asm("rsp");
+> handle_external_interrupt_irqoff() {
+>   asm("and $0xfffffffffffffff0, %%rsp\n\tpush $%c[ss]\n\tpush "
+>       "%[sp]\n\tpushf\n\tpushq $%c[cs]\n\tcall *%[thunk_target]\n"
+>       : [ sp ] "=&r"(b), "+r" (current_stack_pointer)
+>       : [ thunk_target ] "rm"(a), [ ss ] "i"(3 * 8), [ cs ] "i"(2 * 8) );
 > }
-> 
-> +static int hci_msft_read_supported_features_req(struct hci_request *req,
-> +						unsigned long opt)
-> +{
-> +	struct hci_dev *hdev = req->hdev;
-> +	struct msft_cp_read_supported_features cp;
-> +
-> +	if (hdev->msft_vnd_ext_opcode == HCI_OP_NOP)
-> +		return -EOPNOTSUPP;
-> +
-> +	cp.sub_opcode = MSFT_OP_READ_SUPPORTED_FEATURES;
-> +	hci_req_add(req, hdev->msft_vnd_ext_opcode, sizeof(cp), &cp);
-> +	return 0;
-> +}
-> +
-> +static void read_vendor_extension_features(struct hci_dev *hdev)
-> +{
-> +	int err;
-> +
-> +	if (hdev->msft_vnd_ext_opcode !=  HCI_OP_NOP) {
-> +		err = __hci_req_sync(hdev, hci_msft_read_supported_features_req,
-> +				     0, HCI_CMD_TIMEOUT, NULL);
-> +		if (err)
-> +			BT_ERR("HCI_VS_MSFT_Read_Supported_Feature failed");
-> +	}
-> +}
-> +
-> static int hci_dev_do_open(struct hci_dev *hdev)
-> {
-> 	int ret = 0;
-> @@ -1572,6 +1598,10 @@ static int hci_dev_do_open(struct hci_dev *hdev)
-> 		set_bit(HCI_UP, &hdev->flags);
-> 		hci_sock_dev_event(hdev, HCI_DEV_UP);
-> 		hci_leds_update_powered(hdev, true);
-> +
-> +		/* Check features supported by HCI extensions. */
-> +		read_vendor_extension_features(hdev);
-> +
+> =================================
+> (in fact creduce even throws away current_stack_pointer, but we
+> probably want to keep it to prove the point).
+>
+> Clang generates the following code for it:
+>
+> $ clang vmx.i -O2 -c -w -o vmx.o
+> $ objdump -d vmx.o
+> ...
+> 0000000000000000 <handle_external_interrupt_irqoff>:
+>    0: 8b 05 00 00 00 00    mov    0x0(%rip),%eax        # 6
+> <handle_external_interrupt_irqoff+0x6>
+>    6: 89 44 24 fc          mov    %eax,-0x4(%rsp)
+>    a: 48 83 e4 f0          and    $0xfffffffffffffff0,%rsp
+>    e: 6a 18                pushq  $0x18
+>   10: 50                    push   %rax
+>   11: 9c                    pushfq
+>   12: 6a 10                pushq  $0x10
+>   14: ff 54 24 fc          callq  *-0x4(%rsp)
+>   18: 48 89 05 00 00 00 00 mov    %rax,0x0(%rip)        # 1f
+> <handle_external_interrupt_irqoff+0x1f>
+>   1f: c3                    retq
+>
+> The question is whether using current_stack_pointer as an output is
+> actually a valid way to tell the compiler it should not clobber RSP.
+> Intuitively it is, but explicitly adding RSP to the clobber list
+> sounds a bit more bulletproof.
 
-Lets not do this after the HCI_DEV_UP event. You need to do this after the init sequence has executed.
+Ok, I think this reproducer demonstrates the issue:
+https://godbolt.org/z/jAafjz
+I *think* what's happening is that we're not specifying correctly that
+the stack is being modified by inline asm, so using variable
+references against the stack pointer is not correct.
 
-> 		if (!hci_dev_test_flag(hdev, HCI_SETUP) &&
-> 		    !hci_dev_test_flag(hdev, HCI_CONFIG) &&
-> 		    !hci_dev_test_flag(hdev, HCI_UNCONFIGURED) &&
-> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-> index 20408d386268..6a156167dfc9 100644
-> --- a/net/bluetooth/hci_event.c
-> +++ b/net/bluetooth/hci_event.c
-> @@ -23,7 +23,6 @@
-> */
-> 
-> /* Bluetooth HCI event handling. */
-> -
+commit f5caf621ee357 ("x86/asm: Fix inline asm call constraints for Clang")
+has more context about ASM_CALL_CONSTRAINT.
 
-This change doesn’t belong here.
+It seems that specifying "rsp" in the clobber list is a -Wdeprecated
+warning in GCC, and an error in Clang (unless you remove
+current_stack_pointer as an output, but will get Clang to produce the
+correct code).
 
-> #include <asm/unaligned.h>
-> 
-> #include <net/bluetooth/bluetooth.h>
-> @@ -1787,6 +1786,47 @@ static void hci_cc_write_ssp_debug_mode(struct hci_dev *hdev, struct sk_buff *sk
-> 		hdev->ssp_debug_mode = *mode;
-> }
-> 
-> +static void hci_cc_msft_vnd_ext(struct hci_dev *hdev, struct sk_buff *skb)
-> +{
-> +	struct msft_cmd_cmp_info *info = (void *)skb->data;
-> +	const u8 status = info->status;
-> +	const u16 sub_opcode = __le16_to_cpu(info->sub_opcode);
-> +
-> +	skb_pull(skb, sizeof(*info));
-> +
-> +	if (status) {
-> +		BT_ERR("Microsoft vendor extension sub command 0x%2.2x failed",
-> +		       sub_opcode);
-> +		return;
-> +	}
-> +
-> +	BT_DBG("%s status 0x%2.2x sub opcode 0x%2.2x", hdev->name, status,
-> +	       sub_opcode);
-> +
-> +	switch (sub_opcode) {
-> +	case MSFT_OP_READ_SUPPORTED_FEATURES: {
-> +		struct msft_rp_read_supported_features *rp = (void *)skb->data;
-> +
-> +		hdev->msft_vnd_ext_features = __le64_to_cpu(rp->features);
-> +		hdev->msft_vnd_ext_evt_prefix_len = rp->msft_evt_prefix_len;
-> +		hdev->msft_vnd_ext_evt_prefix =
-> +			kmalloc(hdev->msft_vnd_ext_evt_prefix_len, GFP_ATOMIC);
-> +		if (!hdev->msft_vnd_ext_evt_prefix)
-> +			return;
-> +
-> +		memcpy(hdev->msft_vnd_ext_evt_prefix, rp->msft_evt_prefix,
-> +		       hdev->msft_vnd_ext_evt_prefix_len);
-> +		BT_DBG("%s Microsoft vendor extension features 0x%016llx",
-> +		       hdev->name, hdev->msft_vnd_ext_features);
-> +		break;
-> +	}
-> +	default:
-> +		BT_ERR("%s unknown sub opcode 0x%2.2x", hdev->name,
-> +		       sub_opcode);
-> +		break;
-> +	}
-> +}
-> +
-> static void hci_cs_inquiry(struct hci_dev *hdev, __u8 status)
-> {
-> 	BT_DBG("%s status 0x%2.2x", hdev->name, status);
-> @@ -3198,6 +3238,7 @@ static void hci_cmd_complete_evt(struct hci_dev *hdev, struct sk_buff *skb,
-> 				 hci_req_complete_skb_t *req_complete_skb)
-> {
-> 	struct hci_ev_cmd_complete *ev = (void *) skb->data;
-> +	const u16 msft_vnd_ext_opcode = hdev->msft_vnd_ext_opcode;
-> 
-> 	*opcode = __le16_to_cpu(ev->opcode);
-> 	*status = skb->data[sizeof(*ev)];
-> @@ -3538,6 +3579,12 @@ static void hci_cmd_complete_evt(struct hci_dev *hdev, struct sk_buff *skb,
-> 		break;
-> 
-> 	default:
-> +		/* Check if it's a Microsoft vendor extension opcode. */
-> +		if (msft_vnd_ext_opcode != HCI_OP_NOP &&
-> +		    *opcode == msft_vnd_ext_opcode) {
-> +			hci_cc_msft_vnd_ext(hdev, skb);
-> +			break;
-> +		}
-> 		BT_DBG("%s opcode 0x%4.4x", hdev->name, *opcode);
-> 		break;
-> 	}
-
-For now we only have synchronous commands. The features reading can be done with sync call.
-
-Regards
-
-Marcel
-
+-- 
+Thanks,
+~Nick Desaulniers
