@@ -2,131 +2,120 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51939C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1D9C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD6120714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F95C20753
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbgCWOJz (ORCPT
+        id S1728595AbgCWOKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:09:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54904 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728378AbgCWOJz (ORCPT
+        Mon, 23 Mar 2020 10:10:19 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41496 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728401AbgCWOKS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:09:55 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02NE7ClM195877;
-        Mon, 23 Mar 2020 10:09:41 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywdr51t8c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Mar 2020 10:09:40 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02NE93fE026135;
-        Mon, 23 Mar 2020 14:09:39 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma03wdc.us.ibm.com with ESMTP id 2ywaw9gw76-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Mar 2020 14:09:39 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02NE9cXc57934080
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Mar 2020 14:09:38 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1CA20C6055;
-        Mon, 23 Mar 2020 14:09:38 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BCC4CC6057;
-        Mon, 23 Mar 2020 14:09:36 +0000 (GMT)
-Received: from localhost (unknown [9.85.135.158])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Mon, 23 Mar 2020 14:09:36 +0000 (GMT)
-From:   Fabiano Rosas <farosas@linux.ibm.com>
-To:     Laurent Dufour <ldufour@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org
-Cc:     Bharata B Rao <bharata@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH 2/2] KVM: PPC: Book3S HV: H_SVM_INIT_START must call UV_RETURN
-In-Reply-To: <20200320102643.15516-3-ldufour@linux.ibm.com>
-References: <20200320102643.15516-1-ldufour@linux.ibm.com> <20200320102643.15516-3-ldufour@linux.ibm.com>
-Date:   Mon, 23 Mar 2020 11:09:33 -0300
-Message-ID: <87wo7bgo2q.fsf@linux.ibm.com>
+        Mon, 23 Mar 2020 10:10:18 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jGNmD-0008KI-Na; Mon, 23 Mar 2020 15:10:02 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id B7B181040AA; Mon, 23 Mar 2020 15:10:00 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Evan Green <evgreen@chromium.org>,
+        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
+        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
+        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>
+Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
+In-Reply-To: <b9fbd55a-7f97-088d-2cc2-4e4ea86d9440@linux.intel.com>
+References: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com> <87d0974akk.fsf@nanos.tec.linutronix.de> <b9fbd55a-7f97-088d-2cc2-4e4ea86d9440@linux.intel.com>
+Date:   Mon, 23 Mar 2020 15:10:00 +0100
+Message-ID: <87r1xjp3gn.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-23_05:2020-03-21,2020-03-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- adultscore=0 impostorscore=0 lowpriorityscore=0 phishscore=0
- priorityscore=1501 clxscore=1011 suspectscore=5 mlxlogscore=999 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003230078
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Laurent Dufour <ldufour@linux.ibm.com> writes:
+Mathias,
 
-> When the call to UV_REGISTER_MEM_SLOT is failing, for instance because
-> there is not enough free secured memory, the Hypervisor (HV) has to call
-> UV_RETURN to report the error to the Ultravisor (UV). Then the UV will call
-> H_SVM_INIT_ABORT to abort the securing phase and go back to the calling VM.
+Mathias Nyman <mathias.nyman@linux.intel.com> writes:
+> Full function trace with patch is huge, can be found compressed at
 >
-> If the kvm->arch.secure_guest is not set, in the return path rfid is called
-> but there is no valid context to get back to the SVM since the Hcall has
-> been routed by the Ultravisor.
->
-> Move the setting of kvm->arch.secure_guest earlier in
-> kvmppc_h_svm_init_start() so in the return path, UV_RETURN will be called
-> instead of rfid.
->
-> Cc: Bharata B Rao <bharata@linux.ibm.com>
-> Cc: Paul Mackerras <paulus@ozlabs.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
-> ---
+> This time xhci interrupts stopped after
+> migration/3-24    [003] d..1    48.530271: msi_set_affinity: twostep update msi, irq 122, vector 33 -> 34, apicid: 6 -> 4
 
-I tested this along with the code that rejects the secure transition
-when it is not enabled in KVM.
+thanks for providing the data. I think I decoded the issue. Can you
+please test the patch below?
 
-I have also forced a KVM_PPC_SVM_OFF (via system_reset) right after
-setting kvm->arch.secure_guest and nothing bad happened.
+Thanks,
 
-Tested-by: Fabiano Rosas <farosas@linux.ibm.com>
-
-
->  arch/powerpc/kvm/book3s_hv_uvmem.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
-> index 79b1202b1c62..68dff151315c 100644
-> --- a/arch/powerpc/kvm/book3s_hv_uvmem.c
-> +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
-> @@ -209,6 +209,8 @@ unsigned long kvmppc_h_svm_init_start(struct kvm *kvm)
->  	int ret = H_SUCCESS;
->  	int srcu_idx;
->
-> +	kvm->arch.secure_guest = KVMPPC_SECURE_INIT_START;
-> +
->  	if (!kvmppc_uvmem_bitmap)
->  		return H_UNSUPPORTED;
->
-> @@ -233,7 +235,6 @@ unsigned long kvmppc_h_svm_init_start(struct kvm *kvm)
->  			goto out;
->  		}
->  	}
-> -	kvm->arch.secure_guest |= KVMPPC_SECURE_INIT_START;
->  out:
->  	srcu_read_unlock(&kvm->srcu, srcu_idx);
->  	return ret;
+        tglx
+----
+diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+index 159bd0cb8548..49aec92fa35b 100644
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -63,12 +63,13 @@ msi_set_affinity(struct irq_data *irqd, const struct cpumask *mask, bool force)
+ {
+ 	struct irq_cfg old_cfg, *cfg = irqd_cfg(irqd);
+ 	struct irq_data *parent = irqd->parent_data;
+-	unsigned int cpu;
++	unsigned int cpu, old_vector;
+ 	int ret;
+ 
+ 	/* Save the current configuration */
+ 	cpu = cpumask_first(irq_data_get_effective_affinity_mask(irqd));
+ 	old_cfg = *cfg;
++	old_vector = old_cfg.vector;
+ 
+ 	/* Allocate a new target vector */
+ 	ret = parent->chip->irq_set_affinity(parent, mask, force);
+@@ -90,10 +91,10 @@ msi_set_affinity(struct irq_data *irqd, const struct cpumask *mask, bool force)
+ 	 */
+ 	if (!irqd_msi_nomask_quirk(irqd) ||
+ 	    cfg->vector == old_cfg.vector ||
+-	    old_cfg.vector == MANAGED_IRQ_SHUTDOWN_VECTOR ||
++	    old_vector == MANAGED_IRQ_SHUTDOWN_VECTOR ||
+ 	    cfg->dest_apicid == old_cfg.dest_apicid) {
+ 		irq_msi_update_msg(irqd, cfg);
+-		return ret;
++		goto check_old;
+ 	}
+ 
+ 	/*
+@@ -102,7 +103,7 @@ msi_set_affinity(struct irq_data *irqd, const struct cpumask *mask, bool force)
+ 	 */
+ 	if (WARN_ON_ONCE(cpu != smp_processor_id())) {
+ 		irq_msi_update_msg(irqd, cfg);
+-		return ret;
++		goto check_old;
+ 	}
+ 
+ 	/*
+@@ -163,6 +164,11 @@ msi_set_affinity(struct irq_data *irqd, const struct cpumask *mask, bool force)
+ 	if (lapic_vector_set_in_irr(cfg->vector))
+ 		irq_data_get_irq_chip(irqd)->irq_retrigger(irqd);
+ 
++check_old:
++	if (!in_irq() && old_vector != MANAGED_IRQ_SHUTDOWN_VECTOR &&
++	    irqd_msi_nomask_quirk(irqd) && lapic_vector_set_in_irr(old_vector))
++		irq_data_get_irq_chip(irqd)->irq_retrigger(irqd);
++
+ 	return ret;
+ }
+ 
