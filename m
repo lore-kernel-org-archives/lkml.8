@@ -2,104 +2,127 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23568C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A387C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2B82072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C88B2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:38:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgCWSim (ORCPT
+        id S1727932AbgCWSiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:38:42 -0400
-Received: from smtprelay0236.hostedemail.com ([216.40.44.236]:55556 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727586AbgCWSih (ORCPT
+        Mon, 23 Mar 2020 14:38:51 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:46740 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727662AbgCWSiZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:38:37 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 8EAF5837F253;
-        Mon, 23 Mar 2020 18:38:36 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: beef27_67eacf456a42a
-X-Filterd-Recvd-Size: 2819
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 23 Mar 2020 18:38:33 +0000 (UTC)
-Message-ID: <de4ee117f047874788ea64c4625c96d40ec0a35e.camel@perches.com>
-Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add Segey Semin to maintainers of
- DW APB GPIO driver
-From:   Joe Perches <joe@perches.com>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-gpio@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mon, 23 Mar 2020 14:38:25 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGRxt-00135y-Km; Mon, 23 Mar 2020 18:38:21 +0000
+From:   Al Viro <viro@ZenIV.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Mon, 23 Mar 2020 11:36:45 -0700
-In-Reply-To: <20200323180632.14119-7-Sergey.Semin@baikalelectronics.ru>
-References: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
-         <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
-         <20200323180632.14119-7-Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+Subject: [RFC][PATCH 11/22] x86: switch ia32_setup_sigcontext() to unsafe_put_user()
+Date:   Mon, 23 Mar 2020 18:38:08 +0000
+Message-Id: <20200323183819.250124-11-viro@ZenIV.linux.org.uk>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200323183819.250124-1-viro@ZenIV.linux.org.uk>
+References: <20200323183620.GD23230@ZenIV.linux.org.uk>
+ <20200323183819.250124-1-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-23 at 21:06 +0300, Sergey.Semin@baikalelectronics.ru
-wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> Add myself as a co-maintainer of the Synopsis DesignWare APB GPIO driver.
-[]
-> diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> @@ -16084,6 +16084,7 @@ F:	drivers/tty/serial/8250/8250_dw.c
->  
->  SYNOPSYS DESIGNWARE APB GPIO DRIVER
->  M:	Hoan Tran <hoan@os.amperecomputing.com>
-> +S:	Serge Semin <fancer.lancer@gmail.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-nack - S: is not the right line type prefix
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ arch/x86/ia32/ia32_signal.c | 64 +++++++++++++++++++++++----------------------
+ 1 file changed, 33 insertions(+), 31 deletions(-)
 
-You need to use an M: type line not an S:.
-
-The S: line is for subsystem status which should be one of:
-
-	S: *Status*, one of the following:
-	   Supported:	Someone is actually paid to look after this.
-	   Maintained:	Someone actually looks after it.
-	   Odd Fixes:	It has a maintainer but they don't have time to do
-			much other than throw the odd patch in. See below..
-	   Orphan:	No current maintainer [but maybe you could take the
-			role as you write your new code].
-	   Obsolete:	Old code. Something tagged obsolete generally means
-			it has been replaced by a better system and you
-			should be using that.
-
->  L:	linux-gpio@vger.kernel.org
->  S:	Maintained
-
-like this...
-
->  F:	Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-
-
+diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
+index 23e2c55d8a59..af673ec23a2d 100644
+--- a/arch/x86/ia32/ia32_signal.c
++++ b/arch/x86/ia32/ia32_signal.c
+@@ -158,38 +158,40 @@ static int ia32_setup_sigcontext(struct sigcontext_32 __user *sc,
+ 				 void __user *fpstate,
+ 				 struct pt_regs *regs, unsigned int mask)
+ {
+-	int err = 0;
+-
+-	put_user_try {
+-		put_user_ex(get_user_seg(gs), (unsigned int __user *)&sc->gs);
+-		put_user_ex(get_user_seg(fs), (unsigned int __user *)&sc->fs);
+-		put_user_ex(get_user_seg(ds), (unsigned int __user *)&sc->ds);
+-		put_user_ex(get_user_seg(es), (unsigned int __user *)&sc->es);
+-
+-		put_user_ex(regs->di, &sc->di);
+-		put_user_ex(regs->si, &sc->si);
+-		put_user_ex(regs->bp, &sc->bp);
+-		put_user_ex(regs->sp, &sc->sp);
+-		put_user_ex(regs->bx, &sc->bx);
+-		put_user_ex(regs->dx, &sc->dx);
+-		put_user_ex(regs->cx, &sc->cx);
+-		put_user_ex(regs->ax, &sc->ax);
+-		put_user_ex(current->thread.trap_nr, &sc->trapno);
+-		put_user_ex(current->thread.error_code, &sc->err);
+-		put_user_ex(regs->ip, &sc->ip);
+-		put_user_ex(regs->cs, (unsigned int __user *)&sc->cs);
+-		put_user_ex(regs->flags, &sc->flags);
+-		put_user_ex(regs->sp, &sc->sp_at_signal);
+-		put_user_ex(regs->ss, (unsigned int __user *)&sc->ss);
+-
+-		put_user_ex(ptr_to_compat(fpstate), &sc->fpstate);
+-
+-		/* non-iBCS2 extensions.. */
+-		put_user_ex(mask, &sc->oldmask);
+-		put_user_ex(current->thread.cr2, &sc->cr2);
+-	} put_user_catch(err);
++	if (!user_access_begin(sc, sizeof(struct sigcontext_32)))
++		return -EFAULT;
+ 
+-	return err;
++	unsafe_put_user(get_user_seg(gs), (unsigned int __user *)&sc->gs, Efault);
++	unsafe_put_user(get_user_seg(fs), (unsigned int __user *)&sc->fs, Efault);
++	unsafe_put_user(get_user_seg(ds), (unsigned int __user *)&sc->ds, Efault);
++	unsafe_put_user(get_user_seg(es), (unsigned int __user *)&sc->es, Efault);
++
++	unsafe_put_user(regs->di, &sc->di, Efault);
++	unsafe_put_user(regs->si, &sc->si, Efault);
++	unsafe_put_user(regs->bp, &sc->bp, Efault);
++	unsafe_put_user(regs->sp, &sc->sp, Efault);
++	unsafe_put_user(regs->bx, &sc->bx, Efault);
++	unsafe_put_user(regs->dx, &sc->dx, Efault);
++	unsafe_put_user(regs->cx, &sc->cx, Efault);
++	unsafe_put_user(regs->ax, &sc->ax, Efault);
++	unsafe_put_user(current->thread.trap_nr, &sc->trapno, Efault);
++	unsafe_put_user(current->thread.error_code, &sc->err, Efault);
++	unsafe_put_user(regs->ip, &sc->ip, Efault);
++	unsafe_put_user(regs->cs, (unsigned int __user *)&sc->cs, Efault);
++	unsafe_put_user(regs->flags, &sc->flags, Efault);
++	unsafe_put_user(regs->sp, &sc->sp_at_signal, Efault);
++	unsafe_put_user(regs->ss, (unsigned int __user *)&sc->ss, Efault);
++
++	unsafe_put_user(ptr_to_compat(fpstate), &sc->fpstate, Efault);
++
++	/* non-iBCS2 extensions.. */
++	unsafe_put_user(mask, &sc->oldmask, Efault);
++	unsafe_put_user(current->thread.cr2, &sc->cr2, Efault);
++	user_access_end();
++	return 0;
++Efault:
++	user_access_end();
++	return -EFAULT;
+ }
+ 
+ /*
+-- 
+2.11.0
 
