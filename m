@@ -6,69 +6,104 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F56C10F26
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE110C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6984620732
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1424206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584945024;
-	bh=lGY0/B9v5kKP+fRPvrlnERsifU+J0PKOjNa0Qax8RwM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=leUaM7S/Qk5JYrvNQ74GetkX5pKEHRzr3QQbud2Ja7tzdH17rwggT3STMnau+aL2I
-	 UbWlePLe3hZo5htDGvQMycS04CsXdX95RD9n6IfSfULkLDtfLTClAJPDWxqHdtew4P
-	 4ACbg4kVzwD3gur7fT5bkmZrAXwlyKIuSH7g9qzg=
+	s=default; t=1584945396;
+	bh=Csqr77kgWxM20+oOpjO3J6BIvWyQRvuVQjRvzhXhAME=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mtr/kaCFbHAaClLY4YJR8dkT4nIZv8bi2pCYVXLp+WdZmlZxHTAGvy30Qi3BoP1hP
+	 McvQV1ftfsKDKDNMMeZhhmkAQB3nYbM9IfPZr3ZOltCfY+y2WzrfG62zloZCxCsapg
+	 ULP6Krn4EZ2uSmfmm1y6I3JcSSUjZWvHzSEQfzk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbgCWGaX (ORCPT
+        id S1727291AbgCWGg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 02:30:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbgCWGaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 02:30:22 -0400
-Received: from localhost (unknown [171.76.96.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A3C7206F8;
-        Mon, 23 Mar 2020 06:30:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584945022;
-        bh=lGY0/B9v5kKP+fRPvrlnERsifU+J0PKOjNa0Qax8RwM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hean15XoxKID8EY5Tcazr5zdTf2itcveXgy7ln0MhQEq/cw4Y8eD1o4vaYOT3ybHx
-         LIhmVLjoK2Td2QTKupu4GYQujTftHLWPvpooT+mKjt2Fh/CzvBsTKXpjfwvXIYEsg+
-         nfWucFwKKsNmJl/qjPtwKU7Up2adbDbp7bcHrrEA=
-Date:   Mon, 23 Mar 2020 12:00:14 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     ldewangan@nvidia.com, jonathanh@nvidia.com,
-        dan.j.williams@intel.com, thierry.reding@gmail.com,
-        swarren@wwwdotorg.org, dmaengine@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        digetx@gmail.com
-Subject: Re: [PATCH -next] dmaengine: tegra-apb: mark PM functions as
- __maybe_unused
-Message-ID: <20200323063014.GG72691@vkoul-mobl>
-References: <20200320071337.59756-1-yuehaibing@huawei.com>
+        Mon, 23 Mar 2020 02:36:28 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:18538 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgCWGg2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 02:36:28 -0400
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 02N6aLFm018207;
+        Mon, 23 Mar 2020 15:36:22 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 02N6aLFm018207
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1584945382;
+        bh=shlaUHJ6YdG7mbEpHkN6/tISt8RC9LOOVikM/qp/dxc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wKnDwDhJFc8Y/ng9LZpTEIfoJiMcccezrUcXOqoOU+qE11X2LDCeehocKauCJbv3x
+         cH+mCv+WsKtEX17ZCxJzOF1lQAciNfXPq/G3TPHalSLxt2xFQJynciyBPuL0cH9Fz8
+         /6jn+rYSeUQ3CdRfRg5d7RZtfbVrvfOoM1q8RIJZuY/xxnALydPlP8xX1u1tN5eZXq
+         bJOIlDdkvpEChWDcpMZVxfWqbVzaDyC3vXUtC+8pthTk/Wrdng+VSUp8SGgylt6NSf
+         Kh1mnA3tQr9PXHVeruWGQRV30/8dhaHg4I7aw6qQOncGG4lnMUmjzvTjF/qfaMPNzC
+         ZdLNkHCKYVpJQ==
+X-Nifty-SrcIP: [209.85.217.52]
+Received: by mail-vs1-f52.google.com with SMTP id e138so8016291vsc.11;
+        Sun, 22 Mar 2020 23:36:22 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2EJDheWMKgQ0QryFwTWbYtmEgscJAhgVCI9NBxUXLVVxwVjfFg
+        P8KSDY/1rrb5D8xRTXSjWFL8iyvJ+cvPeglk7mI=
+X-Google-Smtp-Source: ADFU+vsHb3DgDpRsXUG7d3UafC+Qn78HHllA0iW1XqDKXH45rCZbX13k7qZAtpwQCFWBh+DyDZFZIOxf9erXQX2+/NU=
+X-Received: by 2002:a67:2d55:: with SMTP id t82mr14012597vst.215.1584945381312;
+ Sun, 22 Mar 2020 23:36:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320071337.59756-1-yuehaibing@huawei.com>
+References: <20200323020844.17064-1-masahiroy@kernel.org> <CAHmME9p=ECJ15uyPH79bF0tuzEksdxoUsjGQSyz74FfdEJxTpQ@mail.gmail.com>
+ <CAHmME9q4egN7_KeYB-ZHCFPfXs-virgTv4iz9jW2SVOM7dTnLw@mail.gmail.com>
+In-Reply-To: <CAHmME9q4egN7_KeYB-ZHCFPfXs-virgTv4iz9jW2SVOM7dTnLw@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 23 Mar 2020 15:35:45 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR07vZFzh1Bbpq4CoJ4zmsc+p5rxpkO1Zv8QVfqhfvr2w@mail.gmail.com>
+Message-ID: <CAK7LNAR07vZFzh1Bbpq4CoJ4zmsc+p5rxpkO1Zv8QVfqhfvr2w@mail.gmail.com>
+Subject: Re: [PATCH 0/7] x86: remove always-defined CONFIG_AS_* options
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     X86 ML <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Song Liu <songliubraving@fb.com>,
+        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-03-20, 15:13, YueHaibing wrote:
-> When CONFIG_PM is disabled, gcc warning this:
-> 
-> drivers/dma/tegra20-apb-dma.c:1587:12: warning: 'tegra_dma_runtime_resume' defined but not used [-Wunused-function]
-> drivers/dma/tegra20-apb-dma.c:1578:12: warning: 'tegra_dma_runtime_suspend' defined but not used [-Wunused-function]
-> 
-> Make it as __maybe_unused to fix the warnings,
-> also remove unneeded function declarations.
+Hi Jason,
 
-Applied, thanks
+On Mon, Mar 23, 2020 at 1:28 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> Hi again,
+>
+> I've consolidated your patches and rebased mine on top, and
+> incorporated your useful binutils comments. The result lives here:
+>
+> https://git.zx2c4.com/linux-dev/log/?h=jd/kconfig-assembler-support
+>
+> I can submit all of those to the list, if you want, or maybe you can
+> just pull them out of there, include them in your v2, and put them in
+> your tree for 5.7? However you want is fine with me.
+
+
+Your series does not work correctly.
+
+I will comment why later.
+
+
+
 
 -- 
-~Vinod
+Best Regards
+Masahiro Yamada
