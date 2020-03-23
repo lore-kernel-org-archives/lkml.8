@@ -2,90 +2,102 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E8DC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E00DC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F15E2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009F22073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:09:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4nrWQdD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgCWNIy (ORCPT
+        id S1728392AbgCWNJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 09:08:54 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35778 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728313AbgCWNIu (ORCPT
+        Mon, 23 Mar 2020 09:09:39 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:53398 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728275AbgCWNJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 09:08:50 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aratiu)
-        with ESMTPSA id F2FF029057E
-From:   Adrian Ratiu <adrian.ratiu@collabora.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ezequiel Garcia <ezequiel@collabora.com>, kernel@collabora.com,
-        kernel@pengutronix.de, Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH 1/2] media: coda: jpeg: support optimized huffman tables
-Date:   Mon, 23 Mar 2020 15:09:36 +0200
-Message-Id: <20200323130937.3666244-2-adrian.ratiu@collabora.com>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200323130937.3666244-1-adrian.ratiu@collabora.com>
-References: <20200323130937.3666244-1-adrian.ratiu@collabora.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 23 Mar 2020 09:09:39 -0400
+Received: by mail-pj1-f68.google.com with SMTP id l36so6157015pjb.3;
+        Mon, 23 Mar 2020 06:09:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=UVUZSZmN0wfjBDMswnzLJO1IiNBLG8FZGAX4PW0SLkk=;
+        b=e4nrWQdDZ5NyXWFxrTJOR86i5pZIZr/nwpPzSIUUS7OfQg0vG0p999rLCaZ4syxvqj
+         rYTQkwVIfQvvsAibJBaJSw11yNn2RaV4LftQcZjYQihRm9SNXN5GYzLD3atDe1OuhCaa
+         SBYpQFWc71X451bz9yKrmR0eTz9R0bFMPWVdY9Go6j+db3T30hfCiMvbR1zaUUuem0tD
+         PZIO7xJtBsIc7PSLncYHnwHERLXXHTOB9I51bXpiP0CxGmJREOG6sWYpYj/qj/zYYeW7
+         mDSPMFrSOklfZq+si3TziJ9x3inTq8V/k5204MGzOqCA9F2B6t0eSQSx3i7Hkm+IdPy4
+         wjzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UVUZSZmN0wfjBDMswnzLJO1IiNBLG8FZGAX4PW0SLkk=;
+        b=onxp7FADVsujDym7A+NZEQmuKQ99/bFT1OgFXIxPCVUcwGOg5Xl8om9iaJ0HMbsQ8M
+         aPihbZ41M+KCPGJUBD1pdWgpEXrFLpiLg3JOhOvr1nTbSVqbd33m7Qma8XBt8UQhjBAY
+         Np7mq0Ek7lr1iO477Xu+m2aRN5sElVN8fTsu2saRVx8/nVqgmCHTbIW+lo9cGDSQ+mBX
+         AAcxLDhczaSFHKqSUdIETShUEqfFiOBP+AXV2t/gxy8h/3y4Ic/BrDzUXmiacJzXkXGm
+         04bDy3Q3OuBYrtEBX2pM3fCetKKG9lELwFELHNyWSHFtMnoI40xFno6t6Qv/gnsNBbW8
+         BPpA==
+X-Gm-Message-State: ANhLgQ03ImGn6uljcFtlPtAddlR2KX6e+rj0Qf2oeBBsl6kvOuToTw8Y
+        n+2SLLhS/ikois2CCQzFu4A=
+X-Google-Smtp-Source: ADFU+vtB4leTBTZjE63gAMA35Rvm5e8MjeaU9ZkT+abole1ttsY0G4cq73QxN4AY1ERoj9DLZr9ndA==
+X-Received: by 2002:a17:90b:30ca:: with SMTP id hi10mr24931835pjb.113.1584968978640;
+        Mon, 23 Mar 2020 06:09:38 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([131.107.147.210])
+        by smtp.googlemail.com with ESMTPSA id u14sm12262034pgg.67.2020.03.23.06.09.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Mar 2020 06:09:37 -0700 (PDT)
+From:   ltykernel@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com
+Subject: [PATCH V2 0/6] x86/Hyper-V: Panic code path fixes
+Date:   Mon, 23 Mar 2020 06:09:18 -0700
+Message-Id: <20200323130924.2968-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each jpeg can have the huffman tables optimized for its specific content
-meaning that the table lenghts and values don't match the standard table
-of substitutions so there's no reason to hardcode and expect the sandard
-lenghts, otherwise we just end up rejecting optimized jpegs altogether.
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-Tested on CODA960.
+This patchset fixes some issues in the Hyper-V panic code path.
+Patch 1 resolves issue that panic system still responses network
+packets.
+Patch 2-3,5-6 resolves crash enlightenment issues.
+Patch 4 is to set crash_kexec_post_notifiers to true for Hyper-V
+VM in order to report crash data or kmsg to host before running
+kdump kernel.
 
-Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
----
- drivers/media/platform/coda/coda-jpeg.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+Tianyu Lan (6):
+  x86/Hyper-V: Unload vmbus channel in hv panic callback
+  x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
+  x86/Hyper-V: Trigger crash enlightenment only once during  system
+    crash.
+  x86/Hyper-V: Report crash register data or ksmg before  running crash
+    kernel
+  x86/Hyper-V: Report crash register data when sysctl_record_panic_msg
+    is not set
+  x86/Hyper-V: Report crash data in die() when panic_on_oops is set
 
-diff --git a/drivers/media/platform/coda/coda-jpeg.c b/drivers/media/platform/coda/coda-jpeg.c
-index 6a11b64efb6b..162ba28a6b95 100644
---- a/drivers/media/platform/coda/coda-jpeg.c
-+++ b/drivers/media/platform/coda/coda-jpeg.c
-@@ -343,7 +343,8 @@ int coda_jpeg_decode_header(struct coda_ctx *ctx, struct vb2_buffer *vb)
- 			v4l2_err(&dev->v4l2_dev, "missing Huffman table\n");
- 			return -EINVAL;
- 		}
--		if (huffman_tables[i].length != ((i & 2) ? 178 : 28)) {
-+		if (huffman_tables[i].length < 17 ||
-+		    huffman_tables[i].length > 178) {
- 			v4l2_err(&dev->v4l2_dev,
- 				 "invalid Huffman table %d length: %zu\n",
- 				 i, huffman_tables[i].length);
-@@ -357,10 +358,12 @@ int coda_jpeg_decode_header(struct coda_ctx *ctx, struct vb2_buffer *vb)
- 			return -ENOMEM;
- 		ctx->params.jpeg_huff_tab = huff_tab;
- 	}
--	memcpy(huff_tab->luma_dc, huffman_tables[0].start, 16 + 12);
--	memcpy(huff_tab->chroma_dc, huffman_tables[1].start, 16 + 12);
--	memcpy(huff_tab->luma_ac, huffman_tables[2].start, 16 + 162);
--	memcpy(huff_tab->chroma_ac, huffman_tables[3].start, 16 + 162);
-+
-+	memset(huff_tab, 0, sizeof(*huff_tab));
-+	memcpy(huff_tab->luma_dc, huffman_tables[0].start, huffman_tables[0].length);
-+	memcpy(huff_tab->chroma_dc, huffman_tables[1].start, huffman_tables[1].length);
-+	memcpy(huff_tab->luma_ac, huffman_tables[2].start, huffman_tables[2].length);
-+	memcpy(huff_tab->chroma_ac, huffman_tables[3].start, huffman_tables[3].length);
- 
- 	/* check scan header */
- 	for (i = 0; i < scan_header.num_components; i++) {
+ arch/x86/kernel/cpu/mshyperv.c | 10 ++++++++
+ drivers/hv/channel_mgmt.c      |  3 +++
+ drivers/hv/vmbus_drv.c         | 55 ++++++++++++++++++++++++++++--------------
+ 3 files changed, 50 insertions(+), 18 deletions(-)
+
 -- 
-2.25.2
+2.14.5
 
