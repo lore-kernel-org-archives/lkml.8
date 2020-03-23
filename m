@@ -2,146 +2,124 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2940C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF48C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0AD020735
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A599920735
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbgCWN3j (ORCPT
+        id S1728488AbgCWNaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 09:29:39 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27938 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728344AbgCWN3j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 09:29:39 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02NDChUs053251
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 09:29:38 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywf0ms232-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 09:29:38 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <agordeev@linux.ibm.com>;
-        Mon, 23 Mar 2020 13:29:35 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 23 Mar 2020 13:29:34 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02NDTX8458851470
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Mar 2020 13:29:33 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A39A84204C;
-        Mon, 23 Mar 2020 13:29:33 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5994842047;
-        Mon, 23 Mar 2020 13:29:33 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.39.189])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 23 Mar 2020 13:29:33 +0000 (GMT)
-From:   agordeev@linux.ibm.com
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: [PATCH 2/2] mm/mmap.c: do not allow mappings outside of allowed limits
-Date:   Mon, 23 Mar 2020 14:29:29 +0100
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1584958099.git.agordeev@linux.ibm.com>
-References: <cover.1584958099.git.agordeev@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 20032313-0012-0000-0000-000003963A1B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032313-0013-0000-0000-000021D32A7F
-Message-Id: <d6da1319114a331095052638f0ffa3ccb0be58f1.1584958099.git.agordeev@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-23_04:2020-03-21,2020-03-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 impostorscore=0 malwarescore=0 mlxlogscore=445 spamscore=0
- clxscore=1015 lowpriorityscore=0 adultscore=0 suspectscore=1 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003230073
+        Mon, 23 Mar 2020 09:30:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:49042 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728355AbgCWNaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 09:30:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E36881FB;
+        Mon, 23 Mar 2020 06:30:18 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07D413F52E;
+        Mon, 23 Mar 2020 06:30:17 -0700 (PDT)
+References: <20200320151245.21152-1-mgorman@techsingularity.net> <20200320151245.21152-2-mgorman@techsingularity.net>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Phil Auld <pauld@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] sched/fair: Track efficiency of select_idle_sibling
+In-reply-to: <20200320151245.21152-2-mgorman@techsingularity.net>
+Date:   Mon, 23 Mar 2020 13:30:10 +0000
+Message-ID: <jhj369zmc65.mognet@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Gordeev <agordeev@linux.ibm.com>
 
-It is possible to request a fixed mapping address below
-mmap_min_addr and succeed. This update adds early checks
-of mmap_min_addr and mmap_end boundaries and fixes the
-above issue.
+Hi Mel,
 
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- mm/mmap.c | 24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+On Fri, Mar 20 2020, Mel Gorman wrote:
+> SIS Search: Number of calls to select_idle_sibling
+>
+> SIS Domain Search: Number of times the domain was searched because the
+>       fast path failed.
+>
+> SIS Scanned: Generally the number of runqueues scanned but the fast
+>       path counts as 1 regardless of the values for target, prev
+>       and recent.
+>
+> SIS Domain Scanned: Number of runqueues scanned during a search of the
+>       LLC domain.
+>
+> SIS Failures: Number of SIS calls that failed to find an idle CPU
+>
 
-diff --git a/mm/mmap.c b/mm/mmap.c
-index a0fcb5ca0e06..bd673a01b1d0 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -59,6 +59,14 @@
- #define arch_mmap_check(addr, len, flags)	(0)
- #endif
- 
-+#ifndef arch_get_mmap_end
-+#define arch_get_mmap_end(addr)	(TASK_SIZE)
-+#endif
-+
-+#ifndef arch_get_mmap_base
-+#define arch_get_mmap_base(addr, base) (base)
-+#endif
-+
- #ifdef CONFIG_HAVE_ARCH_MMAP_RND_BITS
- const int mmap_rnd_bits_min = CONFIG_ARCH_MMAP_RND_BITS_MIN;
- const int mmap_rnd_bits_max = CONFIG_ARCH_MMAP_RND_BITS_MAX;
-@@ -1366,6 +1374,7 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- 			unsigned long pgoff, unsigned long *populate,
- 			struct list_head *uf)
- {
-+	const unsigned long mmap_end = arch_get_mmap_end(addr);
- 	struct mm_struct *mm = current->mm;
- 	int pkey = 0;
- 
-@@ -1388,8 +1397,12 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- 	if (flags & MAP_FIXED_NOREPLACE)
- 		flags |= MAP_FIXED;
- 
--	if (!(flags & MAP_FIXED))
-+	if (flags & MAP_FIXED) {
-+		if ((addr < mmap_min_addr) || (addr > mmap_end))
-+			return -ENOMEM;
-+	} else {
- 		addr = round_hint_to_min(addr);
-+	}
- 
- 	/* Careful about overflows.. */
- 	len = PAGE_ALIGN(len);
-@@ -2050,15 +2063,6 @@ unsigned long unmapped_area_topdown(struct vm_unmapped_area_info *info)
- 	return gap_end;
- }
- 
--
--#ifndef arch_get_mmap_end
--#define arch_get_mmap_end(addr)	(TASK_SIZE)
--#endif
--
--#ifndef arch_get_mmap_base
--#define arch_get_mmap_base(addr, base) (base)
--#endif
--
- /* Get an address range which is currently unmapped.
-  * For shmat() with addr=0.
-  *
--- 
-2.23.0
+Let me put my changelog pedant hat on; it would be nice to explicitely
+separate the 'raw' stats (i.e. those that you are adding to sis()) to
+the downstream ones.
 
+AIUI the ones above here are the 'raw' stats (except "SIS Domain
+Scanned", I'm not sure I get where this one comes from?), and the ones
+below are the downstream, post-processed ones.
+
+> SIS Search Efficiency: A ratio expressed as a percentage of runqueues
+>       scanned versus idle CPUs found. A 100% efficiency indicates that
+>       the target, prev or recent CPU of a task was idle at wakeup. The
+>       lower the efficiency, the more runqueues were scanned before an
+>       idle CPU was found.
+>
+> SIS Domain Search Efficiency: Similar, except only for the slower SIS
+>       patch.
+>
+> SIS Fast Success Rate: Percentage of SIS that used target, prev or
+>       recent CPUs.
+>
+> SIS Success rate: Percentage of scans that found an idle CPU.
+>
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+
+With the nits taken into account:
+
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+
+> ---
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 1dea8554ead0..9d32a81ece08 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -6150,6 +6153,15 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+>       struct sched_domain *sd;
+>       int i, recent_used_cpu;
+>
+> +	schedstat_inc(this_rq()->sis_search);
+> +
+> +	/*
+> +	 * Checking if prev, target and recent is treated as one scan. A
+> +	 * perfect hit on one of those is considered 100% efficiency.
+> +	 * Further scanning impairs efficiency.
+> +	 */
+> +	schedstat_inc(this_rq()->sis_scanned);
+> +
+
+You may want to move that sis_scanned increment to below the 'symmetric'
+label. Also, you should instrument select_idle_capacity() with
+sis_scanned increments, if only for the sake of completeness.
+
+One last thing: each of the new schedstat_inc() callsites use this_rq();
+IIRC because of the RELOC_HIDE() hiding underneath there's very little
+chance of the compiler caching this. However, this depends on schedstat,
+so I suppose that is fine.
+
+>       /*
+>        * For asymmetric CPU capacity systems, our domain of interest is
+>        * sd_asym_cpucapacity rather than sd_llc.
