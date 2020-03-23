@@ -3,197 +3,1079 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 008FEC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 05:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71329C10F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 05:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3448206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 05:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162E320732
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 05:33:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="k9MhAEVo";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="cZIBD8sD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1qtPChL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbgCWFcs (ORCPT
+        id S1727267AbgCWFde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 01:32:48 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:33104 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725930AbgCWFcs (ORCPT
+        Mon, 23 Mar 2020 01:33:34 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37836 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgCWFde (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 01:32:48 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02N5VvfB013682;
-        Sun, 22 Mar 2020 22:32:32 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=ABkLYonluh/vC5BtI/uETa9akND1QvC9IGQQ6vrohPM=;
- b=k9MhAEVoR9klg1ROBIcWpFdCYco5HvCeNgByaayenulH43gqnFclXve+omSWLHIPnri2
- +HQPWd3vSg3VQrSe2zSrDKfcGBWx0vzSV1d19bXQf7TOJg+WnOrfpD0NewWHb6RtEuTk
- ejPLQa97Tl36HH7l2zx9By2o2sfol3SGk8U= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 2yx2r4kb2d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Sun, 22 Mar 2020 22:32:32 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Sun, 22 Mar 2020 22:32:31 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XnGxt67UxN9SlXikrOxQkaVbyzyWr2MezLAPC07Wm/OcA/WOEaKikOIgJ8u9b/0UN+36ggor6bqLCvER/asCW8kuou/+ADqJsYCq42i7z7zjWSYgOltU1X0Ac7NClTQc5kGlA/tylCMVhQp5U2SD01bbolXNuW2J24yaKRCt8BVJ5Guv/1+k2ym+VSPFauXQ/Xqy06WNZrBVxt2+nCSIgXqTTXmPqaN/BUZKzIKTHQQ582OjuLJFPo4BCvUPekOtPiT9EHrgl/6aSktwOk7z6uBRautlA/p1+FkahNfXw8G0k+WvoNiIIpl86Hcj5pzmpZo904SJjc1ckZTTRCPkDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ABkLYonluh/vC5BtI/uETa9akND1QvC9IGQQ6vrohPM=;
- b=W8KHM8jz6WcQtjCErXoNhAjJxLILXhHI8Qk2gLTL39Fd3oki8SWUfJTt25kMeit2IDs6eiE492PJeg4+Gx11H1i3//kpvxnqolsGlYr3v+u/NwYBeSHAQ5QCeG1dqxKvaIOAeBpx6r1RATVNysDRTHr8UB3B+/0o67MJ0sWi0iNVidOg6qlmCHdaFSH0ABy1bn56+PfdRPO6UWuFs/VnITVWGUE7uJTLihZYsiFPDKuY2H8nfDkd+BK/5iDP0BiVzNkZm2VHKu+i5lcPLFybUob86cYCqhh5vKov2LLadLCAa6ICBaLRluGB23XprIBYb17whfnijGoESFeftPALYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ABkLYonluh/vC5BtI/uETa9akND1QvC9IGQQ6vrohPM=;
- b=cZIBD8sDfivKnzPUjJ1//CUhZn0XdB3mxTZUqAWaZbkQMHeJfPiwQQJCSmzfSbgsvTpXbk2KzkEGXGIjAS5Gh87Eitu+/jF1ptQrfs0WC3lomVx7Qpa4QfKIzcgO27S9FoGxL3hXkIdJZuo9VHxMD3LWRuqmWlIlvq7iT9YdiKo=
-Received: from MW3PR15MB3883.namprd15.prod.outlook.com (2603:10b6:303:51::22)
- by MW3PR15MB3865.namprd15.prod.outlook.com (2603:10b6:303:42::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.19; Mon, 23 Mar
- 2020 05:32:16 +0000
-Received: from MW3PR15MB3883.namprd15.prod.outlook.com
- ([fe80::a49b:8546:912f:dd98]) by MW3PR15MB3883.namprd15.prod.outlook.com
- ([fe80::a49b:8546:912f:dd98%5]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
- 05:32:16 +0000
-Subject: Re: [PATCH] bpf: fix build warning - missing prototype
-To:     Jean-Philippe Menil <jpmenil@gmail.com>, <netdev@vger.kernel.org>
-CC:     <kernel-janitors@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200322140844.4674-1-jpmenil@gmail.com>
-From:   Yonghong Song <yhs@fb.com>
-Message-ID: <b08375c6-81ce-b96d-0b87-299f966f4d84@fb.com>
-Date:   Sun, 22 Mar 2020 22:32:13 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
-In-Reply-To: <20200322140844.4674-1-jpmenil@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MWHPR13CA0010.namprd13.prod.outlook.com
- (2603:10b6:300:16::20) To MW3PR15MB3883.namprd15.prod.outlook.com
- (2603:10b6:303:51::22)
+        Mon, 23 Mar 2020 01:33:34 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d1so13276541wmb.2
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 22:33:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Y6DLystsq/7Y8TnUjMwq4arqWPWvU4/lJTRg2tlrfzQ=;
+        b=M1qtPChLzWipspQJZFUh4HCUP8MHdxgf+I7ccEIWSk/dWCCNILTNGsL3nqUVHfhXs2
+         3tLzKBTnxbsyKKf3EnuH6exEO63gpWbZhm5N1kmm+4JjYbUWh+eSN3ztWO+3liv4/sEo
+         Dks2x8+n1gznYS1/ngnSNFC9VLF9RRl/zfTPQln3uQ0shHxJH+Lniw7CpI0OiH24atxZ
+         6CLPpZxLxh8PJWUyJQLccvO+AMXESIqcTrjeOOWwsf/SnFp6+Go9Cs549n2wuaThOpD5
+         Ot5kbiIuFyvirUjeGCOW+5cGQrwMXzRnRibkydfTD0wYbkbbCAZxlzWkoDo5DUF7ixFI
+         71Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Y6DLystsq/7Y8TnUjMwq4arqWPWvU4/lJTRg2tlrfzQ=;
+        b=YyMqxW7ztarNV13kydYt57N6T8s8kxYH3QdixeeOOLGgBjsXEDRFOaT78ZStzxapCm
+         eL5/av7DHqa3urtOuaDPzo1eyUHZ5N6gVmej8bCbWER7Pl5IDB88iAriscAXxI4GgE22
+         zYueDmROMx2kZM6iTSVl0eHIYPkVAirZoMHvANY26XIMo7uJ9OJ9laJcRRBJgCphBlMb
+         JaoWDm5ZFNq0yqooMIH9QHWsGm6yTS7PZUqC9RmmkvtUekpSj3wZondioe9DlVkhPZxa
+         +haYH6COXtgIKuB8Gk/BR6b++wDRN15u2B5+XmAm38JeBMHvJ2cp8DIXesl9NdB7CWh9
+         Y3lA==
+X-Gm-Message-State: ANhLgQ21wtiygHEIPTQ7x3uj3fQPOUkCa7oGEvR7NXYdj4jueMzASZ2d
+        mFnegWTLODYfNYFP4+EdSRdS9lyK
+X-Google-Smtp-Source: ADFU+vsGz8mT/AWojqJ4vvoc1y6dpYAn6UIIHbfzcqohrlqqOELskkPYw/EDbLtsElsiPiJUJZRKHw==
+X-Received: by 2002:a1c:e913:: with SMTP id q19mr26070407wmc.31.1584941608635;
+        Sun, 22 Mar 2020 22:33:28 -0700 (PDT)
+Received: from kbp1-lhp-F74019 (a81-14-236-68.net-htp.de. [81.14.236.68])
+        by smtp.gmail.com with ESMTPSA id c23sm22120750wrb.79.2020.03.22.22.33.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 22 Mar 2020 22:33:28 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 07:33:25 +0200
+From:   Yan Yankovskyi <yyankovskyi@gmail.com>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Jan Beulich <jbeulich@suse.com>
+Cc:     Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Subject: [Xen-devel] [PATCH v3 1/2] xen: Use evtchn_type_t as a type for
+ event channels
+Message-ID: <20200323053325.GA15004@kbp1-lhp-F74019>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from macbook-pro-52.local.dhcp.thefacebook.com (2620:10d:c090:400::5:76c) by MWHPR13CA0010.namprd13.prod.outlook.com (2603:10b6:300:16::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.12 via Frontend Transport; Mon, 23 Mar 2020 05:32:15 +0000
-X-Originating-IP: [2620:10d:c090:400::5:76c]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9eeb5646-72b5-4cf2-47c5-08d7ceeb8c51
-X-MS-TrafficTypeDiagnostic: MW3PR15MB3865:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MW3PR15MB3865E253D6A4336221446DA3D3F00@MW3PR15MB3865.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
-X-Forefront-PRVS: 0351D213B3
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(376002)(396003)(136003)(366004)(346002)(39860400002)(199004)(478600001)(81156014)(81166006)(52116002)(66946007)(6506007)(86362001)(66556008)(53546011)(66476007)(31686004)(31696002)(36756003)(8676002)(5660300002)(6486002)(8936002)(6512007)(16526019)(186003)(54906003)(2906002)(316002)(2616005)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:MW3PR15MB3865;H:MW3PR15MB3883.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9/Be3lI6qksF7BXpI6U/koq4nZpkYN0qaYyCC6VbeEMNMVinRulWaDcuqikqKik7bFZsxqpsPuRKLvyrfXK4mQCI5x+7+K92x67+DbwdUOGLcpff/iIFZL4n0RZjVT+ePxR/WYc1ilQk7caM2y5NqlIYWWQxc9/m3aus9SX/fsOWEFxrmh81nC+R24dSbI7zmLJa1vRGFiQbKctiH+/yc6VtUJp6pyHDSptbUiNaZ2SJMmA65HHP6/Q686zQLNYlb4sCgpuKsfClhaftfIRNunlEkjqMsh4+2wNAyUQ8tBE/FYY2crlLA9+yNoxAmmwAOda/ODdtpqxhQTSidiwJ6q+H1GNNOsHa4qiHX422H7IYIfDS6utxgP7G0Dd0u01jQ57EelKg6MfgvrQ7VIdRTMd2xAuy1AhU/8sDpD4RpEn71PLMZYt7YJZZkzj0u9zt
-X-MS-Exchange-AntiSpam-MessageData: spCL1PZ12FgtzpLRY4TA7oYmC3UMagtEPr87jkiG0eaokSIr+niFqLdG5mjWQEjT4fiGRuTrf6Ln/rSs/yCqPKsKSBN9am/gfziGrGk3cbWIm84sMJNe4SmqU+MTNNfAVb9R9ylVIWyQQJ7RIVE74SVkxqSvM75i4GNJbFQg733RauOz8b9dIcO7FeKrcAKa
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9eeb5646-72b5-4cf2-47c5-08d7ceeb8c51
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2020 05:32:16.5865
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xqUxRU1HlO1o1CtcEK1VfAbpubLs9oZVFoIkEvSDL2ZsViTyjf/W0Dxe7AV+Wdy8
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB3865
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-23_01:2020-03-21,2020-03-23 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- adultscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0 spamscore=0
- priorityscore=1501 clxscore=1011 impostorscore=0 suspectscore=0
- mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2003230033
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Make event channel functions pass event channel port using
+evtchn_port_t type. It eliminates signed <-> unsigned conversion.
 
+Signed-off-by: Yan Yankovskyi <yyankovskyi@gmail.com>
+---
+ drivers/xen/events/events_2l.c        | 16 ++---
+ drivers/xen/events/events_base.c      | 95 ++++++++++++++-------------
+ drivers/xen/events/events_fifo.c      | 22 +++----
+ drivers/xen/events/events_internal.h  | 30 ++++-----
+ drivers/xen/evtchn.c                  | 13 ++--
+ drivers/xen/gntdev-common.h           |  2 +-
+ drivers/xen/gntdev.c                  |  2 +-
+ drivers/xen/pvcalls-back.c            |  5 +-
+ drivers/xen/pvcalls-front.c           | 15 +++--
+ drivers/xen/xen-pciback/xenbus.c      |  7 +-
+ drivers/xen/xen-scsiback.c            |  3 +-
+ drivers/xen/xenbus/xenbus_client.c    |  6 +-
+ include/xen/events.h                  | 22 +++----
+ include/xen/interface/event_channel.h |  2 +-
+ include/xen/xenbus.h                  |  5 +-
+ 15 files changed, 128 insertions(+), 117 deletions(-)
 
-On 3/22/20 7:08 AM, Jean-Philippe Menil wrote:
-> Fix build warning when building net/bpf/test_run.o with W=1 due
-> to missing prototype for bpf_fentry_test{1..6}.
-> 
-> These functions are only used in test_run.c so just make them static.
-> Therefore inline keyword should sit between storage class and type.
+diff --git a/drivers/xen/events/events_2l.c b/drivers/xen/events/events_2l.c
+index 8edef51c92e5..64df919a2111 100644
+--- a/drivers/xen/events/events_2l.c
++++ b/drivers/xen/events/events_2l.c
+@@ -53,37 +53,37 @@ static void evtchn_2l_bind_to_cpu(struct irq_info *info, unsigned cpu)
+ 	set_bit(info->evtchn, BM(per_cpu(cpu_evtchn_mask, cpu)));
+ }
+ 
+-static void evtchn_2l_clear_pending(unsigned port)
++static void evtchn_2l_clear_pending(evtchn_port_t port)
+ {
+ 	struct shared_info *s = HYPERVISOR_shared_info;
+ 	sync_clear_bit(port, BM(&s->evtchn_pending[0]));
+ }
+ 
+-static void evtchn_2l_set_pending(unsigned port)
++static void evtchn_2l_set_pending(evtchn_port_t port)
+ {
+ 	struct shared_info *s = HYPERVISOR_shared_info;
+ 	sync_set_bit(port, BM(&s->evtchn_pending[0]));
+ }
+ 
+-static bool evtchn_2l_is_pending(unsigned port)
++static bool evtchn_2l_is_pending(evtchn_port_t port)
+ {
+ 	struct shared_info *s = HYPERVISOR_shared_info;
+ 	return sync_test_bit(port, BM(&s->evtchn_pending[0]));
+ }
+ 
+-static bool evtchn_2l_test_and_set_mask(unsigned port)
++static bool evtchn_2l_test_and_set_mask(evtchn_port_t port)
+ {
+ 	struct shared_info *s = HYPERVISOR_shared_info;
+ 	return sync_test_and_set_bit(port, BM(&s->evtchn_mask[0]));
+ }
+ 
+-static void evtchn_2l_mask(unsigned port)
++static void evtchn_2l_mask(evtchn_port_t port)
+ {
+ 	struct shared_info *s = HYPERVISOR_shared_info;
+ 	sync_set_bit(port, BM(&s->evtchn_mask[0]));
+ }
+ 
+-static void evtchn_2l_unmask(unsigned port)
++static void evtchn_2l_unmask(evtchn_port_t port)
+ {
+ 	struct shared_info *s = HYPERVISOR_shared_info;
+ 	unsigned int cpu = get_cpu();
+@@ -173,7 +173,7 @@ static void evtchn_2l_handle_events(unsigned cpu)
+ 	/* Timer interrupt has highest priority. */
+ 	irq = irq_from_virq(cpu, VIRQ_TIMER);
+ 	if (irq != -1) {
+-		unsigned int evtchn = evtchn_from_irq(irq);
++		evtchn_port_t evtchn = evtchn_from_irq(irq);
+ 		word_idx = evtchn / BITS_PER_LONG;
+ 		bit_idx = evtchn % BITS_PER_LONG;
+ 		if (active_evtchns(cpu, s, word_idx) & (1ULL << bit_idx))
+@@ -228,7 +228,7 @@ static void evtchn_2l_handle_events(unsigned cpu)
+ 
+ 		do {
+ 			xen_ulong_t bits;
+-			int port;
++			evtchn_port_t port;
+ 
+ 			bits = MASK_LSBS(pending_bits, bit_idx);
+ 
+diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
+index 499eff7d3f65..0367fbaead5d 100644
+--- a/drivers/xen/events/events_base.c
++++ b/drivers/xen/events/events_base.c
+@@ -116,7 +116,7 @@ static void clear_evtchn_to_irq_all(void)
+ 	}
+ }
+ 
+-static int set_evtchn_to_irq(unsigned evtchn, unsigned irq)
++static int set_evtchn_to_irq(evtchn_port_t evtchn, unsigned int irq)
+ {
+ 	unsigned row;
+ 	unsigned col;
+@@ -143,7 +143,7 @@ static int set_evtchn_to_irq(unsigned evtchn, unsigned irq)
+ 	return 0;
+ }
+ 
+-int get_evtchn_to_irq(unsigned evtchn)
++int get_evtchn_to_irq(evtchn_port_t evtchn)
+ {
+ 	if (evtchn >= xen_evtchn_max_channels())
+ 		return -1;
+@@ -162,7 +162,7 @@ struct irq_info *info_for_irq(unsigned irq)
+ static int xen_irq_info_common_setup(struct irq_info *info,
+ 				     unsigned irq,
+ 				     enum xen_irq_type type,
+-				     unsigned evtchn,
++				     evtchn_port_t evtchn,
+ 				     unsigned short cpu)
+ {
+ 	int ret;
+@@ -184,7 +184,7 @@ static int xen_irq_info_common_setup(struct irq_info *info,
+ }
+ 
+ static int xen_irq_info_evtchn_setup(unsigned irq,
+-				     unsigned evtchn)
++				     evtchn_port_t evtchn)
+ {
+ 	struct irq_info *info = info_for_irq(irq);
+ 
+@@ -193,7 +193,7 @@ static int xen_irq_info_evtchn_setup(unsigned irq,
+ 
+ static int xen_irq_info_ipi_setup(unsigned cpu,
+ 				  unsigned irq,
+-				  unsigned evtchn,
++				  evtchn_port_t evtchn,
+ 				  enum ipi_vector ipi)
+ {
+ 	struct irq_info *info = info_for_irq(irq);
+@@ -207,7 +207,7 @@ static int xen_irq_info_ipi_setup(unsigned cpu,
+ 
+ static int xen_irq_info_virq_setup(unsigned cpu,
+ 				   unsigned irq,
+-				   unsigned evtchn,
++				   evtchn_port_t evtchn,
+ 				   unsigned virq)
+ {
+ 	struct irq_info *info = info_for_irq(irq);
+@@ -220,7 +220,7 @@ static int xen_irq_info_virq_setup(unsigned cpu,
+ }
+ 
+ static int xen_irq_info_pirq_setup(unsigned irq,
+-				   unsigned evtchn,
++				   evtchn_port_t evtchn,
+ 				   unsigned pirq,
+ 				   unsigned gsi,
+ 				   uint16_t domid,
+@@ -245,7 +245,7 @@ static void xen_irq_info_cleanup(struct irq_info *info)
+ /*
+  * Accessors for packed IRQ information.
+  */
+-unsigned int evtchn_from_irq(unsigned irq)
++evtchn_port_t evtchn_from_irq(unsigned irq)
+ {
+ 	if (WARN(irq >= nr_irqs, "Invalid irq %d!\n", irq))
+ 		return 0;
+@@ -253,7 +253,7 @@ unsigned int evtchn_from_irq(unsigned irq)
+ 	return info_for_irq(irq)->evtchn;
+ }
+ 
+-unsigned irq_from_evtchn(unsigned int evtchn)
++unsigned int irq_from_evtchn(evtchn_port_t evtchn)
+ {
+ 	return get_evtchn_to_irq(evtchn);
+ }
+@@ -304,7 +304,7 @@ unsigned cpu_from_irq(unsigned irq)
+ 	return info_for_irq(irq)->cpu;
+ }
+ 
+-unsigned int cpu_from_evtchn(unsigned int evtchn)
++unsigned int cpu_from_evtchn(evtchn_port_t evtchn)
+ {
+ 	int irq = get_evtchn_to_irq(evtchn);
+ 	unsigned ret = 0;
+@@ -330,9 +330,9 @@ static bool pirq_needs_eoi_flag(unsigned irq)
+ 	return info->u.pirq.flags & PIRQ_NEEDS_EOI;
+ }
+ 
+-static void bind_evtchn_to_cpu(unsigned int chn, unsigned int cpu)
++static void bind_evtchn_to_cpu(evtchn_port_t evtchn, unsigned int cpu)
+ {
+-	int irq = get_evtchn_to_irq(chn);
++	int irq = get_evtchn_to_irq(evtchn);
+ 	struct irq_info *info = info_for_irq(irq);
+ 
+ 	BUG_ON(irq == -1);
+@@ -354,7 +354,7 @@ static void bind_evtchn_to_cpu(unsigned int chn, unsigned int cpu)
+  */
+ void notify_remote_via_irq(int irq)
+ {
+-	int evtchn = evtchn_from_irq(irq);
++	evtchn_port_t evtchn = evtchn_from_irq(irq);
+ 
+ 	if (VALID_EVTCHN(evtchn))
+ 		notify_remote_via_evtchn(evtchn);
+@@ -445,7 +445,7 @@ static void xen_free_irq(unsigned irq)
+ 	irq_free_desc(irq);
+ }
+ 
+-static void xen_evtchn_close(unsigned int port)
++static void xen_evtchn_close(evtchn_port_t port)
+ {
+ 	struct evtchn_close close;
+ 
+@@ -472,7 +472,7 @@ static void pirq_query_unmask(int irq)
+ 
+ static void eoi_pirq(struct irq_data *data)
+ {
+-	int evtchn = evtchn_from_irq(data->irq);
++	evtchn_port_t evtchn = evtchn_from_irq(data->irq);
+ 	struct physdev_eoi eoi = { .irq = pirq_from_irq(data->irq) };
+ 	int rc = 0;
+ 
+@@ -508,7 +508,7 @@ static unsigned int __startup_pirq(unsigned int irq)
+ {
+ 	struct evtchn_bind_pirq bind_pirq;
+ 	struct irq_info *info = info_for_irq(irq);
+-	int evtchn = evtchn_from_irq(irq);
++	evtchn_port_t evtchn = evtchn_from_irq(irq);
+ 	int rc;
+ 
+ 	BUG_ON(info->type != IRQT_PIRQ);
+@@ -561,7 +561,7 @@ static void shutdown_pirq(struct irq_data *data)
+ {
+ 	unsigned int irq = data->irq;
+ 	struct irq_info *info = info_for_irq(irq);
+-	unsigned evtchn = evtchn_from_irq(irq);
++	evtchn_port_t evtchn = evtchn_from_irq(irq);
+ 
+ 	BUG_ON(info->type != IRQT_PIRQ);
+ 
+@@ -601,7 +601,7 @@ EXPORT_SYMBOL_GPL(xen_irq_from_gsi);
+ 
+ static void __unbind_from_irq(unsigned int irq)
+ {
+-	int evtchn = evtchn_from_irq(irq);
++	evtchn_port_t evtchn = evtchn_from_irq(irq);
+ 	struct irq_info *info = irq_get_handler_data(irq);
+ 
+ 	if (info->refcnt > 0) {
+@@ -827,7 +827,7 @@ int xen_pirq_from_irq(unsigned irq)
+ }
+ EXPORT_SYMBOL_GPL(xen_pirq_from_irq);
+ 
+-int bind_evtchn_to_irq(unsigned int evtchn)
++int bind_evtchn_to_irq(evtchn_port_t evtchn)
+ {
+ 	int irq;
+ 	int ret;
+@@ -870,8 +870,8 @@ EXPORT_SYMBOL_GPL(bind_evtchn_to_irq);
+ static int bind_ipi_to_irq(unsigned int ipi, unsigned int cpu)
+ {
+ 	struct evtchn_bind_ipi bind_ipi;
+-	int evtchn, irq;
+-	int ret;
++	evtchn_port_t evtchn;
++	int ret, irq;
+ 
+ 	mutex_lock(&irq_mapping_update_lock);
+ 
+@@ -909,7 +909,7 @@ static int bind_ipi_to_irq(unsigned int ipi, unsigned int cpu)
+ }
+ 
+ int bind_interdomain_evtchn_to_irq(unsigned int remote_domain,
+-				   unsigned int remote_port)
++				   evtchn_port_t remote_port)
+ {
+ 	struct evtchn_bind_interdomain bind_interdomain;
+ 	int err;
+@@ -924,10 +924,11 @@ int bind_interdomain_evtchn_to_irq(unsigned int remote_domain,
+ }
+ EXPORT_SYMBOL_GPL(bind_interdomain_evtchn_to_irq);
+ 
+-static int find_virq(unsigned int virq, unsigned int cpu)
++static int find_virq(unsigned int virq, unsigned int cpu, evtchn_port_t *evtchn)
+ {
+ 	struct evtchn_status status;
+-	int port, rc = -ENOENT;
++	evtchn_port_t port;
++	int rc = -ENOENT;
+ 
+ 	memset(&status, 0, sizeof(status));
+ 	for (port = 0; port < xen_evtchn_max_channels(); port++) {
+@@ -939,7 +940,7 @@ static int find_virq(unsigned int virq, unsigned int cpu)
+ 		if (status.status != EVTCHNSTAT_virq)
+ 			continue;
+ 		if (status.u.virq == virq && status.vcpu == xen_vcpu_nr(cpu)) {
+-			rc = port;
++			*evtchn = port;
+ 			break;
+ 		}
+ 	}
+@@ -962,7 +963,8 @@ EXPORT_SYMBOL_GPL(xen_evtchn_nr_channels);
+ int bind_virq_to_irq(unsigned int virq, unsigned int cpu, bool percpu)
+ {
+ 	struct evtchn_bind_virq bind_virq;
+-	int evtchn, irq, ret;
++	evtchn_port_t evtchn;
++	int irq, ret;
+ 
+ 	mutex_lock(&irq_mapping_update_lock);
+ 
+@@ -988,9 +990,8 @@ int bind_virq_to_irq(unsigned int virq, unsigned int cpu, bool percpu)
+ 			evtchn = bind_virq.port;
+ 		else {
+ 			if (ret == -EEXIST)
+-				ret = find_virq(virq, cpu);
++				ret = find_virq(virq, cpu, &evtchn);
+ 			BUG_ON(ret < 0);
+-			evtchn = ret;
+ 		}
+ 
+ 		ret = xen_irq_info_virq_setup(cpu, irq, evtchn, virq);
+@@ -1019,7 +1020,7 @@ static void unbind_from_irq(unsigned int irq)
+ 	mutex_unlock(&irq_mapping_update_lock);
+ }
+ 
+-int bind_evtchn_to_irqhandler(unsigned int evtchn,
++int bind_evtchn_to_irqhandler(evtchn_port_t evtchn,
+ 			      irq_handler_t handler,
+ 			      unsigned long irqflags,
+ 			      const char *devname, void *dev_id)
+@@ -1040,7 +1041,7 @@ int bind_evtchn_to_irqhandler(unsigned int evtchn,
+ EXPORT_SYMBOL_GPL(bind_evtchn_to_irqhandler);
+ 
+ int bind_interdomain_evtchn_to_irqhandler(unsigned int remote_domain,
+-					  unsigned int remote_port,
++					  evtchn_port_t remote_port,
+ 					  irq_handler_t handler,
+ 					  unsigned long irqflags,
+ 					  const char *devname,
+@@ -1132,7 +1133,7 @@ int xen_set_irq_priority(unsigned irq, unsigned priority)
+ }
+ EXPORT_SYMBOL_GPL(xen_set_irq_priority);
+ 
+-int evtchn_make_refcounted(unsigned int evtchn)
++int evtchn_make_refcounted(evtchn_port_t evtchn)
+ {
+ 	int irq = get_evtchn_to_irq(evtchn);
+ 	struct irq_info *info;
+@@ -1153,7 +1154,7 @@ int evtchn_make_refcounted(unsigned int evtchn)
+ }
+ EXPORT_SYMBOL_GPL(evtchn_make_refcounted);
+ 
+-int evtchn_get(unsigned int evtchn)
++int evtchn_get(evtchn_port_t evtchn)
+ {
+ 	int irq;
+ 	struct irq_info *info;
+@@ -1186,7 +1187,7 @@ int evtchn_get(unsigned int evtchn)
+ }
+ EXPORT_SYMBOL_GPL(evtchn_get);
+ 
+-void evtchn_put(unsigned int evtchn)
++void evtchn_put(evtchn_port_t evtchn)
+ {
+ 	int irq = get_evtchn_to_irq(evtchn);
+ 	if (WARN_ON(irq == -1))
+@@ -1252,7 +1253,7 @@ void xen_hvm_evtchn_do_upcall(void)
+ EXPORT_SYMBOL_GPL(xen_hvm_evtchn_do_upcall);
+ 
+ /* Rebind a new event channel to an existing irq. */
+-void rebind_evtchn_irq(int evtchn, int irq)
++void rebind_evtchn_irq(evtchn_port_t evtchn, int irq)
+ {
+ 	struct irq_info *info = info_for_irq(irq);
+ 
+@@ -1275,7 +1276,7 @@ void rebind_evtchn_irq(int evtchn, int irq)
+ 
+ 	mutex_unlock(&irq_mapping_update_lock);
+ 
+-        bind_evtchn_to_cpu(evtchn, info->cpu);
++	bind_evtchn_to_cpu(evtchn, info->cpu);
+ 	/* This will be deferred until interrupt is processed */
+ 	irq_set_affinity(irq, cpumask_of(info->cpu));
+ 
+@@ -1284,7 +1285,7 @@ void rebind_evtchn_irq(int evtchn, int irq)
+ }
+ 
+ /* Rebind an evtchn so that it gets delivered to a specific cpu */
+-static int xen_rebind_evtchn_to_cpu(int evtchn, unsigned int tcpu)
++static int xen_rebind_evtchn_to_cpu(evtchn_port_t evtchn, unsigned int tcpu)
+ {
+ 	struct evtchn_bind_vcpu bind_vcpu;
+ 	int masked;
+@@ -1342,7 +1343,7 @@ EXPORT_SYMBOL_GPL(xen_set_affinity_evtchn);
+ 
+ static void enable_dynirq(struct irq_data *data)
+ {
+-	int evtchn = evtchn_from_irq(data->irq);
++	evtchn_port_t evtchn = evtchn_from_irq(data->irq);
+ 
+ 	if (VALID_EVTCHN(evtchn))
+ 		unmask_evtchn(evtchn);
+@@ -1350,7 +1351,7 @@ static void enable_dynirq(struct irq_data *data)
+ 
+ static void disable_dynirq(struct irq_data *data)
+ {
+-	int evtchn = evtchn_from_irq(data->irq);
++	evtchn_port_t evtchn = evtchn_from_irq(data->irq);
+ 
+ 	if (VALID_EVTCHN(evtchn))
+ 		mask_evtchn(evtchn);
+@@ -1358,7 +1359,7 @@ static void disable_dynirq(struct irq_data *data)
+ 
+ static void ack_dynirq(struct irq_data *data)
+ {
+-	int evtchn = evtchn_from_irq(data->irq);
++	evtchn_port_t evtchn = evtchn_from_irq(data->irq);
+ 
+ 	if (!VALID_EVTCHN(evtchn))
+ 		return;
+@@ -1385,7 +1386,7 @@ static void mask_ack_dynirq(struct irq_data *data)
+ 
+ static int retrigger_dynirq(struct irq_data *data)
+ {
+-	unsigned int evtchn = evtchn_from_irq(data->irq);
++	evtchn_port_t evtchn = evtchn_from_irq(data->irq);
+ 	int masked;
+ 
+ 	if (!VALID_EVTCHN(evtchn))
+@@ -1440,7 +1441,8 @@ static void restore_pirqs(void)
+ static void restore_cpu_virqs(unsigned int cpu)
+ {
+ 	struct evtchn_bind_virq bind_virq;
+-	int virq, irq, evtchn;
++	evtchn_port_t evtchn;
++	int virq, irq;
+ 
+ 	for (virq = 0; virq < NR_VIRQS; virq++) {
+ 		if ((irq = per_cpu(virq_to_irq, cpu)[virq]) == -1)
+@@ -1465,7 +1467,8 @@ static void restore_cpu_virqs(unsigned int cpu)
+ static void restore_cpu_ipis(unsigned int cpu)
+ {
+ 	struct evtchn_bind_ipi bind_ipi;
+-	int ipi, irq, evtchn;
++	evtchn_port_t evtchn;
++	int ipi, irq;
+ 
+ 	for (ipi = 0; ipi < XEN_NR_IPIS; ipi++) {
+ 		if ((irq = per_cpu(ipi_to_irq, cpu)[ipi]) == -1)
+@@ -1489,7 +1492,7 @@ static void restore_cpu_ipis(unsigned int cpu)
+ /* Clear an irq's pending state, in preparation for polling on it */
+ void xen_clear_irq_pending(int irq)
+ {
+-	int evtchn = evtchn_from_irq(irq);
++	evtchn_port_t evtchn = evtchn_from_irq(irq);
+ 
+ 	if (VALID_EVTCHN(evtchn))
+ 		clear_evtchn(evtchn);
+@@ -1497,7 +1500,7 @@ void xen_clear_irq_pending(int irq)
+ EXPORT_SYMBOL(xen_clear_irq_pending);
+ void xen_set_irq_pending(int irq)
+ {
+-	int evtchn = evtchn_from_irq(irq);
++	evtchn_port_t evtchn = evtchn_from_irq(irq);
+ 
+ 	if (VALID_EVTCHN(evtchn))
+ 		set_evtchn(evtchn);
+@@ -1505,7 +1508,7 @@ void xen_set_irq_pending(int irq)
+ 
+ bool xen_test_irq_pending(int irq)
+ {
+-	int evtchn = evtchn_from_irq(irq);
++	evtchn_port_t evtchn = evtchn_from_irq(irq);
+ 	bool ret = false;
+ 
+ 	if (VALID_EVTCHN(evtchn))
+@@ -1667,7 +1670,7 @@ module_param(fifo_events, bool, 0);
+ void __init xen_init_IRQ(void)
+ {
+ 	int ret = -EINVAL;
+-	unsigned int evtchn;
++	evtchn_port_t evtchn;
+ 
+ 	if (fifo_events)
+ 		ret = xen_evtchn_fifo_init();
+diff --git a/drivers/xen/events/events_fifo.c b/drivers/xen/events/events_fifo.c
+index 76b318e88382..c60ee0450173 100644
+--- a/drivers/xen/events/events_fifo.c
++++ b/drivers/xen/events/events_fifo.c
+@@ -82,7 +82,7 @@ static unsigned event_array_pages __read_mostly;
+ 
+ #endif
+ 
+-static inline event_word_t *event_word_from_port(unsigned port)
++static inline event_word_t *event_word_from_port(evtchn_port_t port)
+ {
+ 	unsigned i = port / EVENT_WORDS_PER_PAGE;
+ 
+@@ -140,7 +140,7 @@ static void init_array_page(event_word_t *array_page)
+ 
+ static int evtchn_fifo_setup(struct irq_info *info)
+ {
+-	unsigned port = info->evtchn;
++	evtchn_port_t port = info->evtchn;
+ 	unsigned new_array_pages;
+ 	int ret;
+ 
+@@ -191,37 +191,37 @@ static void evtchn_fifo_bind_to_cpu(struct irq_info *info, unsigned cpu)
+ 	/* no-op */
+ }
+ 
+-static void evtchn_fifo_clear_pending(unsigned port)
++static void evtchn_fifo_clear_pending(evtchn_port_t port)
+ {
+ 	event_word_t *word = event_word_from_port(port);
+ 	sync_clear_bit(EVTCHN_FIFO_BIT(PENDING, word), BM(word));
+ }
+ 
+-static void evtchn_fifo_set_pending(unsigned port)
++static void evtchn_fifo_set_pending(evtchn_port_t port)
+ {
+ 	event_word_t *word = event_word_from_port(port);
+ 	sync_set_bit(EVTCHN_FIFO_BIT(PENDING, word), BM(word));
+ }
+ 
+-static bool evtchn_fifo_is_pending(unsigned port)
++static bool evtchn_fifo_is_pending(evtchn_port_t port)
+ {
+ 	event_word_t *word = event_word_from_port(port);
+ 	return sync_test_bit(EVTCHN_FIFO_BIT(PENDING, word), BM(word));
+ }
+ 
+-static bool evtchn_fifo_test_and_set_mask(unsigned port)
++static bool evtchn_fifo_test_and_set_mask(evtchn_port_t port)
+ {
+ 	event_word_t *word = event_word_from_port(port);
+ 	return sync_test_and_set_bit(EVTCHN_FIFO_BIT(MASKED, word), BM(word));
+ }
+ 
+-static void evtchn_fifo_mask(unsigned port)
++static void evtchn_fifo_mask(evtchn_port_t port)
+ {
+ 	event_word_t *word = event_word_from_port(port);
+ 	sync_set_bit(EVTCHN_FIFO_BIT(MASKED, word), BM(word));
+ }
+ 
+-static bool evtchn_fifo_is_masked(unsigned port)
++static bool evtchn_fifo_is_masked(evtchn_port_t port)
+ {
+ 	event_word_t *word = event_word_from_port(port);
+ 	return sync_test_bit(EVTCHN_FIFO_BIT(MASKED, word), BM(word));
+@@ -242,7 +242,7 @@ static void clear_masked(volatile event_word_t *word)
+ 	} while (w != old);
+ }
+ 
+-static void evtchn_fifo_unmask(unsigned port)
++static void evtchn_fifo_unmask(evtchn_port_t port)
+ {
+ 	event_word_t *word = event_word_from_port(port);
+ 
+@@ -270,7 +270,7 @@ static uint32_t clear_linked(volatile event_word_t *word)
+ 	return w & EVTCHN_FIFO_LINK_MASK;
+ }
+ 
+-static void handle_irq_for_port(unsigned port)
++static void handle_irq_for_port(evtchn_port_t port)
+ {
+ 	int irq;
+ 
+@@ -286,7 +286,7 @@ static void consume_one_event(unsigned cpu,
+ {
+ 	struct evtchn_fifo_queue *q = &per_cpu(cpu_queue, cpu);
+ 	uint32_t head;
+-	unsigned port;
++	evtchn_port_t port;
+ 	event_word_t *word;
+ 
+ 	head = q->head[priority];
+diff --git a/drivers/xen/events/events_internal.h b/drivers/xen/events/events_internal.h
+index 82938cff6c7a..10684feb094e 100644
+--- a/drivers/xen/events/events_internal.h
++++ b/drivers/xen/events/events_internal.h
+@@ -33,7 +33,7 @@ struct irq_info {
+ 	int refcnt;
+ 	enum xen_irq_type type;	/* type */
+ 	unsigned irq;
+-	unsigned int evtchn;	/* event channel */
++	evtchn_port_t evtchn;	/* event channel */
+ 	unsigned short cpu;	/* cpu bound */
+ 
+ 	union {
+@@ -60,12 +60,12 @@ struct evtchn_ops {
+ 	int (*setup)(struct irq_info *info);
+ 	void (*bind_to_cpu)(struct irq_info *info, unsigned cpu);
+ 
+-	void (*clear_pending)(unsigned port);
+-	void (*set_pending)(unsigned port);
+-	bool (*is_pending)(unsigned port);
+-	bool (*test_and_set_mask)(unsigned port);
+-	void (*mask)(unsigned port);
+-	void (*unmask)(unsigned port);
++	void (*clear_pending)(evtchn_port_t port);
++	void (*set_pending)(evtchn_port_t port);
++	bool (*is_pending)(evtchn_port_t port);
++	bool (*test_and_set_mask)(evtchn_port_t port);
++	void (*mask)(evtchn_port_t port);
++	void (*unmask)(evtchn_port_t port);
+ 
+ 	void (*handle_events)(unsigned cpu);
+ 	void (*resume)(void);
+@@ -74,11 +74,11 @@ struct evtchn_ops {
+ extern const struct evtchn_ops *evtchn_ops;
+ 
+ extern int **evtchn_to_irq;
+-int get_evtchn_to_irq(unsigned int evtchn);
++int get_evtchn_to_irq(evtchn_port_t evtchn);
+ 
+ struct irq_info *info_for_irq(unsigned irq);
+ unsigned cpu_from_irq(unsigned irq);
+-unsigned cpu_from_evtchn(unsigned int evtchn);
++unsigned int cpu_from_evtchn(evtchn_port_t evtchn);
+ 
+ static inline unsigned xen_evtchn_max_channels(void)
+ {
+@@ -102,32 +102,32 @@ static inline void xen_evtchn_port_bind_to_cpu(struct irq_info *info,
+ 	evtchn_ops->bind_to_cpu(info, cpu);
+ }
+ 
+-static inline void clear_evtchn(unsigned port)
++static inline void clear_evtchn(evtchn_port_t port)
+ {
+ 	evtchn_ops->clear_pending(port);
+ }
+ 
+-static inline void set_evtchn(unsigned port)
++static inline void set_evtchn(evtchn_port_t port)
+ {
+ 	evtchn_ops->set_pending(port);
+ }
+ 
+-static inline bool test_evtchn(unsigned port)
++static inline bool test_evtchn(evtchn_port_t port)
+ {
+ 	return evtchn_ops->is_pending(port);
+ }
+ 
+-static inline bool test_and_set_mask(unsigned port)
++static inline bool test_and_set_mask(evtchn_port_t port)
+ {
+ 	return evtchn_ops->test_and_set_mask(port);
+ }
+ 
+-static inline void mask_evtchn(unsigned port)
++static inline void mask_evtchn(evtchn_port_t port)
+ {
+ 	return evtchn_ops->mask(port);
+ }
+ 
+-static inline void unmask_evtchn(unsigned port)
++static inline void unmask_evtchn(evtchn_port_t port)
+ {
+ 	return evtchn_ops->unmask(port);
+ }
+diff --git a/drivers/xen/evtchn.c b/drivers/xen/evtchn.c
+index 052b55a14ebc..6e0b1dd5573c 100644
+--- a/drivers/xen/evtchn.c
++++ b/drivers/xen/evtchn.c
+@@ -83,7 +83,7 @@ struct per_user_data {
+ struct user_evtchn {
+ 	struct rb_node node;
+ 	struct per_user_data *user;
+-	unsigned port;
++	evtchn_port_t port;
+ 	bool enabled;
+ };
+ 
+@@ -138,7 +138,8 @@ static void del_evtchn(struct per_user_data *u, struct user_evtchn *evtchn)
+ 	kfree(evtchn);
+ }
+ 
+-static struct user_evtchn *find_evtchn(struct per_user_data *u, unsigned port)
++static struct user_evtchn *find_evtchn(struct per_user_data *u,
++				       evtchn_port_t port)
+ {
+ 	struct rb_node *node = u->evtchns.rb_node;
+ 
+@@ -163,7 +164,7 @@ static irqreturn_t evtchn_interrupt(int irq, void *data)
+ 	struct per_user_data *u = evtchn->user;
+ 
+ 	WARN(!evtchn->enabled,
+-	     "Interrupt for port %d, but apparently not enabled; per-user %p\n",
++	     "Interrupt for port %u, but apparently not enabled; per-user %p\n",
+ 	     evtchn->port, u);
+ 
+ 	disable_irq_nosync(irq);
+@@ -286,7 +287,7 @@ static ssize_t evtchn_write(struct file *file, const char __user *buf,
+ 	mutex_lock(&u->bind_mutex);
+ 
+ 	for (i = 0; i < (count/sizeof(evtchn_port_t)); i++) {
+-		unsigned port = kbuf[i];
++		evtchn_port_t port = kbuf[i];
+ 		struct user_evtchn *evtchn;
+ 
+ 		evtchn = find_evtchn(u, port);
+@@ -361,7 +362,7 @@ static int evtchn_resize_ring(struct per_user_data *u)
+ 	return 0;
+ }
+ 
+-static int evtchn_bind_to_user(struct per_user_data *u, int port)
++static int evtchn_bind_to_user(struct per_user_data *u, evtchn_port_t port)
+ {
+ 	struct user_evtchn *evtchn;
+ 	struct evtchn_close close;
+@@ -423,7 +424,7 @@ static void evtchn_unbind_from_user(struct per_user_data *u,
+ 
+ static DEFINE_PER_CPU(int, bind_last_selected_cpu);
+ 
+-static void evtchn_bind_interdom_next_vcpu(int evtchn)
++static void evtchn_bind_interdom_next_vcpu(evtchn_port_t evtchn)
+ {
+ 	unsigned int selected_cpu, irq;
+ 	struct irq_desc *desc;
+diff --git a/drivers/xen/gntdev-common.h b/drivers/xen/gntdev-common.h
+index 9a3960ecff6c..ef52647779f1 100644
+--- a/drivers/xen/gntdev-common.h
++++ b/drivers/xen/gntdev-common.h
+@@ -38,7 +38,7 @@ struct gntdev_unmap_notify {
+ 	int flags;
+ 	/* Address relative to the start of the gntdev_grant_map. */
+ 	int addr;
+-	int event;
++	evtchn_port_t event;
+ };
+ 
+ struct gntdev_grant_map {
+diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
+index 0258415ca0b2..50651e566564 100644
+--- a/drivers/xen/gntdev.c
++++ b/drivers/xen/gntdev.c
+@@ -652,7 +652,7 @@ static long gntdev_ioctl_notify(struct gntdev_priv *priv, void __user *u)
+ 	struct gntdev_grant_map *map;
+ 	int rc;
+ 	int out_flags;
+-	unsigned int out_event;
++	evtchn_port_t out_event;
+ 
+ 	if (copy_from_user(&op, u, sizeof(op)))
+ 		return -EFAULT;
+diff --git a/drivers/xen/pvcalls-back.c b/drivers/xen/pvcalls-back.c
+index c57c71b7d53d..cf4ce3e9358d 100644
+--- a/drivers/xen/pvcalls-back.c
++++ b/drivers/xen/pvcalls-back.c
+@@ -300,7 +300,7 @@ static struct sock_mapping *pvcalls_new_active_socket(
+ 		struct pvcalls_fedata *fedata,
+ 		uint64_t id,
+ 		grant_ref_t ref,
+-		uint32_t evtchn,
++		evtchn_port_t evtchn,
+ 		struct socket *sock)
+ {
+ 	int ret;
+@@ -905,7 +905,8 @@ static irqreturn_t pvcalls_back_conn_event(int irq, void *sock_map)
+ 
+ static int backend_connect(struct xenbus_device *dev)
+ {
+-	int err, evtchn;
++	int err;
++	evtchn_port_t evtchn;
+ 	grant_ref_t ring_ref;
+ 	struct pvcalls_fedata *fedata = NULL;
+ 
+diff --git a/drivers/xen/pvcalls-front.c b/drivers/xen/pvcalls-front.c
+index 57592a6b5c9e..b43b5595e988 100644
+--- a/drivers/xen/pvcalls-front.c
++++ b/drivers/xen/pvcalls-front.c
+@@ -368,12 +368,12 @@ static int alloc_active_ring(struct sock_mapping *map)
+ 	return -ENOMEM;
+ }
+ 
+-static int create_active(struct sock_mapping *map, int *evtchn)
++static int create_active(struct sock_mapping *map, evtchn_port_t *evtchn)
+ {
+ 	void *bytes;
+ 	int ret = -ENOMEM, irq = -1, i;
+ 
+-	*evtchn = -1;
++	*evtchn = 0;
+ 	init_waitqueue_head(&map->active.inflight_conn_req);
+ 
+ 	bytes = map->active.data.in;
+@@ -404,7 +404,7 @@ static int create_active(struct sock_mapping *map, int *evtchn)
+ 	return 0;
+ 
+ out_error:
+-	if (*evtchn >= 0)
++	if (*evtchn > 0)
+ 		xenbus_free_evtchn(pvcalls_front_dev, *evtchn);
+ 	return ret;
+ }
+@@ -415,7 +415,8 @@ int pvcalls_front_connect(struct socket *sock, struct sockaddr *addr,
+ 	struct pvcalls_bedata *bedata;
+ 	struct sock_mapping *map = NULL;
+ 	struct xen_pvcalls_request *req;
+-	int notify, req_id, ret, evtchn;
++	int notify, req_id, ret;
++	evtchn_port_t evtchn;
+ 
+ 	if (addr->sa_family != AF_INET || sock->type != SOCK_STREAM)
+ 		return -EOPNOTSUPP;
+@@ -765,7 +766,8 @@ int pvcalls_front_accept(struct socket *sock, struct socket *newsock, int flags)
+ 	struct sock_mapping *map;
+ 	struct sock_mapping *map2 = NULL;
+ 	struct xen_pvcalls_request *req;
+-	int notify, req_id, ret, evtchn, nonblock;
++	int notify, req_id, ret, nonblock;
++	evtchn_port_t evtchn;
+ 
+ 	map = pvcalls_enter_sock(sock);
+ 	if (IS_ERR(map))
+@@ -1125,7 +1127,8 @@ static int pvcalls_front_remove(struct xenbus_device *dev)
+ static int pvcalls_front_probe(struct xenbus_device *dev,
+ 			  const struct xenbus_device_id *id)
+ {
+-	int ret = -ENOMEM, evtchn, i;
++	int ret = -ENOMEM, i;
++	evtchn_port_t evtchn;
+ 	unsigned int max_page_order, function_calls, len;
+ 	char *versions;
+ 	grant_ref_t gref_head = 0;
+diff --git a/drivers/xen/xen-pciback/xenbus.c b/drivers/xen/xen-pciback/xenbus.c
+index 833b2d2c4318..f2115587855f 100644
+--- a/drivers/xen/xen-pciback/xenbus.c
++++ b/drivers/xen/xen-pciback/xenbus.c
+@@ -105,13 +105,13 @@ static void free_pdev(struct xen_pcibk_device *pdev)
+ }
+ 
+ static int xen_pcibk_do_attach(struct xen_pcibk_device *pdev, int gnt_ref,
+-			     int remote_evtchn)
++			     evtchn_port_t remote_evtchn)
+ {
+ 	int err = 0;
+ 	void *vaddr;
+ 
+ 	dev_dbg(&pdev->xdev->dev,
+-		"Attaching to frontend resources - gnt_ref=%d evtchn=%d\n",
++		"Attaching to frontend resources - gnt_ref=%d evtchn=%u\n",
+ 		gnt_ref, remote_evtchn);
+ 
+ 	err = xenbus_map_ring_valloc(pdev->xdev, &gnt_ref, 1, &vaddr);
+@@ -142,7 +142,8 @@ static int xen_pcibk_do_attach(struct xen_pcibk_device *pdev, int gnt_ref,
+ static int xen_pcibk_attach(struct xen_pcibk_device *pdev)
+ {
+ 	int err = 0;
+-	int gnt_ref, remote_evtchn;
++	int gnt_ref;
++	evtchn_port_t remote_evtchn;
+ 	char *magic = NULL;
+ 
+ 
+diff --git a/drivers/xen/xen-scsiback.c b/drivers/xen/xen-scsiback.c
+index ba0942e481bc..75c0a2e9a6db 100644
+--- a/drivers/xen/xen-scsiback.c
++++ b/drivers/xen/xen-scsiback.c
+@@ -854,7 +854,8 @@ static int scsiback_init_sring(struct vscsibk_info *info, grant_ref_t ring_ref,
+ static int scsiback_map(struct vscsibk_info *info)
+ {
+ 	struct xenbus_device *dev = info->dev;
+-	unsigned int ring_ref, evtchn;
++	unsigned int ring_ref;
++	evtchn_port_t evtchn;
+ 	int err;
+ 
+ 	err = xenbus_gather(XBT_NIL, dev->otherend,
+diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
+index e17ca8156171..1f87514e4efc 100644
+--- a/drivers/xen/xenbus/xenbus_client.c
++++ b/drivers/xen/xenbus/xenbus_client.c
+@@ -391,7 +391,7 @@ EXPORT_SYMBOL_GPL(xenbus_grant_ring);
+  * error, the device will switch to XenbusStateClosing, and the error will be
+  * saved in the store.
+  */
+-int xenbus_alloc_evtchn(struct xenbus_device *dev, int *port)
++int xenbus_alloc_evtchn(struct xenbus_device *dev, evtchn_port_t *port)
+ {
+ 	struct evtchn_alloc_unbound alloc_unbound;
+ 	int err;
+@@ -414,7 +414,7 @@ EXPORT_SYMBOL_GPL(xenbus_alloc_evtchn);
+ /**
+  * Free an existing event channel. Returns 0 on success or -errno on error.
+  */
+-int xenbus_free_evtchn(struct xenbus_device *dev, int port)
++int xenbus_free_evtchn(struct xenbus_device *dev, evtchn_port_t port)
+ {
+ 	struct evtchn_close close;
+ 	int err;
+@@ -423,7 +423,7 @@ int xenbus_free_evtchn(struct xenbus_device *dev, int port)
+ 
+ 	err = HYPERVISOR_event_channel_op(EVTCHNOP_close, &close);
+ 	if (err)
+-		xenbus_dev_error(dev, err, "freeing event channel %d", port);
++		xenbus_dev_error(dev, err, "freeing event channel %u", port);
+ 
+ 	return err;
+ }
+diff --git a/include/xen/events.h b/include/xen/events.h
+index c0e6a0598397..12b0dcb6a120 100644
+--- a/include/xen/events.h
++++ b/include/xen/events.h
+@@ -14,8 +14,8 @@
+ 
+ unsigned xen_evtchn_nr_channels(void);
+ 
+-int bind_evtchn_to_irq(unsigned int evtchn);
+-int bind_evtchn_to_irqhandler(unsigned int evtchn,
++int bind_evtchn_to_irq(evtchn_port_t evtchn);
++int bind_evtchn_to_irqhandler(evtchn_port_t evtchn,
+ 			      irq_handler_t handler,
+ 			      unsigned long irqflags, const char *devname,
+ 			      void *dev_id);
+@@ -31,9 +31,9 @@ int bind_ipi_to_irqhandler(enum ipi_vector ipi,
+ 			   const char *devname,
+ 			   void *dev_id);
+ int bind_interdomain_evtchn_to_irq(unsigned int remote_domain,
+-				   unsigned int remote_port);
++				   evtchn_port_t remote_port);
+ int bind_interdomain_evtchn_to_irqhandler(unsigned int remote_domain,
+-					  unsigned int remote_port,
++					  evtchn_port_t remote_port,
+ 					  irq_handler_t handler,
+ 					  unsigned long irqflags,
+ 					  const char *devname,
+@@ -54,15 +54,15 @@ int xen_set_irq_priority(unsigned irq, unsigned priority);
+ /*
+  * Allow extra references to event channels exposed to userspace by evtchn
+  */
+-int evtchn_make_refcounted(unsigned int evtchn);
+-int evtchn_get(unsigned int evtchn);
+-void evtchn_put(unsigned int evtchn);
++int evtchn_make_refcounted(evtchn_port_t evtchn);
++int evtchn_get(evtchn_port_t evtchn);
++void evtchn_put(evtchn_port_t evtchn);
+ 
+ void xen_send_IPI_one(unsigned int cpu, enum ipi_vector vector);
+-void rebind_evtchn_irq(int evtchn, int irq);
++void rebind_evtchn_irq(evtchn_port_t evtchn, int irq);
+ int xen_set_affinity_evtchn(struct irq_desc *desc, unsigned int tcpu);
+ 
+-static inline void notify_remote_via_evtchn(int port)
++static inline void notify_remote_via_evtchn(evtchn_port_t port)
+ {
+ 	struct evtchn_send send = { .port = port };
+ 	(void)HYPERVISOR_event_channel_op(EVTCHNOP_send, &send);
+@@ -86,9 +86,9 @@ void xen_poll_irq(int irq);
+ void xen_poll_irq_timeout(int irq, u64 timeout);
+ 
+ /* Determine the IRQ which is bound to an event channel */
+-unsigned irq_from_evtchn(unsigned int evtchn);
++unsigned int irq_from_evtchn(evtchn_port_t evtchn);
+ int irq_from_virq(unsigned int cpu, unsigned int virq);
+-unsigned int evtchn_from_irq(unsigned irq);
++evtchn_port_t evtchn_from_irq(unsigned irq);
+ 
+ #ifdef CONFIG_XEN_PVHVM
+ /* Xen HVM evtchn vector callback */
+diff --git a/include/xen/interface/event_channel.h b/include/xen/interface/event_channel.h
+index 45650c9a06d5..cf80e338fbb0 100644
+--- a/include/xen/interface/event_channel.h
++++ b/include/xen/interface/event_channel.h
+@@ -220,7 +220,7 @@ struct evtchn_expand_array {
+ #define EVTCHNOP_set_priority    13
+ struct evtchn_set_priority {
+ 	/* IN parameters. */
+-	uint32_t port;
++	evtchn_port_t port;
+ 	uint32_t priority;
+ };
+ 
+diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
+index 850a43bd69d3..725da8965eb9 100644
+--- a/include/xen/xenbus.h
++++ b/include/xen/xenbus.h
+@@ -47,6 +47,7 @@
+ #include <xen/interface/grant_table.h>
+ #include <xen/interface/io/xenbus.h>
+ #include <xen/interface/io/xs_wire.h>
++#include <xen/interface/event_channel.h>
+ 
+ #define XENBUS_MAX_RING_GRANT_ORDER 4
+ #define XENBUS_MAX_RING_GRANTS      (1U << XENBUS_MAX_RING_GRANT_ORDER)
+@@ -219,8 +220,8 @@ int xenbus_unmap_ring(struct xenbus_device *dev,
+ 		      grant_handle_t *handles, unsigned int nr_handles,
+ 		      unsigned long *vaddrs);
+ 
+-int xenbus_alloc_evtchn(struct xenbus_device *dev, int *port);
+-int xenbus_free_evtchn(struct xenbus_device *dev, int port);
++int xenbus_alloc_evtchn(struct xenbus_device *dev, evtchn_port_t *port);
++int xenbus_free_evtchn(struct xenbus_device *dev, evtchn_port_t port);
+ 
+ enum xenbus_state xenbus_read_driver_state(const char *path);
+ 
+-- 
+2.17.1
 
-This won't work. These functions are intentionally global functions
-so that their definitions will be in vmlinux BTF and fentry/fexit kernel
-selftests can run against them.
-
-See file 
-linux/tools/testing/selftests/bpf/progs/{fentry_test.c,fexit_test.c}.
-
-> 
-> Signed-off-by: Jean-Philippe Menil <jpmenil@gmail.com>
-> ---
->   net/bpf/test_run.c | 12 ++++++------
->   1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
-> index d555c0d8657d..c0dcd29f682c 100644
-> --- a/net/bpf/test_run.c
-> +++ b/net/bpf/test_run.c
-> @@ -113,32 +113,32 @@ static int bpf_test_finish(const union bpf_attr *kattr,
->    * architecture dependent calling conventions. 7+ can be supported in the
->    * future.
->    */
-> -int noinline bpf_fentry_test1(int a)
-> +static noinline int bpf_fentry_test1(int a)
->   {
->   	return a + 1;
->   }
->   
-> -int noinline bpf_fentry_test2(int a, u64 b)
-> +static noinline int bpf_fentry_test2(int a, u64 b)
->   {
->   	return a + b;
->   }
->   
-> -int noinline bpf_fentry_test3(char a, int b, u64 c)
-> +static noinline int bpf_fentry_test3(char a, int b, u64 c)
->   {
->   	return a + b + c;
->   }
->   
-> -int noinline bpf_fentry_test4(void *a, char b, int c, u64 d)
-> +static noinline int bpf_fentry_test4(void *a, char b, int c, u64 d)
->   {
->   	return (long)a + b + c + d;
->   }
->   
-> -int noinline bpf_fentry_test5(u64 a, void *b, short c, int d, u64 e)
-> +static noinline int bpf_fentry_test5(u64 a, void *b, short c, int d, u64 e)
->   {
->   	return a + (long)b + c + d + e;
->   }
->   
-> -int noinline bpf_fentry_test6(u64 a, void *b, short c, int d, void *e, u64 f)
-> +static noinline int bpf_fentry_test6(u64 a, void *b, short c, int d, void *e, u64 f)
->   {
->   	return a + (long)b + c + d + (long)e + f;
->   }
-> 
