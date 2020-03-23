@@ -2,127 +2,167 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4693EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC675C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB4C920714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAB9E206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:47:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZDtoQrdG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbgCWPp6 (ORCPT
+        id S1727357AbgCWPrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:45:58 -0400
-Received: from mga14.intel.com ([192.55.52.115]:15279 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbgCWPp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:45:57 -0400
-IronPort-SDR: u7ZN4ARRIn8F7MchxD9fwYKEgcQj6DabdvWSO1U6JYjlwOcnIxl8icbOdiAyv+Io21fq8Cp805
- sq4bymdjfXaw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 08:45:56 -0700
-IronPort-SDR: bu1ik5F+bnR7ftr76+AYqs6SQU+gaMwj5hoyqpsiWSdHEg6qDPt3p7v6V7BJ2jXFoZan5rr/QE
- RFjx0wMxztJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,296,1580803200"; 
-   d="scan'208";a="249669076"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 23 Mar 2020 08:45:55 -0700
-Date:   Mon, 23 Mar 2020 08:45:55 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        John Haxby <john.haxby@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH v3 02/37] KVM: nVMX: Validate the EPTP when emulating
- INVEPT(EXTENT_CONTEXT)
-Message-ID: <20200323154555.GH28711@linux.intel.com>
-References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
- <20200320212833.3507-3-sean.j.christopherson@intel.com>
- <871rpj9lay.fsf@vitty.brq.redhat.com>
+        Mon, 23 Mar 2020 11:47:24 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37944 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727176AbgCWPrY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:47:24 -0400
+Received: by mail-ot1-f68.google.com with SMTP id t28so13841806ott.5
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 08:47:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cItIuGU2gR6wVLWQZQIQDeYiaP+Gc3FxK48fZM1brJk=;
+        b=ZDtoQrdGGlgu75KoHaK60jCUVrLQZE1+QnsJ4tGfG4vAD9Acz0nNQiNrCABc1w7gUr
+         N0kaqBhWvXNmUnm2BgEv+qeEgn8DVbX5vDwwkbo5uBYuDZ+sr5SuftcU2K3kV42i1JOg
+         lBTOz50tJwChTdzUOiOXWe52jxfbGkL2BDZtKCjQ9rJ2hu03qEygyQdiDPmVYEYfnAUP
+         8kJWK8JO89b/G4/XbVGe5YDk6BBz09OWKMGhI8o2LXYrl1rOOlCJM/kqTuJ0BwJ5nUZG
+         xM4PVqZYi+D0kfbBibDO016lqGbTLk9P2Jxda+mUDfGjcI3Mfh0Tv4I0tddAQSNIC1EG
+         /wnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cItIuGU2gR6wVLWQZQIQDeYiaP+Gc3FxK48fZM1brJk=;
+        b=qEc55IVMmEsUavJfxPZDuwCCtNoUIFAskaPUXdIVJVXsxzUGfo9d2JDJOE7zmeN6Ms
+         oUdgTPRqsSlHfsl8KtM2wUUaAYLW5txqEangZLH68nxj3/2O78DU71Gf/9TaHhLAuEly
+         c+mGD/0vCyUBpXSAZphUudz3kJ0NWWZcdpjz208EOmm9QMmQ7DEh0P8ebWDypbrmYO6/
+         7rMpolrTY2cRm5n5Z81v+JRGlt7i9upKf7iMF/gwbt9doGoeoqvS9sp5rTeX9oewn89L
+         NMs2YjfEZCqN943VxgcVa6qpt3LqV/pk9zqapJA07g5DfG1ilTk3NOLShNUwx/iyhjdq
+         l+Gw==
+X-Gm-Message-State: ANhLgQ0IM2aOGpyTcA9aEEsTSygxjUCYW1f9wWqlgpEvb1+JzjKF6jYp
+        LkB/5scHUOddn99WBPMrvz5GbZuH
+X-Google-Smtp-Source: ADFU+vvhIvZo++vpC2sEQ+aVp7I3JdDelQ2YEVzzpCKyvbHCRqADKg+N8Nc327lxhP0mF6a+vd3BKg==
+X-Received: by 2002:a05:6830:201a:: with SMTP id e26mr19198262otp.238.1584978443730;
+        Mon, 23 Mar 2020 08:47:23 -0700 (PDT)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id g5sm5424312oiy.27.2020.03.23.08.47.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Mar 2020 08:47:22 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 08:47:21 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Clement Courbet <courbet@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH]     x86: Alias memset to __builtin_memset.
+Message-ID: <20200323154721.GB40380@ubuntu-m2-xlarge-x86>
+References: <20200323114207.222412-1-courbet@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <871rpj9lay.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200323114207.222412-1-courbet@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 03:51:17PM +0100, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Mon, Mar 23, 2020 at 12:42:06PM +0100, 'Clement Courbet' via Clang Built Linux wrote:
+>     Recent compilers know the meaning of builtins (`memset`,
+>     `memcpy`, ...) and can replace calls by inline code when
+>     deemed better. For example, `memset(p, 0, 4)` will be lowered
+>     to a four-byte zero store.
 > 
-> > Signal VM-Fail for the single-context variant of INVEPT if the specified
-> > EPTP is invalid.  Per the INEVPT pseudocode in Intel's SDM, it's subject
-> > to the standard EPT checks:
-> >
-> >   If VM entry with the "enable EPT" VM execution control set to 1 would
-> >   fail due to the EPTP value then VMfail(Invalid operand to INVEPT/INVVPID);
-> >
-> > Fixes: bfd0a56b90005 ("nEPT: Nested INVEPT")
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > ---
-> >  arch/x86/kvm/vmx/nested.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> > index 8578513907d7..f3774cef4fd4 100644
-> > --- a/arch/x86/kvm/vmx/nested.c
-> > +++ b/arch/x86/kvm/vmx/nested.c
-> > @@ -5156,8 +5156,12 @@ static int handle_invept(struct kvm_vcpu *vcpu)
-> >  	}
-> >  
-> >  	switch (type) {
-> > -	case VMX_EPT_EXTENT_GLOBAL:
-> >  	case VMX_EPT_EXTENT_CONTEXT:
-> > +		if (!nested_vmx_check_eptp(vcpu, operand.eptp))
-> > +			return nested_vmx_failValid(vcpu,
-> > +				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
+>     When using -ffreestanding (this is the case e.g. building on
+>     clang), these optimizations are disabled. This means that **all**
+>     memsets, including those with small, constant sizes, will result
+>     in an actual call to memset.
 > 
-> I was going to ask "and we don't seem to check that current nested VMPTR
-> is valid, how can we know that nested_vmx_failValid() is the right
-> VMfail() to use" but then I checked our nested_vmx_failValid() and there
-> is a fallback there:
+>     We have identified several spots where we have high CPU usage
+>     because of this. For example, a single one of these memsets is
+>     responsible for about 0.3% of our total CPU usage in the kernel.
 > 
-> 	if (vmx->nested.current_vmptr == -1ull && !vmx->nested.hv_evmcs)
-> 		return nested_vmx_failInvalid(vcpu);
+>     Aliasing `memset` to `__builtin_memset` allows the compiler to
+>     perform this optimization even when -ffreestanding is used.
+>     There is no change when -ffreestanding is not used.
 > 
-> so this is a non-issue. My question, however, transforms into "would it
-> make sense to introduce nested_vmx_fail() implementing the logic from
-> SDM:
+>     Below is a diff (clang) for `update_sg_lb_stats()`, which
+>     includes the aforementionned hot memset:
+>         memset(sgs, 0, sizeof(*sgs));
 > 
-> VMfail(ErrorNumber):
-> 	IF VMCS pointer is valid
-> 		THEN VMfailValid(ErrorNumber);
-> 	ELSE VMfailInvalid;
-> 	FI;
+>     Diff:
+>         movq %rsi, %rbx        ~~~>  movq $0x0, 0x40(%r8)
+>         movq %rdi, %r15        ~~~>  movq $0x0, 0x38(%r8)
+>         movl $0x48, %edx       ~~~>  movq $0x0, 0x30(%r8)
+>         movq %r8, %rdi         ~~~>  movq $0x0, 0x28(%r8)
+>         xorl %esi, %esi        ~~~>  movq $0x0, 0x20(%r8)
+>         callq <memset>         ~~~>  movq $0x0, 0x18(%r8)
+>                                ~~~>  movq $0x0, 0x10(%r8)
+>                                ~~~>  movq $0x0, 0x8(%r8)
+>                                ~~~>  movq $0x0, (%r8)
 > 
+>     In terms of code size, this grows the clang-built kernel a
+>     bit (+0.022%):
+>     440285512 vmlinux.clang.after
+>     440383608 vmlinux.clang.before
+> 
+> Signed-off-by: Clement Courbet <courbet@google.com>
+> ---
+>  arch/x86/include/asm/string_64.h | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
+> index 75314c3dbe47..7073c25aa4a3 100644
+> --- a/arch/x86/include/asm/string_64.h
+> +++ b/arch/x86/include/asm/string_64.h
+> @@ -18,6 +18,15 @@ extern void *__memcpy(void *to, const void *from, size_t len);
+>  void *memset(void *s, int c, size_t n);
+>  void *__memset(void *s, int c, size_t n);
+>  
+> +/* Recent compilers can generate much better code for known size and/or
+> + * fill values, and will fallback on `memset` if they fail.
+> + * We alias `memset` to `__builtin_memset` explicitly to inform the compiler to
+> + * perform this optimization even when -ffreestanding is used.
+> + */
+> +#if (__GNUC__ >= 4)
 
-Hmm, I wouldn't be opposed to such a wrapper.  It would pair with
-nested_vmx_succeed().
+This ifdef is unnecessary, this will always be true because the minimum
+supported GCC version is 4.6 and clang pretends it is 4.2.1. It appears
+the Intel compiler will pretend to be whatever whatever GCC version the
+host is using (no idea if it is still used by anyone or truly supported
+but still worth mentioning) so it would still always be true because of
+the GCC 4.6 requirement.
 
-> 
-> > +		fallthrough;
-> > +	case VMX_EPT_EXTENT_GLOBAL:
-> >  	/*
-> >  	 * TODO: Sync the necessary shadow EPT roots here, rather than
-> >  	 * at the next emulated VM-entry.
-> 
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> 
+I cannot comment on the validity of the patch even though the reasoning
+seems sound to me.
+
+Cheers,
+Nathan
+
+> +#define memset(s, c, count) __builtin_memset(s, c, count)
+> +#endif
+> +
+>  #define __HAVE_ARCH_MEMSET16
+>  static inline void *memset16(uint16_t *s, uint16_t v, size_t n)
+>  {
+> @@ -74,6 +83,7 @@ int strcmp(const char *cs, const char *ct);
+>  #undef memcpy
+>  #define memcpy(dst, src, len) __memcpy(dst, src, len)
+>  #define memmove(dst, src, len) __memmove(dst, src, len)
+> +#undef memset
+>  #define memset(s, c, n) __memset(s, c, n)
+>  
+>  #ifndef __NO_FORTIFY
 > -- 
-> Vitaly
+> 2.25.1.696.g5e7596f4ac-goog
 > 
