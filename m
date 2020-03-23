@@ -2,109 +2,71 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC04C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FFEC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404E320714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:55:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DcupFgfR"
+	by mail.kernel.org (Postfix) with ESMTP id 84AAC20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbgCWPy7 (ORCPT
+        id S1727356AbgCWPzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:54:59 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:34442 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727202AbgCWPy6 (ORCPT
+        Mon, 23 Mar 2020 11:55:02 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:59865 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727267AbgCWPzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:54:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584978898;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aONbZkW7VTtlNQ7IX/OP6HCvxPbDTjsQv8h6JUzUnHw=;
-        b=DcupFgfRD/LTA1e5rN6ma/k+cmMcZNVu9B3iwubyfX2QYPS0gJPH2ivaCgV+FxjXEUZNOM
-        ibBSXqpaxa69SWBGNnJAwAMKRqg3Z2IQVPcWfjkZCleJD9CSJOzA0HNu3lfE5qS//Sto75
-        rHM5a/Qjed83xCfixnZpCTpttGTJQRE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-285-8D5ohllOMACo1HLXscfZ1Q-1; Mon, 23 Mar 2020 11:54:56 -0400
-X-MC-Unique: 8D5ohllOMACo1HLXscfZ1Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D86F6800D54;
-        Mon, 23 Mar 2020 15:54:54 +0000 (UTC)
-Received: from optiplex-lnx (unknown [10.33.36.220])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F1CC919C4F;
-        Mon, 23 Mar 2020 15:54:52 +0000 (UTC)
-Date:   Mon, 23 Mar 2020 11:54:49 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org
-Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
- false-negative errors
-Message-ID: <20200323155449.GG23364@optiplex-lnx>
-References: <20200322020326.GB1068248@t490s>
- <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
- <CALvZod7LiMiK1JtfdvvU3W36cGSUKhhKf6dMZpsNZv6nMiJ5=g@mail.gmail.com>
- <20200323075208.GC7524@dhcp22.suse.cz>
- <20200323144240.GB23364@optiplex-lnx>
- <20200323145106.GM7524@dhcp22.suse.cz>
- <20200323150259.GD23364@optiplex-lnx>
- <20200323151256.GP7524@dhcp22.suse.cz>
- <20200323154159.GF23364@optiplex-lnx>
- <20200323155111.GQ7524@dhcp22.suse.cz>
+        Mon, 23 Mar 2020 11:55:00 -0400
+Received: (qmail 27965 invoked by uid 500); 23 Mar 2020 11:54:59 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 23 Mar 2020 11:54:59 -0400
+Date:   Mon, 23 Mar 2020 11:54:59 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Oliver Neukum <oneukum@suse.de>
+cc:     Qais Yousef <qais.yousef@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+In-Reply-To: <1584977769.27949.18.camel@suse.de>
+Message-ID: <Pine.LNX.4.44L0.2003231151390.24254-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323155111.GQ7524@dhcp22.suse.cz>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 04:51:11PM +0100, Michal Hocko wrote:
-> On Mon 23-03-20 11:41:59, Rafael Aquini wrote:
-> > On Mon, Mar 23, 2020 at 04:12:56PM +0100, Michal Hocko wrote:
-> > > On Mon 23-03-20 11:02:59, Rafael Aquini wrote:
-> [...]
-> > > > The selftest also checks the kernel visible effect, via
-> > > > /proc/kpageflags, and that's where it fails after 9c4e6b1a7027f.
-> > > 
-> > > I really fail to see your point. Even if you are right that the self
-> > > test is somehow evaluating the kernel implementation which I am not sure
-> > > is the scope of the selft thest but anyway. The mere fact that the
-> > > kernel test fails on a perfectly valid change should just suggest that
-> > > the test is leading to false positives and therefore should be fixed.
-> > > Your proposed fix is simply suboptimal because it relies on yet another
-> > > side effect which might change anytime in the future and still lead to a
-> > > correctly behaving kernel. See my point?
-> > >
+On Mon, 23 Mar 2020, Oliver Neukum wrote:
+
+> Am Montag, den 23.03.2020, 14:38 +0000 schrieb Qais Yousef:
+> > Hi
 > > 
-> > OK, I concede your point on the bogusness of checking the page flags in
-> > this particular test and expect certain valuse there, given that no other 
-> > selftest seems to be doing that level of inner kenrel detail scrutiny.
+> > I've hit the following lockdep warning when I trigger hibernate on arm64
+> > platform (Juno-r2)
 > > 
-> > I'll repost this fix suggestion getting rif of those related
-> > checkpoints.
+> > 
+> > 	echo suspend > /sys/power/disk
+> > 	echo disk > /sys/power/state
+> > 
+> > I only had a usb flash drive attached to it. Let me know if you need more info.
 > 
-> Here is what I have after I had to context switch to something else
-> before finishing it. Feel free to reuse if you feel like. It is likely
-> to not even compile.
->
+> Hi,
+> 
+> that is not a lockdep issue, but the hub driver is not properly killing
+> its URB presumably. Yet, the driver looks correct to me. Please use
+> the additional patch and activate dynamic debugging for usbcore.
 
-I'm OK with it, if you want to go ahead and do the kill.
+Was the USB flash drive being used as a swap device for holding the 
+hibernation image?  That's not likely to work very well.  At least, I 
+doubt that it has been tested very much.
 
-Thanks 
--- Rafael
+This diagnostic was suggested by the runtime PM error that occurred 
+when the system was trying to store the hibernation image.  That's 
+probably when the hub driver's URB got restarted.
+
+Alan Stern
 
