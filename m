@@ -2,285 +2,113 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0619BC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 861B0C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C84B72076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE4C2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:11:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dD0eXVvu"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MMBY7IqQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgCWRLN (ORCPT
+        id S1727717AbgCWRL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:11:13 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:59934 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727743AbgCWRLJ (ORCPT
+        Mon, 23 Mar 2020 13:11:57 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:39651 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727111AbgCWRL4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:11:09 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NH94Cp018203;
-        Mon, 23 Mar 2020 17:11:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=2wHsr8EVvBw92F+gOYMJOtWc9nDb5xvEIXN8o348KFE=;
- b=dD0eXVvud3iPbAhBVvHWDiWCiyrrodPkfbNeM9Bz3ly1RKNMh+3LTuoNW7I8m1/9G+uw
- 27I/+wqA4yZN8fkKs2HfpptriQ18erp/7PckId9uWTipAjaG/6Bbc8881ysn7lx/nxZl
- NjNVHrCduhocPzM1s27YBlfUXu0c6HQ2I0WON3+MI6LONVQufOhPZj/dQQitmylJbp73
- 2XFvJEnt6zhTgCOxItmsiGcU/JaxoOoKqJ2rAgfjDu/3RvfA+sAswqKzaWqavOJX3F1x
- uaUTOgAkY+854ZxdakrYQSSyDch64ZbPLREWESJxQc4M1Cp/OmRkQLZfNg1FSoQADCsx EA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2ywavkyv38-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Mar 2020 17:11:04 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NGvgtN163221;
-        Mon, 23 Mar 2020 17:11:03 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2yxw7fx2wr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Mar 2020 17:11:03 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02NHB2EH009873;
-        Mon, 23 Mar 2020 17:11:02 GMT
-Received: from localhost.uk.oracle.com (/10.175.192.214)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 23 Mar 2020 10:11:02 -0700
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     brendanhiggins@google.com, shuah@kernel.org,
-        trishalfonso@google.com
-Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        Mon, 23 Mar 2020 13:11:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584983515; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=IEMZZMwit8jGQ6JtBKx5Pm5tAMO0Zqopsic27Lhl0m4=;
+ b=MMBY7IqQny/B9qxg8WExhjmhHae4uUQSFuH0hA4XQ5WwAmi6FbYDp7COGPXOVHEPAR6jG9/A
+ wuVLDCUKS+Qur+QG5sdJTU889nbtadNFKrIV9ClHY9LfncK3FtA36DyYNiXzMrGtiP721Hup
+ TysORdu8gHT2m0IIZNf3btLjZ1Q=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e78edda.7f27cb6a4998-smtp-out-n05;
+ Mon, 23 Mar 2020 17:11:54 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2DDD6C43636; Mon, 23 Mar 2020 17:11:53 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 56213C433CB;
+        Mon, 23 Mar 2020 17:11:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 56213C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] wireless: marvell: Replace zero-length array with
+ flexible-array member
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200225020413.GA8057@embeddedor>
+References: <20200225020413.GA8057@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Lennert Buytenhek <buytenh@wantstofly.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v2 kunit-next 2/2] kunit: add support for named resources
-Date:   Mon, 23 Mar 2020 17:10:43 +0000
-Message-Id: <1584983443-27456-3-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1584983443-27456-1-git-send-email-alan.maguire@oracle.com>
-References: <1584983443-27456-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=965 spamscore=0
- adultscore=0 phishscore=0 suspectscore=2 malwarescore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003230090
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1015 impostorscore=0
- phishscore=0 suspectscore=2 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003230090
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200323171153.2DDD6C43636@smtp.codeaurora.org>
+Date:   Mon, 23 Mar 2020 17:11:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kunit resources API allows for custom initialization and
-cleanup code (init/fini); here we use the init code to set the
-new "struct kunit_resource" "name" field, and call an additional
-init function if needed.  Having a simple way to name resources
-is useful in cases such as multithreaded tests where a set of
-resources are shared among threads; a pointer to the
-"struct kunit *" test state then is all that is needed to
-retrieve and use named resources.  Support is provided to add,
-find and destroy named resources; the latter two are simply
-wrappers that use a "match-by-name" callback.
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 
-If an attempt to add a resource with a name that already exists
-is made kunit_add_named_resource() will return -EEXIST.
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
----
- include/kunit/test.h   | 49 ++++++++++++++++++++++++++++++++++++++++++++++++-
- lib/kunit/kunit-test.c | 37 +++++++++++++++++++++++++++++++++++++
- lib/kunit/test.c       | 24 ++++++++++++++++++++++++
- 3 files changed, 109 insertions(+), 1 deletion(-)
+Patch applied to wireless-drivers-next.git, thanks.
 
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index 4608ff0..9a1ee97 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -72,10 +72,15 @@
-  *		return kunit_alloc_resource(test, kunit_kmalloc_init,
-  *			kunit_kmalloc_free, &params);
-  *	}
-+ *
-+ * Resources can also be named, with lookup/removal done on a name
-+ * basis also.  kunit_add_named_resource(), kunit_find_named_resource()
-+ * and kunit_destroy_named_resource() below.  Resource names must be
-+ * unique within the test instance.
-  */
- struct kunit_resource {
- 	void *data;
--
-+	const char *name;		/* optional name */
- 	/* private: internal use only. */
- 	kunit_resource_init_t init;
- 	kunit_resource_free_t free;
-@@ -282,6 +287,21 @@ int kunit_add_resource(struct kunit *test,
- 		       kunit_resource_free_t free,
- 		       struct kunit_resource *res,
- 		       void *data);
-+
-+/**
-+ * kunit_add_named_resource() - Add a named *test managed resource*.
-+ * @test: The test context object.
-+ * @init: a user-supplied function to initialize the resource data, if needed.
-+ * @free: a user-supplied function to free the resource data, if needed.
-+ * @name_data: name and data to be set for resource.
-+ */
-+int kunit_add_named_resource(struct kunit *test,
-+			     kunit_resource_init_t init,
-+			     kunit_resource_free_t free,
-+			     struct kunit_resource *res,
-+			     const char *name,
-+			     void *data);
-+
- /**
-  * kunit_alloc_resource() - Allocates a *test managed resource*.
-  * @test: The test context object.
-@@ -337,6 +357,19 @@ static inline bool kunit_resource_instance_match(struct kunit *test,
- }
- 
- /**
-+ * kunit_resource_name_match() - Match a resource with the same name.
-+ * @test: Test case to which the resource belongs.
-+ * @res: The resource.
-+ * @match_name: The name to match against.
-+ */
-+static inline bool kunit_resource_name_match(struct kunit *test,
-+					     struct kunit_resource *res,
-+					     void *match_name)
-+{
-+	return res->name && strcmp(res->name, match_name) == 0;
-+}
-+
-+/**
-  * kunit_find_resource() - Find a resource using match function/data.
-  * @test: Test case to which the resource belongs.
-  * @match: match function to be applied to resources/match data.
-@@ -346,6 +379,14 @@ struct kunit_resource *kunit_find_resource(struct kunit *test,
- 					   kunit_resource_match_t match,
- 					   void *match_data);
- 
-+static inline struct kunit_resource *kunit_find_named_resource(
-+					struct kunit *test,
-+					const char *name)
-+{
-+	return kunit_find_resource(test, kunit_resource_name_match,
-+				   (void *)name);
-+}
-+
- /**
-  * kunit_destroy_resource() - Find a kunit_resource and destroy it.
-  * @test: Test case to which the resource belongs.
-@@ -359,6 +400,12 @@ int kunit_destroy_resource(struct kunit *test,
- 			   kunit_resource_match_t match,
- 			   void *match_data);
- 
-+static inline int kunit_destroy_named_resource(struct kunit *test,
-+					       const char *name)
-+{
-+	return kunit_destroy_resource(test, kunit_resource_name_match,
-+				      (void *)name);
-+}
- 
- /**
-  * kunit_remove_resource: remove resource from resource list associated with
-diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
-index 718ef4c..6463587 100644
---- a/lib/kunit/kunit-test.c
-+++ b/lib/kunit/kunit-test.c
-@@ -325,6 +325,42 @@ static void kunit_resource_test_static(struct kunit *test)
- 	KUNIT_EXPECT_TRUE(test, list_empty(&test->resources));
- }
- 
-+static void kunit_resource_test_named(struct kunit *test)
-+{
-+	struct kunit_resource res1, res2, *found = NULL;
-+	struct kunit_test_resource_context ctx;
-+
-+	KUNIT_EXPECT_EQ(test,
-+			kunit_add_named_resource(test, NULL, NULL, &res1,
-+						 "resource_1", &ctx),
-+			0);
-+	KUNIT_EXPECT_PTR_EQ(test, res1.data, (void *)&ctx);
-+
-+	KUNIT_EXPECT_EQ(test,
-+			kunit_add_named_resource(test, NULL, NULL, &res1,
-+						 "resource_1", &ctx),
-+			-EEXIST);
-+
-+	KUNIT_EXPECT_EQ(test,
-+			kunit_add_named_resource(test, NULL, NULL, &res2,
-+						 "resource_2", &ctx),
-+			0);
-+
-+	found = kunit_find_named_resource(test, "resource_1");
-+
-+	KUNIT_EXPECT_PTR_EQ(test, found, &res1);
-+
-+	if (found)
-+		kunit_put_resource(&res1);
-+
-+	KUNIT_EXPECT_EQ(test, kunit_destroy_named_resource(test, "resource_2"),
-+			0);
-+
-+	kunit_cleanup(test);
-+
-+	KUNIT_EXPECT_TRUE(test, list_empty(&test->resources));
-+}
-+
- static int kunit_resource_test_init(struct kunit *test)
- {
- 	struct kunit_test_resource_context *ctx =
-@@ -354,6 +390,7 @@ static void kunit_resource_test_exit(struct kunit *test)
- 	KUNIT_CASE(kunit_resource_test_cleanup_resources),
- 	KUNIT_CASE(kunit_resource_test_proper_free_ordering),
- 	KUNIT_CASE(kunit_resource_test_static),
-+	KUNIT_CASE(kunit_resource_test_named),
- 	{}
- };
- 
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index 49d9e80..029a5b7 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -382,6 +382,30 @@ int kunit_add_resource(struct kunit *test,
- }
- EXPORT_SYMBOL_GPL(kunit_add_resource);
- 
-+int kunit_add_named_resource(struct kunit *test,
-+			     kunit_resource_init_t init,
-+			     kunit_resource_free_t free,
-+			     struct kunit_resource *res,
-+			     const char *name,
-+			     void *data)
-+{
-+	struct kunit_resource *existing;
-+
-+	if (!name)
-+		return -EINVAL;
-+
-+	existing = kunit_find_named_resource(test, name);
-+	if (existing) {
-+		kunit_put_resource(existing);
-+		return -EEXIST;
-+	}
-+
-+	res->name = name;
-+
-+	return kunit_add_resource(test, init, free, res, data);
-+}
-+EXPORT_SYMBOL_GPL(kunit_add_named_resource);
-+
- struct kunit_resource *kunit_alloc_and_get_resource(struct kunit *test,
- 						    kunit_resource_init_t init,
- 						    kunit_resource_free_t free,
+2a6be797d232 wireless: marvell: Replace zero-length array with flexible-array member
+
 -- 
-1.8.3.1
+https://patchwork.kernel.org/patch/11402409/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
