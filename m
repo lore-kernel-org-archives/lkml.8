@@ -2,160 +2,156 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDDEC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C8EC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8303620722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20FE720722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:17:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="TeUavIPY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgCWRRq convert rfc822-to-8bit (ORCPT
+        id S1727854AbgCWRRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:17:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:52280 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726982AbgCWRRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:17:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FF781FB;
+        Mon, 23 Mar 2020 13:17:48 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42368 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727650AbgCWRRr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 13:17:47 -0400
+Received: by mail-qt1-f193.google.com with SMTP id t9so8396630qto.9
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 10:17:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5UPSbpkPmie9GnveloVGF9xAODR3WB+FmPL6STYIGmc=;
+        b=TeUavIPYFPLLqG/YaNLT3tjSeohe+zeYsi+/hQqhjeL3hrswyeziREW5u6eRWYe4Ni
+         kJASgeDjr2RVDtA9njTLtIeOWrdov4NpKmJmkWL7HBL2Ra0gqpGNrXV3KUj73gFgzCd9
+         /OIxrBwjc0Blky9EdkhAKHS8kvVkpJSpFdZayB18qCSAzPCjhAn7VGgsTbtTUdR/rTjE
+         /CqgIMZhscCPLFSLFr10JPMzAFzgpFiHg4gB7VJaOI82SxNYm/8EjtfpkGyT0W5CPxIH
+         4Ud0euudcDhHcIFCE//XhdDxajDBWjq84tN/HZBhultz48iEt79YEdP4Trpjbt2izzPi
+         UHJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5UPSbpkPmie9GnveloVGF9xAODR3WB+FmPL6STYIGmc=;
+        b=VEiWDvCunUlVL0scdtWrxi6qYpyfsba3z4qUZ3h0JyoZouPC9MIbCz5autVCgmbOES
+         cnMe7fetw6NzwRKCK4gALNtCiiMydt1ZFK3VKzIex36fxqkDIZOuIGMIZytvQi9J8QuU
+         GD4BnwnE3UGqEOpPInJxSDmHLuXZi4eHPfh1RoYVvFlDy9zguPBu/AzwjqFQX6DP1byY
+         C+kqqDTaOmVk98iYHuaergixC9TQawR1GlcH4OJCXFoqMTMn2yDtlb9iqzzXljVBiNX6
+         Knq/RUdc06xMm4A+Fw7rS8xhAVf52kq0nxpi/i4/Mwbu91wuoP+8+ejA5nYPe2MQw6qb
+         iNQA==
+X-Gm-Message-State: ANhLgQ0wCTjW6CO83OezatmtxtzGOeBM8C0ckEOxt17wygsDruObKe/G
+        LndGdDxCdUPWrt/dFJQkIYMblg==
+X-Google-Smtp-Source: ADFU+vsAk4UOKfLs+QsERk4rLmrDQwGvdl/zE/znH/FEK9q9YQ2sMzaUTlOvlm0ybx5t1hU5lZWeFQ==
+X-Received: by 2002:ac8:4e24:: with SMTP id d4mr22504101qtw.307.1584983866330;
+        Mon, 23 Mar 2020 10:17:46 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:a9a9])
+        by smtp.gmail.com with ESMTPSA id v126sm11586447qkb.107.2020.03.23.10.17.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 23 Mar 2020 10:17:45 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1C873F7C3;
-        Mon, 23 Mar 2020 10:17:44 -0700 (PDT)
-References: <20200311181601.18314-1-valentin.schneider@arm.com> <20200311181601.18314-4-valentin.schneider@arm.com> <c74a32d9-e40c-b976-be19-9ceea91d6fa7@arm.com> <jhjv9n0o8hf.mognet@arm.com> <5decd96b-6fe0-3c35-4609-59378a0c8621@arm.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        peterz@infradead.org, vincent.guittot@linaro.org
-Subject: Re: [PATCH v2 3/9] sched: Remove checks against SD_LOAD_BALANCE
-In-reply-to: <5decd96b-6fe0-3c35-4609-59378a0c8621@arm.com>
-Date:   Mon, 23 Mar 2020 17:17:42 +0000
-Message-ID: <jhjwo7bkn2h.mognet@arm.com>
+Date:   Mon, 23 Mar 2020 13:17:44 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [PATCH v4 6/8] mm/swap: implement workingset detection for
+ anonymous LRU
+Message-ID: <20200323171744.GD204561@cmpxchg.org>
+References: <1584942732-2184-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1584942732-2184-7-git-send-email-iamjoonsoo.kim@lge.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584942732-2184-7-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 23, 2020 at 02:52:10PM +0900, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> This patch implements workingset detection for anonymous LRU.
+> All the infrastructure is implemented by the previous patches so this patch
+> just activates the workingset detection by installing/retrieving
+> the shadow entry.
+> 
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> ---
+>  include/linux/swap.h |  6 ++++++
+>  mm/memory.c          |  7 ++++++-
+>  mm/swap_state.c      | 20 ++++++++++++++++++--
+>  mm/vmscan.c          |  7 +++++--
+>  4 files changed, 35 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index 273de48..fb4772e 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -408,6 +408,7 @@ extern struct address_space *swapper_spaces[];
+>  extern unsigned long total_swapcache_pages(void);
+>  extern void show_swap_cache_info(void);
+>  extern int add_to_swap(struct page *page);
+> +extern void *get_shadow_from_swap_cache(swp_entry_t entry);
+>  extern int add_to_swap_cache(struct page *page, swp_entry_t entry,
+>  			gfp_t gfp, void **shadowp);
+>  extern int __add_to_swap_cache(struct page *page, swp_entry_t entry);
+> @@ -566,6 +567,11 @@ static inline int add_to_swap(struct page *page)
+>  	return 0;
+>  }
+>  
+> +static inline void *get_shadow_from_swap_cache(swp_entry_t entry)
+> +{
+> +	return NULL;
+> +}
+> +
+>  static inline int add_to_swap_cache(struct page *page, swp_entry_t entry,
+>  					gfp_t gfp_mask, void **shadowp)
+>  {
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 5f7813a..91a2097 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -2925,10 +2925,15 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>  			page = alloc_page_vma(GFP_HIGHUSER_MOVABLE, vma,
+>  							vmf->address);
+>  			if (page) {
+> +				void *shadow;
+> +
+>  				__SetPageLocked(page);
+>  				__SetPageSwapBacked(page);
+>  				set_page_private(page, entry.val);
+> -				lru_cache_add_anon(page);
+> +				shadow = get_shadow_from_swap_cache(entry);
+> +				if (shadow)
+> +					workingset_refault(page, shadow);
 
-On Mon, Mar 23 2020, Dietmar Eggemann wrote:
+Hm, this is calling workingset_refault() on a page that isn't charged
+to a cgroup yet. That means the refault stats and inactive age counter
+will be bumped incorrectly in the root cgroup instead of the real one.
 
-> On 19.03.20 13:05, Valentin Schneider wrote:
->>
->> On Thu, Mar 19 2020, Dietmar Eggemann wrote:
->>> On 11.03.20 19:15, Valentin Schneider wrote:
->
-> [...]
->
->> Your comments make me realize that changelog isn't great, what about the
->> following?
->>
->> ---
->>
->> The SD_LOAD_BALANCE flag is set unconditionally for all domains in
->> sd_init(). By making the sched_domain->flags syctl interface read-only, we
->> have removed the last piece of code that could clear that flag - as such,
->> it will now be always present. Rather than to keep carrying it along, we
->> can work towards getting rid of it entirely.
->>
->> cpusets don't need it because they can make CPUs be attached to the NULL
->> domain (e.g. cpuset with sched_load_balance=0), or to a partitionned
->
-> s/partitionned/partitioned
->
->> root_domain, i.e. a sched_domain hierarchy that doesn't span the entire
->> system (e.g. root cpuset with sched_load_balance=0 and sibling cpusets with
->> sched_load_balance=1).
->>
->> isolcpus apply the same "trick": isolated CPUs are explicitly taken out of
->> the sched_domain rebuild (using housekeeping_cpumask()), so they get the
->> NULL domain treatment as well.
->>
->> Remove the checks against SD_LOAD_BALANCE.
->
-> Sounds better to me:
->
-> Essentially, I was referring to examples like:
->
-> Hikey960 - 2x4
->
-> (A) exclusive cpusets:
->
-> root@h960:/sys/fs/cgroup/cpuset# mkdir cs1
-> root@h960:/sys/fs/cgroup/cpuset# echo 1 > cs1/cpuset.cpu_exclusive
-> root@h960:/sys/fs/cgroup/cpuset# echo 0 > cs1/cpuset.mems
-> root@h960:/sys/fs/cgroup/cpuset# echo 0-2 > cs1/cpuset.cpus
-> root@h960:/sys/fs/cgroup/cpuset# mkdir cs2
-> root@h960:/sys/fs/cgroup/cpuset# echo 1 > cs2/cpuset.cpu_exclusive
-> root@h960:/sys/fs/cgroup/cpuset# echo 0 > cs2/cpuset.mems
-> root@h960:/sys/fs/cgroup/cpuset# echo 3-5 > cs2/cpuset.cpus
-> root@h960:/sys/fs/cgroup/cpuset# echo 0 > cpuset.sched_load_balance
->
+> +				lru_cache_add(page);
+>  				swap_readpage(page, true);
+>  			}
+>  		} else {
 
-AFAICT you don't even have to bother with cpuset.cpu_exclusive if you
-only care about the end-result wrt sched_domains.
+You need to look up and remember the shadow entry at the top and call
+workingset_refault() after mem_cgroup_commit_charge() has run.
 
-> root@h960:/proc/sys/kernel# tree -d sched_domain
->
-> ├── cpu0
-> │   └── domain0
-> ├── cpu1
-> │   └── domain0
-> ├── cpu2
-> │   └── domain0
-> ├── cpu3
-> │   └── domain0
-> ├── cpu4
-> │   ├── domain0
-> │   └── domain1
-> ├── cpu5
-> │   ├── domain0
-> │   └── domain1
-> ├── cpu6
-> └── cpu7
->
-> (B) non-exclusive cpuset:
->
-> root@h960:/sys/fs/cgroup/cpuset# echo 0 > cpuset.sched_load_balance
->
-> [ 8661.240385] CPU1 attaching NULL sched-domain.
-> [ 8661.244802] CPU2 attaching NULL sched-domain.
-> [ 8661.249255] CPU3 attaching NULL sched-domain.
-> [ 8661.253623] CPU4 attaching NULL sched-domain.
-> [ 8661.257989] CPU5 attaching NULL sched-domain.
-> [ 8661.262363] CPU6 attaching NULL sched-domain.
-> [ 8661.266730] CPU7 attaching NULL sched-domain.
->
-> root@h960:/sys/fs/cgroup/cpuset# mkdir cs1
-> root@h960:/sys/fs/cgroup/cpuset# echo 0-5 > cs1/cpuset.cpus
->
-> root@h960:/proc/sys/kernel# tree -d sched_domain
->
-> ├── cpu0
-> │   ├── domain0
-> │   └── domain1
-> ├── cpu1
-> │   ├── domain0
-> │   └── domain1
-> ├── cpu2
-> │   ├── domain0
-> │   └── domain1
-> ├── cpu3
-> │   ├── domain0
-> │   └── domain1
-> ├── cpu4
-> │   ├── domain0
-> │   └── domain1
-> ├── cpu5
-> │   ├── domain0
-> │   └── domain1
-> ├── cpu6
-> └── cpu7
-
-I think my updated changelog covers those cases, right?
+It'd be nice if we could do the shadow lookup for everybody in
+lookup_swap_cache(), but that's subject to race conditions if multiple
+faults on the same swap page happen in multiple vmas concurrently. The
+swapcache bypass scenario is only safe because it checks that there is
+a single pte under the mmap sem to prevent forking. So it looks like
+you have to bubble up the shadow entry through swapin_readahead().
