@@ -2,134 +2,110 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3565FC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4302C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13F1E2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75DED20771
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:55:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="E0yd7jBH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgCWOyq convert rfc822-to-8bit (ORCPT
+        id S1727130AbgCWOza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:54:46 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:57480 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725710AbgCWOyp (ORCPT
+        Mon, 23 Mar 2020 10:55:30 -0400
+Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:5282 "EHLO
+        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbgCWOz3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:54:45 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id uk-mta-2-iYJu0SDqM9iMX_bcm93M5w-1;
- Mon, 23 Mar 2020 14:54:41 +0000
-X-MC-Unique: iYJu0SDqM9iMX_bcm93M5w-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 23 Mar 2020 14:54:40 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 23 Mar 2020 14:54:40 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Melissa Wen' <melissa.srw@gmail.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "Rodrigo.Siqueira@amd.com" <Rodrigo.Siqueira@amd.com>
-CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] drm/vkms: use bitfield op to get xrgb on compute crc
-Thread-Topic: [PATCH] drm/vkms: use bitfield op to get xrgb on compute crc
-Thread-Index: AQHV/8B1smDC5j2GuEKWS+RWmHzqeKhWQ8Aw
-Date:   Mon, 23 Mar 2020 14:54:40 +0000
-Message-ID: <d82c4d909a2d4921941121ba60aa91c9@AcuMS.aculab.com>
-References: <20200321203640.dwyk25jvnn2rffpw@smtp.gmail.com>
-In-Reply-To: <20200321203640.dwyk25jvnn2rffpw@smtp.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 23 Mar 2020 10:55:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1584975329;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=lBVVrBypVz+RADchWAvVwdaNJBZHScOt3Cc1rORYDdI=;
+  b=E0yd7jBHfDprI9Yvwf14vyp1Ld6j2+CWTLhYs55yqRAqN6edcTI0x+1o
+   YnrfqpnOrBZk/qndUXjkGjsRTsgiMBehih2o/jiuHwV3bVJdSDi2omk4Z
+   NTt6r9mB8f05jApUSY2oHOCKc5gM4RO1ZR375j00y8nMgRz7TwC4rD9ym
+   Y=;
+Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa4.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: LufU9WBY251XB+4L29AisBql4KftCAViZA91z6ekHJUun8XztQ5VLTDD6QOQnumWlhlQQz5qdh
+ ViLl+cJqzd00AKgXop8Fsz4Aq4zi+Bp/B7SYLbiis8nhA5xVtMm0ZqnujSruIK+Dy5xuBNLC/2
+ 5UO4lElqyMQ7hHRML/AfC0itKUN+pMSRqvaUGUxkbaXkrY7w4cNHTogb45wa8eH6PMLzzMYnrK
+ uyoQrBnn/NJnP4y2udfj7H2Ly+gjzE7D6R1l+AzcNd+uyWyMsR0JqHUUH1MVlmmiTiS4K4J0YY
+ 7bk=
+X-SBRS: 2.7
+X-MesageID: 15118429
+X-Ironport-Server: esa4.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.72,296,1580792400"; 
+   d="scan'208";a="15118429"
+Date:   Mon, 23 Mar 2020 15:55:22 +0100
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>
+CC:     <xen-devel@lists.xenproject.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        "Stefano Stabellini" <sstabellini@kernel.org>,
+        Simon Gaiser <simon@invisiblethingslab.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] xen-pciback: fix INTERRUPT_TYPE_* defines
+Message-ID: <20200323145522.GC24458@Air-de-Roger.citrite.net>
+References: <20200320030929.24735-1-marmarek@invisiblethingslab.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200320030929.24735-1-marmarek@invisiblethingslab.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Melissa Wen
-> Sent: 21 March 2020 20:37
-> The previous memset operation was not correctly setting zero on the
-> alpha channel to compute the crc, and as a result, the
-> pipe-A-cursor-alpha-transparent subtest of the IGT test kms_cursor_crc
-> was crashing. To avoid errors of misinterpretation related to
-> endianness, this solution uses a bitfield operation to extract the RGB
-> values from each pixel and ignores the alpha channel as expected.
+On Fri, Mar 20, 2020 at 04:09:18AM +0100, Marek Marczykowski-Górecki wrote:
+> xen_pcibk_get_interrupt_type() assumes INTERRUPT_TYPE_NONE being 0
+> (initialize ret to 0 and return as INTERRUPT_TYPE_NONE).
+> Fix the definition to make INTERRUPT_TYPE_NONE really 0, and also shift
+> other values to not leave holes.
+> But also, do not assume INTERRUPT_TYPE_NONE being 0 anymore to avoid
+> similar confusions in the future.
 > 
-> Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
-> ---
->  drivers/gpu/drm/vkms/vkms_composer.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-> index 4af2f19480f4..8c1c005bb717 100644
-> --- a/drivers/gpu/drm/vkms/vkms_composer.c
-> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0+
-> 
->  #include <linux/crc32.h>
-> +#include <linux/bitfield.h>
-> 
->  #include <drm/drm_atomic.h>
->  #include <drm/drm_atomic_helper.h>
-> @@ -9,6 +10,8 @@
-> 
->  #include "vkms_drv.h"
-> 
-> +#define XRGB_MSK GENMASK(23, 0)
-> +
->  /**
->   * compute_crc - Compute CRC value on output frame
->   *
-> @@ -26,6 +29,7 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
->  	int h_src = drm_rect_height(&composer->src) >> 16;
->  	int w_src = drm_rect_width(&composer->src) >> 16;
->  	u32 crc = 0;
-> +	u32 *pixel;
-> 
->  	for (i = y_src; i < y_src + h_src; ++i) {
->  		for (j = x_src; j < x_src + w_src; ++j) {
-> @@ -33,7 +37,8 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
->  				     + (i * composer->pitch)
->  				     + (j * composer->cpp);
->  			/* XRGB format ignores Alpha channel */
-> -			memset(vaddr_out + src_offset + 24, 0,  8);
-> +			pixel = vaddr_out + src_offset;
-> +			*pixel = FIELD_GET(XRGB_MSK, *(u32 *)pixel);
->  			crc = crc32_le(crc, vaddr_out + src_offset,
->  				       sizeof(u32));
+> Fixes: 476878e4b2be ("xen-pciback: optionally allow interrupt enable flag writes")
+> Signed-off-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
 
-That looks horrid.
-I suspect the simplest fix is to change the memset() offset/length
-to bytes from bits.
-Or (assuming the alpha channel is last) just:
-	*(u8 *)(vaddr_out + src_offset + 3) = 0;
-I'm not sure of the options for the crc code, but if you are only
-passing in 4 bytes there ought to be an option to pass in the value
-itself (rather than the address).
+Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
 
-Do you actually want to 'zap' the alpha channel data from the
-output buffer? or just exclude it from the crc??
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Thanks, Roger.
