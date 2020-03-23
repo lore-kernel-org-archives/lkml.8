@@ -2,125 +2,94 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9671C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5C0C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA4672070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:50:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584993005;
-	bh=DBUGYNMli+b+uV3NamoWPc9K2HPz/ws+6gKUkNUTaS8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Pk8oZ3dVDovGjbH4b+wGZ7fJgH8LvprQ/YFfxcvWprpE4jL+b7BT0YgvWAsUyiUhm
-	 YL6RhyoY0SAQA09WWuH52ZDoUXktyEovirNB1RbWuhLD3kIqdAa3eZaVTPJx+VvOVV
-	 V5CnblIKDVFdGWFGYIKtofvRtkVNBYPMZSF+nosE=
+	by mail.kernel.org (Postfix) with ESMTP id 974812070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:50:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="FY2Jx9nE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgCWTuF (ORCPT
+        id S1727053AbgCWTuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:50:05 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:35541 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbgCWTuE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:50:04 -0400
-Received: by mail-il1-f194.google.com with SMTP id 7so1128350ill.2;
-        Mon, 23 Mar 2020 12:50:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=OjC6r2usuImBDLu/35CLd+c7UkFmIFG+06FkAS9qKVg=;
-        b=Zolz3XoqNSScFkogN6i1/SNo1bDXQUnOU67VOoSZpj1teQcbeKyrMVneeHOiEBOApH
-         0MqPucuWEpw1ncRJjqyAE3WGFtLI2n/pGkuzSzLV9X/TJ8+aXI90UPSwWmf9uBxk6x6F
-         ddJmNbJ4AXwvT8OuKpmboVrsKa45qKEmZTSXYhvULrRnCNXGMnG9eBpvSjDO+ZDu1dWZ
-         /xMz2Xf7VX1SuwRAouBGf+xrplcJYPL8aC1fb6Nwa0+GQlVTKwiSBta+H1drfV9cqh/7
-         DmT9HeW9DUTLkBsS/lquf0hsoK9Lt46QPzzX+7TBs8qLHCZhk5XLe+KzK7jhYwxj1NUc
-         4qSg==
-X-Gm-Message-State: ANhLgQ1NPxw+DrpjMI/bylzPYg7KrA5BQbK+PFQsCg/8G9vd4nAU4cC0
-        JWvv12CHP6/as9u1IQOk4Q==
-X-Google-Smtp-Source: ADFU+vu/MHCQinxeMPLh3FyJXqUbP8NrFB6mE2fqpJvLKhVTVJRcYgL95OftLKo2ne7u4RCE9iSYrw==
-X-Received: by 2002:a92:7b10:: with SMTP id w16mr22320500ilc.93.1584993003863;
-        Mon, 23 Mar 2020 12:50:03 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id v24sm1199217iob.0.2020.03.23.12.50.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 12:50:03 -0700 (PDT)
-Received: (nullmailer pid 29486 invoked by uid 1000);
-        Mon, 23 Mar 2020 19:50:02 -0000
-Date:   Mon, 23 Mar 2020 13:50:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Wells Lu =?utf-8?B?5ZGC6Iqz6aiw?= <wells.lu@sunplus.com>,
-        Dvorkin Dmitry <dvorkin@tibbo.com>,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [RFC 05/11] dt-bindings: serial: Add Sunplus SP7021 UART
-Message-ID: <20200323195002.GA27190@bogus>
-References: <20200308163230.4002-1-afaerber@suse.de>
- <20200308163230.4002-6-afaerber@suse.de>
+        Mon, 23 Mar 2020 15:50:15 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:54011 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725776AbgCWTuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 15:50:15 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id d07cdbd7;
+        Mon, 23 Mar 2020 19:43:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=ARsmCOiccHNPI2GJ9BGtp7i3LYY=; b=FY2Jx9
+        nEsfEJLPF+tI/yEJKvvVu8yS5lCI8K8rZ8gWD4b+8uL8yaAIQhJ/EYyDsBTgkQPZ
+        BpTyrg+V/0v0GRdQit67Itpr+s+hyMM+Sd8UEvSOapxyDL/ClZV/D8+q8V7c2zO0
+        xw8JwrQr2W6tLdvuFZ9NXa9cxs96xzgb4sF4TyqjXpgWPF2syrfm8uDia7yzuXDO
+        Yd+rx5hta/MUozntQCB4VsxSWw99vDoeZa0/RCe+tRhQ9EBr1d8puPZ6ib6dX4bZ
+        OJ/rVivrJf20pJR46rpusX9J5jJk6Zkw7bl+M76d70aQ9xxuTmVKcZ9kUGk6GJ5r
+        06zbLGKzsHVjedMQ==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 783bb53a (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Mon, 23 Mar 2020 19:43:10 +0000 (UTC)
+Received: by mail-io1-f43.google.com with SMTP id c19so15661347ioo.6;
+        Mon, 23 Mar 2020 12:50:12 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0mmizbXUaf9SheXk3cKAvUB3LYWlTQfVg/qiFbkri3BjSDEYAF
+        +49g/k8LwpQkpFd0/RSGTt2fWshfdO5NvsK4Ymo=
+X-Google-Smtp-Source: ADFU+vtbqSgGXmN8lOz/6XAXbL8GhAwjjTG6v2fKkZp23QgkzRne+YI9zK1t8WN3CztQO2PAapdtgwE0xNatsIUGuYw=
+X-Received: by 2002:a5e:a50f:: with SMTP id 15mr3802700iog.67.1584993011135;
+ Mon, 23 Mar 2020 12:50:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200308163230.4002-6-afaerber@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200323020844.17064-1-masahiroy@kernel.org> <CAHmME9p=ECJ15uyPH79bF0tuzEksdxoUsjGQSyz74FfdEJxTpQ@mail.gmail.com>
+ <CAHmME9q4egN7_KeYB-ZHCFPfXs-virgTv4iz9jW2SVOM7dTnLw@mail.gmail.com>
+ <CAK7LNAR07vZFzh1Bbpq4CoJ4zmsc+p5rxpkO1Zv8QVfqhfvr2w@mail.gmail.com>
+ <CAHmME9qCjo4kOQM3Dw6PDjEebmb6rvXajqhK-m-=vKcHWqNhAw@mail.gmail.com> <CA+icZUUjP7e2zgrVCFenO_YJfpcOQWV++kuU5UWGKN_5udZXSw@mail.gmail.com>
+In-Reply-To: <CA+icZUUjP7e2zgrVCFenO_YJfpcOQWV++kuU5UWGKN_5udZXSw@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Mon, 23 Mar 2020 13:50:00 -0600
+X-Gmail-Original-Message-ID: <CAHmME9quSMLwLacntdhvLKVDVtg6QVGhOQxADzz_4kVZYOJxNA@mail.gmail.com>
+Message-ID: <CAHmME9quSMLwLacntdhvLKVDVtg6QVGhOQxADzz_4kVZYOJxNA@mail.gmail.com>
+Subject: Re: [PATCH 0/7] x86: remove always-defined CONFIG_AS_* options
+To:     sedat.dilek@gmail.com
+Cc:     Masahiro Yamada <masahiroy@kernel.org>, X86 ML <x86@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Song Liu <songliubraving@fb.com>,
+        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 05:32:23PM +0100, Andreas Färber wrote:
-> The Sunplus Plus1 (aka Pentagram) SP7021 SoC has five UARTs.
-> 
-> Cc: Wells Lu 呂芳騰 <wells.lu@sunplus.com>
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->  .../bindings/serial/sunplus,pentagram-uart.yaml    | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/sunplus,pentagram-uart.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/sunplus,pentagram-uart.yaml b/Documentation/devicetree/bindings/serial/sunplus,pentagram-uart.yaml
-> new file mode 100644
-> index 000000000000..9d1641232a4c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/sunplus,pentagram-uart.yaml
-> @@ -0,0 +1,24 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/serial/sunplus,pentagram-uart.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Sunplus Pentagram SoC UART Serial Interface
-> +
-> +maintainers:
-> +  - Andreas Färber <afaerber@suse.de>
-> +
+On Mon, Mar 23, 2020 at 3:53 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> Hi Jason,
+> I have not checked your Kconfig changes are really working, especially
+> I looked at [2] and comment on this.
+>
+> I would have expected your arch/x86/Kconfig.assembler file as
+> arch/x86/crypto/Kconfig (source include needs to be adapted in
+> arch/x86/Kconfig).
 
-Soon this will need to reference serial.yaml which is getting added to 
-5.7.
+CONFIG_AS_* is required for more than just the crypto.
 
-> +properties:
-> +  compatible:
-> +    const: sunplus,sp7021-uart
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +...
-> -- 
-> 2.16.4
-> 
+> What about a commit subject like "x86: crypto: Probe assembler options
+> via Kconfig instead of makefile"?
+
+Thanks. Will fix silly verbiage and update branch.
+
+Jason
