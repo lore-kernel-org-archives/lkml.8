@@ -2,80 +2,164 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FD7C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6833C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE7320719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E120206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:44:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cY31lTq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgCWVnT (ORCPT
+        id S1727122AbgCWVoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 17:43:19 -0400
-Received: from mga12.intel.com ([192.55.52.136]:58783 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbgCWVnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 17:43:18 -0400
-IronPort-SDR: tziNcJmLxCcjM0YPon1rWz7pbDJ35kAPuY+ggIQidfcBI6iOVQCYFy4zqj+i3+5g9xH27p3KiP
- gXMqSIYYVtaQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 14:43:18 -0700
-IronPort-SDR: gG/i2xiQabDd+0fKhxgcrKNHoliXkP2XeeQaOXnMeGJ5UazG6ramiBv3ouABkLU8FEAciJMZ8d
- bqHQCPBHyiVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="235350031"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 23 Mar 2020 14:43:18 -0700
-Date:   Mon, 23 Mar 2020 14:43:18 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: Re: [PATCH 7/7] KVM: selftests: Add "delete" testcase to
- set_memory_region_test
-Message-ID: <20200323214317.GV28711@linux.intel.com>
-References: <20200320205546.2396-1-sean.j.christopherson@intel.com>
- <20200320205546.2396-8-sean.j.christopherson@intel.com>
- <20200323190636.GM127076@xz-x1>
+        Mon, 23 Mar 2020 17:44:09 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45425 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbgCWVoJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 17:44:09 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b9so6484700pls.12
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 14:44:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hEOCvDpxyBMwengYvfMIe1pWY5IozmG+/5v8TyzWx7E=;
+        b=cY31lTq7BOxMLd+B6z8dKX7c1GMJuNhCFQ2Bvdkmy/khdCyZG1FsLovWzwfE2X4puE
+         RptITITDWaegsUZT6yoqeuJNa76WgCG1fH5jgsi1As+AtzwHN7iuUOnSYCIdpRoGwUb5
+         Wnqi55UYFSoUBKmaBg5PSmjcREgFlzmrKx9d8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hEOCvDpxyBMwengYvfMIe1pWY5IozmG+/5v8TyzWx7E=;
+        b=CFEg2uYN43pkE1OfdE9PxKlQIz0i1vHCDYrlS78Hkj8fuYP1BVskJvAkr84Bew2EWy
+         1ENLnMDgPDw6fFxZjuURPjhc8+i5Vy9Y8DpB3IfF7wMASerDxs9F+DZHx8yGnPh2J/Qd
+         2IxHAE2nFnOPD8j9l04AR3tPxLStXtPuuYKGPLISxNaklzXANkkLF9m5sARqA9sijIvn
+         DfmxI5oUWlOq9IGNUtBTqNF1WQbiQi/ydrjzyYS7CscyCKDO1PJTnDQi24nABwskVydE
+         fj9buuPepuwLKQYtl2dMUfQiVrkOIeDXkIF66rzJJwFMBIdJEqycAI2sTJjdY2HVcFsZ
+         u3Vg==
+X-Gm-Message-State: ANhLgQ2PBVoeq3jm3sa7TRXdQlOipuW19GwpnGNyHhZfHjH+RZp/d6iU
+        QjfqhOytuDdG5xrtsf7SaglKLg==
+X-Google-Smtp-Source: ADFU+vs4T4+am9OY7T5Vrd+slkVkXOF1hX/R220W6qPtnU8hpwLQ94vxad44ILyHFDs7R6x2GRtQNA==
+X-Received: by 2002:a17:90a:346f:: with SMTP id o102mr1542753pjb.162.1584999847690;
+        Mon, 23 Mar 2020 14:44:07 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 73sm13685819pgg.90.2020.03.23.14.44.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 14:44:06 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 14:44:05 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
+        Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH bpf-next v5 5/7] bpf: lsm: Initialize the BPF LSM hooks
+Message-ID: <202003231354.1454ED92EC@keescook>
+References: <20200323164415.12943-1-kpsingh@chromium.org>
+ <20200323164415.12943-6-kpsingh@chromium.org>
+ <202003231237.F654B379@keescook>
+ <0655d820-4c42-cf9a-23d3-82dc4fdeeceb@schaufler-ca.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200323190636.GM127076@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <0655d820-4c42-cf9a-23d3-82dc4fdeeceb@schaufler-ca.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 03:06:36PM -0400, Peter Xu wrote:
-> On Fri, Mar 20, 2020 at 01:55:46PM -0700, Sean Christopherson wrote:
-> > +	/*
-> > +	 * Spin until the memory region is moved to a misaligned address.  This
-> > +	 * may or may not trigger MMIO, as the window where the memslot is
-> > +	 * invalid is quite small.
-> > +	 */
-> > +	val = guest_spin_on_val(0);
-> > +	GUEST_ASSERT(val == 1 || val == MMIO_VAL);
-> > +
-> > +	/* Spin until the memory region is realigned. */
-> > +	GUEST_ASSERT(guest_spin_on_val(MMIO_VAL) == 1);
+On Mon, Mar 23, 2020 at 01:47:29PM -0700, Casey Schaufler wrote:
+> On 3/23/2020 12:44 PM, Kees Cook wrote:
+> > On Mon, Mar 23, 2020 at 05:44:13PM +0100, KP Singh wrote:
+> >> +/* Some LSM hooks do not have 0 as their default return values. Override the
+> >> + * __weak definitons generated by default for these hooks
+> > If you wanted to avoid this, couldn't you make the default return value
+> > part of lsm_hooks.h?
+> >
+> > e.g.:
+> >
+> > LSM_HOOK(int, -EOPNOTSUPP, inode_getsecurity, struct inode *inode,
+> > 	 const char *name, void **buffer, bool alloc)
 > 
-> IIUC ideally we should do GUEST_SYNC() after each GUEST_ASSERT() to
-> make sure the two threads are in sync.  Otherwise e.g. there's no
-> guarantee that the main thread won't run too fast to quickly remove
-> the memslot and re-add it back before the guest_spin_on_val() starts
-> above, then the assert could trigger when it reads the value as zero.
+> If you're going to do that you'll have to keep lsm_hooks.h and security.c
+> default values in sync somehow. Note that the four functions you've called
+> out won't be using call_int_hook() after the next round of stacking. I'm not
+> nixing the idea, I just don't want the default return for the security_
+> functions defined in two places.
 
-Hrm, I was thinking ucall wasn't available across pthreads, but it's just
-dumped into a global variable.  I'll rework this to replace the udelay()
-hacks with proper synchronization.
+Yeah, I actually went looking for this after I sent the email, realizing
+that the defaults were also used in security.c. I've been pondering how
+to keep them from being duplicated. I'm working on some ideas.
+
+The four are:
+
+inode_getsecurity
+inode_setsecurity
+task_prctl
+xfrm_state_pol_flow_match
+
+None of these are already just calling call_int_hook(), but I assume
+they'll need further tweaks in the coming stacking.
+
+To leave things as open-code-able as possible while still benefiting
+from the macro consolidation, how about something like this:
+
+lsm_hook_names.h:
+
+LSM_HOOK(int, -EOPNOTSUPP, inode_getsecurity,
+	 struct inode *inode, const char *name, void **buffer, bool alloc)
+
+...
+
+security.c:
+
+#define LSM_RET_DEFAULT_void(DEFAULT, NAME)	/* */
+#define LSM_RET_DEFAULT_int(DEFAULT, NAME)
+	static const int NAME#_default = (DEFAULT);
+
+#define LSM_HOOK(RET, DEFAULT, NAME, ...)	\
+	LSM_RET_DEFAULT_#RET(DEFAULT, NAME)
+#include <linux/lsm_hook_names.h>
+#undef LSM_HOOK
+...
+
+Then -EOPNOTSUPP is available as "inode_getsecurity_default":
+
+int security_inode_getsecurity(struct inode *inode, const char *name,
+			       void **buffer, bool alloc)
+{
+        struct security_hook_list *hp;
+        int rc;
+
+        if (unlikely(IS_PRIVATE(inode)))
+                return inode_getsecurity_default;
+        /*
+         * Only one module will provide an attribute with a given name.
+         */
+        hlist_for_each_entry(hp, &security_hook_heads.inode_getsecurity, list) {
+                rc = hp->hook.inode_getsecurity(inode, name, buffer, alloc);
+                if (rc != inode_getsecurity_default)
+                        return rc;
+        }
+        return inode_getsecurity_default;
+}
+
+
+On the other hand, it's only 4 non-default return codes, so maybe the
+sync burden isn't very high?
+
+-- 
+Kees Cook
