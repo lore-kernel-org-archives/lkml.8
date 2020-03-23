@@ -2,167 +2,87 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8928C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 392DBC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA7E2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:46:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584967603;
-	bh=7C/45yxMVezqPY/AYGZVlsZQoI91jW9qnhU3Os7B61w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WZFcBNB5rbK1L+TaqUa50JDiDIGF+tqPlE7R+ZxhVSzBERrh9RAaO/h6CJirrVByE
-	 2TsA/9sU4z2cMASZPAAahrG2RrsnsgCrcmWkFDJjOKaqtM/TQGGVHrxX3ZCzP7wOCW
-	 +P0G6hRzFmWZ6wcy3Yv8QTfWSwNGGj5yCu4KR8i4=
+	by mail.kernel.org (Postfix) with ESMTP id 14E932072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:47:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgCWMqm (ORCPT
+        id S1728298AbgCWMr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:46:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59146 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728238AbgCWMqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 08:46:42 -0400
-Received: from localhost (unknown [122.178.205.141])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACA7C2072E;
-        Mon, 23 Mar 2020 12:46:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584967601;
-        bh=7C/45yxMVezqPY/AYGZVlsZQoI91jW9qnhU3Os7B61w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NXIMczFaCjgjWefIoljSdvKnyxoa/R+pZ0836WIdz3F7JJTFUPn43gKihTEtub0EV
-         S9f0XkaoQGnBo362s/XqyLWh4Tz4MUi3qiekMOxc/gfvjFd1fJ5+zIU2NLJnvZnD17
-         m7iRdJ9HdqB4e2YPr2gI4zMSpKN01TILfaUD2gdI=
-Date:   Mon, 23 Mar 2020 18:16:36 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH] soundwire: stream: only change state if needed
-Message-ID: <20200323124636.GN72691@vkoul-mobl>
-References: <20200317105142.4998-1-pierre-louis.bossart@linux.intel.com>
- <20200320141528.GI4885@vkoul-mobl>
- <f212f561-27aa-265c-3f4c-45b2336ac145@linux.intel.com>
+        Mon, 23 Mar 2020 08:47:29 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45482 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727840AbgCWMr2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 08:47:28 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c9so3022641otl.12;
+        Mon, 23 Mar 2020 05:47:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E67n6CwTbk8RP7A9ScDb1eReUhjteCxGgL/uzVVjrZg=;
+        b=q9p4EoRhbkJ3ySAbeTJSTPBszGK+8DLSMignjH35lM0oRnhz4fxfooBgf0LnGlt05y
+         WS+ZhDIKPlICDhR7kaDx9e6PRRnBzxJ16x79sLToOUKOJrmDYo9i4LJbzQefaQVnOsCS
+         U0blcRcH913vy8J7+nYplhvNqQ16tZrEFMtgijS9jLWKrrRtJu/y6ilfv4PV7p2uXoMC
+         Krj2Vf9nd0xZ4bAR2/Aongjoi+a/HdbvCt8WyIbx8rHxSrF3xVGZuuwp5a0arqBukrWW
+         4xi9Neeqa8FwkLeNMIA+RQEBMTqM7RcHRoU2mRPzMGHaoq2abOaTt1OOlKYZyo/+D58/
+         Dk3A==
+X-Gm-Message-State: ANhLgQ0Xo6pL/Lf3LpcgzLhcQW3B2t/QWCDkGk9wzC/0JYcJ8ZKGjs/8
+        0IUV4mr3ehACTzhAojrdwHlM54n9z8nEmj9bZZk=
+X-Google-Smtp-Source: ADFU+vvAIf5JWg/DzJeGvOtVmYVxfZJkH902ec3aDAMZKmCnAoMjdGGBc2PdZNlwrus/lBB6UZAOnUWk77vrIUskhew=
+X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr17815859otk.145.1584967646401;
+ Mon, 23 Mar 2020 05:47:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f212f561-27aa-265c-3f4c-45b2336ac145@linux.intel.com>
+References: <20200315140525.21780-1-zhengdejin5@gmail.com> <20200315140525.21780-5-zhengdejin5@gmail.com>
+In-Reply-To: <20200315140525.21780-5-zhengdejin5@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 23 Mar 2020 13:47:15 +0100
+Message-ID: <CAMuHMdWht-TGGZsrKetXEQ8VTMrZAz+0z3kS+XELu-Vr7HnwAw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] usb: dwc2: convert to devm_platform_get_and_ioremap_resource
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Winkler, Tomas" <tomas.winkler@intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-03-20, 09:33, Pierre-Louis Bossart wrote:
-> On 3/20/20 9:15 AM, Vinod Koul wrote:
-> > On 17-03-20, 05:51, Pierre-Louis Bossart wrote:
-> > > In a multi-cpu DAI context, the stream routines may be called from
-> > > multiple DAI callbacks. Make sure the stream state only changes for
-> > > the first call, and don't return error messages if the target state is
-> > > already reached.
+On Sun, Mar 15, 2020 at 3:05 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
+> Use devm_platform_get_and_ioremap_resource() to simplify code, which
+> contains platform_get_resource() and devm_ioremap_resource(), it also
+> get the resource for use by the following code.
+>
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 
-Again I ask you to read emails carefully and not jump the gun.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> > For stream-apis we have documented explicitly in Documentation/driver-api/soundwire/stream.rst
-> > 
+Gr{oetje,eeting}s,
 
-< begins with quote from the file stream.rst>
-
-> > "Bus implements below API for allocate a stream which needs to be called once
-> > per stream. From ASoC DPCM framework, this stream state maybe linked to
-> > .startup() operation.
-> > 
-> > .. code-block:: c
-> > 
-> >    int sdw_alloc_stream(char * stream_name); "
-
-<end quote>
-
-> > This is documented for all stream-apis.
-
-This line is very important. But seems to have skipped
-
-> > This can be resolved by moving the calling of these APIs from
-> > master-dais/slave-dais to machine-dais. They are unique in the card.
-
-This is suggestion, feel free to do anything as long as that conforms to
-documentation laid out, which incidentally was written by Sanyog and
-signed off by you. See 89634f99a83e ("Documentation: soundwire: Add more documentation")
-
-> this change is about prepare/enable/disable/deprepare, not allocation or
-> startup.
-
-Sad to see this. Now am going to quote for all these, since you skipped
-the line in above email.
-
-For prepare:
-"Bus implements below API for PREPARE state which needs to be called
-once per stream. From ASoC DPCM framework, this stream state is linked
-to .prepare() operation. Since the .trigger() operations may not
-follow the .prepare(), a direct transition from
-``SDW_STREAM_PREPARED`` to ``SDW_STREAM_DEPREPARED`` is allowed."
-
-See the point about "once per stream".
-
-On Enable:
-"Bus implements below API for ENABLE state which needs to be called once per
-stream. From ASoC DPCM framework, this stream state is linked to
-.trigger() start operation."
-
-See the point about "once per stream".
-
-For Disable:
-"Bus implements below API for DISABLED state which needs to be called once
-per stream. From ASoC DPCM framework, this stream state is linked to
-.trigger() stop operation."
-
-See the point about "once per stream".
-
-For deprepare:
-"Bus implements below API for DEPREPARED state which needs to be called
-once per stream. ALSA/ASoC do not have a concept of 'deprepare', and
-the mapping from this stream state to ALSA/ASoC operation may be
-implementation specific."
-
-See the point about "once per stream".
-
-> I see no reason to burden the machine driver with all these steps. It's not
-> because QCOM needs this transition that everyone does.
-> 
-> As discussed earlier, QCOM cannot use this functionality because the
-> prepare/enable and disable/deprepare are done in the hw_params and hw_free
-> respectively. This was never the intended use, but Intel let it happen so
-> I'd like you to return the favor. This change has no impact for QCOM and
-> simplifies the Intel solution, so why would you object?
-> 
-> Seriously, your replies on all Intel contributions make me wonder if this is
-> the QCOM/Linaro SoundWire subsystem, or if we are going to find common
-> ground to deal with vastly different underlying architectures?
-
-It is extremely sad that you chose to say this and didn't even try to
-read the email and recheck the documentation you have signed off.
-
-This has nothing to do with Qcom/Linaro. If you look at git tree in
-Intel you will find that the original implementation was to use these from
-machine driver. I am sure of this fact as I had written that code.
-
-I am really getting extremely annoyed at your attitude in your
-conversations and accusing me. This is not nice.
-My replies are based on documentation and questioning the
-implementation, which is my job here. I dont care if you feel bad about
-me questions. I guess you dont like that someone is questioning, but I
-dont care.
+                        Geert
 
 -- 
-~Vinod
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
