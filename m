@@ -2,72 +2,73 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BD6C10F26
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F56C10F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF5E206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6984620732
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:30:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584945024;
+	bh=lGY0/B9v5kKP+fRPvrlnERsifU+J0PKOjNa0Qax8RwM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=leUaM7S/Qk5JYrvNQ74GetkX5pKEHRzr3QQbud2Ja7tzdH17rwggT3STMnau+aL2I
+	 UbWlePLe3hZo5htDGvQMycS04CsXdX95RD9n6IfSfULkLDtfLTClAJPDWxqHdtew4P
+	 4ACbg4kVzwD3gur7fT5bkmZrAXwlyKIuSH7g9qzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbgCWG3p (ORCPT
+        id S1727340AbgCWGaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 02:29:45 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:56914 "EHLO fornost.hmeau.com"
+        Mon, 23 Mar 2020 02:30:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbgCWG3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 02:29:45 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jGGaI-0004Wx-IH; Mon, 23 Mar 2020 17:29:15 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 23 Mar 2020 17:29:14 +1100
-Date:   Mon, 23 Mar 2020 17:29:14 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
+        id S1726059AbgCWGaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 02:30:22 -0400
+Received: from localhost (unknown [171.76.96.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A3C7206F8;
+        Mon, 23 Mar 2020 06:30:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584945022;
+        bh=lGY0/B9v5kKP+fRPvrlnERsifU+J0PKOjNa0Qax8RwM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hean15XoxKID8EY5Tcazr5zdTf2itcveXgy7ln0MhQEq/cw4Y8eD1o4vaYOT3ybHx
+         LIhmVLjoK2Td2QTKupu4GYQujTftHLWPvpooT+mKjt2Fh/CzvBsTKXpjfwvXIYEsg+
+         nfWucFwKKsNmJl/qjPtwKU7Up2adbDbp7bcHrrEA=
+Date:   Mon, 23 Mar 2020 12:00:14 +0530
+From:   Vinod Koul <vkoul@kernel.org>
 To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     steffen.klassert@secunet.com, davem@davemloft.net, kuba@kernel.org,
-        timo.teras@iki.fi, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] xfrm: policy: Fix doulbe free in xfrm_policy_timer
-Message-ID: <20200323062914.GA5811@gondor.apana.org.au>
-References: <20200318034839.57996-1-yuehaibing@huawei.com>
- <20200323014155.56376-1-yuehaibing@huawei.com>
+Cc:     ldewangan@nvidia.com, jonathanh@nvidia.com,
+        dan.j.williams@intel.com, thierry.reding@gmail.com,
+        swarren@wwwdotorg.org, dmaengine@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        digetx@gmail.com
+Subject: Re: [PATCH -next] dmaengine: tegra-apb: mark PM functions as
+ __maybe_unused
+Message-ID: <20200323063014.GG72691@vkoul-mobl>
+References: <20200320071337.59756-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200323014155.56376-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200320071337.59756-1-yuehaibing@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 09:41:55AM +0800, YueHaibing wrote:
->
-> diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
-> index dbda08ec566e..ae0689174bbf 100644
-> --- a/net/xfrm/xfrm_policy.c
-> +++ b/net/xfrm/xfrm_policy.c
-> @@ -434,6 +434,7 @@ EXPORT_SYMBOL(xfrm_policy_destroy);
->  
->  static void xfrm_policy_kill(struct xfrm_policy *policy)
->  {
-> +	write_lock_bh(&policy->lock);
->  	policy->walk.dead = 1;
->  
->  	atomic_inc(&policy->genid);
-> @@ -445,6 +446,7 @@ static void xfrm_policy_kill(struct xfrm_policy *policy)
->  	if (del_timer(&policy->timer))
->  		xfrm_pol_put(policy);
->  
-> +	write_unlock_bh(&policy->lock);
+On 20-03-20, 15:13, YueHaibing wrote:
+> When CONFIG_PM is disabled, gcc warning this:
+> 
+> drivers/dma/tegra20-apb-dma.c:1587:12: warning: 'tegra_dma_runtime_resume' defined but not used [-Wunused-function]
+> drivers/dma/tegra20-apb-dma.c:1578:12: warning: 'tegra_dma_runtime_suspend' defined but not used [-Wunused-function]
+> 
+> Make it as __maybe_unused to fix the warnings,
+> also remove unneeded function declarations.
 
-Why did you expand the critical section? Can't you just undo the
-patch in xfrm_policy_kill?
+Applied, thanks
 
-Cheers,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+~Vinod
