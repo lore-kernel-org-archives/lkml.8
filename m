@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808F9C4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D4AC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE8620409
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 397B220409
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgCWSjQ (ORCPT
+        id S1728073AbgCWSjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:39:16 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:46730 "EHLO
+        Mon, 23 Mar 2020 14:39:22 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:46704 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727647AbgCWSiY (ORCPT
+        with ESMTP id S1727581AbgCWSiX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:38:24 -0400
+        Mon, 23 Mar 2020 14:38:23 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGRxs-00135K-Qt; Mon, 23 Mar 2020 18:38:20 +0000
+        id 1jGRxt-00135W-0G; Mon, 23 Mar 2020 18:38:21 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [RFC][PATCH 05/22] vm86: get rid of get_user_ex() use
-Date:   Mon, 23 Mar 2020 18:38:02 +0000
-Message-Id: <20200323183819.250124-5-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH 07/22] x86: get rid of get_user_ex() in restore_sigcontext()
+Date:   Mon, 23 Mar 2020 18:38:04 +0000
+Message-Id: <20200323183819.250124-7-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200323183819.250124-1-viro@ZenIV.linux.org.uk>
 References: <20200323183620.GD23230@ZenIV.linux.org.uk>
@@ -42,100 +42,145 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-Just do a copyin of what we want into a local variable and
-be done with that.  We are guaranteed to be on shallow stack
-here...
+Just do copyin into a local struct and be done with that - we are
+on a shallow stack here.
 
-Note that conditional expression for range passed to access_ok()
-in mainline had been pointless all along - the only difference
-between vm86plus_struct and vm86_struct is that the former has
-one extra field in the end and when we get to copyin of that
-field (conditional upon 'plus' argument), we use copy_from_user().
-Moreover, all fields starting with ->int_revectored are copied
-that way, so we only need that check (be it done by access_ok()
-or by user_access_begin()) only on the beginning of the structure -
-the fields that used to be covered by that get_user_try() block.
+[reworked by tglx, removing the macro horrors while we are touching that]
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- arch/x86/kernel/vm86_32.c | 54 +++++++++++++++++++++--------------------------
- 1 file changed, 24 insertions(+), 30 deletions(-)
+ arch/x86/kernel/signal.c | 86 ++++++++++++++++++++----------------------------
+ 1 file changed, 36 insertions(+), 50 deletions(-)
 
-diff --git a/arch/x86/kernel/vm86_32.c b/arch/x86/kernel/vm86_32.c
-index 91d55454e702..49b37eb01e99 100644
---- a/arch/x86/kernel/vm86_32.c
-+++ b/arch/x86/kernel/vm86_32.c
-@@ -243,6 +243,7 @@ static long do_sys_vm86(struct vm86plus_struct __user *user_vm86, bool plus)
- 	struct kernel_vm86_regs vm86regs;
- 	struct pt_regs *regs = current_pt_regs();
- 	unsigned long err = 0;
-+	struct vm86_struct v;
+diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+index 53ac66b3fd9b..83563e98f0be 100644
+--- a/arch/x86/kernel/signal.c
++++ b/arch/x86/kernel/signal.c
+@@ -47,24 +47,6 @@
+ #include <asm/sigframe.h>
+ #include <asm/signal.h>
  
- 	err = security_mmap_addr(0);
- 	if (err) {
-@@ -278,39 +279,32 @@ static long do_sys_vm86(struct vm86plus_struct __user *user_vm86, bool plus)
- 	if (vm86->saved_sp0)
- 		return -EPERM;
- 
--	if (!access_ok(user_vm86, plus ?
--		       sizeof(struct vm86_struct) :
--		       sizeof(struct vm86plus_struct)))
-+	if (copy_from_user(&v, user_vm86,
-+			offsetof(struct vm86_struct, int_revectored)))
- 		return -EFAULT;
- 
- 	memset(&vm86regs, 0, sizeof(vm86regs));
--	get_user_try {
--		unsigned short seg;
--		get_user_ex(vm86regs.pt.bx, &user_vm86->regs.ebx);
--		get_user_ex(vm86regs.pt.cx, &user_vm86->regs.ecx);
--		get_user_ex(vm86regs.pt.dx, &user_vm86->regs.edx);
--		get_user_ex(vm86regs.pt.si, &user_vm86->regs.esi);
--		get_user_ex(vm86regs.pt.di, &user_vm86->regs.edi);
--		get_user_ex(vm86regs.pt.bp, &user_vm86->regs.ebp);
--		get_user_ex(vm86regs.pt.ax, &user_vm86->regs.eax);
--		get_user_ex(vm86regs.pt.ip, &user_vm86->regs.eip);
--		get_user_ex(seg, &user_vm86->regs.cs);
--		vm86regs.pt.cs = seg;
--		get_user_ex(vm86regs.pt.flags, &user_vm86->regs.eflags);
--		get_user_ex(vm86regs.pt.sp, &user_vm86->regs.esp);
--		get_user_ex(seg, &user_vm86->regs.ss);
--		vm86regs.pt.ss = seg;
--		get_user_ex(vm86regs.es, &user_vm86->regs.es);
--		get_user_ex(vm86regs.ds, &user_vm86->regs.ds);
--		get_user_ex(vm86regs.fs, &user_vm86->regs.fs);
--		get_user_ex(vm86regs.gs, &user_vm86->regs.gs);
+-#define COPY(x)			do {			\
+-	get_user_ex(regs->x, &sc->x);			\
+-} while (0)
 -
--		get_user_ex(vm86->flags, &user_vm86->flags);
--		get_user_ex(vm86->screen_bitmap, &user_vm86->screen_bitmap);
--		get_user_ex(vm86->cpu_type, &user_vm86->cpu_type);
--	} get_user_catch(err);
--	if (err)
--		return err;
-+
-+	vm86regs.pt.bx = v.regs.ebx;
-+	vm86regs.pt.cx = v.regs.ecx;
-+	vm86regs.pt.dx = v.regs.edx;
-+	vm86regs.pt.si = v.regs.esi;
-+	vm86regs.pt.di = v.regs.edi;
-+	vm86regs.pt.bp = v.regs.ebp;
-+	vm86regs.pt.ax = v.regs.eax;
-+	vm86regs.pt.ip = v.regs.eip;
-+	vm86regs.pt.cs = v.regs.cs;
-+	vm86regs.pt.flags = v.regs.eflags;
-+	vm86regs.pt.sp = v.regs.esp;
-+	vm86regs.pt.ss = v.regs.ss;
-+	vm86regs.es = v.regs.es;
-+	vm86regs.ds = v.regs.ds;
-+	vm86regs.fs = v.regs.fs;
-+	vm86regs.gs = v.regs.gs;
-+
-+	vm86->flags = v.flags;
-+	vm86->screen_bitmap = v.screen_bitmap;
-+	vm86->cpu_type = v.cpu_type;
+-#define GET_SEG(seg)		({			\
+-	unsigned short tmp;				\
+-	get_user_ex(tmp, &sc->seg);			\
+-	tmp;						\
+-})
+-
+-#define COPY_SEG(seg)		do {			\
+-	regs->seg = GET_SEG(seg);			\
+-} while (0)
+-
+-#define COPY_SEG_CPL3(seg)	do {			\
+-	regs->seg = GET_SEG(seg) | 3;			\
+-} while (0)
+-
+ #ifdef CONFIG_X86_64
+ /*
+  * If regs->ss will cause an IRET fault, change it.  Otherwise leave it
+@@ -92,53 +74,58 @@ static void force_valid_ss(struct pt_regs *regs)
+ 	    ar != (AR_DPL3 | AR_S | AR_P | AR_TYPE_RWDATA_EXPDOWN))
+ 		regs->ss = __USER_DS;
+ }
++# define CONTEXT_COPY_SIZE	offsetof(struct sigcontext, reserved1)
++#else
++# define CONTEXT_COPY_SIZE	sizeof(struct sigcontext)
+ #endif
  
- 	if (copy_from_user(&vm86->int_revectored,
- 			   &user_vm86->int_revectored,
+ static int restore_sigcontext(struct pt_regs *regs,
+-			      struct sigcontext __user *sc,
++			      struct sigcontext __user *usc,
+ 			      unsigned long uc_flags)
+ {
+-	unsigned long buf_val;
+-	void __user *buf;
+-	unsigned int tmpflags;
+-	unsigned int err = 0;
++	struct sigcontext sc;
+ 
+ 	/* Always make any pending restarted system calls return -EINTR */
+ 	current->restart_block.fn = do_no_restart_syscall;
+ 
+-	get_user_try {
++	if (copy_from_user(&sc, usc, CONTEXT_COPY_SIZE))
++		return -EFAULT;
+ 
+ #ifdef CONFIG_X86_32
+-		set_user_gs(regs, GET_SEG(gs));
+-		COPY_SEG(fs);
+-		COPY_SEG(es);
+-		COPY_SEG(ds);
++	set_user_gs(regs, sc.gs);
++	regs->fs = sc.fs;
++	regs->es = sc.es;
++	regs->ds = sc.ds;
+ #endif /* CONFIG_X86_32 */
+ 
+-		COPY(di); COPY(si); COPY(bp); COPY(sp); COPY(bx);
+-		COPY(dx); COPY(cx); COPY(ip); COPY(ax);
++	regs->bx = sc.bx;
++	regs->cx = sc.cx;
++	regs->dx = sc.dx;
++	regs->si = sc.si;
++	regs->di = sc.di;
++	regs->bp = sc.bp;
++	regs->ax = sc.ax;
++	regs->sp = sc.sp;
++	regs->ip = sc.ip;
+ 
+ #ifdef CONFIG_X86_64
+-		COPY(r8);
+-		COPY(r9);
+-		COPY(r10);
+-		COPY(r11);
+-		COPY(r12);
+-		COPY(r13);
+-		COPY(r14);
+-		COPY(r15);
++	regs->r8 = sc.r8;
++	regs->r9 = sc.r9;
++	regs->r10 = sc.r10;
++	regs->r11 = sc.r11;
++	regs->r12 = sc.r12;
++	regs->r13 = sc.r13;
++	regs->r14 = sc.r14;
++	regs->r15 = sc.r15;
+ #endif /* CONFIG_X86_64 */
+ 
+-		COPY_SEG_CPL3(cs);
+-		COPY_SEG_CPL3(ss);
+-
+-		get_user_ex(tmpflags, &sc->flags);
+-		regs->flags = (regs->flags & ~FIX_EFLAGS) | (tmpflags & FIX_EFLAGS);
+-		regs->orig_ax = -1;		/* disable syscall checks */
++	/* Get CS/SS and force CPL3 */
++	regs->cs = sc.cs | 0x03;
++	regs->ss = sc.ss | 0x03;
+ 
+-		get_user_ex(buf_val, &sc->fpstate);
+-		buf = (void __user *)buf_val;
+-	} get_user_catch(err);
++	regs->flags = (regs->flags & ~FIX_EFLAGS) | (sc.flags & FIX_EFLAGS);
++	/* disable syscall checks */
++	regs->orig_ax = -1;
+ 
+ #ifdef CONFIG_X86_64
+ 	/*
+@@ -149,9 +136,8 @@ static int restore_sigcontext(struct pt_regs *regs,
+ 		force_valid_ss(regs);
+ #endif
+ 
+-	err |= fpu__restore_sig(buf, IS_ENABLED(CONFIG_X86_32));
+-
+-	return err;
++	return fpu__restore_sig((void __user *)sc.fpstate,
++			       IS_ENABLED(CONFIG_X86_32));
+ }
+ 
+ int setup_sigcontext(struct sigcontext __user *sc, void __user *fpstate,
 -- 
 2.11.0
 
