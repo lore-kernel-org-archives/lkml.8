@@ -2,168 +2,164 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468FFC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCFDC54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13EA820736
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B8D22074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:08:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="c/Cq70Xu"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="qrJmi+s3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbgCWIFT (ORCPT
+        id S1727524AbgCWIIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 04:05:19 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:46310 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbgCWIFP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 04:05:15 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200323080511epoutp015828bf8ecb3a901b887a4e43c687f88e~_4EZpYkzm0938709387epoutp01h
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 08:05:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200323080511epoutp015828bf8ecb3a901b887a4e43c687f88e~_4EZpYkzm0938709387epoutp01h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1584950711;
-        bh=dSYUW03bHzrs9o67DnwnF349vBuzWA6AMzTlkUXfLWo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c/Cq70XueTavKVS2yaajtyGQISate4WyZ7oZSqtZQFwf4a6DvwjItBfnkm0OR2LVw
-         2VX/3auCyY7O2C7mw8yH5jkZ7Hswc50BfXw6jn/HRihKV0o0yrU0hAWDq5zfoShaHe
-         krQpzu0Er2Cio6ru0MQmbAPIkhGgH0m+j9xLR008=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200323080511epcas1p1e045fa882c46a59520affd8470248956~_4EZAIXBi2159621596epcas1p1G;
-        Mon, 23 Mar 2020 08:05:11 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.163]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 48m6PJ58TyzMqYkg; Mon, 23 Mar
-        2020 08:05:08 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E1.70.04145.4BD687E5; Mon, 23 Mar 2020 17:05:08 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200323080508epcas1p2dfe6517169a65936e5ab10c4e63a19a7~_4EWKChal2331623316epcas1p28;
-        Mon, 23 Mar 2020 08:05:08 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200323080508epsmtrp1e95a6cc4a2e1e35601c95ad2b01b48c9~_4EWIopZ50063700637epsmtrp1f;
-        Mon, 23 Mar 2020 08:05:08 +0000 (GMT)
-X-AuditID: b6c32a35-2a5ff70000001031-37-5e786db4bb01
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C7.73.04024.4BD687E5; Mon, 23 Mar 2020 17:05:08 +0900 (KST)
-Received: from jaewon-linux.10.32.193.11 (unknown [10.253.104.82]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200323080507epsmtip1af2b09b7d835e20c46018369fa326f2f~_4EV5mw5Z3157831578epsmtip1N;
-        Mon, 23 Mar 2020 08:05:07 +0000 (GMT)
-From:   Jaewon Kim <jaewon31.kim@samsung.com>
-To:     gregkh@linuxfoundation.org, leon@kernel.org, vbabka@suse.cz,
-        adobriyan@gmail.com, akpm@linux-foundation.org, labbott@redhat.com,
-        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com, kasong@redhat.com,
-        bhe@redhat.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        jaewon31.kim@gmail.com, linux-api@vger.kernel.org,
-        kexec@lists.infradead.org, Jaewon Kim <jaewon31.kim@samsung.com>
-Subject: [RFC PATCH v2 2/3] mm: zsmalloc: include zs page size in meminfo
- extra
-Date:   Mon, 23 Mar 2020 17:05:02 +0900
-Message-Id: <20200323080503.6224-3-jaewon31.kim@samsung.com>
-X-Mailer: git-send-email 2.13.7
-In-Reply-To: <20200323080503.6224-1-jaewon31.kim@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TbUxTVxjOube994J23FzdPEHC2E1mgkuhtbScTViWaLabQRRjJHFZYDfl
-        hBJvP9JbFPWHVAmyQqUSDaPSBT9QqRBMSwYodqaSjAzn5xgTrVF/qJhAFYcayOZabs3273nf
-        93nO877vOYchuVEqk6mxubDTJko8la766UquVjtgravQ9UVzUbv7a9TZ30uh6w8WKHTgZD+F
-        msMdAHnjzwh0ZnYcoIvj8wTqGXlDoCML3SQKv26i0O0LnRS63/tWjU7Px2l0vsFPo0e+NgL9
-        GntJo2PuQ+ALThj2x2ghFPyeEkJzbbRw748RShj7YVEl/BzopYXwqX1CPDJBCYcGgkC42jVK
-        C8NzYbXwMpRdtvwbqciCxSrszME2s72qxlZdzJdsrdxQaTTp9Fr9p6iQz7GJVlzMbywt035Z
-        IyXG43N2ilJtIlUmyjKf/3mR017rwjkWu+wq5rGjSnLodY48WbTKtbbqPLPd+plep1tnTDC/
-        kyyNU09phy+97vn0qKoe+BkPSGMgWwAPejoJD0hnOHYIwOGLbiJZ4Ng5AA9PqJXCKwC9U63g
-        neJFrDNVuATg/vHrKiV4DWD97BMqyaLYT2C8q22JtZJtJeCJ2IklFsn2ARj0xBImDLOC3QJv
-        +oxJgYr9GPqaB1VJrGGLYE/PPVWSAtkP4fG3ZDKdxhbDyK0pKnkMZE/TcLTPSygtbYTT4XgK
-        r4DPfhmgFZwJp1sbaUVwAMCZjjBQggYAYyFvaiAD9LbcIJNuJJsL+y/kK+mP4PBiYIlCsu/B
-        2fkWtdKQBjY1cgplDWx4PK9WcBb8+5/HKSzAxdlQakU+AM/NdRM+kO3/z6ELgCD4ADtkazWW
-        9Q79/+8sBJZe8FrjEDhyrTQKWAbwyzX1zbsqOLW4U95tjQLIkPxKTRjXVXCaKnH3Huy0Vzpr
-        JSxHgTGxysNk5vtme+I/2FyVeuM6g8GACkyFJqOBX6U5OilVcGy16MI7MHZg5zsdwaRl1oOj
-        sa82ZbU8dEz8uHDwxeWSZXvLs65uXVVwNyCdyXgzacLrh8rkSx3b1U+ORcby71vcm7f9XhKM
-        lP95xx8wB/ZM0Z5vm0YGTv11Zf/g5l3tbq7UTOS96mhvHrycPrHBGiHLjzeYMnonM8gZnpnZ
-        d3fHpq5u9W9j0ezpG/Tq8kItc5ZXyRZRv5Z0yuK/EJa4iNcDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFLMWRmVeSWpSXmKPExsWy7bCSnO6W3Io4g5f3mC2mN3pZzFm/hs3i
-        /INfbBbNi9ezWXRvnslo0fv+FZPF8nenGS12n/7KZLFyzw8miym/ljJbbP7ewWZxedccNot7
-        a/6zWiz7+p7dYkPLLHaLRxMmMVmcuvuZ3WJ2Yx+jg5DHzll32T02repk89j0aRK7x51re9g8
-        Tsz4zeKxf+4ado/NS+o93u+7yubRt2UVo8eZBUfYPXZ+2szq8XmTXABPFJdNSmpOZllqkb5d
-        AldG260X7AUTuCo+vDzC0sA4i6OLkZNDQsBE4uPdOaxdjFwcQgK7GSWebX3NBpGQkXhz/ilL
-        FyMHkC0scfhwMUhYSOAro8Tcy/EgNpuAtsT7BZNYQWwRgflMEv3t/CBzmAU2M0pMXNrMApIQ
-        FvCXmDJpITOIzSKgKjGheztYnFfARmLlyjtQ8+UlFv4HK+EUsJXYd+kWG8QuG4mt3c+YJzDy
-        LWBkWMUomVpQnJueW2xYYJiXWq5XnJhbXJqXrpecn7uJERwjWpo7GC8viT/EKMDBqMTDe6O3
-        PE6INbGsuDL3EKMEB7OSCO/m1Io4Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxP845FCgmkJ5ak
-        ZqemFqQWwWSZODilGhgdq2s3egb8jnmwbmcVnwPrn7bpync2HNa5MafyhfgS6edT4ltYw5nm
-        zBU/Yb5BoDM7bEOEDW9Jz3f/Le90Nk2pOv774ZETNY5uDx62PYg9qRaYsfd19sGqubEuNxW1
-        nBp7zT2bEjTnK2jOZWzY9tp2upARu4BGpjXD8hWmHksYlxU3We7U7VRiKc5INNRiLipOBACx
-        /fqvjQIAAA==
-X-CMS-MailID: 20200323080508epcas1p2dfe6517169a65936e5ab10c4e63a19a7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200323080508epcas1p2dfe6517169a65936e5ab10c4e63a19a7
-References: <20200323080503.6224-1-jaewon31.kim@samsung.com>
-        <CGME20200323080508epcas1p2dfe6517169a65936e5ab10c4e63a19a7@epcas1p2.samsung.com>
+        Mon, 23 Mar 2020 04:08:46 -0400
+Received: from mail-dm6nam12on2073.outbound.protection.outlook.com ([40.107.243.73]:6051
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727486AbgCWIIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 04:08:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TOO1G7gWpf7d4k3u4hnT4ybHuMtEpJehQIByKseqoCceD9i0O6RrXXY135LAN2/AqKaDMWUIhqQRQlLGkzxzQtXzRp/yDU1vCRDsfiCqQXmK+VAh3yeBvAF5mqG1tVaZKSkl8doEVHRuPb/jfgNFRuVZ4TF9u3AFmJ4CWIUjavx3VNqrudzGUDz7P3k84yyPCOznm4FceXSrOjdcAENqfe5IluQ3NmzOhrMjbv2dRGwYr5pKw+R4rgybrJ1nY+0SwBwbDmHlEjv8yFgdrXa0wjqwLi/cdD3MINfIhedYfrjqH5jG0b07+OEDM5UPl+Japa/QmxsIL5s1vXf5c0z4Vw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Enscesey7yzLYrtE4L+/Txn1r+dHg3TjlpnJWzhzZ3U=;
+ b=F7L4MsZwKHEp+UzouhkbLBsI2hMAcHsedHxytf5URPFUMzZsShxoAj/nRrQEGRHU21+nfdMGfMEPOvG45oe3B2BhPwIyZbWi705KSUMwOaNilQvVoX0Nx0Tjlt9ejP7SmRu9YWB1+Q/KDZyRnoDtWIQ7tO8zP7q+qpDidla3GY7aU6CIdEjX7Uk5fD4oBaDSYNso2QV6ZogE8UwSOIGadKNoN6tq7rEO1PuEYvPvwjG5c+FckrFj7t19EXfg39a8xEinH8KPXvytFor6wwpgiwCn7QsuTna1+wSvdkYj3XGQBlA7+D3fPoDWC/tVR+RvVV99SDokwsmGP/b/iRhyiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=canb.auug.org.au smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Enscesey7yzLYrtE4L+/Txn1r+dHg3TjlpnJWzhzZ3U=;
+ b=qrJmi+s3l7YsI6KFUhL3LwvzHdB5kEEduExNz7b2+OHqb/04G1Eatwx///fW00MxW94ai9EepKAkFVrvMJCFGgTmbImJuRKzWxGnKQZdvrXqV44jq3l6R8dw+I//lz1uzDwsi3VooQoh4CizPRKOjzNyjxQLGPkVbpBkFncxAkM=
+Received: from SN4PR0801CA0003.namprd08.prod.outlook.com
+ (2603:10b6:803:29::13) by SN6PR02MB4096.namprd02.prod.outlook.com
+ (2603:10b6:805:2b::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.22; Mon, 23 Mar
+ 2020 08:08:39 +0000
+Received: from SN1NAM02FT036.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:803:29:cafe::fc) by SN4PR0801CA0003.outlook.office365.com
+ (2603:10b6:803:29::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend
+ Transport; Mon, 23 Mar 2020 08:08:39 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; canb.auug.org.au; dkim=none (message not signed)
+ header.d=none;canb.auug.org.au; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT036.mail.protection.outlook.com (10.152.72.149) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2814.13
+ via Frontend Transport; Mon, 23 Mar 2020 08:08:38 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jGI8U-0005ni-Ca; Mon, 23 Mar 2020 01:08:38 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jGI8P-0000OV-9E; Mon, 23 Mar 2020 01:08:33 -0700
+Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 02N88QS6021123;
+        Mon, 23 Mar 2020 01:08:26 -0700
+Received: from [172.30.17.108]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1jGI8I-0000NA-5d; Mon, 23 Mar 2020 01:08:26 -0700
+Subject: Re: linux-next: build failure after merge of the irqchip tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Mubin Sayyed <mubin.usman.sayyed@xilinx.com>
+References: <20200323175946.7ad497ea@canb.auug.org.au>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <48d3232d-0f1d-42ea-3109-f44bbabfa2e8@xilinx.com>
+Date:   Mon, 23 Mar 2020 09:08:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200323175946.7ad497ea@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(346002)(376002)(199004)(46966005)(47076004)(44832011)(426003)(2616005)(186003)(356004)(31686004)(2906002)(336012)(478600001)(26005)(316002)(107886003)(110136005)(54906003)(5660300002)(31696002)(36756003)(70206006)(81166006)(8936002)(4326008)(9786002)(70586007)(81156014)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4096;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e5046c16-53a5-4a82-e686-08d7cf0164c3
+X-MS-TrafficTypeDiagnostic: SN6PR02MB4096:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB409628BD8FF920262A743DB0C6F00@SN6PR02MB4096.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0351D213B3
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 9wpPlRvzJSfDkg9r5lWNkSNJpB98RiCPPEStwLalSqqe8/g+etDERwMXBgDnH8ztvyN6BGYc4ZfQcn6a6AaA0+p3WpNbC8gcm15o5zMUbab3J71Hj27v15uq9u0ExaluPjxYCdtJETK2rJjdPrjfuQMY92/V4WgXj3KzKzwTD0MX3IVGzcEeQ/A6IGv9nuyX85NS4hJOf8uaBa2IvJjhmZZ2g8FXtk1Vdqf1LILkFIAn1/I/yV5EBX+anaZfK/20aHbuIGJAZsHOAmyFXpS0gZcTZ0oSFePD2NHIHQeWDfmkM14XIrS5UBlqCVYCERejGQCyPmCAJowukL3fl6mSrb4Ei1U9tQO94cd6a2fkoklrk925k7uMmXAB5275NfAqv0eZXLyiqIgfj006YoG5kg7wERkZULUrBi7MS3by0c3Zdm1r9RrvLgXFhk+V4WzOXCJQPabxrZ8ID61RdfWuODaxGRg5MMiycD1rVXTEXCNKxm0fy2rgz/I8RiS6Q/P0poPZmnrt/679ezN9cArS1g==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2020 08:08:38.7572
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5046c16-53a5-4a82-e686-08d7cf0164c3
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On most of recent Android device use DRAM memory based compressed swap
-to save free memory. And the swap device size is also big enough.
+Hi Stephen,
 
-The zsmalloc page size is alread shown on vmstat by commit 91537fee0013
-("mm: add NR_ZSMALLOC to vmstat"). If the size is also shown in
-/proc/meminfo_extra, it will be better to see system wide memory usage at a
-glance.
+On 23. 03. 20 7:59, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the irqchip tree, today's linux-next build (powerpc
+> ppc44x_defconfig) failed like this:
+> 
+> drivers/irqchip/irq-xilinx-intc.c: In function 'xil_intc_handle_irq':
+> drivers/irqchip/irq-xilinx-intc.c:176:10: error: implicit declaration of function 'handle_domain_irq'; did you mean 'handle_bad_irq'? [-Werror=implicit-function-declaration]
+>   176 |    ret = handle_domain_irq(irqc->root_domain, hwirq, regs);
+>       |          ^~~~~~~~~~~~~~~~~
+>       |          handle_bad_irq
+> drivers/irqchip/irq-xilinx-intc.c: In function 'xilinx_intc_of_init':
+> drivers/irqchip/irq-xilinx-intc.c:253:3: error: implicit declaration of function 'set_handle_irq'; did you mean 'generic_handle_irq'? [-Werror=implicit-function-declaration]
+>   253 |   set_handle_irq(xil_intc_handle_irq);
+>       |   ^~~~~~~~~~~~~~
+>       |   generic_handle_irq
+> 
+> Caused by commit
+> 
+>   a0789993bf82 ("irqchip/xilinx: Enable generic irq multi handler")
+> 
+> I have reverted that commit (and commit
+> 
+>   9c2d4f525c00 ("irqchip/xilinx: Do not call irq_set_default_host()")
+> 
+> that conflicted with the other revert).
+> 
 
-To include heap size, use register_meminfo_extra introduced in previous
-patch.
+thanks for reporting this.
 
-i.e) cat /proc/meminfo_extra | grep ZsPages
-IonSystemHeap:    242620 kB
-ZsPages:          203860 kB
+Marc: I completely forget about this wiring for very ancient platform.
+AFAIK Xilinx is not testing this platform for years and would likely the
+best to remove support for it completely.
+The second option is to get xintc_get_irq() back with note about powerpc
+because it won't be that simple change all PPC platform to generic
+domain irq handler.
+Any other suggestion?
 
-i.e.) show_mem on oom
-<6>[  420.856428]  Mem-Info:
-<6>[  420.856433]  ZsPages:44114kB
-
-Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
----
- mm/zsmalloc.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
-index 22d17ecfe7df..9d5682aa44ac 100644
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -2566,6 +2566,7 @@ static int __init zs_init(void)
- 
- 	zs_stat_init();
- 
-+	register_meminfo_extra(&vm_zone_stat[NR_ZSPAGES], 0, "ZsPages");
- 	return 0;
- 
- hp_setup_fail:
-@@ -2583,6 +2584,7 @@ static void __exit zs_exit(void)
- 	cpuhp_remove_state(CPUHP_MM_ZS_PREPARE);
- 
- 	zs_stat_exit();
-+	unregister_meminfo_extra(&vm_zone_stat[NR_ZSPAGES]);
- }
- 
- module_init(zs_init);
--- 
-2.13.7
-
+Thanks,
+Michal
