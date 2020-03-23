@@ -7,194 +7,258 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EDAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63699C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E1120719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36BAF20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:29:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nST53KuQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FxgC6y+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbgCWR3F (ORCPT
+        id S1727684AbgCWR3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:29:05 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37623 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727257AbgCWR3F (ORCPT
+        Mon, 23 Mar 2020 13:29:38 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42048 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbgCWR3h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:29:05 -0400
-Received: by mail-pl1-f196.google.com with SMTP id x1so2173964plm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 10:29:05 -0700 (PDT)
+        Mon, 23 Mar 2020 13:29:37 -0400
+Received: by mail-oi1-f193.google.com with SMTP id e4so2010515oig.9
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 10:29:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=W+gJxpxvFbfNBEOfkvfTA+dUu8PDaWOK6s/6neYRg5U=;
-        b=nST53KuQbnhYyOCSHRRYxQ2NOAPH5T4CnztaFDPdCnJGTLxcHZWg+R3+k4ODA2BJPF
-         MIzjhMMmvIqGumrXcyN+f17sEA65dbG+b+43UQqkHyPIPvdYo+7+VBvNaoSDqGWJlPce
-         DtZ1ggvLFOU2zuT/fMpAL08Xcgn7N4e+I8T7ww4uzRiBgGBZcWy8eoJwvGL/9aE0gMO/
-         Pp5kCwCdrybSDZ0dHabn2u10hsjc8EJprC6GfW9uPEdOPUDf/7Un7ZxgWrOmXwoKBHKV
-         DSYBssYb9LUULMVb3q8/fx6fSQxSlqp6CwF0M7hyeNA/B2dsOfZZd/b6Ky9KiEHZlvkk
-         EH5A==
+        bh=coauMnrl6/+PptbG82eRore8posxzJJD9TGT8ilHcxo=;
+        b=FxgC6y+z2lfFKzKhX7N23ChynlrKNVvuzpjrWiLCulaYwMp10qLX9MbPhOFlnq8jsW
+         sY3v4tsVnUxdMrjfPutOxtKBw4dbfXW5BX9PL2JxLFcGsvK8/WKfuMJtt6rN1xCGutDh
+         WU0JVZLs+U+oxJsHHFGfuLL8MQZPfbsnM+0bV5pzLxjKRKu5+I6uP2qLOvZBCz+7cQvf
+         7+Gp9ZEUDeHD3Cul07BSxKygxabkZi0DRkc5HwQB25pLtGtSWWUlKkj4qQV1plq1XkcF
+         Z0OagJGhnq5m8J/JxzRz+LYI+o1+nnOjJtSUXjDLipAO5Ho6xaCSRdA+LZ7vZiUt4bHR
+         AZhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=W+gJxpxvFbfNBEOfkvfTA+dUu8PDaWOK6s/6neYRg5U=;
-        b=K/abwG58TX3ml6KGH+lodJEQPB2rNVZ2Z0ue5nWk8IkbY4dD9Tx3UWichCca6N+q3J
-         YZbQRfD0lAoqIj1gpbTbB2/QRGGj3d+gGG5wPo0IGSR6Wtjkw295urCtAOHB7uyTq2Y2
-         se0cru6iniCxFmuC7swWDYqy4ohVkN7qdVxfM/k4KSfZjt4CdWqJBUMluyMhwPdIilD6
-         Qj6nWRzEEGkg05klab9nXqyUhptunpi0Q4pcPf7mEIi/zuForA/OLjqVojLwtjExd/83
-         6mUf8TaPcD3gEJDZRi8kjrIduriH2wRnIhJWpLBKEwrTRIGV292iw8qYTZOt4zi1vSpN
-         bp0w==
-X-Gm-Message-State: ANhLgQ36KY5K/enlrRdXTwEP3fqv3BbB8txF1vn1qD3kWOhO8gsDVOyY
-        BxqOjQZncROlbYnH2K3dAeOpSpUlh7bPVHx+ac6BXA==
-X-Google-Smtp-Source: ADFU+vspZ9THbwKZxEtPew+mV6NrQtoZQ96vWXT1Ie/mEZuPOWjmu2zXsJ8HvikT0dP1Y4Elpl00k8LUKnadBtrqxsM=
-X-Received: by 2002:a17:902:22e:: with SMTP id 43mr21721280plc.119.1584984544159;
- Mon, 23 Mar 2020 10:29:04 -0700 (PDT)
+        bh=coauMnrl6/+PptbG82eRore8posxzJJD9TGT8ilHcxo=;
+        b=QZSpq8BSs+AWy3PWHyvsLdFDT+QmwvLMlyxGLvoo0eFcRgyCgPEZ6N56RV9ceH/CaO
+         KYq7thedrJzkBeA4wMMxSbN8l4XmsAYR5XWIYKuY/RboHV+y8GHhqGUpaPUyV4/Wp5F7
+         v/Hz4Psmsc9GI+WlkDYRpx3sbHB9jApuy8eWV+6CwLf/kmi3pv2TCRD4N4Tk7YtgXBJ7
+         dj5dJrxPU91ytdT2fCVcdCXiNf8ca+D3WFrE5bwWCvdncEiVQa50erSQvMLePEgfOxqi
+         9Uv4x2TH7UJkCgbXR3tGRh2g4sM+v3FgwYFCQcPru3htooCC/eb/O/6m3gGfneJzZBfn
+         ER+g==
+X-Gm-Message-State: ANhLgQ2oRsK0JiNLXegCHfC2/m7G8Dz527h27cKsmMKaNioxwF/06JaV
+        rJek80mZZwJ5UnwFHqxd3k2HXvPzbArQ7MWJHmaE9A==
+X-Google-Smtp-Source: ADFU+vvnpd1CGPY5YrzOYcSAmKn5g0ovK39HJgfqd1R3bB1CCa9F8gGIz0jAEgWdK2oFXBLLC17nE5VYLM3curbyt3k=
+X-Received: by 2002:aca:ed54:: with SMTP id l81mr315133oih.69.1584984576071;
+ Mon, 23 Mar 2020 10:29:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <000000000000277a0405a16bd5c9@google.com> <CACT4Y+b1WFT87pWQaXD3CWjyjoQaP1jcycHdHF+rtxoR5xW1ww@mail.gmail.com>
- <5058aabe-f32d-b8ef-57ed-f9c0206304c5@redhat.com> <CAG_fn=WYtSoyi63ACaz-ya=Dbi+BFU-_mADDpL6gQvDimQscmw@mail.gmail.com>
- <20200323163925.GP28711@linux.intel.com> <CAKwvOdkE8OAu=Gj4MKWwpctka6==6EtrbF3e1tvF=jS2hBB3Ow@mail.gmail.com>
-In-Reply-To: <CAKwvOdkE8OAu=Gj4MKWwpctka6==6EtrbF3e1tvF=jS2hBB3Ow@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 23 Mar 2020 10:28:52 -0700
-Message-ID: <CAKwvOdkXi1MN2Yqqoa6ghw14tQ25WYgyJkSv35-+1KRb=cmhZw@mail.gmail.com>
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in handle_external_interrupt_irqoff
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        syzbot <syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <CALvZod7JoOKZRGb6nnmA4ymsZCXdHetS_CPFbFeC1Rqmx4yYHw@mail.gmail.com>
+ <20200319090301.1038-1-sjpark@amazon.com>
+In-Reply-To: <20200319090301.1038-1-sjpark@amazon.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Mon, 23 Mar 2020 10:29:24 -0700
+Message-ID: <CALvZod68P8tB=mY2xvpogB_oSSFVPb6qDfkBDGxCCBAKE_fg_g@mail.gmail.com>
+Subject: Re: Re: Re: Re: [PATCH v6 00/14] Introduce Data Access MONitor (DAMON)
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        SeongJae Park <sjpark@amazon.de>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, amit@kernel.org,
+        brendan.d.gregg@gmail.com,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Qian Cai <cai@lca.pw>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>, dwmw@amazon.com,
+        jolsa@redhat.com, "Kirill A. Shutemov" <kirill@shutemov.name>,
+        mark.rutland@arm.com, Mel Gorman <mgorman@suse.de>,
+        Minchan Kim <minchan@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, namhyung@kernel.org,
+        peterz@infradead.org, Randy Dunlap <rdunlap@infradead.org>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, shuah@kernel.org,
+        sj38.park@gmail.com, Vlastimil Babka <vbabka@suse.cz>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Linux MM <linux-mm@kvack.org>, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 9:57 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
+On Thu, Mar 19, 2020 at 2:04 AM SeongJae Park <sjpark@amazon.com> wrote:
 >
-> On Mon, Mar 23, 2020 at 9:39 AM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > On Mon, Mar 23, 2020 at 05:31:15PM +0100, Alexander Potapenko wrote:
-> > > On Mon, Mar 23, 2020 at 9:18 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
-> > > >
-> > > > On 22/03/20 07:59, Dmitry Vyukov wrote:
-> > > > >
-> > > > > The commit range is presumably
-> > > > > fb279f4e238617417b132a550f24c1e86d922558..63849c8f410717eb2e6662f3953ff674727303e7
-> > > > > But I don't see anything that says "it's me". The only commit that
-> > > > > does non-trivial changes to x86/vmx seems to be "KVM: VMX: check
-> > > > > descriptor table exits on instruction emulation":
-> > > >
-> > > > That seems unlikely, it's a completely different file and it would only
-> > > > affect the outside (non-nested) environment rather than your own kernel.
-> > > >
-> > > > The only instance of "0x86" in the registers is in the flags:
-> > > >
-> > > > > RSP: 0018:ffffc90001ac7998 EFLAGS: 00010086
-> > > > > RAX: ffffc90001ac79c8 RBX: fffffe0000000000 RCX: 0000000000040000
-> > > > > RDX: ffffc9000e20f000 RSI: 000000000000b452 RDI: 000000000000b453
-> > > > > RBP: 0000000000000ec0 R08: ffffffff83987523 R09: ffffffff811c7eca
-> > > > > R10: ffff8880a4e94200 R11: 0000000000000002 R12: dffffc0000000000
-> > > > > R13: fffffe0000000ec8 R14: ffffffff880016f0 R15: fffffe0000000ecb
-> > > > > FS:  00007fb50e370700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > > CR2: 000000000000005c CR3: 0000000092fc7000 CR4: 00000000001426f0
-> > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > >
-> > > > That would suggest a miscompilation of the inline assembly, which does
-> > > > push the flags:
-> > > >
-> > > > #ifdef CONFIG_X86_64
-> > > >                 "mov %%" _ASM_SP ", %[sp]\n\t"
-> > > >                 "and $0xfffffffffffffff0, %%" _ASM_SP "\n\t"
-> > > >                 "push $%c[ss]\n\t"
-> > > >                 "push %[sp]\n\t"
-> > > > #endif
-> > > >                 "pushf\n\t"
-> > > >                 __ASM_SIZE(push) " $%c[cs]\n\t"
-> > > >                 CALL_NOSPEC
-> > > >
-> > > >
-> > > > It would not explain why it suddenly started to break, unless the clang
-> > > > version also changed, but it would be easy to ascertain and fix (in
-> > > > either KVM or clang).  Dmitry, can you send me the vmx.o and
-> > > > kvm-intel.ko files?
+> On Wed, 18 Mar 2020 12:52:48 -0700 Shakeel Butt <shakeelb@google.com> wrote:
+>
+> > On Thu, Mar 12, 2020 at 3:44 AM SeongJae Park <sjpark@amazon.com> wrote:
 > > >
-> > > On a quick glance, Clang does not miscompile this part.
+> > > On Thu, 12 Mar 2020 11:07:59 +0100 SeongJae Park <sjpark@amazon.com> wrote:
+> > >
+> > > > On Tue, 10 Mar 2020 10:21:34 -0700 Shakeel Butt <shakeelb@google.com> wrote:
+> > > >
+> > > > > On Mon, Feb 24, 2020 at 4:31 AM SeongJae Park <sjpark@amazon.com> wrote:
+> > > > > >
+> > > > > > From: SeongJae Park <sjpark@amazon.de>
+> > > > > >
+> > > > > > Introduction
+> > > > > > ============
+> > > > > >
+> > > [...]
+> > > > >
+> > > > > I do want to question the actual motivation of the design followed by this work.
+> > > > >
+> > > > > With the already present Page Idle Tracking feature in the kernel, I
+> > > > > can envision that the region sampling and adaptive region adjustments
+> > > > > can be done in the user space. Due to sampling, the additional
+> > > > > overhead will be very small and configurable.
+> > > > >
+> > > > > Additionally the proposed mechanism has inherent assumption of the
+> > > > > presence of spatial locality (for virtual memory) in the monitored
+> > > > > processes which is very workload dependent.
+> > > > >
+> > > > > Given that the the same mechanism can be implemented in the user space
+> > > > > within tolerable overhead and is workload dependent, why it should be
+> > > > > done in the kernel? What exactly is the advantage of implementing this
+> > > > > in kernel?
+> > > >
+> > > > First of all, DAMON is not for only user space processes, but also for kernel
+> > > > space core mechanisms.  Many of the core mechanisms will be able to use DAMON
+> > > > for access pattern based optimizations, with light overhead and reasonable
+> > > > accuracy.
 > >
-> > Clang definitely miscompiles the asm, the indirect call operates on the
-> > EFLAGS value, not on @entry as expected.  It looks like clang doesn't honor
-> > ASM_CALL_CONSTRAINT, which effectively tells the compiler that %rsp is
-
-I noticed that in the syzcaller config I have, that CONFIG_RETPOLINE
-is not set.  I'm more reliably able to reproduce this with
-clang+defconfig+CONFIG_KVM=y+CONFIG_KVM_INTEL=y+CONFIG_RETPOLINE=n,
-ie. by manually disabling retpoline.
-
-> > getting clobbered, e.g. the "mov %r14,0x8(%rsp)" is loading @entry for
-> > "callq *0x8(%rsp)", which breaks because of asm's pushes.
-> >
-> > clang:
-> >
-> >         kvm_before_interrupt(vcpu);
-> >
-> >         asm volatile(
-> > ffffffff811b798e:       4c 89 74 24 08          mov    %r14,0x8(%rsp)
-> > ffffffff811b7993:       48 89 e0                mov    %rsp,%rax
-> > ffffffff811b7996:       48 83 e4 f0             and    $0xfffffffffffffff0,%rsp
-> > ffffffff811b799a:       6a 18                   pushq  $0x18
-> > ffffffff811b799c:       50                      push   %rax
-> > ffffffff811b799d:       9c                      pushfq
-> > ffffffff811b799e:       6a 10                   pushq  $0x10
-> > ffffffff811b79a0:       ff 54 24 08             callq  *0x8(%rsp) <--------- calls the EFLAGS value
-> > kvm_after_interrupt():
-> >
-> >
-> > gcc:
-> >         kvm_before_interrupt(vcpu);
-> >
-> >         asm volatile(
-> > ffffffff8118e17c:       48 89 e0                mov    %rsp,%rax
-> > ffffffff8118e17f:       48 83 e4 f0             and    $0xfffffffffffffff0,%rsp
-> > ffffffff8118e183:       6a 18                   pushq  $0x18
-> > ffffffff8118e185:       50                      push   %rax
-> > ffffffff8118e186:       9c                      pushfq
-> > ffffffff8118e187:       6a 10                   pushq  $0x10
-> > ffffffff8118e189:       ff d3                   callq  *%rbx <-------- calls @entry
-> > kvm_after_interrupt():
+> > Which kernel space core mechanisms? I can see memory reclaim, do you
+> > envision some other component as well.
 >
-> Thanks for this analysis, it looks like this is dependent on some
-> particular configuration; here's clang+defconfig+CONFIG_KVM_INTEL=y:
+> In addition to reclmation, I am thinking THP promotion/demotion decision, page
+> migration among NUMA nodes on tier-memory configuration, and on-demand virtual
+> machine live migration mechanisms could benefit from DAMON, for now.  I also
+> believe more use-cases could be found.
 >
->    0x000000000000528f <+127>:   pushq  $0x18
->    0x0000000000005291 <+129>:   push   %rcx
->    0x0000000000005292 <+130>:   pushfq
->    0x0000000000005293 <+131>:   pushq  $0x10
->    0x0000000000005295 <+133>:   callq  *%rax
+
+I am still struggling to see how these use-cases require in-kernel
+DAMON. For THP promotion/demotaion, madvise(MADV_[NO]HUGEPAGE) can be
+used or we can introduce a new MADV_HUGIFY to synchronously convert
+small pages to hugepages. Page migration on tier-memory is similar to
+proactive reclaim and we already have migrate_pages/move_pages
+syscalls. Basically why userspace DAMON can not perform these
+operations?
+
+> >
+> > Let's discuss how this can interact with memory reclaim and we can see
+> > if there is any benefit to do this in kernel.
 >
-> --
-> Thanks,
-> ~Nick Desaulniers
+> For reclaim, I believe we could try the proactive reclamation again using DAMON
+> (Yes, I'm a fan of the idea of proactive reclamation).  I already implemented
+> and evaluated a simple form of DAMON-based proactive reclamation for the proof
+> of the concept (not for production).  In best case (parsec3/freqmine), it
+> reduces 22.42% of system memory usage and 88.86% of residential sets while
+> incurring only 3.07% runtime overhead.  Please refer to 'Appendix E' of the v7
+> patchset[1] of DAMON.  It also describes the implementation and the evaluation
+> of a data access monitoring-based THP promotion/demotion policy.
+>
+> The experimental implementation cannot be directly applied to kernel
+> reclamation mechanism, because it requires users to specify the target
+> applications.  Nonetheless, I think we can also easily adopt it inside the
+> kernel by modifying kswapd to periodically select processes having huge RSS as
+> targets, or by creating proactive reclamation type cgroups which selects every
+> processes in the cgroup as targets.
 
+Again I feel like these should be done in user space as these are more
+policies instead of mechanisms. However if it can be shown that doing
+that in userspace is very expensive as compared to in-kernel solution
+then we can think about it.
 
+>
+> Of course, we can extend DAMON to support physical memory address space instead
+> of virtual memory of specific processes.  Actually, this is in our TODO list.
+> With the extension, applying DAMON to core memory management mechanisms will be
+> even easier.
 
--- 
-Thanks,
-~Nick Desaulniers
+See below on physical memory monitoring.
+
+>
+> Nonetheless, this is only example but not concrete plan.  I didn't make the
+> concrete plan yet, but believe that of DAMON will open the gates.
+>
+> [1] https://lore.kernel.org/linux-mm/20200318112722.30143-1-sjpark@amazon.com/
+>
+> >
+> > > >
+> > > > Implementing DAMON in user space is of course possible, but it will be
+> > > > inefficient.  Using it from kernel space would make no sense, and it would
+> > > > incur unnecessarily frequent kernel-user context switches, which is very
+> > > > expensive nowadays.
+> > >
+> > > Forgot mentioning about the spatial locality.  Yes, it is workload dependant,
+> > > but still pervasive in many case.  Also, many core mechanisms in kernel such as
+> > > read-ahead or LRU are already using some similar assumptions.
+> > >
+> >
+> > Not sure about the LRU but yes read-ahead in several places does
+> > assume spatial locality. However most of those are configurable and
+> > the userspace can enable/disable the read-ahead based on the workload.
+>
+> Sorry for my ambiguous description.  LRU uses temporal locality, which is
+> somewhat similar to spatial locality, in terms of workload dependency.
+>
+> >
+> > >
+> > > If it is so problematic, you could set the maximum number of regions to the
+> > > number of pages in the system so that each region monitors each page.
+> > >
+> >
+> > How will this work in the process context? Number of regions equal to
+> > the number of mapped pages?
+>
+> Suppose that a process has 1024 pages of working set and each of the pages has
+> totally different access frequency.  If the maximum number of regions is 1024,
+> the adaptive regions adjustment mechanism of DAMON will create each region for
+> each page and monitor the access to each page.  So, the output will be same to
+> straightforward periodic page-granularity access checking methods, which does
+> not depend on the spatial locality.  Nevertheless, the monitoring overhead will
+> be also similar to that.
+>
+> However, if any adjacent pages have similar access frequencies, DAMON will
+> group those pages into one region.  This will reduce the total number of PTE
+> Accessed bit checks and thus decrease the overhead.  In other words, DAMON do
+> its best effort to minimize the overhead while preserving quality.
+>
+> Also suppose that the maximum number of region is smaller than 1024 in this
+> case.  Pages having different access frequency will be grouped in same region
+> and thus the output quality will be decreased.  However, the overhead will
+> be half, as DAMON does one access check per each region.  This means that you
+> can easily trade the monitoring quality with overhead by adjusting the maximum
+> number of regions.
+>
+
+So, users can select to not merge the regions to keep the monitoring
+quality high, right?
+
+> >
+> > Basically I am trying to envision the comparison of physical memory
+> > based monitoring (using idle page tracking) vs pid+VA based
+> > monitoring.
+>
+> I believe the core mechanisms of DAMON could be easily extended to the physical
+> memory.  Indeed, it is in our TODO list, and I believe it would make use of
+> DAMON in kernel core mechanisms much easier.
+>
+
+How will the sampling and regions representation/resizing work in
+physical memory?
+
+> >
+> > Anyways I am not against your proposal. I am trying to see how to make
+> > it more general to be applicable to more use-cases and one such
+> > use-case which I am interested in is monitoring all the user pages on
+> > the system for proactive reclaim purpose.
+>
+> Your questions gave me many insight and shed lights to the way DAMON should go.
+> Really appreciate.  If you have any more questions or need my help, please let
+> me know.
+>
+>
+
+Shakeel
