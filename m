@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E0FC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 673EEC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7EEB2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8D12076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:09:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SWIWo+Aq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="irb5TVIo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbgCWNJl (ORCPT
+        id S1728430AbgCWNJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 09:09:41 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37451 "EHLO
+        Mon, 23 Mar 2020 09:09:45 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35713 "EHLO
         mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728386AbgCWNJk (ORCPT
+        with ESMTP id S1728414AbgCWNJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 09:09:40 -0400
-Received: by mail-pl1-f196.google.com with SMTP id x1so1874937plm.4;
-        Mon, 23 Mar 2020 06:09:39 -0700 (PDT)
+        Mon, 23 Mar 2020 09:09:42 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g6so5905834plt.2;
+        Mon, 23 Mar 2020 06:09:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2aM37J8K657Wv3q10MHFjXciLCyJUEUJMTeOksWFXlc=;
-        b=SWIWo+Aqd79tlSi+ZxL1H7RyIXs/NZ2TWYmtGv+/luxUxaAjR22ugVkZxwcQGpEXdu
-         p/Un3hsKlRi854qsA9HKgUt/Qo8AG7h70F/TN5fzs8HDTx/Q6WuMH2SQHDe1nZsw1zA9
-         NWpLoarNYC/DeRH7xSsiyl2fikG1jrP5+msSK/yR4lQ+Kkw/NOjPHIodwmAmnk4szB87
-         T9jbwPh6vFb4W4TFeDAO54RoDc3PAd8fy6sPNFtoNjouAMRCo9TQsM8RtVMD3MmwbsDL
-         XXQM3a0SJQPa6+q2/Y7++aGt33vgxZ2Fg7oIxtrLoyygxpwlWJmHwK/Cs950WNyLVuXu
-         HD0w==
+        bh=izVkhfSJVvX4iA5swA8dGgujHIuHYwU5C2aqb2eYYrk=;
+        b=irb5TVIoPbz6Yed8udTigBEPXhzjFOGpitYwIEPV1hbsNP5YaRO8r8Kf3/JCerbfEQ
+         /ApN5AoXZESSrRO/utFd686k8rxTBNQmhFbWEYEF7VIHJhHhfaJBnUTLMLHXNTlXQQ/I
+         jNUQavLbOCe4mrgFTBFh4WELLT4QkaUROCkTGHVMZxwhMgsvCDi9/eng4sZM/DEJo24j
+         JhpSfZsfoC4zw0WLRXvRfur4IqwC9ji5acV/N2Y3p5JqJj9XmHWBi7IfOMJ1rV2nbAJ+
+         LU2DbA65heYX7ZZt1UGjVvsyxe/GZYVEDpNVdXwcctVk0qOvkuq8yGteiMYTeH4jWIwB
+         XaVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=2aM37J8K657Wv3q10MHFjXciLCyJUEUJMTeOksWFXlc=;
-        b=mFCDtcvluA5it5WCOwYT4zSE4lZxbVVu614loHVveI1q+Y2RmK5nfUSmr7MMgi2ILY
-         4U82uqchnMKZOOo8JpQBqZfWORPvrm1qPd5wMjQxQN32cHH4E40Od6+t05we7qr89RW8
-         zdSNBROdS795tGxjmQevA1SBDT6OecXE6DkzljzPiSa3zYn5bwH2zBoHyuT0MDZHS717
-         Cv9QqzMcz6KT7vgO3Wa2AiWeEhXquNZLyzArBuWw1l9mpm4a1AwvZAhKrcZGZlcLWfxh
-         hiL5OXQvJTuy+y3Z9kUEjEv5eoMXBlrhDzZpRVVxV48T3l5J7Me7dps8YFNVOonyFfiy
-         X0WQ==
-X-Gm-Message-State: ANhLgQ1zKWGUNgKiRfEYlVaH16jXx/DUOU/7VjRHu3zly34yjtnAts3C
-        OWQKujIr3mXkg6iMX8hM6vs=
-X-Google-Smtp-Source: ADFU+vtkaSll1ZFfjJZwIv5gBFcCiPPFH3YNokXv7kzbUW0+vnBGMAd5HpAzylr14dJkHbOJfXbqNQ==
-X-Received: by 2002:a17:90a:bd01:: with SMTP id y1mr25461188pjr.26.1584968979320;
-        Mon, 23 Mar 2020 06:09:39 -0700 (PDT)
+        bh=izVkhfSJVvX4iA5swA8dGgujHIuHYwU5C2aqb2eYYrk=;
+        b=UPauy1GZEviu7vLbXV8TyfXMpUSVbo0XbncxdOiahwtQTyxEYwxeve+ohbyG+csdh1
+         RtsWHA+uVik6EG4PNlG4532TnAaGpxtaXIjYT+pupGhR1ws1h80/OWsS/Jj4gwBs6l3Q
+         jIlIEFVW4yyJK+7IltNAb+lTytznoOPYX4Hwewq5HIHsMbcocr7HzRftmWmpHa5Zki0p
+         EM2yWfjnDCz9wNSZc0jDWdpDmZz8WygngdTp1TyZ4fQSBbKcpUIawJu1bc1HiRNKstp7
+         TRJ758p8nXZOLDKsfdO4xsoonW3iM1/TdZBHsgdiPBSRgU01HuOtayiSsIeRRa8Pxe8/
+         YhPw==
+X-Gm-Message-State: ANhLgQ0dAMWrrtRENBgqh0xCN7bRnDNMNRQ+6sWHsBpoo7QPXbp/QlIZ
+        xaNP4TO1mtqoGUjqGJF3oHh/UNidrI4=
+X-Google-Smtp-Source: ADFU+vs6gpWtDOUag62aIa46URGumGNJDOjLz1Cj10Jh1C6aWIbTITvju+Snb3dQzEQVGGlvj9FGnA==
+X-Received: by 2002:a17:90a:e50e:: with SMTP id t14mr6410378pjy.98.1584968980845;
+        Mon, 23 Mar 2020 06:09:40 -0700 (PDT)
 Received: from localhost.corp.microsoft.com ([131.107.147.210])
-        by smtp.googlemail.com with ESMTPSA id u14sm12262034pgg.67.2020.03.23.06.09.38
+        by smtp.googlemail.com with ESMTPSA id u14sm12262034pgg.67.2020.03.23.06.09.40
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 23 Mar 2020 06:09:38 -0700 (PDT)
+        Mon, 23 Mar 2020 06:09:40 -0700 (PDT)
 From:   ltykernel@gmail.com
 X-Google-Original-From: Tianyu.Lan@microsoft.com
 To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
@@ -65,9 +65,9 @@ To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
 Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
         vkuznets@redhat.com
-Subject: [PATCH V2 1/6] x86/Hyper-V: Unload vmbus channel in hv panic callback
-Date:   Mon, 23 Mar 2020 06:09:19 -0700
-Message-Id: <20200323130924.2968-2-Tianyu.Lan@microsoft.com>
+Subject: [PATCH V2 3/6] x86/Hyper-V: Trigger crash enlightenment only once during  system crash.
+Date:   Mon, 23 Mar 2020 06:09:21 -0700
+Message-Id: <20200323130924.2968-4-Tianyu.Lan@microsoft.com>
 X-Mailer: git-send-email 2.14.5
 In-Reply-To: <20200323130924.2968-1-Tianyu.Lan@microsoft.com>
 References: <20200323130924.2968-1-Tianyu.Lan@microsoft.com>
@@ -78,104 +78,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-When kdump is not configured, a Hyper-V VM might still respond to
-network traffic after a kernel panic when kernel parameter panic=0.
-The panic CPU goes into an infinite loop with interrupts enabled,
-and the VMbus driver interrupt handler still works because the
-VMbus connection is unloaded only in the kdump path.  The network
-responses make the other end of the connection think the VM is
-still functional even though it has panic'ed, which could affect any
-failover actions that should be taken.
+When a guest VM panics, Hyper-V should be notified only once via the
+crash synthetic MSRs.  Current Linux code might write these crash MSRs
+twice during a system panic:
+1) hyperv_panic/die_event() calling hyperv_report_panic()
+2) hv_kmsg_dump() calling hyperv_report_panic_msg()
 
-Fix this by unloading the VMbus connection during the panic process.
-vmbus_initiate_unload() could then be called twice (e.g., by
-hyperv_panic_event() and hv_crash_handler(), so reset the connection
-state in vmbus_initiate_unload() to ensure the unload is done only
-once.
+Fix this by not calling hyperv_report_panic() if a kmsg dump has been
+successfully registered.  The notification will happen later via
+hyperv_report_panic_msg().
 
 Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 ---
 Change since v1:
-	- Update chnage log
-	- Use xchg() to change vmbus connection status
+	- Update commit log
 ---
- drivers/hv/channel_mgmt.c |  3 +++
- drivers/hv/vmbus_drv.c    | 17 +++++++++--------
- 2 files changed, 12 insertions(+), 8 deletions(-)
+ drivers/hv/vmbus_drv.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 0370364169c4..501c43c5851d 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -839,6 +839,9 @@ void vmbus_initiate_unload(bool crash)
- {
- 	struct vmbus_channel_message_header hdr;
- 
-+	if (xchg(&vmbus_connection.conn_state, DISCONNECTED) == DISCONNECTED)
-+		return;
-+
- 	/* Pre-Win2012R2 hosts don't support reconnect */
- 	if (vmbus_proto_version < VERSION_WIN8_1)
- 		return;
 diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 029378c27421..b56b9fb9bd90 100644
+index 3a0472c8b7ae..d73fa8aa00a3 100644
 --- a/drivers/hv/vmbus_drv.c
 +++ b/drivers/hv/vmbus_drv.c
-@@ -53,9 +53,12 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
- {
- 	struct pt_regs *regs;
+@@ -55,7 +55,12 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
  
--	regs = current_pt_regs();
-+	vmbus_initiate_unload(true);
+ 	vmbus_initiate_unload(true);
+ 
+-	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
++	/*
++	 * Crash notify only can be triggered once. If crash notify
++	 * message is available, just report kmsg to crash buffer.
++	 */
++	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
++	    && !hv_panic_page) {
+ 		regs = current_pt_regs();
+ 		hyperv_report_panic(regs, val);
+ 	}
+@@ -68,7 +73,12 @@ static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
+ 	struct die_args *die = (struct die_args *)args;
+ 	struct pt_regs *regs = die->regs;
  
 -	hyperv_report_panic(regs, val);
-+	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
-+		regs = current_pt_regs();
++	/*
++	 * Crash notify only can be triggered once. If crash notify
++	 * message is available, just report kmsg to crash buffer.
++	 */
++	if (!hv_panic_page)
 +		hyperv_report_panic(regs, val);
-+	}
  	return NOTIFY_DONE;
  }
  
-@@ -1391,10 +1394,12 @@ static int vmbus_bus_init(void)
- 		}
- 
- 		register_die_notifier(&hyperv_die_block);
--		atomic_notifier_chain_register(&panic_notifier_list,
--					       &hyperv_panic_block);
- 	}
- 
-+	/* Vmbus channel is unloaded in panic callback when panic happens.*/
-+	atomic_notifier_chain_register(&panic_notifier_list,
-+			       &hyperv_panic_block);
-+
- 	vmbus_request_offers();
- 
- 	return 0;
-@@ -2204,8 +2209,6 @@ static int vmbus_bus_suspend(struct device *dev)
- 
- 	vmbus_initiate_unload(false);
- 
--	vmbus_connection.conn_state = DISCONNECTED;
--
- 	/* Reset the event for the next resume. */
- 	reinit_completion(&vmbus_connection.ready_for_resume_event);
- 
-@@ -2289,7 +2292,6 @@ static void hv_kexec_handler(void)
- {
- 	hv_stimer_global_cleanup();
- 	vmbus_initiate_unload(false);
--	vmbus_connection.conn_state = DISCONNECTED;
- 	/* Make sure conn_state is set as hv_synic_cleanup checks for it */
- 	mb();
- 	cpuhp_remove_state(hyperv_cpuhp_online);
-@@ -2306,7 +2308,6 @@ static void hv_crash_handler(struct pt_regs *regs)
- 	 * doing the cleanup for current CPU only. This should be sufficient
- 	 * for kdump.
- 	 */
--	vmbus_connection.conn_state = DISCONNECTED;
- 	cpu = smp_processor_id();
- 	hv_stimer_cleanup(cpu);
- 	hv_synic_disable_regs(cpu);
 -- 
 2.14.5
 
