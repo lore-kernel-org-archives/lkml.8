@@ -6,43 +6,43 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBCDC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DC5C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89FF2206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A01920753
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:43:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgCWXnB (ORCPT
+        id S1727064AbgCWXnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 19:43:01 -0400
-Received: from mga05.intel.com ([192.55.52.43]:29269 "EHLO mga05.intel.com"
+        Mon, 23 Mar 2020 19:43:00 -0400
+Received: from mga01.intel.com ([192.55.52.88]:40316 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727032AbgCWXm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 19:42:57 -0400
-IronPort-SDR: bTKt1x4yX7geieRmCJFywxJqKtmRPXcN/IIE6Ujy7tz8+nTf4AAD012xRuwDPaffjXqq4uJ5BR
- UNLu4D+heUHQ==
+        id S1726955AbgCWXm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 19:42:59 -0400
+IronPort-SDR: 4TII6rjMw2CH8kRXiWLqm7JcssNxlUJkHWUiUQI/HxseifN2Ju1tra/NydgBjJnoqDeDU2ZNSE
+ MaaXCbJOYYkA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 16:42:57 -0700
-IronPort-SDR: qGvNp8CUfHC0zM/w341r3CUy9+naIO/mbxTvZor8nAWzxbgOi3Cr2ufZFwcCfQ5VR/1AoKU9Wk
- WovG6omAx5vg==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 16:42:59 -0700
+IronPort-SDR: p7wHP0E9cCVis6ujH7VlrAKm8YZPl0C4TIq9c60LiPT3dJzR1QTeK0Fua8V62w6YKfvNaTzfX6
+ h1mg9ix2Jfag==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,298,1580803200"; 
-   d="scan'208";a="239600815"
+   d="scan'208";a="419682388"
 Received: from viggo.jf.intel.com (HELO localhost.localdomain) ([10.54.77.144])
-  by fmsmga008.fm.intel.com with ESMTP; 23 Mar 2020 16:42:56 -0700
-Subject: [PATCH 1/2] mm/madvise: help MADV_PAGEOUT to find swap cache pages
+  by orsmga005.jf.intel.com with ESMTP; 23 Mar 2020 16:42:58 -0700
+Subject: [PATCH 2/2] mm/madvise: skip MADV_PAGEOUT on shared swap cache pages
 To:     linux-kernel@vger.kernel.org
 Cc:     Dave Hansen <dave.hansen@linux.intel.com>, mhocko@suse.com,
         jannh@google.com, vbabka@suse.cz, minchan@kernel.org,
         dancol@google.com, joel@joelfernandes.org,
         akpm@linux-foundation.org
 From:   Dave Hansen <dave.hansen@linux.intel.com>
-Date:   Mon, 23 Mar 2020 16:41:49 -0700
+Date:   Mon, 23 Mar 2020 16:41:51 -0700
 References: <20200323234147.558EBA81@viggo.jf.intel.com>
 In-Reply-To: <20200323234147.558EBA81@viggo.jf.intel.com>
-Message-Id: <20200323234149.9FE95081@viggo.jf.intel.com>
+Message-Id: <20200323234151.10AF5617@viggo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -51,41 +51,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dave Hansen <dave.hansen@linux.intel.com>
 
-tl;dr: MADV_PAGEOUT ignores unmapped swap cache pages.  Enable
-MADV_PAGEOUT to find and reclaim swap cache.
+MADV_PAGEOUT might interfere with other processes if it is
+allowed to reclaim pages shared with other processses.  A
+previous patch tried to avoid this for anonymous pages
+which were shared by a fork().  It did this by checking
+page_mapcount().
 
-The long story:
+That works great for mapped pages.  But, it can not detect
+unmapped swap cache pages.  This has not been a problem,
+until the previous patch which added the ability for
+MADV_PAGEOUT to *find* swap cache pages.
 
-Looking for another issue, I wrote a simple test which had two
-processes: a parent and a fork()'d child.  The parent reads a
-memory buffer shared by the fork() and the child calls
-madvise(MADV_PAGEOUT) on the same buffer.
+A process doing MADV_PAGEOUT which finds an unmapped swap
+cache page and evicts it might interfere with another process
+which had the same page mapped.  But, such a page would have
+a page_mapcount() of 1 since the page is only actually mapped
+in the *other* process.  The page_mapcount() test would fail
+to detect the situation.
 
-The first call to MADV_PAGEOUT does what is expected: it pages
-the memory out and causes faults in the parent.  However, after
-that, it does not cause any faults in the parent.  MADV_PAGEOUT
-only works once!  This was a surprise.
+Thankfully, there is a reference count for swap entries.
+To fix this, simply consult both page_mapcount() and the swap
+reference count via page_swapcount().
 
-The PTEs in the shared buffer start out pte_present()==1 in
-both parent and child.  The first MADV_PAGEOUT operation replaces
-those with pte_present()==0 swap PTEs.  The parent process
-quickly faults and recreates pte_present()==1.  However, the
-child process (the one calling MADV_PAGEOUT) never touches the
-memory and has retained the non-present swap PTEs.
+I rigged up a little test program to try to create these
+situations.  Basically, if the parent "reader" RSS changes
+in response to MADV_PAGEOUT actions in the child, there is
+a problem.
 
-This situation could also happen in the case where a single
-process had some of its data placed in the swap cache but where
-the memory has not yet been reclaimed.
-
-The MADV_PAGEOUT code has a pte_present()==0 check.  It will
-essentially ignore any pte_present()==0 pages.  This essentially
-makes unmapped swap cache immune from MADV_PAGEOUT, which is not
-very friendly behavior.
-
-Enable MADV_PAGEOUT to find and reclaim swap cache.  Because
-swap cache is not pinned by holding the PTE lock, a reference
-must be held until the page is isolated, where a second
-reference is obtained.
+	https://www.sr71.net/~dave/intel/madv-pageout.c
 
 Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: Michal Hocko <mhocko@suse.com>
@@ -97,118 +90,75 @@ Cc: "Joel Fernandes (Google)" <joel@joelfernandes.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 ---
 
- b/mm/madvise.c |   68 +++++++++++++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 57 insertions(+), 11 deletions(-)
+ b/mm/madvise.c |   37 +++++++++++++++++++++++++++++--------
+ 1 file changed, 29 insertions(+), 8 deletions(-)
 
-diff -puN mm/madvise.c~madv-pageout-find-swap-cache mm/madvise.c
---- a/mm/madvise.c~madv-pageout-find-swap-cache	2020-03-23 16:30:48.505385896 -0700
-+++ b/mm/madvise.c	2020-03-23 16:30:48.509385896 -0700
-@@ -250,6 +250,52 @@ static void force_shm_swapin_readahead(s
- #endif		/* CONFIG_SWAP */
+diff -puN mm/madvise.c~madv-pageout-ignore-shared-swap-cache mm/madvise.c
+--- a/mm/madvise.c~madv-pageout-ignore-shared-swap-cache	2020-03-23 16:30:52.022385888 -0700
++++ b/mm/madvise.c	2020-03-23 16:41:15.448384333 -0700
+@@ -261,6 +261,7 @@ static struct page *pte_get_reclaim_page
+ {
+ 	swp_entry_t entry;
+ 	struct page *page;
++	int nr_page_references = 0;
  
- /*
-+ * Given a PTE, find the corresponding 'struct page'
-+ * and acquire a reference.  Also handles non-present
-+ * swap PTEs.
-+ *
-+ * Returns NULL when there is no page to reclaim.
-+ */
-+static struct page *pte_get_reclaim_page(struct vm_area_struct *vma,
-+					 unsigned long addr, pte_t ptent)
-+{
-+	swp_entry_t entry;
-+	struct page *page;
-+
-+	/* Totally empty PTE: */
-+	if (pte_none(ptent))
-+		return NULL;
-+
-+	/* Handle present or PROT_NONE ptes: */
-+	if (!is_swap_pte(ptent)) {
-+		page = vm_normal_page(vma, addr, ptent);
-+		if (page)
-+			get_page(page);
-+		return page;
-+	}
-+
-+	/*
-+	 * 'ptent' is now definitely a (non-present) swap
-+	 * PTE in this process.  Go look for additional
-+	 * references to the swap cache.
-+	 */
-+
-+	/*
-+	 * Is it one of the "swap PTEs" that's not really
-+	 * swap?  Do not try to reclaim those.
-+	 */
-+	entry = pte_to_swp_entry(ptent);
-+	if (non_swap_entry(entry))
-+		return NULL;
-+
-+	/*
-+	 * The PTE was a true swap entry.  The page may be in
-+	 * the swap cache.
-+	 */
-+	return lookup_swap_cache(entry, vma, addr);
-+}
-+
-+/*
-  * Schedule all required I/O operations.  Do not wait for completion.
-  */
- static long madvise_willneed(struct vm_area_struct *vma,
-@@ -398,13 +444,8 @@ regular_page:
- 	for (; addr < end; pte++, addr += PAGE_SIZE) {
- 		ptent = *pte;
- 
--		if (pte_none(ptent))
--			continue;
--
--		if (!pte_present(ptent))
--			continue;
--
--		page = vm_normal_page(vma, addr, ptent);
-+		/* 'page' can be mapped, in the swap cache or both */
-+		page = pte_get_reclaim_page(vma, addr, ptent);
- 		if (!page)
- 			continue;
- 
-@@ -413,9 +454,10 @@ regular_page:
- 		 * are sure it's worth. Split it if we are only owner.
- 		 */
- 		if (PageTransCompound(page)) {
--			if (page_mapcount(page) != 1)
-+			if (page_mapcount(page) != 1) {
-+				put_page(page);
- 				break;
--			get_page(page);
-+			}
- 			if (!trylock_page(page)) {
- 				put_page(page);
- 				break;
-@@ -436,12 +478,14 @@ regular_page:
- 		}
- 
- 		/* Do not interfere with other mappings of this page */
--		if (page_mapcount(page) != 1)
-+		if (page_mapcount(page) != 1) {
-+			put_page(page);
- 			continue;
-+		}
- 
- 		VM_BUG_ON_PAGE(PageTransCompound(page), page);
- 
--		if (pte_young(ptent)) {
-+		if (!is_swap_pte(ptent) && pte_young(ptent)) {
- 			ptent = ptep_get_and_clear_full(mm, addr, pte,
- 							tlb->fullmm);
- 			ptent = pte_mkold(ptent);
-@@ -466,6 +510,8 @@ regular_page:
- 			}
- 		} else
- 			deactivate_page(page);
-+		/* drop ref acquired in pte_get_reclaim_page() */
-+		put_page(page);
+ 	/* Totally empty PTE: */
+ 	if (pte_none(ptent))
+@@ -271,7 +272,7 @@ static struct page *pte_get_reclaim_page
+ 		page = vm_normal_page(vma, addr, ptent);
+ 		if (page)
+ 			get_page(page);
+-		return page;
++		goto got_page;
  	}
  
- 	arch_leave_lazy_mmu_mode();
+ 	/*
+@@ -292,7 +293,33 @@ static struct page *pte_get_reclaim_page
+ 	 * The PTE was a true swap entry.  The page may be in
+ 	 * the swap cache.
+ 	 */
+-	return lookup_swap_cache(entry, vma, addr);
++	page = lookup_swap_cache(entry, vma, addr);
++	if (!page)
++		return NULL;
++got_page:
++	/*
++	 * Account for references to the swap entry.  These
++	 * might be "upgraded" to a normal mapping at any
++	 * time.
++	 */
++	if (PageSwapCache(page))
++		nr_page_references += page_swapcount(page);
++
++	/*
++	 * Account for all mappings of the page, including
++	 * when it is in the swap cache.  This ensures that
++	 * MADV_PAGOUT not interfere with anything shared
++	 * with another process.
++	 */
++	nr_page_references += page_mapcount(page);
++
++	/* Any extra references?  Do not reclaim it. */
++	if (nr_page_references > 1) {
++		put_page(page);
++		return NULL;
++	}
++
++	return page;
+ }
+ 
+ /*
+@@ -477,12 +504,6 @@ regular_page:
+ 			continue;
+ 		}
+ 
+-		/* Do not interfere with other mappings of this page */
+-		if (page_mapcount(page) != 1) {
+-			put_page(page);
+-			continue;
+-		}
+-
+ 		VM_BUG_ON_PAGE(PageTransCompound(page), page);
+ 
+ 		if (!is_swap_pte(ptent) && pte_young(ptent)) {
 _
