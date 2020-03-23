@@ -2,205 +2,170 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EADC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB716C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6B2F20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83EF520714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:52:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="s/jaXPvn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o1zl9slY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbgCWPwk (ORCPT
+        id S1727278AbgCWPwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 23 Mar 2020 11:52:40 -0400
-Received: from mga04.intel.com ([192.55.52.120]:33100 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbgCWPwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from bombadil.infradead.org ([198.137.202.133]:45974 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgCWPwk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Mar 2020 11:52:40 -0400
-IronPort-SDR: Bxk3l/nacJ/MImTZcSDX38v7uiprxwhT3vakDEs8hUYUAVizZ5Gi96pIoaNYMAoj2i6Uwr09m7
- JgjQRN0XMGxA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 08:52:39 -0700
-IronPort-SDR: qdgVt2/8/RiYVSkmoIPLI02uvi7BFx1td0EGptt4/GDQ6Pn5ouFZ4JQ/vgHSWY2HKNYvXPEard
- nn8Pofm1rp3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,296,1580803200"; 
-   d="scan'208";a="325610672"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga001.jf.intel.com with ESMTP; 23 Mar 2020 08:52:38 -0700
-Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 23 Mar 2020 08:52:34 -0700
-Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 23 Mar 2020 08:52:33 -0700
-Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 23 Mar 2020 08:52:33 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.173)
- by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Mon, 23 Mar 2020 08:52:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZuXiPUNBLNeLCWHdxUMszbEOYf8aI9C0RZXWrPfhqgHhQ8qaWvtFrTiPRWbPYkcXY6OF/nexTPLnnks+Li9ZPXQipES/AtoHiTx4sBmiSCHZ7kIqs/2l03N+ROhdhScXkFEGSu9iW9D8mRmbHBRIZV/zv85nhHG9izSs7ld0/jaakiZ9cn+WVlZlII24jmRYa/LE93Tbq0D5K0GMh2rBZev2qmJPDGJIiiUIxiICb8QCQga/yY6zN4hwtwz2rj90WRjlDI/dAdQi/0NZJTrSyC96eZ+68eWInNXnme0v6U6h7Ks1T685EP6ZuFUKCUvk4kJFNTHrFJ6It9ckGenXHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8NbG25fPmN6j9cr+i/Z3VOKaKxitNL0V+BRRKst/0fU=;
- b=aB7BaxLbk0Zk+6a/bx2UcHQLMHsSkBbX0KMqV+igdBLI2P/4R61thDurmnjput0rlj48JWHe8BEY3OOHy7w39S8A88lBZds6d86AulZMseC1Eri2nwCB8PkG9ibhyrZ1RdiWJQlm/Q7LwcT8pjSHTw5+2HTpTys025iZQ8MTNgiGlVDzf0Oq1CzcKAkBiCLbvjuZDQWAgxQvC1NANFakLYUyWm4SaQaaYB/S4QtDcZGZWSHL0OpzYH5T5y8jUdG+zlFlqPB2SE/sD46Ib4XOiqWkxpfo1Bey2HskZfXnyN7RMS5wVe0y/OFubQhuwUyaL/jShTX2wE5PIeDrg55CbQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8NbG25fPmN6j9cr+i/Z3VOKaKxitNL0V+BRRKst/0fU=;
- b=s/jaXPvnKA6bAEcmWB/X4ly9OyT3oHWmrDWTG6LAJCtxmxfTRjYKqyaWgfKlhOcN+FdqDY9YtL+80HOwC+Pi9xNAFneWfTJxK56ZbFr6fwBhdnX7AqTyBfLsTL6QyzyomCF5s1IHjtRk2BJlQjmZ9F7Uca1j4iq+qzOEsJU/pJ0=
-Received: from BYAPR11MB2757.namprd11.prod.outlook.com (2603:10b6:a02:cb::16)
- by BYAPR11MB2615.namprd11.prod.outlook.com (2603:10b6:a02:c3::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.19; Mon, 23 Mar
- 2020 15:52:13 +0000
-Received: from BYAPR11MB2757.namprd11.prod.outlook.com
- ([fe80::f8aa:496b:6423:f5fc]) by BYAPR11MB2757.namprd11.prod.outlook.com
- ([fe80::f8aa:496b:6423:f5fc%4]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
- 15:52:13 +0000
-From:   "Voon, Weifeng" <weifeng.voon@intel.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>
-Subject: RE: [RFC,net-next,v1, 1/1] net: stmmac: Enable SERDES power up/down
- sequence
-Thread-Topic: [RFC,net-next,v1, 1/1] net: stmmac: Enable SERDES power up/down
- sequence
-Thread-Index: AQHWAE0vpBWvWDPaGkGozDEPMDm2A6hVzcSAgAAFr0CAAAz8AIAAbqEw
-Date:   Mon, 23 Mar 2020 15:52:13 +0000
-Message-ID: <BYAPR11MB2757B80101035B9A599E357B88F00@BYAPR11MB2757.namprd11.prod.outlook.com>
-References: <20200322132342.2687-1-weifeng.voon@intel.com>
- <20200322132342.2687-2-weifeng.voon@intel.com>
- <BN8PR12MB3266ACFFA4808A133BB72F9DD3F00@BN8PR12MB3266.namprd12.prod.outlook.com>
- <BYAPR11MB27575EF05D65A8AA9AF4128488F00@BYAPR11MB2757.namprd11.prod.outlook.com>
- <BN8PR12MB326606DE1FEB055B7361A939D3F00@BN8PR12MB3266.namprd12.prod.outlook.com>
-In-Reply-To: <BN8PR12MB326606DE1FEB055B7361A939D3F00@BN8PR12MB3266.namprd12.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=weifeng.voon@intel.com; 
-x-originating-ip: [134.134.136.203]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 14b99ac5-7879-4d67-58f6-08d7cf42279d
-x-ms-traffictypediagnostic: BYAPR11MB2615:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR11MB261530E4C76A52E9635539D588F00@BYAPR11MB2615.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0351D213B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(366004)(396003)(376002)(136003)(199004)(186003)(478600001)(26005)(33656002)(4326008)(316002)(9686003)(55016002)(54906003)(110136005)(6506007)(107886003)(7696005)(71200400001)(86362001)(81166006)(66446008)(66946007)(66476007)(64756008)(52536014)(8936002)(76116006)(66556008)(2906002)(8676002)(81156014)(5660300002)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR11MB2615;H:BYAPR11MB2757.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VwnRttc10a6RPfsduwVIRJkHwJvNRWhzOPeLkzlRo6qEP1ewKc4PCmjXHjj5XkaZlSRAoqHGwsODYC/a8nX1bOqqPEhfvOx52AB+XmV33BqnIlcmql31LAy3rLvXSHugQ5Xfblbq88aK1f2R7tkqZ3jsPk7Fi1CsuSKQnEv8XNE3c3q9V1kWVCXABLTXMZMKJc2qmfaENEEO/jNn1X8kEdlAeCJ8PnUpItyJGFWd2tPM8Tskwv0cIFv2a+in9ZIBZPClUriAOMg4gatzUjuO9PS0/rgY1eeg9mdvuGeNAp31geDVrhjV5KGLidgDnisfS39C5qweubkKbIs24zNUIGua1iDmcNZhKT3eNI2q7cCBkBBhtIHVAHafVZ3XCh8rs8ezxXw4/NDY9DSoYWtpjVU86n2/eEnyS9zGu2nSl1QaegjLWp3NC5ias3H559R5ypFAHI1FZvFCpDES3D7QpdvgwyX0PPBYynp1phFMhCgQjzMDgQkO5/2O4lGYDe1Y
-x-ms-exchange-antispam-messagedata: TDKnBxT8DoLhNweoIPdlFrEKxJMp41KA9C/SaZYN2HbizVB8pBV9WU+1FS3bcxJ4CTGJqaB4/5WXcJDcXY0ngnqVSr+ESf0C4gntV1ceXu8bPHbmbM6Kaait6rMRUr5lHLqHJBhcXPug6bIEqmSgAQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=ysalBJzhuJVJmOkBVr4y/sPJxWq5OuY+ZimbIwAKEcs=; b=o1zl9slYsnK310chqMTVz6ctmY
+        OmCkgh5gHMdklsfTfA87pKDo2SKUnVIOD5HFTActx8i8muWVBEZUm5tt4F9yMCmlvW6MWxrUIHxxu
+        TgMIOBdWU+dYL2MfGcFNrD1enc7ZEeBwz9gwNd/yS2DhvXjgpQklInlQryQSbaUAsKnortVI1rv26
+        RFYR/smtJTc/k5Ynszyk7WGe9Sbg0hDFJ38n16/fyxLayaDpq+xjXd73+CwbtJud9v5SNlqdpBBNf
+        tP6SOj+KUdn49GI5IN6GYfVq/vLiPquI864gqc2PYB8W6liP8uXHoqDN+b+6B4MiE6+PMA/l+qWxT
+        SBJDPhOw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGPNV-0000U6-4c; Mon, 23 Mar 2020 15:52:37 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] Docs: locktypes: minor fixes
+Message-ID: <27884858-6468-bbc4-0e3e-f36c3b2241c0@infradead.org>
+Date:   Mon, 23 Mar 2020 08:52:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14b99ac5-7879-4d67-58f6-08d7cf42279d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2020 15:52:13.4629
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IiSNaK8ZMhHubLowDkL2YQpDDvHyqx5tTQPq+LKwY3yNOBlwkWaUe5+Hc2btGR1orI1DYemnhBUiriupPdne2Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2615
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > > This patch is to enable Intel SERDES power up/down sequence. The
-> > > > SERDES converts 8/10 bits data to SGMII signal. Below is an
-> > > > example of HW configuration for SGMII mode. The SERDES is located
-> > > > in the PHY IF in the diagram below.
-> > > >
-> > > > <-----------------GBE Controller---------->|<--External PHY
-> > > > chip-->
-> > > > +----------+         +----+            +---+           +----------
-> +
-> > > > |   EQoS   | <-GMII->| DW | < ------ > |PHY| <-SGMII-> | External
-> |
-> > > > |   MAC    |         |xPCS|            |IF |           | PHY
-> |
-> > > > +----------+         +----+            +---+           +----------
-> +
-> > > >        ^               ^                 ^                ^
-> > > >        |               |                 |                |
-> > > >        +---------------------MDIO-------------------------+
-> > > >
-> > > > PHY IF configuration and status registers are accessible through
-> > > > mdio address 0x15 which is defined as intel_adhoc_addr. During D0,
-> > > > The driver will need to power up PHY IF by changing the power
-> state to P0.
-> > > > Likewise, for D3, the driver sets PHY IF power state to P3.
-> > >
-> > > I don't think this is the right approach.
-> > >
-> > > You could just add a new "mdio-intel-serdes" to phy/ folder just
-> > > like I did with XPCS because this is mostly related with PHY
-> > > settings rather than EQoS.
-> > I am taking this approach to put it in stmmac folder rather than phy
-> > folder as a generic mdio-intel-serdes as this is a specific Intel
-> > serdes architecture which would only pair with DW EQos and DW xPCS HW.
-> > Since this serdes will not able to pair other MAC or other non-Intel
-> > platform, I would like you to reconsider this approach. I am open for
-> discussion.
-> > Thanks Jose for the fast response.
->=20
-> OK, then I think we should use the BSP init/exit functions that are
-> already available for platform setups (.init and .exit callback of
-> plat_stmmacenet_data struct). We just need to extend this to PCI based
-> setups.
->=20
-> You can take a look at stmmac_platform.c and check what's done.
-> Basically:
-> 	- Call priv->plat->init() at probe() and resume()
-> 	- Call priv->plat->exit() at remove() and suspend()
->=20
-I have 2 concern if using the suggested BSP init/exit function.
-1. Serdes is configured through MDIO bus. But the mdio bus register only ha=
-ppens
-in stmmac_dvr_probe() in stmmac_main.c.=20
+From: Randy Dunlap <rdunlap@infradead.org>
 
-2. All tx/rx packets requires serdes to be in the correct power state. If t=
-he driver=20
-power-down before stopping all the dma, it will cause tx queue timeout as p=
-ackets=20
-are not able to be transmitted out. Hence, the serdes cannot be power-down =
-before calling
-the stmmac_dvr_remove(). The stmmac_dvr_remove() will unregister the mdio b=
-us. So, the=20
-driver cannot powerdown the serdes after the stmmac_dvr_remove() too.   =20
+Copy editor fixes:
+- add some hyphens to multi-word adjectives
+- end some sentences with a period ('.') for consistency
+- minor wordsmithing
+- use semi-colon instead of comma in a sentence
 
-Regards,
-Weifeng
 
-> ---
-> Thanks,
-> Jose Miguel Abreu
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Paul E . McKenney" <paulmck@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+Applies to your PATCH V3 13/20] of 2020-03-21.
+
+ Documentation/locking/locktypes.rst |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+--- linux-next-20200323.orig/Documentation/locking/locktypes.rst
++++ linux-next-20200323/Documentation/locking/locktypes.rst
+@@ -73,7 +73,7 @@ rtmutex
+ 
+ RT-mutexes are mutexes with support for priority inheritance (PI).
+ 
+-PI has limitations on non PREEMPT_RT enabled kernels due to preemption and
++PI has limitations on non-PREEMPT_RT-enabled kernels due to preemption and
+ interrupt disabled sections.
+ 
+ PI clearly cannot preempt preemption-disabled or interrupt-disabled
+@@ -90,11 +90,11 @@ raw_spinlock_t
+ --------------
+ 
+ raw_spinlock_t is a strict spinning lock implementation regardless of the
+-kernel configuration including PREEMPT_RT enabled kernels.
++kernel configuration including PREEMPT_RT-enabled kernels.
+ 
+ raw_spinlock_t is a strict spinning lock implementation in all kernels,
+ including PREEMPT_RT kernels.  Use raw_spinlock_t only in real critical
+-core code, low level interrupt handling and places where disabling
++core code, low-level interrupt handling and places where disabling
+ preemption or interrupts is required, for example, to safely access
+ hardware state.  raw_spinlock_t can sometimes also be used when the
+ critical section is tiny, thus avoiding RT-mutex overhead.
+@@ -104,20 +104,20 @@ spinlock_t
+ 
+ The semantics of spinlock_t change with the state of CONFIG_PREEMPT_RT.
+ 
+-On a non PREEMPT_RT enabled kernel spinlock_t is mapped to raw_spinlock_t
++On a non-PREEMPT_RT-enabled kernel spinlock_t is mapped to raw_spinlock_t
+ and has exactly the same semantics.
+ 
+ spinlock_t and PREEMPT_RT
+ -------------------------
+ 
+-On a PREEMPT_RT enabled kernel spinlock_t is mapped to a separate
++On a PREEMPT_RT-enabled kernel spinlock_t is mapped to a separate
+ implementation based on rt_mutex which changes the semantics:
+ 
+- - Preemption is not disabled
++ - Preemption is not disabled.
+ 
+  - The hard interrupt related suffixes for spin_lock / spin_unlock
+    operations (_irq, _irqsave / _irqrestore) do not affect the CPUs
+-   interrupt disabled state
++   interrupt disabled state.
+ 
+  - The soft interrupt related suffix (_bh()) still disables softirq
+    handlers.
+@@ -194,8 +194,8 @@ and is fully equivalent to::
+ 
+ Same applies to rwlock_t and the _irqsave() suffix variants.
+ 
+-On PREEMPT_RT kernel this code sequence breaks because RT-mutex requires a
+-fully preemptible context.  Instead, use spin_lock_irq() or
++On a PREEMPT_RT kernel this code sequence breaks because RT-mutex requires
++a fully preemptible context.  Instead, use spin_lock_irq() or
+ spin_lock_irqsave() and their unlock counterparts.  In cases where the
+ interrupt disabling and locking must remain separate, PREEMPT_RT offers a
+ local_lock mechanism.  Acquiring the local_lock pins the task to a CPU,
+@@ -257,7 +257,7 @@ The most basic rules are:
+ These rules apply in general independent of CONFIG_PREEMPT_RT.
+ 
+ As PREEMPT_RT changes the lock category of spinlock_t and rwlock_t from
+-spinning to sleeping this has obviously restrictions how they can nest with
++spinning to sleeping this has obvious restrictions on how they can nest with
+ raw_spinlock_t.
+ 
+ This results in the following nest ordering:
+@@ -286,7 +286,7 @@ often used for both serialization and wa
+ discouraged and should be replaced by separate serialization and wait
+ mechanisms, such as mutexes and completions.
+ 
+-rwsems have grown interfaces which allow non owner release for special
++rwsems have grown interfaces which allow non-owner release for special
+ purposes. This usage is problematic on PREEMPT_RT because PREEMPT_RT
+ substitutes all locking primitives except semaphores with RT-mutex based
+ implementations to provide priority inheritance for all lock types except
+@@ -295,5 +295,5 @@ obviously impossible.
+ 
+ For now the rwsem non-owner release excludes code which utilizes it from
+ being used on PREEMPT_RT enabled kernels. In same cases this can be
+-mitigated by disabling portions of the code, in other cases the complete
++mitigated by disabling portions of the code; in other cases the complete
+ functionality has to be disabled until a workable solution has been found.
+
+
