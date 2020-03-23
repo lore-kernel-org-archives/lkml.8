@@ -2,127 +2,89 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F28C4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC08C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 474C820714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:42:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i2ZRIgCf"
+	by mail.kernel.org (Postfix) with ESMTP id B622C20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584992644;
+	bh=ybjCvacjEGd/Q6jtpvM6CKxHbtDZvPBosD9QOKBwDF0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d02nICt0J8iQbSfFG5C4bsHdyWO/7tZsAPTW4daEc750qKMaV1CWYmAR1Rkz3IJb7
+	 VJgXrF0wPPzscUXpXiLTXGo+lcAPWikZ4+WT9EoGV0SrUpSDVrgLArZ8bx4W3SjK6J
+	 VekEoANIlIMyY1/xbLhwUHnDpu+BtRD44VJDUMbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgCWTmd (ORCPT
+        id S1726560AbgCWToD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:42:33 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:28495 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725816AbgCWTmd (ORCPT
+        Mon, 23 Mar 2020 15:44:03 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:43089 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgCWToD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:42:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584992551;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=smmSxlhEOR5qNhn11L1ve0W1BbFnYt0RhPTc7f7mic0=;
-        b=i2ZRIgCfppNiAOGVsnkTGA7D+iQBu85SsCnVN80e/SsYLfmGR14J24Mv4bB5at9Br6NR3Y
-        nnYFN5lj3rc7G4SPgCdyIR14eXd44mxCCSLARr9OfuhsNlv4xFrg5xW1w21BnjZmP1sSXe
-        qVux2s1HpUz1o+DYfTvwredTH60KC6U=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-341-ftuvxa9XOoKeiQXLvdtAlg-1; Mon, 23 Mar 2020 15:42:29 -0400
-X-MC-Unique: ftuvxa9XOoKeiQXLvdtAlg-1
-Received: by mail-wm1-f69.google.com with SMTP id f9so239480wme.7
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 12:42:29 -0700 (PDT)
+        Mon, 23 Mar 2020 15:44:03 -0400
+Received: by mail-il1-f196.google.com with SMTP id g15so5374271ilj.10;
+        Mon, 23 Mar 2020 12:44:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=smmSxlhEOR5qNhn11L1ve0W1BbFnYt0RhPTc7f7mic0=;
-        b=YVI8qNl/GLA4foCa/duu6EMJ7IyaT9qN2k1oXDVeUZdKqzZX63TbfdekhrWRt7DF/K
-         67VO0ljRkJW/Tipiqj27Q0Fay0R9Q0d74/ZBDmnmVL7KgUjCzbPa2Jdr76uhOWgHCC7P
-         VnKZ8S0ATzz02eWytlNHIJgn/4OBDVAwJFjA0hx2+i4uj09/w1UtP4HJZrIIIJES2mMZ
-         BPE0XSf8kX6wCxGKZHfpGvSs4AqUopMW+Rg1hfntkF9qYncd+zxsIwjP+7h+VscTopPR
-         VgpOGX9LfokyPzMgrrUROkwZS6Wd2Ekow1vq01oZzdyUOYc6rzwFfV5zzHuBoZzrrGbJ
-         Aq5g==
-X-Gm-Message-State: ANhLgQ1TUujUllUqUidkaRQNdkH8qWNhp14ZLvSP/R5jaJJ35XhdAPjV
-        iHnRcnt2pMkp8U2rljbKlKduUY2TRXX1fCKb0+s2aGgdEIFyrjvJ2jK8dNftbdrwpyZIZOLjbBt
-        NCHPfB5d3FuzgaUfx2wUZ4F+V
-X-Received: by 2002:a5d:44d0:: with SMTP id z16mr9536736wrr.28.1584992548663;
-        Mon, 23 Mar 2020 12:42:28 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtQtBDqi8UHm7eMe+WXYdgVpyqZ4rAOMGiQwUhT4b15bVIuSlqY9zZJBAt+/xHFll+hTH7sBQ==
-X-Received: by 2002:a5d:44d0:: with SMTP id z16mr9536706wrr.28.1584992548365;
-        Mon, 23 Mar 2020 12:42:28 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:24d8:ed40:c82a:8a01? ([2001:b07:6468:f312:24d8:ed40:c82a:8a01])
-        by smtp.gmail.com with ESMTPSA id h26sm831009wmb.19.2020.03.23.12.42.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2020 12:42:27 -0700 (PDT)
-Subject: Re: [PATCH 0/2] Fix errors when try to build kvm selftests on
-To:     shuah <shuah@kernel.org>, Xiaoyao Li <xiaoyao.li@intel.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20200315093425.33600-1-xiaoyao.li@intel.com>
- <7f7a2945-300d-d62c-e5f5-de55c2e3fd2f@redhat.com>
- <ed26428d-00bc-e90c-f2ee-ee7c0f874715@kernel.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d89b9433-7825-c204-a7b7-cce07d4ba7e7@redhat.com>
-Date:   Mon, 23 Mar 2020 20:42:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=z6kwnFs0niH7E9Kzv2VbHKH5UoBOgvaVsFLxKybIkRI=;
+        b=ZYABjhIYNmMp5VOtv/owH/83m5HG4ILhBjgX+mX8I99XNdc7r0Mb7Vkq2CnC/beiqX
+         3LIkpPKErnAu8GOIFACUleZqr0m2u2PIkXfx/OhyqWS16QLRt8bcs4NYvdub8zQMu4fR
+         wr1BEdEX6VtSCc/GzBb5JNr7svHpez+ZjrH1tewkUgsNprEK1IIujewAwlxEKWdqV9Yg
+         VkWRObMZTxJORyU7AszH0h5nGe5CaRMCFuh/NPxST+dog7hv2cd4xWCjYBNkeMXzrM9S
+         NL0kujO//kTDQJu9mvd0phXcbFEg5zVyDTDti2HYQo1ZRSirF0gtemLU/4azGZnT7JLm
+         clig==
+X-Gm-Message-State: ANhLgQ2RJnDKuc+5oLcdTZ9mgup1LITXUPGMcOZHEPsAR5lyYvcvk4wH
+        opfQs6/lrt28of5ZcMQmBw==
+X-Google-Smtp-Source: ADFU+vut6tX/rjj5bh3lZRotPsHXc27nCWaaqY0ASQCB3Fp2ukLJeY95a9TfwnFEy1qAMy5Jtjs3LA==
+X-Received: by 2002:a92:aa87:: with SMTP id p7mr21088780ill.63.1584992641642;
+        Mon, 23 Mar 2020 12:44:01 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id n26sm4568483ioo.9.2020.03.23.12.44.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 12:44:00 -0700 (PDT)
+Received: (nullmailer pid 19776 invoked by uid 1000);
+        Mon, 23 Mar 2020 19:43:58 -0000
+Date:   Mon, 23 Mar 2020 13:43:58 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Peng Ma <peng.ma@nxp.com>, Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH 1/2] dt-bindings: dma: fsl-edma: fix ls1028a-edma
+ compatible
+Message-ID: <20200323194358.GA19737@bogus>
+References: <20200306205403.29881-1-michael@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <ed26428d-00bc-e90c-f2ee-ee7c0f874715@kernel.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306205403.29881-1-michael@walle.cc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/03/20 16:44, shuah wrote:
-> On 3/18/20 7:13 AM, Paolo Bonzini wrote:
->> On 15/03/20 10:34, Xiaoyao Li wrote:
->>> I attempted to build KVM selftests on a specified dir, unfortunately
->>> neither    "make O=~/mydir TARGETS=kvm" in tools/testing/selftests, nor
->>> "make OUTPUT=~/mydir" in tools/testing/selftests/kvm work.
->>>
->>> This series aims to make both work.
->>>
->>> Xiaoyao Li (2):
->>>    kvm: selftests: Fix no directory error when OUTPUT specified
+On Fri,  6 Mar 2020 21:54:02 +0100, Michael Walle wrote:
+> The bootloader will fix up the IOMMU entries only on nodes with the
+> compatible "fsl,vf610-edma". Thus make this compatible string mandatory
+> for the ls1028a-edma.
 > 
-> This definitely isn't thr right fix for this issue.
+> While at it, fix the "fsl,fsl," typo.
 > 
->>>    selftests: export INSTALL_HDR_PATH if using "O" to specify output dir
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> Fixes: d8c1bdb5288d ("dt-bindings: dma: fsl-edma: add new fsl,fsl,ls1028a-edma")
+> ---
+>  Documentation/devicetree/bindings/dma/fsl-edma.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> Might be okay, but hard to find problems with the limited testing
-> done just on the kvm test.
-> 
->>>
->>>   tools/testing/selftests/Makefile     | 6 +++++-
->>>   tools/testing/selftests/kvm/Makefile | 3 ++-
->>>   2 files changed, 7 insertions(+), 2 deletions(-)
->>>
->>
->> Queued, thanks.
->>
->> Paolo
->>
->>
-> Can you please drop these for your queue. I would like to make sure
-> they work with other patches queued in kselftest next and would like
-> these go through kselftest tree.
-> 
-> It will be easier to find regressions when tested with other patches
-> to framework as opposed to limited testing on just the kvm test.
 
-Sure, thanks.
-
-Paolo
-
+Reviewed-by: Rob Herring <robh@kernel.org>
