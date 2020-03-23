@@ -2,124 +2,119 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F9BC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9955C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6319E20637
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB5C20637
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:07:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eJSDXtxz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbgCWUGQ (ORCPT
+        id S1726982AbgCWUHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 16:06:16 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:54683 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgCWUGP (ORCPT
+        Mon, 23 Mar 2020 16:07:05 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37665 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbgCWUHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 16:06:15 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id B1FB8C0004;
-        Mon, 23 Mar 2020 20:06:13 +0000 (UTC)
-Date:   Mon, 23 Mar 2020 21:06:13 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Steve Muckle <smuckle@google.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        LKML <linux-kernel@vger.kernel.org>, linux-rtc@vger.kernel.org,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Subject: Re: [PATCH] rtc: class: support hctosys from modular RTC drivers
-Message-ID: <20200323200508.GA16405@piout.net>
-References: <20191106194625.116692-1-smuckle@google.com>
- <20191106231923.GK8309@piout.net>
- <b96f085b-8a0c-7c71-4fde-8af83d49823a@google.com>
- <20191115133627.GT3572@piout.net>
- <CAL21Ktd3JmRbkwPCCb77knXg4AWi0vWdU147sVaDaoWeEMauDQ@mail.gmail.com>
+        Mon, 23 Mar 2020 16:07:05 -0400
+Received: by mail-wm1-f67.google.com with SMTP id d1so997974wmb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 13:07:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5WiRAMnvFissAlOT1YjcrzmBmUjG0ccc8lAc8bMs2nc=;
+        b=eJSDXtxzZXqZVLJ7iLFvQKQIGT5Z5MKeRdjR2U1SDKWo/A7zLTEFqu8YUSlDUuIsWH
+         ucWHXS+AgYJCXRByKz7Z4lb/oCDwD9JYbBnje4nndfo0nxly6+tUXktMmqbHlgv23l3y
+         BNKGuA0NU/+S3+sPK8umJg0I1ZHQhYh9lGmbNA1ISEzXvdczBteydXKji9c3SpOGlB9t
+         WoWD5gsQME4PpX1sRSLMO18TT1IuC5bSMU91otU4V5dVXFzu7hphkr2o3X+sack31rWz
+         UrFxAWRaDRliZKWI0Tf3Vj7yQW6U52DdMk/UpTy/dZ35hIvC8Hf1RQTcVV6LK6iThNkp
+         l+wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5WiRAMnvFissAlOT1YjcrzmBmUjG0ccc8lAc8bMs2nc=;
+        b=UZixCkg6427c8fFl4qQFVviNL+4ft+MvLZ+F9iOtO7S99UxrlvG+JNp1DOiK/8xpl1
+         uTc/WuYOSKrmxUqCfbRZIIo4BXeRysDiGUknKW6/nTt+WcBldYIB58FuIaFTZZbIlJaK
+         RqXDXNExmbrq5ftLBo4jHlduRvPcJjGV8AQ5bYtuZJwSWXDKzpzHR+cHOo0RaVW+Y+HB
+         TT1TBHm/CSniX42rwaF6g5uH1BToYG4ekGNB5FURAWr4lc3FhHUxDex1EyAgGauhWHvY
+         1vajE2vwhvispzq/J7v8NJTNDC4w5e+0aEsAxheC9ZQgWIR8+PBPpHkRUdQ67MeNDBjn
+         Pmaw==
+X-Gm-Message-State: ANhLgQ0uXp4qa07/XSg+5MUQTetglTaEK7ZepnhZ43rVHzbvYQjv/zHs
+        IXu3lDGw4Vj7wYeM1FeItYcu6mSCmxGaJQtJG09ceQ==
+X-Google-Smtp-Source: ADFU+vvZ6PTvzLc7c7CtUOFxWTsDOMweZx9kr7k8Uiqz2DUl/JLub/emgkVCTrSEHEOx+RvXJddLqVDI5T23g3NLQ94=
+X-Received: by 2002:a1c:a9cf:: with SMTP id s198mr1082793wme.115.1584994022457;
+ Mon, 23 Mar 2020 13:07:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL21Ktd3JmRbkwPCCb77knXg4AWi0vWdU147sVaDaoWeEMauDQ@mail.gmail.com>
+References: <20200313232720.22364-1-bernardo.perez.priego@intel.com> <f1635547-2c18-b9d6-0fb2-2f69dcfd124e@collabora.com>
+In-Reply-To: <f1635547-2c18-b9d6-0fb2-2f69dcfd124e@collabora.com>
+From:   Daniel Campello <campello@google.com>
+Date:   Mon, 23 Mar 2020 14:06:26 -0600
+Message-ID: <CAHcu+Vb37A+b2B6tJDYmJtH2dhUPEDy-3yZxaQYy3P3fLV2nVg@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: wilco_ec: Provide correct output format
+ to 'h1_gpio' file
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Bernardo Perez Priego <bernardo.perez.priego@intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Nick Crews <ncrews@chromium.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/12/2019 12:23:23-0800, Steve Muckle wrote:
-> On Fri, Nov 15, 2019 at 5:36 AM Alexandre Belloni <
-> alexandre.belloni@bootlin.com> wrote:
-> 
-> > On 06/11/2019 15:37:49-0800, Steve Muckle wrote:
-> > > On 11/6/19 3:19 PM, Alexandre Belloni wrote:
-> > > > On 06/11/2019 11:46:25-0800, Steve Muckle wrote:
-> > > > > Due to distribution constraints it may not be possible to statically
-> > > > > compile the required RTC driver into the kernel.
-> > > > >
-> > > > > Expand RTC_HCTOSYS support to cover all RTC devices (statically
-> > compiled
-> > > > > or not) by checking at the end of RTC device registration whether the
-> > > > > time should be synced.
-> > > > >
-> > > >
-> > > > This does not really help distributions because most of them will still
-> > > > have "rtc0" hardcoded and rtc0 is often the rtc that shouldn't be used.
-> > >
-> > > Just for my own edification, why is that? Is rtc0 normally useless on PC
-> > for
-> > > some reason?
-> > >
-> >
-> > On PC, rtc0 is probably fine which is not the case for other
-> > architectures where rtc0 is the SoC RTC and is often not battery backed.
-> >
-> > > On the platforms I'm working with I believe it can be assured that rtc0
-> > will
-> > > be the correct rtc. That doesn't help typical distributions though.
-> > >
-> > > What about a kernel parameter to optionally override the rtc hctosys
-> > device
-> > > at runtime?
-> > >
-> >
-> > What about keeping that in userspace instead which is way easier than
-> > messing with kernel parameters?
-> >
-> 
-> This should ideally happen before file systems are mounted so I don't see
-> many alternatives for communicating which RTC should be used. Android uses
-> the kernel command line for userspace parameters as well and that's an
-> option but that defeats part of the value of doing it in userspace IMO.
-> There's also device tree but I'm not sure this belongs there.
-> 
-> Hctosys is also saving and restoring the system time on suspend/resume. It
-> seems more efficient to me to do this (which happens very frequently on an
-> Android device) in the kernel as opposed to in userspace.
-> 
-> If I set the initial system time from the rtc in userspace but continue to
-> rely on the hctosys suspend/resume code, as it stands there will be a
-> window after the rtc driver is loaded but before the system time is set
-> where if suspend is entered, the correct time in the rtc will be lost.
-> 
-> > > Can't you move away from HCTOSYS and do the correct thing in userspace
-> > > > instead of the crap hctosys is doing?
-> > >
-> > > Yes, I just figured it's a small change, and if hctosys can be made to
-> > work
-> > > might as well use that.
-> >
-> > The fact is that hctosys is more related to time keeping than it is to
-> > the RTC subsytem. It also does a very poor job setting the system time
-> > because adding 0.5s is not the smartest thing to do. The rtc granularity
-> > is indeed 1 second but is can be very precisely set.
-> >
-> 
-> No argument with that, but millions of devices successfully rely on it
-> today. AFAICT this simple patch doesn't make anything worse. Together with
-> a change to support a kernel parameter for runtime rtc selection, it should
-> allow RTC drivers to be modularized on many systems. Can it be adopted as a
-> stopgap measure?
+Hello,
 
-I've applied this patch for 5.7 after removing the unnecessary
-reformatting of the kconfig help.
+On Tue, Mar 17, 2020 at 1:09 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi,
+>
+> On 14/3/20 0:27, Bernardo Perez Priego wrote:
+> > Function 'h1_gpio_get' is receiving 'val' parameter of type u64,
+> > this is being passed to 'send_ec_cmd' as type u8, thus, result
+> > is stored in least significant byte. Due to output format,
+> > the whole 'val' value was being displayed when any of the most
+> > significant bytes are different than zero.
+> >
+> > This fix will make sure only least significant byte is displayed
+> > regardless of remaining bytes value.
+> >
+> > Signed-off-by: Bernardo Perez Priego <bernardo.perez.priego@intel.com>
+>
+> Daniel, could you give a try and give you Tested-by tag if you're fine with it?
+>
+> Thanks,
+>  Enric
+>
+> > ---
+> >  drivers/platform/chrome/wilco_ec/debugfs.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platform/chrome/wilco_ec/debugfs.c
+> > index df5a5f6c3ec6..c775b7d58c6d 100644
+> > --- a/drivers/platform/chrome/wilco_ec/debugfs.c
+> > +++ b/drivers/platform/chrome/wilco_ec/debugfs.c
+> > @@ -211,7 +211,7 @@ static int h1_gpio_get(void *arg, u64 *val)
+> >       return send_ec_cmd(arg, SUB_CMD_H1_GPIO, (u8 *)val);
+> >  }
+> >
+> > -DEFINE_DEBUGFS_ATTRIBUTE(fops_h1_gpio, h1_gpio_get, NULL, "0x%02llx\n");
+> > +DEFINE_DEBUGFS_ATTRIBUTE(fops_h1_gpio, h1_gpio_get, NULL, "0x%02hhx\n");
+> >
+> >  /**
+> >   * test_event_set() - Sends command to EC to cause an EC test event.
+> >
+
+Done. I also found the chromium review for this on crrev.com/c/2090128
+
+Tested-by: Daniel Campello <campello@chromium.org>
