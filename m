@@ -6,125 +6,110 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEFCC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4C4C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB10620780
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E39208E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbgCWOkC (ORCPT
+        id S1727179AbgCWOkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:40:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:50308 "EHLO foss.arm.com"
+        Mon, 23 Mar 2020 10:40:32 -0400
+Received: from mga11.intel.com ([192.55.52.93]:36173 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbgCWOkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:40:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 74305FEC;
-        Mon, 23 Mar 2020 07:40:01 -0700 (PDT)
-Received: from mbp (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B8773F52E;
-        Mon, 23 Mar 2020 07:39:57 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 14:39:55 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        nd@arm.com
-Subject: Re: [PATCH v10 00/13] arm64: Branch Target Identification support
-Message-ID: <20200323143954.GC4892@mbp>
-References: <20200316165055.31179-1-broonie@kernel.org>
- <20200320173945.GC27072@arm.com>
- <20200323122143.GB4892@mbp>
- <20200323132412.GD4948@sirena.org.uk>
- <20200323135722.GA3959@C02TD0UTHF1T.local>
+        id S1725816AbgCWOkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 10:40:32 -0400
+IronPort-SDR: Qpl0iO+boptv/rFvsCLtEjQES3Wx5TAqXIPorZycf/k0cIsNiCEdpgsToA0JxOFdnrtrQYjqbw
+ +o3jOC4ppSrQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 07:40:31 -0700
+IronPort-SDR: a0XCa+e1GQIxpO/K/RToaMSSO1oaOTImJsmySbWz2YU8TW1xDo40/Phqv/W3fNuNgQ8un+lC8s
+ 3W5AZzlHSq2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,296,1580803200"; 
+   d="scan'208";a="419518847"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 23 Mar 2020 07:40:31 -0700
+Date:   Mon, 23 Mar 2020 07:40:31 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
+        <longpeng2@huawei.com>, akpm@linux-foundation.org,
+        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
+        arei.gonglei@huawei.com, weidong.huang@huawei.com,
+        weifuqiang@huawei.com, kvm@vger.kernel.org, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] mm/hugetlb: fix a addressing exception caused by
+ huge_pte_offset()
+Message-ID: <20200323144030.GA28711@linux.intel.com>
+References: <1582342427-230392-1-git-send-email-longpeng2@huawei.com>
+ <51a25d55-de49-4c0a-c994-bf1a8cfc8638@oracle.com>
+ <5700f44e-9df9-1b12-bc29-68e0463c2860@huawei.com>
+ <e16fe81b-5c4c-e689-2f48-214f2025df2f@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200323135722.GA3959@C02TD0UTHF1T.local>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e16fe81b-5c4c-e689-2f48-214f2025df2f@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 01:57:22PM +0000, Mark Rutland wrote:
-> On Mon, Mar 23, 2020 at 01:24:12PM +0000, Mark Brown wrote:
-> > On Mon, Mar 23, 2020 at 12:21:44PM +0000, Catalin Marinas wrote:
-> > > On Fri, Mar 20, 2020 at 05:39:46PM +0000, Szabolcs Nagy wrote:
+On Sun, Mar 22, 2020 at 07:54:32PM -0700, Mike Kravetz wrote:
+> On 3/22/20 7:03 PM, Longpeng (Mike, Cloud Infrastructure Service Product Dept.) wrote:
 > > 
-> > > +int arch_elf_adjust_prot(int prot, const struct arch_elf_state *state,
-> > > +                        bool has_interp, bool is_interp)
-> > > +{
-> > > +       if (is_interp != has_interp)
-> > > +               return prot;
-> > > +
-> > > +       if (!(state->flags & ARM64_ELF_BTI))
-> > > +               return prot;
-> > > +
-> > > +       if (prot & PROT_EXEC)
-> > > +               prot |= PROT_BTI;
-> > > +
-> > > +       return prot;
-> > > +}
-> > 
-> > > At a quick look, for dynamic binaries we have has_interp == true and
-> > > is_interp == false. I don't know why but, either way, the above code
-> > > needs a comment with some justification.
-> > 
-> > I don't really know for certain either, I inherited this code as is with
-> > the understanding that this was all agreed with the toolchain and libc
-> > people - the actual discussion that lead to the decisions being made
-> > happened before I was involved.  My understanding is that the idea was
-> > that the dynamic linker would be responsible for mapping everything in
-> > dynamic applications other than itself but other than consistency I
-> > don't know why.  I guess it defers more decision making to userspace but
-> > I'm having a hard time thinking of sensible cases where one might wish
-> > to make a decision other than enabling PROT_BTI.
+> > On 2020/3/22 7:38, Mike Kravetz wrote:
+> >> On 2/21/20 7:33 PM, Longpeng(Mike) wrote:
+> >>> From: Longpeng <longpeng2@huawei.com>
+> I have not looked closely at the generated code for lookup_address_in_pgd.
+> It appears that it would dereference p4d, pud and pmd multiple times.  Sean
+> seemed to think there was something about the calling context that would
+> make issues like those seen with huge_pte_offset less likely to happen.  I
+> do not know if this is accurate or not.
+
+Only for KVM's calls to lookup_address_in_mm(), I can't speak to other
+calls that funnel into to lookup_address_in_pgd().
+
+KVM uses a combination of tracking and blocking mmu_notifier calls to ensure
+PTE changes/invalidations between gup() and lookup_address_in_pgd() cause a
+restart of the faulting instruction, and that pending changes/invalidations
+are blocked until installation of the pfn in KVM's secondary MMU completes.
+
+kvm_mmu_page_fault():
+
+	mmu_seq = kvm->mmu_notifier_seq;
+	smp_rmb();
+
+	pfn = gup(hva);
+
+	spin_lock(&kvm->mmu_lock);
+	smp_rmb();
+	if (kvm->mmu_notifier_seq != mmu_seq)
+		goto out_unlock: // Restart guest, i.e. retry the fault
+
+	lookup_address_in_mm(hva, ...);
+
+	...
+
+  out_unlock:
+	spin_unlock(&kvm->mmu_lock);
+
+
+kvm_mmu_notifier_change_pte() / kvm_mmu_notifier_invalidate_range_end():
+
+	spin_lock(&kvm->mmu_lock);
+	kvm->mmu_notifier_seq++;
+	smp_wmb();
+	spin_unlock(&kvm->mmu_lock);
+
+
+> Let's remove the two READ_ONCE calls and move this patch forward.  We can
+> look closer at lookup_address_in_pgd and generate another patch if that needs
+> to be fixed as well.
 > 
-> My understanding was this had been agreed with the toolchain folk a
-> while back -- anything static loaded by the kernel (i.e. a static
-> executable or the dynamic linker) would get GP set. In other cases the
-> linker will mess with the permissions on the pages anyhow, and needs to
-> be aware of BTI in order to do the right thing, so it was better to
-> leave it to userspace consistently (e.g. as that had the least risk of
-> subtle changes in behaviour leading to ABI difficulties).
-
-So this means that the interpreter will have to mprotect(PROT_BTI) the
-text section of the primary executable. For subsequent libraries, it
-calls mmap() explicitly anyway but not for the main executable (IIUC).
-
-> > I'd be perfectly happy to drop the check if that makes more sense to
-> > people, otherwise I can send a patch adding a comment explaining the
-> > situation.
-> 
-> I think it would be best to document the current behaviour, as it's a
-> simple ABI that we can guarantee, and the dynamic linker will have to be
-> aware of BTI in order to do the right thing anyhow.
-
-That's a valid point. If we have an old dynamic linker and the kernel
-enabled BTI automatically for the main executable, could things go wrong
-(e.g. does the PLT need to be BTI-aware)?
-
--- 
-Catalin
+> Thanks
+> -- 
+> Mike Kravetz
