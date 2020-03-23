@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3F4C10F26
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1224CC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 403FB2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D951020736
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:53:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="g3ks5wvh"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="TguF1o1/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbgCWGxl (ORCPT
+        id S1727426AbgCWGxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 02:53:41 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33689 "EHLO
+        Mon, 23 Mar 2020 02:53:47 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33693 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbgCWGxk (ORCPT
+        with ESMTP id S1727399AbgCWGxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 02:53:40 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r7so12445719wmg.0
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 23:53:39 -0700 (PDT)
+        Mon, 23 Mar 2020 02:53:47 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r7so12445835wmg.0
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 23:53:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=C3DogahGC9+RykrmX70/1+RE3NkN/OINb0pWKE0oiy4=;
-        b=g3ks5wvh67hKay0usPtxla8zP4/ICys2eEZE2K2tUDUgQQl7Th+BDUgKXXp1AChHqM
-         Hrc9Jfbt1PO3FMGfvF8dFCofuxtqQqRaXbCoBBKdeU0XQEczUdsuxO/1CHUN2yOD74SX
-         bnUREGRRB5d9rtVwRNdRfZgeKXv2Vw81fQkig=
+        bh=DuqutkfVD4m7NtyrXjd1qFiuKaLZ6gnOOVtPX0RgVTY=;
+        b=TguF1o1/qlgnZwU27lTm96jgi4/VmGaBU9Eea/Y1AGY4nm0JxN1hlQq8gngr0eXvRZ
+         COkqUxmF+S78f7qM1i7WsXFrGqJBmuvAzIxi/Mx3KFXr2kUiPBQfEB7TEazWvWf1EJ8d
+         kBhyfPSYv7fRe/9sVm6xPmpCcJzBLyo9FjBsA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=C3DogahGC9+RykrmX70/1+RE3NkN/OINb0pWKE0oiy4=;
-        b=RAOrp+3up+9lQOQGhbG+NVAuEwtRbjtTMeSMV8+O2IFlWZ7xl0Eg/LnvfDP6AXRULZ
-         wynrJilh7U1JHc9pr2SYaR23vLoeVUHuvLK9dZoWWeaoTLcsi9yQLhBacqv1zQLSzEuP
-         rbIvf9Js0fEcIHcYdCjUHNk+gA9uySuq+NDp1Ft21yn1/rcBjHL9YoDeUANSrtpKjDJ8
-         BPoLI6/5rL5fzAla0wDsLK/XojAvYhpAiyxHpS26hrtitcFU8xXtMEC/pf6CC98x6wIo
-         TG72tG6B1ObFVKTd8o2sV8TZlMOc4qNOYy4NxEu/RFzkOzkI2aA04/ZiPtbLHpXmU98z
-         hwtw==
-X-Gm-Message-State: ANhLgQ1fuuEY2TMLAU/JatB5HTyizdFMoHyZZ3DPZUwOS+lfXsFRaOcd
-        jf1i2CPe5wEuSYa0vGuW2zJddQ==
-X-Google-Smtp-Source: ADFU+vtUdIK/nmJ5km4kTi10jFNj5bmdEnLO9j2fB7uf9CpemLLpupJmfYE4Pun9FHYO8c9rMSa6kg==
-X-Received: by 2002:a05:600c:4013:: with SMTP id i19mr10552720wmm.17.1584946419207;
-        Sun, 22 Mar 2020 23:53:39 -0700 (PDT)
+        bh=DuqutkfVD4m7NtyrXjd1qFiuKaLZ6gnOOVtPX0RgVTY=;
+        b=Ta9I0saKn5kq31ar3R+gM0dTYZP8EEG6E+TNGq/io6RkyfcRINjJvgcWGU7P7rmzAp
+         peIKkeeCmiaaN+T2nEMCc8H1Y9loJnI5xDu4T1upcjpQvXY5eXTbLNzuRQ8ngLe6BoTb
+         ZE81X7EL3G0IOfRh8vLJi7yV30l+7dO6LMX9BTuhtW9OTsF9ixWRe+twU/l0Ksap50jb
+         lSO7PeIRikVW250OXYMRCuzSIKMeocFslz0gj4MpvYTvXTKyTY3ngEHAD9n6TuvsAbjb
+         d2t2jOVzINHKhPHd8uQJVT8SBkA73MawfGL0DjAYv6kQ6Z9grlcfdbBBJLqhbbhcmfDb
+         h5JA==
+X-Gm-Message-State: ANhLgQ3VJEP1xTPBVaWioMAuJJF0WRNgAMIardJYzqzgw7bSHlx7GUqJ
+        JgE5Sf0ds2PDy/XlXT19Iea50w==
+X-Google-Smtp-Source: ADFU+vvTcWQvI4pQ74ETn6iuJkGTxDPyFfqkWItYiIQQfNbGj4qUUZzKTb7JO1lqWDauafYBB0xF4g==
+X-Received: by 2002:a1c:196:: with SMTP id 144mr26056577wmb.100.1584946424816;
+        Sun, 22 Mar 2020 23:53:44 -0700 (PDT)
 Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id g128sm21127453wmf.27.2020.03.22.23.53.35
+        by smtp.gmail.com with ESMTPSA id g128sm21127453wmf.27.2020.03.22.23.53.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2020 23:53:38 -0700 (PDT)
+        Sun, 22 Mar 2020 23:53:44 -0700 (PDT)
 From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -62,9 +62,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         <yendapally.reddy@broadcom.com>, linux-pwm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Subject: [PATCH v1 1/2] pwm: bcm-iproc: handle clk_get_rate() return
-Date:   Mon, 23 Mar 2020 12:23:17 +0530
-Message-Id: <20200323065318.16533-2-rayagonda.kokatanur@broadcom.com>
+Subject: [PATCH v1 2/2] pwm: bcm-iproc: remove unnecessary check of 'duty'
+Date:   Mon, 23 Mar 2020 12:23:18 +0530
+Message-Id: <20200323065318.16533-3-rayagonda.kokatanur@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200323065318.16533-1-rayagonda.kokatanur@broadcom.com>
 References: <20200323065318.16533-1-rayagonda.kokatanur@broadcom.com>
@@ -73,58 +73,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Handle clk_get_rate() returning <= 0 condition to avoid
-possible division by zero.
+Variable 'duty' is u32. Hence the less-than zero
+comparison is never true, remove the check.
 
 Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
 Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 ---
- drivers/pwm/pwm-bcm-iproc.c | 32 +++++++++++++++++++-------------
- 1 file changed, 19 insertions(+), 13 deletions(-)
+ drivers/pwm/pwm-bcm-iproc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
-index 1f829edd8ee7..8bbd2a04fead 100644
+index 8bbd2a04fead..1bb66721f985 100644
 --- a/drivers/pwm/pwm-bcm-iproc.c
 +++ b/drivers/pwm/pwm-bcm-iproc.c
-@@ -99,19 +99,25 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	else
- 		state->polarity = PWM_POLARITY_INVERSED;
+@@ -149,8 +149,7 @@ static int iproc_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		value = rate * state->duty_cycle;
+ 		duty = div64_u64(value, div);
  
--	value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
--	prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
--	prescale &= IPROC_PWM_PRESCALE_MAX;
--
--	multi = NSEC_PER_SEC * (prescale + 1);
--
--	value = readl(ip->base + IPROC_PWM_PERIOD_OFFSET(pwm->hwpwm));
--	tmp = (value & IPROC_PWM_PERIOD_MAX) * multi;
--	state->period = div64_u64(tmp, rate);
--
--	value = readl(ip->base + IPROC_PWM_DUTY_CYCLE_OFFSET(pwm->hwpwm));
--	tmp = (value & IPROC_PWM_PERIOD_MAX) * multi;
--	state->duty_cycle = div64_u64(tmp, rate);
-+	if (rate == 0) {
-+		state->period = 0;
-+		state->duty_cycle = 0;
-+	} else {
-+		value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
-+		prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
-+		prescale &= IPROC_PWM_PRESCALE_MAX;
-+
-+		multi = NSEC_PER_SEC * (prescale + 1);
-+
-+		value = readl(ip->base + IPROC_PWM_PERIOD_OFFSET(pwm->hwpwm));
-+		tmp = (value & IPROC_PWM_PERIOD_MAX) * multi;
-+		state->period = div64_u64(tmp, rate);
-+
-+		value = readl(ip->base +
-+			      IPROC_PWM_DUTY_CYCLE_OFFSET(pwm->hwpwm));
-+		tmp = (value & IPROC_PWM_PERIOD_MAX) * multi;
-+		state->duty_cycle = div64_u64(tmp, rate);
-+	}
- }
+-		if (period < IPROC_PWM_PERIOD_MIN ||
+-		    duty < IPROC_PWM_DUTY_CYCLE_MIN)
++		if (period < IPROC_PWM_PERIOD_MIN)
+ 			return -EINVAL;
  
- static int iproc_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		if (period <= IPROC_PWM_PERIOD_MAX &&
 -- 
 2.17.1
 
