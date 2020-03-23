@@ -2,153 +2,92 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12176C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA58C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F992073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD38720719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:33:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JHiCizBx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbgCWVbI (ORCPT
+        id S1727040AbgCWVd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 17:31:08 -0400
-Received: from mga17.intel.com ([192.55.52.151]:16683 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgCWVbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 17:31:07 -0400
-IronPort-SDR: HO/Hh6XJvTBIT1a23McPVVzi0ni02XNpr24eTelDMwERX+srJYKj/2On1QyYjT6rJVr2aXFB6o
- 2Yykugfobqmw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 14:31:07 -0700
-IronPort-SDR: lAG7dNz3KM5h9x18gwyGFVd7TNjjxASEgoY84yygSdCCD4Gr62lG4hY4KmCkK1oFXhMCLdDWPc
- /6DH0HNA8exA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="445961116"
-Received: from unknown (HELO kekkonen.fi.intel.com) ([10.249.35.222])
-  by fmsmga005.fm.intel.com with ESMTP; 23 Mar 2020 14:31:03 -0700
-Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
-        id 98D1D21EF2; Mon, 23 Mar 2020 23:31:01 +0200 (EET)
-Date:   Mon, 23 Mar 2020 23:31:01 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v4 5/6] at24: Support probing while off
-Message-ID: <20200323213101.GB21174@kekkonen.localdomain>
-References: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
- <20200121134157.20396-6-sakari.ailus@linux.intel.com>
- <CAMpxmJU5dG49N2FA0oSQsOfKrCr3KQ1BisON4c+nUJJmZQG=bQ@mail.gmail.com>
- <20200311085555.GH5379@paasikivi.fi.intel.com>
- <CAMpxmJVPTKW+sYSJ3dnfF8nLAOKEa4Ob7bpxG0KD3Tkdm+rtYw@mail.gmail.com>
+        Mon, 23 Mar 2020 17:33:26 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37017 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgCWVd0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 17:33:26 -0400
+Received: by mail-ed1-f65.google.com with SMTP id b23so18116981edx.4
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 14:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zhnknTMAfH/wRzM1aNoHZGvfELya9SoXYzFYD0LL+XY=;
+        b=JHiCizBxgvc+j7w2CR8qEtF10rjJazyvP28JcwYjWY87NnULzuRquBD2xdCHOmt58I
+         9Bgvr/GpRQrQycF5UnWMEul7qpIT6iQY10T0PpLTH32rvyfntrMD50ZKh7etd0+RE63Q
+         L7mAsD3Udvg8QJPSaS8rCC4NL04WOHi/5ZiWE+57KIjPERgxGhGpIcPb9nZKPfuS3+Sn
+         L0neJPcZHC0cjgfQZm4waK/O87Z8q1FVKq2koyFn1c5RWjPUGoSvVXGhroDs2BQ9N+D3
+         BYdv5NUKccrnJvxxxe//kFazPj7rCGqVspuFjNoHAUaBDQe7JIWS1DrAJVUyzVIqtbyA
+         ueXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zhnknTMAfH/wRzM1aNoHZGvfELya9SoXYzFYD0LL+XY=;
+        b=hJE6r8YkEZInhYrs8MFtZysN0IcOG86qAOOY5qxxsGl9uj59LekLwCfDok+UdqJgEk
+         uqf4X2xA7oIq2E9o+x77PLwhJ2WJChu+jaT4MwoqomymYXIh9yb+v5KxgLnlYd5/yvLf
+         3HrKGQS0SucV/48ywb455G2ECslSmOu4S7ZyO2f5LTue9rsu7l2mP0LAzIpDqPKX+uaf
+         1Xmpse5FgHUBH2MJd1LENGiqlxxwndVSMEHb2cYr8vAuy9RK9Zl6VYgrSqyV4pXPZVTq
+         /gZQaA8+nyn6Sf+5b4sEAJ+00CTS51eMtYNoBpJKoogSNCblWLPm+QZIhu0tUhz0vfj7
+         +7/w==
+X-Gm-Message-State: ANhLgQ3H0RRaoAffEtZERuSbyToPY5UnbKFLISLe/U4FWWV+Klud8jJQ
+        mupWdyCtCWsfqhQjufE+E4O9rDmrfal//GNqiiKNug==
+X-Google-Smtp-Source: ADFU+vuJarP63ymQBTXL3joEpixrNSQwYHFgXElydF5vi1pdd4W1J4ZjXKpEs9Et3yCFPhnm1VGPn1bDtVwod8wCF6g=
+X-Received: by 2002:a17:906:af57:: with SMTP id ly23mr7224694ejb.6.1584999202172;
+ Mon, 23 Mar 2020 14:33:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJVPTKW+sYSJ3dnfF8nLAOKEa4Ob7bpxG0KD3Tkdm+rtYw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200320175910.180266-1-yonghyun@google.com> <20200323111404.GA4554@infradead.org>
+In-Reply-To: <20200323111404.GA4554@infradead.org>
+From:   Yonghyun Hwang <yonghyun@google.com>
+Date:   Mon, 23 Mar 2020 14:33:11 -0700
+Message-ID: <CAEauFbww3X2WZuOvMbnhOD2ONBjqR-JS2BrxWPO=HqzXVcKakw@mail.gmail.com>
+Subject: Re: [PATCH] vfio-mdev: support mediated device creation in kernel
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Kirti Wankhede <kwankhede@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Havard Skinnemoen <hskinnemoen@google.com>,
+        Moritz Fischer <mdf@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bartosz,
+On Mon, Mar 23, 2020 at 4:14 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Fri, Mar 20, 2020 at 10:59:10AM -0700, Yonghyun Hwang wrote:
+> > To enable a mediated device, a device driver registers its device to VFIO
+> > MDev framework. Once the mediated device gets enabled, UUID gets fed onto
+> > the sysfs attribute, "create", to create the mediated device. This
+> > additional step happens after boot-up gets complete. If the driver knows
+> > how many mediated devices need to be created during probing time, the
+> > additional step becomes cumbersome. This commit implements a new function
+> > to allow the driver to create a mediated device in kernel.
+>
+> Please send this along with your proposed user so that we can understand
+> the use.  Without that new exports have no chance of going in anyway.
 
-On Thu, Mar 12, 2020 at 02:10:32PM +0100, Bartosz Golaszewski wrote:
-> śr., 11 mar 2020 o 09:56 Sakari Ailus <sakari.ailus@linux.intel.com> napisał(a):
-> >
-> > Hi Bartosz,
-> >
-> > Thanks for the reply.
-> >
-> > On Wed, Jan 29, 2020 at 02:36:17PM +0100, Bartosz Golaszewski wrote:
-> > > wt., 21 sty 2020 o 14:41 Sakari Ailus <sakari.ailus@linux.intel.com> napisał(a):
-> > > >
-> > > > In certain use cases (where the chip is part of a camera module, and the
-> > > > camera module is wired together with a camera privacy LED), powering on
-> > > > the device during probe is undesirable. Add support for the at24 to
-> > > > execute probe while being powered off. For this to happen, a hint in form
-> > > > of a device property is required from the firmware.
-> > > >
-> > > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > > ---
-> > > >  drivers/misc/eeprom/at24.c | 31 +++++++++++++++++++++----------
-> 
-> [snip!]
-> 
-> > > >
-> > > >  static int at24_remove(struct i2c_client *client)
-> > > >  {
-> > > > +       bool low_power;
-> > > > +
-> > > >         pm_runtime_disable(&client->dev);
-> > > > -       pm_runtime_set_suspended(&client->dev);
-> > > > +       low_power = acpi_dev_state_low_power(&client->dev);
-> > >
-> > > This is inconsistent. You define the low_power field in the context
-> > > structure (BTW the name low_power is a bit vague here - without
-> > > looking at its assignment it would make me think it's about something
-> > > battery-related, how about 'off_at_probe'?) and instead of reusing
-> >
-> > The field was called probe_powered_off in v1, but I changed it to
-> > probe_low_power (and renamed related functions etc.) based on review
-> > comments --- for the device may not be powered off actually.
-> >
-> 
-> But is it actually ever low-power? What are the possible logical
-> states of the device? If I understood correctly: it's either off or on
-> at probe - not actually low-power. Am I missing something? In your
-> cover letter you're writing: "These patches enable calling (and
-> finishing) a driver's probe function without powering on the
-> respective device on busses where the practice is to power on the
-> device for probe." To me there's no mention of a low-power state,
-> which makes the name 'probe_low_power' seem completely unrelated.
+My driver is still under development. Do you recommend me to implement
+an example code for the new exports and re-submit the commit?
 
-See <URL:https://patchwork.kernel.org/patch/10938483/>
-
-I've updated the patches according to the comments but did not update the
-cover page accordingly.
-
-Generally drivers are interested whether a device is powered on so it can
-be accessed, but the actual power state of the device isn't known to the
-driver when it is, well, not in an operational state. A device may be
-powered from a regulator that is always enabled, for instance.
-
-> 
-> > > this field here, you call acpi_dev_state_low_power() again. Either
-> > > don't store the context for the life-time of the device if not
-> > > necessary or don't call acpi_dev_state_low_power() at remove, although
-> > > the commit message doesn't describe whether the latter is done on
-> > > purpose.
-> >
-> > Right. probe-low-power property has the same effect on remove for
-> > consistency, i.e. the device can remain in low power state during remove.
-> > This is documented in probe_low_power field documentation in the first
-> > patch.
-> >
-> 
-> Just please don't store any state if you're not using it outside of
-> the probe() function.
-
-What exactly are you referring to? The patch adds a local variable to the
-driver's probe and remove functions.
-
--- 
-Kind regards,
-
-Sakari Ailus
+Thank you,
+Yonghyun
