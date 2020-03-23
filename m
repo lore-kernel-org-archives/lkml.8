@@ -2,170 +2,97 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE95C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF97C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6AE7206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:47:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P4wwVtYa"
+	by mail.kernel.org (Postfix) with ESMTP id 29B8E206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:48:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgCWPr4 (ORCPT
+        id S1727438AbgCWPsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:47:56 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:30649 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727175AbgCWPr4 (ORCPT
+        Mon, 23 Mar 2020 11:48:47 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:44009 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727176AbgCWPsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:47:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584978474;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dvBlRRLg3CjMYlQe8Gy70l16tflLAU7l7Cy4EhgrGo0=;
-        b=P4wwVtYaxDQKUJ8RBZeHTek9AygsSXPIfHIOQ+pQvMYh2fIve8W+aZYE8KbWx0/3xfpdyb
-        3ZUb2lcbMg83rYw9+lQ85eEeNTXo/NR9INqNNxrJlGegfmzIG+M8wxc8Zs0X9l52eNadrV
-        pVQi62pkodYA/zJh/QAM5V+fOPeYVzk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-410-DumA1gXdMjq4pIeZrbvmrA-1; Mon, 23 Mar 2020 11:47:52 -0400
-X-MC-Unique: DumA1gXdMjq4pIeZrbvmrA-1
-Received: by mail-wr1-f72.google.com with SMTP id e10so5795401wru.6
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 08:47:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=dvBlRRLg3CjMYlQe8Gy70l16tflLAU7l7Cy4EhgrGo0=;
-        b=olzK3b2PJfY5OQMXYVBmwFKr0WGPPu6WWveAB5HzyyiODWXZ5QxdkFizbXriW4UC5R
-         MAi1qWPiqxEhuKP7UUHc3DV/ZJNDvZIixeVeyqOD/HRW1sO8kOIaQXSnvBAyj61bV9KM
-         uf+aMsuRe2ju5Zc2kPPh9GEJYFntCWkowEEhfNpSb6haWjkpKOWqmXiGekJW7sxD0JJx
-         YVgY8Hv89p3CU2em7ff1SUKAbfvbIbmrA9tGAHguo2lQ8ydpehMxeJJrh/NITEyDzk9Z
-         PzX7Z4kZcpxljXoJcr8l/wG/ObHa1VzG5Yy5o3g40vLk0MO9KF80egzy5YPjuEbbnrrv
-         PBXQ==
-X-Gm-Message-State: ANhLgQ3UIr78NYYqgqOXn3PKCf3DrnTRZHmJcfTeqsrZ62Rm5pqVA3Va
-        Yaz7Q2aR8V4jKxNoy+ONlAoUDFkrjUm2o7qy3ekmmK8vJurc/rJ0k9BBF4jeFynTjZXrVct3FLW
-        LByP8iFyuTKKOYuvCBFMXOuXv
-X-Received: by 2002:a1c:98c4:: with SMTP id a187mr6825268wme.76.1584978471553;
-        Mon, 23 Mar 2020 08:47:51 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vu6SRGI7uUqQOuOD8Xkl9vZIQC4ykzVWdgZrGD/mWxQULS1g06vwwsinh5zxqAoG0+ZZJGMBA==
-X-Received: by 2002:a1c:98c4:: with SMTP id a187mr6825239wme.76.1584978471254;
-        Mon, 23 Mar 2020 08:47:51 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id h81sm24320939wme.42.2020.03.23.08.47.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 08:47:50 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        John Haxby <john.haxby@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH v3 05/37] KVM: x86: Export kvm_propagate_fault() (as kvm_inject_emulated_page_fault)
-In-Reply-To: <20200320212833.3507-6-sean.j.christopherson@intel.com>
-References: <20200320212833.3507-1-sean.j.christopherson@intel.com> <20200320212833.3507-6-sean.j.christopherson@intel.com>
-Date:   Mon, 23 Mar 2020 16:47:49 +0100
-Message-ID: <87sghz844a.fsf@vitty.brq.redhat.com>
+        Mon, 23 Mar 2020 11:48:46 -0400
+Received: (qmail 27447 invoked by uid 500); 23 Mar 2020 11:48:45 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 23 Mar 2020 11:48:45 -0400
+Date:   Mon, 23 Mar 2020 11:48:45 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Vinod Koul <vkoul@kernel.org>
+cc:     kbuild test robot <lkp@intel.com>, <kbuild-all@lists.01.org>,
+        <clang-built-linux@googlegroups.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-arm-msm@vger.kernel.org, Bjorn Andersson" 
+        <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: [PATCH v7 1/5] usb: hci: add hc_driver as argument for
+ usb_hcd_pci_probe
+In-Reply-To: <20200323153429.GR72691@vkoul-mobl>
+Message-ID: <Pine.LNX.4.44L0.2003231147190.24254-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Mon, 23 Mar 2020, Vinod Koul wrote:
 
-> Export the page fault propagation helper so that VMX can use it to
-> correctly emulate TLB invalidation on page faults in an upcoming patch.
->
-> In the (hopefully) not-too-distant future, SGX virtualization will also
-> want access to the helper for injecting page faults to the correct level
-> (L1 vs. L2) when emulating ENCLS instructions.
->
-> Rename the function to kvm_inject_emulated_page_fault() to clarify that
-> it is (a) injecting a fault and (b) only for page faults.  WARN if it's
-> invoked with an exception other than PF_VECTOR.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/include/asm/kvm_host.h | 2 ++
->  arch/x86/kvm/x86.c              | 8 ++++++--
->  2 files changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 9a183e9d4cb1..328b1765ff76 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1447,6 +1447,8 @@ void kvm_queue_exception_e(struct kvm_vcpu *vcpu, unsigned nr, u32 error_code);
->  void kvm_requeue_exception(struct kvm_vcpu *vcpu, unsigned nr);
->  void kvm_requeue_exception_e(struct kvm_vcpu *vcpu, unsigned nr, u32 error_code);
->  void kvm_inject_page_fault(struct kvm_vcpu *vcpu, struct x86_exception *fault);
-> +bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
-> +				    struct x86_exception *fault);
->  int kvm_read_guest_page_mmu(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
->  			    gfn_t gfn, void *data, int offset, int len,
->  			    u32 access);
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index e54c6ad628a8..64ed6e6e2b56 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -611,8 +611,11 @@ void kvm_inject_page_fault(struct kvm_vcpu *vcpu, struct x86_exception *fault)
->  }
->  EXPORT_SYMBOL_GPL(kvm_inject_page_fault);
->  
-> -static bool kvm_propagate_fault(struct kvm_vcpu *vcpu, struct x86_exception *fault)
-> +bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
-> +				    struct x86_exception *fault)
->  {
-> +	WARN_ON_ONCE(fault->vector != PF_VECTOR);
-> +
->  	if (mmu_is_nested(vcpu) && !fault->nested_page_fault)
->  		vcpu->arch.nested_mmu.inject_page_fault(vcpu, fault);
->  	else
-> @@ -620,6 +623,7 @@ static bool kvm_propagate_fault(struct kvm_vcpu *vcpu, struct x86_exception *fau
->  
->  	return fault->nested_page_fault;
->  }
-> +EXPORT_SYMBOL_GPL(kvm_inject_emulated_page_fault);
+> On 23-03-20, 22:49, kbuild test robot wrote:
+> > Hi Vinod,
+> > 
+> > I love your patch! Yet something to improve:
+> 
+> Thanks for the report.
+> 
+> > [auto build test ERROR on v5.6-rc7]
+> > [also build test ERROR on next-20200323]
+> > [cannot apply to usb/usb-testing]
+> > [if your patch is applied to the wrong git tree, please drop us a note to help
+> > improve the system. BTW, we also suggest to use '--base' option to specify the
+> > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> > 
+> > url:    https://github.com/0day-ci/linux/commits/Vinod-Koul/usb-xhci-Add-support-for-Renesas-USB-controllers/20200323-203447
+> > base:    16fbf79b0f83bc752cee8589279f1ebfe57b3b6e
+> > config: x86_64-defconfig (attached as .config)
+> > compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 006244152d6c7dd6a390ff89b236cc7801834b46)
+> > reproduce:
+> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # save the attached .config to linux build tree
+> >         COMPILER=clang make.cross ARCH=x86_64 
+> > 
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > 
+> > All errors (new ones prefixed by >>):
+> > 
+> >    In file included from drivers/usb/host/uhci-hcd.c:847:
+> > >> drivers/usb/host/uhci-pci.c:297:36: error: passing 'const struct hc_driver *' to parameter of type 'struct hc_driver *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+> >            return usb_hcd_pci_probe(dev, id, &uhci_driver);
+> >                                              ^~~~~~~~~~~~
+> >    include/linux/usb/hcd.h:483:27: note: passing argument to parameter 'driver' here
+> >                                 struct hc_driver *driver);
+> 
+> I need to drop the const qualifiers for uhci_driver, I have checked that
+> and will send v8 with this fix
 
-We don't seem to use the return value a lot, actually,
-inject_emulated_exception() seems to be the only one, the rest just call
-it without checking the return value. Judging by the new name, I'd guess
-that the function returns whether it was able to inject the exception or
-not but this doesn't seem to be the case. My suggestion would then be to
-make it return 'void' and return 'fault->nested_page_fault' separately
-in inject_emulated_exception().
+No, don't remove the qualifier for uhci_driver.  Instead, change 
+usb_hcd_pci_probe(): make driver a pointer to const.
 
->  
->  void kvm_inject_nmi(struct kvm_vcpu *vcpu)
->  {
-> @@ -6373,7 +6377,7 @@ static bool inject_emulated_exception(struct kvm_vcpu *vcpu)
->  {
->  	struct x86_emulate_ctxt *ctxt = vcpu->arch.emulate_ctxt;
->  	if (ctxt->exception.vector == PF_VECTOR)
-> -		return kvm_propagate_fault(vcpu, &ctxt->exception);
-> +		return kvm_inject_emulated_page_fault(vcpu, &ctxt->exception);
->  
->  	if (ctxt->exception.error_code_valid)
->  		kvm_queue_exception_e(vcpu, ctxt->exception.vector,
-
-With or without the change suggested above,
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
--- 
-Vitaly
+Alan Stern
 
