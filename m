@@ -2,141 +2,75 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C6AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA261C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146C1206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0BF6206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:07:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584943639;
+	bh=ibPYCWGXC+3W4pwXBMCDZLajjZQWIs4y9VSQ1PY2kkE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YWM0e+Ts6UwYW9767e+tWgvoYA2PdTDBrY6vDtbZiDHjPFkao0ywMsZg33P0Vhh8y
+	 ADz65wi5W5ghKpn2mggbI4obDDGgprTLJrVOy7u4cxhlBaBuom3n0bfE88GPlXL9J8
+	 t2tQNGdMWe7GYsDs1FsGmwvxnicdMZSDbKcbIvNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbgCWGGi (ORCPT
+        id S1727277AbgCWGHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 02:06:38 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35743 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgCWGGh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 02:06:37 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <pza@pengutronix.de>)
-        id 1jGGEC-0008Et-Tp; Mon, 23 Mar 2020 07:06:24 +0100
-Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <pza@pengutronix.de>)
-        id 1jGGE8-0002sT-HS; Mon, 23 Mar 2020 07:06:20 +0100
-Date:   Mon, 23 Mar 2020 07:06:20 +0100
-From:   Philipp Zabel <pza@pengutronix.de>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/12] pcie: qcom: add missing reset for ipq806x
-Message-ID: <20200323060620.GA1617@pengutronix.de>
-References: <20200320183455.21311-1-ansuelsmth@gmail.com>
- <20200320183455.21311-5-ansuelsmth@gmail.com>
+        Mon, 23 Mar 2020 02:07:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44026 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726142AbgCWGHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 02:07:18 -0400
+Received: from localhost (unknown [171.76.96.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DD4C206C3;
+        Mon, 23 Mar 2020 06:07:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584943637;
+        bh=ibPYCWGXC+3W4pwXBMCDZLajjZQWIs4y9VSQ1PY2kkE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T+AKXtTiEx2F4fvV576lTkypnagA0PkvNzMXSxvZCfsQ+YIHsqHbXosnbB9ZvN8mv
+         F3NhqdKp08F1Skw1MDp4NuKvE1w/xHqo5uPtiVFbcDk/CGoTaa649qlUQdGtAiFLc6
+         oPfZ4DmvrU+yToy7LBmg3A4VuQ+ng8ms2q+SF7Jg=
+Date:   Mon, 23 Mar 2020 11:37:13 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     dan.j.williams@intel.com, orsonzhai@gmail.com,
+        zhang.lyra@gmail.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: sprd: Set request pending flag when DMA
+ controller is active
+Message-ID: <20200323060713.GC72691@vkoul-mobl>
+References: <02adbe4364ec436ec2c5bc8fd2386bab98edd884.1584019223.git.baolin.wang7@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320183455.21311-5-ansuelsmth@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:00:25 up 32 days, 13:30, 45 users,  load average: 1.03, 0.51,
- 0.25
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: pza@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <02adbe4364ec436ec2c5bc8fd2386bab98edd884.1584019223.git.baolin.wang7@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ansuel,
-
-On Fri, Mar 20, 2020 at 07:34:47PM +0100, Ansuel Smith wrote:
-> Add missing ext reset used by ipq806x soc in
-> pcie qcom driver
+On 12-03-20, 21:26, Baolin Wang wrote:
+> From: Zhenfang Wang <zhenfang.wang@unisoc.com>
 > 
-> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 24 ++++++++++++++++++------
->  1 file changed, 18 insertions(+), 6 deletions(-)
+> On new Spreadtrum platforms, when the CPU enters idle, it will close
+> the DMA controllers' clock to save power if the DMA controller is not
+> busy. Moreover the DMA controller's busy signal depends on the DMA
+> enable flag and the request pending flag.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 596731b54728..ecc22fd27ea6 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -95,6 +95,7 @@ struct qcom_pcie_resources_2_1_0 {
->  	struct reset_control *ahb_reset;
->  	struct reset_control *por_reset;
->  	struct reset_control *phy_reset;
-> +	struct reset_control *ext_reset;
->  	struct regulator_bulk_data supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
->  };
->  
-> @@ -272,6 +273,10 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
->  	if (IS_ERR(res->por_reset))
->  		return PTR_ERR(res->por_reset);
->  
-> +	res->ext_reset = devm_reset_control_get(dev, "ext");
+> When DMA controller starts to transfer data, which means we already
+> set the DMA enable flag, but now we should also set the request pending
+> flag, in case the DMA clock will be closed accidentally if the CPU
+> can not detect the DMA controller's busy signal.
 
-Please use devm_reset_control_get_exclusive() instead.
+Applied, thanks
 
-> +	if (IS_ERR(res->ext_reset))
-> +		return PTR_ERR(res->ext_reset);
-> +
->  	res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
->  	return PTR_ERR_OR_ZERO(res->phy_reset);
->  }
-> @@ -285,6 +290,7 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
->  	reset_control_assert(res->axi_reset);
->  	reset_control_assert(res->ahb_reset);
->  	reset_control_assert(res->por_reset);
-> +	reset_control_assert(res->ext_reset);
->  	reset_control_assert(res->phy_reset);
->  	clk_disable_unprepare(res->iface_clk);
->  	clk_disable_unprepare(res->core_clk);
-> @@ -301,18 +307,18 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
->  	u32 val;
->  	int ret;
->  
-> +	ret = reset_control_assert(res->ahb_reset);
-> +	if (ret) {
-> +		dev_err(dev, "cannot assert ahb reset\n");
-> +		return ret;
-> +	}
-> +
->  	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
->  	if (ret < 0) {
->  		dev_err(dev, "cannot enable regulators\n");
->  		return ret;
->  	}
->  
-> -	ret = reset_control_assert(res->ahb_reset);
-> -	if (ret) {
-> -		dev_err(dev, "cannot assert ahb reset\n");
-> -		goto err_assert_ahb;
-> -	}
-> -
-
-This change is not described in the commit message.
-
-regards
-Philipp
+-- 
+~Vinod
