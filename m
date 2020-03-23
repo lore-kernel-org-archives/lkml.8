@@ -2,155 +2,160 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F6FC10F26
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D48C10F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA9F20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:18:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJBVGaEy"
+	by mail.kernel.org (Postfix) with ESMTP id 0BFE620719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgCWESV (ORCPT
+        id S1725893AbgCWEVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 00:18:21 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37423 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725208AbgCWESV (ORCPT
+        Mon, 23 Mar 2020 00:21:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56688 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725710AbgCWEVZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 00:18:21 -0400
-Received: by mail-qt1-f196.google.com with SMTP id d12so8190054qtj.4
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 21:18:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XZ6ALnKcU8GcDCoOPSuVyF4QFHvhGeqgzFOKGeSC0Vg=;
-        b=fJBVGaEy7KOWlF0tE1BYrzuhumGYB0dEhtuV8n7bDfbT27n4jyVdtkD+znxPp089pS
-         lTFUyQv9lcSf9pFHucv52F5tnwfiodEjAjiCeFlHbrgkNeCn48OgJIr0gm3+wDhzQVIh
-         BIlgCnzf9vW1RpPvr7puUFJFGXpfTN7HWeFvTfEroVXDq0JaiM8pZ7PS1Dw1/zXSEYjV
-         lOn2YPmshDRKqt3BIZrVfLmMkDJU0tqiTJgE35rT6MD71B2VLzigd4We7TSuq3jxrKIB
-         a6DRE20Ssyd9nez5022vOmcFy4MwmAbbONZNQWViCV6TBX9rG9q8RNNUeRS8zIfqgQyu
-         rxtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XZ6ALnKcU8GcDCoOPSuVyF4QFHvhGeqgzFOKGeSC0Vg=;
-        b=JxQRFNZZmSbVlLteS4ezPodo2+03Q3zB2ltGODuRxgKKyYQM4wL+OmKtZnTWA+IrUq
-         uWOVoQsvO4u7nIeEum8oluZtMMiPIeI93QNJYuh4t1Y98Vn6kuaYEcHRpPj0QOjb9LqH
-         OTSnVNk/XLE8c/ZZ3HXX7lXr65GAluYAcO++eBhjgiLiC8cVAprRyQoxDIa/6ylfEll8
-         5epIWEWoowH7FCS8BaaxfKGzOrV/FEijQdwO4Pq9QabdId0nDc8jor1aJAWzURnPI+1h
-         LcWjFiM11BS89hpFmNNrzT/VqaO6xDLB1CdiWKE4ZU5ia5IuA3gilDlrhcHdiZbVBfnG
-         qh0g==
-X-Gm-Message-State: ANhLgQ3nDZDAkWfcbyw4s1d8NK/CB3l/QLAiohWbpOAuMa7+s5up5a9Z
-        k1/BUzb2UnmXxkSsBw/rUeUS5xxjZdYcR7+m12w=
-X-Google-Smtp-Source: ADFU+vtHqEKk2glIG9BQrGBFX4mSf9fs7yV9yFaJvVEQg8IAer5BX6uDG+e8M4RocqLDedeoeAJQ22aciHzwFeqURK4=
-X-Received: by 2002:aed:3981:: with SMTP id m1mr1734059qte.35.1584937100110;
- Sun, 22 Mar 2020 21:18:20 -0700 (PDT)
+        Mon, 23 Mar 2020 00:21:25 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02N42Zwe076639
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 00:21:24 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywf0kpc21-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 00:21:24 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
+        Mon, 23 Mar 2020 04:21:22 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 23 Mar 2020 04:21:18 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02N4LI7c54526146
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Mar 2020 04:21:18 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EFDE4AE045;
+        Mon, 23 Mar 2020 04:21:17 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A1AFCAE053;
+        Mon, 23 Mar 2020 04:21:16 +0000 (GMT)
+Received: from in.ibm.com (unknown [9.199.43.35])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 23 Mar 2020 04:21:16 +0000 (GMT)
+Date:   Mon, 23 Mar 2020 09:51:14 +0530
+From:   Bharata B Rao <bharata@linux.ibm.com>
+To:     Laurent Dufour <ldufour@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 2/2] KVM: PPC: Book3S HV: H_SVM_INIT_START must call
+ UV_RETURN
+Reply-To: bharata@linux.ibm.com
+References: <20200320102643.15516-1-ldufour@linux.ibm.com>
+ <20200320102643.15516-3-ldufour@linux.ibm.com>
+ <20200320112403.GG26049@in.ibm.com>
+ <f6a71da6-6363-8cba-8215-78b23a046443@linux.ibm.com>
 MIME-Version: 1.0
-References: <1584693135-4396-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1584693135-4396-2-git-send-email-iamjoonsoo.kim@lge.com> <20200320103000.GB3039@MiWiFi-R3L-srv>
- <CAAmzW4PVguD0jEEAt0ZUPqMykswuq2an21jRpP2ZuwRL6PYwCw@mail.gmail.com> <20200323035843.GH2987@MiWiFi-R3L-srv>
-In-Reply-To: <20200323035843.GH2987@MiWiFi-R3L-srv>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Mon, 23 Mar 2020 13:18:09 +0900
-Message-ID: <CAAmzW4Oejc8MFs91v=SWyy-GSLFskcFAGs1-J_4bYKv2Tt=F0g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] mm/page_alloc: use ac->high_zoneidx for classzone_idx
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Ye Xiaolong <xiaolong.ye@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f6a71da6-6363-8cba-8215-78b23a046443@linux.ibm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-TM-AS-GCONF: 00
+x-cbid: 20032304-4275-0000-0000-000003B138A4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20032304-4276-0000-0000-000038C66D81
+Message-Id: <20200323042114.GH26049@in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-22_08:2020-03-21,2020-03-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 impostorscore=0 malwarescore=0 mlxlogscore=999 spamscore=0
+ clxscore=1015 lowpriorityscore=0 adultscore=0 suspectscore=2 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003230021
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 3=EC=9B=94 23=EC=9D=BC (=EC=9B=94) =EC=98=A4=ED=9B=84 12:59, =
-Baoquan He <bhe@redhat.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On 03/23/20 at 12:50pm, Joonsoo Kim wrote:
-> > Hello, Baoquan.
-> >
-> > 2020=EB=85=84 3=EC=9B=94 20=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 7:3=
-0, Baoquan He <bhe@redhat.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
-> > >
-> > >
-> > > On 03/20/20 at 05:32pm, js1304@gmail.com wrote:
-> > > > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> > > >
-> > > > Currently, we use the zone index of preferred_zone which represents
-> > > > the best matching zone for allocation, as classzone_idx. It has
-> > > > a problem on NUMA systems when the lowmem reserve protection exists
-> > > > for some zones on a node that do not exist on other nodes.
-> > > >
-> > > > In NUMA system, it can be possible that each node has different pop=
-ulated
-> > > > zones. For example, node 0 could have DMA/DMA32/NORMAL/MOVABLE zone=
- and
-> > > > node 1 could have only NORMAL zone. In this setup, allocation reque=
-st
-> > > > initiated on node 0 and the one on node 1 would have different
-> > > > classzone_idx, 3 and 2, respectively, since their preferred_zones a=
-re
-> > > > different. If the allocation is local, there is no problem. However=
-,
-> > > > if it is handled by the remote node due to memory shortage, the pro=
-blem
-> > > > would happen.
-> > >
-> > > Hi Joonsoo,
-> > >
-> > > Not sure if adding one sentence into above paragraph would be make it
-> > > easier to understand. Assume you are only talking about the high_zone=
-idx
-> > > is MOVABLE_ZONE with calculation of gfp_zone(gfp_mask), since any oth=
-er
-> > > case doesn't have this problem. Please correct me if I am wrong.
-> >
-> > You're right. This example is for the allocation request with
-> > gfp_zone(gfp_mask),
-> > MOVABLE_ZONE.
-> >
-> > > In NUMA system, it can be possible that each node has different popul=
-ated
-> > > zones. For example, node 0 could have DMA/DMA32/NORMAL/MOVABLE zone a=
-nd
-> > > node 1 could have only NORMAL zone. In this setup, if we get high_zon=
-eidx
-> > > as 3 (namely MOVABLE zone), with gfp_zone(gfp_mask), allocation reque=
-st
-> > > initiated on node 0 and the one on node 1 would have different
-> > > classzone_idx, 3 and 2, respectively, since their preferred_zones are
-> > > different. If the allocation is local, there is no problem. However,
-> > > if it is handled by the remote node due to memory shortage, the probl=
-em
-> > > would happen.
-> >
-> > I'm okay with your change but I try again to be better. Please check th=
-e
-> > following rewritten commit message and please let me know if it is bett=
-er
-> > than before.
->
-> Yeah, this new one looks very detailed, I believe anyone interested can
-> get what's going on. Thanks for doing this.
+On Fri, Mar 20, 2020 at 03:36:05PM +0100, Laurent Dufour wrote:
+> Le 20/03/2020 à 12:24, Bharata B Rao a écrit :
+> > On Fri, Mar 20, 2020 at 11:26:43AM +0100, Laurent Dufour wrote:
+> > > When the call to UV_REGISTER_MEM_SLOT is failing, for instance because
+> > > there is not enough free secured memory, the Hypervisor (HV) has to call
+> > > UV_RETURN to report the error to the Ultravisor (UV). Then the UV will call
+> > > H_SVM_INIT_ABORT to abort the securing phase and go back to the calling VM.
+> > > 
+> > > If the kvm->arch.secure_guest is not set, in the return path rfid is called
+> > > but there is no valid context to get back to the SVM since the Hcall has
+> > > been routed by the Ultravisor.
+> > > 
+> > > Move the setting of kvm->arch.secure_guest earlier in
+> > > kvmppc_h_svm_init_start() so in the return path, UV_RETURN will be called
+> > > instead of rfid.
+> > > 
+> > > Cc: Bharata B Rao <bharata@linux.ibm.com>
+> > > Cc: Paul Mackerras <paulus@ozlabs.org>
+> > > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > > Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+> > > ---
+> > >   arch/powerpc/kvm/book3s_hv_uvmem.c | 3 ++-
+> > >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
+> > > index 79b1202b1c62..68dff151315c 100644
+> > > --- a/arch/powerpc/kvm/book3s_hv_uvmem.c
+> > > +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
+> > > @@ -209,6 +209,8 @@ unsigned long kvmppc_h_svm_init_start(struct kvm *kvm)
+> > >   	int ret = H_SUCCESS;
+> > >   	int srcu_idx;
+> > > +	kvm->arch.secure_guest = KVMPPC_SECURE_INIT_START;
+> > > +
+> > >   	if (!kvmppc_uvmem_bitmap)
+> > >   		return H_UNSUPPORTED;
+> > > @@ -233,7 +235,6 @@ unsigned long kvmppc_h_svm_init_start(struct kvm *kvm)
+> > >   			goto out;
+> > >   		}
+> > >   	}
+> > > -	kvm->arch.secure_guest |= KVMPPC_SECURE_INIT_START;
+> > 
+> > There is an assumption that memory slots would have been registered with UV
+> > if KVMPPC_SECURE_INIT_START has been done. KVM_PPC_SVM_OFF ioctl will skip
+> > unregistration and other steps during reboot if KVMPPC_SECURE_INIT_START
+> > hasn't been done.
+> > 
+> > Have you checked if that path isn't affected by this change?
+> 
+> I checked that and didn't find any issue there.
+> 
+> My only concern was that block:
+> 	kvm_for_each_vcpu(i, vcpu, kvm) {
+> 		spin_lock(&vcpu->arch.vpa_update_lock);
+> 		unpin_vpa_reset(kvm, &vcpu->arch.dtl);
+> 		unpin_vpa_reset(kvm, &vcpu->arch.slb_shadow);
+> 		unpin_vpa_reset(kvm, &vcpu->arch.vpa);
+> 		spin_unlock(&vcpu->arch.vpa_update_lock);
+> 	}
+> 
+> But that seems to be safe.
 
-Thanks for checking it.
-I will submit v4 with including this re-written commit message.
+Yes, looks like.
 
-Thanks.
+> 
+> However I'm not a familiar with the KVM's code, do you think an additional
+> KVMPPC_SECURE_INIT_* value needed here?
+
+May be not as long as UV can handle the unexpected uv_unregister_mem_slot()
+calls, we are good.
+
+Regards,
+Bharata.
+
