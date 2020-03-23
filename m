@@ -2,98 +2,111 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16B6C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75333C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2CF6206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B524206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:59:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ly3490A7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cubjLG9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgCWM5I (ORCPT
+        id S1728312AbgCWM7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:57:08 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36389 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728189AbgCWM5I (ORCPT
+        Mon, 23 Mar 2020 08:59:03 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:25817 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728204AbgCWM7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 08:57:08 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i13so7465296pfe.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 05:57:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=aK3DeOPBkAJf49C7Fw8X52i7Vx073H/AsUP+vobEGEY=;
-        b=ly3490A72/2ieLkbBI5Mnz+tBc4A71HmZmowVGlOolfoe/jZD2H/R6mbyQWsQiUgTu
-         kpZ4ZcWsciDi9I3YlrR0LKSqWW8Gv/mkNMUbu7PZW7D74qyZ8RVIstQhlfH+HptO6NL2
-         58F85Id8z1kFzPI9eLxKvVzNenX0rjcD4cPfzcNEmAl5dnrwc7oliFKxWPVmJQ+rw6aJ
-         QdDETWJk+hHmmYkTfpb7yUgjIg+6p/2afiWL6Td8D2YI0TuVpHn0FNtsgcI/xXyqtR99
-         scEkPd+CM0ZeeeNon4UQFyZcGWDBGXAhkpVoPREqvbJhm0I6YqTCmNT8Rzep93Ry1eR6
-         K7Sg==
+        Mon, 23 Mar 2020 08:59:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584968341;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4HTzcRz3o3qfXex5hqeXQ2T6ofF+yWf+Qi36UvhbgGw=;
+        b=cubjLG9C8kO5DZTKpy/DEbEkZ7PShd1lbaVwY0mHpi26ZJRLIlUv1D0A4fhROfJBR/huYe
+        a5mnL1iyYw7TOzpba8PPhI+eGLu0HyT5A6ONgq2RA1iBV2ErQeMswXaNSwTvkGPOmkCoTw
+        ZwFFIbGnwP1ucui5tIdMcRxr8El8PXg=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-308-r6cO9dm-OGuMIIhwD1WbzA-1; Mon, 23 Mar 2020 08:58:59 -0400
+X-MC-Unique: r6cO9dm-OGuMIIhwD1WbzA-1
+Received: by mail-wr1-f71.google.com with SMTP id v6so7271825wrg.22
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 05:58:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=aK3DeOPBkAJf49C7Fw8X52i7Vx073H/AsUP+vobEGEY=;
-        b=EDmEBK9OwDi/4dLugfhnUrT5Ku5y1rnGfcEmhC7BpKwCZ2asUb7/9UqNxYun9DRnUz
-         cg2hkYazqIYvLzTErai95syQFKPRkD25Yjl+QBI6flaiBgKr0XD6S/91FshgxoG869tj
-         5Re6khK0Ya4AUHbX98MYdxMc6VkH+i8bHXzv7oDh5YTA6bR7iDaDmealLh9dMSljQaxN
-         yxdODKqglo5tuDX4/lzfU87TjM+WkZIUSM31lLM7K0LKeh9goHCO+3LmpZZRE5mqFoIF
-         5PBjwyB4O+2R2WGvH6jInQXgxaqtxavfxVn3ySuF2/NQSnoIUyz4IIG0K4vx/7TNbbq+
-         8IzA==
-X-Gm-Message-State: ANhLgQ15G4v8LECXc7TDT8xT4eqCXYv+ApZd5JSX/CPc+if5Kv6ij81E
-        +MwQfokoArAjHCvfds+On+ZIxWZdLGGArw==
-X-Google-Smtp-Source: ADFU+vtVvcSV9fZ8DxhITlnIBG2HwGYhdhCBJSkI549QSx1wPIH/ONEDafFOV/AnVQHb/CGFjUTRJA==
-X-Received: by 2002:a63:2cce:: with SMTP id s197mr22598743pgs.184.1584968226972;
-        Mon, 23 Mar 2020 05:57:06 -0700 (PDT)
-Received: from localhost ([161.117.239.120])
-        by smtp.gmail.com with ESMTPSA id p7sm12922826pjp.1.2020.03.23.05.57.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 23 Mar 2020 05:57:06 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     tglx@linutronix.de, dan.carpenter@oracle.com,
-        gregkh@linuxfoundation.org
-Cc:     viro@zeniv.linux.org.uk, deepa.kernel@gmail.com,
-        darrick.wong@oracle.com, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, anenbupt@gmail.com,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH] minix: Fix NULL dereference in alloc_branch()
-Date:   Mon, 23 Mar 2020 20:57:00 +0800
-Message-Id: <20200323125700.7512-1-hqjagain@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4HTzcRz3o3qfXex5hqeXQ2T6ofF+yWf+Qi36UvhbgGw=;
+        b=bKng3f3L6CUehFNuBZV/rUE025w0CplXBbRtdhh9T8Hd/CJBRAKuZrO0duNIkZs0gM
+         LgPFVnZT8qSmj0mmX6bP7HLO2u68QxFUpsJb+SOaYjct4foltFKPe5sSd9CNQkdAfFVv
+         51CSgtC+55g/ZpXEfRQBu77/fwficDg5RBuR32W2icvVXY1pWH5jzH95bsrNHVXYPdyv
+         bu8WBAtptz0vw8e+7YVtKxU7iFfcXvsLFXTgx30EfdAWHz03K90pSQg1gtMGAdZWcJxe
+         CW8NIEHMUh+UdKB3jrsG9UXyE0EsKgo2uasmddL3xg6Hx7en09audQOZW2YbVAZtmA8r
+         EABA==
+X-Gm-Message-State: ANhLgQ0vPkLEq7aGj1zJQBAqshwe3dvhhcOI0dGQtQzPrZuipMSnAXjM
+        GE/L24+DTt/iEGR8PySz5NBgk7mS5yk4HdK9w6d2HtADQdfmA5Y0gtcRLIY0KaWHsc/uQMCs+Gg
+        Qk36VSW+Dll0tIoRy9b45XO8G
+X-Received: by 2002:adf:aacc:: with SMTP id i12mr31396969wrc.116.1584968338289;
+        Mon, 23 Mar 2020 05:58:58 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vu6lNHTTDFNS1+6/voSjetJ50D0n//DWfUviVLJPhmz+dU6+d94lOeUVvb31wDc7vbhL+vjfQ==
+X-Received: by 2002:adf:aacc:: with SMTP id i12mr31396943wrc.116.1584968337983;
+        Mon, 23 Mar 2020 05:58:57 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:24d8:ed40:c82a:8a01? ([2001:b07:6468:f312:24d8:ed40:c82a:8a01])
+        by smtp.gmail.com with ESMTPSA id g14sm22381288wme.32.2020.03.23.05.58.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Mar 2020 05:58:57 -0700 (PDT)
+Subject: Re: [PATCH] KVM: x86: Expose fast short REP MOV for supported cpuid
+To:     Zhenyu Wang <zhenyuw@linux.intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200323092236.3703-1-zhenyuw@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <5bf4035d-4c37-be3f-cfe2-759ccc0bc17d@redhat.com>
+Date:   Mon, 23 Mar 2020 13:58:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200323092236.3703-1-zhenyuw@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Need to check the return value of sb_getblk.
+On 23/03/20 10:22, Zhenyu Wang wrote:
+> For CPU supporting fast short REP MOV (XF86_FEATURE_FSRM) e.g Icelake,
+> Tigerlake, expose it in KVM supported cpuid as well.
+> 
+> Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+> ---
+>  arch/x86/kvm/cpuid.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 435a7da07d5f..cf6da12bd17a 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -338,7 +338,7 @@ void kvm_set_cpu_caps(void)
+>  	kvm_cpu_cap_mask(CPUID_7_EDX,
+>  		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+>  		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+> -		F(MD_CLEAR) | F(AVX512_VP2INTERSECT)
+> +		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM)
+>  	);
+>  
+>  	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
+> 
 
-Reported-by: syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- fs/minix/itree_common.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Queued, thanks.
 
-diff --git a/fs/minix/itree_common.c b/fs/minix/itree_common.c
-index 043c3fdbc8e7..6edb0f11e8a0 100644
---- a/fs/minix/itree_common.c
-+++ b/fs/minix/itree_common.c
-@@ -85,6 +85,10 @@ static int alloc_branch(struct inode *inode,
- 			break;
- 		branch[n].key = cpu_to_block(nr);
- 		bh = sb_getblk(inode->i_sb, parent);
-+		if (!bh) {
-+			minix_free_block(inode, block_to_cpu(branch[n].key));
-+			break;
-+		}
- 		lock_buffer(bh);
- 		memset(bh->b_data, 0, bh->b_size);
- 		branch[n].bh = bh;
--- 
-2.17.1
+Paolo
 
