@@ -2,178 +2,167 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5699BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B11C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D76320409
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4E52070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:54:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="thfwQNJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbgCWXwm (ORCPT
+        id S1727313AbgCWXyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 19:52:42 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:52675 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgCWXwm (ORCPT
+        Mon, 23 Mar 2020 19:54:51 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43767 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727234AbgCWXyv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 19:52:42 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 48mWQZ2fJFz1rwtx;
-        Tue, 24 Mar 2020 00:52:38 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 48mWQZ1mkbz1qyDv;
-        Tue, 24 Mar 2020 00:52:38 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id dsdc2cmNuP8z; Tue, 24 Mar 2020 00:52:36 +0100 (CET)
-X-Auth-Info: 3FxyK811rrHcEf1hkb6YOMRfQXbYfd56Aqzjqx9BVm8=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Tue, 24 Mar 2020 00:52:36 +0100 (CET)
-Subject: Re: [PATCH v3 2/2] pinctrl: stm32: Add level interrupt support to
- gpio irq chip
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20200219143229.18084-1-alexandre.torgue@st.com>
- <20200219143229.18084-3-alexandre.torgue@st.com>
- <CACRpkdZ7uq4U6GBQQQh=pTLf4wW3KfH3Zrz9z_3ZQgoaJD9Ynw@mail.gmail.com>
- <c991edca3e8925cf0489c0a5676f77b2@kernel.org>
- <a7fc5e43-34c2-a4e6-e0c5-1584f17fb024@denx.de>
- <8d6f6646-56e4-5218-9990-f0c96862dc83@denx.de> <20200323193157.038f36f9@why>
- <8e2795d8-4a8b-35a7-7d3f-e24d011878f6@denx.de> <20200323194946.26bdd003@why>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <3f032003-c847-ccd7-931a-16acc58c8342@denx.de>
-Date:   Tue, 24 Mar 2020 00:52:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 23 Mar 2020 19:54:51 -0400
+Received: by mail-ot1-f68.google.com with SMTP id a6so15314208otb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 16:54:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7ivUKPeO9SerTi1Ute2v62GeXvzFfzfq/ifSKn+sYwQ=;
+        b=thfwQNJ+GUelNm8rDcQbImlNSsL38HmovsMWSUD77gnenKIZWO31Vdd6mnUTPPx08e
+         45KGnfFt1/UDa9QTOY+ds3jJ3HIIgojiX2Z9bqR9ZMWiSh3olum+I6sfvYx7l0pFfhJ4
+         0LpBblO07Ug/XoSo1zImEquUsFXik2gMjHlWZF9ffsp+KSgjiNM2SXfbhdel7p2bZwU7
+         kWsuq38NGtewIFW9qOEhGd3ulgVVpqrH3n1ZTb/glzLXRv/+aFuwGISdYDRXALQFDINN
+         8SoUWX5gEJznTIXLAhnTOaD/x9CMSpZ06ZTiwHU3fgxkiAqgSy9wRQX/34/Rnw15bPBd
+         R6Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7ivUKPeO9SerTi1Ute2v62GeXvzFfzfq/ifSKn+sYwQ=;
+        b=nHpg6wRr6J9eRfLix70QA2d1iQYCN8HtGrBWl2wzubGAIqbITVxrdb4G2cIwFg2mEg
+         M0AQQfOt/fgJN+y+rff7nqaQ5+5rTv0Vcc8e0UhBX3O6A9D18lyq2FOJF302Zq9UzdL2
+         yhj661QIEn3juarCeTBFSPdOkYcdAWn8z92f59x0nAv4xzfRKcqrCaOMiRqJ1dForwHC
+         tNnL8p626L1kc9ktT86MEInLkrvlHpO5RxUuiekmSFUoeYSRG4pQlbBTtd+v7cD/iOc9
+         bFkyqpBLiak9SPTKvJLbWufEFz8nEZx1wSTLAt7O5ZGU4l8UcuA7FuOAoL/xVr2azDLF
+         ON5Q==
+X-Gm-Message-State: ANhLgQ2epwMQooDSi/fG3evyCIkV9gbfJq5J+UlK+n1UzKOce+QgRMUv
+        lX9NPgLGEMbz23/bHU4cOtKCL7oCeO2f3Ws7y0x/rw==
+X-Google-Smtp-Source: ADFU+vsot8kt5s5rcGN6TXz0OW7n8RiiPx5Zhc+LE3dHDuKUm9vVQOF7PdjFALlTfmRme2UwsrwpkLPQ8+yM7KuiE8I=
+X-Received: by 2002:a05:6830:1ac1:: with SMTP id r1mr15659040otc.139.1585007688284;
+ Mon, 23 Mar 2020 16:54:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200323194946.26bdd003@why>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAJZ5v0ju-rOU6TF9HDScXvV9N02wuJT9d3cLkoyEdd1xL6Kfbw@mail.gmail.com>
+ <20200323222803.GA21243@google.com>
+In-Reply-To: <20200323222803.GA21243@google.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 23 Mar 2020 16:54:12 -0700
+Message-ID: <CAGETcx-kBHuvoJGqtdx=AORjezdOBX7-h+6Zrwpgv7UPn1UuVQ@mail.gmail.com>
+Subject: Re: [PATCH v1] driver core: Add device links from fwnode only for the
+ primary device
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/23/20 8:49 PM, Marc Zyngier wrote:
-> On Mon, 23 Mar 2020 20:37:54 +0100
-> Marek Vasut <marex@denx.de> wrote:
-> 
->> On 3/23/20 8:31 PM, Marc Zyngier wrote:
->>> On Mon, 23 Mar 2020 20:19:39 +0100
->>> Marek Vasut <marex@denx.de> wrote:
->>>
->>>> On 3/23/20 8:04 PM, Marek Vasut wrote:
->>>>> On 2/20/20 10:17 AM, Marc Zyngier wrote:
->>>>>> On 2020-02-20 09:04, Linus Walleij wrote:
->>>>>>> On Wed, Feb 19, 2020 at 3:32 PM Alexandre Torgue
->>>>>>> <alexandre.torgue@st.com> wrote:
->>>>>>>
->>>>>>>> GPIO hardware block is directly linked to EXTI block but EXTI handles
->>>>>>>> external interrupts only on edge. To be able to handle GPIO interrupt on
->>>>>>>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
->>>>>>>> chip)
->>>>>>>> is retriggered following interrupt type and gpio line value.
->>>>>>>>
->>>>>>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->>>>>>>> Tested-by: Marek Vasut <marex@denx.de>
->>>>>>>
->>>>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>>>>>>
->>>>>>> If Marc want to merge it with patch 1/2 go ahead!
->>>>>>
->>>>>> I'll queue the whole thing for 5.7.
->>>>>
->>>>> I have a feeling this doesn't work with threaded interrupts.
->>>>>
->>>>> If the interrupt handler runs in a thread context, the EOI will happen
->>>>> almost right away (while the IRQ handler runs) and so will the code
->>>>> handling the IRQ retriggering. But since the IRQ handler still runs and
->>>>> didn't return yet, the retriggering doesn't cause the IRQ handler to be
->>>>> called again once it finishes, even if the IRQ line is still asserted.
->>>>> And that could result in some of the retriggers now happening I think.
->>>>> Or am I doing something wrong ?
->>>>
->>>> The patch below makes my usecase work, but I don't know whether it's
->>>> correct. Basically once the threaded IRQ handler finishes and unmasks
->>>> the IRQ, check whether the line is asserted and retrigger if so.
->>>>
->>>> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c
->>>> b/drivers/pinctrl/stm32/pinctrl-stm32.c
->>>> index 9ac9ecfc2f34..060dbcb7ae72 100644
->>>> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
->>>> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
->>>> @@ -371,12 +371,26 @@ static void
->>>> stm32_gpio_irq_release_resources(struct irq_data *irq_data)
->>>>         gpiochip_unlock_as_irq(&bank->gpio_chip, irq_data->hwirq);
->>>>  }
->>>>
->>>> +static void stm32_gpio_irq_unmask(struct irq_data *d)
->>>> +{
->>>> +       struct stm32_gpio_bank *bank = d->domain->host_data;
->>>> +       int level;
->>>> +
->>>> +       irq_chip_unmask_parent(d);
->>>> +
->>>> +       /* If level interrupt type then retrig */
->>>> +       level = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
->>>> +       if ((level == 0 && bank->irq_type[d->hwirq] ==
->>>> IRQ_TYPE_LEVEL_LOW) ||
->>>> +           (level == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
->>>> +               irq_chip_retrigger_hierarchy(d);
->>>> +}
->>>> +
->>>>  static struct irq_chip stm32_gpio_irq_chip = {
->>>>         .name           = "stm32gpio",
->>>>         .irq_eoi        = stm32_gpio_irq_eoi,
->>>>         .irq_ack        = irq_chip_ack_parent,
->>>>         .irq_mask       = irq_chip_mask_parent,
->>>> -       .irq_unmask     = irq_chip_unmask_parent,
->>>> +       .irq_unmask     = stm32_gpio_irq_unmask,
->>>>         .irq_set_type   = stm32_gpio_set_type,
->>>>         .irq_set_wake   = irq_chip_set_wake_parent,
->>>>         .irq_request_resources = stm32_gpio_irq_request_resources,
->>>>
->>>
->>> OK, I see your problem now.
->>>
->>> The usual flow is along the line of Ack+Eoi, and that's what the
->>> current code guarantees.
->>>
->>> Threaded interrupts do Ack+Mask+Eoi, followed by an Unmask once the
->>> thread finishes. This unmask needs to do the retrigger as well, as you
->>> found out.
->>>
->>> Can you please refactor the above so that we have the common code
->>> between unmask and eoi in a separate function, send a proper patch, and
->>> I'll apply it on top of the current irq/irqchip-5.7 branch.
->>
->> Sure, I can. Do we still need this retriggering in the irq_eoi too ?
-> 
-> Absolutely, because that's what matters for the non-threaded case
-> (there is no mask/unmask on that path). It is also never wrong to
-> over-resample (it just slows things down).
-> 
->> Also, are there any other hidden details I might've missed ?
-> 
-> Probably. But let's fix one bug at a time, shall we? ;-) And let's hope
-> that ST doesn't take this as a excuse not to clean up their act in
-> their next SoC!
+On Mon, Mar 23, 2020 at 3:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Sat, Mar 21, 2020 at 11:20:07AM +0100, Rafael J. Wysocki wrote:
+> > On Sat, Mar 21, 2020 at 5:55 AM Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > Sometimes, more than one (generally two) device can point to the same
+> > > fwnode.  However, only one device is set as the fwnode's device
+> > > (fwnode->dev) and can be looked up from the fwnode.
+> > >
+> > > Typically, only one of these devices actually have a driver and actually
+> > > probe. If we create device links for all these devices, then the
+> > > suppliers' of these devices (with the same fwnode) will never get a
+> > > sync_state() call because one of their consumer devices will never probe
+> > > (because they don't have a driver).
+> > >
+> > > So, create device links only for the device that is considered as the
+> > > fwnode's device.
+> > >
+> > > One such example of this is the PCI bridge platform_device and the
+> > > corresponding pci_bus device. Both these devices will have the same
+> > > fwnode. It's the platform_device that is registered first and is set as
+> > > the fwnode's device. Also the platform_device is the one that actually
+> > > probes. Without this patch none of the suppliers of a PCI bridge
+> > > platform_device would get a sync_state() callback.
+> >
+> > For the record, I think that this is a PCI subsystem problem, but I
+> > agree with the patch here.
+>
+> I don't understand the issue here.  Can somebody educate me?  I'm
+> guessing this is related to pci_set_bus_of_node(), which does (for
+> PCI-to-PCI bridges):
+>
+>   bus->dev.of_node = of_node_get(bus->self->dev.of_node);
+>   bus->dev.fwnode = &bus->dev.of_node->fwnode;
 
-Indeed.
+Assuming you intentionally simplified the code here, yes, it's related to that.
 
-Patch is out, thanks for the feedback :)
+> where "bus" points to a struct pci_bus and "bus->self" points to the
+> struct pci_dev for the bridge leading to the bus?
+>
+> Is this related to the fact that we have a struct device for both a
+> PCI-to-PCI bridge and for its downstream bus?
+
+This patch at least isn't talking about how many devices we have.
+
+The patch is referring to the fact that more than one device has their
+dev.fwnode point to the same fwnode. fwnode is just a generic way to
+point to devicetree nodes (of_node) or ACPI nodes. So the concerns
+raised for fwnode apply to of_node too, but ignore of_node for now
+(I'll get to that part later).
+
+dev.fwnode is supposed to point to the firmware node from which the
+device is created or represents. Having more than one struct device
+point to the same fwnode is unusual as it's unlikely one firmware node
+is creating two different devices.. Maybe for MFD (multi function
+devices) it *might* make sense but even then it's questionable.
+
+In the specific case of the PCI + a device tree based system, the pcie
+root controller/bridge(?) has a platform_device (bridge->dev.parent)
+that points to a fwnode (that corresponds to the DT node from which
+the platform device was created). Somehow (the code path is very
+confusing) the pci_bus->dev.fwnode ends up pointing to the same fwnode
+the platform_device is pointing to.
+
+The pci_bus is just a run time allocated struct device used to form
+some kind of device hierarchy you are trying to maintain. I think (and
+maybe this is the part Rafael is referring to) the pci_bus is not
+really representing the firmware node and maybe should have fwnode set
+to NULL. And this fwnode issue is made more unusual because this
+device doesn't even probe.
+
+> Any suggestions for how could we fix this problem in the PCI
+> subsystem?
+
+If you set a device's of_node = something, then you really should be
+setting the device's fwnode to point to the corresponding fwnode for
+that of_node. So the real question is why you need to set
+pci_bus->dev.of_node (instead of leaving it NULL). Sometimes devices
+have their of_node set to some other device's of_node because
+regulator_get()/clk_get/whatever_get() they call look at dev.of_node
+to find the resource. But I don't think that's the case here.
+
+So, if you can simply skip setting pci_bus of_node, then that's the
+simplest fix. If not, not setting fwnode (while setting of_node) might
+be an acceptable hack to reduce the weirdness (of setting fwnode =
+some other device's fwnode). If not, then the fix would be to unwind
+the need for setting pci_bus's of_node.
+
+Hope that makes some sense.
+
+-Saravana
+
+-Saravana
