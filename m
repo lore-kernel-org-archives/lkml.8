@@ -2,323 +2,138 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C5EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D852C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2FB20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5480D20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:48:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="VhBNvBYq"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="b58XeakZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgCWUrf (ORCPT
+        id S1727023AbgCWUst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 16:47:35 -0400
-Received: from sonic310-30.consmr.mail.ne1.yahoo.com ([66.163.186.211]:42225
-        "EHLO sonic310-30.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725893AbgCWUre (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 16:47:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1584996452; bh=7Q91aiE4rFiKsFv4/8Et+8SX35Ktzhult4cEA7Ku6uY=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=VhBNvBYqlpgwd1HYJJny3nPGyY/O2s2IHFcKiPZQSYfHWyp2hEyHfqNcL/MlfmBVwNxoclR8V9Gq7AUrorTaJ8nWtl3rvAIk0YL5vLQgd4e8tH9P557p2rkCNiuBBoIGg11BPeqE9MgEHANeFNaDlr+XJtcGXSNZZzYBtz6QGI2TdEAgCo1P7mTq7polNHHAW6R40vGRWvUsE/N4EtvTqT7bXIuxOUY/WQMpn/XY2uyCuk5zoX9d5M+84gEqeW/sGGRdc4ZdulQS6CPKpfXMLXkqFNpxGFXpZBOwz9tlOV7q00WcSBL3ETE/LxGXXMpGCWTa9OlWyWYC7jR2lhj74g==
-X-YMail-OSG: 70TLNYAVM1nhPMew0yp2AgZ0iUX9b8y1ZAwqKq_MvUt1wwEZOCBfxdxymHrAl8s
- GZGT2CEr5jCAXi2UgzndzWyQ9rImG7wc5Rp5By7dStr4WmHlImkAqmXSH3X2PCqg7LZ2fw8uDq3P
- mHSMiFNSVji4BOc6lhNBWw_AmA_F6CeC.L4E.0.WWP9ZZm3hzFPPvNgRmO5plWVopKV9zzpNSwD_
- DlRlcQ.DtwSZS8FxV2riAEOhaqW4xny1azw7Ma7ym8jOO7hpRbnK8VzcVy3kmzyUvmCi1MQ4RXKy
- XOfnWea24.s9.tBguJOCbL4kinaAidak5Gs6Dm.zek2IvXHqxVSDIVb980h5NzSF9dABH9HAchXU
- Mqdnfb_D3Z_PrGsgz9lj8frxPGpHk4z.GcF421c8GNCg_iyJbNXrK.ygTaSYktFwl6rPokRR93y0
- nj8ezzdmYDNCJ_q5KxPbVZ2zfHDfGp3IWWyuzqVpc7V_202Ww5C28HvG5PvfUA7wCNP4yRpJs_ZM
- nNBUThIYaYNTK0MyQ8_t5wXXDOSMRc9mbdAQWrq8OM7n5fRYDrtS.OBLmB_M1U4PJAdV.fpcnvkJ
- 4zB_T4APqnlJlyP47plxgWlnl6E1dcUsa0D.OyHgPZjO6D52Ywma9cEAb3zo7NLI6a1YdHFM6ixF
- hAQCtL.TuXQD1FSkyc2X4F7L70EIavgm54at1HDnNlLeRslaT1qBC6URNoXX8xsmAzczBI8w3Jpx
- iAOwj1nEt43XlzAbG3M9xAeesiIc1pvlkr2auAW3SLl2klndPtbp3ohiMkTYaGe87OZ_q18.MD8z
- 3WyntLBZOmqo4bfeXVKSpRASWxVLUgXUS.sHe9_O4c6rIyDoRew957ao_7peexOXDewdQevQVvL9
- 3oGKAQC6sowDXwpXGtBJcl2NE_U32rBRd3X.4Fy5LufqHiNIjwt1VDVkUqLQAnMj2_X5_Y3gBxlR
- sKEGLV34_qJj_YxvvLudaiuRbQ9fZlKVAmrMWWFhgrmtT2GOKlK5HuegzYvr4Y17pakyW6E8ypm.
- szLPAFcKu_Mzp9GafUeA3zKUocozjY30KtGBU5gDp.tjAdTocQBUfMHz3x3HOJbTe_MiBMSIEWbR
- xfrUMoDjFhR1X8mJkQ0pPgMdKGeX5yiMxqNwfu9pnorYBunE0_kBNHjkgDHCqEUjR8R5B3p5LGDu
- nb4xX8PTGgBVLNZhbROlsJTxSuxvfVCR0OC0XPGCx7hZeBhOBKIcP6MNK7sC.iCwOicGUQYy3dwn
- c6dX43.iB4yf_59nd4IHhPud6GcDKtBCfZUsEMNYHFJuHrwEtmoG5tqs1MYQ2opvXGML.5QJcdRK
- r34BJIQ9bz3mabF83gaRLQjLIU6_A79k6yO1F6Cmm_0yY.9B7eCw1kQYButm3TRpWRduml_y9QrX
- hTG_cbsdelaZYNoiV105rbztUqYOCGHR6Qo1w
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.ne1.yahoo.com with HTTP; Mon, 23 Mar 2020 20:47:32 +0000
-Received: by smtp432.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID f2519a3a28c5deca2168a06d076f32a1;
-          Mon, 23 Mar 2020 20:47:31 +0000 (UTC)
-Subject: Re: [PATCH bpf-next v5 5/7] bpf: lsm: Initialize the BPF LSM hooks
-To:     Kees Cook <keescook@chromium.org>, KP Singh <kpsingh@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
-        Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>
-References: <20200323164415.12943-1-kpsingh@chromium.org>
- <20200323164415.12943-6-kpsingh@chromium.org>
- <202003231237.F654B379@keescook>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <0655d820-4c42-cf9a-23d3-82dc4fdeeceb@schaufler-ca.com>
-Date:   Mon, 23 Mar 2020 13:47:29 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 23 Mar 2020 16:48:49 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:56697 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725893AbgCWUst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 16:48:49 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id b3e60c82;
+        Mon, 23 Mar 2020 20:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=H/E7+InwbixoEBWVVgGNiW0bFwI=; b=b58Xea
+        kZqz7YY98vn/PPE0vX0KkVsz1SrIbgXsVOndAKXTPqv4k+Xf6c5px586bgCivdqo
+        zxyBTgg3pT8dGVIiaHL0ETkW5nXjW9zgIYZp8kgjLFBh02Xa60XOAbr9O3AoK4bs
+        T8zWytg38SrywWPYzfgrmo2L6wiUC9bVuGCMCrDUDCp34XiAKmj1I3ZTQa+UVtJo
+        94Qf4NsDE7IpUWnRkV9Q/ToZ3DYKmfmRslttlMRD4KykIzi2S4dinE5USnyGwwUc
+        +lVx9RIlH3SkYt/jVEZ0huqonFJQQ2/JzJUSqKe35QigA/1fUY6o4YsHnuwQeQ7f
+        XY4uAhQFnYvXFHuA==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 2a94b5b6 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Mon, 23 Mar 2020 20:41:45 +0000 (UTC)
+Received: by mail-io1-f47.google.com with SMTP id k9so5168609iov.7;
+        Mon, 23 Mar 2020 13:48:47 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2Wmytooqn6r50E8x2MqoECbt3DwsGmEHon0WVPwfvMnVWniHmG
+        34wTQiT7VTwQL1rZrAbjBUjybnm+9k2AYkVlIec=
+X-Google-Smtp-Source: ADFU+vuogE2FYRhytJcSX3heagpm4iOVGOOafzpqpPi8fhbcekFavLibp6Y7zDbD/tPZtMeAGruZcXchqz5/fqCu7m8=
+X-Received: by 2002:a5e:a50f:: with SMTP id 15mr4024585iog.67.1584996526758;
+ Mon, 23 Mar 2020 13:48:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <202003231237.F654B379@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Mailer: WebService/1.1.15518 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_242)
+References: <20200323020844.17064-1-masahiroy@kernel.org> <20200323020844.17064-6-masahiroy@kernel.org>
+ <CAHmME9p3LAnrUMmcGPEUFqY5vOASe8MVk4=pzqFRj3E9C-bM+Q@mail.gmail.com> <CAK7LNATVAq_Wkv=K-ezwnG=o8a9OoKspZJYOyq+4OXX7EZHPnA@mail.gmail.com>
+In-Reply-To: <CAK7LNATVAq_Wkv=K-ezwnG=o8a9OoKspZJYOyq+4OXX7EZHPnA@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Mon, 23 Mar 2020 14:48:35 -0600
+X-Gmail-Original-Message-ID: <CAHmME9pg0_EAG_YkGJQ2AE0n=9EvP2CVoj+bT8cCuiDAdHzUCQ@mail.gmail.com>
+Message-ID: <CAHmME9pg0_EAG_YkGJQ2AE0n=9EvP2CVoj+bT8cCuiDAdHzUCQ@mail.gmail.com>
+Subject: Re: [PATCH 5/7] x86: remove always-defined CONFIG_AS_SSSE3
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     X86 ML <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Song Liu <songliubraving@fb.com>,
+        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/23/2020 12:44 PM, Kees Cook wrote:
-> On Mon, Mar 23, 2020 at 05:44:13PM +0100, KP Singh wrote:
->> From: KP Singh <kpsingh@google.com>
->>
->> The bpf_lsm_ nops are initialized into the LSM framework like any othe=
-r
->> LSM.  Some LSM hooks do not have 0 as their default return value. The
->> __weak symbol for these hooks is overridden by a corresponding
->> definition in security/bpf/hooks.c
->>
->> The LSM can be enabled / disabled with CONFIG_LSM.
->>
->> Signed-off-by: KP Singh <kpsingh@google.com>
-> Nice! This is super clean on the LSM side of things. :)
+On Mon, Mar 23, 2020 at 2:45 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> One note below...
+> On Tue, Mar 24, 2020 at 3:06 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> >
+> > On Sun, Mar 22, 2020 at 8:10 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > > diff --git a/lib/raid6/algos.c b/lib/raid6/algos.c
+> > > index bf1b4765c8f6..77457ea5a239 100644
+> > > --- a/lib/raid6/algos.c
+> > > +++ b/lib/raid6/algos.c
+> > > @@ -103,9 +103,7 @@ const struct raid6_recov_calls *const raid6_recov_algos[] = {
+> > >  #ifdef CONFIG_AS_AVX2
+> > >         &raid6_recov_avx2,
+> > >  #endif
+> > > -#ifdef CONFIG_AS_SSSE3
+> > >         &raid6_recov_ssse3,
+> > > -#endif
+> > >  #ifdef CONFIG_S390
+> > >         &raid6_recov_s390xc,
+> > >  #endif
+> >
+> > algos.c is compiled on all platforms, so you'll need to ifdef that x86
+> > section where SSSE3 is no longer guarding it. The pattern in the rest
+> > of the file, if you want to follow it, is "#if defined(__x86_64__) &&
+> > !defined(__arch_um__)". That seems ugly and like there are better
+> > ways, but in the interest of uniformity and a lack of desire to
+> > rewrite all the raid6 code, I went with that in this cleanup:
+> >
+> > https://git.zx2c4.com/linux-dev/commit/?h=jd/kconfig-assembler-support&id=512a00ddebbe5294a88487dcf1dc845cf56703d9
 >
->> Reviewed-by: Brendan Jackman <jackmanb@google.com>
->> Reviewed-by: Florent Revest <revest@google.com>
->> ---
->>  security/Kconfig      | 10 ++++----
->>  security/Makefile     |  2 ++
->>  security/bpf/Makefile |  5 ++++
->>  security/bpf/hooks.c  | 55 ++++++++++++++++++++++++++++++++++++++++++=
-+
->>  4 files changed, 67 insertions(+), 5 deletions(-)
->>  create mode 100644 security/bpf/Makefile
->>  create mode 100644 security/bpf/hooks.c
->>
->> diff --git a/security/Kconfig b/security/Kconfig
->> index 2a1a2d396228..cd3cc7da3a55 100644
->> --- a/security/Kconfig
->> +++ b/security/Kconfig
->> @@ -277,11 +277,11 @@ endchoice
->> =20
->>  config LSM
->>  	string "Ordered list of enabled LSMs"
->> -	default "lockdown,yama,loadpin,safesetid,integrity,smack,selinux,tom=
-oyo,apparmor" if DEFAULT_SECURITY_SMACK
->> -	default "lockdown,yama,loadpin,safesetid,integrity,apparmor,selinux,=
-smack,tomoyo" if DEFAULT_SECURITY_APPARMOR
->> -	default "lockdown,yama,loadpin,safesetid,integrity,tomoyo" if DEFAUL=
-T_SECURITY_TOMOYO
->> -	default "lockdown,yama,loadpin,safesetid,integrity" if DEFAULT_SECUR=
-ITY_DAC
->> -	default "lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tom=
-oyo,apparmor"
->> +	default "lockdown,yama,loadpin,safesetid,integrity,smack,selinux,tom=
-oyo,apparmor,bpf" if DEFAULT_SECURITY_SMACK
->> +	default "lockdown,yama,loadpin,safesetid,integrity,apparmor,selinux,=
-smack,tomoyo,bpf" if DEFAULT_SECURITY_APPARMOR
->> +	default "lockdown,yama,loadpin,safesetid,integrity,tomoyo,bpf" if DE=
-FAULT_SECURITY_TOMOYO
->> +	default "lockdown,yama,loadpin,safesetid,integrity,bpf" if DEFAULT_S=
-ECURITY_DAC
->> +	default "lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tom=
-oyo,apparmor,bpf"
->>  	help
->>  	  A comma-separated list of LSMs, in initialization order.
->>  	  Any LSMs left off this list will be ignored. This can be
->> diff --git a/security/Makefile b/security/Makefile
->> index 746438499029..22e73a3482bd 100644
->> --- a/security/Makefile
->> +++ b/security/Makefile
->> @@ -12,6 +12,7 @@ subdir-$(CONFIG_SECURITY_YAMA)		+=3D yama
->>  subdir-$(CONFIG_SECURITY_LOADPIN)	+=3D loadpin
->>  subdir-$(CONFIG_SECURITY_SAFESETID)    +=3D safesetid
->>  subdir-$(CONFIG_SECURITY_LOCKDOWN_LSM)	+=3D lockdown
->> +subdir-$(CONFIG_BPF_LSM)		+=3D bpf
->> =20
->>  # always enable default capabilities
->>  obj-y					+=3D commoncap.o
->> @@ -30,6 +31,7 @@ obj-$(CONFIG_SECURITY_LOADPIN)		+=3D loadpin/
->>  obj-$(CONFIG_SECURITY_SAFESETID)       +=3D safesetid/
->>  obj-$(CONFIG_SECURITY_LOCKDOWN_LSM)	+=3D lockdown/
->>  obj-$(CONFIG_CGROUP_DEVICE)		+=3D device_cgroup.o
->> +obj-$(CONFIG_BPF_LSM)			+=3D bpf/
->> =20
->>  # Object integrity file lists
->>  subdir-$(CONFIG_INTEGRITY)		+=3D integrity
->> diff --git a/security/bpf/Makefile b/security/bpf/Makefile
->> new file mode 100644
->> index 000000000000..c7a89a962084
->> --- /dev/null
->> +++ b/security/bpf/Makefile
->> @@ -0,0 +1,5 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +#
->> +# Copyright (C) 2020 Google LLC.
->> +
->> +obj-$(CONFIG_BPF_LSM) :=3D hooks.o
->> diff --git a/security/bpf/hooks.c b/security/bpf/hooks.c
->> new file mode 100644
->> index 000000000000..68e5824868f9
->> --- /dev/null
->> +++ b/security/bpf/hooks.c
->> @@ -0,0 +1,55 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +/*
->> + * Copyright (C) 2020 Google LLC.
->> + */
->> +#include <linux/lsm_hooks.h>
->> +#include <linux/bpf_lsm.h>
->> +
->> +/* Some LSM hooks do not have 0 as their default return values. Overr=
-ide the
->> + * __weak definitons generated by default for these hooks
-> If you wanted to avoid this, couldn't you make the default return value=
+>
+> Thanks for the pointer,
+> but I think guarding with CONFIG_X86 makes more sense.
+>
+> raid6_recov_ssse3 is defined in lib/raid6/recov_ssse3.c,
+> which is guarded by like this:
+>
+> raid6_pq-$(CONFIG_X86) += recov_ssse3.o recov_avx2.o mmx.o sse1.o
+> sse2.o avx2.o avx512.o recov_avx512.o
+>
+>
+> Indeed,
+>
+>  #if defined(__x86_64__) && !defined(__arch_um__)
+>
+> is ugly.
+>
+>
+> I wonder why the code was written like that.
+>
+> I rather want to check a single CONFIG option.
+> Please see the attached patch.
 
-> part of lsm_hooks.h?
->
-> e.g.:
->
-> LSM_HOOK(int, -EOPNOTSUPP, inode_getsecurity, struct inode *inode,
-> 	 const char *name, void **buffer, bool alloc)
+Seems better indeed. Looks like you've cleaned up multiple cases.
 
-If you're going to do that you'll have to keep lsm_hooks.h and security.c=
+Now if you could only tell me what is wrong with my series... "Your
+series does not work correctly. I will comment why later." I've been
+at the edge of my seat, Fermat's last theorem style. :)
 
-default values in sync somehow. Note that the four functions you've calle=
-d
-out won't be using call_int_hook() after the next round of stacking. I'm =
-not
-nixing the idea, I just don't want the default return for the security_
-functions defined in two places.
+By the way, it looks like 5.7 will be raising the minimum binutils to
+2.23: https://lore.kernel.org/lkml/20200316160259.GN26126@zn.tnic/ In
+light of this, I'll place another patch on top of my branch handling
+that transition.
 
->
-> ...
->
-> #define LSM_HOOK(RET, DEFAULT, NAME, ...)	\
-> 	LSM_HOOK_##RET(NAME, DEFAULT, __VA_ARGS__)
-> ...
-> #define LSM_HOOK_int(NAME, DEFAULT, ...)	\
-> noinline int bpf_lsm_##NAME(__VA_ARGS__)	\
-> {						\
-> 	return (DEFAULT);			\
-> }
->
-> Then all the __weak stuff is gone, and the following 4 functions don't
-> need to be written out, and the information is available to the macros
-> if anyone else might ever want it.
->
-> -Kees
->
->> + */
->> +noinline int bpf_lsm_inode_getsecurity(struct inode *inode, const cha=
-r *name,
->> +				       void **buffer, bool alloc)
->> +{
->> +	return -EOPNOTSUPP;
->> +}
->> +
->> +noinline int bpf_lsm_inode_setsecurity(struct inode *inode, const cha=
-r *name,
->> +				       const void *value, size_t size,
->> +				       int flags)
->> +{
->> +	return -EOPNOTSUPP;
->> +}
->> +
->> +noinline int bpf_lsm_task_prctl(int option, unsigned long arg2,
->> +				unsigned long arg3, unsigned long arg4,
->> +				unsigned long arg5)
->> +{
->> +	return -ENOSYS;
->> +}
->> +
->> +noinline int bpf_lsm_xfrm_state_pol_flow_match(struct xfrm_state *x,
->> +					       struct xfrm_policy *xp,
->> +					       const struct flowi *fl)
->> +{
->> +	return 1;
->> +}
->> +
->> +static struct security_hook_list bpf_lsm_hooks[] __lsm_ro_after_init =
-=3D {
->> +	#define LSM_HOOK(RET, NAME, ...) LSM_HOOK_INIT(NAME, bpf_lsm_##NAME)=
-,
->> +	#include <linux/lsm_hook_names.h>
->> +	#undef LSM_HOOK
->> +};
->> +
->> +static int __init bpf_lsm_init(void)
->> +{
->> +	security_add_hooks(bpf_lsm_hooks, ARRAY_SIZE(bpf_lsm_hooks), "bpf");=
-
->> +	pr_info("LSM support for eBPF active\n");
->> +	return 0;
->> +}
->> +
->> +DEFINE_LSM(bpf) =3D {
->> +	.name =3D "bpf",
->> +	.init =3D bpf_lsm_init,
->> +};
->> --=20
->> 2.20.1
->>
-
+Jason
