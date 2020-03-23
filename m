@@ -2,137 +2,121 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B40C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE74C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08D17206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205A3206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:20:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="frWZZr05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgCWTTs (ORCPT
+        id S1727868AbgCWTUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:19:48 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:50476 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727179AbgCWTTr (ORCPT
+        Mon, 23 Mar 2020 15:20:08 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:52372 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727179AbgCWTUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:19:47 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 48mPMg2gv7z1rVw0;
-        Mon, 23 Mar 2020 20:19:43 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 48mPMg18Ffz1qyDc;
-        Mon, 23 Mar 2020 20:19:43 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id Nl_L2P0oJ9M6; Mon, 23 Mar 2020 20:19:40 +0100 (CET)
-X-Auth-Info: MMjA740fuZT2ajLKTyDbPMH63PHY+8ynlOErWzqXzRE=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Mon, 23 Mar 2020 20:19:39 +0100 (CET)
-Subject: Re: [PATCH v3 2/2] pinctrl: stm32: Add level interrupt support to
- gpio irq chip
-From:   Marek Vasut <marex@denx.de>
-To:     Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20200219143229.18084-1-alexandre.torgue@st.com>
- <20200219143229.18084-3-alexandre.torgue@st.com>
- <CACRpkdZ7uq4U6GBQQQh=pTLf4wW3KfH3Zrz9z_3ZQgoaJD9Ynw@mail.gmail.com>
- <c991edca3e8925cf0489c0a5676f77b2@kernel.org>
- <a7fc5e43-34c2-a4e6-e0c5-1584f17fb024@denx.de>
-Message-ID: <8d6f6646-56e4-5218-9990-f0c96862dc83@denx.de>
-Date:   Mon, 23 Mar 2020 20:19:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <a7fc5e43-34c2-a4e6-e0c5-1584f17fb024@denx.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 23 Mar 2020 15:20:07 -0400
+Received: by mail-qk1-f201.google.com with SMTP id w124so13382066qkd.19
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 12:20:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=EuEgHEvOOlLZGILEOt39luhrShhjhA+dXySCvlN5S/w=;
+        b=frWZZr05u+jNrEcB3GH0499Ea350wyE93JmIJPfup0N2Iea+YPd3q6/qiz0WC7FuIP
+         WBoyPuMVzyQ4O0/YDSAKhAYkgwpj2nq/kGj7IXWW8nzOpSAWmDkEmkHZBHhOdIb7x4pd
+         qlvurUUNUqAF0ALylfTDWTBWNPTw17zbfsbVbCkiBao+3wRoTcRnmjsmmCReJ48hIwth
+         B68OT7qccAkZcNrdsb1H/LUCmoznz/xEpUxBHTQXSMH4jktAFRqwWvBTNfrNypJtUtaF
+         YcA+zNaafJAhGeMyIFSuEJaN92/9bAes2ovUyOw85AoB7NNsikFkTqC7SY5py2h97KEV
+         vWNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=EuEgHEvOOlLZGILEOt39luhrShhjhA+dXySCvlN5S/w=;
+        b=fyuOJ7a9OXFzZGlah13Un8wZVkUaeMhL7meiA8bflYL1D3DbMOVYPbbG8mZrUx4Y8u
+         VGOpWUiUQdl65YGx2DYaS6FVw52ah/Emf+bm1t8iYlYip/IReYSrcB578gpdamGgL8B1
+         p8p/Lpuu2Kc5lI+sDLZtQX0UOdEQ2Q2G5OCWidmOOfwnshd4JuzgeQoq3vxqzwTNq1t/
+         1KNgqSby/mj5b1UBwIk/CGzJhAgttTBN82tf/2P9JK5L1i+KTG9D576jPXbXLWJ+NelR
+         J7Ni4tZl/PIp2W/fYzXZ6R+0MAdJzWpm5QCjK2HiwDNi7sUdOBPUgxbicefOzgmr7vsm
+         Ao2w==
+X-Gm-Message-State: ANhLgQ2axfDI0qpxzsdHd5RJ+9n8b+VWPorIjhRGRBiOUoTqU1LLzGgD
+        DUN0SoIYCG33xwbhd8N+eAafOfAhDj1oISsQXeE=
+X-Google-Smtp-Source: ADFU+vvHiSEJBBT42wVNqrw/x1QVUgfHCyw0l5oYHfNcWj0WqOy/M8fE1DC3Ojv4iFuGiQeAk5S8n+b6TA1pOtTBh1A=
+X-Received: by 2002:a0c:fd85:: with SMTP id p5mr6095302qvr.205.1584991205290;
+ Mon, 23 Mar 2020 12:20:05 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 12:12:43 -0700
+In-Reply-To: <CAKwvOdn10Ts_AU6i+7toj7NkMwK-+0yr5wTrN0XEDudBWS0sPQ@mail.gmail.com>
+Message-Id: <20200323191243.30002-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <CAKwvOdn10Ts_AU6i+7toj7NkMwK-+0yr5wTrN0XEDudBWS0sPQ@mail.gmail.com>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH] KVM: VMX: don't allow memory operands for inline asm that
+ modifies SP
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     pbonzini@redhat.com, sean.j.christopherson@intel.com
+Cc:     ndesaulniers@google.com, bp@alien8.de,
+        clang-built-linux@googlegroups.com, dvyukov@google.com,
+        glider@google.com, hpa@zytor.com, jmattson@google.com,
+        joro@8bytes.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com,
+        syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        vkuznets@redhat.com, wanpengli@tencent.com, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/23/20 8:04 PM, Marek Vasut wrote:
-> On 2/20/20 10:17 AM, Marc Zyngier wrote:
->> On 2020-02-20 09:04, Linus Walleij wrote:
->>> On Wed, Feb 19, 2020 at 3:32 PM Alexandre Torgue
->>> <alexandre.torgue@st.com> wrote:
->>>
->>>> GPIO hardware block is directly linked to EXTI block but EXTI handles
->>>> external interrupts only on edge. To be able to handle GPIO interrupt on
->>>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
->>>> chip)
->>>> is retriggered following interrupt type and gpio line value.
->>>>
->>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->>>> Tested-by: Marek Vasut <marex@denx.de>
->>>
->>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>>
->>> If Marc want to merge it with patch 1/2 go ahead!
->>
->> I'll queue the whole thing for 5.7.
-> 
-> I have a feeling this doesn't work with threaded interrupts.
-> 
-> If the interrupt handler runs in a thread context, the EOI will happen
-> almost right away (while the IRQ handler runs) and so will the code
-> handling the IRQ retriggering. But since the IRQ handler still runs and
-> didn't return yet, the retriggering doesn't cause the IRQ handler to be
-> called again once it finishes, even if the IRQ line is still asserted.
-> And that could result in some of the retriggers now happening I think.
-> Or am I doing something wrong ?
+THUNK_TARGET defines [thunk_target] as having "rm" input constraints
+when CONFIG_RETPOLINE is not set, which isn't constrained enough for
+this specific case.
 
-The patch below makes my usecase work, but I don't know whether it's
-correct. Basically once the threaded IRQ handler finishes and unmasks
-the IRQ, check whether the line is asserted and retrigger if so.
+For inline assembly that modifies the stack pointer before using this
+input, the underspecification of constraints is dangerous, and results
+in an indirect call to a previously pushed flags register.
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c
-b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index 9ac9ecfc2f34..060dbcb7ae72 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -371,12 +371,26 @@ static void
-stm32_gpio_irq_release_resources(struct irq_data *irq_data)
-        gpiochip_unlock_as_irq(&bank->gpio_chip, irq_data->hwirq);
- }
+In this case `entry`'s stack slot is good enough to satisfy the "m"
+constraint in "rm", but the inline assembly in
+handle_external_interrupt_irqoff() modifies the stack pointer via
+push+pushf before using this input, which in this case results in
+calling what was the previous state of the flags register, rather than
+`entry`.
 
-+static void stm32_gpio_irq_unmask(struct irq_data *d)
-+{
-+       struct stm32_gpio_bank *bank = d->domain->host_data;
-+       int level;
-+
-+       irq_chip_unmask_parent(d);
-+
-+       /* If level interrupt type then retrig */
-+       level = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
-+       if ((level == 0 && bank->irq_type[d->hwirq] ==
-IRQ_TYPE_LEVEL_LOW) ||
-+           (level == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
-+               irq_chip_retrigger_hierarchy(d);
-+}
-+
- static struct irq_chip stm32_gpio_irq_chip = {
-        .name           = "stm32gpio",
-        .irq_eoi        = stm32_gpio_irq_eoi,
-        .irq_ack        = irq_chip_ack_parent,
-        .irq_mask       = irq_chip_mask_parent,
--       .irq_unmask     = irq_chip_unmask_parent,
-+       .irq_unmask     = stm32_gpio_irq_unmask,
-        .irq_set_type   = stm32_gpio_set_type,
-        .irq_set_wake   = irq_chip_set_wake_parent,
-        .irq_request_resources = stm32_gpio_irq_request_resources,
+Be more specific in the constraints by requiring `entry` be in a
+register, and not a memory operand.
+
+Reported-by: Dmitry Vyukov <dvyukov@google.com>
+Reported-by: syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com
+Debugged-by: Alexander Potapenko <glider@google.com>
+Debugged-by: Paolo Bonzini <pbonzini@redhat.com>
+Debugged-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+ arch/x86/kvm/vmx/vmx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 4d22b1b5e822..310e8c1169b8 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6277,7 +6277,7 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu)
+ #endif
+ 		ASM_CALL_CONSTRAINT
+ 		:
+-		THUNK_TARGET(entry),
++		[thunk_target]"r"(entry),
+ 		[ss]"i"(__KERNEL_DS),
+ 		[cs]"i"(__KERNEL_CS)
+ 	);
+-- 
+2.25.1.696.g5e7596f4ac-goog
+
