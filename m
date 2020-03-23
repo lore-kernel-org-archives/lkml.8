@@ -2,116 +2,250 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D890BC1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A59C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F93420722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D0920722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:51:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="RWwGJOKf"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oeXXi7HJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbgCWBui (ORCPT
+        id S1727030AbgCWBvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 21:50:38 -0400
-Received: from vps.xff.cz ([195.181.215.36]:37720 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726954AbgCWBui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 21:50:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-        t=1584928236; bh=1N30fcEiZZHKBwEnOj8WWoevPWmYxyTUVcPdUGEd8VE=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=RWwGJOKfp8Gr8AiVOHHK7dNKWIZF6ArzehJDlzDMofSgs5dGvdFPbF8uLA46sy7+d
-         FC6NjOMYhiCFGsUgEimFwvK1Pohb6g+OehoXJ8QMdkjysSzdA41/i5Qhs/sCE/behe
-         qJnW95oq0YmXDfKASbPTNv7dvLxQKugaEmHkMMSE=
-Date:   Mon, 23 Mar 2020 02:50:36 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH v3] f2fs: fix potential .flags overflow on 32bit
- architecture
-Message-ID: <20200323015036.pniupuucfl3dug4m@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
-        Chao Yu <yuchao0@huawei.com>, jaegeuk@kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-References: <20200323012519.41536-1-yuchao0@huawei.com>
+        Sun, 22 Mar 2020 21:51:38 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:57574 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726971AbgCWBvh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 21:51:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584928297; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=rVs4UhZfq5ySydb0Mkp7e5H5eaz7AWJc5B+WJxcd6OA=;
+ b=oeXXi7HJAdAjRFRsaDWEuaayd8gRaII5+76Nyvyy349dSO4m+QHZdEUB32tFink+IeTdYxuf
+ KipznAjn701kjhg0OAt0LCVvZdYL8+rAB73cql1C0v6yvxMZy8s8JYIUNFLZ3Fat5gF9opbn
+ OqtbJJA09xfH0q21CW4tvS4JQqE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e78161f.7f05264692d0-smtp-out-n03;
+ Mon, 23 Mar 2020 01:51:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C2B99C43636; Mon, 23 Mar 2020 01:51:27 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: rjliao)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CF9E2C433D2;
+        Mon, 23 Mar 2020 01:51:26 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323012519.41536-1-yuchao0@huawei.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 23 Mar 2020 09:51:26 +0800
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org,
+        linux-bluetooth-owner@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] Bluetooth: hci_qca: Add support for Qualcomm
+ Bluetooth SoC QCA6390
+In-Reply-To: <20200316174615.GP144492@google.com>
+References: <20200314094328.3331-1-rjliao@codeaurora.org>
+ <20200316174615.GP144492@google.com>
+Message-ID: <1aff039c60da7e1d188bd5ef8750eefd@codeaurora.org>
+X-Sender: rjliao@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Chao Yu,
+在 2020-03-17 01:46，Matthias Kaehlcke 写道：
+> On Sat, Mar 14, 2020 at 05:43:27PM +0800, Rocky Liao wrote:
+>> This patch adds support for QCA6390, including the devicetree and acpi
+>> compatible hwid matching, and patch/nvm downloading.
+>> 
+>> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+>> ---
+>>  drivers/bluetooth/btqca.c   | 44 +++++++++++++++++++++++++++++++----
+>>  drivers/bluetooth/btqca.h   |  8 +++++++
+>>  drivers/bluetooth/hci_qca.c | 46 
+>> +++++++++++++++++++++++++++++++------
+>>  3 files changed, 86 insertions(+), 12 deletions(-)
+>> 
+>> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+>> index a16845c0751d..ca126e499c58 100644
+>> --- a/drivers/bluetooth/btqca.c
+>> +++ b/drivers/bluetooth/btqca.c
+>> @@ -14,6 +14,9 @@
+>> 
+>>  #define VERSION "0.1"
+>> 
+>> +#define QCA_IS_3991_6390(soc_type)    \
+>> +	(soc_type == QCA_WCN3991 || soc_type == QCA_QCA6390)
+> 
+> This macro style is 3991 or 6390 is pretty ugly, IMO it's worse than 
+> the
+> problem it intends to solve.
+> 
+> I would either just spell out what the macro does, or if that becomes 
+> to
+> cumbersome (especially when more types are added) have a macro that 
+> checks
+> a bitmask like:
+> 
+> qca_soc_type_matches(soc_type, QCA_WCN3991 | QCA6390)
+> 
+> For this the SoC types read from FW would have to be mapped to a bit 
+> for
+> each SoC type, which could be done during initialization.
+> 
+> Another alternative could be to have a set of flags that indicate if a 
+> SoC
+> has certain characteristics (e.g. enhanced logging needs to be 
+> enabled),
+> these flags could be set during initialization.
+> 
 
-On Mon, Mar 23, 2020 at 09:25:19AM +0800, Chao Yu wrote:
-> [snip]
->  
-> +static inline void __set_inode_flag(struct inode *inode, int flag)
-> +{
-> +	test_and_set_bit(flag % BITS_PER_LONG,
-> +			&F2FS_I(inode)->flags[BIT_WORD(flag)]);
+I prefer to adopt Bala's suggestion to use soc_type >= QCA_WCN3991
 
-This can simply be:
+>> +
+>>  int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version,
+>>  			 enum qca_btsoc_type soc_type)
+>>  {
+>> @@ -32,7 +35,7 @@ int qca_read_soc_version(struct hci_dev *hdev, u32 
+>> *soc_version,
+>>  	 * VSE event. WCN3991 sends version command response as a payload to
+>>  	 * command complete event.
+>>  	 */
+>> -	if (soc_type == QCA_WCN3991) {
+>> +	if (QCA_IS_3991_6390(soc_type)) {
+>>  		event_type = 0;
+>>  		rlen += 1;
+>>  		rtype = EDL_PATCH_VER_REQ_CMD;
+>> @@ -69,7 +72,7 @@ int qca_read_soc_version(struct hci_dev *hdev, u32 
+>> *soc_version,
+>>  		goto out;
+>>  	}
+>> 
+>> -	if (soc_type == QCA_WCN3991)
+>> +	if (QCA_IS_3991_6390(soc_type))
+>>  		memmove(&edl->data, &edl->data[1], sizeof(*ver));
+>> 
+>>  	ver = (struct qca_btsoc_version *)(edl->data);
+>> @@ -138,6 +141,29 @@ int qca_send_pre_shutdown_cmd(struct hci_dev 
+>> *hdev)
+>>  }
+>>  EXPORT_SYMBOL_GPL(qca_send_pre_shutdown_cmd);
+>> 
+>> +int qca_send_enhancelog_enable_cmd(struct hci_dev *hdev)
+>> +{
+>> +	struct sk_buff *skb;
+>> +	int err;
+>> +	const u8 param[2] = {0x14, 0x01};
+>> +
+>> +	bt_dev_dbg(hdev, "QCA enhanced log enable cmd");
+>> +
+>> +	skb = __hci_cmd_sync_ev(hdev, QCA_ENHANCED_LOG_ENABLE_CMD, 2,
+>> +				param, HCI_EV_CMD_COMPLETE, HCI_INIT_TIMEOUT);
+>> +
+>> +	if (IS_ERR(skb)) {
+>> +		err = PTR_ERR(skb);
+>> +		bt_dev_err(hdev, "Enhanced log enable cmd failed (%d)", err);
+>> +		return err;
+>> +	}
+>> +
+>> +	kfree_skb(skb);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(qca_send_enhancelog_enable_cmd);
+>> +
+>>  static void qca_tlv_check_data(struct qca_fw_config *config,
+>>  		const struct firmware *fw, enum qca_btsoc_type soc_type)
+>>  {
+>> @@ -217,7 +243,7 @@ static void qca_tlv_check_data(struct 
+>> qca_fw_config *config,
+>>  				tlv_nvm->data[0] |= 0x80;
+>> 
+>>  				/* UART Baud Rate */
+>> -				if (soc_type == QCA_WCN3991)
+>> +				if (QCA_IS_3991_6390(soc_type))
+>>  					tlv_nvm->data[1] = nvm_baud_rate;
+>>  				else
+>>  					tlv_nvm->data[2] = nvm_baud_rate;
+>> @@ -268,7 +294,7 @@ static int qca_tlv_send_segment(struct hci_dev 
+>> *hdev, int seg_size,
+>>  	 * VSE event. WCN3991 sends version command response as a payload to
+>>  	 * command complete event.
+>>  	 */
+>> -	if (soc_type == QCA_WCN3991) {
+>> +	if (QCA_IS_3991_6390(soc_type)) {
+>>  		event_type = 0;
+>>  		rlen = sizeof(*edl);
+>>  		rtype = EDL_PATCH_TLV_REQ_CMD;
+>> @@ -301,7 +327,7 @@ static int qca_tlv_send_segment(struct hci_dev 
+>> *hdev, int seg_size,
+>>  		err = -EIO;
+>>  	}
+>> 
+>> -	if (soc_type == QCA_WCN3991)
+>> +	if (QCA_IS_3991_6390(soc_type))
+>>  		goto out;
+>> 
+>>  	tlv_resp = (struct tlv_seg_resp *)(edl->data);
+>> @@ -442,6 +468,11 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
+>> baudrate,
+>>  			    (soc_ver & 0x0000000f);
+>>  		snprintf(config.fwname, sizeof(config.fwname),
+>>  			 "qca/crbtfw%02x.tlv", rom_ver);
+>> +	} else if (soc_type == QCA_QCA6390) {
+>> +		rom_ver = ((soc_ver & 0x00000f00) >> 0x04) |
+>> +			    (soc_ver & 0x0000000f);
+>> +		snprintf(config.fwname, sizeof(config.fwname),
+>> +			 "qca/htbtfw%02x.tlv", rom_ver);
+>>  	} else {
+>>  		snprintf(config.fwname, sizeof(config.fwname),
+>>  			 "qca/rampatch_%08x.bin", soc_ver);
+>> @@ -464,6 +495,9 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
+>> baudrate,
+>>  	else if (qca_is_wcn399x(soc_type))
+>>  		snprintf(config.fwname, sizeof(config.fwname),
+>>  			 "qca/crnv%02x.bin", rom_ver);
+>> +	else if (soc_type == QCA_QCA6390)
+>> +		snprintf(config.fwname, sizeof(config.fwname),
+>> +			 "qca/htnv%02x.bin", rom_ver);
+>>  	else
+>>  		snprintf(config.fwname, sizeof(config.fwname),
+>>  			 "qca/nvm_%08x.bin", soc_ver);
+>> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
+>> index e16a4d650597..bc703817c3d7 100644
+>> --- a/drivers/bluetooth/btqca.h
+>> +++ b/drivers/bluetooth/btqca.h
+>> @@ -14,6 +14,7 @@
+>>  #define EDL_NVM_ACCESS_SET_REQ_CMD	(0x01)
+>>  #define MAX_SIZE_PER_TLV_SEGMENT	(243)
+>>  #define QCA_PRE_SHUTDOWN_CMD		(0xFC08)
+>> +#define QCA_ENHANCED_LOG_ENABLE_CMD     (0xFC17)
+>> 
+>>  #define EDL_CMD_REQ_RES_EVT		(0x00)
+>>  #define EDL_PATCH_VER_RES_EVT		(0x19)
+>> @@ -127,6 +128,7 @@ enum qca_btsoc_type {
+>>  	QCA_WCN3990,
+>>  	QCA_WCN3991,
+>>  	QCA_WCN3998,
+>> +	QCA_QCA6390,
+> 
+> QCA_QCAxxxx seems a bit redundant, why not call it QCA_6390 or QCA6390?
+> I also wouldn't be opposed to scrap the QCA_ prefixes from the WCN399x
+> types, this is the QCA Bluetooth driver, so it's pretty evident that
+> these are Qualcomm chips.
 
-    test_and_set_bit(flag, F2FS_I(inode)->flags);
-
-all of these bitmap manipulation functions already will do the
-right thing to access the correct location in the flags array:
-
-  https://elixir.bootlin.com/linux/latest/source/include/asm-generic/bitops/atomic.h#L32
-
-see BIT_MASK and BIT_WORD use in that function.
-
-> +}
-> +
->  static inline void set_inode_flag(struct inode *inode, int flag)
->  {
-> -	if (!test_bit(flag, &F2FS_I(inode)->flags))
-> -		set_bit(flag, &F2FS_I(inode)->flags);
-> +	__set_inode_flag(inode, flag);
->  	__mark_inode_dirty_flag(inode, flag, true);
->  }
->  
->  static inline int is_inode_flag_set(struct inode *inode, int flag)
->  {
-> -	return test_bit(flag, &F2FS_I(inode)->flags);
-> +	return test_bit(flag % BITS_PER_LONG,
-> +				&F2FS_I(inode)->flags[BIT_WORD(flag)]);
-
-ditto
-
->  }
->  
->  static inline void clear_inode_flag(struct inode *inode, int flag)
->  {
-> -	if (test_bit(flag, &F2FS_I(inode)->flags))
-> -		clear_bit(flag, &F2FS_I(inode)->flags);
-> +	test_and_clear_bit(flag % BITS_PER_LONG,
-> +				&F2FS_I(inode)->flags[BIT_WORD(flag)]);
-
-ditto
-
-I'm going to test the patch. It looks like that this was really
-the root cause of all those locking issues I was seeing on my
-32-bit tablet. It seems to explain why my 64-bit systems were
-not affected, and why reverting compession fixed it too.
-Great job figuring this out.
-
-I'll let you know soon.
-
-thank you and regards,
-	o.
-
->  	__mark_inode_dirty_flag(inode, flag, false);
->  }
->  
+I would like to do this in a separate patch.
