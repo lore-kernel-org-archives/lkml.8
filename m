@@ -2,114 +2,200 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A831C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8A3C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDA2C20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97AF20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:05:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="oTCO06RS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbgCWPE1 (ORCPT
+        id S1727243AbgCWPFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:04:27 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:43638 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725990AbgCWPE1 (ORCPT
+        Mon, 23 Mar 2020 11:05:12 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:48822 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726955AbgCWPFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:04:27 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-230-B2u6v4l1P-67PVtv6VFiCw-1; Mon, 23 Mar 2020 15:04:24 +0000
-X-MC-Unique: B2u6v4l1P-67PVtv6VFiCw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 23 Mar 2020 15:04:23 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 23 Mar 2020 15:04:23 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Andy Shevchenko' <andy.shevchenko@gmail.com>,
-        Rohit Sarkar <rohitsarkar5398@gmail.com>
-CC:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        "dragos.bogdan@analog.com" <dragos.bogdan@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        "Stefan Popa" <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        "Peter Meerwald" <pmeerw@pmeerw.net>
-Subject: RE: [PATCH] iio: gyro: adis16136: use scnprintf instead of snprintf
-Thread-Topic: [PATCH] iio: gyro: adis16136: use scnprintf instead of snprintf
-Thread-Index: AQHWADSGKND5IUy8BE2X+HWi1cqZDKhWRidA
-Date:   Mon, 23 Mar 2020 15:04:23 +0000
-Message-ID: <81821e142e3c48febb7ab357dd200992@AcuMS.aculab.com>
-References: <5e723666.1c69fb81.3545b.79c3@mx.google.com>
- <20200322002542.GA2826015@smile.fi.intel.com>
- <5e77017a.1c69fb81.dc341.8ab9@mx.google.com>
- <CAHp75VddtJs1ZCk1XAZ2WJLhWQDcVwiiN5gDpK9oYPEOS=c_ZQ@mail.gmail.com>
-In-Reply-To: <CAHp75VddtJs1ZCk1XAZ2WJLhWQDcVwiiN5gDpK9oYPEOS=c_ZQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 23 Mar 2020 11:05:12 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id AD78B2E0AF3;
+        Mon, 23 Mar 2020 18:05:09 +0300 (MSK)
+Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
+        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id s3ED7ZnPtH-59NOwMP0;
+        Mon, 23 Mar 2020 18:05:09 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1584975909; bh=kmq7mjIkuy0JgwDaEhLMvbyTFfm1yg70KiCTf+qdFP8=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=oTCO06RSPtRgx7ylET1DtUPO1RAEf4fh4WjjM5oWDcxf0DC+jZZ6kALONI8nunTap
+         HkJoqCSEnuaPLiDV9KGm+kgr7XZzDTE3Y8ZjpuMl2KSdmnQRfzrnJFKIpGAS5WezsM
+         Po2t9yH0VUlDlgMJciTkXSIazNQ2jFv5/opU1V+I=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:6803::1:2])
+        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id FQS5zzaSBX-58aO1vlM;
+        Mon, 23 Mar 2020 18:05:08 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH v2] fs/namespace: handle mount(MS_BIND|MS_REMOUNT) without
+ locking sb->s_umount
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     David Howells <dhowells@redhat.com>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
+        Matthew Wilcox <willy@infradead.org>
+Date:   Mon, 23 Mar 2020 18:05:08 +0300
+Message-ID: <158497590858.7371.9311902565121473436.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQW5keSBTaGV2Y2hlbmtvDQo+IFNlbnQ6IDIyIE1hcmNoIDIwMjAgMTA6MjcNCj4gT24g
-U3VuLCBNYXIgMjIsIDIwMjAgYXQgODoxMSBBTSBSb2hpdCBTYXJrYXIgPHJvaGl0c2Fya2FyNTM5
-OEBnbWFpbC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gT24gU3VuLCBNYXIgMjIsIDIwMjAgYXQgMDI6
-MjU6NDJBTSArMDIwMCwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiA+ID4gT24gV2VkLCBNYXIg
-MTgsIDIwMjAgYXQgMDg6MjU6MjJQTSArMDUzMCwgUm9oaXQgU2Fya2FyIHdyb3RlOg0KPiA+ID4g
-PiBzY25wcmludGYgcmV0dXJucyB0aGUgYWN0dWFsIG51bWJlciBvZiBieXRlcyB3cml0dGVuIGlu
-dG8gdGhlIGJ1ZmZlciBhcw0KPiA+ID4gPiBvcHBvc2VkIHRvIHNucHJpbnRmIHdoaWNoIHJldHVy
-bnMgdGhlIG51bWJlciBvZiBieXRlcyB0aGF0IHdvdWxkIGhhdmUNCj4gPiA+ID4gYmVlbiB3cml0
-dGVuIGlmIHRoZSBidWZmZXIgd2FzIGJpZyBlbm91Z2guIFVzaW5nIHRoZSBvdXRwdXQgb2Ygc25w
-cmludGYNCj4gPiA+ID4gbWF5IGxlYWQgdG8gZGlmZmljdWx0IHRvIGRldGVjdCBidWdzLg0KPiA+
-ID4NCj4gPiA+IE5pY2UuIEhhdmUgeW91IGludmVzdGlnYXRlIHRoZSBjb2RlPw0KPiA+ID4NCj4g
-PiA+ID4gQEAgLTk2LDcgKzk2LDcgQEAgc3RhdGljIHNzaXplX3QgYWRpczE2MTM2X3Nob3dfc2Vy
-aWFsKHN0cnVjdCBmaWxlICpmaWxlLA0KPiA+ID4gPiAgICAgaWYgKHJldCkNCj4gPiA+ID4gICAg
-ICAgICAgICAgcmV0dXJuIHJldDsNCj4gPiA+ID4NCj4gPiA+ID4gLSAgIGxlbiA9IHNucHJpbnRm
-KGJ1Ziwgc2l6ZW9mKGJ1ZiksICIlLjR4JS40eCUuNHgtJS40eFxuIiwgbG90MSwgbG90MiwNCj4g
-PiA+ID4gKyAgIGxlbiA9IHNjbnByaW50ZihidWYsIHNpemVvZihidWYpLCAiJS40eCUuNHglLjR4
-LSUuNHhcbiIsIGxvdDEsIGxvdDIsDQo+ID4gPiA+ICAgICAgICAgICAgIGxvdDMsIHNlcmlhbCk7
-DQo+ID4gPiA+DQo+ID4gPiA+ICAgICByZXR1cm4gc2ltcGxlX3JlYWRfZnJvbV9idWZmZXIodXNl
-cmJ1ZiwgY291bnQsIHBwb3MsIGJ1ZiwgbGVuKTsNCj4gPiA+DQo+ID4gPiBUaGUgYnVmZmVyIHNp
-emUgaXMgMjAsIHRoZSBwYXR0ZXJuIHNpemUgSSBjb3VudCB0byAxOS4gRG8geW91IHRoaW5rIHNu
-cHJpbnRmKCkNCj4gPiA+IGNhbiBmYWlsPw0KPiA+IFRoYXQgbWlnaHQgYmUgdGhlIGNhc2UsIGJ1
-dCBJTU8gdXNpbmcgc2NucHJpbnRmIGNhbiBiZSBjb25zaWRlcmVkIGFzIGENCj4gPiBiZXN0IHBy
-YWN0aWNlLiBUaGVyZSBpcyBubyBvdmVyaGVhZCB3aXRoIHRoaXMgY2hhbmdlIGFuZCBmdXJ0aGVy
-IGlmIHRoZQ0KPiA+IHBhdHRlcm4gaXMgY2hhbmdlZCBieSBzb21lb25lIGluIHRoZSBmdXR1cmUg
-dGhleSBtaWdodCBvdmVybG9vayB0aGUNCj4gPiBidWZmZXJzaXplDQo+IA0KPiBJZiB3ZSBjdXQg
-dGhlIHN0cmluZyBhYm92ZSB3ZSB3aWxsIGdpdmUgd3JvbmcgaW5mb3JtYXRpb24gdG8gdGhlIHVz
-ZXIgc3BhY2UuDQo+IEkgdGhpbmsgc2NucHJpbnRmKCkgY2hhbmdlIGlzIGEgbm9pc2UgYW5kIGRv
-ZXMgbm90IGltcHJvdmUgdGhlIHNpdHVhdGlvbiBhbnlob3cuDQoNCklmLCBmb3IgYW55IHJlYXNv
-biwgYW55IG9mIHRoZSB2YWx1ZXMgYXJlIGxhcmdlIHRoZSB1c2VyIHdpbGwgZ2V0DQpjb3JydXB0
-IGRhdGEuDQpCdXQgeW91IGRvbid0IHdhbnQgdG8gbGVhayByYW5kb20ga2VybmVsIG1lbW9yeSB0
-byB0aGUgdXNlci4NCg0KU28gd2hpbGUgeW91IG1heSBiZSBhYmxlIHRvIHByb3ZlIHRoYXQgdGhp
-cyBwYXJ0aWN1bGFyIHNucHJpbnRmKCkNCmNhbid0IG92ZXJmbG93LCBpbiBnZW5lcmFsIGNoZWNr
-aW5nIGl0IHJlcXVpcmVzIGtub3dsZWRnZSBvZiB0aGUgY29kZS4NCg0KV2l0aCBzY25wcmludGYo
-KSB5b3Uga25vdyBub3RoaW5nIG9kZCB3aWxsIGhhcHBlbi4NCg0KRldJVyBJIHN1c3BlY3QgdGhl
-ICdzdGFuZGFyZCcgcmV0dXJuIHZhbHVlIGZyb20gc25wcmludGYoKSBjb21lcw0KZnJvbSB0aGUg
-cmV0dXJuIHZhbHVlIG9mIHRoZSBvcmlnaW5hbCB1c2VyLXNwYWNlIGltcGxlbWVudGF0aW9ucw0K
-d2hpY2ggZmFrZWQtdXAgYSBGSUxFIHN0cnVjdHVyZSBvbiBzdGFjayBhbmQganVzdCBzaWxlbnRs
-eSBkaXNjYXJkZWQNCnRoZSBvdXRwdXQgYnl0ZXMgdGhhdCB3b3VsZG4ndCBmaXQgaW4gdGhlIGJ1
-ZmZlciAodGhleSdkIHVzdWFsbHkNCmJ5IGZsdXNoZWQgdG8gYSByZWFsIGZpbGUpLg0KVGhlIG9y
-aWdpbmFsIHNwcmludGYoKSBqdXN0IHNwZWNpZmllZCBhIHZlcnkgYmlnIGxlbmd0aCBzbyB0aGUN
-CmZsdXNoIHdvdWxkIG5ldmVyIGJlIHJlcXVlc3RlZC4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVy
-ZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5
-bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+Writeback grabs sb->s_umount for read during I/O. This blocks bind-remount
+for a long time. Bind-remount actually does not need sb->s_umount locked
+for read or write because it does not alter superblock, only mnt_flags.
+All mnt_flags are serialized by global mount_lock.
+
+This patch moves locking into callers to handle remount atomically.
+Also grab namespace_sem to synchronize with /proc/mounts and mountinfo.
+Function do_change_type() uses the same locking combination.
+
+v2:
+- inline helpers into change_mount_ro_state
+- verify lock with lockdep_assert_held_write
+
+Link: https://lore.kernel.org/lkml/158454107541.4470.14819321770893756073.stgit@buzz/ (v1)
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ fs/namespace.c |   58 +++++++++++++++++++++++++-------------------------------
+ 1 file changed, 26 insertions(+), 32 deletions(-)
+
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 85b5f7bea82e..d394a4c414a2 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -459,11 +459,22 @@ void mnt_drop_write_file(struct file *file)
+ }
+ EXPORT_SYMBOL(mnt_drop_write_file);
+ 
+-static int mnt_make_readonly(struct mount *mnt)
++/* mount_lock must be held */
++static int change_mount_ro_state(struct mount *mnt, unsigned int mnt_flags)
+ {
++	bool readonly_request = (mnt_flags & MNT_READONLY);
+ 	int ret = 0;
+ 
+-	lock_mount_hash();
++	lockdep_assert_held_write(&mount_lock.seqcount);
++
++	if (readonly_request == __mnt_is_readonly(&mnt->mnt))
++		goto out;
++
++	if (!readonly_request) {
++		mnt->mnt.mnt_flags &= ~MNT_READONLY;
++		goto out;
++	}
++
+ 	mnt->mnt.mnt_flags |= MNT_WRITE_HOLD;
+ 	/*
+ 	 * After storing MNT_WRITE_HOLD, we'll read the counters. This store
+@@ -497,16 +508,9 @@ static int mnt_make_readonly(struct mount *mnt)
+ 	 */
+ 	smp_wmb();
+ 	mnt->mnt.mnt_flags &= ~MNT_WRITE_HOLD;
+-	unlock_mount_hash();
+-	return ret;
+-}
+ 
+-static int __mnt_unmake_readonly(struct mount *mnt)
+-{
+-	lock_mount_hash();
+-	mnt->mnt.mnt_flags &= ~MNT_READONLY;
+-	unlock_mount_hash();
+-	return 0;
++out:
++	return ret;
+ }
+ 
+ int sb_prepare_remount_readonly(struct super_block *sb)
+@@ -2440,30 +2444,16 @@ static bool can_change_locked_flags(struct mount *mnt, unsigned int mnt_flags)
+ 	return true;
+ }
+ 
+-static int change_mount_ro_state(struct mount *mnt, unsigned int mnt_flags)
+-{
+-	bool readonly_request = (mnt_flags & MNT_READONLY);
+-
+-	if (readonly_request == __mnt_is_readonly(&mnt->mnt))
+-		return 0;
+-
+-	if (readonly_request)
+-		return mnt_make_readonly(mnt);
+-
+-	return __mnt_unmake_readonly(mnt);
+-}
+-
+ /*
+- * Update the user-settable attributes on a mount.  The caller must hold
+- * sb->s_umount for writing.
++ * Update the user-settable attributes on a mount.
++ * mount_lock must be held.
+  */
+ static void set_mount_attributes(struct mount *mnt, unsigned int mnt_flags)
+ {
+-	lock_mount_hash();
++	lockdep_assert_held_write(&mount_lock.seqcount);
+ 	mnt_flags |= mnt->mnt.mnt_flags & ~MNT_USER_SETTABLE_MASK;
+ 	mnt->mnt.mnt_flags = mnt_flags;
+ 	touch_mnt_namespace(mnt->mnt_ns);
+-	unlock_mount_hash();
+ }
+ 
+ static void mnt_warn_timestamp_expiry(struct path *mountpoint, struct vfsmount *mnt)
+@@ -2495,7 +2485,6 @@ static void mnt_warn_timestamp_expiry(struct path *mountpoint, struct vfsmount *
+  */
+ static int do_reconfigure_mnt(struct path *path, unsigned int mnt_flags)
+ {
+-	struct super_block *sb = path->mnt->mnt_sb;
+ 	struct mount *mnt = real_mount(path->mnt);
+ 	int ret;
+ 
+@@ -2508,11 +2497,13 @@ static int do_reconfigure_mnt(struct path *path, unsigned int mnt_flags)
+ 	if (!can_change_locked_flags(mnt, mnt_flags))
+ 		return -EPERM;
+ 
+-	down_write(&sb->s_umount);
++	namespace_lock();
++	lock_mount_hash();
+ 	ret = change_mount_ro_state(mnt, mnt_flags);
+ 	if (ret == 0)
+ 		set_mount_attributes(mnt, mnt_flags);
+-	up_write(&sb->s_umount);
++	unlock_mount_hash();
++	namespace_unlock();
+ 
+ 	mnt_warn_timestamp_expiry(path, &mnt->mnt);
+ 
+@@ -2551,8 +2542,11 @@ static int do_remount(struct path *path, int ms_flags, int sb_flags,
+ 		err = -EPERM;
+ 		if (ns_capable(sb->s_user_ns, CAP_SYS_ADMIN)) {
+ 			err = reconfigure_super(fc);
+-			if (!err)
++			if (!err) {
++				lock_mount_hash();
+ 				set_mount_attributes(mnt, mnt_flags);
++				unlock_mount_hash();
++			}
+ 		}
+ 		up_write(&sb->s_umount);
+ 	}
 
