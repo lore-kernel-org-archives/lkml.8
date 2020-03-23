@@ -2,98 +2,110 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE0CC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10749C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F93C20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E5720714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:52:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="J71bVAk8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbgCWRvX (ORCPT
+        id S1727233AbgCWRwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:51:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44468 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727160AbgCWRvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:51:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5AE11AE89;
-        Mon, 23 Mar 2020 17:51:21 +0000 (UTC)
-Date:   Mon, 23 Mar 2020 18:51:20 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Daniel Kurtz <djkurtz@chromium.org>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com>
-Subject: Re: [PATCH] i2c: i801: Fix memory corruption in
- i801_isr_byte_done()
-Message-ID: <20200323185120.1a5cd734@endymion>
-In-Reply-To: <20200323093733.GA26299@kadam>
-References: <0000000000009586b2059c13c7e1@google.com>
-        <20200114073406.qaq3hbrhtx76fkes@kili.mountain>
-        <20200322231106.3d431ced@endymion>
-        <20200323093733.GA26299@kadam>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Mon, 23 Mar 2020 13:52:38 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14743 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbgCWRwi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 13:52:38 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e78f7390000>; Mon, 23 Mar 2020 10:51:53 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 23 Mar 2020 10:52:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 23 Mar 2020 10:52:37 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Mar
+ 2020 17:52:37 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 23 Mar 2020 17:52:37 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.160.78]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e78f7640000>; Mon, 23 Mar 2020 10:52:37 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH v5 1/9] arm64: tegra: Fix sor powergate clocks and reset
+Date:   Mon, 23 Mar 2020 10:52:27 -0700
+Message-ID: <1584985955-19101-2-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1584985913; bh=PTc2SyRS9NP+68XdMh+c6cj6nLmKTNHZwxALx6dnzdM=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=J71bVAk8mBk+hwQro1QjM7SO9SwRQibgoVQdkGOW2dGaeQnqs1AYtN9As1zmtq/PH
+         KmT4v6Vst6FLPJ6RuNTgpzr9kJrsCmKMBIkKAWg9FsSRWmloyD/dDNvejeCKR6eU43
+         pdwS2DTOpXUxYQl0eHA4XdJrfssUQaRR8EzKPPQlSrOH0TX/JVOXiMNnGycFlgpuOo
+         Q5HfikyW2yXRTXC+K+sMJ3DKijs+iMqwOKI18uT6ZvdkF8/n0+ZFWttERIVk7lVhFy
+         gQqIYdCJ5SvX60ghx/zz7u67Ux4J3sWAx1aZSgtxp4//+3xzJzYYRxM00kQSDmO/d5
+         v/lYdISp6P6fw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Mar 2020 12:37:33 +0300, Dan Carpenter wrote:
-> On Sun, Mar 22, 2020 at 11:11:06PM +0100, Jean Delvare wrote:
-> > Definitely not correct. The first byte of the block data array MUST be
-> > the size of the block read. Even if the code above does not do the
-> > right thing, removing the line will not help.
-> >   
-> 
-> Yeah.  I misread the code.
-> 
-> > Is it possible that kasan got this wrong due to the convoluted logic?
-> > It's late and I'll check again tomorrow morning but the code looks OK
-> > to me.  
-> 
-> KASan doesn't work like that.  It works at runtime and doesn't care
-> about the logic.
-> 
-> https://syzkaller.appspot.com/bug?id=426fc8b1c1b63fb0af524d839dfcf452f2d858e2
-> 
-> At the bottom of the report it shows that we're in a field of f9
-> poisoned data so it's not priv->len which is wrong.  (My patch was way
-> off).
-> 
-> mm/kasan/kasan.h:#define KASAN_VMALLOC_INVALID   0xF9  /* unallocated space in vmapped page */
-> 
-> The logic looks okay to me too.  So possibly this was a race condition
-> or even memory corruption in an unrelated part of the kernel.
+Tegra210 device tree lists csi clock and reset under SOR powergate
+node.
 
-I checked out the exact kernel version this report was generated for,
-and the faulty line is:
+But Tegra210 has csicil in SOR partition and csi in VENC partition.
 
-  592:			priv->data[priv->count++] = inb(SMBBLKDAT(priv));
+So, this patch includes fix for sor powergate node.
 
-This would suggest the problem is with priv->count growing beyond the
-end of the array, however the fact that we land in a memory spot full
-of 0xF9 kind of excludes this possibility (the data before the spot
-would contain different data if it was the case).
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-The other option is that priv->count wasn't initialized at the time
-it is used. However I can't see how this could happen, given that the
-priv structure is kzalloc'd.
-
-So, to be honest I can't really see how priv->count can get wrong. So
-I would be tempted to lend towards the theory that the i2c-i801 driver
-was a collateral victim of a memory corruption happening somewhere else
-in the kernel. Wouldn't Kasan catch this too? Is it possible to access
-the other Kasan reports from the same test run?
-
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index 64c46ce..d0eff92 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -796,7 +796,9 @@
+ 			pd_sor: sor {
+ 				clocks = <&tegra_car TEGRA210_CLK_SOR0>,
+ 					 <&tegra_car TEGRA210_CLK_SOR1>,
+-					 <&tegra_car TEGRA210_CLK_CSI>,
++					 <&tegra_car TEGRA210_CLK_CILAB>,
++					 <&tegra_car TEGRA210_CLK_CILCD>,
++					 <&tegra_car TEGRA210_CLK_CILE>,
+ 					 <&tegra_car TEGRA210_CLK_DSIA>,
+ 					 <&tegra_car TEGRA210_CLK_DSIB>,
+ 					 <&tegra_car TEGRA210_CLK_DPAUX>,
+@@ -804,7 +806,6 @@
+ 					 <&tegra_car TEGRA210_CLK_MIPI_CAL>;
+ 				resets = <&tegra_car TEGRA210_CLK_SOR0>,
+ 					 <&tegra_car TEGRA210_CLK_SOR1>,
+-					 <&tegra_car TEGRA210_CLK_CSI>,
+ 					 <&tegra_car TEGRA210_CLK_DSIA>,
+ 					 <&tegra_car TEGRA210_CLK_DSIB>,
+ 					 <&tegra_car TEGRA210_CLK_DPAUX>,
 -- 
-Jean Delvare
-SUSE L3 Support
+2.7.4
+
