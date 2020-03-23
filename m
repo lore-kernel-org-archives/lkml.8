@@ -2,175 +2,117 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AE7C54FD5
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14463C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E74420658
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA3120658
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:36:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hnxrr2z1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U/UGFiIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgCWQgG (ORCPT
+        id S1727835AbgCWQgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:36:06 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44769 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727646AbgCWQfo (ORCPT
+        Mon, 23 Mar 2020 12:36:35 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38802 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727578AbgCWQgf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:35:44 -0400
-Received: by mail-lj1-f196.google.com with SMTP id w4so15289435lji.11;
-        Mon, 23 Mar 2020 09:35:42 -0700 (PDT)
+        Mon, 23 Mar 2020 12:36:35 -0400
+Received: by mail-io1-f66.google.com with SMTP id m15so9710373iob.5
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 09:36:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MD6xGZ4xORI+tNtNZZDwyKjUfBMMQlzk74IcvklWY7A=;
-        b=hnxrr2z14XgP3gYDZJf1VnWxpBTjP+LA97XCUK7xTr7Cya02gHwDGMsxt+If5NdrZG
-         UFANZiVW2p7/l9DtPiu7w2o5/4m0USqs4MvPhYLO/M6qyQCsvncX+mCg2dZJFricfchL
-         LWXeq7O1PG41a+mE9bqcnWyWjxopRLzYDTmkQkHDVIhID7yF6vPKXcF/Jlc/pWCFx899
-         kgJfkQsWJCUpGfL/wuRLooRukLDrkBykqF+mAK9BHwzRb7lcwczsy8wyPN5IblZ9glyn
-         msn0ZsQ0IAyK6VLYikcsjcHzX5lbY5z/Qr9UYPtn2eYcTzXqY0U4a5TLJZ1wb32XN0xj
-         t1CA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xZed4vuzAn5/aNVB1Kdbz5tqSTALBHIWaW5u1icHeCY=;
+        b=U/UGFiIz7X9b1XORx4G0t8VK2Vtpq2Ha1+ZZX+tSAZSdmyebvAE6+Y5V3rx3lRKG75
+         CaHAQofdlayPv8CK04pkyFPISqwOZ12wVaCKtxGqI4L8OqxNPE68vVotVCsaseur+Ke9
+         SDsz2XIy4C592KfSooSZAhWPZTKCfbcd5AWndoy4+d4IIEx/bHdOUdzz6BxLR7+ixqYW
+         rcJzSdbZIBxjMhIqu4WIJZNRXUn2zvi37lc4UaBlYGHLeJvWuz0qY8+n2KBNobObumAh
+         Vyp5WAg+o0j7apYcrfEYWq3QtkCZfO+hrK1eyHyvgtlR5wWrZY2JasZicfeV2wqt3zB2
+         yg5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MD6xGZ4xORI+tNtNZZDwyKjUfBMMQlzk74IcvklWY7A=;
-        b=XPqHakrbvNvyc4Xzzs1D7/RLewpT6x91Pe9+BcFS8kRXb4meB538opmT+HIltZyjnv
-         JuhitmE6QslC2cyZmeufVTAV2b4UJSFtoMKwqF+ibsLndiWXWsmU/yEuyNJEnudOx8p4
-         t1SWNJ+4+rblAWqoRyKrzUpjibkMjHAx3ZLzElTQioLjvZCGKv3OXai34VgQlEdrhAnc
-         q3Wbx6MMKELL47C/DnSkYqQ3sF/jQlv0g4T83I85cjzr1Ui8dQbhcdZE0FHRkXV7Qhkr
-         kEspxXor0tlahJq1M1adF32yrWBkv+uxf0YzBfhWbRdVt7hEf7XcQdY2cIvzstXSBOHZ
-         u1QA==
-X-Gm-Message-State: ANhLgQ19YwL2mKTJO7hixJUT9ru/xk15P0fglW+LAh9/VUepcoRviInz
-        Qr9uhz9np5H3A4+tgrH3ZQw=
-X-Google-Smtp-Source: ADFU+vuiTGI7tGqS5jeAw/PSMsEFiIhB8ZSLCL1XV0mlcTGg0/REiOy/H7BcJXDm+lBefKsMAZkh1w==
-X-Received: by 2002:a2e:9017:: with SMTP id h23mr14685724ljg.144.1584981341741;
-        Mon, 23 Mar 2020 09:35:41 -0700 (PDT)
-Received: from localhost.localdomain (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.gmail.com with ESMTPSA id m14sm4820017lfo.25.2020.03.23.09.35.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 09:35:41 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Billy Laws <blaws05@gmail.com>
-Cc:     linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
-        Andrey Danin <danindrey@mail.ru>,
-        Gilles Grandou <gilles@grandou.net>,
-        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 07/10] mmc: block: Add MMC_QUIRK_RESCAN_MAIN_BLKDEV
-Date:   Mon, 23 Mar 2020 19:34:28 +0300
-Message-Id: <20200323163431.7678-8-digetx@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200323163431.7678-1-digetx@gmail.com>
-References: <20200323163431.7678-1-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xZed4vuzAn5/aNVB1Kdbz5tqSTALBHIWaW5u1icHeCY=;
+        b=OVRsDzblTySb8TXFYHBNVE1+QEu9sq9p4OlrqCoz4l4T2OXKQ/bOsYWniB6JDLFouw
+         aQkIcvuaDqhyd9J8RFII9XlvJoMj3Ea7r+E4vm8C+7Pc7nyvnSjJrL9mkbx4tWLsaHJh
+         II9iubMluw+PCr11uptlaw4LgJMnFxHvNJf5cAoMuaqGoY+ibau4PFe7PRbBg/LbpDq7
+         zis8j8hNCiG/8XBhaXTNUieXMUrpqtMxXP2k4vdw2d4EprTbEA1mBRCjqwRjkqhoU2jx
+         L4DBNCbgCl04zi+ofPEWQZ0hIil0iPjThVXMlhv7tUXB+wQSwrngZC2l6ymsk0GqptNK
+         HtJw==
+X-Gm-Message-State: ANhLgQ3+5+P87EWDWi0iriMw75smC5KMK3qIGBuDMGX8w8rmq2k7sPzf
+        mWW8W11Lt52QPRwYm++fx6fPuKDPb6+yOtu8+ktwvA==
+X-Google-Smtp-Source: ADFU+vsWzcumLwhqw56m/BCbndSZWQyTZy977Pe1EcOchX9GJbFfWlVB9Xjq+FDtNdouWnpRTTre4vuCJsXIdPHUUk8=
+X-Received: by 2002:a02:5a87:: with SMTP id v129mr19330387jaa.48.1584981393823;
+ Mon, 23 Mar 2020 09:36:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
+ <20200320212833.3507-4-sean.j.christopherson@intel.com> <CALMp9eR5Uu7nRDOS2nQHGzb+Gi6vjDEk1AmuiqkkGWFjKNG+sA@mail.gmail.com>
+ <20200323162807.GN28711@linux.intel.com>
+In-Reply-To: <20200323162807.GN28711@linux.intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Mon, 23 Mar 2020 09:36:22 -0700
+Message-ID: <CALMp9eR42eM7g81EgHieyNky+kP2mycO7UyMN+y2ibLoqrD2Yg@mail.gmail.com>
+Subject: Re: [PATCH v3 03/37] KVM: nVMX: Invalidate all EPTP contexts when
+ emulating INVEPT for L1
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ben Gardon <bgardon@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        John Haxby <john.haxby@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NVIDIA Tegra Partition Table location isn't restricted by the main eMMC
-partition. This patch introduces new MMC-card quirk which is needed by
-some NVIDIA Tegra devices in order to set up partition table if it is
-stored on a eMMC boot partition.
+On Mon, Mar 23, 2020 at 9:28 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Mon, Mar 23, 2020 at 09:24:25AM -0700, Jim Mattson wrote:
+> > On Fri, Mar 20, 2020 at 2:29 PM Sean Christopherson
+> > <sean.j.christopherson@intel.com> wrote:
+> > >
+> > > Free all L2 (guest_mmu) roots when emulating INVEPT for L1.  Outstanding
+> > > changes to the EPT tables managed by L1 need to be recognized, and
+> > > relying on KVM to always flush L2's EPTP context on nested VM-Enter is
+> > > dangerous.
+> > >
+> > > Similar to handle_invpcid(), rely on kvm_mmu_free_roots() to do a remote
+> > > TLB flush if necessary, e.g. if L1 has never entered L2 then there is
+> > > nothing to be done.
+> > >
+> > > Nuking all L2 roots is overkill for the single-context variant, but it's
+> > > the safe and easy bet.  A more precise zap mechanism will be added in
+> > > the future.  Add a TODO to call out that KVM only needs to invalidate
+> > > affected contexts.
+> > >
+> > > Fixes: b119019847fbc ("kvm: nVMX: Remove unnecessary sync_roots from handle_invept")
+> >
+> > The bug existed well before the commit indicated in the "Fixes" line.
+>
+> Ah, my bad.  A cursory glance at commit b119019847fbc makes that quite
+> obvious.  This should be
+>
+>   Fixes: bfd0a56b9000 ("nEPT: Nested INVEPT")
 
-The tegra-partition parser will read out FS partition table from the eMMC
-boot partition and stash it for the main eMMC partition. In this case
-block device of the main eMMC partition needs to be re-scanned in order
-to assign the stashed partition table to the main MMC block device by
-tegra-partition parser.
-
-This patch adds new MMC card flag that is applied by tegra-partition
-parser to the scanned MMC card if partition table is found on a boot
-eMMC partition. This flag tells MMC_BLOCK core that main MMC partition
-needs to be re-scanned once all block devices of the MMC card are
-instantiated.
-
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/mmc/core/block.c | 31 +++++++++++++++++++++++++++++++
- include/linux/mmc/card.h |  1 +
- 2 files changed, 32 insertions(+)
-
-diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-index ec69b613ee92..2c2bec114fd6 100644
---- a/drivers/mmc/core/block.c
-+++ b/drivers/mmc/core/block.c
-@@ -2955,6 +2955,27 @@ static void mmc_blk_remove_debugfs(struct mmc_card *card,
- 
- #endif /* CONFIG_DEBUG_FS */
- 
-+static int mmc_blk_rescan_disk(struct mmc_blk_data *md)
-+{
-+	struct block_device *bdev;
-+
-+	bdev = blkdev_get_by_dev(disk_devt(md->disk), FMODE_READ | FMODE_EXCL,
-+				 md);
-+	if (IS_ERR(bdev)) {
-+		pr_err("%s: %s: failed to get block device\n",
-+		       __func__, md->disk->disk_name);
-+		return PTR_ERR(bdev);
-+	}
-+
-+	mutex_lock(&bdev->bd_mutex);
-+	bdev_disk_changed(bdev, false);
-+	mutex_unlock(&bdev->bd_mutex);
-+
-+	blkdev_put(bdev, FMODE_READ | FMODE_EXCL);
-+
-+	return 0;
-+}
-+
- static int mmc_blk_probe(struct mmc_card *card)
- {
- 	struct mmc_blk_data *md, *part_md;
-@@ -2998,6 +3019,16 @@ static int mmc_blk_probe(struct mmc_card *card)
- 			goto out;
- 	}
- 
-+	/*
-+	 * Quirk for NVIDIA Tegra devices that store FS partition table
-+	 * on a boot partition.  Tegra-partition scanner found partition
-+	 * table on a boot MMC partition and stashed it for the main MMC
-+	 * partition if MMC_QUIRK_RESCAN_MAIN_BLKDEV is set, and thus,
-+	 * the main partition needs to be re-scanned.
-+	 */
-+	if (card->quirks & MMC_QUIRK_RESCAN_MAIN_BLKDEV)
-+		mmc_blk_rescan_disk(md);
-+
- 	/* Add two debugfs entries */
- 	mmc_blk_add_debugfs(card, md);
- 
-diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
-index 90b1d83ce675..550d50e57cc4 100644
---- a/include/linux/mmc/card.h
-+++ b/include/linux/mmc/card.h
-@@ -270,6 +270,7 @@ struct mmc_card {
- #define MMC_QUIRK_BROKEN_IRQ_POLLING	(1<<11)	/* Polling SDIO_CCCR_INTx could create a fake interrupt */
- #define MMC_QUIRK_TRIM_BROKEN	(1<<12)		/* Skip trim */
- #define MMC_QUIRK_BROKEN_HPI	(1<<13)		/* Disable broken HPI support */
-+#define MMC_QUIRK_RESCAN_MAIN_BLKDEV	(1<<14)	/* Main partition needs to be re-scanned after instantiating all partitions */
- 
- 	bool			reenable_cmdq;	/* Re-enable Command Queue */
- 
--- 
-2.25.1
-
+Actually, I think that things were fine back then (though we
+gratuitously flushed L1's TLB as a result of an emulated INVEPT). The
+problem started when we stopped flushing the TLB on every emulated
+VM-entry (i.e. L1 -> L2 transitions). I'm not sure what that commit
+was, but I think you referenced it in an earlier email.
