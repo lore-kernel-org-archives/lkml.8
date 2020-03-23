@@ -2,306 +2,198 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEC8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC82C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC51F20753
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:06:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584997578;
-	bh=ZO0Os48Lyi80fkIx7SIm0g2CNt6go/G7Pp0EYDC4JoU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jg8u3sMqtfwT8hiiXiUiVcVaUulE3H+oBTD8kKK2Wek8Y83JNkaPHuCvWFEmKHBDB
-	 Nkq9qNemjKfLNAJvbUzBcwPuuprCmSkP6jtR911L1M9lxICB0vlkR2zPO9SthGNPK7
-	 5blicIbARUVfYxur+P51Mic7h3t+/vzeuPcUzc3k=
+	by mail.kernel.org (Postfix) with ESMTP id 2F8BF206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:08:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i6vsEh9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgCWVGR (ORCPT
+        id S1726991AbgCWVIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 17:06:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbgCWVGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 17:06:17 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3535206C3;
-        Mon, 23 Mar 2020 21:06:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584997576;
-        bh=ZO0Os48Lyi80fkIx7SIm0g2CNt6go/G7Pp0EYDC4JoU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nr04SHhRM7quhxkY25cxi/E3CH/Myrp3fjpNZUtI/DRqKDkVWxWOcIujkCz8ZQs9G
-         unoiKl4BwnF8aG/tdQaQZMR8nQvLx9qgqslC0OEY2R5LrXVbs09C6D8e6SFa/CT0ru
-         bBUF3BT/pgBH2ZWM1MaivwKRqxLTD7P6IiQ3SUhQ=
-Date:   Mon, 23 Mar 2020 14:06:15 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: lockdep warning in sys_swapon
-Message-Id: <20200323140615.75e3c7481f4c6aeb94c95ba9@linux-foundation.org>
-In-Reply-To: <20200323153045.s7ag3lrvfe2cpiiw@e107158-lin.cambridge.arm.com>
-References: <20200323151725.gayvs5g6h5adwqkd@e107158-lin.cambridge.arm.com>
-        <20200323153045.s7ag3lrvfe2cpiiw@e107158-lin.cambridge.arm.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 23 Mar 2020 17:08:44 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44659 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbgCWVIn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 17:08:43 -0400
+Received: by mail-wr1-f68.google.com with SMTP id m17so9957629wrw.11
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 14:08:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=687KbESYiM8wnn56HtrynedT82uRKZ3AZhgE3NNrRms=;
+        b=i6vsEh9sk9T5FjlwJB2CkTMmncnXIwZATtDWZ993D5G3H+J+yOfLATSaN2/6NnVRSJ
+         20mY+60XGp6xp6R0UpqhlvuR/BDpQtEFvmNrSd7A+qH5WV1Nfs2TvmF5es3Z3/3ZC/NP
+         ZyYDRFFl7sgZV52dYqK2sbmaPuOEi9AM8rxYzz1rNvLGM0o6/k2KTqfYY53H43clQKFu
+         s8o8ccIZ4xFq9yVuzX3oQwKWitIzR+yY+gjkVMoTX8kuUyFhHgyCzvn8lgGcaP/xis1f
+         JNWIsgW95OHu4SeBB/NSfj0Ql5z/vMTU+DUqVdDsqogAaFMMCUmRiQvVIrjpa/aLhbJV
+         CLpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=687KbESYiM8wnn56HtrynedT82uRKZ3AZhgE3NNrRms=;
+        b=A8kQWrZzcuNMlPQsvrhqKF6vDDGwGAiXSQVBRQRY/Ji7oQdj+OsdiLP3HHMuahAExk
+         e/uAnMaizOsZJk4o58MYWJzCsGaOuoyRJtadqR65/lvSNEEF9HSpHquEzL44Hn2bBrM6
+         q7rggbfr2QPq0dW07BRQRlytMV2fR5egFBWizmmKs7sahe+PUsAW9U14+ariWlnf4eSW
+         W+MBwoneP+UOvdtJNd54gEXKgtldPZpqbsajPvIOUA6zn3nkZuyGl0vM/6VHwHPYgnZG
+         +pY+aUKCbsuPOyupiKT01RLWOEWzsYTrbdf2/3Aj1znKBKNLArj6mun8VbFnw35rhYKb
+         RTbw==
+X-Gm-Message-State: ANhLgQ25TS3lhyc82Lq5ZSIqhaEhujicSQQKoUTV+KgIiqLHFj+b5TZY
+        5V518Ho+aPCOWUHnDXUTHkW4dA==
+X-Google-Smtp-Source: ADFU+vuz/4XfJK2Sx1f5DAGVmlNqDFqEUCqFcboYTwx1ksJnRI6lnxOt92rS0gOTlb5OrAIsZGjtbg==
+X-Received: by 2002:a05:6000:114f:: with SMTP id d15mr33290917wrx.143.1584997720974;
+        Mon, 23 Mar 2020 14:08:40 -0700 (PDT)
+Received: from [192.168.0.43] (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
+        by smtp.googlemail.com with ESMTPSA id d5sm15962265wrh.40.2020.03.23.14.08.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Mar 2020 14:08:40 -0700 (PDT)
+Subject: Re: [PATCH] thermal/drivers/cpufreq_cooling: Fix return of
+ cpufreq_set_cur_state
+To:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        Willy Wolff <willy.mh.wolff.ml@gmail.com>
+Cc:     Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Javi Merino <javi.merino@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J.Wysocki" <rjw@rjwysocki.net>
+References: <20200321092740.7vvwfxsebcrznydh@macmini.local>
+ <CAHLCerOFg30GEaQgV=4ccgA1fG6P3OTgaG33pw-3YCtuD5mSmA@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ xsFNBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
+ sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
+ 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
+ 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
+ 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
+ xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
+ P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
+ 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
+ wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
+ eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABzSpEYW5pZWwgTGV6
+ Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz7Cwa4EEwEIAEECGwEFCwkIBwIGFQoJ
+ CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAh
+ CRCP9LjScWdVJxYhBCTWJvJTvp6H5s5b9I/0uNJxZ1Un69gQAJK0ODuKzYl0TvHPU8W7uOeu
+ U7OghN/DTkG6uAkyqW+iIVi320R5QyXN1Tb6vRx6+yZ6mpJRW5S9fO03wcD8Sna9xyZacJfO
+ UTnpfUArs9FF1pB3VIr95WwlVoptBOuKLTCNuzoBTW6jQt0sg0uPDAi2dDzf+21t/UuF7I3z
+ KSeVyHuOfofonYD85FkQJN8lsbh5xWvsASbgD8bmfI87gEbt0wq2ND5yuX+lJK7FX4lMO6gR
+ ZQ75g4KWDprOO/w6ebRxDjrH0lG1qHBiZd0hcPo2wkeYwb1sqZUjQjujlDhcvnZfpDGR4yLz
+ 5WG+pdciQhl6LNl7lctNhS8Uct17HNdfN7QvAumYw5sUuJ+POIlCws/aVbA5+DpmIfzPx5Ak
+ UHxthNIyqZ9O6UHrVg7SaF3rvqrXtjtnu7eZ3cIsfuuHrXBTWDsVwub2nm1ddZZoC530BraS
+ d7Y7eyKs7T4mGwpsi3Pd33Je5aC/rDeF44gXRv3UnKtjq2PPjaG/KPG0fLBGvhx0ARBrZLsd
+ 5CTDjwFA4bo+pD13cVhTfim3dYUnX1UDmqoCISOpzg3S4+QLv1bfbIsZ3KDQQR7y/RSGzcLE
+ z164aDfuSvl+6Myb5qQy1HUQ0hOj5Qh+CzF3CMEPmU1v9Qah1ThC8+KkH/HHjPPulLn7aMaK
+ Z8t6h7uaAYnGzjMEXZLIEhYJKwYBBAHaRw8BAQdAGdRDglTydmxI03SYiVg95SoLOKT5zZW1
+ 7Kpt/5zcvt3CwhsEGAEIACAWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXZLIEgIbAgCvCRCP
+ 9LjScWdVJ40gBBkWCAAdFiEEbinX+DPdhovb6oob3uarTi9/eqYFAl2SyBIAIQkQ3uarTi9/
+ eqYWIQRuKdf4M92Gi9vqihve5qtOL396pnZGAP0c3VRaj3RBEOUGKxHzcu17ZUnIoJLjpHdk
+ NfBnWU9+UgD/bwTxE56Wd8kQZ2e2UTy4BM8907FsJgAQLL4tD2YZggwWIQQk1ibyU76eh+bO
+ W/SP9LjScWdVJ5CaD/0YQyfUzjpR1GnCSkbaLYTEUsyaHuWPI/uSpKTtcbttpYv+QmYsIwD9
+ 8CeH3zwY0Xl/1fE9Hy59z6Vxv9YVapLx0nPDOA1zDVNq2MnutxHb8t+Imjz4ERCxysqtfYrv
+ gao3E/h0c8SEeh+bh5MkjwmU8CwZ3doWyiVdULKESe7/Gs5OuhFzaDVPCpWdsKdCAGyUuP/+
+ qRWwKGVpWP0Rrt6MTK24Ibeu3xEZO8c3XOEXH5d9nf6YRqBEIizAecoCr00E9c+6BlRS0AqR
+ OQC3/Mm7rWtco3+WOridqVXkko9AcZ8AiM5nu0F8AqYGKg0y7vkL2LOP8us85L0p57MqIR1u
+ gDnITlTY0x4RYRWJ9+k7led5WsnWlyv84KNzbDqQExTm8itzeZYW9RvbTS63r/+FlcTa9Cz1
+ 5fW3Qm0BsyECvpAD3IPLvX9jDIR0IkF/BQI4T98LQAkYX1M/UWkMpMYsL8tLObiNOWUl4ahb
+ PYi5Yd8zVNYuidXHcwPAUXqGt3Cs+FIhihH30/Oe4jL0/2ZoEnWGOexIFVFpue0jdqJNiIvA
+ F5Wpx+UiT5G8CWYYge5DtHI3m5qAP9UgPuck3N8xCihbsXKX4l8bdHfziaJuowief7igeQs/
+ WyY9FnZb0tl29dSa7PdDKFWu+B+ZnuIzsO5vWMoN6hMThTl1DxS+jc7ATQRb/8z6AQgAvSkg
+ 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
+ +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
+ dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
+ XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
+ bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABwsGNBBgBCAAgFiEE
+ JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwAIQkQj/S40nFnVScWIQQk1ibyU76eh+bO
+ W/SP9LjScWdVJ/g6EACFYk+OBS7pV9KZXncBQYjKqk7Kc+9JoygYnOE2wN41QN9Xl0Rk3wri
+ qO7PYJM28YjK3gMT8glu1qy+Ll1bjBYWXzlsXrF4szSqkJpm1cCxTmDOne5Pu6376dM9hb4K
+ l9giUinI4jNUCbDutlt+Cwh3YuPuDXBAKO8YfDX2arzn/CISJlk0d4lDca4Cv+4yiJpEGd/r
+ BVx2lRMUxeWQTz+1gc9ZtbRgpwoXAne4iw3FlR7pyg3NicvR30YrZ+QOiop8psWM2Fb1PKB9
+ 4vZCGT3j2MwZC50VLfOXC833DBVoLSIoL8PfTcOJOcHRYU9PwKW0wBlJtDVYRZ/CrGFjbp2L
+ eT2mP5fcF86YMv0YGWdFNKDCOqOrOkZVmxai65N9d31k8/O9h1QGuVMqCiOTULy/h+FKpv5q
+ t35tlzA2nxPOX8Qj3KDDqVgQBMYJRghZyj5+N6EKAbUVa9Zq8xT6Ms2zz/y7CPW74G1GlYWP
+ i6D9VoMMi6ICko/CXUZ77OgLtMsy3JtzTRbn/wRySOY2AsMgg0Sw6yJ0wfrVk6XAMoLGjaVt
+ X4iPTvwocEhjvrO4eXCicRBocsIB2qZaIj3mlhk2u4AkSpkKm9cN0KWYFUxlENF4/NKWMK+g
+ fGfsCsS3cXXiZpufZFGr+GoHwiELqfLEAQ9AhlrHGCKcgVgTOI6NHg==
+Message-ID: <b30a2e5b-5fa6-9761-efe1-d3b5396ceaaa@linaro.org>
+Date:   Mon, 23 Mar 2020 22:08:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <CAHLCerOFg30GEaQgV=4ccgA1fG6P3OTgaG33pw-3YCtuD5mSmA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Mar 2020 15:30:45 +0000 Qais Yousef <qais.yousef@arm.com> wrote:
-
-> On 03/23/20 15:17, Qais Yousef wrote:
-> > Hi
-> > 
-> > I hit the following 2 warnings when running with LOCKDEP=y on arm64 platform
-> > (juno-r2), running on v5.6-rc6
-> > 
-> > The 1st one is when I execute `swapon -a`. The 2nd one happens at boot. I have
-> > /dev/sda2 as my swap in /etc/fstab
-> > 
-> > Note that I either hit 1 OR 2, but didn't hit both warnings at the same time,
-> > yet at least.
-> > 
-> > /dev/sda2 is a usb flash drive, in case it matters somehow.
+On 23/03/2020 22:05, Amit Kucheria wrote:
+> Hi Willy,
 > 
-> By the way, I noticed that in claim_swapfile() if we fail we don't release the
-> lock. Shouldn't we release the lock here?
+> On Sat, Mar 21, 2020 at 2:57 PM Willy Wolff <willy.mh.wolff.ml@gmail.com> wrote:
+>>
+>> The function freq_qos_update_request returns 0 or 1 describing update
+>> effectiveness, and a negative error code on failure. However,
+>> cpufreq_set_cur_state returns 0 on success or an error code otherwise.
+>>
 > 
-> I tried with that FWIW, but it had no effect on the warnings.
-> 
+> Please improve the commit message with context from your earlier bug
+> report thread and a summary of how the problem shows up.
 
-I'll be sending the below into Linus this week.
+I've improved the commit message when applied:
 
-I was hoping to hear from Darrick/Christoph (?) but it looks like the
-right thing to do.  Are you able to test it?
+https://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git/commit/?h=testing&id=ff44f672d74178b3be19d41a169b98b3e391d4ce
 
-I think I'll add a cc:stable to this one.
+>> Signed-off-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+>> ---
+>>  drivers/thermal/cpufreq_cooling.c | 6 ++++--
+>>  1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
+>> index fe83d7a210d4..af55ac08e1bd 100644
+>> --- a/drivers/thermal/cpufreq_cooling.c
+>> +++ b/drivers/thermal/cpufreq_cooling.c
+>> @@ -431,6 +431,7 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
+>>                                  unsigned long state)
+>>  {
+>>         struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
+>> +       int ret;
+>>
+>>         /* Request state should be less than max_level */
+>>         if (WARN_ON(state > cpufreq_cdev->max_level))
+>> @@ -442,8 +443,9 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
+>>
+>>         cpufreq_cdev->cpufreq_state = state;
+>>
+>> -       return freq_qos_update_request(&cpufreq_cdev->qos_req,
+>> -                               get_state_freq(cpufreq_cdev, state));
+>> +       ret = freq_qos_update_request(&cpufreq_cdev->qos_req,
+>> +                                     get_state_freq(cpufreq_cdev, state));
+>> +       return ret < 0 ? ret : 0;
+>>  }
+>>
+>>  /* Bind cpufreq callbacks to thermal cooling device ops */
+>> --
+>> 2.20.1
+>>
 
 
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-From: Naohiro Aota <naohiro.aota@wdc.com>
-Subject: mm/swapfile.c: move inode_lock out of claim_swapfile
-
-claim_swapfile() currently keeps the inode locked when it is successful,
-or the file is already swapfile (with -EBUSY).  And, on the other error
-cases, it does not lock the inode.
-
-This inconsistency of the lock state and return value is quite confusing
-and actually causing a bad unlock balance as below in the "bad_swap"
-section of __do_sys_swapon().
-
-This commit fixes this issue by moving the inode_lock() and IS_SWAPFILE
-check out of claim_swapfile().  The inode is unlocked in
-"bad_swap_unlock_inode" section, so that the inode is ensured to be
-unlocked at "bad_swap".  Thus, error handling codes after the locking now
-jumps to "bad_swap_unlock_inode" instead of "bad_swap".
-
-    =====================================
-    WARNING: bad unlock balance detected!
-    5.5.0-rc7+ #176 Not tainted
-    -------------------------------------
-    swapon/4294 is trying to release lock (&sb->s_type->i_mutex_key) at:
-    [<ffffffff8173a6eb>] __do_sys_swapon+0x94b/0x3550
-    but there are no more locks to release!
-
-    other info that might help us debug this:
-    no locks held by swapon/4294.
-
-    stack backtrace:
-    CPU: 5 PID: 4294 Comm: swapon Not tainted 5.5.0-rc7-BTRFS-ZNS+ #176
-    Hardware name: ASUS All Series/H87-PRO, BIOS 2102 07/29/2014
-    Call Trace:
-     dump_stack+0xa1/0xea
-     ? __do_sys_swapon+0x94b/0x3550
-     print_unlock_imbalance_bug.cold+0x114/0x123
-     ? __do_sys_swapon+0x94b/0x3550
-     lock_release+0x562/0xed0
-     ? kvfree+0x31/0x40
-     ? lock_downgrade+0x770/0x770
-     ? kvfree+0x31/0x40
-     ? rcu_read_lock_sched_held+0xa1/0xd0
-     ? rcu_read_lock_bh_held+0xb0/0xb0
-     up_write+0x2d/0x490
-     ? kfree+0x293/0x2f0
-     __do_sys_swapon+0x94b/0x3550
-     ? putname+0xb0/0xf0
-     ? kmem_cache_free+0x2e7/0x370
-     ? do_sys_open+0x184/0x3e0
-     ? generic_max_swapfile_size+0x40/0x40
-     ? do_syscall_64+0x27/0x4b0
-     ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
-     ? lockdep_hardirqs_on+0x38c/0x590
-     __x64_sys_swapon+0x54/0x80
-     do_syscall_64+0xa4/0x4b0
-     entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    RIP: 0033:0x7f15da0a0dc7
-
-Link: http://lkml.kernel.org/r/20200206090132.154869-1-naohiro.aota@wdc.com
-Fixes: 1638045c3677 ("mm: set S_SWAPFILE on blockdev swap devices")
-Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Darrick J. Wong <darrick.wong@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- mm/swapfile.c |   41 ++++++++++++++++++++---------------------
- 1 file changed, 20 insertions(+), 21 deletions(-)
-
---- a/mm/swapfile.c~mm-swap-move-inode_lock-out-of-claim_swapfile
-+++ a/mm/swapfile.c
-@@ -2899,10 +2899,6 @@ static int claim_swapfile(struct swap_in
- 		p->bdev = inode->i_sb->s_bdev;
- 	}
- 
--	inode_lock(inode);
--	if (IS_SWAPFILE(inode))
--		return -EBUSY;
--
- 	return 0;
- }
- 
-@@ -3157,36 +3153,41 @@ SYSCALL_DEFINE2(swapon, const char __use
- 	mapping = swap_file->f_mapping;
- 	inode = mapping->host;
- 
--	/* will take i_rwsem; */
- 	error = claim_swapfile(p, inode);
- 	if (unlikely(error))
- 		goto bad_swap;
- 
-+	inode_lock(inode);
-+	if (IS_SWAPFILE(inode)) {
-+		error = -EBUSY;
-+		goto bad_swap_unlock_inode;
-+	}
-+
- 	/*
- 	 * Read the swap header.
- 	 */
- 	if (!mapping->a_ops->readpage) {
- 		error = -EINVAL;
--		goto bad_swap;
-+		goto bad_swap_unlock_inode;
- 	}
- 	page = read_mapping_page(mapping, 0, swap_file);
- 	if (IS_ERR(page)) {
- 		error = PTR_ERR(page);
--		goto bad_swap;
-+		goto bad_swap_unlock_inode;
- 	}
- 	swap_header = kmap(page);
- 
- 	maxpages = read_swap_header(p, swap_header, inode);
- 	if (unlikely(!maxpages)) {
- 		error = -EINVAL;
--		goto bad_swap;
-+		goto bad_swap_unlock_inode;
- 	}
- 
- 	/* OK, set up the swap map and apply the bad block list */
- 	swap_map = vzalloc(maxpages);
- 	if (!swap_map) {
- 		error = -ENOMEM;
--		goto bad_swap;
-+		goto bad_swap_unlock_inode;
- 	}
- 
- 	if (bdi_cap_stable_pages_required(inode_to_bdi(inode)))
-@@ -3211,7 +3212,7 @@ SYSCALL_DEFINE2(swapon, const char __use
- 					GFP_KERNEL);
- 		if (!cluster_info) {
- 			error = -ENOMEM;
--			goto bad_swap;
-+			goto bad_swap_unlock_inode;
- 		}
- 
- 		for (ci = 0; ci < nr_cluster; ci++)
-@@ -3220,7 +3221,7 @@ SYSCALL_DEFINE2(swapon, const char __use
- 		p->percpu_cluster = alloc_percpu(struct percpu_cluster);
- 		if (!p->percpu_cluster) {
- 			error = -ENOMEM;
--			goto bad_swap;
-+			goto bad_swap_unlock_inode;
- 		}
- 		for_each_possible_cpu(cpu) {
- 			struct percpu_cluster *cluster;
-@@ -3234,13 +3235,13 @@ SYSCALL_DEFINE2(swapon, const char __use
- 
- 	error = swap_cgroup_swapon(p->type, maxpages);
- 	if (error)
--		goto bad_swap;
-+		goto bad_swap_unlock_inode;
- 
- 	nr_extents = setup_swap_map_and_extents(p, swap_header, swap_map,
- 		cluster_info, maxpages, &span);
- 	if (unlikely(nr_extents < 0)) {
- 		error = nr_extents;
--		goto bad_swap;
-+		goto bad_swap_unlock_inode;
- 	}
- 	/* frontswap enabled? set up bit-per-page map for frontswap */
- 	if (IS_ENABLED(CONFIG_FRONTSWAP))
-@@ -3280,7 +3281,7 @@ SYSCALL_DEFINE2(swapon, const char __use
- 
- 	error = init_swap_address_space(p->type, maxpages);
- 	if (error)
--		goto bad_swap;
-+		goto bad_swap_unlock_inode;
- 
- 	/*
- 	 * Flush any pending IO and dirty mappings before we start using this
-@@ -3290,7 +3291,7 @@ SYSCALL_DEFINE2(swapon, const char __use
- 	error = inode_drain_writes(inode);
- 	if (error) {
- 		inode->i_flags &= ~S_SWAPFILE;
--		goto bad_swap;
-+		goto bad_swap_unlock_inode;
- 	}
- 
- 	mutex_lock(&swapon_mutex);
-@@ -3315,6 +3316,8 @@ SYSCALL_DEFINE2(swapon, const char __use
- 
- 	error = 0;
- 	goto out;
-+bad_swap_unlock_inode:
-+	inode_unlock(inode);
- bad_swap:
- 	free_percpu(p->percpu_cluster);
- 	p->percpu_cluster = NULL;
-@@ -3322,6 +3325,7 @@ bad_swap:
- 		set_blocksize(p->bdev, p->old_block_size);
- 		blkdev_put(p->bdev, FMODE_READ | FMODE_WRITE | FMODE_EXCL);
- 	}
-+	inode = NULL;
- 	destroy_swap_extents(p);
- 	swap_cgroup_swapoff(p->type);
- 	spin_lock(&swap_lock);
-@@ -3333,13 +3337,8 @@ bad_swap:
- 	kvfree(frontswap_map);
- 	if (inced_nr_rotate_swap)
- 		atomic_dec(&nr_rotate_swap);
--	if (swap_file) {
--		if (inode) {
--			inode_unlock(inode);
--			inode = NULL;
--		}
-+	if (swap_file)
- 		filp_close(swap_file, NULL);
--	}
- out:
- 	if (page && !IS_ERR(page)) {
- 		kunmap(page);
-_
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
