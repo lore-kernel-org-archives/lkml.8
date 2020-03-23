@@ -2,89 +2,97 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6466C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5DFC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDCED2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:28:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWId/kub"
+	by mail.kernel.org (Postfix) with ESMTP id 7841820753
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgCWS2D (ORCPT
+        id S1727470AbgCWSe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:28:03 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35132 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgCWS2D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:28:03 -0400
-Received: by mail-qk1-f196.google.com with SMTP id k13so4663157qki.2;
-        Mon, 23 Mar 2020 11:28:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=3wB0xVpulcp40RTW3vhxAgoqjUdCApY2I0xSALST5l8=;
-        b=iWId/kub+Jrlo1bcvpBVEXxR/ZG9PWIncegc9idzjaRroBA4JrJJ7Y70UOECdbDiXd
-         B3BoZpqvZqkcN/ptpNHuT5/3TLthAFgGaho6+/ig0Vfx7Qs5qQCOc4Ho8Pb9lN1nauQt
-         kgk4+kYQNe4WhXNz8IrpJnBIpyqJ8XUKKreavbZIChnXotm1ncu8tKQq0WMIhb5sG7qq
-         UHK83Nbfhdv5+rJRg0rHUhDc+PS/H0vu0HNYlKTWumJKnBJWdy0LnSBXfbLkPhg4gx31
-         qZtjm9LrumSQNjIEWpF8rDb4W9R00pSh1/m5cEKdlG46L5RzvhSyCjwVW6jw7vsUqqvX
-         7Iuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=3wB0xVpulcp40RTW3vhxAgoqjUdCApY2I0xSALST5l8=;
-        b=NtAXmLPvHbbhhIhhigxj9UHO3JhHTDe9ek9VRZFZps6wqsceOnnkJRlNVqVh4JSRfc
-         eY4VSVMxSCzHFk7hPsk61Vch2aZCvpMG8lqtVgOBSDOfYwUIR6/0Vg5wWAouURICOcWO
-         IpJq4l+7s0VtgpR0OGmAImhX6gPrDYCxdz63OtDBwd/rLjDCm4FyNx7HH1o6A97EvToL
-         iTr23bYLR5DmCgTi4Na2g/DJzIEvGNZCjkEIqjS1Lhgu43ap4BgXw8JMAPXRTVMt3VJ4
-         /fx6bp7WU9Qw/liVhms9QGCVO/qHmhDYPYThKAARRL7qGC4/PrGoEfE/jEOmkjbkjz+W
-         eERA==
-X-Gm-Message-State: ANhLgQ0DZx04FuOhSniPOxzfCYUbIPzHF0hEKXKyZsFtXRtybAWVskMc
-        rG4ROSZFlPqMWP8mb6rewd4=
-X-Google-Smtp-Source: ADFU+vthjZL644J49K7lhCku/51veVNw3keoxJgU51g8G/2TuPtgYFtuz1OgXoV5uQVkESY/vVx3BQ==
-X-Received: by 2002:a37:8d81:: with SMTP id p123mr9768397qkd.17.1584988082030;
-        Mon, 23 Mar 2020 11:28:02 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id n4sm12146258qti.55.2020.03.23.11.28.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 11:28:01 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 14:28:00 -0400
-Message-ID: <20200323142800.GD4041079@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, alobakin@dlink.ru, olteanv@gmail.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
+        Mon, 23 Mar 2020 14:34:27 -0400
+Received: from mga09.intel.com ([134.134.136.24]:30763 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726643AbgCWSe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 14:34:27 -0400
+IronPort-SDR: anCU9mDSm8x9mp6F0SlD0a1KMRPJwEvzBAZjPVUQidojPIIAi28FYFtlOb4Zw1feHbmPlmFs3U
+ kC3ujQHwfqtA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 11:34:26 -0700
+IronPort-SDR: fcnOiKx5CD2lQDtzXqai7u53Hpm0UfTO77ZXZRNuNg25UkLxUihSYGieAJfgAJHi+JbFa99q0+
+ hwLdlkwGsAmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
+   d="scan'208";a="237980140"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 23 Mar 2020 11:34:23 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jGRu4-00CJSQ-VZ; Mon, 23 Mar 2020 20:34:24 +0200
+Date:   Mon, 23 Mar 2020 20:34:24 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-gpio@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: dsa: Implement flow dissection for
- tag_brcm.c
-In-Reply-To: <20200322210957.3940-1-f.fainelli@gmail.com>
-References: <20200322210957.3940-1-f.fainelli@gmail.com>
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add Segey Semin to maintainers of DW
+ APB GPIO driver
+Message-ID: <20200323183424.GT1922688@smile.fi.intel.com>
+References: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
+ <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
+ <20200323180632.14119-7-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200323180632.14119-7-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 22 Mar 2020 14:09:57 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> Provide a flow_dissect callback which returns the network offset and
-> where to find the skb protocol, given the tags structure a common
-> function works for both tagging formats that are supported.
+On Mon, Mar 23, 2020 at 09:06:32PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Add myself as a co-maintainer of the Synopsis DesignWare APB GPIO driver.
 
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+I see neither cover letter, nor first three patches. What's going on?
+
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16084,6 +16084,7 @@ F:	drivers/tty/serial/8250/8250_dw.c
+>  
+>  SYNOPSYS DESIGNWARE APB GPIO DRIVER
+>  M:	Hoan Tran <hoan@os.amperecomputing.com>
+
+> +S:	Serge Semin <fancer.lancer@gmail.com>
+
+Are you sure you used a correct letter?
+
+>  L:	linux-gpio@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+
+Had you chance to run parse-maintainers.pl to see if other fields are in order?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
