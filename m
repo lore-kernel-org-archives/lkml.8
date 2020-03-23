@@ -2,92 +2,182 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4639EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8ECC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1606A206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3988A206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:13:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584976383;
+	bh=enniVPz3502Kag1xUTfxFAFoI4o/Gsr1Vj+prIUJy3Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kec/lTtLfezOqgtKIHDR8XqfJFv6xORCxZrg1Og8652/wChL8zdHvNtBWCWftPD9A
+	 lQMP/f/2uqOq6Y/8OxyStnMmLJXgxJegOworKh7b4yK6NpWYr/Pf3RAaKtPcf/WY8q
+	 pPx7uUSLThdH3kKSDGG0XSE4GOXkXuq++Q7j0icc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbgCWPLq convert rfc822-to-8bit (ORCPT
+        id S1727283AbgCWPNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:11:46 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:32604 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727096AbgCWPLp (ORCPT
+        Mon, 23 Mar 2020 11:13:02 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54055 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgCWPNB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:11:45 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-117-FP7y-fD7Or6NzgHxkL5fNw-1; Mon, 23 Mar 2020 15:11:41 +0000
-X-MC-Unique: FP7y-fD7Or6NzgHxkL5fNw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 23 Mar 2020 15:11:40 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 23 Mar 2020 15:11:40 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Christophe JAILLET' <christophe.jaillet@wanadoo.fr>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
-        "zhe.he@windriver.com" <zhe.he@windriver.com>,
-        "dzickus@redhat.com" <dzickus@redhat.com>,
-        "jstancek@redhat.com" <jstancek@redhat.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: RE: [PATCH] perf cpumap: Use scnprintf instead of snprintf
-Thread-Topic: [PATCH] perf cpumap: Use scnprintf instead of snprintf
-Thread-Index: AQHWAG7rOhePTwQGyk2fyROkdMOaUqhWSN8A
-Date:   Mon, 23 Mar 2020 15:11:40 +0000
-Message-ID: <c0441e54a07e424f9646ca232d44e9d8@AcuMS.aculab.com>
-References: <20200322172523.2677-1-christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20200322172523.2677-1-christophe.jaillet@wanadoo.fr>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 23 Mar 2020 11:13:01 -0400
+Received: by mail-wm1-f66.google.com with SMTP id b12so2044263wmj.3;
+        Mon, 23 Mar 2020 08:12:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cLJYUtlzJQnIte12O+1TX7NShd0c3CUtv4V79jlUG84=;
+        b=JGJupvO7EldIErAkGQH+3A2PbUoff+OsUf3jxHWlgUug4K4kJ5V6OYOiO2ipJSbccI
+         Mszsiz24eJdP0wREB0crKDQyiPYiGhxKjWEl8zeWtbx+cNweQNZ18yN2waxuzTFm059+
+         60QoGfqKG+rH5/yn739TTJ19BjPBA3dBl6W17IHOhuPIYbj0ckkNRxP3dld9gu2587B8
+         p4yF1c6DWlaV7KlJhygThY/Q8Y9dbCjonH7I16HX3u3MUxBssTGPSWrze1oLxRWvqjQD
+         z13zmOAryGl2z7i3FS1JoLH9IaGVvKVFYHFpRlBSrxpRRkpbRG84PLq5pIZ6GtPSo5Gj
+         7NrQ==
+X-Gm-Message-State: ANhLgQ1OqrlTXvR+DkW4vaQbjZeVwPAeptRCy6A7Gu10211XxStNLV5q
+        39VQvBWJxpd3Q4IkbYJ9J+g=
+X-Google-Smtp-Source: ADFU+vsua7OLk/30k9tXowXZF7JCw9SZSk5+/fONQ8eNrvIfByUUwexLlvp/OcSMb8/stQ4yLQvsyQ==
+X-Received: by 2002:a1c:1b51:: with SMTP id b78mr27754175wmb.8.1584976379152;
+        Mon, 23 Mar 2020 08:12:59 -0700 (PDT)
+Received: from localhost (ip-37-188-135-150.eurotel.cz. [37.188.135.150])
+        by smtp.gmail.com with ESMTPSA id y7sm1335565wrq.54.2020.03.23.08.12.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 08:12:58 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 16:12:56 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Rafael Aquini <aquini@redhat.com>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, shuah@kernel.org
+Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
+ false-negative errors
+Message-ID: <20200323151256.GP7524@dhcp22.suse.cz>
+References: <20200322013525.1095493-1-aquini@redhat.com>
+ <20200321184352.826d3dba38aecc4ff7b32e72@linux-foundation.org>
+ <20200322020326.GB1068248@t490s>
+ <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
+ <CALvZod7LiMiK1JtfdvvU3W36cGSUKhhKf6dMZpsNZv6nMiJ5=g@mail.gmail.com>
+ <20200323075208.GC7524@dhcp22.suse.cz>
+ <20200323144240.GB23364@optiplex-lnx>
+ <20200323145106.GM7524@dhcp22.suse.cz>
+ <20200323150259.GD23364@optiplex-lnx>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323150259.GD23364@optiplex-lnx>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET
-> Sent: 22 March 2020 17:25
-> 'scnprintf' returns the number of characters written in the output buffer
-> excluding the trailing '\0', instead of the number of characters which
-> would be generated for the given input.
+On Mon 23-03-20 11:02:59, Rafael Aquini wrote:
+> On Mon, Mar 23, 2020 at 03:51:06PM +0100, Michal Hocko wrote:
+> > On Mon 23-03-20 10:42:40, Rafael Aquini wrote:
+> > > On Mon, Mar 23, 2020 at 08:52:08AM +0100, Michal Hocko wrote:
+> > > > On Sun 22-03-20 09:36:49, Shakeel Butt wrote:
+> > > > > On Sat, Mar 21, 2020 at 9:31 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > > > > >
+> > > > > > On Sat, 21 Mar 2020 22:03:26 -0400 Rafael Aquini <aquini@redhat.com> wrote:
+> > > > > >
+> > > > > > > > > + * In order to sort out that race, and get the after fault checks consistent,
+> > > > > > > > > + * the "quick and dirty" trick below is required in order to force a call to
+> > > > > > > > > + * lru_add_drain_all() to get the recently MLOCK_ONFAULT pages moved to
+> > > > > > > > > + * the unevictable LRU, as expected by the checks in this selftest.
+> > > > > > > > > + */
+> > > > > > > > > +static void force_lru_add_drain_all(void)
+> > > > > > > > > +{
+> > > > > > > > > + sched_yield();
+> > > > > > > > > + system("echo 1 > /proc/sys/vm/compact_memory");
+> > > > > > > > > +}
+> > > > > > > >
+> > > > > > > > What is the sched_yield() for?
+> > > > > > > >
+> > > > > > >
+> > > > > > > Mostly it's there to provide a sleeping gap after the fault, whithout
+> > > > > > > actually adding an arbitrary value with usleep().
+> > > > > > >
+> > > > > > > It's not a hard requirement, but, in some of the tests I performed
+> > > > > > > (whithout that sleeping gap) I would still see around 1% chance
+> > > > > > > of hitting the false-negative. After adding it I could not hit
+> > > > > > > the issue anymore.
+> > > > > >
+> > > > > > It's concerning that such deep machinery as pagevec draining is visible
+> > > > > > to userspace.
+> > > > > >
+> > > > > 
+> > > > > We already have other examples like memcg stats where the
+> > > > > optimizations like batching per-cpu stats collection exposes
+> > > > > differences to the userspace. I would not be that worried here.
+> > > > 
+> > > > Agreed! Tests should be more tolerant for counters imprecision.
+> > > > Unevictable LRU is an optimization and transition to that list is a
+> > > > matter of an internal implementation detail.
+> > > >
+> > > > > > I suppose that for consistency and correctness we should perform a
+> > > > > > drain prior to each read from /proc/*/pagemap.  Presumably this would
+> > > > > > be far too expensive.
+> > > > > >
+> > > > > > Is there any other way?  One such might be to make the MLOCK_ONFAULT
+> > > > > > pages bypass the lru_add_pvecs?
+> > > > > >
+> > > > > 
+> > > > > I would rather prefer to have something similar to
+> > > > > /proc/sys/vm/stat_refresh which drains the pagevecs.
+> > > > 
+> > > > No, please don't. Pagevecs draining is by far not the only batching
+> > > > scheme we use and an interface like this would promise users to
+> > > > effectivelly force flushing all of them.
+> > > > 
+> > > > Can we simply update the test to be more tolerant to imprecisions
+> > > > instead?
+> > > > 
+> > > 
+> > > I don't think, thouhg, that this particular test case can be entirely
+> > > reduced as "counter imprecison".
+> > > 
+> > > The reason I think this is a different beast, is that having the page
+> > > being flagged as PG_unevictable is expected part of the aftermath of
+> > > a mlock* call. This selftest is, IMO, correctly verifying that fact,
+> > > as it checks the functionality correctness.
+> > > 
+> > > The problem boils down to the fact that the page would immediately
+> > > be flagged as PG_unevictable after the mlock (under MCL_FUTURE|MCL_ONFAULT
+> > > semantics) call, and the test was expecting it, and commit 9c4e6b1a7027f
+> > > changed that by "delaying" that flag setting.
+> > 
+> > As I've tried to explain in other email in this email thread. The test
+> > was exploiting a certain user visible side effect. The unevictable flag
+> > or the placement on the unevictable LRU list is are not really needed
+> > for the user contract correctness. That means that the test is not
+> > really correct. Working around that by trying to enforce kernel to
+> > comply with the test expectations is just plain wrong at least for two
+> > reasons 1) you cannot expect or event do not want userspace to do the
+> > same because the behavior might change in the future 2) the test is not
+> > really testing for correctness in the first place.
+> >
 > 
-> Both function return a number of characters, excluding the trailing '\0'.
-> So comparaison to check if it overflows, should be done against max_size-1.
-> Comparaison against max_size can never match.
+> Sorry, Michal, it seems we keep going back and forth (I just replied to
+> your comment on the other thread)
+> 
+> The selftest also checks the kernel visible effect, via
+> /proc/kpageflags, and that's where it fails after 9c4e6b1a7027f.
 
-NACK.
-Since snprintf() returns the number of characters it would have
-written to an infinite buffer the comparison can 'match'.
+I really fail to see your point. Even if you are right that the self
+test is somehow evaluating the kernel implementation which I am not sure
+is the scope of the selft thest but anyway. The mere fact that the
+kernel test fails on a perfectly valid change should just suggest that
+the test is leading to false positives and therefore should be fixed.
+Your proposed fix is simply suboptimal because it relies on yet another
+side effect which might change anytime in the future and still lead to a
+correctly behaving kernel. See my point?
 
-However it should test for (ret >= PATH_MAX).
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+-- 
+Michal Hocko
+SUSE Labs
