@@ -2,167 +2,113 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B11C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AE4C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4E52070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6F22070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:56:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="thfwQNJ+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gGzNq++v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbgCWXyv (ORCPT
+        id S1727338AbgCWX4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 19:54:51 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43767 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbgCWXyv (ORCPT
+        Mon, 23 Mar 2020 19:56:42 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:24383 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727054AbgCWX4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 19:54:51 -0400
-Received: by mail-ot1-f68.google.com with SMTP id a6so15314208otb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 16:54:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7ivUKPeO9SerTi1Ute2v62GeXvzFfzfq/ifSKn+sYwQ=;
-        b=thfwQNJ+GUelNm8rDcQbImlNSsL38HmovsMWSUD77gnenKIZWO31Vdd6mnUTPPx08e
-         45KGnfFt1/UDa9QTOY+ds3jJ3HIIgojiX2Z9bqR9ZMWiSh3olum+I6sfvYx7l0pFfhJ4
-         0LpBblO07Ug/XoSo1zImEquUsFXik2gMjHlWZF9ffsp+KSgjiNM2SXfbhdel7p2bZwU7
-         kWsuq38NGtewIFW9qOEhGd3ulgVVpqrH3n1ZTb/glzLXRv/+aFuwGISdYDRXALQFDINN
-         8SoUWX5gEJznTIXLAhnTOaD/x9CMSpZ06ZTiwHU3fgxkiAqgSy9wRQX/34/Rnw15bPBd
-         R6Eg==
+        Mon, 23 Mar 2020 19:56:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585007800;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qLT9PP21JpSVg8g9Ca0QcaUFbJS8dx+sxPNM6+3EIvA=;
+        b=gGzNq++vTNY3KAGTyR6qFdmtDRlpZJumYkLhxGhhIy4yKrYWxCTIr3aqt7DRQNbvXkPhXR
+        UZEfKKGBh3NK1QZJat+ya7waOZDnW54tkT7HRB19+3Cn1n0ZsVPKCmG3e/wdxzbT4vOZT3
+        VrdTxSJohOLmBuad8/uXybsKePa7or8=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-87-NFSOpbt_PoS-QNZVSZLocQ-1; Mon, 23 Mar 2020 19:56:36 -0400
+X-MC-Unique: NFSOpbt_PoS-QNZVSZLocQ-1
+Received: by mail-wm1-f69.google.com with SMTP id w12so643991wmc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 16:56:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7ivUKPeO9SerTi1Ute2v62GeXvzFfzfq/ifSKn+sYwQ=;
-        b=nHpg6wRr6J9eRfLix70QA2d1iQYCN8HtGrBWl2wzubGAIqbITVxrdb4G2cIwFg2mEg
-         M0AQQfOt/fgJN+y+rff7nqaQ5+5rTv0Vcc8e0UhBX3O6A9D18lyq2FOJF302Zq9UzdL2
-         yhj661QIEn3juarCeTBFSPdOkYcdAWn8z92f59x0nAv4xzfRKcqrCaOMiRqJ1dForwHC
-         tNnL8p626L1kc9ktT86MEInLkrvlHpO5RxUuiekmSFUoeYSRG4pQlbBTtd+v7cD/iOc9
-         bFkyqpBLiak9SPTKvJLbWufEFz8nEZx1wSTLAt7O5ZGU4l8UcuA7FuOAoL/xVr2azDLF
-         ON5Q==
-X-Gm-Message-State: ANhLgQ2epwMQooDSi/fG3evyCIkV9gbfJq5J+UlK+n1UzKOce+QgRMUv
-        lX9NPgLGEMbz23/bHU4cOtKCL7oCeO2f3Ws7y0x/rw==
-X-Google-Smtp-Source: ADFU+vsot8kt5s5rcGN6TXz0OW7n8RiiPx5Zhc+LE3dHDuKUm9vVQOF7PdjFALlTfmRme2UwsrwpkLPQ8+yM7KuiE8I=
-X-Received: by 2002:a05:6830:1ac1:: with SMTP id r1mr15659040otc.139.1585007688284;
- Mon, 23 Mar 2020 16:54:48 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qLT9PP21JpSVg8g9Ca0QcaUFbJS8dx+sxPNM6+3EIvA=;
+        b=N4o1TtZ1QMzCotjfWARzd6Sfr7NHyYFPqAPGnhQyyewRhgkxfTNtMxRrru32vJAMCl
+         zojxfliSlTsto1BoBJT+xmP5NHI74HEh6NO5Sc8dzDudjpGMdvRmUszO/RpCje4pYqTZ
+         VMeFnSoK0nx/XJ8LYRZqa7RpSP57uhS45bQ2hTuN2Osev3J8OEsIq/xFGjfh+55WaMos
+         IqsTHevK0AI75uOSHttHIXByKvEM5Uif5YFJwiHv5vYpZc3b3hpf9+re0F4NPrcnLqc0
+         sRxFK4MYpj19ut+owcBjAeEXgVZJgZcpF8mbzpvQp1XC+xIoAnoZXuSShkiOUmghwejE
+         0FzA==
+X-Gm-Message-State: ANhLgQ39AlN+8VQz4TaxBEe7OpM36jCY68xe3M6oOaxoLUpLF3TqxWXg
+        DjMjm4IQfAWzjve5IqrWwInCPLFG+cczTcG9ONWxL4vBrf7bsfFZM65ldHlSWBwf447l1jrDLw/
+        hJoasSffF2VkPi5hlLB2wJS5O
+X-Received: by 2002:adf:a54a:: with SMTP id j10mr33957036wrb.188.1585007795333;
+        Mon, 23 Mar 2020 16:56:35 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtA2yqwy0OwlfJUMK17zDbiP8PQ7IbBWxWzAUrDpK93gZxWeKy0DQaWOZHLglMy/9Tmdrqomw==
+X-Received: by 2002:adf:a54a:: with SMTP id j10mr33957012wrb.188.1585007795099;
+        Mon, 23 Mar 2020 16:56:35 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:7848:99b4:482a:e888? ([2001:b07:6468:f312:7848:99b4:482a:e888])
+        by smtp.gmail.com with ESMTPSA id t16sm23019727wra.17.2020.03.23.16.56.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Mar 2020 16:56:34 -0700 (PDT)
+Subject: Re: [PATCH v3 05/37] KVM: x86: Export kvm_propagate_fault() (as
+ kvm_inject_emulated_page_fault)
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        John Haxby <john.haxby@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
+ <20200320212833.3507-6-sean.j.christopherson@intel.com>
+ <87sghz844a.fsf@vitty.brq.redhat.com>
+ <20200323162433.GM28711@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <7012fd88-5590-e50d-cee2-d14fb54ce742@redhat.com>
+Date:   Tue, 24 Mar 2020 00:56:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <CAJZ5v0ju-rOU6TF9HDScXvV9N02wuJT9d3cLkoyEdd1xL6Kfbw@mail.gmail.com>
- <20200323222803.GA21243@google.com>
-In-Reply-To: <20200323222803.GA21243@google.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 23 Mar 2020 16:54:12 -0700
-Message-ID: <CAGETcx-kBHuvoJGqtdx=AORjezdOBX7-h+6Zrwpgv7UPn1UuVQ@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: Add device links from fwnode only for the
- primary device
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200323162433.GM28711@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 3:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Sat, Mar 21, 2020 at 11:20:07AM +0100, Rafael J. Wysocki wrote:
-> > On Sat, Mar 21, 2020 at 5:55 AM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > Sometimes, more than one (generally two) device can point to the same
-> > > fwnode.  However, only one device is set as the fwnode's device
-> > > (fwnode->dev) and can be looked up from the fwnode.
-> > >
-> > > Typically, only one of these devices actually have a driver and actually
-> > > probe. If we create device links for all these devices, then the
-> > > suppliers' of these devices (with the same fwnode) will never get a
-> > > sync_state() call because one of their consumer devices will never probe
-> > > (because they don't have a driver).
-> > >
-> > > So, create device links only for the device that is considered as the
-> > > fwnode's device.
-> > >
-> > > One such example of this is the PCI bridge platform_device and the
-> > > corresponding pci_bus device. Both these devices will have the same
-> > > fwnode. It's the platform_device that is registered first and is set as
-> > > the fwnode's device. Also the platform_device is the one that actually
-> > > probes. Without this patch none of the suppliers of a PCI bridge
-> > > platform_device would get a sync_state() callback.
-> >
-> > For the record, I think that this is a PCI subsystem problem, but I
-> > agree with the patch here.
->
-> I don't understand the issue here.  Can somebody educate me?  I'm
-> guessing this is related to pci_set_bus_of_node(), which does (for
-> PCI-to-PCI bridges):
->
->   bus->dev.of_node = of_node_get(bus->self->dev.of_node);
->   bus->dev.fwnode = &bus->dev.of_node->fwnode;
+On 23/03/20 17:24, Sean Christopherson wrote:
+>> We don't seem to use the return value a lot, actually,
+>> inject_emulated_exception() seems to be the only one, the rest just call
+>> it without checking the return value. Judging by the new name, I'd guess
+>> that the function returns whether it was able to inject the exception or
+>> not but this doesn't seem to be the case. My suggestion would then be to
+>> make it return 'void' and return 'fault->nested_page_fault' separately
+>> in inject_emulated_exception().
+> Oooh, I like that idea.  The return from the common helper also confuses me
+> every time I look at it.
+> 
 
-Assuming you intentionally simplified the code here, yes, it's related to that.
+Separate patch, please.  I'm not sure it makes a great difference though.
 
-> where "bus" points to a struct pci_bus and "bus->self" points to the
-> struct pci_dev for the bridge leading to the bus?
->
-> Is this related to the fact that we have a struct device for both a
-> PCI-to-PCI bridge and for its downstream bus?
+Paolo
 
-This patch at least isn't talking about how many devices we have.
-
-The patch is referring to the fact that more than one device has their
-dev.fwnode point to the same fwnode. fwnode is just a generic way to
-point to devicetree nodes (of_node) or ACPI nodes. So the concerns
-raised for fwnode apply to of_node too, but ignore of_node for now
-(I'll get to that part later).
-
-dev.fwnode is supposed to point to the firmware node from which the
-device is created or represents. Having more than one struct device
-point to the same fwnode is unusual as it's unlikely one firmware node
-is creating two different devices.. Maybe for MFD (multi function
-devices) it *might* make sense but even then it's questionable.
-
-In the specific case of the PCI + a device tree based system, the pcie
-root controller/bridge(?) has a platform_device (bridge->dev.parent)
-that points to a fwnode (that corresponds to the DT node from which
-the platform device was created). Somehow (the code path is very
-confusing) the pci_bus->dev.fwnode ends up pointing to the same fwnode
-the platform_device is pointing to.
-
-The pci_bus is just a run time allocated struct device used to form
-some kind of device hierarchy you are trying to maintain. I think (and
-maybe this is the part Rafael is referring to) the pci_bus is not
-really representing the firmware node and maybe should have fwnode set
-to NULL. And this fwnode issue is made more unusual because this
-device doesn't even probe.
-
-> Any suggestions for how could we fix this problem in the PCI
-> subsystem?
-
-If you set a device's of_node = something, then you really should be
-setting the device's fwnode to point to the corresponding fwnode for
-that of_node. So the real question is why you need to set
-pci_bus->dev.of_node (instead of leaving it NULL). Sometimes devices
-have their of_node set to some other device's of_node because
-regulator_get()/clk_get/whatever_get() they call look at dev.of_node
-to find the resource. But I don't think that's the case here.
-
-So, if you can simply skip setting pci_bus of_node, then that's the
-simplest fix. If not, not setting fwnode (while setting of_node) might
-be an acceptable hack to reduce the weirdness (of setting fwnode =
-some other device's fwnode). If not, then the fix would be to unwind
-the need for setting pci_bus's of_node.
-
-Hope that makes some sense.
-
--Saravana
-
--Saravana
