@@ -2,110 +2,108 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4302C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04661C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75DED20771
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C20D020735
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:55:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="E0yd7jBH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UH0//XA+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbgCWOza (ORCPT
+        id S1727145AbgCWOzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:55:30 -0400
-Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:5282 "EHLO
-        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbgCWOz3 (ORCPT
+        Mon, 23 Mar 2020 10:55:52 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:20091 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725990AbgCWOzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:55:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1584975329;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=lBVVrBypVz+RADchWAvVwdaNJBZHScOt3Cc1rORYDdI=;
-  b=E0yd7jBHfDprI9Yvwf14vyp1Ld6j2+CWTLhYs55yqRAqN6edcTI0x+1o
-   YnrfqpnOrBZk/qndUXjkGjsRTsgiMBehih2o/jiuHwV3bVJdSDi2omk4Z
-   NTt6r9mB8f05jApUSY2oHOCKc5gM4RO1ZR375j00y8nMgRz7TwC4rD9ym
-   Y=;
-Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa4.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: LufU9WBY251XB+4L29AisBql4KftCAViZA91z6ekHJUun8XztQ5VLTDD6QOQnumWlhlQQz5qdh
- ViLl+cJqzd00AKgXop8Fsz4Aq4zi+Bp/B7SYLbiis8nhA5xVtMm0ZqnujSruIK+Dy5xuBNLC/2
- 5UO4lElqyMQ7hHRML/AfC0itKUN+pMSRqvaUGUxkbaXkrY7w4cNHTogb45wa8eH6PMLzzMYnrK
- uyoQrBnn/NJnP4y2udfj7H2Ly+gjzE7D6R1l+AzcNd+uyWyMsR0JqHUUH1MVlmmiTiS4K4J0YY
- 7bk=
-X-SBRS: 2.7
-X-MesageID: 15118429
-X-Ironport-Server: esa4.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.72,296,1580792400"; 
-   d="scan'208";a="15118429"
-Date:   Mon, 23 Mar 2020 15:55:22 +0100
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>
-CC:     <xen-devel@lists.xenproject.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Stefano Stabellini" <sstabellini@kernel.org>,
-        Simon Gaiser <simon@invisiblethingslab.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] xen-pciback: fix INTERRUPT_TYPE_* defines
-Message-ID: <20200323145522.GC24458@Air-de-Roger.citrite.net>
-References: <20200320030929.24735-1-marmarek@invisiblethingslab.com>
+        Mon, 23 Mar 2020 10:55:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584975350;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VvGlC8Czl63YZgi4jgzehNhHSqhqg15Zh+SkPrQjW4Y=;
+        b=UH0//XA+w6S855aDvVZ3AckN3VkyZOzIg1aom9otoibYvWWFF011uLvM73lzOHv2Kcwz6h
+        vmAOTwpRdNaDCsmNYpdYnA/elifOM74ROcfKnUFlaU57V6zO4AAeq2UgBbUsWLSHMh1tTg
+        PuEAFPrP2LrH3QfszBK10LJevWVkw0Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-316-K7jnb4PuMQqRo8yGC7qZCg-1; Mon, 23 Mar 2020 10:55:48 -0400
+X-MC-Unique: K7jnb4PuMQqRo8yGC7qZCg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 473131005514;
+        Mon, 23 Mar 2020 14:55:47 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.33.36.220])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 63A865F904;
+        Mon, 23 Mar 2020 14:55:45 +0000 (UTC)
+Date:   Mon, 23 Mar 2020 10:55:42 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, shuah@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
+ false-negative errors
+Message-ID: <20200323145542.GC23364@optiplex-lnx>
+References: <20200322013525.1095493-1-aquini@redhat.com>
+ <CALvZod4GjRFLRX=S_YFYnJk-kL6tjveYEDOBFS76NqrURERHHQ@mail.gmail.com>
+ <20200323141659.GA23364@optiplex-lnx>
+ <20200323142941.GK7524@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200320030929.24735-1-marmarek@invisiblethingslab.com>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+In-Reply-To: <20200323142941.GK7524@dhcp22.suse.cz>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 04:09:18AM +0100, Marek Marczykowski-Górecki wrote:
-> xen_pcibk_get_interrupt_type() assumes INTERRUPT_TYPE_NONE being 0
-> (initialize ret to 0 and return as INTERRUPT_TYPE_NONE).
-> Fix the definition to make INTERRUPT_TYPE_NONE really 0, and also shift
-> other values to not leave holes.
-> But also, do not assume INTERRUPT_TYPE_NONE being 0 anymore to avoid
-> similar confusions in the future.
+On Mon, Mar 23, 2020 at 03:29:41PM +0100, Michal Hocko wrote:
+> On Mon 23-03-20 10:16:59, Rafael Aquini wrote:
+> > On Sun, Mar 22, 2020 at 09:31:04AM -0700, Shakeel Butt wrote:
+> > > On Sat, Mar 21, 2020 at 6:35 PM Rafael Aquini <aquini@redhat.com> wrote:
+> > > >
+> > > > Changes for commit 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
+> > > > break this test expectations on the behavior of mlock syscall family immediately
+> > > > inserting the recently faulted pages into the UNEVICTABLE_LRU, when MCL_ONFAULT is
+> > > > passed to the syscall as part of its flag-set.
+> > > 
+> > > mlock* syscalls do not provide any guarantee that the pages will be in
+> > > unevictable LRU, only that the pages will not be paged-out. The test
+> > > is checking something very internal to the kernel and this is expected
+> > > to break.
+> > 
+> > It was a check expected to be satisfied before the commit, though. 
+> > Getting the mlocked pages inserted directly into the unevictable LRU,
+> > skipping the pagevec, was established behavior before the aforementioned
+> > commit, and even though one could argue userspace should not be aware,
+> > or care, about such inner kernel circles the program in question is not an 
+> > ordinary userspace app, but a kernel selftest that is supposed to check
+> > for the functionality correctness.
 > 
-> Fixes: 476878e4b2be ("xen-pciback: optionally allow interrupt enable flag writes")
-> Signed-off-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+> But mlock (in neither mode) is reall forced to put pages to the
+> UNEVICTABLE_LRU for correctness. If the test is really depending on it
+> then the selftest is bogus. A real MCL_ONFAULT test should focus on the
+> user observable contract of this api. And that is that a new mapping
+> doesn't fault in the page during the mlock call but the memory is locked
+> after the memory is faulted in. You can use different methods to observe
+> locked memory - e.g. try to reclaim it and check or check /proc/<pid>/smaps
+>
 
-Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
+Again, I don't think the test is bogus, although it's (now) expecting
+something that is not guaranteed after the referred commit.
+The check for PG_unevictable set on the page backing up the mapping
+seems reasonable, as the flag is supposed to be there, if everything 
+went on fine after the mlock call. 
 
-Thanks, Roger.
+-- Rafael
+
