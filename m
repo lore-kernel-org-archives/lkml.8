@@ -7,62 +7,63 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6283EC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E22F7C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35EF3206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C57206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:01:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gqo70M0+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mush7+yE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbgCWPA6 (ORCPT
+        id S1727298AbgCWPAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:00:58 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41840 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727313AbgCWPA1 (ORCPT
+        Mon, 23 Mar 2020 11:00:25 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44119 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgCWPAY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:00:27 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h9so17478314wrc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 08:00:24 -0700 (PDT)
+        Mon, 23 Mar 2020 11:00:24 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m17so8507160wrw.11
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 08:00:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0O+vyK5vvC4g3IYlNFFCkLQmqVkoo7LNP5yoPvyfpdE=;
-        b=Gqo70M0+HFwbN0MmzQEglDxiBxNm+W+puIXvN+GAICu7lYABiGs/xEsSBxYkvVqpWq
-         yuvHsTjP2uH3iw7e9HwaLc+sF2R88a5l3FTi84DjzvNenJ1bYJtO/8w4oFrAaSlWoH5A
-         nHX17SgUfcCu7WxxqvaeXnh3WdmESJvdlayLJVRV/R6nsjUtjS4f/NL77xHMCn1qvh/5
-         aw9GdJMALGLJVOGlubDV4zdndIR+RYEbMBKHDgthFt9rgHDb1mOW2y+OK4G7mvUlYdpQ
-         VSIamwLE6ETJ16ZXObw5XH2naLAVv3aGVUYrzmlfipzhx1t0Vh3kkQcz6UQpo5gGmwJN
-         NdHg==
+        bh=CrKKQrPGfQFRg7O+vdgKrrd0BOZAZev2MLFiaSgyZ1I=;
+        b=mush7+yERMiuascXsIXpZhs1VjJ3P5orEU9x7LRqxsOOAENQAgwnXVOuH0uwWF+h3r
+         ObsJNkt/dB5e3/nsoUNwrdgzcD+XWPyc6OQNWfgtfZebqDP89RVarAxkoFBompcWbZDU
+         rxXlbxRH7ppUbWrszbz6GUZgvv/5q3Ra8nZIiw585XBaxer2C4Zl8lukVMMUvEqnGLZR
+         ceQMTmCMlBnSulHRKNHd/9xgaMBM8vRkwvFr/C1OaQzf5cVgpJVf7Bs0GYJVSfS8pewE
+         uKJfhteGatNkV6Gxnq7I2dRih+wmjezFLdejfqSPJvr1uB5dAbjZO8Cs4quZ5rfU7dtW
+         sOtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0O+vyK5vvC4g3IYlNFFCkLQmqVkoo7LNP5yoPvyfpdE=;
-        b=ld/I+LD/2eIuXDsByib5U9wpNd1RqJB6PhULtDJkiOk3NgdmdHNk9AfrUrkvERJVfh
-         1mr+C09A7dU27ePEf4QwOg0zD3BGFV2VydeG2YhjSIaS5N+GVldPeWFxuLJzHuqPISIx
-         ODi0kThYBHsD2RPzQz/JZjWhjVRCvh1tcQ+hSK53HYrp+B1TyHbuaKG9FNsgY2tTTYj2
-         VXS9IEO9Uc8oeTm4WKDsopeeoNjbQsYtNxEj++fnK0mGsoA/ZeUcvrNfHZTkPqe//tIh
-         +voqkshKq5jTy7TdQ7H+7JQ4tTtmJ+hChVeedrSgP34UZMPU651mFNmiLm8/kyrBI2EE
-         ORJg==
-X-Gm-Message-State: ANhLgQ3+S43UI+6gZpvdPZoAur0ALEsdiRFN/gqvcHqKvkqdt9/+Ogg7
-        wQOBKSlDp/eR9SKpn33o9+Vn0g==
-X-Google-Smtp-Source: ADFU+vvUw8NlYb8kFG0Q4CTsJDCPmoXn3SIEDR2EUPxgYv4otkwIBqPzpG1jWJPPXmGr3T9mKf3khw==
-X-Received: by 2002:adf:dec3:: with SMTP id i3mr4458066wrn.351.1584975623946;
-        Mon, 23 Mar 2020 08:00:23 -0700 (PDT)
+        bh=CrKKQrPGfQFRg7O+vdgKrrd0BOZAZev2MLFiaSgyZ1I=;
+        b=bL6GFD7gwgm/lJxX8wnS21OAji7+lFQiygubvlDfJJRFOGLOh1ejY3/ZTcMaXxGPdW
+         JHvYnJOHlzRoy21D43I0yI9mzVAUZcxYcx6qgiaA+c56n+SI+iwNXGGLJz+uECE0PKpF
+         tVTG7jbpDcOHd31iISLjXt8lQnuhiX0AvNrIkclzdKgkhkORUnMjcUDOeDrfVI+3/gps
+         +gTzTsRB31a51YhNDDIZ0hxuP5iYLlCVG9royJbmG/DlIaPD0G6jdWQA5DKxnLSEPP0Y
+         oQgE7H35ueWNScFOR6XWPd/KpRKIwMYWQ4DfjLm0L4n0qIN4gE3M+rKsE4HOw141buaM
+         LfkQ==
+X-Gm-Message-State: ANhLgQ2kCIg0h7iq3LWlZcU4+53us1ZtoKd4yJlYGNF7Yst0wVgnQGXi
+        EwDgE0PzZemITzZ/GivpHYA8nQ==
+X-Google-Smtp-Source: ADFU+vsvlgw+lN3GNp1q2MMLQUFtUgqb+HGeDjdPszXkA2zzYG2n8/KXS9d51QVzASfGXcFEA3OXbg==
+X-Received: by 2002:adf:e448:: with SMTP id t8mr8335390wrm.257.1584975621735;
+        Mon, 23 Mar 2020 08:00:21 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id k15sm1084196wrm.55.2020.03.23.08.00.23
+        by smtp.gmail.com with ESMTPSA id k15sm1084196wrm.55.2020.03.23.08.00.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 08:00:23 -0700 (PDT)
+        Mon, 23 Mar 2020 08:00:21 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, Baolin Wang <baolin.wang7@gmail.com>,
+Cc:     linux-kernel@vger.kernel.org, Freeman Liu <freeman.liu@unisoc.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 3/5] nvmem: sprd: Determine double data programming from device data
-Date:   Mon, 23 Mar 2020 15:00:05 +0000
-Message-Id: <20200323150007.7487-4-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 1/5] nvmem: sprd: Fix the block lock operation
+Date:   Mon, 23 Mar 2020 15:00:03 +0000
+Message-Id: <20200323150007.7487-2-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200323150007.7487-1-srinivas.kandagatla@linaro.org>
 References: <20200323150007.7487-1-srinivas.kandagatla@linaro.org>
@@ -73,37 +74,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baolin Wang <baolin.wang7@gmail.com>
+From: Freeman Liu <freeman.liu@unisoc.com>
 
-We've saved the double data flag in the device data, so we should
-use it when programming a block.
+According to the Spreadtrum eFuse specification, we should write 0 to
+the block to trigger the lock operation.
 
+Fixes: 096030e7f449 ("nvmem: sprd: Add Spreadtrum SoCs eFuse support")
+Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
 Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/sprd-efuse.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nvmem/sprd-efuse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/nvmem/sprd-efuse.c b/drivers/nvmem/sprd-efuse.c
-index 43b3f6ef8c20..925feb21d5ad 100644
+index 2f1e0fbd1901..7a189ef52333 100644
 --- a/drivers/nvmem/sprd-efuse.c
 +++ b/drivers/nvmem/sprd-efuse.c
-@@ -324,6 +324,7 @@ static int sprd_efuse_read(void *context, u32 offset, void *val, size_t bytes)
- static int sprd_efuse_write(void *context, u32 offset, void *val, size_t bytes)
- {
- 	struct sprd_efuse *efuse = context;
-+	bool blk_double = efuse->data->blk_double;
- 	bool lock;
- 	int ret;
- 
-@@ -348,7 +349,7 @@ static int sprd_efuse_write(void *context, u32 offset, void *val, size_t bytes)
- 	else
- 		lock = true;
- 
--	ret = sprd_efuse_raw_prog(efuse, offset, false, lock, val);
-+	ret = sprd_efuse_raw_prog(efuse, offset, blk_double, lock, val);
- 
- 	clk_disable_unprepare(efuse->clk);
+@@ -239,7 +239,7 @@ static int sprd_efuse_raw_prog(struct sprd_efuse *efuse, u32 blk, bool doub,
+ 		ret = -EBUSY;
+ 	} else {
+ 		sprd_efuse_set_prog_lock(efuse, lock);
+-		writel(*data, efuse->base + SPRD_EFUSE_MEM(blk));
++		writel(0, efuse->base + SPRD_EFUSE_MEM(blk));
+ 		sprd_efuse_set_prog_lock(efuse, false);
+ 	}
  
 -- 
 2.21.0
