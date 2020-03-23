@@ -2,276 +2,89 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29868C4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA71C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E714020714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1EA920714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:28:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="kgtAL3A/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgCWBZf (ORCPT
+        id S1726979AbgCWB2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 21:25:35 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12172 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726847AbgCWBZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 21:25:35 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2C7624363A6500E042E7;
-        Mon, 23 Mar 2020 09:25:33 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 23 Mar 2020 09:25:26 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v3] f2fs: fix potential .flags overflow on 32bit architecture
-Date:   Mon, 23 Mar 2020 09:25:19 +0800
-Message-ID: <20200323012519.41536-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Sun, 22 Mar 2020 21:28:30 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37394 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726916AbgCWB2a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 21:28:30 -0400
+Received: by mail-pf1-f196.google.com with SMTP id h72so4474806pfe.4
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 18:28:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=AiAyav6BwFSr29hdXCFnFBhxNCa7Q5OcMKiajqm24bE=;
+        b=kgtAL3A/6q6jkcurZgQ/kVVXu6f85IzCnxR0nwV9strvNuVnOnmy4sxdJ0k0ru7kJc
+         aI4BvhATkLGVtBTW1/B4/RhGO5LO3n1BjpiwKCiTn2PGnbmxFfUtuONEoPBmWdaPvBAo
+         +Oxb3JMtGWXYsuNKG2e4JYF7e+htB9ANmvl1zYsE7Z6L5romyFG/jag1HvVFx6j+hyOo
+         xH3shSVK3thQEQweHvwtBf83/3468I/gEP1ARm9iQv1+Hb9F6s/5K3dSd7raIRur0I7L
+         esl7ic6dt83E9FuT0apPYzZDSViZlff2zT552qXxcSeCESDxns4hTRYwm4+xRJnfhikr
+         1Biw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AiAyav6BwFSr29hdXCFnFBhxNCa7Q5OcMKiajqm24bE=;
+        b=bLKnVIuQDJIVpv8VJw6xyEQkxQOsXab1dy9XvTTQBiWbnuwdEIt+JeaCe8MBgtvO6y
+         CVyQkeVSjVw0ngNU/L5ENsOLTpdHARvAJnfQM0jxIhYouzvXW3Px9YNdF/HIAK3uXU3s
+         qArubbEz9Bv5DrYuA/LoHx/PF7BGhB6T5gY36UkFb4UGOZzwwNdOfO+gG5fL4k1PU6Ru
+         zk7qw4ULSpnO0Vg2LsUeZ1RfwECRdfhLwHcNAgu1MG2jikkGfkQgPUoTn9niICbGKE6Y
+         uY6MhfOO4N4IK9wyzhoBQjB7iuqHC1b/ru5lFETqSeo9va4NZwwmvgyPHuErj4i6bLk1
+         dMfA==
+X-Gm-Message-State: ANhLgQ0GyDrOOaOV8CfIRxxLOa/E5np3tkkKYCDKcgn5r2ZDXcC92dFe
+        CuSWZwSPEq8QKSj/yvKAH+sLoeP8UyYAKg==
+X-Google-Smtp-Source: ADFU+vsBiyW0sX3RAY4WyAPXLoLQgRCGZpgI/fXucknlS62yFbmqVtt4Y5o8sFEPdrgT4rTI7yKCew==
+X-Received: by 2002:a62:2a8c:: with SMTP id q134mr10146989pfq.35.1584926908504;
+        Sun, 22 Mar 2020 18:28:28 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id m11sm10334604pjq.13.2020.03.22.18.28.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Mar 2020 18:28:28 -0700 (PDT)
+Subject: Re: [PATCH 1/1] io_uring: Fix ->data corruption on re-enqueue
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <c8d9cc69995858fd8859b339f77901f93574c528.1584912194.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <be427cf7-78d4-7e19-bc16-25aeb0ab33e5@kernel.dk>
+Date:   Sun, 22 Mar 2020 19:28:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+In-Reply-To: <c8d9cc69995858fd8859b339f77901f93574c528.1584912194.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-f2fs_inode_info.flags is unsigned long variable, it has 32 bits
-in 32bit architecture, since we introduced FI_MMAP_FILE flag
-when we support data compression, we may access memory cross
-the border of .flags field, corrupting .i_sem field, result in
-below deadlock.
+On 3/22/20 3:23 PM, Pavel Begunkov wrote:
+> work->data and work->list are shared in union. io_wq_assign_next() sets
+> ->data if a req having a linked_timeout, but then io-wq may want to use
+> work->list, e.g. to do re-enqueue of a request, so corrupting ->data.
+> 
+> ->data is not necessary, just remove it and extract linked_timeout
+> through @link_list.
 
-To fix this issue, let's expand .flags as an array to grab enough
-space to store new flags.
+You're missing a Fixes line again!
 
-Call Trace:
- __schedule+0x8d0/0x13fc
- ? mark_held_locks+0xac/0x100
- schedule+0xcc/0x260
- rwsem_down_write_slowpath+0x3ab/0x65d
- down_write+0xc7/0xe0
- f2fs_drop_nlink+0x3d/0x600 [f2fs]
- f2fs_delete_inline_entry+0x300/0x440 [f2fs]
- f2fs_delete_entry+0x3a1/0x7f0 [f2fs]
- f2fs_unlink+0x500/0x790 [f2fs]
- vfs_unlink+0x211/0x490
- do_unlinkat+0x483/0x520
- sys_unlink+0x4a/0x70
- do_fast_syscall_32+0x12b/0x683
- entry_SYSENTER_32+0xaa/0x102
-
-Fixes: 4c8ff7095bef ("f2fs: support data compression")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v3:
-- clean up with test_and_{set,clear}_bit suggested by Joe Perches
-- clean up with BITS_TO_LONGS suggested by Ondřej Jirman
-- avoid unneeded parameter type change in __mark_inode_dirty_flag()
- fs/f2fs/f2fs.h  | 112 ++++++++++++++++++++++++++----------------------
- fs/f2fs/inode.c |   4 +-
- 2 files changed, 63 insertions(+), 53 deletions(-)
-
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index fcafa68212eb..a68f2301a1ff 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -682,6 +682,47 @@ enum {
- 	MAX_GC_FAILURE
- };
- 
-+/* used for f2fs_inode_info->flags */
-+enum {
-+	FI_NEW_INODE,		/* indicate newly allocated inode */
-+	FI_DIRTY_INODE,		/* indicate inode is dirty or not */
-+	FI_AUTO_RECOVER,	/* indicate inode is recoverable */
-+	FI_DIRTY_DIR,		/* indicate directory has dirty pages */
-+	FI_INC_LINK,		/* need to increment i_nlink */
-+	FI_ACL_MODE,		/* indicate acl mode */
-+	FI_NO_ALLOC,		/* should not allocate any blocks */
-+	FI_FREE_NID,		/* free allocated nide */
-+	FI_NO_EXTENT,		/* not to use the extent cache */
-+	FI_INLINE_XATTR,	/* used for inline xattr */
-+	FI_INLINE_DATA,		/* used for inline data*/
-+	FI_INLINE_DENTRY,	/* used for inline dentry */
-+	FI_APPEND_WRITE,	/* inode has appended data */
-+	FI_UPDATE_WRITE,	/* inode has in-place-update data */
-+	FI_NEED_IPU,		/* used for ipu per file */
-+	FI_ATOMIC_FILE,		/* indicate atomic file */
-+	FI_ATOMIC_COMMIT,	/* indicate the state of atomical committing */
-+	FI_VOLATILE_FILE,	/* indicate volatile file */
-+	FI_FIRST_BLOCK_WRITTEN,	/* indicate #0 data block was written */
-+	FI_DROP_CACHE,		/* drop dirty page cache */
-+	FI_DATA_EXIST,		/* indicate data exists */
-+	FI_INLINE_DOTS,		/* indicate inline dot dentries */
-+	FI_DO_DEFRAG,		/* indicate defragment is running */
-+	FI_DIRTY_FILE,		/* indicate regular/symlink has dirty pages */
-+	FI_NO_PREALLOC,		/* indicate skipped preallocated blocks */
-+	FI_HOT_DATA,		/* indicate file is hot */
-+	FI_EXTRA_ATTR,		/* indicate file has extra attribute */
-+	FI_PROJ_INHERIT,	/* indicate file inherits projectid */
-+	FI_PIN_FILE,		/* indicate file should not be gced */
-+	FI_ATOMIC_REVOKE_REQUEST, /* request to drop atomic data */
-+	FI_VERITY_IN_PROGRESS,	/* building fs-verity Merkle tree */
-+	FI_COMPRESSED_FILE,	/* indicate file's data can be compressed */
-+	FI_MMAP_FILE,		/* indicate file was mmapped */
-+	FI_MAX,			/* max flag, never be used */
-+};
-+
-+/* f2fs_inode_info.flags array size */
-+#define FI_ARRAY_SIZE		(BITS_TO_LONGS(FI_MAX))
-+
- struct f2fs_inode_info {
- 	struct inode vfs_inode;		/* serve a vfs inode */
- 	unsigned long i_flags;		/* keep an inode flags for ioctl */
-@@ -694,7 +735,7 @@ struct f2fs_inode_info {
- 	umode_t i_acl_mode;		/* keep file acl mode temporarily */
- 
- 	/* Use below internally in f2fs*/
--	unsigned long flags;		/* use to pass per-file flags */
-+	unsigned long flags[FI_ARRAY_SIZE];	/* use to pass per-file flags */
- 	struct rw_semaphore i_sem;	/* protect fi info */
- 	atomic_t dirty_pages;		/* # of dirty pages */
- 	f2fs_hash_t chash;		/* hash value of given file name */
-@@ -2531,43 +2572,6 @@ static inline __u32 f2fs_mask_flags(umode_t mode, __u32 flags)
- 		return flags & F2FS_OTHER_FLMASK;
- }
- 
--/* used for f2fs_inode_info->flags */
--enum {
--	FI_NEW_INODE,		/* indicate newly allocated inode */
--	FI_DIRTY_INODE,		/* indicate inode is dirty or not */
--	FI_AUTO_RECOVER,	/* indicate inode is recoverable */
--	FI_DIRTY_DIR,		/* indicate directory has dirty pages */
--	FI_INC_LINK,		/* need to increment i_nlink */
--	FI_ACL_MODE,		/* indicate acl mode */
--	FI_NO_ALLOC,		/* should not allocate any blocks */
--	FI_FREE_NID,		/* free allocated nide */
--	FI_NO_EXTENT,		/* not to use the extent cache */
--	FI_INLINE_XATTR,	/* used for inline xattr */
--	FI_INLINE_DATA,		/* used for inline data*/
--	FI_INLINE_DENTRY,	/* used for inline dentry */
--	FI_APPEND_WRITE,	/* inode has appended data */
--	FI_UPDATE_WRITE,	/* inode has in-place-update data */
--	FI_NEED_IPU,		/* used for ipu per file */
--	FI_ATOMIC_FILE,		/* indicate atomic file */
--	FI_ATOMIC_COMMIT,	/* indicate the state of atomical committing */
--	FI_VOLATILE_FILE,	/* indicate volatile file */
--	FI_FIRST_BLOCK_WRITTEN,	/* indicate #0 data block was written */
--	FI_DROP_CACHE,		/* drop dirty page cache */
--	FI_DATA_EXIST,		/* indicate data exists */
--	FI_INLINE_DOTS,		/* indicate inline dot dentries */
--	FI_DO_DEFRAG,		/* indicate defragment is running */
--	FI_DIRTY_FILE,		/* indicate regular/symlink has dirty pages */
--	FI_NO_PREALLOC,		/* indicate skipped preallocated blocks */
--	FI_HOT_DATA,		/* indicate file is hot */
--	FI_EXTRA_ATTR,		/* indicate file has extra attribute */
--	FI_PROJ_INHERIT,	/* indicate file inherits projectid */
--	FI_PIN_FILE,		/* indicate file should not be gced */
--	FI_ATOMIC_REVOKE_REQUEST, /* request to drop atomic data */
--	FI_VERITY_IN_PROGRESS,	/* building fs-verity Merkle tree */
--	FI_COMPRESSED_FILE,	/* indicate file's data can be compressed */
--	FI_MMAP_FILE,		/* indicate file was mmapped */
--};
--
- static inline void __mark_inode_dirty_flag(struct inode *inode,
- 						int flag, bool set)
- {
-@@ -2586,22 +2590,28 @@ static inline void __mark_inode_dirty_flag(struct inode *inode,
- 	}
- }
- 
-+static inline void __set_inode_flag(struct inode *inode, int flag)
-+{
-+	test_and_set_bit(flag % BITS_PER_LONG,
-+			&F2FS_I(inode)->flags[BIT_WORD(flag)]);
-+}
-+
- static inline void set_inode_flag(struct inode *inode, int flag)
- {
--	if (!test_bit(flag, &F2FS_I(inode)->flags))
--		set_bit(flag, &F2FS_I(inode)->flags);
-+	__set_inode_flag(inode, flag);
- 	__mark_inode_dirty_flag(inode, flag, true);
- }
- 
- static inline int is_inode_flag_set(struct inode *inode, int flag)
- {
--	return test_bit(flag, &F2FS_I(inode)->flags);
-+	return test_bit(flag % BITS_PER_LONG,
-+				&F2FS_I(inode)->flags[BIT_WORD(flag)]);
- }
- 
- static inline void clear_inode_flag(struct inode *inode, int flag)
- {
--	if (test_bit(flag, &F2FS_I(inode)->flags))
--		clear_bit(flag, &F2FS_I(inode)->flags);
-+	test_and_clear_bit(flag % BITS_PER_LONG,
-+				&F2FS_I(inode)->flags[BIT_WORD(flag)]);
- 	__mark_inode_dirty_flag(inode, flag, false);
- }
- 
-@@ -2689,22 +2699,20 @@ static inline void f2fs_i_pino_write(struct inode *inode, nid_t pino)
- 
- static inline void get_inline_info(struct inode *inode, struct f2fs_inode *ri)
- {
--	struct f2fs_inode_info *fi = F2FS_I(inode);
--
- 	if (ri->i_inline & F2FS_INLINE_XATTR)
--		set_bit(FI_INLINE_XATTR, &fi->flags);
-+		__set_inode_flag(inode, FI_INLINE_XATTR);
- 	if (ri->i_inline & F2FS_INLINE_DATA)
--		set_bit(FI_INLINE_DATA, &fi->flags);
-+		__set_inode_flag(inode, FI_INLINE_DATA);
- 	if (ri->i_inline & F2FS_INLINE_DENTRY)
--		set_bit(FI_INLINE_DENTRY, &fi->flags);
-+		__set_inode_flag(inode, FI_INLINE_DENTRY);
- 	if (ri->i_inline & F2FS_DATA_EXIST)
--		set_bit(FI_DATA_EXIST, &fi->flags);
-+		__set_inode_flag(inode, FI_DATA_EXIST);
- 	if (ri->i_inline & F2FS_INLINE_DOTS)
--		set_bit(FI_INLINE_DOTS, &fi->flags);
-+		__set_inode_flag(inode, FI_INLINE_DOTS);
- 	if (ri->i_inline & F2FS_EXTRA_ATTR)
--		set_bit(FI_EXTRA_ATTR, &fi->flags);
-+		__set_inode_flag(inode, FI_EXTRA_ATTR);
- 	if (ri->i_inline & F2FS_PIN_FILE)
--		set_bit(FI_PIN_FILE, &fi->flags);
-+		__set_inode_flag(inode, FI_PIN_FILE);
- }
- 
- static inline void set_raw_inline(struct inode *inode, struct f2fs_inode *ri)
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 44e08bf2e2b4..5e441fdd4858 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -328,6 +328,7 @@ static int do_read_inode(struct inode *inode)
- 	struct f2fs_inode *ri;
- 	projid_t i_projid;
- 	int err;
-+	int i;
- 
- 	/* Check if ino is within scope */
- 	if (f2fs_check_nid_range(sbi, inode->i_ino))
-@@ -362,7 +363,8 @@ static int do_read_inode(struct inode *inode)
- 	fi->i_flags = le32_to_cpu(ri->i_flags);
- 	if (S_ISREG(inode->i_mode))
- 		fi->i_flags &= ~F2FS_PROJINHERIT_FL;
--	fi->flags = 0;
-+	for (i = 0; i < FI_ARRAY_SIZE; i++)
-+		fi->flags[i] = 0;
- 	fi->i_advise = ri->i_advise;
- 	fi->i_pino = le32_to_cpu(ri->i_pino);
- 	fi->i_dir_level = ri->i_dir_level;
 -- 
-2.18.0.rc1
+Jens Axboe
 
