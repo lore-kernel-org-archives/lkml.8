@@ -2,111 +2,178 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9724CC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D75EC4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 741A52073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF9572070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbgCWTyg (ORCPT
+        id S1727152AbgCWTyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:54:36 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42692 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbgCWTyc (ORCPT
+        Mon, 23 Mar 2020 15:54:38 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38258 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgCWTyd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:54:32 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGT9Y-00065W-JG; Mon, 23 Mar 2020 20:54:28 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B0CA61C0470;
-        Mon, 23 Mar 2020 20:54:27 +0100 (CET)
-Date:   Mon, 23 Mar 2020 19:54:27 -0000
-From:   "tip-bot2 for Vincenzo Frascino" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] vdso: Fix clocksource.h macro detection
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200323133920.46546-1-vincenzo.frascino@arm.com>
-References: <20200323133920.46546-1-vincenzo.frascino@arm.com>
+        Mon, 23 Mar 2020 15:54:33 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1BA07803087C;
+        Mon, 23 Mar 2020 19:54:31 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id JDwqgdMbt3cQ; Mon, 23 Mar 2020 22:54:30 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+To:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 5/6] gpio: dwapb: Add debounce reference clock support
+Date:   Mon, 23 Mar 2020 22:54:00 +0300
+Message-ID: <20200323195401.30338-6-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200323195401.30338-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
+ <20200323195401.30338-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Message-ID: <158499326733.28353.8842220324373081169.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Commit-ID:     ca214e2c1793058e3a1387f9e343cc5b1731db15
-Gitweb:        https://git.kernel.org/tip/ca214e2c1793058e3a1387f9e343cc5b1731db15
-Author:        Vincenzo Frascino <vincenzo.frascino@arm.com>
-AuthorDate:    Mon, 23 Mar 2020 13:39:20 
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 23 Mar 2020 18:51:08 +01:00
+Aside from the APB reference clock DW GPIO controller can have a
+dedicated clock connected to setup a debounce time interval for
+GPIO-based IRQs. Since this functionality is optional the corresponding
+clock source is also optional. Due to this lets handle the debounce
+clock in the same way as it has been developed for the APB reference
+clock, but using the bulk request/enable-disable methods.
 
-vdso: Fix clocksource.h macro detection
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
 
-CONFIG_GENERIC_GETTIMEOFDAY is a sufficient condition to verify if an
-architecture implements asm/vdso/clocksource.h or not. The current
-implementation wrongly assumes that the same is true for the config
-option CONFIG_ARCH_CLOCKSOURCE_DATA.
-
-This results in a series of build errors on ia64/sparc/sparc64 like this:
-
-  In file included from ./include/linux/clocksource.h:31,
-                   from ./include/linux/clockchips.h:14,
-                   from ./include/linux/tick.h:8,
-                   from fs/proc/stat.c:15:
-  ./include/vdso/clocksource.h:9:10: fatal error: asm/vdso/clocksource.h:
-  No such file or directory
-      9 | #include <asm/vdso/clocksource.h>
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~
-
-Fix the issue removing the unneeded config condition.
-
-Fixes: 14ee2ac618e4 ("linux/clocksource.h: Extract common header for vDSO")
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200323133920.46546-1-vincenzo.frascino@arm.com
 ---
- include/vdso/clocksource.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/include/vdso/clocksource.h b/include/vdso/clocksource.h
-index ab58330..c682e7c 100644
---- a/include/vdso/clocksource.h
-+++ b/include/vdso/clocksource.h
-@@ -4,10 +4,9 @@
+Changelog v2:
+- Print error instead of info-message if APB/debounce clocks either
+  failed to be acquired or couldn't be enabled.
+---
+ drivers/gpio/gpio-dwapb.c | 35 ++++++++++++++++++++++-------------
+ 1 file changed, 22 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 0c5abfa361e6..d2ed11510f3c 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -62,6 +62,8 @@
+ #define GPIO_INTSTATUS_V2	0x3c
+ #define GPIO_PORTA_EOI_V2	0x40
  
- #include <vdso/limits.h>
++#define DWAPB_NR_CLOCKS		2
++
+ struct dwapb_gpio;
  
--#if defined(CONFIG_ARCH_CLOCKSOURCE_DATA) || \
--	defined(CONFIG_GENERIC_GETTIMEOFDAY)
-+#ifdef CONFIG_GENERIC_GETTIMEOFDAY
- #include <asm/vdso/clocksource.h>
--#endif /* CONFIG_ARCH_CLOCKSOURCE_DATA || CONFIG_GENERIC_GETTIMEOFDAY */
-+#endif /* CONFIG_GENERIC_GETTIMEOFDAY */
+ #ifdef CONFIG_PM_SLEEP
+@@ -97,7 +99,7 @@ struct dwapb_gpio {
+ 	struct irq_domain	*domain;
+ 	unsigned int		flags;
+ 	struct reset_control	*rst;
+-	struct clk		*clk;
++	struct clk_bulk_data	clks[DWAPB_NR_CLOCKS];
+ };
  
- enum vdso_clock_mode {
- 	VDSO_CLOCKMODE_NONE,
+ static inline u32 gpio_reg_v2_convert(unsigned int offset)
+@@ -689,16 +691,19 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
+ 	if (IS_ERR(gpio->regs))
+ 		return PTR_ERR(gpio->regs);
+ 
+-	/* Optional bus clock */
+-	gpio->clk = devm_clk_get_optional(&pdev->dev, "bus");
+-	if (IS_ERR(gpio->clk)) {
+-		dev_err(&pdev->dev, "Cannot get APB clock\n");
+-		return PTR_ERR(gpio->clk);
++	/* Optional bus and debounce clocks */
++	gpio->clks[0].id = "bus";
++	gpio->clks[1].id = "db";
++	err = devm_clk_bulk_get_optional(&pdev->dev, DWAPB_NR_CLOCKS,
++					 gpio->clks);
++	if (err) {
++		dev_err(&pdev->dev, "Cannot get APB/Debounce clocks\n");
++		return err;
+ 	}
+ 
+-	err = clk_prepare_enable(gpio->clk);
++	err = clk_bulk_prepare_enable(DWAPB_NR_CLOCKS, gpio->clks);
+ 	if (err) {
+-		dev_err(&pdev->dev, "Cannot enable APB clock\n");
++		dev_err(&pdev->dev, "Cannot enable APB/Debounce clocks\n");
+ 		return err;
+ 	}
+ 
+@@ -727,7 +732,7 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
+ out_unregister:
+ 	dwapb_gpio_unregister(gpio);
+ 	dwapb_irq_teardown(gpio);
+-	clk_disable_unprepare(gpio->clk);
++	clk_bulk_disable_unprepare(DWAPB_NR_CLOCKS, gpio->clks);
+ 
+ 	return err;
+ }
+@@ -739,7 +744,7 @@ static int dwapb_gpio_remove(struct platform_device *pdev)
+ 	dwapb_gpio_unregister(gpio);
+ 	dwapb_irq_teardown(gpio);
+ 	reset_control_assert(gpio->rst);
+-	clk_disable_unprepare(gpio->clk);
++	clk_bulk_disable_unprepare(DWAPB_NR_CLOCKS, gpio->clks);
+ 
+ 	return 0;
+ }
+@@ -784,7 +789,7 @@ static int dwapb_gpio_suspend(struct device *dev)
+ 	}
+ 	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+ 
+-	clk_disable_unprepare(gpio->clk);
++	clk_bulk_disable_unprepare(DWAPB_NR_CLOCKS, gpio->clks);
+ 
+ 	return 0;
+ }
+@@ -794,9 +799,13 @@ static int dwapb_gpio_resume(struct device *dev)
+ 	struct dwapb_gpio *gpio = dev_get_drvdata(dev);
+ 	struct gpio_chip *gc	= &gpio->ports[0].gc;
+ 	unsigned long flags;
+-	int i;
++	int i, err;
+ 
+-	clk_prepare_enable(gpio->clk);
++	err = clk_bulk_prepare_enable(DWAPB_NR_CLOCKS, gpio->clks);
++	if (err) {
++		dev_err(gpio->dev, "Cannot reenable APB/Debounce clocks\n");
++		return err;
++	}
+ 
+ 	spin_lock_irqsave(&gc->bgpio_lock, flags);
+ 	for (i = 0; i < gpio->nr_ports; i++) {
+-- 
+2.25.1
+
