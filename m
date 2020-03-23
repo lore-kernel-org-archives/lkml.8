@@ -2,365 +2,225 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8C6C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EFFC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C4C2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:39:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="hnW2R+ur"
+	by mail.kernel.org (Postfix) with ESMTP id DB0E020769
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbgCWKjt (ORCPT
+        id S1727962AbgCWKlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 06:39:49 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:36954 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727983AbgCWKjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 06:39:46 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id F05F941287;
-        Mon, 23 Mar 2020 10:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received; s=mta-01; t=
-        1584959982; x=1586774383; bh=cWc+BWK7R/hfHqtemzYKbWHkpKQ3ORmG2Ed
-        gDZ8PEtE=; b=hnW2R+urj/3AbYY3a84jti1HGNlbzaF53dCREN3ON75K7YNhisn
-        Tc1oEXb/oAoeb0zW520Umf1CYBk5eMuBGvyfwsTGULn45eZ4Pg0ULNecd9qx0koH
-        Mpy1fKaovE6cHYC77pCoFdMoqfc4A6jFHyXhCa3WGhVRMBbBg9I0zUkg=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 89LBs7Nu4AeE; Mon, 23 Mar 2020 13:39:42 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 2B9F841268;
-        Mon, 23 Mar 2020 13:39:41 +0300 (MSK)
-Received: from localhost.yadro.com (10.199.2.66) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Mon, 23
- Mar 2020 13:39:38 +0300
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH 2/2] iio: proximity: Add driver support for vcnl3020 proximity sensor
-Date:   Mon, 23 Mar 2020 13:39:26 +0300
-Message-ID: <20200323103926.21271-3-i.mikhaylov@yadro.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200323103926.21271-1-i.mikhaylov@yadro.com>
-References: <20200323103926.21271-1-i.mikhaylov@yadro.com>
+        Mon, 23 Mar 2020 06:41:19 -0400
+Received: from mga04.intel.com ([192.55.52.120]:8196 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727927AbgCWKlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 06:41:19 -0400
+IronPort-SDR: KCwF5Ply8UgSeO4S+PGl3DvEZ9Z3MA8VTHGpBKASbQ4cAeW2/7KKt38F9c5Rkva7aB58vKPw0h
+ fA23NPq31pxA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 03:41:18 -0700
+IronPort-SDR: eOtrzGvSusLMTfRTvFyBPorKV+mVb51eytbuTxs3x6COANHzQSGtcUYUsCG0w+mPYFHObkAHT+
+ w8jYrxNqA8dg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,296,1580803200"; 
+   d="scan'208";a="292536636"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 23 Mar 2020 03:41:16 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jGKWC-0001Lo-5v; Mon, 23 Mar 2020 18:41:16 +0800
+Date:   Mon, 23 Mar 2020 18:40:42 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:perf/core] BUILD SUCCESS
+ 3442a9ecb8e72a33c28a2b969b766c659830e410
+Message-ID: <5e78922a.1XnAcV+Rfg8lBNUp%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.2.66]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Proximity sensor driver based on light/vcnl4000.c code.
-For now supports only the single on-demand measurement.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  perf/core
+branch HEAD: 3442a9ecb8e72a33c28a2b969b766c659830e410  perf/x86/intel/uncore: Factor out __snr_uncore_mmio_init_box
 
-The VCNL3020 is a fully integrated proximity sensor. Fully
-integrated means that the infrared emitter is included in the
-package. It has 16-bit resolution. It includes a signal
-processing IC and features standard I2C communication
-interface. It features an interrupt function.
+elapsed time: 3704m
 
-Datasheet available at:
-http://www.vishay.com/docs/84150/vcnl3020.pdf
+configs tested: 158
+configs skipped: 0
 
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+ia64                             alldefconfig
+h8300                     edosk2674_defconfig
+microblaze                    nommu_defconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+microblaze                      mmu_defconfig
+powerpc                           allnoconfig
+mips                      fuloong2e_defconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+x86_64               randconfig-a001-20200323
+x86_64               randconfig-a002-20200323
+x86_64               randconfig-a003-20200323
+i386                 randconfig-a001-20200323
+i386                 randconfig-a002-20200323
+i386                 randconfig-a003-20200323
+alpha                randconfig-a001-20200323
+m68k                 randconfig-a001-20200323
+mips                 randconfig-a001-20200323
+nds32                randconfig-a001-20200323
+parisc               randconfig-a001-20200323
+c6x                  randconfig-a001-20200323
+h8300                randconfig-a001-20200323
+microblaze           randconfig-a001-20200323
+nios2                randconfig-a001-20200323
+sparc64              randconfig-a001-20200323
+csky                 randconfig-a001-20200323
+openrisc             randconfig-a001-20200323
+s390                 randconfig-a001-20200323
+sh                   randconfig-a001-20200323
+xtensa               randconfig-a001-20200323
+x86_64               randconfig-b001-20200323
+x86_64               randconfig-b002-20200323
+x86_64               randconfig-b003-20200323
+i386                 randconfig-b001-20200323
+i386                 randconfig-b002-20200323
+i386                 randconfig-b003-20200323
+x86_64               randconfig-c001-20200323
+x86_64               randconfig-c002-20200323
+x86_64               randconfig-c003-20200323
+i386                 randconfig-c001-20200323
+i386                 randconfig-c002-20200323
+i386                 randconfig-c003-20200323
+x86_64               randconfig-d001-20200323
+x86_64               randconfig-d002-20200323
+x86_64               randconfig-d003-20200323
+i386                 randconfig-d001-20200323
+i386                 randconfig-d002-20200323
+i386                 randconfig-d003-20200323
+x86_64               randconfig-e001-20200323
+x86_64               randconfig-e002-20200323
+x86_64               randconfig-e003-20200323
+i386                 randconfig-e001-20200323
+i386                 randconfig-e002-20200323
+i386                 randconfig-e003-20200323
+x86_64               randconfig-f001-20200323
+x86_64               randconfig-f002-20200323
+x86_64               randconfig-f003-20200323
+i386                 randconfig-f001-20200323
+i386                 randconfig-f002-20200323
+i386                 randconfig-f003-20200323
+x86_64               randconfig-g001-20200323
+x86_64               randconfig-g002-20200323
+x86_64               randconfig-g003-20200323
+i386                 randconfig-g001-20200323
+i386                 randconfig-g002-20200323
+i386                 randconfig-g003-20200323
+x86_64               randconfig-h001-20200323
+x86_64               randconfig-h002-20200323
+x86_64               randconfig-h003-20200323
+i386                 randconfig-h001-20200323
+i386                 randconfig-h002-20200323
+i386                 randconfig-h003-20200323
+arc                  randconfig-a001-20200323
+arm                  randconfig-a001-20200323
+arm64                randconfig-a001-20200323
+ia64                 randconfig-a001-20200323
+powerpc              randconfig-a001-20200323
+sparc                randconfig-a001-20200323
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
 ---
- drivers/iio/proximity/Kconfig    |  10 ++
- drivers/iio/proximity/Makefile   |   1 +
- drivers/iio/proximity/vcnl3020.c | 233 +++++++++++++++++++++++++++++++
- 3 files changed, 244 insertions(+)
- create mode 100644 drivers/iio/proximity/vcnl3020.c
-
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index d53601447da4..936cd181916a 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -123,4 +123,14 @@ config VL53L0X_I2C
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called vl53l0x-i2c.
- 
-+config VCNL3020
-+	tristate "VCNL3020 proximity sensor"
-+	depends on I2C
-+	help
-+	  Say Y here if you want to build a driver for the Vishay VCNL3020
-+	  proximity sensor.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called vcnl3020.
-+
- endmenu
-diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-index 0bb5f9de13d6..96b6330e90ff 100644
---- a/drivers/iio/proximity/Makefile
-+++ b/drivers/iio/proximity/Makefile
-@@ -13,4 +13,5 @@ obj-$(CONFIG_SRF04)		+= srf04.o
- obj-$(CONFIG_SRF08)		+= srf08.o
- obj-$(CONFIG_SX9500)		+= sx9500.o
- obj-$(CONFIG_VL53L0X_I2C)	+= vl53l0x-i2c.o
-+obj-$(CONFIG_VCNL3020)		+= vcnl3020.o
- 
-diff --git a/drivers/iio/proximity/vcnl3020.c b/drivers/iio/proximity/vcnl3020.c
-new file mode 100644
-index 000000000000..f6d9a21eed0b
---- /dev/null
-+++ b/drivers/iio/proximity/vcnl3020.c
-@@ -0,0 +1,233 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * vcnl3020.c - Support for Vishay VCNL3020 proximity sensor
-+ *
-+ * based on vcnl4000.c
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/err.h>
-+#include <linux/delay.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+
-+#define VCNL_DRV_NAME		"vcnl3020"
-+#define VCNL3020_PROD_ID	0x21
-+
-+#define VCNL_COMMAND		0x80 /* Command register */
-+#define VCNL_PROD_REV		0x81 /* Product ID and Revision ID */
-+#define VCNL_PROXIMITY_RATE	0x82 /* Rate of Proximity Measurement */
-+#define VCNL_LED_CURRENT	0x83 /* IR LED current for proximity mode */
-+#define VCNL_PS_RESULT_HI	0x87 /* Proximity result register, MSB */
-+#define VCNL_PS_RESULT_LO	0x88 /* Proximity result register, LSB */
-+#define VCNL_PS_ICR		0x89 /* Interrupt Control Register  */
-+
-+#define VCNL_PS_LO_THR_HI	0x8a /* High byte of low threshold value */
-+#define VCNL_PS_LO_THR_LO	0x8b /* Low byte of low threshold value */
-+#define VCNL_PS_HI_THR_HI	0x8c /* High byte of high threshold value */
-+#define VCNL_PS_HI_THR_LO	0x8d /* Low byte of high threshold value */
-+#define VCNL_ISR		0x8e /* Interrupt Status Register */
-+#define VCNL_PS_MOD_ADJ		0x8f /* Proximity Modulator Timing Adjustment */
-+
-+/* Bit masks for COMMAND register */
-+#define VCNL_PS_RDY		BIT(5) /* proximity data ready? */
-+#define VCNL_PS_OD		BIT(3) /* start on-demand proximity
-+					* measurement
-+					*/
-+
-+struct vcnl3020_data {
-+	struct i2c_client *client;
-+	u32 rev;
-+	struct mutex vcnl3020_lock; /* for i2c operations */
-+};
-+
-+static const struct i2c_device_id vcnl3020_id[] = {
-+	{ "vcnl3020", 0 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, vcnl3020_id);
-+
-+static int32_t vcnl3020_init(struct vcnl3020_data *data)
-+{
-+	s32 rc;
-+	u32 led_current;
-+	struct device *dev = &data->client->dev;
-+
-+	rc = device_property_read_u32(dev, "led-current", &led_current);
-+	if (rc) {
-+		dev_err(dev, "Couldn't get led current (%d)", rc);
-+		goto exit;
-+	}
-+
-+	rc = i2c_smbus_read_byte_data(data->client, VCNL_PROD_REV);
-+	if (rc < 0) {
-+		dev_err(dev, "Error (%d) reading product revision", rc);
-+		goto exit;
-+	}
-+
-+	if (rc == VCNL3020_PROD_ID) {
-+		data->rev = rc & 0xff;
-+		mutex_init(&data->vcnl3020_lock);
-+	} else {
-+		dev_err(dev, "Product id (%x) did not match vcnl3020 (%x)", rc,
-+			VCNL3020_PROD_ID);
-+		rc = -ENODEV;
-+		goto exit;
-+	}
-+
-+	/* set led current */
-+	rc = i2c_smbus_write_byte_data(data->client, VCNL_LED_CURRENT,
-+				       led_current);
-+	if (rc < 0) {
-+		dev_err(dev, "Error (%d) setting LED current", rc);
-+		goto exit;
-+	}
-+
-+	return 0;
-+exit:
-+	return rc;
-+};
-+
-+static int32_t vcnl3020_measure_proximity(struct vcnl3020_data *data,
-+					  int32_t *val)
-+{
-+	s32 tries = 20;
-+	s32 rc;
-+
-+	mutex_lock(&data->vcnl3020_lock);
-+
-+	rc = i2c_smbus_write_byte_data(data->client, VCNL_COMMAND,
-+				       VCNL_PS_OD);
-+	if (rc < 0)
-+		goto fail;
-+
-+	/* wait for data to become ready */
-+	while (tries--) {
-+		rc = i2c_smbus_read_byte_data(data->client, VCNL_COMMAND);
-+		if (rc < 0)
-+			goto fail;
-+		if (rc & VCNL_PS_RDY)
-+			break;
-+		msleep(20); /* measurement takes up to 100 ms */
-+	}
-+
-+	if (tries < 0) {
-+		dev_err(&data->client->dev,
-+			"vcnl3020_measure() failed, data is not ready");
-+		rc = -EIO;
-+		goto fail;
-+	}
-+
-+	rc = i2c_smbus_read_byte_data(data->client, VCNL_PS_RESULT_HI);
-+	if (rc < 0)
-+		goto fail;
-+	*val = (rc & 0xff) << 8;
-+	dev_dbg(&data->client->dev, "result high byte 0x%x", rc);
-+
-+	rc = i2c_smbus_read_byte_data(data->client, VCNL_PS_RESULT_LO);
-+	if (rc < 0)
-+		goto fail;
-+	*val |= rc & 0xff;
-+	dev_dbg(&data->client->dev, "result low byte 0x%x", rc);
-+
-+fail:
-+	mutex_unlock(&data->vcnl3020_lock);
-+
-+	return rc;
-+}
-+
-+static const struct iio_chan_spec vcnl3020_channels[] = {
-+	{
-+		.type = IIO_PROXIMITY,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+	}
-+};
-+
-+static int32_t vcnl3020_read_raw(struct iio_dev *indio_dev,
-+				 struct iio_chan_spec const *chan,
-+				 s32 *val, s32 *val2, long mask)
-+{
-+	s32 rc;
-+	struct vcnl3020_data *data = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		switch (chan->type) {
-+		case IIO_PROXIMITY:
-+			rc = vcnl3020_measure_proximity(data, val);
-+			if (rc < 0)
-+				return rc;
-+			return IIO_VAL_INT;
-+		default:
-+			return -EINVAL;
-+		}
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info vcnl3020_info = {
-+	.read_raw = vcnl3020_read_raw,
-+};
-+
-+static int32_t vcnl3020_probe(struct i2c_client *client,
-+			      const struct i2c_device_id *id)
-+{
-+	struct vcnl3020_data *data;
-+	struct iio_dev *indio_dev;
-+	s32 rc;
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	data = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+	data->client = client;
-+
-+	rc = vcnl3020_init(data);
-+	if (rc < 0)
-+		goto out;
-+
-+	dev_info(&client->dev, "Proximity sensor, Rev: %02x\n",
-+		 data->rev);
-+
-+	indio_dev->dev.parent = &client->dev;
-+	indio_dev->info = &vcnl3020_info;
-+	indio_dev->channels = vcnl3020_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(vcnl3020_channels);
-+	indio_dev->name = VCNL_DRV_NAME;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	rc = devm_iio_device_register(&client->dev, indio_dev);
-+	if (rc != 0)
-+		goto out;
-+
-+	return rc;
-+out:
-+	devm_iio_device_free(&client->dev, indio_dev);
-+	return rc;
-+}
-+
-+static const struct of_device_id vcnl3020_of_match[] = {
-+	{
-+		.compatible = "vishay,vcnl3020",
-+	},
-+};
-+MODULE_DEVICE_TABLE(of, vcnl3020_of_match);
-+
-+static struct i2c_driver vcnl3020_driver = {
-+	.driver = {
-+		.name   = VCNL_DRV_NAME,
-+		.of_match_table = vcnl3020_of_match,
-+	},
-+	.probe  = vcnl3020_probe,
-+	.id_table = vcnl3020_id,
-+};
-+module_i2c_driver(vcnl3020_driver);
-+
-+MODULE_AUTHOR("Ivan Mikhaylov <i.mikhaylov@yadro.com>");
-+MODULE_DESCRIPTION("Vishay VCNL3020 proximity sensor driver");
-+MODULE_LICENSE("GPL");
--- 
-2.21.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
