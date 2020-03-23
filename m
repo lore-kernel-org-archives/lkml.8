@@ -2,149 +2,110 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895DFC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD7EC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5899C20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C97D20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:22:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g8kc3zua"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KkVzm046"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgCWXPH (ORCPT
+        id S1727030AbgCWXWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 19:15:07 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36261 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbgCWXPH (ORCPT
+        Mon, 23 Mar 2020 19:22:24 -0400
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:51557 "EHLO
+        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbgCWXWY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 19:15:07 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k18so16698751oib.3;
-        Mon, 23 Mar 2020 16:15:06 -0700 (PDT)
+        Mon, 23 Mar 2020 19:22:24 -0400
+Received: by mail-vk1-f202.google.com with SMTP id c127so5802632vkh.18
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 16:22:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6XMWmroL8l0RyumbjJQMXqqTUiBB/qlm/O2qNYaLqxs=;
-        b=g8kc3zua4EN8yhOvo2P3ovQ9jQiLF1szvCtR0XEAsm2wMuvlYDYuPxGBRsqxzKJYAc
-         4a8I/I1nB/5+ffpBCTbehxZMdRsEs5jDx8VXGxIpnr/pX1NWDroh7ehtXRMgebkoDF7v
-         OF/gFgMQO+/FTOwAnTZFGFbdjxYcN36Vxa5uvKHsqmvOczR1Gr+g1CE0EkglFWDZu0ar
-         w2H7QtmFhbbXIJxc03vwj/bJKZsYR9Yku5oeuUldltz66QFsel1OFFSyapHhEc1AZdCH
-         BBRZCUvFw2sxxd+XzJfR0S3ROcjZQIG6dRQaQtNOJPXdBIYd9pSRQspP4PoetbNQFy8a
-         zVbw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=nGAFHlfBd3e/4DpEoxTJ41Z972i/CI0Z5FKhkiHor+U=;
+        b=KkVzm0461yU6p8JLPw5BdoWxzunch2vLEcP54K5QZvsLM4QoavKN+hEQuBLXUZlmd8
+         6y1ZQrF318g9bGJkcYAo3JjgjZwIh7/5zTFX8r7ZTNLHmekAAY+NLyZVPp/fBWEHPzI8
+         F36WcYCv4PNE9M2wNe6yEni6hoT0UiB6CoCXBV+YYjezYkDJRKQLf8kFLyoJZzVnbhtf
+         Az7Lh4RV8yf8M821Z8dWCJcAjiGmb4JeiM7KCafgK2JjhOTg+PBY3KtGO3gm/Fy46KUL
+         kkYHU9VbxZ2TT3+qkvTSei9kIe/XRbm4ydvwomJ2LbpBP6pkJKhuYp8a/naTLHheYtFc
+         U62g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6XMWmroL8l0RyumbjJQMXqqTUiBB/qlm/O2qNYaLqxs=;
-        b=E6JFiZKmK7hDstkb0iwl7k6qzyZyfupsbHl4nIjfpcbC/tByR9q4cRrOdwg+YwdpyX
-         DaKYLSCANevHcuJdOrqIVY5F+VU/3kZRNtwa/SSoXuNv1Au8yawTMtoIhoFoJq6Nz07L
-         X8HcPXmUqn0IvCTvstVHOUQDu1uJd4zFTT2Tv/HVornwWL7YmHJYg9CVmzQunjObXnR0
-         j9BCVG63n6M3UvmWz6nOTYWHUFbyYwISNfS7aLv0b5Ujirs9IzqAViBSPfz/QUK1Y4kd
-         0Z6IvFxaZDh32LAygUE41EH99G4ba9F7D1BA3nfKgxPJ5hWS4KX0KPT3rSehRkihVhkQ
-         DkNA==
-X-Gm-Message-State: ANhLgQ3GnL11xzeooI0GvOCkh9toHnhPqQzL0rXmA1MrBcDkSZAoHx09
-        qh1c92J/SALwukZl1PmBstWvWjHz+Nc9YgH4hehSWXipJRk=
-X-Google-Smtp-Source: ADFU+vsCvY8CERQTDQlrKdJLytsSH5SaPe5yKhe7yF4Vu8cMX0/43dpVL+a9smxjTpswrL8zHcQe8jyN/jLIT0u9XcE=
-X-Received: by 2002:a05:6808:648:: with SMTP id z8mr1417673oih.72.1585005306171;
- Mon, 23 Mar 2020 16:15:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <000000000000742e9e05a10170bc@google.com> <87a74arown.fsf@nanos.tec.linutronix.de>
- <CAM_iQpV3S0xv5xzSrA5COYa3uyy_TBGpDA9Wcj9Qt_vn1n3jBQ@mail.gmail.com> <87ftdypyec.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87ftdypyec.fsf@nanos.tec.linutronix.de>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 23 Mar 2020 16:14:55 -0700
-Message-ID: <CAM_iQpVR8Ve3Jy8bb9VB6RcQ=p22ZTyTqjxJxL11RZmO7rkWeg@mail.gmail.com>
-Subject: Re: WARNING: ODEBUG bug in tcindex_destroy_work (3)
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     syzbot <syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=nGAFHlfBd3e/4DpEoxTJ41Z972i/CI0Z5FKhkiHor+U=;
+        b=JjZGYJuHvI4RoWvayUYeNAQ7SWtq2NKYsWBnAS8qpvyhfMe0qb/2IZ3Dwonqdpc27C
+         2TBzmchrynGcFeyFBOQSwve2mertqqgHwvEj6hXFQwi5qOUDjeyxQsS0wxKEiUQcAZFa
+         mH5t6ZbCW9VAR8tH1Aq/UNrQzdnDHdvz66/t4skDDj/X1EuWcZgi5Kuyj9pTx1yOys2P
+         eVaq7Iii1/KERsY1++uHXXhCKDhxCWpaZ+o3HkGcW1ZjXBvWdBzfNuD6Za680dmsymAL
+         kX+3d2hlAcUqLQ3TqsK304cWqdggEY1FbDnIoYiLWfpZvfDmBvgMBfCt6fgR0XZV8x5+
+         ds0A==
+X-Gm-Message-State: ANhLgQ1w0BFSjPt4Ds5yjXpt6DKG+FV2ZAIvkgtcDilniVEnArpaVufu
+        wQAoS4EuxyBF67nXj3XtL/nJDr9SrGWrYMIdxuc=
+X-Google-Smtp-Source: ADFU+vskvFj1HOnGYXk4svHJcctnmJs6/MIQ4hjyv2RxvzqHxMbJ2FfebvZdnvXto9grRKUnfRyaGkZMqTTYZmCxue4=
+X-Received: by 2002:ab0:2553:: with SMTP id l19mr5446513uan.128.1585005742543;
+ Mon, 23 Mar 2020 16:22:22 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 16:22:14 -0700
+Message-Id: <20200323232214.24939-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH] Documentation: x86: exception-tables: document CONFIG_BUILDTIME_TABLE_SORT
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     corbet@lwn.net
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 2:14 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Cong Wang <xiyou.wangcong@gmail.com> writes:
-> > On Sat, Mar 21, 2020 at 3:19 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> > ------------[ cut here ]------------
-> >> > ODEBUG: free active (active state 0) object type: work_struct hint: tcindex_destroy_rexts_work+0x0/0x20 net/sched/cls_tcindex.c:143
-> >> ...
-> >> >  __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
-> >> >  debug_check_no_obj_freed+0x2e1/0x445 lib/debugobjects.c:998
-> >> >  kfree+0xf6/0x2b0 mm/slab.c:3756
-> >> >  tcindex_destroy_work+0x2e/0x70 net/sched/cls_tcindex.c:231
-> >>
-> >> So this is:
-> >>
-> >>         kfree(p->perfect);
-> >>
-> >> Looking at the place which queues that work:
-> >>
-> >> tcindex_destroy()
-> >>
-> >>    if (p->perfect) {
-> >>         if (tcf_exts_get_net(&r->exts))
-> >>             tcf_queue_work(&r-rwork, tcindex_destroy_rexts_work);
-> >>         else
-> >>             __tcindex_destroy_rexts(r)
-> >>    }
-> >>
-> >>    .....
-> >>
-> >>    tcf_queue_work(&p->rwork, tcindex_destroy_work);
-> >>
-> >> So obviously if tcindex_destroy_work() runs before
-> >> tcindex_destroy_rexts_work() then the above happens.
-> >
-> > We use an ordered workqueue for tc filters, so these two
-> > works are executed in the same order as they are queued.
->
-> The workqueue is ordered, but look how the work is queued on the work
-> queue:
->
-> tcf_queue_work()
->   queue_rcu_work()
->     call_rcu(&rwork->rcu, rcu_work_rcufn);
->
-> So after the grace period elapses rcu_work_rcufn() queues it in the
-> actual work queue.
->
-> Now tcindex_destroy() is invoked via tcf_proto_destroy() which can be
-> invoked from preemtible context. Now assume the following:
->
-> CPU0
->   tcf_queue_work()
->     tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
->
-> -> Migration
->
-> CPU1
->    tcf_queue_work(&p->rwork, tcindex_destroy_work);
->
-> So your RCU callbacks can be placed on different CPUs which obviously
-> has no ordering guarantee at all. See also:
+Provide more information about __ex_table sorting post link.
 
-Good catch!
+The exception tables and fixup tables use a commonly recurring pattern
+in the kernel of storing the address of labels as date in custom ELF
+sections, then finding these sections, iterating elements within them,
+and possibly revisiting them or modifying the data at these addresses.
 
-I thought about this when I added this ordered workqueue, but it
-seems I misinterpret max_active, so despite we have max_active==1,
-more than 1 work could still be queued on different CPU's here.
+Sorting readonly arrays to minimize runtime penalties is quite clever.
 
-I don't know how to fix this properly, I think essentially RCU work
-should be guaranteed the same ordering with regular work. But this
-seems impossible unless RCU offers some API to achieve that.
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+ Documentation/x86/exception-tables.rst | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Thanks.
+diff --git a/Documentation/x86/exception-tables.rst b/Documentation/x86/exception-tables.rst
+index ed6d4b0cf62c..15455b2f7ba8 100644
+--- a/Documentation/x86/exception-tables.rst
++++ b/Documentation/x86/exception-tables.rst
+@@ -257,6 +257,9 @@ the fault, in our case the actual value is c0199ff5:
+ the original assembly code: > 3:      movl $-14,%eax
+ and linked in vmlinux     : > c0199ff5 <.fixup+10b5> movl   $0xfffffff2,%eax
+ 
++If the fixup was able to handle the exception, control flow may be returned
++to the instruction after the one that triggered the fault, ie. local label 2b.
++
+ The assembly code::
+ 
+  > .section __ex_table,"a"
+@@ -344,3 +347,9 @@ pointer which points to one of:
+      it as special.
+ 
+ More functions can easily be added.
++
++CONFIG_BUILDTIME_TABLE_SORT allows the __ex_table section to be sorted post
++link of the kernel image, via a host utility scripts/sorttable. It will set the
++symbol main_extable_sort_needed to 0, avoiding sorting the __ex_table section
++at boot time. With the exception table sorted, at runtime when an exception
++occurs we can quickly lookup the __ex_table entry via binary search.
+-- 
+2.25.1.696.g5e7596f4ac-goog
+
