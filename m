@@ -6,104 +6,66 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE110C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE5FC10F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1424206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED1E206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584945396;
-	bh=Csqr77kgWxM20+oOpjO3J6BIvWyQRvuVQjRvzhXhAME=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mtr/kaCFbHAaClLY4YJR8dkT4nIZv8bi2pCYVXLp+WdZmlZxHTAGvy30Qi3BoP1hP
-	 McvQV1ftfsKDKDNMMeZhhmkAQB3nYbM9IfPZr3ZOltCfY+y2WzrfG62zloZCxCsapg
-	 ULP6Krn4EZ2uSmfmm1y6I3JcSSUjZWvHzSEQfzk8=
+	s=default; t=1584945425;
+	bh=wwssTt1olbo6fmG524AB0JzcyASMEeLlZtrMwgjHU/o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AarIZawRERgtzcQaJpeCc51hSeZZtgniOTzUq2MHEZWpm6bf+cy2oo/tbux7hxWGI
+	 jzSeAndAkkNlZ5Uoge1FX6aaOdSssSaeBB0S1Mw66ZtQjJiE+opgsIr1sJzJm7km9G
+	 wdp5cCIc6cKSdA87DpKKdbtHIGyeuMhUBm4bJdE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbgCWGg2 (ORCPT
+        id S1727333AbgCWGgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 02:36:28 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:18538 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgCWGg2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 02:36:28 -0400
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 02N6aLFm018207;
-        Mon, 23 Mar 2020 15:36:22 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 02N6aLFm018207
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1584945382;
-        bh=shlaUHJ6YdG7mbEpHkN6/tISt8RC9LOOVikM/qp/dxc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wKnDwDhJFc8Y/ng9LZpTEIfoJiMcccezrUcXOqoOU+qE11X2LDCeehocKauCJbv3x
-         cH+mCv+WsKtEX17ZCxJzOF1lQAciNfXPq/G3TPHalSLxt2xFQJynciyBPuL0cH9Fz8
-         /6jn+rYSeUQ3CdRfRg5d7RZtfbVrvfOoM1q8RIJZuY/xxnALydPlP8xX1u1tN5eZXq
-         bJOIlDdkvpEChWDcpMZVxfWqbVzaDyC3vXUtC+8pthTk/Wrdng+VSUp8SGgylt6NSf
-         Kh1mnA3tQr9PXHVeruWGQRV30/8dhaHg4I7aw6qQOncGG4lnMUmjzvTjF/qfaMPNzC
-         ZdLNkHCKYVpJQ==
-X-Nifty-SrcIP: [209.85.217.52]
-Received: by mail-vs1-f52.google.com with SMTP id e138so8016291vsc.11;
-        Sun, 22 Mar 2020 23:36:22 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2EJDheWMKgQ0QryFwTWbYtmEgscJAhgVCI9NBxUXLVVxwVjfFg
-        P8KSDY/1rrb5D8xRTXSjWFL8iyvJ+cvPeglk7mI=
-X-Google-Smtp-Source: ADFU+vsHb3DgDpRsXUG7d3UafC+Qn78HHllA0iW1XqDKXH45rCZbX13k7qZAtpwQCFWBh+DyDZFZIOxf9erXQX2+/NU=
-X-Received: by 2002:a67:2d55:: with SMTP id t82mr14012597vst.215.1584945381312;
- Sun, 22 Mar 2020 23:36:21 -0700 (PDT)
+        Mon, 23 Mar 2020 02:36:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726080AbgCWGgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 02:36:51 -0400
+Received: from localhost (unknown [171.76.96.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E48F206F8;
+        Mon, 23 Mar 2020 06:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584945411;
+        bh=wwssTt1olbo6fmG524AB0JzcyASMEeLlZtrMwgjHU/o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ou5r5FMS90/kz8q4urmSRJt/TC/05HgPW6jQhytkgR4ccNCTAEEB3e8z9tXFARFFF
+         ZhCQprzFP1bBh+mTme5ql2CaiXYLAlJgruDvn9CAYalF8UqbNbycZF9VUrfgQ21XPR
+         tqktDk2yQN96BuT8KBUpNtAYDDXAW7H87jSWixAA=
+Date:   Mon, 23 Mar 2020 12:06:46 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dmaengine: tegra-apb: Don't save/restore IRQ
+ flags in interrupt handler
+Message-ID: <20200323063646.GH72691@vkoul-mobl>
+References: <20200319212321.3297-1-digetx@gmail.com>
 MIME-Version: 1.0
-References: <20200323020844.17064-1-masahiroy@kernel.org> <CAHmME9p=ECJ15uyPH79bF0tuzEksdxoUsjGQSyz74FfdEJxTpQ@mail.gmail.com>
- <CAHmME9q4egN7_KeYB-ZHCFPfXs-virgTv4iz9jW2SVOM7dTnLw@mail.gmail.com>
-In-Reply-To: <CAHmME9q4egN7_KeYB-ZHCFPfXs-virgTv4iz9jW2SVOM7dTnLw@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 23 Mar 2020 15:35:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR07vZFzh1Bbpq4CoJ4zmsc+p5rxpkO1Zv8QVfqhfvr2w@mail.gmail.com>
-Message-ID: <CAK7LNAR07vZFzh1Bbpq4CoJ4zmsc+p5rxpkO1Zv8QVfqhfvr2w@mail.gmail.com>
-Subject: Re: [PATCH 0/7] x86: remove always-defined CONFIG_AS_* options
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     X86 ML <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Song Liu <songliubraving@fb.com>,
-        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319212321.3297-1-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+On 20-03-20, 00:23, Dmitry Osipenko wrote:
+> The interrupt is already disabled while interrupt handler is running, and
+> thus, there is no need to save/restore the IRQ flags within the spinlock.
 
-On Mon, Mar 23, 2020 at 1:28 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> Hi again,
->
-> I've consolidated your patches and rebased mine on top, and
-> incorporated your useful binutils comments. The result lives here:
->
-> https://git.zx2c4.com/linux-dev/log/?h=jd/kconfig-assembler-support
->
-> I can submit all of those to the list, if you want, or maybe you can
-> just pull them out of there, include them in your v2, and put them in
-> your tree for 5.7? However you want is fine with me.
-
-
-Your series does not work correctly.
-
-I will comment why later.
-
-
-
+Applied both, thanks
 
 -- 
-Best Regards
-Masahiro Yamada
+~Vinod
