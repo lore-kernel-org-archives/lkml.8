@@ -2,317 +2,251 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247E6C1975A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA47C54FD0
 	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6FFA20769
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:55:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584932109;
-	bh=N0k6o8c8KvYw0g3jcUDhN/MPud7VOyTsnr0yHrUxgUw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=m7Mhit7/Z7+Kvhtpzouy04SQrMP8KFesHtSKgm1aOBUPu8LAtiBOHvxeuSOgEzdKS
-	 eFkIZw0c0MgyXfU+v860I1Ub9yDQmM8C7lU7AJjAacZKJxLoJAAZeek5zSXjIvVNfs
-	 u2T9r+wtIZyyv5VDc688Wd4MEQcng0NwPcaeheFI=
+	by mail.kernel.org (Postfix) with ESMTP id 259A820777
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:55:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="v3NTf4g9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbgCWCzE (ORCPT
+        id S1727152AbgCWCzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 22:55:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbgCWCzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 22:55:05 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53078 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbgCWCzD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 22 Mar 2020 22:55:03 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A325C20722;
-        Mon, 23 Mar 2020 02:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584932101;
-        bh=N0k6o8c8KvYw0g3jcUDhN/MPud7VOyTsnr0yHrUxgUw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=g9VPl4eajjddjNIOPzBfeSyOtL9KQiSn/FZzz7hTPVSKlmvRnqj3azUI4CLLkZJvc
-         uYirLjF1H+fdvZlmKyt2AxGT61givxo81nRhOvH91ViOca/11r46Ug+bKaoJ8lwwc0
-         hRh7PEZEFJGW9zuLBEKdZoD1kcl6jFPVucBD+M6Y=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 72D1C35226BE; Sun, 22 Mar 2020 19:55:01 -0700 (PDT)
-Date:   Sun, 22 Mar 2020 19:55:01 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
-        Brian Cain <bcain@codeaurora.org>,
-        linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        Michal Simek <monstr@monstr.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geoff Levand <geoff@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [patch V3 13/20] Documentation: Add lock ordering and nesting
- documentation
-Message-ID: <20200323025501.GE3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200321112544.878032781@linutronix.de>
- <20200321113242.026561244@linutronix.de>
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02N2rSRS089278;
+        Mon, 23 Mar 2020 02:54:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=ZZQEayPHLxpvnG1qA71F6R+YYT9S83amHyeYOBkf77A=;
+ b=v3NTf4g9sQM9n7LaUeFrAXfiJieqo3vzViaHZzy4B3uguI/I6D64f2UU6xKIMtWBI3QR
+ SJA0TAIhHJEoXfmuz/i6IQzyvLRjUU0ywM+1mP7BUWZfB0TVD0u4rR30jI0qRcfNKMTx
+ wsyTBiSKzfx4twoX0yRxIKyimd8LV8vNRk3EQpHhuFRDjCmamN2Y9tg/jDPzrcjEq/T0
+ 4FkRwQKTq63+Yz18OIWzERqciJdsWLB/xiWT6abYbBOVzr8XYttJx1SzYLw2fcAKrU+J
+ R9IyvReeFndWk9pAgpupXsz/7AcegMLll4hR4VwZT6QqcdnDS9TrphleVd6jdMvyiKPF Nw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2ywavkv5kq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Mar 2020 02:54:37 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02N2rTj2133784;
+        Mon, 23 Mar 2020 02:54:37 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2ywwuh73u7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Mar 2020 02:54:37 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02N2sYen008568;
+        Mon, 23 Mar 2020 02:54:34 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 22 Mar 2020 19:54:34 -0700
+Subject: Re: [PATCH v2] mm/hugetlb: fix a addressing exception caused by
+ huge_pte_offset()
+To:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
+        <longpeng2@huawei.com>
+Cc:     akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        linux-kernel@vger.kernel.org, arei.gonglei@huawei.com,
+        weidong.huang@huawei.com, weifuqiang@huawei.com,
+        kvm@vger.kernel.org, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org
+References: <1582342427-230392-1-git-send-email-longpeng2@huawei.com>
+ <51a25d55-de49-4c0a-c994-bf1a8cfc8638@oracle.com>
+ <5700f44e-9df9-1b12-bc29-68e0463c2860@huawei.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <e16fe81b-5c4c-e689-2f48-214f2025df2f@oracle.com>
+Date:   Sun, 22 Mar 2020 19:54:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200321113242.026561244@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <5700f44e-9df9-1b12-bc29-68e0463c2860@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9568 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 mlxscore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003230016
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9568 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ phishscore=0 suspectscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003230016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 12:25:57PM +0100, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
+On 3/22/20 7:03 PM, Longpeng (Mike, Cloud Infrastructure Service Product Dept.) wrote:
 > 
-> The kernel provides a variety of locking primitives. The nesting of these
-> lock types and the implications of them on RT enabled kernels is nowhere
-> documented.
 > 
-> Add initial documentation.
+> On 2020/3/22 7:38, Mike Kravetz wrote:
+>> On 2/21/20 7:33 PM, Longpeng(Mike) wrote:
+>>> From: Longpeng <longpeng2@huawei.com>
+>>>
+>>> Our machine encountered a panic(addressing exception) after run
+>>> for a long time and the calltrace is:
+>>> RIP: 0010:[<ffffffff9dff0587>]  [<ffffffff9dff0587>] hugetlb_fault+0x307/0xbe0
+>>> RSP: 0018:ffff9567fc27f808  EFLAGS: 00010286
+>>> RAX: e800c03ff1258d48 RBX: ffffd3bb003b69c0 RCX: e800c03ff1258d48
+>>> RDX: 17ff3fc00eda72b7 RSI: 00003ffffffff000 RDI: e800c03ff1258d48
+>>> RBP: ffff9567fc27f8c8 R08: e800c03ff1258d48 R09: 0000000000000080
+>>> R10: ffffaba0704c22a8 R11: 0000000000000001 R12: ffff95c87b4b60d8
+>>> R13: 00005fff00000000 R14: 0000000000000000 R15: ffff9567face8074
+>>> FS:  00007fe2d9ffb700(0000) GS:ffff956900e40000(0000) knlGS:0000000000000000
+>>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> CR2: ffffd3bb003b69c0 CR3: 000000be67374000 CR4: 00000000003627e0
+>>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>>> Call Trace:
+>>>  [<ffffffff9df9b71b>] ? unlock_page+0x2b/0x30
+>>>  [<ffffffff9dff04a2>] ? hugetlb_fault+0x222/0xbe0
+>>>  [<ffffffff9dff1405>] follow_hugetlb_page+0x175/0x540
+>>>  [<ffffffff9e15b825>] ? cpumask_next_and+0x35/0x50
+>>>  [<ffffffff9dfc7230>] __get_user_pages+0x2a0/0x7e0
+>>>  [<ffffffff9dfc648d>] __get_user_pages_unlocked+0x15d/0x210
+>>>  [<ffffffffc068cfc5>] __gfn_to_pfn_memslot+0x3c5/0x460 [kvm]
+>>>  [<ffffffffc06b28be>] try_async_pf+0x6e/0x2a0 [kvm]
+>>>  [<ffffffffc06b4b41>] tdp_page_fault+0x151/0x2d0 [kvm]
+>>>  [<ffffffffc075731c>] ? vmx_vcpu_run+0x2ec/0xc80 [kvm_intel]
+>>>  [<ffffffffc0757328>] ? vmx_vcpu_run+0x2f8/0xc80 [kvm_intel]
+>>>  [<ffffffffc06abc11>] kvm_mmu_page_fault+0x31/0x140 [kvm]
+>>>  [<ffffffffc074d1ae>] handle_ept_violation+0x9e/0x170 [kvm_intel]
+>>>  [<ffffffffc075579c>] vmx_handle_exit+0x2bc/0xc70 [kvm_intel]
+>>>  [<ffffffffc074f1a0>] ? __vmx_complete_interrupts.part.73+0x80/0xd0 [kvm_intel]
+>>>  [<ffffffffc07574c0>] ? vmx_vcpu_run+0x490/0xc80 [kvm_intel]
+>>>  [<ffffffffc069f3be>] vcpu_enter_guest+0x7be/0x13a0 [kvm]
+>>>  [<ffffffffc06cf53e>] ? kvm_check_async_pf_completion+0x8e/0xb0 [kvm]
+>>>  [<ffffffffc06a6f90>] kvm_arch_vcpu_ioctl_run+0x330/0x490 [kvm]
+>>>  [<ffffffffc068d919>] kvm_vcpu_ioctl+0x309/0x6d0 [kvm]
+>>>  [<ffffffff9deaa8c2>] ? dequeue_signal+0x32/0x180
+>>>  [<ffffffff9deae34d>] ? do_sigtimedwait+0xcd/0x230
+>>>  [<ffffffff9e03aed0>] do_vfs_ioctl+0x3f0/0x540
+>>>  [<ffffffff9e03b0c1>] SyS_ioctl+0xa1/0xc0
+>>>  [<ffffffff9e53879b>] system_call_fastpath+0x22/0x27
+>>>
+>>> ( The kernel we used is older, but we think the latest kernel also has this
+>>>   bug after dig into this problem. )
+>>>
+>>> For 1G hugepages, huge_pte_offset() wants to return NULL or pudp, but it
+>>> may return a wrong 'pmdp' if there is a race. Please look at the following
+>>> code snippet:
+>>>     ...
+>>>     pud = pud_offset(p4d, addr);
+>>>     if (sz != PUD_SIZE && pud_none(*pud))
+>>>         return NULL;
+>>>     /* hugepage or swap? */
+>>>     if (pud_huge(*pud) || !pud_present(*pud))
+>>>         return (pte_t *)pud;
+>>>
+>>>     pmd = pmd_offset(pud, addr);
+>>>     if (sz != PMD_SIZE && pmd_none(*pmd))
+>>>         return NULL;
+>>>     /* hugepage or swap? */
+>>>     if (pmd_huge(*pmd) || !pmd_present(*pmd))
+>>>         return (pte_t *)pmd;
+>>>     ...
+>>>
+>>> The following sequence would trigger this bug:
+>>> 1. CPU0: sz = PUD_SIZE and *pud = 0 , continue
+>>> 1. CPU0: "pud_huge(*pud)" is false
+>>> 2. CPU1: calling hugetlb_no_page and set *pud to xxxx8e7(PRESENT)
+>>> 3. CPU0: "!pud_present(*pud)" is false, continue
+>>> 4. CPU0: pmd = pmd_offset(pud, addr) and maybe return a wrong pmdp
+>>> However, we want CPU0 to return NULL or pudp.
+>>>
+>>> We can avoid this race by read the pud only once. What's more, we also use
+>>> READ_ONCE to access the entries for safe(e.g. avoid the compilier mischief)
+>>>
+>>> Cc: Matthew Wilcox <willy@infradead.org>
+>>> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+>>> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Longpeng <longpeng2@huawei.com>
+>>
+>> Andrew dropped this patch from his tree which caused me to go back and
+>> look at the status of this patch/issue.
+>>
+>> It is pretty obvious that code in the current huge_pte_offset routine
+>> is racy.  I checked out the assembly code produced by my compiler and
+>> verified that the line,
+>>
+>> 	if (pud_huge(*pud) || !pud_present(*pud))
+>>
+>> does actually dereference *pud twice.  So, the value could change between
+>> those two dereferences.   Longpeng (Mike) could easlily recreate the issue
+>> if he put a delay between the two dereferences.  I believe the only
+>> reservations/concerns about the patch below was the use of READ_ONCE().
+>> Is that correct?
+>>
+> Hi Mike,
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: "Paul E . McKenney" <paulmck@kernel.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> ---
-> V3: Addressed review comments from Paul, Jonathan, Davidlohr
-> V2: Addressed review comments from Randy
-> ---
->  Documentation/locking/index.rst     |    1 
->  Documentation/locking/locktypes.rst |  299 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 300 insertions(+)
->  create mode 100644 Documentation/locking/locktypes.rst
+> It seems I've missed your another mail in my client, I found it here
+> (https://lkml.org/lkml/2020/2/27/1927) just now.
 > 
-> --- a/Documentation/locking/index.rst
-> +++ b/Documentation/locking/index.rst
-> @@ -7,6 +7,7 @@ locking
->  .. toctree::
->      :maxdepth: 1
->  
-> +    locktypes
->      lockdep-design
->      lockstat
->      locktorture
-> --- /dev/null
-> +++ b/Documentation/locking/locktypes.rst
-> @@ -0,0 +1,299 @@
+> I think we have reached an agreement that the pud/pmd need READ_ONCE in
+> huge_pte_offset() and disagreement is whether the pgd/p4d also need READ_ONCE,
+> right ?
 
-[ . . . Adding your example execution sequences . . . ]
+Correct.
 
-> +PREEMPT_RT kernels preserve all other spinlock_t semantics:
-> +
-> + - Tasks holding a spinlock_t do not migrate.  Non-PREEMPT_RT kernels
-> +   avoid migration by disabling preemption.  PREEMPT_RT kernels instead
-> +   disable migration, which ensures that pointers to per-CPU variables
-> +   remain valid even if the task is preempted.
-> +
-> + - Task state is preserved across spinlock acquisition, ensuring that the
-> +   task-state rules apply to all kernel configurations.  Non-PREEMPT_RT
-> +   kernels leave task state untouched.  However, PREEMPT_RT must change
-> +   task state if the task blocks during acquisition.  Therefore, it saves
-> +   the current task state before blocking and the corresponding lock wakeup
-> +   restores it.
-> +
-> +   Other types of wakeups would normally unconditionally set the task state
-> +   to RUNNING, but that does not work here because the task must remain
-> +   blocked until the lock becomes available.  Therefore, when a non-lock
-> +   wakeup attempts to awaken a task blocked waiting for a spinlock, it
-> +   instead sets the saved state to RUNNING.  Then, when the lock
-> +   acquisition completes, the lock wakeup sets the task state to the saved
-> +   state, in this case setting it to RUNNING.
+Sorry, I did not reply to the mail thread with more context.
 
-In the normal case where the task sleeps through the entire lock
-acquisition, the sequence of events is as follows:
+>> Are there any objections to the patch if the READ_ONCE() calls are removed?
+>>
+> Because the pgd/p4g are only accessed and dereferenced once here, so some guys
+> want to remove it.
+> 
+> But we must make sure they are *really* accessed once, in other words, this
+> makes we need to care about both the implementation of pgd_present/p4d_present
+> and the behavior of any compiler, for example:
+> 
+> '''
+> static inline int func(int val)
+> {
+>     return subfunc1(val) & subfunc2(val);
+> }
+> 
+> func(*p); // int *p
+> '''
+> We must make sure there's no strange compiler to generate an assemble code that
+> access and dereference 'p' more than once.
+> 
+> I've not found any backwards with READ_ONCE here. However, if you also agree to
+> remove READ_ONCE around pgd/p4d, I'll do.
+> 
 
-     state = UNINTERRUPTIBLE
-     lock()
-       block()
-         real_state = state
-         state = SLEEPONLOCK
+I would like to remove the READ_ONCE calls and move the patch forward.  It
+does address a real issue you are seeing.
 
-                               lock wakeup
-                                 state = real_state == UNINTERRUPTIBLE
+To be honest, I am more worried about the races in lookup_address_in_pgd()
+than using or not using READ_ONCE for  pgd/p4d in this patch.
 
-This sequence of events can occur when the task acquires spinlocks
-on its way to sleeping, for example, in a call to wait_event().
+I have not looked closely at the generated code for lookup_address_in_pgd.
+It appears that it would dereference p4d, pud and pmd multiple times.  Sean
+seemed to think there was something about the calling context that would
+make issues like those seen with huge_pte_offset less likely to happen.  I
+do not know if this is accurate or not.
 
-The non-lock wakeup can occur when a wakeup races with this wait_event(),
-which can result in the following sequence of events:
+Let's remove the two READ_ONCE calls and move this patch forward.  We can
+look closer at lookup_address_in_pgd and generate another patch if that needs
+to be fixed as well.
 
-     state = UNINTERRUPTIBLE
-     lock()
-       block()
-         real_state = state
-         state = SLEEPONLOCK
-
-                             non lock wakeup
-                                 real_state = RUNNING
-
-                               lock wakeup
-                                 state = real_state == RUNNING
-
-Without this real_state subterfuge, the wakeup might be lost.
-
-[ . . . and continuing where I left off earlier . . . ]
-
-> +bit spinlocks
-> +-------------
-> +
-> +Bit spinlocks are problematic for PREEMPT_RT as they cannot be easily
-> +substituted by an RT-mutex based implementation for obvious reasons.
-> +
-> +The semantics of bit spinlocks are preserved on PREEMPT_RT kernels and the
-> +caveats vs. raw_spinlock_t apply.
-> +
-> +Some bit spinlocks are substituted by regular spinlock_t for PREEMPT_RT but
-> +this requires conditional (#ifdef'ed) code changes at the usage site while
-> +the spinlock_t substitution is simply done by the compiler and the
-> +conditionals are restricted to header files and core implementation of the
-> +locking primitives and the usage sites do not require any changes.
-
-PREEMPT_RT cannot substitute bit spinlocks because a single bit is
-too small to accommodate an RT-mutex.  Therefore, the semantics of bit
-spinlocks are preserved on PREEMPT_RT kernels, so that the raw_spinlock_t
-caveats also apply to bit spinlocks.
-
-Some bit spinlocks are replaced with regular spinlock_t for PREEMPT_RT
-using conditional (#ifdef'ed) code changes at the usage site.
-In contrast, usage-site changes are not needed for the spinlock_t
-substitution.  Instead, conditionals in header files and the core locking
-implemementation enable the compiler to do the substitution transparently.
-
-
-> +Lock type nesting rules
-> +=======================
-> +
-> +The most basic rules are:
-> +
-> +  - Lock types of the same lock category (sleeping, spinning) can nest
-> +    arbitrarily as long as they respect the general lock ordering rules to
-> +    prevent deadlocks.
-
-  - Lock types in the same category (sleeping, spinning) can nest
-     arbitrarily as long as they respect the general deadlock-avoidance
-     ordering rules.
-
-[ Give or take lockdep eventually complaining about too-deep nesting,
-  but that is probably not worth mentioning here.  Leave that caveat
-  to the lockdep documentation. ]
-
-> +  - Sleeping lock types cannot nest inside spinning lock types.
-> +
-> +  - Spinning lock types can nest inside sleeping lock types.
-> +
-> +These rules apply in general independent of CONFIG_PREEMPT_RT.
-
-These constraints apply both in CONFIG_PREEMPT_RT and otherwise.
-
-> +As PREEMPT_RT changes the lock category of spinlock_t and rwlock_t from
-> +spinning to sleeping this has obviously restrictions how they can nest with
-> +raw_spinlock_t.
-> +
-> +This results in the following nest ordering:
-
-The fact that PREEMPT_RT changes the lock category of spinlock_t and
-rwlock_t from spinning to sleeping means that they cannot be acquired
-while holding a raw spinlock.  This results in the following nesting
-ordering:
-
-> +  1) Sleeping locks
-> +  2) spinlock_t and rwlock_t
-> +  3) raw_spinlock_t and bit spinlocks
-> +
-> +Lockdep is aware of these constraints to ensure that they are respected.
-
-Lockdep will complain if these constraints are violated, both in
-CONFIG_PREEMPT_RT and otherwise.
-
-
-> +Owner semantics
-> +===============
-> +
-> +Most lock types in the Linux kernel have strict owner semantics, i.e. the
-> +context (task) which acquires a lock has to release it.
-
-The aforementioned lock types have strict owner semantics: The context
-(task) that acquired the lock must release it.
-
-> +There are two exceptions:
-> +
-> +  - semaphores
-> +  - rwsems
-> +
-> +semaphores have no owner semantics for historical reason, and as such
-> +trylock and release operations can be called from any context. They are
-> +often used for both serialization and waiting purposes. That's generally
-> +discouraged and should be replaced by separate serialization and wait
-> +mechanisms, such as mutexes and completions.
-
-semaphores lack owner semantics for historical reasons, so their trylock
-and release operations may be called from any context. They are often
-used for both serialization and waiting, but new use cases should
-instead use separate serialization and wait mechanisms, such as mutexes
-and completions.
-
-> +rwsems have grown interfaces which allow non owner release for special
-> +purposes. This usage is problematic on PREEMPT_RT because PREEMPT_RT
-> +substitutes all locking primitives except semaphores with RT-mutex based
-> +implementations to provide priority inheritance for all lock types except
-> +the truly spinning ones. Priority inheritance on ownerless locks is
-> +obviously impossible.
-> +
-> +For now the rwsem non-owner release excludes code which utilizes it from
-> +being used on PREEMPT_RT enabled kernels. In same cases this can be
-> +mitigated by disabling portions of the code, in other cases the complete
-> +functionality has to be disabled until a workable solution has been found.
-
-rwsems have grown special-purpose interfaces that allow non-owner release.
-This non-owner release prevents PREEMPT_RT from substituting RT-mutex
-implementations, for example, by defeating priority inheritance.
-After all, if the lock has no owner, whose priority should be boosted?
-As a result, PREEMPT_RT does not currently support rwsem, which in turn
-means that code using it must therefore be disabled until a workable
-solution presents itself.
-
-[ Note: Not as confident as I would like to be in the above. ]
-
-							Thanx, Paul
+Thanks
+-- 
+Mike Kravetz
