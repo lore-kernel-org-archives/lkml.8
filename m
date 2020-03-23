@@ -2,214 +2,95 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D27C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27024C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A0220663
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF21320714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:19:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuGyBhSE"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KBvcX/j7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgCWUTH (ORCPT
+        id S1727127AbgCWUTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 16:19:07 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33236 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgCWUTH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 16:19:07 -0400
-Received: by mail-qk1-f195.google.com with SMTP id v7so7269900qkc.0;
-        Mon, 23 Mar 2020 13:19:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TZ+ZwfTMYYsGD6syPZhmYKv+gyxadYlXHYerkec/Prc=;
-        b=MuGyBhSE7OGl8aZJaCuWgDEd5sIIQ085S1F5HqBLnJoCv13/Zxds8/CWAFZYTt8/9J
-         S840MrwKl0aeLkDA8pfk7R5jAyjYojOp6foFlae/XPQZf5nLwd/5/q5iHYxyAEFUKWeZ
-         /je1mmdRsTf0C2Ype/Ht09cqC9bE3WSU9+MS/GjSn8uYJVF6PvDEsem6wh7+W9EPTH0i
-         fbqQ97VnVOYnp0XQ9JUq6P72J+8z2r7IDsoNvUj2edBPIIzcVVItedYbKP/GoatZxyag
-         olGaneNwEWpjfjuk46k39KmpbnhieLBIA2xrZRFhDLcKiu7nLamj7QtNpYXHIqbodcXa
-         rX3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TZ+ZwfTMYYsGD6syPZhmYKv+gyxadYlXHYerkec/Prc=;
-        b=IrgZVHZaQ90htltCOkZ2lhTQkLVp6e0H/mL6kbtEga+BmHCagvSv/AZgjRLqq+hcAn
-         ruTBPAKoirHAH7nU6AGcFLoTwNVjR3Vt0AnOjIOx6Y5k4D8RAM1LTFEgMeordsEmekX7
-         PxwIhkZraSfDfg49BP3EnYYBZo5vrQ6QtOKAI0znwVV0PYKNqrAf9gj9vDdWLkNYxYNE
-         qKDzpJmF0bcaAKKScHBvx+tQpPVTmYRw8eQb1VoyEwQLvYbKI7NjwUz8bijZU2esiODJ
-         ptDsoXYEWze5/DE5gnsBYy5xc4ECjrEvXi1Ye0GNNhSUEms+EfhO18UzdWvMWkxR3shw
-         g4IA==
-X-Gm-Message-State: ANhLgQ0ps0HKX6jROyTCyD5i3H09Td1eiyds/LzNcHcvC7+kDd2npzkj
-        e3tEwSUERNK8e7d3Wj2ghTevwxE1BNYCZvVWYSo=
-X-Google-Smtp-Source: ADFU+vsHBUxL6es42p14wjLjJwEUAXo+ilHYJpl09AVNoQ6QYphYryIlVRToeHqmy7Gxz1bQ/1tZVVgMcOW5Vfq5RYo=
-X-Received: by 2002:a37:e40d:: with SMTP id y13mr22599759qkf.39.1584994744820;
- Mon, 23 Mar 2020 13:19:04 -0700 (PDT)
+        Mon, 23 Mar 2020 16:19:14 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:51073 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725830AbgCWUTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 16:19:14 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48mQhH3rGHz9sR4;
+        Tue, 24 Mar 2020 07:19:11 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584994752;
+        bh=55SbTnHJWs3v4tN8TDPEr7gmdYr/dXGxIh5pGOfQbdc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KBvcX/j7uCeAkyOzvRBVbij/MGnnh7DUUPz4doLPykt7cH8P7l0jKxCXCer+lbdME
+         T2HpV+MosuajcryL1/0DF1BU4tEk3pxTNbeVhxYm6UorfNHm1qBsP21l10lBp6dE+9
+         eSkBqwSA8q9bYwvaO/SpF8a7cWkuktAxtwQHSR87SEMrtKlWaL6QNGuxNHmILuOl11
+         09GJTLSrICpB8gsEYljrXQB5EXeXcOmQwfnJ88OHrmPOMvSe15KLcsb6iyeu+BJ+m0
+         2MaFznPXPDQCoSnScEin8t7Bnl9kz/N/VSzD20ueUIPuq83el3t+eyRXag8GznkC8D
+         rl1ZslwX2rfOg==
+Date:   Tue, 24 Mar 2020 07:19:07 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commits in the thermal tree
+Message-ID: <20200324071907.500c6a7b@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200323164415.12943-1-kpsingh@chromium.org> <20200323164415.12943-5-kpsingh@chromium.org>
-In-Reply-To: <20200323164415.12943-5-kpsingh@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 23 Mar 2020 13:18:54 -0700
-Message-ID: <CAEf4BzaceUCEw+-s9EM3rvz+KbLrvBbUfa5e0CSbtkOytF+RsQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 4/7] bpf: lsm: Implement attach, detach and execution
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/ZQR9Pa+DwleBlAdxx9NXJOF";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 9:45 AM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> JITed BPF programs are dynamically attached to the LSM hooks
-> using BPF trampolines. The trampoline prologue generates code to handle
-> conversion of the signature of the hook to the appropriate BPF context.
->
-> The allocated trampoline programs are attached to the nop functions
-> initialized as LSM hooks.
->
-> BPF_PROG_TYPE_LSM programs must have a GPL compatible license and
-> and need CAP_SYS_ADMIN (required for loading eBPF programs).
->
-> Upon attachment:
->
-> * A BPF fexit trampoline is used for LSM hooks with a void return type.
-> * A BPF fmod_ret trampoline is used for LSM hooks which return an
->   int. The attached programs can override the return value of the
->   bpf LSM hook to indicate a MAC Policy decision.
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> Reviewed-by: Brendan Jackman <jackmanb@google.com>
-> Reviewed-by: Florent Revest <revest@google.com>
-> ---
->  include/linux/bpf.h     |  4 ++++
->  include/linux/bpf_lsm.h | 11 +++++++++++
->  kernel/bpf/bpf_lsm.c    | 29 +++++++++++++++++++++++++++++
->  kernel/bpf/btf.c        |  9 ++++++++-
->  kernel/bpf/syscall.c    | 26 ++++++++++++++++++++++----
->  kernel/bpf/trampoline.c | 17 +++++++++++++----
->  kernel/bpf/verifier.c   | 19 +++++++++++++++----
->  7 files changed, 102 insertions(+), 13 deletions(-)
->
+--Sig_/ZQR9Pa+DwleBlAdxx9NXJOF
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-[...]
+Hi all,
 
->
-> +#define BPF_LSM_SYM_PREFX  "bpf_lsm_"
-> +
-> +int bpf_lsm_verify_prog(struct bpf_verifier_log *vlog,
-> +                       const struct bpf_prog *prog)
-> +{
-> +       /* Only CAP_MAC_ADMIN users are allowed to make changes to LSM hooks
-> +        */
-> +       if (!capable(CAP_MAC_ADMIN))
-> +               return -EPERM;
-> +
-> +       if (!prog->gpl_compatible) {
-> +               bpf_log(vlog,
-> +                       "LSM programs must have a GPL compatible license\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       if (strncmp(BPF_LSM_SYM_PREFX, prog->aux->attach_func_name,
-> +                   strlen(BPF_LSM_SYM_PREFX))) {
+Commits
 
-sizeof(BPF_LSM_SYM_PREFIX) - 1?
+  ba53cb499706 ("thermal: imx8mm: Add i.MX8MP support")
+  06ccf2eecd67 ("dt-bindings: thermal: imx8mm-thermal: Add support for i.MX=
+8MP")
+  5c7bc817d814 ("thermal: qcom: tsens.h: Replace zero-length array with fle=
+xible-array member")
+  7796140751cb ("thermal: imx_sc_thermal: Fix incorrect data type")
+  eed84a45ca84 ("thermal: int340x_thermal: Use scnprintf() for avoiding pot=
+ential buffer overflow")
 
-> +               bpf_log(vlog, "attach_btf_id %u points to wrong type name %s\n",
-> +                       prog->aux->attach_btf_id, prog->aux->attach_func_name);
-> +               return -EINVAL;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
+are missing a Signed-off-by from their committer.
 
-[...]
+--=20
+Cheers,
+Stephen Rothwell
 
-> @@ -2367,10 +2369,24 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog)
->         struct file *link_file;
->         int link_fd, err;
->
-> -       if (prog->expected_attach_type != BPF_TRACE_FENTRY &&
-> -           prog->expected_attach_type != BPF_TRACE_FEXIT &&
-> -           prog->expected_attach_type != BPF_MODIFY_RETURN &&
-> -           prog->type != BPF_PROG_TYPE_EXT) {
-> +       switch (prog->type) {
-> +       case BPF_PROG_TYPE_TRACING:
-> +               if (prog->expected_attach_type != BPF_TRACE_FENTRY &&
-> +                   prog->expected_attach_type != BPF_TRACE_FEXIT &&
-> +                   prog->expected_attach_type != BPF_MODIFY_RETURN) {
-> +                       err = -EINVAL;
-> +                       goto out_put_prog;
-> +               }
-> +               break;
-> +       case BPF_PROG_TYPE_EXT:
+--Sig_/ZQR9Pa+DwleBlAdxx9NXJOF
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-It looks like an omission that we don't enforce expected_attach_type
-to be 0 here. Should we fix it until it's too late?
+-----BEGIN PGP SIGNATURE-----
 
-> +               break;
-> +       case BPF_PROG_TYPE_LSM:
-> +               if (prog->expected_attach_type != BPF_LSM_MAC) {
-> +                       err = -EINVAL;
-> +                       goto out_put_prog;
-> +               }
-> +               break;
-> +       default:
->                 err = -EINVAL;
->                 goto out_put_prog;
->         }
-> @@ -2452,12 +2468,14 @@ static int bpf_raw_tracepoint_open(const union bpf_attr *attr)
->         if (prog->type != BPF_PROG_TYPE_RAW_TRACEPOINT &&
->             prog->type != BPF_PROG_TYPE_TRACING &&
->             prog->type != BPF_PROG_TYPE_EXT &&
-> +           prog->type != BPF_PROG_TYPE_LSM &&
->             prog->type != BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE) {
->                 err = -EINVAL;
->                 goto out_put_prog;
->         }
->
->         if (prog->type == BPF_PROG_TYPE_TRACING ||
-> +           prog->type == BPF_PROG_TYPE_LSM ||
->             prog->type == BPF_PROG_TYPE_EXT) {
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl55GbsACgkQAVBC80lX
+0Gx8AQf+JhhKtF/DUIXyHEvCDGj4OVGjZP3VF3jebtt326VT+4Hu9GrXgBcRrOlO
+H2ht1cdHwUrOrYR4iU5ngR6gx/JcHVkSESW0vP5d6ZP4KOqgCkcjM8wzdv7kiQQW
+ZDh/FLcxmPRGVTSbARI7HlfHpnVv93vgXhGZAifzAsMfYEP8HWCCxo4ivqZZxZdJ
+YOCh8pRYlFYUbXV21qIoKcdSQtL4sq00FlOT5309lha6JTlM0hl5nyFPIbu/ZeLk
+mXfQGTS975f3ec+7WAglp2p2344bxCCeXlhFLBf9nQfrJp2NL1Yh8kJq1/FfKt9H
+GmuklkuNdbEzl33XXvYBFlxjZmFkmw==
+=f3ZL
+-----END PGP SIGNATURE-----
 
-
-can you please refactor this into a nicer explicit switch instead of
-combination of if/elses?
-
->                 if (attr->raw_tracepoint.name) {
->                         /* The attach point for this category of programs
-> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-> index f30bca2a4d01..9be85aa4ec5f 100644
-> --- a/kernel/bpf/trampoline.c
-> +++ b/kernel/bpf/trampoline.c
-> @@ -6,6 +6,7 @@
->  #include <linux/ftrace.h>
->  #include <linux/rbtree_latch.h>
->  #include <linux/perf_event.h>
-> +#include <linux/btf.h>
->
-
-[...]
+--Sig_/ZQR9Pa+DwleBlAdxx9NXJOF--
