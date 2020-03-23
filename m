@@ -2,260 +2,199 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB9AC1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BDCC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 114AA20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5051A20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgCWClb (ORCPT
+        id S1727103AbgCWCqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 22:41:31 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12116 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726951AbgCWCla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 22:41:30 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 906DFA95CF0F26075FF3;
-        Mon, 23 Mar 2020 10:41:26 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 23 Mar 2020 10:41:17 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v4] f2fs: fix potential .flags overflow on 32bit architecture
-Date:   Mon, 23 Mar 2020 10:41:09 +0800
-Message-ID: <20200323024109.60967-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Sun, 22 Mar 2020 22:46:52 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33246 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726979AbgCWCqv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 22:46:51 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id CB41180307CB;
+        Mon, 23 Mar 2020 02:46:47 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id UTjW9bYZDdnY; Mon, 23 Mar 2020 05:46:46 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] serial: 8250_dw: Fix common clocks usage race condition
+Date:   Mon, 23 Mar 2020 05:46:09 +0300
+Message-ID: <20200323024611.16039-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200306130231.05BBC8030795@mail.baikalelectronics.ru>
+References: 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-f2fs_inode_info.flags is unsigned long variable, it has 32 bits
-in 32bit architecture, since we introduced FI_MMAP_FILE flag
-when we support data compression, we may access memory cross
-the border of .flags field, corrupting .i_sem field, result in
-below deadlock.
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-To fix this issue, let's expand .flags as an array to grab enough
-space to store new flags.
+There are races possible in the dw8250_set_termios() callback method
+and while the device is in PM suspend state. A race condition may
+happen if the baudrate clock source device is shared with some other
+device (in our machine it's another DW UART port). In this case if that
+device changes the clock rate while serial console is using it the
+DW 8250 UART port might not only end up with an invalid uartclk value
+saved, but may also experience a distorted output data since baud-clock
+could have been changed. In order to fix this lets enable an exclusive
+reference clock rate access in case if "baudclk" device is specified.
 
-Call Trace:
- __schedule+0x8d0/0x13fc
- ? mark_held_locks+0xac/0x100
- schedule+0xcc/0x260
- rwsem_down_write_slowpath+0x3ab/0x65d
- down_write+0xc7/0xe0
- f2fs_drop_nlink+0x3d/0x600 [f2fs]
- f2fs_delete_inline_entry+0x300/0x440 [f2fs]
- f2fs_delete_entry+0x3a1/0x7f0 [f2fs]
- f2fs_unlink+0x500/0x790 [f2fs]
- vfs_unlink+0x211/0x490
- do_unlinkat+0x483/0x520
- sys_unlink+0x4a/0x70
- do_fast_syscall_32+0x12b/0x683
- entry_SYSENTER_32+0xaa/0x102
+So if some other device also acquires the rate exclusivity during the
+time of a DW UART 8250 port being opened, then DW UART 8250 driver
+won't be able to alter the baud-clock. It shall just use the available
+clock rate. Similarly another device also won't manage to change the
+rate at that time. If nothing else have the exclusive rate access
+acquired except DW UART 8250 driver, then the driver will be able to
+alter the rate as much as it needs to in accordance with the currently
+implemented logic.
 
-Fixes: 4c8ff7095bef ("f2fs: support data compression")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>
+CC: Ray Jui <rjui@broadcom.com>
+Cc: Scott Branden <sbranden@broadcom.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Wei Xu <xuwei5@hisilicon.com>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Gregory Clement <gregory.clement@bootlin.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-clk@vger.kernel.org
+
 ---
-v4:
-- clean up codes when using bit operation functions.
- fs/f2fs/f2fs.h  | 102 ++++++++++++++++++++++++------------------------
- fs/f2fs/inode.c |   4 +-
- 2 files changed, 55 insertions(+), 51 deletions(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index fcafa68212eb..b0dc7bf44a54 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -682,6 +682,47 @@ enum {
- 	MAX_GC_FAILURE
- };
+Changelog v2:
+- Move exclusive ref clock lock/unlock precudures to the 8250 port
+  startup/shutdown methods.
+- The changelog message has also been slightly modified due to the
+  alteration.
+- Remove Alexey' SoB tag.
+- Cc someone from ARM who might be concerned regarding this change.
+- Cc someone from Clocks Framework to get their comments on this patch.
+---
+ drivers/tty/serial/8250/8250_dw.c | 36 +++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index aab3cccc6789..08f3f745ed54 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -319,6 +319,40 @@ static void dw8250_set_ldisc(struct uart_port *p, struct ktermios *termios)
+ 	serial8250_do_set_ldisc(p, termios);
+ }
  
-+/* used for f2fs_inode_info->flags */
-+enum {
-+	FI_NEW_INODE,		/* indicate newly allocated inode */
-+	FI_DIRTY_INODE,		/* indicate inode is dirty or not */
-+	FI_AUTO_RECOVER,	/* indicate inode is recoverable */
-+	FI_DIRTY_DIR,		/* indicate directory has dirty pages */
-+	FI_INC_LINK,		/* need to increment i_nlink */
-+	FI_ACL_MODE,		/* indicate acl mode */
-+	FI_NO_ALLOC,		/* should not allocate any blocks */
-+	FI_FREE_NID,		/* free allocated nide */
-+	FI_NO_EXTENT,		/* not to use the extent cache */
-+	FI_INLINE_XATTR,	/* used for inline xattr */
-+	FI_INLINE_DATA,		/* used for inline data*/
-+	FI_INLINE_DENTRY,	/* used for inline dentry */
-+	FI_APPEND_WRITE,	/* inode has appended data */
-+	FI_UPDATE_WRITE,	/* inode has in-place-update data */
-+	FI_NEED_IPU,		/* used for ipu per file */
-+	FI_ATOMIC_FILE,		/* indicate atomic file */
-+	FI_ATOMIC_COMMIT,	/* indicate the state of atomical committing */
-+	FI_VOLATILE_FILE,	/* indicate volatile file */
-+	FI_FIRST_BLOCK_WRITTEN,	/* indicate #0 data block was written */
-+	FI_DROP_CACHE,		/* drop dirty page cache */
-+	FI_DATA_EXIST,		/* indicate data exists */
-+	FI_INLINE_DOTS,		/* indicate inline dot dentries */
-+	FI_DO_DEFRAG,		/* indicate defragment is running */
-+	FI_DIRTY_FILE,		/* indicate regular/symlink has dirty pages */
-+	FI_NO_PREALLOC,		/* indicate skipped preallocated blocks */
-+	FI_HOT_DATA,		/* indicate file is hot */
-+	FI_EXTRA_ATTR,		/* indicate file has extra attribute */
-+	FI_PROJ_INHERIT,	/* indicate file inherits projectid */
-+	FI_PIN_FILE,		/* indicate file should not be gced */
-+	FI_ATOMIC_REVOKE_REQUEST, /* request to drop atomic data */
-+	FI_VERITY_IN_PROGRESS,	/* building fs-verity Merkle tree */
-+	FI_COMPRESSED_FILE,	/* indicate file's data can be compressed */
-+	FI_MMAP_FILE,		/* indicate file was mmapped */
-+	FI_MAX,			/* max flag, never be used */
-+};
++static int dw8250_startup(struct uart_port *p)
++{
++	struct dw8250_data *d = to_dw8250_data(p->private_data);
 +
-+/* f2fs_inode_info.flags array size */
-+#define FI_ARRAY_SIZE		(BITS_TO_LONGS(FI_MAX))
++	/*
++	 * Some platforms may provide a reference clock shared between several
++	 * devices. In this case before using the serial port first we have to
++	 * make sure nothing will change the rate behind our back and second
++	 * the tty/serial subsystem knows the actual reference clock rate of
++	 * the port.
++	 */
++	if (clk_rate_exclusive_get(d->clk)) {
++		dev_warn(p->dev, "Couldn't lock the clock rate\n");
++	} else if (d->clk) {
++		p->uartclk = clk_get_rate(d->clk);
++		if (!p->uartclk) {
++			clk_rate_exclusive_put(d->clk);
++			dev_err(p->dev, "Clock rate not defined\n");
++			return -EINVAL;
++		}
++	}
 +
- struct f2fs_inode_info {
- 	struct inode vfs_inode;		/* serve a vfs inode */
- 	unsigned long i_flags;		/* keep an inode flags for ioctl */
-@@ -694,7 +735,7 @@ struct f2fs_inode_info {
- 	umode_t i_acl_mode;		/* keep file acl mode temporarily */
++	return serial8250_do_startup(p);
++}
++
++static void dw8250_shutdown(struct uart_port *p)
++{
++	struct dw8250_data *d = to_dw8250_data(p->private_data);
++
++	serial8250_do_shutdown(p);
++
++	clk_rate_exclusive_put(d->clk);
++}
++
+ /*
+  * dw8250_fallback_dma_filter will prevent the UART from getting just any free
+  * channel on platforms that have DMA engines, but don't have any channels
+@@ -414,6 +448,8 @@ static int dw8250_probe(struct platform_device *pdev)
+ 	p->serial_out	= dw8250_serial_out;
+ 	p->set_ldisc	= dw8250_set_ldisc;
+ 	p->set_termios	= dw8250_set_termios;
++	p->startup	= dw8250_startup;
++	p->shutdown	= dw8250_shutdown;
  
- 	/* Use below internally in f2fs*/
--	unsigned long flags;		/* use to pass per-file flags */
-+	unsigned long flags[FI_ARRAY_SIZE];	/* use to pass per-file flags */
- 	struct rw_semaphore i_sem;	/* protect fi info */
- 	atomic_t dirty_pages;		/* # of dirty pages */
- 	f2fs_hash_t chash;		/* hash value of given file name */
-@@ -2531,43 +2572,6 @@ static inline __u32 f2fs_mask_flags(umode_t mode, __u32 flags)
- 		return flags & F2FS_OTHER_FLMASK;
- }
- 
--/* used for f2fs_inode_info->flags */
--enum {
--	FI_NEW_INODE,		/* indicate newly allocated inode */
--	FI_DIRTY_INODE,		/* indicate inode is dirty or not */
--	FI_AUTO_RECOVER,	/* indicate inode is recoverable */
--	FI_DIRTY_DIR,		/* indicate directory has dirty pages */
--	FI_INC_LINK,		/* need to increment i_nlink */
--	FI_ACL_MODE,		/* indicate acl mode */
--	FI_NO_ALLOC,		/* should not allocate any blocks */
--	FI_FREE_NID,		/* free allocated nide */
--	FI_NO_EXTENT,		/* not to use the extent cache */
--	FI_INLINE_XATTR,	/* used for inline xattr */
--	FI_INLINE_DATA,		/* used for inline data*/
--	FI_INLINE_DENTRY,	/* used for inline dentry */
--	FI_APPEND_WRITE,	/* inode has appended data */
--	FI_UPDATE_WRITE,	/* inode has in-place-update data */
--	FI_NEED_IPU,		/* used for ipu per file */
--	FI_ATOMIC_FILE,		/* indicate atomic file */
--	FI_ATOMIC_COMMIT,	/* indicate the state of atomical committing */
--	FI_VOLATILE_FILE,	/* indicate volatile file */
--	FI_FIRST_BLOCK_WRITTEN,	/* indicate #0 data block was written */
--	FI_DROP_CACHE,		/* drop dirty page cache */
--	FI_DATA_EXIST,		/* indicate data exists */
--	FI_INLINE_DOTS,		/* indicate inline dot dentries */
--	FI_DO_DEFRAG,		/* indicate defragment is running */
--	FI_DIRTY_FILE,		/* indicate regular/symlink has dirty pages */
--	FI_NO_PREALLOC,		/* indicate skipped preallocated blocks */
--	FI_HOT_DATA,		/* indicate file is hot */
--	FI_EXTRA_ATTR,		/* indicate file has extra attribute */
--	FI_PROJ_INHERIT,	/* indicate file inherits projectid */
--	FI_PIN_FILE,		/* indicate file should not be gced */
--	FI_ATOMIC_REVOKE_REQUEST, /* request to drop atomic data */
--	FI_VERITY_IN_PROGRESS,	/* building fs-verity Merkle tree */
--	FI_COMPRESSED_FILE,	/* indicate file's data can be compressed */
--	FI_MMAP_FILE,		/* indicate file was mmapped */
--};
--
- static inline void __mark_inode_dirty_flag(struct inode *inode,
- 						int flag, bool set)
- {
-@@ -2588,20 +2592,18 @@ static inline void __mark_inode_dirty_flag(struct inode *inode,
- 
- static inline void set_inode_flag(struct inode *inode, int flag)
- {
--	if (!test_bit(flag, &F2FS_I(inode)->flags))
--		set_bit(flag, &F2FS_I(inode)->flags);
-+	test_and_set_bit(flag, F2FS_I(inode)->flags);
- 	__mark_inode_dirty_flag(inode, flag, true);
- }
- 
- static inline int is_inode_flag_set(struct inode *inode, int flag)
- {
--	return test_bit(flag, &F2FS_I(inode)->flags);
-+	return test_bit(flag, F2FS_I(inode)->flags);
- }
- 
- static inline void clear_inode_flag(struct inode *inode, int flag)
- {
--	if (test_bit(flag, &F2FS_I(inode)->flags))
--		clear_bit(flag, &F2FS_I(inode)->flags);
-+	test_and_clear_bit(flag, F2FS_I(inode)->flags);
- 	__mark_inode_dirty_flag(inode, flag, false);
- }
- 
-@@ -2692,19 +2694,19 @@ static inline void get_inline_info(struct inode *inode, struct f2fs_inode *ri)
- 	struct f2fs_inode_info *fi = F2FS_I(inode);
- 
- 	if (ri->i_inline & F2FS_INLINE_XATTR)
--		set_bit(FI_INLINE_XATTR, &fi->flags);
-+		set_bit(FI_INLINE_XATTR, fi->flags);
- 	if (ri->i_inline & F2FS_INLINE_DATA)
--		set_bit(FI_INLINE_DATA, &fi->flags);
-+		set_bit(FI_INLINE_DATA, fi->flags);
- 	if (ri->i_inline & F2FS_INLINE_DENTRY)
--		set_bit(FI_INLINE_DENTRY, &fi->flags);
-+		set_bit(FI_INLINE_DENTRY, fi->flags);
- 	if (ri->i_inline & F2FS_DATA_EXIST)
--		set_bit(FI_DATA_EXIST, &fi->flags);
-+		set_bit(FI_DATA_EXIST, fi->flags);
- 	if (ri->i_inline & F2FS_INLINE_DOTS)
--		set_bit(FI_INLINE_DOTS, &fi->flags);
-+		set_bit(FI_INLINE_DOTS, fi->flags);
- 	if (ri->i_inline & F2FS_EXTRA_ATTR)
--		set_bit(FI_EXTRA_ATTR, &fi->flags);
-+		set_bit(FI_EXTRA_ATTR, fi->flags);
- 	if (ri->i_inline & F2FS_PIN_FILE)
--		set_bit(FI_PIN_FILE, &fi->flags);
-+		set_bit(FI_PIN_FILE, fi->flags);
- }
- 
- static inline void set_raw_inline(struct inode *inode, struct f2fs_inode *ri)
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 44e08bf2e2b4..5e441fdd4858 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -328,6 +328,7 @@ static int do_read_inode(struct inode *inode)
- 	struct f2fs_inode *ri;
- 	projid_t i_projid;
- 	int err;
-+	int i;
- 
- 	/* Check if ino is within scope */
- 	if (f2fs_check_nid_range(sbi, inode->i_ino))
-@@ -362,7 +363,8 @@ static int do_read_inode(struct inode *inode)
- 	fi->i_flags = le32_to_cpu(ri->i_flags);
- 	if (S_ISREG(inode->i_mode))
- 		fi->i_flags &= ~F2FS_PROJINHERIT_FL;
--	fi->flags = 0;
-+	for (i = 0; i < FI_ARRAY_SIZE; i++)
-+		fi->flags[i] = 0;
- 	fi->i_advise = ri->i_advise;
- 	fi->i_pino = le32_to_cpu(ri->i_pino);
- 	fi->i_dir_level = ri->i_dir_level;
+ 	p->membase = devm_ioremap(dev, regs->start, resource_size(regs));
+ 	if (!p->membase)
 -- 
-2.18.0.rc1
+2.25.1
 
