@@ -2,132 +2,151 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB9EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4257AC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71FB62051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BD062072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:25:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="X1CH1GVl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbgCWSX5 (ORCPT
+        id S1727361AbgCWSZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:23:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:53024 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727576AbgCWSXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:23:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D11811FB;
-        Mon, 23 Mar 2020 11:23:54 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D4A83F52E;
-        Mon, 23 Mar 2020 11:23:54 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 18:23:51 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Hit WARN_ON() in rcutorture.c:1055
-Message-ID: <20200323182351.xr764b6wafzs6fse@e107158-lin.cambridge.arm.com>
-References: <20200323154309.nah44so2556ee56g@e107158-lin.cambridge.arm.com>
- <20200323155731.GK3199@paulmck-ThinkPad-P72>
- <20200323170609.w64xrfahd2snfz6h@e107158-lin.cambridge.arm.com>
- <20200323171751.GL3199@paulmck-ThinkPad-P72>
- <20200323174147.lneh4rp4tazhtm6x@e107158-lin.cambridge.arm.com>
- <20200323181010.GN3199@paulmck-ThinkPad-P72>
+        Mon, 23 Mar 2020 14:25:37 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36820 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727179AbgCWSZg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 14:25:36 -0400
+Received: by mail-qt1-f193.google.com with SMTP id m33so12601185qtb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 11:25:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vz1jTrOHhlau0BRekH82JXjI9Z5PbbRoxtyzM7wcGdk=;
+        b=X1CH1GVltCQdj8DdoNqavN4roarwwcB2hsCI+XK3JzbOgASZx+Kj0guGgixCarN8m0
+         yF2zg//qewNml70VOfqydcfIUG+A+LDNw/5cOdFrrzvjH2jdApwlKvzNHtKc2IQ64Swd
+         mHOw6pLeTWAUiIEPs6ybgnFPu3hBO9khxJylZH+SUZRhIssZwakCeu0K1kh7VrNc51rE
+         lMoPT/HMzDOrtYXL2z+uty/6LPVxYustbdL93bBBPzXMnQ8fZQvs7hzC2gHoQS2AwalO
+         lUajioxU2lilEs7I3w159QXUk9BYngxYjRdibBQCvubenXNFUK/MoOVOhXgQJwZKJni9
+         ZHLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vz1jTrOHhlau0BRekH82JXjI9Z5PbbRoxtyzM7wcGdk=;
+        b=A4Z/49ui49ieXwgh9uaIsy554nDXaOvltIN9nPH7BJbhVPDkHMJO/QJEi/WsnQfrKk
+         1OKu9nTQRD5y/oaVzcJMCQf5Z+mf5Z1/S+1k4GClvApU74BsqEEwMaw6Vn/9nFkr4IIA
+         wOXkSGvYuuePxV/7SXkbb4acNZClOmm3t6KUwGwu9JMVs+22xGmgZp2f46Ry3I1hUsZN
+         ZtG+mKdK517iHGsmWmBZSi1lEPAr8l/pcRBvUjnEIGCYoWdxx5pInE+afz3lISNXdGQg
+         OlW3VVqkpYVTePKavO+WPwdjSk+PyYuthHoMIFJbrnqth96baAR8PIloOPPBqtw1izyo
+         LqNQ==
+X-Gm-Message-State: ANhLgQ2/xxmEQUvdzXLy2nzR3+hEwgb2Rom1H7mOiLv610tzklontzbE
+        R3XHioxHGfUkO/mdhBm0Yv+11Q==
+X-Google-Smtp-Source: ADFU+vsib7u44SXaJjB6F+7ycgLvU7K9p2KA3EjlB2X4Tm1ey09SO8RfuMz6qlyjf9wDCQFwfID/9g==
+X-Received: by 2002:ac8:6b54:: with SMTP id x20mr22673141qts.41.1584987935620;
+        Mon, 23 Mar 2020 11:25:35 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id o67sm11050065qka.114.2020.03.23.11.25.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Mar 2020 11:25:35 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jGRlW-0007K3-F2; Mon, 23 Mar 2020 15:25:34 -0300
+Date:   Mon, 23 Mar 2020 15:25:34 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Ralph Campbell <rcampbell@nvidia.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v8 0/3] mm/hmm/test: add self tests for HMM
+Message-ID: <20200323182534.GD20941@ziepe.ca>
+References: <20200321003108.22941-1-rcampbell@nvidia.com>
+ <20200321090047.GM514123@unreal>
+ <396f0c30-4a49-6a18-ff02-a73ee1a09883@nvidia.com>
+ <20200321215505.GW20941@ziepe.ca>
+ <20200322081038.GG650439@unreal>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200323181010.GN3199@paulmck-ThinkPad-P72>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200322081038.GG650439@unreal>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/23/20 11:10, Paul E. McKenney wrote:
-> On Mon, Mar 23, 2020 at 05:41:48PM +0000, Qais Yousef wrote:
-> > On 03/23/20 10:17, Paul E. McKenney wrote:
-> > > On Mon, Mar 23, 2020 at 05:06:10PM +0000, Qais Yousef wrote:
-> > > > On 03/23/20 08:57, Paul E. McKenney wrote:
-> > > > > On Mon, Mar 23, 2020 at 03:43:09PM +0000, Qais Yousef wrote:
-> > > > > > Hi
-> > > > > > 
-> > > > > > I hit the following warning while running rcutorture tests. It only happens
-> > > > > > when I try to hibernate the system (arm64 Juno-r2).
-> > > > > 
-> > > > > Hibernating the system during rcutorture tests.  Now that is gutsy!  ;-)
-> > > > 
-> > > > Hehe was just a side effect of testing the cpu hotplug stuff :-)
-> > > > 
-> > > > > 
-> > > > > > Let me know if you need additional info.
-> > > > > 
-> > > > > 1.	Do you need this to work?  If so, please tell me your use case.
-> > > > 
-> > > > Nope. It just happened while trying to stress the cpu hotplug series I just
-> > > > posted.
-> > > > 
-> > > > > 2.	What is line 1055 of your rcutorture.c?  Here is my guess:
-> > > > 
-> > > > It's 5.6-rc6, sorry should have mentioned in the report.
-> > > > 
-> > > > 		/* Cycle through nesting levels of rcu_expedite_gp() calls. */
-> > > > 		if (can_expedite &&
-> > > > 		    !(torture_random(&rand) & 0xff & (!!expediting - 1))) {
-> > > > 			WARN_ON_ONCE(expediting == 0 && rcu_gp_is_expedited());
-> > > > 			if (expediting >= 0)
-> > > > 				rcu_expedite_gp();
-> > > > 			else
-> > > > 				rcu_unexpedite_gp();
-> > > > 			if (++expediting > 3)
-> > > > 				expediting = -expediting;
-> > > > 		} else if (!can_expedite) { /* Disabled during boot, recheck. */
-> > > > 
-> > > > If it's something you don't care about, then I don't care about too. I just
-> > > > thought I'd report it in case it uncovered something worthwhile.
-> > > 
-> > > Well, my guess was wrong.  ;-)
-> > > 
-> > > This is instead rcutorture being surprised by the fact that RCU grace
-> > > periods are expedited during the hibernate process.  I could fix this
-> > > particular situation, but I bet that there are a number of others,
-> > > including my guess above.
-> > > 
-> > > One approach would be to halt rcutorture testing just before hibernating
-> > > and restart it just after resuming.
-> > > 
-> > > Thoughts?
-> > 
-> > {register, unregister}_pm_notifier() don't seem to be too hard to use.
+On Sun, Mar 22, 2020 at 10:10:38AM +0200, Leon Romanovsky wrote:
+> On Sat, Mar 21, 2020 at 06:55:05PM -0300, Jason Gunthorpe wrote:
+> > On Sat, Mar 21, 2020 at 10:27:46AM -0700, Ralph Campbell wrote:
+> > >
+> > > On 3/21/20 2:00 AM, Leon Romanovsky wrote:
+> > > > On Fri, Mar 20, 2020 at 05:31:05PM -0700, Ralph Campbell wrote:
+> > > > > This series adds basic self tests for HMM and are intended for Jason
+> > > > > Gunthorpe's rdma tree which has a number of HMM patches applied.
+> > > > >
+> > > > > Changes v7 -> v8:
+> > > > > Rebased to Jason's rdma/hmm tree, plus Jason's 6 patch series
+> > > > >    "Small hmm_range_fault() cleanups".
+> > > > > Applied a number of changes from Jason's comments.
+> > > > >
+> > > > > Changes v6 -> v7:
+> > > > > Rebased to linux-5.6.0-rc6
+> > > > > Reverted back to just using mmu_interval_notifier_insert() and making
+> > > > >    this series only introduce HMM self tests.
+> > > > >
+> > > > > Changes v5 -> v6:
+> > > > > Rebased to linux-5.5.0-rc6
+> > > > > Refactored mmu interval notifier patches
+> > > > > Converted nouveau to use the new mmu interval notifier API
+> > > > >
+> > > > > Changes v4 -> v5:
+> > > > > Added mmu interval notifier insert/remove/update callable from the
+> > > > >    invalidate() callback
+> > > > > Updated HMM tests to use the new core interval notifier API
+> > > > >
+> > > > > Changes v1 -> v4:
+> > > > > https://lore.kernel.org/linux-mm/20191104222141.5173-1-rcampbell@nvidia.com
+> > > > >
+> > > > > Ralph Campbell (3):
+> > > > >    mm/hmm/test: add selftest driver for HMM
+> > > > >    mm/hmm/test: add selftests for HMM
+> > > > >    MAINTAINERS: add HMM selftests
+> > > > >
+> > > > >   MAINTAINERS                            |    3 +
+> > > > >   include/uapi/linux/test_hmm.h          |   59 ++
+> > > >
+> > > > Isn't UAPI folder supposed to be for user-visible interfaces that follow
+> > > > the rule of non-breaking user space and not for selftests?
+> > > >
+> > > > Thanks
+> > > >
+> > >
+> > > Most of the other kernel module tests seem to invoke the test as part of the
+> > > module load/init. I'm open to moving it if there is a more appropriate location.
+> >
+> > Is it even possible to create a user mm_struct and put crazy things in
+> > it soley from a kernel module?
 > 
-> That part is easy.  It would also be necessary to find all the affected
-> warnings in rcutorture and suppress them, not only during this time,
-> but also for some period of time afterwards.  Maybe this is the only one,
-> but that would be surprising.  ;-)
+> I didn't look very closely of what Ralph did in his patchsets, but from
+> what I know, if you want in-kernel interface, you use in-kernel module,
+> if you want to test user visible uapi, you write application. You don't
+> create new UAPI just to test something in the kernel.
 
-Wouldn't be easier to just deinit/init()? ie: treat it like unload/load module.
+That works fine as long as the in-kernel interfaces don't require user
+created objects like mm_struct and vmas, which is the case here.
 
-But you'll lose some info then that maybe you'd like to keep across
-suspend/resume cycles.
+So there must be some special uAPI between the kerne/user to make it
+work.
 
-> 
-> > But if it's not that simple, then it's not worthwhile I'd say. The report
-> > lives in LKML as a documentation of this missing support :-P
-> 
-> It might at some point be necessary for rcutorture to handle suspends
-> and hibernates in midstream, and yes, it could be done, but first I need
-> to see some reason why it provides significant help.
-
-Sounds reasonable to me. I agree my use case isn't sensible in general. It just
-happened because I was testing an operation that affected both hibernation and
-rcutorture test and I tend to compile my kernels with everything built-in.
-
-Thanks
-
---
-Qais Yousef
+Jason
