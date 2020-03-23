@@ -2,127 +2,95 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED781C4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960DAC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85312051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7496A206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:04:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbgCWTEN (ORCPT
+        id S1727821AbgCWTE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:04:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:53372 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727451AbgCWTEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:04:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B40CC31B;
-        Mon, 23 Mar 2020 12:04:12 -0700 (PDT)
-Received: from mbp (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB8EA3F52E;
-        Mon, 23 Mar 2020 12:04:11 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 19:04:09 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     =?iso-8859-1?Q?R=E9mi?= Denis-Courmont <remi@remlab.net>,
-        will@kernel.org, james.morse@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] arm64: clean up trampoline vector loads
-Message-ID: <20200323190408.GE4892@mbp>
-References: <1938400.7m7sAWtiY1@basile.remlab.net>
- <20200319091407.51449-1-remi@remlab.net>
- <20200323120700.GB2597@C02TD0UTHF1T.local>
- <2345780.q8flsOIESp@basile.remlab.net>
- <20200323121437.GC2597@C02TD0UTHF1T.local>
+        Mon, 23 Mar 2020 15:04:28 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:48858 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbgCWTE2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 15:04:28 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 48mP213YTmz1qs3f;
+        Mon, 23 Mar 2020 20:04:25 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 48mP212dwFz1qyDb;
+        Mon, 23 Mar 2020 20:04:25 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id QqK1mG1Wus-J; Mon, 23 Mar 2020 20:04:24 +0100 (CET)
+X-Auth-Info: I4MqN1cNOhqaPCP1appfZmyf8HYmdhHvee0xhz+7aVc=
+Received: from [IPv6:::1] (unknown [195.140.253.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Mon, 23 Mar 2020 20:04:24 +0100 (CET)
+Subject: Re: [PATCH v3 2/2] pinctrl: stm32: Add level interrupt support to
+ gpio irq chip
+To:     Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20200219143229.18084-1-alexandre.torgue@st.com>
+ <20200219143229.18084-3-alexandre.torgue@st.com>
+ <CACRpkdZ7uq4U6GBQQQh=pTLf4wW3KfH3Zrz9z_3ZQgoaJD9Ynw@mail.gmail.com>
+ <c991edca3e8925cf0489c0a5676f77b2@kernel.org>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <a7fc5e43-34c2-a4e6-e0c5-1584f17fb024@denx.de>
+Date:   Mon, 23 Mar 2020 20:04:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200323121437.GC2597@C02TD0UTHF1T.local>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c991edca3e8925cf0489c0a5676f77b2@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 12:14:37PM +0000, Mark Rutland wrote:
-> On Mon, Mar 23, 2020 at 02:08:53PM +0200, Rémi Denis-Courmont wrote:
-> > Le maanantaina 23. maaliskuuta 2020, 14.07.00 EET Mark Rutland a écrit :
-> > > On Thu, Mar 19, 2020 at 11:14:05AM +0200, Rémi Denis-Courmont wrote:
-> > > > From: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
-> > > > 
-> > > > This switches from custom instruction patterns to the regular large
-> > > > memory model sequence with ADRP and LDR. In doing so, the ADD
-> > > > instruction can be eliminated in the SDEI handler, and the code no
-> > > > longer assumes that the trampoline vectors and the vectors address both
-> > > > start on a page boundary.
-> > > > 
-> > > > Signed-off-by: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
-> > > > ---
-> > > > 
-> > > >  arch/arm64/kernel/entry.S | 9 ++++-----
-> > > >  1 file changed, 4 insertions(+), 5 deletions(-)
-> > > > 
-> > > > diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-> > > > index e5d4e30ee242..24f828739696 100644
-> > > > --- a/arch/arm64/kernel/entry.S
-> > > > +++ b/arch/arm64/kernel/entry.S
-> > > > @@ -805,9 +805,9 @@ alternative_else_nop_endif
-> > > > 
-> > > >  2:
-> > > >  	tramp_map_kernel	x30
-> > > >  
-> > > >  #ifdef CONFIG_RANDOMIZE_BASE
-> > > > 
-> > > > -	adr	x30, tramp_vectors + PAGE_SIZE
-> > > > +	adrp	x30, tramp_vectors + PAGE_SIZE
-> > > > 
-> > > >  alternative_insn isb, nop, ARM64_WORKAROUND_QCOM_FALKOR_E1003
-> > > > 
-> > > > -	ldr	x30, [x30]
-> > > > +	ldr	x30, [x30, #:lo12:__entry_tramp_data_start]
-> > > 
-> > > I think this is busted for !4K kernels once we reduce the alignment of
-> > > __entry_tramp_data_start.
-> > > 
-> > > The ADRP gives us a 64K aligned address (with bits 15:0 clear). The lo12
-> > > relocation gives us bits 11:0, so we haven't accounted for bits 15:12.
-> > 
-> > IMU, ADRP gives a 4K aligned value, regardless of MMU (TCR) settings.
+On 2/20/20 10:17 AM, Marc Zyngier wrote:
+> On 2020-02-20 09:04, Linus Walleij wrote:
+>> On Wed, Feb 19, 2020 at 3:32 PM Alexandre Torgue
+>> <alexandre.torgue@st.com> wrote:
+>>
+>>> GPIO hardware block is directly linked to EXTI block but EXTI handles
+>>> external interrupts only on edge. To be able to handle GPIO interrupt on
+>>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
+>>> chip)
+>>> is retriggered following interrupt type and gpio line value.
+>>>
+>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+>>> Tested-by: Marek Vasut <marex@denx.de>
+>>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> If Marc want to merge it with patch 1/2 go ahead!
 > 
-> Sorry, I had erroneously assumed tramp_vectors was page aligned. The
-> issue still stands -- we haven't accounted for bits 15:12, as those can
-> differ between tramp_vectors and __entry_tramp_data_start.
+> I'll queue the whole thing for 5.7.
 
-Should we just use adrp on __entry_tramp_data_start? Anyway, the diff
-below doesn't solve the issue I'm seeing (only reverting patch 3).
+I have a feeling this doesn't work with threaded interrupts.
 
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index ca1340eb46d8..4cc9d1df3985 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -810,7 +810,7 @@ alternative_else_nop_endif
- 2:
- 	tramp_map_kernel	x30
- #ifdef CONFIG_RANDOMIZE_BASE
--	adrp	x30, tramp_vectors + PAGE_SIZE
-+	adrp	x30, __entry_tramp_data_start
- alternative_insn isb, nop, ARM64_WORKAROUND_QCOM_FALKOR_E1003
- 	ldr	x30, [x30, #:lo12:__entry_tramp_data_start]
- #else
-@@ -964,7 +964,7 @@ SYM_CODE_START(__sdei_asm_entry_trampoline)
- 1:	str	x4, [x1, #(SDEI_EVENT_INTREGS + S_ORIG_ADDR_LIMIT)]
- 
- #ifdef CONFIG_RANDOMIZE_BASE
--	adrp	x4, tramp_vectors + PAGE_SIZE
-+	adrp	x4, __sdei_asm_trampoline_next_handler
- 	ldr	x4, [x4, #:lo12:__sdei_asm_trampoline_next_handler]
- #else
- 	ldr	x4, =__sdei_asm_handler
-
--- 
-Catalin
+If the interrupt handler runs in a thread context, the EOI will happen
+almost right away (while the IRQ handler runs) and so will the code
+handling the IRQ retriggering. But since the IRQ handler still runs and
+didn't return yet, the retriggering doesn't cause the IRQ handler to be
+called again once it finishes, even if the IRQ line is still asserted.
+And that could result in some of the retriggers now happening I think.
+Or am I doing something wrong ?
