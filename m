@@ -2,168 +2,108 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81667C10F26
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB0FC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22B3420409
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B6620409
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="maqMTIiL";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ANPS+DoQ"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="hVvfdRx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgCWHqr (ORCPT
+        id S1727498AbgCWHro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 03:46:47 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:37174 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727422AbgCWHqq (ORCPT
+        Mon, 23 Mar 2020 03:47:44 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44861 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727422AbgCWHro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 03:46:46 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 63E21401B2;
-        Mon, 23 Mar 2020 07:46:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1584949605; bh=zY4v6gkIXM8sd+hrgkVj2SPnVx2+xHLtAfCyBTUStq0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=maqMTIiLx1PgoZFd/Nrur9O7qjAsbUPShIMqksq7Q2A8o6fmvRejy40t1PD6ZeCpA
-         MJ0+1xuyBnAU9Z2pwCT7fA2XBI3aRfr2AFnTO8aIWuSfWhX4FxYiqHQ9VrZXo9Rziq
-         l/J/njaA/5sJhl5m1nEWGA3nb9CFrtV9rcos1pCjwD2bnNXF47PuObaio6RjCsv2Ni
-         9Rrvxw9zeV3ouSsMVh7DiIHVTzdFyq4CLdWtTzBYjrp+afeFeKZq5Eg8cvOmBCRmre
-         UCV7zfTiiDhUtwg5s5IpDxTnLDLoYlZtbHq9gOJgMc556K6Q60KR37IOvauOenXAkq
-         +4JtdsfzcPE/w==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 78A4DA006C;
-        Mon, 23 Mar 2020 07:46:41 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 23 Mar 2020 00:46:41 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 23 Mar 2020 00:46:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PD+y+xSeGJt1Lxn8A7QeUeCzs/WNC3/E/uwQCRuqlrosgZjjNLBunz5IYj3mGsFrW8ZFD1qK57fh5LPkl3Vdhi3dDej0JdJv3mT0+5E4cRqnFMC0bb7mzNRWj7j08dd9y0BsBHExQaQFKn8ltgFSdjeQMmowAwmRGKtTSBZU7I923BYkzPz8u/gHi0Y4ly88G97sjkrI3pLx4YAY1O4MNXa6OcizQNmWMzOAKm+Vv0R7TkXI7scgTBiYBfT3LzX4x2NhFy9n4PZntDyi+agroy2iP8Nd2ynTVauVZHDWVV0DnJwOKYwL9vn5nG4lnJml769NTwUBOP6z6K+zJ57KZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=znBL8FCMzfUCfOlXPMEUGibGT+B999s+uBKzRxM6f0o=;
- b=YQUewbnEZEO4htpx02jHpzuT7qwVDAi9vZnELgcJe11yug5X6O5DI0mnnjmwZy3i7HDaP4zuQA/JsuC6ktj2XqQbz6jCKoBO6TMttHXJnZBSMVOc3gSoY400lwckRe7a3SEoGG0Ksmf2tr3HTUG5fJdRZnCoiFrCJpQHyZU/x6ya87XFdRZgN4IimgMnDItFDq08HVMa6i11jQLjUyeGRO7KBikdr5i3hp6A4hp8LwT8Ynf4oRLADHxw9RkLm7lalCu50cgwB/4gmOKt8wds8kDMJJn92LEi3Omg0Y/3s1yqumvlkFeN5TkvNYZ8biq1Hhi8vlQoidyl8S1rinc9mg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=znBL8FCMzfUCfOlXPMEUGibGT+B999s+uBKzRxM6f0o=;
- b=ANPS+DoQcHNxfEMVAdlmCbOt4nKijtCZBpq4eoXuWTTBRy3v9peTXVmhwo+sAjPY3nko8FB3BQlWaBtPF7D/zv7Cxs+inmV6ySAeGbu9LOQOzN2lg3s+Nf1jffvDnDDUv6zjvOIDzzuI8KVqrTmpWiDCs2kwHPquSQx1Q1n+HTA=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (2603:10b6:408:6e::17)
- by BN8PR12MB3153.namprd12.prod.outlook.com (2603:10b6:408:69::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Mon, 23 Mar
- 2020 07:46:40 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c9ed:b08e:f3c5:42fa]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c9ed:b08e:f3c5:42fa%7]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
- 07:46:40 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Voon Weifeng <weifeng.voon@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>
-Subject: RE: [RFC,net-next,v1, 1/1] net: stmmac: Enable SERDES power up/down
- sequence
-Thread-Topic: [RFC,net-next,v1, 1/1] net: stmmac: Enable SERDES power up/down
- sequence
-Thread-Index: AQHWAE03JZEV2gP9CkiKXaQcDq7OzahVzGeA
-Date:   Mon, 23 Mar 2020 07:46:39 +0000
-Message-ID: <BN8PR12MB3266ACFFA4808A133BB72F9DD3F00@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <20200322132342.2687-1-weifeng.voon@intel.com>
- <20200322132342.2687-2-weifeng.voon@intel.com>
-In-Reply-To: <20200322132342.2687-2-weifeng.voon@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [82.155.99.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3d97721e-3255-4b3e-45de-08d7cefe52aa
-x-ms-traffictypediagnostic: BN8PR12MB3153:
-x-microsoft-antispam-prvs: <BN8PR12MB315351C657186FA9C8018F86D3F00@BN8PR12MB3153.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0351D213B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(346002)(39850400004)(396003)(376002)(199004)(2906002)(5660300002)(9686003)(55016002)(33656002)(81156014)(81166006)(8676002)(8936002)(478600001)(316002)(71200400001)(110136005)(54906003)(6506007)(26005)(186003)(86362001)(4326008)(66556008)(66476007)(66946007)(66446008)(64756008)(7696005)(76116006)(52536014)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3153;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NJXNLhjffBmzHWO+jXzI/wMfimKn3yRH6QNodJbDrvwpDuotZSM42e5TXWJOMpKx1zlRqcrnLlAFHaw7HzhE3Pm01yleB3TjrKz131X616CRpQ9klu/kwtOFHmnKtbQj5j/Akple9iMWjEMlKgJaG0ylxzwj+PIMVhvuW6pOXTLtzJKtlYoDEkfpnm4xzC6IWO6Cuf6SnSR/R0z39GPM5UNQKfbXYLNovurDeBaZA3P2mXcdm8GlmXOKeyAyTZSzHukfcnSHK9F2iqoPy2UMqlTsmK6OWw8eJFraKm0l3mbMGUambSixVPlswU3RUOF7CX2bLg59xoIlokmJdFR13VpSOkI5Sb9Ak2EBIopACwSCvEiHQKbIVfEEaQ3E5UhOoTbVgj91IHs5NGkgjxRgEOTdWC56MDKZzLQvkqWiRsQOYgvB6CaV5kvgd1iy0/KOAFwHUUL2ucsrckTi5839TUjaL3DRx/x5LW0LFmEYiV23IPCT5zwdvXRZ7XJ317n6
-x-ms-exchange-antispam-messagedata: KwmNZHGEvCDlaCAM6Szum+SfOrQbLQoNh4pU9k1zrtAZZsYQAMlEb9eF/qrQg4VNHAUXTmWcvq1mfKhsWJ0Z/gtYURA2qSyuPnccM8BuOZrF/WUC/02znPu6g2Q4Cd15QdJEfNQEX5DY2PLE7FlWCw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 23 Mar 2020 03:47:44 -0400
+Received: by mail-lj1-f196.google.com with SMTP id w4so13366417lji.11
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 00:47:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tNemhAmkl1sC97ky4z5cEU5jjdlE0uUKewIMEJEyzJ8=;
+        b=hVvfdRx0erRcY30bjN+sbyE/bqsSqTNdYvemLMYMWnpKOAQUEor8deRsklqX4tWjc3
+         4ys0vcqxsiYXGN2NflgKGB06jaPwHLDyXyp+2hyMcsSc8zySGFguQgQxOSv85FKEneFl
+         8oNO4rCLXpX7xvt67eN00p8khz+/CIWt0FTlTbaO9xDfNU4Jf4++YTPdCBe8WgD9Zvll
+         8UnnKMfRQ9F9Mh5BoHeRJjZN94+oDaUmVYJJaAqyBDPOXtfk6aivEh1mgf7WX4Yplozb
+         Vnvk32/7Ar40rg6mULkdvxIbkyJLIQxAVKDG/sknbPIiBVeva7UXUunQQ9W99ZqCujzx
+         2w1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tNemhAmkl1sC97ky4z5cEU5jjdlE0uUKewIMEJEyzJ8=;
+        b=TSOXewZ1yipH8tw13/IihDVrIEm4IxxjROvBOY+y+Tqdm40aJfHXqENcULw5MDHGtZ
+         4aTkH94CQMZROJAb3pmTvpsesYb2kwz2td+1fD/FALBDWbdv5e0ZEVL43VJCCXjOy5HE
+         286BJD0q34DkckTCKbQ5G1WHF2/quHoWXdRCxwBfbz+M6FDUTzJDT/UoS7eOqQ1xu9rv
+         ZheGVgiUAEonC7Vmp2lh52U6Vt1cMLqZ7UTWoBA1evvGzmkBRgpXVzVkTCVlcUMiok/3
+         AsMe5AahLgUQENsOKojbaCbtkBG7LNjXKlbdV0rNNpD2VAox9L1LbY3ibV5ddAuhUrdE
+         G3Cw==
+X-Gm-Message-State: ANhLgQ0XtCRpA3IUs0OKqzbPd83OF75MlNOiUN1WtgTpwim5sFwFdLk6
+        hvohlgIeUQKi+YJRepbvnMl8cw==
+X-Google-Smtp-Source: ADFU+vvTzGsmzHUi0GbFlRIRrHVNq0/fulaIiAo4xVsXvbsRD+agAie/6i3zPBHF8Dq4sENHzZEnyQ==
+X-Received: by 2002:a2e:b701:: with SMTP id j1mr13060175ljo.6.1584949661247;
+        Mon, 23 Mar 2020 00:47:41 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id f23sm8018219lja.42.2020.03.23.00.47.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 00:47:40 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id BA4FF100B9B; Mon, 23 Mar 2020 10:47:40 +0300 (+03)
+Date:   Mon, 23 Mar 2020 10:47:40 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, jhubbard@nvidia.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/memory: Drop pud_mknotpresent()
+Message-ID: <20200323074740.s5q3ifxvd6ahln7l@box>
+References: <1584925542-13034-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d97721e-3255-4b3e-45de-08d7cefe52aa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2020 07:46:39.9230
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: f8k//LO87II/nejQhcWL/7MkZCcPjTJWemyISI/tW7hAKSGPDhDTEbiX8/zeMBKvsTG0kMhPFNMwIkhwryx5Og==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3153
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584925542-13034-1-git-send-email-anshuman.khandual@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Voon Weifeng <weifeng.voon@intel.com>
-Date: Mar/22/2020, 13:23:42 (UTC+00:00)
+On Mon, Mar 23, 2020 at 06:35:42AM +0530, Anshuman Khandual wrote:
+> There is an inconsistency between PMD and PUD based THP page table helpers
+> like the following, as pud_present() does not test for _PAGE_PSE.
+> 
+> pmd_present(pmd_mknotpresent(pmd)) : True
+> pud_present(pud_mknotpresent(pud)) : False
+> 
+> This drops pud_mknotpresent() as there are no current users. If/when needed
+> back later, pud_present() will also have to fixed to accommodate _PAGE_PSE.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Dave Hansen <dave.hansen@intel.com>
+> Cc: Kirill A. Shutemov <kirill@shutemov.name>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: x86@kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-> This patch is to enable Intel SERDES power up/down sequence. The SERDES
-> converts 8/10 bits data to SGMII signal. Below is an example of
-> HW configuration for SGMII mode. The SERDES is located in the PHY IF
-> in the diagram below.
->=20
-> <-----------------GBE Controller---------->|<--External PHY chip-->
-> +----------+         +----+            +---+           +----------+
-> |   EQoS   | <-GMII->| DW | < ------ > |PHY| <-SGMII-> | External |
-> |   MAC    |         |xPCS|            |IF |           | PHY      |
-> +----------+         +----+            +---+           +----------+
->        ^               ^                 ^                ^
->        |               |                 |                |
->        +---------------------MDIO-------------------------+
->=20
-> PHY IF configuration and status registers are accessible through
-> mdio address 0x15 which is defined as intel_adhoc_addr. During D0,
-> The driver will need to power up PHY IF by changing the power state
-> to P0. Likewise, for D3, the driver sets PHY IF power state to P3.
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-I don't think this is the right approach.
-
-You could just add a new "mdio-intel-serdes" to phy/ folder just like I=20
-did with XPCS because this is mostly related with PHY settings rather than=
-=20
-EQoS.
-
-Perhaps Andrew has better insight on this.
-
-BTW, are you using the standard XPCS helpers in phy/ folder ? Is it=20
-working fine for you ?
-
----
-Thanks,
-Jose Miguel Abreu
+-- 
+ Kirill A. Shutemov
