@@ -2,124 +2,81 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C122C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672B4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 419EE2076F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:54:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qDU3xfyd"
+	by mail.kernel.org (Postfix) with ESMTP id 4905320714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:54:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgCWWxG (ORCPT
+        id S1727150AbgCWWy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:53:06 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53012 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbgCWWxF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 18:53:05 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02NMqwLU046211;
-        Mon, 23 Mar 2020 17:52:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585003978;
-        bh=r+sfqraITYcKJAQvGWd1Eaf2bkxsbyuiSdj02KQUtLM=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=qDU3xfydhzoAMTW4OURb+SlNnr7hjs0MAbuNLcFHEASMQxcdn35YME5oRldzz8456
-         G6ZG0/UEhJklk3NbAQHXRutZ2/ujMOJ61jAdd+VQERcJxTa/KK8fGtvibdnKc/3Rvx
-         mUtPy+SAXkGUo1mHuETYiQELsLijo7cUp7B2PHNA=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02NMqwWW049927
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Mar 2020 17:52:58 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
- Mar 2020 17:52:58 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 23 Mar 2020 17:52:58 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02NMqvjJ125515;
-        Mon, 23 Mar 2020 17:52:57 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
-        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>
-CC:     Murali Karicheri <m-karicheri2@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v6 01/11] phy: ti: gmii-sel: simplify config dependencies between net drivers and gmii phy
-Date:   Tue, 24 Mar 2020 00:52:44 +0200
-Message-ID: <20200323225254.12759-2-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200323225254.12759-1-grygorii.strashko@ti.com>
-References: <20200323225254.12759-1-grygorii.strashko@ti.com>
+        Mon, 23 Mar 2020 18:54:56 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:33292 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725897AbgCWWyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 18:54:55 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jGVxM-00071z-4E; Tue, 24 Mar 2020 09:54:05 +1100
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 24 Mar 2020 09:54:03 +1100
+Date:   Tue, 24 Mar 2020 09:54:03 +1100
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [GIT PULL] Crypto Fixes for 5.6
+Message-ID: <20200323225403.GA10100@gondor.apana.org.au>
+References: <20190916084901.GA20338@gondor.apana.org.au>
+ <20190923050515.GA6980@gondor.apana.org.au>
+ <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
+ <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
+ <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
+ <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
+ <20200224060042.GA26184@gondor.apana.org.au>
+ <20200312115714.GA21470@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312115714.GA21470@gondor.apana.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The phy-gmii-sel can be only auto selected in Kconfig and now the pretty
-complex Kconfig dependencies are defined for phy-gmii-sel driver, which
-also need to be updated every time phy-gmii-sel is re-used for any new
-networking driver.
+Hi Linus:
 
-Simplify Kconfig definition for phy-gmii-sel PHY driver - drop all
-dependencies and from networking drivers and rely on using 'imply
-PHY_TI_GMII_SEL' in Kconfig definitions for networking drivers instead.
+This push fixes a correctness bug in the ARM64 version of ChaCha
+for lib/crypto used by WireGuard.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-Tested-by: Murali Karicheri <m-karicheri2@ti.com>
-Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/net/ethernet/ti/Kconfig | 1 +
- drivers/phy/ti/Kconfig          | 3 ---
- 2 files changed, 1 insertion(+), 3 deletions(-)
+The following changes since commit 1579f1bc3b753d17a44de3457d5c6f4a5b14c752:
 
-diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-index bf98e0fa7d8b..8a6ca16eee3b 100644
---- a/drivers/net/ethernet/ti/Kconfig
-+++ b/drivers/net/ethernet/ti/Kconfig
-@@ -53,6 +53,7 @@ config TI_CPSW
- 	select MFD_SYSCON
- 	select PAGE_POOL
- 	select REGMAP
-+	imply PHY_TI_GMII_SEL
- 	---help---
- 	  This driver supports TI's CPSW Ethernet Switch.
- 
-diff --git a/drivers/phy/ti/Kconfig b/drivers/phy/ti/Kconfig
-index 6dbe9d0b9ff3..15a3bcf32308 100644
---- a/drivers/phy/ti/Kconfig
-+++ b/drivers/phy/ti/Kconfig
-@@ -106,11 +106,8 @@ config TWL4030_USB
- 
- config PHY_TI_GMII_SEL
- 	tristate
--	default y if TI_CPSW=y || TI_CPSW_SWITCHDEV=y
--	depends on TI_CPSW || TI_CPSW_SWITCHDEV || COMPILE_TEST
- 	select GENERIC_PHY
- 	select REGMAP
--	default m
- 	help
- 	  This driver supports configuring of the TI CPSW Port mode depending on
- 	  the Ethernet PHY connected to the CPSW Port.
+  crypto: x86/curve25519 - support assemblers with no adx support (2020-03-05 18:28:09 +1100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus 
+
+for you to fetch changes up to c8cfcb78c65877313cda7bcbace624d3dbd1f3b3:
+
+  crypto: arm64/chacha - correctly walk through blocks (2020-03-20 14:35:27 +1100)
+
+----------------------------------------------------------------
+Jason A. Donenfeld (1):
+      crypto: arm64/chacha - correctly walk through blocks
+
+ arch/arm64/crypto/chacha-neon-glue.c   |  8 ++++----
+ lib/crypto/chacha20poly1305-selftest.c | 11 ++++++++---
+ 2 files changed, 12 insertions(+), 7 deletions(-)
+
+Thanks,
 -- 
-2.17.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
