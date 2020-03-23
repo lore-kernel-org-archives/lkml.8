@@ -2,72 +2,90 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C60F8C4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E748C4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A348620719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE37206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:17:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="EUrv5Fzt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbgCWTRO (ORCPT
+        id S1727943AbgCWTRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:17:14 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37760 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727689AbgCWTRO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:17:14 -0400
-Received: from [222.129.50.174] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <aaron.ma@canonical.com>)
-        id 1jGSZN-00031K-JS; Mon, 23 Mar 2020 19:17:06 +0000
-From:   Aaron Ma <aaron.ma@canonical.com>
-To:     jeffrey.t.kirsher@intel.com, aaron.ma@canonical.com,
-        davem@davemloft.net, intel-wired-lan@lists.osuosl.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sasha.neftin@intel.com
-Subject: [PATCH] e1000e: bump up timeout to wait when ME un-configure ULP mode
-Date:   Tue, 24 Mar 2020 03:16:39 +0800
-Message-Id: <20200323191639.48826-1-aaron.ma@canonical.com>
-X-Mailer: git-send-email 2.25.2
+        Mon, 23 Mar 2020 15:17:54 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:37239 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727689AbgCWTRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 15:17:54 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48mPKW0XfjzWS;
+        Mon, 23 Mar 2020 20:17:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1584991071; bh=XQ3m3+vQyM1VoUnzBx+7RSvsto1Yo997gskRv6Y8sNw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EUrv5FztMtosPKGE+IXzco8ePvvAoseoWikMkCmMNukTiH8+xrbqOHtRvbyB1nWiU
+         GaWXoAqpOJ/wr2QLc2P6VXOcd+YPtnl1sjbLY5Xcqi76HEkCoi/p/qVbuZw05wECy9
+         yfIsM51B2DdOta7zwUsRZdOHCpdhlsvCtBUbe/0NewH0+mo+Eeqmh6St9BEGMayBmN
+         KS43CYpOlgggJCu/R18F0sINmLul+wU5NUN24bVpxnvSopb4SjJ1rmrXJ8TacdQSB1
+         dxQS9jXSwgbQiLHnktvCk1tJZqHBzgJStDTVCTxqG1NP3hNut8gcc8b9FgtBNRAMkz
+         w2Y46EOBgTUSg==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Mon, 23 Mar 2020 20:17:48 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>, linux-tegra@vger.kernel.org,
+        linux-block@vger.kernel.org, Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 03/10] partitions: Introduce NVIDIA Tegra Partition
+ Table
+Message-ID: <20200323191748.GB30585@qmqm.qmqm.pl>
+References: <20200323163431.7678-1-digetx@gmail.com>
+ <20200323163431.7678-4-digetx@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200323163431.7678-4-digetx@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ME takes 2+ seconds to un-configure ULP mode done after resume
-from s2idle on some ThinkPad laptops.
-Without enough wait, reset and re-init will fail with error.
+On Mon, Mar 23, 2020 at 07:34:24PM +0300, Dmitry Osipenko wrote:
+> All NVIDIA Tegra devices use a special partition table format for the
+> internal storage partitioning. Most of Tegra devices have GPT partition
+> in addition to TegraPT, but some older Android consumer-grade devices do
+> not or GPT is placed in a wrong sector, and thus, the TegraPT is needed
+> in order to support these devices properly in the upstream kernel. This
+> patch adds support for NVIDIA Tegra Partition Table format that is used
+> at least by all NVIDIA Tegra20 and Tegra30 devices.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  arch/arm/mach-tegra/tegra.c   |  54 ++++
+[...]
 
-Fixes: f15bb6dde738cc8fa0 ("e1000e: Add support for S0ix")
-BugLink: https://bugs.launchpad.net/bugs/1865570
-Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
----
- drivers/net/ethernet/intel/e1000e/ich8lan.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Please split off this part and make the information available to
+userspace (pt_addr + pt_size) if found. This would make it easier
+to support use the partition table later in initrd instead.
 
-diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-index b4135c50e905..147b15a2f8b3 100644
---- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
-+++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-@@ -1240,9 +1240,9 @@ static s32 e1000_disable_ulp_lpt_lp(struct e1000_hw *hw, bool force)
- 			ew32(H2ME, mac_reg);
- 		}
- 
--		/* Poll up to 300msec for ME to clear ULP_CFG_DONE. */
-+		/* Poll up to 2.5sec for ME to clear ULP_CFG_DONE. */
- 		while (er32(FWSM) & E1000_FWSM_ULP_CFG_DONE) {
--			if (i++ == 30) {
-+			if (i++ == 250) {
- 				ret_val = -E1000_ERR_PHY;
- 				goto out;
- 			}
--- 
-2.17.1
-
+Best Regards
+Micha³ Miros³aw
