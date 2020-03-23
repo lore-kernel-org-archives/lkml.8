@@ -2,174 +2,198 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4D7C4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64084C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72EA42077D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7EF2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:56:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="nshXgbiG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L+/GePl+"
+	dkim=pass (1024-bit key) header.d=topicbv.onmicrosoft.com header.i=@topicbv.onmicrosoft.com header.b="i5k1sv4/";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=topicbv.onmicrosoft.com header.i=@topicbv.onmicrosoft.com header.b="FKpWf0VI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgCWJ4w (ORCPT
+        id S1727843AbgCWJ4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 05:56:52 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:42299 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727793AbgCWJ4w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:56:52 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 077E35C01CF;
-        Mon, 23 Mar 2020 05:56:49 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 23 Mar 2020 05:56:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=wgbXdMR5Fy5EoV2nT9ZPQ25D44q
-        Kl+2Q83gfeD4WsWA=; b=nshXgbiGIQu+izkBtG8tT/GEKL4mlWche5RCX/MlhZy
-        B8ebR3mFX0SOHAXIspoWjrvDc9V3ETYadmxss3/kr/MxHGoR0uPgYv6R3mQwE3Fx
-        V7URTIuMgJW9FroS5GPyXGrvhMx7INYPD3RIWbHcXiY71MA4Rmvu8uz8lgln1S6p
-        vBOyOFegoaOrZD1vNwn1bMvnKHOjSBIeeaEoq/xLNYG8f7JdBlxl4o6uN9Q+xWaY
-        2ugXa7fJngedIVWdwoDlPwKvgMvUgFuLdzmFjO2Khtxg9r9LIx63pkp3g6hs57xk
-        5x12Qj/Rm1TkAT5/pXGyDAc3jnSK/flEIpuXwwJgSGQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=wgbXdM
-        R5Fy5EoV2nT9ZPQ25D44qKl+2Q83gfeD4WsWA=; b=L+/GePl+SdIY0cknem8U2P
-        5WTH8v4cB/yDVJ2d3Q9torbs8tVeXMPRF7xT7sC6b+2TcJBqVsEIacYv/dZMXqri
-        Xb0wmnY+6z1kV+Z9jIlXAbAp+eNblFkklbx0WZxpwxKDRR88y4UkYH/MSDfG8ZYU
-        4p/6EWkm7kDInYOG23T6RpJCs5U3HNti0UiCbLodb+doo/+hH2bTtTewcp4AYyH0
-        4mt1mKfveFF/iOOKCVQkmNXOAOaElVpA8wEMA9sImg2zU/+nuay7v66PUPR40naK
-        v2NkC0IGmKnZ303AaBQToCGrc7Tbk1fdm39JMb/zLl2HwTTX/SHsK6cTxZBkQFwA
-        ==
-X-ME-Sender: <xms:34d4Xi6Ytc5JcWWDM4SBt2M1VBog0H0upnvEsQHoF5okksU2LbAhQA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudegkedgtdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhr
-    vghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:34d4XohrD5UDyKXTlqsKRqSJy1qBjo9Oy2HsobcoR_Vt6KiDk1CHkQ>
-    <xmx:34d4Xn1erQc4iie6eRx422uUbdV-3iynpjDgLhWXJGdSBiE0M00i_A>
-    <xmx:34d4XpAff2Y8txk_l3ufAqnvhrgGsA3KG4k3NKi_kxsNSf3c_57c1g>
-    <xmx:4Yd4XgAC1XEAPGdfYvICAwXAbJRloID6AkatzG7ZKrOfp708bhbcKg>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6F1EE328005D;
-        Mon, 23 Mar 2020 05:56:47 -0400 (EDT)
-Date:   Mon, 23 Mar 2020 10:56:45 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Michael Tretter <m.tretter@pengutronix.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: linux-next: manual merge of the staging tree with the v4l-dvb
- tree
-Message-ID: <20200323095645.GC425358@kroah.com>
-References: <20200323151805.6a166c84@canb.auug.org.au>
+        Mon, 23 Mar 2020 05:56:55 -0400
+Received: from mail-eopbgr10042.outbound.protection.outlook.com ([40.107.1.42]:36398
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727761AbgCWJ4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 05:56:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=topicbv.onmicrosoft.com; s=selector2-topicbv-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GTEXr5ihoKR+FB8MpLDXhQgCKuCWoobr17dkdbOSkt0=;
+ b=i5k1sv4/Os2f17yfuqBNFWcd8CDJ40Tb1HbzYWnrSeN1OVcL/QH7i/HRc2fXvK7UikXeL0GIj3jVrx+MTdSH8PLkxDA1ReAFjj24OnBf2qT0R5nTv15MZVlxvGuFmzqiRBLNzXKV8HHTwdR3QAou7SO8K3HWv9pNvpwP07J2eSk=
+Received: from AM5PR0402CA0011.eurprd04.prod.outlook.com
+ (2603:10a6:203:90::21) by AM0PR0402MB3746.eurprd04.prod.outlook.com
+ (2603:10a6:208:e::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.22; Mon, 23 Mar
+ 2020 09:56:48 +0000
+Received: from HE1EUR01FT031.eop-EUR01.prod.protection.outlook.com
+ (2603:10a6:203:90:cafe::aa) by AM5PR0402CA0011.outlook.office365.com
+ (2603:10a6:203:90::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.19 via Frontend
+ Transport; Mon, 23 Mar 2020 09:56:48 +0000
+Authentication-Results: spf=pass (sender IP is 13.81.10.179)
+ smtp.mailfrom=topicproducts.com; arm.com; dkim=fail (signature did not
+ verify) header.d=topicbv.onmicrosoft.com;arm.com; dmarc=none action=none
+ header.from=topic.nl;
+Received-SPF: Pass (protection.outlook.com: domain of topicproducts.com
+ designates 13.81.10.179 as permitted sender) receiver=protection.outlook.com;
+ client-ip=13.81.10.179; helo=westeu13-emailsignatures-cloud.codetwo.com;
+Received: from westeu13-emailsignatures-cloud.codetwo.com (13.81.10.179) by
+ HE1EUR01FT031.mail.protection.outlook.com (10.152.0.177) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.14 via Frontend Transport; Mon, 23 Mar 2020 09:56:47 +0000
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (104.47.13.51) by westeu13-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Mon, 23 Mar 2020 09:56:44 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IUFajBeOBWiPVua/k9yjzocUa1j0Of/4WBIne4bP3FdScb6oA4EE6yh7QwVrZ2x5+NUD79BTD/e4TP2vyRb2cySOTpSZ7A+oF77syijsWT3EjFTJkyT7qQyO599T9qLilz+dtFdnse5aNMu39D+ABWg25xxsgvpfYaDJcBSi7RqIRONF+gW0hkg24Z+SF2Yy26h20kI415/j592fp7L5waX199viWhWTlx70pihKlRXWforW073+VRKhRCDVJTGxdkyN+pEqawMW+3Y74i+88I/tKuqLVX+Cb9o2DL6vdw0X9mdHP+Wiwns/PUyI4y05Nh9cfp4Pl6dalgHWRh3/Jg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GTEXr5ihoKR+FB8MpLDXhQgCKuCWoobr17dkdbOSkt0=;
+ b=baudYcU6Sa85M74/aAbXrsmWLAY/gvdNMYOoyAIomVdSijDdoRCDxhCwzWIHTif54QdGyLV3oTqjDMJOcrDXGvqcH9eT8D7wx9YvSR1qohg8hUfKXOlLAmMR0XNtfnPpWMQ3ZPZ50qJGEdKb2M7hneb+tsSI2B+5xI3t4bhqkNQBi8/jv5FRuywu2/C4bqhmxNrVZtO81iOYuX+KWVR4GK6F/BN4DdQ1ahkX8aYyyEHuDOPrU7p+TNXY69wBmPzbsLDE/vjgxP9s1dulcEf5baaCGnuaSKInO8vGazR+ELtct1EFKyXtzH+IdBL3W51V6AmsKAc3jvJY46mwEAejuw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=topicproducts.com; dmarc=pass action=none header.from=topic.nl;
+ dkim=pass header.d=topic.nl; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=topicbv.onmicrosoft.com; s=selector2-topicbv-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GTEXr5ihoKR+FB8MpLDXhQgCKuCWoobr17dkdbOSkt0=;
+ b=FKpWf0VIQ8M2inUd3Pxpuk8YCKScaqhWE7STGztkoxH5S49mC58l7pYLXkIDl1jPqJq3C12wipiZ0B7cbLd8w0Pq8OEUgeURIrNoyhXPIJF4f/nAiqRU1lEkbJ/29U/eoVlEqe4s27bsvPR7MmyOqXjg72zomzHSupFrkb7Ysvg=
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=mike.looijmans@topicproducts.com; 
+Received: from DB3PR0402MB3947.eurprd04.prod.outlook.com (52.134.67.147) by
+ DB3PR0402MB3769.eurprd04.prod.outlook.com (52.134.71.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.22; Mon, 23 Mar 2020 09:56:42 +0000
+Received: from DB3PR0402MB3947.eurprd04.prod.outlook.com
+ ([fe80::380e:f722:2d0d:9c71]) by DB3PR0402MB3947.eurprd04.prod.outlook.com
+ ([fe80::380e:f722:2d0d:9c71%6]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
+ 09:56:42 +0000
+Subject: Re: [PATCH] dt-bindings: iio: accel: Add bmi088 accelerometer
+ bindings
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com
+References: <20200316065218.4103-1-mike.looijmans@topic.nl>
+ <20200322173704.5cc497c1@archlinux>
+From:   Mike Looijmans <mike.looijmans@topic.nl>
+Organization: Topic
+Message-ID: <d9105fb7-fe0b-d432-fb12-d595c364f83b@topic.nl>
+Date:   Mon, 23 Mar 2020 10:56:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <20200322173704.5cc497c1@archlinux>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR04CA0004.eurprd04.prod.outlook.com
+ (2603:10a6:208:122::17) To DB3PR0402MB3947.eurprd04.prod.outlook.com
+ (2603:10a6:8:7::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323151805.6a166c84@canb.auug.org.au>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.130] (83.128.90.119) by AM0PR04CA0004.eurprd04.prod.outlook.com (2603:10a6:208:122::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.18 via Frontend Transport; Mon, 23 Mar 2020 09:56:42 +0000
+X-Originating-IP: [83.128.90.119]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3711d50c-3028-453c-49e5-08d7cf10805a
+X-MS-TrafficTypeDiagnostic: DB3PR0402MB3769:|AM0PR0402MB3746:
+X-Microsoft-Antispam-PRVS: <AM0PR0402MB37462CC59907990E59FF3C6F96F00@AM0PR0402MB3746.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;OLM:7691;
+X-Forefront-PRVS: 0351D213B3
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(39830400003)(396003)(136003)(366004)(346002)(376002)(199004)(2906002)(956004)(53546011)(5660300002)(316002)(4326008)(2616005)(44832011)(36756003)(16576012)(31696002)(508600001)(81156014)(36916002)(81166006)(6916009)(42882007)(6486002)(52116002)(31686004)(26005)(8676002)(8936002)(16526019)(66556008)(66946007)(66476007)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3769;H:DB3PR0402MB3947.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: topicproducts.com does not
+ designate permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: LDhzRkpRod/aukZl/FS0hSxvG1I/+ui8d3s7mtFcEJ+dGzSB0IaTLQgQ22gfj7nBZSupmcIrgf5Np8UadkI4WYL2ARhU8e36eXy9Q3j8gtpGsLSNtr/fgP1xdl/paA4Vf6+N2plTiHAsINjW5V77bdj8tJgR6JydLFnM9oWxUYoUPiMzZ+qqh6SyV8KhotP+gDwlhu2LCWHMhUAZPL8aLZQ9x4TjMsHRohQCrHWkv5ys9XFzJT/fwVB3/otXle41HHPD4gsHUqPNYSr6fEI8aNqNdmVvIrw2HUtJprwVuhUUXqZomXw6a4P8Q9M8BOG/bSeAKjGHMQjsPz4OGdyXs9hX2xAYXEH/mY7hpXYj+ZLVCL0JpbTnMBaKRNEMifKAl8yqI/rYl0IdvK83BdQN4UeNL+A7vkE6B9C1eL8KoKKVulB+SYv8tm8jVkxD7aaW4+0+jhoU7eL+iO3Wz1DMkim66SdZxONhDurEHnEF8vzOz2Vy/6Ekdei6S9Ft26+aNmUhyi7pfNazmOxY3aZZeQ==
+X-MS-Exchange-AntiSpam-MessageData: FqVtpD1B5z7uCHnmibmIw1KahKoiSy0EdyRNDrVFHIsA9IFSHjt/VUzx8uQnq/BU8hKunfXovfHgGItOT24mqNZn39ogAIFikugsTRUKBYM9vPjHO/nAplUf+/Bz3Hak64yXFuF3Lp5V9lJTkeuVgQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3769
+X-CodeTwo-MessageID: 0748f135-05df-498f-a256-d77e0c7afd67.20200323095644@westeu13-emailsignatures-cloud.codetwo.com
+X-CodeTwoProcessed: true
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: HE1EUR01FT031.eop-EUR01.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:13.81.10.179;IPV:;CTRY:NL;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(376002)(346002)(39840400004)(396003)(199004)(46966005)(2616005)(53546011)(956004)(186003)(26005)(16526019)(336012)(70586007)(356004)(70206006)(6486002)(42882007)(7636002)(246002)(7596002)(44832011)(36756003)(508600001)(2906002)(36916002)(8936002)(5660300002)(82310400001)(31686004)(31696002)(316002)(8676002)(6916009)(16576012)(47076004)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0402MB3746;H:westeu13-emailsignatures-cloud.codetwo.com;FPR:;SPF:Pass;LANG:en;PTR:westeu13-emailsignatures-cloud.codetwo.com;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 5447c0dc-cc13-4ef6-f8c8-08d7cf107d41
+X-Forefront-PRVS: 0351D213B3
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lmRbrCB5m51XiPj+9t1wciX/RJQj4OZAXRr4c47mARPnvR+t6Y5HZGoYN9pt0GZBl/2VXyw+IKYfKQjUaw1g3o6X7+aixJECev3F9rleogXmI6U5S3fk5ffgqC5f4USFur5HKjoAQ5Qxg8PDiHQBwMhr1ZxzQqZEa7JBS4fWeXCoxDE8jTrPiB0EELJYqyIjtJelLRJl7SMVC23ppdn6tITjypTw+jO+5wYpeLvDFN43032Uk/Z9eTjh2LdaJZ7NuGBHnibAyfF2tXa79HGLs7I4mKBFFZ/uOz32YYXp+xW9wNfGxExbyqsq673ZJIT7vpsvn6wMp5u7D7+mhhCFHvIa9BszE2lhysEqTtLT+Eg+HpIjC9fPm8Tj5XOIZB+8FwCf6CmNA5Ubrn52v1SdGpeye6DUsQsZJZwbR3qMqNYEoBWTdpsx1wGBmy2pG3IxgrehHFA9A4Qh4MX/LwdnwWEmUSsuejtDtAHC4Ne+zNq1JaigtIMg+ELjtRLSEVJX1Z1SKZfMsr3dIdwZjRxTbIZyLdPt5b15ObUywWezAyIVDa99Qx8/pXu1ef4gzCHvTKQP2JXIph1XPJ7Ry0v+ww==
+X-OriginatorOrg: topic.nl
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2020 09:56:47.3572
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3711d50c-3028-453c-49e5-08d7cf10805a
+X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[13.81.10.179];Helo=[westeu13-emailsignatures-cloud.codetwo.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3746
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 03:18:05PM +1100, Stephen Rothwell wrote:
-> Hi all,
+On 22-03-2020 18:37, Jonathan Cameron wrote:
+> On Mon, 16 Mar 2020 07:52:18 +0100
+> Mike Looijmans <mike.looijmans@topic.nl> wrote:
 > 
-> Today's linux-next merge of the staging tree got a conflict in:
+>> This adds the device-tree bindings for the Bosch Sensortec BMI088 IMU,
+>> the accelerometer part.
+>>
+>> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+>> ---
+>>   .../devicetree/bindings/iio/accel/bmi088.txt  | 23 +++++++++++++++++++
 > 
->   drivers/staging/media/allegro-dvt/allegro-core.c
+> Sorry.  All new DT bindings need to be in yaml format.
 > 
-> between several commits from the v4l-dvb tree and commits:
+> Please put this in the same series as the driver.
+
+sooy, I noticed this too late, patches are underway in separate mails 
+now. Hope that isn't a blocking issue?
+
 > 
->   5979afa2c4d1 ("staging: Replace zero-length array with flexible-array member")
->   e3d21cbfa978 ("staging: media: allegro: align with parenthesis")
+> Thanks,
 > 
-> from the staging tree.
+> Jonathan
 > 
-> I fixed it up (see bottom and below merge fix patch) and can carry the
-> fix as necessary. This is now fixed as far as linux-next is concerned,
-> but any non trivial conflicts should be mentioned to your upstream
-> maintainer when your tree is submitted for merging.  You may also want
-> to consider cooperating with the maintainer of the conflicting tree to
-> minimise any particularly complex conflicts.
+>>   1 file changed, 23 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/iio/accel/bmi088.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/accel/bmi088.txt b/Documentation/devicetree/bindings/iio/accel/bmi088.txt
+>> new file mode 100644
+>> index 000000000000..691a47726dbc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/accel/bmi088.txt
+>> @@ -0,0 +1,23 @@
+>> +* Bosch BMI088 IMU combining accelerometer and gyroscope
+>> +
+>> +https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf
+>> +
+>> +Required properties:
+>> +
+>> +  - compatible : should be "bosch,bmi088_accel"
+>> +  - reg : the I2C address of the sensor or the SPI chip select number
+>> +
+>> +Optional properties:
+>> +
+>> +  - interrupts : interrupt mapping for GPIO IRQ, it should be configured with
+>> +		 IRQ_TYPE_EDGE_RISING
+>> +
+>> +Example:
+>> +
+>> +bmi088_accel@1 {
+>> +	compatible = "bosch,bmi088_accel";
+>> +	reg = <1>;
+>> +	spi-max-frequency = <10000000>;
+>> +	interrupt-parent = <&gpio>;
+>> +	interrupts = <90 IRQ_TYPE_EDGE_RISING>;
+>> +};
 > 
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Mon, 23 Mar 2020 15:12:50 +1100
-> Subject: [PATCH] fix up for "staging: Replace zero-length array with flexible-array member"
-> 
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  drivers/staging/media/allegro-dvt/allegro-mail.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/media/allegro-dvt/allegro-mail.h b/drivers/staging/media/allegro-dvt/allegro-mail.h
-> index 1fd36f65be78..17db665f8e1e 100644
-> --- a/drivers/staging/media/allegro-dvt/allegro-mail.h
-> +++ b/drivers/staging/media/allegro-dvt/allegro-mail.h
-> @@ -169,7 +169,7 @@ struct mcu_msg_push_buffers_internal_buffer {
->  struct mcu_msg_push_buffers_internal {
->  	struct mcu_msg_header header;
->  	u32 channel_id;
-> -	struct mcu_msg_push_buffers_internal_buffer buffer[0];
-> +	struct mcu_msg_push_buffers_internal_buffer buffer[];
->  } __attribute__ ((__packed__));
->  
->  struct mcu_msg_put_stream_buffer {
-> -- 
-> 2.25.0
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc drivers/staging/media/allegro-dvt/allegro-core.c
-> index 34c3e55be902,1162cc38f3fc..000000000000
-> --- a/drivers/staging/media/allegro-dvt/allegro-core.c
-> +++ b/drivers/staging/media/allegro-dvt/allegro-core.c
-> @@@ -2403,19 -2324,12 +2403,19 @@@ static int allegro_open(struct file *fi
->   			0, ALLEGRO_GOP_SIZE_MAX,
->   			1, channel->gop_size);
->   	v4l2_ctrl_new_std(handler,
-> - 			&allegro_ctrl_ops,
-> - 			V4L2_CID_MIN_BUFFERS_FOR_OUTPUT,
-> - 			1, 32,
-> - 			1, 1);
-> + 			  &allegro_ctrl_ops,
-> + 			  V4L2_CID_MIN_BUFFERS_FOR_OUTPUT,
-> + 			  1, 32,
-> + 			  1, 1);
->  +	if (handler->error != 0) {
->  +		ret = handler->error;
->  +		goto error;
->  +	}
->  +
->   	channel->fh.ctrl_handler = handler;
->   
->  +	v4l2_ctrl_cluster(3, &channel->mpeg_video_bitrate_mode);
->  +
->   	channel->mcu_channel_id = -1;
->   	channel->user_id = -1;
->   
 
 
-
-Looks good, thanks!
-
-greg k-h
+-- 
+Mike Looijmans
