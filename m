@@ -2,102 +2,115 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE8CC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED3FC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED5BF20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:55:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l7OF3bT9"
+	by mail.kernel.org (Postfix) with ESMTP id 77EEF206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:58:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585000705;
+	bh=aMG7VIYfX0OhzjdOzTfIRGbzAnS/nwmDmVEElL3qjmY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=myxQhZPIK6Fm4XIusGvd4AH5SXL8ciplg8Gm92YojamGyurstQFC/Sjxhts2OLYBV
+	 iq49iybffcS7RQrdKzzlyaUhpSUiLRmJaE9iyJ7yXZj84tZWKNxTLoLEDy2EpVU5ak
+	 oJa7D2252o/viArnjaxGbDy+vv1XGdasOloY4s1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgCWVzy (ORCPT
+        id S1727036AbgCWV6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 17:55:54 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57496 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgCWVzy (ORCPT
+        Mon, 23 Mar 2020 17:58:24 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:42945 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgCWV6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 17:55:54 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NLsiWh140449;
-        Mon, 23 Mar 2020 21:55:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=YvIAy0wzv2+tc9aPVF5RtWgeBJRlBEGtNVz2L2/Z/U8=;
- b=l7OF3bT9wxBgDsTgSEekeq4UQlQDi7thEafWDog7Xg9UJ3oVb7I7Ib4bQY6hKtYd2jPT
- Qkq6aUIOZghWwTx/iJxA2fKIk1W9aNAMETSQeyJ8H/o3Fb7WYIXf7TWN4T4r27RqZM9L
- XeEm7hJTbuSkRvvXLQPZQFAjqFj4+CqgMWJTrvGSKl/bDMUuDON7FGlInCthfuiXXUQl
- B3Dd19mLelId9CiKRdOpiU/dmLvos34llylNSi0zkYW1cS8rpbm5YIhGT6eBfj24HMAd
- P10t8KGTYxdbzY6+vkVoOE39+L601LkkpDAqSrnnHoWhUdOklq7VxIhKBBf56dvUevsC Mg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2yx8abx414-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Mar 2020 21:55:44 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NLpo5a182537;
-        Mon, 23 Mar 2020 21:55:44 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2yxw91gjpy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Mar 2020 21:55:43 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02NLtgBB017985;
-        Mon, 23 Mar 2020 21:55:42 GMT
-Received: from [10.39.222.158] (/10.39.222.158)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 23 Mar 2020 14:55:42 -0700
-Subject: Re: [Xen-devel] [PATCH v4 1/2] xen: Use evtchn_type_t as a type for
- event channels
-To:     Yan Yankovskyi <yyankovskyi@gmail.com>,
-        Jan Beulich <jbeulich@suse.com>
-Cc:     Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-References: <20200323152343.GA28422@kbp1-lhp-F74019>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Message-ID: <06458b85-fb66-faac-e75a-1ccefa848cb0@oracle.com>
-Date:   Mon, 23 Mar 2020 17:55:39 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200323152343.GA28422@kbp1-lhp-F74019>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 bulkscore=0
- adultscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003230108
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
- mlxscore=0 adultscore=0 phishscore=0 impostorscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003230108
+        Mon, 23 Mar 2020 17:58:24 -0400
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 02NLvX4u010884;
+        Tue, 24 Mar 2020 06:57:34 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 02NLvX4u010884
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585000654;
+        bh=QJRuxjA1adnz8HlTmZr3rif6p3iCZLo6NIxaBlhHutA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UohJXRGP+Ak+syMR8ZEtPtnc7gHFx+cgIXLCCtvkZ4sqr7LVcfQON6VZw2INRbYpu
+         NlkSSq7X78ynNVKQuOWznwpLaDqhJW2p60qUG4AYEdPSCr4KqmLxoK+hdDOAbhjNEw
+         GKK2aLGzQj1K164yTpqG5WYPyau6ZBeZuvQLT4CTe74m4i/hfxCK0vEqt+Wav0zF9z
+         mBHR2zFymc3y8SmQMPbC5VQ/qWb5/vFogjjztz/xengoF04Iy5iU9Dc4Rvjme9ydDR
+         8Rr6TotHgzjq4HYCLYQm88ipMf0P/V5ttz0MiTiEHv0Jf3gQ2yYw8jIwRxOtR7tfc+
+         h96Vmcv+4Znjg==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] kconfig: allow to pass optional flag into as-instr macro
+Date:   Tue, 24 Mar 2020 06:57:31 +0900
+Message-Id: <20200323215732.13339-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit 42d519e3d0c0 ("kbuild: Add support for 'as-instr' to be used in
+Kconfig files") introduced the Kconfig variant of as-instr.
 
-On 3/23/20 12:15 PM, Yan Yankovskyi wrote:
-> Make event channel functions pass event channel port using
-> evtchn_port_t type. It eliminates signed <-> unsigned conversion.
->
-> Signed-off-by: Yan Yankovskyi <yyankovskyi@gmail.com>
+It is currently used in arch/arm64/Kconfig.
 
+arm and arm64 are simple cases because they are separated by directory,
+and GCC also provides a single architecture.
 
-If the difference is only the whitespace fix then
+Such architectures as x86, powerpc, sparc, etc. support both 32 and
+64 bit kernel in the unified arch directory, and GCC can be biarch.
+On such architectures, Kbuild passes -m32 / -m64 flag (or a proper
+target triple for Clang) to select the target machine bit.
 
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+This commit adds the second parameter to as-instr so you can optionally
+pass a compiler flag to evaluate the instruction with.
 
-and I am sorry, I should have explicitly said that you don't need to resend.
+One example usage of this is for the conversion of the following code
+in arch/x86/Makefile:
 
+  adx_instr := $(call as-instr,adox %r10$(comma)%r10,-DCONFIG_AS_ADX=1)
+
+This instruction code should be evaluated by the 64-bit assembler
+(r10 is a 64-bit register).
+
+If you use compiler that defaults to 32-bit for building the 64-bit
+kernel, -m64 should be passed to invoke the 64-bit assembler.
+
+  config AS_ADX
+          def_bool $(as-instr,adox %r10$(comma)%r10,$(m64-flags))
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ scripts/Kconfig.include | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+index 496d11c92c97..9b8c98168ba9 100644
+--- a/scripts/Kconfig.include
++++ b/scripts/Kconfig.include
+@@ -31,9 +31,10 @@ cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -S -x c /dev/null -o /de
+ # Return y if the linker supports <flag>, n otherwise
+ ld-option = $(success,$(LD) -v $(1))
+ 
+-# $(as-instr,<instr>)
++# $(as-instr,<instr>,[<flag>])
+ # Return y if the assembler supports <instr>, n otherwise
+-as-instr = $(success,printf "%b\n" "$(1)" | $(CC) $(CLANG_FLAGS) -c -x assembler -o /dev/null -)
++# You can pass optional <flag> to evaluate <instr> with
++as-instr = $(success,printf "%b\n" "$(1)" | $(CC) $(CLANG_FLAGS) $(2) -c -x assembler -o /dev/null -)
+ 
+ # check if $(CC) and $(LD) exist
+ $(error-if,$(failure,command -v $(CC)),compiler '$(CC)' not found)
+-- 
+2.17.1
 
