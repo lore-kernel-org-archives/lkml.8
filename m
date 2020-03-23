@@ -2,159 +2,250 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC4EC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33486C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA49720732
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:17:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GSd8CU4x"
+	by mail.kernel.org (Postfix) with ESMTP id 07770206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbgCWDRz (ORCPT
+        id S1727218AbgCWDS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 23:17:55 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37283 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbgCWDRz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 23:17:55 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w10so15201513wrm.4;
-        Sun, 22 Mar 2020 20:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ADbIUm07Jo+6o0WZFLpwcGFfQa7iZ4Cd0fx6zgYPrcE=;
-        b=GSd8CU4xIgZTbRom4yNM0u0nYg8ZNSgGsedl5NQLSk5EpnbkpcU/afXPMjB9WPXIL+
-         cRnsXo4QvRVNtbOIt4P9k5a6WyrSFEbyOAW1QMhDhoCJe+gqOwJibDwEiC3nnCx3vze0
-         2ehY1aA1o4vDtLpXGmagerNQJYUw2iqJSgFFq5M4WvEjTTWqbO0O7Xz+LUqpv7zlc1e3
-         Ckq8nRSFELORWjOORxTUib8qcY+LvE2LJFHM2g8Sl4fv1CrRrqMd8afDmE++G4eMDROK
-         TXWMMZkuTNYpeJOfbmtchf+1xDmAvbs3c4nZg4qzYfa8EpCkR6hPehYEAwciSBs2D/7D
-         QqPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ADbIUm07Jo+6o0WZFLpwcGFfQa7iZ4Cd0fx6zgYPrcE=;
-        b=GsY/tqJ3algSB+7d1VSDCh5YvAloUb5FANpIANTgQyKtFUwwA5J5kQsLXxfuEdTVUP
-         U0Dfrl3TJ0B4tBWDFRVp6vSzC5TlihDbNTbkFfIuB8M9kinydc6oJPEcrNbZzcuZ0gL5
-         NXlnhmaojFWt88waZ3Ww20As4RF3BhsPqfUOgdZQyRAXryHkPIh+FQK0aljpTeV83li1
-         6aMkietNOYUbqwNShS83L4wHR+/4b2MU0mbq1S3Txzrib4yvOnfKdfI0CmKfZ2fUIV8a
-         9JPvue57FgR+vDV3Pz9185esIJLITJr0t3x/eTAge1BTJ9B9syiapdubIESiDOYDrjLP
-         /X/g==
-X-Gm-Message-State: ANhLgQ1hAzHR2IBaQ1GFrjs0nvA1JaP93XrJ2Ho1LfuElIo+bRhiWOPC
-        RxexlVNsWxWMNFcPD/HRksXf90OA
-X-Google-Smtp-Source: ADFU+vsl9d9NgucvDrZzhZ67r6uCRFI61d07LglGRlahh2yGlE1aGsP9U5PM9dcPxVHT17ummrLhtw==
-X-Received: by 2002:adf:90ee:: with SMTP id i101mr26498989wri.417.1584933472045;
-        Sun, 22 Mar 2020 20:17:52 -0700 (PDT)
-Received: from [10.230.186.223] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id f10sm21366023wrw.96.2020.03.22.20.17.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Mar 2020 20:17:51 -0700 (PDT)
-Subject: Re: [PATCH net-next v6 09/10] net: phy: smsc: use
- phy_read_poll_timeout() to simplify the code
-To:     Dejin Zheng <zhengdejin5@gmail.com>, andrew@lunn.ch,
-        hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
-        mchehab+samsung@kernel.org, gregkh@linuxfoundation.org,
-        broonie@kernel.org, tglx@linutronix.de, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20200323025633.6069-1-zhengdejin5@gmail.com>
- <20200323025633.6069-10-zhengdejin5@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <50e68879-adf3-52f4-1b0b-334dd02ef85a@gmail.com>
-Date:   Sun, 22 Mar 2020 20:17:47 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.6.0
+        Sun, 22 Mar 2020 23:18:27 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12175 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726979AbgCWDS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 23:18:27 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id EAB31DE167A3E9B8ECDF;
+        Mon, 23 Mar 2020 11:18:22 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 23 Mar 2020 11:18:13 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v5] f2fs: fix potential .flags overflow on 32bit architecture
+Date:   Mon, 23 Mar 2020 11:18:07 +0800
+Message-ID: <20200323031807.94473-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <20200323025633.6069-10-zhengdejin5@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+f2fs_inode_info.flags is unsigned long variable, it has 32 bits
+in 32bit architecture, since we introduced FI_MMAP_FILE flag
+when we support data compression, we may access memory cross
+the border of .flags field, corrupting .i_sem field, result in
+below deadlock.
 
+To fix this issue, let's expand .flags as an array to grab enough
+space to store new flags.
 
-On 3/22/2020 7:56 PM, Dejin Zheng wrote:
-> use phy_read_poll_timeout() to replace the poll codes for
-> simplify lan87xx_read_status() function.
-> 
-> it should be add msleep(10) before call phy_read_poll_timeout()
-> to keep the code more similar, but it will report that warning, so
-> modify it to msleep(20).
-> 
-> ./scripts/checkpatch.pl
-> v5-0009-net-phy-smsc-use-phy_read_poll_timeout-to-simplif.patch
-> WARNING: msleep < 20ms can sleep for up to 20ms; see Documentation/timers/timers-howto.rst
-> #42: FILE: drivers/net/phy/smsc.c:126:
-> +		msleep(10);
-> 
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+Call Trace:
+ __schedule+0x8d0/0x13fc
+ ? mark_held_locks+0xac/0x100
+ schedule+0xcc/0x260
+ rwsem_down_write_slowpath+0x3ab/0x65d
+ down_write+0xc7/0xe0
+ f2fs_drop_nlink+0x3d/0x600 [f2fs]
+ f2fs_delete_inline_entry+0x300/0x440 [f2fs]
+ f2fs_delete_entry+0x3a1/0x7f0 [f2fs]
+ f2fs_unlink+0x500/0x790 [f2fs]
+ vfs_unlink+0x211/0x490
+ do_unlinkat+0x483/0x520
+ sys_unlink+0x4a/0x70
+ do_fast_syscall_32+0x12b/0x683
+ entry_SYSENTER_32+0xaa/0x102
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 4c8ff7095bef ("f2fs: support data compression")
+Tested-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+v5:
+- get rid of FI_ARRAY_SIZE
+- use bitmap_zero for cleanup
+ fs/f2fs/f2fs.h  | 99 ++++++++++++++++++++++++-------------------------
+ fs/f2fs/inode.c |  2 +-
+ 2 files changed, 50 insertions(+), 51 deletions(-)
+
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index fcafa68212eb..2049e258bfbd 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -682,6 +682,44 @@ enum {
+ 	MAX_GC_FAILURE
+ };
+ 
++/* used for f2fs_inode_info->flags */
++enum {
++	FI_NEW_INODE,		/* indicate newly allocated inode */
++	FI_DIRTY_INODE,		/* indicate inode is dirty or not */
++	FI_AUTO_RECOVER,	/* indicate inode is recoverable */
++	FI_DIRTY_DIR,		/* indicate directory has dirty pages */
++	FI_INC_LINK,		/* need to increment i_nlink */
++	FI_ACL_MODE,		/* indicate acl mode */
++	FI_NO_ALLOC,		/* should not allocate any blocks */
++	FI_FREE_NID,		/* free allocated nide */
++	FI_NO_EXTENT,		/* not to use the extent cache */
++	FI_INLINE_XATTR,	/* used for inline xattr */
++	FI_INLINE_DATA,		/* used for inline data*/
++	FI_INLINE_DENTRY,	/* used for inline dentry */
++	FI_APPEND_WRITE,	/* inode has appended data */
++	FI_UPDATE_WRITE,	/* inode has in-place-update data */
++	FI_NEED_IPU,		/* used for ipu per file */
++	FI_ATOMIC_FILE,		/* indicate atomic file */
++	FI_ATOMIC_COMMIT,	/* indicate the state of atomical committing */
++	FI_VOLATILE_FILE,	/* indicate volatile file */
++	FI_FIRST_BLOCK_WRITTEN,	/* indicate #0 data block was written */
++	FI_DROP_CACHE,		/* drop dirty page cache */
++	FI_DATA_EXIST,		/* indicate data exists */
++	FI_INLINE_DOTS,		/* indicate inline dot dentries */
++	FI_DO_DEFRAG,		/* indicate defragment is running */
++	FI_DIRTY_FILE,		/* indicate regular/symlink has dirty pages */
++	FI_NO_PREALLOC,		/* indicate skipped preallocated blocks */
++	FI_HOT_DATA,		/* indicate file is hot */
++	FI_EXTRA_ATTR,		/* indicate file has extra attribute */
++	FI_PROJ_INHERIT,	/* indicate file inherits projectid */
++	FI_PIN_FILE,		/* indicate file should not be gced */
++	FI_ATOMIC_REVOKE_REQUEST, /* request to drop atomic data */
++	FI_VERITY_IN_PROGRESS,	/* building fs-verity Merkle tree */
++	FI_COMPRESSED_FILE,	/* indicate file's data can be compressed */
++	FI_MMAP_FILE,		/* indicate file was mmapped */
++	FI_MAX,			/* max flag, never be used */
++};
++
+ struct f2fs_inode_info {
+ 	struct inode vfs_inode;		/* serve a vfs inode */
+ 	unsigned long i_flags;		/* keep an inode flags for ioctl */
+@@ -694,7 +732,7 @@ struct f2fs_inode_info {
+ 	umode_t i_acl_mode;		/* keep file acl mode temporarily */
+ 
+ 	/* Use below internally in f2fs*/
+-	unsigned long flags;		/* use to pass per-file flags */
++	unsigned long flags[BITS_TO_LONGS(FI_MAX)];	/* use to pass per-file flags */
+ 	struct rw_semaphore i_sem;	/* protect fi info */
+ 	atomic_t dirty_pages;		/* # of dirty pages */
+ 	f2fs_hash_t chash;		/* hash value of given file name */
+@@ -2531,43 +2569,6 @@ static inline __u32 f2fs_mask_flags(umode_t mode, __u32 flags)
+ 		return flags & F2FS_OTHER_FLMASK;
+ }
+ 
+-/* used for f2fs_inode_info->flags */
+-enum {
+-	FI_NEW_INODE,		/* indicate newly allocated inode */
+-	FI_DIRTY_INODE,		/* indicate inode is dirty or not */
+-	FI_AUTO_RECOVER,	/* indicate inode is recoverable */
+-	FI_DIRTY_DIR,		/* indicate directory has dirty pages */
+-	FI_INC_LINK,		/* need to increment i_nlink */
+-	FI_ACL_MODE,		/* indicate acl mode */
+-	FI_NO_ALLOC,		/* should not allocate any blocks */
+-	FI_FREE_NID,		/* free allocated nide */
+-	FI_NO_EXTENT,		/* not to use the extent cache */
+-	FI_INLINE_XATTR,	/* used for inline xattr */
+-	FI_INLINE_DATA,		/* used for inline data*/
+-	FI_INLINE_DENTRY,	/* used for inline dentry */
+-	FI_APPEND_WRITE,	/* inode has appended data */
+-	FI_UPDATE_WRITE,	/* inode has in-place-update data */
+-	FI_NEED_IPU,		/* used for ipu per file */
+-	FI_ATOMIC_FILE,		/* indicate atomic file */
+-	FI_ATOMIC_COMMIT,	/* indicate the state of atomical committing */
+-	FI_VOLATILE_FILE,	/* indicate volatile file */
+-	FI_FIRST_BLOCK_WRITTEN,	/* indicate #0 data block was written */
+-	FI_DROP_CACHE,		/* drop dirty page cache */
+-	FI_DATA_EXIST,		/* indicate data exists */
+-	FI_INLINE_DOTS,		/* indicate inline dot dentries */
+-	FI_DO_DEFRAG,		/* indicate defragment is running */
+-	FI_DIRTY_FILE,		/* indicate regular/symlink has dirty pages */
+-	FI_NO_PREALLOC,		/* indicate skipped preallocated blocks */
+-	FI_HOT_DATA,		/* indicate file is hot */
+-	FI_EXTRA_ATTR,		/* indicate file has extra attribute */
+-	FI_PROJ_INHERIT,	/* indicate file inherits projectid */
+-	FI_PIN_FILE,		/* indicate file should not be gced */
+-	FI_ATOMIC_REVOKE_REQUEST, /* request to drop atomic data */
+-	FI_VERITY_IN_PROGRESS,	/* building fs-verity Merkle tree */
+-	FI_COMPRESSED_FILE,	/* indicate file's data can be compressed */
+-	FI_MMAP_FILE,		/* indicate file was mmapped */
+-};
+-
+ static inline void __mark_inode_dirty_flag(struct inode *inode,
+ 						int flag, bool set)
+ {
+@@ -2588,20 +2589,18 @@ static inline void __mark_inode_dirty_flag(struct inode *inode,
+ 
+ static inline void set_inode_flag(struct inode *inode, int flag)
+ {
+-	if (!test_bit(flag, &F2FS_I(inode)->flags))
+-		set_bit(flag, &F2FS_I(inode)->flags);
++	test_and_set_bit(flag, F2FS_I(inode)->flags);
+ 	__mark_inode_dirty_flag(inode, flag, true);
+ }
+ 
+ static inline int is_inode_flag_set(struct inode *inode, int flag)
+ {
+-	return test_bit(flag, &F2FS_I(inode)->flags);
++	return test_bit(flag, F2FS_I(inode)->flags);
+ }
+ 
+ static inline void clear_inode_flag(struct inode *inode, int flag)
+ {
+-	if (test_bit(flag, &F2FS_I(inode)->flags))
+-		clear_bit(flag, &F2FS_I(inode)->flags);
++	test_and_clear_bit(flag, F2FS_I(inode)->flags);
+ 	__mark_inode_dirty_flag(inode, flag, false);
+ }
+ 
+@@ -2692,19 +2691,19 @@ static inline void get_inline_info(struct inode *inode, struct f2fs_inode *ri)
+ 	struct f2fs_inode_info *fi = F2FS_I(inode);
+ 
+ 	if (ri->i_inline & F2FS_INLINE_XATTR)
+-		set_bit(FI_INLINE_XATTR, &fi->flags);
++		set_bit(FI_INLINE_XATTR, fi->flags);
+ 	if (ri->i_inline & F2FS_INLINE_DATA)
+-		set_bit(FI_INLINE_DATA, &fi->flags);
++		set_bit(FI_INLINE_DATA, fi->flags);
+ 	if (ri->i_inline & F2FS_INLINE_DENTRY)
+-		set_bit(FI_INLINE_DENTRY, &fi->flags);
++		set_bit(FI_INLINE_DENTRY, fi->flags);
+ 	if (ri->i_inline & F2FS_DATA_EXIST)
+-		set_bit(FI_DATA_EXIST, &fi->flags);
++		set_bit(FI_DATA_EXIST, fi->flags);
+ 	if (ri->i_inline & F2FS_INLINE_DOTS)
+-		set_bit(FI_INLINE_DOTS, &fi->flags);
++		set_bit(FI_INLINE_DOTS, fi->flags);
+ 	if (ri->i_inline & F2FS_EXTRA_ATTR)
+-		set_bit(FI_EXTRA_ATTR, &fi->flags);
++		set_bit(FI_EXTRA_ATTR, fi->flags);
+ 	if (ri->i_inline & F2FS_PIN_FILE)
+-		set_bit(FI_PIN_FILE, &fi->flags);
++		set_bit(FI_PIN_FILE, fi->flags);
+ }
+ 
+ static inline void set_raw_inline(struct inode *inode, struct f2fs_inode *ri)
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index 44e08bf2e2b4..fded4b342346 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -362,7 +362,7 @@ static int do_read_inode(struct inode *inode)
+ 	fi->i_flags = le32_to_cpu(ri->i_flags);
+ 	if (S_ISREG(inode->i_mode))
+ 		fi->i_flags &= ~F2FS_PROJINHERIT_FL;
+-	fi->flags = 0;
++	bitmap_zero(fi->flags, BITS_TO_LONGS(FI_MAX));
+ 	fi->i_advise = ri->i_advise;
+ 	fi->i_pino = le32_to_cpu(ri->i_pino);
+ 	fi->i_dir_level = ri->i_dir_level;
 -- 
-Florian
+2.18.0.rc1
+
