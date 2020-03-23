@@ -2,112 +2,76 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C31C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C53C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02E942076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:39:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="J0pPqTUx"
+	by mail.kernel.org (Postfix) with ESMTP id 89C3520735
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:41:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgCWNjn (ORCPT
+        id S1728445AbgCWNlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 09:39:43 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:60304 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728445AbgCWNjn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 09:39:43 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NDd3DW046802;
-        Mon, 23 Mar 2020 13:39:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=B6xbo+X/W6byPkLPB8gr8u9US63A3zZRiGNQn2Uu/x8=;
- b=J0pPqTUx6IWbzNSK6u5Y4GqggULLph8AOavUaFMxu2gakwglKsBdrBDlwi5PEwoxbTSO
- VYb/n21qrkYKwWB37KpO/3VQ+BhZDJhX+uC96AaPXIXdRS0vSVc/4FqfZ8rsYQlGKwoF
- hn1g/fMWEQ/7so1044GZVT3MNtse4FcGF4Q1atu5PspCvKjaaXWjoNgCA9K/apYhUn7H
- juhle/qUwsfVTMoVHyVXkAgn2hTTeuDC+Sb5BOmalkbm43j/r9Cp3L40LdOkgRM+XjGZ
- A0nAQj6xa1vZsDtsI/9jjSOXseqGFVC13/uRepeVLCht1iTD6qsE0XwtfjVKz96qzsGn tA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2ywavkxjvy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Mar 2020 13:39:35 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NDXI7S180921;
-        Mon, 23 Mar 2020 13:39:34 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2yxw6jk9py-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Mar 2020 13:39:34 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02NDdTwK007738;
-        Mon, 23 Mar 2020 13:39:29 GMT
-Received: from [10.39.222.158] (/10.39.222.158)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 23 Mar 2020 06:39:29 -0700
-Subject: Re: [Xen-devel] [PATCH v3 1/2] xen: Use evtchn_type_t as a type for
- event channels
-To:     Yan Yankovskyi <yyankovskyi@gmail.com>,
-        Jan Beulich <jbeulich@suse.com>
-Cc:     Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-References: <20200323053325.GA15004@kbp1-lhp-F74019>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Message-ID: <0d9d07e1-a828-28f2-b6ec-9d4d5bdc14be@oracle.com>
-Date:   Mon, 23 Mar 2020 09:39:27 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 23 Mar 2020 09:41:08 -0400
+Received: from mga12.intel.com ([192.55.52.136]:13182 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728222AbgCWNlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 09:41:08 -0400
+IronPort-SDR: nn9pnNMY+7ZaBXMQDXR9Jl6EM9931r7AQsIZapt6bUYNTg9qXzkrQwLZIRXreEFn15g2RauMhu
+ hSTeYUZVL2Zg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 06:41:07 -0700
+IronPort-SDR: uFLy6JJSeTGnzmRiJJAKN4vHXRp+7R5BWZMIg3TpWRlZH5cu21kaeqeWTOz6YtofvpCaCkytRq
+ vqRtAC/oXBuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,296,1580803200"; 
+   d="scan'208";a="325572569"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 23 Mar 2020 06:41:04 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jGNKE-00CFod-HI; Mon, 23 Mar 2020 15:41:06 +0200
+Date:   Mon, 23 Mar 2020 15:41:06 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+        gregkh@linuxfoundation.org, jslaby@suse.com,
+        matwey.kornilov@gmail.com, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] serial: 8250: Add rs485 emulation to 8250_dw
+Message-ID: <20200323134106.GL1922688@smile.fi.intel.com>
+References: <20200318142640.982763-1-heiko@sntech.de>
+ <5640842.EtOnNDtpGh@diego>
+ <20200319054034.dyq7yydqi6yg7jhf@wunner.de>
+ <6241816.LpgjcNKrfa@diego>
+ <20200323131714.vmhjws5xpj6yf536@wunner.de>
 MIME-Version: 1.0
-In-Reply-To: <20200323053325.GA15004@kbp1-lhp-F74019>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9568 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
- malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003230078
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9568 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1015 impostorscore=0
- phishscore=0 suspectscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003230078
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200323131714.vmhjws5xpj6yf536@wunner.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 23, 2020 at 02:17:14PM +0100, Lukas Wunner wrote:
+> On Mon, Mar 23, 2020 at 09:25:57AM +0100, Heiko Stübner wrote:
+> > Am Donnerstag, 19. März 2020, 06:40:34 CET schrieb Lukas Wunner:
 
-On 3/23/20 1:33 AM, Yan Yankovskyi wrote:
-> Make event channel functions pass event channel port using
-> evtchn_port_t type. It eliminates signed <-> unsigned conversion.
->
-> Signed-off-by: Yan Yankovskyi <yyankovskyi@gmail.com>
+> "rs485-re-gpios" seems a bit cryptic, how about "rs485-rx-enable-gpios"
+> or "rs485-full-duplex-gpios"?
 
+First is in align with well established pin name, second is its elaboration,
+I'm for any, but last.
 
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-
-
-
-> =20
-> @@ -1275,7 +1276,7 @@ void rebind_evtchn_irq(int evtchn, int irq)
-> =20
->  	mutex_unlock(&irq_mapping_update_lock);
-> =20
-> -        bind_evtchn_to_cpu(evtchn, info->cpu);
-> +	bind_evtchn_to_cpu(evtchn, info->cpu);
-
-
-I'd leave this as is.
-
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
