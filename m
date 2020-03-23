@@ -2,146 +2,123 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B8BC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A22EDC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAD9D2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F792072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:10:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="eNuL1zAg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrN4Rh7B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbgCWQJ7 (ORCPT
+        id S1727426AbgCWQK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:09:59 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:32800 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbgCWQJ6 (ORCPT
+        Mon, 23 Mar 2020 12:10:57 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44104 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727277AbgCWQK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:09:58 -0400
-Received: by mail-qk1-f194.google.com with SMTP id v7so6233765qkc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 09:09:57 -0700 (PDT)
+        Mon, 23 Mar 2020 12:10:57 -0400
+Received: by mail-lj1-f194.google.com with SMTP id w4so15187218lji.11;
+        Mon, 23 Mar 2020 09:10:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kAhcxP8/eNJxKmPp4P/1zEx2VH3e7bOqUzz83MhM5no=;
-        b=eNuL1zAguHPlqQybPhPa1MXls3PQYb5vdLS5AZjgIq8RkZBCaxVVIIJpgVPW7QrGSY
-         KA7ZAYszAWHP6UbEIF7t3zDnHlCOL9PW6k4i9mtF7oVXKTMo0W6DhnV6FOCLEaxS3BZL
-         Nl+nfv/a30GWZzhldB3ExREp3xIPvsWdTuISOXGXdlKFmE6QIipUAkCffJK9vyX8B5L+
-         bVwjJ+7ef9TJV7QA9dy/U3o8SdwKDb5X7jK6dCtQUslWMIalmrWiQxEGYimgiQYMsFYf
-         di9FRqrqUb+Wgu/STcRhGoXM0jqV7OuNMKpOEUF2xp2NMaMyKKc9aLgUCcsVQJUjR88e
-         okYQ==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/0zBfx6rPy6OaV/sXxMDO20sjUMqldTKMQQQm3+A82I=;
+        b=rrN4Rh7B0bHYQOV4Lv/fuRsTdQ1n5kDuqAjCjuhsg4+Ca1zFHIDh/hKTh3VwNy1fzh
+         wA1l6GDBMYY0BRn/tha/sGCxzQB+r+1ms08cWiulZefWcqGlwBd4imWOzF0mHvpM4e/y
+         +4RWolBHffTjIHaburArg2euBHkwpmk1w8TSYKjf9Ujilv1k1tjD22ui6wLanKcMbQl6
+         Atj8QCIJnkCwDk8rbRJ4m+v+ulNZpnDYom+rdYDog6c3PKemA7+6xonTpXPxBi/bVvWP
+         4VAOZ540fZENa796ZqCZ3N7r2TaWyKh5Y/y6sojlRxOhreiR3yqckCUJN3vxQn4OeBJt
+         QoDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kAhcxP8/eNJxKmPp4P/1zEx2VH3e7bOqUzz83MhM5no=;
-        b=qUOJ82/vocWKYOW0LU6V9YHu8DwP+LMuQ783zcXQwkSWo3oBjngNVzP26PaSRN+m8S
-         dAjYvYTeYW/jB2/3bugNUl0UtfbH8qn3HWZ9+1JDnxZIN272ToopVOpQHvK4MbCTsSuT
-         2dKJzOQxYhoYdkSzGG3wjmjK8JaXJpM9Q9t+EwipT1fSWLy9vi/QfQuc/9RsXGzrcoWP
-         qDKdqznYi3SuJLkk9XCyqEpwC+0tI39WyQdSzGYuK9fSHNZ4FDNCjOfIXBvY28QIWtyS
-         we+4Na3arHUC5bc4U9v0eRRSfPOKbAYqH/k+dAsb8bt4tyCRvaX6MpmolDbsFLrivCAW
-         v7Lg==
-X-Gm-Message-State: ANhLgQ3Clibp07V0JuIqMlerJvG9wBoAIdZKZiMx7N4BFYVSmVZPh1xn
-        33W1NpB8VFGyjk9SlPFKTxzIWA==
-X-Google-Smtp-Source: ADFU+vsws2eqOZlxDQQkmlsIvJQ1ivBDR/Au9oUOqDUQqVvEuamycFbO8yG/pIZC6ehrGORsRcL+Yg==
-X-Received: by 2002:a05:620a:22ef:: with SMTP id p15mr19433497qki.495.1584979796923;
-        Mon, 23 Mar 2020 09:09:56 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id a11sm1005364qto.57.2020.03.23.09.09.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 23 Mar 2020 09:09:56 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jGPeF-00053p-1f; Mon, 23 Mar 2020 13:09:55 -0300
-Date:   Mon, 23 Mar 2020 13:09:55 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     "Longpeng (Mike)" <longpeng2@huawei.com>,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        linux-kernel@vger.kernel.org, arei.gonglei@huawei.com,
-        weidong.huang@huawei.com, weifuqiang@huawei.com,
-        kvm@vger.kernel.org, linux-mm@kvack.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] mm/hugetlb: fix a addressing exception caused by
- huge_pte_offset()
-Message-ID: <20200323160955.GY20941@ziepe.ca>
-References: <1582342427-230392-1-git-send-email-longpeng2@huawei.com>
- <51a25d55-de49-4c0a-c994-bf1a8cfc8638@oracle.com>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/0zBfx6rPy6OaV/sXxMDO20sjUMqldTKMQQQm3+A82I=;
+        b=ljXCVu5Q5y1UHC6vZNP8aLvx2Vk/eTcZV5PBbjpotRSHAEzfY3jediLjUA8sZf0tT9
+         ubL8i3YBt1E5hrKExliAR5E6QqgciF2rBi1/YUaoz2Iz1M6BY7BzvWDCu9RmWUGRs9y2
+         qPzFXtFc7Z4kRpXtgj/xW9WANaQVPs0EUXSh+BakLX2LiWhSPFqj5ER1mWWugtyMmU8K
+         IgjTHCeZOXBNm0ySRM6oMnGJFEU/TGKpSA1KuhzbDrOr0+VuDfzV19+naWPwKbfyP+4d
+         vhjGbN2cdJj/ruw2F/0uTf04l0Sbld02QTxd5QsJIW8rOwFRBsx0zrZbnlN65be2Phm5
+         G/WQ==
+X-Gm-Message-State: ANhLgQ3KYFX9CUGr9BEDv00w1GFLwYCI/YBuERGfY7b1AoxBusbYEJix
+        tIOsLHFX0vLHAcU7+i5VCgbhBlA5
+X-Google-Smtp-Source: ADFU+vtrKhhRT9bnt9GY9LLloFRbJ6fchh+JM5a53YXxlh9MQy43zjdZ1FFxsAVFpnqPmZvKwOHxjw==
+X-Received: by 2002:a2e:8e98:: with SMTP id z24mr13393902ljk.66.1584979854347;
+        Mon, 23 Mar 2020 09:10:54 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id t7sm7444717lfg.93.2020.03.23.09.10.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Mar 2020 09:10:53 -0700 (PDT)
+Subject: Re: [PATCH 2/7] clocksource: Add Tegra186 timers support
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200320133452.3705040-1-thierry.reding@gmail.com>
+ <20200320133452.3705040-3-thierry.reding@gmail.com>
+ <48b2099c-dd83-d4dc-aab4-8c6f68a215cf@gmail.com>
+ <da2a0501-664a-c5d0-7b13-174e5347eaf7@gmail.com>
+ <20200323134221.GI3883508@ulmo>
+ <b3859b98-02a3-d197-735c-2c9a9fbe597c@gmail.com>
+Message-ID: <23f9ba4f-0e6b-a946-a52d-eea1916a38ef@gmail.com>
+Date:   Mon, 23 Mar 2020 19:10:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <51a25d55-de49-4c0a-c994-bf1a8cfc8638@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <b3859b98-02a3-d197-735c-2c9a9fbe597c@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 04:38:19PM -0700, Mike Kravetz wrote:
-
-> Andrew dropped this patch from his tree which caused me to go back and
-> look at the status of this patch/issue.
+23.03.2020 16:45, Dmitry Osipenko пишет:
+> 23.03.2020 16:42, Thierry Reding пишет:
+>> On Fri, Mar 20, 2020 at 06:38:32PM +0300, Dmitry Osipenko wrote:
+>>> 20.03.2020 18:11, Dmitry Osipenko пишет:
+>>>> 20.03.2020 16:34, Thierry Reding пишет:
+>>>>> From: Thierry Reding <treding@nvidia.com>
+>>>>>
+>>>>> Currently this only supports a single watchdog, which uses a timer in
+>>>>> the background for countdown. Eventually the timers could be used for
+>>>>> various time-keeping tasks, but by default the architected timer will
+>>>>> already provide that functionality.
+>>>>>
+>>>>> Signed-off-by: Thierry Reding <treding@nvidia.com>
+>>>>> ---
+>>>>
+>>>> ...
+>>>>> +config TEGRA186_TIMER
+>>>>> +	bool "NVIDIA Tegra186 timer driver"
+>>>>
+>>>> tristate?
+>>>>
+>>>>> +	depends on ARCH_TEGRA || COMPILE_TEST
+>>>>
+>>>> depends on WATCHDOG && WATCHDOG_CORE?
+>>>
+>>> Actually `select WATCHDOG_CORE` for the WATCHDOG_CORE.
+>>
+>> WATCHDOG_CORE is user-visible, so it's not safe to select it. Any reason
+>> depends on WATCHDOG && WATCHDOG_CORE wouldn't work? I guess a dependency
+>> on WATCHDOG_CORE would be enough because that itself already depends on
+>> WATCHDOG.
 > 
-> It is pretty obvious that code in the current huge_pte_offset routine
-> is racy.  I checked out the assembly code produced by my compiler and
-> verified that the line,
-> 
-> 	if (pud_huge(*pud) || !pud_present(*pud))
-> 
-> does actually dereference *pud twice.  So, the value could change between
-> those two dereferences.   Longpeng (Mike) could easlily recreate the issue
-> if he put a delay between the two dereferences.  I believe the only
-> reservations/concerns about the patch below was the use of READ_ONCE().
-> Is that correct?
+> It looks to that should be much better if you could factor out all the
+> watchdog functionality into the drivers/watchdog, like it's done in a
+> case of MC / SMMU drivers for example.
 
-I'm looking at a similar situation in pagewalk.c right now with PUD,
-and it is very confusing to see that locks are being held, memory
-accessed without READ_ONCE, but actually it has concurrent writes.
-
-I think it is valuable to annotate with READ_ONCE when the author
-knows this is an unlocked data access, regardless of what the compiler
-does.
-
-pagewalk probably has the same racy bug you show here, I'm going to
-send a very similar looking patch to pagewalk hopefully soon.
-
-Also, the remark about pmd_offset() seems accurate. The
-get_user_fast_pages() pattern seems like the correct one to emulate:
-
-  pud = READ_ONCE(*pudp);
-  if (pud_none(pud)) 
-     ..
-  if (!pud_'is a pmd pointer')
-     ..
-  pmdp = pmd_offset(&pud, address);
-  pmd = READ_ONCE(*pmd);
-  [...]
-
-Passing &pud in avoids another de-reference of the pudp. Honestly all
-these APIs that take in page table pointers and internally
-de-reference them seem very hard to use correctly when the page table
-access isn't fully locked against write.
-
-This also relies on 'some kind of locking' to prevent the pmdp from
-becoming freed concurrently while this is running.
-
-.. also this only works if READ_ONCE() is atomic, ie the pud can't be
-64 bit on a 32 bit platform. At least pmd has this problem, I haven't
-figured out if pud does??
-
-> Are there any objections to the patch if the READ_ONCE() calls are removed?
-
-I think if we know there is no concurrent data access then it makes
-sense to keep the READ_ONCE.
-
-It looks like at least the p4d read from the pgd is also unlocked here
-as handle_mm_fault() writes to it??
-
-Jason
+Also, please see drivers/watchdog/Kconfig where each individual driver
+selects WATCHDOG_CORE on by as-needed basis.
