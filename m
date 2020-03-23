@@ -2,118 +2,124 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3C2C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39527C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8859B20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B1620714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgCWN5f (ORCPT
+        id S1728582AbgCWN7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 09:57:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:49884 "EHLO foss.arm.com"
+        Mon, 23 Mar 2020 09:59:19 -0400
+Received: from mga11.intel.com ([192.55.52.93]:32719 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728354AbgCWN5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 09:57:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 271AC1FB;
-        Mon, 23 Mar 2020 06:57:34 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 919783F52E;
-        Mon, 23 Mar 2020 06:57:28 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 13:57:22 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        nd@arm.com
-Subject: Re: [PATCH v10 00/13] arm64: Branch Target Identification support
-Message-ID: <20200323135722.GA3959@C02TD0UTHF1T.local>
-References: <20200316165055.31179-1-broonie@kernel.org>
- <20200320173945.GC27072@arm.com>
- <20200323122143.GB4892@mbp>
- <20200323132412.GD4948@sirena.org.uk>
+        id S1728530AbgCWN7S (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 09:59:18 -0400
+IronPort-SDR: s5mHNkrDBxv1gRMLe3MYhrgqRx60yGeOUk4Z89NuyHexrcg37Ksq2HgTFU3BoBXbm7UE+I04F1
+ ofE8IqM5QmXw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 06:59:18 -0700
+IronPort-SDR: DqH60UWVJ8o+GzONqrr9LzVitrkLS8sMk0GSBjgE6Tqd5YokA3vDXTEPUpQm7u96p0CfC71lKI
+ Krzpd3KU3GAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,296,1580803200"; 
+   d="scan'208";a="357101009"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.254.213.220]) ([10.254.213.220])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Mar 2020 06:59:14 -0700
+Subject: Re: [PATCH v2 00/14] perf: Stream comparison
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200313071118.11983-1-yao.jin@linux.intel.com>
+ <20200323110514.GG1534489@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <ed2686f2-a370-4113-5148-e75c194b25bd@linux.intel.com>
+Date:   Mon, 23 Mar 2020 21:59:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323132412.GD4948@sirena.org.uk>
+In-Reply-To: <20200323110514.GG1534489@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 01:24:12PM +0000, Mark Brown wrote:
-> On Mon, Mar 23, 2020 at 12:21:44PM +0000, Catalin Marinas wrote:
-> > On Fri, Mar 20, 2020 at 05:39:46PM +0000, Szabolcs Nagy wrote:
+Hi Jiri,
+
+On 3/23/2020 7:05 PM, Jiri Olsa wrote:
+> On Fri, Mar 13, 2020 at 03:11:04PM +0800, Jin Yao wrote:
+>> Sometimes, a small change in a hot function reducing the cycles of
+>> this function, but the overall workload doesn't get faster. It is
+>> interesting where the cycles are moved to.
 > 
-> > +int arch_elf_adjust_prot(int prot, const struct arch_elf_state *state,
-> > +                        bool has_interp, bool is_interp)
-> > +{
-> > +       if (is_interp != has_interp)
-> > +               return prot;
-> > +
-> > +       if (!(state->flags & ARM64_ELF_BTI))
-> > +               return prot;
-> > +
-> > +       if (prot & PROT_EXEC)
-> > +               prot |= PROT_BTI;
-> > +
-> > +       return prot;
-> > +}
+> I'm getting compilation fail:
 > 
-> > At a quick look, for dynamic binaries we have has_interp == true and
-> > is_interp == false. I don't know why but, either way, the above code
-> > needs a comment with some justification.
+> 	  BUILD:   Doing 'make -j1' parallel build
+> 	  CC       util/srclist.o
+> 	util/srclist.c: In function ‘srclist__node_new’:
+> 	util/srclist.c:388:35: error: ‘%s’ directive output may be truncated writing up to 4095 bytes into a region of size 4091 [-Werror=format-truncation=]
+> 	  388 |  snprintf(cmd, sizeof(cmd), "diff %s %s",
+> 	      |                                   ^~
+> 	......
+> 	  456 |  ret = init_src_info(b_path, a_path, rel_path, &node->info);
+> 	      |                      ~~~~~~
+> 	In file included from /usr/include/stdio.h:867,
+> 			 from util/srclist.c:8:
+> 	/usr/include/bits/stdio2.h:67:10: note: ‘__builtin___snprintf_chk’ output between 7 and 8197 bytes into a destination of size 4096
+> 	   67 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+> 	      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 	   68 |        __bos (__s), __fmt, __va_arg_pack ());
+> 	      |        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 	cc1: all warnings being treated as errors
+> 	mv: cannot stat 'util/.srclist.o.tmp': No such file or directory
+> 	make[4]: *** [/home/jolsa/kernel/linux-perf/tools/build/Makefile.build:97: util/srclist.o] Error 1
+> 	make[3]: *** [/home/jolsa/kernel/linux-perf/tools/build/Makefile.build:139: util] Error 2
+> 	make[2]: *** [Makefile.perf:617: perf-in.o] Error 2
+> 	make[1]: *** [Makefile.perf:225: sub-make] Error 2
+> 	make: *** [Makefile:70: all] Error 2
 > 
-> I don't really know for certain either, I inherited this code as is with
-> the understanding that this was all agreed with the toolchain and libc
-> people - the actual discussion that lead to the decisions being made
-> happened before I was involved.  My understanding is that the idea was
-> that the dynamic linker would be responsible for mapping everything in
-> dynamic applications other than itself but other than consistency I
-> don't know why.  I guess it defers more decision making to userspace but
-> I'm having a hard time thinking of sensible cases where one might wish
-> to make a decision other than enabling PROT_BTI.
+> 
+> [jolsa@krava ~]$ gcc --version
+> gcc (GCC) 9.3.1 20200317 (Red Hat 9.3.1-1)
+> 
+> jirka
+> 
 
-My understanding was this had been agreed with the toolchain folk a
-while back -- anything static loaded by the kernel (i.e. a static
-executable or the dynamic linker) would get GP set. In other cases the
-linker will mess with the permissions on the pages anyhow, and needs to
-be aware of BTI in order to do the right thing, so it was better to
-leave it to userspace consistently (e.g. as that had the least risk of
-subtle changes in behaviour leading to ABI difficulties).
+Can you help to add following patch on top of the patch-set? Looks we 
+need to check the return value of snprintf for truncation checking.
 
-> I'd be perfectly happy to drop the check if that makes more sense to
-> people, otherwise I can send a patch adding a comment explaining the
-> situation.
+jinyao@kbl:~/kbl-ws/perf-dev/lck-7589/acme/tools/perf$ git diff
+diff --git a/tools/perf/util/srclist.c b/tools/perf/util/srclist.c
+index 8060e4855d11..51ca69eaa9fd 100644
+--- a/tools/perf/util/srclist.c
++++ b/tools/perf/util/srclist.c
+@@ -385,8 +385,12 @@ static int src_info__create_line_mapping(struct 
+src_info *info, char *b_path,
+                 goto out;
+         }
 
-I think it would be best to document the current behaviour, as it's a
-simple ABI that we can guarantee, and the dynamic linker will have to be
-aware of BTI in order to do the right thing anyhow.
+-       snprintf(cmd, sizeof(cmd), "diff %s %s",
+-                b_path, a_path);
++       ret = snprintf(cmd, PATH_MAX, "diff %s %s",
++                      b_path, a_path);
++       if (ret == PATH_MAX) {
++               ret = -1;
++               goto out;
++       }
 
-Thanks,
-Mark.
+         pr_debug("Execute '%s'\n", cmd);
+
+Thanks
+Jin Yao
+
