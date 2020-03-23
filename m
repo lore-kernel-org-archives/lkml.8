@@ -2,145 +2,121 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EC3C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0A9C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDEA82074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584951930;
-	bh=tqQ8PlsQArzeFElGfgu0kJhz7Czy0eqAc18ZQGW6JD8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vd4+sGCQAFx9G4F2toUdrM74OVZ8TyuxfJoB3MZolLKd8m+Hc9Jo+Ur5L12yqFh+m
-	 yE4D0AlxD1ybenQVdwkxV0/rNSHLjXacRzmBIaNOi18b0ryiVPzkF+5I7rFdySe72a
-	 WvHwvE0JD1p/jHzt3l1q5P+t65x0AsiXqplLZPOU=
+	by mail.kernel.org (Postfix) with ESMTP id 01EAD2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:25:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbgCWIZ3 (ORCPT
+        id S1727594AbgCWIZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 04:25:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727451AbgCWIZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 04:25:29 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D447F2072E;
-        Mon, 23 Mar 2020 08:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584951929;
-        bh=tqQ8PlsQArzeFElGfgu0kJhz7Czy0eqAc18ZQGW6JD8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tZ4grYy2alHlUvPC7sxjJFVOb1mrLYtqyhRfBHfGnbDbVuviyeian+drdS/c1uww+
-         6ZKBvhncRTZ8u0v/xdXoKvOz3n5fT6bjzdUDR4GPsILVepol0jbF2YhVx4JwV9nDtv
-         5UaxhARaZQ4WTIaDKxaZmT0MmNSNNhz2LBe5rROs=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        Mon, 23 Mar 2020 04:25:48 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37899 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727565AbgCWIZr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 04:25:47 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jGIOl-00Etsi-6T; Mon, 23 Mar 2020 08:25:27 +0000
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jGIOz-0004Ux-QJ; Mon, 23 Mar 2020 09:25:41 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jGIOy-0007Z4-UY; Mon, 23 Mar 2020 09:25:40 +0100
+Date:   Mon, 23 Mar 2020 09:25:40 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Yendapally Reddy Dhananjaya Reddy 
+        <yendapally.reddy@broadcom.com>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] pwm: bcm-iproc: handle clk_get_rate() return
+Message-ID: <20200323082540.2gvbbxtwadvzeeos@pengutronix.de>
+References: <20200323065318.16533-1-rayagonda.kokatanur@broadcom.com>
+ <20200323065318.16533-2-rayagonda.kokatanur@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Date:   Mon, 23 Mar 2020 08:25:27 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v5 20/23] KVM: arm64: GICv4.1: Plumb SGI implementation
- selection in the distributor
-In-Reply-To: <cf5d7cf3-076f-47a7-83cf-717a619dc13e@huawei.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-21-maz@kernel.org>
- <72832f51-bbde-8502-3e03-189ac20a0143@huawei.com>
- <4a06fae9c93e10351276d173747d17f4@kernel.org>
- <1c9fdfc8-bdb2-88b6-4bdc-2b9254dfa55c@huawei.com>
- <256b58a9679412c96600217f316f424f@kernel.org>
- <cf5d7cf3-076f-47a7-83cf-717a619dc13e@huawei.com>
-Message-ID: <1c10593ac5b75f37c6853fbc74daa481@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <20200323065318.16533-2-rayagonda.kokatanur@broadcom.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
+On Mon, Mar 23, 2020 at 12:23:17PM +0530, Rayagonda Kokatanur wrote:
+> Handle clk_get_rate() returning <= 0 condition to avoid
+> possible division by zero.
 
-[...]
+Was this noticed during a review and is more theoretic. Or does this
+(depending on pre-boot state) result in a kernel crash?
 
->> And actually, maybe we can handle that pretty cheaply. If userspace
->> tries to restore GICD_TYPER2 to a value that isn't what KVM can
->> offer, we just return an error. Exactly like we do for GICD_IIDR.
->> Hence the following patch:
->> 
->> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c 
->> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
->> index 28b639fd1abc..e72dcc454247 100644
->> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
->> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
->> @@ -156,6 +156,7 @@ static int vgic_mmio_uaccess_write_v3_misc(struct 
->> kvm_vcpu *vcpu,
->>       struct vgic_dist *dist = &vcpu->kvm->arch.vgic;
->> 
->>       switch (addr & 0x0c) {
->> +    case GICD_TYPER2:
->>       case GICD_IIDR:
->>           if (val != vgic_mmio_read_v3_misc(vcpu, addr, len))
->>               return -EINVAL;
->> 
->> Being a RO register, writing something that isn't compatible with the
->> possible behaviour of the hypervisor will just return an error.
+> Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> ---
+>  drivers/pwm/pwm-bcm-iproc.c | 32 +++++++++++++++++++-------------
+>  1 file changed, 19 insertions(+), 13 deletions(-)
 > 
-> This is really a nice point to address my concern! I'm happy to see
-> this in v6 now.
-> 
->> 
->> What do you think?
-> 
-> I agreed with you, with a bit nervous though. Some old guests (which
-> have no knowledge about GICv4.1 vSGIs and don't care about nASSGIcap
-> at all) will also fail to migrate from A to B, just because now we
-> present two different (unused) GICD_TYPER2 registers to them.
-> 
-> Is it a little unfair to them :-) ?
+> diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
+> index 1f829edd8ee7..8bbd2a04fead 100644
+> --- a/drivers/pwm/pwm-bcm-iproc.c
+> +++ b/drivers/pwm/pwm-bcm-iproc.c
+> @@ -99,19 +99,25 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	else
+>  		state->polarity = PWM_POLARITY_INVERSED;
+>  
+> -	value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
+> -	prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
+> -	prescale &= IPROC_PWM_PRESCALE_MAX;
+> -
+> -	multi = NSEC_PER_SEC * (prescale + 1);
+> -
+> -	value = readl(ip->base + IPROC_PWM_PERIOD_OFFSET(pwm->hwpwm));
+> -	tmp = (value & IPROC_PWM_PERIOD_MAX) * multi;
+> -	state->period = div64_u64(tmp, rate);
+> -
+> -	value = readl(ip->base + IPROC_PWM_DUTY_CYCLE_OFFSET(pwm->hwpwm));
+> -	tmp = (value & IPROC_PWM_PERIOD_MAX) * multi;
+> -	state->duty_cycle = div64_u64(tmp, rate);
+> +	if (rate == 0) {
+> +		state->period = 0;
+> +		state->duty_cycle = 0;
+> +	} else {
+> +		value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
+> +		prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
+> +		prescale &= IPROC_PWM_PRESCALE_MAX;
+> +
+> +		multi = NSEC_PER_SEC * (prescale + 1);
+> +
+> +		value = readl(ip->base + IPROC_PWM_PERIOD_OFFSET(pwm->hwpwm));
+> +		tmp = (value & IPROC_PWM_PERIOD_MAX) * multi;
+> +		state->period = div64_u64(tmp, rate);
+> +
+> +		value = readl(ip->base +
+> +			      IPROC_PWM_DUTY_CYCLE_OFFSET(pwm->hwpwm));
+> +		tmp = (value & IPROC_PWM_PERIOD_MAX) * multi;
+> +		state->duty_cycle = div64_u64(tmp, rate);
+> +	}
 
-I never pretended to be fair! ;-)
+The change looks fine.
 
-I'm happy to prevent migrating from a v4.1 system (A) to a v4.0
-system (B). As soon as the guest has run, it isn't safe to do so
-(it may have read TYPER2, and now knows about vSGIs). We *could*
-track this and find ways to migrate this state as well, but it
-feels fragile.
+Best regards
+Uwe
 
-Migrating from B to A is more appealing. It should be possible to
-do so without much difficulty (just check that the nASSGIcap bit
-is either 0 or equal to KVM's view of the capability).
-
-But overall I seriously doubt we can easily migrate guests across
-very different HW. We've been talking about this for years, and
-we still don't have a good solution for it given the diversity
-of the ecosystem... :-/
-
-Thanks,
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+Pengutronix e.K.                           | Uwe Kleine-K�nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
