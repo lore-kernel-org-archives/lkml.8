@@ -2,151 +2,89 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4257AC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6466C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD062072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCED2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:28:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="X1CH1GVl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWId/kub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbgCWSZh (ORCPT
+        id S1727460AbgCWS2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:25:37 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36820 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727179AbgCWSZg (ORCPT
+        Mon, 23 Mar 2020 14:28:03 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35132 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgCWS2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:25:36 -0400
-Received: by mail-qt1-f193.google.com with SMTP id m33so12601185qtb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 11:25:36 -0700 (PDT)
+        Mon, 23 Mar 2020 14:28:03 -0400
+Received: by mail-qk1-f196.google.com with SMTP id k13so4663157qki.2;
+        Mon, 23 Mar 2020 11:28:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vz1jTrOHhlau0BRekH82JXjI9Z5PbbRoxtyzM7wcGdk=;
-        b=X1CH1GVltCQdj8DdoNqavN4roarwwcB2hsCI+XK3JzbOgASZx+Kj0guGgixCarN8m0
-         yF2zg//qewNml70VOfqydcfIUG+A+LDNw/5cOdFrrzvjH2jdApwlKvzNHtKc2IQ64Swd
-         mHOw6pLeTWAUiIEPs6ybgnFPu3hBO9khxJylZH+SUZRhIssZwakCeu0K1kh7VrNc51rE
-         lMoPT/HMzDOrtYXL2z+uty/6LPVxYustbdL93bBBPzXMnQ8fZQvs7hzC2gHoQS2AwalO
-         lUajioxU2lilEs7I3w159QXUk9BYngxYjRdibBQCvubenXNFUK/MoOVOhXgQJwZKJni9
-         ZHLQ==
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=3wB0xVpulcp40RTW3vhxAgoqjUdCApY2I0xSALST5l8=;
+        b=iWId/kub+Jrlo1bcvpBVEXxR/ZG9PWIncegc9idzjaRroBA4JrJJ7Y70UOECdbDiXd
+         B3BoZpqvZqkcN/ptpNHuT5/3TLthAFgGaho6+/ig0Vfx7Qs5qQCOc4Ho8Pb9lN1nauQt
+         kgk4+kYQNe4WhXNz8IrpJnBIpyqJ8XUKKreavbZIChnXotm1ncu8tKQq0WMIhb5sG7qq
+         UHK83Nbfhdv5+rJRg0rHUhDc+PS/H0vu0HNYlKTWumJKnBJWdy0LnSBXfbLkPhg4gx31
+         qZtjm9LrumSQNjIEWpF8rDb4W9R00pSh1/m5cEKdlG46L5RzvhSyCjwVW6jw7vsUqqvX
+         7Iuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vz1jTrOHhlau0BRekH82JXjI9Z5PbbRoxtyzM7wcGdk=;
-        b=A4Z/49ui49ieXwgh9uaIsy554nDXaOvltIN9nPH7BJbhVPDkHMJO/QJEi/WsnQfrKk
-         1OKu9nTQRD5y/oaVzcJMCQf5Z+mf5Z1/S+1k4GClvApU74BsqEEwMaw6Vn/9nFkr4IIA
-         wOXkSGvYuuePxV/7SXkbb4acNZClOmm3t6KUwGwu9JMVs+22xGmgZp2f46Ry3I1hUsZN
-         ZtG+mKdK517iHGsmWmBZSi1lEPAr8l/pcRBvUjnEIGCYoWdxx5pInE+afz3lISNXdGQg
-         OlW3VVqkpYVTePKavO+WPwdjSk+PyYuthHoMIFJbrnqth96baAR8PIloOPPBqtw1izyo
-         LqNQ==
-X-Gm-Message-State: ANhLgQ2/xxmEQUvdzXLy2nzR3+hEwgb2Rom1H7mOiLv610tzklontzbE
-        R3XHioxHGfUkO/mdhBm0Yv+11Q==
-X-Google-Smtp-Source: ADFU+vsib7u44SXaJjB6F+7ycgLvU7K9p2KA3EjlB2X4Tm1ey09SO8RfuMz6qlyjf9wDCQFwfID/9g==
-X-Received: by 2002:ac8:6b54:: with SMTP id x20mr22673141qts.41.1584987935620;
-        Mon, 23 Mar 2020 11:25:35 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id o67sm11050065qka.114.2020.03.23.11.25.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 23 Mar 2020 11:25:35 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jGRlW-0007K3-F2; Mon, 23 Mar 2020 15:25:34 -0300
-Date:   Mon, 23 Mar 2020 15:25:34 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Ralph Campbell <rcampbell@nvidia.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v8 0/3] mm/hmm/test: add self tests for HMM
-Message-ID: <20200323182534.GD20941@ziepe.ca>
-References: <20200321003108.22941-1-rcampbell@nvidia.com>
- <20200321090047.GM514123@unreal>
- <396f0c30-4a49-6a18-ff02-a73ee1a09883@nvidia.com>
- <20200321215505.GW20941@ziepe.ca>
- <20200322081038.GG650439@unreal>
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=3wB0xVpulcp40RTW3vhxAgoqjUdCApY2I0xSALST5l8=;
+        b=NtAXmLPvHbbhhIhhigxj9UHO3JhHTDe9ek9VRZFZps6wqsceOnnkJRlNVqVh4JSRfc
+         eY4VSVMxSCzHFk7hPsk61Vch2aZCvpMG8lqtVgOBSDOfYwUIR6/0Vg5wWAouURICOcWO
+         IpJq4l+7s0VtgpR0OGmAImhX6gPrDYCxdz63OtDBwd/rLjDCm4FyNx7HH1o6A97EvToL
+         iTr23bYLR5DmCgTi4Na2g/DJzIEvGNZCjkEIqjS1Lhgu43ap4BgXw8JMAPXRTVMt3VJ4
+         /fx6bp7WU9Qw/liVhms9QGCVO/qHmhDYPYThKAARRL7qGC4/PrGoEfE/jEOmkjbkjz+W
+         eERA==
+X-Gm-Message-State: ANhLgQ0DZx04FuOhSniPOxzfCYUbIPzHF0hEKXKyZsFtXRtybAWVskMc
+        rG4ROSZFlPqMWP8mb6rewd4=
+X-Google-Smtp-Source: ADFU+vthjZL644J49K7lhCku/51veVNw3keoxJgU51g8G/2TuPtgYFtuz1OgXoV5uQVkESY/vVx3BQ==
+X-Received: by 2002:a37:8d81:: with SMTP id p123mr9768397qkd.17.1584988082030;
+        Mon, 23 Mar 2020 11:28:02 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id n4sm12146258qti.55.2020.03.23.11.28.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 11:28:01 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 14:28:00 -0400
+Message-ID: <20200323142800.GD4041079@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, alobakin@dlink.ru, olteanv@gmail.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] net: dsa: Implement flow dissection for
+ tag_brcm.c
+In-Reply-To: <20200322210957.3940-1-f.fainelli@gmail.com>
+References: <20200322210957.3940-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200322081038.GG650439@unreal>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 10:10:38AM +0200, Leon Romanovsky wrote:
-> On Sat, Mar 21, 2020 at 06:55:05PM -0300, Jason Gunthorpe wrote:
-> > On Sat, Mar 21, 2020 at 10:27:46AM -0700, Ralph Campbell wrote:
-> > >
-> > > On 3/21/20 2:00 AM, Leon Romanovsky wrote:
-> > > > On Fri, Mar 20, 2020 at 05:31:05PM -0700, Ralph Campbell wrote:
-> > > > > This series adds basic self tests for HMM and are intended for Jason
-> > > > > Gunthorpe's rdma tree which has a number of HMM patches applied.
-> > > > >
-> > > > > Changes v7 -> v8:
-> > > > > Rebased to Jason's rdma/hmm tree, plus Jason's 6 patch series
-> > > > >    "Small hmm_range_fault() cleanups".
-> > > > > Applied a number of changes from Jason's comments.
-> > > > >
-> > > > > Changes v6 -> v7:
-> > > > > Rebased to linux-5.6.0-rc6
-> > > > > Reverted back to just using mmu_interval_notifier_insert() and making
-> > > > >    this series only introduce HMM self tests.
-> > > > >
-> > > > > Changes v5 -> v6:
-> > > > > Rebased to linux-5.5.0-rc6
-> > > > > Refactored mmu interval notifier patches
-> > > > > Converted nouveau to use the new mmu interval notifier API
-> > > > >
-> > > > > Changes v4 -> v5:
-> > > > > Added mmu interval notifier insert/remove/update callable from the
-> > > > >    invalidate() callback
-> > > > > Updated HMM tests to use the new core interval notifier API
-> > > > >
-> > > > > Changes v1 -> v4:
-> > > > > https://lore.kernel.org/linux-mm/20191104222141.5173-1-rcampbell@nvidia.com
-> > > > >
-> > > > > Ralph Campbell (3):
-> > > > >    mm/hmm/test: add selftest driver for HMM
-> > > > >    mm/hmm/test: add selftests for HMM
-> > > > >    MAINTAINERS: add HMM selftests
-> > > > >
-> > > > >   MAINTAINERS                            |    3 +
-> > > > >   include/uapi/linux/test_hmm.h          |   59 ++
-> > > >
-> > > > Isn't UAPI folder supposed to be for user-visible interfaces that follow
-> > > > the rule of non-breaking user space and not for selftests?
-> > > >
-> > > > Thanks
-> > > >
-> > >
-> > > Most of the other kernel module tests seem to invoke the test as part of the
-> > > module load/init. I'm open to moving it if there is a more appropriate location.
-> >
-> > Is it even possible to create a user mm_struct and put crazy things in
-> > it soley from a kernel module?
+On Sun, 22 Mar 2020 14:09:57 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> Provide a flow_dissect callback which returns the network offset and
+> where to find the skb protocol, given the tags structure a common
+> function works for both tagging formats that are supported.
 > 
-> I didn't look very closely of what Ralph did in his patchsets, but from
-> what I know, if you want in-kernel interface, you use in-kernel module,
-> if you want to test user visible uapi, you write application. You don't
-> create new UAPI just to test something in the kernel.
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-That works fine as long as the in-kernel interfaces don't require user
-created objects like mm_struct and vmas, which is the case here.
-
-So there must be some special uAPI between the kerne/user to make it
-work.
-
-Jason
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
