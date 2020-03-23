@@ -2,137 +2,92 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F703C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD82C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A11120719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C037920735
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:50:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ZcZyAY3W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbgCWQuD (ORCPT
+        id S1727754AbgCWQuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:50:03 -0400
-Received: from mga02.intel.com ([134.134.136.20]:36306 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbgCWQuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:50:03 -0400
-IronPort-SDR: AuCpJwR6e+ND5waOSVyALQJStdbEozrPuOUoz/2Mxvlrcu1zQ1eQBxNe6dslk0xrCuFupYLwkT
- TTZ8E36hxLXg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 09:50:02 -0700
-IronPort-SDR: YOjnM1lhGB6aAHFakbm39vv7nwcKvrPIL1qKbD+3OLR+h+dn9jhdjj/+lZlvnev8270tbaFZmK
- d5gqoSd7NAcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="447452716"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Mar 2020 09:50:01 -0700
-Date:   Mon, 23 Mar 2020 09:50:01 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        John Haxby <john.haxby@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH v3 04/37] KVM: nVMX: Invalidate all roots when emulating
- INVVPID without EPT
-Message-ID: <20200323165001.GR28711@linux.intel.com>
-References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
- <20200320212833.3507-5-sean.j.christopherson@intel.com>
- <87v9mv84qu.fsf@vitty.brq.redhat.com>
- <20200323160432.GJ28711@linux.intel.com>
- <87lfnr820r.fsf@vitty.brq.redhat.com>
+        Mon, 23 Mar 2020 12:50:05 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40234 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbgCWQuE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 12:50:04 -0400
+Received: by mail-qk1-f193.google.com with SMTP id l25so11104613qki.7
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 09:50:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DAmo83OU6Z9FY3EAp1eIchXxAfwetYnQdz8RvRwBuLE=;
+        b=ZcZyAY3Wd1okpJtclZ7/IBkX8wfbqKUNN5lO1oFhQNxyLZ1FZsPVoKOeBj/ZuiMW80
+         4jLbw4Rh6Xn56iu+4PnTK7aYWQJhH9qrOEN7YukpCw7h9Xzm7X78NSxn2wc+gybfdhrd
+         MpbcwW4y9psWgwKT2m9gUau5GEfxyzMbv2/H94x8pttsANppUemk62gfr/LEPNvWZ0uC
+         66DRMIIGGYQNJWeM31j9rwS5A6NxmIjoBGTv4i1PfbEbV3lLWFhHgI9ZgwVJvaHE4VUT
+         ltDS7BPoEw1CtiidbjM0Emm1Bg2qJioiKVsI74SOl37DJxnwyDyaHNFWFHW3WIcZ1Fzn
+         UvFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DAmo83OU6Z9FY3EAp1eIchXxAfwetYnQdz8RvRwBuLE=;
+        b=iJD9gSEz0xXhIIYlPcz27/ECUy5g0GHh98XprDmQUjq9A8xkZzt0uNNGtnPjXepMO+
+         Es14f2uot5tjKCGQRMDZrbEnoul6aXo/G9R5fqeo/Wwy06C7Ol4c21YFtLwmV4/r43Jp
+         4xyQWxYWMuADCEjLfRKeZHr6LxTZgmppkY2Fqe8nx/KYS7FZAevzU4P7x9YGWaJ4MuUr
+         PyYMt0UxNHyRMJkpQHSrO8TffuO5jyeZAnNS6i9ymEuB7AHmqe7EYzW2sj9YKWsNb9Ka
+         WBaNGSqpVe0/3Z82GSRvEd0RRHF6+c/rh2wLV5EetpmqcdXk8Nz55sAnrhg/Mx+RbXXs
+         Ix3Q==
+X-Gm-Message-State: ANhLgQ1VDdxVQhQuPChvgPipKL3vqRrIE0vSiUyoUa6OnKbJf1tayDAG
+        ZJBv9HIB6N3XR8ieql1suXeQQg==
+X-Google-Smtp-Source: ADFU+vunnDaxvXSc+qWcDivkYalaGTqTcWCY6d7czPBN8l0n8CQRm4WMoMRQwRLqQtEBHK26LLPJWA==
+X-Received: by 2002:a37:a297:: with SMTP id l145mr20930518qke.322.1584982203273;
+        Mon, 23 Mar 2020 09:50:03 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:a9a9])
+        by smtp.gmail.com with ESMTPSA id p17sm3561970qkk.18.2020.03.23.09.50.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 09:50:02 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 12:50:01 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [PATCH v4 4/8] mm/swapcache: support to handle the exceptional
+ entries in swapcache
+Message-ID: <20200323165001.GB204561@cmpxchg.org>
+References: <1584942732-2184-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1584942732-2184-5-git-send-email-iamjoonsoo.kim@lge.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87lfnr820r.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1584942732-2184-5-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 05:33:08PM +0100, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Mon, Mar 23, 2020 at 02:52:08PM +0900, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 > 
-> > On Mon, Mar 23, 2020 at 04:34:17PM +0100, Vitaly Kuznetsov wrote:
-> >> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> >> 
-> >> > From: Junaid Shahid <junaids@google.com>
-> >> >
-> >> > Free all roots when emulating INVVPID for L1 and EPT is disabled, as
-> >> > outstanding changes to the page tables managed by L1 need to be
-> >> > recognized.  Because L1 and L2 share an MMU when EPT is disabled, and
-> >> > because VPID is not tracked by the MMU role, all roots in the current
-> >> > MMU (root_mmu) need to be freed, otherwise a future nested VM-Enter or
-> >> > VM-Exit could do a fast CR3 switch (without a flush/sync) and consume
-> >> > stale SPTEs.
-> >> >
-> >> > Fixes: 5c614b3583e7b ("KVM: nVMX: nested VPID emulation")
-> >> > Signed-off-by: Junaid Shahid <junaids@google.com>
-> >> > [sean: ported to upstream KVM, reworded the comment and changelog]
-> >> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> >> > ---
-> >> >  arch/x86/kvm/vmx/nested.c | 14 ++++++++++++++
-> >> >  1 file changed, 14 insertions(+)
-> >> >
-> >> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> >> > index 9624cea4ed9f..bc74fbbf33c6 100644
-> >> > --- a/arch/x86/kvm/vmx/nested.c
-> >> > +++ b/arch/x86/kvm/vmx/nested.c
-> >> > @@ -5250,6 +5250,20 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
-> >> >  		return kvm_skip_emulated_instruction(vcpu);
-> >> >  	}
-> >> >  
-> >> > +	/*
-> >> > +	 * Sync the shadow page tables if EPT is disabled, L1 is invalidating
-> >> > +	 * linear mappings for L2 (tagged with L2's VPID).  Free all roots as
-> >> > +	 * VPIDs are not tracked in the MMU role.
-> >> > +	 *
-> >> > +	 * Note, this operates on root_mmu, not guest_mmu, as L1 and L2 share
-> >> > +	 * an MMU when EPT is disabled.
-> >> > +	 *
-> >> > +	 * TODO: sync only the affected SPTEs for INVDIVIDUAL_ADDR.
-> >> > +	 */
-> >> > +	if (!enable_ept)
-> >> > +		kvm_mmu_free_roots(vcpu, &vcpu->arch.root_mmu,
-> >> > +				   KVM_MMU_ROOTS_ALL);
-> >> > +
-> >> 
-> >> This is related to my remark on the previous patch; the comment above
-> >> makes me think I'm missing something obvious, enlighten me please)
-> >> 
-> >> My understanding is that L1 and L2 will share arch.root_mmu not only
-> >> when EPT is globally disabled, we seem to switch between
-> >> root_mmu/guest_mmu only when nested_cpu_has_ept(vmcs12) but different L2
-> >> guests may be different on this. Do we need to handle this somehow?
-> >
-> > guest_mmu is used iff nested EPT is enabled, which requires enable_ept=1.
-> > enable_ept is global and cannot be changed without reloading kvm_intel.
-> >
-> > This most definitely over-invalidates, e.g. it blasts away L1's page
-> > tables.  But, fixing that requires tracking VPID in mmu_role and/or adding
-> > support for using guest_mmu when L1 isn't using TDP, i.e. nested EPT is
-> > disabled.  Assuming the vast majority of nested deployments enable EPT in
-> > L0, the cost of both options likely outweighs the benefits.
-> >
+> Swapcache doesn't handle the exceptional entries since there is no case
+> using it. In the following patch, workingset detection for anonymous
+> page will be implemented and it stores the shadow entries as exceptional
+> entries into the swapcache. So, we need to handle the exceptional entries
+> and this patch implements it.
 > 
-> Yes but my question rather was: what if global 'enable_ept' is true but
-> nested EPT is not being used by L1, don't we still need to do
-> kvm_mmu_free_roots(&vcpu->arch.root_mmu) here?
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-No, because L0 isn't shadowing the L1->L2 page tables, i.e. there can't be
-unsync'd SPTEs for L2.  The vpid_sync_*() above flushes the TLB for L2's
-effective VPID, which is all that's required.
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
