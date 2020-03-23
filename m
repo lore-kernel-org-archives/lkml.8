@@ -2,101 +2,134 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01821C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DDBC54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF3520769
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A37206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:59:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgCWC7A (ORCPT
+        id S1727201AbgCWC7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 22:59:00 -0400
-Received: from smtprelay0204.hostedemail.com ([216.40.44.204]:45076 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727067AbgCWC7A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 22:59:00 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id BCE4E1802926E;
-        Mon, 23 Mar 2020 02:58:59 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: foot07_314bb36a3e01d
-X-Filterd-Recvd-Size: 2428
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 23 Mar 2020 02:58:58 +0000 (UTC)
-Message-ID: <8d435607bd79f518bd9420d68894ddda521bac5a.camel@perches.com>
-Subject: Re: [PATCH v4] f2fs: fix potential .flags overflow on 32bit
- architecture
-From:   Joe Perches <joe@perches.com>
-To:     Chao Yu <yuchao0@huawei.com>, jaegeuk@kernel.org
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Date:   Sun, 22 Mar 2020 19:57:09 -0700
-In-Reply-To: <20200323024109.60967-1-yuchao0@huawei.com>
-References: <20200323024109.60967-1-yuchao0@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sun, 22 Mar 2020 22:59:25 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:56014 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727112AbgCWC7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 22:59:24 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxP+gDJnhedaseAA--.407S3;
+        Mon, 23 Mar 2020 10:59:17 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v2 1/3] MIPS: Loongson: Get host bridge information
+Date:   Mon, 23 Mar 2020 10:59:13 +0800
+Message-Id: <1584932355-3642-2-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9AxP+gDJnhedaseAA--.407S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxAw4UJF4kZF13Zr4kGF18Grg_yoW5Jw47pa
+        1Sy3W8Gr45Wr43Zrs3ArWUur1Syan8KFZrGFW2qw1FkFyDXw1FqF4kKF1UAw47CF45Ja4k
+        X3sYgr48G3ZxC3DanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+        x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+        Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
+        8EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxd
+        M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
+        v20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
+        F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8JwCF04
+        k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+        MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr4
+        1lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+        IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4
+        A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUa-erUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-23 at 10:41 +0800, Chao Yu wrote:
-> f2fs_inode_info.flags is unsigned long variable, it has 32 bits
-> in 32bit architecture, since we introduced FI_MMAP_FILE flag
-> when we support data compression, we may access memory cross
-> the border of .flags field, corrupting .i_sem field, result in
-> below deadlock.
-[]
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-[]
-> @@ -682,6 +682,47 @@ enum {
-[]
-> +/* used for f2fs_inode_info->flags */
-> +enum {
-[]
-> +	FI_MAX,			/* max flag, never be used */
-> +};
-> +
-> +/* f2fs_inode_info.flags array size */
-> +#define FI_ARRAY_SIZE		(BITS_TO_LONGS(FI_MAX))
+Read the address of HyperTransport Configuration Space to get the vendor ID
+and device ID of bridge chip, and then we can distinguish various types of
+bridge chip such as Loongson 7A1000 or AMD RS780E.
 
-Perhaps FI_ARRAY_SIZE isn't necessary.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/mips/include/asm/mach-loongson64/boot_param.h |  6 ++++++
+ arch/mips/loongson64/env.c                         | 16 ++++++++++++++++
+ 2 files changed, 22 insertions(+)
 
-> +
->  struct f2fs_inode_info {
->  	struct inode vfs_inode;		/* serve a vfs inode */
->  	unsigned long i_flags;		/* keep an inode flags for ioctl */
-> @@ -694,7 +735,7 @@ struct f2fs_inode_info {
->  	umode_t i_acl_mode;		/* keep file acl mode temporarily */
->  
->  	/* Use below internally in f2fs*/
-> -	unsigned long flags;		/* use to pass per-file flags */
-> +	unsigned long flags[FI_ARRAY_SIZE];	/* use to pass per-file flags */
-
-and BITS_TO_LONGS should be used here.
-
-> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-[]
-> @@ -362,7 +363,8 @@ static int do_read_inode(struct inode *inode)
->  	fi->i_flags = le32_to_cpu(ri->i_flags);
->  	if (S_ISREG(inode->i_mode))
->  		fi->i_flags &= ~F2FS_PROJINHERIT_FL;
-> -	fi->flags = 0;
-> +	for (i = 0; i < FI_ARRAY_SIZE; i++)
-> +		fi->flags[i] = 0;
-
-And this could become
-
-	bitmap_zero(fi->flags, BITS_TO_LONG(FI_MAX));
-
-Is FI_ARRAY_SIZE used anywhere else?
+diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
+index 8c286be..5e8c70d 100644
+--- a/arch/mips/include/asm/mach-loongson64/boot_param.h
++++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
+@@ -190,6 +190,11 @@ struct boot_params {
+ 	struct efi_reset_system_t reset_system;
+ };
+ 
++enum loongson_bridge_type {
++	RS780E = 1,
++	LS7A1000 = 2
++};
++
+ struct loongson_system_configuration {
+ 	u32 nr_cpus;
+ 	u32 nr_nodes;
+@@ -198,6 +203,7 @@ struct loongson_system_configuration {
+ 	u16 boot_cpu_id;
+ 	u16 reserved_cpus_mask;
+ 	enum loongson_cpu_type cputype;
++	enum loongson_bridge_type bridgetype;
+ 	u64 ht_control_base;
+ 	u64 pci_mem_start_addr;
+ 	u64 pci_mem_end_addr;
+diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
+index 0daeb7b..42542c7 100644
+--- a/arch/mips/loongson64/env.c
++++ b/arch/mips/loongson64/env.c
+@@ -19,6 +19,8 @@
+ #include <boot_param.h>
+ #include <workarounds.h>
+ 
++#define HT1_LO_BUS_CONFIG_BASE	0x90000efdfe000000
++
+ u32 cpu_clock_freq;
+ EXPORT_SYMBOL(cpu_clock_freq);
+ struct efi_memory_map_loongson *loongson_memmap;
+@@ -42,6 +44,8 @@ void __init prom_init_env(void)
+ 	struct system_loongson *esys;
+ 	struct efi_cpuinfo_loongson *ecpu;
+ 	struct irq_source_routing_table *eirq_source;
++	u32 id;
++	u16 vendor, device;
+ 
+ 	/* firmware arguments are initialized in head.S */
+ 	boot_p = (struct boot_params *)fw_arg2;
+@@ -155,4 +159,16 @@ void __init prom_init_env(void)
+ 		memcpy(loongson_sysconf.sensors, esys->sensors,
+ 			sizeof(struct sensor_device) * loongson_sysconf.nr_sensors);
+ 	pr_info("CpuClock = %u\n", cpu_clock_freq);
++
++	id = readl((u32 *)HT1_LO_BUS_CONFIG_BASE);
++	vendor = id & 0xffff;
++	device = (id >> 16) & 0xffff;
++
++	if (vendor == 0x0014 && device == 0x7a00) {
++		pr_info("The bridge chip is Loongson 7A1000\n");
++		loongson_sysconf.bridgetype = LS7A1000;
++	} else {
++		pr_info("The bridge chip is AMD RS780E or SR5690\n");
++		loongson_sysconf.bridgetype = RS780E;
++	}
+ }
+-- 
+2.1.0
 
