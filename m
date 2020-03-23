@@ -2,250 +2,129 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33486C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97406C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07770206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BD1E206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:18:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S1YSH0Q/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbgCWDS1 (ORCPT
+        id S1727238AbgCWDSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 23:18:27 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12175 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726979AbgCWDS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 23:18:27 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EAB31DE167A3E9B8ECDF;
-        Mon, 23 Mar 2020 11:18:22 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 23 Mar 2020 11:18:13 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v5] f2fs: fix potential .flags overflow on 32bit architecture
-Date:   Mon, 23 Mar 2020 11:18:07 +0800
-Message-ID: <20200323031807.94473-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Sun, 22 Mar 2020 23:18:45 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:33648 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbgCWDSp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 23:18:45 -0400
+Received: by mail-pj1-f66.google.com with SMTP id jz1so294924pjb.0
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 20:18:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aMIzTIHWSoQEuD3NW13lJVBAL+BLE12hWj2KYBO7txM=;
+        b=S1YSH0Q/6tQP2M8Q1UwsLzzUyHLw6bppQVF1Ha5ktef5mmvYNF1a3jHHwm1D85PIog
+         6KTN5gH2fCJwEin7BwM/RqJwZplQsswobQSYalBEbrsVo1qM6QgiPB5ycwcQbJ/UNM/i
+         A61/X6MSqWEDH+T4pLUGx/NDv2Wdxjo7uqdKxGL8KyssPyhx5Q8oe0hUGVyaxp+TohOJ
+         FqbrUWct6+ejA/t5UgcM3UOBT+qLLEDsDBDu32+5w7rpjvsbJdlfHZcnCpd8igflGtTJ
+         bzSl9JdLebueNglDgX+smG5EgZImeGuiolkgLqThV5bl9Tmwj5r0UgTUAGagPnf5mk3N
+         6ahg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aMIzTIHWSoQEuD3NW13lJVBAL+BLE12hWj2KYBO7txM=;
+        b=MxIH+itYRZ3y3Rjhbq/CEjlapZ0Ww2zr1nYhpaKiQykwEjViUcl/UIX48ZUlVsMcsy
+         gEfq135uEk6j/yGah8q7sD394YXfoclotGzQs+M8woTjAZ6ri/Y/Rvyu6R9nvKv3mwY8
+         7ZEkMWBKOJ3/nes2/kyJCEJMxoVeMPj+Qp+EIzfX+o+1Q4xj+79TK4UqEbfByfZdB1pm
+         z4tbtpgcDrFhIoqWvi6EUycBQmF40rbgpKMUoSICY2e4YEfPiZeanpbl4lHYII35A/IO
+         LNBCS08OAWhj3Lu/6T+X2FLKSRj2eHuNmJPew972YIz4r2mwbyCHfylxpadC9COyhuTC
+         T3Ew==
+X-Gm-Message-State: ANhLgQ2FXelE/BnPQ/5vF39bmnJKwTdfQ9RadXWkbYqLZ1lzwugGGV7r
+        5gIw+sUOSTygaiUGrct5ThFSsZavH1g=
+X-Google-Smtp-Source: ADFU+vu8k9GI5cnzzbIwLy/DS7vxGfnesH9BGW3MYJZxorO/F/gtqw4J5cxkWEf67HBbY+LMsmk/vg==
+X-Received: by 2002:a17:90a:757:: with SMTP id s23mr22938559pje.166.1584933523923;
+        Sun, 22 Mar 2020 20:18:43 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id 184sm10578687pgb.52.2020.03.22.20.18.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 22 Mar 2020 20:18:43 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 08:48:33 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "open list:THERMAL/CPU_COOLING" <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] thermal/drivers/cpufreq_cooling: Remove abusing WARN_ON
+Message-ID: <20200323031833.fefxzvl7q2t5dn3i@vireshk-i7>
+References: <20200321193107.21590-1-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200321193107.21590-1-daniel.lezcano@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-f2fs_inode_info.flags is unsigned long variable, it has 32 bits
-in 32bit architecture, since we introduced FI_MMAP_FILE flag
-when we support data compression, we may access memory cross
-the border of .flags field, corrupting .i_sem field, result in
-below deadlock.
+On 21-03-20, 20:31, Daniel Lezcano wrote:
+> The WARN_ON macros are used at the entry functions state2power() and
+> set_cur_state().
+> 
+> state2power() is called with the max_state retrieved from
+> get_max_state which returns cpufreq_cdev->max_level, then it check if
+> max_state is > cpufreq_cdev->max_level. The test does not really makes
+> sense but let's assume we want to make sure to catch an error if the
+> code evolves. However the WARN_ON is overkill.
+> 
+> set_cur_state() is also called from userspace if we write to the
+> sysfs. It is easy to see a stack dumped by just writing to sysfs
+> /sys/class/thermal/cooling_device0/cur_state a value greater than
+> "max_level". A bit scary. Returing -EINVAL is enough.
+> 
+> Remove these WARN_ON.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  drivers/thermal/cpufreq_cooling.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
+> index af55ac08e1bd..d66791a71320 100644
+> --- a/drivers/thermal/cpufreq_cooling.c
+> +++ b/drivers/thermal/cpufreq_cooling.c
+> @@ -273,7 +273,7 @@ static int cpufreq_state2power(struct thermal_cooling_device *cdev,
+>  	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
+>  
+>  	/* Request state should be less than max_level */
+> -	if (WARN_ON(state > cpufreq_cdev->max_level))
+> +	if (state > cpufreq_cdev->max_level)
+>  		return -EINVAL;
+>  
+>  	num_cpus = cpumask_weight(cpufreq_cdev->policy->cpus);
+> @@ -434,7 +434,7 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
+>  	int ret;
+>  
+>  	/* Request state should be less than max_level */
+> -	if (WARN_ON(state > cpufreq_cdev->max_level))
+> +	if (state > cpufreq_cdev->max_level)
+>  		return -EINVAL;
+>  
+>  	/* Check if the old cooling action is same as new cooling action */
 
-To fix this issue, let's expand .flags as an array to grab enough
-space to store new flags.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Call Trace:
- __schedule+0x8d0/0x13fc
- ? mark_held_locks+0xac/0x100
- schedule+0xcc/0x260
- rwsem_down_write_slowpath+0x3ab/0x65d
- down_write+0xc7/0xe0
- f2fs_drop_nlink+0x3d/0x600 [f2fs]
- f2fs_delete_inline_entry+0x300/0x440 [f2fs]
- f2fs_delete_entry+0x3a1/0x7f0 [f2fs]
- f2fs_unlink+0x500/0x790 [f2fs]
- vfs_unlink+0x211/0x490
- do_unlinkat+0x483/0x520
- sys_unlink+0x4a/0x70
- do_fast_syscall_32+0x12b/0x683
- entry_SYSENTER_32+0xaa/0x102
 
-Fixes: 4c8ff7095bef ("f2fs: support data compression")
-Tested-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v5:
-- get rid of FI_ARRAY_SIZE
-- use bitmap_zero for cleanup
- fs/f2fs/f2fs.h  | 99 ++++++++++++++++++++++++-------------------------
- fs/f2fs/inode.c |  2 +-
- 2 files changed, 50 insertions(+), 51 deletions(-)
-
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index fcafa68212eb..2049e258bfbd 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -682,6 +682,44 @@ enum {
- 	MAX_GC_FAILURE
- };
- 
-+/* used for f2fs_inode_info->flags */
-+enum {
-+	FI_NEW_INODE,		/* indicate newly allocated inode */
-+	FI_DIRTY_INODE,		/* indicate inode is dirty or not */
-+	FI_AUTO_RECOVER,	/* indicate inode is recoverable */
-+	FI_DIRTY_DIR,		/* indicate directory has dirty pages */
-+	FI_INC_LINK,		/* need to increment i_nlink */
-+	FI_ACL_MODE,		/* indicate acl mode */
-+	FI_NO_ALLOC,		/* should not allocate any blocks */
-+	FI_FREE_NID,		/* free allocated nide */
-+	FI_NO_EXTENT,		/* not to use the extent cache */
-+	FI_INLINE_XATTR,	/* used for inline xattr */
-+	FI_INLINE_DATA,		/* used for inline data*/
-+	FI_INLINE_DENTRY,	/* used for inline dentry */
-+	FI_APPEND_WRITE,	/* inode has appended data */
-+	FI_UPDATE_WRITE,	/* inode has in-place-update data */
-+	FI_NEED_IPU,		/* used for ipu per file */
-+	FI_ATOMIC_FILE,		/* indicate atomic file */
-+	FI_ATOMIC_COMMIT,	/* indicate the state of atomical committing */
-+	FI_VOLATILE_FILE,	/* indicate volatile file */
-+	FI_FIRST_BLOCK_WRITTEN,	/* indicate #0 data block was written */
-+	FI_DROP_CACHE,		/* drop dirty page cache */
-+	FI_DATA_EXIST,		/* indicate data exists */
-+	FI_INLINE_DOTS,		/* indicate inline dot dentries */
-+	FI_DO_DEFRAG,		/* indicate defragment is running */
-+	FI_DIRTY_FILE,		/* indicate regular/symlink has dirty pages */
-+	FI_NO_PREALLOC,		/* indicate skipped preallocated blocks */
-+	FI_HOT_DATA,		/* indicate file is hot */
-+	FI_EXTRA_ATTR,		/* indicate file has extra attribute */
-+	FI_PROJ_INHERIT,	/* indicate file inherits projectid */
-+	FI_PIN_FILE,		/* indicate file should not be gced */
-+	FI_ATOMIC_REVOKE_REQUEST, /* request to drop atomic data */
-+	FI_VERITY_IN_PROGRESS,	/* building fs-verity Merkle tree */
-+	FI_COMPRESSED_FILE,	/* indicate file's data can be compressed */
-+	FI_MMAP_FILE,		/* indicate file was mmapped */
-+	FI_MAX,			/* max flag, never be used */
-+};
-+
- struct f2fs_inode_info {
- 	struct inode vfs_inode;		/* serve a vfs inode */
- 	unsigned long i_flags;		/* keep an inode flags for ioctl */
-@@ -694,7 +732,7 @@ struct f2fs_inode_info {
- 	umode_t i_acl_mode;		/* keep file acl mode temporarily */
- 
- 	/* Use below internally in f2fs*/
--	unsigned long flags;		/* use to pass per-file flags */
-+	unsigned long flags[BITS_TO_LONGS(FI_MAX)];	/* use to pass per-file flags */
- 	struct rw_semaphore i_sem;	/* protect fi info */
- 	atomic_t dirty_pages;		/* # of dirty pages */
- 	f2fs_hash_t chash;		/* hash value of given file name */
-@@ -2531,43 +2569,6 @@ static inline __u32 f2fs_mask_flags(umode_t mode, __u32 flags)
- 		return flags & F2FS_OTHER_FLMASK;
- }
- 
--/* used for f2fs_inode_info->flags */
--enum {
--	FI_NEW_INODE,		/* indicate newly allocated inode */
--	FI_DIRTY_INODE,		/* indicate inode is dirty or not */
--	FI_AUTO_RECOVER,	/* indicate inode is recoverable */
--	FI_DIRTY_DIR,		/* indicate directory has dirty pages */
--	FI_INC_LINK,		/* need to increment i_nlink */
--	FI_ACL_MODE,		/* indicate acl mode */
--	FI_NO_ALLOC,		/* should not allocate any blocks */
--	FI_FREE_NID,		/* free allocated nide */
--	FI_NO_EXTENT,		/* not to use the extent cache */
--	FI_INLINE_XATTR,	/* used for inline xattr */
--	FI_INLINE_DATA,		/* used for inline data*/
--	FI_INLINE_DENTRY,	/* used for inline dentry */
--	FI_APPEND_WRITE,	/* inode has appended data */
--	FI_UPDATE_WRITE,	/* inode has in-place-update data */
--	FI_NEED_IPU,		/* used for ipu per file */
--	FI_ATOMIC_FILE,		/* indicate atomic file */
--	FI_ATOMIC_COMMIT,	/* indicate the state of atomical committing */
--	FI_VOLATILE_FILE,	/* indicate volatile file */
--	FI_FIRST_BLOCK_WRITTEN,	/* indicate #0 data block was written */
--	FI_DROP_CACHE,		/* drop dirty page cache */
--	FI_DATA_EXIST,		/* indicate data exists */
--	FI_INLINE_DOTS,		/* indicate inline dot dentries */
--	FI_DO_DEFRAG,		/* indicate defragment is running */
--	FI_DIRTY_FILE,		/* indicate regular/symlink has dirty pages */
--	FI_NO_PREALLOC,		/* indicate skipped preallocated blocks */
--	FI_HOT_DATA,		/* indicate file is hot */
--	FI_EXTRA_ATTR,		/* indicate file has extra attribute */
--	FI_PROJ_INHERIT,	/* indicate file inherits projectid */
--	FI_PIN_FILE,		/* indicate file should not be gced */
--	FI_ATOMIC_REVOKE_REQUEST, /* request to drop atomic data */
--	FI_VERITY_IN_PROGRESS,	/* building fs-verity Merkle tree */
--	FI_COMPRESSED_FILE,	/* indicate file's data can be compressed */
--	FI_MMAP_FILE,		/* indicate file was mmapped */
--};
--
- static inline void __mark_inode_dirty_flag(struct inode *inode,
- 						int flag, bool set)
- {
-@@ -2588,20 +2589,18 @@ static inline void __mark_inode_dirty_flag(struct inode *inode,
- 
- static inline void set_inode_flag(struct inode *inode, int flag)
- {
--	if (!test_bit(flag, &F2FS_I(inode)->flags))
--		set_bit(flag, &F2FS_I(inode)->flags);
-+	test_and_set_bit(flag, F2FS_I(inode)->flags);
- 	__mark_inode_dirty_flag(inode, flag, true);
- }
- 
- static inline int is_inode_flag_set(struct inode *inode, int flag)
- {
--	return test_bit(flag, &F2FS_I(inode)->flags);
-+	return test_bit(flag, F2FS_I(inode)->flags);
- }
- 
- static inline void clear_inode_flag(struct inode *inode, int flag)
- {
--	if (test_bit(flag, &F2FS_I(inode)->flags))
--		clear_bit(flag, &F2FS_I(inode)->flags);
-+	test_and_clear_bit(flag, F2FS_I(inode)->flags);
- 	__mark_inode_dirty_flag(inode, flag, false);
- }
- 
-@@ -2692,19 +2691,19 @@ static inline void get_inline_info(struct inode *inode, struct f2fs_inode *ri)
- 	struct f2fs_inode_info *fi = F2FS_I(inode);
- 
- 	if (ri->i_inline & F2FS_INLINE_XATTR)
--		set_bit(FI_INLINE_XATTR, &fi->flags);
-+		set_bit(FI_INLINE_XATTR, fi->flags);
- 	if (ri->i_inline & F2FS_INLINE_DATA)
--		set_bit(FI_INLINE_DATA, &fi->flags);
-+		set_bit(FI_INLINE_DATA, fi->flags);
- 	if (ri->i_inline & F2FS_INLINE_DENTRY)
--		set_bit(FI_INLINE_DENTRY, &fi->flags);
-+		set_bit(FI_INLINE_DENTRY, fi->flags);
- 	if (ri->i_inline & F2FS_DATA_EXIST)
--		set_bit(FI_DATA_EXIST, &fi->flags);
-+		set_bit(FI_DATA_EXIST, fi->flags);
- 	if (ri->i_inline & F2FS_INLINE_DOTS)
--		set_bit(FI_INLINE_DOTS, &fi->flags);
-+		set_bit(FI_INLINE_DOTS, fi->flags);
- 	if (ri->i_inline & F2FS_EXTRA_ATTR)
--		set_bit(FI_EXTRA_ATTR, &fi->flags);
-+		set_bit(FI_EXTRA_ATTR, fi->flags);
- 	if (ri->i_inline & F2FS_PIN_FILE)
--		set_bit(FI_PIN_FILE, &fi->flags);
-+		set_bit(FI_PIN_FILE, fi->flags);
- }
- 
- static inline void set_raw_inline(struct inode *inode, struct f2fs_inode *ri)
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 44e08bf2e2b4..fded4b342346 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -362,7 +362,7 @@ static int do_read_inode(struct inode *inode)
- 	fi->i_flags = le32_to_cpu(ri->i_flags);
- 	if (S_ISREG(inode->i_mode))
- 		fi->i_flags &= ~F2FS_PROJINHERIT_FL;
--	fi->flags = 0;
-+	bitmap_zero(fi->flags, BITS_TO_LONGS(FI_MAX));
- 	fi->i_advise = ri->i_advise;
- 	fi->i_pino = le32_to_cpu(ri->i_pino);
- 	fi->i_dir_level = ri->i_dir_level;
 -- 
-2.18.0.rc1
-
+viresh
