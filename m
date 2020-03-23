@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A1CC1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5EEC54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E069620753
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 817F42074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584929452;
-	bh=68EJQjEar+UsfKLiDjF2JAQc6ZEgqxWm6jTIrxcMeaw=;
+	s=default; t=1584929454;
+	bh=jaGPIpGPPqctDJCD6IDvFLvTBAHWUPLPebvF99tCaPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WdD93tFGr2L2WjNgVSubf23y+MOhMyAiiPvLK14FiKF70mRqLZh7+KELJ+oSOgZsy
-	 uAWWK/+a2NftMyaOuB96aOgbawK1uSycb9R0zra/d5ly1QkANr5jNF16cMKE+tVamv
-	 EsbZYrtqd2rqM5zQwT/rc9HYkXHnfyufxaqAH2SY=
+	b=wvGgDsiWnH+VYuKzsdbFiKwD8dtBYWfzwp3JUaufvZYw8FhrejyHskOdKh+7wf4Ce
+	 NGUWzd5s+pfHhWJCgOxka2TnzeQjkgq3fkWCXqo6Ahtbtp8vDNCawwXf3KgagXZdZG
+	 +7GlFPSL07Nk9quLr1rEDhyJJH04Z3LNo22efdYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgCWCKv (ORCPT
+        id S1727116AbgCWCKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 22:10:51 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:44556 "EHLO
+        Sun, 22 Mar 2020 22:10:53 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:44563 "EHLO
         conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgCWCKv (ORCPT
+        with ESMTP id S1727091AbgCWCKv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 22 Mar 2020 22:10:51 -0400
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 02N28urY002941;
-        Mon, 23 Mar 2020 11:09:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 02N28urY002941
+        by conuserg-11.nifty.com with ESMTP id 02N28urT002941;
+        Mon, 23 Mar 2020 11:08:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 02N28urT002941
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1584929345;
-        bh=E2psVuEg+JhrGKw/xZVOkRp9XPBXsZqoNs5V0bJG/gA=;
+        s=dec2015msa; t=1584929339;
+        bh=OBYpbzm6LFgChfbfmHLibCZaTv/7d/Vlu331wrlDIOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MfRamYOstzaL5Sdv1wE9lZXnE8bLRnXna+yR1JH4iXjmaUPwYMnh2NWst9/ff8YPw
-         AXJKIQ3+rVT9RGaDi4j9DWLail38HYCjOzAZqjdjkEA4KAAqQRsX+EqrFmR+07iOkN
-         QvgMAy0+YFGccpWjhxWNNm2ic37LK2yOhmqyRyDphkwIoVjJKxo8xk4C6yWkFUS6cz
-         /Fv4pcHguDHLpP2fxOlPLBWqc4upQ0sUQd3cs2XWW4CdFVrk8TizPmVCzYxbpalFW0
-         XDM2TEFWRMJnV/gu1kuYYz/qnk7T37MZsS89UoLTLe74Mq3caI6+MueCVI52hB8+br
-         i7i0vEneYa5uw==
+        b=mkDpJesliGScBOAxZ66gIOiD2WBWbhIna7MuM4pGekNDp0ijO/7AFqNjlLFqglyI6
+         9Do/dM8ngkRIU9M0XbVHdlgsM9myaQsmtfIqv8QE0I1kGLoFVJbMAlcVAtJ0Y/hJjy
+         cyKP1MSmilQb6R8/CXRkufwVbqHjl8y1TaOlWtKRyoIDCEl95YeAdiWLk9FJh/3g47
+         hJcHYTcDBZQJCGeakVhAKqaecMveMht7Uj8jOD7cdpmraUUnPSp24gXGZHQ1oDfOl8
+         bApyyJP8S3v45mW7DhP/PT5iL0IQJdghBsr+NeM6BcYSB9mTQ9wdiatOiW6M0by82p
+         Psxmp3ZMKXg7Q==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
@@ -53,9 +53,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Masahiro Yamada <masahiroy@kernel.org>,
         Ingo Molnar <mingo@redhat.com>,
         clang-built-linux@googlegroups.com
-Subject: [PATCH 7/7] x86: add comments about the binutils version to support code in as-instr
-Date:   Mon, 23 Mar 2020 11:08:44 +0900
-Message-Id: <20200323020844.17064-8-masahiroy@kernel.org>
+Subject: [PATCH 2/7] x86: remove always-defined CONFIG_AS_CFI
+Date:   Mon, 23 Mar 2020 11:08:39 +0900
+Message-Id: <20200323020844.17064-3-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200323020844.17064-1-masahiroy@kernel.org>
 References: <20200323020844.17064-1-masahiroy@kernel.org>
@@ -64,45 +64,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+CONFIG_AS_CFI was introduced by commit e2414910f212 ("[PATCH] x86:
+Detect CFI support in the assembler at runtime"), and extended by
+commit f0f12d85af85 ("x86_64: Check for .cfi_rel_offset in CFI probe").
+
 We raise the minimal supported binutils version from time to time.
 The last bump was commit 1fb12b35e5ff ("kbuild: Raise the minimum
 required binutils version to 2.21").
 
-We need to keep these as-instr checks because binutils 2.21 does not
-support them.
+I confirmed the code in $(call as-instr,...) can be assembled by the
+binutils 2.21 assembler and also by LLVM integrated assembler.
 
-I hope this will be a good hint which one can be dropped when we
-bump the minimal binutils version next time.
-
-As for the Clang/LLVM builds, we require very new LLVM version,
-so the LLVM integrated assembler supports all of them.
+Remove CONFIG_AS_CFI, which is always defined.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- arch/x86/Makefile | 5 +++++
- 1 file changed, 5 insertions(+)
+If this series is OK, we can do follwup cleanups.
+We can hard-code the assembler code, and delete CFI_* macros entirely.
+
+
+ arch/x86/Makefile             | 10 ++--------
+ arch/x86/include/asm/dwarf2.h | 36 -----------------------------------
+ 2 files changed, 2 insertions(+), 44 deletions(-)
 
 diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index f32ef7b8d5ca..4c57cb3018fb 100644
+index 513a55562d75..72f8f744ebd7 100644
 --- a/arch/x86/Makefile
 +++ b/arch/x86/Makefile
-@@ -178,10 +178,15 @@ ifeq ($(ACCUMULATE_OUTGOING_ARGS), 1)
+@@ -177,12 +177,6 @@ ifeq ($(ACCUMULATE_OUTGOING_ARGS), 1)
+ 	KBUILD_CFLAGS += $(call cc-option,-maccumulate-outgoing-args,)
  endif
  
- # does binutils support specific instructions?
-+# binutils >= 2.22
- avx2_instr :=$(call as-instr,vpbroadcastb %xmm0$(comma)%ymm1,-DCONFIG_AS_AVX2=1)
-+# binutils >= 2.25
- avx512_instr :=$(call as-instr,vpmovm2b %k1$(comma)%zmm5,-DCONFIG_AS_AVX512=1)
-+# binutils >= 2.24
- sha1_ni_instr :=$(call as-instr,sha1msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA1_NI=1)
-+# binutils >= 2.24
+-# Stackpointer is addressed different for 32 bit and 64 bit x86
+-sp-$(CONFIG_X86_32) := esp
+-sp-$(CONFIG_X86_64) := rsp
+-
+-# do binutils support CFI?
+-cfi := $(call as-instr,.cfi_startproc\n.cfi_rel_offset $(sp-y)$(comma)0\n.cfi_endproc,-DCONFIG_AS_CFI=1)
+ # is .cfi_signal_frame supported too?
+ cfi-sigframe := $(call as-instr,.cfi_startproc\n.cfi_signal_frame\n.cfi_endproc,-DCONFIG_AS_CFI_SIGNAL_FRAME=1)
+ cfi-sections := $(call as-instr,.cfi_sections .debug_frame,-DCONFIG_AS_CFI_SECTIONS=1)
+@@ -196,8 +190,8 @@ sha1_ni_instr :=$(call as-instr,sha1msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA1_NI=
  sha256_ni_instr :=$(call as-instr,sha256msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA256_NI=1)
-+# binutils >= 2.23
  adx_instr := $(call as-instr,adox %r10$(comma)%r10,-DCONFIG_AS_ADX=1)
  
- KBUILD_AFLAGS += $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
+-KBUILD_AFLAGS += $(cfi) $(cfi-sigframe) $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
+-KBUILD_CFLAGS += $(cfi) $(cfi-sigframe) $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
++KBUILD_AFLAGS += $(cfi-sigframe) $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
++KBUILD_CFLAGS += $(cfi-sigframe) $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
+ 
+ KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
+ 
+diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
+index 5a0502212bc5..90807583cad7 100644
+--- a/arch/x86/include/asm/dwarf2.h
++++ b/arch/x86/include/asm/dwarf2.h
+@@ -6,15 +6,6 @@
+ #warning "asm/dwarf2.h should be only included in pure assembly files"
+ #endif
+ 
+-/*
+- * Macros for dwarf2 CFI unwind table entries.
+- * See "as.info" for details on these pseudo ops. Unfortunately
+- * they are only supported in very new binutils, so define them
+- * away for older version.
+- */
+-
+-#ifdef CONFIG_AS_CFI
+-
+ #define CFI_STARTPROC		.cfi_startproc
+ #define CFI_ENDPROC		.cfi_endproc
+ #define CFI_DEF_CFA		.cfi_def_cfa
+@@ -55,31 +46,4 @@
+ #endif
+ #endif
+ 
+-#else
+-
+-/*
+- * Due to the structure of pre-exisiting code, don't use assembler line
+- * comment character # to ignore the arguments. Instead, use a dummy macro.
+- */
+-.macro cfi_ignore a=0, b=0, c=0, d=0
+-.endm
+-
+-#define CFI_STARTPROC		cfi_ignore
+-#define CFI_ENDPROC		cfi_ignore
+-#define CFI_DEF_CFA		cfi_ignore
+-#define CFI_DEF_CFA_REGISTER	cfi_ignore
+-#define CFI_DEF_CFA_OFFSET	cfi_ignore
+-#define CFI_ADJUST_CFA_OFFSET	cfi_ignore
+-#define CFI_OFFSET		cfi_ignore
+-#define CFI_REL_OFFSET		cfi_ignore
+-#define CFI_REGISTER		cfi_ignore
+-#define CFI_RESTORE		cfi_ignore
+-#define CFI_REMEMBER_STATE	cfi_ignore
+-#define CFI_RESTORE_STATE	cfi_ignore
+-#define CFI_UNDEFINED		cfi_ignore
+-#define CFI_ESCAPE		cfi_ignore
+-#define CFI_SIGNAL_FRAME	cfi_ignore
+-
+-#endif
+-
+ #endif /* _ASM_X86_DWARF2_H */
 -- 
 2.17.1
 
