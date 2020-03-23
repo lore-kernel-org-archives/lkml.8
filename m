@@ -2,133 +2,127 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A81C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A566FC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4C82074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:16:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="ERgyVwfG"
+	by mail.kernel.org (Postfix) with ESMTP id 7926F20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584958911;
+	bh=WUDqjxSP5HIye7Jm6hq9yOS7QIpPig9D7tnQpVgfrh8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sVvPCvIVH7z13gr2tXWg7ab+kkOhYJ54oeSGVi8dqFsgTHzKvvyE8fiLl+JNxo9Fh
+	 VmsZ30NiNMAf3P2H88I5vFcj/P0PuVctQdju4pstjApz3jiayPrIMeiiU8ZPzG+aGh
+	 NBw1pQeOIQHQ2+Og5N5JiuoZpD/PLxmP/xYwcXQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgCWKQr (ORCPT
+        id S1727896AbgCWKVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 06:16:47 -0400
-Received: from mail-dm6nam11on2075.outbound.protection.outlook.com ([40.107.223.75]:6060
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727862AbgCWKQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 06:16:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Hkd8vE172iiKQPIh7Gta8JZj655Ynvtbed7WQPgCQdBgFEVu1IHElLzbbyBweBOSAE7XUD1inD0rIMyhYBOgUCF+rO09XqJG7er7SV3vTT8HKQ6hUqcQZ11Rb8Dx1AbIhdFc/25mdsA8xX18WLY6RrApOSboMDC4S8QnIgN9p5fXWu0Eg+4R7235wTBijw9lbpoGv7im6OWAC8RX0Oi/QpGEByQjrSirYx/OpVblHpxmSa1/acnuJpc2F+oXxs3jJT/5z3Vbr0HgbcddYu+wLU74iXyESLWvi96+TIz5y1l0QD/d1ALi+sM0S5kLLcrAa91ffsOhpHrrk5VzLnZ8Eg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z8tQW8a6NUK1oT/Yn43sYBuKdyxxr27XgbFZq3OTl94=;
- b=DUwygy5e3Hm2TxJPtL97B5FRMZTanTAikQ+0ad56q2J9PT4fGZRudKQ9q8nz0JfBkz8sRTFJWJ9ZleSn+JaTCRhsqHIipV82gcIsiVJrc8rlPJrCrUg957iHwt0ZMan0pwcvPHg+sYITpVXRqv4D3sQUTZcI4fxGiwhmehsFYKhhu//32JctMlokCskdXFPe9xwnKiEdNc+eLtxNI6XII6kL6XagfKBdO5MB0jcDfEb5jWsFsQJq46Wzaf9KM2LBPsouGB+rJWV2us1iNbQfwugBM7jgoP7BNaDeK0eDQDVWrZSpgGLd3Dki/G27kGHHU9j4WweRnV56Gb+QooTdJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z8tQW8a6NUK1oT/Yn43sYBuKdyxxr27XgbFZq3OTl94=;
- b=ERgyVwfGrhHpG7UNR5/vTUdQXXBVMYdB1daaR/A/FEMGc0b8L/GQJGsi8ucJvl4YhTf78XKS6CBUvjmjrAJbb+8c+Omu0KUx8lV0cVUiehGWB4Dej4KNdygLEDtrljA6mESO3kB6pD3LU35uHma/nex/qDkas8DZlkpqwRD/gEM=
-Received: from MWHPR05MB3376.namprd05.prod.outlook.com (2603:10b6:301:3c::19)
- by MWHPR05MB3470.namprd05.prod.outlook.com (2603:10b6:301:42::38) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.11; Mon, 23 Mar
- 2020 10:16:44 +0000
-Received: from MWHPR05MB3376.namprd05.prod.outlook.com
- ([fe80::884b:8b78:93b:29e0]) by MWHPR05MB3376.namprd05.prod.outlook.com
- ([fe80::884b:8b78:93b:29e0%7]) with mapi id 15.20.2856.015; Mon, 23 Mar 2020
- 10:16:44 +0000
-From:   Jorgen Hansen <jhansen@vmware.com>
-To:     'Arnd Bergmann' <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Adit Ranadive <aditr@vmware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yuanxzhang@fudan.edu.cn" <yuanxzhang@fudan.edu.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>, Xin Tan <tanxin.ctf@gmail.com>
-Subject: RE: [PATCH v2] VMCI: Fix NULL pointer dereference on context ptr
-Thread-Topic: [PATCH v2] VMCI: Fix NULL pointer dereference on context ptr
-Thread-Index: AQHWAO0PYlOmj4PpzU+IYASut1pHpqhV3viAgAAGvwCAAA2QwA==
-Date:   Mon, 23 Mar 2020 10:16:43 +0000
-Message-ID: <MWHPR05MB33760A2F7ABC03DB367B09C2DAF00@MWHPR05MB3376.namprd05.prod.outlook.com>
-References: <1584951832-120773-1-git-send-email-xiyuyang19@fudan.edu.cn>
- <20200323085241.GA342330@kroah.com>
- <CAK8P3a3B373YcmZncnE-wJz12B+3A5QC9CUrDd72qSw+65MwQg@mail.gmail.com>
-In-Reply-To: <CAK8P3a3B373YcmZncnE-wJz12B+3A5QC9CUrDd72qSw+65MwQg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jhansen@vmware.com; 
-x-originating-ip: [208.91.2.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0885fbe5-6acc-4648-892c-08d7cf134977
-x-ms-traffictypediagnostic: MWHPR05MB3470:|MWHPR05MB3470:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR05MB347038BBC32E61CF9D7D2E99DAF00@MWHPR05MB3470.namprd05.prod.outlook.com>
-x-vmwhitelist: True
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0351D213B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(376002)(346002)(366004)(199004)(7696005)(110136005)(316002)(33656002)(4326008)(7416002)(26005)(478600001)(86362001)(55016002)(9686003)(186003)(53546011)(6506007)(54906003)(66476007)(8676002)(81156014)(81166006)(8936002)(5660300002)(66556008)(66946007)(64756008)(66446008)(76116006)(71200400001)(52536014)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR05MB3470;H:MWHPR05MB3376.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OQEwi/XYbDzXcZSK548f7UhnMyjG4Bs/tLpOKJnY+dO4eNZHvXNPR1j7oEvkAFGGLzUiVTxWXp1s/S9s3IgwJ8pIXpF68qrky2HrwsPuevh+ZjSun1VMjXi9Hy+OBh3Dn/S3KHAa4SQtxp6yqgJqASyt5nOTLc86CDkh9fxKF6avQ6rFxXER5RXGzNcRIHdvJ86q+fXhnqzzhY9gIb1x+okZW2FTNedw4mC8IhqAXHGX1gyxP+3Xlr8BNCpeB/lJpphh5dB7/NuJy+3WyqyqMYXj0Y9RJVlFbU4x1e6lEyrvJVXhkVN4cVKWY7oHlJaKxaJg5tZ/q2igBO8Cqc7woM/xKFB6VYG4WAOvnzL6O6UFtS67e6/o0vcLEEVHlzhBP/ET8VhFfXZxyLDgwOG8DAm4S7Ds+QpyTed/8kSoPol/mQzrg61VHXEGwkwmUONi
-x-ms-exchange-antispam-messagedata: fkNeRYbcDEeiYJGPkAUsJxktjvXPumNdbeFmLHdNJDCNZ7fc9zXfeEzHiG/AJOz4vLyA0BfU4yfQtad6D34VM6AOlT65IhDLrBJJryNRbxzqe4/38EGFIu5+2phrvapckECjgqRIxJ8qK+l1qUFz/Q==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 23 Mar 2020 06:21:50 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58176 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727827AbgCWKVu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 06:21:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description;
+        bh=3WfSQ3OZhM0uMtvR96lPO9D2XEhT6VnleEL2HTMq9qc=; b=B5q6NfBAhKcSzZ3KlhdFVBHL7w
+        DZB2imhu75xJbB3QtYbJRRfGTzNKz/YBND322z63b+tNyIQuKPbKkUZWry1fWF5T0/wsNa5MZpEfm
+        Z3eEjbwIg8P7CrA/OOneVnMtgehQijD/+dIePxPF9uo/UPfCwTcpoqatNj54Z4WEc85Tw1YPAfGMK
+        uVL9iBX5OyyKfNdtnWQW+pLmpCjMd0bqTghGYIZbjy0UEjxgGS3ktZJATt+VhxDnnfiuUif3khhOX
+        ikM/lun32HfmT6ajMX9N6aDSPhtx4W/Ih/hXHQ1cblAEZZWO+DGSSV0GVgSxQl3Ei5IR2IaBEyEAp
+        9XfudGdQ==;
+Received: from ip5f5ad4e9.dynamic.kabel-deutschland.de ([95.90.212.233] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGKDM-0005ME-AT; Mon, 23 Mar 2020 10:21:48 +0000
+Date:   Mon, 23 Mar 2020 11:21:42 +0100
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Martin Knoblauch <knobi@knobisoft.de>
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+Subject: Re: Build error on 5.5.10 after activating v4l in .config
+Message-ID: <20200323112142.457a8a28@coco.lan>
+In-Reply-To: <CAJtcoLZKbiSqRPvLMz-Bp142sxEFhuAkbZzx7P3n3VW2bNCtQA@mail.gmail.com>
+References: <CAJtcoLYiGLa3UWQ-XBVc=ATQEnsFrfZuU0i_fS22b7Uv+S-Ysw@mail.gmail.com>
+        <20200320161301.36866c31@coco.lan>
+        <CAJtcoLZKbiSqRPvLMz-Bp142sxEFhuAkbZzx7P3n3VW2bNCtQA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0885fbe5-6acc-4648-892c-08d7cf134977
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2020 10:16:43.7764
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: faHUJViScUWhjWCBJBoSmncp4Y+suDt+ddmvP5A8B9nsb+kn0Am9+H51UyIHf44c6MAxl7NNf/fKz1YCQP18Cg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR05MB3470
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBcm5kIEJlcmdtYW5uIFttYWlsdG86YXJuZEBhcm5kYi5kZV0NCj4gU2VudDogTW9u
-ZGF5LCBNYXJjaCAyMywgMjAyMCAxMDoxNyBBTQ0KPiBPbiBNb24sIE1hciAyMywgMjAyMCBhdCA5
-OjUyIEFNIEdyZWcgS3JvYWgtSGFydG1hbg0KPiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+
-IHdyb3RlOg0KPiA+DQo+ID4gT24gTW9uLCBNYXIgMjMsIDIwMjAgYXQgMDQ6MjI6MzNQTSArMDgw
-MCwgWGl5dSBZYW5nIHdyb3RlOg0KPiA+ID4gQSBOVUxMIHZtY2lfY3R4IG9iamVjdCBtYXkgcGFz
-cyB0byB2bWNpX2N0eF9wdXQoKSBmcm9tIGl0cyBjYWxsZXJzLg0KPiA+DQo+ID4gQXJlIHlvdSBz
-dXJlIHRoaXMgY2FuIGhhcHBlbj8NCj4gPg0KPiA+ID4gQWRkIGEgTlVMTCBjaGVjayB0byBwcmV2
-ZW50IE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZS4NCj4gDQo+IEl0IGxvb2tzIGxpa2UgdGhpcyBj
-b3VsZCBoYXBwZW4gaWYgdm1jaV9jdHhfZ2V0KCkgcmV0dXJucyBOVUxMLCB3aGljaCBpcw0KPiBu
-b3QgY2hlY2tlZCBmb3IgY29uc2lzdGVudGx5LiBNYXliZSBhZGQgYmV0dGVyIGVycm9yIGhhbmRs
-aW5nIHRvIHRoZQ0KPiBjYWxsZXJzIHRoYXQgY3VycmVudGx5IGRvbid0IGNoZWNrIGZvciB0aGF0
-LCB0byBjYXRjaCBwcm9ibGVtcyBzdWNoIGFzDQoNCkluIHRoZSBjYXNlcywgd2hlcmUgdGhlIHJl
-dHVybiB2YWx1ZSBpc24ndCBjaGVja2VkLCB0aGUgcmV0dXJuIHZhbHVlIG9mDQp2bWNpX2N0eF9n
-ZXQoKSB3b24ndCBiZSBOVUxMLCBhcyB0aGUgY29kZSB3b24ndCBiZSByZWFjaGVkIHVubGVzcyB0
-aGUNCmNvbnRleHQgSUQgaGFzIGFuIGFzc29jaWF0ZWQgY29udGV4dCBzdHJ1Y3R1cmUuIEluIHRo
-ZSBleGFtcGxlIGJlbG93LA0KdGhlIGNhbGxlciBoYXMgb2J0YWluZWQgdGhlIGNvbnRleHRfaWQg
-ZnJvbSBhbiBhY3RpdmUgY29udGV4dC4gVGhhdCBzYWlkLA0KaXQgd291bGRuJ3QgaHVydCB0byBh
-ZGQgZWl0aGVyIGNoZWNrcyBvciBhdCBsZWFzdCBhIGNvbW1lbnQgYXMgdG8gd2h5DQp0aGUgY29u
-dGV4dCB3b24ndCBiZSBOVUxMIGluIHRoZSBjYXNlcywgd2hlcmUgaXQgaXNuJ3QgY2hlY2tlZCB0
-b2RheS4NCg0KPiANCj4gdm9pZCB2bWNpX2N0eF9yY3Zfbm90aWZpY2F0aW9uc19yZWxlYXNlKC4u
-LikNCj4gew0KPiAgICAgICAgIHN0cnVjdCB2bWNpX2N0eCAqY29udGV4dCA9IHZtY2lfY3R4X2dl
-dChjb250ZXh0X2lkKTsgLyogbWF5IGJlIE5VTEwgKi8NCj4gICAgICAgIC4uLg0KPiAgICAgICAg
-Y29udGV4dC0+cGVuZGluZ19kb29yYmVsbF9hcnJheSA9IGRiX2hhbmRsZV9hcnJheTsNCj4gICAg
-ICAgIC4uLg0KPiAgICAgICAgdm1jaV9jdHhfcHV0KGNvbnRleHQpOw0KPiB9DQo+IA0KPiBDaGVj
-a2luZyBvbmx5IGluIHZtY2lfY3R4X3B1dCgpIGlzIHRvbyBsYXRlLg0KPiANCj4gICAgICBBcm5k
-DQoNClRoYW5rcywNCkpvcmdlbg0K
+Em Mon, 23 Mar 2020 10:44:42 +0100
+Martin Knoblauch <knobi@knobisoft.de> escreveu:
+
+> On Fri, Mar 20, 2020 at 4:13 PM Mauro Carvalho Chehab <mchehab@kernel.org>
+> wrote:
+> 
+> > Em Fri, 20 Mar 2020 15:56:16 +0100
+> > Martin Knoblauch <knobi@knobisoft.de> escreveu:
+> >  
+> > > Hi, (sesending without attachment)
+> > >
+> > >  today I tried to build 5.5.10 based on a working 5.5.6 configuration. I
+> > > also enabled v4l in the configuration using menuconfig. This resulted in
+> > > the following build error:
+> > >
+> > >   AS      arch/x86/boot/compressed/efi_thunk_64.o
+> > >   CC      arch/x86/boot/compressed/misc.o
+> > >   XZKERN  arch/x86/boot/compressed/vmlinux.bin.xz
+> > > ERROR: "__devm_regmap_init_i2c" [drivers/media/i2c/tvp5150.ko] undefined!
+> > > make[1]: *** [scripts/Makefile.modpost:94: __modpost] Error 1
+> > > make: *** [Makefile:1282: modules] Error 2
+> > > make: *** Waiting for unfinished jobs....
+> > >
+> > > After some searching the universal support tool, I applied the following
+> > > patch:
+> > >
+> > > --- ./drivers/media/i2c/Kconfig-orig 2020-03-18 13:57:30.288639392 +0100
+> > > +++ ./drivers/media/i2c/Kconfig 2020-03-18 16:44:03.938384192 +0100
+> > > @@ -378,6 +378,7 @@
+> > >  config VIDEO_TVP5150
+> > >   tristate "Texas Instruments TVP5150 video decoder"
+> > >   depends on VIDEO_V4L2 && I2C
+> > > + select REGMAP_I2C
+> > >   select V4L2_FWNODE
+> > >   help
+> > >    Support for the Texas Instruments TVP5150 video decoder.
+> > >
+> > > This made my build work again. But I am absolutely not sure this is the
+> > > right fix or whether it is complete.  
+> >
+> > Yes, it is. There are other places where the same select is needed.
+> >
+> > There's already a patch upstream (linux-next) addressing this issue.
+> >
+> > It should be merged for 5.7.
+> >
+> > Regards,
+> > Mauro
+> >  
+> 
+> Hi Mauro,
+> 
+>  so I had the same issue again with 5.5.11 (expected). In order to avoid
+> keeping a local patch until 5.5.7, I tried to deselect the driver. But it
+> seems I cannot. Only options I have for it are "M" or "*". So, what makes
+> this device different from e.g. TVP514x? I do not have the TVP5150 and the
+> driver is also not loaded. To me it seems the forced selection should not
+> happen in the first place ?
+
+Some other driver you selected may support boards with tvp5150. By default,
+it will auto-select all possible dependencies. 
+
+You can disable MEDIA_SUBDRV_AUTOSELECT. Please notice, however, that this
+may break support for some hardware.
+
+Thanks,
+Mauro
