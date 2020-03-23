@@ -2,75 +2,102 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06329C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51D4C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D357F2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1D0D2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:49:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584956990;
+	bh=Dk9SiQHTvQDbS1aDBmct0UumdwanFiG0VwvW4geFoX0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AlC3u9hnbnNDykuYImf+MVgDrH2qDij7HDVekXJ8C845wDMcwuizxPn/7/XyF+7ce
+	 0X51VM2cZ8QL56U++zREcFEd9T7I6aoOa6FaR/IbCoJm9sWRLeMQxELWdau2iHGWTs
+	 xygoAiX/WBj6kEW5LJovI8wBoMuIrQ6Br34WJ3SE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgCWJpw (ORCPT
+        id S1727769AbgCWJtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 05:45:52 -0400
-Received: from mx.socionext.com ([202.248.49.38]:5938 "EHLO mx.socionext.com"
+        Mon, 23 Mar 2020 05:49:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727737AbgCWJpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:45:52 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 23 Mar 2020 18:45:51 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id A21DB60057;
-        Mon, 23 Mar 2020 18:45:51 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Mon, 23 Mar 2020 18:45:51 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 564BB1A12AD;
-        Mon, 23 Mar 2020 18:45:51 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH] PCI: endpoint: functions/pci-epf-test: Avoid DMA release when DMA is unsupported
-Date:   Mon, 23 Mar 2020 18:45:47 +0900
-Message-Id: <1584956747-9273-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        id S1727737AbgCWJtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 05:49:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B5022072D;
+        Mon, 23 Mar 2020 09:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584956988;
+        bh=Dk9SiQHTvQDbS1aDBmct0UumdwanFiG0VwvW4geFoX0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LSULd/9gOiraf5VSWDJaltlND3dLyq3/XYW5kRo1UHq7nV7tV0kIgncKq3yFgmPbq
+         QOrPv+GZWXZq5oFHq2ycSIzwD38EuTM9L/n9Y1Ge+z833ItBbLH/ifI8YStGlieQTE
+         E/rDy5i7fGDZMudd5gobmLJdX7pLFD+pG1mmmKmw=
+Date:   Mon, 23 Mar 2020 10:49:46 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jaewon Kim <jaewon31.kim@samsung.com>
+Cc:     leon@kernel.org, vbabka@suse.cz, adobriyan@gmail.com,
+        akpm@linux-foundation.org, labbott@redhat.com,
+        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com, kasong@redhat.com,
+        bhe@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        jaewon31.kim@gmail.com, linux-api@vger.kernel.org,
+        kexec@lists.infradead.org
+Subject: Re: [RFC PATCH v2 3/3] android: ion: include system heap size in
+ meminfo extra
+Message-ID: <20200323094946.GA425358@kroah.com>
+References: <20200323080503.6224-1-jaewon31.kim@samsung.com>
+ <CGME20200323080508epcas1p3c68190cd46635b9ff026a4ae70fc7a3b@epcas1p3.samsung.com>
+ <20200323080503.6224-4-jaewon31.kim@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323080503.6224-4-jaewon31.kim@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When unbinding pci_epf_test, pci_epf_test_clean_dma_chan() is called in
-pci_epf_test_unbind() even though epf_test->dma_supported is false.
-As a result, dma_release_channel() will occur null pointer access because
-dma_chan isn't set.
+On Mon, Mar 23, 2020 at 05:05:03PM +0900, Jaewon Kim wrote:
+> In Android system ion system heap size is huge like hundreds of MB. To
+> know overal system memory usage, include ion system heap size in
+> proc/meminfo_extra.
+> 
+> To include heap size, use register_meminfo_extra introduced in previous
+> patch.
+> 
+> Prior to register we need to add stats to show the ion heap usage. Add
+> total_allocated into ion heap and count it on allocation and freeing. In
+> a ion heap using ION_HEAP_FLAG_DEFER_FREE, a buffer can be freed from
+> user but still live on deferred free list. Keep stats until the buffer
+> is finally freed so that we can cover situation of deferred free thread
+> stuck problem.
+> 
+> i.e) cat /proc/meminfo_extra | grep IonSystemHeap
+> IonSystemHeap:    242620 kB
+> 
+> i.e.) show_mem on oom
+> <6>[  420.856428]  Mem-Info:
+> <6>[  420.856433]  IonSystemHeap:32813kB
+> 
+> Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
+> ---
+>  drivers/staging/android/ion/ion.c             | 2 ++
+>  drivers/staging/android/ion/ion.h             | 1 +
+>  drivers/staging/android/ion/ion_system_heap.c | 2 ++
+>  3 files changed, 5 insertions(+)
 
-This avoids calling dma_release_channel() if epf_test->dma_supported
-is false.
+Does this really give the proper granularity that ion users have?  I
+thought they wanted to know what each heap was doing.
 
-Fixes: a1d105d4ab8e ("PCI: endpoint: functions/pci-epf-test: Add DMA support to transfer data")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/pci/endpoint/functions/pci-epf-test.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Also, this code should be deleted really soon now, so I would not make
+any core changes to the kernel based on it at all.
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 3b4cf7e..8b4f136 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -609,7 +609,8 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
- 	int bar;
- 
- 	cancel_delayed_work(&epf_test->cmd_handler);
--	pci_epf_test_clean_dma_chan(epf_test);
-+	if (epf_test->dma_supported)
-+		pci_epf_test_clean_dma_chan(epf_test);
- 	pci_epc_stop(epc);
- 	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
- 		epf_bar = &epf->bar[bar];
--- 
-2.7.4
+thanks,
 
+greg k-h
