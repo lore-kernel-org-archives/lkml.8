@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4919CC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98AFC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDDC20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5072072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:48:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="USfXImCF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YUzEAw5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgCWMsM (ORCPT
+        id S1728345AbgCWMst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:48:12 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:41046 "EHLO
+        Mon, 23 Mar 2020 08:48:49 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:47171 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728293AbgCWMsL (ORCPT
+        by vger.kernel.org with ESMTP id S1728254AbgCWMss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 08:48:11 -0400
+        Mon, 23 Mar 2020 08:48:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584967691;
+        s=mimecast20190719; t=1584967727;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=oZZMumaLZJu5X3TxC1ggPEB/siyDp674fd3PHOwNKOk=;
-        b=USfXImCFJKadRb001iHR6e1rBoAlfR0GSqjryUxPGTwN1Z1W3SiA6dtMbnEGioY+uGKXYv
-        ZlZ4pJQvOkAdc7zn9QpSqdIPTLChLZJpr2MXq4AYt0Qy2OSBD7TttHrL9tpWTAiHHBTuP8
-        tfCJbqdZHmruWzxehVs9raf6VVKeP5Q=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-462-43zl1JrJPmqfMa_dQ5sFVw-1; Mon, 23 Mar 2020 08:48:09 -0400
-X-MC-Unique: 43zl1JrJPmqfMa_dQ5sFVw-1
-Received: by mail-wr1-f70.google.com with SMTP id p2so7315561wrw.8
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 05:48:09 -0700 (PDT)
+        bh=wF/Z91rii7js9BxWiPX/IJSf6cOn716YQpoQOgnhvlY=;
+        b=YUzEAw5odvtGgwnsXrh8keojEDtlxHkVerI8Dfyb6mVPl1BcVoPgIxD+Oei3OxIdg080Lj
+        5/O0ewihSHfmeEUPLl9NCQ0hS20Sg4uVCv8Ubx1d+mPT+HR8hBfiQ4Y3gF+jHU/y1hnr1c
+        T2yHrYRfihu1EVQlZoClXI/YTSXqQj0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-206-TTfEUdEXMlyRW_TGgzWIxw-1; Mon, 23 Mar 2020 08:48:45 -0400
+X-MC-Unique: TTfEUdEXMlyRW_TGgzWIxw-1
+Received: by mail-wr1-f72.google.com with SMTP id w11so7323748wrp.20
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 05:48:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=oZZMumaLZJu5X3TxC1ggPEB/siyDp674fd3PHOwNKOk=;
-        b=po1zwL/JKOHQc/Iygw1MRbU8VKoTB8A1DJfwMVCIQRd0S93QM4+NHsjlNOQaBwTdpr
-         uw6Lagm2Jm2bl5cZCIhrpjKHnNw9fxWwJusfdAmVVLixZO7SXZIEAXsW1CMuBQ1nGvLR
-         11JMtwaVwwMvXoxrdyQYL6Xn9UYktD63pDkcgq3wetNU3YR3Mfj/4Eu0vmfyF9Ti2lDN
-         HQ67MygBiBFftue9LP3H5gTQIdiiubi6YYJIEXsenSG8cbXFFu0Xudu64ieRK4Pp8qvx
-         qXZEqYlf2SX3nC+oDNyrebuQly6CD2rX/e5nNYWjiVJ4+mWaEUq2JynNYa6cqFWSP1x/
-         e5cw==
-X-Gm-Message-State: ANhLgQ2UvxVOeDIQHucwWURDniimgWTh2g/WMk+pj0drWKGw9ReZ8dKi
-        m/M4NGSuAHtfg8g/v4+0oZ3ilDbHL9tyc+2y+zaeyO/7FxPVK5uSkNqS+6IRBF+r36YwONwMgYJ
-        tQgfPlc8vKCd097vPuuVsDMgF
-X-Received: by 2002:adf:decf:: with SMTP id i15mr26153365wrn.277.1584967688273;
-        Mon, 23 Mar 2020 05:48:08 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtzfkKiGqY46hQmyiE1uEEqN2+GnJhVE7scycSa3L2yRyeY3La61RQMFCIJXOpzJGHNoWPMLQ==
-X-Received: by 2002:adf:decf:: with SMTP id i15mr26153331wrn.277.1584967688007;
-        Mon, 23 Mar 2020 05:48:08 -0700 (PDT)
+        bh=wF/Z91rii7js9BxWiPX/IJSf6cOn716YQpoQOgnhvlY=;
+        b=o/FDVTBdjQpsf5RUBga7YosrndoYi9RKRUHOGveHTDmSWlcWsiCMmFKNSlgHMAAJCC
+         E3cZ/IuXUGbYMwiil77ODKH0gDGdLTvXvjWr1RGs2QSU8nC0LgQIE9YDPUvsgSd8rfg5
+         2Ad/EPPaOuEhDI+44fWUqTRAGKScTji9/y1BVcmh+KMyrM2B8eFYLuLDEHsBFdpxMTOa
+         L9dr4WWmxAtlCrghElzQtXlv7/Sd29kSiQC5JfFFuK6Kq9wIurgVYhioYINHseebawIl
+         4Ix8FWE9QqXIkaiMNj2uwQgWgjFLSKs0kGWHsij85Z9iC89/qqrkpoMvgTSgpdUkT5na
+         8V0Q==
+X-Gm-Message-State: ANhLgQ0T4F94nsMmVS3O50dOtL2tjBpm8Qz5pN/BTwWLA6Xg3SUeJ4Mq
+        +Z52spUj97IKgcjCCdOVuXNq5nXuGnWXrSWBEUN2mWQGr4Ky3OahEZk47sFBQBY9L3FXMXyPOQ2
+        mjkl2YCdN2WJ9ZQgUR8BNVRWg
+X-Received: by 2002:a1c:5544:: with SMTP id j65mr25700714wmb.60.1584967724308;
+        Mon, 23 Mar 2020 05:48:44 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vsE+BwUdC/3N3MhWCg3gX3gw8CdW/xveukJtA9Qqd5DxMyzUeCK03I5juokdRkfNo1dgo0DkQ==
+X-Received: by 2002:a1c:5544:: with SMTP id j65mr25700677wmb.60.1584967724024;
+        Mon, 23 Mar 2020 05:48:44 -0700 (PDT)
 Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id m12sm15324212wmi.3.2020.03.23.05.48.06
+        by smtp.gmail.com with ESMTPSA id j39sm24686004wre.11.2020.03.23.05.48.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 05:48:07 -0700 (PDT)
+        Mon, 23 Mar 2020 05:48:43 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>
@@ -79,11 +79,11 @@ Cc:     Paul Mackerras <paulus@ozlabs.org>,
         linux-mips@vger.kernel.org, kvm@vger.kernel.org,
         kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 8/9] KVM: VMX: Annotate vmx_x86_ops as __initdata
-In-Reply-To: <20200321202603.19355-9-sean.j.christopherson@intel.com>
-References: <20200321202603.19355-1-sean.j.christopherson@intel.com> <20200321202603.19355-9-sean.j.christopherson@intel.com>
-Date:   Mon, 23 Mar 2020 13:48:05 +0100
-Message-ID: <877dzb9r0a.fsf@vitty.brq.redhat.com>
+Subject: Re: [PATCH v3 9/9] KVM: SVM: Annotate svm_x86_ops as __initdata
+In-Reply-To: <20200321202603.19355-10-sean.j.christopherson@intel.com>
+References: <20200321202603.19355-1-sean.j.christopherson@intel.com> <20200321202603.19355-10-sean.j.christopherson@intel.com>
+Date:   Mon, 23 Mar 2020 13:48:41 +0100
+Message-ID: <874kuf9qza.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -93,30 +93,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-> Tag vmx_x86_ops with __initdata now the the struct is copied by value
+> Tag svm_x86_ops with __initdata now the the struct is copied by value to
 
-Typo, "now that the struct".
+Same typo, "now that the struct".
 
-> to a common x86 instance of kvm_x86_ops as part of kvm_init().
+> a common x86 instance of kvm_x86_ops as part of kvm_init().
 >
 > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
->  arch/x86/kvm/vmx/vmx.c | 2 +-
+>  arch/x86/kvm/svm.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index fac22e316417..eae90379d0d1 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7668,7 +7668,7 @@ static bool vmx_check_apicv_inhibit_reasons(ulong bit)
->  	return supported & BIT(bit);
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index b61bb306602b..ab2a1cf6c188 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -7350,7 +7350,7 @@ static void svm_pre_update_apicv_exec_ctrl(struct kvm *kvm, bool activate)
+>  	avic_update_access_page(kvm, activate);
 >  }
 >  
-> -static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
-> +static struct kvm_x86_ops vmx_x86_ops __initdata = {
->  	.hardware_unsetup = hardware_unsetup,
->  
->  	.hardware_enable = hardware_enable,
+> -static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+> +static struct kvm_x86_ops svm_x86_ops __initdata = {
+>  	.hardware_unsetup = svm_hardware_teardown,
+>  	.hardware_enable = svm_hardware_enable,
+>  	.hardware_disable = svm_hardware_disable,
 
 Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
