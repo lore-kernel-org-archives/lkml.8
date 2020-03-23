@@ -2,253 +2,92 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10285C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 393A1C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D04302070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:44:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WG07lqEp"
+	by mail.kernel.org (Postfix) with ESMTP id F3D0E2073C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:45:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584992705;
+	bh=zCAtNtjRoPXx6JmeMN5UgZhqCNa1x6VPSrcDikr0X04=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WBcmOC631A8+qv3VayiOANUNoBbGmMp4erX67D0VQ0AbBgDx93KZgq+JJsFc9hl66
+	 fYt0TqxmBMvmK+a1IgmKrLFxTrddkXJTHvg4RvijehwzaDiCoAhtuZnDTEaZSbJOg9
+	 lLJN2zb7kv3pnelqvmxMlqjTMU0kD8vTVreI2dR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgCWTom (ORCPT
+        id S1727084AbgCWTpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:44:42 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53137 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726764AbgCWTom (ORCPT
+        Mon, 23 Mar 2020 15:45:04 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35579 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgCWTpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:44:42 -0400
-Received: by mail-pj1-f66.google.com with SMTP id ng8so335190pjb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 12:44:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ls4G6lKYt71Y0XHFWkt5nDqXPlvj9q0Xq6iH0HNGuqM=;
-        b=WG07lqEpeapNlf+q9UhkvXekq1R2/kM+rxpL4XAMpxJf2QVYMEOFaDgJ1BJTHpgRZC
-         jDaKZB9+DGrG33wwzu19a0mx0kiWNijGGl1pUTqq0ljioxipjy03c4VFZPRELVCP0Dg0
-         4/bW4JhFRbWml+M7I0FBl9RebdX2ykFPTxQi0=
+        Mon, 23 Mar 2020 15:45:03 -0400
+Received: by mail-io1-f67.google.com with SMTP id h8so15672195iob.2;
+        Mon, 23 Mar 2020 12:45:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ls4G6lKYt71Y0XHFWkt5nDqXPlvj9q0Xq6iH0HNGuqM=;
-        b=fuQXgkpWL9SbAHRe+NmnfrdeJXwvNm1YuJ2cT7Cox4UWeCWQ4CdkxjC2lUmwhwUTMb
-         i3idKahZMaMh8V1t/efA06nr2ZMOG1HsRfb7R0JwwcjbWtftZ+3QhyFEfHoduNQV17LX
-         CJQRMpWfulGFzNVcI9rxm4UmfoTNZv3Xf9+9LMcRSd6T5XGC9Hv5ZF1WJc7ttUghRlrT
-         nCu7hc7jLBOSQ1lt/NpBb3rrW99z5CKJ6legjMffz72FGSgfad1PFY21apMbcs+GPCFk
-         5aW8z78ADFYzDLuHnDEvIREIEqA8brQw/i6u476++ktUqMsGUY1Sy7EjFs6Ao2Hdzmqq
-         WiLg==
-X-Gm-Message-State: ANhLgQ3BnGObyMuK9wHEOuSlgIEBnMzXMAjMbGYHgDcICLAr2XE13qYz
-        ayxt5ScvO9ENmUI3FRhnOg2fCw==
-X-Google-Smtp-Source: ADFU+vsjYREv0zb7uF0J3MSz4K/B3zotCbcEm7avZsPU6eUphxOcsAxXrRXR9QeoPK6hPks76WA6aw==
-X-Received: by 2002:a17:902:8648:: with SMTP id y8mr22771881plt.153.1584992680710;
-        Mon, 23 Mar 2020 12:44:40 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 19sm13145800pgx.63.2020.03.23.12.44.39
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r9i5Yy99e3CgW0P8gaLcjQIhjCX66478/XRcWS3+S84=;
+        b=d8m11+ivbJP5xi/pGCJvyTYah7/QMhlokBbsrsVn5XLekaBYcOHSTkyBHc1LZU0lFk
+         5Ad6hmEu6Uy1ic+rDSh4JrS1Kck2a965Vaa8XsFb8g3ck8VWuqX1612W65I3O8tLtG3D
+         JdouCNEBZfYZUxs+5qx7nUZiqeVKBzNdvB+s/Zo7uQreqzYoHXNcmTZpmS0htLXtjAF0
+         +JkiCkWjAtc3kSMk3neKonlai4dMRi6j31E8FeXvycllfzdc2neoig62R45Simioz7B2
+         ZKvqugvbC64GtbJJ1L1APJqgxyTHpvzyU5tgYYLAb1On/Df1GUB11CULc7L3U+3Haf/r
+         1VZg==
+X-Gm-Message-State: ANhLgQ2GKx6fqqj7eZKyZSV8VZ2TJ+TdYr6nZ2yr6mN0mVocN711Wdet
+        1s/PAJ2YcuAHZ85Ml/r79A==
+X-Google-Smtp-Source: ADFU+vsAzTXBZGUBrZAQ1lAg1LZa7C8Eb/zL/ybcePG+EQHsuJFpa2ORV2x7aE10Xrh+Imf8iDK5Eg==
+X-Received: by 2002:a05:6602:cf:: with SMTP id z15mr20497163ioe.13.1584992701381;
+        Mon, 23 Mar 2020 12:45:01 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id o23sm5554448ild.33.2020.03.23.12.44.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 12:44:39 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 12:44:38 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
-        Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH bpf-next v5 5/7] bpf: lsm: Initialize the BPF LSM hooks
-Message-ID: <202003231237.F654B379@keescook>
-References: <20200323164415.12943-1-kpsingh@chromium.org>
- <20200323164415.12943-6-kpsingh@chromium.org>
+        Mon, 23 Mar 2020 12:45:00 -0700 (PDT)
+Received: (nullmailer pid 21498 invoked by uid 1000);
+        Mon, 23 Mar 2020 19:44:59 -0000
+Date:   Mon, 23 Mar 2020 13:44:59 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        od@zcrc.me, Zhou Yanjie <zhouyanjie@wanyeetech.com>,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/6] dt-bindings: sound: Convert jz4740-i2s doc to YAML
+Message-ID: <20200323194459.GA21444@bogus>
+References: <20200306222931.39664-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200323164415.12943-6-kpsingh@chromium.org>
+In-Reply-To: <20200306222931.39664-1-paul@crapouillou.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 05:44:13PM +0100, KP Singh wrote:
-> From: KP Singh <kpsingh@google.com>
+On Fri,  6 Mar 2020 23:29:26 +0100, Paul Cercueil wrote:
+> Convert the textual binding documentation for the AIC (AC97/I2S
+> Controller) of Ingenic SoCs to a YAML schema, and add the new compatible
+> strings in the process.
 > 
-> The bpf_lsm_ nops are initialized into the LSM framework like any other
-> LSM.  Some LSM hooks do not have 0 as their default return value. The
-> __weak symbol for these hooks is overridden by a corresponding
-> definition in security/bpf/hooks.c
-> 
-> The LSM can be enabled / disabled with CONFIG_LSM.
-> 
-> Signed-off-by: KP Singh <kpsingh@google.com>
-
-Nice! This is super clean on the LSM side of things. :)
-
-One note below...
-
-> Reviewed-by: Brendan Jackman <jackmanb@google.com>
-> Reviewed-by: Florent Revest <revest@google.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  security/Kconfig      | 10 ++++----
->  security/Makefile     |  2 ++
->  security/bpf/Makefile |  5 ++++
->  security/bpf/hooks.c  | 55 +++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 67 insertions(+), 5 deletions(-)
->  create mode 100644 security/bpf/Makefile
->  create mode 100644 security/bpf/hooks.c
-> 
-> diff --git a/security/Kconfig b/security/Kconfig
-> index 2a1a2d396228..cd3cc7da3a55 100644
-> --- a/security/Kconfig
-> +++ b/security/Kconfig
-> @@ -277,11 +277,11 @@ endchoice
->  
->  config LSM
->  	string "Ordered list of enabled LSMs"
-> -	default "lockdown,yama,loadpin,safesetid,integrity,smack,selinux,tomoyo,apparmor" if DEFAULT_SECURITY_SMACK
-> -	default "lockdown,yama,loadpin,safesetid,integrity,apparmor,selinux,smack,tomoyo" if DEFAULT_SECURITY_APPARMOR
-> -	default "lockdown,yama,loadpin,safesetid,integrity,tomoyo" if DEFAULT_SECURITY_TOMOYO
-> -	default "lockdown,yama,loadpin,safesetid,integrity" if DEFAULT_SECURITY_DAC
-> -	default "lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor"
-> +	default "lockdown,yama,loadpin,safesetid,integrity,smack,selinux,tomoyo,apparmor,bpf" if DEFAULT_SECURITY_SMACK
-> +	default "lockdown,yama,loadpin,safesetid,integrity,apparmor,selinux,smack,tomoyo,bpf" if DEFAULT_SECURITY_APPARMOR
-> +	default "lockdown,yama,loadpin,safesetid,integrity,tomoyo,bpf" if DEFAULT_SECURITY_TOMOYO
-> +	default "lockdown,yama,loadpin,safesetid,integrity,bpf" if DEFAULT_SECURITY_DAC
-> +	default "lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf"
->  	help
->  	  A comma-separated list of LSMs, in initialization order.
->  	  Any LSMs left off this list will be ignored. This can be
-> diff --git a/security/Makefile b/security/Makefile
-> index 746438499029..22e73a3482bd 100644
-> --- a/security/Makefile
-> +++ b/security/Makefile
-> @@ -12,6 +12,7 @@ subdir-$(CONFIG_SECURITY_YAMA)		+= yama
->  subdir-$(CONFIG_SECURITY_LOADPIN)	+= loadpin
->  subdir-$(CONFIG_SECURITY_SAFESETID)    += safesetid
->  subdir-$(CONFIG_SECURITY_LOCKDOWN_LSM)	+= lockdown
-> +subdir-$(CONFIG_BPF_LSM)		+= bpf
->  
->  # always enable default capabilities
->  obj-y					+= commoncap.o
-> @@ -30,6 +31,7 @@ obj-$(CONFIG_SECURITY_LOADPIN)		+= loadpin/
->  obj-$(CONFIG_SECURITY_SAFESETID)       += safesetid/
->  obj-$(CONFIG_SECURITY_LOCKDOWN_LSM)	+= lockdown/
->  obj-$(CONFIG_CGROUP_DEVICE)		+= device_cgroup.o
-> +obj-$(CONFIG_BPF_LSM)			+= bpf/
->  
->  # Object integrity file lists
->  subdir-$(CONFIG_INTEGRITY)		+= integrity
-> diff --git a/security/bpf/Makefile b/security/bpf/Makefile
-> new file mode 100644
-> index 000000000000..c7a89a962084
-> --- /dev/null
-> +++ b/security/bpf/Makefile
-> @@ -0,0 +1,5 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Copyright (C) 2020 Google LLC.
-> +
-> +obj-$(CONFIG_BPF_LSM) := hooks.o
-> diff --git a/security/bpf/hooks.c b/security/bpf/hooks.c
-> new file mode 100644
-> index 000000000000..68e5824868f9
-> --- /dev/null
-> +++ b/security/bpf/hooks.c
-> @@ -0,0 +1,55 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Copyright (C) 2020 Google LLC.
-> + */
-> +#include <linux/lsm_hooks.h>
-> +#include <linux/bpf_lsm.h>
-> +
-> +/* Some LSM hooks do not have 0 as their default return values. Override the
-> + * __weak definitons generated by default for these hooks
-
-If you wanted to avoid this, couldn't you make the default return value
-part of lsm_hooks.h?
-
-e.g.:
-
-LSM_HOOK(int, -EOPNOTSUPP, inode_getsecurity, struct inode *inode,
-	 const char *name, void **buffer, bool alloc)
-
-...
-
-#define LSM_HOOK(RET, DEFAULT, NAME, ...)	\
-	LSM_HOOK_##RET(NAME, DEFAULT, __VA_ARGS__)
-...
-#define LSM_HOOK_int(NAME, DEFAULT, ...)	\
-noinline int bpf_lsm_##NAME(__VA_ARGS__)	\
-{						\
-	return (DEFAULT);			\
-}
-
-Then all the __weak stuff is gone, and the following 4 functions don't
-need to be written out, and the information is available to the macros
-if anyone else might ever want it.
-
--Kees
-
-> + */
-> +noinline int bpf_lsm_inode_getsecurity(struct inode *inode, const char *name,
-> +				       void **buffer, bool alloc)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +noinline int bpf_lsm_inode_setsecurity(struct inode *inode, const char *name,
-> +				       const void *value, size_t size,
-> +				       int flags)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +noinline int bpf_lsm_task_prctl(int option, unsigned long arg2,
-> +				unsigned long arg3, unsigned long arg4,
-> +				unsigned long arg5)
-> +{
-> +	return -ENOSYS;
-> +}
-> +
-> +noinline int bpf_lsm_xfrm_state_pol_flow_match(struct xfrm_state *x,
-> +					       struct xfrm_policy *xp,
-> +					       const struct flowi *fl)
-> +{
-> +	return 1;
-> +}
-> +
-> +static struct security_hook_list bpf_lsm_hooks[] __lsm_ro_after_init = {
-> +	#define LSM_HOOK(RET, NAME, ...) LSM_HOOK_INIT(NAME, bpf_lsm_##NAME),
-> +	#include <linux/lsm_hook_names.h>
-> +	#undef LSM_HOOK
-> +};
-> +
-> +static int __init bpf_lsm_init(void)
-> +{
-> +	security_add_hooks(bpf_lsm_hooks, ARRAY_SIZE(bpf_lsm_hooks), "bpf");
-> +	pr_info("LSM support for eBPF active\n");
-> +	return 0;
-> +}
-> +
-> +DEFINE_LSM(bpf) = {
-> +	.name = "bpf",
-> +	.init = bpf_lsm_init,
-> +};
-> -- 
-> 2.20.1
+>  .../bindings/sound/ingenic,aic.yaml           | 92 +++++++++++++++++++
+>  .../bindings/sound/ingenic,jz4740-i2s.txt     | 23 -----
+>  2 files changed, 92 insertions(+), 23 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/ingenic,aic.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/sound/ingenic,jz4740-i2s.txt
 > 
 
--- 
-Kees Cook
+Reviewed-by: Rob Herring <robh@kernel.org>
