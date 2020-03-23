@@ -2,118 +2,106 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EF0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDC5C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C04620735
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E5620735
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:17:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tRVtXFAK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DWGRd7Im"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgCWOOM (ORCPT
+        id S1728553AbgCWORK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:14:12 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:49200 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728542AbgCWOOM (ORCPT
+        Mon, 23 Mar 2020 10:17:10 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:35605 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728359AbgCWORK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:14:12 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584972851; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=eoXl/UGZmMz/ABa7xJzX716BPb2HfAsc1SNuOejhtls=; b=tRVtXFAKtFjqvtfcJwVk7ErsL7cW4zus3BOhENbKj2B0pthr1YFCMdOuOO7Tyu3G/PCfPtuU
- A4L2g2+/wmITYublilVlZk/MxcuY3GUl2+JtnERmV0zvex2oYzLPzzOMWDVHG8QF64q10zk2
- HZS59yro3617HBz9or751R4hxh0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e78c432.7fd0cdd39f80-smtp-out-n05;
- Mon, 23 Mar 2020 14:14:10 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 75C01C433BA; Mon, 23 Mar 2020 14:14:09 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 23 Mar 2020 10:17:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584973029;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tPIplu8ZO1Qu8lXPNUvkAqnEYJOCKO8CICL+ixcY0t0=;
+        b=DWGRd7ImtLnALm/Nwl2l+nbXUi3CDGauO4dwVWeR0VV8ecnqEDwYZF9z9kt186xn8nvqlD
+        FGUROjA/GQsP4bJen3dg5bxkg7QTFz3ScoWlKB7h+Bxa98ahEXscw+J/BiVsKSnn8x8GYL
+        6gyNzDpURL7ngZ5hYHlTANPfSzV3cB8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-233-h64GYDNaPO6-O6mcwkvD1g-1; Mon, 23 Mar 2020 10:17:05 -0400
+X-MC-Unique: h64GYDNaPO6-O6mcwkvD1g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0CC8DC433CB;
-        Mon, 23 Mar 2020 14:14:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0CC8DC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v2 2/7] bus: mhi: core: Add support for reading MHI info
- from device
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        gregkh@linuxfoundation.org, davem@davemloft.net
-Cc:     smohanad@codeaurora.org, kvalo@codeaurora.org,
-        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200323123102.13992-1-manivannan.sadhasivam@linaro.org>
- <20200323123102.13992-3-manivannan.sadhasivam@linaro.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <c6b696ed-b9cf-98ed-7402-9fb82bcab1c6@codeaurora.org>
-Date:   Mon, 23 Mar 2020 08:14:07 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D0CCDBA7;
+        Mon, 23 Mar 2020 14:17:04 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.33.36.220])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7E1BD10002A7;
+        Mon, 23 Mar 2020 14:17:02 +0000 (UTC)
+Date:   Mon, 23 Mar 2020 10:16:59 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, shuah@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
+ false-negative errors
+Message-ID: <20200323141659.GA23364@optiplex-lnx>
+References: <20200322013525.1095493-1-aquini@redhat.com>
+ <CALvZod4GjRFLRX=S_YFYnJk-kL6tjveYEDOBFS76NqrURERHHQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200323123102.13992-3-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALvZod4GjRFLRX=S_YFYnJk-kL6tjveYEDOBFS76NqrURERHHQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/23/2020 6:30 AM, Manivannan Sadhasivam wrote:
-> The MHI register base has several registers used for getting the MHI
-> specific information such as version, family, major, and minor numbers
-> from the device. This information can be used by the controller drivers
-> for usecases such as applying quirks for a specific revision etc...
+On Sun, Mar 22, 2020 at 09:31:04AM -0700, Shakeel Butt wrote:
+> On Sat, Mar 21, 2020 at 6:35 PM Rafael Aquini <aquini@redhat.com> wrote:
+> >
+> > Changes for commit 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
+> > break this test expectations on the behavior of mlock syscall family immediately
+> > inserting the recently faulted pages into the UNEVICTABLE_LRU, when MCL_ONFAULT is
+> > passed to the syscall as part of its flag-set.
 > 
-> While at it, let's also rearrange the local variables
-> in mhi_register_controller().
+> mlock* syscalls do not provide any guarantee that the pages will be in
+> unevictable LRU, only that the pages will not be paged-out. The test
+> is checking something very internal to the kernel and this is expected
+> to break.
+
+It was a check expected to be satisfied before the commit, though. 
+Getting the mlocked pages inserted directly into the unevictable LRU,
+skipping the pagevec, was established behavior before the aforementioned
+commit, and even though one could argue userspace should not be aware,
+or care, about such inner kernel circles the program in question is not an 
+ordinary userspace app, but a kernel selftest that is supposed to check
+for the functionality correctness.
+
+> >
+> > There is no functional error introduced by the aforementioned commit,
+> > but it opens up a time window where the recently faulted and locked pages
+> > might yet not be put back into the UNEVICTABLE_LRU, thus causing a
+> > subsequent and immediate PFN flag check for the UNEVICTABLE bit
+> > to trip on false-negative errors, as it happens with this test.
+> >
+> > This patch fix the false negative by forcefully resorting to a code path that
+> > will call a CPU pagevec drain right after the fault but before the PFN flag
+> > check takes place, sorting out the race that way.
+> >
+> > Fixes: 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
 > 
-> Suggested-by: Hemant Kumar <hemantk@codeaurora.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
-> --- a/include/linux/mhi.h
-> +++ b/include/linux/mhi.h
-> @@ -310,6 +310,10 @@ struct mhi_controller_config {
->    * @sw_ev_rings: Number of software event rings
->    * @nr_irqs_req: Number of IRQs required to operate (optional)
->    * @nr_irqs: Number of IRQ allocated by bus master (required)
-> + * @family_number: MHI controller family number
-> + * @device_number: MHI controller device number
-> + * @major_version: MHI controller major revision number
-> + * @minor_version: MHI controller minor revision number
+> This is fixing the actual test and not about fixing the mentioned
+> patch. So, this Fixes line is not needed.
+>
 
-Maybe expand the comment to indicate there are valid after register() to 
-give controller implementations an idea of when they can use these for 
-quirks, etc?
+If one bisects the kernel looking for the patch that causes the selftest
+to fail that commit is going to show up as the issue, thus the reference.
 
->    * @mhi_event: MHI event ring configurations table
->    * @mhi_cmd: MHI command ring configurations table
->    * @mhi_ctxt: MHI device context, shared memory between host and device
-> @@ -375,6 +379,10 @@ struct mhi_controller {
->   	u32 sw_ev_rings;
->   	u32 nr_irqs_req;
->   	u32 nr_irqs;
-> +	u32 family_number;
-> +	u32 device_number;
-> +	u32 major_version;
-> +	u32 minor_version;
->   
->   	struct mhi_event *mhi_event;
->   	struct mhi_cmd *mhi_cmd;
-> 
-
-
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
