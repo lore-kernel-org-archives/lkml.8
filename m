@@ -2,108 +2,171 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CDFC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 679BEC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE7320722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 368AB2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:16:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MLccFkn8"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SbyJHSy6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbgCWRQj (ORCPT
+        id S1727803AbgCWRQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:16:39 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:31230 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727372AbgCWRQi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:16:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584983798; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=R0syYUBJ3TKMO6Xu1jzmN//LBZ5ew8aVKtjUSI8OIZc=;
- b=MLccFkn8JZRUczS8EaxNwJI1wgy6H0k/zCOQDb/Y2+qmbU4r2EQr7RVmlsg4W1CP5CtjMmBB
- eNPkG3FSATYRM75P6s4iofSDoGWafNK8nfe+F0BvVSIKAdv73f7GnWnvhaoA34XucJINTfUq
- N1C/SLpT6A2CkP8r5gWve1vmbJQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e78eef4.7fe19c45ad18-smtp-out-n02;
- Mon, 23 Mar 2020 17:16:36 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6BD4DC433D2; Mon, 23 Mar 2020 17:16:36 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA98FC433CB;
-        Mon, 23 Mar 2020 17:16:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AA98FC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Mon, 23 Mar 2020 13:16:44 -0400
+Received: from mail-mw2nam10on2091.outbound.protection.outlook.com ([40.107.94.91]:23264
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727372AbgCWRQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 13:16:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nuXK62LNgmXjJxbSGiFYzPW/HMa3VMISRRAxfXMSlEdbegz03ENrexbTxtRhwyWSOevCwq0/bgYb3KO6W6NvZLtm7lVE0+y4GYr0LyzAnfaFFTSPOoFk5VWpzC797mImJ2g6eBnjSQ67p79gdDWJfvZlPvHQzlMevwT3JT4D3k5iVxN/urnAdOgrU7xre7K+XXkx/zoVfRsKlvnbwRUwpjUYpDUrF1gvlPehvF+5hbOoqdmCBmI0I8JoRa41Tx74txZbii8BH9GA9aTBTsCsvDaJjwsS4dAa1IEeLw8sEGHYCcszczq5G3ovJSuNbBcVgfQXDWra/wJNwLGZlqv61w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=34cffHmfyAcIIdjCAB30ex6Tp35VBh+wADNtaK4Umuc=;
+ b=Vz3UQzJtKb+fIA8csYymgTo7d+FnVQiKgwU7bIPo8TeG0I68YofyaLEzeSIDa45ggolgl/8Bc72qKLbR76jwIvqEpV3a4y3RHewQ0H6rlm6Z3Y5qZY3sx7uOWxofg/Lj+zre2OPIkIsUlrVWwP8J1KOvKLWeQzHYCC86lKyQrOIbLp0otOFK7/+ak1ewSpaFtvgP6jc3sG2mft4k9mGE2N5zJeni9XBBkiix7z7qXNgThCJkt5tVKuWvC/SCoKbaVuzGjNtCfAvShetM0gZJz/cgJQIaZCyfyKFPTXP+MnMrQ4ZyJ+hZf9D8e2XzMZ/giHPqa37oHrVuv88dcKOM7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=34cffHmfyAcIIdjCAB30ex6Tp35VBh+wADNtaK4Umuc=;
+ b=SbyJHSy6H6k3hf85SY91X1EX51cBiJ0Mc1ShfavZIythOh4M99ASQqCx+SQ50MmRrbG7ISQ19yxdiQqs7U0qTAIZ3KlojFAGzds7zp1tIOSHHzPFtcRM9lYFTT56i2I5z8eX+DUKHe8eosib0aAkDKDm9yrBkKP1IZErV6cN1KQ=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB1035.namprd21.prod.outlook.com (2603:10b6:302:a::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.2; Mon, 23 Mar
+ 2020 17:16:39 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156%8]) with mapi id 15.20.2878.000; Mon, 23 Mar 2020
+ 17:16:39 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "ltykernel@gmail.com" <ltykernel@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>
+CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>
+Subject: RE: [PATCH V2 4/6] x86/Hyper-V: Report crash register data or ksmg
+ before running crash kernel
+Thread-Topic: [PATCH V2 4/6] x86/Hyper-V: Report crash register data or ksmg
+ before running crash kernel
+Thread-Index: AQHWARRUDuguXH5gg0uTXw2zl86LOqhWaytg
+Date:   Mon, 23 Mar 2020 17:16:39 +0000
+Message-ID: <MW2PR2101MB10526621D88B9D2327394F17D7F00@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200323130924.2968-1-Tianyu.Lan@microsoft.com>
+ <20200323130924.2968-5-Tianyu.Lan@microsoft.com>
+In-Reply-To: <20200323130924.2968-5-Tianyu.Lan@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-23T17:16:36.9285206Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=15fcd8fa-183f-41f4-a441-cfcc7aa8627b;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6a4344f7-482b-4413-3d23-08d7cf4df340
+x-ms-traffictypediagnostic: MW2PR2101MB1035:|MW2PR2101MB1035:|MW2PR2101MB1035:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB1035B54033A1216074D291ACD7F00@MW2PR2101MB1035.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:525;
+x-forefront-prvs: 0351D213B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(366004)(346002)(39860400002)(376002)(199004)(7696005)(33656002)(81156014)(86362001)(81166006)(8676002)(8936002)(66556008)(52536014)(76116006)(66476007)(66946007)(186003)(64756008)(8990500004)(26005)(66446008)(71200400001)(6506007)(5660300002)(54906003)(55016002)(2906002)(10290500003)(316002)(110136005)(4326008)(478600001)(9686003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB1035;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uU/oahSZuzkgrBDIL1LReRAIGIKwVZejN7JLjO2s7KreFG4angzaS6lPTeNM+vZBInO72MLFdWMCuOi+gmuew6EkLWtTJB1DyNgNwNV9CfX/F7o9XW3iulaRJa0HbpBCtn1b9pX28+hL0oG6OI7kcgrlWMw2LJsWbTskrJ7+AVbeSMa72LvMR3ByUR7LaTWcACzMbdfTfAq7Q8cCHdXOETcg0FHkfB/Lfx03xZspBqOA03Ty7n/9P9A5M9hqxElMO0g/r6Ro1gagaNCKNYhKphw8zoZJ20zvpBsoWuut9oSx0LRyN42GU8wTAaBoVA2ZSaB7wUsQsu813TgOajMBt0YN/1i2pNUGu10tfDoGXUjnLRO3R+22YnKu1ShYK0vbhLfWUwnxtZoLRL9Gn11mwALObcpKyVXD+kUwYIvlbv9F3k2oSvZs2tThEgsgfqk0nvw7BoCAaj2fD1cM6aIc3bMk91TmQSFl3mPMabn48DGBKRJdIrWBXz1YPXmkc5hx
+x-ms-exchange-antispam-messagedata: 93nbieScnf77GXxKgNp5oZm2/8wFjUyoA1ahvOMabMpHDwqPTlp0Sji4Tah6tJJFiWcA5M4egc/yWLFDbeh5CMW2Si8alNYyVZvWR7eStDDtrSQPkvWSVGaSqLQ8Qmbghru0BRfYAn59qij/sU6TJg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] adm80211: Replace zero-length array with
- flexible-array member
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200319225002.GA28673@embeddedor.com>
-References: <20200319225002.GA28673@embeddedor.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200323171636.6BD4DC433D2@smtp.codeaurora.org>
-Date:   Mon, 23 Mar 2020 17:16:36 +0000 (UTC)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a4344f7-482b-4413-3d23-08d7cf4df340
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2020 17:16:39.2291
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JET/e19fVLCtbK6x7lr7jZ6TtRsT9AjzCbVDzdyinsYCCnqHtBpRYKv5UxPDAU+HX0KoAXLKkxwfzn+qy3IGD3803LdT6hO+GZZa9weQZc8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Monday, March 23, 2020 6:=
+09 AM
+>=20
+> When a guest VM panics, Hyper-V should be notified only once via the
+> crash synthetic MSRs.  Current Linux code might write these crash MSRs
+> twice during a system panic:
+> 1) hyperv_panic/die_event() calling hyperv_report_panic()
+> 2) hv_kmsg_dump() calling hyperv_report_panic_msg()
+>=20
+> Fix this by not calling hyperv_report_panic() if a kmsg dump has been
+> successfully registered.  The notification will happen later via
+> hyperv_report_panic_msg().
 
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+I think this patch got the wrong commit message.  This message is the same
+as in patch 3 of the series.
 
-Patch applied to wireless-drivers-next.git, thanks.
+>=20
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> ---
+> Change since v1:
+>        Update commit log
+> ---
+>  arch/x86/kernel/cpu/mshyperv.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>=20
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyper=
+v.c
+> index caa032ce3fe3..5e296a7e6036 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -263,6 +263,16 @@ static void __init ms_hyperv_init_platform(void)
+>  			cpuid_eax(HYPERV_CPUID_NESTED_FEATURES);
+>  	}
+>=20
+> +	/*
+> +	 * Hyper-V expects to get crash register data or kmsg when
+> +	 * crash enlightment is available and system crashes. Set
+> +	 * crash_kexec_post_notifiers to be true to make sure that
+> +	 * calling crash enlightment interface before running kdump
+> +	 * kernel.
+> +	 */
+> +	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE)
+> +		crash_kexec_post_notifiers =3D true;
+> +
+>  #ifdef CONFIG_X86_LOCAL_APIC
+>  	if (ms_hyperv.features & HV_X64_ACCESS_FREQUENCY_MSRS &&
+>  	    ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE) {
+> --
+> 2.14.5
 
-98d13639e695 adm80211: Replace zero-length array with flexible-array member
-
--- 
-https://patchwork.kernel.org/patch/11448169/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
