@@ -2,120 +2,163 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545D3C10F26
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A88C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 293B220732
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:16:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584936984;
-	bh=2VPoavb3/Nh65+u7sn+FxjbORv9J9qX5wWi4UPuIvng=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p0pR5oB0mpYn7IkXvjWi2DSFlimZuJlZC1ALmO6FzETjw2qEFd2LAQJDxUrgrEUKw
-	 vrzl8YjiPH8hjJjEJ4GtchziHLlffhwDK5XCANIhljaapmY+aal7c2VSX05WfLWADZ
-	 Yf8CkW6QkBUYWvKRWKg0EkeF3dvuMQRy82t0jAyY=
+	by mail.kernel.org (Postfix) with ESMTP id 4B61720719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 04:18:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OP3TgEiq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725844AbgCWEQV (ORCPT
+        id S1725913AbgCWESN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 00:16:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52516 "EHLO mail.kernel.org"
+        Mon, 23 Mar 2020 00:18:13 -0400
+Received: from ozlabs.org ([203.11.71.1]:37907 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725208AbgCWEQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 00:16:21 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725208AbgCWESM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 00:18:12 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4345620719;
-        Mon, 23 Mar 2020 04:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584936980;
-        bh=2VPoavb3/Nh65+u7sn+FxjbORv9J9qX5wWi4UPuIvng=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WUCqFrmJGJ1z6rhNT/5V4ZIUm7ipQ7z18II1tlu9mk47y39o93IYNZvPKW49oB+Y6
-         DrH3W2AubwKpH1D9rhGw5sikGCHIczjXruck9FdRpYrS4OgYMjWsRvC35ivB2csZYD
-         MKn2DrUYWjISPK69Iz6nh9jvAMJb+kHY9bsheJ30=
-Date:   Sun, 22 Mar 2020 21:16:19 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Ju Hyung Park <qkrwngud825@gmail.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Chao Yu <chao@kernel.org>
-Subject: Re: [PATCH v2] f2fs: use kmem_cache pool during inline xattr lookups
-Message-ID: <20200323041619.GD147648@google.com>
-References: <20200225101710.40123-1-yuchao0@huawei.com>
- <CAD14+f3pi331-V0gzjtxcMRVaEn3tPacrC20wtRq9+6JY9_HVA@mail.gmail.com>
- <08d03473-9871-ba10-4626-58c4479ef9d1@huawei.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48m1ML5wdPz9sQt;
+        Mon, 23 Mar 2020 15:18:06 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584937090;
+        bh=x+NQl/E6Mh/u/ePCkbLu0UGyghT5lcOrFoskFG2kFss=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OP3TgEiqYBkp7Ld1+48zwifmguIU+duMdNIPLF+15q7fteii/ijNdzQpgZUk82GP6
+         AWvcY0StAub1rwCbd3OKvnm+0nuy2MifjMYxUysAtcYAaeRDEe/O76riFm68u3H5jB
+         mQWwh8miF0n2FpOQ6rkyUu28QBJtsQsVaXhYgKGRaIqWPV3oijZ82IF0p9275cor5D
+         gi3bcuyfeocaSIZbmUfKZgtI9zv3nV9Y1N9oBUskKIYn0xQ5tqQQlxJCh81nUh8GP2
+         HmPRGKyXUnOujaExsK+hl/aiREH/aaHbLgdTDqGkGzplwywgDDOwVkhgMO0Pb64JKU
+         mVOiBsXZqyAKA==
+Date:   Mon, 23 Mar 2020 15:18:05 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Michael Tretter <m.tretter@pengutronix.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: linux-next: manual merge of the staging tree with the v4l-dvb tree
+Message-ID: <20200323151805.6a166c84@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08d03473-9871-ba10-4626-58c4479ef9d1@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: multipart/signed; boundary="Sig_/+YgsVGcrL=CGBIIOEoP2Q84";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/19, Chao Yu wrote:
-> Hi Ju Hyung,
-> 
-> On 2020/3/18 20:14, Ju Hyung Park wrote:
-> > Hi Chao.
-> > 
-> > I got the time around to test this patch.
-> > The v2 patch seems to work just fine, and the code looks good.
-> 
-> Thanks a lot for the review and test.
-> 
-> > 
-> > On Tue, Feb 25, 2020 at 7:17 PM Chao Yu <yuchao0@huawei.com> wrote:
-> >> diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
-> >> index a3360a97e624..e46a10eb0e42 100644
-> >> --- a/fs/f2fs/xattr.c
-> >> +++ b/fs/f2fs/xattr.c
-> >> @@ -23,6 +23,25 @@
-> >>  #include "xattr.h"
-> >>  #include "segment.h"
-> >>
-> >> +static void *xattr_alloc(struct f2fs_sb_info *sbi, int size, bool *is_inline)
-> >> +{
-> >> +       *is_inline = (size == sbi->inline_xattr_slab_size);
-> > 
-> > Would it be meaningless to change this to the following code?
-> > if (likely(size == sbi->inline_xattr_slab_size))
-> >     *is_inline = true;
-> > else
-> >     *is_inline = false;
-> 
-> Yup, I guess it's very rare that user will change inline xattr size via remount,
-> so I'm okay with this change.
+--Sig_/+YgsVGcrL=CGBIIOEoP2Q84
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied like this. Thanks,
+Hi all,
 
- 26 static void *xattr_alloc(struct f2fs_sb_info *sbi, int size, bool *is_inline)
- 27 {
- 28         if (likely(size == sbi->inline_xattr_slab_size)) {
- 29                 *is_inline = true;
- 30                 return kmem_cache_zalloc(sbi->inline_xattr_slab, GFP_NOFS);
- 31         }
- 32         *is_inline = false;
- 33         return f2fs_kzalloc(sbi, size, GFP_NOFS);
- 34 }
+Today's linux-next merge of the staging tree got a conflict in:
 
-> 
-> Jaegeuk,
-> 
-> Could you please help to update the patch in your git tree directly?
-> 
-> Thanks,
-> 
-> > 
-> > The above statement seems to be only false during the initial mount
-> > and the rest(millions) seems to be always true.
-> > 
-> > Thanks.
-> > .
-> > 
+  drivers/staging/media/allegro-dvt/allegro-core.c
+
+between several commits from the v4l-dvb tree and commits:
+
+  5979afa2c4d1 ("staging: Replace zero-length array with flexible-array mem=
+ber")
+  e3d21cbfa978 ("staging: media: allegro: align with parenthesis")
+
+from the staging tree.
+
+I fixed it up (see bottom and below merge fix patch) and can carry the
+fix as necessary. This is now fixed as far as linux-next is concerned,
+but any non trivial conflicts should be mentioned to your upstream
+maintainer when your tree is submitted for merging.  You may also want
+to consider cooperating with the maintainer of the conflicting tree to
+minimise any particularly complex conflicts.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 23 Mar 2020 15:12:50 +1100
+Subject: [PATCH] fix up for "staging: Replace zero-length array with flexib=
+le-array member"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/staging/media/allegro-dvt/allegro-mail.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/media/allegro-dvt/allegro-mail.h b/drivers/sta=
+ging/media/allegro-dvt/allegro-mail.h
+index 1fd36f65be78..17db665f8e1e 100644
+--- a/drivers/staging/media/allegro-dvt/allegro-mail.h
++++ b/drivers/staging/media/allegro-dvt/allegro-mail.h
+@@ -169,7 +169,7 @@ struct mcu_msg_push_buffers_internal_buffer {
+ struct mcu_msg_push_buffers_internal {
+ 	struct mcu_msg_header header;
+ 	u32 channel_id;
+-	struct mcu_msg_push_buffers_internal_buffer buffer[0];
++	struct mcu_msg_push_buffers_internal_buffer buffer[];
+ } __attribute__ ((__packed__));
+=20
+ struct mcu_msg_put_stream_buffer {
+--=20
+2.25.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/staging/media/allegro-dvt/allegro-core.c
+index 34c3e55be902,1162cc38f3fc..000000000000
+--- a/drivers/staging/media/allegro-dvt/allegro-core.c
++++ b/drivers/staging/media/allegro-dvt/allegro-core.c
+@@@ -2403,19 -2324,12 +2403,19 @@@ static int allegro_open(struct file *fi
+  			0, ALLEGRO_GOP_SIZE_MAX,
+  			1, channel->gop_size);
+  	v4l2_ctrl_new_std(handler,
+- 			&allegro_ctrl_ops,
+- 			V4L2_CID_MIN_BUFFERS_FOR_OUTPUT,
+- 			1, 32,
+- 			1, 1);
++ 			  &allegro_ctrl_ops,
++ 			  V4L2_CID_MIN_BUFFERS_FOR_OUTPUT,
++ 			  1, 32,
++ 			  1, 1);
+ +	if (handler->error !=3D 0) {
+ +		ret =3D handler->error;
+ +		goto error;
+ +	}
+ +
+  	channel->fh.ctrl_handler =3D handler;
+ =20
+ +	v4l2_ctrl_cluster(3, &channel->mpeg_video_bitrate_mode);
+ +
+  	channel->mcu_channel_id =3D -1;
+  	channel->user_id =3D -1;
+ =20
+
+--Sig_/+YgsVGcrL=CGBIIOEoP2Q84
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl54OH0ACgkQAVBC80lX
+0GxmAwf8CVaSwnMhmRKJkGw0yvaKLQMauUqfhdbhDxhh9Ewn8KWsR5LL+iQvx4lJ
+bzaONtVY2fn58CnPf1GxaV0Bt/olslyXJNuTTQh49DTF4Cb9MAKLRhW1G0z099aX
+qUhiOqyqOl+6UutN2ae42hil3tez8XI9n5OJaVkQ+D53oT7QHnS6ChNZeXUyaNYy
+LcImd1ffEesctCraTGqLQFiTYhP03U1FGtTJuDXnW6QYDP6OIDw2VOyYzKEnavw6
+og2OCHLECKMvd8vWPVUuqOcLvf1Dh9mQA+5FdckNPzEJoowT1uPHO8uFVREcmytF
+QsX0mk31sgA9V1L0feD4vtYDb8qcfA==
+=8vN4
+-----END PGP SIGNATURE-----
+
+--Sig_/+YgsVGcrL=CGBIIOEoP2Q84--
