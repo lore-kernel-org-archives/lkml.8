@@ -2,77 +2,140 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1889C4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC04DC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7523B2076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905662072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:53:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EI2zKktS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgCWJuy (ORCPT
+        id S1727801AbgCWJxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 05:50:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:46794 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727738AbgCWJuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:50:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B8ED131B;
-        Mon, 23 Mar 2020 02:50:53 -0700 (PDT)
-Received: from [10.37.12.136] (unknown [10.37.12.136])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 118DF3F68E;
-        Mon, 23 Mar 2020 02:50:50 -0700 (PDT)
-Subject: Re: [PATCH 1/2] coresight: etm4x: Add support for Qualcomm SC7180 SoC
-To:     saiprakash.ranjan@codeaurora.org, mathieu.poirier@linaro.org,
-        bjorn.andersson@linaro.org, leo.yan@linaro.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org, agross@kernel.org,
-        david.brown@linaro.org, mark.rutland@arm.com
-Cc:     swboyd@chromium.org, rnayak@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <cover.1584689229.git.saiprakash.ranjan@codeaurora.org>
- <07a6b272c6e71e0e480f0dd0bffaf3138c0ab4c2.1584689229.git.saiprakash.ranjan@codeaurora.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <edf1bab3-411a-ff7a-b4ca-78a8ab00c72b@arm.com>
-Date:   Mon, 23 Mar 2020 09:55:38 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Mon, 23 Mar 2020 05:53:04 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54624 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727752AbgCWJxE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 05:53:04 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c81so3434307wmd.4;
+        Mon, 23 Mar 2020 02:53:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=Z+6XVznaFEON0f8iN5LEjyjFaUvEkyzSk7nWE3yhXyU=;
+        b=EI2zKktST7siFx8D5JHNrQES9a9jniXP+LT73GIPnwoUwynj2pC0K7zDBxeclTGJPd
+         Ph8+H9FavfKjZP6pI8Hi0CmWQEL/MPftc/U2L3C+p18DIQ1+iyhHT4+j6HbifIiMHX4F
+         n9xX9O3Ezwi5B8b2ghTMjvwkvsjFrGnSpiA6gm5/aPNE4kX8Si6TOWD2ZmMXiVdcl1FB
+         caSBR5D07nYH/Z1u6Z/lXFZqJ4w0hUeKJFKJhJV+eaKcz636ZIIYt9GvA8QRfjySGO19
+         hvbudMx9EzHxSiUAMkWYdOU9Yknh6DWpviuJJf1O5rQKGe16OB2+9ImoD5heJMyqASA6
+         PwKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=Z+6XVznaFEON0f8iN5LEjyjFaUvEkyzSk7nWE3yhXyU=;
+        b=lAnBvXtB2dLALA0XbKxiW/Y4L/KIoHmx8ajbyvwnZMyO9Zb8JexmoXUsnVqLgLmzoc
+         Y8iHRNPY/fGZQkagnz6hQpWgCt1WO2AElbMWgZdVfZY7mAxJ+jehXlXuqzG5C3KNAT2d
+         as3LrYu/zE4x+I/n6D+RVTTDjhWD0zNGtdZJEjuQb1Yspsi6SeA7bpVqKFgfKM84k4Gr
+         G1Ni9r4W55cpOOv6tuVN/6LlXkJq9FsKk5Mm9ayI/Q0xTC4ct++KJzLkUJz/5BBBlIRp
+         cEJSEhRwPBJitRTRv69gSeWJdETL4pwCQATOWSmMzNZLf1Gcj9eB2X1xv5+Hhxr4tdJf
+         Exqg==
+X-Gm-Message-State: ANhLgQ2PWHTvMkORYZeE6iXvW/yfur4Rw74xXZEe9VzA30KcyROmAlm6
+        /iWb3wlcrXuDKOACUDTZoRRHsbructhBnJ+O67c=
+X-Google-Smtp-Source: ADFU+vuntAywRjz8eiWGZawNNazTzcPLdLf5SbEvx4DOHezzFPANFDCW/hQE4Lrr5sX/Nd4jh6OidJJxI8X1Nyv+Bq0=
+X-Received: by 2002:a1c:4e0f:: with SMTP id g15mr12959874wmh.163.1584957182077;
+ Mon, 23 Mar 2020 02:53:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <07a6b272c6e71e0e480f0dd0bffaf3138c0ab4c2.1584689229.git.saiprakash.ranjan@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200323020844.17064-1-masahiroy@kernel.org> <CAHmME9p=ECJ15uyPH79bF0tuzEksdxoUsjGQSyz74FfdEJxTpQ@mail.gmail.com>
+ <CAHmME9q4egN7_KeYB-ZHCFPfXs-virgTv4iz9jW2SVOM7dTnLw@mail.gmail.com>
+ <CAK7LNAR07vZFzh1Bbpq4CoJ4zmsc+p5rxpkO1Zv8QVfqhfvr2w@mail.gmail.com> <CAHmME9qCjo4kOQM3Dw6PDjEebmb6rvXajqhK-m-=vKcHWqNhAw@mail.gmail.com>
+In-Reply-To: <CAHmME9qCjo4kOQM3Dw6PDjEebmb6rvXajqhK-m-=vKcHWqNhAw@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Mon, 23 Mar 2020 10:52:50 +0100
+Message-ID: <CA+icZUUjP7e2zgrVCFenO_YJfpcOQWV++kuU5UWGKN_5udZXSw@mail.gmail.com>
+Subject: Re: [PATCH 0/7] x86: remove always-defined CONFIG_AS_* options
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>, X86 ML <x86@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Song Liu <songliubraving@fb.com>,
+        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/20/2020 07:44 AM, Sai Prakash Ranjan wrote:
-> Add ETM Peripheral IDs for Qualcomm SC7180 SoC. It has
-> 2 big CPU cores based on Cortex-A76 and 6 LITTLE CPU
-> cores based on Cortex-A55.
-> 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->   drivers/hwtracing/coresight/coresight-etm4x.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-> index a90d757f7043..a153a65c4c5b 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-> @@ -1556,6 +1556,8 @@ static const struct amba_id etm4_ids[] = {
->   	CS_AMBA_UCI_ID(0x000f0211, uci_id_etm4),/* Qualcomm Kryo */
->   	CS_AMBA_ID(0x000bb802),			/* Qualcomm Kryo 385 Cortex-A55 */
->   	CS_AMBA_ID(0x000bb803),			/* Qualcomm Kryo 385 Cortex-A75 */
-> +	CS_AMBA_ID(0x000bb805),			/* Qualcomm Kryo 4XX Cortex-A55 */
-> +	CS_AMBA_ID(0x000bb804),			/* Qualcomm Kryo 4XX Cortex-A76 */
+On Mon, Mar 23, 2020 at 7:53 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> On Mon, Mar 23, 2020 at 12:36 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > Hi Jason,
+> >
+> > On Mon, Mar 23, 2020 at 1:28 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> > >
+> > > Hi again,
+> > >
+> > > I've consolidated your patches and rebased mine on top, and
+> > > incorporated your useful binutils comments. The result lives here:
+> > >
+> > > https://git.zx2c4.com/linux-dev/log/?h=jd/kconfig-assembler-support
+> > >
+> > > I can submit all of those to the list, if you want, or maybe you can
+> > > just pull them out of there, include them in your v2, and put them in
+> > > your tree for 5.7? However you want is fine with me.
+> >
+> >
+> > Your series does not work correctly.
+> >
+> > I will comment why later.
+>
+> Bummer, okay. Looking forward to learning what's up. Also, if some
+> parts of it are useful (like the resorting and organizing of
+> arch/x86/crypto/Makefile), feel free to cannibalize it, keeping what's
+> useful and discarding what's not.
+>
 
-Does the DEVARCH indicate that it is an ETMv4 ? (It should !) Please
-could we enforce the UCI_ID check for these components ? The
-moment you add CTI components to your board this could conflict with
-them unless we check the UCI_ID for ETMv4.
+Hi Jason,
 
-Suzuki
+I have your patches on my radar.
+
+I have not checked your Kconfig changes are really working, especially
+I looked at [2] and comment on this.
+
+I would have expected your arch/x86/Kconfig.assembler file as
+arch/x86/crypto/Kconfig (source include needs to be adapted in
+arch/x86/Kconfig).
+What about a commit subject like "x86: crypto: Probe assembler options
+via Kconfig instead of makefile"?
+Not sure if the commit message needs some massage?
+
+Maybe this is all irrelevant when Masahiro has commented.
+
+Thanks.
+
+Regards,
+- Sedat -
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/zx2c4/linux.git/log/?h=jd/kconfig-assembler-support
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/zx2c4/linux.git/commit/?h=jd/kconfig-assembler-support&id=ac483ff6fb4c785cd0b10d9756b71696829cd117
