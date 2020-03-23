@@ -2,184 +2,108 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DD8C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D25F9C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C33492072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 787B62072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:58:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B39b0zc2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MHhXEETW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgCWQ5r (ORCPT
+        id S1727884AbgCWQ6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:57:47 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45041 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbgCWQ5r (ORCPT
+        Mon, 23 Mar 2020 12:58:00 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:26186 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727228AbgCWQ57 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:57:47 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 142so2241636pgf.11
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 09:57:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tkNJ2UmLjV4ApEsFFknqUQDdSIA2E0Fh+l4Y3g/LsCM=;
-        b=B39b0zc2oZZ5Gh0Ng85cQRtN1NaIkQzxq1N2LCaTr46l4HzUnn99DPUrggBOS6EP7q
-         I78k8ss2qJvNARogQHChpSGHrI/bRnIRniHWxTkuXY7ryAOMSAWxMoMtSgfo4WZxduxe
-         lnNlLOv+bEUyt47nbZ27SMg2titwDw0hRS+CCusOcrocy2/5CvJDAmU5s0gPxHD+OJ6K
-         JvCqxtE4ybaT2rbh01S1qEI+CzkFXjYNe3NLD9VlQ0sbXni2GIx089dFEZEWs6DB0Sx1
-         6L7mINAkMk+bs1aLvy0iciKtEhokUxJcpXzqoJEsONw8ZHwjvGbqgM4PGVfCZXzIAyJt
-         UhYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tkNJ2UmLjV4ApEsFFknqUQDdSIA2E0Fh+l4Y3g/LsCM=;
-        b=fl+VQiyhOtwtcad1q4VxJFEnNcDBDI+4Y7mq2Mvweu6EHyyLpaPtg4H+xCOivykw06
-         20m19IojOVW4oMEg0YNV8kdMgYKMt3j065RL7Mz9ey58+h8qgem7bgqW+DLBCrl6RdJr
-         dNJdWjR8RTyOa2rI/5amu12cowEmjYaWWp7YNdIDG00GXIWBSNyahNaK03NF6iqX5NaR
-         0hZWIxRKMWuDvpG04TGQW5vCNykIZ4tlemw2qMEcObA0vJ9Lg+CwfeSevPYoO8id7Afd
-         cb0/PHn+AXybN+SwWr1rpPHw26DPFkXmtlqUmYTUFoAM89XLF4tkeYn2gmmW/4+tVMvt
-         T24Q==
-X-Gm-Message-State: ANhLgQ2SiY2awbEKBTcV/6GNNOYXBCmeYRwL/6ye7ztyt8HmivKx59wt
-        Gh1ow0VNyrfKDCQkzwPVwUXn0meq4iimGwIt5tUIQg==
-X-Google-Smtp-Source: ADFU+vvIOUp1V6KsMC/3na/2JsKBqlMueF1nZsdGXm5tMw0c2pQvaZDOD8yMa9n7Zm6XKP1Q/Os5aAwOti3QeyDL+lg=
-X-Received: by 2002:aa7:8b54:: with SMTP id i20mr24735682pfd.39.1584982663685;
- Mon, 23 Mar 2020 09:57:43 -0700 (PDT)
+        Mon, 23 Mar 2020 12:57:59 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584982679; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=RzTd9yidaJNPKPYdkuKLeB4afMPdW8B9UycwLsO6lGA=;
+ b=MHhXEETWgVGQu3I+zvxOW1orVBY+E67p6ybfM+6u8rM0pECMmKtIm9zLI05ckbV5An0HgUxc
+ 2bhUzZITBymKWWAlFOq7xQBlvIVReVDetEC9md30KHB6reabSBSTEw2FMjwUan9vuMpkVeFO
+ xBP1J5keIEKnyYNYWla0BWHrTWw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e78ea85.7f772ce14ab0-smtp-out-n04;
+ Mon, 23 Mar 2020 16:57:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CE56BC432C2; Mon, 23 Mar 2020 16:57:41 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F268AC433CB;
+        Mon, 23 Mar 2020 16:57:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F268AC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <000000000000277a0405a16bd5c9@google.com> <CACT4Y+b1WFT87pWQaXD3CWjyjoQaP1jcycHdHF+rtxoR5xW1ww@mail.gmail.com>
- <5058aabe-f32d-b8ef-57ed-f9c0206304c5@redhat.com> <CAG_fn=WYtSoyi63ACaz-ya=Dbi+BFU-_mADDpL6gQvDimQscmw@mail.gmail.com>
- <20200323163925.GP28711@linux.intel.com>
-In-Reply-To: <20200323163925.GP28711@linux.intel.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 23 Mar 2020 09:57:32 -0700
-Message-ID: <CAKwvOdkE8OAu=Gj4MKWwpctka6==6EtrbF3e1tvF=jS2hBB3Ow@mail.gmail.com>
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in handle_external_interrupt_irqoff
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] wireless: ti: Replace zero-length array with
+ flexible-array member
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200225003408.GA28675@embeddedor>
+References: <20200225003408.GA28675@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200323165741.CE56BC432C2@smtp.codeaurora.org>
+Date:   Mon, 23 Mar 2020 16:57:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 9:39 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Mon, Mar 23, 2020 at 05:31:15PM +0100, Alexander Potapenko wrote:
-> > On Mon, Mar 23, 2020 at 9:18 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
-> > >
-> > > On 22/03/20 07:59, Dmitry Vyukov wrote:
-> > > >
-> > > > The commit range is presumably
-> > > > fb279f4e238617417b132a550f24c1e86d922558..63849c8f410717eb2e6662f3953ff674727303e7
-> > > > But I don't see anything that says "it's me". The only commit that
-> > > > does non-trivial changes to x86/vmx seems to be "KVM: VMX: check
-> > > > descriptor table exits on instruction emulation":
-> > >
-> > > That seems unlikely, it's a completely different file and it would only
-> > > affect the outside (non-nested) environment rather than your own kernel.
-> > >
-> > > The only instance of "0x86" in the registers is in the flags:
-> > >
-> > > > RSP: 0018:ffffc90001ac7998 EFLAGS: 00010086
-> > > > RAX: ffffc90001ac79c8 RBX: fffffe0000000000 RCX: 0000000000040000
-> > > > RDX: ffffc9000e20f000 RSI: 000000000000b452 RDI: 000000000000b453
-> > > > RBP: 0000000000000ec0 R08: ffffffff83987523 R09: ffffffff811c7eca
-> > > > R10: ffff8880a4e94200 R11: 0000000000000002 R12: dffffc0000000000
-> > > > R13: fffffe0000000ec8 R14: ffffffff880016f0 R15: fffffe0000000ecb
-> > > > FS:  00007fb50e370700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > CR2: 000000000000005c CR3: 0000000092fc7000 CR4: 00000000001426f0
-> > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > >
-> > > That would suggest a miscompilation of the inline assembly, which does
-> > > push the flags:
-> > >
-> > > #ifdef CONFIG_X86_64
-> > >                 "mov %%" _ASM_SP ", %[sp]\n\t"
-> > >                 "and $0xfffffffffffffff0, %%" _ASM_SP "\n\t"
-> > >                 "push $%c[ss]\n\t"
-> > >                 "push %[sp]\n\t"
-> > > #endif
-> > >                 "pushf\n\t"
-> > >                 __ASM_SIZE(push) " $%c[cs]\n\t"
-> > >                 CALL_NOSPEC
-> > >
-> > >
-> > > It would not explain why it suddenly started to break, unless the clang
-> > > version also changed, but it would be easy to ascertain and fix (in
-> > > either KVM or clang).  Dmitry, can you send me the vmx.o and
-> > > kvm-intel.ko files?
-> >
-> > On a quick glance, Clang does not miscompile this part.
->
-> Clang definitely miscompiles the asm, the indirect call operates on the
-> EFLAGS value, not on @entry as expected.  It looks like clang doesn't honor
-> ASM_CALL_CONSTRAINT, which effectively tells the compiler that %rsp is
-> getting clobbered, e.g. the "mov %r14,0x8(%rsp)" is loading @entry for
-> "callq *0x8(%rsp)", which breaks because of asm's pushes.
->
-> clang:
->
->         kvm_before_interrupt(vcpu);
->
->         asm volatile(
-> ffffffff811b798e:       4c 89 74 24 08          mov    %r14,0x8(%rsp)
-> ffffffff811b7993:       48 89 e0                mov    %rsp,%rax
-> ffffffff811b7996:       48 83 e4 f0             and    $0xfffffffffffffff0,%rsp
-> ffffffff811b799a:       6a 18                   pushq  $0x18
-> ffffffff811b799c:       50                      push   %rax
-> ffffffff811b799d:       9c                      pushfq
-> ffffffff811b799e:       6a 10                   pushq  $0x10
-> ffffffff811b79a0:       ff 54 24 08             callq  *0x8(%rsp) <--------- calls the EFLAGS value
-> kvm_after_interrupt():
->
->
-> gcc:
->         kvm_before_interrupt(vcpu);
->
->         asm volatile(
-> ffffffff8118e17c:       48 89 e0                mov    %rsp,%rax
-> ffffffff8118e17f:       48 83 e4 f0             and    $0xfffffffffffffff0,%rsp
-> ffffffff8118e183:       6a 18                   pushq  $0x18
-> ffffffff8118e185:       50                      push   %rax
-> ffffffff8118e186:       9c                      pushfq
-> ffffffff8118e187:       6a 10                   pushq  $0x10
-> ffffffff8118e189:       ff d3                   callq  *%rbx <-------- calls @entry
-> kvm_after_interrupt():
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 
-Thanks for this analysis, it looks like this is dependent on some
-particular configuration; here's clang+defconfig+CONFIG_KVM_INTEL=y:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-   0x000000000000528f <+127>:   pushq  $0x18
-   0x0000000000005291 <+129>:   push   %rcx
-   0x0000000000005292 <+130>:   pushfq
-   0x0000000000005293 <+131>:   pushq  $0x10
-   0x0000000000005295 <+133>:   callq  *%rax
+Patch applied to wireless-drivers-next.git, thanks.
+
+398978f7dfa5 wireless: ti: Replace zero-length array with flexible-array member
 
 -- 
-Thanks,
-~Nick Desaulniers
+https://patchwork.kernel.org/patch/11402335/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
