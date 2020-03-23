@@ -2,87 +2,84 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E92C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7073C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B4C206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584997175;
-	bh=+TA7KQ2sMUdn5SzkG4qlg9H4PAhYDaW1bNYEm5pMLj0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZK3ZAZ9p/M4t5sitszVkio0mJ8epR+8haA4Vk19bR/l6a90VTJSkgV2924qR/fBoJ
-	 D/ObJE38mrWSdAULkIRPu9hmhkMaRHTQPevI67Pwyd/1ckWkiUJclBUjceyBU3GFj8
-	 ghg7IUiHKEDtwWL1gAlhYpDfYnUUf+bg01cewCPI=
+	by mail.kernel.org (Postfix) with ESMTP id 8C87F206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:01:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="ZlDyQMB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgCWU7e (ORCPT
+        id S1726955AbgCWVB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 16:59:34 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35254 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgCWU7e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 16:59:34 -0400
-Received: by mail-io1-f65.google.com with SMTP id h8so15911345iob.2;
-        Mon, 23 Mar 2020 13:59:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8IyE6MoEtawQWc+ii3p8qF/jfUchyUm7Ryk1+Vf5LdA=;
-        b=IP5X6FRCRGm8+9p2Iq4guk4gQvXnsANr5kg2TlVStCucFpL/qq2UHusz8YYLmS1emC
-         JluzMvVh06YS+ToVcF4sREg4wwBVv/DsM2ecNx9hOpwr33dkUyH32QqeXrjN2rxKkKw0
-         LDxUdnK2hI5fSPGt+kzx++/FougPZQtpIw4FhcGF6ha040uaGuukhx4tPhBxmUYr7fiS
-         h2V35/alxpeHGUQxVagjOaCGA0DBc+kPpUYc+Qer0bmL6XTOSm+1mnOjU21AajObphFa
-         N+eooBGiTjpSwt1wL/poduGoox1loAsRTuEN58hW7R+MC2Xy/xl2NQr5054K+vPgNkeT
-         A46w==
-X-Gm-Message-State: ANhLgQ2l1nsdRrsp5uEFDDR5uD5g9sadTkPTcknzSgeyr7CXV05Z+Yvv
-        PA0BpD2sETt9TpnY9oV2NA==
-X-Google-Smtp-Source: ADFU+vskTGdXLQiJKIPM4lcX/9O07zGAs8eCCyBftML/Gf9uUcnYeYoJjSFudfYbwa0nSAnpdxuPhw==
-X-Received: by 2002:a05:6602:2439:: with SMTP id g25mr14723488iob.142.1584997173185;
-        Mon, 23 Mar 2020 13:59:33 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id s69sm2130679ild.70.2020.03.23.13.59.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 13:59:32 -0700 (PDT)
-Received: (nullmailer pid 11750 invoked by uid 1000);
-        Mon, 23 Mar 2020 20:59:31 -0000
-Date:   Mon, 23 Mar 2020 14:59:31 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Giulio Benetti <giulio.benetti@benettiengineering.com>
-Cc:     Giulio Benetti <giulio.benetti@benettiengineering.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: clk: fix example for single-output provider
-Message-ID: <20200323205931.GA11658@bogus>
-References: <20200309235722.26278-1-giulio.benetti@benettiengineering.com>
+        Mon, 23 Mar 2020 17:01:56 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:47999 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726049AbgCWVB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 17:01:56 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 05ec56f2;
+        Mon, 23 Mar 2020 20:54:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=Dzejo8MYHCbr04lE7e7h/dcQGR0=; b=ZlDyQM
+        B3eLmIe4Lzb9S1fZKMuVz0p6YPU14Sh2RKRK9T5t69tI+QitT251cxSL7DCTD82Q
+        5UMSVeNjuCWIvg+UjKp6o8XxsdtuqFjGO+JytU+amWToRil3dy2zKWM38wa13Ek3
+        Dg1pRn7Zdt/7SrVwP2wLpZIgi2ur71Mp0mLeiEccJ20jyfYRXHhfE7OJR9IR7l5w
+        WqEXkJy3i7LfLeOXU5Xek1zGo+0K1ybvIAzAePfSxl9B63SOxKT1jczOOpsH8WfQ
+        PyejD1IloUSTh14VsAETuGlZmR9hCGZ2k2Rg1wBCawkClzZyqhIs6UqPWIJS1YOm
+        RM2flSbiCM/Vg+DQ==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 0ed2ecef (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Mon, 23 Mar 2020 20:54:50 +0000 (UTC)
+Received: by mail-il1-f169.google.com with SMTP id r5so10024782ilq.6;
+        Mon, 23 Mar 2020 14:01:53 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0CwfgEJJsfD2EfC78COOFnm7OD/pKysM0CkUJyU+KQh1O8yrUd
+        QefFExJ85mvcBmTu7FNgxca6a8evJAoTubHcfD4=
+X-Google-Smtp-Source: ADFU+vvDFPmC+Zf1SrdmYagNkhzoBtUhqADiRrdFYfBgB18+BfHzDxaVVBEO9t6ZtFAL6weZTY9YjQCJRXktPBoLtWI=
+X-Received: by 2002:a92:cece:: with SMTP id z14mr14770588ilq.38.1584997311836;
+ Mon, 23 Mar 2020 14:01:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200309235722.26278-1-giulio.benetti@benettiengineering.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200323020844.17064-1-masahiroy@kernel.org> <20200323020844.17064-6-masahiroy@kernel.org>
+ <CAHmME9p3LAnrUMmcGPEUFqY5vOASe8MVk4=pzqFRj3E9C-bM+Q@mail.gmail.com>
+ <CAK7LNATVAq_Wkv=K-ezwnG=o8a9OoKspZJYOyq+4OXX7EZHPnA@mail.gmail.com> <CAHmME9pg0_EAG_YkGJQ2AE0n=9EvP2CVoj+bT8cCuiDAdHzUCQ@mail.gmail.com>
+In-Reply-To: <CAHmME9pg0_EAG_YkGJQ2AE0n=9EvP2CVoj+bT8cCuiDAdHzUCQ@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Mon, 23 Mar 2020 15:01:40 -0600
+X-Gmail-Original-Message-ID: <CAHmME9o9AmwvD=SWmf=xtuOgQXgGi1D504tE6v3s4yqF2pR8ug@mail.gmail.com>
+Message-ID: <CAHmME9o9AmwvD=SWmf=xtuOgQXgGi1D504tE6v3s4yqF2pR8ug@mail.gmail.com>
+Subject: Re: [PATCH 5/7] x86: remove always-defined CONFIG_AS_SSSE3
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     X86 ML <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Song Liu <songliubraving@fb.com>,
+        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 00:57:22 +0100, Giulio Benetti wrote:
-> As described above single-output clock provider should have
-> 0 cells number, so let's fix it by using 0 as cells number.
-> 
-> Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
-> ---
->  Documentation/devicetree/bindings/clock/clock-bindings.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+On Mon, Mar 23, 2020 at 2:48 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> By the way, it looks like 5.7 will be raising the minimum binutils to
+> 2.23: https://lore.kernel.org/lkml/20200316160259.GN26126@zn.tnic/ In
+> light of this, I'll place another patch on top of my branch handling
+> that transition.
 
-Applied, thanks.
-
-Rob
+That now lives at the top of the usual branch:
+https://git.zx2c4.com/linux-dev/log/?h=jd/kconfig-assembler-support
