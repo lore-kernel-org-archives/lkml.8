@@ -2,129 +2,116 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20F9C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C896FC1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63FB206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CF3E20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:45:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgCWBmb (ORCPT
+        id S1727011AbgCWBpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 21:42:31 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12173 "EHLO huawei.com"
+        Sun, 22 Mar 2020 21:45:09 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12174 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726951AbgCWBmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 21:42:31 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 188EEA22B45C05522922;
-        Mon, 23 Mar 2020 09:42:21 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 23 Mar
- 2020 09:42:18 +0800
-Subject: Re: [f2fs-dev] [PATCH] ENOSPC returned but there still many free
- segments
-To:     chenying <chen.ying153@zte.com.cn>, <jaegeuk@kernel.org>
-CC:     <wang.yi59@zte.com.cn>, <xue.zhihong@zte.com.cn>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>, <jiang.xuexin@zte.com.cn>
-References: <1584754308-39299-1-git-send-email-chen.ying153@zte.com.cn>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <26f11617-92e4-1dc5-38fd-5048e92e059e@huawei.com>
-Date:   Mon, 23 Mar 2020 09:42:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726954AbgCWBpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 21:45:09 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E2157334D816B813E5A9;
+        Mon, 23 Mar 2020 09:45:03 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Mon, 23 Mar 2020
+ 09:44:57 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <timo.teras@iki.fi>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2] xfrm: policy: Fix doulbe free in xfrm_policy_timer
+Date:   Mon, 23 Mar 2020 09:41:55 +0800
+Message-ID: <20200323014155.56376-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20200318034839.57996-1-yuehaibing@huawei.com>
+References: <20200318034839.57996-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <1584754308-39299-1-git-send-email-chen.ying153@zte.com.cn>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
+Content-Type: text/plain
+X-Originating-IP: [10.173.223.234]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/21 9:31, chenying wrote:
-> I write data to a compressed file when the disk space is almost full
-> and it return -ENOSPC error, but cat /sys/kernel/debug/f2fs/status
-> shows that there still many free segments.
+After xfrm_add_policy add a policy, its ref is 2, then
 
-free segments include reserved segments, so its value should never be zero,
-otherwise there should be a bug.
+                             xfrm_policy_timer
+                               read_lock
+                               xp->walk.dead is 0
+                               ....
+                               mod_timer()
+xfrm_policy_kill
+  policy->walk.dead = 1
+  ....
+  del_timer(&policy->timer)
+    xfrm_pol_put //ref is 1
+  xfrm_pol_put  //ref is 0
+    xfrm_policy_destroy
+      call_rcu
+                                 xfrm_pol_hold //ref is 1
+                               read_unlock
+                               xfrm_pol_put //ref is 0
+                                 xfrm_policy_destroy
+                                  call_rcu
 
-BTW, could you check result in 'stat -f <your_mountpoint>' rather than f2fs
-status in debugfs?
+xfrm_policy_destroy is called twice, which may leads to
+double free.
 
-> 
-> Signed-off-by: chenying <chen.ying153@zte.com.cn>
-> ---
->  fs/f2fs/compress.c | 5 ++++-
->  fs/f2fs/file.c     | 4 ++++
->  2 files changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-> index d8a64be..6ca058b 100644
-> --- a/fs/f2fs/compress.c
-> +++ b/fs/f2fs/compress.c
-> @@ -854,6 +854,8 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
->  				fio.compr_blocks++;
->  			if (__is_valid_data_blkaddr(blkaddr))
->  				f2fs_invalidate_blocks(sbi, blkaddr);
-> +			else if (blkaddr != NULL_ADDR)
-> +				dec_valid_block_count(sbi, dn.inode, 1);
->  			f2fs_update_data_blkaddr(&dn, COMPRESS_ADDR);
->  			goto unlock_continue;
->  		}
-> @@ -865,7 +867,8 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
->  			if (__is_valid_data_blkaddr(blkaddr)) {
->  				f2fs_invalidate_blocks(sbi, blkaddr);
->  				f2fs_update_data_blkaddr(&dn, NEW_ADDR);
-> -			}
-> +			} else if (blkaddr != NULL_ADDR)
-> +				dec_valid_block_count(sbi, dn.inode, 1);
+Call Trace:
+RIP: 0010:refcount_warn_saturate+0x161/0x210
+...
+ xfrm_policy_timer+0x522/0x600
+ call_timer_fn+0x1b3/0x5e0
+ ? __xfrm_decode_session+0x2990/0x2990
+ ? msleep+0xb0/0xb0
+ ? _raw_spin_unlock_irq+0x24/0x40
+ ? __xfrm_decode_session+0x2990/0x2990
+ ? __xfrm_decode_session+0x2990/0x2990
+ run_timer_softirq+0x5c5/0x10e0
 
-I don't think this is correct, you could check message in git pull of 5.6:
+Fix this by use write_lock_bh in xfrm_policy_kill.
 
-Quoted:
+Fixes: ea2dea9dacc2 ("xfrm: remove policy lock when accessing policy->walk.dead")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2:  Fix typo 'write_lock_bh'--> 'write_unlock_bh' while unlocking
+---
+ net/xfrm/xfrm_policy.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-"f2fs-for-5.6
+diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+index dbda08ec566e..ae0689174bbf 100644
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -434,6 +434,7 @@ EXPORT_SYMBOL(xfrm_policy_destroy);
+ 
+ static void xfrm_policy_kill(struct xfrm_policy *policy)
+ {
++	write_lock_bh(&policy->lock);
+ 	policy->walk.dead = 1;
+ 
+ 	atomic_inc(&policy->genid);
+@@ -445,6 +446,7 @@ static void xfrm_policy_kill(struct xfrm_policy *policy)
+ 	if (del_timer(&policy->timer))
+ 		xfrm_pol_put(policy);
+ 
++	write_unlock_bh(&policy->lock);
+ 	xfrm_pol_put(policy);
+ }
+ 
+-- 
+2.17.1
 
-In this series, we've implemented transparent compression experimentally. It
-supports LZO and LZ4, but will add more later as we investigate in the field
-more. At this point, the feature doesn't expose compressed space to user
-directly in order to guarantee potential data updates later to the space.
-Instead, the main goal is to reduce data writes to flash disk as much as
-possible, resulting in extending disk life time as well as relaxing IO
-congestion. Alternatively, we're also considering to add ioctl() to reclaim
-compressed space and show it to user after putting the immutable bit.
-"
 
-That means we will keep reserved blocks in compressed cluster until user
-release them via ioctl.
-
-Thanks,
-
->  			goto unlock_continue;
->  		}
->  
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 0d4da64..f07c9e2 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -589,6 +589,10 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
->  			clear_inode_flag(dn->inode, FI_FIRST_BLOCK_WRITTEN);
->  
->  		f2fs_invalidate_blocks(sbi, blkaddr);
-> +		if (compressed_cluster &&
-> +			(blkaddr == NEW_ADDR || blkaddr == COMPRESS_ADDR))
-> +			continue;
-> +
->  		nr_free++;
->  	}
->  
-> 
