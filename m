@@ -7,63 +7,62 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07B1C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDFFC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7ABF20780
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E559220781
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:00:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UIvFNBqB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oo9AZI4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbgCWPA0 (ORCPT
+        id S1727338AbgCWPA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:00:26 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35597 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbgCWPAY (ORCPT
+        Mon, 23 Mar 2020 11:00:27 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38905 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727301AbgCWPA0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:00:24 -0400
-Received: by mail-wm1-f66.google.com with SMTP id m3so15176972wmi.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 08:00:23 -0700 (PDT)
+        Mon, 23 Mar 2020 11:00:26 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s1so17493515wrv.5
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 08:00:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2YB83cTZZ+dkKwZqeNn0IusybULPWIXDl0NIQtgjxNE=;
-        b=UIvFNBqBk7iR+4GmBLSv5tLbSq0g9hNsuFOdmXzf8SB+1Vono/LaQ8UrZfI99c4VuB
-         m8XLCjmpRK8sz+6LGB2NS5X+4c91SyPHGjGUyAD5EfQcglQLa/AwWWunxvr8Dnup2qqw
-         3iatTkbzC4mHtAXHUEDyGS8mdBA6MlbuZsfLn+wOHDaDpawS2BMuTsnrCMjYaNPDH2Wd
-         /7cyjAsZhxbY9LUjuvHbW4wZNPoa+hkT/fae4sJ+jlXLyf7630wsjmhl7cRY2E3XQHWG
-         je5DNo4Os5zBtI1QbBsShoZqbp58Wv7RBOslsVDunXpzfeDQF8xDVi1yWfBEkvmQE7bg
-         kwMQ==
+        bh=2HWDKGe7o0RlZ1ycFAcKhMfPvSlYOOFb4fX4iFyPE34=;
+        b=oo9AZI4lqQKOxCjlxcgQ/ZLomfS7BzOwzi+HQe9wTh5URTFBgqhHp7x+vUDENsUfKv
+         iOoKHs7GQzR3W+ybS191kq/2l61gyEIMXfmtvvtFQ+wDMQsfIIacWIBc/c1VpANTevS5
+         ittY5NdkIhkfdon3piHQLsuAQDZWDmwkQygR7TEjNtdjM2r8wPe61v2cQ1uKbw8GZK+f
+         xyBSHn7CXf9w4WNb80lBkMrE9DNxG61Ia9ft0QKroBZ6ZkKVXjuoQWcijqHagVm1zid8
+         rSDlmW3FkmiKhIpwad6y6Z5JerPKOFL+/fPClAEOIMBy+egOGK7wEW/RJBQECDsIF5w2
+         +TdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2YB83cTZZ+dkKwZqeNn0IusybULPWIXDl0NIQtgjxNE=;
-        b=o9vT3vxGNagB+l1xrs+V7UFg2M+WgrMo2gw0f/k3GcEwWrvsdaLE7oTS6tGDG+ES/D
-         A43/9rGALtPwoGet57dqbNr16DWCbeFBtTP0U3Y2FLJYJmPWjhYq4rEBpVRhEdOnDHSF
-         mfWuv0FBwQHLpCGw7woCKLVkUqeuIGbov2yb3y1GsBquYCgYcfpztBhKMhJqenriesGT
-         hT0X7ef/rVPWSWPNzCR0AHbR0Rq1KownasBWvZyuhmXhWhweA2lb81JLNNaT2GJxtsdB
-         4yPyGckeDfsEXxfAOkKScu5Yi4LI0uywC4twa3AsrMRrrZAvBeBkbHVwhc+PMCezOHPv
-         DiKw==
-X-Gm-Message-State: ANhLgQ0HI9UwoeljPIltiH69xsLqcE0cVIcI87o48+ZDunBw0G4frhh6
-        z5wiF0kyEVaI6DF0SERBIhjLAPRGvcc=
-X-Google-Smtp-Source: ADFU+vuqvU5MNHtON+6hYZfmrYY4jiC3SNzkcUelz9medrmAfPETSSE5BQKe44c24aNdRviCQK5OaQ==
-X-Received: by 2002:a05:600c:2a42:: with SMTP id x2mr1524441wme.77.1584975623017;
-        Mon, 23 Mar 2020 08:00:23 -0700 (PDT)
+        bh=2HWDKGe7o0RlZ1ycFAcKhMfPvSlYOOFb4fX4iFyPE34=;
+        b=X0w4POPx12xdWLqFf/zmfFTLtCziuSb8jzXwPFvOlpukI0o+v2+gpBH5YRkS+eX1av
+         gCZtKuHr8W5OSgQrHIKX/u/fscy0vwAD8yUgQ8WIISY0ZBnKo1Q+1m8q+RJNQCpbL/2X
+         9/Q9wUqWnUgBSMjD0M4l7aRGQ7k2v3C7QxG1XKkvwX8p6mTMxqzy5Afw3IAb4eKlSErP
+         RygLd+yhoZ3ofOqCveVvMljFbCWXp1e2xyhCXauaLRwKUpTFY3lJRgrL5oyqPsHE9dOh
+         Z/GLuacaHQuEOGw0AbsoIMKSEbsYzjaEzcvx6msPGJcQkDTkAuMJqTQXwrVHOXkr1CKc
+         qcJA==
+X-Gm-Message-State: ANhLgQ2Wot2AQ8Vjq97JSeemDy6VU6e3WOPzgFp9GdVW2jCGWj4HVExN
+        XzsiStm9qd2YmTwpQIgF8iGFVZKmSS8=
+X-Google-Smtp-Source: ADFU+vtl7Eu/KjNNT/XI4pKBLLj18KZm9PMLF4AcEflkTz4wKA99zG+podxlZv3udjZXn2QwUmZwtQ==
+X-Received: by 2002:a5d:45c7:: with SMTP id b7mr2708426wrs.44.1584975624987;
+        Mon, 23 Mar 2020 08:00:24 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id k15sm1084196wrm.55.2020.03.23.08.00.21
+        by smtp.gmail.com with ESMTPSA id k15sm1084196wrm.55.2020.03.23.08.00.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 08:00:22 -0700 (PDT)
+        Mon, 23 Mar 2020 08:00:24 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, Freeman Liu <freeman.liu@unisoc.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
+Cc:     linux-kernel@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 2/5] nvmem: sprd: Optimize the block lock operation
-Date:   Mon, 23 Mar 2020 15:00:04 +0000
-Message-Id: <20200323150007.7487-3-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 4/5] nvmem: mxs-ocotp: Use devm_add_action_or_reset() for cleanup
+Date:   Mon, 23 Mar 2020 15:00:06 +0000
+Message-Id: <20200323150007.7487-5-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200323150007.7487-1-srinivas.kandagatla@linaro.org>
 References: <20200323150007.7487-1-srinivas.kandagatla@linaro.org>
@@ -74,83 +73,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Freeman Liu <freeman.liu@unisoc.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-We have some cases that will programme the eFuse block partially multiple
-times, so we should allow the block to be programmed again if it was
-programmed partially. But we should lock the block if the whole block
-was programmed. Thus add a condition to validate if we need lock the
-block or not.
+Use devm_add_action_or_reset() for cleanup to call clk_unprepare(),
+which can simplify the error handling in .probe, and .remove callback
+can be dropped.
 
-Moreover we only enable the auto-check function when locking the block.
-
-Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/sprd-efuse.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ drivers/nvmem/mxs-ocotp.c | 30 +++++++++++-------------------
+ 1 file changed, 11 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/nvmem/sprd-efuse.c b/drivers/nvmem/sprd-efuse.c
-index 7a189ef52333..43b3f6ef8c20 100644
---- a/drivers/nvmem/sprd-efuse.c
-+++ b/drivers/nvmem/sprd-efuse.c
-@@ -217,12 +217,14 @@ static int sprd_efuse_raw_prog(struct sprd_efuse *efuse, u32 blk, bool doub,
- 	 * Enable the auto-check function to validate if the programming is
- 	 * successful.
- 	 */
--	sprd_efuse_set_auto_check(efuse, true);
-+	if (lock)
-+		sprd_efuse_set_auto_check(efuse, true);
+diff --git a/drivers/nvmem/mxs-ocotp.c b/drivers/nvmem/mxs-ocotp.c
+index 8e4898dec002..588ab56d75b7 100644
+--- a/drivers/nvmem/mxs-ocotp.c
++++ b/drivers/nvmem/mxs-ocotp.c
+@@ -130,6 +130,11 @@ static const struct of_device_id mxs_ocotp_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, mxs_ocotp_match);
  
- 	writel(*data, efuse->base + SPRD_EFUSE_MEM(blk));
- 
- 	/* Disable auto-check and data double after programming */
--	sprd_efuse_set_auto_check(efuse, false);
-+	if (lock)
-+		sprd_efuse_set_auto_check(efuse, false);
- 	sprd_efuse_set_data_double(efuse, false);
- 
- 	/*
-@@ -237,7 +239,7 @@ static int sprd_efuse_raw_prog(struct sprd_efuse *efuse, u32 blk, bool doub,
- 		writel(SPRD_EFUSE_ERR_CLR_MASK,
- 		       efuse->base + SPRD_EFUSE_ERR_CLR);
- 		ret = -EBUSY;
--	} else {
-+	} else if (lock) {
- 		sprd_efuse_set_prog_lock(efuse, lock);
- 		writel(0, efuse->base + SPRD_EFUSE_MEM(blk));
- 		sprd_efuse_set_prog_lock(efuse, false);
-@@ -322,6 +324,7 @@ static int sprd_efuse_read(void *context, u32 offset, void *val, size_t bytes)
- static int sprd_efuse_write(void *context, u32 offset, void *val, size_t bytes)
- {
- 	struct sprd_efuse *efuse = context;
-+	bool lock;
- 	int ret;
- 
- 	ret = sprd_efuse_lock(efuse);
-@@ -332,7 +335,20 @@ static int sprd_efuse_write(void *context, u32 offset, void *val, size_t bytes)
- 	if (ret)
- 		goto unlock;
- 
--	ret = sprd_efuse_raw_prog(efuse, offset, false, false, val);
-+	/*
-+	 * If the writing bytes are equal with the block width, which means the
-+	 * whole block will be programmed. For this case, we should not allow
-+	 * this block to be programmed again by locking this block.
-+	 *
-+	 * If the block was programmed partially, we should allow this block to
-+	 * be programmed again.
-+	 */
-+	if (bytes < SPRD_EFUSE_BLOCK_WIDTH)
-+		lock = false;
-+	else
-+		lock = true;
++static void mxs_ocotp_action(void *data)
++{
++	clk_unprepare(data);
++}
 +
-+	ret = sprd_efuse_raw_prog(efuse, offset, false, lock, val);
+ static int mxs_ocotp_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -160,39 +165,26 @@ static int mxs_ocotp_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
  
- 	clk_disable_unprepare(efuse->clk);
++	ret = devm_add_action_or_reset(&pdev->dev, mxs_ocotp_action, otp->clk);
++	if (ret)
++		return ret;
++
+ 	data = match->data;
  
+ 	ocotp_config.size = data->size;
+ 	ocotp_config.priv = otp;
+ 	ocotp_config.dev = dev;
+ 	otp->nvmem = devm_nvmem_register(dev, &ocotp_config);
+-	if (IS_ERR(otp->nvmem)) {
+-		ret = PTR_ERR(otp->nvmem);
+-		goto err_clk;
+-	}
++	if (IS_ERR(otp->nvmem))
++		return PTR_ERR(otp->nvmem);
+ 
+ 	platform_set_drvdata(pdev, otp);
+ 
+-	return 0;
+-
+-err_clk:
+-	clk_unprepare(otp->clk);
+-
+-	return ret;
+-}
+-
+-static int mxs_ocotp_remove(struct platform_device *pdev)
+-{
+-	struct mxs_ocotp *otp = platform_get_drvdata(pdev);
+-
+-	clk_unprepare(otp->clk);
+-
+ 	return 0;
+ }
+ 
+ static struct platform_driver mxs_ocotp_driver = {
+ 	.probe = mxs_ocotp_probe,
+-	.remove = mxs_ocotp_remove,
+ 	.driver = {
+ 		.name = "mxs-ocotp",
+ 		.of_match_table = mxs_ocotp_match,
 -- 
 2.21.0
 
