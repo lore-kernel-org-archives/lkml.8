@@ -2,92 +2,101 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA58C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C133FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD38720719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 970E420719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:35:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JHiCizBx"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Fv7ozbGf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgCWVd0 (ORCPT
+        id S1727050AbgCWVf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 17:33:26 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37017 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgCWVd0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 17:33:26 -0400
-Received: by mail-ed1-f65.google.com with SMTP id b23so18116981edx.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 14:33:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zhnknTMAfH/wRzM1aNoHZGvfELya9SoXYzFYD0LL+XY=;
-        b=JHiCizBxgvc+j7w2CR8qEtF10rjJazyvP28JcwYjWY87NnULzuRquBD2xdCHOmt58I
-         9Bgvr/GpRQrQycF5UnWMEul7qpIT6iQY10T0PpLTH32rvyfntrMD50ZKh7etd0+RE63Q
-         L7mAsD3Udvg8QJPSaS8rCC4NL04WOHi/5ZiWE+57KIjPERgxGhGpIcPb9nZKPfuS3+Sn
-         L0neJPcZHC0cjgfQZm4waK/O87Z8q1FVKq2koyFn1c5RWjPUGoSvVXGhroDs2BQ9N+D3
-         BYdv5NUKccrnJvxxxe//kFazPj7rCGqVspuFjNoHAUaBDQe7JIWS1DrAJVUyzVIqtbyA
-         ueXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zhnknTMAfH/wRzM1aNoHZGvfELya9SoXYzFYD0LL+XY=;
-        b=hJE6r8YkEZInhYrs8MFtZysN0IcOG86qAOOY5qxxsGl9uj59LekLwCfDok+UdqJgEk
-         uqf4X2xA7oIq2E9o+x77PLwhJ2WJChu+jaT4MwoqomymYXIh9yb+v5KxgLnlYd5/yvLf
-         3HrKGQS0SucV/48ywb455G2ECslSmOu4S7ZyO2f5LTue9rsu7l2mP0LAzIpDqPKX+uaf
-         1Xmpse5FgHUBH2MJd1LENGiqlxxwndVSMEHb2cYr8vAuy9RK9Zl6VYgrSqyV4pXPZVTq
-         /gZQaA8+nyn6Sf+5b4sEAJ+00CTS51eMtYNoBpJKoogSNCblWLPm+QZIhu0tUhz0vfj7
-         +7/w==
-X-Gm-Message-State: ANhLgQ3H0RRaoAffEtZERuSbyToPY5UnbKFLISLe/U4FWWV+Klud8jJQ
-        mupWdyCtCWsfqhQjufE+E4O9rDmrfal//GNqiiKNug==
-X-Google-Smtp-Source: ADFU+vuJarP63ymQBTXL3joEpixrNSQwYHFgXElydF5vi1pdd4W1J4ZjXKpEs9Et3yCFPhnm1VGPn1bDtVwod8wCF6g=
-X-Received: by 2002:a17:906:af57:: with SMTP id ly23mr7224694ejb.6.1584999202172;
- Mon, 23 Mar 2020 14:33:22 -0700 (PDT)
+        Mon, 23 Mar 2020 17:35:27 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:14178 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725897AbgCWVf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 17:35:27 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48mSNB3H8BzWS;
+        Mon, 23 Mar 2020 22:35:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1584999324; bh=pV85d3OblMJ7RfsZIWWNkfwMsTCzcwys5+ldfE8oyZw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Fv7ozbGfqk4BAVi284jvwufI0hVjijArO/XOUuhWlDD89PPjHCarTiS4+vK1mLWmF
+         DVrJtYAOhraUK5SWlXX3puKkx7cHu9Izmlao4fdzra6GVS4GRsOt2PtTR9LBtUeuew
+         ISMmmXeSeKf+pTj3r3pby2kz6gewBNTXjM+g72iTo3c+cQs2JdYYSDjU7N7mT4mzt8
+         gYfJddytE23BcOX0fnhr2zdaDfp5E7D9lwz0M4MYIh/ZxqHo2ixHNnfkY+tI06YcS6
+         CbjH7zDW0pQXVzQZ3yGdyqN0HUQc7h5dEw5eUDAbbIa4/zfuuWUSXQ6CVwyT8vS0oo
+         xwY0W70E5c50g==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Mon, 23 Mar 2020 22:35:20 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>, linux-tegra@vger.kernel.org,
+        linux-block@vger.kernel.org, Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 03/10] partitions: Introduce NVIDIA Tegra Partition
+ Table
+Message-ID: <20200323213520.GA16587@qmqm.qmqm.pl>
+References: <20200323163431.7678-1-digetx@gmail.com>
+ <20200323163431.7678-4-digetx@gmail.com>
+ <20200323191748.GB30585@qmqm.qmqm.pl>
+ <67140755-c829-5c58-3fbf-efd496e225df@gmail.com>
 MIME-Version: 1.0
-References: <20200320175910.180266-1-yonghyun@google.com> <20200323111404.GA4554@infradead.org>
-In-Reply-To: <20200323111404.GA4554@infradead.org>
-From:   Yonghyun Hwang <yonghyun@google.com>
-Date:   Mon, 23 Mar 2020 14:33:11 -0700
-Message-ID: <CAEauFbww3X2WZuOvMbnhOD2ONBjqR-JS2BrxWPO=HqzXVcKakw@mail.gmail.com>
-Subject: Re: [PATCH] vfio-mdev: support mediated device creation in kernel
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Kirti Wankhede <kwankhede@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Havard Skinnemoen <hskinnemoen@google.com>,
-        Moritz Fischer <mdf@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <67140755-c829-5c58-3fbf-efd496e225df@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 4:14 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Fri, Mar 20, 2020 at 10:59:10AM -0700, Yonghyun Hwang wrote:
-> > To enable a mediated device, a device driver registers its device to VFIO
-> > MDev framework. Once the mediated device gets enabled, UUID gets fed onto
-> > the sysfs attribute, "create", to create the mediated device. This
-> > additional step happens after boot-up gets complete. If the driver knows
-> > how many mediated devices need to be created during probing time, the
-> > additional step becomes cumbersome. This commit implements a new function
-> > to allow the driver to create a mediated device in kernel.
->
-> Please send this along with your proposed user so that we can understand
-> the use.  Without that new exports have no chance of going in anyway.
+On Mon, Mar 23, 2020 at 10:59:52PM +0300, Dmitry Osipenko wrote:
+> 23.03.2020 22:17, Michał Mirosław пишет:
+> > On Mon, Mar 23, 2020 at 07:34:24PM +0300, Dmitry Osipenko wrote:
+> >> All NVIDIA Tegra devices use a special partition table format for the
+> >> internal storage partitioning. Most of Tegra devices have GPT partition
+> >> in addition to TegraPT, but some older Android consumer-grade devices do
+> >> not or GPT is placed in a wrong sector, and thus, the TegraPT is needed
+> >> in order to support these devices properly in the upstream kernel. This
+> >> patch adds support for NVIDIA Tegra Partition Table format that is used
+> >> at least by all NVIDIA Tegra20 and Tegra30 devices.
+> >>
+> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >> ---
+> >>  arch/arm/mach-tegra/tegra.c   |  54 ++++
+> > [...]
+> > 
+> > Please split off this part and make the information available to
+> > userspace (pt_addr + pt_size) if found. This would make it easier
+> > to support use the partition table later in initrd instead.
+> 
+> Please clarify what do you mean by "use the partition table later in
+> initrd instead".
 
-My driver is still under development. Do you recommend me to implement
-an example code for the new exports and re-submit the commit?
+Configure device-mapper to span eMMC boot+data partitions and then ask
+(modified) kpartx to partition the resulting device. All before rootfs
+is mounted and switched to in initrd.
 
-Thank you,
-Yonghyun
+Best Regards
+Michał Mirosław
