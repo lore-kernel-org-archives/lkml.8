@@ -6,158 +6,125 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20021C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEFCC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F10602077D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB10620780
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgCWOjC (ORCPT
+        id S1727156AbgCWOkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:39:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:50276 "EHLO foss.arm.com"
+        Mon, 23 Mar 2020 10:40:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:50308 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbgCWOjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:39:01 -0400
+        id S1725830AbgCWOkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 10:40:02 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7EB81FB;
-        Mon, 23 Mar 2020 07:39:00 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F8613F52E;
-        Mon, 23 Mar 2020 07:39:00 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 14:38:58 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: lockdep warning in urb.c:363 usb_submit_urb
-Message-ID: <20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 74305FEC;
+        Mon, 23 Mar 2020 07:40:01 -0700 (PDT)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B8773F52E;
+        Mon, 23 Mar 2020 07:39:57 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 14:39:55 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        nd@arm.com
+Subject: Re: [PATCH v10 00/13] arm64: Branch Target Identification support
+Message-ID: <20200323143954.GC4892@mbp>
+References: <20200316165055.31179-1-broonie@kernel.org>
+ <20200320173945.GC27072@arm.com>
+ <20200323122143.GB4892@mbp>
+ <20200323132412.GD4948@sirena.org.uk>
+ <20200323135722.GA3959@C02TD0UTHF1T.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200323135722.GA3959@C02TD0UTHF1T.local>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Mon, Mar 23, 2020 at 01:57:22PM +0000, Mark Rutland wrote:
+> On Mon, Mar 23, 2020 at 01:24:12PM +0000, Mark Brown wrote:
+> > On Mon, Mar 23, 2020 at 12:21:44PM +0000, Catalin Marinas wrote:
+> > > On Fri, Mar 20, 2020 at 05:39:46PM +0000, Szabolcs Nagy wrote:
+> > 
+> > > +int arch_elf_adjust_prot(int prot, const struct arch_elf_state *state,
+> > > +                        bool has_interp, bool is_interp)
+> > > +{
+> > > +       if (is_interp != has_interp)
+> > > +               return prot;
+> > > +
+> > > +       if (!(state->flags & ARM64_ELF_BTI))
+> > > +               return prot;
+> > > +
+> > > +       if (prot & PROT_EXEC)
+> > > +               prot |= PROT_BTI;
+> > > +
+> > > +       return prot;
+> > > +}
+> > 
+> > > At a quick look, for dynamic binaries we have has_interp == true and
+> > > is_interp == false. I don't know why but, either way, the above code
+> > > needs a comment with some justification.
+> > 
+> > I don't really know for certain either, I inherited this code as is with
+> > the understanding that this was all agreed with the toolchain and libc
+> > people - the actual discussion that lead to the decisions being made
+> > happened before I was involved.  My understanding is that the idea was
+> > that the dynamic linker would be responsible for mapping everything in
+> > dynamic applications other than itself but other than consistency I
+> > don't know why.  I guess it defers more decision making to userspace but
+> > I'm having a hard time thinking of sensible cases where one might wish
+> > to make a decision other than enabling PROT_BTI.
+> 
+> My understanding was this had been agreed with the toolchain folk a
+> while back -- anything static loaded by the kernel (i.e. a static
+> executable or the dynamic linker) would get GP set. In other cases the
+> linker will mess with the permissions on the pages anyhow, and needs to
+> be aware of BTI in order to do the right thing, so it was better to
+> leave it to userspace consistently (e.g. as that had the least risk of
+> subtle changes in behaviour leading to ABI difficulties).
 
-I've hit the following lockdep warning when I trigger hibernate on arm64
-platform (Juno-r2)
+So this means that the interpreter will have to mprotect(PROT_BTI) the
+text section of the primary executable. For subsequent libraries, it
+calls mmap() explicitly anyway but not for the main executable (IIUC).
 
+> > I'd be perfectly happy to drop the check if that makes more sense to
+> > people, otherwise I can send a patch adding a comment explaining the
+> > situation.
+> 
+> I think it would be best to document the current behaviour, as it's a
+> simple ABI that we can guarantee, and the dynamic linker will have to be
+> aware of BTI in order to do the right thing anyhow.
 
-	echo suspend > /sys/power/disk
-	echo disk > /sys/power/state
+That's a valid point. If we have an old dynamic linker and the kernel
+enabled BTI automatically for the main executable, could things go wrong
+(e.g. does the PLT need to be BTI-aware)?
 
-I only had a usb flash drive attached to it. Let me know if you need more info.
-
-
-
-# echo suspend > disk
-# echo disk > state
-[  325.775152] PM: hibernation: hibernation entry
-[  325.780708] Filesystems sync: 0.000 seconds
-[  325.784976] Freezing user space processes ... (elapsed 0.001 seconds) done.
-[  325.793322] OOM killer disabled.
-[  325.797934] PM: hibernation: Preallocating image memory
-[  326.852851] PM: hibernation: Allocated 96124 pages for snapshot
-[  326.858826] PM: hibernation: Allocated 384496 kbytes in 1.04 seconds (369.70 MB/s)
-[  326.866447] Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
-[  326.876429] printk: Suspending console(s) (use no_console_suspend to debug)
-[  326.947751] Disabling non-boot CPUs ...
-[  326.948909] CPU1: shutdown
-[  326.948918] psci: CPU1 killed (polled 0 ms)
-[  326.951082] CPU2: shutdown
-[  326.952130] psci: CPU2 killed (polled 0 ms)
-[  326.954600] CPU3: shutdown
-[  326.954613] psci: CPU3 killed (polled 0 ms)
-[  326.957217] CPU4: shutdown
-[  326.957229] psci: CPU4 killed (polled 0 ms)
-[  326.958924] CPU5: shutdown
-[  326.958936] psci: CPU5 killed (polled 0 ms)
-[  326.959878] PM: hibernation: Creating image:
-[  326.959878] PM: hibernation: Need to copy 94789 pages
-[  326.959878] PM: hibernation: Image created (94789 pages copied)
-[  326.959994] Enabling non-boot CPUs ...
-[  326.973678] Detected PIPT I-cache on CPU1
-[  326.973728] CPU1: Booted secondary processor 0x0000000000 [0x410fd080]
-[  326.975172] CPU1 is up
-[  326.993051] Detected PIPT I-cache on CPU2
-[  326.993081] CPU2: Booted secondary processor 0x0000000001 [0x410fd080]
-[  326.993839] CPU2 is up
-[  327.007492] Detected VIPT I-cache on CPU3
-[  327.007557] CPU3: Booted secondary processor 0x0000000101 [0x410fd033]
-[  327.009075] CPU3 is up
-[  327.022636] Detected VIPT I-cache on CPU4
-[  327.022682] CPU4: Booted secondary processor 0x0000000102 [0x410fd033]
-[  327.024296] CPU4 is up
-[  327.038227] Detected VIPT I-cache on CPU5
-[  327.038272] CPU5: Booted secondary processor 0x0000000103 [0x410fd033]
-[  327.039921] CPU5 is up
-[  327.154849] usb usb2: runtime PM trying to activate child device usb2 but parent (7ffb0000.ohci) is not active
-[  327.290355] PM: Cannot find swap device, try swapon -a
-[  327.295533] PM: Cannot get swap writer
-[  327.480758] OOM killer enabled.
-[  327.483939] Restarting tasks ...
-[  327.484229] ------------[ cut here ]------------
-[  327.484664] done.
-[  327.487743] URB 000000000c121c1c submitted while active
-[  327.499622] WARNING: CPU: 1 PID: 296 at drivers/usb/core/urb.c:363 usb_submit_urb+0x3f0/0x520
-[  327.508191] Modules linked in:
-[  327.511262] CPU: 1 PID: 296 Comm: kworker/1:2 Not tainted 5.6.0-rc6 #533
-[  327.517993] Hardware name: ARM Juno development board (r2) (DT)
-[  327.523944] Workqueue: usb_hub_wq hub_event
-[  327.528148] pstate: 40000005 (nZcv daif -PAN -UAO)
-[  327.532959] pc : usb_submit_urb+0x3f0/0x520
-[  327.537160] lr : usb_submit_urb+0x3f0/0x520
-[  327.541360] sp : ffff80001891b8c0
-[  327.544687] x29: ffff80001891b8c0 x28: ffff000973f7a000
-[  327.550024] x27: ffff00097049f320 x26: 0000000000000003
-[  327.555361] x25: ffff8000101704e8 x24: ffff80001891bb48
-[  327.560697] x23: ffff80001323d000 x22: 0000000000000c00
-[  327.566033] x21: 0000000000000004 x20: 00000000fffffff0
-[  327.571369] x19: ffff0009703f0300 x18: 0000000000000000
-[  327.576705] x17: 0000000000000000 x16: 0000000000000000
-[  327.582041] x15: 0000000000000000 x14: 0000000000000000
-[  327.587376] x13: 0000000000000000 x12: 0000000000000000
-[  327.592712] x11: 0000000000000000 x10: 0000000000000000
-[  327.598048] x9 : ffff80001323da88 x8 : ffff00097ef0a798
-[  327.603384] x7 : ffff800010148c08 x6 : ffff00097eef7450
-[  327.608720] x5 : ffff00097eef7450 x4 : 0000000000000000
-[  327.614055] x3 : ffff00097ef06df0 x2 : 0000000000000001
-[  327.619391] x1 : 1798c844b4d7c300 x0 : 0000000000000000
-[  327.624727] Call trace:
-[  327.627183]  usb_submit_urb+0x3f0/0x520
-[  327.631035]  hub_activate+0x108/0x788
-[  327.634713]  hub_resume+0x40/0x108
-[  327.638129]  usb_resume_interface.isra.9+0x60/0x108
-[  327.643028]  usb_resume_both+0xe4/0x140
-[  327.646881]  usb_runtime_resume+0x24/0x30
-[  327.650910]  __rpm_callback+0xdc/0x138
-[  327.654675]  rpm_callback+0x34/0x98
-[  327.658178]  rpm_resume+0x4a8/0x720
-[  327.661681]  rpm_resume+0x50c/0x720
-[  327.665183]  __pm_runtime_resume+0x4c/0xb8
-[  327.669297]  usb_autopm_get_interface+0x28/0x60
-[  327.673848]  hub_event+0x80/0x1368
-[  327.677266]  process_one_work+0x2a4/0x748
-[  327.681292]  worker_thread+0x48/0x498
-[  327.684970]  kthread+0x13c/0x140
-[  327.688211]  ret_from_fork+0x10/0x18
-[  327.691801] irq event stamp: 17114
-[  327.695219] hardirqs last  enabled at (17113): [<ffff80001191b29c>] _raw_spin_unlock_irq+0x34/0x68
-[  327.704224] hardirqs last disabled at (17114): [<ffff8000119132d8>] __schedule+0xd0/0x7e8
-[  327.712442] softirqs last  enabled at (16742): [<ffff8000100818a4>] __do_softirq+0x4bc/0x568
-[  327.720922] softirqs last disabled at (16731): [<ffff800010114064>] irq_exit+0x144/0x150
-[  327.729051] ---[ end trace 7d41436f96488c51 ]---
-[  327.733762] PM: hibernation: hibernation exit
-sh: write error: No such device
-# [  327.739972] hub 2-0:1.0: activate --> -16
-
-
-
-Thanks
-
---
-Qais Yousef
+-- 
+Catalin
