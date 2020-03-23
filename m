@@ -2,158 +2,80 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9793CC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B15C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E67520719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:33:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FyDsCBjA"
+	by mail.kernel.org (Postfix) with ESMTP id B723920719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:33:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbgCWQdQ (ORCPT
+        id S1727598AbgCWQdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:33:16 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:56893 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727411AbgCWQdP (ORCPT
+        Mon, 23 Mar 2020 12:33:43 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42015 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbgCWQdn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:33:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584981193;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KCvacwiU6OTRKkamU+WDDamahYADSqAV/L9BazSCR94=;
-        b=FyDsCBjAuszSEz/Qix1nNSdnyL8pT1oGIeUj/ny9Rdbll9TDFSuTM/URQBIeIYU7x63+UP
-        +uRuUcbVIEcLMaqW76YMJFsfykPuMxx7I4M7qHclek8LX7GBZZSvYTKC1MVAXUS+jMLWNQ
-        k5V5YUGm/45UUpjDgSkGbCnRuDn9oDs=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-389-qE8KsxTrMbysGhWP8DqqnQ-1; Mon, 23 Mar 2020 12:33:11 -0400
-X-MC-Unique: qE8KsxTrMbysGhWP8DqqnQ-1
-Received: by mail-wr1-f71.google.com with SMTP id e10so5858601wru.6
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 09:33:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=KCvacwiU6OTRKkamU+WDDamahYADSqAV/L9BazSCR94=;
-        b=Fyd/SCeR6xD1Mc+AK+9bp4UQ1Hj4nJ+3FR7aWScbOtkWSv70N9cOJkDpvTclgVfwwJ
-         82a8EjBvztfHiSTwcX9XrGJK/q4OKi1XJGw3akc+tIvSxlLktwIjfpqN/j4P0V4mp5Il
-         gJGczDHW7Z+Iehx5oiYoRiK217FaXJOG+CLId77lI24kMyen07iVN4XLM11eH9MSbfW1
-         R9vH2+Lujzd358npDmNCI6J6E8tS0Oj34xo0AjubjqxxausIO2LEa3Wn5qYSae4+QNgO
-         0yVhJOV+BQRQT/3Zfllzq2KUH1tPoSzmg7u3+VkK+a0xY++JhCfyk8piN2Y3szyR94qF
-         xq3A==
-X-Gm-Message-State: ANhLgQ2zoih4kwyDjb/bT54emlnHTl9jM0pK4vQOawCei1Wq76TO/FKI
-        eue4cZihd239F7e/H5ViU4zWEOcL5rBsORAJ/9KcnXbhLrSi/yQ5VT7bE4AoBA++XCx6GCv2Jdu
-        rmAV2KaJZVlNRIBXWnwDsJUrh
-X-Received: by 2002:adf:a387:: with SMTP id l7mr30790721wrb.250.1584981190739;
-        Mon, 23 Mar 2020 09:33:10 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vu5DQvhi2385iSKFZyFJgeZoUq4ZNFT6SaoQ4GLJpPuvChdtB8xZdp32gM1w6hlQUmPYIQLCg==
-X-Received: by 2002:adf:a387:: with SMTP id l7mr30790696wrb.250.1584981190471;
-        Mon, 23 Mar 2020 09:33:10 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id 61sm26456602wrn.82.2020.03.23.09.33.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 09:33:09 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        John Haxby <john.haxby@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH v3 04/37] KVM: nVMX: Invalidate all roots when emulating INVVPID without EPT
-In-Reply-To: <20200323160432.GJ28711@linux.intel.com>
-References: <20200320212833.3507-1-sean.j.christopherson@intel.com> <20200320212833.3507-5-sean.j.christopherson@intel.com> <87v9mv84qu.fsf@vitty.brq.redhat.com> <20200323160432.GJ28711@linux.intel.com>
-Date:   Mon, 23 Mar 2020 17:33:08 +0100
-Message-ID: <87lfnr820r.fsf@vitty.brq.redhat.com>
+        Mon, 23 Mar 2020 12:33:43 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jGQ1B-0002JV-7s; Mon, 23 Mar 2020 17:33:37 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id ACBFF1040AA; Mon, 23 Mar 2020 17:33:36 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 04/17] kernel: futex.c: get rid of a docs build warning
+In-Reply-To: <20200320170035.581f5095@coco.lan>
+References: <cover.1584456635.git.mchehab+huawei@kernel.org> <aab1052263e340a3eada5522f32be318890314a1.1584456635.git.mchehab+huawei@kernel.org> <87h7yj59m0.fsf@nanos.tec.linutronix.de> <20200320170035.581f5095@coco.lan>
+Date:   Mon, 23 Mar 2020 17:33:36 +0100
+Message-ID: <87h7yfowtb.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-> On Mon, Mar 23, 2020 at 04:34:17PM +0100, Vitaly Kuznetsov wrote:
->> Sean Christopherson <sean.j.christopherson@intel.com> writes:
->> 
->> > From: Junaid Shahid <junaids@google.com>
->> >
->> > Free all roots when emulating INVVPID for L1 and EPT is disabled, as
->> > outstanding changes to the page tables managed by L1 need to be
->> > recognized.  Because L1 and L2 share an MMU when EPT is disabled, and
->> > because VPID is not tracked by the MMU role, all roots in the current
->> > MMU (root_mmu) need to be freed, otherwise a future nested VM-Enter or
->> > VM-Exit could do a fast CR3 switch (without a flush/sync) and consume
->> > stale SPTEs.
->> >
->> > Fixes: 5c614b3583e7b ("KVM: nVMX: nested VPID emulation")
->> > Signed-off-by: Junaid Shahid <junaids@google.com>
->> > [sean: ported to upstream KVM, reworded the comment and changelog]
->> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
->> > ---
->> >  arch/x86/kvm/vmx/nested.c | 14 ++++++++++++++
->> >  1 file changed, 14 insertions(+)
->> >
->> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
->> > index 9624cea4ed9f..bc74fbbf33c6 100644
->> > --- a/arch/x86/kvm/vmx/nested.c
->> > +++ b/arch/x86/kvm/vmx/nested.c
->> > @@ -5250,6 +5250,20 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
->> >  		return kvm_skip_emulated_instruction(vcpu);
->> >  	}
->> >  
->> > +	/*
->> > +	 * Sync the shadow page tables if EPT is disabled, L1 is invalidating
->> > +	 * linear mappings for L2 (tagged with L2's VPID).  Free all roots as
->> > +	 * VPIDs are not tracked in the MMU role.
->> > +	 *
->> > +	 * Note, this operates on root_mmu, not guest_mmu, as L1 and L2 share
->> > +	 * an MMU when EPT is disabled.
->> > +	 *
->> > +	 * TODO: sync only the affected SPTEs for INVDIVIDUAL_ADDR.
->> > +	 */
->> > +	if (!enable_ept)
->> > +		kvm_mmu_free_roots(vcpu, &vcpu->arch.root_mmu,
->> > +				   KVM_MMU_ROOTS_ALL);
->> > +
->> 
->> This is related to my remark on the previous patch; the comment above
->> makes me think I'm missing something obvious, enlighten me please)
->> 
->> My understanding is that L1 and L2 will share arch.root_mmu not only
->> when EPT is globally disabled, we seem to switch between
->> root_mmu/guest_mmu only when nested_cpu_has_ept(vmcs12) but different L2
->> guests may be different on this. Do we need to handle this somehow?
+> Em Fri, 20 Mar 2020 16:28:23 +0100
+> Thomas Gleixner <tglx@linutronix.de> escreveu:
 >
-> guest_mmu is used iff nested EPT is enabled, which requires enable_ept=1.
-> enable_ept is global and cannot be changed without reloading kvm_intel.
+>> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+>> 
+>> The subject prefix for this is: 'futex:'
 >
-> This most definitely over-invalidates, e.g. it blasts away L1's page
-> tables.  But, fixing that requires tracking VPID in mmu_role and/or adding
-> support for using guest_mmu when L1 isn't using TDP, i.e. nested EPT is
-> disabled.  Assuming the vast majority of nested deployments enable EPT in
-> L0, the cost of both options likely outweighs the benefits.
+> Ok!
 >
+>> >   * For shared mappings (when @fshared), the key is:
+>> > - *   ( inode->i_sequence, page->index, offset_within_page )
+>> > + * ( inode->i_sequence, page->index, offset_within_page )  
+>> 
+>> Sigh. Is there no better way to make this look sane both in the file and
+>> in the docs?
+>
+> The enclosed patch would do the trick.
+>
+>
+> [PATCH 04/17 v2] kernel: futex: get rid of a docs build warning
 
-Yes but my question rather was: what if global 'enable_ept' is true but
-nested EPT is not being used by L1, don't we still need to do
-kvm_mmu_free_roots(&vcpu->arch.root_mmu) here?
+The prefix is still wrong. See above.
 
--- 
-Vitaly
+git log --oneline $FILE usually gives you a pretty good hint.
 
+Thanks,
+
+        tglx
