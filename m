@@ -2,89 +2,80 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CDDC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0876C10F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B76D2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:02:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="VDtaFZaU"
+	by mail.kernel.org (Postfix) with ESMTP id BE2A02072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:04:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbgCWHC4 (ORCPT
+        id S1727400AbgCWHEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 03:02:56 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55221 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbgCWHCz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 03:02:55 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c81so2928892wmd.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 00:02:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=5jTrjO4QSy5fUBmSLfWHrfzpqSWpoJNJJJo1AqTJhfE=;
-        b=VDtaFZaUmPZr8jbxDzrfRDjnl5Dg2m1FlJrzku7TJJmh8Farbm29/l5MlqLy7GiEhW
-         86f3P+aU8L6NeTKE7s15nCKzF3cBavJZfXPVg0falO+Z61B6UwrjNLhCI7Vo1ifnWIOQ
-         lQ3wXJH5Y7x7gaLAAInH+p/RAPt+szD5urRJ4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5jTrjO4QSy5fUBmSLfWHrfzpqSWpoJNJJJo1AqTJhfE=;
-        b=rqf6lc+6BBVFRoOFznR/8tigp31MvTZ1UETFju1/oTMJCkSPA9ljs361LQKTmj/A/e
-         jMErgPhY+n0pFfiYDcnJrs995/hujFqqBoYQAlCuV0/kgzzjZ8MuY1jUKeiDRcnK9Hyh
-         rercwzGKEgW+jlGy0zFVczi1xSvP2e9v4gwo4f8GG7uKfft1m/JMCmsems+l1qFRF8U6
-         k6xu3u/SY54oPbIHX2jIELTFZwmbFWSf9nNYfIulaHiKCcjW7Ej5vJIAwHa7mOP8AhbU
-         zzLavm6ppfOE+eHlDvpNxpyvNwbDCZSuTwHDBe/4N5fxQsuwsDL3eH5teXrJX+lEgfGN
-         Njnw==
-X-Gm-Message-State: ANhLgQ1CK6BRJILGFHM5GY7mOb1qgSWb/MzbeRqPsMbDCfN80klbxRqj
-        3MTaTKTYjA1CcuDn0njqRhmnbQ==
-X-Google-Smtp-Source: ADFU+vt8wlEJzuyTBKieIQvIghcKvOFk9qC+BSzFe8laRmww4Kq84qj6x71Ht8C6r0LiJct+CW+zkA==
-X-Received: by 2002:a1c:80d3:: with SMTP id b202mr25954016wmd.16.1584946973457;
-        Mon, 23 Mar 2020 00:02:53 -0700 (PDT)
-Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id t2sm8198735wml.30.2020.03.23.00.02.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 00:02:52 -0700 (PDT)
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-To:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Subject: [PATCH v2 1/1] firmware: tee_bnxt: remove unused variable assignment
-Date:   Mon, 23 Mar 2020 12:32:42 +0530
-Message-Id: <20200323070242.16873-1-rayagonda.kokatanur@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 23 Mar 2020 03:04:10 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45822 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727164AbgCWHEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 03:04:10 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 49B5B59097D5E94A2342;
+        Mon, 23 Mar 2020 15:04:04 +0800 (CST)
+Received: from [127.0.0.1] (10.173.223.234) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Mon, 23 Mar 2020
+ 15:04:02 +0800
+Subject: Re: [PATCH v2] xfrm: policy: Fix doulbe free in xfrm_policy_timer
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+References: <20200318034839.57996-1-yuehaibing@huawei.com>
+ <20200323014155.56376-1-yuehaibing@huawei.com>
+ <20200323062914.GA5811@gondor.apana.org.au>
+CC:     <steffen.klassert@secunet.com>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <timo.teras@iki.fi>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <52f2d9b2-e66a-f2aa-52fb-d0a3ca748a73@huawei.com>
+Date:   Mon, 23 Mar 2020 15:04:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <20200323062914.GA5811@gondor.apana.org.au>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unused variable assignment.
+On 2020/3/23 14:29, Herbert Xu wrote:
+> On Mon, Mar 23, 2020 at 09:41:55AM +0800, YueHaibing wrote:
+>>
+>> diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+>> index dbda08ec566e..ae0689174bbf 100644
+>> --- a/net/xfrm/xfrm_policy.c
+>> +++ b/net/xfrm/xfrm_policy.c
+>> @@ -434,6 +434,7 @@ EXPORT_SYMBOL(xfrm_policy_destroy);
+>>  
+>>  static void xfrm_policy_kill(struct xfrm_policy *policy)
+>>  {
+>> +	write_lock_bh(&policy->lock);
+>>  	policy->walk.dead = 1;
+>>  
+>>  	atomic_inc(&policy->genid);
+>> @@ -445,6 +446,7 @@ static void xfrm_policy_kill(struct xfrm_policy *policy)
+>>  	if (del_timer(&policy->timer))
+>>  		xfrm_pol_put(policy);
+>>  
+>> +	write_unlock_bh(&policy->lock);
+> 
+> Why did you expand the critical section? Can't you just undo the
+> patch in xfrm_policy_kill?
 
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
----
- drivers/firmware/broadcom/tee_bnxt_fw.c | 2 --
- 1 file changed, 2 deletions(-)
+Indeed, the critical section should not be expanded, thanks!
 
-diff --git a/drivers/firmware/broadcom/tee_bnxt_fw.c b/drivers/firmware/broadcom/tee_bnxt_fw.c
-index ed10da5313e8..6fd62657e35f 100644
---- a/drivers/firmware/broadcom/tee_bnxt_fw.c
-+++ b/drivers/firmware/broadcom/tee_bnxt_fw.c
-@@ -143,8 +143,6 @@ int tee_bnxt_copy_coredump(void *buf, u32 offset, u32 size)
- 	prepare_args(TA_CMD_BNXT_COPY_COREDUMP, &arg, param);
- 
- 	while (rbytes)  {
--		nbytes = rbytes;
--
- 		nbytes = min_t(u32, rbytes, param[0].u.memref.size);
- 
- 		/* Fill additional invoke cmd params */
--- 
-2.17.1
+> 
+> Cheers,
+> 
 
