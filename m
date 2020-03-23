@@ -2,102 +2,170 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A81C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11888C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A512080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCF8820735
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:03:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q0zycYaR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbgCWPCR (ORCPT
+        id S1727212AbgCWPDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:02:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:50762 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbgCWPCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:02:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35DAA1FB;
-        Mon, 23 Mar 2020 08:02:16 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 460B13F7C3;
-        Mon, 23 Mar 2020 08:02:12 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 15:02:09 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        nd@arm.com
-Subject: Re: [PATCH v10 00/13] arm64: Branch Target Identification support
-Message-ID: <20200323150209.GC3959@C02TD0UTHF1T.local>
-References: <20200316165055.31179-1-broonie@kernel.org>
- <20200320173945.GC27072@arm.com>
- <20200323122143.GB4892@mbp>
- <20200323132412.GD4948@sirena.org.uk>
- <20200323135722.GA3959@C02TD0UTHF1T.local>
- <20200323143954.GC4892@mbp>
+        Mon, 23 Mar 2020 11:03:11 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:45911 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727138AbgCWPDL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:03:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584975789;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=C04vHTmtlsvJpQjudnPl4U8KUo7RqEolEs590PlIhK8=;
+        b=Q0zycYaRaJKnXqjULcX09Hg1ZUqgkHQMy2xrahBZDWHRSwHMyw/y2tjIx0Bvz9vqyx99WT
+        2gJ97BbDuIjDlsgRKMHWKC7lUM7aUM3+qD0GPrWsBMXDBSzRAaQ35ej5JSAjUm9Nr+t0Op
+        PzUw//XIQPXjb8Lp1DRqjLmS4AddhAw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-UK1BPhOWOhe2y3PD85mHHg-1; Mon, 23 Mar 2020 11:03:05 -0400
+X-MC-Unique: UK1BPhOWOhe2y3PD85mHHg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2EDB3100550D;
+        Mon, 23 Mar 2020 15:03:04 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.33.36.220])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 50D7F5C1B2;
+        Mon, 23 Mar 2020 15:03:02 +0000 (UTC)
+Date:   Mon, 23 Mar 2020 11:02:59 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, shuah@kernel.org
+Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
+ false-negative errors
+Message-ID: <20200323150259.GD23364@optiplex-lnx>
+References: <20200322013525.1095493-1-aquini@redhat.com>
+ <20200321184352.826d3dba38aecc4ff7b32e72@linux-foundation.org>
+ <20200322020326.GB1068248@t490s>
+ <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
+ <CALvZod7LiMiK1JtfdvvU3W36cGSUKhhKf6dMZpsNZv6nMiJ5=g@mail.gmail.com>
+ <20200323075208.GC7524@dhcp22.suse.cz>
+ <20200323144240.GB23364@optiplex-lnx>
+ <20200323145106.GM7524@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200323143954.GC4892@mbp>
+In-Reply-To: <20200323145106.GM7524@dhcp22.suse.cz>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 02:39:55PM +0000, Catalin Marinas wrote:
-> On Mon, Mar 23, 2020 at 01:57:22PM +0000, Mark Rutland wrote:
-> > On Mon, Mar 23, 2020 at 01:24:12PM +0000, Mark Brown wrote:
-> > > On Mon, Mar 23, 2020 at 12:21:44PM +0000, Catalin Marinas wrote:
-> > > > On Fri, Mar 20, 2020 at 05:39:46PM +0000, Szabolcs Nagy wrote:
+On Mon, Mar 23, 2020 at 03:51:06PM +0100, Michal Hocko wrote:
+> On Mon 23-03-20 10:42:40, Rafael Aquini wrote:
+> > On Mon, Mar 23, 2020 at 08:52:08AM +0100, Michal Hocko wrote:
+> > > On Sun 22-03-20 09:36:49, Shakeel Butt wrote:
+> > > > On Sat, Mar 21, 2020 at 9:31 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > > > >
+> > > > > On Sat, 21 Mar 2020 22:03:26 -0400 Rafael Aquini <aquini@redhat.com> wrote:
+> > > > >
+> > > > > > > > + * In order to sort out that race, and get the after fault checks consistent,
+> > > > > > > > + * the "quick and dirty" trick below is required in order to force a call to
+> > > > > > > > + * lru_add_drain_all() to get the recently MLOCK_ONFAULT pages moved to
+> > > > > > > > + * the unevictable LRU, as expected by the checks in this selftest.
+> > > > > > > > + */
+> > > > > > > > +static void force_lru_add_drain_all(void)
+> > > > > > > > +{
+> > > > > > > > + sched_yield();
+> > > > > > > > + system("echo 1 > /proc/sys/vm/compact_memory");
+> > > > > > > > +}
+> > > > > > >
+> > > > > > > What is the sched_yield() for?
+> > > > > > >
+> > > > > >
+> > > > > > Mostly it's there to provide a sleeping gap after the fault, whithout
+> > > > > > actually adding an arbitrary value with usleep().
+> > > > > >
+> > > > > > It's not a hard requirement, but, in some of the tests I performed
+> > > > > > (whithout that sleeping gap) I would still see around 1% chance
+> > > > > > of hitting the false-negative. After adding it I could not hit
+> > > > > > the issue anymore.
+> > > > >
+> > > > > It's concerning that such deep machinery as pagevec draining is visible
+> > > > > to userspace.
+> > > > >
+> > > > 
+> > > > We already have other examples like memcg stats where the
+> > > > optimizations like batching per-cpu stats collection exposes
+> > > > differences to the userspace. I would not be that worried here.
 > > > 
-> > > > +int arch_elf_adjust_prot(int prot, const struct arch_elf_state *state,
-> > > > +                        bool has_interp, bool is_interp)
-> > > > +{
-> > > > +       if (is_interp != has_interp)
-> > > > +               return prot;
-> > > > +
-> > > > +       if (!(state->flags & ARM64_ELF_BTI))
-> > > > +               return prot;
-> > > > +
-> > > > +       if (prot & PROT_EXEC)
-> > > > +               prot |= PROT_BTI;
-> > > > +
-> > > > +       return prot;
-> > > > +}
-
-> > I think it would be best to document the current behaviour, as it's a
-> > simple ABI that we can guarantee, and the dynamic linker will have to be
-> > aware of BTI in order to do the right thing anyhow.
+> > > Agreed! Tests should be more tolerant for counters imprecision.
+> > > Unevictable LRU is an optimization and transition to that list is a
+> > > matter of an internal implementation detail.
+> > >
+> > > > > I suppose that for consistency and correctness we should perform a
+> > > > > drain prior to each read from /proc/*/pagemap.  Presumably this would
+> > > > > be far too expensive.
+> > > > >
+> > > > > Is there any other way?  One such might be to make the MLOCK_ONFAULT
+> > > > > pages bypass the lru_add_pvecs?
+> > > > >
+> > > > 
+> > > > I would rather prefer to have something similar to
+> > > > /proc/sys/vm/stat_refresh which drains the pagevecs.
+> > > 
+> > > No, please don't. Pagevecs draining is by far not the only batching
+> > > scheme we use and an interface like this would promise users to
+> > > effectivelly force flushing all of them.
+> > > 
+> > > Can we simply update the test to be more tolerant to imprecisions
+> > > instead?
+> > > 
+> > 
+> > I don't think, thouhg, that this particular test case can be entirely
+> > reduced as "counter imprecison".
+> > 
+> > The reason I think this is a different beast, is that having the page
+> > being flagged as PG_unevictable is expected part of the aftermath of
+> > a mlock* call. This selftest is, IMO, correctly verifying that fact,
+> > as it checks the functionality correctness.
+> > 
+> > The problem boils down to the fact that the page would immediately
+> > be flagged as PG_unevictable after the mlock (under MCL_FUTURE|MCL_ONFAULT
+> > semantics) call, and the test was expecting it, and commit 9c4e6b1a7027f
+> > changed that by "delaying" that flag setting.
 > 
-> That's a valid point. If we have an old dynamic linker and the kernel
-> enabled BTI automatically for the main executable, could things go wrong
-> (e.g. does the PLT need to be BTI-aware)?
+> As I've tried to explain in other email in this email thread. The test
+> was exploiting a certain user visible side effect. The unevictable flag
+> or the placement on the unevictable LRU list is are not really needed
+> for the user contract correctness. That means that the test is not
+> really correct. Working around that by trying to enforce kernel to
+> comply with the test expectations is just plain wrong at least for two
+> reasons 1) you cannot expect or event do not want userspace to do the
+> same because the behavior might change in the future 2) the test is not
+> really testing for correctness in the first place.
+>
 
-Also worth noting that an old dynamic linker won't have ARM64_ELF_BTI
-set, so the kernel will not enable BTI for this.
+Sorry, Michal, it seems we keep going back and forth (I just replied to
+your comment on the other thread)
 
-Mark.
+The selftest also checks the kernel visible effect, via
+/proc/kpageflags, and that's where it fails after 9c4e6b1a7027f.
+
+As I mentioned before, I think it is a reasonable check, given this
+is a kernel selftest, although we need to compensate it for the
+differences between its expectations and what the kernel is doing
+currently.
+
+-- Rafael
+
