@@ -4,188 +4,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75547C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9671C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 432A420714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4672070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584992992;
-	bh=75fCAdyH4YV81OwXKG2GRQR18TAvhiNCXmFJeaAdyck=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=u19uMhTXMJJF98okKlPU8p7499Y0axi9+SBIkBM7OfUGS7znFzskRTqHnQCp0mTu5
-	 12Yzg9sBmg2RjdmZ7VOXSeZglyIXEvGNVy20oAo8i1Pat33+JCnL0S5L97trLPW3rx
-	 3K8KrXUYb1l7uyB67iLnhcQv7EkCUlADxwSNczds=
+	s=default; t=1584993005;
+	bh=DBUGYNMli+b+uV3NamoWPc9K2HPz/ws+6gKUkNUTaS8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Pk8oZ3dVDovGjbH4b+wGZ7fJgH8LvprQ/YFfxcvWprpE4jL+b7BT0YgvWAsUyiUhm
+	 YL6RhyoY0SAQA09WWuH52ZDoUXktyEovirNB1RbWuhLD3kIqdAa3eZaVTPJx+VvOVV
+	 V5CnblIKDVFdGWFGYIKtofvRtkVNBYPMZSF+nosE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgCWTtv (ORCPT
+        id S1727028AbgCWTuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:49:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbgCWTtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:49:51 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD84C2070A;
-        Mon, 23 Mar 2020 19:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584992989;
-        bh=75fCAdyH4YV81OwXKG2GRQR18TAvhiNCXmFJeaAdyck=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=y5vo+6AF3TQK2YW/tZA0Jy8AbEKmvv1Y6a4gi+YZPNOKWLQaJnYCs22QY5MeFL+Tq
-         ob/MhXhtp/8mzVoBIOuORDQL0p9rf4ph2aXEvxZygJS63Rv1lL7LtA4jfE+nD3pfz8
-         sCBHKEfhQ71SriTplZAe4wRFHMKpKehZlwZ5yUaQ=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jGT51-00F3cy-U1; Mon, 23 Mar 2020 19:49:48 +0000
-Date:   Mon, 23 Mar 2020 19:49:46 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Marek Vasut <marex@denx.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Mon, 23 Mar 2020 15:50:05 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35541 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbgCWTuE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 15:50:04 -0400
+Received: by mail-il1-f194.google.com with SMTP id 7so1128350ill.2;
+        Mon, 23 Mar 2020 12:50:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=OjC6r2usuImBDLu/35CLd+c7UkFmIFG+06FkAS9qKVg=;
+        b=Zolz3XoqNSScFkogN6i1/SNo1bDXQUnOU67VOoSZpj1teQcbeKyrMVneeHOiEBOApH
+         0MqPucuWEpw1ncRJjqyAE3WGFtLI2n/pGkuzSzLV9X/TJ8+aXI90UPSwWmf9uBxk6x6F
+         ddJmNbJ4AXwvT8OuKpmboVrsKa45qKEmZTSXYhvULrRnCNXGMnG9eBpvSjDO+ZDu1dWZ
+         /xMz2Xf7VX1SuwRAouBGf+xrplcJYPL8aC1fb6Nwa0+GQlVTKwiSBta+H1drfV9cqh/7
+         DmT9HeW9DUTLkBsS/lquf0hsoK9Lt46QPzzX+7TBs8qLHCZhk5XLe+KzK7jhYwxj1NUc
+         4qSg==
+X-Gm-Message-State: ANhLgQ1NPxw+DrpjMI/bylzPYg7KrA5BQbK+PFQsCg/8G9vd4nAU4cC0
+        JWvv12CHP6/as9u1IQOk4Q==
+X-Google-Smtp-Source: ADFU+vu/MHCQinxeMPLh3FyJXqUbP8NrFB6mE2fqpJvLKhVTVJRcYgL95OftLKo2ne7u4RCE9iSYrw==
+X-Received: by 2002:a92:7b10:: with SMTP id w16mr22320500ilc.93.1584993003863;
+        Mon, 23 Mar 2020 12:50:03 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id v24sm1199217iob.0.2020.03.23.12.50.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 12:50:03 -0700 (PDT)
+Received: (nullmailer pid 29486 invoked by uid 1000);
+        Mon, 23 Mar 2020 19:50:02 -0000
+Date:   Mon, 23 Mar 2020 13:50:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Wells Lu =?utf-8?B?5ZGC6Iqz6aiw?= <wells.lu@sunplus.com>,
+        Dvorkin Dmitry <dvorkin@tibbo.com>,
         linux-kernel@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] pinctrl: stm32: Add level interrupt support to
- gpio irq chip
-Message-ID: <20200323194946.26bdd003@why>
-In-Reply-To: <8e2795d8-4a8b-35a7-7d3f-e24d011878f6@denx.de>
-References: <20200219143229.18084-1-alexandre.torgue@st.com>
-        <20200219143229.18084-3-alexandre.torgue@st.com>
-        <CACRpkdZ7uq4U6GBQQQh=pTLf4wW3KfH3Zrz9z_3ZQgoaJD9Ynw@mail.gmail.com>
-        <c991edca3e8925cf0489c0a5676f77b2@kernel.org>
-        <a7fc5e43-34c2-a4e6-e0c5-1584f17fb024@denx.de>
-        <8d6f6646-56e4-5218-9990-f0c96862dc83@denx.de>
-        <20200323193157.038f36f9@why>
-        <8e2795d8-4a8b-35a7-7d3f-e24d011878f6@denx.de>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC 05/11] dt-bindings: serial: Add Sunplus SP7021 UART
+Message-ID: <20200323195002.GA27190@bogus>
+References: <20200308163230.4002-1-afaerber@suse.de>
+ <20200308163230.4002-6-afaerber@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: marex@denx.de, linus.walleij@linaro.org, alexandre.torgue@st.com, tglx@linutronix.de, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200308163230.4002-6-afaerber@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Mar 2020 20:37:54 +0100
-Marek Vasut <marex@denx.de> wrote:
-
-> On 3/23/20 8:31 PM, Marc Zyngier wrote:
-> > On Mon, 23 Mar 2020 20:19:39 +0100
-> > Marek Vasut <marex@denx.de> wrote:
-> > 
-> >> On 3/23/20 8:04 PM, Marek Vasut wrote:
-> >>> On 2/20/20 10:17 AM, Marc Zyngier wrote:
-> >>>> On 2020-02-20 09:04, Linus Walleij wrote:
-> >>>>> On Wed, Feb 19, 2020 at 3:32 PM Alexandre Torgue
-> >>>>> <alexandre.torgue@st.com> wrote:
-> >>>>>
-> >>>>>> GPIO hardware block is directly linked to EXTI block but EXTI handles
-> >>>>>> external interrupts only on edge. To be able to handle GPIO interrupt on
-> >>>>>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
-> >>>>>> chip)
-> >>>>>> is retriggered following interrupt type and gpio line value.
-> >>>>>>
-> >>>>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> >>>>>> Tested-by: Marek Vasut <marex@denx.de>
-> >>>>>
-> >>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >>>>>
-> >>>>> If Marc want to merge it with patch 1/2 go ahead!
-> >>>>
-> >>>> I'll queue the whole thing for 5.7.
-> >>>
-> >>> I have a feeling this doesn't work with threaded interrupts.
-> >>>
-> >>> If the interrupt handler runs in a thread context, the EOI will happen
-> >>> almost right away (while the IRQ handler runs) and so will the code
-> >>> handling the IRQ retriggering. But since the IRQ handler still runs and
-> >>> didn't return yet, the retriggering doesn't cause the IRQ handler to be
-> >>> called again once it finishes, even if the IRQ line is still asserted.
-> >>> And that could result in some of the retriggers now happening I think.
-> >>> Or am I doing something wrong ?
-> >>
-> >> The patch below makes my usecase work, but I don't know whether it's
-> >> correct. Basically once the threaded IRQ handler finishes and unmasks
-> >> the IRQ, check whether the line is asserted and retrigger if so.
-> >>
-> >> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c
-> >> b/drivers/pinctrl/stm32/pinctrl-stm32.c
-> >> index 9ac9ecfc2f34..060dbcb7ae72 100644
-> >> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-> >> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-> >> @@ -371,12 +371,26 @@ static void
-> >> stm32_gpio_irq_release_resources(struct irq_data *irq_data)
-> >>         gpiochip_unlock_as_irq(&bank->gpio_chip, irq_data->hwirq);
-> >>  }
-> >>
-> >> +static void stm32_gpio_irq_unmask(struct irq_data *d)
-> >> +{
-> >> +       struct stm32_gpio_bank *bank = d->domain->host_data;
-> >> +       int level;
-> >> +
-> >> +       irq_chip_unmask_parent(d);
-> >> +
-> >> +       /* If level interrupt type then retrig */
-> >> +       level = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
-> >> +       if ((level == 0 && bank->irq_type[d->hwirq] ==
-> >> IRQ_TYPE_LEVEL_LOW) ||
-> >> +           (level == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
-> >> +               irq_chip_retrigger_hierarchy(d);
-> >> +}
-> >> +
-> >>  static struct irq_chip stm32_gpio_irq_chip = {
-> >>         .name           = "stm32gpio",
-> >>         .irq_eoi        = stm32_gpio_irq_eoi,
-> >>         .irq_ack        = irq_chip_ack_parent,
-> >>         .irq_mask       = irq_chip_mask_parent,
-> >> -       .irq_unmask     = irq_chip_unmask_parent,
-> >> +       .irq_unmask     = stm32_gpio_irq_unmask,
-> >>         .irq_set_type   = stm32_gpio_set_type,
-> >>         .irq_set_wake   = irq_chip_set_wake_parent,
-> >>         .irq_request_resources = stm32_gpio_irq_request_resources,
-> >>
-> > 
-> > OK, I see your problem now.
-> > 
-> > The usual flow is along the line of Ack+Eoi, and that's what the
-> > current code guarantees.
-> > 
-> > Threaded interrupts do Ack+Mask+Eoi, followed by an Unmask once the
-> > thread finishes. This unmask needs to do the retrigger as well, as you
-> > found out.
-> > 
-> > Can you please refactor the above so that we have the common code
-> > between unmask and eoi in a separate function, send a proper patch, and
-> > I'll apply it on top of the current irq/irqchip-5.7 branch.
+On Sun, Mar 08, 2020 at 05:32:23PM +0100, Andreas Färber wrote:
+> The Sunplus Plus1 (aka Pentagram) SP7021 SoC has five UARTs.
 > 
-> Sure, I can. Do we still need this retriggering in the irq_eoi too ?
+> Cc: Wells Lu 呂芳騰 <wells.lu@sunplus.com>
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> ---
+>  .../bindings/serial/sunplus,pentagram-uart.yaml    | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/sunplus,pentagram-uart.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/sunplus,pentagram-uart.yaml b/Documentation/devicetree/bindings/serial/sunplus,pentagram-uart.yaml
+> new file mode 100644
+> index 000000000000..9d1641232a4c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/sunplus,pentagram-uart.yaml
+> @@ -0,0 +1,24 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/serial/sunplus,pentagram-uart.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sunplus Pentagram SoC UART Serial Interface
+> +
+> +maintainers:
+> +  - Andreas Färber <afaerber@suse.de>
+> +
 
-Absolutely, because that's what matters for the non-threaded case
-(there is no mask/unmask on that path). It is also never wrong to
-over-resample (it just slows things down).
+Soon this will need to reference serial.yaml which is getting added to 
+5.7.
 
-> Also, are there any other hidden details I might've missed ?
-
-Probably. But let's fix one bug at a time, shall we? ;-) And let's hope
-that ST doesn't take this as a excuse not to clean up their act in
-their next SoC!
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> +properties:
+> +  compatible:
+> +    const: sunplus,sp7021-uart
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +...
+> -- 
+> 2.16.4
+> 
