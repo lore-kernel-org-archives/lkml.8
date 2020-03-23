@@ -2,103 +2,88 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6D3C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0860C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC49B20637
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C120920663
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:17:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Y96ROCqd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgCWULm (ORCPT
+        id S1726958AbgCWURV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 16:11:42 -0400
-Received: from smtprelay0085.hostedemail.com ([216.40.44.85]:44634 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725830AbgCWULm (ORCPT
+        Mon, 23 Mar 2020 16:17:21 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:49545 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725912AbgCWURV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 16:11:42 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id B46D3837F24D;
-        Mon, 23 Mar 2020 20:11:40 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: blood13_2b83efc501e40
-X-Filterd-Recvd-Size: 3004
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 23 Mar 2020 20:11:38 +0000 (UTC)
-Message-ID: <03547be94c4944ca672c7aef2dd38b0fb1eedc84.camel@perches.com>
-Subject: Re: [PATCH v1 1/2] Bluetooth: btusb: Indicate Microsoft vendor
- extension for Intel 9460/9560 and 9160/9260
-From:   Joe Perches <joe@perches.com>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Miao-chen Chou <mcchou@chromium.org>,
-        Bluetooth Kernel Mailing List 
-        <linux-bluetooth@vger.kernel.org>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Alain Michaud <alainm@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Date:   Mon, 23 Mar 2020 13:09:50 -0700
-In-Reply-To: <57C56801-7F3B-478A-83E9-1D2376C60666@holtmann.org>
-References: <20200323072824.254495-1-mcchou@chromium.org>
-         <20200323002820.v1.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
-         <04021BE3-63F7-4B19-9F0E-145785594E8C@holtmann.org>
-         <421d27670f2736c88e8c0693e3ff7c0dcfceb40b.camel@perches.com>
-         <57C56801-7F3B-478A-83E9-1D2376C60666@holtmann.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 23 Mar 2020 16:17:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584994641; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=KGnUNmRcDy5qyeJCZ/YUzraPHQiNfDF4nWlSCpjoNJI=; b=Y96ROCqdiQJHOozoK8PcvxkyrMPryVDoyq7x+5gwEIRFbnwUXrTeqr0Qv+eFvwd+RR8nLxCV
+ Fy62JJvSbM4Wb4X6XYm/CX8rd3EEYPljwMM6ql6G+Vb+cnXnmRMyt+2Fng+4M/a9KGbiuWPW
+ 6MaBdzp0ZNalHMaALJ8XPuxOr8c=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e791950.7f4acc119420-smtp-out-n04;
+ Mon, 23 Mar 2020 20:17:20 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 18789C43636; Mon, 23 Mar 2020 20:17:19 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 31EC1C433D2;
+        Mon, 23 Mar 2020 20:17:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 31EC1C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH v2 0/4] Add SS/HS-USB changes for Qualcomm SM8150 chipset
+Date:   Mon, 23 Mar 2020 13:17:08 -0700
+Message-Id: <1584994632-31193-1-git-send-email-wcheng@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-23 at 19:48 +0100, Marcel Holtmann wrote:
-> Hi Joe,
+This series adds support for the Synopsis 7nm HSPHY USB driver being
+used in QCOM chipsets.  The HSPHY register map differs compared to 
+other PHY revisions.  In addition, modifications and updates are done
+to the QMP driver to add new registers/offsets, and to update the
+initialization sequence for enabling the SSUSB path on SM8150.
 
-Hello Marcel.
+Changes in v2:
+ - Fixed YAML errors caught by dt_binding_check
 
-> > > > This adds a bit mask of driver_info for Microsoft vendor extension and
-> > > > indicates the support for Intel 9460/9560 and 9160/9260. See
-> > > > https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
-> > > > microsoft-defined-bluetooth-hci-commands-and-events for more information
-> > > > about the extension. This was verified with Intel ThunderPeak BT controller
-> > > > where msft_vnd_ext_opcode is 0xFC1E.
-> > []
-> > > > diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-> > []
-> > > > @@ -315,6 +315,10 @@ struct hci_dev {
-> > > > 	__u8		ssp_debug_mode;
-> > > > 	__u8		hw_error_code;
-> > > > 	__u32		clock;
-> > > > +	__u16		msft_vnd_ext_opcode;
-> > > > +	__u64		msft_vnd_ext_features;
-> > > > +	__u8		msft_vnd_ext_evt_prefix_len;
-> > > > +	void		*msft_vnd_ext_evt_prefix;
-> > 
-> > msft is just another vendor.
-> > 
-> > If there are to be vendor extensions, this should
-> > likely use a blank line above and below and not
-> > be prefixed with msft_
-> 
-> there are other vendors, but all of them are different. So this needs to be prefixed with msft_ actually. But I agree that having empty lines above and below makes it more readable.
+Jack Pham (1):
+  phy: qcom-qmp: Add SM8150 QMP USB3 PHY support
 
-So struct hci_dev should become a clutter
-of random vendor extensions?
+Wesley Cheng (3):
+  dt-bindings: phy: Add binding for qcom,usb-hs-7nm
+  phy: qcom-snps: Add SNPS USB PHY driver for QCOM based SOCs
+  phy: qcom-qmp: Use proper PWRDOWN offset for sm8150 USB
 
-Perhaps there should instead be something like
-an array of char at the end of the struct and
-various vendor specific extensions could be
-overlaid on that array or just add a void *
-to whatever info that vendors require.
+ .../devicetree/bindings/phy/qcom,usb-hs-7nm.yaml   |  76 ++++++
+ drivers/phy/qualcomm/Kconfig                       |  10 +
+ drivers/phy/qualcomm/Makefile                      |   1 +
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 157 +++++++++++
+ drivers/phy/qualcomm/phy-qcom-qmp.h                | 198 +++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-snps-7nm.c           | 294 +++++++++++++++++++++
+ 6 files changed, 734 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-7nm.c
 
-
-
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
