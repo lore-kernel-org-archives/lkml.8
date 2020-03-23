@@ -2,97 +2,69 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1ABC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C38C4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2FD020774
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F8E20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:38:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="TAfG0nmN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbgCWShC (ORCPT
+        id S1727479AbgCWSiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:37:02 -0400
-Received: from mga09.intel.com ([134.134.136.24]:31066 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbgCWShB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:37:01 -0400
-IronPort-SDR: YOkxqaso6Z7uPrm7mC6ZXusdJl53vhgH/gxmpk1KbItWK/qT0YLgSBdgeK+0iDSql1fefjyTR4
- r/QgSnwNSIJg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 11:37:01 -0700
-IronPort-SDR: tn0NhD+lQU0//7+OWZF8rpqEyWHco1D+xNqV3wisea2CpAF7U/EzfOgg4BIY8Y53j3XrvIKEJR
- Fy+53NbiH7SQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="235304109"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 23 Mar 2020 11:36:57 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jGRwZ-00CJV4-2O; Mon, 23 Mar 2020 20:36:59 +0200
-Date:   Mon, 23 Mar 2020 20:36:59 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/6] gpio: dwapb: Use optional-clocks interface for
- APB ref-clock
-Message-ID: <20200323183659.GU1922688@smile.fi.intel.com>
-References: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
- <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
- <20200323180632.14119-5-Sergey.Semin@baikalelectronics.ru>
+        Mon, 23 Mar 2020 14:38:15 -0400
+Received: from mail-40135.protonmail.ch ([185.70.40.135]:41676 "EHLO
+        mail-40135.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgCWSiP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 14:38:15 -0400
+Date:   Mon, 23 Mar 2020 18:38:09 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1584988693;
+        bh=O6Tw8TJRg++9j2ri6Gc7hapvnjdFIrbgbPvtwym41A8=;
+        h=Date:To:From:Reply-To:Subject:From;
+        b=TAfG0nmNls6qM+q7z3SqLiA8TIcURu2f6ZnKT/l/OSCM0eacsxhN9sq0kTNWfGehd
+         GFPhmBl5xnVWri2KlvI4ASqcVbckTasCl8i74Ubnddimtx7YylS1IQOxQEkNQBUB16
+         sZ6HZkgFH4kWXF2+nayaxFF8xOZuZQ0ezMO3gBMI=
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
+Reply-To: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
+Subject: Re: fair pay sys, an additional inclusion and update. + nasa
+Message-ID: <sEWcwu5dwTWZFBke_umZPK665xFwVlGKupL8N6aL9AGaKyARWeGH0UMcSMoACzPxSAzR4Jm_DSDfNSO5nCF_-6NsEoedPpczALiATS2IXpg=@protonmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323180632.14119-5-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 09:06:30PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> The common clocks kernel framework provides a generic way to use
-> an optional reference clock sources. If it's utilized there is no
-> need in checking whether the clock descriptor pointer is actually a
-> negative error at the moment of the prepare/unprepare clocks method
-> calling. So if the corresponding clock source is provided, then
-> getting an error shall actually terminate the device probe procedure.
-> If it isn't specified then the driver shall proceed with further
-> initializations.
-> 
-> We'll use the optional clocks getting method to handle the APB reference
-> clock, which can be provided for instance in the device of-node with
-> "bus" clock-name.
+I also watched some imagery from the Mars Rover.
 
-> -	if (!IS_ERR(gpio->clk))
-> -		clk_prepare_enable(gpio->clk);
-> +	clk_prepare_enable(gpio->clk);
+Which made me think, we can support this type of research.
 
-Perhaps it makes sense now to consider error code returned by above.
-Maybe it's material for a separate patch (up to you).
+So it is now named I/T LX,
 
-The rest looks good.
+- =C3=93ne Dewa without company, as root philosophy.
+- meaning global optimization of economy
+- against Al-Qaida (seems to be a (deliberate misspelling of Al-Quda, The G=
+hod).
+ - Supporting Canadian Lobotomy as an outdated procedure.
+ - Supporting places still with communism as an outdated rule.
+ - Supporting Technocracy (groups to leader type democracy).
+ - And Nasa/Mars type research.
 
--- 
-With Best Regards,
-Andy Shevchenko
+This is a paradigm coherent with a software/hardware interface system, with=
+ no sympathy with "bugs".
 
+Serene Greetings,
+Ywe C=C3=A6rlyn
+Initiative-Taker, Research,
+I/T LX.
+https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
 
