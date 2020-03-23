@@ -2,200 +2,159 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8A3C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBB8C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97AF20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C88C20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:06:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="oTCO06RS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s1e2fAiR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbgCWPFM (ORCPT
+        id S1727249AbgCWPGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:05:12 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:48822 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726955AbgCWPFM (ORCPT
+        Mon, 23 Mar 2020 11:06:10 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32889 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbgCWPGJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:05:12 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id AD78B2E0AF3;
-        Mon, 23 Mar 2020 18:05:09 +0300 (MSK)
-Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
-        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id s3ED7ZnPtH-59NOwMP0;
-        Mon, 23 Mar 2020 18:05:09 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1584975909; bh=kmq7mjIkuy0JgwDaEhLMvbyTFfm1yg70KiCTf+qdFP8=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=oTCO06RSPtRgx7ylET1DtUPO1RAEf4fh4WjjM5oWDcxf0DC+jZZ6kALONI8nunTap
-         HkJoqCSEnuaPLiDV9KGm+kgr7XZzDTE3Y8ZjpuMl2KSdmnQRfzrnJFKIpGAS5WezsM
-         Po2t9yH0VUlDlgMJciTkXSIazNQ2jFv5/opU1V+I=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:6803::1:2])
-        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id FQS5zzaSBX-58aO1vlM;
-        Mon, 23 Mar 2020 18:05:08 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH v2] fs/namespace: handle mount(MS_BIND|MS_REMOUNT) without
- locking sb->s_umount
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     David Howells <dhowells@redhat.com>,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
-        Matthew Wilcox <willy@infradead.org>
-Date:   Mon, 23 Mar 2020 18:05:08 +0300
-Message-ID: <158497590858.7371.9311902565121473436.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Mon, 23 Mar 2020 11:06:09 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d17so6759632pgo.0;
+        Mon, 23 Mar 2020 08:06:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ajceQ+V3zw66qFn+FAQDxPZYKnMzPixlGv65sCGTpO0=;
+        b=s1e2fAiR6oBx32wFcEhUi82X7PDRtxZ3jpg+LyNIyR2i98Fp7kBZKqN/hj7dQVp8DM
+         mfw4vf4CjC3yFh41Mh8J1j8ieRtm3AH6C13FWFQuJ6RZ3unnivu2+P15nGphRWoDCmsi
+         MOMeAC71Kv9E6F7hEOeWXPNIx+5owixsqrUBHiWk0nyYbSByhxf21Q2rdRNQuf1bTTNF
+         h7Qi7POYmW8nmA7o1/GzpJr7ingg6uYRqJsb3//j4SfN/ldweu19ClcghCtNWQ9aLR5l
+         6MnUwiGpR9W0PEjjPayOMM7c0Rwlgj+Zy1PLNwqPtHn6XaK/2JQq9uFbo2atya5qJP/P
+         r+GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ajceQ+V3zw66qFn+FAQDxPZYKnMzPixlGv65sCGTpO0=;
+        b=gER7hEsMQzF3J/l3vOJT4ZQ9zcU8nNqWZ7hEZIa+M2cfTo3hk8yf4rb7hvUhdXWerW
+         SwZPfz+TFHVpLlYttI0kfha/f7OET+jHF2sshqaI4VMOUwo13M0IhSAp/pyBpqbwVwel
+         7eKElmae2jb/VY5ZEBKTlGC3QLk240s3fWHFLyMt+FsdnUngPA1f2tbrhybp82F1fz27
+         m58HRomq86uX5i5vREDiZRx3N0LeS80yP3LE87AVv/bMn8nv0nd6rV14Olt7UulgrmO6
+         DMEjfGg2kZeNmE9e0OM0qvJBhxpDXodnG2FbbNWS2wLLUKiwiFENXGZ4CrNN4LZygm+9
+         Gn+Q==
+X-Gm-Message-State: ANhLgQ06MeK3NeFGOkzL6+fioxsuTCkaXNE+dsSWZQoEwYq3NWDcNjI5
+        y3fjCbjjIihvr5DCYOocea8=
+X-Google-Smtp-Source: ADFU+vvrocWci1SAHOFEVPIhwHInDnYdCfu5g8Z/k3fgBIJ6LIJY6sxkGmyKM9N23Q8dim4CLrjRzQ==
+X-Received: by 2002:aa7:953b:: with SMTP id c27mr25124221pfp.201.1584975968013;
+        Mon, 23 Mar 2020 08:06:08 -0700 (PDT)
+Received: from localhost (176.122.158.203.16clouds.com. [176.122.158.203])
+        by smtp.gmail.com with ESMTPSA id d26sm56811pfo.37.2020.03.23.08.06.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Mar 2020 08:06:07 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, davem@davemloft.net, corbet@lwn.net,
+        tglx@linutronix.de, gregkh@linuxfoundation.org,
+        allison@lohutok.net, mchehab+samsung@kernel.org,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH net-next v7 00/10] introduce read_poll_timeout
+Date:   Mon, 23 Mar 2020 23:05:50 +0800
+Message-Id: <20200323150600.21382-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Writeback grabs sb->s_umount for read during I/O. This blocks bind-remount
-for a long time. Bind-remount actually does not need sb->s_umount locked
-for read or write because it does not alter superblock, only mnt_flags.
-All mnt_flags are serialized by global mount_lock.
+This patch sets is introduce read_poll_timeout macro, it is an extension
+of readx_poll_timeout macro. the accessor function op just supports only
+one parameter in the readx_poll_timeout macro, but this macro can
+supports multiple variable parameters for it. so functions like
+phy_read(struct phy_device *phydev, u32 regnum) and
+phy_read_mmd(struct phy_device *phydev, int devad, u32 regnum) can
+use this poll timeout framework.
 
-This patch moves locking into callers to handle remount atomically.
-Also grab namespace_sem to synchronize with /proc/mounts and mountinfo.
-Function do_change_type() uses the same locking combination.
+the first patch introduce read_poll_timeout macro, and the second patch
+redefined readx_poll_timeout macro by read_poll_timeout(), and the other
+patches are examples using read_poll_timeout macro.
 
-v2:
-- inline helpers into change_mount_ro_state
-- verify lock with lockdep_assert_held_write
+v6 -> v7:
+	- add a parameter to supports that it can sleep some time
+	  before read operation in read_poll_timeout macro.
+	- add prefix with double underscores for some variable to avoid
+	  any variable re-declaration or shadowing in patch 3 and patch
+	  7.
+v5 -> v6:
+	- add some check to keep the code more similar in patch 8
+v4 -> v5:
+	- add some msleep() before call phy_read_mmd_poll_timeout() to
+	  keep the code more similar in patch 6 and patch 9.
+	- add a patch of drop by v4, it can add msleep before call
+	  phy_read_poll_timeout() to keep the code more similar.
+v3 -> v4:
+	- add 3 examples of using new functions.
+	- deal with precedence issues for parameter cond.
+	- drop a patch about phy_poll_reset() function.
+v2 -> v3:
+	- modify the parameter order of newly added functions.
+	  phy_read_mmd_poll_timeout(val, cond, sleep_us, timeout_us, \
+				     phydev, devaddr, regnum)
+				||
+				\/
+	  phy_read_mmd_poll_timeout(phydev, devaddr regnum, val, cond, \
+				    sleep_us, timeout_us)
 
-Link: https://lore.kernel.org/lkml/158454107541.4470.14819321770893756073.stgit@buzz/ (v1)
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
----
- fs/namespace.c |   58 +++++++++++++++++++++++++-------------------------------
- 1 file changed, 26 insertions(+), 32 deletions(-)
+	  phy_read_poll_timeout(val, cond, sleep_us, timeout_us, \
+				phydev, regnum)
+				||
+				\/
+	  phy_read_poll_timeout(phydev, regnum, val, cond, sleep_us, \
+				timeout_us)
+v1 -> v2:
+	- passed a phydev, device address and a reg to replace args...
+	  parameter in phy_read_mmd_poll_timeout() by Andrew Lunn 's
+	  suggestion in patch 3. Andrew Lunn <andrew@lunn.ch>, Thanks
+	  very much for your help!
+	- also in patch 3, handle phy_read_mmd return an error(the return
+	  value < 0) in phy_read_mmd_poll_timeout(). Thanks Andrew
+	  again.
+	- in patch 6, pass a phydev and a reg to replace args...
+	  parameter in phy_read_poll_timeout(), and also handle the
+	  phy_read() function's return error.
 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 85b5f7bea82e..d394a4c414a2 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -459,11 +459,22 @@ void mnt_drop_write_file(struct file *file)
- }
- EXPORT_SYMBOL(mnt_drop_write_file);
- 
--static int mnt_make_readonly(struct mount *mnt)
-+/* mount_lock must be held */
-+static int change_mount_ro_state(struct mount *mnt, unsigned int mnt_flags)
- {
-+	bool readonly_request = (mnt_flags & MNT_READONLY);
- 	int ret = 0;
- 
--	lock_mount_hash();
-+	lockdep_assert_held_write(&mount_lock.seqcount);
-+
-+	if (readonly_request == __mnt_is_readonly(&mnt->mnt))
-+		goto out;
-+
-+	if (!readonly_request) {
-+		mnt->mnt.mnt_flags &= ~MNT_READONLY;
-+		goto out;
-+	}
-+
- 	mnt->mnt.mnt_flags |= MNT_WRITE_HOLD;
- 	/*
- 	 * After storing MNT_WRITE_HOLD, we'll read the counters. This store
-@@ -497,16 +508,9 @@ static int mnt_make_readonly(struct mount *mnt)
- 	 */
- 	smp_wmb();
- 	mnt->mnt.mnt_flags &= ~MNT_WRITE_HOLD;
--	unlock_mount_hash();
--	return ret;
--}
- 
--static int __mnt_unmake_readonly(struct mount *mnt)
--{
--	lock_mount_hash();
--	mnt->mnt.mnt_flags &= ~MNT_READONLY;
--	unlock_mount_hash();
--	return 0;
-+out:
-+	return ret;
- }
- 
- int sb_prepare_remount_readonly(struct super_block *sb)
-@@ -2440,30 +2444,16 @@ static bool can_change_locked_flags(struct mount *mnt, unsigned int mnt_flags)
- 	return true;
- }
- 
--static int change_mount_ro_state(struct mount *mnt, unsigned int mnt_flags)
--{
--	bool readonly_request = (mnt_flags & MNT_READONLY);
--
--	if (readonly_request == __mnt_is_readonly(&mnt->mnt))
--		return 0;
--
--	if (readonly_request)
--		return mnt_make_readonly(mnt);
--
--	return __mnt_unmake_readonly(mnt);
--}
--
- /*
-- * Update the user-settable attributes on a mount.  The caller must hold
-- * sb->s_umount for writing.
-+ * Update the user-settable attributes on a mount.
-+ * mount_lock must be held.
-  */
- static void set_mount_attributes(struct mount *mnt, unsigned int mnt_flags)
- {
--	lock_mount_hash();
-+	lockdep_assert_held_write(&mount_lock.seqcount);
- 	mnt_flags |= mnt->mnt.mnt_flags & ~MNT_USER_SETTABLE_MASK;
- 	mnt->mnt.mnt_flags = mnt_flags;
- 	touch_mnt_namespace(mnt->mnt_ns);
--	unlock_mount_hash();
- }
- 
- static void mnt_warn_timestamp_expiry(struct path *mountpoint, struct vfsmount *mnt)
-@@ -2495,7 +2485,6 @@ static void mnt_warn_timestamp_expiry(struct path *mountpoint, struct vfsmount *
-  */
- static int do_reconfigure_mnt(struct path *path, unsigned int mnt_flags)
- {
--	struct super_block *sb = path->mnt->mnt_sb;
- 	struct mount *mnt = real_mount(path->mnt);
- 	int ret;
- 
-@@ -2508,11 +2497,13 @@ static int do_reconfigure_mnt(struct path *path, unsigned int mnt_flags)
- 	if (!can_change_locked_flags(mnt, mnt_flags))
- 		return -EPERM;
- 
--	down_write(&sb->s_umount);
-+	namespace_lock();
-+	lock_mount_hash();
- 	ret = change_mount_ro_state(mnt, mnt_flags);
- 	if (ret == 0)
- 		set_mount_attributes(mnt, mnt_flags);
--	up_write(&sb->s_umount);
-+	unlock_mount_hash();
-+	namespace_unlock();
- 
- 	mnt_warn_timestamp_expiry(path, &mnt->mnt);
- 
-@@ -2551,8 +2542,11 @@ static int do_remount(struct path *path, int ms_flags, int sb_flags,
- 		err = -EPERM;
- 		if (ns_capable(sb->s_user_ns, CAP_SYS_ADMIN)) {
- 			err = reconfigure_super(fc);
--			if (!err)
-+			if (!err) {
-+				lock_mount_hash();
- 				set_mount_attributes(mnt, mnt_flags);
-+				unlock_mount_hash();
-+			}
- 		}
- 		up_write(&sb->s_umount);
- 	}
+Dejin Zheng (10):
+  iopoll: introduce read_poll_timeout macro
+  iopoll: redefined readx_poll_timeout macro to simplify the code
+  net: phy: introduce phy_read_mmd_poll_timeout macro
+  net: phy: bcm84881: use phy_read_mmd_poll_timeout() to simplify the
+    code
+  net: phy: aquantia: use phy_read_mmd_poll_timeout() to simplify the
+    code
+  net: phy: marvell10g: use phy_read_mmd_poll_timeout() to simplify the
+    code
+  net: phy: introduce phy_read_poll_timeout macro
+  net: phy: use phy_read_poll_timeout() to simplify the code
+  net: phy: smsc: use phy_read_poll_timeout() to simplify the code
+  net: phy: tja11xx: use phy_read_poll_timeout() to simplify the code
+
+ drivers/net/phy/aquantia_main.c | 13 ++++-------
+ drivers/net/phy/bcm84881.c      | 27 ++++------------------
+ drivers/net/phy/marvell10g.c    | 15 +++++--------
+ drivers/net/phy/nxp-tja11xx.c   | 16 +++----------
+ drivers/net/phy/phy_device.c    | 16 +++++--------
+ drivers/net/phy/smsc.c          | 16 +++++--------
+ include/linux/iopoll.h          | 40 +++++++++++++++++++++++++++------
+ include/linux/phy.h             | 27 ++++++++++++++++++++++
+ 8 files changed, 86 insertions(+), 84 deletions(-)
+
+-- 
+2.25.0
 
