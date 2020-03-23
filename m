@@ -2,246 +2,204 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C41C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A65C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 358942073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C732073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:33:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b1NZ3QUp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgCWWap (ORCPT
+        id S1727030AbgCWWdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:30:45 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42781 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbgCWWao (ORCPT
+        Mon, 23 Mar 2020 18:33:06 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42778 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbgCWWdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 18:30:44 -0400
-Received: from mail-qt1-f199.google.com ([209.85.160.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <gpiccoli@canonical.com>)
-        id 1jGVak-0008VR-Fz
-        for linux-kernel@vger.kernel.org; Mon, 23 Mar 2020 22:30:42 +0000
-Received: by mail-qt1-f199.google.com with SMTP id r16so14500580qtt.13
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 15:30:42 -0700 (PDT)
+        Mon, 23 Mar 2020 18:33:06 -0400
+Received: by mail-pg1-f196.google.com with SMTP id h8so7944579pgs.9
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 15:33:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0+ekX362XTPZJu3MhQATXIXqUXtG5s7CcnngEAL+Izo=;
+        b=b1NZ3QUpB8kyqAwX+eyh8GUPAXNDdOo1fCa5qf2EFSFPVbJdg07sptzq6SiNSW34i5
+         ZWmyQbOPpGEoDsMvWnvurtNfNzkCUyns53hEoX3dawG18/5impvl8lZn5WXph6sSYxA8
+         jm04jXIkWWISgkibF1MGcD4GUIygaajwRfRxRQoYb421YVaARMC13jM/IlQCMSuMsY91
+         Azu/HDfOmz33wfgnx4n7F8dFgSNDMnsJD1XjNMbDDueKcb6MNqCPk8fC/X9RRFeGrgKF
+         s1D3IWrT7WQO4jO5rzwukZcpKmhpsS13Aby/O2uyxX96wlFbaVOKsVs/8BUrsVU97CSQ
+         n7sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eLU6QAsvnXROGLfRM3tayO8KnVh0W3thszMUzPMtEKg=;
-        b=UsP/3ZPZsrNBTwIM+FdPUlsGTB3F1cvRTtJ8r4OpxsiGsS9UkwvR4nBKtw4vuPlrkI
-         DuRQZawHjTP1LzbZ8l2NMzvfM7Gg3OL6nzH3WYnQdt3N3/6dnAW7559XM9/Yf8NPVYA/
-         br1K38esM5GR70G4VG66/MNOu1Goq5kcWX77+N7s/z/7cShkpTItXjRTw2Z9uJqFPOps
-         JBAtWqCuOU4EKWVXARBzJNu0Ei30dwrmBmVbOWTmlxRI3erTs3nXrj3XGw6CyTaEm7p5
-         ceZ3XqVZuzLXbMQ/vihtUlck3ON897wt4Zq3Qaxko30WG36IxwvTgYLaUfLVjKX98EXy
-         rpfQ==
-X-Gm-Message-State: ANhLgQ2qQTUJv4QgQ1crz5dcwIIRnPFu1z8TGSAMHvhXQB8UI0/t/YnD
-        CioblFlRvP7mh/JiItkzE55RBNStVEVBDJt1cuDtCdrGmUDnEIu5dP0ohU+bmZnc038srCp+oua
-        lhFySaspjKAiDqEnBYDPcq55gGNV1HzBx2NJ322z0uA==
-X-Received: by 2002:ac8:a8b:: with SMTP id d11mr22756230qti.94.1585002641072;
-        Mon, 23 Mar 2020 15:30:41 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vsTQBRiPkiwW3HiyLOozMBtqzvrhukAt8NVf/Rykr5oh/XnNKcWvstjmOpyCmFqRJWYI13/yw==
-X-Received: by 2002:ac8:a8b:: with SMTP id d11mr22756188qti.94.1585002640687;
-        Mon, 23 Mar 2020 15:30:40 -0700 (PDT)
-Received: from localhost (189-47-87-73.dsl.telesp.net.br. [189.47.87.73])
-        by smtp.gmail.com with ESMTPSA id w30sm13984116qtw.21.2020.03.23.15.30.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Mar 2020 15:30:39 -0700 (PDT)
-From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-doc@vger.kernel.org, mcgrof@kernel.org,
-        keescook@chromium.org, yzaikin@google.com, tglx@linutronix.de,
-        akpm@linux-foundation.org, linux-api@vger.kernel.org,
-        rdunlap@infradead.org, willy@infradead.org, gpiccoli@canonical.com,
-        kernel@gpiccoli.net
-Subject: [PATCH V2] panic: Add sysctl/cmdline to dump all CPUs backtraces on oops event
-Date:   Mon, 23 Mar 2020 19:30:35 -0300
-Message-Id: <20200323223035.29891-1-gpiccoli@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0+ekX362XTPZJu3MhQATXIXqUXtG5s7CcnngEAL+Izo=;
+        b=mrx3McRvk0jzsfzNUML9f3kt7GcLft6W+wNSFzScZ0EWNurYjpP5RC6PyW7lhK1XhS
+         cpgwsidodq5u/jdSRPTAHD4if7jRwXUTjZ9TQ6hkC6+0X4OyalrCa7rI0aKX6C1OpA2b
+         G4svqtNSuR/97P3wMZ1NR7bsT0natvZtbM+JlTTw1wApSUy6uST76f5oJMOM/ox9neVF
+         v/X8B6p2INIW+vO4+VSQY88fLYsY1SEEBTQpd8gr9SGxm7mbEKrQtlwQuH4JurQsj1xH
+         apcHWrfY3zgrOtLaUFYZSBTapxmxA0DmPzhpcuV0GYS7/sdALmeeDMzpW39GnHgobqIT
+         z4ww==
+X-Gm-Message-State: ANhLgQ21H2MVACMRdgfhq4HO+FLTbdhL6HLn2ha1dsnAMqecnEE8WnHB
+        JdkIqlM9fQ923h17k0B3NYznvg==
+X-Google-Smtp-Source: ADFU+vtefTwL6Il0Xt8K5zlmPRXAiFzgLNisLSnIcnujFjC7yBzql5SiSmblDDlkqMGnLglZXAPmpA==
+X-Received: by 2002:a63:4912:: with SMTP id w18mr23539999pga.122.1585002784637;
+        Mon, 23 Mar 2020 15:33:04 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id e9sm14427742pfl.179.2020.03.23.15.33.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 15:33:04 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 16:33:02 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] remoteproc: Introduce "panic" callback in ops
+Message-ID: <20200323223302.GC30464@xps15>
+References: <20200310063817.3344712-1-bjorn.andersson@linaro.org>
+ <20200310063817.3344712-3-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310063817.3344712-3-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Usually when kernel reach an oops condition, it's a point of no return;
-in case not enough debug information is available in the kernel splat,
-one of the last resorts would be to collect a kernel crash dump and
-analyze it. The problem with this approach is that in order to collect
-the dump, a panic is required (to kexec-load the crash kernel). When
-in an environment of multiple virtual machines, users may prefer to
-try living with the oops, at least until being able to properly
-shutdown their VMs / finish their important tasks.
+On Mon, Mar 09, 2020 at 11:38:15PM -0700, Bjorn Andersson wrote:
+> Introduce generic support for handling kernel panics in remoteproc
+> drivers, in order to allow operations needed for aiding in post mortem
+> system debugging, such as flushing caches etc.
+> 
+> The function can return a number of milliseconds needed by the remote to
+> "settle" and the core will wait the longest returned duration before
+> returning from the panic handler.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Change since v3:
+> - Migrate from mutex_trylock() to using RCU
+> - Turned the timeout to unsigned long
+> 
+>  drivers/remoteproc/remoteproc_core.c | 44 ++++++++++++++++++++++++++++
+>  include/linux/remoteproc.h           |  3 ++
+>  2 files changed, 47 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index f0a77c30c6b1..2024a98930bf 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -16,6 +16,7 @@
+>  
+>  #define pr_fmt(fmt)    "%s: " fmt, __func__
+>  
+> +#include <linux/delay.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/device.h>
+> @@ -43,6 +44,7 @@
+>  
+>  static DEFINE_MUTEX(rproc_list_mutex);
+>  static LIST_HEAD(rproc_list);
+> +static struct notifier_block rproc_panic_nb;
+>  
+>  typedef int (*rproc_handle_resource_t)(struct rproc *rproc,
+>  				 void *, int offset, int avail);
+> @@ -2219,10 +2221,51 @@ void rproc_report_crash(struct rproc *rproc, enum rproc_crash_type type)
+>  }
+>  EXPORT_SYMBOL(rproc_report_crash);
+>  
+> +static int rproc_panic_handler(struct notifier_block *nb, unsigned long event,
+> +			       void *ptr)
+> +{
+> +	unsigned int longest = 0;
+> +	struct rproc *rproc;
+> +	unsigned int d;
+> +
+> +	rcu_read_lock();
+> +	list_for_each_entry_rcu(rproc, &rproc_list, node) {
+> +		if (!rproc->ops->panic || rproc->state != RPROC_RUNNING)
+> +			continue;
+> +
+> +		d = rproc->ops->panic(rproc);
+> +		longest = max(longest, d);
+> +	}
+> +	rcu_read_unlock();
+> +
+> +	/*
+> +	 * Delay for the longest requested duration before returning.
+> +	 * This can be used by the remoteproc drivers to give the remote
+> +	 * processor time to perform any requested operations (such as flush
+> +	 * caches), where means for signalling the Linux side isn't available
 
-This patch implements a way to collect a bit more debug details when an
-oops event is reached, by printing all the CPUs backtraces through the
-usage of NMIs (on architectures that support that). The sysctl/kernel
-parameter added (and documented) here was called "oops_all_cpu_backtrace"
-and when set will (as the name suggests) dump all CPUs backtraces.
+There is a problem with the above sentence.
 
-Far from ideal, this may be the last option though for users that for
-some reason cannot panic on oops. Most of times oopses are clear enough
-to indicate the kernel portion that must be investigated, but in virtual
-environments it's possible to observe hypervisor/KVM issues that could
-lead to oopses shown in other guests CPUs (like virtual APIC crashes).
-This patch hence aims to help debug such complex issues without
-resorting to kdump.
-
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
----
-
-
-V2: Implemented grammar suggestions from Randy, Andrew and
-Matthew. Thanks in advance for the reviews!
-Cheers,
-
-Guilherme
-
-
- .../admin-guide/kernel-parameters.txt         |  8 +++++++
- Documentation/admin-guide/sysctl/kernel.rst   | 17 +++++++++++++++
- include/linux/kernel.h                        |  6 ++++++
- kernel/panic.c                                | 21 +++++++++++++++++++
- kernel/sysctl.c                               | 11 ++++++++++
- 5 files changed, 63 insertions(+)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 7a14caac6c94..7db622028c00 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3333,6 +3333,14 @@
- 			This will also cause panics on machine check exceptions.
- 			Useful together with panic=30 to trigger a reboot.
- 
-+	oops_all_cpu_backtrace=
-+			[KNL] Should kernel generate backtraces on all cpus
-+			when oops occurs - this should be a last measure resort
-+			in case	a kdump cannot be collected, for example.
-+			Defaults to 0 and can be controlled by the sysctl
-+			kernel.oops_all_cpu_backtrace.
-+			Format: <integer>
-+
- 	page_alloc.shuffle=
- 			[KNL] Boolean flag to control whether the page allocator
- 			should randomize its free lists. The randomization may
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 8b4ff69d2348..8660001d3a3e 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -57,6 +57,7 @@ show up in /proc/sys/kernel:
- - msgmnb
- - msgmni
- - nmi_watchdog
-+- oops_all_cpu_backtrace
- - osrelease
- - ostype
- - overflowgid
-@@ -572,6 +573,22 @@ numa_balancing_scan_size_mb is how many megabytes worth of pages are
- scanned for a given scan.
- 
- 
-+oops_all_cpu_backtrace:
-+================
-+
-+If this option is set, the kernel will send an NMI to all CPUs to dump
-+their backtraces when an oops event occurs. It should be used as a last
-+resort in case a panic cannot be triggered (to protect VMs running, for
-+example) or kdump can't be collected. This file shows up if CONFIG_SMP
-+is enabled.
-+
-+0: Won't show all CPUs backtraces when an oops is detected.
-+This is the default behavior.
-+
-+1: Will non-maskably interrupt all CPUs and dump their backtraces when
-+an oops event is detected.
-+
-+
- osrelease, ostype & version:
- ============================
- 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 0d9db2a14f44..6cd00257b572 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -513,6 +513,12 @@ static inline u32 int_sqrt64(u64 x)
- }
- #endif
- 
-+#ifdef CONFIG_SMP
-+extern unsigned int sysctl_oops_all_cpu_backtrace;
-+#else
-+#define sysctl_oops_all_cpu_backtrace 0
-+#endif /* CONFIG_SMP */
-+
- extern void bust_spinlocks(int yes);
- extern int oops_in_progress;		/* If set, an oops, panic(), BUG() or die() is in progress */
- extern int panic_timeout;
-diff --git a/kernel/panic.c b/kernel/panic.c
-index b69ee9e76cb2..73c340418575 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -36,6 +36,24 @@
- #define PANIC_TIMER_STEP 100
- #define PANIC_BLINK_SPD 18
- 
-+#ifdef CONFIG_SMP
-+/*
-+ * Should we dump all CPUs backtraces in an oops event?
-+ * Defaults to 0, can be changed either via cmdline or sysctl.
-+ */
-+unsigned int __read_mostly sysctl_oops_all_cpu_backtrace;
-+
-+static int __init oops_backtrace_setup(char *str)
-+{
-+	int rc = kstrtouint(str, 0, &sysctl_oops_all_cpu_backtrace);
-+
-+	if (rc)
-+		return rc;
-+	return 1;
-+}
-+__setup("oops_all_cpu_backtrace=", oops_backtrace_setup);
-+#endif /* CONFIG_SMP */
-+
- int panic_on_oops = CONFIG_PANIC_ON_OOPS_VALUE;
- static unsigned long tainted_mask =
- 	IS_ENABLED(CONFIG_GCC_PLUGIN_RANDSTRUCT) ? (1 << TAINT_RANDSTRUCT) : 0;
-@@ -515,6 +533,9 @@ void oops_enter(void)
- 	/* can't trust the integrity of the kernel anymore: */
- 	debug_locks_off();
- 	do_oops_enter_exit();
-+
-+	if (sysctl_oops_all_cpu_backtrace)
-+		trigger_all_cpu_backtrace();
- }
- 
- /*
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 238f268de486..1ac31d9d5b7e 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -813,6 +813,17 @@ static struct ctl_table kern_table[] = {
- 		.proc_handler	= proc_dointvec,
- 	},
- #endif
-+#ifdef CONFIG_SMP
-+	{
-+		.procname	= "oops_all_cpu_backtrace",
-+		.data		= &sysctl_oops_all_cpu_backtrace,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE,
-+	},
-+#endif /* CONFIG_SMP */
- 	{
- 		.procname	= "pid_max",
- 		.data		= &pid_max,
--- 
-2.25.1
-
+> +	 * while in panic.
+> +	 */
+> +	mdelay(longest);
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static void __init rproc_init_panic(void)
+> +{
+> +	rproc_panic_nb.notifier_call = rproc_panic_handler;
+> +	atomic_notifier_chain_register(&panic_notifier_list, &rproc_panic_nb);
+> +}
+> +
+> +static void __exit rproc_exit_panic(void)
+> +{
+> +	atomic_notifier_chain_unregister(&panic_notifier_list, &rproc_panic_nb);
+> +}
+> +
+>  static int __init remoteproc_init(void)
+>  {
+>  	rproc_init_sysfs();
+>  	rproc_init_debugfs();
+> +	rproc_init_panic();
+>  
+>  	return 0;
+>  }
+> @@ -2232,6 +2275,7 @@ static void __exit remoteproc_exit(void)
+>  {
+>  	ida_destroy(&rproc_dev_index);
+>  
+> +	rproc_exit_panic();
+>  	rproc_exit_debugfs();
+>  	rproc_exit_sysfs();
+>  }
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 16ad66683ad0..5959d6247dc0 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -369,6 +369,8 @@ enum rsc_handling_status {
+>   *			expects to find it
+>   * @sanity_check:	sanity check the fw image
+>   * @get_boot_addr:	get boot address to entry point specified in firmware
+> + * @panic:	optional callback to react to system panic, core will delay
+> + *		panic at least the returned number of milliseconds
+>   */
+>  struct rproc_ops {
+>  	int (*start)(struct rproc *rproc);
+> @@ -383,6 +385,7 @@ struct rproc_ops {
+>  	int (*load)(struct rproc *rproc, const struct firmware *fw);
+>  	int (*sanity_check)(struct rproc *rproc, const struct firmware *fw);
+>  	u32 (*get_boot_addr)(struct rproc *rproc, const struct firmware *fw);
+> +	unsigned long (*panic)(struct rproc *rproc);
+>  };
+>  
+>  /**
+> -- 
+> 2.24.0
+> 
