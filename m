@@ -2,167 +2,170 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC675C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE95C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAB9E206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6AE7206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:47:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZDtoQrdG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P4wwVtYa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbgCWPrY (ORCPT
+        id S1727398AbgCWPr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:47:24 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37944 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727176AbgCWPrY (ORCPT
+        Mon, 23 Mar 2020 11:47:56 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:30649 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727175AbgCWPr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:47:24 -0400
-Received: by mail-ot1-f68.google.com with SMTP id t28so13841806ott.5
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 08:47:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cItIuGU2gR6wVLWQZQIQDeYiaP+Gc3FxK48fZM1brJk=;
-        b=ZDtoQrdGGlgu75KoHaK60jCUVrLQZE1+QnsJ4tGfG4vAD9Acz0nNQiNrCABc1w7gUr
-         N0kaqBhWvXNmUnm2BgEv+qeEgn8DVbX5vDwwkbo5uBYuDZ+sr5SuftcU2K3kV42i1JOg
-         lBTOz50tJwChTdzUOiOXWe52jxfbGkL2BDZtKCjQ9rJ2hu03qEygyQdiDPmVYEYfnAUP
-         8kJWK8JO89b/G4/XbVGe5YDk6BBz09OWKMGhI8o2LXYrl1rOOlCJM/kqTuJ0BwJ5nUZG
-         xM4PVqZYi+D0kfbBibDO016lqGbTLk9P2Jxda+mUDfGjcI3Mfh0Tv4I0tddAQSNIC1EG
-         /wnA==
+        Mon, 23 Mar 2020 11:47:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584978474;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dvBlRRLg3CjMYlQe8Gy70l16tflLAU7l7Cy4EhgrGo0=;
+        b=P4wwVtYaxDQKUJ8RBZeHTek9AygsSXPIfHIOQ+pQvMYh2fIve8W+aZYE8KbWx0/3xfpdyb
+        3ZUb2lcbMg83rYw9+lQ85eEeNTXo/NR9INqNNxrJlGegfmzIG+M8wxc8Zs0X9l52eNadrV
+        pVQi62pkodYA/zJh/QAM5V+fOPeYVzk=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-410-DumA1gXdMjq4pIeZrbvmrA-1; Mon, 23 Mar 2020 11:47:52 -0400
+X-MC-Unique: DumA1gXdMjq4pIeZrbvmrA-1
+Received: by mail-wr1-f72.google.com with SMTP id e10so5795401wru.6
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 08:47:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cItIuGU2gR6wVLWQZQIQDeYiaP+Gc3FxK48fZM1brJk=;
-        b=qEc55IVMmEsUavJfxPZDuwCCtNoUIFAskaPUXdIVJVXsxzUGfo9d2JDJOE7zmeN6Ms
-         oUdgTPRqsSlHfsl8KtM2wUUaAYLW5txqEangZLH68nxj3/2O78DU71Gf/9TaHhLAuEly
-         c+mGD/0vCyUBpXSAZphUudz3kJ0NWWZcdpjz208EOmm9QMmQ7DEh0P8ebWDypbrmYO6/
-         7rMpolrTY2cRm5n5Z81v+JRGlt7i9upKf7iMF/gwbt9doGoeoqvS9sp5rTeX9oewn89L
-         NMs2YjfEZCqN943VxgcVa6qpt3LqV/pk9zqapJA07g5DfG1ilTk3NOLShNUwx/iyhjdq
-         l+Gw==
-X-Gm-Message-State: ANhLgQ0IM2aOGpyTcA9aEEsTSygxjUCYW1f9wWqlgpEvb1+JzjKF6jYp
-        LkB/5scHUOddn99WBPMrvz5GbZuH
-X-Google-Smtp-Source: ADFU+vvhIvZo++vpC2sEQ+aVp7I3JdDelQ2YEVzzpCKyvbHCRqADKg+N8Nc327lxhP0mF6a+vd3BKg==
-X-Received: by 2002:a05:6830:201a:: with SMTP id e26mr19198262otp.238.1584978443730;
-        Mon, 23 Mar 2020 08:47:23 -0700 (PDT)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id g5sm5424312oiy.27.2020.03.23.08.47.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 23 Mar 2020 08:47:22 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 08:47:21 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Clement Courbet <courbet@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH]     x86: Alias memset to __builtin_memset.
-Message-ID: <20200323154721.GB40380@ubuntu-m2-xlarge-x86>
-References: <20200323114207.222412-1-courbet@google.com>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=dvBlRRLg3CjMYlQe8Gy70l16tflLAU7l7Cy4EhgrGo0=;
+        b=olzK3b2PJfY5OQMXYVBmwFKr0WGPPu6WWveAB5HzyyiODWXZ5QxdkFizbXriW4UC5R
+         MAi1qWPiqxEhuKP7UUHc3DV/ZJNDvZIixeVeyqOD/HRW1sO8kOIaQXSnvBAyj61bV9KM
+         uf+aMsuRe2ju5Zc2kPPh9GEJYFntCWkowEEhfNpSb6haWjkpKOWqmXiGekJW7sxD0JJx
+         YVgY8Hv89p3CU2em7ff1SUKAbfvbIbmrA9tGAHguo2lQ8ydpehMxeJJrh/NITEyDzk9Z
+         PzX7Z4kZcpxljXoJcr8l/wG/ObHa1VzG5Yy5o3g40vLk0MO9KF80egzy5YPjuEbbnrrv
+         PBXQ==
+X-Gm-Message-State: ANhLgQ3UIr78NYYqgqOXn3PKCf3DrnTRZHmJcfTeqsrZ62Rm5pqVA3Va
+        Yaz7Q2aR8V4jKxNoy+ONlAoUDFkrjUm2o7qy3ekmmK8vJurc/rJ0k9BBF4jeFynTjZXrVct3FLW
+        LByP8iFyuTKKOYuvCBFMXOuXv
+X-Received: by 2002:a1c:98c4:: with SMTP id a187mr6825268wme.76.1584978471553;
+        Mon, 23 Mar 2020 08:47:51 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vu6SRGI7uUqQOuOD8Xkl9vZIQC4ykzVWdgZrGD/mWxQULS1g06vwwsinh5zxqAoG0+ZZJGMBA==
+X-Received: by 2002:a1c:98c4:: with SMTP id a187mr6825239wme.76.1584978471254;
+        Mon, 23 Mar 2020 08:47:51 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id h81sm24320939wme.42.2020.03.23.08.47.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 08:47:50 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        John Haxby <john.haxby@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH v3 05/37] KVM: x86: Export kvm_propagate_fault() (as kvm_inject_emulated_page_fault)
+In-Reply-To: <20200320212833.3507-6-sean.j.christopherson@intel.com>
+References: <20200320212833.3507-1-sean.j.christopherson@intel.com> <20200320212833.3507-6-sean.j.christopherson@intel.com>
+Date:   Mon, 23 Mar 2020 16:47:49 +0100
+Message-ID: <87sghz844a.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323114207.222412-1-courbet@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 12:42:06PM +0100, 'Clement Courbet' via Clang Built Linux wrote:
->     Recent compilers know the meaning of builtins (`memset`,
->     `memcpy`, ...) and can replace calls by inline code when
->     deemed better. For example, `memset(p, 0, 4)` will be lowered
->     to a four-byte zero store.
-> 
->     When using -ffreestanding (this is the case e.g. building on
->     clang), these optimizations are disabled. This means that **all**
->     memsets, including those with small, constant sizes, will result
->     in an actual call to memset.
-> 
->     We have identified several spots where we have high CPU usage
->     because of this. For example, a single one of these memsets is
->     responsible for about 0.3% of our total CPU usage in the kernel.
-> 
->     Aliasing `memset` to `__builtin_memset` allows the compiler to
->     perform this optimization even when -ffreestanding is used.
->     There is no change when -ffreestanding is not used.
-> 
->     Below is a diff (clang) for `update_sg_lb_stats()`, which
->     includes the aforementionned hot memset:
->         memset(sgs, 0, sizeof(*sgs));
-> 
->     Diff:
->         movq %rsi, %rbx        ~~~>  movq $0x0, 0x40(%r8)
->         movq %rdi, %r15        ~~~>  movq $0x0, 0x38(%r8)
->         movl $0x48, %edx       ~~~>  movq $0x0, 0x30(%r8)
->         movq %r8, %rdi         ~~~>  movq $0x0, 0x28(%r8)
->         xorl %esi, %esi        ~~~>  movq $0x0, 0x20(%r8)
->         callq <memset>         ~~~>  movq $0x0, 0x18(%r8)
->                                ~~~>  movq $0x0, 0x10(%r8)
->                                ~~~>  movq $0x0, 0x8(%r8)
->                                ~~~>  movq $0x0, (%r8)
-> 
->     In terms of code size, this grows the clang-built kernel a
->     bit (+0.022%):
->     440285512 vmlinux.clang.after
->     440383608 vmlinux.clang.before
-> 
-> Signed-off-by: Clement Courbet <courbet@google.com>
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
+
+> Export the page fault propagation helper so that VMX can use it to
+> correctly emulate TLB invalidation on page faults in an upcoming patch.
+>
+> In the (hopefully) not-too-distant future, SGX virtualization will also
+> want access to the helper for injecting page faults to the correct level
+> (L1 vs. L2) when emulating ENCLS instructions.
+>
+> Rename the function to kvm_inject_emulated_page_fault() to clarify that
+> it is (a) injecting a fault and (b) only for page faults.  WARN if it's
+> invoked with an exception other than PF_VECTOR.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
->  arch/x86/include/asm/string_64.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
-> index 75314c3dbe47..7073c25aa4a3 100644
-> --- a/arch/x86/include/asm/string_64.h
-> +++ b/arch/x86/include/asm/string_64.h
-> @@ -18,6 +18,15 @@ extern void *__memcpy(void *to, const void *from, size_t len);
->  void *memset(void *s, int c, size_t n);
->  void *__memset(void *s, int c, size_t n);
+>  arch/x86/include/asm/kvm_host.h | 2 ++
+>  arch/x86/kvm/x86.c              | 8 ++++++--
+>  2 files changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 9a183e9d4cb1..328b1765ff76 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1447,6 +1447,8 @@ void kvm_queue_exception_e(struct kvm_vcpu *vcpu, unsigned nr, u32 error_code);
+>  void kvm_requeue_exception(struct kvm_vcpu *vcpu, unsigned nr);
+>  void kvm_requeue_exception_e(struct kvm_vcpu *vcpu, unsigned nr, u32 error_code);
+>  void kvm_inject_page_fault(struct kvm_vcpu *vcpu, struct x86_exception *fault);
+> +bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
+> +				    struct x86_exception *fault);
+>  int kvm_read_guest_page_mmu(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
+>  			    gfn_t gfn, void *data, int offset, int len,
+>  			    u32 access);
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index e54c6ad628a8..64ed6e6e2b56 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -611,8 +611,11 @@ void kvm_inject_page_fault(struct kvm_vcpu *vcpu, struct x86_exception *fault)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_inject_page_fault);
 >  
-> +/* Recent compilers can generate much better code for known size and/or
-> + * fill values, and will fallback on `memset` if they fail.
-> + * We alias `memset` to `__builtin_memset` explicitly to inform the compiler to
-> + * perform this optimization even when -ffreestanding is used.
-> + */
-> +#if (__GNUC__ >= 4)
-
-This ifdef is unnecessary, this will always be true because the minimum
-supported GCC version is 4.6 and clang pretends it is 4.2.1. It appears
-the Intel compiler will pretend to be whatever whatever GCC version the
-host is using (no idea if it is still used by anyone or truly supported
-but still worth mentioning) so it would still always be true because of
-the GCC 4.6 requirement.
-
-I cannot comment on the validity of the patch even though the reasoning
-seems sound to me.
-
-Cheers,
-Nathan
-
-> +#define memset(s, c, count) __builtin_memset(s, c, count)
-> +#endif
-> +
->  #define __HAVE_ARCH_MEMSET16
->  static inline void *memset16(uint16_t *s, uint16_t v, size_t n)
+> -static bool kvm_propagate_fault(struct kvm_vcpu *vcpu, struct x86_exception *fault)
+> +bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
+> +				    struct x86_exception *fault)
 >  {
-> @@ -74,6 +83,7 @@ int strcmp(const char *cs, const char *ct);
->  #undef memcpy
->  #define memcpy(dst, src, len) __memcpy(dst, src, len)
->  #define memmove(dst, src, len) __memmove(dst, src, len)
-> +#undef memset
->  #define memset(s, c, n) __memset(s, c, n)
+> +	WARN_ON_ONCE(fault->vector != PF_VECTOR);
+> +
+>  	if (mmu_is_nested(vcpu) && !fault->nested_page_fault)
+>  		vcpu->arch.nested_mmu.inject_page_fault(vcpu, fault);
+>  	else
+> @@ -620,6 +623,7 @@ static bool kvm_propagate_fault(struct kvm_vcpu *vcpu, struct x86_exception *fau
 >  
->  #ifndef __NO_FORTIFY
-> -- 
-> 2.25.1.696.g5e7596f4ac-goog
-> 
+>  	return fault->nested_page_fault;
+>  }
+> +EXPORT_SYMBOL_GPL(kvm_inject_emulated_page_fault);
+
+We don't seem to use the return value a lot, actually,
+inject_emulated_exception() seems to be the only one, the rest just call
+it without checking the return value. Judging by the new name, I'd guess
+that the function returns whether it was able to inject the exception or
+not but this doesn't seem to be the case. My suggestion would then be to
+make it return 'void' and return 'fault->nested_page_fault' separately
+in inject_emulated_exception().
+
+>  
+>  void kvm_inject_nmi(struct kvm_vcpu *vcpu)
+>  {
+> @@ -6373,7 +6377,7 @@ static bool inject_emulated_exception(struct kvm_vcpu *vcpu)
+>  {
+>  	struct x86_emulate_ctxt *ctxt = vcpu->arch.emulate_ctxt;
+>  	if (ctxt->exception.vector == PF_VECTOR)
+> -		return kvm_propagate_fault(vcpu, &ctxt->exception);
+> +		return kvm_inject_emulated_page_fault(vcpu, &ctxt->exception);
+>  
+>  	if (ctxt->exception.error_code_valid)
+>  		kvm_queue_exception_e(vcpu, ctxt->exception.vector,
+
+With or without the change suggested above,
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+-- 
+Vitaly
+
