@@ -2,132 +2,73 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CD0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B97D9C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B1B32074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A5C2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbgCWRKI (ORCPT
+        id S1727714AbgCWRLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:10:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:52208 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727201AbgCWRKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:10:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31C381FB;
-        Mon, 23 Mar 2020 10:10:07 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 456F53F7C3;
-        Mon, 23 Mar 2020 10:10:06 -0700 (PDT)
-References: <20200311183320.19186-1-valentin.schneider@arm.com> <20200311183320.19186-2-valentin.schneider@arm.com> <20200323134234.GD6103@e123083-lin>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Morten Rasmussen <morten.rasmussen@arm.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com
-Subject: Re: [RFC PATCH 1/3] sched/topology: Split out SD_* flags declaration to its own file
-In-reply-to: <20200323134234.GD6103@e123083-lin>
-Date:   Mon, 23 Mar 2020 17:10:00 +0000
-Message-ID: <jhjy2rrknfb.mognet@arm.com>
+        Mon, 23 Mar 2020 13:11:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42139 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727257AbgCWRK7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 13:10:59 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jGQbC-00035t-Gj; Mon, 23 Mar 2020 18:10:50 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id ED6471040AA; Mon, 23 Mar 2020 18:10:49 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH v5 3/9] x86/split_lock: Re-define the kernel param option for split_lock_detect
+In-Reply-To: <20200315050517.127446-4-xiaoyao.li@intel.com>
+References: <20200315050517.127446-1-xiaoyao.li@intel.com> <20200315050517.127446-4-xiaoyao.li@intel.com>
+Date:   Mon, 23 Mar 2020 18:10:49 +0100
+Message-ID: <87r1xjov3a.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Xiaoyao Li <xiaoyao.li@intel.com> writes:
 
-Hi Morten,
-
-Just as a heads-up, I think those changes would better fit 2/3, or be
-in their own patch. 1/3 is just a straight up code move, with no changes
-to the existing comments.
-
-On Mon, Mar 23 2020, Morten Rasmussen wrote:
-> On Wed, Mar 11, 2020 at 06:33:18PM +0000, Valentin Schneider wrote:
->> diff --git a/include/linux/sched/sd_flags.h b/include/linux/sched/sd_flags.h
->> new file mode 100644
->> index 000000000000..685bbe736945
->> --- /dev/null
->> +++ b/include/linux/sched/sd_flags.h
->> @@ -0,0 +1,33 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * sched-domains (multiprocessor balancing) flag declarations.
->> + */
->> +
->> +/* Balance when about to become idle */
->> +SD_FLAG(SD_BALANCE_NEWIDLE,     0)
->> +/* Balance on exec */
->> +SD_FLAG(SD_BALANCE_EXEC,        1)
->> +/* Balance on fork, clone */
->> +SD_FLAG(SD_BALANCE_FORK,        2)
->> +/* Balance on wakeup */
->> +SD_FLAG(SD_BALANCE_WAKE,        3)
->> +/* Wake task to waking CPU */
->> +SD_FLAG(SD_WAKE_AFFINE,         4)
+> Change sld_off to sld_disable, which means disabling feature split lock
+> detection and it cannot be used in kernel nor can kvm expose it guest.
+> Of course, the X86_FEATURE_SPLIT_LOCK_DETECT is not set.
 >
-> Isn't it more like: "Consider waking task on waking CPU"?
->
-> IIRC, with this flag set the wake-up can happen either near prev_cpu or
-> this_cpu.
->
+> Add a new optioin sld_kvm_only, which means kernel turns split lock
+> detection off, but kvm can expose it to guest.
 
-Right, it's not a hard guarantee.
+What's the point of this? If the host is not clean, then you better fix
+the host first before trying to expose it to guests.
 
->> +/* Domain members have different CPU capacities */
->> +SD_FLAG(SD_ASYM_CPUCAPACITY,    5)
->> +/* Domain members share CPU capacity */
->> +SD_FLAG(SD_SHARE_CPUCAPACITY,   6)
->
-> Perhaps add +" (SMT)" to the comment to help the uninitiated
-> understanding it a bit easier?
->
+Thanks,
 
-Sounds good.
+        tglx
 
->> +/* Domain members share power domain */
->> +SD_FLAG(SD_SHARE_POWERDOMAIN,   7)
->
-> This flag is set only by 32-bit arm and has never had any effect. I
-> think it was the beginning of something years ago that hasn't
-> progressed. Perhaps we can remove it now?
->
-
-Right, I don't think I've seen anything recent that uses that flag.
-
->> +/* Domain members share CPU pkg resources */
->> +SD_FLAG(SD_SHARE_PKG_RESOURCES, 8)
->
-> +" (e.g. caches)" ?
->
-
-Agreed! I actually already have that one in 2/3.
-
->> +/* Only a single load balancing instance */
->> +SD_FLAG(SD_SERIALIZE,           9)
->> +/* Place busy groups earlier in the domain */
->> +SD_FLAG(SD_ASYM_PACKING,        10)
->
-> Place busy _tasks_ earlier in the domain?
->
-
-Ack.
-
-> It is a bit unclear what 'earlier' means here but since the packing
-> ordering can actually be defined by the architecture, we can't be much
-> more specific I guess.
->
-
-This probably dates back to when ASYM_PACKING was really just for
-bubbling tasks up to the first CPU of each core, and hasn't been changed
-when the asym_priority thing was introduced. I can add a pointer to that.
-
-> Morten
