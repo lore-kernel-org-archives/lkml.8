@@ -2,103 +2,174 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2473AC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4D7C4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAFF420769
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72EA42077D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:56:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="nshXgbiG";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L+/GePl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgCWJz5 (ORCPT
+        id S1727830AbgCWJ4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 05:55:57 -0400
-Received: from jax4mhob20.registeredsite.com ([64.69.218.108]:48594 "EHLO
-        jax4mhob20.registeredsite.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727737AbgCWJz5 (ORCPT
+        Mon, 23 Mar 2020 05:56:52 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:42299 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727793AbgCWJ4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:55:57 -0400
-Received: from mailpod.hostingplatform.com ([10.30.71.205])
-        by jax4mhob20.registeredsite.com (8.14.4/8.14.4) with ESMTP id 02N9tt2x122335
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 05:55:55 -0400
-Received: (qmail 5728 invoked by uid 0); 23 Mar 2020 09:55:55 -0000
-X-TCPREMOTEIP: 83.128.90.119
-X-Authenticated-UID: mike@milosoftware.com
-Received: from unknown (HELO phenom.domain?not?set.invalid) (mike@milosoftware.com@83.128.90.119)
-  by 0 with ESMTPA; 23 Mar 2020 09:55:55 -0000
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-To:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        jic23@kernel.org
-Cc:     linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH v2] dt-bindings: iio: accel: Add bmi088 accelerometer bindings
-Date:   Mon, 23 Mar 2020 10:55:51 +0100
-Message-Id: <20200323095551.23500-1-mike.looijmans@topic.nl>
-X-Mailer: git-send-email 2.17.1
+        Mon, 23 Mar 2020 05:56:52 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 077E35C01CF;
+        Mon, 23 Mar 2020 05:56:49 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Mon, 23 Mar 2020 05:56:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=wgbXdMR5Fy5EoV2nT9ZPQ25D44q
+        Kl+2Q83gfeD4WsWA=; b=nshXgbiGIQu+izkBtG8tT/GEKL4mlWche5RCX/MlhZy
+        B8ebR3mFX0SOHAXIspoWjrvDc9V3ETYadmxss3/kr/MxHGoR0uPgYv6R3mQwE3Fx
+        V7URTIuMgJW9FroS5GPyXGrvhMx7INYPD3RIWbHcXiY71MA4Rmvu8uz8lgln1S6p
+        vBOyOFegoaOrZD1vNwn1bMvnKHOjSBIeeaEoq/xLNYG8f7JdBlxl4o6uN9Q+xWaY
+        2ugXa7fJngedIVWdwoDlPwKvgMvUgFuLdzmFjO2Khtxg9r9LIx63pkp3g6hs57xk
+        5x12Qj/Rm1TkAT5/pXGyDAc3jnSK/flEIpuXwwJgSGQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=wgbXdM
+        R5Fy5EoV2nT9ZPQ25D44qKl+2Q83gfeD4WsWA=; b=L+/GePl+SdIY0cknem8U2P
+        5WTH8v4cB/yDVJ2d3Q9torbs8tVeXMPRF7xT7sC6b+2TcJBqVsEIacYv/dZMXqri
+        Xb0wmnY+6z1kV+Z9jIlXAbAp+eNblFkklbx0WZxpwxKDRR88y4UkYH/MSDfG8ZYU
+        4p/6EWkm7kDInYOG23T6RpJCs5U3HNti0UiCbLodb+doo/+hH2bTtTewcp4AYyH0
+        4mt1mKfveFF/iOOKCVQkmNXOAOaElVpA8wEMA9sImg2zU/+nuay7v66PUPR40naK
+        v2NkC0IGmKnZ303AaBQToCGrc7Tbk1fdm39JMb/zLl2HwTTX/SHsK6cTxZBkQFwA
+        ==
+X-ME-Sender: <xms:34d4Xi6Ytc5JcWWDM4SBt2M1VBog0H0upnvEsQHoF5okksU2LbAhQA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudegkedgtdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhr
+    vghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:34d4XohrD5UDyKXTlqsKRqSJy1qBjo9Oy2HsobcoR_Vt6KiDk1CHkQ>
+    <xmx:34d4Xn1erQc4iie6eRx422uUbdV-3iynpjDgLhWXJGdSBiE0M00i_A>
+    <xmx:34d4XpAff2Y8txk_l3ufAqnvhrgGsA3KG4k3NKi_kxsNSf3c_57c1g>
+    <xmx:4Yd4XgAC1XEAPGdfYvICAwXAbJRloID6AkatzG7ZKrOfp708bhbcKg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6F1EE328005D;
+        Mon, 23 Mar 2020 05:56:47 -0400 (EDT)
+Date:   Mon, 23 Mar 2020 10:56:45 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Michael Tretter <m.tretter@pengutronix.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: linux-next: manual merge of the staging tree with the v4l-dvb
+ tree
+Message-ID: <20200323095645.GC425358@kroah.com>
+References: <20200323151805.6a166c84@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323151805.6a166c84@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the device-tree bindings for the Bosch Sensortec BMI088 IMU,
-the accelerometer part.
+On Mon, Mar 23, 2020 at 03:18:05PM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the staging tree got a conflict in:
+> 
+>   drivers/staging/media/allegro-dvt/allegro-core.c
+> 
+> between several commits from the v4l-dvb tree and commits:
+> 
+>   5979afa2c4d1 ("staging: Replace zero-length array with flexible-array member")
+>   e3d21cbfa978 ("staging: media: allegro: align with parenthesis")
+> 
+> from the staging tree.
+> 
+> I fixed it up (see bottom and below merge fix patch) and can carry the
+> fix as necessary. This is now fixed as far as linux-next is concerned,
+> but any non trivial conflicts should be mentioned to your upstream
+> maintainer when your tree is submitted for merging.  You may also want
+> to consider cooperating with the maintainer of the conflicting tree to
+> minimise any particularly complex conflicts.
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Mon, 23 Mar 2020 15:12:50 +1100
+> Subject: [PATCH] fix up for "staging: Replace zero-length array with flexible-array member"
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/staging/media/allegro-dvt/allegro-mail.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/media/allegro-dvt/allegro-mail.h b/drivers/staging/media/allegro-dvt/allegro-mail.h
+> index 1fd36f65be78..17db665f8e1e 100644
+> --- a/drivers/staging/media/allegro-dvt/allegro-mail.h
+> +++ b/drivers/staging/media/allegro-dvt/allegro-mail.h
+> @@ -169,7 +169,7 @@ struct mcu_msg_push_buffers_internal_buffer {
+>  struct mcu_msg_push_buffers_internal {
+>  	struct mcu_msg_header header;
+>  	u32 channel_id;
+> -	struct mcu_msg_push_buffers_internal_buffer buffer[0];
+> +	struct mcu_msg_push_buffers_internal_buffer buffer[];
+>  } __attribute__ ((__packed__));
+>  
+>  struct mcu_msg_put_stream_buffer {
+> -- 
+> 2.25.0
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+> 
+> diff --cc drivers/staging/media/allegro-dvt/allegro-core.c
+> index 34c3e55be902,1162cc38f3fc..000000000000
+> --- a/drivers/staging/media/allegro-dvt/allegro-core.c
+> +++ b/drivers/staging/media/allegro-dvt/allegro-core.c
+> @@@ -2403,19 -2324,12 +2403,19 @@@ static int allegro_open(struct file *fi
+>   			0, ALLEGRO_GOP_SIZE_MAX,
+>   			1, channel->gop_size);
+>   	v4l2_ctrl_new_std(handler,
+> - 			&allegro_ctrl_ops,
+> - 			V4L2_CID_MIN_BUFFERS_FOR_OUTPUT,
+> - 			1, 32,
+> - 			1, 1);
+> + 			  &allegro_ctrl_ops,
+> + 			  V4L2_CID_MIN_BUFFERS_FOR_OUTPUT,
+> + 			  1, 32,
+> + 			  1, 1);
+>  +	if (handler->error != 0) {
+>  +		ret = handler->error;
+>  +		goto error;
+>  +	}
+>  +
+>   	channel->fh.ctrl_handler = handler;
+>   
+>  +	v4l2_ctrl_cluster(3, &channel->mpeg_video_bitrate_mode);
+>  +
+>   	channel->mcu_channel_id = -1;
+>   	channel->user_id = -1;
+>   
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
-v2: convert to yaml format
 
- .../bindings/iio/accel/bosch,bmi088.yaml      | 38 +++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml
 
-diff --git a/Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml b/Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml
-new file mode 100644
-index 000000000000..715f79c3b2a9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/accel/bosch,bma400.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bosch BMI088 IMU accelerometer part
-+
-+maintainers:
-+  - Mike Looijmans <mike.looijmans@topic.nl>
-+
-+description: |
-+  Acceleration part of the IMU sensor with an SPI interface
-+
-+  Specifications about the sensor can be found at:
-+    https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - bosch,bmi088_accel
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+  spi {
-+    bmi088_accel@1 {
-+      compatible = "bosch,bmi088_accel";
-+      reg = <1>;
-+      spi-max-frequency = <10000000>;
-+    };
-+  };
--- 
-2.17.1
+Looks good, thanks!
 
+greg k-h
