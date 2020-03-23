@@ -4,100 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E254C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9D4C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 606A2206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD5320735
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:26:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgCWO0X (ORCPT
+        id S1727100AbgCWO00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:26:23 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:21245 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725861AbgCWO0X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:26:23 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 23 Mar 2020 19:55:35 +0530
-Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 23 Mar 2020 19:55:08 +0530
-Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
-        id CE2FB4DF7; Mon, 23 Mar 2020 19:55:06 +0530 (IST)
-From:   Pradeep P V K <ppvk@codeaurora.org>
-To:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
-        Pradeep P V K <ppvk@codeaurora.org>
-Subject: [RFC v6 2/2] dt-bindings: mmc: sdhci-msm: Add interconnect BW scaling strings
-Date:   Mon, 23 Mar 2020 19:55:02 +0530
-Message-Id: <1584973502-14775-3-git-send-email-ppvk@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1584973502-14775-1-git-send-email-ppvk@codeaurora.org>
-References: <1584973502-14775-1-git-send-email-ppvk@codeaurora.org>
+        Mon, 23 Mar 2020 10:26:26 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:49278 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725861AbgCWO0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 10:26:25 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BA6D3201262;
+        Mon, 23 Mar 2020 15:26:23 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0C05F200ED6;
+        Mon, 23 Mar 2020 15:26:18 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CCFB3402AF;
+        Mon, 23 Mar 2020 22:26:10 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] thermal: imx8mm: Fix build warning of incorrect argument type
+Date:   Mon, 23 Mar 2020 22:19:16 +0800
+Message-Id: <1584973156-25734-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add interconnect bandwidth scaling supported strings for qcom-sdhci
-controller.
+Fix below sparse warning:
 
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+drivers/thermal/imx8mm_thermal.c:82:36: sparse: sparse: incorrect type in argument 2 (different address spaces), expected unsigned long const volatile *addr
+drivers/thermal/imx8mm_thermal.c:82:36: sparse: expected unsigned long const volatile *addr
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
+ drivers/thermal/imx8mm_thermal.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-RFC v5 -> v6:
-- No changes.
-
- Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-index 5445931..9eafc41 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-@@ -46,6 +46,21 @@ Required properties:
- 	"cal"	- reference clock for RCLK delay calibration (optional)
- 	"sleep"	- sleep clock for RCLK delay calibration (optional)
+diff --git a/drivers/thermal/imx8mm_thermal.c b/drivers/thermal/imx8mm_thermal.c
+index c32308b..0d60f8d 100644
+--- a/drivers/thermal/imx8mm_thermal.c
++++ b/drivers/thermal/imx8mm_thermal.c
+@@ -75,15 +75,14 @@ static int imx8mp_tmu_get_temp(void *data, int *temp)
+ {
+ 	struct tmu_sensor *sensor = data;
+ 	struct imx8mm_tmu *tmu = sensor->priv;
++	unsigned long val;
+ 	bool ready;
+-	u32 val;
  
-+Optional Properties:
-+* Following bus parameters are required for interconnect bandwidth scaling:
-+- interconnects: Pairs of phandles and interconnect provider specifier
-+		 to denote the edge source and destination ports of
-+		 the interconnect path.
-+
-+- interconnect-names: For sdhc, we have two main paths.
-+		1. Data path : sdhc to ddr
-+		2. Config path : cpu to sdhc
-+		For Data interconnect path the name supposed to be
-+		is "sdhc-ddr" and for config interconnect path it is
-+		"cpu-sdhc".
-+		Please refer to Documentation/devicetree/bindings/
-+		interconnect/ for more details.
-+
- Example:
+-	ready = test_bit(probe_status_offset(sensor->hw_id),
+-			 tmu->base + TRITSR);
++	val = readl_relaxed(tmu->base + TRITSR);
++	ready = test_bit(probe_status_offset(sensor->hw_id), &val);
+ 	if (!ready)
+ 		return -EAGAIN;
  
- 	sdhc_1: sdhci@f9824900 {
-@@ -63,6 +78,9 @@ Example:
- 
- 		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
- 		clock-names = "core", "iface";
-+		interconnects = <&qnoc MASTER_SDCC_ID &qnoc SLAVE_DDR_ID>,
-+				<&qnoc MASTER_CPU_ID &qnoc SLAVE_SDCC_ID>;
-+		interconnect-names = "sdhc-ddr","cpu-sdhc";
- 	};
- 
- 	sdhc_2: sdhci@f98a4900 {
+-	val = readl_relaxed(tmu->base + TRITSR);
+ 	val = sensor->hw_id ? FIELD_GET(TRITSR_TEMP1_VAL_MASK, val) :
+ 	      FIELD_GET(TRITSR_TEMP0_VAL_MASK, val);
+ 	if (val & SIGN_BIT) /* negative */
 -- 
-1.9.1
+2.7.4
 
