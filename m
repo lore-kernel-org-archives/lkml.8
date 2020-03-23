@@ -2,160 +2,90 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C51C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258C2C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3E22051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27932072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:23:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="V6XX7qH9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R6g9O1aJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbgCWSVR (ORCPT
+        id S1727569AbgCWSXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:21:17 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2790 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbgCWSVQ (ORCPT
+        Mon, 23 Mar 2020 14:23:47 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35460 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727141AbgCWSXq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:21:16 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e78fe0e0000>; Mon, 23 Mar 2020 11:21:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 23 Mar 2020 11:21:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 23 Mar 2020 11:21:15 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Mar
- 2020 18:21:15 +0000
-Subject: Re: [PATCH v8 0/3] mm/hmm/test: add self tests for HMM
-To:     Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>
-References: <20200321003108.22941-1-rcampbell@nvidia.com>
- <20200321090047.GM514123@unreal>
- <396f0c30-4a49-6a18-ff02-a73ee1a09883@nvidia.com>
- <20200321215505.GW20941@ziepe.ca> <20200322081038.GG650439@unreal>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <010050db-a37d-d200-88d4-696cc2c8d9d6@nvidia.com>
-Date:   Mon, 23 Mar 2020 11:21:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 23 Mar 2020 14:23:46 -0400
+Received: by mail-qk1-f196.google.com with SMTP id k13so4645971qki.2;
+        Mon, 23 Mar 2020 11:23:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=pxQGd5AdyutteOIvAQyWIwfU7T2T1nCM5kVPlyE1dag=;
+        b=R6g9O1aJ4ct3TFhYVVpHBpqGry9HpNS5PuO+iO7MteTplmXEyijEYZ1hz1ULHy/o3C
+         Jl2stoeBcFWMBCcn/zZ3rKXpd1qbynOVkEquOQ4uRwIYX83C1DKYZOcN2Ods/zAcf9rp
+         5bAMJsTZ7zHum+5AKQDt4Bi8qPYMV3u2VECnthvphe4LemSm6bxP5yZkg2GGYQLg7M+v
+         gqREtbW/SU5/X4jVtcgta9+o4bIDnSwXBhlzWqGRynEOatXfVzHwNkCL927A3k7NaKz6
+         zoLlIURX1SjJdSzC3oTKNaa3IYcw+/p7jleArgLoUiTUfFekgLaW7FMYDw2Wg8oLLsEU
+         297Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=pxQGd5AdyutteOIvAQyWIwfU7T2T1nCM5kVPlyE1dag=;
+        b=sL26PubyKsFhR9Dm7ycy/mH7R4NbYWsWIA1aaUGDmyoDvEvUOTGOfZpI/mhKhGogyK
+         agXdvFl3kJ8ChH/kBQbpuFKeB7GHvLctRuIqZEBC3GFu2w1yDLJOcPa3l8QeIAaDvjd7
+         EvSQt7JuddmHGQgPJoVrUYLCBxmPfL02MsI5a5BQwLXhfzUcVQ1N5T9cjmvLj8zuKMFl
+         whCgNTtZeVZwesA6q4qVc3A8LvgFBV+ceLYJfKd7orPAYh2fCXi7I5sj5aTluaMrwR4x
+         0TXh1HEDkCeIJLSOGnif02Rj67upkyGf4q+R1EjyIbQfnqbXLxNXGUNX3Q7dGhqvRK9U
+         T0YQ==
+X-Gm-Message-State: ANhLgQ1ICLNxOKrsGCjBsWrUohiON2lxCpyyeyeNKpK7cEP165tyCylv
+        KerIGSZY9WfR/SN4fVbNHh4MIt6a
+X-Google-Smtp-Source: ADFU+vvJ8FdJfmEDICEEbe/rvbppzglFwH+sqPoV6JqW2Ob3rpUNEU5rrk7Z3T4++ZWLLTmiYySGBw==
+X-Received: by 2002:a37:61d0:: with SMTP id v199mr17557635qkb.305.1584987825334;
+        Mon, 23 Mar 2020 11:23:45 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id s49sm12976791qtc.29.2020.03.23.11.23.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 11:23:44 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 14:23:43 -0400
+Message-ID: <20200323142343.GB4041079@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, mbizon@freebox.fr,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net] net: dsa: Fix duplicate frames flooded by learning
+In-Reply-To: <20200322205850.3528-1-f.fainelli@gmail.com>
+References: <20200322205850.3528-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200322081038.GG650439@unreal>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584987662; bh=1Wek6LBYAdU1aHIlmdcVgKcV0g9ZqFumuUlMbDqQya8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=V6XX7qH92buUCwPTHr32tVk37r9DCwWiP01gZ5NQeioLh2l4m+RDLIaGzQFmE8xKW
-         9/9K4I5SpNQDgrdpE8b4vsxDz1hF89T0L/c6ByepnxqI1t6ti/j72xBQ9/dn/F8nV6
-         Wo4ZwOBBiq7JgsD3MPAa6a1LK6MWvXuNW0KdD/ac0hLX6xK8K25QJw2JYFDH4wXJzb
-         ac8IxYzO30X+L8jxW31n/NglXxNBSsNufj05l8/Ih8O2Sjp6v/4e1vKAHYosj1IfeM
-         PvKEoZrvRH0HnckdaiMqeu01h824HMlqbHXQEZwriSE2Q6iDBk4tOKGOYAsamku+pt
-         ctx4qI2Fc5iaw==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 22 Mar 2020 13:58:50 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> When both the switch and the bridge are learning about new addresses,
+> switch ports attached to the bridge would see duplicate ARP frames
+> because both entities would attempt to send them.
+> 
+> Fixes: 5037d532b83d ("net: dsa: add Broadcom tag RX/TX handler")
+> Reported-by: Maxime Bizon <mbizon@freebox.fr>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-On 3/22/20 1:10 AM, Leon Romanovsky wrote:
-> On Sat, Mar 21, 2020 at 06:55:05PM -0300, Jason Gunthorpe wrote:
->> On Sat, Mar 21, 2020 at 10:27:46AM -0700, Ralph Campbell wrote:
->>>
->>> On 3/21/20 2:00 AM, Leon Romanovsky wrote:
->>>> On Fri, Mar 20, 2020 at 05:31:05PM -0700, Ralph Campbell wrote:
->>>>> This series adds basic self tests for HMM and are intended for Jason
->>>>> Gunthorpe's rdma tree which has a number of HMM patches applied.
->>>>>
->>>>> Changes v7 -> v8:
->>>>> Rebased to Jason's rdma/hmm tree, plus Jason's 6 patch series
->>>>>     "Small hmm_range_fault() cleanups".
->>>>> Applied a number of changes from Jason's comments.
->>>>>
->>>>> Changes v6 -> v7:
->>>>> Rebased to linux-5.6.0-rc6
->>>>> Reverted back to just using mmu_interval_notifier_insert() and making
->>>>>     this series only introduce HMM self tests.
->>>>>
->>>>> Changes v5 -> v6:
->>>>> Rebased to linux-5.5.0-rc6
->>>>> Refactored mmu interval notifier patches
->>>>> Converted nouveau to use the new mmu interval notifier API
->>>>>
->>>>> Changes v4 -> v5:
->>>>> Added mmu interval notifier insert/remove/update callable from the
->>>>>     invalidate() callback
->>>>> Updated HMM tests to use the new core interval notifier API
->>>>>
->>>>> Changes v1 -> v4:
->>>>> https://lore.kernel.org/linux-mm/20191104222141.5173-1-rcampbell@nvidia.com
->>>>>
->>>>> Ralph Campbell (3):
->>>>>     mm/hmm/test: add selftest driver for HMM
->>>>>     mm/hmm/test: add selftests for HMM
->>>>>     MAINTAINERS: add HMM selftests
->>>>>
->>>>>    MAINTAINERS                            |    3 +
->>>>>    include/uapi/linux/test_hmm.h          |   59 ++
->>>>
->>>> Isn't UAPI folder supposed to be for user-visible interfaces that follow
->>>> the rule of non-breaking user space and not for selftests?
->>>>
->>>> Thanks
->>>>
->>>
->>> Most of the other kernel module tests seem to invoke the test as part of the
->>> module load/init. I'm open to moving it if there is a more appropriate location.
->>
->> Is it even possible to create a user mm_struct and put crazy things in
->> it soley from a kernel module?
-> 
-> I didn't look very closely of what Ralph did in his patchsets, but from
-> what I know, if you want in-kernel interface, you use in-kernel module,
-> if you want to test user visible uapi, you write application. You don't
-> create new UAPI just to test something in the kernel.
-> 
-> Can kunit help here?
-> https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html
-> 
-> Thanks
-> 
->>
->> Jason
-
-The tests are intended to cover hmm_range_fault() and the migrate_vma_setup(),
-migrate_vma_pages(), and migrate_vma_finalize() kernel functions that a device
-driver can call to initialize hardware that has its own page tables.
-An example is a GPU where the code on the GPU sees the same address space as
-code running on the host CPU. This means the test has to have a user process
-to create a user process address space and a device driver to simulate some
-real device driver. The UAPI is for the user level test program to tell the
-kernel module test driver what to do and return results.
-The complexity is all around maintaining coherent copies of the user process
-page tables while hardware and CPUs are accessing the same physical addresses.
-The pages are not pinned as with most I/O so system activity like pagein/pageout,
-LRU page reclaim, compaction, and the process calling functions like
-mmap(), mprotect(), madvise(), fork(), etc. all update the CPU and device page
-tables and would be very hard to duplicate in a kernel level only KUNIT style
-of test.
-
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
