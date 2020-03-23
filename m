@@ -2,114 +2,151 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4C4C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DBBC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E39208E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:40:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB6C2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:42:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ed3nDkcE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbgCWOkc (ORCPT
+        id S1727063AbgCWOmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:40:32 -0400
-Received: from mga11.intel.com ([192.55.52.93]:36173 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbgCWOkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:40:32 -0400
-IronPort-SDR: Qpl0iO+boptv/rFvsCLtEjQES3Wx5TAqXIPorZycf/k0cIsNiCEdpgsToA0JxOFdnrtrQYjqbw
- +o3jOC4ppSrQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 07:40:31 -0700
-IronPort-SDR: a0XCa+e1GQIxpO/K/RToaMSSO1oaOTImJsmySbWz2YU8TW1xDo40/Phqv/W3fNuNgQ8un+lC8s
- 3W5AZzlHSq2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,296,1580803200"; 
-   d="scan'208";a="419518847"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 23 Mar 2020 07:40:31 -0700
-Date:   Mon, 23 Mar 2020 07:40:31 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>, akpm@linux-foundation.org,
-        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
-        arei.gonglei@huawei.com, weidong.huang@huawei.com,
-        weifuqiang@huawei.com, kvm@vger.kernel.org, linux-mm@kvack.org,
-        Matthew Wilcox <willy@infradead.org>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] mm/hugetlb: fix a addressing exception caused by
- huge_pte_offset()
-Message-ID: <20200323144030.GA28711@linux.intel.com>
-References: <1582342427-230392-1-git-send-email-longpeng2@huawei.com>
- <51a25d55-de49-4c0a-c994-bf1a8cfc8638@oracle.com>
- <5700f44e-9df9-1b12-bc29-68e0463c2860@huawei.com>
- <e16fe81b-5c4c-e689-2f48-214f2025df2f@oracle.com>
+        Mon, 23 Mar 2020 10:42:53 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:24365 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725913AbgCWOmw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 10:42:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584974570;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jmqufm0XIBzHOIeOpsr7SvuIMRay/BSooAZ86ryWfTY=;
+        b=ed3nDkcEnpNiYETnn1iktzzDsiMDy+JcDLCUfo+UJmxtcLv878BKsAqNiZCwGfrQiOSoke
+        R7F21sLHPvfRMU+Y3McOE8ot4GJIuVNxK+0KXG/BWdQ9grAViJzkQGPJdq0dYkG8iyzNMn
+        KYc5j/VkwnPLYgx2953MBLjBFZj4Fl0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-27-ubSL_eP_Nu21TQnnl7LeKQ-1; Mon, 23 Mar 2020 10:42:47 -0400
+X-MC-Unique: ubSL_eP_Nu21TQnnl7LeKQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7485FA0CC0;
+        Mon, 23 Mar 2020 14:42:45 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.33.36.220])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9529760BE2;
+        Mon, 23 Mar 2020 14:42:43 +0000 (UTC)
+Date:   Mon, 23 Mar 2020 10:42:40 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, shuah@kernel.org
+Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
+ false-negative errors
+Message-ID: <20200323144240.GB23364@optiplex-lnx>
+References: <20200322013525.1095493-1-aquini@redhat.com>
+ <20200321184352.826d3dba38aecc4ff7b32e72@linux-foundation.org>
+ <20200322020326.GB1068248@t490s>
+ <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
+ <CALvZod7LiMiK1JtfdvvU3W36cGSUKhhKf6dMZpsNZv6nMiJ5=g@mail.gmail.com>
+ <20200323075208.GC7524@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e16fe81b-5c4c-e689-2f48-214f2025df2f@oracle.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200323075208.GC7524@dhcp22.suse.cz>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 07:54:32PM -0700, Mike Kravetz wrote:
-> On 3/22/20 7:03 PM, Longpeng (Mike, Cloud Infrastructure Service Product Dept.) wrote:
+On Mon, Mar 23, 2020 at 08:52:08AM +0100, Michal Hocko wrote:
+> On Sun 22-03-20 09:36:49, Shakeel Butt wrote:
+> > On Sat, Mar 21, 2020 at 9:31 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > >
+> > > On Sat, 21 Mar 2020 22:03:26 -0400 Rafael Aquini <aquini@redhat.com> wrote:
+> > >
+> > > > > > + * In order to sort out that race, and get the after fault checks consistent,
+> > > > > > + * the "quick and dirty" trick below is required in order to force a call to
+> > > > > > + * lru_add_drain_all() to get the recently MLOCK_ONFAULT pages moved to
+> > > > > > + * the unevictable LRU, as expected by the checks in this selftest.
+> > > > > > + */
+> > > > > > +static void force_lru_add_drain_all(void)
+> > > > > > +{
+> > > > > > + sched_yield();
+> > > > > > + system("echo 1 > /proc/sys/vm/compact_memory");
+> > > > > > +}
+> > > > >
+> > > > > What is the sched_yield() for?
+> > > > >
+> > > >
+> > > > Mostly it's there to provide a sleeping gap after the fault, whithout
+> > > > actually adding an arbitrary value with usleep().
+> > > >
+> > > > It's not a hard requirement, but, in some of the tests I performed
+> > > > (whithout that sleeping gap) I would still see around 1% chance
+> > > > of hitting the false-negative. After adding it I could not hit
+> > > > the issue anymore.
+> > >
+> > > It's concerning that such deep machinery as pagevec draining is visible
+> > > to userspace.
+> > >
 > > 
-> > On 2020/3/22 7:38, Mike Kravetz wrote:
-> >> On 2/21/20 7:33 PM, Longpeng(Mike) wrote:
-> >>> From: Longpeng <longpeng2@huawei.com>
-> I have not looked closely at the generated code for lookup_address_in_pgd.
-> It appears that it would dereference p4d, pud and pmd multiple times.  Sean
-> seemed to think there was something about the calling context that would
-> make issues like those seen with huge_pte_offset less likely to happen.  I
-> do not know if this is accurate or not.
-
-Only for KVM's calls to lookup_address_in_mm(), I can't speak to other
-calls that funnel into to lookup_address_in_pgd().
-
-KVM uses a combination of tracking and blocking mmu_notifier calls to ensure
-PTE changes/invalidations between gup() and lookup_address_in_pgd() cause a
-restart of the faulting instruction, and that pending changes/invalidations
-are blocked until installation of the pfn in KVM's secondary MMU completes.
-
-kvm_mmu_page_fault():
-
-	mmu_seq = kvm->mmu_notifier_seq;
-	smp_rmb();
-
-	pfn = gup(hva);
-
-	spin_lock(&kvm->mmu_lock);
-	smp_rmb();
-	if (kvm->mmu_notifier_seq != mmu_seq)
-		goto out_unlock: // Restart guest, i.e. retry the fault
-
-	lookup_address_in_mm(hva, ...);
-
-	...
-
-  out_unlock:
-	spin_unlock(&kvm->mmu_lock);
-
-
-kvm_mmu_notifier_change_pte() / kvm_mmu_notifier_invalidate_range_end():
-
-	spin_lock(&kvm->mmu_lock);
-	kvm->mmu_notifier_seq++;
-	smp_wmb();
-	spin_unlock(&kvm->mmu_lock);
-
-
-> Let's remove the two READ_ONCE calls and move this patch forward.  We can
-> look closer at lookup_address_in_pgd and generate another patch if that needs
-> to be fixed as well.
+> > We already have other examples like memcg stats where the
+> > optimizations like batching per-cpu stats collection exposes
+> > differences to the userspace. I would not be that worried here.
 > 
-> Thanks
+> Agreed! Tests should be more tolerant for counters imprecision.
+> Unevictable LRU is an optimization and transition to that list is a
+> matter of an internal implementation detail.
+>
+> > > I suppose that for consistency and correctness we should perform a
+> > > drain prior to each read from /proc/*/pagemap.  Presumably this would
+> > > be far too expensive.
+> > >
+> > > Is there any other way?  One such might be to make the MLOCK_ONFAULT
+> > > pages bypass the lru_add_pvecs?
+> > >
+> > 
+> > I would rather prefer to have something similar to
+> > /proc/sys/vm/stat_refresh which drains the pagevecs.
+> 
+> No, please don't. Pagevecs draining is by far not the only batching
+> scheme we use and an interface like this would promise users to
+> effectivelly force flushing all of them.
+> 
+> Can we simply update the test to be more tolerant to imprecisions
+> instead?
+> 
+
+I don't think, thouhg, that this particular test case can be entirely
+reduced as "counter imprecison".
+
+The reason I think this is a different beast, is that having the page
+being flagged as PG_unevictable is expected part of the aftermath of
+a mlock* call. This selftest is, IMO, correctly verifying that fact,
+as it checks the functionality correctness.
+
+The problem boils down to the fact that the page would immediately
+be flagged as PG_unevictable after the mlock (under MCL_FUTURE|MCL_ONFAULT
+semantics) call, and the test was expecting it, and commit 9c4e6b1a7027f
+changed that by "delaying" that flag setting.
+
+As I mentioned, too, there's nothing wrong with the delayed setting of 
+PG_unevictable, we just need to compensate for that fact in this test,
+which is what this patch is suggesting to do.
+  
 > -- 
-> Mike Kravetz
+> Michal Hocko
+> SUSE Labs
+> 
+
