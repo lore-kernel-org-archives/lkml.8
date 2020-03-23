@@ -2,131 +2,160 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE46AC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C1BC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9614F2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D3CC2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:27:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="s0aD2iU5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BK9j0God"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgCWWUX (ORCPT
+        id S1727025AbgCWW1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:20:23 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:36797 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgCWWUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 18:20:23 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 15cbe099;
-        Mon, 23 Mar 2020 22:13:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=PbPvni7Sltr0h22AlXOhuRrhfNc=; b=s0aD2i
-        U5ofzLQJr4YECUyNMfLSjtqQRyjbV9+bXmhW9fatlhO9WHSiEh3OIaHvTdzTdDhI
-        /03IoRQe2iO1B5KpvlQbDoD2rKkX/gJbz3I9Tqp01ORyHErrVX19NGSbTbL/LWeG
-        jvSxxJ1zuEso00rYpNPwCqKvIFshqXAjU+fQK3cRjq1K/IuKGxjZ8isq9MlpXEUA
-        ItKOY4vOQH909nvKaaAvitAFzNPlSghCa4jOJAn28XQ9TBipRvoQDto7JEJU5dFQ
-        f+OLE4VzagoubjBVvu/SNdNR6UKp/EvEeTmi1lUVpUwD0HkpjgKphvUxnOHs/9Qo
-        N8IWimxU7GnzLmEg==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 34232a36 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Mon, 23 Mar 2020 22:13:18 +0000 (UTC)
-Received: by mail-io1-f52.google.com with SMTP id k9so5425031iov.7;
-        Mon, 23 Mar 2020 15:20:21 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3/DBfdaeFBmcTTWexrOYgOPX4L1lKSvT+hY0kZDeALWpsZZaRK
-        3xZ3qkNI6TIW/m9A+PNYPS6wJ/1FCFnDr4kizf8=
-X-Google-Smtp-Source: ADFU+vvRm5gGEehyNNeHhDfxRATjvFXIdpkqP6nuyOPQJHJSeNSq5KBtMdSbsJFvPoMMLVjsD2hE1KtBv2mMqZv2yck=
-X-Received: by 2002:a05:6638:52a:: with SMTP id j10mr1438090jar.36.1585002020839;
- Mon, 23 Mar 2020 15:20:20 -0700 (PDT)
+        Mon, 23 Mar 2020 18:27:47 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44286 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgCWW1r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 18:27:47 -0400
+Received: by mail-oi1-f195.google.com with SMTP id v134so7540664oie.11
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 15:27:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Tmt/AtSQf/b1AfMKrhHYlgdsJf3jzbEQVXwlMTLV4uU=;
+        b=BK9j0Godyj24t7Fh24qKYPTNIBwldF+AKe5Yhrr1AfBOcN8aG8EwvFxZbx3vpsFFVh
+         B87k0TbZhIioXj2VyUHHcm/5XznanhVQ+ny95smNcJE4z28rUfToByS+f7/8MbWIENyQ
+         eAyq1UDs8Rw6JgYLk/ie0RPDfZ/StIL63C+uQ6UX1/8wqr18nwx16fjUmAI5Fx3rmcoT
+         JIXcrJ14x3c7gLEKDHf1e8HrDCZBbsPq4A/OU7NoAF8MLJiRRc1Huh6uixI3uIThDKO2
+         y5NnLa0qxRQjO9bG0uqZreariGc++7WXpSM9JU2WP+lOUouk/RMP1iZRiKJ7dEWQhoHY
+         k+xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Tmt/AtSQf/b1AfMKrhHYlgdsJf3jzbEQVXwlMTLV4uU=;
+        b=nuODTjutPNSRqweX8UG8mQSoS5h5YwEzdTGCbSq6aDYT6obfWgEqk1/4oAmUQiSIvA
+         hpzwbAsaPMeqLdMSJrKDuFU83MFJAhki4smPEvcaKCctxAfGVG4qBm3+vPNv0CkaQxhw
+         J2+OD3s4I6XxZg3jsGxl6l/NSuuWW/lttPqsnoMR9zatvZTcBvdJnf3cmyhgc8344g4C
+         mC2tgDh/oDZ6UjMlxuy7B+1sSh9g+cU0ZBEwROHzD8KXCJH2WoDBcROBlgDWWuVuvCzi
+         SP5k7hFeRnnBbK3nccwU6sJ/ErsxfFrRQMNGA+LGVtmIIoWZwQATpCN4OafjLV/q1EHT
+         rLBA==
+X-Gm-Message-State: ANhLgQ0Z1Mm25XiyOc0q4t2AbasSmEZ5hs0Ke8QaTEPwjtQGuzE9O5yF
+        s7M1UvryGrE5Naa8fuAsUFk=
+X-Google-Smtp-Source: ADFU+vsUUH/xlVPi4/C8Ryv+a8s7tKna64jEsgzR7P/5p5OxS/SoTVln/yBUQR6ydtxBXbp2e0RQhQ==
+X-Received: by 2002:aca:3302:: with SMTP id z2mr1282962oiz.3.1585002466086;
+        Mon, 23 Mar 2020 15:27:46 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id y9sm5708282oie.0.2020.03.23.15.27.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 15:27:45 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>
+Subject: [PATCH] powerpc/maple: Fix declaration made after definition
+Date:   Mon, 23 Mar 2020 15:27:29 -0700
+Message-Id: <20200323222729.15365-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-References: <20200323215732.13339-1-masahiroy@kernel.org>
-In-Reply-To: <20200323215732.13339-1-masahiroy@kernel.org>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Mon, 23 Mar 2020 16:20:10 -0600
-X-Gmail-Original-Message-ID: <CAHmME9qYLYHsfV8S3WVV8x52tvqJNSarfgrXVm0oBsHD1GinCw@mail.gmail.com>
-Message-ID: <CAHmME9qYLYHsfV8S3WVV8x52tvqJNSarfgrXVm0oBsHD1GinCw@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: allow to pass optional flag into as-instr macro
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 3:58 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> Commit 42d519e3d0c0 ("kbuild: Add support for 'as-instr' to be used in
-> Kconfig files") introduced the Kconfig variant of as-instr.
->
-> It is currently used in arch/arm64/Kconfig.
->
-> arm and arm64 are simple cases because they are separated by directory,
-> and GCC also provides a single architecture.
->
-> Such architectures as x86, powerpc, sparc, etc. support both 32 and
-> 64 bit kernel in the unified arch directory, and GCC can be biarch.
-> On such architectures, Kbuild passes -m32 / -m64 flag (or a proper
-> target triple for Clang) to select the target machine bit.
->
-> This commit adds the second parameter to as-instr so you can optionally
-> pass a compiler flag to evaluate the instruction with.
->
-> One example usage of this is for the conversion of the following code
-> in arch/x86/Makefile:
->
->   adx_instr := $(call as-instr,adox %r10$(comma)%r10,-DCONFIG_AS_ADX=1)
->
-> This instruction code should be evaluated by the 64-bit assembler
-> (r10 is a 64-bit register).
->
-> If you use compiler that defaults to 32-bit for building the 64-bit
-> kernel, -m64 should be passed to invoke the 64-bit assembler.
->
->   config AS_ADX
->           def_bool $(as-instr,adox %r10$(comma)%r10,$(m64-flags))
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
->  scripts/Kconfig.include | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-> index 496d11c92c97..9b8c98168ba9 100644
-> --- a/scripts/Kconfig.include
-> +++ b/scripts/Kconfig.include
-> @@ -31,9 +31,10 @@ cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -S -x c /dev/null -o /de
->  # Return y if the linker supports <flag>, n otherwise
->  ld-option = $(success,$(LD) -v $(1))
->
-> -# $(as-instr,<instr>)
-> +# $(as-instr,<instr>,[<flag>])
->  # Return y if the assembler supports <instr>, n otherwise
-> -as-instr = $(success,printf "%b\n" "$(1)" | $(CC) $(CLANG_FLAGS) -c -x assembler -o /dev/null -)
-> +# You can pass optional <flag> to evaluate <instr> with
-> +as-instr = $(success,printf "%b\n" "$(1)" | $(CC) $(CLANG_FLAGS) $(2) -c -x assembler -o /dev/null -)
->
->  # check if $(CC) and $(LD) exist
->  $(error-if,$(failure,command -v $(CC)),compiler '$(CC)' not found)
-> --
-> 2.17.1
+When building ppc64 defconfig, Clang errors (trimmed for brevity):
 
-This looks fine to me, and might be useful down the line in the
-future. But for the ADX situation, I wound up just going with the
-bicompatible register:
+arch/powerpc/platforms/maple/setup.c:365:1: error: attribute declaration
+must precede definition [-Werror,-Wignored-attributes]
+machine_device_initcall(maple, maple_cpc925_edac_setup);
+^
 
-https://git.zx2c4.com/linux-dev/commit/?h=jd/kconfig-assembler-support&id=c81d9c743d058ef9013fbf8661d071ac9d574472
+machine_device_initcall expands to __define_machine_initcall, which in
+turn has the macro machine_is used in it, which declares mach_##name
+with an __attribute__((weak)). define_machine actually defines
+mach_##name, which in this file happens before the declaration, hence
+the warning.
 
-+# binutils >= 2.23
-+config AS_ADX
-+ def_bool $(as-instr,adox %eax$(comma)%eax)
+To fix this, move define_machine after machine_device_initcall so that
+the declaration occurs before the definition, which matches how
+machine_device_initcall and define_machine work throughout arch/powerpc.
 
-This seems to work. But it also doesn't matter much, as it gets
-removed anyway during the binutils 2.23 bump:
+While we're here, remove some spaces before tabs.
 
-https://git.zx2c4.com/linux-dev/commit/?h=jd/kconfig-assembler-support&id=c95d6f2ce88722eeb86d54f206bd7599bdc51e1d
+Fixes: 8f101a051ef0 ("edac: cpc925 MC platform device setup")
+Link: https://godbolt.org/z/kDoYSA
+Link: https://github.com/ClangBuiltLinux/linux/issues/662
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ arch/powerpc/platforms/maple/setup.c | 34 ++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/arch/powerpc/platforms/maple/setup.c b/arch/powerpc/platforms/maple/setup.c
+index 6f019df37916..15b2c6eb506d 100644
+--- a/arch/powerpc/platforms/maple/setup.c
++++ b/arch/powerpc/platforms/maple/setup.c
+@@ -291,23 +291,6 @@ static int __init maple_probe(void)
+ 	return 1;
+ }
+ 
+-define_machine(maple) {
+-	.name			= "Maple",
+-	.probe			= maple_probe,
+-	.setup_arch		= maple_setup_arch,
+-	.init_IRQ		= maple_init_IRQ,
+-	.pci_irq_fixup		= maple_pci_irq_fixup,
+-	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
+-	.restart		= maple_restart,
+-	.halt			= maple_halt,
+-       	.get_boot_time		= maple_get_boot_time,
+-       	.set_rtc_time		= maple_set_rtc_time,
+-       	.get_rtc_time		= maple_get_rtc_time,
+-      	.calibrate_decr		= generic_calibrate_decr,
+-	.progress		= maple_progress,
+-	.power_save		= power4_idle,
+-};
+-
+ #ifdef CONFIG_EDAC
+ /*
+  * Register a platform device for CPC925 memory controller on
+@@ -364,3 +347,20 @@ static int __init maple_cpc925_edac_setup(void)
+ }
+ machine_device_initcall(maple, maple_cpc925_edac_setup);
+ #endif
++
++define_machine(maple) {
++	.name			= "Maple",
++	.probe			= maple_probe,
++	.setup_arch		= maple_setup_arch,
++	.init_IRQ		= maple_init_IRQ,
++	.pci_irq_fixup		= maple_pci_irq_fixup,
++	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
++	.restart		= maple_restart,
++	.halt			= maple_halt,
++	.get_boot_time		= maple_get_boot_time,
++	.set_rtc_time		= maple_set_rtc_time,
++	.get_rtc_time		= maple_get_rtc_time,
++	.calibrate_decr		= generic_calibrate_decr,
++	.progress		= maple_progress,
++	.power_save		= power4_idle,
++};
+-- 
+2.26.0
+
