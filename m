@@ -2,108 +2,133 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04661C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23966C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C20D020735
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:55:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UH0//XA+"
+	by mail.kernel.org (Postfix) with ESMTP id 05A0520771
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbgCWOzw (ORCPT
+        id S1727164AbgCWOzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:55:52 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:20091 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725990AbgCWOzw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:55:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584975350;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VvGlC8Czl63YZgi4jgzehNhHSqhqg15Zh+SkPrQjW4Y=;
-        b=UH0//XA+w6S855aDvVZ3AckN3VkyZOzIg1aom9otoibYvWWFF011uLvM73lzOHv2Kcwz6h
-        vmAOTwpRdNaDCsmNYpdYnA/elifOM74ROcfKnUFlaU57V6zO4AAeq2UgBbUsWLSHMh1tTg
-        PuEAFPrP2LrH3QfszBK10LJevWVkw0Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-316-K7jnb4PuMQqRo8yGC7qZCg-1; Mon, 23 Mar 2020 10:55:48 -0400
-X-MC-Unique: K7jnb4PuMQqRo8yGC7qZCg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 473131005514;
-        Mon, 23 Mar 2020 14:55:47 +0000 (UTC)
-Received: from optiplex-lnx (unknown [10.33.36.220])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 63A865F904;
-        Mon, 23 Mar 2020 14:55:45 +0000 (UTC)
-Date:   Mon, 23 Mar 2020 10:55:42 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
- false-negative errors
-Message-ID: <20200323145542.GC23364@optiplex-lnx>
-References: <20200322013525.1095493-1-aquini@redhat.com>
- <CALvZod4GjRFLRX=S_YFYnJk-kL6tjveYEDOBFS76NqrURERHHQ@mail.gmail.com>
- <20200323141659.GA23364@optiplex-lnx>
- <20200323142941.GK7524@dhcp22.suse.cz>
+        Mon, 23 Mar 2020 10:55:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:50640 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727149AbgCWOzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 10:55:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F4851FB;
+        Mon, 23 Mar 2020 07:55:54 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 51F243F7C3;
+        Mon, 23 Mar 2020 07:55:49 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 14:55:46 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        nd@arm.com
+Subject: Re: [PATCH v10 00/13] arm64: Branch Target Identification support
+Message-ID: <20200323145546.GB3959@C02TD0UTHF1T.local>
+References: <20200316165055.31179-1-broonie@kernel.org>
+ <20200320173945.GC27072@arm.com>
+ <20200323122143.GB4892@mbp>
+ <20200323132412.GD4948@sirena.org.uk>
+ <20200323135722.GA3959@C02TD0UTHF1T.local>
+ <20200323143954.GC4892@mbp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200323142941.GK7524@dhcp22.suse.cz>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200323143954.GC4892@mbp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 03:29:41PM +0100, Michal Hocko wrote:
-> On Mon 23-03-20 10:16:59, Rafael Aquini wrote:
-> > On Sun, Mar 22, 2020 at 09:31:04AM -0700, Shakeel Butt wrote:
-> > > On Sat, Mar 21, 2020 at 6:35 PM Rafael Aquini <aquini@redhat.com> wrote:
-> > > >
-> > > > Changes for commit 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
-> > > > break this test expectations on the behavior of mlock syscall family immediately
-> > > > inserting the recently faulted pages into the UNEVICTABLE_LRU, when MCL_ONFAULT is
-> > > > passed to the syscall as part of its flag-set.
+On Mon, Mar 23, 2020 at 02:39:55PM +0000, Catalin Marinas wrote:
+> On Mon, Mar 23, 2020 at 01:57:22PM +0000, Mark Rutland wrote:
+> > On Mon, Mar 23, 2020 at 01:24:12PM +0000, Mark Brown wrote:
+> > > On Mon, Mar 23, 2020 at 12:21:44PM +0000, Catalin Marinas wrote:
+> > > > On Fri, Mar 20, 2020 at 05:39:46PM +0000, Szabolcs Nagy wrote:
 > > > 
-> > > mlock* syscalls do not provide any guarantee that the pages will be in
-> > > unevictable LRU, only that the pages will not be paged-out. The test
-> > > is checking something very internal to the kernel and this is expected
-> > > to break.
+> > > > +int arch_elf_adjust_prot(int prot, const struct arch_elf_state *state,
+> > > > +                        bool has_interp, bool is_interp)
+> > > > +{
+> > > > +       if (is_interp != has_interp)
+> > > > +               return prot;
+> > > > +
+> > > > +       if (!(state->flags & ARM64_ELF_BTI))
+> > > > +               return prot;
+> > > > +
+> > > > +       if (prot & PROT_EXEC)
+> > > > +               prot |= PROT_BTI;
+> > > > +
+> > > > +       return prot;
+> > > > +}
+> > > 
+> > > > At a quick look, for dynamic binaries we have has_interp == true and
+> > > > is_interp == false. I don't know why but, either way, the above code
+> > > > needs a comment with some justification.
+> > > 
+> > > I don't really know for certain either, I inherited this code as is with
+> > > the understanding that this was all agreed with the toolchain and libc
+> > > people - the actual discussion that lead to the decisions being made
+> > > happened before I was involved.  My understanding is that the idea was
+> > > that the dynamic linker would be responsible for mapping everything in
+> > > dynamic applications other than itself but other than consistency I
+> > > don't know why.  I guess it defers more decision making to userspace but
+> > > I'm having a hard time thinking of sensible cases where one might wish
+> > > to make a decision other than enabling PROT_BTI.
 > > 
-> > It was a check expected to be satisfied before the commit, though. 
-> > Getting the mlocked pages inserted directly into the unevictable LRU,
-> > skipping the pagevec, was established behavior before the aforementioned
-> > commit, and even though one could argue userspace should not be aware,
-> > or care, about such inner kernel circles the program in question is not an 
-> > ordinary userspace app, but a kernel selftest that is supposed to check
-> > for the functionality correctness.
+> > My understanding was this had been agreed with the toolchain folk a
+> > while back -- anything static loaded by the kernel (i.e. a static
+> > executable or the dynamic linker) would get GP set. In other cases the
+> > linker will mess with the permissions on the pages anyhow, and needs to
+> > be aware of BTI in order to do the right thing, so it was better to
+> > leave it to userspace consistently (e.g. as that had the least risk of
+> > subtle changes in behaviour leading to ABI difficulties).
 > 
-> But mlock (in neither mode) is reall forced to put pages to the
-> UNEVICTABLE_LRU for correctness. If the test is really depending on it
-> then the selftest is bogus. A real MCL_ONFAULT test should focus on the
-> user observable contract of this api. And that is that a new mapping
-> doesn't fault in the page during the mlock call but the memory is locked
-> after the memory is faulted in. You can use different methods to observe
-> locked memory - e.g. try to reclaim it and check or check /proc/<pid>/smaps
->
+> So this means that the interpreter will have to mprotect(PROT_BTI) the
+> text section of the primary executable.
 
-Again, I don't think the test is bogus, although it's (now) expecting
-something that is not guaranteed after the referred commit.
-The check for PG_unevictable set on the page backing up the mapping
-seems reasonable, as the flag is supposed to be there, if everything 
-went on fine after the mlock call. 
+Yes, but after fixing up any relocations in that section it's going to
+have to call mprotect() on it anyhow (e.g. in order to make it
+read-only), and in doing so would throw away BTI unless it was BTI
+aware.
 
--- Rafael
+> > I think it would be best to document the current behaviour, as it's a
+> > simple ABI that we can guarantee, and the dynamic linker will have to be
+> > aware of BTI in order to do the right thing anyhow.
+> 
+> That's a valid point. If we have an old dynamic linker and the kernel
+> enabled BTI automatically for the main executable, could things go wrong
+> (e.g. does the PLT need to be BTI-aware)?
 
+I believe that a PLT in an unguarded page needs no special treatment. A
+PLT within a guarded page needs to be built specially for BTI.
+
+Thanks,
+Mark.
