@@ -2,107 +2,76 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AA5C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1388DC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E01F12072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:28:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MQL04WvN"
+	by mail.kernel.org (Postfix) with ESMTP id D7CEE206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:35:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgCWJ2B (ORCPT
+        id S1727739AbgCWJfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 05:28:01 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:27736 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727669AbgCWJ2B (ORCPT
+        Mon, 23 Mar 2020 05:35:24 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44747 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727695AbgCWJfY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:28:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584955679;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0eue0jrc67xfJnfJk9ICQ1xtxeUcbBK4TygDF+Ayn20=;
-        b=MQL04WvNeM5m2QtCPGIjpFrJnnXPrTjxR3MWksat7OlNdS9nZ2UP3AOgGvC7FQWEzGXdrq
-        yrxuey3KhJGuH4JJuU0rxMs6EXhdAGfn0o8hkO7z/DfB/2KQiNEgLlPZwRRm4VWhPGBQkv
-        lVIFcts870zovjhRhBIls1KAtIINPu4=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-392-PrClEjvfNwu1Wo8dCd4OeA-1; Mon, 23 Mar 2020 05:27:58 -0400
-X-MC-Unique: PrClEjvfNwu1Wo8dCd4OeA-1
-Received: by mail-wm1-f72.google.com with SMTP id v184so3309198wme.7
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 02:27:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0eue0jrc67xfJnfJk9ICQ1xtxeUcbBK4TygDF+Ayn20=;
-        b=eW84g2UmHa9BSv1flQKm09HGv7olgqVdOGyFx9O2GKQ6C9WaE4d4OktMj99bgXKmuN
-         9QDvJrXa8bBgwuq2Yvxy5tYiuYUYXaTjL8CPd7KIG5H29DSjhhdDsl+G1JjtGxkYeJQO
-         uAVJpmGrRU+9/RI9jrhm1tn4bxsJsrla8Lv1L+R7ZBJ6EFq5/2Lk8PQ38FQEveoBuEyG
-         4Mojj54M+RKdbbK+12F3Xtwa3+k/91gBo92sEnTtK+J6MH3hPfXJAayzE7q4JcA4fc44
-         Cg1gKckI5EPnxpTeHC+gGFoeKPCH1pVYfL3KAVuxezi7v4t7NN9il7f0ZQliaMpBZEA1
-         OdOQ==
-X-Gm-Message-State: ANhLgQ2MdsShcuNSOIvs0ALM+OQvSm0ehFM2KQzAuZ7hNeexD/axISSR
-        a6xowa4i+hhQRNcuByldX6K3d3OC/N4YLlZQTMai7T0mVkN8PWWOUYS8yBHxtFdKIUlruG6+nFT
-        3ZqplKYF/0isLj4uf9ZJRa9ry
-X-Received: by 2002:a1c:9658:: with SMTP id y85mr26269461wmd.63.1584955676994;
-        Mon, 23 Mar 2020 02:27:56 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vun9jWmUPgL/rJK95Cry9OUaAEuL0bLGvpk0q05iiMD9MI+PPsMSsLdAGIhBJfiJtQ7oLokCw==
-X-Received: by 2002:a1c:9658:: with SMTP id y85mr26269434wmd.63.1584955676758;
-        Mon, 23 Mar 2020 02:27:56 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.194.179])
-        by smtp.gmail.com with ESMTPSA id e1sm23474045wrx.90.2020.03.23.02.27.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 02:27:56 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 10:27:54 +0100
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
-Subject: Re: help needed in debugging missed wakeup(?)
-Message-ID: <20200323092754.GD14300@localhost.localdomain>
-References: <c74744cc78cab34f3be8b547b7ff3cd6769d299b.camel@pengutronix.de>
- <20200320140618.048714c9@gandalf.local.home>
- <d8f1b10028b57c5a62bcf3088489c0dbdd0dec5d.camel@pengutronix.de>
+        Mon, 23 Mar 2020 05:35:24 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jGJUO-0003Th-GA; Mon, 23 Mar 2020 10:35:20 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jGJUN-0002CU-Fr; Mon, 23 Mar 2020 10:35:19 +0100
+Date:   Mon, 23 Mar 2020 10:35:19 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Yendapally Reddy Dhananjaya Reddy 
+        <yendapally.reddy@broadcom.com>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] pwm: bcm-iproc: handle clk_get_rate() return
+Message-ID: <20200323093519.krno3znzqbptrwxj@pengutronix.de>
+References: <20200323092424.22664-1-rayagonda.kokatanur@broadcom.com>
+ <20200323092424.22664-2-rayagonda.kokatanur@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <d8f1b10028b57c5a62bcf3088489c0dbdd0dec5d.camel@pengutronix.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200323092424.22664-2-rayagonda.kokatanur@broadcom.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Mar 23, 2020 at 02:54:23PM +0530, Rayagonda Kokatanur wrote:
+> Handle clk_get_rate() returning <= 0 condition to avoid
+> possible division by zero.
 
-On 20/03/20 20:04, Lucas Stach wrote:
+The idea I wanted to transport with my question about how this problem
+was found is that the commit log is amended with this information. This
+is important information as it helps people having to decide if this
+change should be backported. Also it would be great to know if this can
+really make the kernel crash or if (e.g.) said clock cannot be off in
+practise.
 
-[...]
+Best regards
+Uwe
 
-> My hope was that someone would could guide me a little with an educated
-> guess, to make those trace_printks more helpful. The lockup is hard to
-> trigger and there's other unrelated system activity going on, even when
-> the relevant user task is stuck, so randomly sprinkling debug
-> statements will generate lots of output to filter down.
-
-I'd start by enabling sched:sched_pi_setprio (or adding trace_printks
-around there to confirm your suspicion). Once that is confirmed, I'd try
-to look at update_curr_dl::throttle and verify if the misbehaving task
-was indeed throttled at some point; it shouldn't be, because dl_boosted
-flag should be set for it at this point (maybe check this condition as
-well).
-
-Best,
-
-Juri
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
