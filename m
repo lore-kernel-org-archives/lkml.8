@@ -2,92 +2,282 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6D0C4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E058DC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AAF92076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA23A2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:01:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z5PPvOmh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgCWL6M (ORCPT
+        id S1728230AbgCWMBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 07:58:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:47830 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728174AbgCWL6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 07:58:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 465AB1FB;
-        Mon, 23 Mar 2020 04:58:11 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C14BF3F52E;
-        Mon, 23 Mar 2020 04:58:09 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 11:58:04 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     =?utf-8?B?UsOpbWk=?= Denis-Courmont <remi@remlab.net>,
-        will@kernel.org, linux-arm-kernel@lists.infradead.org,
-        james.morse@arm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: reduce trampoline data alignment
-Message-ID: <20200323115804.GA2597@C02TD0UTHF1T.local>
-References: <1938400.7m7sAWtiY1@basile.remlab.net>
- <20200319091407.51449-3-remi@remlab.net>
- <20200321134056.GB3052@mbp>
+        Mon, 23 Mar 2020 08:01:06 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:54867 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728176AbgCWMBG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 08:01:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584964865;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=P+3Ok5a+3t9Z9rUpZF1j8rUoWy/hS/ROQXyPscaiMOE=;
+        b=Z5PPvOmhwkqQO5Ul4A9phQ78ELyWO1CL2fa7kBULUqyO5GJKsaXKWMZxYP3R74I0Vd3Uew
+        4JPmcc/AAb7A/9a2Ye7yd2NZ9o3GGxJ/gFpbdgJgK+/nj8Mxgc7QCWNWOPKrsFQPHTDm1o
+        IN56pZshSPGgZyhJpO8EG7q2FTyudWw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-26-vHvO5dqPPBC-nWeANp4hUg-1; Mon, 23 Mar 2020 08:00:59 -0400
+X-MC-Unique: vHvO5dqPPBC-nWeANp4hUg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7813E101FC60;
+        Mon, 23 Mar 2020 12:00:56 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-36.pek2.redhat.com [10.72.12.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C00C194BB;
+        Mon, 23 Mar 2020 12:00:49 +0000 (UTC)
+Date:   Mon, 23 Mar 2020 20:00:44 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Jaewon Kim <jaewon31.kim@samsung.com>
+Cc:     gregkh@linuxfoundation.org, leon@kernel.org, vbabka@suse.cz,
+        adobriyan@gmail.com, akpm@linux-foundation.org, labbott@redhat.com,
+        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com, kasong@redhat.com,
+        bhe@redhat.com, linux-api@vger.kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, jaewon31.kim@gmail.com
+Subject: Re: [RFC PATCH v2 1/3] meminfo_extra: introduce meminfo extra
+Message-ID: <20200323120044.GA29433@dhcp-128-65.nay.redhat.com>
+References: <20200323080503.6224-1-jaewon31.kim@samsung.com>
+ <CGME20200323080508epcas1p387c9c19b480da53be40fe5d51e76a477@epcas1p3.samsung.com>
+ <20200323080503.6224-2-jaewon31.kim@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200321134056.GB3052@mbp>
+In-Reply-To: <20200323080503.6224-2-jaewon31.kim@samsung.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 01:41:01PM +0000, Catalin Marinas wrote:
-> On Thu, Mar 19, 2020 at 11:14:07AM +0200, Rémi Denis-Courmont wrote:
-> > diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-> > index c36733d8cd75..ecad15443655 100644
-> > --- a/arch/arm64/kernel/entry.S
-> > +++ b/arch/arm64/kernel/entry.S
-> > @@ -858,7 +858,7 @@ SYM_CODE_END(tramp_exit_compat)
-> >  	.popsection				// .entry.tramp.text
-> >  #ifdef CONFIG_RANDOMIZE_BASE
-> >  	.pushsection ".rodata", "a"
-> > -	.align PAGE_SHIFT
-> > +	.align	4	// all .rodata must be in a single fixmap page
-> >  SYM_DATA_START(__entry_tramp_data_start)
-> >  	.quad	vectors
-> >  SYM_DATA_END(__entry_tramp_data_start)
-> > diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> > index 9b08f7c7e6f0..6a0e75f48e7b 100644
-> > --- a/arch/arm64/mm/mmu.c
-> > +++ b/arch/arm64/mm/mmu.c
-> > @@ -599,9 +599,8 @@ static int __init map_entry_trampoline(void)
-> >  	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
-> >  		extern char __entry_tramp_data_start[];
-> >  
-> > -		__set_fixmap(FIX_ENTRY_TRAMP_DATA,
-> > -			     __pa_symbol(__entry_tramp_data_start),
-> > -			     PAGE_KERNEL_RO);
-> > +		pa_start = __pa_symbol(__entry_tramp_data_start) & PAGE_MASK;
-> > +		__set_fixmap(FIX_ENTRY_TRAMP_DATA, pa_start, PAGE_KERNEL_RO);
-> >  	}
-> >  
-> >  	return 0;
+Hi Jaewon,
+
+On 03/23/20 at 05:05pm, Jaewon Kim wrote:
+> Provide APIs to drivers so that they can show its memory usage on
+> /proc/meminfo_extra.
 > 
-> For some reason, I haven't investigated yet, a kernel with KASAN and 64K
-> pages enabled does not boot (see the attached config). It seems to lock
-> up when starting user space. Bisected to this commit, reverting it fixes
-> the issue.
+> int register_meminfo_extra(atomic_long_t *val, int shift,
+> 			   const char *name);
+> int unregister_meminfo_extra(atomic_long_t *val);
+> 
+> Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
+> ---
+> v2: move to /proc/meminfo_extra as a new file, meminfo_extra.c
+>     use rcu to reduce lock overhead
+> v1: print info at /proc/meminfo
+> ---
+>  fs/proc/Makefile        |   1 +
+>  fs/proc/meminfo_extra.c | 123 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mm.h      |   4 ++
+>  mm/page_alloc.c         |   1 +
+>  4 files changed, 129 insertions(+)
+>  create mode 100644 fs/proc/meminfo_extra.c
+> 
+> diff --git a/fs/proc/Makefile b/fs/proc/Makefile
+> index bd08616ed8ba..83d2f55591c6 100644
+> --- a/fs/proc/Makefile
+> +++ b/fs/proc/Makefile
+> @@ -19,6 +19,7 @@ proc-y	+= devices.o
+>  proc-y	+= interrupts.o
+>  proc-y	+= loadavg.o
+>  proc-y	+= meminfo.o
+> +proc-y	+= meminfo_extra.o
+>  proc-y	+= stat.o
+>  proc-y	+= uptime.o
+>  proc-y	+= util.o
+> diff --git a/fs/proc/meminfo_extra.c b/fs/proc/meminfo_extra.c
+> new file mode 100644
+> index 000000000000..bd3f0d2b7fb7
+> --- /dev/null
+> +++ b/fs/proc/meminfo_extra.c
+> @@ -0,0 +1,123 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/mm.h>
+> +#include <linux/proc_fs.h>
+> +#include <linux/seq_file.h>
+> +#include <linux/slab.h>
+> +
+> +static void show_val_kb(struct seq_file *m, const char *s, unsigned long num)
+> +{
+> +	seq_put_decimal_ull_width(m, s, num << (PAGE_SHIFT - 10), 8);
+> +	seq_write(m, " kB\n", 4);
+> +}
+> +
+> +static LIST_HEAD(meminfo_head);
+> +static DEFINE_SPINLOCK(meminfo_lock);
+> +
+> +#define NAME_SIZE      15
+> +#define NAME_BUF_SIZE  (NAME_SIZE + 2) /* ':' and '\0' */
+> +
+> +struct meminfo_extra {
+> +	struct list_head list;
+> +	atomic_long_t *val;
+> +	int shift_for_page;
 
-I think the issue might be due to ADRP + ADD :lo12: using 4K offsets,
-and so patch 1 isn't quite right for !4K kernels, as we're not
-accounting for 4 bits of the address when we try to generate it.
+Can this be simplified to use a bytes value without an extra shift?
 
-I'll check that now.
+> +	char name[NAME_BUF_SIZE];
+> +	char name_pad[NAME_BUF_SIZE];
+> +};
+> +
+There should be document about below function here.
 
-Thanks,
-Mark.
+> +int register_meminfo_extra(atomic_long_t *val, int shift, const char *name)
+> +{
+> +	struct meminfo_extra *meminfo, *memtemp;
+> +	int len;
+> +	int error = 0;
+> +
+> +	meminfo = kzalloc(sizeof(*meminfo), GFP_KERNEL);
+> +	if (!meminfo) {
+> +		error = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	meminfo->val = val;
+> +	meminfo->shift_for_page = shift;
+> +	strncpy(meminfo->name, name, NAME_SIZE);
+> +	len = strlen(meminfo->name);
+> +	meminfo->name[len] = ':';
+> +	strncpy(meminfo->name_pad, meminfo->name, NAME_BUF_SIZE);
+> +	while (++len < NAME_BUF_SIZE - 1)
+> +		meminfo->name_pad[len] = ' ';
+> +
+> +	spin_lock(&meminfo_lock);
+> +	list_for_each_entry_rcu(memtemp, &meminfo_head, list) {
+> +		if (memtemp->val == val) {
+> +			error = -EINVAL;
+> +			break;
+> +		}
+> +	}
+> +	if (!error)
+> +		list_add_tail_rcu(&meminfo->list, &meminfo_head);
+> +	spin_unlock(&meminfo_lock);
+> +	if (error)
+> +		kfree(meminfo);
+> +out:
+> +
+> +	return error;
+> +}
+> +EXPORT_SYMBOL(register_meminfo_extra);
+> +
+> +int unregister_meminfo_extra(atomic_long_t *val)
+> +{
+> +	struct meminfo_extra *memtemp;
+> +	int error = -EINVAL;
+> +
+> +	spin_lock(&meminfo_lock);
+> +	list_for_each_entry_rcu(memtemp, &meminfo_head, list) {
+> +		if (memtemp->val == val) {
+> +			list_del_rcu(&memtemp->list);
+> +			error = 0;
+> +			break;
+> +		}
+> +	}
+> +	spin_unlock(&meminfo_lock);
+> +	if (!error) {
+> +		synchronize_rcu();
+> +		kfree(memtemp);
+> +	}
+> +
+> +	return error;
+> +}
+> +EXPORT_SYMBOL(unregister_meminfo_extra);
+> +
+> +static void __meminfo_extra(struct seq_file *m)
+> +{
+> +	struct meminfo_extra *memtemp;
+> +	unsigned long nr_page;
+> +
+> +	rcu_read_lock();
+> +	list_for_each_entry_rcu(memtemp, &meminfo_head, list) {
+> +		nr_page = (unsigned long)atomic_long_read(memtemp->val);
+> +		nr_page = nr_page >> memtemp->shift_for_page;
+> +		if (m)
+> +			show_val_kb(m, memtemp->name_pad, nr_page);
+> +		else
+> +			pr_cont("%s%lukB ", memtemp->name, nr_page);
+
+nr_page != nr_kb?
+
+> +	}
+> +	rcu_read_unlock();
+> +}
+> +
+> +void show_meminfo_extra(void)
+> +{
+> +	__meminfo_extra(NULL);
+> +}
+> +
+> +static int meminfo_extra_proc_show(struct seq_file *m, void *v)
+> +{
+> +	__meminfo_extra(m);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init proc_meminfo_extra_init(void)
+> +{
+> +	proc_create_single("meminfo_extra", 0, NULL, meminfo_extra_proc_show);
+> +	return 0;
+> +}
+> +fs_initcall(proc_meminfo_extra_init);
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 52269e56c514..55317161ab57 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2898,6 +2898,10 @@ void __init setup_nr_node_ids(void);
+>  static inline void setup_nr_node_ids(void) {}
+>  #endif
+>  
+> +void show_meminfo_extra(void);
+> +int register_meminfo_extra(atomic_long_t *val, int shift, const char *name);
+> +int unregister_meminfo_extra(atomic_long_t *val);
+> +
+>  extern int memcmp_pages(struct page *page1, struct page *page2);
+>  
+>  static inline int pages_identical(struct page *page1, struct page *page2)
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3c4eb750a199..db1be9a39783 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5229,6 +5229,7 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
+>  	struct zone *zone;
+>  	pg_data_t *pgdat;
+>  
+> +	show_meminfo_extra();
+>  	for_each_populated_zone(zone) {
+>  		if (show_mem_node_skip(filter, zone_to_nid(zone), nodemask))
+>  			continue;
+> -- 
+> 2.13.7
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
+Thanks
+Dave
+
