@@ -2,116 +2,79 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E765BC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADB8C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF81D2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:12:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iEc1NnnY"
+	by mail.kernel.org (Postfix) with ESMTP id F411220771
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584983576;
+	bh=zYY36C+NQw3BWMNbsipgSyupsxr4ozIcZV8x8cgMdVg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KGyY2iCjHPs2Il8Wp3ljBUlVqtOt+1WQzwpE4GF6Z1dEs3MNpOxMLd8i9kNgmoYyW
+	 vKu/V01VvSfrqkzIUu2lc1FRmCUn0VLms28xEl2RSgGn5G7i82HclB4flobTMHUHiM
+	 3nZ3qbtG06y08dLHj0ShRC9MgLogLDtg3wsC9VeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbgCWRMo (ORCPT
+        id S1727743AbgCWRMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:12:44 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:55757 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727456AbgCWRMo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:12:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584983564; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=yBoybXieDVOjskSAC9aDbF4827szgpNJ3hgbbYsVjws=;
- b=iEc1NnnYdeWfZT9gY6Bv0JW6UiMop1/8XAxGbzGP5K9uIz72HqXEGKeInvyw9lvPaNSJ3UOv
- OKALakFgutp2q+rN3k/TOHBGETxXBkGapGCWcl/LtCtBNHCnl/dveUr0Zm68bhcac5snGp0H
- RfgEr5f4ioy7K0rhKIk9VIE7OY4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e78ee0b.7f5fc95c6068-smtp-out-n02;
- Mon, 23 Mar 2020 17:12:43 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5E029C432C2; Mon, 23 Mar 2020 17:12:42 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        Mon, 23 Mar 2020 13:12:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727112AbgCWRMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 13:12:54 -0400
+Received: from gmail.com (unknown [104.132.1.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBA22C433CB;
-        Mon, 23 Mar 2020 17:12:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CBA22C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mail.kernel.org (Postfix) with ESMTPSA id B8A132074D;
+        Mon, 23 Mar 2020 17:12:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584983574;
+        bh=zYY36C+NQw3BWMNbsipgSyupsxr4ozIcZV8x8cgMdVg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xop59apFoDrcZyizFT0955ozbcj/3keVwGNoZtLePDK2SGtIx1HaFk8VL6SIEcz8I
+         2k6RzoP5xe46UnHeGYqWDMVpmhZbBgTtgmAyYAk0dDSw2WZzD5lAUP9UzK4z4OoSb1
+         Puo+jZAZVR7guAK40Rm/crdzrbKVaSQB63ZKZIL0=
+Date:   Mon, 23 Mar 2020 10:12:52 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        NeilBrown <neilb@suse.com>
+Subject: Re: [PATCH v4 0/5] module autoloading fixes and cleanups
+Message-ID: <20200323171252.GA61708@gmail.com>
+References: <20200318230515.171692-1-ebiggers@kernel.org>
+ <20200320052819.GB1315@sol.localdomain>
+ <20200320192718.6d90a5a10476626f0e39b166@linux-foundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] brcmfmac: Replace zero-length array with
- flexible-array member
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200225020804.GA9428@embeddedor>
-References: <20200225020804.GA9428@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200323171242.5E029C432C2@smtp.codeaurora.org>
-Date:   Mon, 23 Mar 2020 17:12:42 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320192718.6d90a5a10476626f0e39b166@linux-foundation.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+On Fri, Mar 20, 2020 at 07:27:18PM -0700, Andrew Morton wrote:
+> On Thu, 19 Mar 2020 22:28:19 -0700 Eric Biggers <ebiggers@kernel.org> wrote:
+> 
+> > It seems that people are relatively happy with this patch series now.
+> > Andrew, will you be taking it through -mm?  I don't see any better place.
+> 
+> Yup.
 
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Andrew, can you update -mm to v4 of this patchset?  Right now it contains a mix
+of v2 and v3.  In particular the diff for "docs: admin-guide: document the
+kernel.modprobe sysctl" is different, and I made some small updates to commit
+messages.
 
-Patch applied to wireless-drivers-next.git, thanks.
-
-232c897eb5ca brcmfmac: Replace zero-length array with flexible-array member
-
--- 
-https://patchwork.kernel.org/patch/11402413/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+- Eric
