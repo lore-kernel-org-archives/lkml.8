@@ -2,78 +2,85 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2ECC10F26
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A685C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1F9520736
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584946020;
-	bh=QVu8pshIueptnWq5DfqM6RzxSosOhQobX0EIxgS3+tQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dsiso4SDaCANp+G2zf0/24PIMzjHVKS0R2G9dLmZVksOHR0RYkT5wbGnrDFtENDaD
-	 IktDNl4Sh2lzTeKDqgvAv7woG3S7AMrvmwfVZMm8Y9OmQKknMuJVI/EdPPw/WdrxB2
-	 noXPYj+UBWtZ4tloqxDbE3OPe/Tfsn6JJAqxWSGs=
+	by mail.kernel.org (Postfix) with ESMTP id ED2E920736
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:48:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbgCWGqT (ORCPT
+        id S1727356AbgCWGsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 02:46:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48724 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727164AbgCWGqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 02:46:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD349206C3;
-        Mon, 23 Mar 2020 06:46:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584945978;
-        bh=QVu8pshIueptnWq5DfqM6RzxSosOhQobX0EIxgS3+tQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Sg8XDyy4bcIQo1pyPyqPapbTCtdpkBGhe24qXskcUHOQyR0SSLHYFii9c7vHA42wD
-         4gH/ZOtKuB+tlLvlim6F/ixD6DJcDlaP/XOywmFN7/l+bMl5hcrAkeWI8Ng1Ej+HIS
-         kyiKn/0xeufQekgSdb0CRfGToPH8fiCfVl9iU3sk=
-Date:   Mon, 23 Mar 2020 07:46:16 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Kyungtae Kim <kt0755@gmail.com>
-Cc:     jslaby@suse.com, slyfox@gentoo.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>, rei4dan@gmail.com,
-        Dave Tian <dave.jing.tian@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: UBSAN: Undefined behaviour in drivers/tty/vt/keyboard.c
-Message-ID: <20200323064616.GB129571@kroah.com>
-References: <CAEAjamv3wT4aqF0y1_PHG_=cbzH-ATsP6TiV5Zt5Qc+ACVnOPw@mail.gmail.com>
+        Mon, 23 Mar 2020 02:48:20 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56286 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726142AbgCWGsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 02:48:19 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7B578D4A8DDD5F88AC1A;
+        Mon, 23 Mar 2020 14:48:11 +0800 (CST)
+Received: from huawei.com (10.175.113.25) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 23 Mar 2020
+ 14:48:04 +0800
+From:   Zheng Zengkai <zhengzengkai@huawei.com>
+To:     <sgoutham@marvell.com>, <rrichter@marvell.com>,
+        <davem@davemloft.net>, <ast@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <zhengzengkai@huawei.com>
+Subject: [PATCH net-next] net: thunderx: remove set but not used variable 'tail'
+Date:   Mon, 23 Mar 2020 14:51:16 +0800
+Message-ID: <20200323065116.45399-1-zhengzengkai@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEAjamv3wT4aqF0y1_PHG_=cbzH-ATsP6TiV5Zt5Qc+ACVnOPw@mail.gmail.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 11:34:01PM -0400, Kyungtae Kim wrote:
-> We report a bug (in linux-5.5.11) found by FuzzUSB (modified version
-> of syzkaller)
-> 
-> Seems the variable "npadch" has a very large value (i.e., 333333333)
-> as a result of multiple executions of the function "k_ascii" (keyboard.c:888)
-> while the variable "base" has 10.
-> So their multiplication at line 888 in "k_ascii" will become
-> larger than the max of type int, causing such an integer overflow.
-> 
-> I believe this can be solved by checking for overflow ahead of operations
-> e.g., using check_mul_overflow().
-> 
-> kernel config: https://kt0755.github.io/etc/config_v5.5.11
+From: Zheng zengkai <zhengzengkai@huawei.com>
 
-Great, can you send a patch for this?
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-thanks,
+drivers/net/ethernet/cavium/thunder/nicvf_queues.c: In function nicvf_sq_free_used_descs:
+drivers/net/ethernet/cavium/thunder/nicvf_queues.c:1182:12: warning:
+ variable tail set but not used [-Wunused-but-set-variable]
 
-greg k-h
+It's not used since commit 4863dea3fab01("net: Adding support for Cavium ThunderX network controller"),
+so remove it.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zheng zengkai <zhengzengkai@huawei.com>
+---
+ drivers/net/ethernet/cavium/thunder/nicvf_queues.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_queues.c b/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
+index 4ab57d33a87e..069e7413f1ef 100644
+--- a/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
++++ b/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
+@@ -1179,13 +1179,12 @@ void nicvf_sq_disable(struct nicvf *nic, int qidx)
+ void nicvf_sq_free_used_descs(struct net_device *netdev, struct snd_queue *sq,
+ 			      int qidx)
+ {
+-	u64 head, tail;
++	u64 head;
+ 	struct sk_buff *skb;
+ 	struct nicvf *nic = netdev_priv(netdev);
+ 	struct sq_hdr_subdesc *hdr;
+ 
+ 	head = nicvf_queue_reg_read(nic, NIC_QSET_SQ_0_7_HEAD, qidx) >> 4;
+-	tail = nicvf_queue_reg_read(nic, NIC_QSET_SQ_0_7_TAIL, qidx) >> 4;
+ 	while (sq->head != head) {
+ 		hdr = (struct sq_hdr_subdesc *)GET_SQ_DESC(sq, sq->head);
+ 		if (hdr->subdesc_type != SQ_DESC_TYPE_HEADER) {
+-- 
+2.18.1
+
