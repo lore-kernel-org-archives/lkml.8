@@ -2,119 +2,93 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3730DC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B06ABC4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E8A206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D87206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:30:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SCUPXLUw"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zo1yalVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgCWL2M (ORCPT
+        id S1728167AbgCWLaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 07:28:12 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33363 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728115AbgCWL2L (ORCPT
+        Mon, 23 Mar 2020 07:30:30 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51426 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727658AbgCWLaa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 07:28:11 -0400
-Received: by mail-wr1-f67.google.com with SMTP id a25so16601379wrd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 04:28:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Hw2/ohwzvhdDAwTeOPYmsLkFpaTkgjXMGVp6G44h3PI=;
-        b=SCUPXLUw/uicEQqC2yi+8megAkqOkf+9OKn4NIu/93ohMq8xiPzCItbINGWJlS9JI2
-         6jl6HgXpuxawRuG5YtcT4Xj8qypZfmst+TP5C6IXyQlnqo90oOHI3QeKfqOc8+ODWDH7
-         bV/lq4EcxwGI+1P0Toc5KZczWbtsehyOc/5zCgpyv4XcYw0Ay92LchAzDj8SzSkp+Hv5
-         /8lA22jOUI4/sZFR/hlJRvFpl1DrUELX3w5BYp0pwNviujN065xrah7N7ZpFDJcodGhN
-         S339MsktCXEOpIf8A6U6V0YTX93mqF0GOlGElvnrpYE19ncHEO7PTbZXt1UpgN3mKh8e
-         raCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Hw2/ohwzvhdDAwTeOPYmsLkFpaTkgjXMGVp6G44h3PI=;
-        b=mzk5Ool06LbgLBjt66li6eyloNziEUglQR76Y4+2+vbRvOwpotGum3ZAMYUjbTHp1M
-         Boj3m9AbzOy0wOvHZVPofI71XlatQMYemTVBPfIdRgwy/IjwFh2uADbm/qIdABmGFERd
-         q/fWBocFivUBMbqiXd1Nhgest7QvVsm7iXCES82YsunlSLbIO5bL1bAM9i6IEhWzgV8Q
-         p1VpL2T2CX4+4vOHbay+b2d70x1hkeICX2HRWGvXdpDOCCO7LjXsMBdwcqg4eFJhFb2l
-         Jm4YeOC6SAvZahx8cpnqizURrVI5QPKAdT8jIP8kyx71lfcM8HyhnwCJe/w2vbWoJzYv
-         2sfQ==
-X-Gm-Message-State: ANhLgQ3RmTqrISZWL+CHvljQkmeygA7ZL5t0V+5mES/xbV5JwmuNuIbO
-        p6+ypsyDzh3UYyme7d9KYHQ=
-X-Google-Smtp-Source: ADFU+vtQPSS6AllqJvb5//lTd0+Eq5uJsrK3kd4PejlM7cu+aEmdFUqp0c8a4/FGUOtoiEAlGF165g==
-X-Received: by 2002:a5d:540c:: with SMTP id g12mr24543560wrv.178.1584962889945;
-        Mon, 23 Mar 2020 04:28:09 -0700 (PDT)
-Received: from wambui.zuku.co.ke ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id s22sm19731666wmc.16.2020.03.23.04.28.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 04:28:09 -0700 (PDT)
-From:   Wambui Karuga <wambui.karugax@gmail.com>
-To:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org
-Subject: [PATCH] drm/vram-helper: remove unneeded #if defined/endif guards.
-Date:   Mon, 23 Mar 2020 14:28:02 +0300
-Message-Id: <20200323112802.228214-1-wambui.karugax@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 23 Mar 2020 07:30:30 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02NBULbc122352;
+        Mon, 23 Mar 2020 06:30:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584963021;
+        bh=SvZEk0kF+xXLC23PlsMzzjUziFI9pRar16wxl8TII6g=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Zo1yalVtoEaB5tFIsjBmAkmnkpzZnGj5w6Rkk1p55dm58UeyWqHwIYII/MIfAgRYx
+         elzBMBWoQa67uJE61S7LWn6QkG7VbcV3xOf4sTuw8U1rRboFR2jJtLdUIPtuckw5hK
+         LBC6p/FqcTxsR01FV3Vn4d68bXOpr5hxXPVPaeAE=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02NBUKpY087302
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 23 Mar 2020 06:30:20 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
+ Mar 2020 06:30:16 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 23 Mar 2020 06:30:16 -0500
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02NBUDtI076876;
+        Mon, 23 Mar 2020 06:30:14 -0500
+Subject: Re: [PATCH v3 0/5] pwm: omap-dmtimer: Allow for dynamic pwm period
+ updates
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+CC:     Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
+References: <20200312042210.17344-1-lokeshvutla@ti.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <09dac13d-44b0-80c6-fdbb-54bfc6f48e36@ti.com>
+Date:   Mon, 23 Mar 2020 17:00:13 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200312042210.17344-1-lokeshvutla@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unneeded #if/#endif guards for checking whether the
-CONFIG_DEBUG_FS option is set or not. If the option is not set, the
-compiler optimizes the functions making the guards
-unnecessary.
+Hi All,
 
-Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
----
- drivers/gpu/drm/drm_gem_vram_helper.c | 4 ----
- 1 file changed, 4 deletions(-)
+On 12/03/20 9:52 AM, Lokesh Vutla wrote:
+> This series fixes minor issues in config callback and allows for on the
+> fly updates for pwm period and duty cycle. This is mainly intended to
+> allow pwm omap dmtimer to be used for generating a 1PPS signal that can be
+> syncronized to PTP clock in CPTS module available in AM335x and AM57xx SoCs.
+> 
+> Series depends on the following series:
+> - https://patchwork.kernel.org/patch/11379875/
+> - https://patchwork.kernel.org/project/linux-omap/list/?series=251691
 
-diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
-index 76506bedac11..b3201a70cbfc 100644
---- a/drivers/gpu/drm/drm_gem_vram_helper.c
-+++ b/drivers/gpu/drm/drm_gem_vram_helper.c
-@@ -1018,7 +1018,6 @@ static struct ttm_bo_driver bo_driver = {
-  * struct drm_vram_mm
-  */
- 
--#if defined(CONFIG_DEBUG_FS)
- static int drm_vram_mm_debugfs(struct seq_file *m, void *data)
- {
- 	struct drm_info_node *node = (struct drm_info_node *) m->private;
-@@ -1035,7 +1034,6 @@ static int drm_vram_mm_debugfs(struct seq_file *m, void *data)
- static const struct drm_info_list drm_vram_mm_debugfs_list[] = {
- 	{ "vram-mm", drm_vram_mm_debugfs, 0, NULL },
- };
--#endif
- 
- /**
-  * drm_vram_mm_debugfs_init() - Register VRAM MM debugfs file.
-@@ -1045,11 +1043,9 @@ static const struct drm_info_list drm_vram_mm_debugfs_list[] = {
-  */
- void drm_vram_mm_debugfs_init(struct drm_minor *minor)
- {
--#if defined(CONFIG_DEBUG_FS)
- 	drm_debugfs_create_files(drm_vram_mm_debugfs_list,
- 				 ARRAY_SIZE(drm_vram_mm_debugfs_list),
- 				 minor->debugfs_root, minor);
--#endif
- }
- EXPORT_SYMBOL(drm_vram_mm_debugfs_init);
- 
--- 
-2.25.1
+Gentle ping on this series :) The above dependencies are merged into timer tree
+and below is the immutable branch:
 
+https://git.linaro.org/people/dlezcano/linux.git/log/?h=timers/drivers/timer-ti-dm
+
+Thanks and regards,
+Lokesh
