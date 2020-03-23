@@ -2,94 +2,115 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA938C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D32C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 992782076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCBA20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:51:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="I8nEQQSW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ObdfsNpY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbgCWQvO (ORCPT
+        id S1727738AbgCWQvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:51:14 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46010 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbgCWQvO (ORCPT
+        Mon, 23 Mar 2020 12:51:52 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:46369 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727479AbgCWQvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:51:14 -0400
-Received: by mail-qt1-f196.google.com with SMTP id t17so2119853qtn.12
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 09:51:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LWBMOpdQ6RM6tzOn/8vWjeIgj8g8a5I1STuJsGCjRo8=;
-        b=I8nEQQSWkjtHSqP1oR4eghgEG3cRUnPlE+gN/nLMpRir0NoJuL2+OW3Ih9ju54o1mp
-         AHaALAKLIoIOXw3pyp+wb+fJADkm3tYqh79N43FfTLB1ikS2bppY8ZfEK12nDPlFafTR
-         afvhXue9Jb+JdKlFwqQUl7+WlJ4l6hBwCpYmW2Y9CVnf27BQDsCNeFCqRTsDzKw+Um4T
-         Kow9JvP65D9EhMJ0W7QNwbOxXYn/7byquVJrjEazzOPYurkG1c7A0JhF+VGWJzaw64hJ
-         Okj2CwJ0nbbDIQ4KtMeCRus9UkOVuaENlWnzezFt2qWFp1nNrsSfj+rMW0+cHuC5+4qQ
-         dDqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LWBMOpdQ6RM6tzOn/8vWjeIgj8g8a5I1STuJsGCjRo8=;
-        b=ioyvttyH1/mbUh4Xp/WW84mQYGQrgVbUZJI76NdaV+9EC9D7zL9rqmvYwsHYcL1qk3
-         bMwK7AFQ3mlhT+ffiWM43CyA/NqAwrRgGukR3TcIs23XxSA+T5ES2qL0x9YV4hQNQIEO
-         cbknzvX20ucN3H9D2oMBQ0mHF9DIQTZLvvp7piAIT3KfkKoRpPAAMT/EUASTpYRF86F8
-         uragmhc9OXYfh8ihB9oVi5BE65dJzC826jnNaFaBkwTgglcGquKo+InXELAbEIt+BfhQ
-         YVExMfIGrQEo2xaKD4oFBAayK39tsE5ia4oBueCNqKnC5JA4bX8bx5Ksu9mvCcRfFP7e
-         qDcA==
-X-Gm-Message-State: ANhLgQ1lEHdySY5JNesmnK7cuWy/Oj0adztecsj6NgK17QUAjC7b93DF
-        uz6/FnkFFZeLIILZQ8RJFgdcU3T+xOo=
-X-Google-Smtp-Source: ADFU+vsVno42d9S3diBfWFL38XIfIgaPdPcxiMkRilrh1GpMhoHWHq7xqGvY4ajHi7WGL965oPHLWA==
-X-Received: by 2002:ac8:6043:: with SMTP id k3mr22532957qtm.336.1584982273059;
-        Mon, 23 Mar 2020 09:51:13 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:a9a9])
-        by smtp.gmail.com with ESMTPSA id l45sm12547211qtb.8.2020.03.23.09.51.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 09:51:12 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 12:51:11 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     js1304@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v4 5/8] mm/workingset: handle the page without memcg
-Message-ID: <20200323165111.GC204561@cmpxchg.org>
-References: <1584942732-2184-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1584942732-2184-6-git-send-email-iamjoonsoo.kim@lge.com>
+        Mon, 23 Mar 2020 12:51:51 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584982310; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=lbQpwFJDFERsSt1RC1aKW37CQ3Nw8XZV5frxE6kKNOw=;
+ b=ObdfsNpYi/S2549T6QNy2C/C7gZTjw79nr+/OUvf2/uvtS2RaSrFN+q3VW9vruxR+xLHfi3Q
+ 2a49cUbKO9Bb2Zj1IEXemycL38PjhYaqreuOerlGLi561vI5vydxRuRZ+5yqhHpGCiQdwlm1
+ MnC4HW1Vvckao1pkWNPzKwV66wo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e78e914.7fdfdce3d8f0-smtp-out-n03;
+ Mon, 23 Mar 2020 16:51:32 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id ECD6AC432C2; Mon, 23 Mar 2020 16:51:30 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 60FB9C432C2;
+        Mon, 23 Mar 2020 16:51:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 60FB9C432C2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584942732-2184-6-git-send-email-iamjoonsoo.kim@lge.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] wireless: intel: Replace zero-length array with
+ flexible-array member
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200224170907.GA9948@embeddedor>
+References: <20200224170907.GA9948@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Stanislaw Gruszka <stf_xl@wp.pl>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200323165130.ECD6AC432C2@smtp.codeaurora.org>
+Date:   Mon, 23 Mar 2020 16:51:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 02:52:09PM +0900, js1304@gmail.com wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> 
-> When implementing workingset detection for anonymous page, I found
-> some swapcache pages with NULL memcg. They are brought in by swap
-> readahead and nobody has touched it.
-> 
-> The idea behind the workingset code is to tell on page fault time
-> whether pages have been previously used or not. Since this page
-> hasn't been used, don't store a shadow entry for it; when it later
-> faults back in, we treat it as the new page that it is.
-> 
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was detected with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+Please split iwlwifi changes to a separate patch so that Luca can apply
+to his tree.
+
+Patch set to Changes Requested.
+
+-- 
+https://patchwork.kernel.org/patch/11401145/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
