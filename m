@@ -2,39 +2,40 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4122C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E649AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE1D2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5F2C2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:07:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="rm/ViKCO"
+	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="hXfPnf6d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbgCWSH0 (ORCPT
+        id S1727793AbgCWSHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:07:26 -0400
-Received: from mr85p00im-zteg06021901.me.com ([17.58.23.194]:55056 "EHLO
-        mr85p00im-zteg06021901.me.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727149AbgCWSH0 (ORCPT
+        Mon, 23 Mar 2020 14:07:31 -0400
+Received: from mr85p00im-hyfv06021301.me.com ([17.58.23.188]:40144 "EHLO
+        mr85p00im-hyfv06021301.me.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727149AbgCWSHb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:07:26 -0400
+        Mon, 23 Mar 2020 14:07:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
-        t=1584986846; bh=Lz+pG/PsJEEZHzsgsUcnNiVD88/w5Vqoinxpr1eJOCM=;
+        t=1584986850; bh=Syms5C1o7RmHUh1txTaH5Wi0LpA3XXA2FF5eRn6eE2g=;
         h=From:To:Subject:Date:Message-Id;
-        b=rm/ViKCOsa5GtE+XNAmAUziuSTB0puOSkVRW/4RMLyJfC8vMPZTF/5ej20zkfOpXD
-         6zCiAGw1Ron9s7aSgU2JPTVvZfcSPn9XsIVXE0xLF4lb4ENKc1UTexRikoGhPQ4Q9p
-         ljFB1ne5iN60+tW9YYCjzLU/OH2Nd1vCMMWoNZwxigCVsAVDO954KgomAEzJX9Zs07
-         vwxg3jIJhOAF22ck7g2JQpr0sDFttmTg7jmFAOufNIdcw9Aa2y8pTOoMg6TcXm2JoN
-         OcbrXN5S/cMkUiIHEzkprdqrQK7UE9V6tJGk4BsawQli8qk2H+h9DcxlYlcVKqknaT
-         KsmTZOeVmhX2Q==
+        b=hXfPnf6dijJ5KW2rdVGJNcj6BUtlRFHbCS2cE7gErk6xuQrkwbkihh4jYsA7oNKk+
+         7jd1JNEm+drP21GD2VqLMJGXbnRmyPKDdrKiBEp3sC7h2ndee/2ndGU1rMX28uSage
+         8Kz4ctx5zDnUuHRI/YF6HpSme9GB9rzOgrivERKtJ4bSMqP6Z28NxDPNn4jsSk8z6L
+         wzbyidfJ/LymzRW8TzJgBmXJ55W8RG92vESF5h35EcBo0cfxxr2BDPr8yQWi4RVppZ
+         kDDKnKJNIsfF1lQ/kvQTs5LGvmcRV0HAJqCY5tlJSx7RL4feP4LtiIAAR1N/m+TAyi
+         cIS5gJABAppNQ==
 Received: from localhost (101.220.150.77.rev.sfr.net [77.150.220.101])
-        by mr85p00im-zteg06021901.me.com (Postfix) with ESMTPSA id 7A7EB7206B2;
-        Mon, 23 Mar 2020 18:07:25 +0000 (UTC)
+        by mr85p00im-hyfv06021301.me.com (Postfix) with ESMTPSA id DA75B40823;
+        Mon, 23 Mar 2020 18:07:29 +0000 (UTC)
 From:   Alain Volmat <avolmat@me.com>
 To:     Russell King <linux@armlinux.org.uk>,
         Arnd Bergmann <arnd@arndb.de>,
@@ -50,30 +51,165 @@ To:     Russell King <linux@armlinux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     patrice.chotard@st.com, avolmat@me.com
-Subject: [PATCH 0/2] arm: sti: LL_UART updates & STiH418 addition
-Date:   Mon, 23 Mar 2020 19:06:37 +0100
-Message-Id: <20200323180639.8481-1-avolmat@me.com>
+Subject: [PATCH 1/2] arm: use DEBUG_UART_PHYS and DEBUG_UART_VIRT for sti LL_UART
+Date:   Mon, 23 Mar 2020 19:06:38 +0100
+Message-Id: <20200323180639.8481-2-avolmat@me.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200323180639.8481-1-avolmat@me.com>
+References: <20200323180639.8481-1-avolmat@me.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-03-23_07:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 clxscore=1011 mlxscore=0
- mlxlogscore=841 adultscore=0 classifier=spam adjust=0 reason=mlx
+ phishscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1908290000 definitions=main-2003230094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This small serie updates the STi platform LL_UART code to rely on
-DEBUG_UART_PHYS/DEBUG_UART_VIRT and add the STiH418 SoC support.
+Update the sti platform LL_UART support to rely on
+CONFIG_DEBUG_UART_PHYS and CONFIG_DEBUG_UART_VIRT from Kconfig
 
-Alain Volmat (2):
-  arm: use DEBUG_UART_PHYS and DEBUG_UART_VIRT for sti LL_UART
-  arm: sti LL_UART: add STiH418 SBC UART0 support
+Signed-off-by: Alain Volmat <avolmat@me.com>
+---
+ arch/arm/Kconfig.debug       | 23 ++++++++++++-----------
+ arch/arm/include/debug/sti.S | 26 ++------------------------
+ 2 files changed, 14 insertions(+), 35 deletions(-)
 
- arch/arm/Kconfig.debug       | 38 +++++++++++++++++++++++++-----------
- arch/arm/include/debug/sti.S | 26 ++----------------------
- 2 files changed, 29 insertions(+), 35 deletions(-)
-
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index b70d7debf5ca..f1fa1cb45ecb 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -1177,10 +1177,9 @@ choice
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on ST SPEAr13xx based platforms.
+ 
+-	config STIH41X_DEBUG_ASC2
++	config DEBUG_STIH41X_ASC2
+ 		bool "Use StiH415/416 ASC2 UART for low-level debug"
+ 		depends on ARCH_STI
+-		select DEBUG_STI_UART
+ 		help
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on STiH415/416 based platforms like b2000, which has
+@@ -1188,10 +1187,9 @@ choice
+ 
+ 		  If unsure, say N.
+ 
+-	config STIH41X_DEBUG_SBC_ASC1
++	config DEBUG_STIH41X_SBC_ASC1
+ 		bool "Use StiH415/416 SBC ASC1 UART for low-level debug"
+ 		depends on ARCH_STI
+-		select DEBUG_STI_UART
+ 		help
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on STiH415/416 based platforms like b2020. which has
+@@ -1501,10 +1499,6 @@ config DEBUG_TEGRA_UART
+ 	bool
+ 	depends on ARCH_TEGRA
+ 
+-config DEBUG_STI_UART
+-	bool
+-	depends on ARCH_STI
+-
+ config DEBUG_STM32_UART
+ 	bool
+ 	depends on ARCH_STM32
+@@ -1557,7 +1551,8 @@ config DEBUG_LL_INCLUDE
+ 	default "debug/s3c24xx.S" if DEBUG_S3C24XX_UART || DEBUG_S3C64XX_UART
+ 	default "debug/s5pv210.S" if DEBUG_S5PV210_UART
+ 	default "debug/sirf.S" if DEBUG_SIRFSOC_UART
+-	default "debug/sti.S" if DEBUG_STI_UART
++	default "debug/sti.S" if DEBUG_STIH41X_ASC2
++	default "debug/sti.S" if DEBUG_STIH41X_SBC_ASC1
+ 	default "debug/stm32.S" if DEBUG_STM32_UART
+ 	default "debug/tegra.S" if DEBUG_TEGRA_UART
+ 	default "debug/ux500.S" if DEBUG_UX500_UART
+@@ -1685,7 +1680,9 @@ config DEBUG_UART_PHYS
+ 	default 0xfc00c000 if DEBUG_AT91_SAMA5D4_USART3
+ 	default 0xfcb00000 if DEBUG_HI3620_UART
+ 	default 0xfd883000 if DEBUG_ALPINE_UART0
++	default 0xfe531000 if DEBUG_STIH41X_SBC_ASC1
+ 	default 0xfe800000 if ARCH_IOP32X
++	default 0xfed32000 if DEBUG_STIH41X_ASC2
+ 	default 0xff690000 if DEBUG_RK32_UART2
+ 	default 0xffc02000 if DEBUG_SOCFPGA_UART0
+ 	default 0xffc02100 if DEBUG_SOCFPGA_ARRIA10_UART1
+@@ -1713,7 +1710,8 @@ config DEBUG_UART_PHYS
+ 		DEBUG_S3C64XX_UART || \
+ 		DEBUG_BCM63XX_UART || DEBUG_ASM9260_UART || \
+ 		DEBUG_SIRFSOC_UART || DEBUG_DIGICOLOR_UA0 || \
+-		DEBUG_AT91_UART
++		DEBUG_AT91_UART || \
++		DEBUG_STIH41X_ASC2 || DEBUG_STIH41X_SBC_ASC1
+ 
+ config DEBUG_UART_VIRT
+ 	hex "Virtual base address of debug UART"
+@@ -1778,7 +1776,9 @@ config DEBUG_UART_VIRT
+ 	default 0xfc705000 if DEBUG_ZTE_ZX
+ 	default 0xfcfe8600 if DEBUG_BCM63XX_UART
+ 	default 0xfd000000 if DEBUG_SPEAR3XX || DEBUG_SPEAR13XX
++	default 0xfd531000 if DEBUG_STIH41X_SBC_ASC1
+ 	default 0xfd883000 if DEBUG_ALPINE_UART0
++	default 0xfdd32000 if DEBUG_STIH41X_ASC2
+ 	default 0xfe017000 if DEBUG_MMP_UART2
+ 	default 0xfe018000 if DEBUG_MMP_UART3
+ 	default 0xfe100000 if DEBUG_IMX23_UART || DEBUG_IMX28_UART
+@@ -1823,7 +1823,8 @@ config DEBUG_UART_VIRT
+ 		DEBUG_S3C64XX_UART || \
+ 		DEBUG_BCM63XX_UART || DEBUG_ASM9260_UART || \
+ 		DEBUG_SIRFSOC_UART || DEBUG_DIGICOLOR_UA0 || \
+-		DEBUG_AT91_UART
++		DEBUG_AT91_UART || \
++		DEBUG_STIH41X_ASC2 || DEBUG_STIH41X_SBC_ASC1
+ 
+ config DEBUG_UART_8250_SHIFT
+ 	int "Register offset shift for the 8250 debug UART"
+diff --git a/arch/arm/include/debug/sti.S b/arch/arm/include/debug/sti.S
+index 6b42c91f217d..a903a60b81c6 100644
+--- a/arch/arm/include/debug/sti.S
++++ b/arch/arm/include/debug/sti.S
+@@ -6,28 +6,6 @@
+  * Copyright (C) 2013 STMicroelectronics (R&D) Limited.
+  */
+ 
+-#define STIH41X_COMMS_BASE              0xfed00000
+-#define STIH41X_ASC2_BASE               (STIH41X_COMMS_BASE+0x32000)
+-
+-#define STIH41X_SBC_LPM_BASE            0xfe400000
+-#define STIH41X_SBC_COMMS_BASE          (STIH41X_SBC_LPM_BASE + 0x100000)
+-#define STIH41X_SBC_ASC1_BASE           (STIH41X_SBC_COMMS_BASE + 0x31000)
+-
+-
+-#define VIRT_ADDRESS(x)		(x - 0x1000000)
+-
+-#if IS_ENABLED(CONFIG_STIH41X_DEBUG_ASC2)
+-#define DEBUG_LL_UART_BASE	STIH41X_ASC2_BASE
+-#endif
+-
+-#if IS_ENABLED(CONFIG_STIH41X_DEBUG_SBC_ASC1)
+-#define DEBUG_LL_UART_BASE	STIH41X_SBC_ASC1_BASE
+-#endif
+-
+-#ifndef DEBUG_LL_UART_BASE
+-#error "DEBUG UART is not Configured"
+-#endif
+-
+ #define ASC_TX_BUF_OFF  0x04
+ #define ASC_CTRL_OFF    0x0c
+ #define ASC_STA_OFF     0x14
+@@ -37,8 +15,8 @@
+ 
+ 
+ 		.macro	addruart, rp, rv, tmp
+-		ldr	\rp,      =DEBUG_LL_UART_BASE	@ physical base
+-		ldr	\rv,      =VIRT_ADDRESS(DEBUG_LL_UART_BASE) @ virt base
++		ldr	\rp,      =CONFIG_DEBUG_UART_PHYS	@ physical base
++		ldr	\rv,      =CONFIG_DEBUG_UART_VIRT	@ virt base
+ 		.endm
+ 
+                 .macro  senduart,rd,rx
+-- 
+2.17.1
 
