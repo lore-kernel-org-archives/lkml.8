@@ -2,143 +2,107 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E7FC10F26
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A64BBC10F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5266520732
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B30D20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:27:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbgCWHWE (ORCPT
+        id S1727416AbgCWH10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 03:22:04 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12176 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727164AbgCWHWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 03:22:03 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 24D25A297C5B469D6335;
-        Mon, 23 Mar 2020 15:21:52 +0800 (CST)
-Received: from [127.0.0.1] (10.173.223.234) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Mon, 23 Mar 2020
- 15:21:46 +0800
-Subject: Re: [PATCH v2] xfrm: policy: Fix doulbe free in xfrm_policy_timer
-To:     Timo Teras <timo.teras@iki.fi>
-References: <20200318034839.57996-1-yuehaibing@huawei.com>
- <20200323014155.56376-1-yuehaibing@huawei.com>
- <20200323085311.35aefe10@vostro.wlan>
-CC:     <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <832e03ea-2511-eb7f-49d1-3cda6c9e6d18@huawei.com>
-Date:   Mon, 23 Mar 2020 15:21:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Mon, 23 Mar 2020 03:27:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59904 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727164AbgCWH1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 03:27:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C5EF6AC11;
+        Mon, 23 Mar 2020 07:27:23 +0000 (UTC)
+Date:   Mon, 23 Mar 2020 08:27:22 +0100 (CET)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     tglx@linutronix.de, jpoimboe@redhat.com,
+        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
+        brgerst@gmail.com
+Subject: Re: [PATCH v2 17/19] objtool: Optimize !vmlinux.o again
+In-Reply-To: <20200321161151.GB3323@worktop.programming.kicks-ass.net>
+Message-ID: <alpine.LSU.2.21.2003230826570.23992@pobox.suse.cz>
+References: <20200317170234.897520633@infradead.org> <20200317170910.819744197@infradead.org> <20200318132025.GH20730@hirez.programming.kicks-ass.net> <alpine.LSU.2.21.2003201719200.21240@pobox.suse.cz> <20200321151421.GD2452@worktop.programming.kicks-ass.net>
+ <20200321161151.GB3323@worktop.programming.kicks-ass.net>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20200323085311.35aefe10@vostro.wlan>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/23 14:53, Timo Teras wrote:
-> Hi
-> 
-> On Mon, 23 Mar 2020 09:41:55 +0800
-> YueHaibing <yuehaibing@huawei.com> wrote:
-> 
->> After xfrm_add_policy add a policy, its ref is 2, then
->>
->>                              xfrm_policy_timer
->>                                read_lock
->>                                xp->walk.dead is 0
->>                                ....
->>                                mod_timer()
->> xfrm_policy_kill
->>   policy->walk.dead = 1
->>   ....
->>   del_timer(&policy->timer)
->>     xfrm_pol_put //ref is 1
->>   xfrm_pol_put  //ref is 0
->>     xfrm_policy_destroy
->>       call_rcu
->>                                  xfrm_pol_hold //ref is 1
->>                                read_unlock
->>                                xfrm_pol_put //ref is 0
->>                                  xfrm_policy_destroy
->>                                   call_rcu
->>
->> xfrm_policy_destroy is called twice, which may leads to
->> double free.
-> 
-> I believe the timer changes were added later in commit e7d8f6cb2f which
-> added holding a reference when timer is running. I think it fails to
-> properly account for concurrently running timer in xfrm_policy_kill().
+On Sat, 21 Mar 2020, Peter Zijlstra wrote:
 
-commit e7d8f6cb2f hold a reference when &pq->hold_timer is armed,
-in my case, it's policy->timer, and hold_timer is not armed.
+> On Sat, Mar 21, 2020 at 04:14:21PM +0100, Peter Zijlstra wrote:
+> > On Fri, Mar 20, 2020 at 05:20:47PM +0100, Miroslav Benes wrote:
+> > 
+> > > I think there is one more missing in create_orc_entry().
+> > 
+> > I'm thikning you're quite right about that.... lemme see what to do
+> > about that.
 > 
-> The time when commit ea2dea9dacc2 was done this was not the case.
+> ---
+> --- a/tools/objtool/elf.c
+> +++ b/tools/objtool/elf.c
+> @@ -472,6 +472,14 @@ static int read_symbols(struct elf *elf)
+>  	return -1;
+>  }
 > 
-> I think it would be preferable if the concurrency issue could be solved
-> without additional locking.
+> +void elf_add_rela(struct elf *elf, struct rela *rela)
+> +{
+> +	struct section *sec = rela->sec;
+> +
+> +	list_add_tail(&rela->list, &sec->rela_list);
+> +	elf_hash_add(elf->rela_hash, &rela->hash, rela_hash(rela));
+> +}
+> +
+>  static int read_relas(struct elf *elf)
+>  {
+>  	struct section *sec;
+> @@ -519,8 +527,7 @@ static int read_relas(struct elf *elf)
+>  				return -1;
+>  			}
 > 
->> Call Trace:
->> RIP: 0010:refcount_warn_saturate+0x161/0x210
->> ...
->>  xfrm_policy_timer+0x522/0x600
->>  call_timer_fn+0x1b3/0x5e0
->>  ? __xfrm_decode_session+0x2990/0x2990
->>  ? msleep+0xb0/0xb0
->>  ? _raw_spin_unlock_irq+0x24/0x40
->>  ? __xfrm_decode_session+0x2990/0x2990
->>  ? __xfrm_decode_session+0x2990/0x2990
->>  run_timer_softirq+0x5c5/0x10e0
->>
->> Fix this by use write_lock_bh in xfrm_policy_kill.
->>
->> Fixes: ea2dea9dacc2 ("xfrm: remove policy lock when accessing
->> policy->walk.dead") Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> -			list_add_tail(&rela->list, &sec->rela_list);
+> -			elf_hash_add(elf->rela_hash, &rela->hash, rela_hash(rela));
+> +			elf_add_rela(elf, rela);
+>  			nr_rela++;
+>  		}
+>  		max_rela = max(max_rela, nr_rela);
+> --- a/tools/objtool/elf.h
+> +++ b/tools/objtool/elf.h
+> @@ -127,6 +127,7 @@ struct section *elf_create_rela_section(
+>  int elf_rebuild_rela_section(struct section *sec);
+>  int elf_write(struct elf *elf);
+>  void elf_close(struct elf *elf);
+> +void elf_add_rela(struct elf *elf, struct rela *rela);
 > 
-> Should be instead:
-> Fixes: e7d8f6cb2f ("xfrm: Add refcount handling to queued policies")
+>  #define for_each_sec(file, sec)						\
+>  	list_for_each_entry(sec, &file->elf->sections, list)
+> --- a/tools/objtool/orc_gen.c
+> +++ b/tools/objtool/orc_gen.c
+> @@ -111,8 +111,7 @@ static int create_orc_entry(struct elf *
+>  	rela->offset = idx * sizeof(int);
+>  	rela->sec = ip_relasec;
 > 
->> ---
->> v2:  Fix typo 'write_lock_bh'--> 'write_unlock_bh' while unlocking
->> ---
->>  net/xfrm/xfrm_policy.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
->> index dbda08ec566e..ae0689174bbf 100644
->> --- a/net/xfrm/xfrm_policy.c
->> +++ b/net/xfrm/xfrm_policy.c
->> @@ -434,6 +434,7 @@ EXPORT_SYMBOL(xfrm_policy_destroy);
->>  
->>  static void xfrm_policy_kill(struct xfrm_policy *policy)
->>  {
->> +	write_lock_bh(&policy->lock);
->>  	policy->walk.dead = 1;
->>  
->>  	atomic_inc(&policy->genid);
->> @@ -445,6 +446,7 @@ static void xfrm_policy_kill(struct xfrm_policy
->> *policy) if (del_timer(&policy->timer))
->>  		xfrm_pol_put(policy);
->>  
->> +	write_unlock_bh(&policy->lock);
->>  	xfrm_pol_put(policy);
->>  }
->>  
+> -	list_add_tail(&rela->list, &ip_relasec->rela_list);
+> -	hash_add(elf->rela_hash, &rela->hash, rela_hash(rela));
+> +	elf_add_rela(elf, rela);
 > 
-> 
-> .
-> 
+>  	return 0;
+>  }
 
+Yup, looks good.
+
+Miroslav
