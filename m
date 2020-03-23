@@ -2,121 +2,84 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB01C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C2AC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80D32072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:10:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F6ZTXoVS"
+	by mail.kernel.org (Postfix) with ESMTP id 6316E20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbgCWNKD (ORCPT
+        id S1728428AbgCWNRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 09:10:03 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:54639 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728275AbgCWNJl (ORCPT
+        Mon, 23 Mar 2020 09:17:18 -0400
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:53087 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728307AbgCWNRR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 09:09:41 -0400
-Received: by mail-pj1-f67.google.com with SMTP id np9so6153819pjb.4;
-        Mon, 23 Mar 2020 06:09:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=vVUzNb5v+z/pbpf2JJFvx1W0kPGFINM64y0EKnoFjUE=;
-        b=F6ZTXoVSQU1OZ0NCDMwr8UhfpBfKbgm5c7Wz3ZKPqZzQ+0cNQfTULmlouHB8CZxKgo
-         ec/hUDlSOhr4cQOUqd4BMa3uf/sLrCHrfRTPdD057Ybk9tR01bbzNa+pJB0PusxDfGu+
-         84MftLwMwBzPtOgS8qRVyEbjj3rVjLX/ZA25OE3nBhFjnWZlm9DqwFxTLgPl4sezwySP
-         DaldGi2xVb7ZosMUptvfuEIdJDWSv0iDWb+r4lOhSl44o9dfveDl23xMfwFOspqbuX+N
-         WkoyruZ1abyhC+Sy5Me/Vv5NbnlC3rmxP9OtIaXSh54dX/JJ+cyf3B2ShuTeNgSLBi7y
-         dnRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=vVUzNb5v+z/pbpf2JJFvx1W0kPGFINM64y0EKnoFjUE=;
-        b=W3I3Z8cQ+ZnBryr64Z8iEgrDlGioZuU4Wjma+tkEd2cyvwxPPAgGPCkixUMsjPJDwJ
-         t44ms+YX7+h+HJUFZ8VU5vwrt6s4STtO9eDaAk0UKxygFcwD/97hNxUCyWBStXiU5iSm
-         KWP5GR49bjgcUk1pcSysX+/JpOM3cI4grG94zv7bSC0Gx2CQqaQDixMODcxQ/f58PtCA
-         tS0ebIA3f/P0Sfb9pr4e0wfZaUHQfBrImIMpFlNS1s4ly6puHmM+gAoSHfGyfBEpifFr
-         mIWSnAuDn+VL0ClFFLS2whWAVcmnoHqy/CojC161wLLGKv0i2H290Afws2Tzc5FEnuoX
-         yF7g==
-X-Gm-Message-State: ANhLgQ1ZZn108fxaY4Ktsf+f0eyAxAdQeWKoOwP3xap0wvuorP8YjpRW
-        ItEZnUCwe4mslqum7DMAvGQ=
-X-Google-Smtp-Source: ADFU+vsXUhp6VDVmW5vAo30YzSP0UO1cBVfz5eyx6kENY/e5YUZBMPeB9eejS87kLB1adUT/5eeKUQ==
-X-Received: by 2002:a17:90a:9b06:: with SMTP id f6mr15750719pjp.76.1584968980066;
-        Mon, 23 Mar 2020 06:09:40 -0700 (PDT)
-Received: from localhost.corp.microsoft.com ([131.107.147.210])
-        by smtp.googlemail.com with ESMTPSA id u14sm12262034pgg.67.2020.03.23.06.09.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 23 Mar 2020 06:09:39 -0700 (PDT)
-From:   ltykernel@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        michael.h.kelley@microsoft.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkuznets@redhat.com
-Subject: [PATCH V2 2/6] x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
-Date:   Mon, 23 Mar 2020 06:09:20 -0700
-Message-Id: <20200323130924.2968-3-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
-In-Reply-To: <20200323130924.2968-1-Tianyu.Lan@microsoft.com>
-References: <20200323130924.2968-1-Tianyu.Lan@microsoft.com>
+        Mon, 23 Mar 2020 09:17:17 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 6AD1F100EF4DC;
+        Mon, 23 Mar 2020 14:17:15 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id F291875F0B; Mon, 23 Mar 2020 14:17:14 +0100 (CET)
+Date:   Mon, 23 Mar 2020 14:17:14 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        gregkh@linuxfoundation.org, jslaby@suse.com,
+        matwey.kornilov@gmail.com, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] serial: 8250: Add rs485 emulation to 8250_dw
+Message-ID: <20200323131714.vmhjws5xpj6yf536@wunner.de>
+References: <20200318142640.982763-1-heiko@sntech.de>
+ <5640842.EtOnNDtpGh@diego>
+ <20200319054034.dyq7yydqi6yg7jhf@wunner.de>
+ <6241816.LpgjcNKrfa@diego>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6241816.LpgjcNKrfa@diego>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On Mon, Mar 23, 2020 at 09:25:57AM +0100, Heiko Stübner wrote:
+> Am Donnerstag, 19. März 2020, 06:40:34 CET schrieb Lukas Wunner:
+> > There are some more patches in the pipeline for the next cycle
+> > to add support for an rs485 bus termination GPIO.  They're on
+> > the tip of this branch:
+> > 
+> > https://github.com/RevolutionPi/linux/commits/revpi-4.19
+> > 
+> > Just so you know in advance and duplicate work is avoided.
+> 
+> do you plan on submitting these soonish? Because looking at your
+> termination-gpio change makes me want to do something similar for
+> my RE-gpio ... instead of trying to mangle this into the DTR thingy.
+[...]
+> So I guess having that as rs485-re-gpios property might be the best way.
 
-If kmsg_dump_register() fails, hv_panic_page will not be used
-anywhere.  So free and reset it.
+I plan to submit them once the 5.7 merge window closes, I'll probably
+have to go over them at least one more time to apply some polish.
 
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
-Change since v1:
-	- Update commit log
-	- Remove hv_free_hyperv_page() in the error path
----
- drivers/hv/vmbus_drv.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+On UARTs capable of disabling and enabling the receiver in software,
+it's best to leverage that to enable full-duplex or half-duplex mode.
+However after having a brief look at the DW UART databook, it seems
+it's not capable of doing that.  For such UARTs, a separate GPIO indeed
+seems like a legitimate approach to allow switching between full-duplex
+and half-duplex.
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index b56b9fb9bd90..3a0472c8b7ae 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1385,9 +1385,13 @@ static int vmbus_bus_init(void)
- 			hv_panic_page = (void *)hv_alloc_hyperv_zeroed_page();
- 			if (hv_panic_page) {
- 				ret = kmsg_dump_register(&hv_kmsg_dumper);
--				if (ret)
-+				if (ret) {
- 					pr_err("Hyper-V: kmsg dump register "
- 						"error 0x%x\n", ret);
-+					hv_free_hyperv_page(
-+					    (unsigned long)hv_panic_page);
-+					hv_panic_page = NULL;
-+				}
- 			} else
- 				pr_err("Hyper-V: panic message page memory "
- 					"allocation failed");
-@@ -1412,7 +1416,6 @@ static int vmbus_bus_init(void)
- 	hv_remove_vmbus_irq();
- 
- 	bus_unregister(&hv_bus);
--	hv_free_hyperv_page((unsigned long)hv_panic_page);
- 	unregister_sysctl_table(hv_ctl_table_hdr);
- 	hv_ctl_table_hdr = NULL;
- 	return ret;
--- 
-2.14.5
+"rs485-re-gpios" seems a bit cryptic, how about "rs485-rx-enable-gpios"
+or "rs485-full-duplex-gpios"?
 
+Thanks,
+
+Lukas
