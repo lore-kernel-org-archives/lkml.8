@@ -2,99 +2,117 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1892C4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7D1C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4F02206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:25:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sfQnsXjI"
+	by mail.kernel.org (Postfix) with ESMTP id A445E206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:25:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584991524;
+	bh=/NMyoIndtBy/uN2Nsb9xjYgoiz267TfqlBXGqvQ5aN4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=UUniGBCkgEIrKcfhLOjrAyN0gW+wCPMwkIQ4S/IBImK1t9qlznBq430nviDSN15qM
+	 /56ySLSVa0Zb852kqDQRdBdsq7zZmnc487czscaNfGgXpBb3dlBu/uyY6yhwxQuw6u
+	 thX2CNHKKi9xsoeH9aun+joAtNyODt+2a7LTn/kE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgCWTZD (ORCPT
+        id S1727906AbgCWTZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:25:03 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37213 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbgCWTZD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:25:03 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x1so2311161plm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 12:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rPnPEDtKkbhlSrwIDL6PW6t3VVGfbYBFp7NvAloc0iU=;
-        b=sfQnsXjIWtuUaNkNjkq1645xDvzSwYj4KKzzlXQefM/UILQCV8xsyn8oGKF2zm+FDF
-         UJ267VnsJnrj2eA0kigh1LjdFqg5jQmKSYVy+SxlFetVDPg+U0hBmpNta81LXfd4fh/0
-         UlioblXsm9Ae+2qNcIHbkyqd4XaAkIIy/x1A8DVP4+/H7hOcFHay35yIwziwWNkUEaCM
-         3zxTzPuJ2f2CC/TnO0fPBBMFdQONufRWSBUw2o6sOMKYZU6UFLK2REbJ8OrCqjAx2Qqy
-         dVeFyaceNkSTn/dMNBsEMjF7msxOR/nzUZqj2GAcup6vxrbcVe6wlLcsLA1kYcadi5Qx
-         Gdvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rPnPEDtKkbhlSrwIDL6PW6t3VVGfbYBFp7NvAloc0iU=;
-        b=Bs4lqMRYZOMvNhQfHe9zFbKFaJz3aqTflGv/+xzypa/i+aj64tZ8QQIqbSFhDQm0z9
-         fN9X3yv7etkNIIWla0UWQZ8genskafIPVYVgf4IITOaUcoQ0946+ruPQTI0HgvrJH6wY
-         XY+YspsaoJIhlxVjtAr6EsbJNmw4XZO6P0ZMyuL7/0hMQTVKIZNPWTv3WyZ0lBSvY26M
-         AWLhDOtVUtDQLv9fq4deceh3qHLAEi9jbkWDoXr6yX/hexi9Ra7/BL/Spo4I0alB6K0x
-         r9RLwN9wqN8H0NuOgjUa7bqKsxLj1A849BBQO/8GsKes0j9HI2TUb9Gxe+lauIg+/osq
-         +xhg==
-X-Gm-Message-State: ANhLgQ28tm1DHL5w2mTWzlcGjVv4ld3xj2xaJtoFcA7HG5OKzCNU7FPs
-        /edBRRbl3EL14nc1tp43N0XUWOhMJ5cgoIBWcie8AQ==
-X-Google-Smtp-Source: ADFU+vtoC47+tQ0c03ehJyLiStK4kkYypznRSFTXRbYuTjHC1n4Sx/iBeZMIroiv6y+aROtKNm0J+zALmkf0dL1qTH0=
-X-Received: by 2002:a17:90a:7789:: with SMTP id v9mr202393pjk.29.1584991501748;
- Mon, 23 Mar 2020 12:25:01 -0700 (PDT)
+        Mon, 23 Mar 2020 15:25:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60520 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727675AbgCWTZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 15:25:23 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 116FC206F8;
+        Mon, 23 Mar 2020 19:25:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584991522;
+        bh=/NMyoIndtBy/uN2Nsb9xjYgoiz267TfqlBXGqvQ5aN4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=X+lbU52fWuhOblpsezheiDLXs/V9cliJVLzB2nfh0dDGkGt54V7PEXXyeyLKstS0L
+         YNCmG0alVYdue7YDyZ7NG5OKHCOc6DZmGhUkRpVhu9G1FBpFrD1egvDgoiEqUm/dDV
+         aXyHk3dJOBUdhuKnjkn/yGo1JsltgN5O2nBqHr8M=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jGShM-00F3Iu-9Z; Mon, 23 Mar 2020 19:25:20 +0000
+Date:   Mon, 23 Mar 2020 19:25:19 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Marek Vasut <marex@denx.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 2/2] pinctrl: stm32: Add level interrupt support to
+ gpio irq chip
+Message-ID: <20200323192519.1bd1dc5f@why>
+In-Reply-To: <a7fc5e43-34c2-a4e6-e0c5-1584f17fb024@denx.de>
+References: <20200219143229.18084-1-alexandre.torgue@st.com>
+        <20200219143229.18084-3-alexandre.torgue@st.com>
+        <CACRpkdZ7uq4U6GBQQQh=pTLf4wW3KfH3Zrz9z_3ZQgoaJD9Ynw@mail.gmail.com>
+        <c991edca3e8925cf0489c0a5676f77b2@kernel.org>
+        <a7fc5e43-34c2-a4e6-e0c5-1584f17fb024@denx.de>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200323173653.41305-1-brendanhiggins@google.com>
- <e5f7db19-4468-8679-9ed1-3565a0adcfc0@kernel.org> <CAFd5g46GqBqdrRk6743bnUQyS+yStP3DpkVNWsAMEHDS3i3FBw@mail.gmail.com>
-In-Reply-To: <CAFd5g46GqBqdrRk6743bnUQyS+yStP3DpkVNWsAMEHDS3i3FBw@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 23 Mar 2020 12:24:50 -0700
-Message-ID: <CAFd5g44R6yTQENSsS+LSnQppzO=gDVfPB-TxLn_+aT8UpLiTcQ@mail.gmail.com>
-Subject: Re: [PATCH v1] kunit: tool: add missing test data file content
-To:     shuah <shuah@kernel.org>
-Cc:     David Gow <davidgow@google.com>,
-        Heidi Fahim <heidifahim@google.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: marex@denx.de, linus.walleij@linaro.org, alexandre.torgue@st.com, tglx@linutronix.de, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 12:15 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Mon, Mar 23, 2020 at 11:44 AM shuah <shuah@kernel.org> wrote:
-> >
-> > On 3/23/20 11:36 AM, Brendan Higgins wrote:
-> > > A test data file for one of the kunit_tool unit tests was missing; add
-> > > it in so that unit tests can run properly.
-> > >
-> > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > > ---
-> > > Shuah, this is a fix for a broken test. Can you apply this for 5.7?
-> >
-> > Can you please add more details on what kind of data this file supplies
-> > and which test fails if it doesn't exist.
->
-> Sure,
->
-> This adds a raw dmesg test log to test the kunit_tool's dmesg parser.
-> test_prefix_poundsign and test_output_with_prefix_isolated_correctly
-> fail without this test log.
->
-> I will send a new revision with this information in the commit message.
+On Mon, 23 Mar 2020 20:04:23 +0100
+Marek Vasut <marex@denx.de> wrote:
 
-I just sent a new revision with an updated message.
+> On 2/20/20 10:17 AM, Marc Zyngier wrote:
+> > On 2020-02-20 09:04, Linus Walleij wrote:
+> >> On Wed, Feb 19, 2020 at 3:32 PM Alexandre Torgue
+> >> <alexandre.torgue@st.com> wrote:
+> >>
+> >>> GPIO hardware block is directly linked to EXTI block but EXTI handles
+> >>> external interrupts only on edge. To be able to handle GPIO interrupt on
+> >>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
+> >>> chip)
+> >>> is retriggered following interrupt type and gpio line value.
+> >>>
+> >>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> >>> Tested-by: Marek Vasut <marex@denx.de>
+> >>
+> >> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >>
+> >> If Marc want to merge it with patch 1/2 go ahead!
+> > 
+> > I'll queue the whole thing for 5.7.
+> 
+> I have a feeling this doesn't work with threaded interrupts.
+> 
+> If the interrupt handler runs in a thread context, the EOI will happen
+> almost right away (while the IRQ handler runs) and so will the code
+> handling the IRQ retriggering. But since the IRQ handler still runs and
+> didn't return yet, the retriggering doesn't cause the IRQ handler to be
+> called again once it finishes, even if the IRQ line is still asserted.
+> And that could result in some of the retriggers now happening I think.
+> Or am I doing something wrong ?
+
+Wouldn't the hardirq handler mask the interrupt? This should certainly
+be the case when IRQF_ONESHOT is set.
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
