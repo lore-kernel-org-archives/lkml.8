@@ -2,167 +2,73 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41339C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD26C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10418206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C211420719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:00:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XN6N/+/X"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QzU9cFza"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgCWUAF (ORCPT
+        id S1727095AbgCWUAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 16:00:05 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36870 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgCWUAF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 16:00:05 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d12so10459475qtj.4;
-        Mon, 23 Mar 2020 13:00:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+qqP3p6NUFM3pblvdRB2elYDHfWUXO+b1eOHuuUBxWo=;
-        b=XN6N/+/XUOYasY96gW1pjrCuXxY8GQUlnV5GJXilFIfrrnts8K7V/RdjEIFOFdTVHo
-         HkyXrkBkUIHWwEVIpaIlhoLtZdPgXWHciZQHPpjN8nZm17zewSzyr25ptGZtnsDJtfos
-         b5hYAFmzOKKE4cGf0/OYqMl1A412YyF9/XtxMzfbTiYd2nPbMGfTOGXkUBGt1NkGU1a2
-         NFK4I/1L1FPdpv07v9Q8Gk2q0s6BO8C7UV0AtWW1QF20Ty28GjsTddd7Qd6bXy8FQkN/
-         n5AUVjtCeu6ON59Kay8w1oqAW6ZkhSv2FFqNXlUIgxenc32X/DKdsSUE7IBJRDnXY7qY
-         wMTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+qqP3p6NUFM3pblvdRB2elYDHfWUXO+b1eOHuuUBxWo=;
-        b=CxhMLGMkCEAxzXByB7DDj8pc6uH97Zyr7QSGb4Yz12+iSy7KduYSN6qiZoPvwVlKO1
-         6rQuJTJgXQTP0XueNpiSM+4kdo5estzTsvHOD5oxqi5F90qdNwOX8s7/rF3wvpER33kT
-         sXFpV4cDGQx0m/rrJ4OjcL1DDprKH2Rx5jzHvQbkzEocyB+3pT7miQSYVKCAYXofGmjC
-         mkOQPx121Mhzwt0nWhjEyWFhSPiSWspKCItN888fswOZxJrObw1A0KzAliUkTmS8xLyB
-         9ZWK4grWtrRRiTmJNONGsLyTe7MLKT49WtGi11lOeQAY6tLXJ9WHgBNyebC40NGv2fj6
-         PHMw==
-X-Gm-Message-State: ANhLgQ0BFDFnMUkc77QhWeZBMNK0Ws3UmberFtlI3e4X1HGV1XDV7IpH
-        DJjvgt/V6SEu4YWL4jP2/HCoL//Ywbm8I2VP4CM=
-X-Google-Smtp-Source: ADFU+vvNQQv8DEH2ydvf51OvRh0rhtw/VacrRt6UqgAOnjfxKJcYGr3rb/Xy/PoTxUkzYGEIVuj3IWmg/Pyvi8BMEo8=
-X-Received: by 2002:ac8:7448:: with SMTP id h8mr22843425qtr.117.1584993603585;
- Mon, 23 Mar 2020 13:00:03 -0700 (PDT)
+        Mon, 23 Mar 2020 16:00:22 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:52636 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725861AbgCWUAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 16:00:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=lxbeXd7qfEIcZ8FcwoMUDpryQyiTOzAl8/EY8KwHWEg=; b=QzU9cFzahaXHJ8OxJmKUwdm6z/
+        /pgm4+bXwB3kKvGQoL1ekYgxXnTdgm/oGzrRudzf552jvXV/bu0NKR1AAY2wL7FggEw0VpSObrDvZ
+        rPNsRnp2Z815/dIntRPFys8ild+OchWYiGws9VuQkAh/bhNs1V/I17BqESMJzhKeZEV8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jGTF3-0002zq-5U; Mon, 23 Mar 2020 21:00:09 +0100
+Date:   Mon, 23 Mar 2020 21:00:09 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Dan Murphy <dmurphy@ti.com>, kbuild-all@lists.01.org,
+        netdev@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: phy: dp83867: fix semicolon.cocci warnings
+Message-ID: <20200323200009.GF32387@lunn.ch>
+References: <202003240333.9w4m8TaM%lkp@intel.com>
+ <20200323195141.GA142065@b4e372e8fdf0>
 MIME-Version: 1.0
-References: <20200323164415.12943-1-kpsingh@chromium.org> <20200323164415.12943-4-kpsingh@chromium.org>
-In-Reply-To: <20200323164415.12943-4-kpsingh@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 23 Mar 2020 12:59:52 -0700
-Message-ID: <CAEf4BzbRivYO=gVjuQw8Z8snN+RFwXswvNxs67c=5g6U3o9rmw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 3/7] bpf: lsm: provide attachment points for
- BPF LSM programs
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323195141.GA142065@b4e372e8fdf0>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 9:45 AM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> When CONFIG_BPF_LSM is enabled, nops functions, bpf_lsm_<hook_name>, are
-> generated for each LSM hook. These nops are initialized as LSM hooks in
-> a subsequent patch.
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> Reviewed-by: Brendan Jackman <jackmanb@google.com>
-> Reviewed-by: Florent Revest <revest@google.com>
-> ---
->  include/linux/bpf_lsm.h | 21 +++++++++++++++++++++
->  kernel/bpf/bpf_lsm.c    | 19 +++++++++++++++++++
->  2 files changed, 40 insertions(+)
->  create mode 100644 include/linux/bpf_lsm.h
->
-> diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
-> new file mode 100644
-> index 000000000000..c6423a140220
-> --- /dev/null
-> +++ b/include/linux/bpf_lsm.h
-> @@ -0,0 +1,21 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +/*
-> + * Copyright (C) 2020 Google LLC.
-> + */
-> +
-> +#ifndef _LINUX_BPF_LSM_H
-> +#define _LINUX_BPF_LSM_H
-> +
-> +#include <linux/bpf.h>
-> +#include <linux/lsm_hooks.h>
-> +
-> +#ifdef CONFIG_BPF_LSM
-> +
-> +#define LSM_HOOK(RET, NAME, ...) RET bpf_lsm_##NAME(__VA_ARGS__);
-> +#include <linux/lsm_hook_names.h>
-> +#undef LSM_HOOK
-> +
-> +#endif /* CONFIG_BPF_LSM */
-> +
-> +#endif /* _LINUX_BPF_LSM_H */
-> diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
-> index 82875039ca90..530d137f7a84 100644
-> --- a/kernel/bpf/bpf_lsm.c
-> +++ b/kernel/bpf/bpf_lsm.c
-> @@ -7,6 +7,25 @@
->  #include <linux/filter.h>
->  #include <linux/bpf.h>
->  #include <linux/btf.h>
-> +#include <linux/lsm_hooks.h>
-> +#include <linux/bpf_lsm.h>
-> +
-> +/* For every LSM hook  that allows attachment of BPF programs, declare a NOP
-> + * function where a BPF program can be attached as an fexit trampoline.
-> + */
-> +#define LSM_HOOK(RET, NAME, ...) LSM_HOOK_##RET(NAME, __VA_ARGS__)
-> +
-> +#define LSM_HOOK_int(NAME, ...)                        \
-> +noinline __weak int bpf_lsm_##NAME(__VA_ARGS__)        \
-> +{                                              \
-> +       return 0;                               \
-> +}
-> +
-> +#define LSM_HOOK_void(NAME, ...) \
-> +noinline __weak void bpf_lsm_##NAME(__VA_ARGS__) {}
-> +
+On Tue, Mar 24, 2020 at 03:51:41AM +0800, kbuild test robot wrote:
+> From: kbuild test robot <lkp@intel.com>
+> 
+> drivers/net/phy/dp83867.c:363:2-3: Unneeded semicolon
+> drivers/net/phy/dp83867.c:398:2-3: Unneeded semicolon
+> 
+> 
+>  Remove unneeded semicolon.
+> 
+> Generated by: scripts/coccinelle/misc/semicolon.cocci
+> 
+> Fixes: cd26d72d4d43 ("net: phy: dp83867: Add speed optimization feature")
+> CC: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: kbuild test robot <lkp@intel.com>
 
-Could unify with:
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-#define LSM_HOOK(RET, NAME, ...) noinline __weak RET bpf_lsm_##NAME(__VA_ARGS__)
-{
-    return (RET)0;
-}
-
-then you don't need LSM_HOOK_int and LSM_HOOK_void.
-
-> +#include <linux/lsm_hook_names.h>
-> +#undef LSM_HOOK
->
->  const struct bpf_prog_ops lsm_prog_ops = {
->  };
-> --
-> 2.20.1
->
+    Andrew
