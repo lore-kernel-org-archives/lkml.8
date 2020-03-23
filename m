@@ -2,338 +2,122 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B4DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5321C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38021206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92863206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:14:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X20DN3Cs"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="qlGTtLzD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgCWVMU (ORCPT
+        id S1727030AbgCWVN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 17:12:20 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57460 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbgCWVMT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 17:12:19 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NLAYSN049352;
-        Mon, 23 Mar 2020 21:12:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=igwPQQbX0NEf/fhBFkS5HfY3M2r7o46riN7msbYs0ik=;
- b=X20DN3CsW+ABHo+3iZrEAI/+oHaQ4T3cwRe5bzZ3IAKKObIM9DPTh/55wpaRHDO5btxO
- QcVALOD34Ety7Enq/QsTB7CtfIUTO6Qm/l3FoUoO7A12dHtddvEV+NKAtxAQpJvGOcj4
- m3TPun6OrwSyfPj0vmVveQnknEj0Wqv7U1ZAVKmsJPkpGzmmQWBawmhI8bzH5UKhIppi
- 4d47mkEEVC6eFE+4maM2xwS/vIvr0ZLSz0JxOt6ETKhCfeybPIq8NgFh29WvjfwmD+V+
- jatZWfJyiBgm8FP15VftV5nMHFV3OoKH0P8A/7KpetTTPcBnI3xtesm5syf0tCo1c3KK gA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2yx8abwycr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Mar 2020 21:12:10 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NKvkZq029668;
-        Mon, 23 Mar 2020 21:12:10 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2yxw4mw4dc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Mar 2020 21:12:10 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02NLC34s030333;
-        Mon, 23 Mar 2020 21:12:03 GMT
-Received: from localhost (/10.159.241.78)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 23 Mar 2020 14:12:02 -0700
-Date:   Mon, 23 Mar 2020 14:12:01 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Naohiro Aota <naohiro.aota@wdc.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: lockdep warning in sys_swapon
-Message-ID: <20200323211201.GD29351@magnolia>
-References: <20200323151725.gayvs5g6h5adwqkd@e107158-lin.cambridge.arm.com>
- <20200323153045.s7ag3lrvfe2cpiiw@e107158-lin.cambridge.arm.com>
- <20200323140615.75e3c7481f4c6aeb94c95ba9@linux-foundation.org>
+        Mon, 23 Mar 2020 17:13:59 -0400
+Received: from mail-co1nam11on2074.outbound.protection.outlook.com ([40.107.220.74]:10401
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726177AbgCWVN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 17:13:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TpxRbc/oaNw0Dwn8fqf3Pc9YxTu5Sr6P8kwqSEv2XbOpYhkdmgQ4XZL1c2DH7/o5VhbJPI0TOz/Rgx02ziaUa6MkoT5Uc1UwNDEdQahVWv4r/Nxr6VruxFs6oUMLicXqHFjYez9tKOY3e/Imqgy/DIMHXKmMUdTLmtFDbZHxQ88zuI8z3pQFmkgN4QdCblTG0cD4sNM7nJNvxkysJJuJ7BP31JuZzOzqjYJVucT4buUY2Q/P+IWaiJdPMLMrv4L0X3bKZ9dYIbIKYp1/LAGrydA5oWl9aQGfTRHTfgUuK0PM49vBY75N64e9YKxtv9XtJmHHY5Xor5jsSds2bvZ/uw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iZsNde0WGieyvn/spbx9JFQCpMRcaDIUnjLgEba/HyQ=;
+ b=BikM7IMXoYiOVwxOWW8GJzhB9Hj+Nj52Pvgmj9HLFSymC0lRq8xIfUf2YoQYj4mQEGZQi60NKWCfbA/u1BS4OJGb9Tx3d8kWKWJ/fGiQ/A9Kc77QCmHWcRgdgoKJEsjW1d51DWRCxy14xTDfLF4eKO7ol58fmyc2AQ7m50vnq/IWrYjrXRXRojxqqaC0kc/FbrkIr/SSy2H04J5KGgBLRh9Frw/IWYPgI/RMc/ZDXmInc2Yy4CsD7EGx4DT3KMlPUzE8uBweFZJAAwH+PCR61TGLdOn/P8RBl9cPTg2qXgF4zxNINoal6pvzegiBeYrCZEs0nzmbv0TsbiIKZVSTqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iZsNde0WGieyvn/spbx9JFQCpMRcaDIUnjLgEba/HyQ=;
+ b=qlGTtLzDdg9Wo9458Ol8xJMuvwO7Nzqx5p8uqFNkGp17iZR1+Z8GNyJfb0slXAFBgj6tppSSW1caSuA3Im0Y4cDBPV9J0Ahgf8GTK9Gu6CptaknbjbqfgPDTLcF/PT0sqG2NFanCJ6CFxU02E/vQSACuzobylxr3zidX/vzIGTg=
+Received: from BYAPR02MB5992.namprd02.prod.outlook.com (2603:10b6:a03:127::16)
+ by BYAPR02MB4423.namprd02.prod.outlook.com (2603:10b6:a03:5f::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Mon, 23 Mar
+ 2020 21:13:55 +0000
+Received: from BYAPR02MB5992.namprd02.prod.outlook.com
+ ([fe80::653c:fb1e:61b9:8f00]) by BYAPR02MB5992.namprd02.prod.outlook.com
+ ([fe80::653c:fb1e:61b9:8f00%6]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
+ 21:13:55 +0000
+From:   Jolly Shah <JOLLYS@xilinx.com>
+To:     Jolly Shah <JOLLYS@xilinx.com>, "olof@lixom.net" <olof@lixom.net>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        Michal Simek <michals@xilinx.com>,
+        "arm@kernel.org" <arm@kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+CC:     Rajan Vaja <RAJANV@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] Clock driver fixes
+Thread-Topic: [PATCH 0/4] Clock driver fixes
+Thread-Index: AQHV8NuptlXrLfHfkk+i2Lx5IRh3SahWWNoA
+Date:   Mon, 23 Mar 2020 21:13:55 +0000
+Message-ID: <D2A3DCE1-1514-445D-B58E-E2EA31BAB0C2@xilinx.com>
+References: <1583185414-20106-1-git-send-email-jolly.shah@xilinx.com>
+In-Reply-To: <1583185414-20106-1-git-send-email-jolly.shah@xilinx.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+user-agent: Microsoft-MacOutlook/10.1a.0.190609
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=JOLLYS@xilinx.com; 
+x-originating-ip: [149.199.62.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1e9298aa-7012-415f-5856-08d7cf6f1867
+x-ms-traffictypediagnostic: BYAPR02MB4423:|BYAPR02MB4423:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR02MB4423242EA24B792FF7C2637DB8F00@BYAPR02MB4423.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1107;
+x-forefront-prvs: 0351D213B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(396003)(136003)(39860400002)(346002)(54906003)(26005)(2616005)(8676002)(36756003)(76116006)(81166006)(81156014)(478600001)(33656002)(5660300002)(6486002)(66446008)(66556008)(64756008)(66946007)(66476007)(86362001)(6506007)(4744005)(71200400001)(8936002)(110136005)(186003)(4326008)(2906002)(6512007)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4423;H:BYAPR02MB5992.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MdMHs6O4NIj/2TS3OBN+cNc1w797eimvt8Vos/H//4xVhTMgmR+pNyJPUrxVaJiksK8ZG9sKcLxCOnw//o/N5M6IreCu0aNsg3dyPjIHwyWtzy21PGmvq9YZ9O/PhsDx4X4Ll6OBZi8ZK+WFCITdUsQkpOhUcBzxOjv5ZoO6ZfZ6LMxuwclg8f0kGBfWRon6qFrz3N5ClTqm2LR8fRenW1DRUzBJEi+vucPs61szpuQSl3LC9Vd01qFNArieeUn7o7FxsJzQ2zIy/ERRUt6x/MoWPIobaHFoRNaGt67nQMlqFTb35GV60VPkDgqWat7+cqWz1ZPW58/lp6Hx+gwBhnU8roWPReiWs/gOxIDvBH+m/0Ll45soDd43Bx2DNSgugOWT+J1ceVKP776MkYozkG8M38yD28MQpp2Y1T1xKil4Mx3k7Te+Hka4me1ud6hO
+x-ms-exchange-antispam-messagedata: DU68EgMU9FOVN+nLQN32yz7ZI6u+yJNgZKeoWYZrp1nn2HPMYntEChfUQzc+l65PEXlSpUwlHHK0k1sYjjbOAzqFfJWr4IEP9dwsiBDeedG9lABb5pgbMag6nGy4Qg8Qxc480euVJ5X1zCYhhBMFAw==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DFC5C5FC00DAF049AAF83A561BD925BD@namprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323140615.75e3c7481f4c6aeb94c95ba9@linux-foundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003230106
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
- mlxscore=0 adultscore=0 phishscore=0 impostorscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003230106
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e9298aa-7012-415f-5856-08d7cf6f1867
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2020 21:13:55.2420
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PmQXxPzlhyMDx2+PKgiqPlMACOg4Hn/nJoMEvZ0gdglIugVjUwvBeeNykacUxeRPSTrmHduUBjMtI3UL6AZyPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4423
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 02:06:15PM -0700, Andrew Morton wrote:
-> On Mon, 23 Mar 2020 15:30:45 +0000 Qais Yousef <qais.yousef@arm.com> wrote:
-> 
-> > On 03/23/20 15:17, Qais Yousef wrote:
-> > > Hi
-> > > 
-> > > I hit the following 2 warnings when running with LOCKDEP=y on arm64 platform
-> > > (juno-r2), running on v5.6-rc6
-> > > 
-> > > The 1st one is when I execute `swapon -a`. The 2nd one happens at boot. I have
-> > > /dev/sda2 as my swap in /etc/fstab
-> > > 
-> > > Note that I either hit 1 OR 2, but didn't hit both warnings at the same time,
-> > > yet at least.
-> > > 
-> > > /dev/sda2 is a usb flash drive, in case it matters somehow.
-> > 
-> > By the way, I noticed that in claim_swapfile() if we fail we don't release the
-> > lock. Shouldn't we release the lock here?
-> > 
-> > I tried with that FWIW, but it had no effect on the warnings.
-> > 
-> 
-> I'll be sending the below into Linus this week.
-> 
-> I was hoping to hear from Darrick/Christoph (?) but it looks like the
-> right thing to do.  Are you able to test it?
-
-I had questions[1] about the patch, but nobody ever replied.
-
---D
-
-[1] https://lore.kernel.org/linux-fsdevel/20200212164956.GK6874@magnolia/
-
-> I think I'll add a cc:stable to this one.
-> 
-> 
-> 
-> From: Naohiro Aota <naohiro.aota@wdc.com>
-> Subject: mm/swapfile.c: move inode_lock out of claim_swapfile
-> 
-> claim_swapfile() currently keeps the inode locked when it is successful,
-> or the file is already swapfile (with -EBUSY).  And, on the other error
-> cases, it does not lock the inode.
-> 
-> This inconsistency of the lock state and return value is quite confusing
-> and actually causing a bad unlock balance as below in the "bad_swap"
-> section of __do_sys_swapon().
-> 
-> This commit fixes this issue by moving the inode_lock() and IS_SWAPFILE
-> check out of claim_swapfile().  The inode is unlocked in
-> "bad_swap_unlock_inode" section, so that the inode is ensured to be
-> unlocked at "bad_swap".  Thus, error handling codes after the locking now
-> jumps to "bad_swap_unlock_inode" instead of "bad_swap".
-> 
->     =====================================
->     WARNING: bad unlock balance detected!
->     5.5.0-rc7+ #176 Not tainted
->     -------------------------------------
->     swapon/4294 is trying to release lock (&sb->s_type->i_mutex_key) at:
->     [<ffffffff8173a6eb>] __do_sys_swapon+0x94b/0x3550
->     but there are no more locks to release!
-> 
->     other info that might help us debug this:
->     no locks held by swapon/4294.
-> 
->     stack backtrace:
->     CPU: 5 PID: 4294 Comm: swapon Not tainted 5.5.0-rc7-BTRFS-ZNS+ #176
->     Hardware name: ASUS All Series/H87-PRO, BIOS 2102 07/29/2014
->     Call Trace:
->      dump_stack+0xa1/0xea
->      ? __do_sys_swapon+0x94b/0x3550
->      print_unlock_imbalance_bug.cold+0x114/0x123
->      ? __do_sys_swapon+0x94b/0x3550
->      lock_release+0x562/0xed0
->      ? kvfree+0x31/0x40
->      ? lock_downgrade+0x770/0x770
->      ? kvfree+0x31/0x40
->      ? rcu_read_lock_sched_held+0xa1/0xd0
->      ? rcu_read_lock_bh_held+0xb0/0xb0
->      up_write+0x2d/0x490
->      ? kfree+0x293/0x2f0
->      __do_sys_swapon+0x94b/0x3550
->      ? putname+0xb0/0xf0
->      ? kmem_cache_free+0x2e7/0x370
->      ? do_sys_open+0x184/0x3e0
->      ? generic_max_swapfile_size+0x40/0x40
->      ? do_syscall_64+0x27/0x4b0
->      ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
->      ? lockdep_hardirqs_on+0x38c/0x590
->      __x64_sys_swapon+0x54/0x80
->      do_syscall_64+0xa4/0x4b0
->      entry_SYSCALL_64_after_hwframe+0x49/0xbe
->     RIP: 0033:0x7f15da0a0dc7
-> 
-> Link: http://lkml.kernel.org/r/20200206090132.154869-1-naohiro.aota@wdc.com
-> Fixes: 1638045c3677 ("mm: set S_SWAPFILE on blockdev swap devices")
-> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
-> Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Darrick J. Wong <darrick.wong@oracle.com>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> ---
-> 
->  mm/swapfile.c |   41 ++++++++++++++++++++---------------------
->  1 file changed, 20 insertions(+), 21 deletions(-)
-> 
-> --- a/mm/swapfile.c~mm-swap-move-inode_lock-out-of-claim_swapfile
-> +++ a/mm/swapfile.c
-> @@ -2899,10 +2899,6 @@ static int claim_swapfile(struct swap_in
->  		p->bdev = inode->i_sb->s_bdev;
->  	}
->  
-> -	inode_lock(inode);
-> -	if (IS_SWAPFILE(inode))
-> -		return -EBUSY;
-> -
->  	return 0;
->  }
->  
-> @@ -3157,36 +3153,41 @@ SYSCALL_DEFINE2(swapon, const char __use
->  	mapping = swap_file->f_mapping;
->  	inode = mapping->host;
->  
-> -	/* will take i_rwsem; */
->  	error = claim_swapfile(p, inode);
->  	if (unlikely(error))
->  		goto bad_swap;
->  
-> +	inode_lock(inode);
-> +	if (IS_SWAPFILE(inode)) {
-> +		error = -EBUSY;
-> +		goto bad_swap_unlock_inode;
-> +	}
-> +
->  	/*
->  	 * Read the swap header.
->  	 */
->  	if (!mapping->a_ops->readpage) {
->  		error = -EINVAL;
-> -		goto bad_swap;
-> +		goto bad_swap_unlock_inode;
->  	}
->  	page = read_mapping_page(mapping, 0, swap_file);
->  	if (IS_ERR(page)) {
->  		error = PTR_ERR(page);
-> -		goto bad_swap;
-> +		goto bad_swap_unlock_inode;
->  	}
->  	swap_header = kmap(page);
->  
->  	maxpages = read_swap_header(p, swap_header, inode);
->  	if (unlikely(!maxpages)) {
->  		error = -EINVAL;
-> -		goto bad_swap;
-> +		goto bad_swap_unlock_inode;
->  	}
->  
->  	/* OK, set up the swap map and apply the bad block list */
->  	swap_map = vzalloc(maxpages);
->  	if (!swap_map) {
->  		error = -ENOMEM;
-> -		goto bad_swap;
-> +		goto bad_swap_unlock_inode;
->  	}
->  
->  	if (bdi_cap_stable_pages_required(inode_to_bdi(inode)))
-> @@ -3211,7 +3212,7 @@ SYSCALL_DEFINE2(swapon, const char __use
->  					GFP_KERNEL);
->  		if (!cluster_info) {
->  			error = -ENOMEM;
-> -			goto bad_swap;
-> +			goto bad_swap_unlock_inode;
->  		}
->  
->  		for (ci = 0; ci < nr_cluster; ci++)
-> @@ -3220,7 +3221,7 @@ SYSCALL_DEFINE2(swapon, const char __use
->  		p->percpu_cluster = alloc_percpu(struct percpu_cluster);
->  		if (!p->percpu_cluster) {
->  			error = -ENOMEM;
-> -			goto bad_swap;
-> +			goto bad_swap_unlock_inode;
->  		}
->  		for_each_possible_cpu(cpu) {
->  			struct percpu_cluster *cluster;
-> @@ -3234,13 +3235,13 @@ SYSCALL_DEFINE2(swapon, const char __use
->  
->  	error = swap_cgroup_swapon(p->type, maxpages);
->  	if (error)
-> -		goto bad_swap;
-> +		goto bad_swap_unlock_inode;
->  
->  	nr_extents = setup_swap_map_and_extents(p, swap_header, swap_map,
->  		cluster_info, maxpages, &span);
->  	if (unlikely(nr_extents < 0)) {
->  		error = nr_extents;
-> -		goto bad_swap;
-> +		goto bad_swap_unlock_inode;
->  	}
->  	/* frontswap enabled? set up bit-per-page map for frontswap */
->  	if (IS_ENABLED(CONFIG_FRONTSWAP))
-> @@ -3280,7 +3281,7 @@ SYSCALL_DEFINE2(swapon, const char __use
->  
->  	error = init_swap_address_space(p->type, maxpages);
->  	if (error)
-> -		goto bad_swap;
-> +		goto bad_swap_unlock_inode;
->  
->  	/*
->  	 * Flush any pending IO and dirty mappings before we start using this
-> @@ -3290,7 +3291,7 @@ SYSCALL_DEFINE2(swapon, const char __use
->  	error = inode_drain_writes(inode);
->  	if (error) {
->  		inode->i_flags &= ~S_SWAPFILE;
-> -		goto bad_swap;
-> +		goto bad_swap_unlock_inode;
->  	}
->  
->  	mutex_lock(&swapon_mutex);
-> @@ -3315,6 +3316,8 @@ SYSCALL_DEFINE2(swapon, const char __use
->  
->  	error = 0;
->  	goto out;
-> +bad_swap_unlock_inode:
-> +	inode_unlock(inode);
->  bad_swap:
->  	free_percpu(p->percpu_cluster);
->  	p->percpu_cluster = NULL;
-> @@ -3322,6 +3325,7 @@ bad_swap:
->  		set_blocksize(p->bdev, p->old_block_size);
->  		blkdev_put(p->bdev, FMODE_READ | FMODE_WRITE | FMODE_EXCL);
->  	}
-> +	inode = NULL;
->  	destroy_swap_extents(p);
->  	swap_cgroup_swapoff(p->type);
->  	spin_lock(&swap_lock);
-> @@ -3333,13 +3337,8 @@ bad_swap:
->  	kvfree(frontswap_map);
->  	if (inced_nr_rotate_swap)
->  		atomic_dec(&nr_rotate_swap);
-> -	if (swap_file) {
-> -		if (inode) {
-> -			inode_unlock(inode);
-> -			inode = NULL;
-> -		}
-> +	if (swap_file)
->  		filp_close(swap_file, NULL);
-> -	}
->  out:
->  	if (page && !IS_ERR(page)) {
->  		kunmap(page);
-> _
-> 
+QSBnZW50bGUgcmVtaW5kZXIgZm9yIHJldmlldy4NCg0K77u/T24gMy8yLzIwLCAxOjQzIFBNLCAi
+Sm9sbHkgU2hhaCIgPGpvbGx5LnNoYWhAeGlsaW54LmNvbT4gd3JvdGU6DQoNCiAgICBUaGlzIHBh
+dGNoc2V0IGluY2x1ZGVzIGJlbG93IGZpeGVzIGZvciBjbG9jayBkcml2ZXINCiAgICAxPiBGaXgg
+RGl2aWRlcjIgY2FsY3VsYXRpb24gDQogICAgMj4gTWVtb3J5IGxlYWsgaW4gY2xvY2sgcmVnaXN0
+cmF0aW9uDQogICAgMz4gRml4IGludmFsaWQgbmFtZSBxdWVyaWVzDQogICAgND4gTGltaXQgYmVz
+dGRpdiB3aXRoIG1heGRpdg0KICAgIA0KICAgIFF1YW55YW5nIFdhbmcgKDEpOg0KICAgICAgY2xr
+OiB6eW5xbXA6IGZpeCBtZW1vcnkgbGVhayBpbiB6eW5xbXBfcmVnaXN0ZXJfY2xvY2tzDQogICAg
+DQogICAgUmFqYW4gVmFqYSAoMik6DQogICAgICBjbGs6IHp5bnFtcDogTGltaXQgYmVzdGRpdiB3
+aXRoIG1heGRpdg0KICAgICAgZHJpdmVyczogY2xrOiBGaXggaW52YWxpZCBjbG9jayBuYW1lIHF1
+ZXJpZXMNCiAgICANCiAgICBUZWphcyBQYXRlbCAoMSk6DQogICAgICBkcml2ZXJzOiBjbGs6IHp5
+bnFtcDogRml4IGRpdmlkZXIyIGNhbGN1bGF0aW9uDQogICAgDQogICAgIGRyaXZlcnMvY2xrL3p5
+bnFtcC9jbGtjLmMgICAgfCAyMCArKysrKysrKysrKysrKy0tLS0tLQ0KICAgICBkcml2ZXJzL2Ns
+ay96eW5xbXAvZGl2aWRlci5jIHwgMTkgKysrKysrKysrKysrKystLS0tLQ0KICAgICAyIGZpbGVz
+IGNoYW5nZWQsIDI4IGluc2VydGlvbnMoKyksIDExIGRlbGV0aW9ucygtKQ0KICAgIA0KICAgIC0t
+IA0KICAgIDIuNy40DQogICAgDQogICAgDQoNCg==
