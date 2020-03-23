@@ -2,108 +2,97 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25F9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8132DC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 787B62072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57F372072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:59:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MHhXEETW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCbfDq3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgCWQ6A (ORCPT
+        id S1727650AbgCWQ7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:58:00 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:26186 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727228AbgCWQ57 (ORCPT
+        Mon, 23 Mar 2020 12:59:07 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:55793 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727532AbgCWQ7G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:57:59 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584982679; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=RzTd9yidaJNPKPYdkuKLeB4afMPdW8B9UycwLsO6lGA=;
- b=MHhXEETWgVGQu3I+zvxOW1orVBY+E67p6ybfM+6u8rM0pECMmKtIm9zLI05ckbV5An0HgUxc
- 2bhUzZITBymKWWAlFOq7xQBlvIVReVDetEC9md30KHB6reabSBSTEw2FMjwUan9vuMpkVeFO
- xBP1J5keIEKnyYNYWla0BWHrTWw=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e78ea85.7f772ce14ab0-smtp-out-n04;
- Mon, 23 Mar 2020 16:57:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CE56BC432C2; Mon, 23 Mar 2020 16:57:41 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F268AC433CB;
-        Mon, 23 Mar 2020 16:57:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F268AC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] wireless: ti: Replace zero-length array with
- flexible-array member
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200225003408.GA28675@embeddedor>
-References: <20200225003408.GA28675@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200323165741.CE56BC432C2@smtp.codeaurora.org>
-Date:   Mon, 23 Mar 2020 16:57:41 +0000 (UTC)
+        Mon, 23 Mar 2020 12:59:06 -0400
+Received: by mail-pj1-f67.google.com with SMTP id mj6so94067pjb.5;
+        Mon, 23 Mar 2020 09:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=MkMZMykbgF51hxSABpWkLu0UuWfliY17yizyDulcCcM=;
+        b=QCbfDq3oGRPAht0bz7pdwG+/s7C98PKYTgvx+f2gGttgL3j94ZBhT9VL1y3AyXV2/t
+         YK7CFNjn8ohLePWY6p3fS6YkesPObEjKA3jkqdzqutT8VwWUDnjTs92sPrkjc/G+GgNN
+         1tKm/ocwkDewgY5mWDLBTr+vk1IlAJ9yic4vGuDDthow5Du1/P97gVz3yLk9/YpgVqHI
+         3668lPUzzGJe6Cbzk7nQXaWtPgzDVjyi7IuPzF8PyOq1zJqX9eiAb1hSE9gwGCu1054O
+         m1NyTfperrPY+PxgKI+bTeGN3FtJxIUkTsRJC+GHkgRmye2C/lvH5Cs10amyOvTuR41G
+         bYKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MkMZMykbgF51hxSABpWkLu0UuWfliY17yizyDulcCcM=;
+        b=tFIPoNsi3K+Oy7/LD9vdMn9Q398jsspGkSNPhlIgzxecEXfXfxBI9pxU1pmR66BhBs
+         OcuZmVjYlaj6z7i0rimzRr7ic42b/eKbEmYrgSdXOZ6FZQd0b1AFS5KokI2HeUe8Prxp
+         zF8gPdEx7xYSVddqh+KP7O628rrZ1UTIO2NeWSWMjI7ohiNOIcHgsV8O9eZVDidd0q9m
+         JH1kvDpPzjyqLr9KPUXfAbh9MeElj3CiHieKhEUKYe/Ky/yB123wxcOCj4FvWO0jlnPY
+         uv/v/ftNVF64kBn+kCB3GslZum7n3H4+511YuSok8sK4InvpuNHyBeFBJFk1GzMDRFKW
+         4t6A==
+X-Gm-Message-State: ANhLgQ1HbgaV8EG/mmvw0ZWFhWSQnPVXpRWGFq02svvicKi/YCDMSd28
+        VCiHkS4qb0iyN+uuq/1IVv4EW3D/hD4=
+X-Google-Smtp-Source: ADFU+vs1Q/9+egtKpJHm+AazcP4CHnerPBhcb0v+FGKXydoGo9weENr3jlCM/BYJJyBIQhg2nn4S7A==
+X-Received: by 2002:a17:902:a9c9:: with SMTP id b9mr6852442plr.274.1584982745320;
+        Mon, 23 Mar 2020 09:59:05 -0700 (PDT)
+Received: from VM_0_35_centos.localdomain ([150.109.62.251])
+        by smtp.gmail.com with ESMTPSA id u5sm13820361pfb.153.2020.03.23.09.59.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Mar 2020 09:59:04 -0700 (PDT)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH -next] rtc: remove set but not used variable 'np'
+Date:   Tue, 24 Mar 2020 00:59:01 +0800
+Message-Id: <1584982741-648-1-git-send-email-hqjagain@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+drivers/rtc/rtc-fsl-ftm-alarm.c: In function 'ftm_rtc_probe':
+drivers/rtc/rtc-fsl-ftm-alarm.c:246:22: warning: unused variable 'np'
+[-Wunused-variable]
+  struct device_node *np = pdev->dev.of_node;
 
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+commit cd49b579e705 ("rtc: fsl-ftm-alarm: enable acpi support")
+involved this unused variable, remove it.
 
-Patch applied to wireless-drivers-next.git, thanks.
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ drivers/rtc/rtc-fsl-ftm-alarm.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-398978f7dfa5 wireless: ti: Replace zero-length array with flexible-array member
-
+diff --git a/drivers/rtc/rtc-fsl-ftm-alarm.c b/drivers/rtc/rtc-fsl-ftm-alarm.c
+index c572044..0f4142b 100644
+--- a/drivers/rtc/rtc-fsl-ftm-alarm.c
++++ b/drivers/rtc/rtc-fsl-ftm-alarm.c
+@@ -243,7 +243,6 @@ static int ftm_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
+ 
+ static int ftm_rtc_probe(struct platform_device *pdev)
+ {
+-	struct device_node *np = pdev->dev.of_node;
+ 	int irq;
+ 	int ret;
+ 	struct ftm_rtc *rtc;
 -- 
-https://patchwork.kernel.org/patch/11402335/
+1.8.3.1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
