@@ -2,105 +2,130 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01577C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E51CC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C254F2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:29:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584973786;
-	bh=vxk2CFpWP9Q0hSe7Ofy07jBrChfrIs3fwHTY5QitQ9A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jEtVrEbrzQee4Nwu3YPHM6vJrtqeALv4KgW4Zk4szQMKUruScCDHOGOcRHmj2mSTy
-	 RQgRar+KTC+2nrP/d+sV/Ou14NfL/aTHKTcslm9JCH3rHo+rteiCHAap9HYRZ6lMLP
-	 0iIDQ4NavR/JxMHL/i1osuWQrRYPpFdQ4pkzFDAE=
+	by mail.kernel.org (Postfix) with ESMTP id DE9DB2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:31:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GiISIai3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgCWO3p (ORCPT
+        id S1727044AbgCWObI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:29:45 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39361 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgCWO3p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:29:45 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a9so11989326wmj.4;
-        Mon, 23 Mar 2020 07:29:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PgGrbAJ9j98exfSo98nJNMVRX6RscOjYHAK4YDkqU6w=;
-        b=UwDcH+L2EuL558+CYxzr3YdodBQrK7RwZYhK4o5BYMuBCh40UA9vLaebQSscaa1weW
-         deLRMuzzmTqyMvEmHhvFqrWaKXetpT2y/nmPctnd+c6WaADbQc936d/EiRVTLJYp+49V
-         jDHqI7FBldPgJrLATnyVa7XD9jYxFpOglnn7eYJ5cQmJH/rdS53Jwb6w+9mSTcMJv7yi
-         tzc7zChTaHio0BSpA/anT6+CsaenSoucpBe2D0NfarZ6DhcuN8+/IhErVfxoTuf1lwSC
-         Z7ey86JId0C6tM4T3Bo4VU+IxPAlAWF8fs/ORHdQkCnvjpvJbZR0h0B6+uZDwSCYOogL
-         uwiA==
-X-Gm-Message-State: ANhLgQ2xofHj+FE67i7ET4M+6cqY0CbjeVo22AJonX8pnZgHl2djuS5u
-        M0mO00Rk+wjyI0wH5TM1TPM=
-X-Google-Smtp-Source: ADFU+vv5KrI51E89paspeXPPrGtzXE/bYqE9+eI3q6rJMUr8Di29zK/34i9JOiFoFKnhNovbBsc6Qw==
-X-Received: by 2002:a1c:de82:: with SMTP id v124mr27142143wmg.70.1584973783317;
-        Mon, 23 Mar 2020 07:29:43 -0700 (PDT)
-Received: from localhost (ip-37-188-135-150.eurotel.cz. [37.188.135.150])
-        by smtp.gmail.com with ESMTPSA id n2sm25447536wro.25.2020.03.23.07.29.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 07:29:42 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 15:29:41 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Rafael Aquini <aquini@redhat.com>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
- false-negative errors
-Message-ID: <20200323142941.GK7524@dhcp22.suse.cz>
-References: <20200322013525.1095493-1-aquini@redhat.com>
- <CALvZod4GjRFLRX=S_YFYnJk-kL6tjveYEDOBFS76NqrURERHHQ@mail.gmail.com>
- <20200323141659.GA23364@optiplex-lnx>
+        Mon, 23 Mar 2020 10:31:08 -0400
+Received: from mail-eopbgr80055.outbound.protection.outlook.com ([40.107.8.55]:10365
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725830AbgCWObH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 10:31:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NiJSX2C0g0gzduhVZRy8+Snxf+2fBJrdKpd0m1yBC4kJV0ljh4BLFG+WNqaMsXecMRSr4vFp3cw5NZA/WwbgayIwvOiHn6lwYwbs4QaWjEl8CD8zeFkNjq/BjsyoS8GKxJTQI3+cpHJ41U5/drUMwhsbeAHZe78X4/NF9rkRbzwsGk4c/Z7t8PhvcUsC2tOEfwdU/BcjEtkrX2mJ9JRo/UpMCZrk5z6Xziy9rSoT68e3ru4HKGurAbRRev552qZqlnoFRVoVZY34Kq6nfwh4q9TC76f8c5LwelV8LfFxWJgaDmoitPtTczEdDeDKpjOfM9dVpuLHCfx3jQTrzndoqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n/jhxgM3SAa8DSF5D/M/NNKNtjfs/0XEoh5OHKTX/cw=;
+ b=oTujLP8FDP/GpjGfzrw+w6rWxs9M1TEooqzABOVCQnO7ug+W7zSjhiJ1Xqi3NW4xP0ZYLuu+GaV0oPATKAZnp2IXSnWjPMq9zSLjn8WrQ+abeQ5mwPvIrCWN1u4S2dlW31+WRUO+JgkbcAs52SxnRpAjSk5x8wunEPmthNfx2ccXLLWG9QYlUQK6esGfECOxbkmBDT89o3HPBcv0wroXxa9uSGziNUZbP0RLePhz0gbicQ+eiVmuBkPPLAqft/ox3SR/SOSwKNbxHKI1qc4B15E8BVdieRgTB9AWR2o2jArahQcS6Fiy30f2wi+7eaj3XWV9OLWBjD++/n4NWw8Wog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n/jhxgM3SAa8DSF5D/M/NNKNtjfs/0XEoh5OHKTX/cw=;
+ b=GiISIai3VbgsFnl9SQwwI1D94JvPJn0KjrUZUp4ED1EFzZSunFiqCO7E/ewdCD05L+d8+9xOtyWdkEkVD/wEY2Ly8Lkj32Ni3/Q+VT7swXq1wN7QJmd6ZW5JnLbu5YroNO5qYjbZGCf+CE89QJK6JEgY32jNDMGNCPHMxQPNz0E=
+Received: from AM0PR04MB7041.eurprd04.prod.outlook.com (10.186.130.77) by
+ AM0PR04MB4371.eurprd04.prod.outlook.com (52.135.148.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.20; Mon, 23 Mar 2020 14:31:03 +0000
+Received: from AM0PR04MB7041.eurprd04.prod.outlook.com
+ ([fe80::59c3:fa42:854b:aeb3]) by AM0PR04MB7041.eurprd04.prod.outlook.com
+ ([fe80::59c3:fa42:854b:aeb3%6]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
+ 14:31:03 +0000
+From:   Christian Herber <christian.herber@nxp.com>
+To:     Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+CC:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>, Marek Vasut <marex@denx.de>,
+        netdev <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: RE: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP
+ TJA11xx
+Thread-Topic: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP
+ TJA11xx
+Thread-Index: AdYBHzfET3LoSQzERB2HqtRjW4y/+A==
+Date:   Mon, 23 Mar 2020 14:31:03 +0000
+Message-ID: <AM0PR04MB70413A974A2152D27CAADFAC86F00@AM0PR04MB7041.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=christian.herber@nxp.com; 
+x-originating-ip: [77.8.198.219]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3f6670c7-2e1d-4a2a-3e4f-08d7cf36d113
+x-ms-traffictypediagnostic: AM0PR04MB4371:
+x-microsoft-antispam-prvs: <AM0PR04MB43719B3F038EC1C5697F3CE886F00@AM0PR04MB4371.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0351D213B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(396003)(376002)(366004)(39860400002)(199004)(8676002)(53546011)(81166006)(81156014)(6506007)(7416002)(7696005)(8936002)(186003)(26005)(86362001)(71200400001)(66946007)(66446008)(66476007)(66556008)(64756008)(316002)(54906003)(478600001)(76116006)(44832011)(110136005)(9686003)(55016002)(33656002)(5660300002)(2906002)(52536014)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4371;H:AM0PR04MB7041.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: geF3bi+WgFVbkHwYXFOff/O0+ZIMdWEK2DkJOJA23iOUDoa0+7MMBCeyPXxn1Qe1POiCtmVTdDLIKnA5GIIETilvh9tq5qgKUkuTiXI2sJ/uQpXQ5CtLGDd5BVvs032lbeL1l7YSsod+JjvWM58+kluZVL26pb1DahXjK+qsjGa8VnsJq0fI/uMjsoFqabldHBwzwVuiTOAaT86XSM/m2KBL2YFKl2feinC0gpwqQ5IddcYuX+Viq2LF57kdsYFRwsR1gMs/bY6MyCzkwuJ1LMMUGR848JSfXEvfzIGAEpmW0pqJ0yhd/wCQlHwjNf7iZMqvz3+XV2kY3dE75PWe3b7jJemf5E6alyJsQ3AF8DAcmZcBGiERoM1OvcymNPaZEd+VchzNGqnrEgZ+MBJE2IiINbtd375SVv0HQVFIPNgIQHjeUmwkbuBwDMEE01pX
+x-ms-exchange-antispam-messagedata: csgqawmTwXPrbVo8Dbc7ZBuXFB4tt44QiYk010HMpBV2/RqLYQExcXhYoWfMhoz29dwsOzYfF1gl0El8BGEjDqDGHY5m85IzqaUKAzLFBv5p7/hLS+xzS+mkCXIDr7xOhMwBVZ+sr0qPM+MyItJgZg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323141659.GA23364@optiplex-lnx>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f6670c7-2e1d-4a2a-3e4f-08d7cf36d113
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2020 14:31:03.8619
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mc6pe6s7QInJ6J1CdUYHOboCr7DWGJgSXKzLB4iXxju5XRul9g/x6FDblV8tbuKBgWHZhcYkjpLZjB1haoTiqFrNGeIGQsRA99/lNUql6uQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4371
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 23-03-20 10:16:59, Rafael Aquini wrote:
-> On Sun, Mar 22, 2020 at 09:31:04AM -0700, Shakeel Butt wrote:
-> > On Sat, Mar 21, 2020 at 6:35 PM Rafael Aquini <aquini@redhat.com> wrote:
-> > >
-> > > Changes for commit 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
-> > > break this test expectations on the behavior of mlock syscall family immediately
-> > > inserting the recently faulted pages into the UNEVICTABLE_LRU, when MCL_ONFAULT is
-> > > passed to the syscall as part of its flag-set.
-> > 
-> > mlock* syscalls do not provide any guarantee that the pages will be in
-> > unevictable LRU, only that the pages will not be paged-out. The test
-> > is checking something very internal to the kernel and this is expected
-> > to break.
-> 
-> It was a check expected to be satisfied before the commit, though. 
-> Getting the mlocked pages inserted directly into the unevictable LRU,
-> skipping the pagevec, was established behavior before the aforementioned
-> commit, and even though one could argue userspace should not be aware,
-> or care, about such inner kernel circles the program in question is not an 
-> ordinary userspace app, but a kernel selftest that is supposed to check
-> for the functionality correctness.
-
-But mlock (in neither mode) is reall forced to put pages to the
-UNEVICTABLE_LRU for correctness. If the test is really depending on it
-then the selftest is bogus. A real MCL_ONFAULT test should focus on the
-user observable contract of this api. And that is that a new mapping
-doesn't fault in the page during the mlock call but the memory is locked
-after the memory is faulted in. You can use different methods to observe
-locked memory - e.g. try to reclaim it and check or check /proc/<pid>/smaps
-
--- 
-Michal Hocko
-SUSE Labs
+Pk9uIFN1biwgTWFyIDIyLCAyMDIwIGF0IDM6MDkgUE0gRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWlu
+ZWxsaUBnbWFpbC5jb20+IHdyb3RlOg0KPj4NCj4+IE9uIDMvMjAvMjAyMCA0OjA1IFBNLCBSb2Ig
+SGVycmluZyB3cm90ZToNCj4+ID4+Pj4gQmVjYXVzZSB0aGUgcHJpbWFyeSBQSFkwIGNhbiBiZSBh
+dXRvZGV0ZWN0ZWQgYnkgdGhlIGJ1cyBzY2FuLg0KPj4gPj4+PiBCdXQgSSBoYXZlIG5vdGhpbmcg
+YWdhaW5zdCB5b3VyIHN1Z2dlc3Rpb25zLiBQbGVhc2UsIHNvbWUgb25lIHNob3VsZCBzYXkgdGhl
+DQo+PiA+Pj4+IGxhc3Qgd29yZCBoZXJlLCBob3cgZXhhY3RseSBpdCBzaG91bGQgYmUgaW1wbGVt
+ZW50ZWQ/DQo+PiA+Pg0KPj4gPj4gSXQncyBub3QgZm9yIG1lIHRvIGRlY2lkZSwgSSB3YXMgaG9w
+aW5nIHRoZSBEZXZpY2UgVHJlZSBtYWludGFpbmVycw0KPj4gPj4gY291bGQgY2hpbWUgaW4sIHlv
+dXIgY3VycmVudCBhcHByb2FjaCB3b3VsZCBjZXJ0YWlubHkgd29yayBhbHRob3VnaCBpdA0KPj4g
+Pj4gZmVlbHMgdmlzdWFsbHkgYXdrd2FyZC4NCj4+ID4NCj4+ID4gU29tZXRoaW5nIGxpa2UgdGhp
+cyBpcyB3aGF0IEknZCBkbzoNCj4+ID4NCj4+ID4gZXRoZXJuZXQtcGh5QDQgew0KPj4gPiAgIGNv
+bXBhdGlibGUgPSAibnhwLHRqYTExMDIiOw0KPj4gPiAgIHJlZyA9IDw0IDU+Ow0KPj4gPiB9Ow0K
+Pj4NCj4+IEJ1dCB0aGUgcGFyZW50IChNRElPIGJ1cyBjb250cm9sbGVyKSBoYXMgI2FkZHJlc3Mt
+Y2VsbHMgPSAxIGFuZA0KPj4gI3NpemUtY2VsbHMgPSAwLCBzbyBob3cgY2FuIHRoaXMgYmUgbWFk
+ZSB0byB3b3JrIHdpdGhvdXQgY3JlYXRpbmcgdHdvDQo+PiBub2RlcyBvciBhIGZpcnN0IG5vZGUg
+ZW5jYXBzdWxhdGluZyBhbm90aGVyIG9uZT8NCj4NCj5UaGF0IGlzIHRoZSBzaXplIG9mIHRoZSBh
+ZGRyZXNzLCBub3QgaG93IG1hbnkgYWRkcmVzc2VzIHRoZXJlIGFyZS4gSWYNCj50aGUgZGV2aWNl
+IGhhcyAyIGFkZHJlc3NlcywgdGhlbiAyIGFkZHJlc3MgZW50cmllcyBzZWVtcyBlbnRpcmVseQ0K
+PmFwcHJvcHJpYXRlLg0KPg0KPlJvYg0KDQpZZXMsIGl0IGlzIG9uZSBkZXZpY2Ugd2l0aCB0d28g
+YWRkcmVzcy4gVGhpcyBpcyBpZiB5b3UgY2FsbCB0aGUgZW50aXJlIElDIGEgZGV2aWNlLiBJZiB5
+b3UgbG9vayBhdCBpdCBmcm9tIGEgUEhZIHBlcnNwZWN0aXZlLCBpdCBpcyB0d28gZGV2aWNlcyB3
+aXRoIDEgYWRkcmVzcy4NCklmIHlvdSBqdXN0IGxvb2sgYXQgaXQgYXMgYSBzaW5nbGUgZGV2aWNl
+LCBpdCBnZXRzIGRpZmZpY3VsdCB0byBhZGQgUEhZIHNwZWNpZmljIHByb3BlcnRpZXMgaW4gdGhl
+IGZ1dHVyZSwgZS5nLiBtYXN0ZXIvc2xhdmUgc2VsZWN0aW9uLg0KSW4gbXkgb3BpbmlvbiBpdHMg
+aW1wb3J0YW50IHRvIGhhdmUgc29tZSBraW5kIG9mIGNvbnRhaW5lciBmb3IgdGhlIGVudGlyZSBJ
+QywgYnV0IGxpa2V3aXNlIGZvciB0aGUgaW5kaXZpZHVhbCBQSFlzLg0KDQpDaHJpc3RpYW4NCg==
