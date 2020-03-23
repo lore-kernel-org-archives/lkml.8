@@ -2,477 +2,356 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3F9C10F26
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 05:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD89C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 05:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7EE20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 05:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D6F20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 05:52:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SS8WBIEd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TA8v2SiI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbgCWFmX (ORCPT
+        id S1726954AbgCWFwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 01:42:23 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39028 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgCWFmW (ORCPT
+        Mon, 23 Mar 2020 01:52:30 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45959 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgCWFwa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 01:42:22 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d25so6957796pfn.6
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 22:42:22 -0700 (PDT)
+        Mon, 23 Mar 2020 01:52:30 -0400
+Received: by mail-pg1-f195.google.com with SMTP id o26so128674pgc.12
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 22:52:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2sIiezijPs+jRs+EmHDt7uhGz2MDV2SCJjKFrMlfDAw=;
-        b=SS8WBIEdRmdQcu7wIhsI/B/dLfnVuJRvuzKOWwaEC/PY64QE9Zr2P4iOMufJ97P0kr
-         8lOO343uH02aWk1viy7uD/fzVH4YfwYNKWU3Z2cVIyBcQGZjcOcN42p+lLaW0/X5ewH7
-         VLyypqCULId3RT/z8X68eFYakFxLRpanJZfq4Rur1JPh5ohE8K48Gj3MOCbcqQ/fRQT4
-         0by7yaqVrl0/xGzfZbyqNTLJWVjAJBq1p5X/KgrVCcrcNb3iwXTBlylhvq429yuOtnoV
-         iVOff4f3zY3up6Vm+38W8FVVmcLVjszLejiJXQsFmCrHNp56uXa/W+K8rFTcgt0zLKXJ
-         BG3g==
+        h=from:to:cc:subject:date:message-id;
+        bh=4r5JAcxlnrKR483D1brZiy1cy3Pxp7dcX+JHZTkqTtI=;
+        b=TA8v2SiIfzaVZAekdVYs5269TfUW8e2S5ipUCJ6mu3ecTurxu69QDTjXmdgrJTfpWT
+         kk3gY8vytvqkzgmhYf4HlBvJhjvHqNunN7MfsGVV62pSkpdZeQV61R5VEjKOrx/U0yCo
+         3Tj/iuuY+qIFoU5QjO5qVtbqPRKOgT09kolAAygV5Fy7d4a0FEx3DH1k8yhHopLIK846
+         ocRa/jbJtqv5GseryBMhgs8oqhBNhgeINDCvpGePe4mPOrxysa0tlmptnQNoJ3lSSdgX
+         Eh/fGPn+2JPoEpZ87iqIX7QX+Y9cjDkQxUXhsIKD+z80rxToSGhGF7+fOSPa35hmsuTQ
+         dRig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=2sIiezijPs+jRs+EmHDt7uhGz2MDV2SCJjKFrMlfDAw=;
-        b=btlaMSoQNinD1Mn+OPHaRyy7hpv3XvU7LHZDrCBdclaQYXdg9ZkHAXoibL6evgdVWC
-         FxdwIw8PWPapOIr65mfipXsPUdNtsKmtBpTltCow7Ioj64BBS+zkVScHCJz/ViDU49X5
-         30PueT+YnrdiIYzq4cyB+iUYNSFD8Gkp4MlTQxT5OCPQRJCPbkAiTkBIZ0Q4o7Tt+X0Q
-         GJXVCkRBd30GoFY4tO2Z6Ya+MdPw+JBjUQmy5yXw0FwIbBSFvHfkWHUlXS92ShNC6gbM
-         rVtKg5MgFAXOxMufIAlVq6YnC+ySiheE+cZ2r/lChQwgS1hyvEwFZbZ0ycKKabJxYcrT
-         PW1w==
-X-Gm-Message-State: ANhLgQ3cHtOhPqpxxGQ9bP2rfCPGbw1MzML3fQJ1OEf+ZiBjRGTLi0db
-        vgs5QJAH9kjOLjbSe9o9MBrXQCRiyxY=
-X-Google-Smtp-Source: ADFU+vvWcc+4sgimLWomClk8+wJYIejxzRanWF5Qwd42znipyENqPEacbDzdUz3rUfAm9g81PVJC/Q==
-X-Received: by 2002:a62:170f:: with SMTP id 15mr21989979pfx.12.1584942141091;
-        Sun, 22 Mar 2020 22:42:21 -0700 (PDT)
-Received: from Slackware ([103.231.91.69])
-        by smtp.gmail.com with ESMTPSA id i4sm3062285pjg.4.2020.03.22.22.42.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2020 22:42:20 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 11:12:09 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.6-rc7 build...compile...boot without fuss!
-Message-ID: <20200323054209.GA1803@Slackware>
-Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAHk-=wipv1y2Z7=CDQ5ajb2OvSyq-0BL9yLRPm1YqW+sjcSDzQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wipv1y2Z7=CDQ5ajb2OvSyq-0BL9yLRPm1YqW+sjcSDzQ@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4r5JAcxlnrKR483D1brZiy1cy3Pxp7dcX+JHZTkqTtI=;
+        b=K44npXm1mEUMOh2pgNNk6mpjWUDwsfcCDB0/FFCGx9P6u8ec7AYs3YioRqHLFPjqsm
+         U2XvuzdH6Le903j+Qr3j1Oa2MTLGCmQRXjdYam9C1JS8NR/XuCkltHZ5mQkiJHzs+kxW
+         r9AHeuwH92DwpskQEhyHoF9z1N9l3lfIvTYH5X7GkVQpBLNTrPSAW/hhn9tOOt00aqRl
+         cBwJ32QEz6bN+aiebbC3cumx9B9HfUlu2KzL2TNluNOEbZP31h5ZBLMVCrT9Z66HV2Dr
+         9DQaoNPtFUxaNfIsPcmy/7ldkRzreyNMAMl8UNYqCxfjwyC3sDShz4iYBnmyjNaF6H1w
+         dqWw==
+X-Gm-Message-State: ANhLgQ0YgYE52h9f+LPulGOmuBAuS+F/T1S2IHCvZTxmE3S23Hl7piYI
+        ipqQeMbaVCAssQB3ea2FJGk=
+X-Google-Smtp-Source: ADFU+vtB4YoNLvyRyVSAzTDsQN1FJVGM6FB2tFKZ5CuFI/PXqIMyfdMhcS4jkCwFp5wTVlth0t7Paw==
+X-Received: by 2002:a62:8202:: with SMTP id w2mr22460950pfd.117.1584942747950;
+        Sun, 22 Mar 2020 22:52:27 -0700 (PDT)
+Received: from localhost.localdomain ([114.206.198.176])
+        by smtp.gmail.com with ESMTPSA id y30sm12563058pff.67.2020.03.22.22.52.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 22 Mar 2020 22:52:27 -0700 (PDT)
+From:   js1304@gmail.com
+X-Google-Original-From: iamjoonsoo.kim@lge.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: [PATCH v4 0/8] workingset protection/detection on the anonymous LRU list
+Date:   Mon, 23 Mar 2020 14:52:04 +0900
+Message-Id: <1584942732-2184-1-git-send-email-iamjoonsoo.kim@lge.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
---82I3+IH0IqGh5yIs
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-On 18:47 Sun 22 Mar 2020, Linus Torvalds wrote:
->The world around us may be going through strange times, but at least
->so far kernel development looks normal.
->
->The bulk this week is - as usual - drivers: gpu, mmc, staging, iio,
->usb, sound... But there's some VM fixes, some arch updates,
->documentation and tooling (mostly turbostat).
->
->Nothing really stands out, it's all pretty small. I'm going to be
->optimistic, and say that it's because we're nicely on track for a
->normal calm release, but obviously it may be partly because everybody
->is distracted by virus worries. But I haven't seen anything that looks
->hugely worrisome on the kernel side.
->
->Go test,
->
->               Linus
+This patchset implements workingset protection and detection on
+the anonymous LRU list.
+
+* Changes on v4
+- In the patch "mm/swapcache: support to handle the exceptional
+entries in swapcache":
+-- replace the word "value" with "exceptional entries"
+-- add to handle the shadow entry in add_to_swap_cache()
+-- support the huge page
+-- remove the registration code for shadow shrinker
+
+- remove the patch "mm/workingset: use the node counter
+if memcg is the root memcg" since workingset detection for
+anonymous page doesn't use shadow shrinker now
+- minor style fixes
+
+* Changes on v3
+- rework the patch, "mm/vmscan: protect the workingset on anonymous LRU"
+(use almost same reference tracking algorithm to the one for the file
+mapped page)
+
+* Changes on v2
+- fix a critical bug that uses out of index lru list in
+workingset_refault()
+- fix a bug that reuses the rotate value for previous page
+
+* SUBJECT
+workingset protection
+
+* PROBLEM
+In current implementation, newly created or swap-in anonymous page is
+started on the active list. Growing the active list results in rebalancing
+active/inactive list so old pages on the active list are demoted to the
+inactive list. Hence, hot page on the active list isn't protected at all.
+
+Following is an example of this situation.
+
+Assume that 50 hot pages on active list and system can contain total
+100 pages. Numbers denote the number of pages on active/inactive
+list (active | inactive). (h) stands for hot pages and (uo) stands for
+used-once pages.
+
+1. 50 hot pages on active list
+50(h) | 0
+
+2. workload: 50 newly created (used-once) pages
+50(uo) | 50(h)
+
+3. workload: another 50 newly created (used-once) pages
+50(uo) | 50(uo), swap-out 50(h)
+
+As we can see, hot pages are swapped-out and it would cause swap-in later.
+
+* SOLUTION
+Since this is what we want to avoid, this patchset implements workingset
+protection. Like as the file LRU list, newly created or swap-in anonymous
+page is started on the inactive list. Also, like as the file LRU list,
+if enough reference happens, the page will be promoted. This simple
+modification changes the above example as following.
+
+1. 50 hot pages on active list
+50(h) | 0
+
+2. workload: 50 newly created (used-once) pages
+50(h) | 50(uo)
+
+3. workload: another 50 newly created (used-once) pages
+50(h) | 50(uo), swap-out 50(uo)
+
+hot pages remains in the active list. :)
+
+* EXPERIMENT
+I tested this scenario on my test bed and confirmed that this problem
+happens on current implementation. I also checked that it is fixed by
+this patchset.
+
+I did another test to show the performance effect of this patchset.
+
+- ebizzy (with modified random function)
+ebizzy is the test program that main thread allocates lots of memory and
+child threads access them randomly during the given times. Swap-in/out
+will happen if allocated memory is larger than the system memory.
+
+The random function that represents the zipf distribution is used to
+make hot/cold memory. Hot/cold ratio is controlled by the parameter. If
+the parameter is high, hot memory is accessed much larger than cold one.
+If the parameter is low, the number of access on each memory would be
+similar. I uses various parameters in order to show the effect of
+patchset on various hot/cold ratio workload.
+
+My test setup is a virtual machine with 8 cpus and 1024MB memory.
+
+Result format is as following.
+
+Parameter 0.1 ... 1.3
+Allocated memory size
+Throughput for base (larger is better)
+Throughput for patchset (larger is better)
+Improvement (larger is better)
 
 
-Well, build,compile and boot without fuss.
+* single thread
+
+     0.1      0.3      0.5      0.7      0.9      1.1      1.3
+<512M>
+  7009.0   7372.0   7774.0   8523.0   9569.0  10724.0  11936.0
+  6973.0   7342.0   7745.0   8576.0   9441.0  10730.0  12033.0
+   -0.01     -0.0     -0.0     0.01    -0.01      0.0     0.01
+<768M>
+   915.0   1039.0   1275.0   1687.0   2328.0   3486.0   5445.0
+   920.0   1037.0   1238.0   1689.0   2384.0   3638.0   5381.0
+    0.01     -0.0    -0.03      0.0     0.02     0.04    -0.01
+<1024M>
+   425.0    471.0    539.0    753.0   1183.0   2130.0   3839.0
+   414.0    468.0    553.0    770.0   1242.0   2187.0   3932.0
+   -0.03    -0.01     0.03     0.02     0.05     0.03     0.02
+<1280M>
+   320.0    346.0    410.0    556.0    871.0   1654.0   3298.0
+   316.0    346.0    411.0    550.0    892.0   1652.0   3293.0
+   -0.01      0.0      0.0    -0.01     0.02     -0.0     -0.0
+<1536M>
+   273.0    290.0    341.0    458.0    733.0   1381.0   2925.0
+   271.0    293.0    344.0    462.0    740.0   1398.0   2969.0
+   -0.01     0.01     0.01     0.01     0.01     0.01     0.02
+<2048M>
+    77.0     79.0     95.0    147.0    276.0    690.0   1816.0
+    91.0     94.0    115.0    170.0    321.0    770.0   2018.0
+    0.18     0.19     0.21     0.16     0.16     0.12     0.11
 
 
+* multi thread (8)
 
-[    3.085160] EXT4-fs (sda): mounted filesystem with ordered data mode.
-Opts: (null)
-[    3.086661] ext4 filesystem being mounted at /root supports
-timestamps until 2038 (0x7fffffff)
-[    3.087398] VFS: Mounted root (ext4 filesystem) on device 8:0.
-[    3.100575] devtmpfs: mounted
-[    3.109763] Freeing unused decrypted memory: 2040K
-[    3.168224] Freeing unused kernel image (initmem) memory: 1568K
-[    3.169033] Write protecting the kernel read-only data: 26624k
-[    3.172891] Freeing unused kernel image (text/rodata gap) memory:
-2040K
-[    3.174589] Freeing unused kernel image (rodata/data gap) memory:
-1040K
-[    3.175361] rodata_test: all tests were successful
-[    3.175732] Run /sbin/init as init process
-[    3.211147] process '/bin/busybox' started with executable stack
-[    3.355965] EXT4-fs (sda): re-mounted. Opts: (null)
-[    3.356633] ext4 filesystem being remounted at / supports timestamps
-until 2038 (0x7fffffff)
-[    3.372172] tsc: Refined TSC clocksource calibration: 2194.918 MHz
-[    3.372923] clocksource: tsc: mask: 0xffffffffffffffff max_cycles:
-0x1fa37202099, max_idle_ns: 440795206796 ns
-[    3.373631] clocksource: Switched to clocksource tsc
-Starting syslogd: OK
-Starting klogd: OK
-Running sysctl: OK
-Initializing random number generator... [    4.441038] random: dd:
-uninitialized urandom read (512 bytes read)
-done.
-Starting network: OK
+     0.1      0.3      0.5      0.7      0.9      1.1      1.3
+<512M>
+ 29083.0  29648.0  30145.0  31668.0  33964.0  38414.0  43707.0
+ 29238.0  29701.0  30301.0  31328.0  33809.0  37991.0  43667.0
+    0.01      0.0     0.01    -0.01     -0.0    -0.01     -0.0
+<768M>
+  3332.0   3699.0   4673.0   5830.0   8307.0  12969.0  17665.0
+  3579.0   3992.0   4432.0   6111.0   8699.0  12604.0  18061.0
+    0.07     0.08    -0.05     0.05     0.05    -0.03     0.02
+<1024M>
+  1921.0   2141.0   2484.0   3296.0   5391.0   8227.0  14574.0
+  1989.0   2155.0   2609.0   3565.0   5463.0   8170.0  15642.0
+    0.04     0.01     0.05     0.08     0.01    -0.01     0.07
+<1280M>
+  1524.0   1625.0   1931.0   2581.0   4155.0   6959.0  12443.0
+  1560.0   1707.0   2016.0   2714.0   4262.0   7518.0  13910.0
+    0.02     0.05     0.04     0.05     0.03     0.08     0.12
+<1536M>
+  1303.0   1399.0   1550.0   2137.0   3469.0   6712.0  12944.0
+  1356.0   1465.0   1701.0   2237.0   3583.0   6830.0  13580.0
+    0.04     0.05      0.1     0.05     0.03     0.02     0.05
+<2048M>
+   172.0    184.0    215.0    289.0    514.0   1318.0   4153.0
+   175.0    190.0    225.0    329.0    606.0   1585.0   5170.0
+    0.02     0.03     0.05     0.14     0.18      0.2     0.24
 
-Welcome to Buildroot
-buildroot login: [    9.580962] random: crng init done
-
-Welcome to Buildroot
-buildroot login: root
-# uname -a
-Linux buildroot 5.6.0-rc7-Slackware #1 SMP Mon Mar 23 09:27:26 IST 2020
-x86_64 GNU/Linux
+As we can see, as allocated memory grows, patched kernel get the better
+result. Maximum improvement is 21% for the single thread test and
+24% for the multi thread test.
 
 
-~Bhaskar
+* SUBJECT
+workingset detection
 
+* PROBLEM
+Later part of the patchset implements the workingset detection for
+the anonymous LRU list. There is a corner case that workingset protection
+could cause thrashing. If we can avoid thrashing by workingset detection,
+we can get the better performance.
 
+Following is an example of thrashing due to the workingset protection.
 
+1. 50 hot pages on active list
+50(h) | 0
 
+2. workload: 50 newly created (will be hot) pages
+50(h) | 50(wh)
 
+3. workload: another 50 newly created (used-once) pages
+50(h) | 50(uo), swap-out 50(wh)
 
->
->---
->
->Alberto Mattea (1):
->      usb: xhci: apply XHCI_SUSPEND_DELAY to AMD XHCI controller 1022:145c
->
->Alexander Shishkin (4):
->      stm class: sys-t: Fix the use of time_after()
->      intel_th: msu: Fix the unexpected state warning
->      intel_th: Fix user-visible error codes
->      intel_th: pci: Add Elkhart Lake CPU support
->
->Alexandru Tachici (1):
->      iio: accel: adxl372: Set iio_chan BE
->
->Anthony Mallet (2):
->      USB: cdc-acm: fix close_delay and closing_wait units in TIOCSSERIAL
->      USB: cdc-acm: fix rounding error in TIOCSSERIAL
->
->Ard Biesheuvel (1):
->      ARM: 8961/2: Fix Kbuild issue caused by per-task stack protector
->GCC plugin
->
->Arnd Bergmann (1):
->      drm/komeda: mark PM functions as __maybe_unused
->
->Baoquan He (1):
->      mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case
->
->Caz Yokoyama (1):
->      Revert "drm/i915/tgl: Add extra hdc flush workaround"
->
->Chen Yu (5):
->      tools/power turbostat: Support Cometlake
->      tools/power turbostat: Support Tiger Lake
->      tools/power turbostat: Support Ice Lake server
->      tools/power turbostat: Support Jasper Lake
->      tools/power turbostat: Support Elkhart Lake
->
->Chen-Tsung Hsieh (1):
->      HID: google: add moonball USB id
->
->Chris Down (2):
->      mm, memcg: fix corruption on 64-bit divisor in memory.high throttling
->      mm, memcg: throttle allocators based on ancestral memory.high
->
->Chris Wilson (1):
->      drm/i915/execlists: Track active elements during dequeue
->
->Christian Brauner (1):
->      binderfs: use refcount for binder control devices too
->
->Christophe Leroy (1):
->      powerpc/kasan: Fix shadow memory protection with CONFIG_KASAN_VMALLOC
->
->Chunguang Xu (1):
->      memcg: fix NULL pointer dereference in __mem_cgroup_usage_unregister=
-_event
->
->Corentin Labbe (1):
->      rtc: max8907: add missing select REGMAP_IRQ
->
->Cristian Marussi (2):
->      arm64: smp: fix smp_send_stop() behaviour
->      arm64: smp: fix crash_smp_send_stop() behaviour
->
->Dan Carpenter (2):
->      thunderbolt: Fix error code in tb_port_is_width_supported()
->      cifs: potential unintitliazed error code in cifs_getattr()
->
->Daniele Palmas (1):
->      USB: serial: option: add ME910G1 ECM composition 0x110b
->
->Eric Biggers (3):
->      tty: drop outdated comments about release_tty() locking
->      tty: fix compat TIOCGSERIAL leaking uninitialized memory
->      tty: fix compat TIOCGSERIAL checking wrong function ptr
->
->Eugen Hristev (1):
->      iio: adc: at91-sama5d2_adc: fix differential channels in triggered m=
-ode
->
->Eugeniy Paltsev (1):
->      initramfs: restore default compression behavior
->
->Evan Quan (1):
->      drm/amdgpu: add fbdev suspend/resume on gpu reset
->
->Fabrice Gasnier (1):
->      iio: trigger: stm32-timer: disable master mode when stopping
->
->Filipe Manana (2):
->      btrfs: fix log context list corruption after rename whiteout error
->      btrfs: fix removal of raid[56|1c34} incompat flags after
->removing block group
->
->Florian Fainelli (1):
->      ARM: 8957/1: VDSO: Match ARMv8 timer in cntvct_functional()
->
->Gerd Hoffmann (1):
->      drm/bochs: downgrade pci_request_region failure from error to warning
->
->Greg Kurz (1):
->      KVM: PPC: Fix kernel crash with PR KVM
->
->Hans de Goede (3):
->      mmc: sdhci-acpi: Switch signal voltage back to 3.3V on suspend
->on external microSD on Lenovo Miix 320
->      mmc: sdhci-acpi: Disable write protect detection on Acer Aspire
->Switch 10 (SW5-012)
->      usb: quirks: add NO_LPM quirk for RTL8153 based ethernet adapters
->
->Heikki Krogerus (2):
->      usb: typec: ucsi: displayport: Fix NULL pointer dereference
->      usb: typec: ucsi: displayport: Fix a potential race during registrat=
-ion
->
->James Zhu (3):
->      drm/amdgpu: fix typo for vcn1 idle check
->      drm/amdgpu: fix typo for vcn2/jpeg2 idle check
->      drm/amdgpu: fix typo for vcn2.5/jpeg2.5 idle check
->
->Jann Horn (1):
->      mm: slub: add missing TID bump in kmem_cache_alloc_bulk()
->
->Jens Axboe (2):
->      io_uring: make sure openat/openat2 honor rlimit nofile
->      io_uring: make sure accept honor rlimit nofile
->
->Jernej Skrabec (1):
->      drm/bridge: dw-hdmi: fix AVI frame colorimetry
->
->Jessica Yu (1):
->      modpost: move the namespace field in Module.symvers last
->
->Jian-Hong Pan (2):
->      ALSA: hda/realtek - Enable headset mic of Acer X2660G with ALC662
->      ALSA: hda/realtek - Enable the headset of Acer N50-600 with ALC662
->
->Joerg Roedel (1):
->      x86/mm: split vmalloc_sync_all()
->
->Johan Hovold (3):
->      staging: greybus: loopback_test: fix poll-mask build breakage
->      staging: greybus: loopback_test: fix potential path truncation
->      staging: greybus: loopback_test: fix potential path truncations
->
->J=C3=A9r=C3=B4me Pouiller (5):
->      staging: wfx: fix warning about freeing in-use mutex during
->device unregister
->      staging: wfx: fix lines ending with a comma instead of a semicolon
->      staging: wfx: make warning about pending frame less scary
->      staging: wfx: fix RCU usage in wfx_join_finalize()
->      staging: wfx: fix RCU usage between hif_join() and ieee80211_bss_get=
-_ie()
->
->Kai-Heng Feng (2):
->      ALSA: hda/realtek: Fix pop noise on ALC225
->      USB: Disable LPM on WD19's Realtek Hub
->
->Kees Cook (1):
->      ARM: 8958/1: rename missed uaccess .fixup section
->
->Len Brown (5):
->      tools/power turbostat: Fix gcc build warnings
->      tools/power turbostat: Fix missing SYS_LPI counter on some Chromeboo=
-ks
->      tools/power turbostat: Fix 32-bit capabilities warning
->      tools/power turbostat: Print cpuidle information
->      tools/power turbostat: update version
->
->Linus Torvalds (3):
->      mm: slub: be more careful about the double cmpxchg of freelist
->      locks: reinstate locks_delete_block optimization
->      Linux 5.6-rc7
->
->Mario Kleiner (2):
->      drm/amd/display: Add link_rate quirk for Apple 15" MBP 2017
->      drm/amd/display: Fix pageflip event race condition for DCN.
->
->Masahiro Yamada (4):
->      kconfig: introduce m32-flag and m64-flag
->      int128: fix __uint128_t compiler test in Kconfig
->      kbuild: doc: fix references to other documents
->      mmc: sdhci-cadence: set SDHCI_QUIRK2_PRESET_VALUE_BROKEN for UniPhier
->
->Matt Roper (1):
->      drm/i915: Handle all MCR ranges
->
->Michael Straube (1):
->      staging: rtl8188eu: Add device id for MERCUSYS MW150US v2
->
->Michal Hocko (1):
->      mm: do not allow MADV_PAGEOUT for CoW pages
->
->Micha=C5=82 Miros=C5=82aw (1):
->      mmc: sdhci-of-at91: fix cd-gpios for SAMA5D2
->
->Mikhail Petrov (1):
->      scripts/kallsyms: fix wrong kallsyms_relative_base
->
->Murphy Zhou (1):
->      CIFS: fiemap: do not return EINVAL if get nothing
->
->Nathan Chancellor (1):
->      kbuild: Disable -Wpointer-to-enum-cast
->
->Olivier Moysan (1):
->      iio: adc: stm32-dfsdm: fix sleep in atomic context
->
->Pavel Begunkov (1):
->      io_uring: NULL-deref for IOSQE_{ASYNC,DRAIN}
->
->Peter Chen (1):
->      usb: chipidea: udc: fix sleeping function called from invalid context
->
->Petr =C5=A0tetiar (1):
->      iio: chemical: sps30: fix missing triggered buffer dependency
->
->Prabhath Sajeepa (1):
->      nvme-rdma: Avoid double freeing of async event data
->
->Qian Cai (2):
->      page-flags: fix a crash at SetPageError(THP_SWAP)
->      mm/mmu_notifier: silence PROVE_RCU_LIST warnings
->
->Qiujun Huang (1):
->      drm/lease: fix WARNING in idr_destroy
->
->Ran Wang (1):
->      usb: host: xhci-plat: add a shutdown
->
->Ricky Wu (1):
->      mmc: rtsx_pci: Fix support for speed-modes that relies on tuning
->
->Roman Penyaev (1):
->      epoll: fix possible lost wakeup on epoll_ctl() path
->
->SZ Lin (=E6=9E=97=E4=B8=8A=E6=99=BA) (1):
->      kbuild: Fix inconsistent comment
->
->Sagi Grimberg (1):
->      nvmet-tcp: set MSG_MORE only if we actually have more to send
->
->Samuel Thibault (1):
->      staging/speakup: fix get_word non-space look-ahead
->
->Scott Chen (1):
->      USB: serial: pl2303: add device-id for HP LD381
->
->Shyam Prasad N (1):
->      CIFS: Increment num_remote_opens stats counter even in case of
->smb2_query_dir_first
->
->Srinivas Kandagatla (1):
->      slimbus: ngd: add v2.1.0 compatible
->
->Stanley.Yang (1):
->      drm/amd/display: fix typos for dcn20_funcs and dcn21_funcs struct
->
->Stephan Gerhold (1):
->      iio: magnetometer: ak8974: Fix negative raw values in sysfs
->
->Steven Rostedt (VMware) (1):
->      xhci: Do not open code __print_symbolic() in xhci trace events
->
->Takashi Iwai (7):
->      ALSA: pcm: oss: Avoid plugin buffer overflow
->      ALSA: line6: Fix endless MIDI read loop
->      HID: hid-picolcd_fb: Use scnprintf() for avoiding potential
->buffer overflow
->      HID: hid-sensor-custom: Use scnprintf() for avoiding potential
->buffer overflow
->      ALSA: pcm: oss: Remove WARNING from snd_pcm_plug_alloc() checks
->      ALSA: seq: virmidi: Fix running status after receiving sysex
->      ALSA: seq: oss: Fix running status after receiving sysex
->
->Tom St Denis (1):
->      drm/amd/amdgpu: Fix GPR read from debugfs (v2)
->
->Tomas Novotny (2):
->      iio: light: vcnl4000: update sampling periods for vcnl4200
->      iio: light: vcnl4000: update sampling periods for vcnl4040
->
->Tony Fischetti (1):
->      HID: add ALWAYS_POLL quirk to lenovo pixart mouse
->
->Vincenzo Frascino (1):
->      arm64: compat: Fix syscall number of compat_clock_getres
->
->Vlastimil Babka (1):
->      mm, slub: prevent kmalloc_node crashes and memory leaks
->
->Wen-chien Jesse Sung (1):
->      iio: st_sensors: remap SMO8840 to LIS2DH12
->
->Will Deacon (1):
->      arm64: kpti: Fix "kpti=3Doff" when KASLR is enabled
->
->Xiao Yang (1):
->      modpost: Get proper section index by get_secindex() instead of st_sh=
-ndx
->
->YueHaibing (1):
->      iio: ping: set pa_laser_ping_cfg in of_ping_match
+4. workload: 50 (will be hot) pages
+50(h) | 50(wh), swap-in 50(wh)
 
---82I3+IH0IqGh5yIs
-Content-Type: application/pgp-signature; name="signature.asc"
+5. workload: another 50 newly created (used-once) pages
+50(h) | 50(uo), swap-out 50(wh)
 
------BEGIN PGP SIGNATURE-----
+6. repeat 4, 5
 
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl54TCgACgkQsjqdtxFL
-KRVBdggAk+YGCvUv/Xa36X94ckDmSg3uOfKjgk+moT0hZfcHHVAnn97PLHD01jkz
-qekRqZD4Femk2ergc/SlgRVFcjxT5kIv9NsTSD1PfkQG5n2NFZ5jhSv6OPap7zac
-zCmr8I+MzR/AFwvfpd7QEh5bC6CyF9RAn4BhQOgmHWvQqdNqyxIs4nWf0QUNgvS3
-kEkmNdam1+xI3Nrp8/e15rtRbXs0X9a2d671vwr28NKzMSfTsk43BkgYFMlm06Dc
-RMUjiV7Fe964Xx0D3mbip1EPsDC98IMKaJCyOxcMmZb8UHfi1/Axr93V9Hj7+wOr
-DeXvD74KGqHpCDjeinjX37EwT8H23Q==
-=0Rxl
------END PGP SIGNATURE-----
+Without workingset detection, this kind of workload cannot be promoted
+and thrashing happens forever.
 
---82I3+IH0IqGh5yIs--
+* SOLUTION
+Therefore, this patchset implements workingset detection.
+All the infrastructure for workingset detecion is already implemented,
+so there is not much work to do. First, extend workingset detection
+code to deal with the anonymous LRU list. Then, make swap cache handles
+the exceptional value for the shadow entry. Lastly, install/retrieve
+the shadow value into/from the swap cache and check the refault distance.
+
+* EXPERIMENT
+I made a test program to imitates above scenario and confirmed that
+problem exists. Then, I checked that this patchset fixes it.
+
+My test setup is a virtual machine with 8 cpus and 6100MB memory. But,
+the amount of the memory that the test program can use is about 280 MB.
+This is because the system uses large ram-backed swap and large ramdisk
+to capture the trace.
+
+Test scenario is like as below.
+
+1. allocate cold memory (512MB)
+2. allocate hot-1 memory (96MB)
+3. activate hot-1 memory (96MB)
+4. allocate another hot-2 memory (96MB)
+5. access cold memory (128MB)
+6. access hot-2 memory (96MB)
+7. repeat 5, 6
+
+Since hot-1 memory (96MB) is on the active list, the inactive list can
+contains roughly 190MB pages. hot-2 memory's re-access interval
+(96+128 MB) is more 190MB, so it cannot be promoted without workingset
+detection and swap-in/out happens repeatedly. With this patchset,
+workingset detection works and promotion happens. Therefore, swap-in/out
+occurs less.
+
+Here is the result. (average of 5 runs)
+
+type swap-in swap-out
+base 863240 989945
+patch 681565 809273
+
+As we can see, patched kernel do less swap-in/out.
+
+Patchset is based on v5.5.
+Patchset can also be available at
+
+https://github.com/JoonsooKim/linux/tree/improve-anonymous-lru-management-v4.00-v5.5
+
+Enjoy it.
+
+Thanks.
+
+Joonsoo Kim (8):
+  mm/vmscan: make active/inactive ratio as 1:1 for anon lru
+  mm/vmscan: protect the workingset on anonymous LRU
+  mm/workingset: extend the workingset detection for anon LRU
+  mm/swapcache: support to handle the exceptional entries in swapcache
+  mm/workingset: handle the page without memcg
+  mm/swap: implement workingset detection for anonymous LRU
+  mm/vmscan: restore active/inactive ratio for anonymous LRU
+  mm/swap: count a new anonymous page as a reclaim_state's rotate
+
+ include/linux/mmzone.h  | 14 +++++++++-----
+ include/linux/swap.h    | 18 +++++++++++++-----
+ kernel/events/uprobes.c |  2 +-
+ mm/huge_memory.c        |  6 +++---
+ mm/khugepaged.c         |  2 +-
+ mm/memcontrol.c         | 12 ++++++++----
+ mm/memory.c             | 16 ++++++++++------
+ mm/migrate.c            |  2 +-
+ mm/shmem.c              |  3 ++-
+ mm/swap.c               | 42 +++++++++++++++++++++++++++++++++++-------
+ mm/swap_state.c         | 44 +++++++++++++++++++++++++++++++++++++-------
+ mm/swapfile.c           |  2 +-
+ mm/userfaultfd.c        |  2 +-
+ mm/vmscan.c             | 26 ++++++++++++++++----------
+ mm/vmstat.c             |  6 ++++--
+ mm/workingset.c         | 46 +++++++++++++++++++++++++++++++++-------------
+ 16 files changed, 175 insertions(+), 68 deletions(-)
+
+-- 
+2.7.4
+
