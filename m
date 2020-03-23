@@ -2,316 +2,180 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52202C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D567C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 093E82070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C1320732
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:53:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIg5w6jz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c82liV2m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbgCWDuv (ORCPT
+        id S1727175AbgCWDxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 23:50:51 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36723 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbgCWDuv (ORCPT
+        Sun, 22 Mar 2020 23:53:20 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58468 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbgCWDxT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 23:50:51 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d11so13979846qko.3
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 20:50:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6INYt4gGhpcoFn705pKJj9o8HPNDr8E2DVtk1eeKAJQ=;
-        b=PIg5w6jzjqlwC2zGBgV01xRGV1zVFSK8wau6VhPDQT6HSNq653JjVBe9KQ/1QBIGus
-         n+mN86UBBgu5RbxQ7DEI+3z9l3W8auqXtQct8bXnOrPZkXjdpqOlWePJPH69v65KVgod
-         EuUX99twNQpzFignvuSb6NMjRxULtYAQghdmXRZXXh+eL5DP0/F+qIjEXKuy+0eBgWzD
-         d3tRWwEzCIa4OHQVBpXsZLv8TXdq2Gr5ayy0YOo6TGhas0sFpNwymcK7nXN9mDuJz897
-         lcyYFoUO7DYMzPqbWT4kAY92SEnOtQ4sLPnjwG3uhvGqJ4wbKjbubGh0owbQLR1GlxNH
-         g3Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6INYt4gGhpcoFn705pKJj9o8HPNDr8E2DVtk1eeKAJQ=;
-        b=kv9wZTTs6xtC7UfVXUCzZE/flUWdiU3LqObRaWLEUPBUVpCOqss9T4X/9vryJMEJ66
-         7Oe0eUa6dbGpa/JEdoKIubMp+vemHqyqpdcqorjWOQTQhYIYJr8Te76Vvsz2zijdOUTd
-         P3VeT0M4gEh5liLlvL86swhEXcPu6oX9wDLRFkdauw0wYPkeqgw6p5a3sVIYBnQ/DAiK
-         9sRKxvURjcPKYM8M4dZGytEWHadBpidL34xlAZ3rYil0BDV6gHvegIEVBI9UkGiPqv6T
-         hyWvVDKIxVy4AWJwOVH3Pw86ptPpe8D/WVAEh+AvLR9tM8MXRjZ5Y6TV9T3CYAtXNsLr
-         8UEA==
-X-Gm-Message-State: ANhLgQ2vzPXXphLgHVyCbLSt1wdNkxtrBrwQcNPDPuv8Z6s6nUTmGrV/
-        HNtF/6CKb0PrSFGCkeLc4oalY8TT5AxZaKWj/Kg=
-X-Google-Smtp-Source: ADFU+vuBpFkesQKVsaTAI45IdP+IwHPp5MHAXNfmfIg9nsLYKcA+XHq6wuHJbaoUG/9iKyEp/Wy6b0ZFkovdX9sqNiQ=
-X-Received: by 2002:a37:b4c1:: with SMTP id d184mr19779707qkf.452.1584935449102;
- Sun, 22 Mar 2020 20:50:49 -0700 (PDT)
+        Sun, 22 Mar 2020 23:53:19 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02N3qwla007132;
+        Sun, 22 Mar 2020 22:52:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584935578;
+        bh=J2EBw4R7xBK+XNXX1pVY/q3taGIhB/DfdmfHuKxeQEA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=c82liV2m0aVep6i5yfZTXdvhFw9gCECk/eJcpGbSDvSMsdvOQVFyNf0hSDYty+/XR
+         8tETQuOkSWW3YjE2Iy/kF2j/Cus0MeORMdKnAad2tyDWVdXsIJBNUbBugHeG+09GKE
+         bOUbS11kSwZt9T+YqleMuyjJGlpewt6vd5dLNMIk=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02N3qwKh102607
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 22 Mar 2020 22:52:58 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 22
+ Mar 2020 22:52:57 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sun, 22 Mar 2020 22:52:57 -0500
+Received: from [10.250.133.209] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02N3qrlP039017;
+        Sun, 22 Mar 2020 22:52:54 -0500
+Subject: Re: [RESEND PATCH v4 2/4] thermal: k3: Add support for bandgap
+ sensors
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, <rui.zhang@intel.com>,
+        <robh+dt@kernel.org>
+CC:     <amit.kucheria@verdurent.com>, <t-kristo@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <mark.rutland@arm.com>
+References: <20200318083028.9984-1-j-keerthy@ti.com>
+ <20200318083028.9984-3-j-keerthy@ti.com>
+ <ea3b34dc-42e3-0b10-4b89-faf2621a4ee2@linaro.org>
+ <03b837de-ff25-2308-8a56-15bc3377cd5f@ti.com>
+ <d8bff098-f852-4c55-0afc-d7fd043dd10a@linaro.org>
+From:   "J, KEERTHY" <j-keerthy@ti.com>
+Message-ID: <b73f1fdc-16d6-7320-ab63-e51bb388fb5d@ti.com>
+Date:   Mon, 23 Mar 2020 09:22:52 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <1584693135-4396-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1584693135-4396-2-git-send-email-iamjoonsoo.kim@lge.com> <20200320103000.GB3039@MiWiFi-R3L-srv>
-In-Reply-To: <20200320103000.GB3039@MiWiFi-R3L-srv>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Mon, 23 Mar 2020 12:50:38 +0900
-Message-ID: <CAAmzW4PVguD0jEEAt0ZUPqMykswuq2an21jRpP2ZuwRL6PYwCw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] mm/page_alloc: use ac->high_zoneidx for classzone_idx
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Ye Xiaolong <xiaolong.ye@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <d8bff098-f852-4c55-0afc-d7fd043dd10a@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Baoquan.
 
-2020=EB=85=84 3=EC=9B=94 20=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 7:30, B=
-aoquan He <bhe@redhat.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
->
-> On 03/20/20 at 05:32pm, js1304@gmail.com wrote:
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> >
-> > Currently, we use the zone index of preferred_zone which represents
-> > the best matching zone for allocation, as classzone_idx. It has
-> > a problem on NUMA systems when the lowmem reserve protection exists
-> > for some zones on a node that do not exist on other nodes.
-> >
-> > In NUMA system, it can be possible that each node has different populat=
-ed
-> > zones. For example, node 0 could have DMA/DMA32/NORMAL/MOVABLE zone and
-> > node 1 could have only NORMAL zone. In this setup, allocation request
-> > initiated on node 0 and the one on node 1 would have different
-> > classzone_idx, 3 and 2, respectively, since their preferred_zones are
-> > different. If the allocation is local, there is no problem. However,
-> > if it is handled by the remote node due to memory shortage, the problem
-> > would happen.
->
-> Hi Joonsoo,
->
-> Not sure if adding one sentence into above paragraph would be make it
-> easier to understand. Assume you are only talking about the high_zoneidx
-> is MOVABLE_ZONE with calculation of gfp_zone(gfp_mask), since any other
-> case doesn't have this problem. Please correct me if I am wrong.
 
-You're right. This example is for the allocation request with
-gfp_zone(gfp_mask),
-MOVABLE_ZONE.
+On 3/19/2020 7:06 PM, Daniel Lezcano wrote:
+> On 19/03/2020 13:52, Keerthy wrote:
+>>
+>>
+>> On 19/03/20 6:08 pm, Daniel Lezcano wrote:
+>>> On 18/03/2020 09:30, Keerthy wrote:
+>>>> The bandgap provides current and voltage reference for its internal
+>>>> circuits and other analog IP blocks. The analog-to-digital
+>>>> converter (ADC) produces an output value that is proportional
+>>>> to the silicon temperature.
+>>>>
+>>>> Currently reading temperatures and creating work to periodically
+>>>> read temperatures from the zones are supported.
+>>>> There are no active/passive cooling agent supported.
+>>>>
+>>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>>>> ---
+> 
+> [ ... ]
+> 
+>>>> +static const int k3_adc_to_temp[] = {
+>>>> +    -40000, -40000, -40000, -40000, -39800, -39400, -39000, -38600,
+> 
+> [ ... ]
+> 
+>>>> 123000,
+>>>> +    123400, 123800, 124200, 124600, 124900, 125000,
+>>>> +};
+>>>
+>>> Can be this array replaced by an initialization array with a formula?
+>>>
+>>> Why do we have most of the time a step of 400 then suddenly 500 and 400
+>>> again? eg. 30600, 31000, 31400, 31900, 32500, 33000, 33400
+>>
+>> This has come from a polynomial equation which i do not want to
+>> calculate every time we read the temperature. Hence prefer Look up table.
+> 
+> Agree, it makes sense to not calculate every time the temperature is read.
+> 
+> I was suggesting to fill the array at init time with this polynomial
+> formula instead of hardcoding it.
 
-> In NUMA system, it can be possible that each node has different populated
-> zones. For example, node 0 could have DMA/DMA32/NORMAL/MOVABLE zone and
-> node 1 could have only NORMAL zone. In this setup, if we get high_zoneidx
-> as 3 (namely MOVABLE zone), with gfp_zone(gfp_mask), allocation request
-> initiated on node 0 and the one on node 1 would have different
-> classzone_idx, 3 and 2, respectively, since their preferred_zones are
-> different. If the allocation is local, there is no problem. However,
-> if it is handled by the remote node due to memory shortage, the problem
-> would happen.
+As in case of OMAP this is a standard polynomial equation that does not
+change so i would prefer not calculating in the driver and having the 
+look up table from TRM.
 
-I'm okay with your change but I try again to be better. Please check the
-following rewritten commit message and please let me know if it is better
-than before.
+> 
+> [ ... ]
+> 
+>>>> +
+>>>> +    /* Get the sensor count in the VTM */
+>>>> +    val = readl(bgp->base + K3_VTM_DEVINFO_PWR0_OFFSET);
+>>>> +    cnt = val & K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK;
+>>>> +    cnt >>= __ffs(K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK);
+>>>> +
+>>>> +    data = devm_kcalloc(dev, cnt, sizeof(*data), GFP_KERNEL);
+>>>> +    if (!data) {
+>>>> +        ret = -ENOMEM;
+>>>> +        goto err_alloc;
+>>>> +    }
+>>>> +
+>>>> +    /* Register the thermal sensors */
+>>>> +    for (id = 0; id < cnt; id++) {
+>>>> +        data[id].sensor_id = id;
+>>>> +        data[id].bgp = bgp;
+>>>> +        data[id].ctrl_offset = K3_VTM_TMPSENS0_CTRL_OFFSET +
+>>>> +                    id * K3_VTM_REGS_PER_TS;
+>>>> +        data[id].stat_offset = data[id].ctrl_offset + 0x8;
+>>>> +        INIT_WORK(&data[id].thermal_wq, k3_thermal_work);
+>>>
+>>>          What is supposed to do ?
+>>
+>> Periodically poll temperature. I know there is no passive cooling agent
+>> like cpufreq at the moment but i do have a critical trip do you
+>> recommend to remove that?
+> 
+> Actually I was referring to the workq which is initialized, the callback
+> set but it is never called. It can be removed.
 
-Thanks.
+Okay got it.
 
------------------------->8-------------------------------
-From 3842d99d54c02c25cc6f6077fd0e97acabc10917 Mon Sep 17 00:00:00 2001
-From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Date: Fri, 4 May 2018 09:55:21 +0900
-Subject: [PATCH] mm/page_alloc: use ac->high_zoneidx for classzone_idx
+> 
+> Please take also the opportunity to wrap the calls to the register with
+> an explicit helper function name.
 
-Currently, we use classzone_idx to calculate lowmem reserve proetection
-for an allocation request. This classzone_idx causes a problem
-on NUMA systems when the lowmem reserve protection exists for some zones
-on a node that do not exist on other nodes.
+IIUC the comment asks me to define a separate function that takes care 
+of the body of the for loop.
 
-Before further explanation, I should first clarify how to compute
-the classzone_idx and the high_zoneidx.
+> 
+> And remove reg_cnt which is unused.
 
-- ac->high_zoneidx is computed via the arcane gfp_zone(gfp_mask) and
-represents the index of the highest zone the allocation can use
-- classzone_idx was supposed to be the index of the highest zone on
-the local node that the allocation can use, that is actually available
-in the system
+Sure
 
-Think about following example. Node 0 has 4 populated zone,
-DMA/DMA32/NORMAL/MOVABLE. Node 1 has 1 populated zone, NORMAL. Some zones,
-such as MOVABLE, doesn't exist on node 1 and this makes following
-difference.
-
-Assume that there is an allocation request whose gfp_zone(gfp_mask) is
-the zone, MOVABLE. Then, it's high_zoneidx is 3. If this allocation is
-initiated on node 0, it's classzone_idx is 3 since actually
-available/usable zone on local (node 0) is MOVABLE. If this allocation
-is initiated on node 1, it's classzone_idx is 2 since actually
-available/usable zone on local (node 1) is NORMAL.
-
-You can see that classzone_idx of the allocation request are different
-according to their starting node, even if their high_zoneidx is the same.
-
-Think more about these two allocation requests. If they are processed
-on local, there is no problem. However, if allocation is initiated
-on node 1 are processed on remote, in this example, at the NORMAL zone
-on node 0, due to memory shortage, problem occurs. Their different
-classzone_idx leads to different lowmem reserve and then different
-min watermark. See the following example.
-
-root@ubuntu:/sys/devices/system/memory# cat /proc/zoneinfo
-Node 0, zone      DMA
-  per-node stats
-...
-  pages free     3965
-        min      5
-        low      8
-        high     11
-        spanned  4095
-        present  3998
-        managed  3977
-        protection: (0, 2961, 4928, 5440)
-...
-Node 0, zone    DMA32
-  pages free     757955
-        min      1129
-        low      1887
-        high     2645
-        spanned  1044480
-        present  782303
-        managed  758116
-        protection: (0, 0, 1967, 2479)
-...
-Node 0, zone   Normal
-  pages free     459806
-        min      750
-        low      1253
-        high     1756
-        spanned  524288
-        present  524288
-        managed  503620
-        protection: (0, 0, 0, 4096)
-...
-Node 0, zone  Movable
-  pages free     130759
-        min      195
-        low      326
-        high     457
-        spanned  1966079
-        present  131072
-        managed  131072
-        protection: (0, 0, 0, 0)
-...
-Node 1, zone      DMA
-  pages free     0
-        min      0
-        low      0
-        high     0
-        spanned  0
-        present  0
-        managed  0
-        protection: (0, 0, 1006, 1006)
-Node 1, zone    DMA32
-  pages free     0
-        min      0
-        low      0
-        high     0
-        spanned  0
-        present  0
-        managed  0
-        protection: (0, 0, 1006, 1006)
-Node 1, zone   Normal
-  per-node stats
-...
-  pages free     233277
-        min      383
-        low      640
-        high     897
-        spanned  262144
-        present  262144
-        managed  257744
-        protection: (0, 0, 0, 0)
-...
-Node 1, zone  Movable
-  pages free     0
-        min      0
-        low      0
-        high     0
-        spanned  262144
-        present  0
-        managed  0
-        protection: (0, 0, 0, 0)
-
-- static min watermark for the NORMAL zone on node 0 is 750.
-- lowmem reserve for the request with classzone idx 3 at the NORMAL
-on node 0 is 4096.
-- lowmem reserve for the request with classzone idx 2 at the NORMAL
-on node 0 is 0.
-
-So, overall min watermark is:
-allocation initiated on node 0 (classzone_idx 3): 750 + 4096 =3D 4846
-allocation initiated on node 1 (classzone_idx 2): 750 + 0 =3D 750
-
-allocation initiated on node 1 will have some precedence than allocation
-initiated on node 0 because min watermark of the former allocation is
-lower than the other. So, allocation initiated on node 1 could succeed
-on node 0 when allocation initiated on node 0 could not, and, this could
-cause too many numa_miss allocation. Then, performance could be
-downgraded.
-
-Recently, there was a regression report about this problem on CMA patches
-since CMA memory are placed in ZONE_MOVABLE by those patches. I checked
-that problem is disappeared with this fix that uses high_zoneidx
-for classzone_idx.
-
-http://lkml.kernel.org/r/20180102063528.GG30397@yexl-desktop
-
-Using high_zoneidx for classzone_idx is more consistent way than previous
-approach because system's memory layout doesn't affect anything to it.
-With this patch, both classzone_idx on above example will be 3 so will
-have the same min watermark.
-
-allocation initiated on node 0: 750 + 4096 =3D 4846
-allocation initiated on node 1: 750 + 4096 =3D 4846
-
-One could wonder if there is a side effect that allocation initiated on
-node 1 will use higher bar when allocation is handled on local since
-classzone_idx could be higher than before. It will not happen because
-the zone without managed page doesn't contributes lowmem_reserve at all.
-
-Reported-by: Ye Xiaolong <xiaolong.ye@intel.com>
-Tested-by: Ye Xiaolong <xiaolong.ye@intel.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
----
- mm/internal.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/internal.h b/mm/internal.h
-index c39c895..aebaa33 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -119,7 +119,7 @@ struct alloc_context {
-        bool spread_dirty_pages;
- };
-
--#define ac_classzone_idx(ac) zonelist_zone_idx(ac->preferred_zoneref)
-+#define ac_classzone_idx(ac) (ac->high_zoneidx)
-
- /*
-  * Locate the struct page for both the matching buddy in our
---=20
-2.7.4
+Thanks,
+Keerthy
+> 
+> Thanks
+> 
+>    -- Daniel
+> 
