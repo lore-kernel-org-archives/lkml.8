@@ -2,129 +2,117 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABCBC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24971C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AEAA20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F02E820663
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:08:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j4OeduM1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OF9gx+Ag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbgCWPH0 (ORCPT
+        id S1727227AbgCWPII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:07:26 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46582 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbgCWPH0 (ORCPT
+        Mon, 23 Mar 2020 11:08:08 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:28884 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727008AbgCWPII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:07:26 -0400
-Received: by mail-pl1-f196.google.com with SMTP id r3so6008420pls.13;
-        Mon, 23 Mar 2020 08:07:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Aa6t6On9SFFaqUu6JfdwGcBHkFRJmU7LGTC9/kij2yU=;
-        b=j4OeduM1npfKZ66EzlFeA2FKn4gSg+Klzf5Ykh0nJ37W3tuHmt4dGgjwU+r2fdUVBh
-         WDNf9zL0XLqhB6vrPb7Pd9z5DSJxKYATXoiUW/DH7S98dRnzLO03BmqmM46WyA42VW8e
-         kPO+3pE3hsogvJJ3CQa744J+yBS9w89ZLTeGK6T1lHyKxD3SCvTeOvyX1tG/M9tj64KP
-         AFxa6f9nZKK5i3GLedFqtrkACxPLzgl6QEufAyYZfHqU8314nnwHfhIrH9xK2tAR6TOs
-         5vQ84b7w7VtrJvdjFtX+b1/vYKL0bEJy6z8kY0XBjmItjrQUH0IifKF0eqgucHUPbZn6
-         RNrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Aa6t6On9SFFaqUu6JfdwGcBHkFRJmU7LGTC9/kij2yU=;
-        b=KyR8XGROI7lxrAWkXKJF/aCMkM+wM5K7U/6wPudae/+wWc/U8JVa27Q/6Kyh6Tf2kR
-         TVGKghAorLnnkJ71rSb5EzspyC75AFQ3GkNyHyVaycOouK19zorRSHJU0qZeyAHozA8U
-         S8vovDb9UOr++25+sCCWfuPJZfPWHzVGKwtiYi671G1nYWM3FYUaARqzNgqNALliBua6
-         sQhNCtEolYD5irb3yZZLf4Kw3xXr0BNDVvJBmsEoB8LOBbqd0jgsgTKRYKqm5FICUTM1
-         mdcC6GFC+jMUX7OQvhz8TU1pqss/aoOtCs2PtEWskijvM5ndGQw2myUs0aleU8TfRhNF
-         EUZQ==
-X-Gm-Message-State: ANhLgQ3CUq0+WB52nzvgZQSUY4fG2LDL/ZPqoCDV3gYWD0qcHP0kdHPW
-        l7Wix2RRXrBiw/daPOqcBJY=
-X-Google-Smtp-Source: ADFU+vtN2ERQpbC09KXihGgin8XmePpn0g8nL0BFTsTtWALL34FFr1+PIv9mRN6UJzIHfhyEGjhIbw==
-X-Received: by 2002:a17:90b:11c4:: with SMTP id gv4mr12148505pjb.148.1584976044918;
-        Mon, 23 Mar 2020 08:07:24 -0700 (PDT)
-Received: from localhost (176.122.158.203.16clouds.com. [176.122.158.203])
-        by smtp.gmail.com with ESMTPSA id x75sm13914648pfc.161.2020.03.23.08.07.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 23 Mar 2020 08:07:24 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, davem@davemloft.net, corbet@lwn.net,
-        tglx@linutronix.de, gregkh@linuxfoundation.org,
-        allison@lohutok.net, mchehab+samsung@kernel.org,
-        netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH net-next v7 10/10] net: phy: tja11xx: use phy_read_poll_timeout() to simplify the code
-Date:   Mon, 23 Mar 2020 23:06:00 +0800
-Message-Id: <20200323150600.21382-11-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200323150600.21382-1-zhengdejin5@gmail.com>
-References: <20200323150600.21382-1-zhengdejin5@gmail.com>
+        Mon, 23 Mar 2020 11:08:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584976087;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=boyhvrzOtDio58DSfyyVO/3598sZBoxhLyRpe5w9LWs=;
+        b=OF9gx+AgfDr1RzecVZvxC28BauyXJHW9Kde00fz6YrBC1YfHJZcj51wcz6iUAYOWZePDZJ
+        2iWY5Kw/tRgmiZkHxSlQJ/n80VkM01goWyJsiAmtAwYooY9mv9z22r0ASxjKySBz3msud2
+        r9GDbqnhHYjx/gKmdEULgRz/JFMXklI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-289-Nc8wrUQJMRuUCpd_uzXOxw-1; Mon, 23 Mar 2020 11:08:02 -0400
+X-MC-Unique: Nc8wrUQJMRuUCpd_uzXOxw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 858158017CC;
+        Mon, 23 Mar 2020 15:08:01 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.33.36.220])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9EDA460BE0;
+        Mon, 23 Mar 2020 15:07:59 +0000 (UTC)
+Date:   Mon, 23 Mar 2020 11:07:56 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, shuah@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
+ false-negative errors
+Message-ID: <20200323150756.GE23364@optiplex-lnx>
+References: <20200322013525.1095493-1-aquini@redhat.com>
+ <CALvZod4GjRFLRX=S_YFYnJk-kL6tjveYEDOBFS76NqrURERHHQ@mail.gmail.com>
+ <20200323141659.GA23364@optiplex-lnx>
+ <20200323142941.GK7524@dhcp22.suse.cz>
+ <20200323150134.GN7524@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323150134.GN7524@dhcp22.suse.cz>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-use phy_read_poll_timeout() to replace the poll codes for
-simplify tja11xx_check() function.
+On Mon, Mar 23, 2020 at 04:01:34PM +0100, Michal Hocko wrote:
+> On Mon 23-03-20 15:29:43, Michal Hocko wrote:
+> > On Mon 23-03-20 10:16:59, Rafael Aquini wrote:
+> > > On Sun, Mar 22, 2020 at 09:31:04AM -0700, Shakeel Butt wrote:
+> > > > On Sat, Mar 21, 2020 at 6:35 PM Rafael Aquini <aquini@redhat.com> wrote:
+> > > > >
+> > > > > Changes for commit 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
+> > > > > break this test expectations on the behavior of mlock syscall family immediately
+> > > > > inserting the recently faulted pages into the UNEVICTABLE_LRU, when MCL_ONFAULT is
+> > > > > passed to the syscall as part of its flag-set.
+> > > > 
+> > > > mlock* syscalls do not provide any guarantee that the pages will be in
+> > > > unevictable LRU, only that the pages will not be paged-out. The test
+> > > > is checking something very internal to the kernel and this is expected
+> > > > to break.
+> > > 
+> > > It was a check expected to be satisfied before the commit, though. 
+> > > Getting the mlocked pages inserted directly into the unevictable LRU,
+> > > skipping the pagevec, was established behavior before the aforementioned
+> > > commit, and even though one could argue userspace should not be aware,
+> > > or care, about such inner kernel circles the program in question is not an 
+> > > ordinary userspace app, but a kernel selftest that is supposed to check
+> > > for the functionality correctness.
+> > 
+> > But mlock (in neither mode) is reall forced to put pages to the
+> 
+> ble I meant to say "is not really forced"
+> 
+> > UNEVICTABLE_LRU for correctness. If the test is really depending on it
+> > then the selftest is bogus. A real MCL_ONFAULT test should focus on the
+> > user observable contract of this api. And that is that a new mapping
+> > doesn't fault in the page during the mlock call but the memory is locked
+> > after the memory is faulted in. You can use different methods to observe
+> > locked memory - e.g. try to reclaim it and check or check /proc/<pid>/smaps
+> 
+> I have just checked the testcase and I believe it is really dubious to
+> check for page flags. Those are really an internal implementation
+> detail. All the available information is available in the
+> /proc/<pid>/smaps file which is already parsed in the test so the test
+> is easily fixable.
 
-Suggested-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
-v6 -> v7:
-	- adapt to a newly added parameter sleep_before_read.
-v5 -> v6:
-	- no changed.
-v4 -> v5:
-	- no changed.
-v3 -> v4:
-	- add this patch by Andrew's suggestion. Thanks Andrew!
+That surely is another take for this test. 
+I still think the test is reasonable when it checks what was 
+expected to be there, from the kernel standpoint, and just needs
+to be adjusted for the current state of affairs.
 
- drivers/net/phy/nxp-tja11xx.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
-index b705d0bd798b..47caae770ffc 100644
---- a/drivers/net/phy/nxp-tja11xx.c
-+++ b/drivers/net/phy/nxp-tja11xx.c
-@@ -72,20 +72,10 @@ static struct tja11xx_phy_stats tja11xx_hw_stats[] = {
- 
- static int tja11xx_check(struct phy_device *phydev, u8 reg, u16 mask, u16 set)
- {
--	int i, ret;
--
--	for (i = 0; i < 200; i++) {
--		ret = phy_read(phydev, reg);
--		if (ret < 0)
--			return ret;
--
--		if ((ret & mask) == set)
--			return 0;
--
--		usleep_range(100, 150);
--	}
-+	int val;
- 
--	return -ETIMEDOUT;
-+	return phy_read_poll_timeout(phydev, reg, val, (val & mask) == set,
-+				     150, 30000, false);
- }
- 
- static int phy_modify_check(struct phy_device *phydev, u8 reg,
--- 
-2.25.0
+-- Rafael
 
