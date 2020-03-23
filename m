@@ -2,88 +2,148 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B52C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3742EC10F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB4C2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584946109;
-	bh=qOFlhZkujaC+JRP+KmxtYFhSXy30kHvp1QbjUTFusoE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hh7MPdOdjojdF/mMu5B/ERFCOaUqj3fwotPqSoS+sA5P2RY1M+wEa34mGyG46vlGc
-	 Xn24rk7L0/858eJjDhQQ9myQFgUJ26bde2e5NF4TvvYRGEpUNMDelwYzEtpizYByRt
-	 UMOk+XZubZ2OnyJdvA48T07s57oCgYp1xPAWhUs4=
+	by mail.kernel.org (Postfix) with ESMTP id 1013520736
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:53:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727374AbgCWGs2 (ORCPT
+        id S1727365AbgCWGxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 02:48:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726142AbgCWGs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 02:48:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A309A20736;
-        Mon, 23 Mar 2020 06:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584946107;
-        bh=qOFlhZkujaC+JRP+KmxtYFhSXy30kHvp1QbjUTFusoE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S0zzGYG+/Phb/0Ly9A+0B24iiyIaboKqCx9HCcV5zBR7HZRPVBYJm8Cct/6B/7uRo
-         tJkcHncvw4MWEkxurkVKzRkMujdvxxvjD3Dn8G/4nJtk7MZYyB3acp/UapGU0Y86xH
-         ngpYL4yzi5LWbGPkYvwmlCeAjNZsxb7wTYwEd4iM=
-Date:   Mon, 23 Mar 2020 07:48:23 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>
-Subject: Re: [PATCH 5.5 00/65] 5.5.11-rc1 review
-Message-ID: <20200323064823.GC129571@kroah.com>
-References: <20200319123926.466988514@linuxfoundation.org>
- <fcf6db4c-cebe-9ad3-9f19-00d49a7b1043@roeck-us.net>
- <20200319145900.GC92193@kroah.com>
- <32c627bf-0e6b-8bc4-88d3-032a69484aa6@roeck-us.net>
- <20200320144658.GK4189@sasha-vm>
- <20200322195134.GA3127@duo.ucw.cz>
+        Mon, 23 Mar 2020 02:53:18 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40684 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727164AbgCWGxS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 02:53:18 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 19so13234286ljj.7;
+        Sun, 22 Mar 2020 23:53:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WoCr+foN/8GXkw0Qp+PYNvYpbwWofyuyqb/3wF5oAQ0=;
+        b=fSiqCnw2zf7Vld1iihjA7bFiyJXfTMXjjEU4RF1bFNrlP2PuAI/99WtEG3Tq9MEHpU
+         E7XaUY18NOg+ce1MTp4eMf6Db6qMABa0vUbxwixu0Pp/698GsouKtQG5R7odxqUjI0ak
+         Lb/hrAHnvLyhOV3IquC3/ff76S9bolL7qTr2h0DgIByJf6u+elNU5nC3Tf0f/iFuRMok
+         PH6Ytzf/o1UadY6u9QiMpXl5orrwFS2pXKm4DiJZtbilBuf2bwH1cbxAPy+hHSqkML4u
+         +QfdkNI80F2VsvNyZfLcxnNy/tyrazrpjGvgHimGvJrRI7FjyqQFK2vwBRDFvGWsL8/L
+         Dt/g==
+X-Gm-Message-State: ANhLgQ1G3V0YXn+358cXlH8HPHktW+m94kt4PAEMNLn7J+pJHuM234a0
+        c/c7BWDz/knW7FZ8WBjvp+g=
+X-Google-Smtp-Source: ADFU+vuMZue8vK66PxCV4QGppTqpco/74F7mHnAgQ3DaTqBb9cApDot3ZuKGv2VLiCHt6BdNejomVg==
+X-Received: by 2002:a2e:a401:: with SMTP id p1mr12840290ljn.106.1584946395170;
+        Sun, 22 Mar 2020 23:53:15 -0700 (PDT)
+Received: from vostro.wlan (dty2hzyyyyyyyyyyyyx9y-3.rev.dnainternet.fi. [2001:14ba:802c:6a00::4fa])
+        by smtp.gmail.com with ESMTPSA id o2sm3976447ljm.2.2020.03.22.23.53.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Mar 2020 23:53:14 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 08:53:11 +0200
+From:   Timo Teras <timo.teras@iki.fi>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] xfrm: policy: Fix doulbe free in xfrm_policy_timer
+Message-ID: <20200323085311.35aefe10@vostro.wlan>
+In-Reply-To: <20200323014155.56376-1-yuehaibing@huawei.com>
+References: <20200318034839.57996-1-yuehaibing@huawei.com>
+        <20200323014155.56376-1-yuehaibing@huawei.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-alpine-linux-musl)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200322195134.GA3127@duo.ucw.cz>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 08:51:34PM +0100, Pavel Machek wrote:
-> Hi!
+Hi
+
+On Mon, 23 Mar 2020 09:41:55 +0800
+YueHaibing <yuehaibing@huawei.com> wrote:
+
+> After xfrm_add_policy add a policy, its ref is 2, then
 > 
-> > > > Thanks for letting me know, I've now dropped that patch (others
-> > > > complained about it for other reasons) and will push out a -rc2 with
-> > > > that fix.
-> > > > 
-> > > 
-> > > I did wonder why the offending patch was included, but then I figured that
-> > > I lost the "we apply too many patches to stable releases" battle, and I didn't
-> > > want to re-litigate it.
-> > 
-> > I usually much rather take prerequisite patches rather than do
-> > backports, which is why that patch was selected.
+>                              xfrm_policy_timer
+>                                read_lock
+>                                xp->walk.dead is 0
+>                                ....
+>                                mod_timer()
+> xfrm_policy_kill
+>   policy->walk.dead = 1
+>   ....
+>   del_timer(&policy->timer)
+>     xfrm_pol_put //ref is 1
+>   xfrm_pol_put  //ref is 0
+>     xfrm_policy_destroy
+>       call_rcu
+>                                  xfrm_pol_hold //ref is 1
+>                                read_unlock
+>                                xfrm_pol_put //ref is 0
+>                                  xfrm_policy_destroy
+>                                   call_rcu
 > 
-> Unfortunately, that results in less useful -stable.
+> xfrm_policy_destroy is called twice, which may leads to
+> double free.
 
-Not at all, it makes for a _MORE_ useful stable, as we want to mirror
-what is in Linus's tree whenever possible.
+I believe the timer changes were added later in commit e7d8f6cb2f which
+added holding a reference when timer is running. I think it fails to
+properly account for concurrently running timer in xfrm_policy_kill().
 
-Come on now, we've been doing this for 17+ years now, it's not new.
+The time when commit ea2dea9dacc2 was done this was not the case.
 
-greg k-h
+I think it would be preferable if the concurrency issue could be solved
+without additional locking.
+
+> Call Trace:
+> RIP: 0010:refcount_warn_saturate+0x161/0x210
+> ...
+>  xfrm_policy_timer+0x522/0x600
+>  call_timer_fn+0x1b3/0x5e0
+>  ? __xfrm_decode_session+0x2990/0x2990
+>  ? msleep+0xb0/0xb0
+>  ? _raw_spin_unlock_irq+0x24/0x40
+>  ? __xfrm_decode_session+0x2990/0x2990
+>  ? __xfrm_decode_session+0x2990/0x2990
+>  run_timer_softirq+0x5c5/0x10e0
+> 
+> Fix this by use write_lock_bh in xfrm_policy_kill.
+> 
+> Fixes: ea2dea9dacc2 ("xfrm: remove policy lock when accessing
+> policy->walk.dead") Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
+Should be instead:
+Fixes: e7d8f6cb2f ("xfrm: Add refcount handling to queued policies")
+
+> ---
+> v2:  Fix typo 'write_lock_bh'--> 'write_unlock_bh' while unlocking
+> ---
+>  net/xfrm/xfrm_policy.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+> index dbda08ec566e..ae0689174bbf 100644
+> --- a/net/xfrm/xfrm_policy.c
+> +++ b/net/xfrm/xfrm_policy.c
+> @@ -434,6 +434,7 @@ EXPORT_SYMBOL(xfrm_policy_destroy);
+>  
+>  static void xfrm_policy_kill(struct xfrm_policy *policy)
+>  {
+> +	write_lock_bh(&policy->lock);
+>  	policy->walk.dead = 1;
+>  
+>  	atomic_inc(&policy->genid);
+> @@ -445,6 +446,7 @@ static void xfrm_policy_kill(struct xfrm_policy
+> *policy) if (del_timer(&policy->timer))
+>  		xfrm_pol_put(policy);
+>  
+> +	write_unlock_bh(&policy->lock);
+>  	xfrm_pol_put(policy);
+>  }
+>  
+
