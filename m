@@ -2,138 +2,141 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3769C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 05:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C6AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B06D20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 05:58:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ugUQ+yGa"
+	by mail.kernel.org (Postfix) with ESMTP id 146C1206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:06:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgCWF61 (ORCPT
+        id S1727154AbgCWGGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 01:58:27 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46977 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgCWF61 (ORCPT
+        Mon, 23 Mar 2020 02:06:38 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35743 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgCWGGh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 01:58:27 -0400
-Received: by mail-qk1-f196.google.com with SMTP id u4so2273575qkj.13
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 22:58:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=AvPMLnaaQp5jiQnFy8j79lDeL85S2eJpDF4bBEQ7H5k=;
-        b=ugUQ+yGaL0p1o6UW9RpqRggClsYXccqqSB8FplD5exKthFaSGIIM/bgCdB2mzcqEYV
-         rdITpGe+oBPR5P1SiacQUztmoejS3s93zIlvhfO0woTNsQTyojw9/idWSLv9bJkBdC3+
-         wdy3exjAspK7nQ1RZtj8NwwNEgC3RSwMeIkxtTjlUyq2Amwwtdc7kqlgCtcAsMWhtTcR
-         PYaV1/JOX8XEAIgn49RnI1IsKyYT/ykRpJcb3z61Vpc38FjtywISV/mrRgEfxKkuLTBu
-         RCZ9B6W03gW2S1x7f1y1AFwHaBJaCV91k5kr3D1OlfknszE1EroIHKpwBwd7489/vqAZ
-         iE2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AvPMLnaaQp5jiQnFy8j79lDeL85S2eJpDF4bBEQ7H5k=;
-        b=scHR7r0ZIb+yzrcYZrtrjmeaSnuc/JFzlssHZnCb1i2qo94TKltxBbSUnH1s/K7D//
-         8ORNjiGvGeXkbhqQpZy6EPmfrMc9Josgs9Ka3PBwluIp//KRWWyr/z0juRxi+0dgfIeh
-         63IgEQlGT+Y1NJVjBYDd/8ZG0ZaojJEjTv1t4XccnuXY5GswNyA9rk5CDv7dW2SCcvxH
-         xHTFX1DHMWeJt6ae76VIy7MZse5EynWlPqhOduZnEXLHLhzndRZxg2hT4ckJkDAwxOar
-         mo9oqBObEXVq4loNRMPmlWL8bRb6ST4CdZj5oyTRyB87r7S5lkPJI2wQnx6LUnTBiXUF
-         tANA==
-X-Gm-Message-State: ANhLgQ3t20WK8dXMVXd4CfjAVxtZ3QEJwtVYSPno7By2uISJZEuxZw0z
-        IY0pjGptKt8O+hC967L2O9Q0tGT60ISsKtSeI4k=
-X-Google-Smtp-Source: ADFU+vsBWCsq7LemXTgsY9xAMRzKPXtMG8l3GWSVWCDNby+xGCjk3u8G4lK2lTtg/LTSdXLsaN0TJFhT5c2i65ZAksQ=
-X-Received: by 2002:a37:8cc1:: with SMTP id o184mr1271395qkd.187.1584943106149;
- Sun, 22 Mar 2020 22:58:26 -0700 (PDT)
+        Mon, 23 Mar 2020 02:06:37 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jGGEC-0008Et-Tp; Mon, 23 Mar 2020 07:06:24 +0100
+Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jGGE8-0002sT-HS; Mon, 23 Mar 2020 07:06:20 +0100
+Date:   Mon, 23 Mar 2020 07:06:20 +0100
+From:   Philipp Zabel <pza@pengutronix.de>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Sham Muthayyan <smuthayy@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/12] pcie: qcom: add missing reset for ipq806x
+Message-ID: <20200323060620.GA1617@pengutronix.de>
+References: <20200320183455.21311-1-ansuelsmth@gmail.com>
+ <20200320183455.21311-5-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-References: <1584938972-7430-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1584938972-7430-3-git-send-email-iamjoonsoo.kim@lge.com> <20200323052145.GD3039@MiWiFi-R3L-srv>
- <20200323054037.GI2987@MiWiFi-R3L-srv>
-In-Reply-To: <20200323054037.GI2987@MiWiFi-R3L-srv>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Mon, 23 Mar 2020 14:58:15 +0900
-Message-ID: <CAAmzW4O-c23H8ogAwhkM97GEeCKgxGtPx7v+csSTikEq7nH82A@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] mm/page_alloc: integrate classzone_idx and high_zoneidx
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Ye Xiaolong <xiaolong.ye@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320183455.21311-5-ansuelsmth@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:00:25 up 32 days, 13:30, 45 users,  load average: 1.03, 0.51,
+ 0.25
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: pza@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 3=EC=9B=94 23=EC=9D=BC (=EC=9B=94) =EC=98=A4=ED=9B=84 2:40, B=
-aoquan He <bhe@redhat.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
-> > > diff --git a/include/trace/events/compaction.h b/include/trace/events=
-/compaction.h
-> > > index e5bf6ee..54e5bf0 100644
-> > > --- a/include/trace/events/compaction.h
-> > > +++ b/include/trace/events/compaction.h
-> > > @@ -314,40 +314,44 @@ TRACE_EVENT(mm_compaction_kcompactd_sleep,
-> > >
-> > >  DECLARE_EVENT_CLASS(kcompactd_wake_template,
-> > >
-> > > -   TP_PROTO(int nid, int order, enum zone_type classzone_idx),
-> > > +   TP_PROTO(int nid, int order, enum zone_type highest_zoneidx),
-> > >
-> > > -   TP_ARGS(nid, order, classzone_idx),
-> > > +   TP_ARGS(nid, order, highest_zoneidx),
-> > >
-> > >     TP_STRUCT__entry(
-> > >             __field(int, nid)
-> > >             __field(int, order)
-> > > -           __field(enum zone_type, classzone_idx)
-> > > +           __field(enum zone_type, highest_zoneidx)
-> > >     ),
-> > >
-> > >     TP_fast_assign(
-> > >             __entry->nid =3D nid;
-> > >             __entry->order =3D order;
-> > > -           __entry->classzone_idx =3D classzone_idx;
-> > > +           __entry->highest_zoneidx =3D highest_zoneidx;
-> > >     ),
-> > >
-> > > +   /*
-> > > +    * classzone_idx is previous name of the highest_zoneidx.
-> > > +    * Reason not to change it is the ABI requirement of the tracepoi=
-nt.
-> > > +    */
-> > >     TP_printk("nid=3D%d order=3D%d classzone_idx=3D%-8s",
-> >                                  ~~~~~~~~~~ this one could be missed.
->
-> Oh, I realized above 'classzone_idx=3D%-8s' being kept is for the old
-> script compatibility? then it's OK.
+Hi Ansuel,
 
-Yes, this is for userspace compatibility. There are two places that aren't
-changed due to compatibility and they are commented on top of the line.
+On Fri, Mar 20, 2020 at 07:34:47PM +0100, Ansuel Smith wrote:
+> Add missing ext reset used by ipq806x soc in
+> pcie qcom driver
+> 
+> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 24 ++++++++++++++++++------
+>  1 file changed, 18 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 596731b54728..ecc22fd27ea6 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -95,6 +95,7 @@ struct qcom_pcie_resources_2_1_0 {
+>  	struct reset_control *ahb_reset;
+>  	struct reset_control *por_reset;
+>  	struct reset_control *phy_reset;
+> +	struct reset_control *ext_reset;
+>  	struct regulator_bulk_data supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
+>  };
+>  
+> @@ -272,6 +273,10 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+>  	if (IS_ERR(res->por_reset))
+>  		return PTR_ERR(res->por_reset);
+>  
+> +	res->ext_reset = devm_reset_control_get(dev, "ext");
 
-Thanks.
+Please use devm_reset_control_get_exclusive() instead.
 
-> >
-> > And I applied this patch series, use 'git grep classzone_idx' to search
-> > any relics, found below classzone_idx leftover in perl script.
-> > [~]$ git grep classzone_idx
-> > Documentation/trace/postprocess/trace-vmscan-postprocess.pl:my $regex_l=
-ru_isolate_default =3D 'isolate_mode=3D([0-9]*) classzone_idx=3D([0-9]*) or=
-der=3D([0-9]*) nr_requested=3D([0-9]*) nr_scanned=3D([0-9]*) nr_skipped=3D(=
-[0-9]*) nr_taken=3D([0-9]*) lru=3D([a-z_]*)';
-> > Documentation/trace/postprocess/trace-vmscan-postprocess.pl:           =
-         "isolate_mode", "classzone_idx", "order",
+> +	if (IS_ERR(res->ext_reset))
+> +		return PTR_ERR(res->ext_reset);
+> +
+>  	res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
+>  	return PTR_ERR_OR_ZERO(res->phy_reset);
+>  }
+> @@ -285,6 +290,7 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+>  	reset_control_assert(res->axi_reset);
+>  	reset_control_assert(res->ahb_reset);
+>  	reset_control_assert(res->por_reset);
+> +	reset_control_assert(res->ext_reset);
+>  	reset_control_assert(res->phy_reset);
+>  	clk_disable_unprepare(res->iface_clk);
+>  	clk_disable_unprepare(res->core_clk);
+> @@ -301,18 +307,18 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+>  	u32 val;
+>  	int ret;
+>  
+> +	ret = reset_control_assert(res->ahb_reset);
+> +	if (ret) {
+> +		dev_err(dev, "cannot assert ahb reset\n");
+> +		return ret;
+> +	}
+> +
+>  	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
+>  	if (ret < 0) {
+>  		dev_err(dev, "cannot enable regulators\n");
+>  		return ret;
+>  	}
+>  
+> -	ret = reset_control_assert(res->ahb_reset);
+> -	if (ret) {
+> -		dev_err(dev, "cannot assert ahb reset\n");
+> -		goto err_assert_ahb;
+> -	}
+> -
+
+This change is not described in the commit message.
+
+regards
+Philipp
