@@ -2,98 +2,143 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D7AC10F26
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E7FC10F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B97220732
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:16:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kEfDlwIZ"
+	by mail.kernel.org (Postfix) with ESMTP id 5266520732
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:22:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbgCWHQo (ORCPT
+        id S1727421AbgCWHWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 03:16:44 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:21753 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727380AbgCWHQo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 03:16:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584947803; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=OBzrnIrYOQqvkeCsNZazNpi4PFkSztP1b56S3A8EX38=; b=kEfDlwIZ6KEzEIix4eeBBdiwdRM9hQ+W1K88BT79d/BInDsas6WnDPpooD5QfsMuP8nnuzpk
- bHzxfr45wgj+NhbiHCD8XREhByXiHaUArvkPXd6WLg/YY4lt/I0sScBW3YQ/XRXOO6uagIxK
- jLGDLYmSfqTipgEHiCZnFkm6dlQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e78624a.7fc54291b340-smtp-out-n04;
- Mon, 23 Mar 2020 07:16:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6240AC433D2; Mon, 23 Mar 2020 07:16:25 +0000 (UTC)
-Received: from maggarwa-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: maggarwa)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0B6FCC433CB;
-        Mon, 23 Mar 2020 07:16:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0B6FCC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=maggarwa@codeaurora.org
-From:   Mohit Aggarwal <maggarwa@codeaurora.org>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com
-Cc:     Mohit Aggarwal <maggarwa@codeaurora.org>,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] rtc-pm8xxx: Clear Alarm register on resume
-Date:   Mon, 23 Mar 2020 12:46:09 +0530
-Message-Id: <1584947769-12076-1-git-send-email-maggarwa@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Mon, 23 Mar 2020 03:22:04 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12176 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727164AbgCWHWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 03:22:03 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 24D25A297C5B469D6335;
+        Mon, 23 Mar 2020 15:21:52 +0800 (CST)
+Received: from [127.0.0.1] (10.173.223.234) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Mon, 23 Mar 2020
+ 15:21:46 +0800
+Subject: Re: [PATCH v2] xfrm: policy: Fix doulbe free in xfrm_policy_timer
+To:     Timo Teras <timo.teras@iki.fi>
+References: <20200318034839.57996-1-yuehaibing@huawei.com>
+ <20200323014155.56376-1-yuehaibing@huawei.com>
+ <20200323085311.35aefe10@vostro.wlan>
+CC:     <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <832e03ea-2511-eb7f-49d1-3cda6c9e6d18@huawei.com>
+Date:   Mon, 23 Mar 2020 15:21:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <20200323085311.35aefe10@vostro.wlan>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, alarm register is not cleared on resume
-leading to reboot during power off charging mode.
+On 2020/3/23 14:53, Timo Teras wrote:
+> Hi
+> 
+> On Mon, 23 Mar 2020 09:41:55 +0800
+> YueHaibing <yuehaibing@huawei.com> wrote:
+> 
+>> After xfrm_add_policy add a policy, its ref is 2, then
+>>
+>>                              xfrm_policy_timer
+>>                                read_lock
+>>                                xp->walk.dead is 0
+>>                                ....
+>>                                mod_timer()
+>> xfrm_policy_kill
+>>   policy->walk.dead = 1
+>>   ....
+>>   del_timer(&policy->timer)
+>>     xfrm_pol_put //ref is 1
+>>   xfrm_pol_put  //ref is 0
+>>     xfrm_policy_destroy
+>>       call_rcu
+>>                                  xfrm_pol_hold //ref is 1
+>>                                read_unlock
+>>                                xfrm_pol_put //ref is 0
+>>                                  xfrm_policy_destroy
+>>                                   call_rcu
+>>
+>> xfrm_policy_destroy is called twice, which may leads to
+>> double free.
+> 
+> I believe the timer changes were added later in commit e7d8f6cb2f which
+> added holding a reference when timer is running. I think it fails to
+> properly account for concurrently running timer in xfrm_policy_kill().
 
-Signed-off-by: Mohit Aggarwal <maggarwa@codeaurora.org>
----
- drivers/rtc/rtc-pm8xxx.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+commit e7d8f6cb2f hold a reference when &pq->hold_timer is armed,
+in my case, it's policy->timer, and hold_timer is not armed.
+> 
+> The time when commit ea2dea9dacc2 was done this was not the case.
+> 
+> I think it would be preferable if the concurrency issue could be solved
+> without additional locking.
+> 
+>> Call Trace:
+>> RIP: 0010:refcount_warn_saturate+0x161/0x210
+>> ...
+>>  xfrm_policy_timer+0x522/0x600
+>>  call_timer_fn+0x1b3/0x5e0
+>>  ? __xfrm_decode_session+0x2990/0x2990
+>>  ? msleep+0xb0/0xb0
+>>  ? _raw_spin_unlock_irq+0x24/0x40
+>>  ? __xfrm_decode_session+0x2990/0x2990
+>>  ? __xfrm_decode_session+0x2990/0x2990
+>>  run_timer_softirq+0x5c5/0x10e0
+>>
+>> Fix this by use write_lock_bh in xfrm_policy_kill.
+>>
+>> Fixes: ea2dea9dacc2 ("xfrm: remove policy lock when accessing
+>> policy->walk.dead") Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> 
+> Should be instead:
+> Fixes: e7d8f6cb2f ("xfrm: Add refcount handling to queued policies")
+> 
+>> ---
+>> v2:  Fix typo 'write_lock_bh'--> 'write_unlock_bh' while unlocking
+>> ---
+>>  net/xfrm/xfrm_policy.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+>> index dbda08ec566e..ae0689174bbf 100644
+>> --- a/net/xfrm/xfrm_policy.c
+>> +++ b/net/xfrm/xfrm_policy.c
+>> @@ -434,6 +434,7 @@ EXPORT_SYMBOL(xfrm_policy_destroy);
+>>  
+>>  static void xfrm_policy_kill(struct xfrm_policy *policy)
+>>  {
+>> +	write_lock_bh(&policy->lock);
+>>  	policy->walk.dead = 1;
+>>  
+>>  	atomic_inc(&policy->genid);
+>> @@ -445,6 +446,7 @@ static void xfrm_policy_kill(struct xfrm_policy
+>> *policy) if (del_timer(&policy->timer))
+>>  		xfrm_pol_put(policy);
+>>  
+>> +	write_unlock_bh(&policy->lock);
+>>  	xfrm_pol_put(policy);
+>>  }
+>>  
+> 
+> 
+> .
+> 
 
-diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
-index bbe013f..f0d89a4 100644
---- a/drivers/rtc/rtc-pm8xxx.c
-+++ b/drivers/rtc/rtc-pm8xxx.c
-@@ -301,6 +301,7 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
- 	struct pm8xxx_rtc *rtc_dd = dev_get_drvdata(dev);
- 	const struct pm8xxx_rtc_regs *regs = rtc_dd->regs;
- 	unsigned int ctrl_reg;
-+	u8 value[NUM_8_BIT_RTC_REGS] = {0};
- 
- 	spin_lock_irqsave(&rtc_dd->ctrl_reg_lock, irq_flags);
- 
-@@ -319,6 +320,16 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
- 		goto rtc_rw_fail;
- 	}
- 
-+	/* Clear Alarm register */
-+	if (!enable) {
-+		     rc = regmap_bulk_write(rtc_dd->regmap, regs->alarm_rw, value,
-+					sizeof(value));
-+		     if (rc) {
-+			     dev_err(dev, "Write to RTC ALARM register failed\n");
-+			     goto rtc_rw_fail;
-+		     }
-+	}
-+
- rtc_rw_fail:
- 	spin_unlock_irqrestore(&rtc_dd->ctrl_reg_lock, irq_flags);
- 	return rc;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
