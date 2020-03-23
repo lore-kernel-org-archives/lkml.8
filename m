@@ -2,164 +2,157 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCFDC54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D24AFC4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8D22074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:08:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="qrJmi+s3"
+	by mail.kernel.org (Postfix) with ESMTP id B0C9420736
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbgCWIIq (ORCPT
+        id S1727538AbgCWILT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 04:08:46 -0400
-Received: from mail-dm6nam12on2073.outbound.protection.outlook.com ([40.107.243.73]:6051
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        Mon, 23 Mar 2020 04:11:19 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35004 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727486AbgCWIIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 04:08:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TOO1G7gWpf7d4k3u4hnT4ybHuMtEpJehQIByKseqoCceD9i0O6RrXXY135LAN2/AqKaDMWUIhqQRQlLGkzxzQtXzRp/yDU1vCRDsfiCqQXmK+VAh3yeBvAF5mqG1tVaZKSkl8doEVHRuPb/jfgNFRuVZ4TF9u3AFmJ4CWIUjavx3VNqrudzGUDz7P3k84yyPCOznm4FceXSrOjdcAENqfe5IluQ3NmzOhrMjbv2dRGwYr5pKw+R4rgybrJ1nY+0SwBwbDmHlEjv8yFgdrXa0wjqwLi/cdD3MINfIhedYfrjqH5jG0b07+OEDM5UPl+Japa/QmxsIL5s1vXf5c0z4Vw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Enscesey7yzLYrtE4L+/Txn1r+dHg3TjlpnJWzhzZ3U=;
- b=F7L4MsZwKHEp+UzouhkbLBsI2hMAcHsedHxytf5URPFUMzZsShxoAj/nRrQEGRHU21+nfdMGfMEPOvG45oe3B2BhPwIyZbWi705KSUMwOaNilQvVoX0Nx0Tjlt9ejP7SmRu9YWB1+Q/KDZyRnoDtWIQ7tO8zP7q+qpDidla3GY7aU6CIdEjX7Uk5fD4oBaDSYNso2QV6ZogE8UwSOIGadKNoN6tq7rEO1PuEYvPvwjG5c+FckrFj7t19EXfg39a8xEinH8KPXvytFor6wwpgiwCn7QsuTna1+wSvdkYj3XGQBlA7+D3fPoDWC/tVR+RvVV99SDokwsmGP/b/iRhyiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=canb.auug.org.au smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Enscesey7yzLYrtE4L+/Txn1r+dHg3TjlpnJWzhzZ3U=;
- b=qrJmi+s3l7YsI6KFUhL3LwvzHdB5kEEduExNz7b2+OHqb/04G1Eatwx///fW00MxW94ai9EepKAkFVrvMJCFGgTmbImJuRKzWxGnKQZdvrXqV44jq3l6R8dw+I//lz1uzDwsi3VooQoh4CizPRKOjzNyjxQLGPkVbpBkFncxAkM=
-Received: from SN4PR0801CA0003.namprd08.prod.outlook.com
- (2603:10b6:803:29::13) by SN6PR02MB4096.namprd02.prod.outlook.com
- (2603:10b6:805:2b::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.22; Mon, 23 Mar
- 2020 08:08:39 +0000
-Received: from SN1NAM02FT036.eop-nam02.prod.protection.outlook.com
- (2603:10b6:803:29:cafe::fc) by SN4PR0801CA0003.outlook.office365.com
- (2603:10b6:803:29::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend
- Transport; Mon, 23 Mar 2020 08:08:39 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; canb.auug.org.au; dkim=none (message not signed)
- header.d=none;canb.auug.org.au; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT036.mail.protection.outlook.com (10.152.72.149) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2814.13
- via Frontend Transport; Mon, 23 Mar 2020 08:08:38 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jGI8U-0005ni-Ca; Mon, 23 Mar 2020 01:08:38 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jGI8P-0000OV-9E; Mon, 23 Mar 2020 01:08:33 -0700
-Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 02N88QS6021123;
-        Mon, 23 Mar 2020 01:08:26 -0700
-Received: from [172.30.17.108]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1jGI8I-0000NA-5d; Mon, 23 Mar 2020 01:08:26 -0700
-Subject: Re: linux-next: build failure after merge of the irqchip tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Mubin Sayyed <mubin.usman.sayyed@xilinx.com>
-References: <20200323175946.7ad497ea@canb.auug.org.au>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <48d3232d-0f1d-42ea-3109-f44bbabfa2e8@xilinx.com>
-Date:   Mon, 23 Mar 2020 09:08:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727422AbgCWILT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 04:11:19 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CDDB242FB3B17C38F76B;
+        Mon, 23 Mar 2020 16:11:09 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Mon, 23 Mar 2020
+ 16:11:02 +0800
+Subject: Re: [PATCH v5 20/23] KVM: arm64: GICv4.1: Plumb SGI implementation
+ selection in the distributor
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        "Robert Richter" <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Eric Auger" <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        "Julien Thierry" <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-21-maz@kernel.org>
+ <72832f51-bbde-8502-3e03-189ac20a0143@huawei.com>
+ <4a06fae9c93e10351276d173747d17f4@kernel.org>
+ <1c9fdfc8-bdb2-88b6-4bdc-2b9254dfa55c@huawei.com>
+ <256b58a9679412c96600217f316f424f@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <cf5d7cf3-076f-47a7-83cf-717a619dc13e@huawei.com>
+Date:   Mon, 23 Mar 2020 16:11:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <20200323175946.7ad497ea@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <256b58a9679412c96600217f316f424f@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(346002)(376002)(199004)(46966005)(47076004)(44832011)(426003)(2616005)(186003)(356004)(31686004)(2906002)(336012)(478600001)(26005)(316002)(107886003)(110136005)(54906003)(5660300002)(31696002)(36756003)(70206006)(81166006)(8936002)(4326008)(9786002)(70586007)(81156014)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4096;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e5046c16-53a5-4a82-e686-08d7cf0164c3
-X-MS-TrafficTypeDiagnostic: SN6PR02MB4096:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB409628BD8FF920262A743DB0C6F00@SN6PR02MB4096.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0351D213B3
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9wpPlRvzJSfDkg9r5lWNkSNJpB98RiCPPEStwLalSqqe8/g+etDERwMXBgDnH8ztvyN6BGYc4ZfQcn6a6AaA0+p3WpNbC8gcm15o5zMUbab3J71Hj27v15uq9u0ExaluPjxYCdtJETK2rJjdPrjfuQMY92/V4WgXj3KzKzwTD0MX3IVGzcEeQ/A6IGv9nuyX85NS4hJOf8uaBa2IvJjhmZZ2g8FXtk1Vdqf1LILkFIAn1/I/yV5EBX+anaZfK/20aHbuIGJAZsHOAmyFXpS0gZcTZ0oSFePD2NHIHQeWDfmkM14XIrS5UBlqCVYCERejGQCyPmCAJowukL3fl6mSrb4Ei1U9tQO94cd6a2fkoklrk925k7uMmXAB5275NfAqv0eZXLyiqIgfj006YoG5kg7wERkZULUrBi7MS3by0c3Zdm1r9RrvLgXFhk+V4WzOXCJQPabxrZ8ID61RdfWuODaxGRg5MMiycD1rVXTEXCNKxm0fy2rgz/I8RiS6Q/P0poPZmnrt/679ezN9cArS1g==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2020 08:08:38.7572
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5046c16-53a5-4a82-e686-08d7cf0164c3
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4096
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Hi Marc,
 
-On 23. 03. 20 7:59, Stephen Rothwell wrote:
-> Hi all,
+On 2020/3/20 17:01, Marc Zyngier wrote:
+> Hi Zenghui,
 > 
-> After merging the irqchip tree, today's linux-next build (powerpc
-> ppc44x_defconfig) failed like this:
+> On 2020-03-20 03:53, Zenghui Yu wrote:
+>> Hi Marc,
+>>
+>> On 2020/3/19 20:10, Marc Zyngier wrote:
+>>>> But I wonder that should we use nassgireq to *only* keep track what
+>>>> the guest had written into the GICD_CTLR.nASSGIreq.  If not, we may
+>>>> lose the guest-request bit after migration among hosts with different
+>>>> has_gicv4_1 settings.
+>>>
+>>> I'm unsure of what you're suggesting here. If userspace tries to set
+>>> GICD_CTLR.nASSGIreq on a non-4.1 host, this bit will not latch.
+>>
+>> This is exactly what I *was* concerning about.
+>>
+>>> Userspace can check that at restore time. Or we could fail the
+>>> userspace write, which is a bit odd (the bit is otherwise RES0).
+>>>
+>>> Could you clarify your proposal?
+>>
+>> Let's assume two hosts below. 'has_gicv4_1' is true on host-A while
+>> it is false on host-B because of lack of HW support or the kernel
+>> parameter "kvm-arm.vgic_v4_enable=0".
+>>
+>> If we migrate guest through A->B->A, we may end-up lose the initial
+>> guest-request "nASSGIreq=1" and don't use direct vSGI delivery for
+>> this guest when it's migrated back to host-A.
 > 
-> drivers/irqchip/irq-xilinx-intc.c: In function 'xil_intc_handle_irq':
-> drivers/irqchip/irq-xilinx-intc.c:176:10: error: implicit declaration of function 'handle_domain_irq'; did you mean 'handle_bad_irq'? [-Werror=implicit-function-declaration]
->   176 |    ret = handle_domain_irq(irqc->root_domain, hwirq, regs);
->       |          ^~~~~~~~~~~~~~~~~
->       |          handle_bad_irq
-> drivers/irqchip/irq-xilinx-intc.c: In function 'xilinx_intc_of_init':
-> drivers/irqchip/irq-xilinx-intc.c:253:3: error: implicit declaration of function 'set_handle_irq'; did you mean 'generic_handle_irq'? [-Werror=implicit-function-declaration]
->   253 |   set_handle_irq(xil_intc_handle_irq);
->       |   ^~~~~~~~~~~~~~
->       |   generic_handle_irq
-> 
-> Caused by commit
-> 
->   a0789993bf82 ("irqchip/xilinx: Enable generic irq multi handler")
-> 
-> I have reverted that commit (and commit
-> 
->   9c2d4f525c00 ("irqchip/xilinx: Do not call irq_set_default_host()")
-> 
-> that conflicted with the other revert).
-> 
+> My point above is that we shouldn't allow the A->B migration the first
+> place, and fail it as quickly as possible. We don't know what the guest
+> has observed in terms of GIC capability, and it may not have enabled the
+> new flavour of SGIs just yet.
 
-thanks for reporting this.
+Indeed. I didn't realize it.
 
-Marc: I completely forget about this wiring for very ancient platform.
-AFAIK Xilinx is not testing this platform for years and would likely the
-best to remove support for it completely.
-The second option is to get xintc_get_irq() back with note about powerpc
-because it won't be that simple change all PPC platform to generic
-domain irq handler.
-Any other suggestion?
+> 
+>> This can be "fixed" by keep track of what guest had written into
+>> nASSGIreq. And we need to evaluate the need for using direct vSGI
+>> for a specified guest by 'has_gicv4_1 && nassgireq'.
+> 
+> It feels odd. It means we have more state than the HW normally has.
+> I have an alternative proposal, see below.
+> 
+>> But if it's expected that "if userspace tries to set nASSGIreq on
+>> a non-4.1 host, this bit will not latch", then this shouldn't be
+>> a problem at all.
+> 
+> Well, that is the semantics of the RES0 bit. It applies from both
+> guest and userspace.
+> 
+> And actually, maybe we can handle that pretty cheaply. If userspace
+> tries to restore GICD_TYPER2 to a value that isn't what KVM can
+> offer, we just return an error. Exactly like we do for GICD_IIDR.
+> Hence the following patch:
+> 
+> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c 
+> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> index 28b639fd1abc..e72dcc454247 100644
+> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> @@ -156,6 +156,7 @@ static int vgic_mmio_uaccess_write_v3_misc(struct 
+> kvm_vcpu *vcpu,
+>       struct vgic_dist *dist = &vcpu->kvm->arch.vgic;
+> 
+>       switch (addr & 0x0c) {
+> +    case GICD_TYPER2:
+>       case GICD_IIDR:
+>           if (val != vgic_mmio_read_v3_misc(vcpu, addr, len))
+>               return -EINVAL;
+> 
+> Being a RO register, writing something that isn't compatible with the
+> possible behaviour of the hypervisor will just return an error.
+
+This is really a nice point to address my concern! I'm happy to see
+this in v6 now.
+
+> 
+> What do you think?
+
+I agreed with you, with a bit nervous though. Some old guests (which
+have no knowledge about GICv4.1 vSGIs and don't care about nASSGIcap
+at all) will also fail to migrate from A to B, just because now we
+present two different (unused) GICD_TYPER2 registers to them.
+
+Is it a little unfair to them :-) ?
+
 
 Thanks,
-Michal
+Zenghui
+
