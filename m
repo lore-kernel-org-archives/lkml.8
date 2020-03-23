@@ -2,137 +2,211 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1337AC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8112FC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB25F20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 400C22072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:47:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Bilf5AvS"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LJrB2koA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbgCWQrJ (ORCPT
+        id S1727673AbgCWQrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:47:09 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:19385 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727402AbgCWQrJ (ORCPT
+        Mon, 23 Mar 2020 12:47:22 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9728 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbgCWQrV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:47:09 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584982028; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=Xb2zinDQGO+onzyW77lJl6Bc9KqowAWzCfieud9lBEI=; b=Bilf5AvSZWDj8ekm8Z1CD5wvD26RGlsKu4jtWrMj5eOQHDFf8w8UmIykAlj17KPZlIRx/3pV
- lPL1z/8x33M94bL8IMKRYgBwxIansXs3OFc+xUGzyQ7evKpcIMx9pJIgw/G4H35YtjSwusWI
- Z4VYWr1TkKAOJTGfBSJnYt370CI=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e78e7fa.7fb8e14e5768-smtp-out-n03;
- Mon, 23 Mar 2020 16:46:50 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5EAC4C4478C; Mon, 23 Mar 2020 16:46:50 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 39E75C433CB;
-        Mon, 23 Mar 2020 16:46:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 39E75C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Jes Sorensen <jes.sorensen@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Ulrich Kunitz <kune@deine-taler.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with flexible-array member
-References: <20200305111216.GA24982@embeddedor>
-        <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
-        <256881484c5db07e47c611a56550642a6f6bd8e9.camel@perches.com>
-        <87blpapyu5.fsf@kamboji.qca.qualcomm.com>
-        <1bb7270f-545b-23ca-aa27-5b3c52fba1be@embeddedor.com>
-        <87r1y0nwip.fsf@kamboji.qca.qualcomm.com>
-        <48ff1333-0a14-36d8-9565-a7f13a06c974@embeddedor.com>
-        <021d1125-3ffd-39ef-395a-b796c527bde4@gmail.com>
-        <fb3395d7-e932-10ac-1feb-ab2ceb63424e@embeddedor.com>
-        <361da904-5adf-eb0c-e937-c5d2f69ac8be@gmail.com>
-        <e4cfda6c-37f0-3c28-f50b-32200a67d856@embeddedor.com>
-        <9700b2c9-1029-60b0-c5d2-684bdcede354@gmail.com>
-        <948ec681-c4ee-3479-8d8b-5aa1e358ec04@embeddedor.com>
-Date:   Mon, 23 Mar 2020 18:46:45 +0200
-In-Reply-To: <948ec681-c4ee-3479-8d8b-5aa1e358ec04@embeddedor.com> (Gustavo A.
-        R. Silva's message of "Tue, 10 Mar 2020 17:36:39 -0500")
-Message-ID: <87h7yfauiy.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Mon, 23 Mar 2020 12:47:21 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e78e7eb0000>; Mon, 23 Mar 2020 09:46:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 23 Mar 2020 09:47:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 23 Mar 2020 09:47:19 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Mar
+ 2020 16:47:19 +0000
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.175)
+ by HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Mon, 23 Mar 2020 16:47:19 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j3Zq3LF2dvTPSUU201sEvh81XZKxNFrOzTnVT/QBsYjn8nIRef8kV7UlMP3fnduSsQaotYKnH/zYKVMvA8I01LWHuoQbDdXvzmvf3ayog5ITFUJvnmwPUtQJPHDZvUkbngp2ttZbTQgD/wnpG/7i9+jhleMgQdbknwxKqKVrtFCkFtm14HvLjogfP+B8+zLVcYmDiVbWc0B/YSyLtCLlGcPNdpUta8t370/S6+vWL4+JQZ8JziN9tqzMTMuM4htbicbFFDUiTHdloz8aO6BEeyXPs9HPY9laKD4os9HFXsUfzlfZjW591HL/GhfAug3FK1mRimw45JVdXOTLhmmelQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XJsVi6im2ZZXOG2lpiKxUTbuFe4ibOj/GD1c/hhXIak=;
+ b=H0Wf+dfrDhTyyR8/BBOMiLn5+nO6brMd94CZVRIze81opYzE1Wi1Y1AdvAJFGpQ9YPa4strzd7ASQ1Y4HlEEvA7X5pf2Bw4jWYKcd34msdlmYeeWuLBZ0ou9i+LADiVaYRC0OGKpJney1Pm6qw9Ds9Be3PfhcP+n6GXF4na9bGrnukm6AhTAkzf3Y3szN+eC7iSdNOHzRukCDZD3+oG4JNoPB4BIp7EdgIoqLr4jVnWJyxJEG/Ziz5O79l7frIj3rJX06BeW/5ye2DsN9nLg7wCtgpMWfG9f5h80p3qTxp64ui1smm1gI9Rjw3BSD8C6Jm8SCBzoprBEvUTD5GOrnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from BYAPR12MB2727.namprd12.prod.outlook.com (2603:10b6:a03:71::22)
+ by BYAPR12MB2744.namprd12.prod.outlook.com (2603:10b6:a03:69::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.18; Mon, 23 Mar
+ 2020 16:47:17 +0000
+Received: from BYAPR12MB2727.namprd12.prod.outlook.com
+ ([fe80::b874:508d:247f:e4f6]) by BYAPR12MB2727.namprd12.prod.outlook.com
+ ([fe80::b874:508d:247f:e4f6%4]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
+ 16:47:17 +0000
+From:   Ajay Gupta <ajayg@nvidia.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+CC:     Wolfram Sang <wsa@the-dreams.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:I2C CONTROLLER DRIVER FOR NVIDIA GPU" 
+        <linux-i2c@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] i2c: nvidia-gpu: Handle timeout correctly in
+ gpu_i2c_check_status()
+Thread-Topic: [PATCH] i2c: nvidia-gpu: Handle timeout correctly in
+ gpu_i2c_check_status()
+Thread-Index: AQHV98ZNTFr9lYhuHEKRpwz8oAZByahVuuuAgACzuwA=
+Date:   Mon, 23 Mar 2020 16:47:17 +0000
+Message-ID: <BYAPR12MB2727B1862E56594E4B6A3E0ADCF00@BYAPR12MB2727.namprd12.prod.outlook.com>
+References: <20200311165806.12365-1-kai.heng.feng@canonical.com>
+ <DA56E103-CAA7-4C28-9528-9EAFF2C717CD@canonical.com>
+In-Reply-To: <DA56E103-CAA7-4C28-9528-9EAFF2C717CD@canonical.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=ajayg@nvidia.com;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2020-03-23T16:47:16.5021139Z;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=5e4ad8e0-5209-4558-b003-a0f0eb2da94a;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ajayg@nvidia.com; 
+x-originating-ip: [2601:647:5500:817:e4cd:8d36:b72a:5b9e]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 291f64c5-7879-42d2-0c20-08d7cf49d91a
+x-ms-traffictypediagnostic: BYAPR12MB2744:
+x-microsoft-antispam-prvs: <BYAPR12MB27440F03B0C8FF76FED908A1DCF00@BYAPR12MB2744.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0351D213B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(39860400002)(346002)(366004)(199004)(66446008)(8676002)(86362001)(76116006)(66556008)(81166006)(8936002)(52536014)(2906002)(186003)(33656002)(71200400001)(55016002)(53546011)(316002)(7696005)(9686003)(54906003)(81156014)(64756008)(6506007)(66946007)(478600001)(6916009)(5660300002)(66476007)(4326008)(70780200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB2744;H:BYAPR12MB2727.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nvidia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ET0+eF8jYLx/TmySDnmqMpNa+0ztxFhPO4h/y5ZeuaVHNJEYtWKEozk0FCCSwUyUidKysft6rnmdVKlmKTjnOHJAE1oT8H3bDCD79rBO1LFuxnvM38Zy+G6kBIDepNWkXZUezbXwD9u1q4pJNxO1JnVqNK9TjcXyTbROYyN8LlgdoiTVbXo8/WV15Ua7qcYln0sYxnZiNJDG9BRxZRKEY9pzdV9f26rULQFKIaOp0eOBD8ZY2xfnU+40JkNLAUM64Q0pLvU3pGRB4e7VSvwFY6oDLJ50OfUQPk51uE5hmkGySa5ewn4oeEvj9HJFxIrvg7u3Mo0GISXAh7z0QhASJfGzctSLVdWxkzHlVlCUboGWGRjPU9CZqMfhXyQN2xfp46PKPaMJo4ATUut+9Z612py7aweWNrL4dSv1zkEjvug2SpqmVmqW5hYH/JFOJBLSw92h1gdGj2rwbS42zGNsd1g8lvSxLlbOJRz6cD4SaTecAhU3fz6wB6llO5CSMYu+
+x-ms-exchange-antispam-messagedata: hWjTBO2CK/muPKvWJ7QrJUPGXI7gSPIu27v1enDgfOIwyh7Uiw3sFgvFUhxi8H2WV7gInVM/XdV41hLzGcNVLaKoVcAxQEmUfRbrwB+PvNs9c1+z2wDCji6qJZCPeNnnNneqyfefzm3x8rSUrl19h9ZonJze0K5ShBFKt3bc1Y1hIKisDk9oC1vmqy9v1yUfqP2Fyw3tyih30nCz/vByeQ==
+x-ms-exchange-transport-forked: True
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-Exchange-CrossTenant-Network-Message-Id: 291f64c5-7879-42d2-0c20-08d7cf49d91a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2020 16:47:17.7330
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PgA2WKYKbkFZVRtufaK53PCUvKpMW08IvzbxZ0REazWdf0Zd1ujCtK7fuPKjWPTA5YXOIK8NC1wujXQzgKfeyg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2744
+X-OriginatorOrg: Nvidia.com
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1584981995; bh=XJsVi6im2ZZXOG2lpiKxUTbuFe4ibOj/GD1c/hhXIak=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
+         Thread-Index:Date:Message-ID:References:In-Reply-To:
+         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
+         authentication-results:x-originating-ip:x-ms-publictraffictype:
+         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
+         x-microsoft-antispam-prvs:x-ms-oob-tlc-oobclassifiers:
+         x-forefront-prvs:x-forefront-antispam-report:received-spf:
+         x-ms-exchange-senderadcheck:x-microsoft-antispam:
+         x-microsoft-antispam-message-info:
+         x-ms-exchange-antispam-messagedata:x-ms-exchange-transport-forked:
+         MIME-Version:X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-originalarrivaltime:
+         X-MS-Exchange-CrossTenant-fromentityheader:
+         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
+         X-MS-Exchange-CrossTenant-userprincipalname:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
+         Content-Language:Content-Type:Content-Transfer-Encoding;
+        b=LJrB2koAEPLc1lxHMuDjCStxF8YkjpJdTXEbQTSPz2RrfnJzeQcPNPU0XqaZjn5RT
+         lw7EkoEWu8upSdi9MmpwAuszTip9ozSJqf2AQDPTzyJSImZXLM/Ozf8KosjROeeCBT
+         T4xq5Pu16Y7Lnja4AS6+iA/Ah53MX8lurj8wW1WFyg4dWAqzrabfzAe1hzhIF+cKjk
+         QRmQnqyvBqz5NrUeJtZxH5rPW7/jwRJT1w3gPRAmRJ7udIJNuEI1toQpXr+x63pmr3
+         RC2iZVSp1wikJuzQmTGFl+VzwozI/5xj1nPS06sg6GXc0YI1aSnGWcR2yDcsQiWA8/
+         WFAlYtlm66Mpg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
+Kai-Heng
 
-> On 3/10/20 5:34 PM, Jes Sorensen wrote:
->> On 3/10/20 6:31 PM, Gustavo A. R. Silva wrote:
->>>
->>>
->>> On 3/10/20 5:20 PM, Jes Sorensen wrote:
->>>> On 3/10/20 6:13 PM, Gustavo A. R. Silva wrote:
->>>>>
->>>>>
->>>>> On 3/10/20 5:07 PM, Jes Sorensen wrote:
->>>>>> As I stated in my previous answer, this seems more code churn than an
->>>>>> actual fix. If this is a real problem, shouldn't the work be put into
->>>>>> fixing the compiler to handle foo[0] instead? It seems that is where the
->>>>>> real value would be.
->>>>>
->>>>> Yeah. But, unfortunately, I'm not a compiler guy, so I'm not able to fix the
->>>>> compiler as you suggest. And I honestly don't see what is so annoying/disturbing
->>>>> about applying a patch that removes the 0 from foo[0] when it brings benefit
->>>>> to the whole codebase.
->>>>
->>>> My point is that it adds what seems like unnecessary churn, which is not
->>>> a benefit, and it doesn't improve the generated code.
->>>>
->>>
->>> As an example of one of the benefits of this is that the compiler won't trigger
->>> a warning in the following case:
->>>
->>> struct boo {
->>> 	int stuff;
->>> 	struct foo array[0];
->>> 	int morestuff;
->>> };
->>>
->>> The result of the code above is an undefined behavior.
->>>
->>> On the other hand in the case below, the compiles does trigger a warning:
->>>
->>> struct boo {
->>> 	int stuff;
->>> 	struct foo array[];
->>> 	int morestuff;
->>> };
->> 
->> Right, this just underlines my prior argument, that this should be fixed
->> in the compiler.
->> 
->
-> In the meantime it's not at all harmful to do something about it in the codebase.
+> -----Original Message-----
+> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Sent: Sunday, March 22, 2020 10:38 PM
+> To: Ajay Gupta <ajayg@nvidia.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>; Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com>; open list:I2C CONTROLLER DRIVER FOR
+> NVIDIA GPU <linux-i2c@vger.kernel.org>; open list <linux-
+> kernel@vger.kernel.org>
+> Subject: Re: [PATCH] i2c: nvidia-gpu: Handle timeout correctly in
+> gpu_i2c_check_status()
+>=20
+> External email: Use caution opening links or attachments
+>=20
+>=20
+> > On Mar 12, 2020, at 00:58, Kai-Heng Feng <kai.heng.feng@canonical.com>
+> wrote:
+> >
+> > Nvidia card may come with a "phantom" UCSI device, and its driver gets
+> > stuck in probe routine, prevents any system PM operations like suspend.
+> >
+> > Let's handle the unaccounted case that the target time equals to
+> > jiffies in gpu_i2c_check_status(), so the UCSI driver can let the
+> > probe fail as it should.
+If status is not seen in 999.5 ms then I don't see any reason why it will c=
+ome
+exactly at 1000ms. In fact,  we expect status to be seen within 160ms as pe=
+r
+I2C_MST_I2C0_TIMING_TIMEOUT_CLK_CNT (16 cycle) and=20
+I2C_MST_I2C0_TIMING_SCL_PERIOD_100KHZ (10ms/cycle) programmed in=20
+I2C_MST_I2C0_TIMING Register. We already have enough extra time to look
+For response.
 
-Cleanup patches are not always harmful, at least they can create bugs
-and conflicts. But I think in this case there are clear benefits for the
-churn so I'm going to apply these.
+Thanks
+> nvpublic
+> >
+> > Fixes: c71bcdcb42a7 ("i2c: add i2c bus driver for NVIDIA GPU")
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>=20
+> A gentle ping...
+>=20
+> > ---
+> > drivers/i2c/busses/i2c-nvidia-gpu.c | 2 +-
+> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/i2c/busses/i2c-nvidia-gpu.c
+> > b/drivers/i2c/busses/i2c-nvidia-gpu.c
+> > index 62e18b4db0ed..1988e93c7925 100644
+> > --- a/drivers/i2c/busses/i2c-nvidia-gpu.c
+> > +++ b/drivers/i2c/busses/i2c-nvidia-gpu.c
+> > @@ -88,7 +88,7 @@ static int gpu_i2c_check_status(struct gpu_i2c_dev
+> *i2cd)
+> >               usleep_range(500, 600);
+> >       } while (time_is_after_jiffies(target));
+> >
+> > -     if (time_is_before_jiffies(target)) {
+> > +     if (time_is_before_eq_jiffies(target)) {
+> >               dev_err(i2cd->dev, "i2c timeout error %x\n", val);
+> >               return -ETIMEDOUT;
+> >       }
+> > --
+> > 2.17.1
+> >
 
-Sorry Jes :)
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
