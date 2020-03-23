@@ -6,120 +6,86 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3710C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DA7C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6497920409
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBFC520753
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584977552;
-	bh=W+mvseXiKIXK+dS0UQFsPgiTwq9SRniuXlU+RpmLMpo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=peoIzcOHjzgXBSWqkWuzCcIjrZQ3oM5oTBVoDiEXmFZXDz9YPdezRociGGwY35eH5
-	 A4JiCbQqXy2OFcjbFhSkslXLZWKHUY8+2eeYxruwjmo3DvNU654K5n75VOhHotjmja
-	 EGbnwYWdxLH0nwoQFdrBxbhNeSOlFeyc9h4Lwd+E=
+	s=default; t=1584977627;
+	bh=jyFWBRIRYk0JA7U0dN/9XleYTgS2UFd/FcsRq3elXVQ=;
+	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
+	b=VLiIIp9HO0WdkObWOJY7uSDKCbthIMUB7AieqdthfrVFv9Hb9ev+DQEwwk4D6O/9o
+	 b69OUPFMjjizNZhEaI/2tT3pWMxrVyMO6TSic5VyvKguN2bEfNYfhaQBNKPIfWaSYK
+	 iDpnYiUn4Qt9HizeTMnmOPwpvk28bHY3ZXsWNUac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbgCWPcb (ORCPT
+        id S1727280AbgCWPdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:32:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:51124 "EHLO foss.arm.com"
+        Mon, 23 Mar 2020 11:33:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727137AbgCWPcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:32:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 640121FB;
-        Mon, 23 Mar 2020 08:32:30 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B83F23F7C3;
-        Mon, 23 Mar 2020 08:32:29 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 15:32:28 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        nd@arm.com
-Subject: Re: [PATCH v10 00/13] arm64: Branch Target Identification support
-Message-ID: <20200323153228.GE4948@sirena.org.uk>
-References: <20200316165055.31179-1-broonie@kernel.org>
- <20200320173945.GC27072@arm.com>
- <20200323122143.GB4892@mbp>
- <20200323132412.GD4948@sirena.org.uk>
- <20200323135722.GA3959@C02TD0UTHF1T.local>
- <20200323143954.GC4892@mbp>
- <20200323145546.GB3959@C02TD0UTHF1T.local>
+        id S1727059AbgCWPdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:33:46 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C711C20409;
+        Mon, 23 Mar 2020 15:33:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584977626;
+        bh=jyFWBRIRYk0JA7U0dN/9XleYTgS2UFd/FcsRq3elXVQ=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=OBOGUwc6BKO42ghUi9CibvkvoSUkPxkD81dK5aV3EKgfqVh4QR9JBNrcRliYV0eNM
+         ORNu+CJ4g6zQOXS5dXh4WHKx69zD5gyoHMB682zrngRVzUO918V+dfHAqD3jy1a71+
+         AFsrAg+13kB30qLqlIyw45luTG/fuZ/lfXbrZ1Sk=
+Subject: Re: [PATCH 0/2] Fix errors when try to build kvm selftests on
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200315093425.33600-1-xiaoyao.li@intel.com>
+ <7f7a2945-300d-d62c-e5f5-de55c2e3fd2f@redhat.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <b472a6aa-dba1-1e50-c660-7bbecf2d0eff@kernel.org>
+Date:   Mon, 23 Mar 2020 09:33:45 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2hMgfIw2X+zgXrFs"
-Content-Disposition: inline
-In-Reply-To: <20200323145546.GB3959@C02TD0UTHF1T.local>
-X-Cookie: Stay on the trail.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <7f7a2945-300d-d62c-e5f5-de55c2e3fd2f@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/18/20 7:13 AM, Paolo Bonzini wrote:
+> On 15/03/20 10:34, Xiaoyao Li wrote:
+>> I attempted to build KVM selftests on a specified dir, unfortunately
+>> neither	"make O=~/mydir TARGETS=kvm" in tools/testing/selftests, nor
+>> "make OUTPUT=~/mydir" in tools/testing/selftests/kvm work.
+>>
+>> This series aims to make both work.
+>>
+>> Xiaoyao Li (2):
+>>    kvm: selftests: Fix no directory error when OUTPUT specified
+>>    selftests: export INSTALL_HDR_PATH if using "O" to specify output dir
+>>
+>>   tools/testing/selftests/Makefile     | 6 +++++-
+>>   tools/testing/selftests/kvm/Makefile | 3 ++-
+>>   2 files changed, 7 insertions(+), 2 deletions(-)
+>>
+> 
+> Queued, thanks.
+> 
+> Paolo
+> 
+> 
 
---2hMgfIw2X+zgXrFs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sorry for the delay. I would like to see these two to go through
+kselftest tree. These involve frame work changes and will cause
+problems if they aren't integrated in kselftest next branch.
 
-On Mon, Mar 23, 2020 at 02:55:46PM +0000, Mark Rutland wrote:
-> On Mon, Mar 23, 2020 at 02:39:55PM +0000, Catalin Marinas wrote:
-
-> > So this means that the interpreter will have to mprotect(PROT_BTI) the
-> > text section of the primary executable.
-
-> Yes, but after fixing up any relocations in that section it's going to
-> have to call mprotect() on it anyhow (e.g. in order to make it
-> read-only), and in doing so would throw away BTI unless it was BTI
-> aware.
-
-Ah, of course - I forgot that's not a read/modify/write cycle.  I'll
-send the comment version.
-
-> > That's a valid point. If we have an old dynamic linker and the kernel
-> > enabled BTI automatically for the main executable, could things go wrong
-> > (e.g. does the PLT need to be BTI-aware)?
-
-> I believe that a PLT in an unguarded page needs no special treatment. A
-> PLT within a guarded page needs to be built specially for BTI.
-
-Unguarded stuff is unaffected.
-
---2hMgfIw2X+zgXrFs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl541osACgkQJNaLcl1U
-h9A4pAf+IvJV9iWwP6vJKgT868+5ZjhSjiVsOKwt0PqgVzwOcV5HIX7k7mlf91GM
-k1Fn/ZsPWecmng93bj0iUlMtnBCoxTyE4F20odXx1vgUhscr6RjCvtPkGlLEgYEz
-0Cs6mB6NDjJxcTJDxB54HIXhlP4lL3Jo++u+yRS2/0lLHba08FUu7/gJYjh7TTCV
-n9kw50W8boGR1DgRe51u0Yn08RqNt2Boe/tauY2huT9H5zgbM2d40jv7qVcdTffJ
-PWeuF23KN9w9E/burfR4MrA8JtLgZHrnjt5cuSXuogtP28D1UcfgaKfr8JSDPT6P
-VjN8hBGRZhte6hqR58+ZsNUrKDDLIw==
-=1CsH
------END PGP SIGNATURE-----
-
---2hMgfIw2X+zgXrFs--
+thanks,
+-- Shuah
