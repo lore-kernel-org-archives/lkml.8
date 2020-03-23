@@ -2,107 +2,145 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6EFC4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616AEC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADBC9205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3DC20637
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:45:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2L0NHm0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C1U5zzFe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbgCWSpP (ORCPT
+        id S1727675AbgCWSp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:45:15 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41254 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbgCWSpP (ORCPT
+        Mon, 23 Mar 2020 14:45:29 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42574 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727011AbgCWSp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:45:15 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h9so18426565wrc.8;
-        Mon, 23 Mar 2020 11:45:12 -0700 (PDT)
+        Mon, 23 Mar 2020 14:45:29 -0400
+Received: by mail-io1-f67.google.com with SMTP id q128so15368062iof.9
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 11:45:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=LCaz4zZs1aCSOHSQ8R4NAVFFxp0HA9sa68+Q6bJNoEg=;
-        b=Z2L0NHm0/DP66X60AMkTybtIvDblGHTTE+O/O3GWrMWgq9KHUQg9aw2nYX4rbUuK0C
-         ZWQb+9CWIfE/IkSDHHXb/uWNgctO93j/x77wbuhMlXxtX9r3xu9PAyskYU4ejiI+TBs8
-         oj2uKOjUelFpifS/emDmr/+LKjJSoLjosqEnGBac4ps9U6RPrs5gy91i0yujS3tvRjD5
-         ntn0Si4VEbBPXf71n1KVdY5IKUI/G0w8e89lwEOwqACzz2TKS8bO+MRt/spbnbWIizkD
-         T3n21W7em2wXGSPWlyv8NpFZcSmKfH29kzDrPV3Gno0DvF1Cpyv7GaEm+6wU4jty7qio
-         jNUw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=icZYPj4zSkGWnoVAnbdqNMAmgPXta//xqBn7Y00v1rM=;
+        b=C1U5zzFeDObXO/GEF8f9ha1SyRra8p24g9S0I9zXXHkKED7mSKpS0EdX1oG4RhkYAA
+         T0tOhRkaqFmEzbgUBgS4d1T6Dov97Aa5JZJ0HFsQY20ukbD6rc/xFdkKYWxK5ZVNVttn
+         61p1oDzsJpnANqPkcbQErqfOcC7SOdtnaz/lU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=LCaz4zZs1aCSOHSQ8R4NAVFFxp0HA9sa68+Q6bJNoEg=;
-        b=YuisvLHYbQ2maucHslaTosEEqPjovGRKIYgSdaPGC56iM+G2vfC2EmLR5tKXJAipyt
-         2dVsXLcJRTtbg/r2uA2qlywgSDXWvVYSBw9p1cq0ZRlrYiNkruEdyqkHm+X5rxSdBaA9
-         tpRqSSllNcaAm6Vvr43hElRaMLuTjZGOGAZkPmTLtTeGbhRX/QDAZtRLspW60viU2FvT
-         M6da/yUBTlk0E8v4KPnALhSCs3pDl30M99R0YyJlcqKVmjaVI0xB2+cVouxKsUqbCH/O
-         REJN1J33uu6W53JG9ZrsKo2OvLhrzXD+Oqtqfy5EFasqec+XVfcqxgIkrUKVnNlCqdUR
-         PsWw==
-X-Gm-Message-State: ANhLgQ0ofvjney9+1fH6tpcVFhTqjGir8x2QfcohxiiAw7sqCNy15vGE
-        zKpt924KZbVSxPx1eCZP99s=
-X-Google-Smtp-Source: ADFU+vuW4HLuD0FDasodB1FXs8xARXjsr4HrDo5pYrVBJfdjyyLH327SzcH+ukRJyO07PQOXdNMtNw==
-X-Received: by 2002:a5d:4003:: with SMTP id n3mr16928921wrp.176.1584989112212;
-        Mon, 23 Mar 2020 11:45:12 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2df6:1a00:4528:2a39:b5c4:c34d])
-        by smtp.gmail.com with ESMTPSA id 195sm633235wmb.8.2020.03.23.11.45.11
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=icZYPj4zSkGWnoVAnbdqNMAmgPXta//xqBn7Y00v1rM=;
+        b=IlOCtGyw4r+hOy0mnSgttXFC6OrXuhiJIOf6umSz61QJGWy0+AJsoVREFxke4XUji0
+         oJeJYSrWaFEFui67TWOO0j9lmcXDngnaIig/0JFHgQn6E0W3KO41gdSorMJyIffiJUNj
+         QWbpI1CTTbyS1cFZZtiCGee8gAUEHH8Qa9rocXNttDsIis2Q/xxJIychh50oTCA2zfez
+         YlICTGO6a3iCnDErNi+q8I5F9Cdb5SOQbPzQ+bIp4BWe2/pB867JRD9I3pVfbOP+T4VP
+         6Mgsuea7rrgxW71yCt4hLr0gaec20IWRgILSx2PTV66Fa11zUCOqkiFyr9WW6dOktMGf
+         i7ZQ==
+X-Gm-Message-State: ANhLgQ36FlyreDfof6al8HO/SgMxvupQp5sbW8jxvZI2BrknzImgx/Fa
+        frOfkor15TvEtv5pY1wvk6O4GA==
+X-Google-Smtp-Source: ADFU+vulf7R6STk8+OCHoqvxohDJjIWY7qIWjV1A2vWb23ySpEkG8Wsj9uavHDn/ly08NYJCj6mYOA==
+X-Received: by 2002:a5e:d919:: with SMTP id n25mr20218429iop.205.1584989127783;
+        Mon, 23 Mar 2020 11:45:27 -0700 (PDT)
+Received: from derch.Home (75-166-136-192.hlrn.qwest.net. [75.166.136.192])
+        by smtp.gmail.com with ESMTPSA id y6sm604857ilc.41.2020.03.23.11.45.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 11:45:11 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: adjust entry to ICST clocks YAML schema creation
-Date:   Mon, 23 Mar 2020 19:45:01 +0100
-Message-Id: <20200323184501.5756-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 23 Mar 2020 11:45:27 -0700 (PDT)
+From:   Daniel Campello <campello@chromium.org>
+To:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: iio: Add bindings for sx9310 sensor
+Date:   Mon, 23 Mar 2020 12:45:14 -0600
+Message-Id: <20200323124310.1.I6ed779cd21abf3e70f21c1562bbda81f590976ab@changeid>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 78c7d8f96b6f ("dt-bindings: clock: Create YAML schema for ICST
-clocks") transformed arm-integrator.txt into arm,syscon-icst.yaml, but did
-not adjust the reference to that file in the ARM INTEGRATOR, VERSATILE AND
-REALVIEW SUPPORT entry in MAINTAINERS.
+Adds device tree bandings for sx9310 sensor.
 
-Hence, since then, ./scripts/get_maintainer.pl --self-test complains:
-
-  warning: no file matches \
-  F: Documentation/devicetree/bindings/clock/arm-integrator.txt
-
-Update the file entry in MAINTAINERS to the new transformed yaml file.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Daniel Campello <campello@chromium.org>
 ---
-applies cleanly on next-20200323
 
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../iio/proximity/semtech,sx9310.yaml         | 52 +++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 07888a277f6f..69e94d712e8f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1297,7 +1297,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	Documentation/devicetree/bindings/arm/arm-boards
- F:	Documentation/devicetree/bindings/auxdisplay/arm-charlcd.txt
--F:	Documentation/devicetree/bindings/clock/arm-integrator.txt
-+F:	Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml
- F:	Documentation/devicetree/bindings/i2c/i2c-versatile.txt
- F:	Documentation/devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt
- F:	Documentation/devicetree/bindings/mtd/arm-versatile.txt
--- 
-2.17.1
+diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+new file mode 100644
+index 00000000000000..da3424abe37e9d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+@@ -0,0 +1,52 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/proximity/semtech,sx9310.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Semtech's SX9310 capacitive proximity sensor
++
++maintainers:
++  - Daniel Campello <campello@chromium.org>
++
++description: |
++  Semtech's SX9310/SX9311 capacitive proximity/button solution.
++
++  Specifications about the devices can be found at:
++  https://www.semtech.com/products/smart-sensing/sar-sensors/sx9310
++
++properties:
++  compatible:
++    enum:
++      - semtech,sx9310
++      - semtech,sx9311
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description:
++      The sole interrupt generated by the device used to announce the
++      preceding reading request has finished and that data is
++      available or that a close/far proximity event has happened.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      proximity@28 {
++        compatible = "semtech,sx9310";
++        reg = <0x28>;
++        interrupt-parent = <&pio>;
++        interrupts = <5 IRQ_TYPE_LEVEL_LOW 5>;
++      };
++    };
+--
+2.25.1.696.g5e7596f4ac-goog
 
