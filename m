@@ -2,87 +2,160 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37992C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C51C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 067472051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF3E22051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:21:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="NbMrO5f5"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="V6XX7qH9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbgCWSTz (ORCPT
+        id S1727425AbgCWSVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:19:55 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:34033 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727141AbgCWSTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:19:54 -0400
-Received: from [IPv6:2601:646:8600:3281:9577:eff3:b2f7:e372] ([IPv6:2601:646:8600:3281:9577:eff3:b2f7:e372])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 02NIJTwW2743830
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Mon, 23 Mar 2020 11:19:32 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 02NIJTwW2743830
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020022001; t=1584987572;
-        bh=uyvTxOGuIfKng6B6meCMKRv3OcCkrewSTJXqYHGMw+M=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=NbMrO5f5M5qN4EmSOSGBOPN9qCRzxkoBVCW1W9GG3djS3u8bvcrP/IeUhLk1wv6SK
-         O40/VwN8uFLLAOAhEzP65zAPHZYmZTq6llHfqbZpggHK8FMH2/eZdEaJA+DtnK/XSs
-         +6/QSoLw7m665yGUnvaeXC1Cu9cG3hOjOus4VfoCiDt9b6KNYLL9nDqd6cQDrEzW7B
-         OuSCLbarU9E/zGp04so/L6Ee9+kdxcpM9lMvE2E3tBcBKcl1SCRb5Zzj+pVLq/xtKl
-         vcJlMmUAQY3b05wXMs1qQ13/Agg6kXe668FA+57Ptxx7tccwesbPG9xRV+sjTRReLc
-         9ChipudnVcr1A==
-Date:   Mon, 23 Mar 2020 11:19:21 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CACdnJusmAHJYauKvHEXNZKaUWPqZoabB_pSn5WokSy_gOnRtTw@mail.gmail.com>
-References: <CAP6exY+LnUXaOVRZUXmi2wajCPZoJVMFFAwbCzN3YywWyhi8ZA@mail.gmail.com> <D31718CF-1755-4846-8043-6E62D57E4937@zytor.com> <CAP6exYJHgqsNq84DCjgNP=nOjp1Aud9J5JAiEZMXe=+dtm-QGA@mail.gmail.com> <8E80838A-7A3F-4600-AF58-923EDA3DE91D@zytor.com> <CACdnJusmAHJYauKvHEXNZKaUWPqZoabB_pSn5WokSy_gOnRtTw@mail.gmail.com>
+        Mon, 23 Mar 2020 14:21:17 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2790 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727091AbgCWSVQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 14:21:16 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e78fe0e0000>; Mon, 23 Mar 2020 11:21:02 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 23 Mar 2020 11:21:15 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 23 Mar 2020 11:21:15 -0700
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Mar
+ 2020 18:21:15 +0000
+Subject: Re: [PATCH v8 0/3] mm/hmm/test: add self tests for HMM
+To:     Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>
+References: <20200321003108.22941-1-rcampbell@nvidia.com>
+ <20200321090047.GM514123@unreal>
+ <396f0c30-4a49-6a18-ff02-a73ee1a09883@nvidia.com>
+ <20200321215505.GW20941@ziepe.ca> <20200322081038.GG650439@unreal>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <010050db-a37d-d200-88d4-696cc2c8d9d6@nvidia.com>
+Date:   Mon, 23 Mar 2020 11:21:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/1] x86 support for the initrd= command line option
-To:     Matthew Garrett <mjg59@google.com>
-CC:     ron minnich <rminnich@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
-        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   hpa@zytor.com
-Message-ID: <A814A71D-0450-4724-885B-859BCD2B7CBD@zytor.com>
+In-Reply-To: <20200322081038.GG650439@unreal>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1584987662; bh=1Wek6LBYAdU1aHIlmdcVgKcV0g9ZqFumuUlMbDqQya8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=V6XX7qH92buUCwPTHr32tVk37r9DCwWiP01gZ5NQeioLh2l4m+RDLIaGzQFmE8xKW
+         9/9K4I5SpNQDgrdpE8b4vsxDz1hF89T0L/c6ByepnxqI1t6ti/j72xBQ9/dn/F8nV6
+         Wo4ZwOBBiq7JgsD3MPAa6a1LK6MWvXuNW0KdD/ac0hLX6xK8K25QJw2JYFDH4wXJzb
+         ac8IxYzO30X+L8jxW31n/NglXxNBSsNufj05l8/Ih8O2Sjp6v/4e1vKAHYosj1IfeM
+         PvKEoZrvRH0HnckdaiMqeu01h824HMlqbHXQEZwriSE2Q6iDBk4tOKGOYAsamku+pt
+         ctx4qI2Fc5iaw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 20, 2020 11:19:19 AM PDT, Matthew Garrett <mjg59@google=2Ecom> wro=
-te:
->On Thu, Mar 19, 2020 at 5:59 PM <hpa@zytor=2Ecom> wrote:
->
->> It has been designated consumed by the bootloader on x86 since at
->least 1995=2E So ARM broke it=2E
->
->Eh=2E This feels like a matter of semantics - booting the kernel via EFI
->results in it being parsed by the boot stub, so in that case we're
->left arguing that the boot stub isn't the kernel=2E I can just about buy
->that, but it's a stretch=2E For this change to actually break something,
->we'd need the bootloader to be passing something that the kernel
->parses, but not actually populating the initrd fields in bootparams=2E
->That seems unlikely?
 
-You are right as long as this is the very last priority *and* neither boot=
- loaders nor the kernel will croak on unexpected input (I really object to =
-Ron calling the non-x86 version "standard", but that's a whole other ball o=
-f wax=2E)
+On 3/22/20 1:10 AM, Leon Romanovsky wrote:
+> On Sat, Mar 21, 2020 at 06:55:05PM -0300, Jason Gunthorpe wrote:
+>> On Sat, Mar 21, 2020 at 10:27:46AM -0700, Ralph Campbell wrote:
+>>>
+>>> On 3/21/20 2:00 AM, Leon Romanovsky wrote:
+>>>> On Fri, Mar 20, 2020 at 05:31:05PM -0700, Ralph Campbell wrote:
+>>>>> This series adds basic self tests for HMM and are intended for Jason
+>>>>> Gunthorpe's rdma tree which has a number of HMM patches applied.
+>>>>>
+>>>>> Changes v7 -> v8:
+>>>>> Rebased to Jason's rdma/hmm tree, plus Jason's 6 patch series
+>>>>>     "Small hmm_range_fault() cleanups".
+>>>>> Applied a number of changes from Jason's comments.
+>>>>>
+>>>>> Changes v6 -> v7:
+>>>>> Rebased to linux-5.6.0-rc6
+>>>>> Reverted back to just using mmu_interval_notifier_insert() and making
+>>>>>     this series only introduce HMM self tests.
+>>>>>
+>>>>> Changes v5 -> v6:
+>>>>> Rebased to linux-5.5.0-rc6
+>>>>> Refactored mmu interval notifier patches
+>>>>> Converted nouveau to use the new mmu interval notifier API
+>>>>>
+>>>>> Changes v4 -> v5:
+>>>>> Added mmu interval notifier insert/remove/update callable from the
+>>>>>     invalidate() callback
+>>>>> Updated HMM tests to use the new core interval notifier API
+>>>>>
+>>>>> Changes v1 -> v4:
+>>>>> https://lore.kernel.org/linux-mm/20191104222141.5173-1-rcampbell@nvidia.com
+>>>>>
+>>>>> Ralph Campbell (3):
+>>>>>     mm/hmm/test: add selftest driver for HMM
+>>>>>     mm/hmm/test: add selftests for HMM
+>>>>>     MAINTAINERS: add HMM selftests
+>>>>>
+>>>>>    MAINTAINERS                            |    3 +
+>>>>>    include/uapi/linux/test_hmm.h          |   59 ++
+>>>>
+>>>> Isn't UAPI folder supposed to be for user-visible interfaces that follow
+>>>> the rule of non-breaking user space and not for selftests?
+>>>>
+>>>> Thanks
+>>>>
+>>>
+>>> Most of the other kernel module tests seem to invoke the test as part of the
+>>> module load/init. I'm open to moving it if there is a more appropriate location.
+>>
+>> Is it even possible to create a user mm_struct and put crazy things in
+>> it soley from a kernel module?
+> 
+> I didn't look very closely of what Ralph did in his patchsets, but from
+> what I know, if you want in-kernel interface, you use in-kernel module,
+> if you want to test user visible uapi, you write application. You don't
+> create new UAPI just to test something in the kernel.
+> 
+> Can kunit help here?
+> https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html
+> 
+> Thanks
+> 
+>>
+>> Jason
 
-Pointing to any number of memory chunks via setup_data works and doesn't n=
-eed to be exposed to the user, but I guess the above is reasonable=2E
+The tests are intended to cover hmm_range_fault() and the migrate_vma_setup(),
+migrate_vma_pages(), and migrate_vma_finalize() kernel functions that a device
+driver can call to initialize hardware that has its own page tables.
+An example is a GPU where the code on the GPU sees the same address space as
+code running on the host CPU. This means the test has to have a user process
+to create a user process address space and a device driver to simulate some
+real device driver. The UAPI is for the user level test program to tell the
+kernel module test driver what to do and return results.
+The complexity is all around maintaining coherent copies of the user process
+page tables while hardware and CPUs are accessing the same physical addresses.
+The pages are not pinned as with most I/O so system activity like pagein/pageout,
+LRU page reclaim, compaction, and the process calling functions like
+mmap(), mprotect(), madvise(), fork(), etc. all update the CPU and device page
+tables and would be very hard to duplicate in a kernel level only KUNIT style
+of test.
 
-*However*, I would also suggest adding "initrdmem=3D" across architectures=
- that doesn't have the ambiguity=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
