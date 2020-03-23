@@ -2,115 +2,167 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90892C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41339C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67FEB20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10418206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:00:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VbyqDhdm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XN6N/+/X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgCWT75 (ORCPT
+        id S1727036AbgCWUAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:59:57 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43166 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgCWT75 (ORCPT
+        Mon, 23 Mar 2020 16:00:05 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36870 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgCWUAF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:59:57 -0400
-Received: by mail-lj1-f194.google.com with SMTP id g27so7270501ljn.10;
-        Mon, 23 Mar 2020 12:59:54 -0700 (PDT)
+        Mon, 23 Mar 2020 16:00:05 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d12so10459475qtj.4;
+        Mon, 23 Mar 2020 13:00:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dbO9AMgv2C3q3wUDDoD6CSYAM2+vrjv9y3H8u+4ZnFk=;
-        b=VbyqDhdmtu1qDNYwk412YWO11Exes5+3Tbpn9dyrqH8rA4FST2Mmw57mVUUdXqETrq
-         3czM7De1zTFuS3Mr3yve7kzyd4RBh5vHUsmtejnJA/REpAtlcpULSkKfJcGmdm3XO88l
-         X+d5o78Uk/LDxT2wpAPPjhbDgJm+9p/znfdteIDwCTTm9Baoi1SMRcLJBHY94Y08914a
-         ui8LDs/96Tu7ScP9kdocgm9eZ1TLrvVlWCCT0lCi2gRCpitCWvliYWGIr1uqEDqueWiB
-         UI+TPjxRMuiP+nGvb26XIDQn4dBrIYe5s5t6+mU4EZf2Cz+4B5m+GVd7TU/eoseddF7w
-         5+lQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+qqP3p6NUFM3pblvdRB2elYDHfWUXO+b1eOHuuUBxWo=;
+        b=XN6N/+/XUOYasY96gW1pjrCuXxY8GQUlnV5GJXilFIfrrnts8K7V/RdjEIFOFdTVHo
+         HkyXrkBkUIHWwEVIpaIlhoLtZdPgXWHciZQHPpjN8nZm17zewSzyr25ptGZtnsDJtfos
+         b5hYAFmzOKKE4cGf0/OYqMl1A412YyF9/XtxMzfbTiYd2nPbMGfTOGXkUBGt1NkGU1a2
+         NFK4I/1L1FPdpv07v9Q8Gk2q0s6BO8C7UV0AtWW1QF20Ty28GjsTddd7Qd6bXy8FQkN/
+         n5AUVjtCeu6ON59Kay8w1oqAW6ZkhSv2FFqNXlUIgxenc32X/DKdsSUE7IBJRDnXY7qY
+         wMTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dbO9AMgv2C3q3wUDDoD6CSYAM2+vrjv9y3H8u+4ZnFk=;
-        b=l9PsH2Vji8B97O1gdsjfzQBzYSTQzBu35eVWZc5Kjfve6HPtj2lZg2WYolopB6keB8
-         +d/CXD1kF92VDCiV95dKhjqQQm6idC0e8xHussgag7MaJWCBGPXrDL8Y+cd+L3l3lA8i
-         LWh49B4RTYgrumY6YR5nf4GrrlutKdj/TJkiCZLseia8kezs3ebDw4SUAkS759lY1pj5
-         EVyLmDhpL2mxATHQIZZk2mMZtzBdjRW7t5R0hmnCizeXhjUBxqfa/waN5yXN56+YAGFW
-         eaDdLRjmnrP0DAvbhKT9A8AmGltCmF5O7iVNPn2lsEwyrR8wUG3QHbKkwsLUZ4GlZ61w
-         tuWQ==
-X-Gm-Message-State: ANhLgQ3GrbaQ+HQH2X9FiqFdsAL1ywo5i+askTgN8MTtlYl8VyYfPFG6
-        YjjeHJegwLLLyk//zc+61sWrI0GL
-X-Google-Smtp-Source: ADFU+vvxc3Pnf8dsypolZV8SPKqREwTrzUhihQIubesluJG79gKWfF5VhPPWmJ8InGnZv1b/rXQ7hA==
-X-Received: by 2002:a2e:94c8:: with SMTP id r8mr15041191ljh.28.1584993593897;
-        Mon, 23 Mar 2020 12:59:53 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id 127sm8831243lfl.29.2020.03.23.12.59.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2020 12:59:53 -0700 (PDT)
-Subject: Re: [PATCH v3 03/10] partitions: Introduce NVIDIA Tegra Partition
- Table
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Billy Laws <blaws05@gmail.com>, linux-tegra@vger.kernel.org,
-        linux-block@vger.kernel.org, Andrey Danin <danindrey@mail.ru>,
-        Gilles Grandou <gilles@grandou.net>,
-        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200323163431.7678-1-digetx@gmail.com>
- <20200323163431.7678-4-digetx@gmail.com>
- <20200323191748.GB30585@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <67140755-c829-5c58-3fbf-efd496e225df@gmail.com>
-Date:   Mon, 23 Mar 2020 22:59:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+qqP3p6NUFM3pblvdRB2elYDHfWUXO+b1eOHuuUBxWo=;
+        b=CxhMLGMkCEAxzXByB7DDj8pc6uH97Zyr7QSGb4Yz12+iSy7KduYSN6qiZoPvwVlKO1
+         6rQuJTJgXQTP0XueNpiSM+4kdo5estzTsvHOD5oxqi5F90qdNwOX8s7/rF3wvpER33kT
+         sXFpV4cDGQx0m/rrJ4OjcL1DDprKH2Rx5jzHvQbkzEocyB+3pT7miQSYVKCAYXofGmjC
+         mkOQPx121Mhzwt0nWhjEyWFhSPiSWspKCItN888fswOZxJrObw1A0KzAliUkTmS8xLyB
+         9ZWK4grWtrRRiTmJNONGsLyTe7MLKT49WtGi11lOeQAY6tLXJ9WHgBNyebC40NGv2fj6
+         PHMw==
+X-Gm-Message-State: ANhLgQ0BFDFnMUkc77QhWeZBMNK0Ws3UmberFtlI3e4X1HGV1XDV7IpH
+        DJjvgt/V6SEu4YWL4jP2/HCoL//Ywbm8I2VP4CM=
+X-Google-Smtp-Source: ADFU+vvNQQv8DEH2ydvf51OvRh0rhtw/VacrRt6UqgAOnjfxKJcYGr3rb/Xy/PoTxUkzYGEIVuj3IWmg/Pyvi8BMEo8=
+X-Received: by 2002:ac8:7448:: with SMTP id h8mr22843425qtr.117.1584993603585;
+ Mon, 23 Mar 2020 13:00:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200323191748.GB30585@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200323164415.12943-1-kpsingh@chromium.org> <20200323164415.12943-4-kpsingh@chromium.org>
+In-Reply-To: <20200323164415.12943-4-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 23 Mar 2020 12:59:52 -0700
+Message-ID: <CAEf4BzbRivYO=gVjuQw8Z8snN+RFwXswvNxs67c=5g6U3o9rmw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v5 3/7] bpf: lsm: provide attachment points for
+ BPF LSM programs
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-23.03.2020 22:17, Michał Mirosław пишет:
-> On Mon, Mar 23, 2020 at 07:34:24PM +0300, Dmitry Osipenko wrote:
->> All NVIDIA Tegra devices use a special partition table format for the
->> internal storage partitioning. Most of Tegra devices have GPT partition
->> in addition to TegraPT, but some older Android consumer-grade devices do
->> not or GPT is placed in a wrong sector, and thus, the TegraPT is needed
->> in order to support these devices properly in the upstream kernel. This
->> patch adds support for NVIDIA Tegra Partition Table format that is used
->> at least by all NVIDIA Tegra20 and Tegra30 devices.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  arch/arm/mach-tegra/tegra.c   |  54 ++++
-> [...]
-> 
-> Please split off this part and make the information available to
-> userspace (pt_addr + pt_size) if found. This would make it easier
-> to support use the partition table later in initrd instead.
+On Mon, Mar 23, 2020 at 9:45 AM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> When CONFIG_BPF_LSM is enabled, nops functions, bpf_lsm_<hook_name>, are
+> generated for each LSM hook. These nops are initialized as LSM hooks in
+> a subsequent patch.
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> Reviewed-by: Florent Revest <revest@google.com>
+> ---
+>  include/linux/bpf_lsm.h | 21 +++++++++++++++++++++
+>  kernel/bpf/bpf_lsm.c    | 19 +++++++++++++++++++
+>  2 files changed, 40 insertions(+)
+>  create mode 100644 include/linux/bpf_lsm.h
+>
+> diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
+> new file mode 100644
+> index 000000000000..c6423a140220
+> --- /dev/null
+> +++ b/include/linux/bpf_lsm.h
+> @@ -0,0 +1,21 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/*
+> + * Copyright (C) 2020 Google LLC.
+> + */
+> +
+> +#ifndef _LINUX_BPF_LSM_H
+> +#define _LINUX_BPF_LSM_H
+> +
+> +#include <linux/bpf.h>
+> +#include <linux/lsm_hooks.h>
+> +
+> +#ifdef CONFIG_BPF_LSM
+> +
+> +#define LSM_HOOK(RET, NAME, ...) RET bpf_lsm_##NAME(__VA_ARGS__);
+> +#include <linux/lsm_hook_names.h>
+> +#undef LSM_HOOK
+> +
+> +#endif /* CONFIG_BPF_LSM */
+> +
+> +#endif /* _LINUX_BPF_LSM_H */
+> diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
+> index 82875039ca90..530d137f7a84 100644
+> --- a/kernel/bpf/bpf_lsm.c
+> +++ b/kernel/bpf/bpf_lsm.c
+> @@ -7,6 +7,25 @@
+>  #include <linux/filter.h>
+>  #include <linux/bpf.h>
+>  #include <linux/btf.h>
+> +#include <linux/lsm_hooks.h>
+> +#include <linux/bpf_lsm.h>
+> +
+> +/* For every LSM hook  that allows attachment of BPF programs, declare a NOP
+> + * function where a BPF program can be attached as an fexit trampoline.
+> + */
+> +#define LSM_HOOK(RET, NAME, ...) LSM_HOOK_##RET(NAME, __VA_ARGS__)
+> +
+> +#define LSM_HOOK_int(NAME, ...)                        \
+> +noinline __weak int bpf_lsm_##NAME(__VA_ARGS__)        \
+> +{                                              \
+> +       return 0;                               \
+> +}
+> +
+> +#define LSM_HOOK_void(NAME, ...) \
+> +noinline __weak void bpf_lsm_##NAME(__VA_ARGS__) {}
+> +
 
-Please clarify what do you mean by "use the partition table later in
-initrd instead".
+Could unify with:
+
+#define LSM_HOOK(RET, NAME, ...) noinline __weak RET bpf_lsm_##NAME(__VA_ARGS__)
+{
+    return (RET)0;
+}
+
+then you don't need LSM_HOOK_int and LSM_HOOK_void.
+
+> +#include <linux/lsm_hook_names.h>
+> +#undef LSM_HOOK
+>
+>  const struct bpf_prog_ops lsm_prog_ops = {
+>  };
+> --
+> 2.20.1
+>
