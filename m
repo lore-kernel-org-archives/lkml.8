@@ -2,140 +2,99 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7154C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6211CC54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD7C206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B87206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:43:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZlUv0Q/r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgCWJn3 (ORCPT
+        id S1727790AbgCWJnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 05:43:29 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:49074 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727695AbgCWJn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:43:29 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A13852B441D062819790;
-        Mon, 23 Mar 2020 17:43:15 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 23 Mar 2020 17:43:07 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v3 3/4] f2fs: fix NULL pointer dereference in f2fs_verity_work()
-Date:   Mon, 23 Mar 2020 17:43:04 +0800
-Message-ID: <20200323094304.51609-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Mon, 23 Mar 2020 05:43:42 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:53956 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727781AbgCWJnl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 05:43:41 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584956621; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=2HfQKcmZY8wkCxlBMQg4ncbqBdorw86rlxGU/P4LKZ0=;
+ b=ZlUv0Q/rpEx7aNkCERwxJCregxf/ojgeRkYw7tAMnnSH14Hs94xB5F8AGsZ3sbX5VUqIMHP0
+ +1k+t+Sl8fMR6Ngdi7uxf463kFVDXFe/lEqpi84b7s33lMFsgZ+anZq3UEhuQmawQTyvSdRH
+ JaYUI6IKVN/8EVhUsrTzRuujboY=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7884b9.7f7d10b49810-smtp-out-n02;
+ Mon, 23 Mar 2020 09:43:21 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8B34AC432C2; Mon, 23 Mar 2020 09:43:21 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 47E68C43636;
+        Mon, 23 Mar 2020 09:43:20 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 23 Mar 2020 15:13:20 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     ohad@wizery.com, devicetree@vger.kernel.org,
+        linux-kernel-owner@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org, iommu@lists.linux-foundation.org,
+        robh+dt@kernel.org, Sibi Sankar <sibis@codeaurora.org>,
+        agross@kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 0/3] Request direct mapping for modem firmware subdevice
+In-Reply-To: <497e40b8-300f-1b83-4312-93a58c459d1d@arm.com>
+References: <20200309182255.20142-1-sibis@codeaurora.org>
+ <20200310112332.GG3794@8bytes.org>
+ <4ed6ddd667a3e6f670084a443d141474@codeaurora.org>
+ <20200310162320.GL3794@8bytes.org>
+ <a50040a9-54fe-f682-dd7e-b2991b48d633@arm.com>
+ <ff805c5c647326c5edaddf2efec5cb87@codeaurora.org>
+ <497e40b8-300f-1b83-4312-93a58c459d1d@arm.com>
+Message-ID: <defd76aa8551858eb568e0ca644d4f4f@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If both compression and fsverity feature is on, generic/572 will
-report below NULL pointer dereference bug.
+Hi Robin,
 
- BUG: kernel NULL pointer dereference, address: 0000000000000018
- RIP: 0010:f2fs_verity_work+0x60/0x90 [f2fs]
- #PF: supervisor read access in kernel mode
- Workqueue: fsverity_read_queue f2fs_verity_work [f2fs]
- RIP: 0010:f2fs_verity_work+0x60/0x90 [f2fs]
- Call Trace:
-  process_one_work+0x16c/0x3f0
-  worker_thread+0x4c/0x440
-  ? rescuer_thread+0x350/0x350
-  kthread+0xf8/0x130
-  ? kthread_unpark+0x70/0x70
-  ret_from_fork+0x35/0x40
+On 2020-03-12 17:35, Robin Murphy wrote:
+> On 2020-03-12 6:28 am, Sai Prakash Ranjan wrote:
+>> Hi Robin,
+>> 
+>> 
+>> Are you talking about this one for SoC specific change - 
+>> https://lore.kernel.org/patchwork/patch/1183530/
+> 
+> Exactly - this particular wheel needs no reinventing at all.
+> 
+> [ I guess I should go review those patches properly... :) ]
+> 
 
-There are two issue in f2fs_verity_work():
-- it needs to traverse and verify all pages in bio.
-- if pages in bio belong to non-compressed cluster, accessing
-decompress IO context stored in page private will cause NULL
-pointer dereference.
+It would be great if you could review the patch - 
+https://lore.kernel.org/patchwork/patch/1183530/
+Sibi has posted a v2 of this series based on that patch.
 
-Fix them.
+Thanks,
+Sai
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v3:
-- call f2fs_verify_pages() when checking last compress page
-to avoid NULL pointer dereference.
- fs/f2fs/compress.c |  2 ++
- fs/f2fs/data.c     | 35 ++++++++++++++++++++++++++++++-----
- 2 files changed, 32 insertions(+), 5 deletions(-)
-
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index 00fd6f904139..748ed8ad1d5a 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -477,6 +477,8 @@ void f2fs_decompress_pages(struct bio *bio, struct page *page, bool verity)
- out_vunmap_rbuf:
- 	vunmap(dic->rbuf);
- out_free_dic:
-+	if (verity)
-+		refcount_add(dic->nr_cpages - 1, &dic->ref);
- 	if (!verity)
- 		f2fs_decompress_end_io(dic->rpages, dic->cluster_size,
- 								ret, false);
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index bb66faf09eea..0197b7b80d19 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -187,12 +187,37 @@ static void f2fs_verify_pages(struct page **rpages, unsigned int cluster_size)
- 
- static void f2fs_verify_bio(struct bio *bio)
- {
--	struct page *page = bio_first_page_all(bio);
--	struct decompress_io_ctx *dic =
--			(struct decompress_io_ctx *)page_private(page);
-+	struct bio_vec *bv;
-+	struct bvec_iter_all iter_all;
-+
-+	bio_for_each_segment_all(bv, bio, iter_all) {
-+		struct page *page = bv->bv_page;
-+		struct decompress_io_ctx *dic;
-+
-+		dic = (struct decompress_io_ctx *)page_private(page);
-+
-+		if (dic) {
-+			if (refcount_dec_not_one(&dic->ref))
-+				continue;
-+			f2fs_verify_pages(dic->rpages,
-+						dic->cluster_size);
-+			f2fs_free_dic(dic);
-+			continue;
-+		}
-+
-+		if (bio->bi_status || PageError(page))
-+			goto clear_uptodate;
- 
--	f2fs_verify_pages(dic->rpages, dic->cluster_size);
--	f2fs_free_dic(dic);
-+		if (fsverity_verify_page(page)) {
-+			SetPageUptodate(page);
-+			goto unlock;
-+		}
-+clear_uptodate:
-+		ClearPageUptodate(page);
-+		ClearPageError(page);
-+unlock:
-+		unlock_page(page);
-+	}
- }
- #endif
- 
 -- 
-2.18.0.rc1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
