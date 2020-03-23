@@ -2,74 +2,82 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FD6C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 111CAC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5C420774
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:02:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fakhOYIO"
+	by mail.kernel.org (Postfix) with ESMTP id DA7542076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:06:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584972367;
+	bh=rtWWonGLfxabgsUxnmMPRo60omiZSTtJ80dw6Vbw4es=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bXEEDAcH0O2sfSCfMKDSQVHhDqL0LYPo1dGKiEFllyBDRdpz2wHLjEfDF8CLo+Rzi
+	 2SAQ76ElPpnDxrXGe2U3zUiUHboQAo7LoWsRzgOHhPxkj3s3VW47KC0FogzpKsL+Tv
+	 q2cfbF28vRHQNrbeLiuskyKJqD/VPJnsNyO+MmMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgCWOCY (ORCPT
+        id S1728576AbgCWOGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:02:24 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:33742 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728542AbgCWOCX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:02:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/I7B0tzAtReOmABokxdYw2sP4Cvmki3tkll9Zuz78Zg=; b=fakhOYIOdEHCnEWwuH0q+wgIgB
-        Ns6xdNIZDgXP1f70rKH0o4D5MGnh/wkghxxxbm3t6wwzk2tJldKPgwVmZAfsg7HiFSPoroOLFlycL
-        oaoSC1BFD4DiU5oJmoavUe08DKf/4YGFTcL8IXZ25EiiXob8wp31HEmncwUKI+ORmzh+LfayvKKe3
-        3VWNesnVjavY7nr7YYaiGembtpTF83x7JD3XtaEFVnNIz+UbqlQgF09109wjtEB5vgRXqolqeZXMk
-        mt9wkSKRZ1Q/9Lr//Oe7zxW+p11h+GIjpq3XKMNki3WWobWPm6T+gjoDzPbgazOOJc6V6w058iyIe
-        NgkGnUcA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGNeo-0006aL-8p; Mon, 23 Mar 2020 14:02:22 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7CD56983504; Mon, 23 Mar 2020 15:02:20 +0100 (CET)
-Date:   Mon, 23 Mar 2020 15:02:20 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH 2/3] lockdep: Merge hardirq_threaded and irq_config
- together
-Message-ID: <20200323140220.GK2452@worktop.programming.kicks-ass.net>
-References: <20200323033207.32370-1-frederic@kernel.org>
- <20200323033207.32370-3-frederic@kernel.org>
+        Mon, 23 Mar 2020 10:06:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728533AbgCWOGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 10:06:06 -0400
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFD7420774;
+        Mon, 23 Mar 2020 14:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584972366;
+        bh=rtWWonGLfxabgsUxnmMPRo60omiZSTtJ80dw6Vbw4es=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SElm5W7pa722XBgeSvhII7RNPt+79YfN17KVpXWJeQwlBUHiIyy6Mm69BnVBGRcbb
+         IYy7bT+WHy50PQ73gJ9am9RicQKsJJpafJFUi+8v5BRqRxZT64FQ0jPvJ6jLQdz/Lk
+         zGASeP/jN8Oqrb2S7rZPRijZW1d/rIJDFy/2wrKs=
+Received: by mail-qk1-f171.google.com with SMTP id i6so6213312qke.1;
+        Mon, 23 Mar 2020 07:06:05 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2buaJ7g6cKVdivvB013insJmXnMzLe64Xjcr/Y1WW6CdeuDbZ+
+        0B74nHmrkZFZNECT65mmfMARdx/z6YPgBFFaWQ==
+X-Google-Smtp-Source: ADFU+vssGZPgRXjn5lVxKqjaxrDoxTeAGBRjs0X7b5X6jo0bCqsPmFn5vlA7NzuNLIW/8VWFJ4jmMC4dOnuNvGBspuc=
+X-Received: by 2002:a37:4a85:: with SMTP id x127mr21299038qka.152.1584972364987;
+ Mon, 23 Mar 2020 07:06:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323033207.32370-3-frederic@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <66b8da28bbf0af6d8bd23953936e7feb6a7ed0c2.1584966325.git.mchehab+huawei@kernel.org>
+ <491d2928a47f59da3636bc63103a5f63fec72b1a.1584966325.git.mchehab+huawei@kernel.org>
+In-Reply-To: <491d2928a47f59da3636bc63103a5f63fec72b1a.1584966325.git.mchehab+huawei@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 23 Mar 2020 08:05:53 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+KtuzU9tvWyka-e84PS+UMnS3=TQ=Q_5GE1tdige4hrg@mail.gmail.com>
+Message-ID: <CAL_Jsq+KtuzU9tvWyka-e84PS+UMnS3=TQ=Q_5GE1tdige4hrg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] MAINTAINERS: dt: update reference for arm-integrator.txt
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 04:32:06AM +0100, Frederic Weisbecker wrote:
-> These fields describe the same state: a code block running in hardirq
-> that might be threaded under specific configurations.
-> 
-> Merge them together in the same field. Also rename the result as
-> "hardirq_threadable" as we are talking about a possible state and not
-> an actual one.
+On Mon, Mar 23, 2020 at 6:25 AM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+>
+> This file was renamed. Update references accordingly.
+>
+> Fixes: 78c7d8f96b6f ("dt-bindings: clock: Create YAML schema for ICST clocks")
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-What isn't instantly obvious is that they cannot overlap. For instance
-mainline with force threaded interrupt handlers on, can't that have the
-irq_work nest inside a threaded handler ?
+Stephen should pick this up.
 
-I *think* it just about works out, but it definitely wants a little more
-than this.
+Acked-by: Rob Herring <robh@kernel.org>
