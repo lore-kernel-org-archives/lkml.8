@@ -2,144 +2,180 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E28C4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1263C4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 627DF20637
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8878220637
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 08:18:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UoClQMO6"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="mxZcJ+qq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbgCWISa (ORCPT
+        id S1727557AbgCWISw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 04:18:30 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:48421 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727526AbgCWISa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 04:18:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584951508;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9+djlOZkkG34kATfFU8ToSkWmnwBYyFJfZBQaAAXqqE=;
-        b=UoClQMO61tOXMtbTmaf2gwx9zvXRbdjdecKnP9NVJ4wfOEi8MWOZsvX5jA6OmMBGr8X6Mm
-        NBdZ+eBhWVV19giVwbsmZ6VmRAcRiDHyOl1TYa/xZRZ+i9FpVlmjCSaVmfCMQgmXe/IuXi
-        ukk9MscQGqe/DsWlBkyGfmBjbWiHSUE=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-201-qsXFI-B7MZCs6vdgKpsJHQ-1; Mon, 23 Mar 2020 04:18:20 -0400
-X-MC-Unique: qsXFI-B7MZCs6vdgKpsJHQ-1
-Received: by mail-wm1-f71.google.com with SMTP id s14so1049220wmj.9
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 01:18:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9+djlOZkkG34kATfFU8ToSkWmnwBYyFJfZBQaAAXqqE=;
-        b=n5WYJgej/rmYeUfKybroqnp9QvNkIF0GgRvVlEmmv4B2a3m01NmD+aBLea7DrF+Mmn
-         0+UqadGRdV4vgp62LIezwendlV+bokEh6+Hw/VM2PV/jhAAEO0CYGHJSiFbCutd/J1BV
-         WHUt61vbtl/Aaa1r1zYJReVYhtMeAEe+XeI7mKmNIFJK4DWr8+buhIBnRWhvk/q4E7qc
-         oPWoMQQ4L5dij107zS325OM3pjg5uuTf/vjX0TVL81ua4+dZm+6LoASlv24mp0AgL+I4
-         qEsrBXJ++9f0hStbAFWZ0fpeW+sajYwA67m/ytmxlnVhOgajUcMYpxqnS1bSFEgJcpWG
-         1sww==
-X-Gm-Message-State: ANhLgQ3jTq3TDdy/uLP2k5xLdi9qUTlh8sQPBvsJx8211WY2BVkl3pt0
-        MZr9c9ltbN2+hi76eltgIlj9IdCUiKBVFqoUXQb2w7F1ZHrbh3LGyZG+1VGz7XWs3dcYP0ZJQ5o
-        bqABBnfsgv/S4huSK4h8mXZfj
-X-Received: by 2002:adf:fa8a:: with SMTP id h10mr6852180wrr.160.1584951497496;
-        Mon, 23 Mar 2020 01:18:17 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vuglqGpMjyGAXtjGXC9VUQZ55Okh6SKZ0pRVVSMnctABMUeYyFbQ50ib/snd3MA/dgnb/Bz0A==
-X-Received: by 2002:adf:fa8a:: with SMTP id h10mr6852142wrr.160.1584951497210;
-        Mon, 23 Mar 2020 01:18:17 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:24d8:ed40:c82a:8a01? ([2001:b07:6468:f312:24d8:ed40:c82a:8a01])
-        by smtp.gmail.com with ESMTPSA id t126sm21823703wmb.27.2020.03.23.01.18.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2020 01:18:16 -0700 (PDT)
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
- handle_external_interrupt_irqoff
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Cc:     Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, wanpengli@tencent.com,
-        the arch/x86 maintainers <x86@kernel.org>
-References: <000000000000277a0405a16bd5c9@google.com>
- <CACT4Y+b1WFT87pWQaXD3CWjyjoQaP1jcycHdHF+rtxoR5xW1ww@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <5058aabe-f32d-b8ef-57ed-f9c0206304c5@redhat.com>
-Date:   Mon, 23 Mar 2020 09:18:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <CACT4Y+b1WFT87pWQaXD3CWjyjoQaP1jcycHdHF+rtxoR5xW1ww@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 23 Mar 2020 04:18:52 -0400
+Received: from mga17.intel.com ([192.55.52.151]:12962 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727526AbgCWISv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 04:18:51 -0400
+IronPort-SDR: IqgRZ9eInJ+Lg6PQgretw86mI8FCDaZHXWa2mhYrSQXlStrmKF/DOTSQWWeiFdsnKCoSRAsnZD
+ e+QT2XwGOnkw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 01:18:51 -0700
+IronPort-SDR: AI7mwcti47a8zY7rP3T1HAx+cm976cqmpmY2xAgIvuvrNZR3O5/Vwl2QZHRfC+y4J7PTcl4dfB
+ luJrNVfdt3Hw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,295,1580803200"; 
+   d="scan'208";a="249542467"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by orsmga006.jf.intel.com with ESMTP; 23 Mar 2020 01:18:50 -0700
+Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
+ ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 23 Mar 2020 01:18:50 -0700
+Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
+ ORSMSX609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 23 Mar 2020 01:18:50 -0700
+Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
+ orsmsx609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 23 Mar 2020 01:18:50 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.171)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 23 Mar 2020 01:17:00 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YIvmfrCqmE18K9w+UDdGoNOVYD4V8VoMdUtgtKX3LKGDH84i8t8pwbt1h0P2MQ/jZ3ORuc4E1LQPWiQSylc1Ydc7CbgvWv1bBwnOQ8BIjVbmOS9aTPKpBqyoF7iIkC+laGTmkWCUsIwkzCMn6UzSlxJ4rUBNmdFqht901JWHZv86GJLZ5sh4NX/7KQnqE4VwnMQ3YlUu7xJhn03w8fVxXIzUaDxA397zdmmIG0VIcM8xcLE96pgWy3hTjYBYiIbwYRrWQNwbngzS8g4DlHDdp84bcKfXb1syhfDfvZiOs3/XWU2DxsPneopXxlK0G0pLUryIN8n8FjzKE+I/7FT2bw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BaMhQe27Ew7yBq8joG5iOJKLRmveGIB+13R36VB14Sc=;
+ b=JRA9OT+l+Xur3VfnRcu2sJTilQoOUKVN1wrgC4xN6G/IB1NLk76lzH26moZoXF+hXrxDYTDKpxBS5AI7Xuc0X6FrTzllHfzsvoztN+zqZbE66NeTDQvr7aeuQ/2VDWkuKUfItKuZ7BRQusC8qme6Ne9oKqDsJNq4xIKMGiaBLWuzij7T5JSjCVmolLZRgbdgBFlQOt7K5ZYV+M/H0KEaJIq2ME9g1n2oiysKF9sPj+yKIDoUkiU+TlZtiUxtaAUnqbf6XNpwVpEjrTBgm98B1MotLr6P/ZMtcjYKK6JdFlWfWuakRp2nLaRTVj6xao8T9V+4SJkpyk8khiFMSdrX0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BaMhQe27Ew7yBq8joG5iOJKLRmveGIB+13R36VB14Sc=;
+ b=mxZcJ+qq1CG4f9oUQL4M9VJ8kszMBeyQZg4S1Xo6pSUcMXZ1N4QdkmnEbC7PT/6tbRDdV9t7NQuvHrOQC9WvTkykIS94NJl6XwGHCidqxVgAZhgssABVu0MxQgYMM2M6Z0gB1EkIi3YApYsrFo9pnNxYCr+Cgu2UCheUElQm64Y=
+Received: from BYAPR11MB2757.namprd11.prod.outlook.com (2603:10b6:a02:cb::16)
+ by BYAPR11MB3192.namprd11.prod.outlook.com (2603:10b6:a03:7a::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.22; Mon, 23 Mar
+ 2020 08:16:29 +0000
+Received: from BYAPR11MB2757.namprd11.prod.outlook.com
+ ([fe80::f8aa:496b:6423:f5fc]) by BYAPR11MB2757.namprd11.prod.outlook.com
+ ([fe80::f8aa:496b:6423:f5fc%4]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
+ 08:16:29 +0000
+From:   "Voon, Weifeng" <weifeng.voon@intel.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>
+Subject: RE: [RFC,net-next,v1, 1/1] net: stmmac: Enable SERDES power up/down
+ sequence
+Thread-Topic: [RFC,net-next,v1, 1/1] net: stmmac: Enable SERDES power up/down
+ sequence
+Thread-Index: AQHWAE0vpBWvWDPaGkGozDEPMDm2A6hVzcSAgAAFr0A=
+Date:   Mon, 23 Mar 2020 08:16:29 +0000
+Message-ID: <BYAPR11MB27575EF05D65A8AA9AF4128488F00@BYAPR11MB2757.namprd11.prod.outlook.com>
+References: <20200322132342.2687-1-weifeng.voon@intel.com>
+ <20200322132342.2687-2-weifeng.voon@intel.com>
+ <BN8PR12MB3266ACFFA4808A133BB72F9DD3F00@BN8PR12MB3266.namprd12.prod.outlook.com>
+In-Reply-To: <BN8PR12MB3266ACFFA4808A133BB72F9DD3F00@BN8PR12MB3266.namprd12.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=weifeng.voon@intel.com; 
+x-originating-ip: [134.134.136.203]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ef479fb2-e056-4be2-e55b-08d7cf027d81
+x-ms-traffictypediagnostic: BYAPR11MB3192:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR11MB31924A7467CAAE6974AB64DD88F00@BYAPR11MB3192.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0351D213B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(136003)(346002)(39860400002)(376002)(199004)(55016002)(316002)(6506007)(54906003)(9686003)(110136005)(33656002)(66946007)(76116006)(64756008)(66476007)(71200400001)(66446008)(66556008)(86362001)(8676002)(8936002)(52536014)(107886003)(81166006)(2906002)(81156014)(4326008)(5660300002)(186003)(7696005)(26005)(478600001)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR11MB3192;H:BYAPR11MB2757.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HGRcyiJXp7aZET68eQ1MNX3RJRIn96+F0PFU+htuL/T7YFz4veEkggbrtmApvRfp+WCKYB/PmLOfKLaZ9CGzGUj8DiYVMvngUhxZ7mm58pztbTr4rMlKahCNHy9CFkvbsTtLTABtqCTYlDCLaL6vBwKMlshHQovfmIMtqq+PdbrmJZWBauT3PRjYzw0rC93xpiLcLmKadF99wv53M8VTrrgPRLeS0/r8rL+qbdGt7o801gMQ2zqJ4Ec7HkSZnctsP+yzSJ0nuYeduo5hZu3QEK+kpm5xrm9PWBykld0vMUN5nenvl/2suqrC9VOm7nCPIzxFxZpcVnfqpRRGQXQ9EbcpZbC6s2pNfaeMu6bqwsallNlI7D7mTCs36MfpReRWf6HSyvFsUU6EMf9bHCrSmyR3ipC0Uw/aIKK5CWk3RFNgwyEu6rbi9t0S+OTy61lL4Tz2f/LQxG1prlTlSwbGIwEcd/Alm7RkHETBIXv8bw0epF5010K8nDXzETTUn1Jj
+x-ms-exchange-antispam-messagedata: vHIKY5WKC3OQViemPR/H2t7W3xhP105VLTzveFwVd9rCKLSJ/CkQeFwY8dMZp2b0WDgBRA1iUOTjgu4Y5jULudwQxYIA64T38S+wt/eO2G6jNwQU6Xw/ut1JZxnf7YWFN/EdxsLWPr+syUFXnOTvAw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef479fb2-e056-4be2-e55b-08d7cf027d81
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2020 08:16:29.7564
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dFLWThUk5g6k87yGS4Hkra9rORQWJqljmILEucZ5oEMjTqQ2WdbD5TrimQaXEHJ9bEpo10bHWcrw7D8kEfiYjw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3192
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/03/20 07:59, Dmitry Vyukov wrote:
-> 
-> The commit range is presumably
-> fb279f4e238617417b132a550f24c1e86d922558..63849c8f410717eb2e6662f3953ff674727303e7
-> But I don't see anything that says "it's me". The only commit that
-> does non-trivial changes to x86/vmx seems to be "KVM: VMX: check
-> descriptor table exits on instruction emulation":
+> > This patch is to enable Intel SERDES power up/down sequence. The
+> > SERDES converts 8/10 bits data to SGMII signal. Below is an example of
+> > HW configuration for SGMII mode. The SERDES is located in the PHY IF
+> > in the diagram below.
+> >
+> > <-----------------GBE Controller---------->|<--External PHY chip-->
+> > +----------+         +----+            +---+           +----------+
+> > |   EQoS   | <-GMII->| DW | < ------ > |PHY| <-SGMII-> | External |
+> > |   MAC    |         |xPCS|            |IF |           | PHY      |
+> > +----------+         +----+            +---+           +----------+
+> >        ^               ^                 ^                ^
+> >        |               |                 |                |
+> >        +---------------------MDIO-------------------------+
+> >
+> > PHY IF configuration and status registers are accessible through mdio
+> > address 0x15 which is defined as intel_adhoc_addr. During D0, The
+> > driver will need to power up PHY IF by changing the power state to P0.
+> > Likewise, for D3, the driver sets PHY IF power state to P3.
+>=20
+> I don't think this is the right approach.
+>=20
+> You could just add a new "mdio-intel-serdes" to phy/ folder just like I
+> did with XPCS because this is mostly related with PHY settings rather
+> than EQoS.
+I am taking this approach to put it in stmmac folder rather than phy folder
+as a generic mdio-intel-serdes as this is a specific Intel serdes architect=
+ure which
+would only pair with DW EQos and DW xPCS HW. Since this serdes will not abl=
+e to
+pair other MAC or other non-Intel platform, I would like you to reconsider =
+this
+approach. I am open for discussion.=20
+Thanks Jose for the fast response.
 
-That seems unlikely, it's a completely different file and it would only
-affect the outside (non-nested) environment rather than your own kernel.
+Regards,
+Weifeng =20
 
-The only instance of "0x86" in the registers is in the flags:
-
-> RSP: 0018:ffffc90001ac7998 EFLAGS: 00010086
-> RAX: ffffc90001ac79c8 RBX: fffffe0000000000 RCX: 0000000000040000
-> RDX: ffffc9000e20f000 RSI: 000000000000b452 RDI: 000000000000b453
-> RBP: 0000000000000ec0 R08: ffffffff83987523 R09: ffffffff811c7eca
-> R10: ffff8880a4e94200 R11: 0000000000000002 R12: dffffc0000000000
-> R13: fffffe0000000ec8 R14: ffffffff880016f0 R15: fffffe0000000ecb
-> FS:  00007fb50e370700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000000000000005c CR3: 0000000092fc7000 CR4: 00000000001426f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-That would suggest a miscompilation of the inline assembly, which does
-push the flags:
-
-#ifdef CONFIG_X86_64
-                "mov %%" _ASM_SP ", %[sp]\n\t"
-                "and $0xfffffffffffffff0, %%" _ASM_SP "\n\t"
-                "push $%c[ss]\n\t"
-                "push %[sp]\n\t"
-#endif
-                "pushf\n\t"
-                __ASM_SIZE(push) " $%c[cs]\n\t"
-                CALL_NOSPEC
-
-
-It would not explain why it suddenly started to break, unless the clang
-version also changed, but it would be easy to ascertain and fix (in
-either KVM or clang).  Dmitry, can you send me the vmx.o and
-kvm-intel.ko files?
-
-Thanks,
-
-Paolo
-
+>=20
+> Perhaps Andrew has better insight on this.
+>=20
+> BTW, are you using the standard XPCS helpers in phy/ folder ? Is it
+> working fine for you ?
+>=20
+> ---
+> Thanks,
+> Jose Miguel Abreu
