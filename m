@@ -2,176 +2,125 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 062A3C54FD7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5363DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6B442072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D74620714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:55:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GCzLV99+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LRurrVu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725880AbgCWRxP (ORCPT
+        id S1727188AbgCWRzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:53:15 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14758 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727569AbgCWRwl (ORCPT
+        Mon, 23 Mar 2020 13:55:20 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40566 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbgCWRzT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:52:41 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e78f73c0001>; Mon, 23 Mar 2020 10:51:56 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 23 Mar 2020 10:52:40 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 23 Mar 2020 10:52:40 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Mar
- 2020 17:52:40 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 23 Mar 2020 17:52:40 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.160.78]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e78f7670000>; Mon, 23 Mar 2020 10:52:40 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v5 5/9] dt-binding: tegra: Add VI and CSI bindings
-Date:   Mon, 23 Mar 2020 10:52:31 -0700
-Message-ID: <1584985955-19101-6-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Mon, 23 Mar 2020 13:55:19 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f3so18228236wrw.7
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 10:55:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+XjXArON/nteRXhEm+avg+BQR0G/+8Zsnf7Y6LGWsQw=;
+        b=LRurrVu3FEJrjddH9Dp7x6EbblzfnT1KxjLAvNlZhOC/xTqU1Ow8u7Dl5F8H1x+wCc
+         dUDgrllLRf4HfPHH5q4tSb1tyd4vk2uR2DFjPa0SAxNTrOxtkHQ4HfY3Anzy3cUVBl+l
+         Y7MMZ5nADcEIY1taSc9wDaV9zTlh+9sRomE7ZfuZdQ3aYFKS627GU9nAo4cZP/Hyz8YM
+         RUPfV3wz0cqgN/SmqpdSu4AGSzE9af5zZmBOTg3Yf93WoSsU09odZzqwLUbJFasFjNV5
+         FSTAule32F4o17HEMxIsw+KiT6utAOgfMK5VQfd0Z6542bNo4pEyVSlrqWDdV28FEiCe
+         UV6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+XjXArON/nteRXhEm+avg+BQR0G/+8Zsnf7Y6LGWsQw=;
+        b=X7K+tZBZZFrHlQskPrkWvN8abFzdg2VZFZ1APYV5RHJ+eLWnX9Mu3skbe+zLEayFiI
+         XqnR8Iyz/kXx8pXvuqCCxwjpSttQq3BMX12C57KPqrGuFVx9pOo99nYb1bMEtdL8bGRl
+         7f3z93OC8Bgo1CPwYtR4CJL0QlSBDegCTlLOV25qh1Zcwm7SR18rnlRf16Xl49H7M1NT
+         /BkRHF8mJGV5xQtjmMACNgVpS+fF/HvhHBXPGYWaCj81hVckSqFRsaW8Giyg+8nCgRcI
+         70n1ijG4wEXxc+hGNJ6L27eJsfcReqznwtMib4601Q1//N5Vyq4IonHU7mGERjdHv6D4
+         4u/w==
+X-Gm-Message-State: ANhLgQ195IclCsDMungQDhjPHIoGJd/A/0adRT8TzWpQE8t6U2DOL30E
+        aSrh1gbJl4fgRNVkA45SiglkBDWjx6Un7cM7vMGIWQ==
+X-Google-Smtp-Source: ADFU+vv6lG8KfkaUa1MoJIlV06SZfWqvD81WQ22YMnvn2jyWH0lQ6LIgWyIOBTjrW0uX1mhiNl0iXHt6y0nVmAu5m2g=
+X-Received: by 2002:a05:6000:100f:: with SMTP id a15mr29680460wrx.382.1584986118163;
+ Mon, 23 Mar 2020 10:55:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584985916; bh=x52xXIXK6pPK6/ZlFIxKUYbjv7dRay6339W/L0ntpdo=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=GCzLV99+uLAtWSNQpT1zL5Ly59zV2wKX1Sjt4yZIyWtuLQ48VJytAw1cPUu4+D7EE
-         NLxz8zOBaa+koB/YJipoOZFVVg4NdXZDY86T0xRWHforh2FvpKJWWBjRh0OAMX5twE
-         aWZIpad3+8TSEqeIF36r6LH67hnerVVR1lS0TI1tUJTyigxuqtvQp7GPIRSAxFFNTq
-         HWoTPPaWT6WMNunz0X1Jv6jUdYLiL0LYo8UFzqaOQbyC/By5Mgc75bt6WUBoii2yhb
-         Rf7o84iYE9igETV125rwfZbUGpYD4hxKrKkccCzn/b6Xu037pORzzNw4dHL7v3fdJP
-         enarff3ELwhlQ==
+References: <000000000000277a0405a16bd5c9@google.com> <CACT4Y+b1WFT87pWQaXD3CWjyjoQaP1jcycHdHF+rtxoR5xW1ww@mail.gmail.com>
+ <5058aabe-f32d-b8ef-57ed-f9c0206304c5@redhat.com> <CAG_fn=WYtSoyi63ACaz-ya=Dbi+BFU-_mADDpL6gQvDimQscmw@mail.gmail.com>
+ <20200323163925.GP28711@linux.intel.com> <CAKwvOdkE8OAu=Gj4MKWwpctka6==6EtrbF3e1tvF=jS2hBB3Ow@mail.gmail.com>
+ <CAKwvOdkXi1MN2Yqqoa6ghw14tQ25WYgyJkSv35-+1KRb=cmhZw@mail.gmail.com>
+In-Reply-To: <CAKwvOdkXi1MN2Yqqoa6ghw14tQ25WYgyJkSv35-+1KRb=cmhZw@mail.gmail.com>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Mon, 23 Mar 2020 18:55:07 +0100
+Message-ID: <CAG_fn=WE0BmuHSxUoBJWQ9dnZ4X5ZpBqcT9rQaDE_6HAfTYKQA@mail.gmail.com>
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in handle_external_interrupt_irqoff
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        syzbot <syzbot+3f29ca2efb056a761e38@syzkaller.appspotmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra contains VI controller which can support up to 6 MIPI CSI
-camera sensors.
+I've reduced the faulty test case to the following code:
 
-Each Tegra CSI port from CSI unit can be one-to-one mapper to
-VI channel and can capture from an external camera sensor or
-from built-in test pattern generator.
+=================================
+a;
+long b;
+register unsigned long current_stack_pointer asm("rsp");
+handle_external_interrupt_irqoff() {
+  asm("and $0xfffffffffffffff0, %%rsp\n\tpush $%c[ss]\n\tpush "
+      "%[sp]\n\tpushf\n\tpushq $%c[cs]\n\tcall *%[thunk_target]\n"
+      : [ sp ] "=&r"(b), "+r" (current_stack_pointer)
+      : [ thunk_target ] "rm"(a), [ ss ] "i"(3 * 8), [ cs ] "i"(2 * 8) );
+}
+=================================
+(in fact creduce even throws away current_stack_pointer, but we
+probably want to keep it to prove the point).
 
-This patch adds dt-bindings for Tegra VI and CSI.
+Clang generates the following code for it:
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- .../display/tegra/nvidia,tegra20-host1x.txt        | 67 +++++++++++++++++-----
- 1 file changed, 54 insertions(+), 13 deletions(-)
+$ clang vmx.i -O2 -c -w -o vmx.o
+$ objdump -d vmx.o
+...
+0000000000000000 <handle_external_interrupt_irqoff>:
+   0: 8b 05 00 00 00 00    mov    0x0(%rip),%eax        # 6
+<handle_external_interrupt_irqoff+0x6>
+   6: 89 44 24 fc          mov    %eax,-0x4(%rsp)
+   a: 48 83 e4 f0          and    $0xfffffffffffffff0,%rsp
+   e: 6a 18                pushq  $0x18
+  10: 50                    push   %rax
+  11: 9c                    pushfq
+  12: 6a 10                pushq  $0x10
+  14: ff 54 24 fc          callq  *-0x4(%rsp)
+  18: 48 89 05 00 00 00 00 mov    %rax,0x0(%rip)        # 1f
+<handle_external_interrupt_irqoff+0x1f>
+  1f: c3                    retq
 
-diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-index 9999255..9421569 100644
---- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-+++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-@@ -40,14 +40,25 @@ of the following host1x client modules:
- 
-   Required properties:
-   - compatible: "nvidia,tegra<chip>-vi"
--  - reg: Physical base address and length of the controller's registers.
-+  - reg: Physical base address and length of the controller registers.
-   - interrupts: The interrupt outputs from the controller.
--  - clocks: Must contain one entry, for the module clock.
-+  - clocks: Must contain an entry for the module clock "vi"
-     See ../clocks/clock-bindings.txt for details.
--  - resets: Must contain an entry for each entry in reset-names.
--    See ../reset/reset.txt for details.
--  - reset-names: Must include the following entries:
--    - vi
-+  - power-domains: Must include venc powergate node as vi is in VE partition.
-+
-+  Tegra210 has CSI part of VI sharing same host interface and register
-+  space. So, VI device node should have CSI child node.
-+
-+  - csi: mipi csi interface to vi
-+
-+    Required properties:
-+    - compatible: "nvidia,tegra<chip>-csi"
-+    - reg: Physical base address offset to parent and length of the controller
-+      registers.
-+    - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
-+      See ../clocks/clock-bindings.txt for details.
-+  - power-domains: Must include sor powergate node as csicil is in
-+    SOR partition.
- 
- - epp: encoder pre-processor
- 
-@@ -309,13 +320,43 @@ Example:
- 			reset-names = "mpe";
- 		};
- 
--		vi {
--			compatible = "nvidia,tegra20-vi";
--			reg = <0x54080000 0x00040000>;
--			interrupts = <0 69 0x04>;
--			clocks = <&tegra_car TEGRA20_CLK_VI>;
--			resets = <&tegra_car 100>;
--			reset-names = "vi";
-+		vi@54080000 {
-+			compatible = "nvidia,tegra210-vi";
-+			reg = <0x0 0x54080000 0x0 0x700>;
-+			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+			assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
-+			assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
-+
-+			clocks = <&tegra_car TEGRA210_CLK_VI>;
-+			clock-names = "vi";
-+			power-domains = <&pd_venc>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			ranges = <0x0 0x0 0x54080000 0x2000>;
-+
-+			csi@838 {
-+				compatible = "nvidia,tegra210-csi";
-+				reg = <0x838 0x1300>;
-+				assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
-+						  <&tegra_car TEGRA210_CLK_CILCD>,
-+						  <&tegra_car TEGRA210_CLK_CILE>;
-+				assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
-+							 <&tegra_car TEGRA210_CLK_PLL_P>,
-+							 <&tegra_car TEGRA210_CLK_PLL_P>;
-+				assigned-clock-rates = <102000000>,
-+						       <102000000>,
-+						       <102000000>;
-+
-+				clocks = <&tegra_car TEGRA210_CLK_CSI>,
-+					 <&tegra_car TEGRA210_CLK_CILAB>,
-+					 <&tegra_car TEGRA210_CLK_CILCD>,
-+					 <&tegra_car TEGRA210_CLK_CILE>;
-+				clock-names = "csi", "cilab", "cilcd", "cile";
-+				power-domains = <&pd_sor>;
-+			};
-+
- 		};
- 
- 		epp {
--- 
-2.7.4
-
+The question is whether using current_stack_pointer as an output is
+actually a valid way to tell the compiler it should not clobber RSP.
+Intuitively it is, but explicitly adding RSP to the clobber list
+sounds a bit more bulletproof.
