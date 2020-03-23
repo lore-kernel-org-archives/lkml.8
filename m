@@ -7,276 +7,136 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E45C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88117C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6702051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E332051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:12:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QZFAJNVn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BzGKmwYH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgCWTK4 (ORCPT
+        id S1727820AbgCWTMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:10:56 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:39069 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727569AbgCWTKz (ORCPT
+        Mon, 23 Mar 2020 15:12:13 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:22789 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727179AbgCWTMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:10:55 -0400
-Received: by mail-vs1-f68.google.com with SMTP id j128so2949592vsd.6
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 12:10:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1tp3bC93e0nUfPggrmvnMYoBNQ6UWOR58w4LV4ZhNS0=;
-        b=QZFAJNVnkEz6tJ6FzoGWo4cS0Tr0c2wT3Gyl8gMiNmkTeIqbKiWYsC2rYDsKnGt2e8
-         t0G0SzWlbvcpkKDxM0HH2DVdv5P7T3kTpraFDN528g94nBDdv0LJS3W0wP8SJBTPgyTD
-         qgcvi04yAeh1TRoLfUD0Y6hp2xFWkCWWHiQaI=
+        Mon, 23 Mar 2020 15:12:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584990731;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fgrAHu1BxFkFO8E2XTbHvJRFF+z4d/8YKZf4AbCghtU=;
+        b=BzGKmwYHvORXIg48h0vUhAxwKV18cjs6WMvEJVtY5jSUeedmm+x7RYf0nv0MeXq/EEchzI
+        nQvwtE9F8HNzu3dbYN7PulU6BkoqHk1OPTrAn37Ofw59Rebh6STtwxjenlyi6M3ygyKHGd
+        Ck9f7D1HCHNbkhjAHfZqmQRKjZqN7l4=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-27-42C_AECpNC6GjuyiQUHdfA-1; Mon, 23 Mar 2020 15:12:09 -0400
+X-MC-Unique: 42C_AECpNC6GjuyiQUHdfA-1
+Received: by mail-wr1-f71.google.com with SMTP id i18so7807467wrx.17
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 12:12:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1tp3bC93e0nUfPggrmvnMYoBNQ6UWOR58w4LV4ZhNS0=;
-        b=Hdv/cKPhE9KcMhbtnXvdtP4rIkLpFl99OnaeQqe5F8ZtWdh3LZ0UpMy9imQHB0IxZ4
-         5CGLYIoMr6y/eqLtmckU2mqedabLYbnDFBPYvmmRJCAPMaB0cOP+noHZUf47zur1nzAB
-         2Ye4ropbwGl45RmInHFWsM0E2m0pjSVDhGmolq67c3HeProla/M3J5ZUFjXfYmzz23km
-         GQ7/RSM5FAte7DeGszSBnqVnNTR65X0/G+7v0GkssPFy+Ef5zeHHK4qhg0XSlrKsWAU6
-         B3O26r1La5DPZ8+O+3SGjsZ5YfD1NoaESFWFlFzM0sGsUgQM4qWD07RdaOQmrZHSWPu8
-         a31w==
-X-Gm-Message-State: ANhLgQ0di3PG8lxnhRAS41PPsDTRp+BqreEr5R+9JcRpQKgvwK800b+D
-        Ai+Jt1WnmexOX5Yd9voVNufeVM3poE4Foy4XVFf21w==
-X-Google-Smtp-Source: ADFU+vuXszqaXED87ZaiMONJXX8a5RIeucsij/ir43q9RdI+5nS8boUUKde8aIEelt/LyWxeF7BRDsbfceIVon8FCw0=
-X-Received: by 2002:a67:c01e:: with SMTP id v30mr17629845vsi.71.1584990652351;
- Mon, 23 Mar 2020 12:10:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fgrAHu1BxFkFO8E2XTbHvJRFF+z4d/8YKZf4AbCghtU=;
+        b=g4YV7NitX2ynwpHiSzz9Uk94E89ubwU1hBeSnBarX1nGBRc1E/ap7tKfyn9pbUKppd
+         c5GT+/3fuGS7R5SY7VDrqABBE0LgE6IWUWDhLuwPYfBkmXW1QNYC/R1f0SkNEcjVarFi
+         MINXCnp4Q5dCTmYp0iJBZ3wWEqyjiskt9e3NmUdauvgWm5QEp14uAaqy7jFRO0vd+qk5
+         fjfixXHrY8fStWCmKK9QUSwVvygl/jSA82ZCGkXR004CTobRDPIsq+vPfvseidgUesJu
+         Dyb4QK0FP8UEaByBW2OymoVfbEQZ9rZZ4gwIELGM223SkAQCv2iFh6mw2RIXqu4lXQCb
+         dI6Q==
+X-Gm-Message-State: ANhLgQ1iM9Ag0u3n8BkLPcI/+u4B+JAUQtyWcOMVzYTM35AJ8GnDEn9Y
+        7E6JYFdu+4zsWBb8PoZtb9qaldERcHeXo+ON+GGdfN9vKs2uI8hc4T23p7yeMXQHscDEnh2+QU5
+        fJoOG3yGLXXSl8pw6Xe7F/kb2
+X-Received: by 2002:a05:600c:20c7:: with SMTP id y7mr969796wmm.38.1584990727796;
+        Mon, 23 Mar 2020 12:12:07 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vvI6FN87AuoICeOVZww+CrDUVby7jnBBCp+g/rZiiNhh884vbdRbO+WpvR0BsEJUCbSMTPLFA==
+X-Received: by 2002:a05:600c:20c7:: with SMTP id y7mr969764wmm.38.1584990727468;
+        Mon, 23 Mar 2020 12:12:07 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id s22sm655926wmc.16.2020.03.23.12.12.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 12:12:06 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 15:12:02 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH 6/7] KVM: selftests: Expose the primary memslot number to
+ tests
+Message-ID: <20200323191202.GN127076@xz-x1>
+References: <20200320205546.2396-1-sean.j.christopherson@intel.com>
+ <20200320205546.2396-7-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-References: <20200320231928.137720-1-abhishekpandit@chromium.org>
- <20200320161922.v2.1.I17e2220fd0c0822c76a15ef89b882fb4cfe3fe89@changeid> <C09DCA09-A2C9-4675-B17B-05CE0B5DE172@holtmann.org>
-In-Reply-To: <C09DCA09-A2C9-4675-B17B-05CE0B5DE172@holtmann.org>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Mon, 23 Mar 2020 12:10:40 -0700
-Message-ID: <CANFp7mXG1HXKNQKn2YTsEOX6puNz=8WY6AHWac4UOiVMVQyEkg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] Bluetooth: Prioritize SCO traffic
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200320205546.2396-7-sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 11:58 AM Marcel Holtmann <marcel@holtmann.org> wrote:
->
-> Hi Abhishek,
->
-> > When scheduling TX packets, send all SCO/eSCO packets first, check for
-> > pending SCO/eSCO packets after every ACL/LE packet and send them if any
-> > are pending.  This is done to make sure that we can meet SCO deadlines
-> > on slow interfaces like UART.
-> >
-> > If we were to queue up multiple ACL packets without checking for a SCO
-> > packet, we might miss the SCO timing. For example:
-> >
-> > The time it takes to send a maximum size ACL packet (1024 bytes):
-> > t = 10/8 * 1024 bytes * 8 bits/byte * 1 packet / baudrate
-> >        where 10/8 is uart overhead due to start/stop bits per byte
-> >
-> > Replace t = 3.75ms (SCO deadline), which gives us a baudrate of 2730666.
-> >
-> > At a baudrate of 3000000, if we didn't check for SCO packets within 1024
-> > bytes, we would miss the 3.75ms timing window.
-> >
-> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> > ---
-> >
-> > Changes in v2:
-> > * Refactor to check for SCO/eSCO after each ACL/LE packet sent
-> > * Enabled SCO priority all the time and removed the sched_limit variable
-> >
-> > net/bluetooth/hci_core.c | 111 +++++++++++++++++++++------------------
-> > 1 file changed, 61 insertions(+), 50 deletions(-)
-> >
-> > diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> > index dbd2ad3a26ed..a29177e1a9d0 100644
-> > --- a/net/bluetooth/hci_core.c
-> > +++ b/net/bluetooth/hci_core.c
-> > @@ -4239,6 +4239,60 @@ static void __check_timeout(struct hci_dev *hdev, unsigned int cnt)
-> >       }
-> > }
-> >
-> > +/* Schedule SCO */
-> > +static void hci_sched_sco(struct hci_dev *hdev)
-> > +{
-> > +     struct hci_conn *conn;
-> > +     struct sk_buff *skb;
-> > +     int quote;
-> > +
-> > +     BT_DBG("%s", hdev->name);
-> > +
-> > +     if (!hci_conn_num(hdev, SCO_LINK))
-> > +             return;
-> > +
-> > +     while (hdev->sco_cnt && (conn = hci_low_sent(hdev, SCO_LINK, &quote))) {
-> > +             while (quote-- && (skb = skb_dequeue(&conn->data_q))) {
-> > +                     BT_DBG("skb %p len %d", skb, skb->len);
-> > +                     hci_send_frame(hdev, skb);
-> > +
-> > +                     conn->sent++;
-> > +                     if (conn->sent == ~0)
-> > +                             conn->sent = 0;
-> > +             }
-> > +     }
-> > +}
-> > +
-> > +static void hci_sched_esco(struct hci_dev *hdev)
-> > +{
-> > +     struct hci_conn *conn;
-> > +     struct sk_buff *skb;
-> > +     int quote;
-> > +
-> > +     BT_DBG("%s", hdev->name);
-> > +
-> > +     if (!hci_conn_num(hdev, ESCO_LINK))
-> > +             return;
-> > +
-> > +     while (hdev->sco_cnt && (conn = hci_low_sent(hdev, ESCO_LINK,
-> > +                                                  &quote))) {
-> > +             while (quote-- && (skb = skb_dequeue(&conn->data_q))) {
-> > +                     BT_DBG("skb %p len %d", skb, skb->len);
-> > +                     hci_send_frame(hdev, skb);
-> > +
-> > +                     conn->sent++;
-> > +                     if (conn->sent == ~0)
-> > +                             conn->sent = 0;
-> > +             }
-> > +     }
-> > +}
-> > +
-> > +static void hci_sched_sync(struct hci_dev *hdev)
-> > +{
-> > +     hci_sched_sco(hdev);
-> > +     hci_sched_esco(hdev);
-> > +}
-> > +
->
-> scrap this function. It has almost zero benefit.
+On Fri, Mar 20, 2020 at 01:55:45PM -0700, Sean Christopherson wrote:
+> Add a define for the primary memslot number so that tests can manipulate
+> the memslot, e.g. to delete it.
+> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  tools/testing/selftests/kvm/include/kvm_util.h | 2 ++
+>  tools/testing/selftests/kvm/lib/kvm_util.c     | 4 ++--
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+> index 0f0e86e188c4..43b5feb546c6 100644
+> --- a/tools/testing/selftests/kvm/include/kvm_util.h
+> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
+> @@ -60,6 +60,8 @@ enum vm_mem_backing_src_type {
+>  	VM_MEM_SRC_ANONYMOUS_HUGETLB,
+>  };
+>  
+> +#define VM_PRIMARY_MEM_SLOT	0
+> +
+>  int kvm_check_cap(long cap);
+>  int vm_enable_cap(struct kvm_vm *vm, struct kvm_enable_cap *cap);
+>  
+> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+> index f69fa84c9a4c..6a1af0455e44 100644
+> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+> @@ -247,8 +247,8 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
+>  	/* Allocate and setup memory for guest. */
+>  	vm->vpages_mapped = sparsebit_alloc();
+>  	if (phy_pages != 0)
+> -		vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
+> -					    0, 0, phy_pages, 0);
+> +		vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS, 0,
+> +					    VM_PRIMARY_MEM_SLOT, phy_pages, 0);
 
-Done.
+IIUC VM_PRIMARY_MEM_SLOT should be used more than here... E.g., to all
+the places that allocate page tables in virt_map() as the last param?
+I didn't check other places.
 
->
-> > static void hci_sched_acl_pkt(struct hci_dev *hdev)
-> > {
-> >       unsigned int cnt = hdev->acl_cnt;
-> > @@ -4270,6 +4324,9 @@ static void hci_sched_acl_pkt(struct hci_dev *hdev)
-> >                       hdev->acl_cnt--;
-> >                       chan->sent++;
-> >                       chan->conn->sent++;
-> > +
-> > +                     /* Send pending SCO packets right away */
-> > +                     hci_sched_sync(hdev);
->
->                         hci_sched_esco();
->                         hci_sched_sco();
->
-> >               }
-> >       }
-> >
-> > @@ -4354,54 +4411,6 @@ static void hci_sched_acl(struct hci_dev *hdev)
-> >       }
-> > }
-> >
-> > -/* Schedule SCO */
-> > -static void hci_sched_sco(struct hci_dev *hdev)
-> > -{
-> > -     struct hci_conn *conn;
-> > -     struct sk_buff *skb;
-> > -     int quote;
-> > -
-> > -     BT_DBG("%s", hdev->name);
-> > -
-> > -     if (!hci_conn_num(hdev, SCO_LINK))
-> > -             return;
-> > -
-> > -     while (hdev->sco_cnt && (conn = hci_low_sent(hdev, SCO_LINK, &quote))) {
-> > -             while (quote-- && (skb = skb_dequeue(&conn->data_q))) {
-> > -                     BT_DBG("skb %p len %d", skb, skb->len);
-> > -                     hci_send_frame(hdev, skb);
-> > -
-> > -                     conn->sent++;
-> > -                     if (conn->sent == ~0)
-> > -                             conn->sent = 0;
-> > -             }
-> > -     }
-> > -}
-> > -
-> > -static void hci_sched_esco(struct hci_dev *hdev)
-> > -{
-> > -     struct hci_conn *conn;
-> > -     struct sk_buff *skb;
-> > -     int quote;
-> > -
-> > -     BT_DBG("%s", hdev->name);
-> > -
-> > -     if (!hci_conn_num(hdev, ESCO_LINK))
-> > -             return;
-> > -
-> > -     while (hdev->sco_cnt && (conn = hci_low_sent(hdev, ESCO_LINK,
-> > -                                                  &quote))) {
-> > -             while (quote-- && (skb = skb_dequeue(&conn->data_q))) {
-> > -                     BT_DBG("skb %p len %d", skb, skb->len);
-> > -                     hci_send_frame(hdev, skb);
-> > -
-> > -                     conn->sent++;
-> > -                     if (conn->sent == ~0)
-> > -                             conn->sent = 0;
-> > -             }
-> > -     }
-> > -}
-> > -
-> > static void hci_sched_le(struct hci_dev *hdev)
-> > {
-> >       struct hci_chan *chan;
-> > @@ -4436,6 +4445,9 @@ static void hci_sched_le(struct hci_dev *hdev)
-> >                       cnt--;
-> >                       chan->sent++;
-> >                       chan->conn->sent++;
-> > +
-> > +                     /* Send pending SCO packets right away */
-> > +                     hci_sched_sync(hdev);
->
-> Same as above. Just call the two functions.
+Maybe it's simpler to drop this patch for now and use 0 directly as
+before for now, after all in the last patch the comment is good enough
+for me to understand slot 0 is the default slot.
 
-Done
+Thanks,
 
->
-> >               }
-> >       }
-> >
-> > @@ -4458,9 +4470,8 @@ static void hci_tx_work(struct work_struct *work)
-> >
-> >       if (!hci_dev_test_flag(hdev, HCI_USER_CHANNEL)) {
-> >               /* Schedule queues and send stuff to HCI driver */
-> > +             hci_sched_sync(hdev);
-> >               hci_sched_acl(hdev);
-> > -             hci_sched_sco(hdev);
-> > -             hci_sched_esco(hdev);
-> >               hci_sched_le(hdev);
->
-> I would actually just move _le up after _acl and then keep _sco and _esco at the bottom. The calls here are just for the case there are no ACL nor LE packets.
+>  
+>  	return vm;
+>  }
+> -- 
+> 2.24.1
+> 
 
-Then we would send at least 1 ACL/LE packet before SCO even if there
-were SCO pending when we entered this function. I think it is still
-better to keep SCO/eSCO at the top.
+-- 
+Peter Xu
 
->
-> Regards
->
-> Marcel
->
