@@ -2,122 +2,152 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAEDC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD92C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A1082073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47CCA20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:45:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jOQyT2Hh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IjNaZRyR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgCWWi1 (ORCPT
+        id S1726987AbgCWWpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:38:27 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46126 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgCWWi0 (ORCPT
+        Mon, 23 Mar 2020 18:45:41 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44010 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbgCWWpl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 18:38:26 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 111so15180394oth.13
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 15:38:26 -0700 (PDT)
+        Mon, 23 Mar 2020 18:45:41 -0400
+Received: by mail-pf1-f195.google.com with SMTP id f206so8255283pfa.10
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 15:45:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gu80lHMEhTHjncO4g/gq1vFZP4xk7NOR08ZBWiLNNKo=;
-        b=jOQyT2HhWKETiqswng1tiRgCPcdF9YcWLzhqPU986HJUtdHE/mL6THRWTt/v4I6pHG
-         P603qVCd0pOoV+ZC7BgJaydSndeJC1obn8+MBb+SVYNnzSYr2GZ7aR5h3FYfIRa6xHhc
-         RYxRmdPMc4aVFu1QlxHyJpvctdV5fzrDU/DAdqNsDkbIhzodW5GhHPeUnV1jnl9uUKao
-         Vf1a6InlSlaPA0mrHfR9EpJunh382SD1wOcqsxpfJ2mOtw9lkxGNOui2F6VN9tatq6vU
-         sbR2ZqhSyy6BKVDoKNlZ40iGML0/6st7dKw9+lkq3hoeAnr9Pif4JvpvjibCq++9EZc8
-         YWdg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TtecznepabbAupu5OhOJc88aU0NaofKjnQBnVaXn4N0=;
+        b=IjNaZRyRYGMcE0x6dwwZkBtuw57R2TXwcrpUx9acHodEYtVrFi2TRISrhMH1zS6FXa
+         lhc2ZjvhReJVfj99jl6Ouimr/xKCRphxnaXm7MlXv16EnADSwT2syqhfllDVSRIzDYW8
+         KfspzlCde6336YXWInAYnEJWipEoiKWX3XL/xv6CT5huoO7/Rmm+wDlewDFSVaW734N8
+         afFeZ8eeVydh7pkemF5N7VASjgAubIYC5atJ/5AQXESzuXFciWhNMKAxNA0RYf1GVYUy
+         BkpGAYI2SqpAnbDSsKbR8biPgWYasibtetHE2JbS3XvfJz7/l5kirAu81G/8goa+5/mG
+         wIqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gu80lHMEhTHjncO4g/gq1vFZP4xk7NOR08ZBWiLNNKo=;
-        b=NG6Rfd3XXPKZVyaJRMYHcm3wfk/ZSLwHdUueA83+QfvjTBSj2gOVxJG8+KrTitcsG1
-         wrzbYqwDdDkpYAGnx9e8ky8aQN/aCQFvESwB+C4qH3WacsqvP91HxGMiiX7furGst8bn
-         ODR+ky/mDmzwIrClXR4QLESUwOjjCiol9+Jc8jUvPeiHvi5x4RyDNoPnJymwLm1KQNR4
-         Nu9BZzljR8yRFO6Ob6Pw/fOCB4cYVpZdCc9id7Q7AVccFehpP+vxa/brnW8DoweU7dKS
-         iUnCoaNtiiKjTFvWAKy/vZZ6FYmo9Z+atS5OMbiI+gjdlGpIOKme/rVnYHn0py7vpfih
-         MSIA==
-X-Gm-Message-State: ANhLgQ1KJQoCT/dqoCc3KFp1ohi7n7P7nsxTSYhwVA/v1MejIF7xeb6T
-        Hn7Aa3W9Og7KlC8Ic/Ty5XHhRpF+Sn0fUFKiR3s=
-X-Google-Smtp-Source: ADFU+vs6gYNhEuSaOtN3tbOtrPOFhNGCoZyD6ZzgKMo7ZKhWCTQ32v4pwuhGPfKBssy2QAI2ZOx3kjGVmfwlI3kk3mk=
-X-Received: by 2002:a9d:412:: with SMTP id 18mr19172704otc.134.1585003106203;
- Mon, 23 Mar 2020 15:38:26 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TtecznepabbAupu5OhOJc88aU0NaofKjnQBnVaXn4N0=;
+        b=Ih68tY1roopke9RzNMKELqzi6PBpK/2/P/utm3YdN7z+dz72eaA+unP5++tyneDjU+
+         rkTSX1vGkwPhS+B1OoGF2hHiLFoFx3Bl5ocF30hx3j/+7zbXqgWxESYYCSThs93tGwek
+         9D3Q0RCAwOxXFzRnN0lL6FT4kTSBygK1AihpyWoRAPoe4Owy3cJGygRFeUuD7p6uQQQB
+         gOsaHnlu4C/n59MSfhQd0rKX6tdPT4nv7sYFeOuBH4QnuwUrl93NJRS3JFDb3IZTBDe1
+         O9MPJDffWhdxA0VEMfM6q01A7wzT2KReAm4ssxc0AKFtKJBPB515ibrH/vMoA1qpAvw6
+         2RRQ==
+X-Gm-Message-State: ANhLgQ1JxPCjMdztZAjBxznxJx7LwU/HOb3wwleSTLyUj54COD+6YTJw
+        Xh8zOxKNfCTf7VVNfpGESeRrfQ==
+X-Google-Smtp-Source: ADFU+vvYPq6IkWolXCJyUIaTFdVYJTxdfEQvTVJCVUvN27Ti6d8m7eoCGv8VwrrCCv/bFy/UakGVPA==
+X-Received: by 2002:a63:fe58:: with SMTP id x24mr23348015pgj.170.1585003539852;
+        Mon, 23 Mar 2020 15:45:39 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id y9sm10286254pfo.135.2020.03.23.15.45.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 15:45:39 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 16:45:36 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/4] remoteproc: qcom: Introduce panic handler for PAS
+ and ADSP
+Message-ID: <20200323224536.GE30464@xps15>
+References: <20200310063817.3344712-1-bjorn.andersson@linaro.org>
+ <20200310063817.3344712-5-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-References: <CAP6exY+LnUXaOVRZUXmi2wajCPZoJVMFFAwbCzN3YywWyhi8ZA@mail.gmail.com>
- <D31718CF-1755-4846-8043-6E62D57E4937@zytor.com> <CAP6exYJHgqsNq84DCjgNP=nOjp1Aud9J5JAiEZMXe=+dtm-QGA@mail.gmail.com>
- <8E80838A-7A3F-4600-AF58-923EDA3DE91D@zytor.com> <CACdnJusmAHJYauKvHEXNZKaUWPqZoabB_pSn5WokSy_gOnRtTw@mail.gmail.com>
- <A814A71D-0450-4724-885B-859BCD2B7CBD@zytor.com> <CAP6exYJdCzG5EOPB9uaWz+uG-KKt+j7aJMGMfqqD3vthco_Y_g@mail.gmail.com>
- <CF1457CD-0BE2-4806-9703-E99146218BEC@zytor.com> <CAP6exYJj5n8tLibwnAPA554ax9gjUFvyMntCx4OYULUOknWQ0g@mail.gmail.com>
- <C2B3BE61-665A-47FD-87E0-BDB5C30CEFF4@zytor.com> <CAP6exY+avh0G3nuqbxJj2ZgKkRdvwGTKeWyazqXJHbp+X-2u+A@mail.gmail.com>
-In-Reply-To: <CAP6exY+avh0G3nuqbxJj2ZgKkRdvwGTKeWyazqXJHbp+X-2u+A@mail.gmail.com>
-From:   ron minnich <rminnich@gmail.com>
-Date:   Mon, 23 Mar 2020 15:38:15 -0700
-Message-ID: <CAP6exYLEg+iu4Hs0+vdk0b6rgB5ZT7ZTvuhe--biCg9dGbNCTQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] x86 support for the initrd= command line option
-To:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Matthew Garrett <mjg59@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
-        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310063817.3344712-5-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-nvm, it's only mentioned as a parameter for bootloaders.
+On Mon, Mar 09, 2020 at 11:38:17PM -0700, Bjorn Andersson wrote:
+> Make the PAS and ADSP/CDSP remoteproc drivers implement the panic
+> handler that will invoke a stop to prepare the remoteprocs for post
+> mortem debugging.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Change since v3:
+>  - Change return type to unsigned long
+> 
+>  drivers/remoteproc/qcom_q6v5_adsp.c | 8 ++++++++
+>  drivers/remoteproc/qcom_q6v5_pas.c  | 8 ++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
+> index d5cdff942535..8f1044e8ea3b 100644
+> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
+> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+> @@ -292,12 +292,20 @@ static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
+>  	return adsp->mem_region + offset;
+>  }
+>  
+> +static unsigned long adsp_panic(struct rproc *rproc)
+> +{
+> +	struct qcom_adsp *adsp = rproc->priv;
+> +
+> +	return qcom_q6v5_panic(&adsp->q6v5);
+> +}
+> +
+>  static const struct rproc_ops adsp_ops = {
+>  	.start = adsp_start,
+>  	.stop = adsp_stop,
+>  	.da_to_va = adsp_da_to_va,
+>  	.parse_fw = qcom_register_dump_segments,
+>  	.load = adsp_load,
+> +	.panic = adsp_panic,
+>  };
+>  
+>  static int adsp_init_clock(struct qcom_adsp *adsp, const char **clk_ids)
+> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+> index e64c268e6113..678c0ddfce96 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> @@ -243,12 +243,20 @@ static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
+>  	return adsp->mem_region + offset;
+>  }
+>  
+> +static unsigned long adsp_panic(struct rproc *rproc)
+> +{
+> +	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
 
-Testing this change now.
+Above rproc->priv is not casted but it is here... Not a problem, just
+consistency.
 
-On Mon, Mar 23, 2020 at 3:29 PM ron minnich <rminnich@gmail.com> wrote:
->
-> sounds good, I'm inclined to want to mention only initrdmem= in
-> Documentation? or just say initrd is discouraged or deprecated?
->
-> On Mon, Mar 23, 2020 at 2:41 PM <hpa@zytor.com> wrote:
-> >
-> > On March 23, 2020 12:40:15 PM PDT, ron minnich <rminnich@gmail.com> wrote:
-> > >I'm wondering -- adding initrdmem= is easy, do you think we'll ever be
-> > >able to end uses of initrd= in the ARM and MIPS world? Is it ok to
-> > >have these two identical command line parameters? I'm guessing just
-> > >changing initrd= would be hard.
-> > >
-> > >Do we just accept initrd= from this day forward, as well as initrdmem=?
-> > >
-> > >On Mon, Mar 23, 2020 at 12:06 PM <hpa@zytor.com> wrote:
-> > >>
-> > >> On March 23, 2020 11:54:28 AM PDT, ron minnich <rminnich@gmail.com>
-> > >wrote:
-> > >> >On Mon, Mar 23, 2020 at 11:19 AM <hpa@zytor.com> wrote:
-> > >> >> Pointing to any number of memory chunks via setup_data works and
-> > >> >doesn't need to be exposed to the user, but I guess the above is
-> > >> >reasonable.
-> > >> >
-> > >> >so, good to go?
-> > >> >
-> > >> >>
-> > >> >> *However*, I would also suggest adding "initrdmem=" across
-> > >> >architectures that doesn't have the ambiguity.
-> > >> >
-> > >> >agreed. I can look at doing that next.
-> > >> >
-> > >> >ron
-> > >>
-> > >> I would prefer if we could put both into the same patchset.
-> > >> --
-> > >> Sent from my Android device with K-9 Mail. Please excuse my brevity.
-> >
-> > Yes, accept both.
-> > --
-> > Sent from my Android device with K-9 Mail. Please excuse my brevity.
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
+> +
+> +	return qcom_q6v5_panic(&adsp->q6v5);
+> +}
+> +
+>  static const struct rproc_ops adsp_ops = {
+>  	.start = adsp_start,
+>  	.stop = adsp_stop,
+>  	.da_to_va = adsp_da_to_va,
+>  	.parse_fw = qcom_register_dump_segments,
+>  	.load = adsp_load,
+> +	.panic = adsp_panic,
+>  };
+>  
+>  static int adsp_init_clock(struct qcom_adsp *adsp)
+> -- 
+> 2.24.0
+> 
