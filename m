@@ -2,132 +2,118 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CD5C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1899C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45A9A20753
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:59:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B0qz0ebz"
+	by mail.kernel.org (Postfix) with ESMTP id A7C2020753
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:00:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585000838;
+	bh=/0FVKzFHqIhe63ISdXNoCbWC3FR+88Guj0g2rxFpzA8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yTgmy8FDaHSsnYbITBagJUFgChmO7NlYFLNbjueZfjzZ+HLmpjN2OGV5kVAWfSij0
+	 5c6+Xlx28s+lLj96nQfb/nPw5ruNMgYi7r2M3bSFWX/TDa/b2CguyMWw7BbN4wmzbr
+	 1icdvOZDruZyB5hBn92H9pDNhc4u/zcz1hxIVB54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgCWV7r (ORCPT
+        id S1727111AbgCWWAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 17:59:47 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:60005 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725990AbgCWV7r (ORCPT
+        Mon, 23 Mar 2020 18:00:37 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46209 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgCWWAh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 17:59:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585000785;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=nevpt0xLORfgoRN4dmNd6lQ6W3/5uqm6WozKz2sMmto=;
-        b=B0qz0ebzcWOB7Th9gsI4anemXL10br44f5hMtZoKI05CyFnYB2qeQSQRd4ChObRglFF1ye
-        hvlFzm+TGYDGgXcfweJXZU1AOyLtMOosLyM0Nwa6JQJHxoLoiMCPcQI69zieu2PR/BIbmH
-        ufTufq1k/8b6SDHKJhXSbCDlfpQdTcM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-477-asBjqoy4MDis8bsZ-K2iEQ-1; Mon, 23 Mar 2020 17:59:43 -0400
-X-MC-Unique: asBjqoy4MDis8bsZ-K2iEQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 669F1100550D;
-        Mon, 23 Mar 2020 21:59:42 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-14.ams2.redhat.com [10.36.112.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 05E8D19C6A;
-        Mon, 23 Mar 2020 21:59:40 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH resend] extcon: axp288: Add wakeup support
-Date:   Mon, 23 Mar 2020 22:59:39 +0100
-Message-Id: <20200323215939.79008-1-hdegoede@redhat.com>
+        Mon, 23 Mar 2020 18:00:37 -0400
+Received: by mail-il1-f195.google.com with SMTP id e8so14845445ilc.13;
+        Mon, 23 Mar 2020 15:00:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qFiwHqrhsKdbaQVzkW2fMkiFVAgwIM9ohgEmy5tZ2Xk=;
+        b=h2XaWn25BA8f6ZdtQT7HumjsgZtaP6yjerv0FBvcjkUiO162O/U8UWR7wttUhTeeWU
+         oqYnRtmybdIahgKbbX3/oJSjVv3YUXNh3xwcWzcqR/m8xygehiLopZDBq1jrAlbdIPCY
+         xHNeBep+J2sJNa9jseWm0Yiz9x5OBJV7g4kokMBx0sPHoCkqR4gvaThy8tY4lDJrQ8jL
+         0S/LPIDNuKTXDs43OCno432UayexhBI0CD+U98M+iPuf288pSCAm8hVgCkHTAMxd25Sv
+         tnTUu3MLCvrUwYwlag+nyW3YskBZZzVw/jgYE8J0mD/oJaKa0DiwkDEkGxRJwUcGrJRg
+         ly4g==
+X-Gm-Message-State: ANhLgQ0NJn3f7gG+rJpLxyGvxvG+zX7u6pcfAYa7hv2/Vbr+L6wvdoux
+        1DNmqlDcXFNEaoZMPOujcA==
+X-Google-Smtp-Source: ADFU+vtSXHZEpiLMs2FsMhDZIZ99EheK1oZfK6YT/nyh4eZQFkcY0AWh7hyF7JqjXt0YhfmzAA9P8Q==
+X-Received: by 2002:a92:ddcb:: with SMTP id d11mr23249377ilr.211.1585000835890;
+        Mon, 23 Mar 2020 15:00:35 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id m18sm5620099ila.54.2020.03.23.15.00.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 15:00:35 -0700 (PDT)
+Received: (nullmailer pid 10516 invoked by uid 1000);
+        Mon, 23 Mar 2020 22:00:33 -0000
+Date:   Mon, 23 Mar 2020 16:00:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com
+Subject: Re: [PATCH v3 1/4] dt-bindings: display: mediatek: add property to
+ control mipi tx drive current
+Message-ID: <20200323220033.GA29463@bogus>
+References: <20200311074032.119481-1-jitao.shi@mediatek.com>
+ <20200311074032.119481-2-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311074032.119481-2-jitao.shi@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On devices with an AXP288, we need to wakeup from suspend when a charger
-is plugged in, so that we can do charger-type detection and so that the
-axp288-charger driver, which listens for our extcon events, can configure
-the input-current-limit accordingly.
+On Wed, Mar 11, 2020 at 03:40:29PM +0800, Jitao Shi wrote:
+> Add a property to control mipi tx drive current:
+> "drive-strength-microamp"
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt     | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+> index a19a6cc375ed..d501f9ff4b1f 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+> @@ -33,6 +33,9 @@ Required properties:
+>  - #clock-cells: must be <0>;
+>  - #phy-cells: must be <0>.
+>  
+> +Optional properties:
+> +- drive-strength-microamp: adjust driving current, should be 1 ~ 0xF
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/extcon/extcon-axp288.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+TBC, 1-0xf is in units of microamps? So a max drive strength of 15uA? 
+Seems a bit low.
 
-diff --git a/drivers/extcon/extcon-axp288.c b/drivers/extcon/extcon-axp28=
-8.c
-index a7f216191493..710a3bb66e95 100644
---- a/drivers/extcon/extcon-axp288.c
-+++ b/drivers/extcon/extcon-axp288.c
-@@ -443,9 +443,40 @@ static int axp288_extcon_probe(struct platform_devic=
-e *pdev)
- 	/* Start charger cable type detection */
- 	axp288_extcon_enable(info);
-=20
-+	device_init_wakeup(dev, true);
-+	platform_set_drvdata(pdev, info);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused axp288_extcon_suspend(struct device *dev)
-+{
-+	struct axp288_extcon_info *info =3D dev_get_drvdata(dev);
-+
-+	if (device_may_wakeup(dev))
-+		enable_irq_wake(info->irq[VBUS_RISING_IRQ]);
-+
- 	return 0;
- }
-=20
-+static int __maybe_unused axp288_extcon_resume(struct device *dev)
-+{
-+	struct axp288_extcon_info *info =3D dev_get_drvdata(dev);
-+
-+	/*
-+	 * Wakeup when a charger is connected to do charger-type
-+	 * connection and generate an extcon event which makes the
-+	 * axp288 charger driver set the input current limit.
-+	 */
-+	if (device_may_wakeup(dev))
-+		disable_irq_wake(info->irq[VBUS_RISING_IRQ]);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(axp288_extcon_pm_ops, axp288_extcon_suspend,
-+			 axp288_extcon_resume);
-+
- static const struct platform_device_id axp288_extcon_table[] =3D {
- 	{ .name =3D "axp288_extcon" },
- 	{},
-@@ -457,6 +488,7 @@ static struct platform_driver axp288_extcon_driver =3D=
- {
- 	.id_table =3D axp288_extcon_table,
- 	.driver =3D {
- 		.name =3D "axp288_extcon",
-+		.pm =3D &axp288_extcon_pm_ops,
- 	},
- };
-=20
---=20
-2.26.0.rc2
-
+> +
+>  Example:
+>  
+>  mipi_tx0: mipi-dphy@10215000 {
+> @@ -42,6 +45,7 @@ mipi_tx0: mipi-dphy@10215000 {
+>  	clock-output-names = "mipi_tx0_pll";
+>  	#clock-cells = <0>;
+>  	#phy-cells = <0>;
+> +	drive-strength-microamp = <0x8>;
+>  };
+>  
+>  dsi0: dsi@1401b000 {
+> -- 
+> 2.21.0
