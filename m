@@ -2,147 +2,125 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EEDC1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A29C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A09DF2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07019206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="HPqpl9aR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KzeqrLYF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgCWBbE (ORCPT
+        id S1726976AbgCWBho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 21:31:04 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45739 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbgCWBbC (ORCPT
+        Sun, 22 Mar 2020 21:37:44 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:54006 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726951AbgCWBho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 21:31:02 -0400
-Received: by mail-qk1-f193.google.com with SMTP id c145so13687157qke.12
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 18:31:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qbZKelnf9av4oEdayiPkq2WIuUvuqILBE4whTz9Zy2k=;
-        b=HPqpl9aRL2IrrGwnAOvgDAi/cVDDDaGlZqNH/RHRtShz8vnbD0h7gid7z52XPaRGbX
-         XnyuJ9t9ds7SP5R4oV4L0ZFj23FgypcAaUZMUeGraJJzPdOdF4t7ju67lq/GCsmkTCUU
-         qE7OKB/zrZv39pb12o9DOvH70d7RRh6IGW7zs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qbZKelnf9av4oEdayiPkq2WIuUvuqILBE4whTz9Zy2k=;
-        b=DXaWy9p4aBbm9tc70sWI1lbZob/DWfZExRTWosj4/enXvUr89N8j1WhXJ7zu1I3qSb
-         A/FdGmaed/REi0bmXGWgpc9qzTmjFzWcmXZwM3MQ0qlJWfdZwdRcjU+s4rpnqS984Kag
-         pvqv6InG/sSvvYaKtCzoLxj9THz76ttbuCANqdv4RhkYD48EE/SNb+bLiwXqwHQFs2bQ
-         FEpciTNzhO+7+i7g1i+5D1Ub0uObG/nmf/OPvTZQE6JAhPF32G4gSlCOd+bCO3s2DX79
-         WH+SxFaG798t3js9j39Wt7ayGzeCztvVVOtfVZZLBlEGwkwcn6rcdudU/y4y0DlX0P0N
-         h+5Q==
-X-Gm-Message-State: ANhLgQ2hM9bx9UtHvJx/j29ZDdurZx8usshgewnCOtY7R2l9wDOYZLDL
-        tJ4+GCHy28Dt6j2TzUgonlEifQ==
-X-Google-Smtp-Source: ADFU+vvl/ceqkZSABdKNWG2+QDkHNSdEo2qVpqX7fZIzcLTum3BEMWl2hOTneYuMX9D2cX934TdQ0g==
-X-Received: by 2002:a37:cc1:: with SMTP id 184mr19167675qkm.430.1584927061435;
-        Sun, 22 Mar 2020 18:31:01 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id f26sm9918119qkl.119.2020.03.22.18.31.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2020 18:31:00 -0700 (PDT)
-Date:   Sun, 22 Mar 2020 21:31:00 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>, linux-arch@vger.kernel.org,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 2/3] LKMM: Add litmus test for RCU GP guarantee where
- reader stores
-Message-ID: <20200323013100.GA207949@google.com>
-References: <20200320165948.GB155212@google.com>
- <Pine.LNX.4.44L0.2003201643370.31761-100000@netrider.rowland.org>
- <20200320214432.GB129293@google.com>
- <20200321020501.GF105953@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+        Sun, 22 Mar 2020 21:37:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584927462;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tg3v//938qsYJhCGyEEV6MmGSlsR1D+MJVYdwSmyjYA=;
+        b=KzeqrLYFzZyomZ47IFhe9qw8kWrRbmO1boxa1ry1uhwcVNXkmpnXIJQ/HUYXRGlztsRaQX
+        dfkxjM59GzAA3UeHJ1l7G0W9HZ3PI4P/UreNR1G17broh9IolX9N8BF4EcoEHLomieO5ef
+        Ixi5x9CLeFo6znWRMI8uwy1UsjmwV+Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-245-zCMmMiyGN_qvBj5Mdzb_LQ-1; Sun, 22 Mar 2020 21:37:38 -0400
+X-MC-Unique: zCMmMiyGN_qvBj5Mdzb_LQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7F16800D4E;
+        Mon, 23 Mar 2020 01:37:35 +0000 (UTC)
+Received: from localhost (ovpn-12-35.pek2.redhat.com [10.72.12.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C114D19C4F;
+        Mon, 23 Mar 2020 01:37:34 +0000 (UTC)
+Date:   Mon, 23 Mar 2020 09:37:32 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, jhubbard@nvidia.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/memory: Drop pud_mknotpresent()
+Message-ID: <20200323013732.GC3039@MiWiFi-R3L-srv>
+References: <1584925542-13034-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200321020501.GF105953@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1584925542-13034-1-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 10:05:01AM +0800, Boqun Feng wrote:
-> On Fri, Mar 20, 2020 at 05:44:32PM -0400, Joel Fernandes wrote:
-> > On Fri, Mar 20, 2020 at 04:56:59PM -0400, Alan Stern wrote:
-> > > On Fri, 20 Mar 2020, Joel Fernandes wrote:
-> > > 
-> > > > On Fri, Mar 20, 2020 at 11:03:30AM -0400, Alan Stern wrote:
-> > > > > On Fri, 20 Mar 2020, Joel Fernandes (Google) wrote:
-> > > > > 
-> > > > > > This adds an example for the important RCU grace period guarantee, which
-> > > > > > shows an RCU reader can never span a grace period.
-> > > > > > 
-> > > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > > > ---
-> > > > > >  .../litmus-tests/RCU+sync+read.litmus         | 37 +++++++++++++++++++
-> > > > > >  1 file changed, 37 insertions(+)
-> > > > > >  create mode 100644 tools/memory-model/litmus-tests/RCU+sync+read.litmus
-> > > > > > 
-> > > > > > diff --git a/tools/memory-model/litmus-tests/RCU+sync+read.litmus b/tools/memory-model/litmus-tests/RCU+sync+read.litmus
-> > > > > > new file mode 100644
-> > > > > > index 0000000000000..73557772e2a32
-> > > > > > --- /dev/null
-> > > > > > +++ b/tools/memory-model/litmus-tests/RCU+sync+read.litmus
-> > > > > 
-> > > > > Do these new tests really belong here?  I thought we were adding a new 
-> > > > > directory under Documentation/ for litmus tests that illustrate parts 
-> > > > > of the LKMM or memory-barriers.txt.
-> > > > > 
-> > > > > By contrast, the tests under tools/memory-model are merely to show 
-> > > > > people what litmus tests look like and how they should be written.
-> > > > 
-> > > > I could add it to tools/memory-model/Documentation/ under a new
-> > > > 'examples' directory there. We could also create an 'rcu' directory in
-> > > > tools/memory-model/litmus-tests/ and add these there. Thoughts?
-> > > 
-> > > What happened was that about a month ago, Boqun Feng added
-> > > Documentation/atomic-tests for litmus tests related to handling of
-> > > atomic_t types (see
-> > > <https://marc.info/?l=linux-kernel&m=158276408609029&w=2>.)  Should we
-> > > interpose an extra directory level, making it
-> > > Documentation/litmus-tests/atomic?  Or
-> > > Documentation/LKMM-litmus-tests/atomic?
-> > > 
-> > > Then the new tests added here could go into
-> > > Documentation/litmus-tests/rcu, or whatever.
-> > 
-> > That's fine with me. Unless anyone objects, I will add to
-> > Documentation/litmus-tests/rcu and resend.
-> > 
+On 03/23/20 at 06:35am, Anshuman Khandual wrote:
+> There is an inconsistency between PMD and PUD based THP page table helpers
+> like the following, as pud_present() does not test for _PAGE_PSE.
 > 
-> Seems good to me, I will resend my patchset with the new directory. And
-> I assume in your patchset you will include the MAINTAINERS part for
-> adding Documentation/litmus-tests/ as a diretory watched by LKMM group?
-> In that case, I won't need to add any change to MAINTAINERS file in mine
-> and we won't have any conflict. ;-)
+> pmd_present(pmd_mknotpresent(pmd)) : True
+> pud_present(pud_mknotpresent(pud)) : False
+> 
+> This drops pud_mknotpresent() as there are no current users. If/when needed
+> back later, pud_present() will also have to fixed to accommodate _PAGE_PSE.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Dave Hansen <dave.hansen@intel.com>
+> Cc: Kirill A. Shutemov <kirill@shutemov.name>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: x86@kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> This has been build and boot tested on x86.
+> 
+> Changes in V2:
+> 
+> - Dropped pud_mknotpresent() instead per Kirill
+> 
+> Changes in V1: (https://patchwork.kernel.org/patch/11444529/)
+> 
+>  arch/x86/include/asm/pgtable.h | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+> index 7e118660bbd9..d74dc560e3ab 100644
+> --- a/arch/x86/include/asm/pgtable.h
+> +++ b/arch/x86/include/asm/pgtable.h
+> @@ -595,12 +595,6 @@ static inline pmd_t pmd_mknotpresent(pmd_t pmd)
+>  		      __pgprot(pmd_flags(pmd) & ~(_PAGE_PRESENT|_PAGE_PROTNONE)));
+>  }
+>  
+> -static inline pud_t pud_mknotpresent(pud_t pud)
+> -{
+> -	return pfn_pud(pud_pfn(pud),
+> -	      __pgprot(pud_flags(pud) & ~(_PAGE_PRESENT|_PAGE_PROTNONE)));
+> -}
+> -
+>  static inline u64 flip_protnone_guard(u64 oldval, u64 val, u64 mask);
+>  
+>  static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
 
-Yes, will add to MAINTAINERS so that you don't have to :) About to send my
-queue now.
-
-thanks,
-
- - Joel
+Reviewed-by: Baoquan He <bhe@redhat.com>
 
