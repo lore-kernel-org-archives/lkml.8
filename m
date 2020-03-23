@@ -2,120 +2,122 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C4AC54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 00:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907B1C4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69959206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 00:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A3AA206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 01:04:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HAHbS1QK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LD++SuMv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgCWAyA (ORCPT
+        id S1726962AbgCWBEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 20:54:00 -0400
-Received: from mail-eopbgr10054.outbound.protection.outlook.com ([40.107.1.54]:61590
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726944AbgCWAx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 20:53:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XM+PI0ns+onMxaiysl/ekhsD0Zh/6lfOZjpft/vN1ltrVh0FWfPHTrVtrZWbhjR0WVZGEVY5fYyzWFclRgFnzcR4uuvjuiMU1gQUZ6jf0+vqucSqMpDDxO6IOttESvRWzsdttf2JCMTSV8sC7a/Pbex2zHHCjGAl33kc5ye7UrM4GY4mD7fK+MuXRlN21aeKpK8cIBatgTou7S4zOYP1uCCTibwQbztVj/gZPnH8r+0inuS10J0FYk9aM+gPmdxwJoUeYWzPiIh0poqF6smB7xtb8i/uNLLBPIz5NDKbybbRjtCfWoBNp5ff+CJSW4sJrD/XGy1lphu/53gdyVL+Pw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4KkK+EmkBoC7F8OE7qiRiaa17cpY6i4iNhkFnq31aCs=;
- b=HAnZYbOsAglaYXyO8JF0jJaTNQneeWAn52aiRiuxLoL2IKub0GPtkIkTbznGGXgUsoGdDQgm4R363qmAU12nShbfumCpN1EqxdIp0lYPCBh8neBPAz8wtDSwW7oY+OyAdjT4z98RGrDDCncxgsHjCTJPgZ3kKBiLjHWuAcInsm55bUIEh5H7l75Q6P3htVy2jsn5G9tutzzcsIn/MpD/uD7bM57EN0Lgta5BNjXcLyzfxePnrfPpIKzm/BVCkKeRICKf+GZTLxDOE78u4Pp5eFLn+iAV3UzeMvG8CL8joLX7w2SPZfKJ+/c+egV5VPeTpf3PfQdpmEzFW+Dn+6QZ5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4KkK+EmkBoC7F8OE7qiRiaa17cpY6i4iNhkFnq31aCs=;
- b=HAHbS1QKOu4uY0YLTE+kXx/mlp1TXpA5yPTabhPn98vQGuebiSFuYeJdpuXT328SS2EKBZjzxl01nwaVGTvziltE78QH+id+xFf6TK9WuuJuGoZSR/1fAMFvfiKzDQTGICOEU+tM66M/UnIDEL6CM0YY/NvZtP1av0+aHZx/Ndc=
-Received: from AM7PR04MB7016.eurprd04.prod.outlook.com (52.135.58.214) by
- AM7PR04MB6853.eurprd04.prod.outlook.com (10.141.172.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.22; Mon, 23 Mar 2020 00:53:55 +0000
-Received: from AM7PR04MB7016.eurprd04.prod.outlook.com
- ([fe80::14c2:8800:1248:ddfa]) by AM7PR04MB7016.eurprd04.prod.outlook.com
- ([fe80::14c2:8800:1248:ddfa%7]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
- 00:53:54 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, Ran Wang <ran.wang_1@nxp.com>,
-        Biwen Li <biwen.li@nxp.com>
-Subject: RE: [EXT] Re: [PATCH] rtc: fsl-ftm-alarm: enable acpi support
-Thread-Topic: [EXT] Re: [PATCH] rtc: fsl-ftm-alarm: enable acpi support
-Thread-Index: AQHV/NDy5KYOzFGsuk+oAQT4bUQ7CKhVI5eAgAA9WTA=
-Date:   Mon, 23 Mar 2020 00:53:54 +0000
-Message-ID: <AM7PR04MB7016DC4509F3493856641EB1EDF00@AM7PR04MB7016.eurprd04.prod.outlook.com>
-References: <20200318025354.6447-1-peng.ma@nxp.com>
- <20200322211237.GD221863@piout.net>
-In-Reply-To: <20200322211237.GD221863@piout.net>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1d316825-9362-4596-b0ca-08d7cec4a985
-x-ms-traffictypediagnostic: AM7PR04MB6853:|AM7PR04MB6853:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM7PR04MB6853C951680DF515A101DCB1EDF00@AM7PR04MB6853.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2582;
-x-forefront-prvs: 0351D213B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(346002)(376002)(366004)(199004)(6506007)(55016002)(4744005)(186003)(8936002)(71200400001)(478600001)(33656002)(4326008)(86362001)(6916009)(45080400002)(54906003)(9686003)(316002)(7696005)(44832011)(5660300002)(26005)(52536014)(64756008)(66476007)(81156014)(2906002)(81166006)(66446008)(8676002)(76116006)(66556008)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM7PR04MB6853;H:AM7PR04MB7016.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +KaFDmOV6MIEImUEv5hzRGfTqUFRUZUiKGNMSd3EHl6imMC0e1M/thBvCV7UM+bLuZhYrviD7YsjfPsFNQf9tqvnDRjW5NRStuTQIv7nJipfO2bsqubldiA8qKw/ly1c1x6Ezy7KpMN5mh7iTYEvVuEqqh1XBawNWDTLDRwMFfFdQWNoaJcWRsFKtPXCmXWKcUM3NL9WOdIbDLDV4olEa+pDpZkj49qfv5WCOuHfMa9MiXK8S3NYDNqcxrtP58+UPtqkYjt/WpKX6tEjdXaZw+Du4hiFNVA5raX4MIE7/L7/Fwi8lD4M2Th41jlh4KedXIY8vaLDqFwqYJEyg0BsKbQ2MvCtfqnVb/POdmyngxqjSZTJdjikAXAPMmEq4jiXI5zXiM3eZhRKDwqgA7ny2zXZ5obpcEd0xAbwkLcB84hWDqoiTXQfJSRNabAQYhXOiReqA4BwJIvaGMKsnzp5bpwg2EJmMYD5hqSdQjGX5/8=
-x-ms-exchange-antispam-messagedata: Ri5ErkEhawyAQY8e8cgXuv3zkEI7/NBoziIUWKaQr+8MG7WEnpWSB4ldbLyMh70lJr+SJ1KfukaVi1I2/4/VjlxbHpx2Ih5sXYf25M6xLwK5NHLUmxisJljx+eOSMcY6XVl4R/H4Snr6LlL+TcKIJA==
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Sun, 22 Mar 2020 21:04:45 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:58163 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726916AbgCWBEp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 21:04:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584925483;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aG1HR6vnX9d/puzieVgxoR5+qeHzgld0YjOlInXM12g=;
+        b=LD++SuMv10RwYBDj1gQIezbJWyURhrso8rcrcNwZmBJcTC454eEXcY+duP3bQmGd0vIzJD
+        wTj/6PwpTmRYPsgwbTMU1hbVJSIiXD0SQNrutBXVSC+crVAsXoe8ISLcPXIwn7P15GzE9S
+        ba0aLQoG/D8Nz9TEZBdjq+2M/un9cFU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-339-gkMjLTdKPYCXVIHRwbB7lA-1; Sun, 22 Mar 2020 21:04:40 -0400
+X-MC-Unique: gkMjLTdKPYCXVIHRwbB7lA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25360107ACCC;
+        Mon, 23 Mar 2020 01:04:38 +0000 (UTC)
+Received: from elisabeth (unknown [10.40.208.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E23960BF1;
+        Mon, 23 Mar 2020 01:04:33 +0000 (UTC)
+Date:   Mon, 23 Mar 2020 02:04:25 +0100
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     Shreeya Patel <shreeya.patel23498@gmail.com>
+Cc:     Joe Perches <joe@perches.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
+Subject: Re: [Outreachy kernel] [PATCH 01/11] Staging: rtl8188eu: hal_com:
+ Add space around operators
+Message-ID: <20200323020425.62dbeebb@elisabeth>
+In-Reply-To: <f2b4f7f38a8a490ffc917f7199099ac95656c8c2.camel@gmail.com>
+References: <cover.1584826154.git.shreeya.patel23498@gmail.com>
+        <19950c71482b3be0dd9518398af85e964f3b66b1.1584826154.git.shreeya.patel23498@gmail.com>
+        <20200322112744.GC75383@kroah.com>
+        <e40d49aaa96a61019804255c2990d229b2eef7dc.camel@perches.com>
+        <f2b4f7f38a8a490ffc917f7199099ac95656c8c2.camel@gmail.com>
+Organization: Red Hat
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d316825-9362-4596-b0ca-08d7cec4a985
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2020 00:53:54.7684
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: afJvYy1UghC0sdoUMIq6waju8o3Neg4Aa1TwUVA806VIWKGBOd2LpJLh33a46DPL
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6853
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWxleGFuZHJlLA0KDQpPSywgR290IGl0Lg0KVGhhbmtzIHZlcnkgbXVjaC4NCg0KQmVzdCBS
-ZWdhcmRzLA0KUGVuZw0KPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQWxleGFu
-ZHJlIEJlbGxvbmkgPGFsZXhhbmRyZS5iZWxsb25pQGJvb3RsaW4uY29tPg0KPlNlbnQ6IDIwMjDE
-6jPUwjIzyNUgNToxMw0KPlRvOiBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+DQo+Q2M6IGEuenVt
-bW9AdG93ZXJ0ZWNoLml0OyBsaW51eC1ydGNAdmdlci5rZXJuZWwub3JnOw0KPmxpbnV4LWtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgUmFuIFdhbmcN
-Cj48cmFuLndhbmdfMUBueHAuY29tPjsgQml3ZW4gTGkgPGJpd2VuLmxpQG54cC5jb20+DQo+U3Vi
-amVjdDogW0VYVF0gUmU6IFtQQVRDSF0gcnRjOiBmc2wtZnRtLWFsYXJtOiBlbmFibGUgYWNwaSBz
-dXBwb3J0DQo+DQo+Q2F1dGlvbjogRVhUIEVtYWlsDQo+DQo+T24gMTgvMDMvMjAyMCAxMDo1Mzo1
-NCswODAwLCBQZW5nIE1hIHdyb3RlOg0KPj4gVGhpcyBwYXRjaCBlbmFibGVzIEFDUEkgc3VwcG9y
-dCBpbiBSdGMgRmxleCB0aW1lciBkcml2ZXIuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogUGVuZyBN
-YSA8cGVuZy5tYUBueHAuY29tPg0KPj4gLS0tDQo+PiAgZHJpdmVycy9ydGMvcnRjLWZzbC1mdG0t
-YWxhcm0uYyB8IDIwICsrKysrKysrKysrKysrKy0tLS0tDQo+PiAgMSBmaWxlIGNoYW5nZWQsIDE1
-IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+Pg0KPkFwcGxpZWQsIHRoYW5rcy4NCj4N
-Cj4tLQ0KPkFsZXhhbmRyZSBCZWxsb25pLCBCb290bGluDQo+RW1iZWRkZWQgTGludXggYW5kIEtl
-cm5lbCBlbmdpbmVlcmluZw0KPmh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0
-bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmJvb3RsaW4uYw0KPm9tJmFtcDtkYXRhPTAyJTdD
-MDElN0NwZW5nLm1hJTQwbnhwLmNvbSU3Q2RlODYyZjg1NTZlNTQ0MGM5ZGNmMA0KPjhkN2NlYTVj
-MGIzJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNzIwNTAN
-Cj44MzYwNDYwOTE1NiZhbXA7c2RhdGE9Y04lMkJWY2dkMUdaY3FLdDNReDdUNnYzJTJGcSUyRndQ
-WElaUHlVRHg5DQo+dnRvWWR0SSUzRCZhbXA7cmVzZXJ2ZWQ9MA0K
+Hi Shreeya,
+
+On Mon, 23 Mar 2020 04:48:08 +0530
+Shreeya Patel <shreeya.patel23498@gmail.com> wrote:
+
+> On Sun, 2020-03-22 at 08:09 -0700, Joe Perches wrote:
+> > On Sun, 2020-03-22 at 12:27 +0100, Greg KH wrote:  
+> 
+> Hi Greg and Joe,
+> 
+> > > On Sun, Mar 22, 2020 at 03:51:13AM +0530, Shreeya Patel wrote:  
+> > > > Add space around operators for improving the code
+> > > > readability.
+> > > > Reported by checkpatch.pl
+> > > > 
+> > > > git diff -w shows no difference.
+> > > > diff of the .o files before and after the changes shows no
+> > > > difference.  
+> > > 
+> > > There is no need to have these two lines on every changelog comment
+> > > in
+> > > this series :(  
+> >   
+> Yes I get that.
+> 
+> > In my opinion, there's no need for a series here.
+> > 
+> > Whitespace only changes _should_ be done all at once.
+> > 
+> > Whitespace changes _could_ have changed string constants.
+> > 
+> > So noting that the patch in only whitespace and that
+> > there isn't a difference in object files is useful as
+> > it shows any change has been compiled and tested.
+> >   
+> 
+> Joe, I feel the same thing, there is no need of a patch series
+> for it but I was given a suggestion that it becomes difficult for the
+> reviewers to review the patch so it is good to send a patchset instead.
+
+In this case, reviewing the 224 lines you're touching in one shot feels
+the same as reviewing them over 11 patches, as the change is always of
+the same type. Maybe a single patch is actually even a bit quicker to
+review.
+
+Are you sure the suggestion was referring to this, and it wasn't about
+different type of changes in the same patch?
+
+-- 
+Stefano
+
