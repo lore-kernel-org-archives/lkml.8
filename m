@@ -2,200 +2,169 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD07C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCDCC54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECAD7206F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:38:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YCB0w4xV"
+	by mail.kernel.org (Postfix) with ESMTP id 5CD28206F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 03:43:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbgCWDi1 (ORCPT
+        id S1727149AbgCWDnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 23:38:27 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37435 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726979AbgCWDi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 23:38:26 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48m0TV55Kkz9sR4;
-        Mon, 23 Mar 2020 14:38:22 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584934703;
-        bh=uPCNoVEw+QAUy93lHSU8pF9nTZf1T0t1eG2TShFgHs8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=YCB0w4xVdG5QzA+Q8SlpD+JA4Q//qAbKYOqM87LOUhrlXiIJV1l+7B5OlKBKuFZSe
-         RuUvIOFnYJ0XC7qZSQk3vZ5wegG6rxqCizZnOufjl3HIJ06QXmjX6R1uoEpTyPQ3vj
-         lhHR/PsBJATIOkLNzaq25IKPt+oonLdHtLz+tBj70bAWsAt5W5tjuxcaRKiHA7CANT
-         7m9qYQJkCtFsHpCCl+gqEWoNvHDgr7JvAwOBq89Wn3dV02oIXsRuasdsYo2xOP5TNc
-         10PZwFgnNtxJwM2UKGN873OvGVPJxpNlIERcFvaNRvfOEjTl3FioByytyoiqVZkXez
-         DeKAVXbWyBw/A==
-Date:   Mon, 23 Mar 2020 14:38:16 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: linux-next: manual merge of the driver-core tree with the
- drivers-x86 tree
-Message-ID: <20200323143816.345b3d54@canb.auug.org.au>
+        Sun, 22 Mar 2020 23:43:21 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50272 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726979AbgCWDnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Mar 2020 23:43:21 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 72D3B7BDC1BD720A4460;
+        Mon, 23 Mar 2020 11:43:16 +0800 (CST)
+Received: from [10.173.228.124] (10.173.228.124) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 23 Mar
+ 2020 11:43:10 +0800
+Subject: Re: [PATCH v2] mm/hugetlb: fix a addressing exception caused by
+ huge_pte_offset()
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+CC:     <akpm@linux-foundation.org>, <kirill.shutemov@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>, <arei.gonglei@huawei.com>,
+        <weidong.huang@huawei.com>, <weifuqiang@huawei.com>,
+        <kvm@vger.kernel.org>, <linux-mm@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>,
+        <stable@vger.kernel.org>
+References: <1582342427-230392-1-git-send-email-longpeng2@huawei.com>
+ <51a25d55-de49-4c0a-c994-bf1a8cfc8638@oracle.com>
+ <5700f44e-9df9-1b12-bc29-68e0463c2860@huawei.com>
+ <e16fe81b-5c4c-e689-2f48-214f2025df2f@oracle.com>
+From:   "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
+        <longpeng2@huawei.com>
+Message-ID: <e5ee0ed4-6af6-27af-1a0c-6eab3727768a@huawei.com>
+Date:   Mon, 23 Mar 2020 11:43:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/soBEOiYHNlehT2faRHoYIpf";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <e16fe81b-5c4c-e689-2f48-214f2025df2f@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.228.124]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/soBEOiYHNlehT2faRHoYIpf
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the driver-core tree got a conflict in:
+On 2020/3/23 10:54, Mike Kravetz wrote:
+> On 3/22/20 7:03 PM, Longpeng (Mike, Cloud Infrastructure Service Product Dept.) wrote:
+>>
+>>
+>> On 2020/3/22 7:38, Mike Kravetz wrote:
+>>> On 2/21/20 7:33 PM, Longpeng(Mike) wrote:
+>>>> From: Longpeng <longpeng2@huawei.com>
+>>>>
+>>>> Our machine encountered a panic(addressing exception) after run
+>>>> for a long time and the calltrace is:
 
-  drivers/platform/x86/Kconfig
+[snip]
 
-between commit:
+>>>>
+>>>> We can avoid this race by read the pud only once. What's more, we also use
+>>>> READ_ONCE to access the entries for safe(e.g. avoid the compilier mischief)
+>>>>
+>>>> Cc: Matthew Wilcox <willy@infradead.org>
+>>>> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+>>>> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+>>>> Cc: stable@vger.kernel.org
+>>>> Signed-off-by: Longpeng <longpeng2@huawei.com>
+>>>
+>>> Andrew dropped this patch from his tree which caused me to go back and
+>>> look at the status of this patch/issue.
+>>>
+>>> It is pretty obvious that code in the current huge_pte_offset routine
+>>> is racy.  I checked out the assembly code produced by my compiler and
+>>> verified that the line,
+>>>
+>>> 	if (pud_huge(*pud) || !pud_present(*pud))
+>>>
+>>> does actually dereference *pud twice.  So, the value could change between
+>>> those two dereferences.   Longpeng (Mike) could easlily recreate the issue
+>>> if he put a delay between the two dereferences.  I believe the only
+>>> reservations/concerns about the patch below was the use of READ_ONCE().
+>>> Is that correct?
+>>>
+>> Hi Mike,
+>>
+>> It seems I've missed your another mail in my client, I found it here
+>> (https://lkml.org/lkml/2020/2/27/1927) just now.
+>>
+>> I think we have reached an agreement that the pud/pmd need READ_ONCE in
+>> huge_pte_offset() and disagreement is whether the pgd/p4d also need READ_ONCE,
+>> right ?
+> 
+> Correct.
+> 
+> Sorry, I did not reply to the mail thread with more context.
+> 
+>>> Are there any objections to the patch if the READ_ONCE() calls are removed?
+>>>
+>> Because the pgd/p4g are only accessed and dereferenced once here, so some guys
+>> want to remove it.
+>>
+>> But we must make sure they are *really* accessed once, in other words, this
+>> makes we need to care about both the implementation of pgd_present/p4d_present
+>> and the behavior of any compiler, for example:
+>>
+>> '''
+>> static inline int func(int val)
+>> {
+>>     return subfunc1(val) & subfunc2(val);
+>> }
+>>
+>> func(*p); // int *p
+>> '''
+>> We must make sure there's no strange compiler to generate an assemble code that
+>> access and dereference 'p' more than once.
+>>
+>> I've not found any backwards with READ_ONCE here. However, if you also agree to
+>> remove READ_ONCE around pgd/p4d, I'll do.
+>>
+> 
+> I would like to remove the READ_ONCE calls and move the patch forward.  It
+> does address a real issue you are seeing.
+> 
+> To be honest, I am more worried about the races in lookup_address_in_pgd()
+> than using or not using READ_ONCE for  pgd/p4d in this patch.
+> 
+I had the same worry, we've discussed in another thread
+(https://lkml.org/lkml/2020/2/20/1182) where I asked you `Is it possible the pud
+changes from pud_huge() to pud_none() while another CPU is walking the
+pagetable` and you thought it's possible.
+The reason why I didn't do something in lookup_address_in_pgd together is just
+because I haven't went into trouble caused by it yet.
 
-  45a3d578f2ed ("platform/x86: Kconfig: Group modules by companies and func=
-tions")
+> I have not looked closely at the generated code for lookup_address_in_pgd.
+> It appears that it would dereference p4d, pud and pmd multiple times.  Sean
+> seemed to think there was something about the calling context that would
+> make issues like those seen with huge_pte_offset less likely to happen.  I
+> do not know if this is accurate or not.
+> 
+> Let's remove the two READ_ONCE calls and move this patch forward.  We can
+> look closer at lookup_address_in_pgd and generate another patch if that needs
+> to be fixed as well.
+> 
+OK, I'll remove them in v3.
 
-from the drivers-x86 tree and commit:
+I'll do some fault injection or add some delays in lookup_address_in_pgd to test
+if it can work well.
 
-  835e1b86ef8c ("platform/x86: touchscreen_dmi: Add EFI embedded firmware i=
-nfo support")
+> Thanks
+> 
 
-from the driver-core tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/platform/x86/Kconfig
-index ae75b19e8649,cd9e2758c479..000000000000
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@@ -1134,46 -978,54 +1134,47 @@@ config TOPSTAR_LAPTO
-  	depends on ACPI
-  	depends on INPUT
-  	select INPUT_SPARSEKMAP
- -	help
- -	  This driver provides support for the Intel Virtual Button interface.
- -	  Some laptops require this driver for power button support.
- -
- -	  To compile this driver as a module, choose M here: the module will
- -	  be called intel_vbtn.
- -
- -config INTEL_SCU_IPC
- -	bool "Intel SCU IPC Support"
- -	depends on X86_INTEL_MID
- -	default y
- +	select LEDS_CLASS
- +	select NEW_LEDS
-  	---help---
- -	  IPC is used to bridge the communications between kernel and SCU on
- -	  some embedded Intel x86 platforms. This is not needed for PC-type
- -	  machines.
- +	  This driver adds support for hotkeys found on Topstar laptops.
- =20
- -config INTEL_SCU_IPC_UTIL
- -	tristate "Intel SCU IPC utility driver"
- -	depends on INTEL_SCU_IPC
- -	---help---
- -	  The IPC Util driver provides an interface with the SCU enabling
- -	  low level access for debug work and updating the firmware. Say
- -	  N unless you will be doing this on an Intel MID platform.
- +	  If you have a Topstar laptop, say Y or M here.
- =20
- -config INTEL_MID_POWER_BUTTON
- -	tristate "power button driver for Intel MID platforms"
- -	depends on INTEL_SCU_IPC && INPUT
- +config I2C_MULTI_INSTANTIATE
- +	tristate "I2C multi instantiate pseudo device driver"
- +	depends on I2C && ACPI
-  	help
- -	  This driver handles the power button on the Intel MID platforms.
- +	  Some ACPI-based systems list multiple i2c-devices in a single ACPI
- +	  firmware-node. This driver will instantiate separate i2c-clients
- +	  for each device in the firmware-node.
- =20
- -	  If unsure, say N.
- +	  To compile this driver as a module, choose M here: the module
- +	  will be called i2c-multi-instantiate.
- =20
- -config INTEL_MFLD_THERMAL
- -       tristate "Thermal driver for Intel Medfield platform"
- -       depends on MFD_INTEL_MSIC && THERMAL
- -       help
- -         Say Y here to enable thermal driver support for the  Intel Medfi=
-eld
- -         platform.
- +config MLX_PLATFORM
- +	tristate "Mellanox Technologies platform support"
- +	depends on I2C && REGMAP
- +	---help---
- +	  This option enables system support for the Mellanox Technologies
- +	  platform. The Mellanox systems provide data center networking
- +	  solutions based on Virtual Protocol Interconnect (VPI) technology
- +	  enable seamless connectivity to 56/100Gb/s InfiniBand or 10/40/56GbE
- +	  connection.
- =20
- -config INTEL_IPS
- -	tristate "Intel Intelligent Power Sharing"
- -	depends on ACPI && PCI
- +	  If you have a Mellanox system, say Y or M here.
- +
- +config TOUCHSCREEN_DMI
- +	bool "DMI based touchscreen configuration info"
- +	depends on ACPI && DMI && I2C=3Dy && TOUCHSCREEN_SILEAD
-++	select EFI_EMBEDDED_FIRMWARE if EFI
-  	---help---
- -	  Intel Calpella platforms support dynamic power sharing between the
- -	  CPU and GPU, maximizing performance in a given TDP.  This driver,
- -	  along with the CPU frequency and i915 drivers, provides that
- -	  functionality.  If in doubt, say Y here; it will only load on
- -	  supported platforms.
- +	  Certain ACPI based tablets with e.g. Silead or Chipone touchscreens
- +	  do not have enough data in ACPI tables for the touchscreen driver to
- +	  handle the touchscreen properly, as OEMs expect the data to be baked
- +	  into the tablet model specific version of the driver shipped with the
- +	  the OS-image for the device. This option supplies the missing info.
- +	  Enable this for x86 tablets with Silead or Chipone touchscreens.
- =20
-  config INTEL_IMR
-  	bool "Intel Isolated Memory Region support"
-
---Sig_/soBEOiYHNlehT2faRHoYIpf
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl54LykACgkQAVBC80lX
-0GzxtQf+JK3ShCaIYV88xyxISKZVa76jagYjeFTU3hdgMR8H94jX3ui4NV3ZcmEI
-iQxykJ/XPw2KRF6YJ/BaCEdc3zX+ECXWu5V7xDzVPK84z79nN107Vy5khJbu0hmZ
-qERT1FjIVAgw8RUTqma6sO9AebpUKlNaHpFA+Z0VPzpXvJ0X5cI7jUm6mdHiBEQX
-5+CUgSmdV16SQq48X09WcRGs1Bp6ZbeHKwcWTt73hqOab3gnva85Ql9FaV2lscuy
-WFl6+zlmPh07V7yJdgXRXFR5aiueMNVtT3MTq1nhI1P6bv38boMY9ilr9m9JWIxe
-shCJeQ9+y/SvtBvw1eF8UL7oIYOmxg==
-=F02p
------END PGP SIGNATURE-----
-
---Sig_/soBEOiYHNlehT2faRHoYIpf--
+---
+Regards,
+Longpeng(Mike)
