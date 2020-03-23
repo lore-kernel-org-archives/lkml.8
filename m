@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBCCC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B833C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D21720753
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA3D206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:10:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgCWVKk (ORCPT
+        id S1727091AbgCWVKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 17:10:40 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40470 "EHLO
+        Mon, 23 Mar 2020 17:10:46 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40486 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgCWVKk (ORCPT
+        with ESMTP id S1726177AbgCWVKp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 17:10:40 -0400
+        Mon, 23 Mar 2020 17:10:45 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: ezequiel)
-        with ESMTPSA id 527E2296003
+        with ESMTPSA id A5D79296002
 From:   Ezequiel Garcia <ezequiel@collabora.com>
 To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Tomasz Figa <tfiga@chromium.org>,
@@ -36,9 +36,9 @@ Cc:     Tomasz Figa <tfiga@chromium.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Helen Koike <helen.koike@collabora.com>,
         Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH 1/2] media: Allow to enable the media controller API unconditionally
-Date:   Mon, 23 Mar 2020 18:10:21 -0300
-Message-Id: <20200323211022.28297-2-ezequiel@collabora.com>
+Subject: [PATCH 2/2] media: Remove VIDEO_DEV unneeded dependency
+Date:   Mon, 23 Mar 2020 18:10:22 -0300
+Message-Id: <20200323211022.28297-3-ezequiel@collabora.com>
 X-Mailer: git-send-email 2.26.0.rc2
 In-Reply-To: <20200323211022.28297-1-ezequiel@collabora.com>
 References: <20200323211022.28297-1-ezequiel@collabora.com>
@@ -49,29 +49,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to enable stateless codec drivers, such as cedrus
-and hantro, the media controller API needs to be visible.
-
-Remove the dependency on the support intermediate
-configuration in order to allow this.
+Enable VIDEO_DEV (which compiles Video4Linux core)
+when MEDIA_SUPPORT is selected. This is needed, in order
+to be able to enable devices such as stateless codecs.
 
 Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 ---
- drivers/media/mc/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/media/Kconfig | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/media/mc/Kconfig b/drivers/media/mc/Kconfig
-index 3b9795cfcb36..9382e35211ca 100644
---- a/drivers/media/mc/Kconfig
-+++ b/drivers/media/mc/Kconfig
-@@ -5,7 +5,6 @@
+diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
+index b36a41332867..7de472ad07a2 100644
+--- a/drivers/media/Kconfig
++++ b/drivers/media/Kconfig
+@@ -93,13 +93,11 @@ source "drivers/media/mc/Kconfig"
  
- config MEDIA_CONTROLLER
- 	bool "Media Controller API"
--	depends on MEDIA_CAMERA_SUPPORT || MEDIA_ANALOG_TV_SUPPORT || MEDIA_DIGITAL_TV_SUPPORT
- 	help
- 	  Enable the media controller API used to query media devices internal
- 	  topology and configure it dynamically.
+ #
+ # Video4Linux support
+-#	Only enables if one of the V4L2 types (ATV, webcam, radio) is selected
+ #
+ 
+ config VIDEO_DEV
+ 	tristate
+ 	depends on MEDIA_SUPPORT
+-	depends on MEDIA_CAMERA_SUPPORT || MEDIA_ANALOG_TV_SUPPORT || MEDIA_RADIO_SUPPORT || MEDIA_SDR_SUPPORT
+ 	default y
+ 
+ config VIDEO_V4L2_SUBDEV_API
 -- 
 2.26.0.rc2
 
