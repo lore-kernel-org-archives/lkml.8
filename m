@@ -2,187 +2,131 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7013BC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D11FFC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA0020409
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:42:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cvJJur4G"
+	by mail.kernel.org (Postfix) with ESMTP id AE65E20409
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:42:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbgCWPmM (ORCPT
+        id S1727421AbgCWPmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:42:12 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:44600 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727270AbgCWPmM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:42:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584978130;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=X2aDqCcSfB/xh/vKuPI7ZlBqpkn3r4YZxQ0+rlPhEEI=;
-        b=cvJJur4GLJrkJMsUNwajJQT+AA3jfc1zYBTxUiWt17Db8SBjegQq/3Elt2LNQSqYfmyXOo
-        QTLZsitFXhZYBMK0pl9WRg2zDXzPdrDpP0Jfpce7+2xRAY+uQNtexg85q3wGvGbsnsufFd
-        kw372mQsogb13ZBelXWlnEs7AmGBT/s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-285-9WCHLGyOPG-VWuxUZDIHKA-1; Mon, 23 Mar 2020 11:42:05 -0400
-X-MC-Unique: 9WCHLGyOPG-VWuxUZDIHKA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 772E6800D50;
-        Mon, 23 Mar 2020 15:42:04 +0000 (UTC)
-Received: from optiplex-lnx (unknown [10.33.36.220])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 999D65C1B2;
-        Mon, 23 Mar 2020 15:42:02 +0000 (UTC)
-Date:   Mon, 23 Mar 2020 11:41:59 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org
-Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
- false-negative errors
-Message-ID: <20200323154159.GF23364@optiplex-lnx>
-References: <20200322013525.1095493-1-aquini@redhat.com>
- <20200321184352.826d3dba38aecc4ff7b32e72@linux-foundation.org>
- <20200322020326.GB1068248@t490s>
- <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
- <CALvZod7LiMiK1JtfdvvU3W36cGSUKhhKf6dMZpsNZv6nMiJ5=g@mail.gmail.com>
- <20200323075208.GC7524@dhcp22.suse.cz>
- <20200323144240.GB23364@optiplex-lnx>
- <20200323145106.GM7524@dhcp22.suse.cz>
- <20200323150259.GD23364@optiplex-lnx>
- <20200323151256.GP7524@dhcp22.suse.cz>
+        Mon, 23 Mar 2020 11:42:18 -0400
+Received: from mga02.intel.com ([134.134.136.20]:30555 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727389AbgCWPmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:42:18 -0400
+IronPort-SDR: NM4VjdK2iMCWrP2Fsi3492YkWv83ukvKmKYbb+peY/nOS/4BdY1i1L7f112k7S1c2Rm3blIDEZ
+ Aby48UkdxAPg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 08:42:17 -0700
+IronPort-SDR: +ids7V//oUP2Cg9ZK/lGG9GXZcBrYFVISXehY99PjtBSEXzqTBFsjQ0F/0+Ygpc5YdPQeMHIuM
+ uc5K0RM/INug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,296,1580803200"; 
+   d="scan'208";a="445854315"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 23 Mar 2020 08:42:16 -0700
+Date:   Mon, 23 Mar 2020 08:42:16 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v7 03/14] KVM: X86: Don't track dirty for
+ KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
+Message-ID: <20200323154216.GG28711@linux.intel.com>
+References: <20200318163720.93929-1-peterx@redhat.com>
+ <20200318163720.93929-4-peterx@redhat.com>
+ <20200321192211.GC13851@linux.intel.com>
+ <20200323145824.GI127076@xz-x1>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200323151256.GP7524@dhcp22.suse.cz>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200323145824.GI127076@xz-x1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 04:12:56PM +0100, Michal Hocko wrote:
-> On Mon 23-03-20 11:02:59, Rafael Aquini wrote:
-> > On Mon, Mar 23, 2020 at 03:51:06PM +0100, Michal Hocko wrote:
-> > > On Mon 23-03-20 10:42:40, Rafael Aquini wrote:
-> > > > On Mon, Mar 23, 2020 at 08:52:08AM +0100, Michal Hocko wrote:
-> > > > > On Sun 22-03-20 09:36:49, Shakeel Butt wrote:
-> > > > > > On Sat, Mar 21, 2020 at 9:31 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > > > > > >
-> > > > > > > On Sat, 21 Mar 2020 22:03:26 -0400 Rafael Aquini <aquini@redhat.com> wrote:
-> > > > > > >
-> > > > > > > > > > + * In order to sort out that race, and get the after fault checks consistent,
-> > > > > > > > > > + * the "quick and dirty" trick below is required in order to force a call to
-> > > > > > > > > > + * lru_add_drain_all() to get the recently MLOCK_ONFAULT pages moved to
-> > > > > > > > > > + * the unevictable LRU, as expected by the checks in this selftest.
-> > > > > > > > > > + */
-> > > > > > > > > > +static void force_lru_add_drain_all(void)
-> > > > > > > > > > +{
-> > > > > > > > > > + sched_yield();
-> > > > > > > > > > + system("echo 1 > /proc/sys/vm/compact_memory");
-> > > > > > > > > > +}
-> > > > > > > > >
-> > > > > > > > > What is the sched_yield() for?
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > Mostly it's there to provide a sleeping gap after the fault, whithout
-> > > > > > > > actually adding an arbitrary value with usleep().
-> > > > > > > >
-> > > > > > > > It's not a hard requirement, but, in some of the tests I performed
-> > > > > > > > (whithout that sleeping gap) I would still see around 1% chance
-> > > > > > > > of hitting the false-negative. After adding it I could not hit
-> > > > > > > > the issue anymore.
-> > > > > > >
-> > > > > > > It's concerning that such deep machinery as pagevec draining is visible
-> > > > > > > to userspace.
-> > > > > > >
-> > > > > > 
-> > > > > > We already have other examples like memcg stats where the
-> > > > > > optimizations like batching per-cpu stats collection exposes
-> > > > > > differences to the userspace. I would not be that worried here.
-> > > > > 
-> > > > > Agreed! Tests should be more tolerant for counters imprecision.
-> > > > > Unevictable LRU is an optimization and transition to that list is a
-> > > > > matter of an internal implementation detail.
-> > > > >
-> > > > > > > I suppose that for consistency and correctness we should perform a
-> > > > > > > drain prior to each read from /proc/*/pagemap.  Presumably this would
-> > > > > > > be far too expensive.
-> > > > > > >
-> > > > > > > Is there any other way?  One such might be to make the MLOCK_ONFAULT
-> > > > > > > pages bypass the lru_add_pvecs?
-> > > > > > >
-> > > > > > 
-> > > > > > I would rather prefer to have something similar to
-> > > > > > /proc/sys/vm/stat_refresh which drains the pagevecs.
-> > > > > 
-> > > > > No, please don't. Pagevecs draining is by far not the only batching
-> > > > > scheme we use and an interface like this would promise users to
-> > > > > effectivelly force flushing all of them.
-> > > > > 
-> > > > > Can we simply update the test to be more tolerant to imprecisions
-> > > > > instead?
-> > > > > 
-> > > > 
-> > > > I don't think, thouhg, that this particular test case can be entirely
-> > > > reduced as "counter imprecison".
-> > > > 
-> > > > The reason I think this is a different beast, is that having the page
-> > > > being flagged as PG_unevictable is expected part of the aftermath of
-> > > > a mlock* call. This selftest is, IMO, correctly verifying that fact,
-> > > > as it checks the functionality correctness.
-> > > > 
-> > > > The problem boils down to the fact that the page would immediately
-> > > > be flagged as PG_unevictable after the mlock (under MCL_FUTURE|MCL_ONFAULT
-> > > > semantics) call, and the test was expecting it, and commit 9c4e6b1a7027f
-> > > > changed that by "delaying" that flag setting.
-> > > 
-> > > As I've tried to explain in other email in this email thread. The test
-> > > was exploiting a certain user visible side effect. The unevictable flag
-> > > or the placement on the unevictable LRU list is are not really needed
-> > > for the user contract correctness. That means that the test is not
-> > > really correct. Working around that by trying to enforce kernel to
-> > > comply with the test expectations is just plain wrong at least for two
-> > > reasons 1) you cannot expect or event do not want userspace to do the
-> > > same because the behavior might change in the future 2) the test is not
-> > > really testing for correctness in the first place.
-> > >
+On Mon, Mar 23, 2020 at 10:58:24AM -0400, Peter Xu wrote:
+> On Sat, Mar 21, 2020 at 12:22:11PM -0700, Sean Christopherson wrote:
+> > On Wed, Mar 18, 2020 at 12:37:09PM -0400, Peter Xu wrote:
+> > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > > index e54c6ad628a8..a5123a0aa7d6 100644
+> > > --- a/arch/x86/kvm/x86.c
+> > > +++ b/arch/x86/kvm/x86.c
+> > > @@ -9786,7 +9786,34 @@ void kvm_arch_sync_events(struct kvm *kvm)
+> > >  	kvm_free_pit(kvm);
+> > >  }
+> > >  
+> > > -int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
+> > > +#define  ERR_PTR_USR(e)  ((void __user *)ERR_PTR(e))
+> > > +
+> > > +/**
+> > > + * __x86_set_memory_region: Setup KVM internal memory slot
+> > > + *
+> > > + * @kvm: the kvm pointer to the VM.
+> > > + * @id: the slot ID to setup.
+> > > + * @gpa: the GPA to install the slot (unused when @size == 0).
+> > > + * @size: the size of the slot. Set to zero to uninstall a slot.
+> > > + *
+> > > + * This function helps to setup a KVM internal memory slot.  Specify
+> > > + * @size > 0 to install a new slot, while @size == 0 to uninstall a
+> > > + * slot.  The return code can be one of the following:
+> > > + *
+> > > + *   HVA:           on success (uninstall will return a bogus HVA)
+> > > + *   -errno:        on error
+> > > + *
+> > > + * The caller should always use IS_ERR() to check the return value
+> > > + * before use.  NOTE: KVM internal memory slots are guaranteed and
 > > 
-> > Sorry, Michal, it seems we keep going back and forth (I just replied to
-> > your comment on the other thread)
+> > "are guaranteed" to ...
 > > 
-> > The selftest also checks the kernel visible effect, via
-> > /proc/kpageflags, and that's where it fails after 9c4e6b1a7027f.
+> > > + * won't change until the VM is destroyed. This is also true to the
+> > > + * returned HVA when installing a new memory slot.  The HVA can be
+> > > + * invalidated by either an errornous userspace program or a VM under
+> > > + * destruction, however as long as we use __copy_{to|from}_user()
+> > > + * properly upon the HVAs and handle the failure paths always then
+> > > + * we're safe.
+> > 
+> > Regarding the HVA, it's a bit confusing saying that it's guaranteed to be
+> > valid, and then contradicting that in the second clause.  Maybe something
+> > like this to explain the GPA->HVA is guaranteed to be valid, but the
+> > HVA->HPA is not.
+> >  
+> > /*
+> >  * before use.  Note, KVM internal memory slots are guaranteed to remain valid
+> >  * and unchanged until the VM is destroyed, i.e. the GPA->HVA translation will
+> >  * not change.  However, the HVA is a user address, i.e. its accessibility is
+> >  * not guaranteed, and must be accessed via __copy_{to,from}_user().
+> >  */
 > 
-> I really fail to see your point. Even if you are right that the self
-> test is somehow evaluating the kernel implementation which I am not sure
-> is the scope of the selft thest but anyway. The mere fact that the
-> kernel test fails on a perfectly valid change should just suggest that
-> the test is leading to false positives and therefore should be fixed.
-> Your proposed fix is simply suboptimal because it relies on yet another
-> side effect which might change anytime in the future and still lead to a
-> correctly behaving kernel. See my point?
->
+> Sure I can switch to this, though note that I still think the GPA->HVA
+> is not guaranteed logically because the userspace can unmap any HVA it
+> wants..
 
-OK, I concede your point on the bogusness of checking the page flags in
-this particular test and expect certain valuse there, given that no other 
-selftest seems to be doing that level of inner kenrel detail scrutiny.
+You're conflating the GPA->HVA translation with the validity of the HVA,
+i.e. the HVA->HPA and/or HVA->VMA translation/association.  GPA->HVA is
+guaranteed because userspace doesn't have access to the memslot which
+defines that transation.
 
-I'll repost this fix suggestion getting rif of those related
-checkpoints.
+> However I agree that shouldn't be important from kvm's perspective as long as
+> we always emphasize on using legal HVA accessors.
 
-Cheers!
--- Rafael
-
+The fact that GPA->HVA can't change _is_ important, otherwise KVM would
+need to take steps to ensure that whatever can change GPA->HVA can't run
+concurrently with consuming the HVA. 
