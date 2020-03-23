@@ -2,136 +2,109 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A042C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC04C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7816920714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404E320714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 15:55:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DcupFgfR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbgCWPxI (ORCPT
+        id S1727282AbgCWPy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:53:08 -0400
-Received: from mga02.intel.com ([134.134.136.20]:31439 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbgCWPxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:53:08 -0400
-IronPort-SDR: ncCw1rb1HEuIF2ENAe6XXQnykfbc1Y80MZaoaU4K8/tHy2lybNsopecy3qxJeQmslQIkdgeXJh
- BfboVzPgbcgw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 08:53:07 -0700
-IronPort-SDR: LIJXRONbRlBxcoQXcsZECJpyRHFeeku3lkFQLFDecL3Xga5yGR57rgWcvcL18VIT8QTcJfP+sk
- 06mjAFwHKiLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,296,1580803200"; 
-   d="scan'208";a="445858372"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 23 Mar 2020 08:53:05 -0700
-Date:   Mon, 23 Mar 2020 08:53:05 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        John Haxby <john.haxby@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH v3 03/37] KVM: nVMX: Invalidate all EPTP contexts when
- emulating INVEPT for L1
-Message-ID: <20200323155305.GI28711@linux.intel.com>
-References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
- <20200320212833.3507-4-sean.j.christopherson@intel.com>
- <87y2rr857u.fsf@vitty.brq.redhat.com>
+        Mon, 23 Mar 2020 11:54:59 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:34442 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727202AbgCWPy6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:54:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584978898;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aONbZkW7VTtlNQ7IX/OP6HCvxPbDTjsQv8h6JUzUnHw=;
+        b=DcupFgfRD/LTA1e5rN6ma/k+cmMcZNVu9B3iwubyfX2QYPS0gJPH2ivaCgV+FxjXEUZNOM
+        ibBSXqpaxa69SWBGNnJAwAMKRqg3Z2IQVPcWfjkZCleJD9CSJOzA0HNu3lfE5qS//Sto75
+        rHM5a/Qjed83xCfixnZpCTpttGTJQRE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-285-8D5ohllOMACo1HLXscfZ1Q-1; Mon, 23 Mar 2020 11:54:56 -0400
+X-MC-Unique: 8D5ohllOMACo1HLXscfZ1Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D86F6800D54;
+        Mon, 23 Mar 2020 15:54:54 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.33.36.220])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F1CC919C4F;
+        Mon, 23 Mar 2020 15:54:52 +0000 (UTC)
+Date:   Mon, 23 Mar 2020 11:54:49 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, shuah@kernel.org
+Subject: Re: [PATCH] tools/testing/selftests/vm/mlock2-tests: fix mlock2
+ false-negative errors
+Message-ID: <20200323155449.GG23364@optiplex-lnx>
+References: <20200322020326.GB1068248@t490s>
+ <20200321213142.597e23af955de653fc4db7a1@linux-foundation.org>
+ <CALvZod7LiMiK1JtfdvvU3W36cGSUKhhKf6dMZpsNZv6nMiJ5=g@mail.gmail.com>
+ <20200323075208.GC7524@dhcp22.suse.cz>
+ <20200323144240.GB23364@optiplex-lnx>
+ <20200323145106.GM7524@dhcp22.suse.cz>
+ <20200323150259.GD23364@optiplex-lnx>
+ <20200323151256.GP7524@dhcp22.suse.cz>
+ <20200323154159.GF23364@optiplex-lnx>
+ <20200323155111.GQ7524@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87y2rr857u.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200323155111.GQ7524@dhcp22.suse.cz>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 04:24:05PM +0100, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Mon, Mar 23, 2020 at 04:51:11PM +0100, Michal Hocko wrote:
+> On Mon 23-03-20 11:41:59, Rafael Aquini wrote:
+> > On Mon, Mar 23, 2020 at 04:12:56PM +0100, Michal Hocko wrote:
+> > > On Mon 23-03-20 11:02:59, Rafael Aquini wrote:
+> [...]
+> > > > The selftest also checks the kernel visible effect, via
+> > > > /proc/kpageflags, and that's where it fails after 9c4e6b1a7027f.
+> > > 
+> > > I really fail to see your point. Even if you are right that the self
+> > > test is somehow evaluating the kernel implementation which I am not sure
+> > > is the scope of the selft thest but anyway. The mere fact that the
+> > > kernel test fails on a perfectly valid change should just suggest that
+> > > the test is leading to false positives and therefore should be fixed.
+> > > Your proposed fix is simply suboptimal because it relies on yet another
+> > > side effect which might change anytime in the future and still lead to a
+> > > correctly behaving kernel. See my point?
+> > >
+> > 
+> > OK, I concede your point on the bogusness of checking the page flags in
+> > this particular test and expect certain valuse there, given that no other 
+> > selftest seems to be doing that level of inner kenrel detail scrutiny.
+> > 
+> > I'll repost this fix suggestion getting rif of those related
+> > checkpoints.
 > 
-> > Free all L2 (guest_mmu) roots when emulating INVEPT for L1.  Outstanding
-> > changes to the EPT tables managed by L1 need to be recognized, and
-> > relying on KVM to always flush L2's EPTP context on nested VM-Enter is
-> > dangerous.
-> >
-> > Similar to handle_invpcid(), rely on kvm_mmu_free_roots() to do a remote
-> > TLB flush if necessary, e.g. if L1 has never entered L2 then there is
-> > nothing to be done.
-> >
-> > Nuking all L2 roots is overkill for the single-context variant, but it's
-> > the safe and easy bet.  A more precise zap mechanism will be added in
-> > the future.  Add a TODO to call out that KVM only needs to invalidate
-> > affected contexts.
-> >
-> > Fixes: b119019847fbc ("kvm: nVMX: Remove unnecessary sync_roots from handle_invept")
-> > Reported-by: Jim Mattson <jmattson@google.com>
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > ---
-> >  arch/x86/kvm/vmx/nested.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> > index f3774cef4fd4..9624cea4ed9f 100644
-> > --- a/arch/x86/kvm/vmx/nested.c
-> > +++ b/arch/x86/kvm/vmx/nested.c
-> > @@ -5160,12 +5160,12 @@ static int handle_invept(struct kvm_vcpu *vcpu)
-> >  		if (!nested_vmx_check_eptp(vcpu, operand.eptp))
-> >  			return nested_vmx_failValid(vcpu,
-> >  				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
-> > +
-> > +		/* TODO: sync only the target EPTP context. */
-> >  		fallthrough;
-> >  	case VMX_EPT_EXTENT_GLOBAL:
-> > -	/*
-> > -	 * TODO: Sync the necessary shadow EPT roots here, rather than
-> > -	 * at the next emulated VM-entry.
-> > -	 */
-> > +		kvm_mmu_free_roots(vcpu, &vcpu->arch.guest_mmu,
-> > +				   KVM_MMU_ROOTS_ALL);
-> >  		break;
-> 
-> An ignorant reader may wonder "and how do we know that L1 actaully uses
-> EPT" as he may find out that guest_mmu is not being used otherwise. The
-> answer to the question will likely be "if L1 doesn't use EPT for some of
-> its guests than there's nothing we should do here as we will be
-> resetting root_mmu when switching to/from them". Hope the ignorant
-> reviewer typing this is not very wrong :-)
+> Here is what I have after I had to context switch to something else
+> before finishing it. Feel free to reuse if you feel like. It is likely
+> to not even compile.
+>
 
-A different way to put it would be:
+I'm OK with it, if you want to go ahead and do the kill.
 
-  KVM never uses root_mmu to hold nested EPT roots.
+Thanks 
+-- Rafael
 
-Invalidating too much is functionally ok, though sub-optimal for performance.
-Invalidating too little is what we really care about.
-
-FWIW, VMX currently uses guest_mmu iff nested EPT is enabled.  In theory,
-KVM could be enhanced to also used guest_mmu when nested-TDP is disabled,
-e.g. to enable VMX to preserve L1's root_mmu when emulating INVVPID.  That
-would likely be a decent performance boost for nested VMX+VPID without
-nested EPT, but I'm guessing that the cross-section of users that care
-about nested performance and don't use nested EPT is quite small.
-
-> >  	default:
-> >  		BUG_ON(1);
-> 
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> 
-> -- 
-> Vitaly
-> 
