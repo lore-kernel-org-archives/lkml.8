@@ -2,311 +2,300 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C258EC4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9583C4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2BF20784
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D4320784
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:10:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8v722V3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e6HzwObd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbgCWMKg (ORCPT
+        id S1727535AbgCWMKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:10:36 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35964 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727384AbgCWMKf (ORCPT
+        Mon, 23 Mar 2020 08:10:48 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:26016 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727345AbgCWMKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 08:10:35 -0400
-Received: by mail-pg1-f194.google.com with SMTP id j29so218362pgl.3;
-        Mon, 23 Mar 2020 05:10:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MlNbdsKoZglu02JmE6j7s82pOmi6hUKrXhzXXYWzb3U=;
-        b=b8v722V3lHjGLReQGi5K9OvQK6x9ONT+ZTYq1NU0THWLfDdApSvvP/M8z9/kxQrlRD
-         jg58JB8Ve57GDm99BztkqNxw3AM7mmQRs7FxA0ETQ++matXgRTHh3cj9Vt6um3V+RbK+
-         w7cR/bdN0Tq03HcSpAf/3hgUAqvLK/4a4QTwvAwSqyNI1kPFd+pSEkTMT8nRmRWGLEFx
-         u8AQBvi0moW8dQHBLGDkFnRVO/PDrJW9q338CnEcAP4esOeFQClvR2p+e70aV+wRE6LI
-         h8G2MDiT2hBXf2x0FyEWrNIuGdwKhzjixduxxWNADDVof9TvDrl4MpjICbjquVRH8ktb
-         6RVQ==
+        Mon, 23 Mar 2020 08:10:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584965446;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rHQRdviv+oNnM+wOvy7j9QWQo0zwjiFN+uLtW4Mvpq0=;
+        b=e6HzwObd5VmQ/zLiFfyo2IME5xSkuxBVbWuhSmky7vXcJLBVysvzqxA+qMlra5n8/vUrOc
+        9/+8dePyeNnnM3NmisMlLq08e2OxgoL8+qjlPUTmKhyE7nx+pcIEGKGcOAtTgEpMhxS396
+        amyyD97S5NEi1Dp0tF9mMpQdOQZwSlc=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-325-BqsMcSBINFqq4smht8tXQQ-1; Mon, 23 Mar 2020 08:10:44 -0400
+X-MC-Unique: BqsMcSBINFqq4smht8tXQQ-1
+Received: by mail-wm1-f70.google.com with SMTP id g26so3914815wmk.6
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 05:10:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MlNbdsKoZglu02JmE6j7s82pOmi6hUKrXhzXXYWzb3U=;
-        b=nfhNGkiJ2aS2LeJuB0+7QYuwY8wDhIlPfPddG4LUx0LGjRryAGQwd93GJa+65Bi7Qd
-         5y5KGqBLjx4VOPmh4QDuEzk27uHSU/HV1TH2N4SQONW+wAvs6/FeJkESEhHYJEBErsy8
-         pPEydpR1QAdo+k1uazfW1lz0QJ7EcsXgDl5LT+cTf5HLDSP7LfaRdv1NbPOaLlLqRRhE
-         BUdYSxPqHe15q7otDW+NiF80gXdtQRUg9rzUu5/NE38CPBufo1UiV7FyD6iVWKXK4E9+
-         prijj1zcvlgt01qyT05cOi6nvvhX6EhxeVukKgFbFb8aBne1jIHG98us3iSmqm7QaqOg
-         OXlg==
-X-Gm-Message-State: ANhLgQ15I7ZeSQUaUJf0k6bb69CpmJLraq5u5jiOZ/RCYeQjxAKigc73
-        8BELdYt3/40DO6UQ1IIomcMS6NCoQVuUOf66SXU=
-X-Google-Smtp-Source: ADFU+vtPHwwDms34oGPAgbK5FoVt8CGhBDYsS8GEceo6UTeFwpey3XsHjBzgJHRFUoWAlESzy6YFOA7a0a8rw7ZYkfU=
-X-Received: by 2002:a63:798a:: with SMTP id u132mr22684974pgc.203.1584965434383;
- Mon, 23 Mar 2020 05:10:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=rHQRdviv+oNnM+wOvy7j9QWQo0zwjiFN+uLtW4Mvpq0=;
+        b=pvackwpggsoLPANDPj4+1fxiqjQRPHJigkAg/AqA/S0YwvWOFGvmehn+QrSKdkrRpC
+         U+gKn/JPVTC/9I8AjhAa/rk3Mp9mXh3em/pu1LCXTX2hzB/Vq2d1/KoBfkzWfPwKFe7a
+         nZn25iwkm4wf5/X1dle5bunbdHmipr9p4dlTpyku80gk8nbzpGwCbNihLApzbfq00kwU
+         cevVZqc7/OyEEQ6bF1SqRXCfdCVWTLYfs6gdoI5D4ag0sfkCumfUoiHPolgfFEDFotJy
+         fS/pwc+fExcCbtPpQrel51spnnsv9/T25gHnd83oPUYm9DP2oUAcpb5+AeMQrWgJ8FBu
+         2zUA==
+X-Gm-Message-State: ANhLgQ1ervHZQQ54/dQv6+es0nGZlRgAlOTV1Hk11+bSKFs7/VQj78Xa
+        9dUEgIpECMKPFBY2it//RNl3LcZH2e1xuRfb7AMzxaBlkQSobKyMAsxledWHr2mDKnms7khxY56
+        FHNaRp1eG6Di0VdYpUfOsReEA
+X-Received: by 2002:adf:f7ce:: with SMTP id a14mr30662466wrq.180.1584965443485;
+        Mon, 23 Mar 2020 05:10:43 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vsLu0mWmhCib7a9L9Z4UgbCUMlvtjWeM7CpEh6ia2EdDdwqHhRYkq8ynpPTFBq7OzYIQ6wpBQ==
+X-Received: by 2002:adf:f7ce:: with SMTP id a14mr30662429wrq.180.1584965443217;
+        Mon, 23 Mar 2020 05:10:43 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id m7sm957131wro.41.2020.03.23.05.10.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 05:10:42 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/9] KVM: x86: Move init-only kvm_x86_ops to separate struct
+In-Reply-To: <20200321202603.19355-3-sean.j.christopherson@intel.com>
+References: <20200321202603.19355-1-sean.j.christopherson@intel.com> <20200321202603.19355-3-sean.j.christopherson@intel.com>
+Date:   Mon, 23 Mar 2020 13:10:40 +0100
+Message-ID: <87lfnr9sqn.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200323103926.21271-1-i.mikhaylov@yadro.com> <20200323103926.21271-3-i.mikhaylov@yadro.com>
-In-Reply-To: <20200323103926.21271-3-i.mikhaylov@yadro.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 23 Mar 2020 14:10:27 +0200
-Message-ID: <CAHp75Ve4rejBKjG+mioRL3S7i3meyy=_4TtW1fr2aGvnVn2tBA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 12:41 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wro=
-te:
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
+
+> Move the kvm_x86_ops functions that are used only within the scope of
+> kvm_init() into a separate struct, kvm_x86_init_ops.  In addition to
+> identifying the init-only functions without restorting to code comments,
+> this also sets the stage for waiting until after ->hardware_setup() to
+> set kvm_x86_ops.  Setting kvm_x86_ops after ->hardware_setup() is
+> desirable as many of the hooks are not usable until ->hardware_setup()
+> completes.
 >
-> Proximity sensor driver based on light/vcnl4000.c code.
-> For now supports only the single on-demand measurement.
+> No functional change intended.
 >
-> The VCNL3020 is a fully integrated proximity sensor. Fully
-> integrated means that the infrared emitter is included in the
-> package. It has 16-bit resolution. It includes a signal
-> processing IC and features standard I2C communication
-> interface. It features an interrupt function.
-
-Thank you for a patch, my comments below.
-
-> Datasheet available at:
-> http://www.vishay.com/docs/84150/vcnl3020.pdf
-
-I'm thinking that we may simple introduce new tag, called Datesheet:
-to put such links.
-
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-
-...
-
->  obj-$(CONFIG_SRF08)            +=3D srf08.o
->  obj-$(CONFIG_SX9500)           +=3D sx9500.o
->  obj-$(CONFIG_VL53L0X_I2C)      +=3D vl53l0x-i2c.o
-> +obj-$(CONFIG_VCNL3020)         +=3D vcnl3020.o
-
-Perhaps keep ordered?
-
-...
-
-> +/*
-> + * vcnl3020.c - Support for Vishay VCNL3020 proximity sensor
-
-Using file names in themselves is a bad idea. Whenever you would
-rename file (for instance, to support new sensors from the same family
-in the future) you will forget (often, I see this in practice!) to
-update this line.
-Just drop it from here and try to avoid in the future.
-
-> + *
-> + * based on vcnl4000.c
-
-This sounds like a continuation of previous sentence. Drop line in
-between and use proper English grammar and punctuation.
-
-> + */
-
-...
-
-> +struct vcnl3020_data {
-> +       struct i2c_client *client;
-> +       u32 rev;
-
-> +       struct mutex vcnl3020_lock; /* for i2c operations */
-
-Simple 'lock' is enough, the rest is dup noise.
-Also, consider kernel doc format instead of odd comments.
-
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 13 +++++++++----
+>  arch/x86/kvm/svm.c              | 15 ++++++++++-----
+>  arch/x86/kvm/vmx/vmx.c          | 16 +++++++++++-----
+>  arch/x86/kvm/x86.c              | 10 ++++++----
+>  4 files changed, 36 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 9a183e9d4cb1..f4c5b49299ff 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1054,12 +1054,8 @@ static inline u16 kvm_lapic_irq_dest_mode(bool dest_mode_logical)
+>  }
+>  
+>  struct kvm_x86_ops {
+> -	int (*cpu_has_kvm_support)(void);          /* __init */
+> -	int (*disabled_by_bios)(void);             /* __init */
+>  	int (*hardware_enable)(void);
+>  	void (*hardware_disable)(void);
+> -	int (*check_processor_compatibility)(void);/* __init */
+> -	int (*hardware_setup)(void);               /* __init */
+>  	void (*hardware_unsetup)(void);            /* __exit */
+>  	bool (*cpu_has_accelerated_tpr)(void);
+>  	bool (*has_emulated_msr)(int index);
+> @@ -1260,6 +1256,15 @@ struct kvm_x86_ops {
+>  	int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
+>  };
+>  
+> +struct kvm_x86_init_ops {
+> +	int (*cpu_has_kvm_support)(void);
+> +	int (*disabled_by_bios)(void);
+> +	int (*check_processor_compatibility)(void);
+> +	int (*hardware_setup)(void);
+> +
+> +	struct kvm_x86_ops *runtime_ops;
+> +};
+> +
+>  struct kvm_arch_async_pf {
+>  	u32 token;
+>  	gfn_t gfn;
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 2125c6ae5951..33e67c3389c2 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -7351,11 +7351,7 @@ static void svm_pre_update_apicv_exec_ctrl(struct kvm *kvm, bool activate)
+>  }
+>  
+>  static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+> -	.cpu_has_kvm_support = has_svm,
+> -	.disabled_by_bios = is_disabled,
+> -	.hardware_setup = svm_hardware_setup,
+>  	.hardware_unsetup = svm_hardware_teardown,
+> -	.check_processor_compatibility = svm_check_processor_compat,
+>  	.hardware_enable = svm_hardware_enable,
+>  	.hardware_disable = svm_hardware_disable,
+>  	.cpu_has_accelerated_tpr = svm_cpu_has_accelerated_tpr,
+> @@ -7480,9 +7476,18 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+>  	.check_nested_events = svm_check_nested_events,
+>  };
+>  
+> +static struct kvm_x86_init_ops svm_init_ops __initdata = {
+> +	.cpu_has_kvm_support = has_svm,
+> +	.disabled_by_bios = is_disabled,
+> +	.hardware_setup = svm_hardware_setup,
+> +	.check_processor_compatibility = svm_check_processor_compat,
+> +
+> +	.runtime_ops = &svm_x86_ops,
 > +};
 
-...
+Unrelated to your patch but I think we can make the naming of some of
+these functions more consistend on SVM/VMX, in particular I'd suggest 
 
-> +static const struct i2c_device_id vcnl3020_id[] =3D {
-> +       { "vcnl3020", 0 },
-> +       {}
+has_svm() -> cpu_has_svm_support()
+is_disabled -> svm_disabled_by_bios()
+...
+(see below for VMX)
+
+> +
+>  static int __init svm_init(void)
+>  {
+> -	return kvm_init(&svm_x86_ops, sizeof(struct vcpu_svm),
+> +	return kvm_init(&svm_init_ops, sizeof(struct vcpu_svm),
+>  			__alignof__(struct vcpu_svm), THIS_MODULE);
+>  }
+>  
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 07299a957d4a..ffcdcc86f5b7 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7842,11 +7842,8 @@ static bool vmx_check_apicv_inhibit_reasons(ulong bit)
+>  }
+>  
+>  static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+> -	.cpu_has_kvm_support = cpu_has_kvm_support,
+> -	.disabled_by_bios = vmx_disabled_by_bios,
+> -	.hardware_setup = hardware_setup,
+>  	.hardware_unsetup = hardware_unsetup,
+> -	.check_processor_compatibility = vmx_check_processor_compat,
+> +
+>  	.hardware_enable = hardware_enable,
+>  	.hardware_disable = hardware_disable,
+>  	.cpu_has_accelerated_tpr = report_flexpriority,
+> @@ -7981,6 +7978,15 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+>  	.apic_init_signal_blocked = vmx_apic_init_signal_blocked,
+>  };
+>  
+> +static struct kvm_x86_init_ops vmx_init_ops __initdata = {
+> +	.cpu_has_kvm_support = cpu_has_kvm_support,
+> +	.disabled_by_bios = vmx_disabled_by_bios,
+> +	.check_processor_compatibility = vmx_check_processor_compat,
+> +	.hardware_setup = hardware_setup,
+
+cpu_has_kvm_support() -> cpu_has_vmx_support()
+hardware_setup() -> vmx_hardware_setup()
+
+> +
+> +	.runtime_ops = &vmx_x86_ops,
 > +};
-> +MODULE_DEVICE_TABLE(i2c, vcnl3020_id);
-
-Can you group this with OF table below?
-
-...
-
-> +static int32_t vcnl3020_init(struct vcnl3020_data *data)
-
-int32_t...
-
-> +{
-
-> +       s32 rc;
-
-...s32?!
-
-Applies to entire code.
-
-> +       u32 led_current;
-> +       struct device *dev =3D &data->client->dev;
-
-Reversed xmas tree order looks better.
-
-> +       rc =3D i2c_smbus_read_byte_data(data->client, VCNL_PROD_REV);
-
-Can you use regmap I=C2=B2C API?
-
-> +       if (rc < 0) {
-> +               dev_err(dev, "Error (%d) reading product revision", rc);
-> +               goto exit;
-> +       }
 > +
+>  static void vmx_cleanup_l1d_flush(void)
+>  {
+>  	if (vmx_l1d_flush_pages) {
+> @@ -8065,7 +8071,7 @@ static int __init vmx_init(void)
+>  	}
+>  #endif
+>  
+> -	r = kvm_init(&vmx_x86_ops, sizeof(struct vcpu_vmx),
+> +	r = kvm_init(&vmx_init_ops, sizeof(struct vcpu_vmx),
+>  		     __alignof__(struct vcpu_vmx), THIS_MODULE);
+>  	if (r)
+>  		return r;
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 0f08e1b4e762..20f989d1bba8 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -7298,8 +7298,8 @@ static struct notifier_block pvclock_gtod_notifier = {
+>  
+>  int kvm_arch_init(void *opaque)
+>  {
+> +	struct kvm_x86_init_ops *ops = opaque;
+>  	int r;
+> -	struct kvm_x86_ops *ops = opaque;
+>  
+>  	if (kvm_x86_ops) {
+>  		printk(KERN_ERR "kvm: already loaded the other module\n");
+> @@ -7354,7 +7354,7 @@ int kvm_arch_init(void *opaque)
+>  	if (r)
+>  		goto out_free_percpu;
+>  
+> -	kvm_x86_ops = ops;
+> +	kvm_x86_ops = ops->runtime_ops;
+>  
+>  	kvm_mmu_set_mask_ptes(PT_USER_MASK, PT_ACCESSED_MASK,
+>  			PT_DIRTY_MASK, PT64_NX_MASK, 0,
+> @@ -9623,6 +9623,7 @@ void kvm_arch_hardware_disable(void)
+>  
+>  int kvm_arch_hardware_setup(void *opaque)
+>  {
+> +	struct kvm_x86_init_ops *ops = opaque;
+>  	int r;
+>  
+>  	rdmsrl_safe(MSR_EFER, &host_efer);
+> @@ -9630,7 +9631,7 @@ int kvm_arch_hardware_setup(void *opaque)
+>  	if (boot_cpu_has(X86_FEATURE_XSAVES))
+>  		rdmsrl(MSR_IA32_XSS, host_xss);
+>  
+> -	r = kvm_x86_ops->hardware_setup();
+> +	r = ops->hardware_setup();
+>  	if (r != 0)
+>  		return r;
+>  
+> @@ -9665,13 +9666,14 @@ void kvm_arch_hardware_unsetup(void)
+>  int kvm_arch_check_processor_compat(void *opaque)
+>  {
+>  	struct cpuinfo_x86 *c = &cpu_data(smp_processor_id());
+> +	struct kvm_x86_init_ops *ops = opaque;
+>  
+>  	WARN_ON(!irqs_disabled());
+>  
+>  	if (kvm_host_cr4_reserved_bits(c) != cr4_reserved_bits)
+>  		return -EIO;
+>  
+> -	return kvm_x86_ops->check_processor_compatibility();
+> +	return ops->check_processor_compatibility();
+>  }
+>  
+>  bool kvm_vcpu_is_reset_bsp(struct kvm_vcpu *vcpu)
 
-> +       if (rc =3D=3D VCNL3020_PROD_ID) {
-> +               data->rev =3D rc & 0xff;
+The patch itself looks good,
 
-This conjunction looks strange. Also, why type of rev is u32 instead of u8?
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-> +               mutex_init(&data->vcnl3020_lock);
-> +       } else {
-> +               dev_err(dev, "Product id (%x) did not match vcnl3020 (%x)=
-", rc,
-> +                       VCNL3020_PROD_ID);
-> +               rc =3D -ENODEV;
-> +               goto exit;
-> +       }
-> +
-> +       /* set led current */
-> +       rc =3D i2c_smbus_write_byte_data(data->client, VCNL_LED_CURRENT,
-> +                                      led_current);
-> +       if (rc < 0) {
-> +               dev_err(dev, "Error (%d) setting LED current", rc);
-> +               goto exit;
-> +       }
-> +
-> +       return 0;
+-- 
+Vitaly
 
-> +exit:
-> +       return rc;
-
-Useless. Return directly.
-
-> +};
-
-...
-
-> +       /* wait for data to become ready */
-> +       while (tries--) {
-> +               rc =3D i2c_smbus_read_byte_data(data->client, VCNL_COMMAN=
-D);
-> +               if (rc < 0)
-> +                       goto fail;
-> +               if (rc & VCNL_PS_RDY)
-> +                       break;
-> +               msleep(20); /* measurement takes up to 100 ms */
-> +       }
-
-Timeout loops look more naturally in do {} while format.
-
-  unsigned int tries =3D 5;
-  ...
-
-  do {
-  ...
-  } while (--tries);
-
-...
-
-> +       *val =3D (rc & 0xff) << 8;
-
-> +       *val |=3D rc & 0xff;
-
-All these conjunctions looks fishy. Why do you need them? Cant you
-rely on the returned value by I=C2=B2C API?
-
-...
-
-> +fail:
-
-Better name is 'err_unlock' or 'out_unlock'. The rule of thumb to
-describe in the label what you *about to do* there.
-
-> +       mutex_unlock(&data->vcnl3020_lock);
-> +
-> +       return rc;
-> +}
-
-...
-
-> +                       rc =3D vcnl3020_measure_proximity(data, val);
-> +                       if (rc < 0)
-
-Can rc be positive? Drop all these ' < 0' in cases where it is
-guaranteed not to be the case.
-
-> +                               return rc;
-
-...
-
-> +static int32_t vcnl3020_probe(struct i2c_client *client,
-> +                             const struct i2c_device_id *id)
-
-Can you switch to ->probe_new() ?
-
-...
-
-> +       dev_info(&client->dev, "Proximity sensor, Rev: %02x\n",
-> +                data->rev);
-
-Noise.
-
-...
-
-> +       rc =3D devm_iio_device_register(&client->dev, indio_dev);
-> +       if (rc !=3D 0)
-
-Redundant ' !=3D 0' part.
-
-> +               goto out;
-> +
-> +       return rc;
-
-> +out:
-> +       devm_iio_device_free(&client->dev, indio_dev);
-> +       return rc;
-
-Managed resources are exactly for this not to be appeared in the code.
-
-> +}
-
-...
-
-> +static const struct of_device_id vcnl3020_of_match[] =3D {
-> +       {
-> +               .compatible =3D "vishay,vcnl3020",
-> +       },
-
-Missed terminator. How did you test this?
-
-> +};
-
---
-With Best Regards,
-Andy Shevchenko
