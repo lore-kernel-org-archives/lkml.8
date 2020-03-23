@@ -2,91 +2,153 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23028C1975A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CA1C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7036206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D59D820722
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:30:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="q6JKPxeJ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QT8qxzDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgCWC0C (ORCPT
+        id S1727064AbgCWCaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 22:26:02 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:48751 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbgCWC0C (ORCPT
+        Sun, 22 Mar 2020 22:30:52 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:23800 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbgCWCaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 22:26:02 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 566B8891AF
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 15:25:59 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1584930359;
-        bh=bWdvbtemEJH5lhjVe6KKJq6aIJiapPUHg8GUIOQKP58=;
-        h=From:To:CC:Subject:Date;
-        b=q6JKPxeJm915cOn42ahIgqRs8L/iiU+JrFLy6bejb8rmLICoRUQA1WHi7arJsi1gN
-         BXGUky/EV8C8ogy/iU3lOMPZv/jfJNso1FSTR00bdEXeYXKvKlaUlfBFAG1CxH5LXV
-         sfS5v2ijMpsluoeQ7oXXDTnwWRNFsMS0xsA/pQ+LfoGd2eWSYUxo7u6Yuojex0Mj/x
-         hQGWsY8rV/5hOfgP3LJnpKQMKPHbvLDLnvfZsz4arfCnAuFIwZKSoGdRc7+7ZvgBu9
-         gT+bulINVs90irPiNRrZ4ZtQaNhGrMvkO+FPtkW/bUAoVUrD706v/r1ebK9cqsi6KG
-         Ic46LpId8mO2Q==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e781e350001>; Mon, 23 Mar 2020 15:25:57 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 23 Mar 2020 15:25:58 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Mon, 23 Mar 2020 15:25:58 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "cai@lca.pw" <cai@lca.pw>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
-Subject: Argh, can't find dcache properties !
-Thread-Topic: Argh, can't find dcache properties !
-Thread-Index: AQHWALpiXt3RJnRHvUCUrPyClavMpQ==
-Date:   Mon, 23 Mar 2020 02:25:57 +0000
-Message-ID: <be8c123a90f6d1664a902b6ad6c754b9f3d9e567.camel@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.14.96]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <085B17206966C34EB5E44D3E6DDA78A6@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Sun, 22 Mar 2020 22:30:52 -0400
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200323023050epoutp0133832c6b5f623500417f195aba97feb4~_zgeHchNI0499904999epoutp01z
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 02:30:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200323023050epoutp0133832c6b5f623500417f195aba97feb4~_zgeHchNI0499904999epoutp01z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1584930650;
+        bh=PBdhHhXowl9TplAif7mn+5bR6K1fB0LE7KtzAtp1XqA=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=QT8qxzDl6E6RjJAKWAzdZijI4FdXcAKGBRcwlro8wn01s7bGCeL/t2b/Lyqd37n6e
+         Bv6rEdNYf6H6S0zHvL9++PRLXthhelzZHnxoaJJXXZ3Nyb4/eOSEapZ91e3nSGoNzv
+         Qt9c1qpOV1b03AkGuqje/6GpdaZaoN8W1N9kXdz4=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20200323023050epcas2p1e7593128df93926c14d60253e176f250~_zgdvC67k1497414974epcas2p1v;
+        Mon, 23 Mar 2020 02:30:50 +0000 (GMT)
+Received: from epsmges2p2.samsung.com (unknown [182.195.40.190]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 48lyzW4x0rzMqYm9; Mon, 23 Mar
+        2020 02:30:47 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1F.35.04142.55F187E5; Mon, 23 Mar 2020 11:30:45 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200323023045epcas2p12007502edd2a65efcccb00eb899d5532~_zgZOZXOw1498614986epcas2p1N;
+        Mon, 23 Mar 2020 02:30:45 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200323023045epsmtrp14233112b63828a31209e55a44180f1d3~_zgZNx__71324713247epsmtrp1O;
+        Mon, 23 Mar 2020 02:30:45 +0000 (GMT)
+X-AuditID: b6c32a46-84f7f9c00000102e-61-5e781f556cfa
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A7.D8.04158.55F187E5; Mon, 23 Mar 2020 11:30:45 +0900 (KST)
+Received: from KORDO036463 (unknown [12.36.155.134]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200323023045epsmtip1dc906dad6e779b43eb7c81110daaa27c~_zgZCnrVt1148611486epsmtip12;
+        Mon, 23 Mar 2020 02:30:45 +0000 (GMT)
+From:   "Seungchul Kim" <sc377.kim@samsung.com>
+To:     <mchehab@kernel.org>
+Cc:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sc377.kim@samsung.com>
+In-Reply-To: 
+Subject: [PATCH] media: v4l2-fh: define v4l2_fh struct regardless of
+ condition
+Date:   Mon, 23 Mar 2020 11:30:45 +0900
+Message-ID: <000601d600bb$0e2d4320$2a87c960$@samsung.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AdX+naBN45/Qp1YKQeqtNz/O47v16QCGcIMQAADYHZA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupik+LIzCtJLcpLzFFi42LZdljTXDdUviLO4NsTXYvLu+awWfRs2Mpq
+        sWzTHyaLaXcmMDqweGxa1cnm0bdlFaPH501yAcxROTYZqYkpqUUKqXnJ+SmZeem2St7B8c7x
+        pmYGhrqGlhbmSgp5ibmptkouPgG6bpk5QNuUFMoSc0qBQgGJxcVK+nY2RfmlJakKGfnFJbZK
+        qQUpOQWGhgV6xYm5xaV56XrJ+blWhgYGRqZAlQk5GYvXbWAqaOOsWNY5k7mB8TB7FyMnh4SA
+        icTTae8YQWwhgR2MEjPXinYxcgHZnxgl5i+fyALhfGOU+PBrKTNMx6QbjawQib2MEh23ZkM5
+        LxklVu64BFbFJqArMf/vf7C5IgISEn//fQTbxywQI7H38WugOAcHpwCvxIR/1iBhYYEAiTNd
+        99lAbBYBVYnnO6aA2bwClhKfn+5kgbAFJU7OfMICMUZeYvvbOVAHKUjsOPsaapWVxNkp+5gg
+        akQkZne2QdUcYJPYsNgdwnaReLBrMhOELSzx6vgWaFBISbzsb4OyyyU+PNrKBPKXhEAHo0TT
+        1ztsEAljiVnP2sHuZxbQlFi/Sx/ElBBQljhyC+o0PomOw3/ZIcK8Eh1tQhCNyhKr//ZDXSMp
+        sf/vCaYJjEqzkDw2C8ljs5A8MAth1wJGllWMYqkFxbnpqcVGBUbIUb2JEZwOtdx2MC4553OI
+        UYCDUYmH90ZveZwQa2JZcWXuIUYJDmYlEV61GKAQb0piZVVqUX58UWlOavEhRlNguE9klhJN
+        zgem6rySeENTIzMzA0tTC1MzIwslcd5N3DdjhATSE0tSs1NTC1KLYPqYODilGhgFg7ex/WIr
+        d+pfvdnN/fSu89te6z5iCOq6Iiy3v6IgImpyoX6Rfp3xvA182/KFgk56xKoKZt96fed75lLN
+        +Slzl8aVPvDNCMvY8Wt7nN7a3DOV57c/6pavWHchLMI2Rifk8jaHyC7hhneRR9WsEn//ihfP
+        kn0x9VpyN0ff2YRZWWfeWNbqOyuxFGckGmoxFxUnAgBL1O+nnQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrELMWRmVeSWpSXmKPExsWy7bCSnG6ofEWcwbMdfBaXd81hs+jZsJXV
+        YtmmP0wW0+5MYHRg8di0qpPNo2/LKkaPz5vkApijuGxSUnMyy1KL9O0SuDIWr9vAVNDGWbGs
+        cyZzA+Nh9i5GTg4JAROJSTcaWbsYuTiEBHYzSnx+/gAowQGUkJRoOVwAUSMscb/lCFTNc0aJ
+        vmt/WUESbAK6EvP//mcEsUUEJCT+/vsI1sssECdx75wBSFhIgEfi1Yb9jCBhTgFeiQn/rEHC
+        wgJ+EtPPdLCB2CwCqhLPd0wBs3kFLCU+P93JAmELSpyc+YQFYqKeRNtGsEXMAvIS29/OYYa4
+        TEFix9nXUAdYSZydso8JokZEYnZnG/MERuFZSCbNQpg0C8mkWUg6FjCyrGKUTC0ozk3PLTYs
+        MMpLLdcrTswtLs1L10vOz93ECI4JLa0djCdOxB9iFOBgVOLhvdFbHifEmlhWXJl7iFGCg1lJ
+        hFctBijEm5JYWZValB9fVJqTWnyIUZqDRUmcVz7/WKSQQHpiSWp2ampBahFMlomDU6qBUcUi
+        80grW+j543s+1X97Kv707/5/qgseH0iu51inO2lBkLHyXtmNM19xVi2PPPuBM/FtrfquwxMc
+        ridq7j+wxvu1ovHUtYsrnC3Edy0penp4ra7Lh0WWEl/l7O74RG17IMRn9/AMG2d+uE6Dho+N
+        V1ym7vwPnzcI3zOe62HCX3JwT/DM8oo50kosxRmJhlrMRcWJAOSu/yOFAgAA
+X-CMS-MailID: 20200323023045epcas2p12007502edd2a65efcccb00eb899d5532
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200323023045epcas2p12007502edd2a65efcccb00eb899d5532
+References: <CGME20200323023045epcas2p12007502edd2a65efcccb00eb899d5532@epcas2p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWxsLA0KDQpKdXN0IGJvb3RpbmcgdXAgdjUuNS4xMSBvbiBhIEZyZWVzY2FsZSBUMjA4MFJE
-QiBhbmQgSSdtIHNlZWluZyB0aGUNCmZvbGxvd2luZyBtZXNhZ2UuDQoNCmtlcm4ud2FybmluZyBs
-aW51eGJveCBrZXJuZWw6IEFyZ2gsIGNhbid0IGZpbmQgZGNhY2hlIHByb3BlcnRpZXMgIQ0Ka2Vy
-bi53YXJuaW5nIGxpbnV4Ym94IGtlcm5lbDogQXJnaCwgY2FuJ3QgZmluZCBpY2FjaGUgcHJvcGVy
-dGllcyAhDQoNClRoaXMgd2FzIGNoYW5nZWQgZnJvbSBEQkcoKSB0byBwcl93YXJuKCkgaW4gY29t
-bWl0IDNiOTE3NmU5YTg3NA0KKCJwb3dlcnBjL3NldHVwXzY0OiBmaXggLVdlbXB0eS1ib2R5IHdh
-cm5pbmdzIikgYnV0IHRoZSBtZXNzYWdlIHNlZW1zDQp0byBiZSBtdWNoIG9sZGVyIHRoYW4gdGhh
-dC4gU28gaXQncyBwcm9iYWJseSBiZWVuIGFuIGlzc3VlIG9uIHRoZSBUMjA4MA0KKGFuZCBvdGhl
-ciBRb3JJUSBTb0NzKSBmb3IgYSB3aGlsZS4NCg0KTG9va2luZyBhdCB0aGUgY29kZSB0aGUgdDIw
-OHggZG9lc24ndCBzcGVjaWZpeSBhbnkgb2YgdGhlIGQtY2FjaGUtDQpzaXplL2ktY2FjaGUtc2l6
-ZSBwcm9wZXJ0aWVzLiBTaG91bGQgSSBhZGQgdGhlbSB0byBzaWxlbmNlIHRoZSB3YXJuaW5nDQpv
-ciBzd2l0Y2ggaXQgdG8gcHJfZGVidWcoKS9wcl9pbmZvKCk/DQoNClRoYW5rcywNCkNocmlzDQoN
-Cg==
+v4l2_fh struct define differently by CONFIG_V4L2_MEM2MEM_DEV.
+If some vendors use CONFIG_V4L2_MEM2MEM_DEV by module, it can make the
+mismatch of v4l2_fh sturct.
+
+By the mismatch, the following error occurs.
+===============================
+[    7.533506] v4l2_mem2mem: disagrees about version of symbol video_devdata
+[    7.533594] v4l2_mem2mem: Unknown symbol video_devdata (err -22)
+[    7.535319] v4l2_mem2mem: disagrees about version of symbol
+v4l2_event_pending
+[    7.542532] v4l2_mem2mem: Unknown symbol v4l2_event_pending (err -22)
+===============================
+
+So v4l2_fh struct is modified to does not have dependency for
+CONFIG_V4L2_MEM2MEM_DEV.
+
+Signed-off-by: Seungchul Kim <sc377.kim@samsung.com>
+---
+ include/media/v4l2-fh.h | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/include/media/v4l2-fh.h b/include/media/v4l2-fh.h index
+53b4dbb..b5b3e00 100644
+--- a/include/media/v4l2-fh.h
++++ b/include/media/v4l2-fh.h
+@@ -53,9 +53,7 @@ struct v4l2_fh {
+ 	unsigned int		navailable;
+ 	u32			sequence;
+ 
+-#if IS_ENABLED(CONFIG_V4L2_MEM2MEM_DEV)
+ 	struct v4l2_m2m_ctx	*m2m_ctx;
+-#endif
+ };
+ 
+ /**
+--
+2.7.4
+
