@@ -2,150 +2,114 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B79C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60282C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 785FD20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33C5720735
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:59:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FCc7MxzM"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Kw3F0Qfj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgCWO6g (ORCPT
+        id S1727132AbgCWO7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:58:36 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:36227 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725776AbgCWO6g (ORCPT
+        Mon, 23 Mar 2020 10:59:53 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:45054 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725912AbgCWO7w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:58:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584975515;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=d3WRK4z56Y42/PY4ghJillk9+g6MIzYsEFbTD8+0g1Y=;
-        b=FCc7MxzMXH1DrtADJDpmUHHurrUyGL/0lQOPVpKNvGV/7PLG1KFCp4CVjajLX2o6JJqjI+
-        ZG59q115lZ6NX/Cjog7OV4bvfCHUBNPv91YrJKnSfpsaVuw2zCu7SgzXLXxNzI0p5rOu5F
-        bdNTtrMuUcqXJ1vauL4SgkmR2wTbxgY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-356-7f4i5WOwNOKvHBToDxEqSA-1; Mon, 23 Mar 2020 10:58:33 -0400
-X-MC-Unique: 7f4i5WOwNOKvHBToDxEqSA-1
-Received: by mail-wr1-f70.google.com with SMTP id r9so5372149wrs.13
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 07:58:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=d3WRK4z56Y42/PY4ghJillk9+g6MIzYsEFbTD8+0g1Y=;
-        b=lpYkMBd9uwJvOYyzsZzRnS7b5cVqWaYKfvASR+iTQ/itmdFyydaw6hpBUtA1f8kQk4
-         pLmG3AZAutA2aMBhiU70cGDnuRJrlo/Sj019iy4miEDyXsXVCchxhLYuvK67KaEQ92Mn
-         2CcV/vSKVxmyHjUgEf9ITjEtYVtt7RR/152kNr6pIY0154Qtc9K5tBdoGGLwP2oOJqO+
-         wP+0RHgsX37k12w3e+WjZ1B9u/a6bydVVc4QVYBB288PNOYtVuZ0nrqlRD1E9BeiC3Tp
-         W3GEcDBJczG50WGyy7984mbShvPhnRLx9J1um7opli6rBqXLJU1e3EzSxEltywZdxoWv
-         fumQ==
-X-Gm-Message-State: ANhLgQ2S0E2/RF+RlKDQlKwTywzlLELF7W0hs8VX/uCGkh5hXUpOTaPZ
-        3OKC12WrcSqf6Tu2HkLarwd1uXyNUX8yJ7VnXTrrw1uFoUzBcPVWFz+Z2xlSY7Sn2Z/1Ge+rehq
-        qz8E47TwB9yJ3gDhWmMT9UQ/Y
-X-Received: by 2002:a1c:63c4:: with SMTP id x187mr27485579wmb.124.1584975510396;
-        Mon, 23 Mar 2020 07:58:30 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtoTXAh8X4n57EHAjSowNYqJvDEgjxu7m+yH90pSUDygASePCuRdJZ/5o/fIE8laYiQAShSiw==
-X-Received: by 2002:a1c:63c4:: with SMTP id x187mr27485546wmb.124.1584975510037;
-        Mon, 23 Mar 2020 07:58:30 -0700 (PDT)
-Received: from xz-x1 (CPEf81d0fb19163-CMf81d0fb19160.cpe.net.fido.ca. [72.137.123.47])
-        by smtp.gmail.com with ESMTPSA id 195sm22060803wmb.8.2020.03.23.07.58.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 07:58:29 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 10:58:24 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v7 03/14] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20200323145824.GI127076@xz-x1>
-References: <20200318163720.93929-1-peterx@redhat.com>
- <20200318163720.93929-4-peterx@redhat.com>
- <20200321192211.GC13851@linux.intel.com>
+        Mon, 23 Mar 2020 10:59:52 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02NEbU8j023776;
+        Mon, 23 Mar 2020 15:59:24 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=yoIK90tuRPwC25Pp82+brJU/Ki+zCwsNgXSgRHpTEmE=;
+ b=Kw3F0Qfj9wlZpMlmthXNy16b7cAByjyv0hCtOmt2Vsd0LTpUkldMQtGiZfNnLmwRd0/y
+ NjI3EiWmbJ7L5Ou2DGpPjx22IWML4GfSKi4y8Z3eVvUXrd1APMe9MCib1Lh4RrGfZgHE
+ b3v6mf1ImKY2r4hPPKcZ4tONCXTprb9rFKMpP1fQgfVBLwky0SiyMIlGjhysdw3jpBEL
+ sfTpWzF9+gH+CrawxPi2FU3yHTv0Zl+f+G1bsuUwt/6l6+BeTIT1tdAj9kjYTSvpj2cp
+ PBogZxVkcemvcm5Dxt+iiQ92/ynA/cZz5G00YFJ9OUaCd4d4UBvcSRv+XM3kW/1b3qdf ew== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yw995ajb2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Mar 2020 15:59:23 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F2E8910003A;
+        Mon, 23 Mar 2020 15:59:18 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DA321220F81;
+        Mon, 23 Mar 2020 15:59:18 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 23 Mar 2020 15:59:18
+ +0100
+From:   Christophe Kerello <christophe.kerello@st.com>
+To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <lee.jones@linaro.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <tony@atomide.com>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>, <marex@denx.de>,
+        Christophe Kerello <christophe.kerello@st.com>
+Subject: [00/12] add STM32 FMC2 controller drivers
+Date:   Mon, 23 Mar 2020 15:58:40 +0100
+Message-ID: <1584975532-8038-1-git-send-email-christophe.kerello@st.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200321192211.GC13851@linux.intel.com>
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-23_05:2020-03-21,2020-03-23 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 12:22:11PM -0700, Sean Christopherson wrote:
-> On Wed, Mar 18, 2020 at 12:37:09PM -0400, Peter Xu wrote:
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index e54c6ad628a8..a5123a0aa7d6 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -9786,7 +9786,34 @@ void kvm_arch_sync_events(struct kvm *kvm)
-> >  	kvm_free_pit(kvm);
-> >  }
-> >  
-> > -int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
-> > +#define  ERR_PTR_USR(e)  ((void __user *)ERR_PTR(e))
-> > +
-> > +/**
-> > + * __x86_set_memory_region: Setup KVM internal memory slot
-> > + *
-> > + * @kvm: the kvm pointer to the VM.
-> > + * @id: the slot ID to setup.
-> > + * @gpa: the GPA to install the slot (unused when @size == 0).
-> > + * @size: the size of the slot. Set to zero to uninstall a slot.
-> > + *
-> > + * This function helps to setup a KVM internal memory slot.  Specify
-> > + * @size > 0 to install a new slot, while @size == 0 to uninstall a
-> > + * slot.  The return code can be one of the following:
-> > + *
-> > + *   HVA:           on success (uninstall will return a bogus HVA)
-> > + *   -errno:        on error
-> > + *
-> > + * The caller should always use IS_ERR() to check the return value
-> > + * before use.  NOTE: KVM internal memory slots are guaranteed and
-> 
-> "are guaranteed" to ...
-> 
-> > + * won't change until the VM is destroyed. This is also true to the
-> > + * returned HVA when installing a new memory slot.  The HVA can be
-> > + * invalidated by either an errornous userspace program or a VM under
-> > + * destruction, however as long as we use __copy_{to|from}_user()
-> > + * properly upon the HVAs and handle the failure paths always then
-> > + * we're safe.
-> 
-> Regarding the HVA, it's a bit confusing saying that it's guaranteed to be
-> valid, and then contradicting that in the second clause.  Maybe something
-> like this to explain the GPA->HVA is guaranteed to be valid, but the
-> HVA->HPA is not.
->  
-> /*
->  * before use.  Note, KVM internal memory slots are guaranteed to remain valid
->  * and unchanged until the VM is destroyed, i.e. the GPA->HVA translation will
->  * not change.  However, the HVA is a user address, i.e. its accessibility is
->  * not guaranteed, and must be accessed via __copy_{to,from}_user().
->  */
+The FMC2 functional block makes the interface with: synchronous and
+asynchronous static devices (such as PSNOR, PSRAM or other memory-mapped
+peripherals) and NAND flash memories.
+Its main purposes are:
+  - to translate AXI transactions into the appropriate external device
+    protocol
+  - to meet the access time requirements of the external devices
+All external devices share the addresses, data and control signals with the
+controller. Each external device is accessed by means of a unique Chip
+Select. The FMC2 performs only one access at a time to an external device.
 
-Sure I can switch to this, though note that I still think the GPA->HVA
-is not guaranteed logically because the userspace can unmap any HVA it
-wants..  However I agree that shouldn't be important from kvm's
-perspective as long as we always emphasize on using legal HVA accessors.
+Christophe Kerello (12):
+  dt-bindings: mfd: stm32-fmc2: add STM32 FMC2 controller documentation
+  mfd: stm32-fmc2: add STM32 FMC2 controller driver
+  bus: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driver
+  mtd: rawnand: stm32_fmc2: manage all errors cases at probe time
+  mtd: rawnand: stm32_fmc2: remove useless inline comments
+  mtd: rawnand: stm32_fmc2: use FMC2_TIMEOUT_MS for timeouts
+  mtd: rawnand: stm32_fmc2: cleanup
+  mtd: rawnand: stm32_fmc2: use FIELD_PREP/FIELD_GET macros
+  mtd: rawnand: stm32_fmc2: move all registers
+  mtd: rawnand: stm32_fmc2: use regmap APIs
+  mtd: rawnand: stm32_fmc2: use stm32_fmc2 structure in nfc controller
+  mtd: rawnand: stm32_fmc2: add new MP1 compatible string
+
+ .../devicetree/bindings/mfd/st,stm32-fmc2.yaml     |  370 ++++++
+ drivers/bus/Kconfig                                |   11 +
+ drivers/bus/Makefile                               |    1 +
+ drivers/bus/stm32-fmc2-ebi.c                       | 1093 +++++++++++++++++
+ drivers/mfd/Kconfig                                |   12 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/stm32-fmc2.c                           |  120 ++
+ drivers/mtd/nand/raw/Kconfig                       |    3 +
+ drivers/mtd/nand/raw/stm32_fmc2_nand.c             | 1273 +++++++++-----------
+ include/linux/mfd/stm32-fmc2.h                     |  226 ++++
+ 10 files changed, 2407 insertions(+), 703 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-fmc2.yaml
+ create mode 100644 drivers/bus/stm32-fmc2-ebi.c
+ create mode 100644 drivers/mfd/stm32-fmc2.c
+ create mode 100644 include/linux/mfd/stm32-fmc2.h
 
 -- 
-Peter Xu
+1.9.1
 
