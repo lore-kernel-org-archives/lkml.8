@@ -2,69 +2,137 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D14C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F07C4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5872076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4922076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 10:56:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="qjncN70i";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cE7OolyF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgCWKyE (ORCPT
+        id S1728008AbgCWK4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 06:54:04 -0400
-Received: from m176148.mail.qiye.163.com ([59.111.176.148]:20087 "EHLO
-        m176148.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727874AbgCWKyE (ORCPT
+        Mon, 23 Mar 2020 06:56:21 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:50107 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727874AbgCWK4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 06:54:04 -0400
-Received: from vivo.com (wm-8.qy.internal [127.0.0.1])
-        by m176148.mail.qiye.163.com (Hmail) with ESMTP id 8201C1A3EAD;
-        Mon, 23 Mar 2020 18:53:46 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AOkAWACXCFOTANH2Ma6Yyao9.3.1584960826518.Hmail.hankecai@vivo.com>
-To:     "alexandre.belloni" <alexandre.belloni@bootlin.com>
-Cc:     "a.zummo" <a.zummo@towertech.it>,
-        linux-rtc <linux-rtc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        trivial <trivial@kernel.org>, kernel <kernel@vivo.com>
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gcnRjOiBwbTh4eHg6IGNsZWFyIGFsYXJtIHJlZ2lzdGVyIHdoZW4gYWxhcm0gaXMgbm90IGVuYWJsZWQ=?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.227
-In-Reply-To: <20200322213331.GI221863@piout.net>
+        Mon, 23 Mar 2020 06:56:21 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 6A43D47D;
+        Mon, 23 Mar 2020 06:56:19 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 23 Mar 2020 06:56:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=fzpRCAmsyk5yn3no7NdCLTL9Xu4
+        x7dq5wW+w+4PqNzo=; b=qjncN70i8E/mm68IiqelYpyQxaqaLFMFkq552WiZ0Ji
+        RDnn/NVEiKwbPBkt2W9lxujvSitEatfIuvVuj78XE0PcmTk+hzhcz32ZYhhtM/60
+        1yFzSlh9H/oBHVjcFJ2ugGcpKarGWqzjiTKFex07KRbzpvbdVf3PAv/VcUoR/lEE
+        4Mot7T+dlrf+JN6aOHzR5EnTO9QxbMDHptMN9yXpWIF3+F9y4LIkzkSMZGx2pWtX
+        eRWw3eyev+hZ+str3PdFD3tz8rBoKp737Mw4xtdpoMs32adEhVUPxmogt2MyYJ61
+        wvNhvrQaE0WfsJKQNeLIf0hlfT9kkHEOSRIeNDJTpgA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=fzpRCA
+        msyk5yn3no7NdCLTL9Xu4x7dq5wW+w+4PqNzo=; b=cE7OolyF0peWljveJycKKO
+        zgMMYtHV+pOFwh6Kmd6FjS3CP/+dOVKARo6nxtG8RqXaYMk0oxNUtX/r5t4uzYfJ
+        ZfoTXKnfD9BLHiemRmNxe/Xjoa7iM2bHZWVxMVCKDh99eCJp/7+cdLObC/GpnflV
+        1Avfs9ubY8SAgqT0wiE9/fvNICQXjzupm0tgLW7rFcKwOwdKcUfaUKY39TcyZ+Oo
+        vGYIPzRBbyYmSY6T2s1DCdvEyosqg++n/woeb+t9tMYE+DiOZJGWeDQjX/1HyK5E
+        nd7oA0OaxQeT1Ic99a9lrnRY63dcHnogyo8riCVTL2kprKBnMQJM/UMzPVf515sQ
+        ==
+X-ME-Sender: <xms:0pV4XpGakGjxFm5WSUO12GozMq6f_D1A6FSPkAn00TVm_p6d4s6Ang>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudegkedgvddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:0pV4XikLQU1_NHrUyExDlyHq0J-4oojakDBlFW9FsrNR-C2JnF1hZw>
+    <xmx:0pV4XmKDL-6HyZMPOqYR6s0tWnJrzCMMMdwAO5GIRETYm08AjRr-WA>
+    <xmx:0pV4XjYGnEMLXt1wHnszQKokWtv-_l8H_BluGP_LWAI0VCj_lKT5Dw>
+    <xmx:05V4XimO5x58E3e7V1Pcv11tNhvCMfJifrwgWq7JC9tH9wENGCIu1criPgA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DED263280067;
+        Mon, 23 Mar 2020 06:56:17 -0400 (EDT)
+Date:   Mon, 23 Mar 2020 11:56:16 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Eric Anholt <eric@anholt.net>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 27/89] clk: bcm: Add BCM2711 DVP driver
+Message-ID: <20200323105616.kiwcyxxcb7eqqfsc@gilmour.lan>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+ <6dd6bd48e894c1e8ee85c29a30ba1b18041d83c4.1582533919.git-series.maxime@cerno.tech>
+ <158406125965.149997.13919203635322854760@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
-Received: from hankecai@vivo.com( [58.251.74.227) ] by ajax-webmail ( [127.0.0.1] ) ; Mon, 23 Mar 2020 18:53:46 +0800 (GMT+08:00)
-From:   =?UTF-8?B?6Z+p56eR5omN?= <hankecai@vivo.com>
-Date:   Mon, 23 Mar 2020 18:53:46 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVDTk1CQkJDTE9KSk9CQllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhNQ0pCTUpIS0hON1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6NBA6LDo4Izg9NC86NTNJNhpNIgIaFEJVSFVKTkNPQk1LQ0lCT0lMVTMWGhIXVRMaFRAeGBoS
-        Ow0SDRRVGBQWRVlXWRILWUFZTkNVSU5KVUxPVUlJTFlXWQgBWUFISUxINwY+
-X-HM-Tid: 0a710706ecaa9394kuws8201c1a3ead
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tfljntymmeg4eptb"
+Content-Disposition: inline
+In-Reply-To: <158406125965.149997.13919203635322854760@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksClN1cmUsIHRoYW5rcyBmb3IgeW91ciBjb25maXJtYXRpb24uCgoK5Y+R5Lu25Lq677yaQWxl
-eGFuZHJlIEJlbGxvbmkgPGFsZXhhbmRyZS5iZWxsb25pQGJvb3RsaW4uY29tPgrlj5HpgIHml6Xm
-nJ/vvJoyMDIwLTAzLTIzIDA1OjMzOjMxCuaUtuS7tuS6uu+8miLpn6nnp5HmiY0iIDxoYW5rZWNh
-aUB2aXZvLmNvbT4K5oqE6YCB5Lq677yaYS56dW1tb0B0b3dlcnRlY2guaXQsbGludXgtcnRjQHZn
-ZXIua2VybmVsLm9yZyxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnLHRyaXZpYWxAa2VybmVs
-Lm9yZyxrZXJuZWxAdml2by5jb20K5Li76aKY77yaUmU6IFtQQVRDSF0gcnRjOiBwbTh4eHg6IGNs
-ZWFyIGFsYXJtIHJlZ2lzdGVyIHdoZW4gYWxhcm0gaXMgbm90IGVuYWJsZWQ+T24gMjEvMDMvMjAy
-MCAxOTo1MDoxNyswODAwLCDpn6nnp5HmiY0gd3JvdGU6Cj4+IENsZWFyIGFsYXJtIHJlZ2lzdGVy
-IHdoZW4gYWxhcm0gaXMgbm90IGVuYWJsZWQgb3RoZXJ3aXNlIHRoZSBjb25zdW1lcgo+PiBtYXkg
-c3RpbGwgc3RhcnQgYWxhcm0gdGltZXIgaWYgaXQgZmluZCB0aGUgYWxhcm0gcmVnaXN0ZXIgaXMg
-bm90IHplcm8uCj4+IAo+PiBTaWduZWQtb2ZmLWJ5OiBoYW5rZWNhaSA8aGFua2VjYWlAdml2by5j
-b20+Cj4+IC0tLQo+PiAgZHJpdmVycy9ydGMvcnRjLXBtOHh4eC5jIHwgMTEgKysrKysrKysrKysK
-Pj4gIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspCj4+IAo+PiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9ydGMvcnRjLXBtOHh4eC5jIGIvZHJpdmVycy9ydGMvcnRjLXBtOHh4eC5jCj4KPkJl
-Y2F1c2UgdGhlIG90aGVyIG9uZSBkb2Vzbid0IGFwcGx5LCBJJ3ZlIGFwcGxpZWQgdGhhdCBvbmUu
-Cj4KPi0tIAo+QWxleGFuZHJlIEJlbGxvbmksIEJvb3RsaW4KPkVtYmVkZGVkIExpbnV4IGFuZCBL
-ZXJuZWwgZW5naW5lZXJpbmcKPmh0dHBzOi8vYm9vdGxpbi5jb20KDQoNCg==
+
+--tfljntymmeg4eptb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Stephen,
+
+On Thu, Mar 12, 2020 at 06:00:59PM -0700, Stephen Boyd wrote:
+> > +       dvp->clks[1] = clk_register_gate(&pdev->dev, "hdmi1-108MHz",
+> > +                                        parent, CLK_IS_CRITICAL,
+> > +                                        base + DVP_HT_RPI_MISC_CONFIG, 4,
+> > +                                        CLK_GATE_SET_TO_DISABLE, &dvp->reset.lock);
+>
+> Can we use clk_hw APIs, document why CLK_IS_CRITICAL, and use something
+> like clk_hw_register_gate_parent_data() so that we don't have to use
+> of_clk_get_parent_name() above?
+
+That function is new to me, and I'm not sure how I'm supposed to use it?
+
+It looks like clk_hw_register_gate, clk_hw_register_gate_parent_hw and
+clk_hw_register_gate_parent_data all call __clk_hw_register_gate with
+the same arguments, each expecting the parent_name, so they look
+equivalent?
+
+It looks like the original intent was to have the parent name, clk_hw
+or clk_parent_data as argument, but the macro itself was copy pasted
+without changing the arguments it's calling __clk_hw_register_gate
+with?
+
+Maxime
+
+--tfljntymmeg4eptb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXniV0AAKCRDj7w1vZxhR
+xTnlAQCIhFMKlCTUi7lT7vtutsg55UjNkCiTBydMK2jwFL/FAwD/SNvqj7HP9kXi
+Uu9uGwZ9ol7SO9ZaYUzJVfxPPZbXQww=
+=Ie9e
+-----END PGP SIGNATURE-----
+
+--tfljntymmeg4eptb--
