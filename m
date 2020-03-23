@@ -2,84 +2,134 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C2AC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C0AC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6316E20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 485402072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:17:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="P8kHhfGc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgCWNRS (ORCPT
+        id S1728500AbgCWNRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 09:17:18 -0400
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:53087 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728307AbgCWNRR (ORCPT
+        Mon, 23 Mar 2020 09:17:21 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:54220 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728307AbgCWNRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 09:17:17 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 6AD1F100EF4DC;
-        Mon, 23 Mar 2020 14:17:15 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id F291875F0B; Mon, 23 Mar 2020 14:17:14 +0100 (CET)
-Date:   Mon, 23 Mar 2020 14:17:14 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        gregkh@linuxfoundation.org, jslaby@suse.com,
-        matwey.kornilov@gmail.com, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] serial: 8250: Add rs485 emulation to 8250_dw
-Message-ID: <20200323131714.vmhjws5xpj6yf536@wunner.de>
-References: <20200318142640.982763-1-heiko@sntech.de>
- <5640842.EtOnNDtpGh@diego>
- <20200319054034.dyq7yydqi6yg7jhf@wunner.de>
- <6241816.LpgjcNKrfa@diego>
+        Mon, 23 Mar 2020 09:17:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584969440; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=khdlMni9LrUnSqeXAXRdAg8xsofhD9R5JuMv0cC8cNk=;
+ b=P8kHhfGcutG9UHIRTCEJ8EV7ZR1jbWzB6JHIQ+UgZjVKL+Gs7xtIrGroLgJl+rD9YL3meQch
+ 1uqhW5/W3G2CwBWdyncMIyS//yfcQuWmvq/T4/UdDtBHrkxUIHWgWPeVBcDX+Df71QJW+O0+
+ i0Ji6zTqKlaF8kUaPaH/TRK2GVo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e78b6d4.7f8c2bd296f8-smtp-out-n05;
+ Mon, 23 Mar 2020 13:17:08 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6EF7DC43636; Mon, 23 Mar 2020 13:17:08 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A4A9DC433D2;
+        Mon, 23 Mar 2020 13:17:07 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6241816.LpgjcNKrfa@diego>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Date:   Mon, 23 Mar 2020 18:47:07 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     mathieu.poirier@linaro.org, bjorn.andersson@linaro.org,
+        leo.yan@linaro.org, devicetree@vger.kernel.org, robh+dt@kernel.org,
+        agross@kernel.org, david.brown@linaro.org, mark.rutland@arm.com,
+        swboyd@chromium.org, rnayak@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/2] coresight: etm4x: Add support for Qualcomm SC7180 SoC
+In-Reply-To: <788554ee-1b78-9651-9a95-843b8725f502@arm.com>
+References: <cover.1584689229.git.saiprakash.ranjan@codeaurora.org>
+ <07a6b272c6e71e0e480f0dd0bffaf3138c0ab4c2.1584689229.git.saiprakash.ranjan@codeaurora.org>
+ <edf1bab3-411a-ff7a-b4ca-78a8ab00c72b@arm.com>
+ <4924d6c9495d412d9ecb3e1a50ea6ca8@codeaurora.org>
+ <788554ee-1b78-9651-9a95-843b8725f502@arm.com>
+Message-ID: <2c75f3548cc735b7ac53e9d06e3b9565@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 09:25:57AM +0100, Heiko St�bner wrote:
-> Am Donnerstag, 19. M�rz 2020, 06:40:34 CET schrieb Lukas Wunner:
-> > There are some more patches in the pipeline for the next cycle
-> > to add support for an rs485 bus termination GPIO.  They're on
-> > the tip of this branch:
-> > 
-> > https://github.com/RevolutionPi/linux/commits/revpi-4.19
-> > 
-> > Just so you know in advance and duplicate work is avoided.
+On 2020-03-23 17:09, Suzuki K Poulose wrote:
+> On 03/23/2020 11:32 AM, Sai Prakash Ranjan wrote:
+>> Hi Suzuki,
+>> 
+>> On 2020-03-23 15:25, Suzuki K Poulose wrote:
+>>> On 03/20/2020 07:44 AM, Sai Prakash Ranjan wrote:
+>>>> Add ETM Peripheral IDs for Qualcomm SC7180 SoC. It has
+>>>> 2 big CPU cores based on Cortex-A76 and 6 LITTLE CPU
+>>>> cores based on Cortex-A55.
+>>>> 
+>>>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>>> ---
+>>>>   drivers/hwtracing/coresight/coresight-etm4x.c | 2 ++
+>>>>   1 file changed, 2 insertions(+)
+>>>> 
+>>>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c 
+>>>> b/drivers/hwtracing/coresight/coresight-etm4x.c
+>>>> index a90d757f7043..a153a65c4c5b 100644
+>>>> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
+>>>> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+>>>> @@ -1556,6 +1556,8 @@ static const struct amba_id etm4_ids[] = {
+>>>>       CS_AMBA_UCI_ID(0x000f0211, uci_id_etm4),/* Qualcomm Kryo */
+>>>>       CS_AMBA_ID(0x000bb802),            /* Qualcomm Kryo 385 
+>>>> Cortex-A55 */
+>>>>       CS_AMBA_ID(0x000bb803),            /* Qualcomm Kryo 385 
+>>>> Cortex-A75 */
+>>>> +    CS_AMBA_ID(0x000bb805),            /* Qualcomm Kryo 4XX 
+>>>> Cortex-A55 */
+>>>> +    CS_AMBA_ID(0x000bb804),            /* Qualcomm Kryo 4XX 
+>>>> Cortex-A76 */
+>>> 
+>>> Does the DEVARCH indicate that it is an ETMv4 ? (It should !) Please
+>>> could we enforce the UCI_ID check for these components ? The
+>>> moment you add CTI components to your board this could conflict with
+>>> them unless we check the UCI_ID for ETMv4.
+>>> 
+>> 
+>> Yes I got these IDs through devarch and it does indicate that it is 
+>> ETMv4.2.
+>> 
+>> devname=7040000.etm dev->type=0x13 devarch=0x47724a13
+>> devname=7140000.etm dev->type=0x13 devarch=0x47724a13
+>> devname=7240000.etm dev->type=0x13 devarch=0x47724a13
+>> devname=7340000.etm dev->type=0x13 devarch=0x47724a13
+>> devname=7440000.etm dev->type=0x13 devarch=0x47724a13
+>> devname=7540000.etm dev->type=0x13 devarch=0x47724a13
+>> devname=7640000.etm dev->type=0x13 devarch=0x47724a13
+>> devname=7740000.etm dev->type=0x13 devarch=0x47724a13
+>> 
+>> I will add the UCI_ID as you suggested in next version.
 > 
-> do you plan on submitting these soonish? Because looking at your
-> termination-gpio change makes me want to do something similar for
-> my RE-gpio ... instead of trying to mangle this into the DTR thingy.
-[...]
-> So I guess having that as rs485-re-gpios property might be the best way.
+> If you do have access to the Kryo 385 variants, please fix
+> them as well.
+> 
 
-I plan to submit them once the 5.7 merge window closes, I'll probably
-have to go over them at least one more time to apply some polish.
-
-On UARTs capable of disabling and enabling the receiver in software,
-it's best to leverage that to enable full-duplex or half-duplex mode.
-However after having a brief look at the DW UART databook, it seems
-it's not capable of doing that.  For such UARTs, a separate GPIO indeed
-seems like a legitimate approach to allow switching between full-duplex
-and half-duplex.
-
-"rs485-re-gpios" seems a bit cryptic, how about "rs485-rx-enable-gpios"
-or "rs485-full-duplex-gpios"?
+Sure, will do.
 
 Thanks,
+Sai
 
-Lukas
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
