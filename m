@@ -2,419 +2,155 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EFFC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A7DC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D0172074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108B7206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:26:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgCWO0a (ORCPT
+        id S1727120AbgCWO0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:26:30 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:21245 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726191AbgCWO01 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:26:27 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 23 Mar 2020 19:55:35 +0530
-Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 23 Mar 2020 19:55:06 +0530
-Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
-        id 90D7F4C7E; Mon, 23 Mar 2020 19:55:05 +0530 (IST)
-From:   Pradeep P V K <ppvk@codeaurora.org>
-To:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
-        Pradeep P V K <ppvk@codeaurora.org>,
-        Subhash Jadavani <subhashj@codeaurora.org>
-Subject: [RFC v6 1/2] mmc: sdhci-msm: Add interconnect bus bandwidth scaling support
-Date:   Mon, 23 Mar 2020 19:55:01 +0530
-Message-Id: <1584973502-14775-2-git-send-email-ppvk@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1584973502-14775-1-git-send-email-ppvk@codeaurora.org>
-References: <1584973502-14775-1-git-send-email-ppvk@codeaurora.org>
+        Mon, 23 Mar 2020 10:26:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:50176 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725776AbgCWO0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 10:26:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B28771FB;
+        Mon, 23 Mar 2020 07:26:37 -0700 (PDT)
+Received: from [192.168.1.19] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A7CEF3F52E;
+        Mon, 23 Mar 2020 07:26:36 -0700 (PDT)
+Subject: Re: [PATCH v2 3/9] sched: Remove checks against SD_LOAD_BALANCE
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        peterz@infradead.org, vincent.guittot@linaro.org
+References: <20200311181601.18314-1-valentin.schneider@arm.com>
+ <20200311181601.18314-4-valentin.schneider@arm.com>
+ <c74a32d9-e40c-b976-be19-9ceea91d6fa7@arm.com> <jhjv9n0o8hf.mognet@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <5decd96b-6fe0-3c35-4609-59378a0c8621@arm.com>
+Date:   Mon, 23 Mar 2020 15:26:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <jhjv9n0o8hf.mognet@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add interconnect bandwidths for SDHC driver using OPP framework that
-is required by SDHC driver based on the clock frequency and bus width
-of the card. Otherwise, the system clocks may run at minimum clock
-speed and thus affecting the performance.
+On 19.03.20 13:05, Valentin Schneider wrote:
+> 
+> On Thu, Mar 19 2020, Dietmar Eggemann wrote:
+>> On 11.03.20 19:15, Valentin Schneider wrote:
 
-This change is based on
-[RFC] mmc: host: sdhci-msm: Use the interconnect API
-(https://lkml.org/lkml/2018/10/11/499) and
+[...]
 
-[PATCH v6] Introduce Bandwidth OPPs for interconnects
-(https://lkml.org/lkml/2019/12/6/740)
+> Your comments make me realize that changelog isn't great, what about the
+> following?
+> 
+> ---
+> 
+> The SD_LOAD_BALANCE flag is set unconditionally for all domains in
+> sd_init(). By making the sched_domain->flags syctl interface read-only, we
+> have removed the last piece of code that could clear that flag - as such,
+> it will now be always present. Rather than to keep carrying it along, we
+> can work towards getting rid of it entirely.
+> 
+> cpusets don't need it because they can make CPUs be attached to the NULL
+> domain (e.g. cpuset with sched_load_balance=0), or to a partitionned
 
-Co-developed-by: Sahitya Tummala <stummala@codeaurora.org>
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Co-developed-by: Subhash Jadavani <subhashj@codeaurora.org>
-Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
----
+s/partitionned/partitioned
 
-RFC v5 -> v6:
-- Added new goto jump tag to put both icc paths.
-- Removed bus vote data error check and added is_null check.
-- Addressed minor code style comments.
+> root_domain, i.e. a sched_domain hierarchy that doesn't span the entire
+> system (e.g. root cpuset with sched_load_balance=0 and sibling cpusets with
+> sched_load_balance=1).
+> 
+> isolcpus apply the same "trick": isolated CPUs are explicitly taken out of
+> the sched_domain rebuild (using housekeeping_cpumask()), so they get the
+> NULL domain treatment as well.
+> 
+> Remove the checks against SD_LOAD_BALANCE.
 
- drivers/mmc/host/sdhci-msm.c | 240 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 236 insertions(+), 4 deletions(-)
+Sounds better to me:
 
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index 09ff731..469db65 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -11,8 +11,10 @@
- #include <linux/mmc/mmc.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
-+#include <linux/interconnect.h>
- #include <linux/iopoll.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/pm_opp.h>
- 
- #include "sdhci-pltfm.h"
- #include "cqhci.h"
-@@ -234,6 +236,12 @@ struct sdhci_msm_variant_info {
- 	const struct sdhci_msm_offset *offset;
- };
- 
-+struct sdhci_msm_bus_vote_data {
-+	struct icc_path *sdhc_to_ddr;
-+	struct icc_path *cpu_to_sdhc;
-+	u32 curr_freq;
-+};
-+
- struct sdhci_msm_host {
- 	struct platform_device *pdev;
- 	void __iomem *core_mem;	/* MSM SDCC mapped address */
-@@ -260,8 +268,11 @@ struct sdhci_msm_host {
- 	bool use_cdr;
- 	u32 transfer_mode;
- 	bool updated_ddr_cfg;
-+	struct sdhci_msm_bus_vote_data *bus_vote_data;
- };
- 
-+static void sdhci_msm_bus_voting(struct sdhci_host *host, bool enable);
-+
- static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
- {
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-@@ -1581,6 +1592,7 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
- 
- 	msm_set_clock_rate_for_bus_mode(host, clock);
- out:
-+	sdhci_msm_bus_voting(host, !!clock);
- 	__sdhci_msm_set_clock(host, clock);
- }
- 
-@@ -1823,6 +1835,210 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
- 	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
- }
- 
-+/*
-+ * Returns required bandwidth in Bytes per Sec
-+ */
-+static unsigned long sdhci_get_bw_required(struct sdhci_host *host,
-+					struct mmc_ios *ios)
-+{
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-+
-+	switch (ios->bus_width) {
-+	case MMC_BUS_WIDTH_1:
-+		return msm_host->clk_rate / 8;
-+	case MMC_BUS_WIDTH_4:
-+		return msm_host->clk_rate / 2;
-+	case MMC_BUS_WIDTH_8:
-+		break;
-+	}
-+	return msm_host->clk_rate;
-+}
-+
-+/*
-+ * Helper function to parse the exact OPP node
-+ * Returns OPP pointer on success else NULL on error
-+ */
-+static struct dev_pm_opp
-+		*sdhci_msm_find_opp_for_freq(struct sdhci_msm_host *msm_host,
-+							unsigned long bw)
-+{
-+	struct dev_pm_opp *opp;
-+	struct sdhci_host *host = mmc_priv(msm_host->mmc);
-+	unsigned int freq = bw;
-+	struct device *dev = &msm_host->pdev->dev;
-+
-+
-+	if (!freq)
-+		opp = dev_pm_opp_find_peak_bw_floor(dev, &freq);
-+	else
-+		opp = dev_pm_opp_find_peak_bw_exact(dev, freq, true);
-+
-+	/* Max bandwidth vote */
-+	if (PTR_ERR(opp) == -ERANGE && freq > sdhci_msm_get_max_clock(host))
-+		opp = dev_pm_opp_find_peak_bw_ceil(dev, &bw);
-+
-+	if (IS_ERR(opp)) {
-+		dev_err(dev, "Failed to find OPP for freq:%u err:%ld\n",
-+				freq, PTR_ERR(opp));
-+		return NULL;
-+	}
-+	return opp;
-+}
-+
-+/*
-+ * This function sets the interconnect bus bandwidth
-+ * vote based on bw (bandwidth) argument.
-+ */
-+#define BUS_INTERCONNECT_PATHS 2 /* 1. sdhc -> ddr 2. cpu -> sdhc */
-+static void sdhci_msm_bus_set_vote(struct sdhci_host *host,
-+						unsigned int bw)
-+{
-+	int i, err;
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-+	struct sdhci_msm_bus_vote_data *vote_data = msm_host->bus_vote_data;
-+	struct device *dev = &msm_host->pdev->dev;
-+	struct dev_pm_opp *opp;
-+	unsigned long freq = bw;
-+	unsigned long peak_bw[BUS_INTERCONNECT_PATHS] = {0};
-+	unsigned long avg_bw[BUS_INTERCONNECT_PATHS] = {0};
-+
-+	if (bw == vote_data->curr_freq)
-+		return;
-+
-+	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
-+		opp = sdhci_msm_find_opp_for_freq(msm_host, freq);
-+		if (opp) {
-+			avg_bw[i] = dev_pm_opp_get_bw(opp, &peak_bw[i]);
-+			freq += 1; /* Next bandwidth vote */
-+			dev_pm_opp_put(opp);
-+		}
-+	}
-+	pr_debug("%s: freq:%d sdhc_to_ddr avg_bw:%lu peak_bw:%lu cpu_to_sdhc avg_bw:%lu peak_bw:%lu\n",
-+			mmc_hostname(host->mmc), bw, avg_bw[0], peak_bw[0],
-+				avg_bw[1], peak_bw[1]);
-+	err = icc_set_bw(vote_data->sdhc_to_ddr, 0, peak_bw[0]);
-+	if (err) {
-+		dev_err(dev, "icc_set() failed for 'sdhc-ddr' path err:%d\n",
-+			err);
-+		return;
-+	}
-+	err = icc_set_bw(vote_data->cpu_to_sdhc, 0, peak_bw[1]);
-+	if (err) {
-+		dev_err(dev, "icc_set() failed for 'cpu-sdhc' path err:%d\n",
-+			err);
-+		return;
-+	}
-+	vote_data->curr_freq = bw;
-+}
-+
-+/*
-+ * Helper function to register for OPP and interconnect
-+ * frameworks.
-+ */
-+static struct sdhci_msm_bus_vote_data
-+		*sdhci_msm_bus_register(struct sdhci_msm_host *host,
-+				struct platform_device *pdev)
-+{
-+	struct sdhci_msm_bus_vote_data *vote_data;
-+	struct device *dev = &pdev->dev;
-+	int i, err;
-+	struct icc_path *icc_paths[BUS_INTERCONNECT_PATHS];
-+	const char *path_names[] = {
-+		"sdhc-ddr",
-+		"cpu-sdhc",
-+	};
-+
-+	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++)
-+		icc_paths[i] = of_icc_get(&pdev->dev, path_names[i]);
-+
-+	if (!icc_paths[0] && !icc_paths[1]) {
-+		dev_info(&pdev->dev, "ICC DT property is missing.Skip vote!!\n");
-+		return NULL;
-+	}
-+
-+	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
-+		if (!icc_paths[i]) {
-+			dev_err(&pdev->dev, "interconnect path '%s' is not configured\n",
-+					path_names[i]);
-+			err = -EINVAL;
-+			goto handle_err;
-+		}
-+		if (IS_ERR(icc_paths[i])) {
-+			err = PTR_ERR(icc_paths[i]);
-+
-+			if (err != -EPROBE_DEFER)
-+				dev_err(&pdev->dev, "interconnect path '%s' is invalid:%d\n",
-+					path_names[i], err);
-+			goto handle_err;
-+		}
-+	}
-+
-+	err = dev_pm_opp_of_add_table(dev);
-+	if (err) {
-+		if (err == -ENODEV || err == -ENODATA)
-+			dev_err(dev, "OPP dt properties missing:%d\n", err);
-+		else
-+			dev_err(dev, "OPP registration failed:%d\n", err);
-+		goto put_icc;
-+	}
-+
-+	vote_data = devm_kzalloc(dev, sizeof(*vote_data), GFP_KERNEL);
-+	if (!vote_data) {
-+		err = -ENOMEM;
-+		goto put_icc;
-+	}
-+	vote_data->sdhc_to_ddr = icc_paths[0];
-+	vote_data->cpu_to_sdhc = icc_paths[1];
-+	return vote_data;
-+
-+handle_err:
-+	if (err) {
-+		int other = (i == 0) ? 1 : 0;
-+
-+		if (!IS_ERR_OR_NULL(icc_paths[other]))
-+			icc_put(icc_paths[other]);
-+	}
-+	return ERR_PTR(err);
-+
-+put_icc:
-+	if (err) {
-+		for (i = 0; i < BUS_INTERCONNECT_PATHS; i++)
-+			icc_put(icc_paths[i]);
-+	}
-+	return ERR_PTR(err);
-+}
-+
-+static void sdhci_msm_bus_unregister(struct device *dev,
-+				struct sdhci_msm_host *host)
-+{
-+	struct sdhci_msm_bus_vote_data *vote_data = host->bus_vote_data;
-+
-+	if (!vote_data)
-+		return;
-+
-+	icc_put(vote_data->sdhc_to_ddr);
-+	icc_put(vote_data->cpu_to_sdhc);
-+}
-+
-+static void sdhci_msm_bus_voting(struct sdhci_host *host, bool enable)
-+{
-+	struct mmc_ios *ios = &host->mmc->ios;
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-+	unsigned int bw;
-+
-+	if (!msm_host->bus_vote_data)
-+		return;
-+
-+	if (enable) {
-+		bw = sdhci_get_bw_required(host, ios);
-+		sdhci_msm_bus_set_vote(host, bw);
-+	} else
-+		sdhci_msm_bus_set_vote(host, 0);
-+}
-+
- static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
- {
- 	if ((host->mmc->caps2 & MMC_CAP2_CQE) && (mask & SDHCI_RESET_ALL))
-@@ -1992,11 +2208,20 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 		dev_warn(&pdev->dev, "TCXO clk not present (%d)\n", ret);
- 	}
- 
-+	msm_host->bus_vote_data = sdhci_msm_bus_register(msm_host, pdev);
-+	if (IS_ERR(msm_host->bus_vote_data)) {
-+		ret = PTR_ERR(msm_host->bus_vote_data);
-+		dev_err(&pdev->dev, "Bus registration failed (%d)\n", ret);
-+		goto clk_disable;
-+	}
-+
-+	sdhci_msm_bus_voting(host, true);
-+
- 	if (!msm_host->mci_removed) {
- 		msm_host->core_mem = devm_platform_ioremap_resource(pdev, 1);
- 		if (IS_ERR(msm_host->core_mem)) {
- 			ret = PTR_ERR(msm_host->core_mem);
--			goto clk_disable;
-+			goto bus_unregister;
- 		}
- 	}
- 
-@@ -2071,7 +2296,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 	msm_host->pwr_irq = platform_get_irq_byname(pdev, "pwr_irq");
- 	if (msm_host->pwr_irq < 0) {
- 		ret = msm_host->pwr_irq;
--		goto clk_disable;
-+		goto bus_unregister;
- 	}
- 
- 	sdhci_msm_init_pwr_irq_wait(msm_host);
-@@ -2084,7 +2309,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 					dev_name(&pdev->dev), host);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Request IRQ failed (%d)\n", ret);
--		goto clk_disable;
-+		goto bus_unregister;
- 	}
- 
- 	pm_runtime_get_noresume(&pdev->dev);
-@@ -2112,6 +2337,9 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
- 	pm_runtime_set_suspended(&pdev->dev);
- 	pm_runtime_put_noidle(&pdev->dev);
-+bus_unregister:
-+	sdhci_msm_bus_voting(host, false);
-+	sdhci_msm_bus_unregister(&pdev->dev, msm_host);
- clk_disable:
- 	clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
- 				   msm_host->bulk_clks);
-@@ -2141,6 +2369,9 @@ static int sdhci_msm_remove(struct platform_device *pdev)
- 				   msm_host->bulk_clks);
- 	if (!IS_ERR(msm_host->bus_clk))
- 		clk_disable_unprepare(msm_host->bus_clk);
-+
-+	sdhci_msm_bus_voting(host, false);
-+	sdhci_msm_bus_unregister(&pdev->dev, msm_host);
- 	sdhci_pltfm_free(pdev);
- 	return 0;
- }
-@@ -2153,7 +2384,7 @@ static __maybe_unused int sdhci_msm_runtime_suspend(struct device *dev)
- 
- 	clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
- 				   msm_host->bulk_clks);
--
-+	sdhci_msm_bus_voting(host, false);
- 	return 0;
- }
- 
-@@ -2175,6 +2406,7 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
- 	if (msm_host->restore_dll_config && msm_host->clk_rate)
- 		return sdhci_msm_restore_sdr_dll_config(host);
- 
-+	sdhci_msm_bus_voting(host, true);
- 	return 0;
- }
- 
--- 
-1.9.1
+Essentially, I was referring to examples like:
 
+Hikey960 - 2x4
+
+(A) exclusive cpusets:
+
+root@h960:/sys/fs/cgroup/cpuset# mkdir cs1
+root@h960:/sys/fs/cgroup/cpuset# echo 1 > cs1/cpuset.cpu_exclusive
+root@h960:/sys/fs/cgroup/cpuset# echo 0 > cs1/cpuset.mems
+root@h960:/sys/fs/cgroup/cpuset# echo 0-2 > cs1/cpuset.cpus
+root@h960:/sys/fs/cgroup/cpuset# mkdir cs2
+root@h960:/sys/fs/cgroup/cpuset# echo 1 > cs2/cpuset.cpu_exclusive
+root@h960:/sys/fs/cgroup/cpuset# echo 0 > cs2/cpuset.mems
+root@h960:/sys/fs/cgroup/cpuset# echo 3-5 > cs2/cpuset.cpus
+root@h960:/sys/fs/cgroup/cpuset# echo 0 > cpuset.sched_load_balance
+
+root@h960:/proc/sys/kernel# tree -d sched_domain
+
+├── cpu0
+│   └── domain0
+├── cpu1
+│   └── domain0
+├── cpu2
+│   └── domain0
+├── cpu3
+│   └── domain0
+├── cpu4
+│   ├── domain0
+│   └── domain1
+├── cpu5
+│   ├── domain0
+│   └── domain1
+├── cpu6
+└── cpu7
+
+(B) non-exclusive cpuset:
+
+root@h960:/sys/fs/cgroup/cpuset# echo 0 > cpuset.sched_load_balance
+
+[ 8661.240385] CPU1 attaching NULL sched-domain.
+[ 8661.244802] CPU2 attaching NULL sched-domain.
+[ 8661.249255] CPU3 attaching NULL sched-domain.
+[ 8661.253623] CPU4 attaching NULL sched-domain.
+[ 8661.257989] CPU5 attaching NULL sched-domain.
+[ 8661.262363] CPU6 attaching NULL sched-domain.
+[ 8661.266730] CPU7 attaching NULL sched-domain.
+
+root@h960:/sys/fs/cgroup/cpuset# mkdir cs1
+root@h960:/sys/fs/cgroup/cpuset# echo 0-5 > cs1/cpuset.cpus
+
+root@h960:/proc/sys/kernel# tree -d sched_domain
+
+├── cpu0
+│   ├── domain0
+│   └── domain1
+├── cpu1
+│   ├── domain0
+│   └── domain1
+├── cpu2
+│   ├── domain0
+│   └── domain1
+├── cpu3
+│   ├── domain0
+│   └── domain1
+├── cpu4
+│   ├── domain0
+│   └── domain1
+├── cpu5
+│   ├── domain0
+│   └── domain1
+├── cpu6
+└── cpu7
