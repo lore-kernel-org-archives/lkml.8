@@ -2,130 +2,84 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAA7C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA19C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 954062072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8B720753
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:08:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="fa/awnkc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgCWSH6 (ORCPT
+        id S1727991AbgCWSH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:07:58 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:37616 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727938AbgCWSH4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 14:07:59 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:4783 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727948AbgCWSH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Mar 2020 14:07:56 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B8C87803078E;
-        Mon, 23 Mar 2020 18:07:53 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id KMehCRwK9X57; Mon, 23 Mar 2020 21:07:53 +0300 (MSK)
-From:   <Sergey.Semin@baikalelectronics.ru>
-To:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 4/6] gpio: dwapb: Use optional-clocks interface for APB ref-clock
-Date:   Mon, 23 Mar 2020 21:06:30 +0300
-Message-ID: <20200323180632.14119-5-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
- <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48mMmn02cmzWS;
+        Mon, 23 Mar 2020 19:07:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1584986874; bh=OwWDAGoWwLX+Rux5D8wCOzLmonUfFV+DbmjbSKwPNpQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fa/awnkcwxuhGfvOJTNp4L4IIqzMwI8izTOjMi+FcjTGDtWbxlp1hEi1tvwVBaRE0
+         ExFnWDfzv0bBXgAdY0m+7hNDvsrTwN40V0EmHoDgcve2vxVoJ/OWt5BADJ5rSEHwQo
+         FQa5cZFS/YRVRECcW/S710bSSNdVEhhVHYe5s0kDxl1QbRDiQ1bSP3W053lI1kfAQm
+         FTKtNGE/ZyAWGymF802OCPJTBjaK055+R5HI6BrtypBq8+UkIprxscvTBKz+3Hoc5p
+         QdbVuQVVUSNX93TUQebeS7aiUQsAWVYTo95mbpIX+/Tc6gK3Aj8erYPK5hT3wOcZDb
+         G8WaUrpBwO2Sw==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Mon, 23 Mar 2020 19:07:50 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>, linux-tegra@vger.kernel.org,
+        linux-block@vger.kernel.org, Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/10] Introduce NVIDIA Tegra Partition Table
+Message-ID: <20200323180750.GA30585@qmqm.qmqm.pl>
+References: <20200323163431.7678-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200323163431.7678-1-digetx@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On Mon, Mar 23, 2020 at 07:34:21PM +0300, Dmitry Osipenko wrote:
+> Some NVIDIA Tegra devices have GPT entry at a wrong location and others may
+> even not have it at all. So either a custom workaround for GPT parsing or
+> TegraPT support is needed for those devices if we want to support them in
+> upstream kernel. The former solution was already rejected [1], let's try
+> the latter.
+[...]
 
-The common clocks kernel framework provides a generic way to use
-an optional reference clock sources. If it's utilized there is no
-need in checking whether the clock descriptor pointer is actually a
-negative error at the moment of the prepare/unprepare clocks method
-calling. So if the corresponding clock source is provided, then
-getting an error shall actually terminate the device probe procedure.
-If it isn't specified then the driver shall proceed with further
-initializations.
+Hi Dmitry,
 
-We'll use the optional clocks getting method to handle the APB reference
-clock, which can be provided for instance in the device of-node with
-"bus" clock-name.
+This amusing use of whole-device offsets in the TegraPT makes it take
+a lot of hacks to support it. Have you considered to first join the MMC
+hardware partitions using DM and its linear target and only then processing
+the partition table dividing just the merged device?
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-
----
-
-Changelog v2:
-- Print error instead of info-message if APB clock either failed to be
-  acquired or couldn't be enabled.
----
- drivers/gpio/gpio-dwapb.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 92e127e74813..0c5abfa361e6 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -690,13 +690,16 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
- 		return PTR_ERR(gpio->regs);
- 
- 	/* Optional bus clock */
--	gpio->clk = devm_clk_get(&pdev->dev, "bus");
--	if (!IS_ERR(gpio->clk)) {
--		err = clk_prepare_enable(gpio->clk);
--		if (err) {
--			dev_info(&pdev->dev, "Cannot enable clock\n");
--			return err;
--		}
-+	gpio->clk = devm_clk_get_optional(&pdev->dev, "bus");
-+	if (IS_ERR(gpio->clk)) {
-+		dev_err(&pdev->dev, "Cannot get APB clock\n");
-+		return PTR_ERR(gpio->clk);
-+	}
-+
-+	err = clk_prepare_enable(gpio->clk);
-+	if (err) {
-+		dev_err(&pdev->dev, "Cannot enable APB clock\n");
-+		return err;
- 	}
- 
- 	gpio->flags = 0;
-@@ -793,8 +796,7 @@ static int dwapb_gpio_resume(struct device *dev)
- 	unsigned long flags;
- 	int i;
- 
--	if (!IS_ERR(gpio->clk))
--		clk_prepare_enable(gpio->clk);
-+	clk_prepare_enable(gpio->clk);
- 
- 	spin_lock_irqsave(&gc->bgpio_lock, flags);
- 	for (i = 0; i < gpio->nr_ports; i++) {
--- 
-2.25.1
-
+Best Regards,
+Micha³ Miros³aw
