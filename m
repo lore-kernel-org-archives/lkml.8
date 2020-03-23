@@ -2,117 +2,117 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BB0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FA6C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D12BD20789
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 590E02074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:11:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CgE+nh/4"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eZwZ4T6t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbgCWRLB (ORCPT
+        id S1727754AbgCWRLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:11:01 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:55757 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727201AbgCWRK7 (ORCPT
+        Mon, 23 Mar 2020 13:11:08 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34732 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727257AbgCWRLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:10:59 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584983458; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=CzEwMos4Yyj1h7s0OSbR4yOAc3JC3hcUnO0IMzo1qok=; b=CgE+nh/40KFCL3ip5KU5azGAMDzOs2BujYSlluk9o355fXZrvKbOz4NOlIZKN2ybC8JlSaGo
- 5G4ihLuBJXjfPKFI+rSekr4fsukmhz9RxDlYYXKG/2NvQFkNq6JzEHTJxhQQmKF2fTiJBuCR
- GL6EQrBemmyAADWu/tA7hDoMeFU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e78ed94.7f6ccb263ea0-smtp-out-n05;
- Mon, 23 Mar 2020 17:10:44 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F056AC433BA; Mon, 23 Mar 2020 17:10:43 +0000 (UTC)
-Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04585C433D2;
-        Mon, 23 Mar 2020 17:10:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04585C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: drivers/net/wireless spring cleaning
-References: <20200225012008.GA4309@embeddedor>
-        <20200225183247.GW11244@42.do-not-panic.com>
-Date:   Mon, 23 Mar 2020 19:10:39 +0200
-In-Reply-To: <20200225183247.GW11244@42.do-not-panic.com> (Luis Chamberlain's
-        message of "Tue, 25 Feb 2020 18:32:48 +0000")
-Message-ID: <87ftdzq9o0.fsf_-_@tynnyri.adurom.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Mon, 23 Mar 2020 13:11:05 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NHAGRO039472;
+        Mon, 23 Mar 2020 17:11:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=YCzgLbBZj5k8qIFVeAOYpztQF0I1eiKCR70BTCEJVNE=;
+ b=eZwZ4T6tF9kC32ji6w2JL764gaCFR9QBe2h5/+r1cHA5ibPrQvp8PwfeE/h2TVR2d41N
+ hYFiO93OF7+i7c4BeDAia4STVYRUPUs4nF9wGTX2TOZnJWBM159Zq9MAawg/kkt7cUsY
+ 95KPE/RltGhKxq2Nxy52wL4C4ERPtKx7KXJDL5tRTeWUv7R8g4MwldF6qRtNc+y5RE2h
+ dId9jFdZ4MNBZ0yo27JofFdX/pT8Qn01QMlw4vsdOmFqbqNFMc9CEULHWdMVkXuQV3Xr
+ 87t0oNL4Toy6u0SW+b6D9cFxozIDpsBx5kXOy62+TmSYvYPRdyJvOKa1RocMHYzh2vFe Jg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2yx8abvu34-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Mar 2020 17:11:00 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NGvVds067395;
+        Mon, 23 Mar 2020 17:10:59 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2yxw914qf6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Mar 2020 17:10:59 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02NHAwOA009796;
+        Mon, 23 Mar 2020 17:10:58 GMT
+Received: from localhost.uk.oracle.com (/10.175.192.214)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Mar 2020 10:10:57 -0700
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     brendanhiggins@google.com, shuah@kernel.org,
+        trishalfonso@google.com
+Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Alan Maguire <alan.maguire@oracle.com>
+Subject: [PATCH v2 kunit-next 0/2] kunit: extend kunit resources API
+Date:   Mon, 23 Mar 2020 17:10:41 +0000
+Message-Id: <1584983443-27456-1-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 bulkscore=0
+ adultscore=0 mlxscore=0 malwarescore=0 mlxlogscore=891 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003230090
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
+ mlxscore=0 adultscore=0 phishscore=0 impostorscore=0 mlxlogscore=955
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003230090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(changing the subject)
+A recent RFC patch set [1] suggests some additional functionality
+may be needed around kunit resources.  It seems to require
 
-Luis Chamberlain <mcgrof@kernel.org> writes:
+1. support for resources without allocation
+2. support for lookup of such resources
+3. support for access to resources across multiple kernel threads
 
-> On Mon, Feb 24, 2020 at 07:20:08PM -0600, Gustavo A. R. Silva wrote:
->> The current codebase makes use of the zero-length array language
->> extension to the C90 standard, but the preferred mechanism to declare
->> variable-length types such as these ones is a flexible array member[1][2],
->> introduced in C99:
->> 
->> struct foo {
->>         int stuff;
->>         struct boo array[];
->> };
->> 
->> By making use of the mechanism above, we will get a compiler warning
->> in case the flexible array does not occur last in the structure, which
->> will help us prevent some kind of undefined behavior bugs from being
->> inadvertently introduced[3] to the codebase from now on.
->> 
->> Also, notice that, dynamic memory allocations won't be affected by
->> this change:
->> 
->> "Flexible array members have incomplete type, and so the sizeof operator
->> may not be applied. As a quirk of the original implementation of
->> zero-length arrays, sizeof evaluates to zero."[1]
->> 
->> This issue was found with the help of Coccinelle.
->> 
->> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
->> [2] https://github.com/KSPP/linux/issues/21
->> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->> 
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->
-> I'd rather we just remove this driver completely, as it has a
-> replacement upstream p54, and remained upstream just for a theoretical
-> period of time someone was not able to use p54 anymore. I'll follow up
-> with a removal of the driver.
+The proposed changes here are designed to address these needs.
+The idea is we first generalize the API to support adding
+resources with static data; then from there we support named
+resources.  The latter support is needed because if we are
+in a different thread context and only have the "struct kunit *"
+to work with, we need a way to identify a resource in lookup.
 
-Yeah, please do.
+[1] https://lkml.org/lkml/2020/2/26/1286
 
-I wonder if we should do other spring cleanup as well and remove drivers
-like ray_cs and wl3501, I have not seen any activity on those for years.
-Also rndis_wlan would be other candidate for removal.
+Changes since v1:
+ - reformatted longer parameter lists to have one parameter per-line
+   (Brendan, patch 1)
+ - fixed phrasing in various comments to clarify allocation of memory
+   and added comment to kunit resource tests to clarify why
+   kunit_put_resource() is used there (Brendan, patch 1)
+ - changed #define to static inline function (Brendan, patch 2)
+ - simplified kunit_add_named_resource() to use more of existing
+   code for non-named resource (Brendan, patch 2)
 
-Anyone know if these drivers are used or if they even work anymore?
+Alan Maguire (2):
+  kunit: generalize kunit_resource API beyond allocated resources
+  kunit: add support for named resources
+
+ include/kunit/test.h      | 159 +++++++++++++++++++++++++++-------
+ lib/kunit/kunit-test.c    | 111 +++++++++++++++++++-----
+ lib/kunit/string-stream.c |  14 ++-
+ lib/kunit/test.c          | 211 ++++++++++++++++++++++++++++++++--------------
+ 4 files changed, 371 insertions(+), 124 deletions(-)
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+1.8.3.1
+
