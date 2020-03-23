@@ -2,398 +2,217 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDC6C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F448C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1D620719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09149206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mVp529FW"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ZuvilEIL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgCWXZz (ORCPT
+        id S1727046AbgCWXcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 19:25:55 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:47101 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726982AbgCWXZz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 19:25:55 -0400
-Received: by mail-il1-f195.google.com with SMTP id e8so15019948ilc.13
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 16:25:54 -0700 (PDT)
+        Mon, 23 Mar 2020 19:32:17 -0400
+Received: from mail-dm6nam11on2074.outbound.protection.outlook.com ([40.107.223.74]:25448
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726203AbgCWXcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 19:32:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iHzFXlgGnK1yPle8nkEviHuyI4NPuTaaiGEkSgmhSYziA2irD0l8auocvthrbswUa8RmxfKEn6vYGXslRFh5DVQLiI+qctD8nKcZRPA4QI2SiBruLwpB6y8Gm+w+Mr+Q7WvrZasBSZjwP+J1qGXPm/pahxQVOgcXr+TIInhR0gDzb1ynTkq4HAxG3vlWjIjUZHYNAtjIw3E6AmJctVAbaBp/1wTtiH25stto2ZE2Oir0uBGYvPZBBcYJAKtRTRs4IBnM8h5Xyl1L2qUqG67pVBZGBU/xTkmL8Z9vHHGkva8KCyFtBdz5f3+OcYCWnS+REN8CZgjpcEicYow4MIcAjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wbWjwDyJbgKKIFJ/eDK+V+dNv09mkJebB/TfuX4qZ5s=;
+ b=kRDP+nda43f1xNsTBQF4NBo1JVtS3Pg6GoqE9dAsHO1onkJAuy32O/JtCLe0NWfiL8rDeGF8/sfcHby5EvbhxQD7kqKTkmAJPQ+lDPlgVTNYWsXzaTKDP+1u4aEemfsZmfUhs5Mkdu0KbP2Gsoh88pvwyouQ0+4Q8o+1LBxz/YaQjIgrZJDgHzyLIZop7ucd0TIWaANfPBGqEgPoDijxP9im7Zz6E00w09U8HAyatzLVDfQhbiz1VojwIPtA+eujPBh8qBWYUvyYfh4Uu3wBSJwH6VB9k9/1V/RMmWtk2bxc5DbA0Ba6Y/3uQOn0FMmcKOLQlxOAHa31FOmGEyhWxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gh9vjwCy/n7eN7gQ+3EfFjdljWF4MHbtJSXf4X51/Mk=;
-        b=mVp529FWKOATrbMF+7HQazoFSV8DrfiOgLLZ0GudwNuIOMxu9wgCidZRX5ytupBlHi
-         +iWTvVEpRSvM9sf5KCy+ejgcg2Pb4aMQTSZQkxTHxDwUyTv9WNSzEfBFeJjqcSYzCZB2
-         je85hcrUs/sDqq5hlWoThf1h1iZ3PZ3IfICqwP3xoiWC5X8tClIDZUuQIm1Huwri9+cP
-         E72f0OMtUH1mfr+8jv/71CxYOH+SjyUhjtuU+jD6W1U0VSwDvHCZYJ1hDGb0mMO7nKDr
-         D4bOiHyQsR1nLoHdez5KCtxDQCuqOswD7Te8VRb5EVOM7+ybc3iPmFMYu0d7+GY++PFu
-         RwbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gh9vjwCy/n7eN7gQ+3EfFjdljWF4MHbtJSXf4X51/Mk=;
-        b=LnUxoPXsZHMmS4NObMeAKlh5+gx4QqcrvqiP5+U7VrjGzdIZArMYVmAdnPS2YKL83x
-         JgZT+Q2rN0J78Dcyh0MT4+9QUmX8F4nmzs+lIlecORR+Vr62mNy2TrYKd5UOjbc3GrtI
-         B2BVcaTClSbelOzl+3sNWxYFWFzvAZDRj38jcqx5DBd+02mKx4zr/LWJDodyMYDowBLE
-         C9LUp/OAOslyCSupJfc2chBgs91HJMSLSbZoNOZolgsrSGoF24qsmQPuhyWmykOn7D1z
-         KJCEYMdQAnmZDsTHPUBnjzL72ffu2zHbdPR4l6W+dt190KeaMuqmwC/FbQgA5t8GlnJF
-         R/JA==
-X-Gm-Message-State: ANhLgQ2SvFHgzKkrj5/2sYPGPEM8TPY1JX0PTY+K8WsDaGYKdQNLTAEc
-        QFvnwQAVAeF3UYpKJgBqy0LeW2eSV2ZEu93yi6pcgg==
-X-Google-Smtp-Source: ADFU+vuQF643mx42yg7Dif4Eg+OfFoR9j+RQNKH7PXwlKtXjgJRDp4CaT3IdnzCGtFb3ilzj6VJmt9vb0aSbtEx2g7M=
-X-Received: by 2002:a92:5ccd:: with SMTP id d74mr22330140ilg.59.1585005953548;
- Mon, 23 Mar 2020 16:25:53 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wbWjwDyJbgKKIFJ/eDK+V+dNv09mkJebB/TfuX4qZ5s=;
+ b=ZuvilEILL3H9lLBBQ5WjqSM7yHc+//0ZDesShP/HFL2n2xO93z+NpyUXmfayxg7zQs05lzhivouF0E+msmJWjDegQV19Gd2wR2s2lTNdzXymB8vuiJydfq+Sjs8I48dOo1NDxPE6eCFOa2gb5FMmCEJ1nQFQUQfVn0pBJglhsKo=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=kim.phillips@amd.com; 
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
+ by SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.22; Mon, 23 Mar
+ 2020 23:32:11 +0000
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
+ 23:32:11 +0000
+From:   Kim Phillips <kim.phillips@amd.com>
+To:     Stephane Eranian <eranian@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Kim Phillips <kim.phillips@amd.com>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: [PATCH] perf/amd/uncore: Set all slices and threads to restore perf stat -a behaviour
+Date:   Mon, 23 Mar 2020 18:31:59 -0500
+Message-Id: <20200323233159.19601-1-kim.phillips@amd.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BN6PR11CA0016.namprd11.prod.outlook.com
+ (2603:10b6:405:2::26) To SN6PR12MB2845.namprd12.prod.outlook.com
+ (2603:10b6:805:75::33)
 MIME-Version: 1.0
-References: <20200319224812.202013-1-kunyi@google.com> <20200319224812.202013-2-kunyi@google.com>
- <476e9c68-4532-ec07-8244-5a8aa2fbc599@roeck-us.net>
-In-Reply-To: <476e9c68-4532-ec07-8244-5a8aa2fbc599@roeck-us.net>
-From:   Kun Yi <kunyi@google.com>
-Date:   Mon, 23 Mar 2020 16:25:25 -0700
-Message-ID: <CAGMNF6V90KtzMXCvVk-BjRRqfR4Znfy-yPs-Ww4H_KFWuY1-vA@mail.gmail.com>
-Subject: Re: [PATCH linux hwmon-next v1 1/3] hwmon: (sbtsi) Add basic support
- for SB-TSI sensors
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Joel Stanley <joel@jms.id.au>, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from amdsos-demo.kimphillips.home (165.204.84.11) by BN6PR11CA0016.namprd11.prod.outlook.com (2603:10b6:405:2::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.19 via Frontend Transport; Mon, 23 Mar 2020 23:32:09 +0000
+X-Mailer: git-send-email 2.20.1
+X-Originating-IP: [165.204.84.11]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 28bc6f60-1aa3-4e67-1fe7-08d7cf826916
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2718:|SN6PR12MB2718:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB27181C34AD965A547A3D97FB87F00@SN6PR12MB2718.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:655;
+X-Forefront-PRVS: 0351D213B3
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(376002)(346002)(396003)(366004)(136003)(81166006)(2906002)(6486002)(316002)(8936002)(81156014)(66556008)(6512007)(478600001)(66476007)(66946007)(5660300002)(16526019)(26005)(6666004)(186003)(7416002)(44832011)(86362001)(956004)(2616005)(36756003)(52116002)(54906003)(7049001)(4326008)(8676002)(6506007)(110136005)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2718;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bDd9tMB6RcPMV/22r5apSOeWE+KZ2RjhKf4pZJGf+iTjYWekQ5tZ5Y1VkY3qnPRwu2vMjx2M0idP1N0LEtynJVQUWiblpIdlrhwaETVapqXkpAxr+R6obAv73c3j7tkQ3Jb/pd/tzKArDF13swFAcP91r80g324nR+7gMZPszQ2bwiob74WjC669pGchy/wayS3LendwfjgBO0wgtEfcUcizGk0y8p4oYWYLsQoUyI1sVfZILOOFTYeooCrvVg4f8+3ZFKhpjlFOfzuA5T/StLY2SrdzkXRKWP16GODqQYaxYUud3CbHPFQ4Dj2nwHZKbDTJl9J//kh+YMUsUNR//zDUmtgJjwlL/Rwnl3txZXxegH2GPV3/mfeOYSebDcppvl16ThEdW4N5TiAFgbfiLEDwxfuXSFhf48qPwjTAEMYGIKThYRYKp1b5d7aGdvhB
+X-MS-Exchange-AntiSpam-MessageData: kX/XsMNgJol779mccvnMSkUHRKpcSMOiP+q5wdAzcNpKZczWw4w8gBMeobG/gby7A79kdLiJ9S5A36sdzSd46g6+m5xIseiGWWOUTObw1Xw1Y3VXPEtq754pjZGHQ3tNfQ0IfXMBWTqj5SDDMA3Lgg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28bc6f60-1aa3-4e67-1fe7-08d7cf826916
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2020 23:32:11.4928
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: m4SAY4r9AGeDC9/tVjTiLqrh8QY5wjjUZ2ZypEGM5cIcPIiZ5z8JVENMqVwVlUU6onQCCUXywQt3vRJZcIeKhQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2718
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the review comments!
+Commit 2f217d58a8a0 ("perf/x86/amd/uncore: Set the thread mask for
+F17h L3 PMCs") inadvertently changed the uncore driver's behaviour
+wrt perf tool invocations with or without a CPU list, specified with
+-C / --cpu=.
 
-On Thu, Mar 19, 2020 at 4:31 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On 3/19/20 3:48 PM, Kun Yi wrote:
-> > SB Temperature Sensor Interface (SB-TSI) is an SMBus compatible
-> > interface that reports AMD SoC's Ttcl (normalized temperature),
-> > and resembles a typical 8-pin remote temperature sensor's I2C interface
-> > to BMC.
-> >
-> > This commit adds basic support using this interface to read CPU
-> > temperature, and read/write high/low CPU temp thresholds.
-> >
-> > Test status: tested reading temp1_input, and reading/writing
-> > temp1_max/min.
-> >
->
-> How do I instantiate this driver on a system with an AMD CPU
-> (in other words, what is the i2c bus and the i2c address) ?
+Change the behaviour of the driver to assume the former all-cpu (-a)
+case, which is the more commonly desired default.  This fixes
+'-a -A' invocations without explicit cpu lists (-C) to not count
+L3 events only on behalf of the first thread of the first core
+in the L3 domain.
 
-The i2c bus number would be the bus connected from BMC to the AMD CPU.
-The i2c address is specified in the spec:
-Section 6.3.1: The SB-TSI address is normally 98h for socket 0 and 90h
-for socket 1, but it could vary based on hardware address select pins.
+BEFORE:
 
-I will add this information to v2 commit message and the Documentation.
+Activity performed by the first thread of the last core (CPU#43) in
+CPU#40's L3 domain is not reported by CPU#40:
 
->
-> > Signed-off-by: Kun Yi <kunyi@google.com>
-> > ---
-> >  drivers/hwmon/Kconfig      |  10 ++
-> >  drivers/hwmon/Makefile     |   1 +
-> >  drivers/hwmon/sbtsi_temp.c | 218 +++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 229 insertions(+)
-> >  create mode 100644 drivers/hwmon/sbtsi_temp.c
-> >
-> > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> > index 05a30832c6ba..9585dcd01d1b 100644
-> > --- a/drivers/hwmon/Kconfig
-> > +++ b/drivers/hwmon/Kconfig
-> > @@ -1412,6 +1412,16 @@ config SENSORS_RASPBERRYPI_HWMON
-> >         This driver can also be built as a module. If so, the module
-> >         will be called raspberrypi-hwmon.
-> >
-> > +config SENSORS_SBTSI
-> > +     tristate "Emulated SB-TSI temperature sensor"
-> > +     depends on I2C
-> > +     help
-> > +       If you say yes here you get support for emulated temperature
-> > +       sensors on AMD SoCs with SB-TSI interface connected to a BMC device.
-> > +
-> > +       This driver can also be built as a module. If so, the module will
-> > +       be called sbtsi_temp.
-> > +
-> >  config SENSORS_SHT15
-> >       tristate "Sensiron humidity and temperature sensors. SHT15 and compat."
-> >       depends on GPIOLIB || COMPILE_TEST
-> > diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> > index b0b9c8e57176..cd109f003ce4 100644
-> > --- a/drivers/hwmon/Makefile
-> > +++ b/drivers/hwmon/Makefile
-> > @@ -152,6 +152,7 @@ obj-$(CONFIG_SENSORS_POWR1220)  += powr1220.o
-> >  obj-$(CONFIG_SENSORS_PWM_FAN)        += pwm-fan.o
-> >  obj-$(CONFIG_SENSORS_RASPBERRYPI_HWMON)      += raspberrypi-hwmon.o
-> >  obj-$(CONFIG_SENSORS_S3C)    += s3c-hwmon.o
-> > +obj-$(CONFIG_SENSORS_SBTSI)  += sbtsi_temp.o
-> >  obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
-> >  obj-$(CONFIG_SENSORS_SCH5627)        += sch5627.o
-> >  obj-$(CONFIG_SENSORS_SCH5636)        += sch5636.o
-> > diff --git a/drivers/hwmon/sbtsi_temp.c b/drivers/hwmon/sbtsi_temp.c
-> > new file mode 100644
-> > index 000000000000..f998d944a515
-> > --- /dev/null
-> > +++ b/drivers/hwmon/sbtsi_temp.c
-> > @@ -0,0 +1,218 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + * sbtsi_temp.c - hwmon driver for a SBI Temperature Sensor Interface (SB-TSI)
-> > + *                compliant AMD SoC temperature device.
-> > + *
-> > + * Copyright (c) 2020, Google Inc.
-> > + * Copyright (c) 2020, Kun Yi <kunyi@google.com>
-> > + */
-> > +
-> > +#include <linux/device.h>
-> > +#include <linux/init.h>
-> > +#include <linux/i2c.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/hwmon.h>
-> > +#include <linux/hwmon-sysfs.h>
-> > +
-> > +/*
-> > + * SB-TSI registers only support SMBus byte data access. "_INT" registers are
-> > + * the integer part of a temperature value or limit, and "_DEC" registers are
-> > + * corresponding decimal parts.
-> > + */
-> > +#define SBTSI_REG_TEMP_INT           0x01 /* RO */
-> > +#define SBTSI_REG_STATUS             0x02 /* RO */
-> > +#define SBTSI_REG_CONFIG             0x03 /* RO */
-> > +#define SBTSI_REG_TEMP_HIGH_INT              0x07 /* RW */
-> > +#define SBTSI_REG_TEMP_LOW_INT               0x08 /* RW */
-> > +#define SBTSI_REG_TEMP_DEC           0x10 /* RW */
-> > +#define SBTSI_REG_TEMP_HIGH_DEC              0x13 /* RW */
-> > +#define SBTSI_REG_TEMP_LOW_DEC               0x14 /* RW */
-> > +#define SBTSI_REG_REV                        0xFF /* RO */
-> > +
-> > +#define SBTSI_CONFIG_READ_ORDER_SHIFT        5
-> > +
-> > +#define SBTSI_TEMP_MIN       (0)
-> > +#define SBTSI_TEMP_MAX       (255875)
-> > +#define SBTSI_REV_MAX_VALID_ID       (4)
->
-> Unnecessary ( ) around literals.
+sudo perf stat -a -A -e l3_request_g1.caching_l3_cache_accesses taskset -c 43 perf bench mem memcpy -s 32mb -l 100 -f default
+...
+CPU36                 21,835      l3_request_g1.caching_l3_cache_accesses
+CPU40                 87,066      l3_request_g1.caching_l3_cache_accesses
+CPU44                 17,360      l3_request_g1.caching_l3_cache_accesses
+...
 
-Will fix in v2.
+AFTER:
 
->
-> > +
-> > +struct sbtsi_data {
-> > +     struct device *dev;
-> > +     struct i2c_client *client;
-> > +     struct mutex lock;
-> > +};
-> > +
-> > +/*
-> > + * From SB-TSI spec: CPU temperature readings and limit registers encode the
-> > + * temperature in increments of 0.125 from 0 to 255.875. The "high byte"
-> > + * register encodes the base-2 of the integer portion, and the upper 3 bits of
-> > + * the "low byte" encode in base-2 the decimal portion.
-> > + *
-> > + * e.g. INT=0x19, DEC=0x20 represents 25.125 degrees Celsius
-> > + *
-> > + * Therefore temperature in millidegree Celsius =
-> > + *   (INT + DEC / 256) * 1000 = (INT * 8 + DEC / 32) * 125
-> > + */
-> > +static inline int SBTSI_REGS_TO_TEMP(s32 integer, s32 decimal)
-> > +{
-> > +     return (((u32)integer << 3) + ((u32)decimal >> 5)) * 125;
->
-> Why pass s32 as parameter just to typecast to u32 ? The values
-> are known to be between 0 and 255, and thus will never be negative,
-> even with s32, so this is really unnecessary.
+The L3 domain activity is now reported by CPU#40:
 
-That's a good point, will fix in v2.
+sudo perf stat -a -A -e l3_request_g1.caching_l3_cache_accesses taskset -c 43 perf bench mem memcpy -s 32mb -l 100 -f default
+...
+CPU36                354,891      l3_request_g1.caching_l3_cache_accesses
+CPU40              1,780,870      l3_request_g1.caching_l3_cache_accesses
+CPU44                315,062      l3_request_g1.caching_l3_cache_accesses
+...
 
-> > +}
-> > +
-> > +/*
-> > + * Inversely, given temperature in millidegree Celsius
-> > + *   INT = (TEMP / 125) / 8
-> > + *   DEC = ((TEMP / 125) % 8) * 32
-> > + * Caller have to make sure temp doesn't exceed 255875, the max valid value.
-> > + */
-> > +static inline void SBTSI_TEMP_TO_REGS(u32 temp, u8 *integer, u8 *decimal)
-> > +{
-> > +     temp /= 125;
-> > +     *integer = temp >> 3;
-> > +     *decimal = (temp & 0x7) << 5;
-> > +}
-> > +
-> > +static ssize_t sbtsi_show_temp(struct device *dev,
-> > +                            struct device_attribute *attr, char *buf)
-> > +{
-> > +     struct sbtsi_data *data = dev_get_drvdata(dev);
-> > +     struct i2c_client *client = data->client;
-> > +     s32 err, temp_int, temp_dec;
-> > +     u8 read_order;
-> > +
-> > +     /*
-> > +      * ReadOrder bit specifies the reading order of integer and decimal
-> > +      * part of CPU temp for atomic reads. If bit == 0, reading integer part
-> > +      * triggers latching of the decimal part, so integer part should be read
-> > +      * first. If bit == 1, read order should be reversed.
-> > +      */
-> > +     err = i2c_smbus_read_byte_data(client, SBTSI_REG_CONFIG);
-> > +     if (err < 0)
-> > +             return err;
-> > +
-> > +     read_order = (u8)err & BIT(SBTSI_CONFIG_READ_ORDER_SHIFT);
-> > +
-> > +     if (read_order == 0) {
-> > +             temp_int = i2c_smbus_read_byte_data(client, SBTSI_REG_TEMP_INT);
-> > +             temp_dec = i2c_smbus_read_byte_data(client, SBTSI_REG_TEMP_DEC);
-> > +     } else {
-> > +             temp_dec = i2c_smbus_read_byte_data(client, SBTSI_REG_TEMP_DEC);
-> > +             temp_int = i2c_smbus_read_byte_data(client, SBTSI_REG_TEMP_INT);
-> > +     }
-> > +
-> > +     if (temp_int < 0)
-> > +             return temp_int;
-> > +     if (temp_dec < 0)
-> > +             return temp_dec;
-> > +
-> > +     return scnprintf(buf, PAGE_SIZE, "%d\n",
-> > +                      SBTSI_REGS_TO_TEMP(temp_int, temp_dec));
-> > +}
-> > +
-> > +#define sbtsi_show_temp_limit(name, REG) \
-> > +static ssize_t sbtsi_show_##name(struct device *dev, \
-> > +                              struct device_attribute *attr, char *buf) \
-> > +{ \
-> > +     struct sbtsi_data *data = dev_get_drvdata(dev); \
-> > +     struct i2c_client *client = data->client; \
-> > +     s32 temp_int, temp_dec; \
-> > +\
-> > +     temp_int = i2c_smbus_read_byte_data(client, REG##_INT); \
-> > +     temp_dec = i2c_smbus_read_byte_data(client, REG##_DEC); \
-> > +\
-> > +     if (temp_int < 0) \
-> > +             return temp_int; \
-> > +     if (temp_dec < 0) \
-> > +             return temp_dec; \
-> > +\
-> > +     return scnprintf(buf, PAGE_SIZE, "%d\n", \
-> > +                      SBTSI_REGS_TO_TEMP(temp_int, temp_dec)); \
-> > +}
-> > +
-> > +sbtsi_show_temp_limit(temp1_min, SBTSI_REG_TEMP_LOW);
-> > +sbtsi_show_temp_limit(temp1_max, SBTSI_REG_TEMP_HIGH);
-> > +
-> > +#define sbtsi_set_temp_limit(name, REG) \
-> > +static ssize_t sbtsi_set_##name(struct device *dev, \
-> > +                             struct device_attribute *attr, \
-> > +                             const char *buf, size_t count) \
-> > +{ \
-> > +     struct sbtsi_data *data = dev_get_drvdata(dev); \
-> > +     struct i2c_client *client = data->client; \
-> > +     long val; \
-> > +     u8 temp_int, temp_dec; \
-> > +     int err = kstrtol(buf, 10, &val); \
-> > +     if (err) \
-> > +             return err; \
-> > +\
-> > +     val = clamp_val(val, SBTSI_TEMP_MIN, SBTSI_TEMP_MAX); \
-> > +     mutex_lock(&data->lock); \
-> > +     SBTSI_TEMP_TO_REGS(val, &temp_int, &temp_dec); \
-> > +     i2c_smbus_write_byte_data(client, REG##_INT, temp_int); \
-> > +     i2c_smbus_write_byte_data(client, REG##_DEC, temp_dec); \
-> > +     mutex_unlock(&data->lock); \
-> > +\
-> > +     return count; \
-> > +}
-> > +
-> > +sbtsi_set_temp_limit(temp1_min, SBTSI_REG_TEMP_LOW);
-> > +sbtsi_set_temp_limit(temp1_max, SBTSI_REG_TEMP_HIGH);
-> > +
-> > +static SENSOR_DEVICE_ATTR(temp1_input, 0444, sbtsi_show_temp, NULL, 0);
-> > +static SENSOR_DEVICE_ATTR(temp1_min, 0644, sbtsi_show_temp1_min,
-> > +                       sbtsi_set_temp1_min, 1);
-> > +static SENSOR_DEVICE_ATTR(temp1_max, 0644, sbtsi_show_temp1_max,
-> > +                       sbtsi_set_temp1_max, 2);
-> > +
-> > +static struct attribute *sbtsi_attrs[] = {
-> > +     &sensor_dev_attr_temp1_input.dev_attr.attr,
-> > +     &sensor_dev_attr_temp1_min.dev_attr.attr,
-> > +     &sensor_dev_attr_temp1_max.dev_attr.attr,
-> > +     NULL,
-> > +};
-> > +ATTRIBUTE_GROUPS(sbtsi);
-> > +
-> > +static int sbtsi_probe(struct i2c_client *client,
-> > +                    const struct i2c_device_id *id)
-> > +{
-> > +     struct device *dev = &client->dev;
-> > +     struct device *hwmon_dev;
-> > +     struct sbtsi_data *data;
-> > +
-> > +     data = devm_kzalloc(dev, sizeof(struct sbtsi_data), GFP_KERNEL);
-> > +     if (!data)
-> > +             return -ENOMEM;
-> > +
-> > +     data->client = client;
-> > +     mutex_init(&data->lock);
-> > +
-> > +     hwmon_dev =
-> > +             devm_hwmon_device_register_with_groups(dev, client->name, data,
-> > +                                                    sbtsi_groups);
->
-> Please rewrite to use the devm_hwmon_device_register_with_info() API.
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Fixes: 2f217d58a8a0 ("perf/x86/amd/uncore: Set the thread mask for F17h L3 PMCs")
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: x86 <x86@kernel.org>
+---
+Stephane, if you want to replace this with the manual thread
+specification patch you have, that's fine with me.
 
-Done in v2.
+ arch/x86/events/amd/uncore.c | 28 ++++++++--------------------
+ 1 file changed, 8 insertions(+), 20 deletions(-)
 
->
-> > +     if (IS_ERR(hwmon_dev))
-> > +             return PTR_ERR(hwmon_dev);
-> > +
-> > +     dev_info(dev, "sensor '%s'\n", client->name);
->
-> Is that really valuable / necessary ?
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index 76400c052b0e..e7e61c8b56bd 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -181,28 +181,16 @@ static void amd_uncore_del(struct perf_event *event, int flags)
+ }
+ 
+ /*
+- * Convert logical CPU number to L3 PMC Config ThreadMask format
++ * Return a full thread and slice mask until per-CPU is
++ * properly supported.
+  */
+-static u64 l3_thread_slice_mask(int cpu)
++static u64 l3_thread_slice_mask(void)
+ {
+-	u64 thread_mask, core = topology_core_id(cpu);
+-	unsigned int shift, thread = 0;
++	if (boot_cpu_data.x86 <= 0x18)
++		return AMD64_L3_SLICE_MASK | AMD64_L3_THREAD_MASK;
+ 
+-	if (topology_smt_supported() && !topology_is_primary_thread(cpu))
+-		thread = 1;
+-
+-	if (boot_cpu_data.x86 <= 0x18) {
+-		shift = AMD64_L3_THREAD_SHIFT + 2 * (core % 4) + thread;
+-		thread_mask = BIT_ULL(shift);
+-
+-		return AMD64_L3_SLICE_MASK | thread_mask;
+-	}
+-
+-	core = (core << AMD64_L3_COREID_SHIFT) & AMD64_L3_COREID_MASK;
+-	shift = AMD64_L3_THREAD_SHIFT + thread;
+-	thread_mask = BIT_ULL(shift);
+-
+-	return AMD64_L3_EN_ALL_SLICES | core | thread_mask;
++	return AMD64_L3_EN_ALL_SLICES | AMD64_L3_EN_ALL_CORES |
++	       AMD64_L3_F19H_THREAD_MASK;
+ }
+ 
+ static int amd_uncore_event_init(struct perf_event *event)
+@@ -232,7 +220,7 @@ static int amd_uncore_event_init(struct perf_event *event)
+ 	 * For other events, the two fields do not affect the count.
+ 	 */
+ 	if (l3_mask && is_llc_event(event))
+-		hwc->config |= l3_thread_slice_mask(event->cpu);
++		hwc->config |= l3_thread_slice_mask();
+ 
+ 	uncore = event_to_amd_uncore(event);
+ 	if (!uncore)
+-- 
+2.20.1
 
-Removed in v2.
-
->
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct i2c_device_id sbtsi_id[] = {
-> > +     {"sbtsi", 0},
-> > +     {}
-> > +};
-> > +MODULE_DEVICE_TABLE(i2c, sbtsi_id);
-> > +
-> > +static struct i2c_driver sbtsi_driver = {
-> > +     .class = I2C_CLASS_HWMON,
-> > +     .driver = {
-> > +             .name = "sbtsi",
-> > +     },
-> > +     .probe = sbtsi_probe,
-> > +     .id_table = sbtsi_id,
-> > +};
-> > +
-> > +module_i2c_driver(sbtsi_driver);
-> > +
-> > +MODULE_AUTHOR("Kun Yi <kunyi@google.com>");
-> > +MODULE_DESCRIPTION("Hwmon driver for AMD SB-TSI emulated sensor");
-> > +MODULE_LICENSE("GPL");
-> >
->
-
-
---
-Regards,
-Kun
