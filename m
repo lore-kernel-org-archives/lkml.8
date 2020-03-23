@@ -2,140 +2,102 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4C4C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE8CC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D863F20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED5BF20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:55:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="P5Dr6zoH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l7OF3bT9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgCWVyF (ORCPT
+        id S1727026AbgCWVzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 17:54:05 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:49650 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgCWVyF (ORCPT
+        Mon, 23 Mar 2020 17:55:54 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57496 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgCWVzy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 17:54:05 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 354508364E
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:54:02 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1585000442;
-        bh=YF90OqhWLGXA4a5YAnTLbpCAqAANWVvf4rDFB17AIsI=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=P5Dr6zoHlp3ncfmE148ZLipXV1kzRF4ueHglhv5mQI7FsmKTG5pzDDl3Ewk/sGUuZ
-         JACS30xbd4fCIPC4mgfh+RsGqLiWIJKX1eIXmtg++FRsA4inody9R0AOC/GtyC+v55
-         O3qNQJT7EzZHKFkt6gL8CFVM3ziK/0IYuj8/bv4TZZj0ZxLzQG+xX4EPKagjpmwsrI
-         LkGScYLYtkH0QcMKcVAtNlIFv1zZTrfdSzf9NfOjBxmbw+lTzV/K3Xq1J7azoFGvit
-         5KMqh59bzEJ6yUndjgu3JTtfgyMLcuWMUwQowuTUS51j47iEfduNvhs88F/A0QKTsb
-         6hz0P4bwz3thA==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e792ffa0005>; Tue, 24 Mar 2020 10:54:02 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Tue, 24 Mar 2020 10:54:01 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Tue, 24 Mar 2020 10:54:01 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
-Subject: Re: [PATCH] powerpc/legacy_serial: Use early_ioremap()
-Thread-Topic: [PATCH] powerpc/legacy_serial: Use early_ioremap()
-Thread-Index: AQHWAVtyPT7uF8EyiECYlBR6HiNzIKhV3nkA
-Date:   Mon, 23 Mar 2020 21:54:01 +0000
-Message-ID: <d94f74c57112e002959143bb5ccdcd9be80ed8d2.camel@alliedtelesis.co.nz>
-References: <3df15946ed0c29663dc7928b31ca07576e1444f6.1580904214.git.christophe.leroy@c-s.fr>
-In-Reply-To: <3df15946ed0c29663dc7928b31ca07576e1444f6.1580904214.git.christophe.leroy@c-s.fr>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.14.96]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A5DFBFFD517DEC4A8B3F2C51E4C14FB8@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Mon, 23 Mar 2020 17:55:54 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NLsiWh140449;
+        Mon, 23 Mar 2020 21:55:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=YvIAy0wzv2+tc9aPVF5RtWgeBJRlBEGtNVz2L2/Z/U8=;
+ b=l7OF3bT9wxBgDsTgSEekeq4UQlQDi7thEafWDog7Xg9UJ3oVb7I7Ib4bQY6hKtYd2jPT
+ Qkq6aUIOZghWwTx/iJxA2fKIk1W9aNAMETSQeyJ8H/o3Fb7WYIXf7TWN4T4r27RqZM9L
+ XeEm7hJTbuSkRvvXLQPZQFAjqFj4+CqgMWJTrvGSKl/bDMUuDON7FGlInCthfuiXXUQl
+ B3Dd19mLelId9CiKRdOpiU/dmLvos34llylNSi0zkYW1cS8rpbm5YIhGT6eBfj24HMAd
+ P10t8KGTYxdbzY6+vkVoOE39+L601LkkpDAqSrnnHoWhUdOklq7VxIhKBBf56dvUevsC Mg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2yx8abx414-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Mar 2020 21:55:44 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NLpo5a182537;
+        Mon, 23 Mar 2020 21:55:44 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2yxw91gjpy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Mar 2020 21:55:43 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02NLtgBB017985;
+        Mon, 23 Mar 2020 21:55:42 GMT
+Received: from [10.39.222.158] (/10.39.222.158)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Mar 2020 14:55:42 -0700
+Subject: Re: [Xen-devel] [PATCH v4 1/2] xen: Use evtchn_type_t as a type for
+ event channels
+To:     Yan Yankovskyi <yyankovskyi@gmail.com>,
+        Jan Beulich <jbeulich@suse.com>
+Cc:     Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+References: <20200323152343.GA28422@kbp1-lhp-F74019>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Message-ID: <06458b85-fb66-faac-e75a-1ccefa848cb0@oracle.com>
+Date:   Mon, 23 Mar 2020 17:55:39 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200323152343.GA28422@kbp1-lhp-F74019>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 bulkscore=0
+ adultscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003230108
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
+ mlxscore=0 adultscore=0 phishscore=0 impostorscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003230108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2hyaXN0b3BoZSwNCg0KT24gV2VkLCAyMDIwLTAyLTA1IGF0IDEyOjAzICswMDAwLCBDaHJp
-c3RvcGhlIExlcm95IHdyb3RlOg0KPiBbICAgIDAuMDAwMDAwXSBpb3JlbWFwKCkgY2FsbGVkIGVh
-cmx5IGZyb20NCj4gZmluZF9sZWdhY3lfc2VyaWFsX3BvcnRzKzB4M2NjLzB4NDc0LiBVc2UgZWFy
-bHlfaW9yZW1hcCgpIGluc3RlYWQNCj4gDQoNCkkgd2FzIGp1c3QgYWJvdXQgdG8gZGlnIGludG8g
-dGhpcyBlcnJvciBtZXNzYWdlIGFuZCBmb3VuZCB5b3UgcGF0Y2guIEkNCmFwcGxpZWQgaXQgdG8g
-YSB2NS41IGJhc2UuDQoNCj4gZmluZF9sZWdhY3lfc2VyaWFsX3BvcnRzKCkgaXMgY2FsbGVkIGVh
-cmx5IGZyb20gc2V0dXBfYXJjaCgpLCBiZWZvcmUNCj4gcGFnaW5nX2luaXQoKS4gdm1hbGxvYyBp
-cyBub3QgYXZhaWxhYmxlIHlldCwgaW9yZW1hcCBzaG91bGRuJ3QgYmUNCj4gdXNlZCB0aGF0IGVh
-cmx5Lg0KPiANCj4gVXNlIGVhcmx5X2lvcmVtYXAoKSBhbmQgc3dpdGNoIHRvIGEgcmVndWxhciBp
-b3JlbWFwKCkgbGF0ZXIuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDaHJpc3RvcGhlIExlcm95IDxj
-aHJpc3RvcGhlLmxlcm95QGMtcy5mcj4NCg0KT24gbXkgc3lzdGVtIChGcmVlc2NhbGUgVDIwODAg
-U09DKSB0aGlzIHNlZW1zIHRvIGNhdXNlIGEgY3Jhc2gvaGFuZyBpbg0KZWFybHkgYm9vdC4gVW5m
-b3J0dW5hdGVseSBiZWNhdXNlIHRoaXMgaXMgYWZmZWN0aW5nIHRoZSBib290IGNvbnNvbGUgSQ0K
-ZG9uJ3QgZ2V0IGFueSBlYXJseXByaW50ayBvdXRwdXQuDQoNCj4gLS0tDQo+ICBhcmNoL3Bvd2Vy
-cGMva2VybmVsL2xlZ2FjeV9zZXJpYWwuYyB8IDMzICsrKysrKysrKysrKysrKysrKysrKysrKysN
-Cj4gLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25z
-KC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2tlcm5lbC9sZWdhY3lfc2VyaWFs
-LmMNCj4gYi9hcmNoL3Bvd2VycGMva2VybmVsL2xlZ2FjeV9zZXJpYWwuYw0KPiBpbmRleCBmMDYx
-ZTA2ZTlmNTEuLjhiMmMxYTg1NTNhMCAxMDA2NDQNCj4gLS0tIGEvYXJjaC9wb3dlcnBjL2tlcm5l
-bC9sZWdhY3lfc2VyaWFsLmMNCj4gKysrIGIvYXJjaC9wb3dlcnBjL2tlcm5lbC9sZWdhY3lfc2Vy
-aWFsLmMNCj4gQEAgLTE1LDYgKzE1LDcgQEANCj4gICNpbmNsdWRlIDxhc20vdWRiZy5oPg0KPiAg
-I2luY2x1ZGUgPGFzbS9wY2ktYnJpZGdlLmg+DQo+ICAjaW5jbHVkZSA8YXNtL3BwYy1wY2kuaD4N
-Cj4gKyNpbmNsdWRlIDxhc20vZWFybHlfaW9yZW1hcC5oPg0KPiAgDQo+ICAjdW5kZWYgREVCVUcN
-Cj4gIA0KPiBAQCAtMzQsNiArMzUsNyBAQCBzdGF0aWMgc3RydWN0IGxlZ2FjeV9zZXJpYWxfaW5m
-byB7DQo+ICAJdW5zaWduZWQgaW50CQkJY2xvY2s7DQo+ICAJaW50CQkJCWlycV9jaGVja19wYXJl
-bnQ7DQo+ICAJcGh5c19hZGRyX3QJCQl0YWRkcjsNCj4gKwl2b2lkIF9faW9tZW0JCQkqZWFybHlf
-YWRkcjsNCj4gIH0gbGVnYWN5X3NlcmlhbF9pbmZvc1tNQVhfTEVHQUNZX1NFUklBTF9QT1JUU107
-DQo+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGxlZ2FjeV9zZXJpYWxf
-cGFyZW50c1tdIF9faW5pdGNvbnN0DQo+ID0gew0KPiBAQCAtMzI1LDE3ICszMjcsMTYgQEAgc3Rh
-dGljIHZvaWQgX19pbml0DQo+IHNldHVwX2xlZ2FjeV9zZXJpYWxfY29uc29sZShpbnQgY29uc29s
-ZSkNCj4gIHsNCj4gIAlzdHJ1Y3QgbGVnYWN5X3NlcmlhbF9pbmZvICppbmZvID0NCj4gJmxlZ2Fj
-eV9zZXJpYWxfaW5mb3NbY29uc29sZV07DQo+ICAJc3RydWN0IHBsYXRfc2VyaWFsODI1MF9wb3J0
-ICpwb3J0ID0NCj4gJmxlZ2FjeV9zZXJpYWxfcG9ydHNbY29uc29sZV07DQo+IC0Jdm9pZCBfX2lv
-bWVtICphZGRyOw0KPiAgCXVuc2lnbmVkIGludCBzdHJpZGU7DQo+ICANCj4gIAlzdHJpZGUgPSAx
-IDw8IHBvcnQtPnJlZ3NoaWZ0Ow0KPiAgDQo+ICAJLyogQ2hlY2sgaWYgYSB0cmFuc2xhdGVkIE1N
-SU8gYWRkcmVzcyBoYXMgYmVlbiBmb3VuZCAqLw0KPiAgCWlmIChpbmZvLT50YWRkcikgew0KPiAt
-CQlhZGRyID0gaW9yZW1hcChpbmZvLT50YWRkciwgMHgxMDAwKTsNCj4gLQkJaWYgKGFkZHIgPT0g
-TlVMTCkNCj4gKwkJaW5mby0+ZWFybHlfYWRkciA9IGVhcmx5X2lvcmVtYXAoaW5mby0+dGFkZHIs
-IDB4MTAwMCk7DQo+ICsJCWlmIChpbmZvLT5lYXJseV9hZGRyID09IE5VTEwpDQo+ICAJCQlyZXR1
-cm47DQo+IC0JCXVkYmdfdWFydF9pbml0X21taW8oYWRkciwgc3RyaWRlKTsNCj4gKwkJdWRiZ191
-YXJ0X2luaXRfbW1pbyhpbmZvLT5lYXJseV9hZGRyLCBzdHJpZGUpOw0KPiAgCX0gZWxzZSB7DQo+
-ICAJCS8qIENoZWNrIGlmIGl0J3MgUElPIGFuZCB3ZSBzdXBwb3J0IHVudHJhbnNsYXRlZCBQSU8g
-Ki8NCj4gIAkJaWYgKHBvcnQtPmlvdHlwZSA9PSBVUElPX1BPUlQgJiYgaXNhX2lvX3NwZWNpYWwp
-DQo+IEBAIC0zNTMsNiArMzU0LDMwIEBAIHN0YXRpYyB2b2lkIF9faW5pdA0KPiBzZXR1cF9sZWdh
-Y3lfc2VyaWFsX2NvbnNvbGUoaW50IGNvbnNvbGUpDQo+ICAJdWRiZ191YXJ0X3NldHVwKGluZm8t
-PnNwZWVkLCBpbmZvLT5jbG9jayk7DQo+ICB9DQo+ICANCj4gK3N0YXRpYyBpbnQgX19pbml0IGlv
-cmVtYXBfbGVnYWN5X3NlcmlhbF9jb25zb2xlKHZvaWQpDQo+ICt7DQo+ICsJc3RydWN0IGxlZ2Fj
-eV9zZXJpYWxfaW5mbyAqaW5mbyA9DQo+ICZsZWdhY3lfc2VyaWFsX2luZm9zW2xlZ2FjeV9zZXJp
-YWxfY29uc29sZV07DQo+ICsJc3RydWN0IHBsYXRfc2VyaWFsODI1MF9wb3J0ICpwb3J0ID0NCj4g
-JmxlZ2FjeV9zZXJpYWxfcG9ydHNbbGVnYWN5X3NlcmlhbF9jb25zb2xlXTsNCj4gKwl2b2lkIF9f
-aW9tZW0gKnZhZGRyOw0KPiArDQo+ICsJaWYgKGxlZ2FjeV9zZXJpYWxfY29uc29sZSA8IDApDQo+
-ICsJCXJldHVybiAwOw0KPiArDQo+ICsJaWYgKCFpbmZvLT5lYXJseV9hZGRyKQ0KPiArCQlyZXR1
-cm4gMDsNCj4gKw0KPiArCXZhZGRyID0gaW9yZW1hcChpbmZvLT50YWRkciwgMHgxMDAwKTsNCj4g
-KwlpZiAoV0FSTl9PTighdmFkZHIpKQ0KPiArCQlyZXR1cm4gLUVOT01FTTsNCj4gKw0KPiArCXVk
-YmdfdWFydF9pbml0X21taW8odmFkZHIsIDEgPDwgcG9ydC0+cmVnc2hpZnQpOw0KPiArCWVhcmx5
-X2lvdW5tYXAoaW5mby0+ZWFybHlfYWRkciwgMHgxMDAwKTsNCj4gKwlpbmZvLT5lYXJseV9hZGRy
-ID0gTlVMTDsNCj4gKw0KPiArCXJldHVybiAwOw0KPiArfQ0KPiArZWFybHlfaW5pdGNhbGwoaW9y
-ZW1hcF9sZWdhY3lfc2VyaWFsX2NvbnNvbGUpOw0KPiArDQo+ICAvKg0KPiAgICogVGhpcyBpcyBj
-YWxsZWQgdmVyeSBlYXJseSwgYXMgcGFydCBvZiBzZXR1cF9zeXN0ZW0oKSBvcg0KPiBldmVudHVh
-bGx5DQo+ICAgKiBzZXR1cF9hcmNoKCksIGJhc2ljYWxseSBiZWZvcmUgYW55dGhpbmcgZWxzZSBp
-biB0aGlzIGZpbGUuIFRoaXMNCj4gZnVuY3Rpb24NCg==
+
+On 3/23/20 12:15 PM, Yan Yankovskyi wrote:
+> Make event channel functions pass event channel port using
+> evtchn_port_t type. It eliminates signed <-> unsigned conversion.
+>
+> Signed-off-by: Yan Yankovskyi <yyankovskyi@gmail.com>
+
+
+If the difference is only the whitespace fix then
+
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+
+and I am sorry, I should have explicitly said that you don't need to resend.
+
+
