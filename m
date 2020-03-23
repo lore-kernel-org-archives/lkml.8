@@ -2,125 +2,101 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C58C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01821C1975A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B99452073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:57:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EgCuRl9P"
+	by mail.kernel.org (Postfix) with ESMTP id CFF3520769
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 02:59:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgCWC55 (ORCPT
+        id S1727120AbgCWC7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Mar 2020 22:57:57 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39674 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbgCWC54 (ORCPT
+        Sun, 22 Mar 2020 22:59:00 -0400
+Received: from smtprelay0204.hostedemail.com ([216.40.44.204]:45076 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727067AbgCWC7A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Mar 2020 22:57:56 -0400
-Received: by mail-pg1-f193.google.com with SMTP id b22so6444488pgb.6;
-        Sun, 22 Mar 2020 19:57:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LCNpzOTbUE/HzR4l3Qcur0n2Jb8EBfncTh7DRzPIDl8=;
-        b=EgCuRl9Pz9lTYHbOjBhWf1PDvq3QaqoDlyNkJbE2XjpwonjwuS5uXsoMD3X0UtsYET
-         v3mHQxzbIvQQmUn4jkkavpShyYpp49a76b9hh5BGZvhlNaWpzDOA6aoBHBkrN8gFHjIG
-         rjXo9oPVTDfQ/VJT3oM/3w+xmbzHciKJ+2g6lB1joU8qdzTcW4/WQsK/FgV+Z13LNuEu
-         5bFCxRob4RlcHGNYBldBd3X05pKm5GVw7LWQnzGPQEEOOYv2aWeWI+n1Z/F6vN5yu5Ya
-         BBIm4u+9ogA9RV8xmNCvBrgj/K4VnXu+E4CsmpHvdRp/ymM+sDFazxRXWlRg7tOfMOB3
-         swPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LCNpzOTbUE/HzR4l3Qcur0n2Jb8EBfncTh7DRzPIDl8=;
-        b=GhGSUFQJiZ06CffYc7grnTVm7W03oI95US+fXmJIQjtt64MnZkA5mZa4CdrmPHDZ4O
-         7S/8CG5EriUi8bFOp9ki6CzNN63gzzYyHNMDX+h9QmTSmF3C3J+0tq5KYkt3urcuoyMz
-         UGNRxBc9jip1u00kPlBBIw5r7dHqbP9UJrzB/jCXdcosDMHoG2pk2Tvv+Ea1o+vn1rqD
-         Y44egZAJuHi/xWTqNIjoRc+92/SlVYlqHW3wpCQD+2eM5VG1UyHUq9taGTDOpmRwV8TD
-         /IlJHo0bGmq3sNUHwu5407s4VZkqEG3iCijtKJRmq78r9Yj0WwCQg8wlVnDEvKCbYi6w
-         EA3g==
-X-Gm-Message-State: ANhLgQ14fuSdO+57dG614jXZFlbWMrnhEk6LiVbqQx+WzXjgKzOrK1kg
-        XwE7yHbaYRPtqRRKXQdizQk=
-X-Google-Smtp-Source: ADFU+vsKVn9fYwahIqa36/dtMadogMhOYktoHnEoNnZ/iBtmTv/Lyly09Mn24qErmVRoZ6LWrgAs2A==
-X-Received: by 2002:aa7:962d:: with SMTP id r13mr23109263pfg.244.1584932275229;
-        Sun, 22 Mar 2020 19:57:55 -0700 (PDT)
-Received: from localhost (104.128.80.227.16clouds.com. [104.128.80.227])
-        by smtp.gmail.com with ESMTPSA id v38sm10838374pjb.1.2020.03.22.19.57.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 22 Mar 2020 19:57:54 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, davem@davemloft.net,
-        mchehab+samsung@kernel.org, gregkh@linuxfoundation.org,
-        broonie@kernel.org, tglx@linutronix.de, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH net-next v6 10/10] net: phy: tja11xx: use phy_read_poll_timeout() to simplify the code
-Date:   Mon, 23 Mar 2020 10:56:33 +0800
-Message-Id: <20200323025633.6069-11-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200323025633.6069-1-zhengdejin5@gmail.com>
-References: <20200323025633.6069-1-zhengdejin5@gmail.com>
+        Sun, 22 Mar 2020 22:59:00 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id BCE4E1802926E;
+        Mon, 23 Mar 2020 02:58:59 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: foot07_314bb36a3e01d
+X-Filterd-Recvd-Size: 2428
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 23 Mar 2020 02:58:58 +0000 (UTC)
+Message-ID: <8d435607bd79f518bd9420d68894ddda521bac5a.camel@perches.com>
+Subject: Re: [PATCH v4] f2fs: fix potential .flags overflow on 32bit
+ architecture
+From:   Joe Perches <joe@perches.com>
+To:     Chao Yu <yuchao0@huawei.com>, jaegeuk@kernel.org
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Date:   Sun, 22 Mar 2020 19:57:09 -0700
+In-Reply-To: <20200323024109.60967-1-yuchao0@huawei.com>
+References: <20200323024109.60967-1-yuchao0@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-use phy_read_poll_timeout() to replace the poll codes for
-simplify tja11xx_check() function.
+On Mon, 2020-03-23 at 10:41 +0800, Chao Yu wrote:
+> f2fs_inode_info.flags is unsigned long variable, it has 32 bits
+> in 32bit architecture, since we introduced FI_MMAP_FILE flag
+> when we support data compression, we may access memory cross
+> the border of .flags field, corrupting .i_sem field, result in
+> below deadlock.
+[]
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+[]
+> @@ -682,6 +682,47 @@ enum {
+[]
+> +/* used for f2fs_inode_info->flags */
+> +enum {
+[]
+> +	FI_MAX,			/* max flag, never be used */
+> +};
+> +
+> +/* f2fs_inode_info.flags array size */
+> +#define FI_ARRAY_SIZE		(BITS_TO_LONGS(FI_MAX))
 
-Suggested-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
-v5 -> v6:
-	- no changed.
-v4 -> v5:
-	- no changed.
-v3 -> v4:
-	- add this patch by Andrew's suggestion. Thanks Andrew!
+Perhaps FI_ARRAY_SIZE isn't necessary.
 
- drivers/net/phy/nxp-tja11xx.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+> +
+>  struct f2fs_inode_info {
+>  	struct inode vfs_inode;		/* serve a vfs inode */
+>  	unsigned long i_flags;		/* keep an inode flags for ioctl */
+> @@ -694,7 +735,7 @@ struct f2fs_inode_info {
+>  	umode_t i_acl_mode;		/* keep file acl mode temporarily */
+>  
+>  	/* Use below internally in f2fs*/
+> -	unsigned long flags;		/* use to pass per-file flags */
+> +	unsigned long flags[FI_ARRAY_SIZE];	/* use to pass per-file flags */
 
-diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
-index b705d0bd798b..32ef32a4af3c 100644
---- a/drivers/net/phy/nxp-tja11xx.c
-+++ b/drivers/net/phy/nxp-tja11xx.c
-@@ -72,20 +72,10 @@ static struct tja11xx_phy_stats tja11xx_hw_stats[] = {
- 
- static int tja11xx_check(struct phy_device *phydev, u8 reg, u16 mask, u16 set)
- {
--	int i, ret;
--
--	for (i = 0; i < 200; i++) {
--		ret = phy_read(phydev, reg);
--		if (ret < 0)
--			return ret;
--
--		if ((ret & mask) == set)
--			return 0;
--
--		usleep_range(100, 150);
--	}
-+	int val;
- 
--	return -ETIMEDOUT;
-+	return phy_read_poll_timeout(phydev, reg, val, (val & mask) == set,
-+				     150, 30000);
- }
- 
- static int phy_modify_check(struct phy_device *phydev, u8 reg,
--- 
-2.25.0
+and BITS_TO_LONGS should be used here.
+
+> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+[]
+> @@ -362,7 +363,8 @@ static int do_read_inode(struct inode *inode)
+>  	fi->i_flags = le32_to_cpu(ri->i_flags);
+>  	if (S_ISREG(inode->i_mode))
+>  		fi->i_flags &= ~F2FS_PROJINHERIT_FL;
+> -	fi->flags = 0;
+> +	for (i = 0; i < FI_ARRAY_SIZE; i++)
+> +		fi->flags[i] = 0;
+
+And this could become
+
+	bitmap_zero(fi->flags, BITS_TO_LONG(FI_MAX));
+
+Is FI_ARRAY_SIZE used anywhere else?
 
