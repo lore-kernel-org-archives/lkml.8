@@ -2,77 +2,86 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A633FC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB00CC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78682206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2105206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585004709;
-	bh=8Kbx+YuPM/kjl/gzSlFEWqeDnOrd7rW3lT6qNKD2TGE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=tk/WzvA6MyqZN3VPUklwCf148NvcDdSHLpdTR1Zj26FZTS570VH/TjmGs+QmWpi9p
-	 P6y/JeOJQBzDAP8DGwEsHJAN5aeKFcn1nF+9vG3Tdas3bTzj11CdyhFergLBMh+LWQ
-	 Heu8CxcwSc50g8mGskxvq1yeu9+pt57kIPg2dX+o=
+	s=default; t=1585005088;
+	bh=Ou977Sqn9Fa+b2IjVCFdOdSQbvwqI6VOCwZuG8bCp2I=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=CfHrFIIrs08Qr6JCPPovFEOgPZI0sy9o6tabukWB9zSCfCDME93RkKe9Ypwdwk4yj
+	 XURqkR3MNTrhxt5F/23yUom7mJm6SvQ2WKbn8QjGUFtlcpreBULiRpKOkfnIIsZhmE
+	 gp74g/nunBt6JLrVy72Y5yfeExv7+cg7Aq1o77x8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgCWXFI (ORCPT
+        id S1727036AbgCWXL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 19:05:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50876 "EHLO mail.kernel.org"
+        Mon, 23 Mar 2020 19:11:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgCWXFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 19:05:08 -0400
-Subject: Re: [GIT PULL] Crypto Fixes for 5.6
+        id S1726958AbgCWXL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 19:11:27 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 307EB20409;
+        Mon, 23 Mar 2020 23:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585004707;
-        bh=8Kbx+YuPM/kjl/gzSlFEWqeDnOrd7rW3lT6qNKD2TGE=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=gh9N4QYcxURA1vuQFp9X/9vN6jCysP/P03cueNfUJCEfemtKsTLS1covr9hYe6r7h
-         NQfwsSX792qAPbQquM/9UWdEVfXyco3VcCYWdSsmmdBPiS4dZBE9ajciSYACkz9zE/
-         NZNbOftpssAWUHRnxNxqsyOIMfrL9H1cw9BrvonA=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200323225403.GA10100@gondor.apana.org.au>
-References: <20190916084901.GA20338@gondor.apana.org.au>
- <20190923050515.GA6980@gondor.apana.org.au>
- <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
- <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
- <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
- <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
- <20200224060042.GA26184@gondor.apana.org.au>
- <20200312115714.GA21470@gondor.apana.org.au>
- <20200323225403.GA10100@gondor.apana.org.au>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200323225403.GA10100@gondor.apana.org.au>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-X-PR-Tracked-Commit-Id: c8cfcb78c65877313cda7bcbace624d3dbd1f3b3
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 979e52ca0469fb38646bc51d26a0263a740c9f03
-Message-Id: <158500470751.3923.15723237667884136785.pr-tracker-bot@kernel.org>
-Date:   Mon, 23 Mar 2020 23:05:07 +0000
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+        s=default; t=1585005086;
+        bh=Ou977Sqn9Fa+b2IjVCFdOdSQbvwqI6VOCwZuG8bCp2I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ICeANoF0S5FEGhCpYA4soaB8ax67eDqLpfttwTTHW3Y3yujYPIejqHKcnToCjMPKw
+         GiasSoKirngcEqpjIqLbZHErqtaAH1x4UJB7Bqf9du4yKUM2aDhbSF3Cc92NxcS0xz
+         yzsfWL2mo/ZgMl1GLgVPX2lmLrP9MzUkg9CEGm9c=
+Subject: Re: [PATCH rebase v2] kunit: add --make_options
+To:     Brendan Higgins <brendanhiggins@google.com>, gthelen@google.com,
+        natechancellor@gmail.com
+Cc:     linux-kselftest@vger.kernel.org, davidgow@google.com,
+        kunit-dev@googlegroups.com, clang-built-linux@googlegroups.com,
+        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200323190459.64737-1-brendanhiggins@google.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <db463fea-3cd0-5e10-02b2-950782437dc8@kernel.org>
+Date:   Mon, 23 Mar 2020 17:11:25 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200323190459.64737-1-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 24 Mar 2020 09:54:03 +1100:
+On 3/23/20 1:04 PM, Brendan Higgins wrote:
+> From: Greg Thelen <gthelen@google.com>
+> 
+> The kunit.py utility builds an ARCH=um kernel and then runs it.  Add
+> optional --make_options flag to kunit.py allowing for the operator to
+> specify extra build options.
+> 
+> This allows use of the clang compiler for kunit:
+>    tools/testing/kunit/kunit.py run --defconfig \
+>      --make_options CC=clang --make_options HOSTCC=clang
+> 
+> Signed-off-by: Greg Thelen <gthelen@google.com>
+> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> Tested-by: David Gow <davidgow@google.com>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+Thanks Brendan!
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/979e52ca0469fb38646bc51d26a0263a740c9f03
+Applied for 5.7-rc1
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+thanks,
+-- Shuah
