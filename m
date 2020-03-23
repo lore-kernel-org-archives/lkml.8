@@ -2,166 +2,131 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB0EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502E8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B7A220714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21B1220714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 20:23:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uu1xFpLO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oHsH9Ydz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgCWUVP (ORCPT
+        id S1727189AbgCWUXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 16:21:15 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36399 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgCWUVO (ORCPT
+        Mon, 23 Mar 2020 16:23:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36812 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbgCWUXC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 16:21:14 -0400
-Received: by mail-qk1-f194.google.com with SMTP id d11so16879619qko.3;
-        Mon, 23 Mar 2020 13:21:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dq2e7ENlb6avmGzEnYBHkNZ9DRnXGKNiPYpj0AW5dUg=;
-        b=uu1xFpLO5YSYuS2vANvLsWqcoNgOTTn9WC1QypwzdjM3kTUkdmt6EUFZrZx3rRBRcX
-         8bX2LVpHMgmGUolIQ6HFEA4X+66E+q5NQetZrr75cs+GYTfEtVMz7BGWALSzlEw1c0rw
-         KRVZ9eDJL9OSoZTSbDxI+TzPufHpnWwQYxuOyObi01ERpflJ5/+ft4JnSmxKL8tZp0dk
-         INhZVTXEJYcUq7arBtuwT6XTlbbNe3heEz8RDNzwyvUtp8RZHiJ7MqkuADnFq89R/YSp
-         BNs5HVvaAv4eLQbdbEaPN33MTXQAPovB+SWUPMoslKlfeyiNFQdCF5UfQ9/+S6tuxg5k
-         fjgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dq2e7ENlb6avmGzEnYBHkNZ9DRnXGKNiPYpj0AW5dUg=;
-        b=OAh6aswAtJ41/KmAuo4RgXPWPlIgiNgQv9s++aoGlwtNsJAKON7wzr/jWF38yUwhBg
-         VZeoehXe10nSXgKWhIgU8gJAepshYjW55iJ32yF4UqHY2vMtAC8TXwJht0P79htXcfXi
-         t/MmYJy3BjNU6NOH5Pv1T1DEaQCgcAhNj/WOuzSj3flL45uSdk92OS/+h6eT18VpLPgf
-         Oqei+IIdQQy7i+pD0Uy4qoEeuXF3VRGINDpggy5QFeCifK7ITm9i+vH6najaU3NYLVAp
-         ekMw/M9onyeu2Lpg9fFWzylvtVqHdAsi7d6nDv6hIT2uyY6tmXPeZQeuKn8VtoP2XH7R
-         NMUw==
-X-Gm-Message-State: ANhLgQ2pK+aN1iOYw6J/djTUmNaMXHbIT3NHv62hsDhTKnEmG7pCPGEn
-        Oye7h3kJY+91hgLwZiE3cascuh37UIQCPt2XqAU=
-X-Google-Smtp-Source: ADFU+vvVtBthwjRyrs5hStcwgajio70+DWdEHq4ZkATtjshFoMokv3FExtoOv5+t9MDaR6Ya6IWPHO1MqUxxgRmEMJY=
-X-Received: by 2002:a37:e40d:: with SMTP id y13mr22608204qkf.39.1584994873559;
- Mon, 23 Mar 2020 13:21:13 -0700 (PDT)
+        Mon, 23 Mar 2020 16:23:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=bXxQrgQXQShpPRAImqUo+1g9aMfKRLOEa0QksKyDt0Y=; b=oHsH9YdzinUiaUUGgXwK2Kr9GL
+        p+PtJJ8EPGRVd2TmXh2RAWU8KcIl6BG8F3K4XiRiRYeZTjWqe7HUI/1F57Z0JOs1jwNBRr7RJUaQR
+        icrqQbRpbxYgjFMYJMyVO+8J8b4CzzyA2f4lKLZVx7cX5keBbfDvBsA+Ued6+PaZ3DqhoFmdNT06f
+        h1Ym/0f05LHoJBFsqCOM2UTKLISKOw3QzYahUH7/cuuMI8DEW9lQfcw12+02bYbHrQ9o74U1Ygkxv
+        xA3yQERj5GatZXGjy8lydEwyH3VD7kesFvedyAc63bUYksONsPU3qjuvG7X1d0kZXFYGOiagDCpRa
+        HiVeG79Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGTbC-0003Vr-3C; Mon, 23 Mar 2020 20:23:02 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        William Kucharski <william.kucharski@oracle.com>,
+        Eric Biggers <ebiggers@google.com>
+Subject: [PATCH v10 21/25] ext4: Pass the inode to ext4_mpage_readpages
+Date:   Mon, 23 Mar 2020 13:22:55 -0700
+Message-Id: <20200323202259.13363-22-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200323202259.13363-1-willy@infradead.org>
+References: <20200323202259.13363-1-willy@infradead.org>
 MIME-Version: 1.0
-References: <20200323164415.12943-1-kpsingh@chromium.org> <20200323164415.12943-6-kpsingh@chromium.org>
- <202003231237.F654B379@keescook> <20200323194759.GB18787@chromium.org>
-In-Reply-To: <20200323194759.GB18787@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 23 Mar 2020 13:21:02 -0700
-Message-ID: <CAEf4BzZTsssnKgRFEzZBOnBMjCxk2wzkq7j_bOHmPpt5RmhqKA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 5/7] bpf: lsm: Initialize the BPF LSM hooks
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
-        Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 12:48 PM KP Singh <kpsingh@chromium.org> wrote:
->
-> On 23-M=C3=A4r 12:44, Kees Cook wrote:
-> > On Mon, Mar 23, 2020 at 05:44:13PM +0100, KP Singh wrote:
-> > > From: KP Singh <kpsingh@google.com>
-> > >
-> > > The bpf_lsm_ nops are initialized into the LSM framework like any oth=
-er
-> > > LSM.  Some LSM hooks do not have 0 as their default return value. The
-> > > __weak symbol for these hooks is overridden by a corresponding
-> > > definition in security/bpf/hooks.c
-> > >
-> > > The LSM can be enabled / disabled with CONFIG_LSM.
-> > >
-> > > Signed-off-by: KP Singh <kpsingh@google.com>
-> >
-> > Nice! This is super clean on the LSM side of things. :)
-> >
-> > One note below...
-> >
-> > > Reviewed-by: Brendan Jackman <jackmanb@google.com>
->
-> [...]
->
-> > > +
-> > > +/*
-> > > + * Copyright (C) 2020 Google LLC.
-> > > + */
-> > > +#include <linux/lsm_hooks.h>
-> > > +#include <linux/bpf_lsm.h>
-> > > +
-> > > +/* Some LSM hooks do not have 0 as their default return values. Over=
-ride the
-> > > + * __weak definitons generated by default for these hooks
-> >
-> > If you wanted to avoid this, couldn't you make the default return value
-> > part of lsm_hooks.h?
-> >
-> > e.g.:
-> >
-> > LSM_HOOK(int, -EOPNOTSUPP, inode_getsecurity, struct inode *inode,
-> >        const char *name, void **buffer, bool alloc)
-> >
-> > ...
-> >
-> > #define LSM_HOOK(RET, DEFAULT, NAME, ...)     \
-> >       LSM_HOOK_##RET(NAME, DEFAULT, __VA_ARGS__)
-> > ...
-> > #define LSM_HOOK_int(NAME, DEFAULT, ...)      \
-> > noinline int bpf_lsm_##NAME(__VA_ARGS__)      \
-> > {                                             \
-> >       return (DEFAULT);                       \
-> > }
-> >
-> > Then all the __weak stuff is gone, and the following 4 functions don't
-> > need to be written out, and the information is available to the macros
-> > if anyone else might ever want it.
->
-> Thanks, I like it!
->
-> If no-one objects, I will update it in the next revision.
->
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-I was about to propose the same, explicit default value seems like a
-much cleaner and more straightforward way to do this.
+This function now only uses the mapping argument to look up the inode,
+and both callers already have the inode, so just pass the inode instead
+of the mapping.
 
-> - KP
->
-> >
-> > -Kees
-> >
-> > > + */
-> > > +noinline int bpf_lsm_inode_getsecurity(struct inode *inode, const ch=
-ar *name,
-> > > +                                  void **buffer, bool alloc)
-> > > +};
->
-> [...]
->
-> > > --
-> > > 2.20.1
-> > >
-> >
-> > --
-> > Kees Cook
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+Reviewed-by: Eric Biggers <ebiggers@google.com>
+---
+ fs/ext4/ext4.h     | 2 +-
+ fs/ext4/inode.c    | 4 ++--
+ fs/ext4/readpage.c | 3 +--
+ 3 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 95b4bb2cc44c..a9c133e6f786 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -3298,7 +3298,7 @@ static inline void ext4_set_de_type(struct super_block *sb,
+ }
+ 
+ /* readpages.c */
+-extern int ext4_mpage_readpages(struct address_space *mapping,
++extern int ext4_mpage_readpages(struct inode *inode,
+ 		struct readahead_control *rac, struct page *page);
+ extern int __init ext4_init_post_read_processing(void);
+ extern void ext4_exit_post_read_processing(void);
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index a867835bca2d..27b35a79f99c 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -3226,7 +3226,7 @@ static int ext4_readpage(struct file *file, struct page *page)
+ 		ret = ext4_readpage_inline(inode, page);
+ 
+ 	if (ret == -EAGAIN)
+-		return ext4_mpage_readpages(page->mapping, NULL, page);
++		return ext4_mpage_readpages(inode, NULL, page);
+ 
+ 	return ret;
+ }
+@@ -3239,7 +3239,7 @@ static void ext4_readahead(struct readahead_control *rac)
+ 	if (ext4_has_inline_data(inode))
+ 		return;
+ 
+-	ext4_mpage_readpages(rac->mapping, rac, NULL);
++	ext4_mpage_readpages(inode, rac, NULL);
+ }
+ 
+ static void ext4_invalidatepage(struct page *page, unsigned int offset,
+diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
+index 66275f25235d..5761e9961682 100644
+--- a/fs/ext4/readpage.c
++++ b/fs/ext4/readpage.c
+@@ -221,13 +221,12 @@ static inline loff_t ext4_readpage_limit(struct inode *inode)
+ 	return i_size_read(inode);
+ }
+ 
+-int ext4_mpage_readpages(struct address_space *mapping,
++int ext4_mpage_readpages(struct inode *inode,
+ 		struct readahead_control *rac, struct page *page)
+ {
+ 	struct bio *bio = NULL;
+ 	sector_t last_block_in_bio = 0;
+ 
+-	struct inode *inode = mapping->host;
+ 	const unsigned blkbits = inode->i_blkbits;
+ 	const unsigned blocks_per_page = PAGE_SIZE >> blkbits;
+ 	const unsigned blocksize = 1 << blkbits;
+-- 
+2.25.1
+
