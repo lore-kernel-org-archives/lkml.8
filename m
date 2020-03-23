@@ -2,125 +2,96 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C8EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9153C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B1B20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD7982072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgCWRT3 (ORCPT
+        id S1727903AbgCWRTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:19:29 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:50434 "EHLO inva020.nxp.com"
+        Mon, 23 Mar 2020 13:19:31 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:57090 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727113AbgCWRT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:19:29 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E6EA11A14C5;
-        Mon, 23 Mar 2020 18:19:26 +0100 (CET)
+        id S1725844AbgCWRTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 13:19:30 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9B313201848;
+        Mon, 23 Mar 2020 18:19:28 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DA8FF1A14A9;
-        Mon, 23 Mar 2020 18:19:26 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8E2A52012E7;
+        Mon, 23 Mar 2020 18:19:28 +0100 (CET)
 Received: from fsr-ub1864-111.ea.freescale.net (fsr-ub1864-111.ea.freescale.net [10.171.82.141])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 8C0B72035C;
-        Mon, 23 Mar 2020 18:19:26 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id F12E62035C;
+        Mon, 23 Mar 2020 18:19:27 +0100 (CET)
 From:   Diana Craciun <diana.craciun@oss.nxp.com>
 To:     kvm@vger.kernel.org, alex.williamson@redhat.com,
         laurentiu.tudor@nxp.com, linux-arm-kernel@lists.infradead.org,
         bharatb.yadav@gmail.com
 Cc:     linux-kernel@vger.kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>
-Subject: [PATCH 0/9] vfio/fsl-mc: VFIO support for FSL-MC devices
-Date:   Mon, 23 Mar 2020 19:19:02 +0200
-Message-Id: <20200323171911.27178-1-diana.craciun@oss.nxp.com>
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Bharat Bhushan <Bharat.Bhushan@nxp.com>
+Subject: [PATCH 3/9] vfio/fsl-mc: Implement VFIO_DEVICE_GET_INFO ioctl
+Date:   Mon, 23 Mar 2020 19:19:05 +0200
+Message-Id: <20200323171911.27178-4-diana.craciun@oss.nxp.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200323171911.27178-1-diana.craciun@oss.nxp.com>
+References: <20200323171911.27178-1-diana.craciun@oss.nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DPAA2 (Data Path Acceleration Architecture) consists in
-mechanisms for processing Ethernet packets, queue management,
-accelerators, etc.
+Allow userspace to get fsl-mc device info (number of regions
+and irqs).
 
-The Management Complex (mc) is a hardware entity that manages the DPAA2
-hardware resources. It provides an object-based abstraction for software
-drivers to use the DPAA2 hardware. The MC mediates operations such as
-create, discover, destroy of DPAA2 objects.
-The MC provides memory-mapped I/O command interfaces (MC portals) which
-DPAA2 software drivers use to operate on DPAA2 objects.
+Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+---
+ drivers/vfio/fsl-mc/vfio_fsl_mc.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-A DPRC is a container object that holds other types of DPAA2 objects.
-Each object in the DPRC is a Linux device and bound to a driver.
-The MC-bus driver is a platform driver (different from PCI or platform
-bus). The DPRC driver does runtime management of a bus instance. It
-performs the initial scan of the DPRC and handles changes in the DPRC
-configuration (adding/removing objects).
-
-All objects inside a container share the same hardware isolation
-context, meaning that only an entire DPRC can be assigned to
-a virtual machine.
-When a container is assigned to a virtual machine, all the objects
-within that container are assigned to that virtual machine.
-The DPRC container assigned to the virtual machine is not allowed
-to change contents (add/remove objects) by the guest. The restriction
-is set by the host and enforced by the mc hardware.
-
-The DPAA2 objects can be directly assigned to the guest. However
-the MC portals (the memory mapped command interface to the MC) need
-to be emulated because there are commands that configure the
-interrupts and the isolation IDs which are virtual in the guest.
-
-Example:
-echo vfio-fsl-mc > /sys/bus/fsl-mc/devices/dprc.2/driver_override
-echo dprc.2 > /sys/bus/fsl-mc/drivers/vfio-fsl-mc/bind
-
-The dprc.2 is bound to the VFIO driver and all the objects within
-dprc.2 are going to be bound to the VFIO driver.
-
-More details about the DPAA2 objects can be found here:
-Documentation/networking/device_drivers/freescale/dpaa2/overview.rst
-
-The patches are dependent on some changes in the mc-bus (bus/fsl-mc)
-driver. The changes were needed in order to re-use code and to export
-some more functions that are needed by the VFIO driver.
-Currenlty the mc-bus patches are under review:
-https://www.spinics.net/lists/kernel/msg3447567.html
-
-Bharat Bhushan (1):
-  vfio/fsl-mc: Add VFIO framework skeleton for fsl-mc devices
-
-Diana Craciun (8):
-  vfio/fsl-mc: Scan DPRC objects on vfio-fsl-mc driver bind
-  vfio/fsl-mc: Implement VFIO_DEVICE_GET_INFO ioctl
-  vfio/fsl-mc: Implement VFIO_DEVICE_GET_REGION_INFO ioctl call
-  vfio/fsl-mc: Allow userspace to MMAP fsl-mc device MMIO regions
-  vfio/fsl-mc: Added lock support in preparation for interrupt handling
-  vfio/fsl-mc: Add irq infrastructure for fsl-mc devices
-  vfio/fsl-mc: trigger an interrupt via eventfd
-  vfio/fsl-mc: Add read/write support for fsl-mc devices
-
- MAINTAINERS                               |   6 +
- drivers/vfio/Kconfig                      |   1 +
- drivers/vfio/Makefile                     |   1 +
- drivers/vfio/fsl-mc/Kconfig               |   9 +
- drivers/vfio/fsl-mc/Makefile              |   4 +
- drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 660 ++++++++++++++++++++++
- drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c    | 221 ++++++++
- drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |  56 ++
- include/uapi/linux/vfio.h                 |   1 +
- 9 files changed, 959 insertions(+)
- create mode 100644 drivers/vfio/fsl-mc/Kconfig
- create mode 100644 drivers/vfio/fsl-mc/Makefile
- create mode 100644 drivers/vfio/fsl-mc/vfio_fsl_mc.c
- create mode 100644 drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
- create mode 100644 drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-
+diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+index 5cc533808bc1..ab1cde375fc6 100644
+--- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
++++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+@@ -31,10 +31,30 @@ static void vfio_fsl_mc_release(void *device_data)
+ static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
+ 			      unsigned long arg)
+ {
++	unsigned long minsz;
++	struct vfio_fsl_mc_device *vdev = device_data;
++	struct fsl_mc_device *mc_dev = vdev->mc_dev;
++
+ 	switch (cmd) {
+ 	case VFIO_DEVICE_GET_INFO:
+ 	{
+-		return -EINVAL;
++		struct vfio_device_info info;
++
++		minsz = offsetofend(struct vfio_device_info, num_irqs);
++
++		if (copy_from_user(&info, (void __user *)arg, minsz))
++			return -EFAULT;
++
++		if (info.argsz < minsz)
++			return -EINVAL;
++
++		info.flags = VFIO_DEVICE_FLAGS_FSL_MC;
++		info.num_regions = mc_dev->obj_desc.region_count;
++		info.num_irqs = mc_dev->obj_desc.irq_count;
++
++		return copy_to_user((void __user *)arg, &info, minsz) ?
++			-EFAULT : 0;
++
+ 	}
+ 	case VFIO_DEVICE_GET_REGION_INFO:
+ 	{
 -- 
 2.17.1
 
