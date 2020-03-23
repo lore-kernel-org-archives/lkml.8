@@ -2,143 +2,116 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BF1C54FD1
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDD1C4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CED320409
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88AE120409
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:47:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FJ96uvPE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U8EsLZBz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbgCWXpY (ORCPT
+        id S1727223AbgCWXrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 19:45:24 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:52090 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727330AbgCWXpW (ORCPT
+        Mon, 23 Mar 2020 19:47:00 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:21116 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727054AbgCWXq7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 19:45:22 -0400
-Received: by mail-pl1-f201.google.com with SMTP id d4so10706922plr.18
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 16:45:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=K7VFDU7GlU5U4OxUapn6OgbtnHCUEbg6buPZcCk3EXM=;
-        b=FJ96uvPEpHjQNRDWex/xGNOmSvOdt1pxL2MVP9Hn8diPXufsanczI0F9UAwO9HFVTX
-         AgDe+k3+hRhAyxWUMmJIrgSJpJ2qMRUI+aGSVuv6dNc+zBRwUg5Ub/YbdtHAw5Un5RXS
-         d5IiS9DkmsILyrHWrBDYIIQYUkJgqkBlJtY+XQoXuw1slRWB8/1/uarmnWmyKGSkogFP
-         40hGgvrLi0bP4NbCEWZIB5CNNHknbs6EDbY04O1VSXN85uELIroHuGM2ksd0R9YD+KyN
-         t832C0CLLfJcotEpZqoGckNiIXDgEuc0Nq6WfXCCNgEqx1JzdFkQyi6xFQV+lzGB0zJA
-         fWCA==
+        Mon, 23 Mar 2020 19:46:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585007218;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tSyvbG0jRJgoukd8LcpY1HnHy+eiw9SXpaYRxe+R7cU=;
+        b=U8EsLZBzxkOeC+eNCMRZderVA7HFHYE9n6DVSwPywY1bBEXwwQS7n3qI/zdNBPXqpfL32c
+        Zp4mHc8s+iZ/HV6LiY9Ax2tiFbSY/6szRj4txZj0gO3YxrrnTCfxH2t0l9/mTwY/amNV2T
+        8gp84P5CPl1px9jxEYz0fIxJUDKEaUs=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-401-vdCmVAKHOn6YMK90IfvWDQ-1; Mon, 23 Mar 2020 19:46:56 -0400
+X-MC-Unique: vdCmVAKHOn6YMK90IfvWDQ-1
+Received: by mail-wm1-f69.google.com with SMTP id f8so606551wmh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 16:46:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=K7VFDU7GlU5U4OxUapn6OgbtnHCUEbg6buPZcCk3EXM=;
-        b=En0rdSuvN5vfYIe6pxVT2A9Vyh1PvB7p6v/3wrzPS3rmu9Z74p3i7oEPQiKdMn/lM2
-         JjfyaKbaLmEDcRPR/FMRPQi4WCwYWYd9Wjhyfv4CoVd3iaxD1rh1Epxtd7J11gldYP1h
-         K9YBnvPOEP5vzC5X36nTbQccHdBER7qB6OD6/ENX9T5+n468rtwXbm2/WFtW8N1VKOWs
-         haaGWZ576NM1Vc4ewlk5LDgNppZ0pQ1dQ+C7rkTYgX6noew1NaECdfkQGrNVGq+06moa
-         Artwv3EM00JChqsRYXGYZIHvCSvbjuX/cFOIO0lFk/Bmjz8oQ4YRPpmESzcBViyVrYHV
-         QUiA==
-X-Gm-Message-State: ANhLgQ2JxLBwbHOdCqjeRDBXscv/6hGTyv9PSOllY9AQPK1m9OyD2YyK
-        5yQQf9tzd4C8SXUdfuskkJoKjj2rNd/H
-X-Google-Smtp-Source: ADFU+vtzNNZ+frS2k2eYn6AUK9rcW4jYx4Hb49mce2tIaK5oiVCnnrj0ZBd2sKY+xjgd7DejcbjvLfReTdBh
-X-Received: by 2002:a17:90a:8586:: with SMTP id m6mr1937984pjn.121.1585007121296;
- Mon, 23 Mar 2020 16:45:21 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 16:45:05 -0700
-In-Reply-To: <20200323234505.226919-1-rajatja@google.com>
-Message-Id: <20200323234505.226919-5-rajatja@google.com>
-Mime-Version: 1.0
-References: <20200323234505.226919-1-rajatja@google.com>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH RESEND 5/5] dt-bindings: input/atkbd.txt: Add binding info for
- "keymap" property
-From:   Rajat Jain <rajatja@google.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, dtor@google.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajat Jain <rajatja@google.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, furquan@google.com,
-        dlaurie@google.com, bleung@google.com, zentaro@google.com,
-        dbehr@google.com
-Cc:     rajatxjain@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tSyvbG0jRJgoukd8LcpY1HnHy+eiw9SXpaYRxe+R7cU=;
+        b=Q57N+ekXsamYav+0Yo+nNsMBjus1n9aiD4VA+C6CwfVRZ9fUFtKWT/eS9OFW1/u7bf
+         xaoVOExS94xMb2PStFGjvY+BX3WkrzNVLYED8yX5IQLGF2BzjOni1bCJGXN7XmoQOrj3
+         eIONJXC+Zlbm5zOueU+B+pypobIE3yOPqhUaTmSNr+oyzUOLIngYhcbzcNt9I2wda8o9
+         fXKNXR8/nbQCrG1ACYMJA7vqnOXl9pLsQmbQBSnmY3+zNV8ssIz98B5fznaQELYInO9z
+         4XmrQ9Jyiv43BwGfsOvA3Huk2ciKlFCrar11zsZsK5N0PGpkUNTAnzhxwsxj9vqHAbZK
+         Ct9g==
+X-Gm-Message-State: ANhLgQ2W34YAYVwq8i+Hy/c0tOO+Vw2A+H5ae39WYd9uqLktsz43uVNP
+        8RFaSvX9Yg3tkQFhl4sEr0v86snXLS1sKZhMjP8eOJxhxMkBuKvhmeYtmaExcmNKd9GFeTZPrlM
+        AvbMm8yK5C118tRRSxNlG7yHX
+X-Received: by 2002:adf:f7cb:: with SMTP id a11mr23524113wrq.79.1585007215284;
+        Mon, 23 Mar 2020 16:46:55 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vvZlGwBX5VRkEHJbRyonc3teesA7wqRwm+dtkXJfD8MCIKgHyy5njk4cisOjUOk59hS+iM0yg==
+X-Received: by 2002:adf:f7cb:: with SMTP id a11mr23524089wrq.79.1585007214986;
+        Mon, 23 Mar 2020 16:46:54 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:7848:99b4:482a:e888? ([2001:b07:6468:f312:7848:99b4:482a:e888])
+        by smtp.gmail.com with ESMTPSA id k9sm26815366wrd.74.2020.03.23.16.46.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Mar 2020 16:46:54 -0700 (PDT)
+Subject: Re: [PATCH v3 02/37] KVM: nVMX: Validate the EPTP when emulating
+ INVEPT(EXTENT_CONTEXT)
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        John Haxby <john.haxby@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
+ <20200320212833.3507-3-sean.j.christopherson@intel.com>
+ <871rpj9lay.fsf@vitty.brq.redhat.com>
+ <20200323154555.GH28711@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <b6fdc5db-2d50-5e4d-cfe8-4d4624c046e0@redhat.com>
+Date:   Tue, 24 Mar 2020 00:46:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200323154555.GH28711@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the info for keymap property that allows firmware to specify the
-mapping from physical code to linux keycode, that the kernel should use.
+On 23/03/20 16:45, Sean Christopherson wrote:
+>> My question, however, transforms into "would it
+>> make sense to introduce nested_vmx_fail() implementing the logic from
+>> SDM:
+>>
+>> VMfail(ErrorNumber):
+>> 	IF VMCS pointer is valid
+>> 		THEN VMfailValid(ErrorNumber);
+>> 	ELSE VMfailInvalid;
+>> 	FI;
+>>
+> Hmm, I wouldn't be opposed to such a wrapper.  It would pair with
+> nested_vmx_succeed().
+> 
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
-Change-Id: I5226fffc048399f003bc30410d5893f5ab24be08
----
- .../devicetree/bindings/input/atkbd.txt       | 27 ++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+Neither would I.
 
-diff --git a/Documentation/devicetree/bindings/input/atkbd.txt b/Documentation/devicetree/bindings/input/atkbd.txt
-index 816653eb8e98d..0a0037d70adc8 100644
---- a/Documentation/devicetree/bindings/input/atkbd.txt
-+++ b/Documentation/devicetree/bindings/input/atkbd.txt
-@@ -6,9 +6,15 @@ Optional properties:
- 			An ordered array of the physical codes for the function
- 			row keys. Arranged in order from left to right.
- 
-+	keymap:
-+			An array of the u32 entries to specify mapping from the
-+			keyboard physcial codes to linux keycodes. The top 16
-+			bits of each entry are the physical code, and bottom
-+			16 bits are the	linux keycode.
-+
- Example:
- 
--	This is a sample ACPI _DSD node describing the property:
-+	This is a sample ACPI _DSD node describing the properties:
- 
-         Name (_DSD, Package () {
-                 ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-@@ -29,6 +35,25 @@ Example:
-                                         0xAE, /* T12 VOL_DOWN */
-                                         0xB0, /* T13 VOL_UP */
-                                 }
-+                        },
-+                        Package () { "keymap",
-+                                Package () {
-+                                        0xEA009E, /* EA -> KEY_BACK */
-+                                        0xE700AD, /* E7 -> KEY_REFRESH */
-+                                        0x910174, /* 91 -> KEY_FULL_SCREEN */
-+                                        0x920078, /* 92 -> KEY_SCALE */
-+                                        0x930280, /* 93 -> 0x280 */
-+                                        0x9400E0, /* 94 -> KEY_BRIGHTNESS_DOWN*/
-+                                        0x9500E1, /* 95 -> KEY_BRIGHTNESS_UP */
-+                                        0x960279, /* 96 -> KEY_PRIVACY_SCRN_TOGGLE*/
-+                                        0x9700E5, /* 97 -> KEY_KBDILLUMDOWN */
-+                                        0x9800E6, /* 98 -> KEY_KBDILLUMUP */
-+                                        0xA00071, /* A0 -> KEY_MUTE */
-+                                        0xAE0072, /* AE -> KEY_VOLUMEDOWN */
-+                                        0xB00073, /* B0 -> KEY_VOLUMEUP */
-+					...
-+					<snip other entries>
-+                                }
-                         }
-                 }
-         })
--- 
-2.25.1.696.g5e7596f4ac-goog
+Paolo
 
