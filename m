@@ -2,140 +2,186 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC04DC54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B12C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 905662072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:53:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EI2zKktS"
+	by mail.kernel.org (Postfix) with ESMTP id 28D732074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:53:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584957229;
+	bh=vYQRdibAHre6Z0ZRM2+BRlR2nFJ0LeQHPRN+LvLMVBQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q2j4VisFxD1mHw8sHiJnupGaRhAzWIGmoOLfBJjeR6k+gLqMI6TQOj/4gJebmCKBD
+	 MuPS2OMkpKEXLhILSuGSozH1VRDT/BI5JlQIsyrmrJwrlkelC1D1HeCCfZxuOOaTHt
+	 NyhmzJ6xCeig4TOAkKEJPMLZ8ZXPTb1WOPOusAYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgCWJxE (ORCPT
+        id S1727815AbgCWJxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 05:53:04 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54624 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727752AbgCWJxE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:53:04 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c81so3434307wmd.4;
-        Mon, 23 Mar 2020 02:53:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=Z+6XVznaFEON0f8iN5LEjyjFaUvEkyzSk7nWE3yhXyU=;
-        b=EI2zKktST7siFx8D5JHNrQES9a9jniXP+LT73GIPnwoUwynj2pC0K7zDBxeclTGJPd
-         Ph8+H9FavfKjZP6pI8Hi0CmWQEL/MPftc/U2L3C+p18DIQ1+iyhHT4+j6HbifIiMHX4F
-         n9xX9O3Ezwi5B8b2ghTMjvwkvsjFrGnSpiA6gm5/aPNE4kX8Si6TOWD2ZmMXiVdcl1FB
-         caSBR5D07nYH/Z1u6Z/lXFZqJ4w0hUeKJFKJhJV+eaKcz636ZIIYt9GvA8QRfjySGO19
-         hvbudMx9EzHxSiUAMkWYdOU9Yknh6DWpviuJJf1O5rQKGe16OB2+9ImoD5heJMyqASA6
-         PwKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=Z+6XVznaFEON0f8iN5LEjyjFaUvEkyzSk7nWE3yhXyU=;
-        b=lAnBvXtB2dLALA0XbKxiW/Y4L/KIoHmx8ajbyvwnZMyO9Zb8JexmoXUsnVqLgLmzoc
-         Y8iHRNPY/fGZQkagnz6hQpWgCt1WO2AElbMWgZdVfZY7mAxJ+jehXlXuqzG5C3KNAT2d
-         as3LrYu/zE4x+I/n6D+RVTTDjhWD0zNGtdZJEjuQb1Yspsi6SeA7bpVqKFgfKM84k4Gr
-         G1Ni9r4W55cpOOv6tuVN/6LlXkJq9FsKk5Mm9ayI/Q0xTC4ct++KJzLkUJz/5BBBlIRp
-         cEJSEhRwPBJitRTRv69gSeWJdETL4pwCQATOWSmMzNZLf1Gcj9eB2X1xv5+Hhxr4tdJf
-         Exqg==
-X-Gm-Message-State: ANhLgQ2PWHTvMkORYZeE6iXvW/yfur4Rw74xXZEe9VzA30KcyROmAlm6
-        /iWb3wlcrXuDKOACUDTZoRRHsbructhBnJ+O67c=
-X-Google-Smtp-Source: ADFU+vuntAywRjz8eiWGZawNNazTzcPLdLf5SbEvx4DOHezzFPANFDCW/hQE4Lrr5sX/Nd4jh6OidJJxI8X1Nyv+Bq0=
-X-Received: by 2002:a1c:4e0f:: with SMTP id g15mr12959874wmh.163.1584957182077;
- Mon, 23 Mar 2020 02:53:02 -0700 (PDT)
+        Mon, 23 Mar 2020 05:53:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727737AbgCWJxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 05:53:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5CDF2072D;
+        Mon, 23 Mar 2020 09:53:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584957227;
+        bh=vYQRdibAHre6Z0ZRM2+BRlR2nFJ0LeQHPRN+LvLMVBQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yWjYuu7kvYMl56D+Y8BuUPq3QPFiMCKuoOxVlWQhwAM+Wm8idPdIVqevNxw69uAAk
+         ovtTcEbcF8rxF1O0XGhGCwlQyvi72gjTGLHWblk502xAlVEL1Pik4+Qi5JPX9hQqV2
+         2pOn7t/JqTJs1YpmmO9wrZEG1pWDWllk+Oa0PCDY=
+Date:   Mon, 23 Mar 2020 10:53:44 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jaewon Kim <jaewon31.kim@samsung.com>
+Cc:     leon@kernel.org, vbabka@suse.cz, adobriyan@gmail.com,
+        akpm@linux-foundation.org, labbott@redhat.com,
+        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com, kasong@redhat.com,
+        bhe@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        jaewon31.kim@gmail.com, linux-api@vger.kernel.org,
+        kexec@lists.infradead.org
+Subject: Re: [RFC PATCH v2 1/3] meminfo_extra: introduce meminfo extra
+Message-ID: <20200323095344.GB425358@kroah.com>
+References: <20200323080503.6224-1-jaewon31.kim@samsung.com>
+ <CGME20200323080508epcas1p387c9c19b480da53be40fe5d51e76a477@epcas1p3.samsung.com>
+ <20200323080503.6224-2-jaewon31.kim@samsung.com>
 MIME-Version: 1.0
-References: <20200323020844.17064-1-masahiroy@kernel.org> <CAHmME9p=ECJ15uyPH79bF0tuzEksdxoUsjGQSyz74FfdEJxTpQ@mail.gmail.com>
- <CAHmME9q4egN7_KeYB-ZHCFPfXs-virgTv4iz9jW2SVOM7dTnLw@mail.gmail.com>
- <CAK7LNAR07vZFzh1Bbpq4CoJ4zmsc+p5rxpkO1Zv8QVfqhfvr2w@mail.gmail.com> <CAHmME9qCjo4kOQM3Dw6PDjEebmb6rvXajqhK-m-=vKcHWqNhAw@mail.gmail.com>
-In-Reply-To: <CAHmME9qCjo4kOQM3Dw6PDjEebmb6rvXajqhK-m-=vKcHWqNhAw@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Mon, 23 Mar 2020 10:52:50 +0100
-Message-ID: <CA+icZUUjP7e2zgrVCFenO_YJfpcOQWV++kuU5UWGKN_5udZXSw@mail.gmail.com>
-Subject: Re: [PATCH 0/7] x86: remove always-defined CONFIG_AS_* options
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>, X86 ML <x86@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Song Liu <songliubraving@fb.com>,
-        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323080503.6224-2-jaewon31.kim@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 7:53 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> On Mon, Mar 23, 2020 at 12:36 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > Hi Jason,
-> >
-> > On Mon, Mar 23, 2020 at 1:28 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> > >
-> > > Hi again,
-> > >
-> > > I've consolidated your patches and rebased mine on top, and
-> > > incorporated your useful binutils comments. The result lives here:
-> > >
-> > > https://git.zx2c4.com/linux-dev/log/?h=jd/kconfig-assembler-support
-> > >
-> > > I can submit all of those to the list, if you want, or maybe you can
-> > > just pull them out of there, include them in your v2, and put them in
-> > > your tree for 5.7? However you want is fine with me.
-> >
-> >
-> > Your series does not work correctly.
-> >
-> > I will comment why later.
->
-> Bummer, okay. Looking forward to learning what's up. Also, if some
-> parts of it are useful (like the resorting and organizing of
-> arch/x86/crypto/Makefile), feel free to cannibalize it, keeping what's
-> useful and discarding what's not.
->
+On Mon, Mar 23, 2020 at 05:05:01PM +0900, Jaewon Kim wrote:
+> Provide APIs to drivers so that they can show its memory usage on
+> /proc/meminfo_extra.
+> 
+> int register_meminfo_extra(atomic_long_t *val, int shift,
+> 			   const char *name);
+> int unregister_meminfo_extra(atomic_long_t *val);
 
-Hi Jason,
+Nit, isn't it nicer to have the subsystem name first:
+	meminfo_extra_register()
+	meminfo_extra_unregister()
+?
 
-I have your patches on my radar.
 
-I have not checked your Kconfig changes are really working, especially
-I looked at [2] and comment on this.
 
-I would have expected your arch/x86/Kconfig.assembler file as
-arch/x86/crypto/Kconfig (source include needs to be adapted in
-arch/x86/Kconfig).
-What about a commit subject like "x86: crypto: Probe assembler options
-via Kconfig instead of makefile"?
-Not sure if the commit message needs some massage?
+> 
+> Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
+> ---
+> v2: move to /proc/meminfo_extra as a new file, meminfo_extra.c
+>     use rcu to reduce lock overhead
+> v1: print info at /proc/meminfo
+> ---
+>  fs/proc/Makefile        |   1 +
+>  fs/proc/meminfo_extra.c | 123 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mm.h      |   4 ++
+>  mm/page_alloc.c         |   1 +
+>  4 files changed, 129 insertions(+)
+>  create mode 100644 fs/proc/meminfo_extra.c
+> 
+> diff --git a/fs/proc/Makefile b/fs/proc/Makefile
+> index bd08616ed8ba..83d2f55591c6 100644
+> --- a/fs/proc/Makefile
+> +++ b/fs/proc/Makefile
+> @@ -19,6 +19,7 @@ proc-y	+= devices.o
+>  proc-y	+= interrupts.o
+>  proc-y	+= loadavg.o
+>  proc-y	+= meminfo.o
+> +proc-y	+= meminfo_extra.o
+>  proc-y	+= stat.o
+>  proc-y	+= uptime.o
+>  proc-y	+= util.o
+> diff --git a/fs/proc/meminfo_extra.c b/fs/proc/meminfo_extra.c
+> new file mode 100644
+> index 000000000000..bd3f0d2b7fb7
+> --- /dev/null
+> +++ b/fs/proc/meminfo_extra.c
+> @@ -0,0 +1,123 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/mm.h>
+> +#include <linux/proc_fs.h>
+> +#include <linux/seq_file.h>
+> +#include <linux/slab.h>
+> +
+> +static void show_val_kb(struct seq_file *m, const char *s, unsigned long num)
+> +{
+> +	seq_put_decimal_ull_width(m, s, num << (PAGE_SHIFT - 10), 8);
+> +	seq_write(m, " kB\n", 4);
+> +}
+> +
+> +static LIST_HEAD(meminfo_head);
+> +static DEFINE_SPINLOCK(meminfo_lock);
+> +
+> +#define NAME_SIZE      15
+> +#define NAME_BUF_SIZE  (NAME_SIZE + 2) /* ':' and '\0' */
+> +
+> +struct meminfo_extra {
+> +	struct list_head list;
+> +	atomic_long_t *val;
+> +	int shift_for_page;
+> +	char name[NAME_BUF_SIZE];
+> +	char name_pad[NAME_BUF_SIZE];
+> +};
+> +
+> +int register_meminfo_extra(atomic_long_t *val, int shift, const char *name)
+> +{
+> +	struct meminfo_extra *meminfo, *memtemp;
+> +	int len;
+> +	int error = 0;
+> +
+> +	meminfo = kzalloc(sizeof(*meminfo), GFP_KERNEL);
+> +	if (!meminfo) {
+> +		error = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	meminfo->val = val;
+> +	meminfo->shift_for_page = shift;
+> +	strncpy(meminfo->name, name, NAME_SIZE);
+> +	len = strlen(meminfo->name);
+> +	meminfo->name[len] = ':';
+> +	strncpy(meminfo->name_pad, meminfo->name, NAME_BUF_SIZE);
+> +	while (++len < NAME_BUF_SIZE - 1)
+> +		meminfo->name_pad[len] = ' ';
+> +
+> +	spin_lock(&meminfo_lock);
+> +	list_for_each_entry_rcu(memtemp, &meminfo_head, list) {
+> +		if (memtemp->val == val) {
+> +			error = -EINVAL;
+> +			break;
+> +		}
+> +	}
+> +	if (!error)
+> +		list_add_tail_rcu(&meminfo->list, &meminfo_head);
+> +	spin_unlock(&meminfo_lock);
 
-Maybe this is all irrelevant when Masahiro has commented.
+If you have a lock, why are you needing rcu?
 
-Thanks.
 
-Regards,
-- Sedat -
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/zx2c4/linux.git/log/?h=jd/kconfig-assembler-support
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/zx2c4/linux.git/commit/?h=jd/kconfig-assembler-support&id=ac483ff6fb4c785cd0b10d9756b71696829cd117
+> +	if (error)
+> +		kfree(meminfo);
+> +out:
+> +
+> +	return error;
+> +}
+> +EXPORT_SYMBOL(register_meminfo_extra);
+
+EXPORT_SYMBOL_GPL()?  I have to ask :)
+
+thanks,
+
+greg k-h
