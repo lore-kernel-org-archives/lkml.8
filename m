@@ -2,101 +2,250 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D55FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D61C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E68206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E13206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:23:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z4gZBwgq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NZO6kIIU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgCWTWo (ORCPT
+        id S1727857AbgCWTXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:22:44 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:47865 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727479AbgCWTWo (ORCPT
+        Mon, 23 Mar 2020 15:23:49 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36679 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727479AbgCWTXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:22:44 -0400
-Received: by mail-qt1-f202.google.com with SMTP id x10so8299065qts.14
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 12:22:43 -0700 (PDT)
+        Mon, 23 Mar 2020 15:23:48 -0400
+Received: by mail-pj1-f66.google.com with SMTP id nu11so296772pjb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 12:23:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=b3TV3f7zYOYzp4ZmIVYfuFFfeN9VG2wjzJh6wHfTV6M=;
-        b=Z4gZBwgq+0xFcv8RckPi1qnCvoD6fHJ9ub3WqBdCfYmxwVZw6Al098BlY9VoLfDeyb
-         iB0MObVc58HusOXUD+WGJ/PSDH0XDDSLEbxo4henXdLgWB/8UUE9zWAAT89Vuyi2djjL
-         /cQCTumXtB8FYo+C56mvFbc0lxrOTQDK7RC9jeo5ie6zBfeke5chqh+VMrPZB+WBmTwu
-         UDnf0IwepG6z5vPkRKLuPyqJH/Ob58jY+8QDvHTos0AFEvk2T9aT/tUvW3Q6mo3oOuTf
-         DqKBGGoE7lCC0MOk0krMobiT5+VgB/EEBMbJq9tLqVp4JN8XIY1m93TVJ7o/rXEB+uz6
-         cEMg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RbHAkwySW+SjMg5aoo3S5bq2JsPjA+qlnGgom9Gml2U=;
+        b=NZO6kIIU6XdWgPNFf7gf7/1ozS9LSCLf84YqVYQhql4HqDD4IdLiCi9TIKY344rCvB
+         Zoy7iLopJVuXHBh+li0Fh01/HjKrQ6vl/M02+YQ9mPLJWYA0UWGlf2O5H9PeBSb7xKIm
+         oV8eDJixx4a4ddaZRZYlf+xgWc8w7cV6S8ex4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=b3TV3f7zYOYzp4ZmIVYfuFFfeN9VG2wjzJh6wHfTV6M=;
-        b=ZDymLB9oi8+2xMHmmOs6gn1LrfLP6DjqCZ8lAHqpgk57KtwyeYtpW9c06R4m4r1AzV
-         FuzBIVDNCp4KUH7Y4GVshauYyzIAdd+wQ+k+t7us7XBGG89vM+dQtNlAq61A8GLd/Xp2
-         RVm7kiDpxTTso+jZ92N9qqPvJOHvLYDFoFmtHIPq+/3MSXRXC2va2kZpcGdUaW9J/oFE
-         s5T5nH/PAZNDCGcIqEuiVZmF1+ptWxMvNXbUAF/Vxyr2IAahUfobZAGhpAf+jg6DXiMF
-         bj0+QwNhFt7tVN5iKYZ+4z3OU1ROzKfD60+Qe2HSBm79BDmeFoCaTc70hXX7WtZtGt3T
-         snJA==
-X-Gm-Message-State: ANhLgQ0TsmvGWLZVg1zkpYHO3Xvii8kCJV7pu9IMKLKsRBbjYb707p53
-        k5aTH10mlmNLhpyxS+Oz1+flGPyERI3ocethD6HLgg==
-X-Google-Smtp-Source: ADFU+vvgMg/UiQ8gH1hyLSTrCyZfCEFnpnqU7yOsR0QRLbiAPWsqeftAb53ZTB58CKrBwku5M7vwhr+sQ0rR5ln7ZBlSQQ==
-X-Received: by 2002:ad4:4dc5:: with SMTP id cw5mr22166003qvb.109.1584991363216;
- Mon, 23 Mar 2020 12:22:43 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 12:22:36 -0700
-Message-Id: <20200323192236.70152-1-brendanhiggins@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH v2] kunit: tool: add missing test data file content
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     shuah@kernel.org, davidgow@google.com, heidifahim@google.com
-Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org,
-        Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RbHAkwySW+SjMg5aoo3S5bq2JsPjA+qlnGgom9Gml2U=;
+        b=BtJB7+tQEeBIuzqnlkbQW5dgN86/rIi6uZtlcvUKs0CUSrILaNmvUCi8q+82L/z/zH
+         bgUBpS1PZmK30HK1VG/6zcRvSJ76XFmlDAIlxeRvQpbaKIa8VuLTkBM3DHJt/YDJO3oE
+         MMjpCvjvxG+zcKyRCWHDYNvsFIgVIWlSE9kC4FwoWvqxytSoQxjGuTE1sOgmSJMBnoBr
+         wqnHhtJjfXcWFpzLqstiI5IION81n0sN64kRzXR0gXWhusoVnADQUNvm9JeIGOxKFdRA
+         g0GhGdiNCu9YGfhQB4dsyVLDwdLBKltLLwILUbb9IvmWz51qBy59c0FPU8SCP+sSIgdK
+         H0dg==
+X-Gm-Message-State: ANhLgQ087sOAu65oVz4dg4HtVUOoca7mWCLeJcQtWoOyhYswWFqW2UrR
+        SbGCN/dz87EHUOZwn9uElvj3ag==
+X-Google-Smtp-Source: ADFU+vt+BA0dpGMNm1Mhwu63M++OXFp0EGRD0FVnEVO+IMYkZxRYTY2rkHIb1guWH6E2+ljzvMqD3Q==
+X-Received: by 2002:a17:902:598e:: with SMTP id p14mr21666696pli.276.1584991427052;
+        Mon, 23 Mar 2020 12:23:47 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 144sm12956585pgc.25.2020.03.23.12.23.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 12:23:46 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 12:23:45 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     shuah <shuah@kernel.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] selftests/harness: Move test child waiting logic
+Message-ID: <202003231220.97A7ABD49@keescook>
+References: <20200313231252.64999-1-keescook@chromium.org>
+ <20200313231252.64999-2-keescook@chromium.org>
+ <0df3a446-cbdf-ed6b-9567-b137ec2138f7@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0df3a446-cbdf-ed6b-9567-b137ec2138f7@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a missing raw dmesg test log to test the kunit_tool's dmesg parser.
-test_prefix_poundsign and test_output_with_prefix_isolated_correctly
-fail without this test log.
+On Mon, Mar 23, 2020 at 12:08:13PM -0600, shuah wrote:
+> Hi Kees,
+> 
+> On 3/13/20 5:12 PM, Kees Cook wrote:
+> > In order to better handle timeout failures, rearrange the child waiting
+> > logic into a separate function. This is mostly a copy/paste with an
+> > indentation change. To handle pid tracking, a new field is added for
+> > the child pid. Also move the alarm() pairing into the function.
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Sorry for the delay. I was on vacation all of last week
+> and totally trying to stay away from checking email.
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
----
- .../testing/kunit/test_data/test_pound_sign.log  | Bin 0 -> 1656 bytes
- 1 file changed, 0 insertions(+), 0 deletions(-)
+Indeed; that's what vacation is for! :)
 
-diff --git a/tools/testing/kunit/test_data/test_pound_sign.log b/tools/testing/kunit/test_data/test_pound_sign.log
-index e69de29bb2d1d6434b8b29ae775ad8c2e48c5391..28ffa5ba03bfa81ea02ea9d38e7de7acf3dd9e5d 100644
-GIT binary patch
-literal 1656
-zcmah}U2EGg6n$=g#f7|Vtj^>lPBOzDM#o@mlt9+Kgd${FPEBlGBgsqs?{^h<Y3h$o
-zFBaGLocpP>13GNVmW<8=R3_K%5Q9W*u~4upWe`4q(jqBTdcAw?ZG=v-jA5@FZ|^*5
-zoU$NALGF+lEFssq<A{~zdHR7p&7+U(X~E!_yGM{l@40vQ%(~pazHH!+GB!sI;iCKZ
-zY69Cjp-?V{LrnyMQ5I_>Rp5<1_i#FmdPY1z2tkYI|M1-7PdS}Ub_h8eK~m)?&(I;{
-zd<2<NV1vyl7BWOggn_Hc5ba`wRu)R=x;oPiRuheYD}$9XJTpphG^wKX*mr|pw(;#T
-zTvPxWb#R&-VC|~9KeFD0ooNCooO~P|@vNKL)n#t&WQm2JSh%gFRMuv7!M#yqYailx
-z8TM&AUN~yqVM$ThVIE55OcVU4mW$eHC#dHEeUvCiE1wT#?U%cS^A_HAK$VqiIBG75
-z($V`G!unJPuo@k2@gj4y7$WV7g73Ls@d32giPqc=`3mz^u|IR`05hOx29+=__XXIv
-z%Xf#6<%P11b*dyatBVv$thED!=x%_Ts?sj1OY%b*t$Y}rODc$J2is^#<A~w+w`~mf
-zCs_oC7u=9pAjzurLE}*e38}&1-KX^pd*7wM-Q35(VDtTJOgeOnB`K*rii#c_+)*qi
-zNQ+5Dqv>MG0wcp<uf!}(SCXw)kqXk>xCSP@rQbRs58c`TmTbn>%WO@TFp;w*gB6RU
-km;Ljlo8cvfMVVCc>`K4bOfE$-fO&T9$C>+RbV7Fh7t6}$ApigX
+> My commit scripts falied on checkpatch warnings.
 
-literal 0
-HcmV?d00001
+All the macros in this file tend to anger checkpatch. ;)
 
+> 
+> A couple of comments below:
+> 
+> 
+> > ---
+> >   tools/testing/selftests/kselftest_harness.h | 93 +++++++++++----------
+> >   1 file changed, 49 insertions(+), 44 deletions(-)
+> >  > diff --git a/tools/testing/selftests/kselftest_harness.h
+> b/tools/testing/selftests/kselftest_harness.h
+> > index 5336b26506ab..c7b67e379219 100644
+> > --- a/tools/testing/selftests/kselftest_harness.h
+> > +++ b/tools/testing/selftests/kselftest_harness.h
+> > @@ -635,6 +635,7 @@
+> >   struct __test_metadata {
+> >   	const char *name;
+> >   	void (*fn)(struct __test_metadata *);
+> > +	pid_t pid;	/* pid of test when being run */
+> >   	int termsig;
+> >   	int passed;
+> >   	int trigger; /* extra handler after the evaluation */
+> > @@ -695,64 +696,68 @@ static inline int __bail(int for_realz, bool no_print, __u8 step)
+> >   	return 0;
+> >   }
+> > -void __run_test(struct __test_metadata *t)
+> > +void __wait_for_test(struct __test_metadata *t)
+> >   {
+> > -	pid_t child_pid;
+> >   	int status;
+> > +	alarm(t->timeout);
+> > +	waitpid(t->pid, &status, 0);
+> > +	alarm(0);
+> > +
+> > +	if (WIFEXITED(status)) {
+> > +		t->passed = t->termsig == -1 ? !WEXITSTATUS(status) : 0;
+> > +		if (t->termsig != -1) {
+> > +			fprintf(TH_LOG_STREAM,
+> > +				"%s: Test exited normally "
+> > +				"instead of by signal (code: %d)\n",
+> > +				t->name,
+> > +				WEXITSTATUS(status));
+> 
+> This one isn't an error and gets printed to stderr? Except for
+> this one message, all other messages in this routine are indeed
+> errors. It makes sense to print this out to stdout instead.
 
-base-commit: 021ed9f551da33449a5238e45e849913422671d7
+No, this is an error. A signal was _expected_ in this case, but the
+program exited without a signal. i.e. the test case failed, and the
+error is reported to stderr.
+
+(This portion, btw, is just moved from below.)
+
+> 
+> > +		} else if (!t->passed) {
+> > +			fprintf(TH_LOG_STREAM,
+> > +				"%s: Test failed at step #%d\n",
+> > +				t->name,
+> > +				WEXITSTATUS(status));
+> > +		}
+> > +	} else if (WIFSIGNALED(status)) {
+> > +		t->passed = 0;
+> > +		if (WTERMSIG(status) == SIGABRT) {
+> > +			fprintf(TH_LOG_STREAM,
+> > +				"%s: Test terminated by assertion\n",
+> > +				t->name);
+> > +		} else if (WTERMSIG(status) == t->termsig) {
+> > +			t->passed = 1;
+> > +		} else {
+> > +			fprintf(TH_LOG_STREAM,
+> > +				"%s: Test terminated unexpectedly "
+> > +				"by signal %d\n",
+> > +				t->name,
+> > +				WTERMSIG(status));
+> > +		}
+> > +	} else {
+> > +		fprintf(TH_LOG_STREAM,
+> > +			"%s: Test ended in some other way [%u]\n",
+> > +			t->name,
+> > +			status);
+> > +	}
+> > +}
+> > +
+> > +void __run_test(struct __test_metadata *t)
+> > +{
+> >   	t->passed = 1;
+> >   	t->trigger = 0;
+> >   	printf("[ RUN      ] %s\n", t->name);
+> > -	alarm(t->timeout);
+> > -	child_pid = fork();
+> > -	if (child_pid < 0) {
+> > +	t->pid = fork();
+> > +	if (t->pid < 0) {
+> >   		printf("ERROR SPAWNING TEST CHILD\n");
+> >   		t->passed = 0;
+> > -	} else if (child_pid == 0) {
+> > +	} else if (t->pid == 0) {
+> >   		t->fn(t);
+> >   		/* return the step that failed or 0 */
+> >   		_exit(t->passed ? 0 : t->step);
+> >   	} else {
+> > -		/* TODO(wad) add timeout support. */
+> > -		waitpid(child_pid, &status, 0);
+> > -		if (WIFEXITED(status)) {
+> > -			t->passed = t->termsig == -1 ? !WEXITSTATUS(status) : 0;
+> > -			if (t->termsig != -1) {
+> > -				fprintf(TH_LOG_STREAM,
+> > -					"%s: Test exited normally "
+> > -					"instead of by signal (code: %d)\n",
+> > -					t->name,
+> > -					WEXITSTATUS(status));
+> > -			} else if (!t->passed) {
+> > -				fprintf(TH_LOG_STREAM,
+> > -					"%s: Test failed at step #%d\n",
+> > -					t->name,
+> > -					WEXITSTATUS(status));
+> > -			}
+> > -		} else if (WIFSIGNALED(status)) {
+> > -			t->passed = 0;
+> > -			if (WTERMSIG(status) == SIGABRT) {
+> > -				fprintf(TH_LOG_STREAM,
+> > -					"%s: Test terminated by assertion\n",
+> > -					t->name);
+> > -			} else if (WTERMSIG(status) == t->termsig) {
+> > -				t->passed = 1;
+> > -			} else {
+> > -				fprintf(TH_LOG_STREAM,
+> > -					"%s: Test terminated unexpectedly "
+> > -					"by signal %d\n",
+> > -					t->name,
+> > -					WTERMSIG(status));
+> > -			}
+> > -		} else {
+> > -			fprintf(TH_LOG_STREAM,
+> > -				"%s: Test ended in some other way [%u]\n",
+> > -				t->name,
+> > -				status);
+> > -		}
+> > +		__wait_for_test(t);
+> >   	}
+> >   	printf("[     %4s ] %s\n", (t->passed ? "OK" : "FAIL"), t->name);
+> > -	alarm(0);
+> >   }
+> >   static int test_harness_run(int __attribute__((unused)) argc,
+> > 
+> 
+> thanks,
+> -- Shuah
+
+Hopefully that clears it up. I don't see anything to change for a v2?
+Did I miss anything?
+
+Thanks!
+
+-Kees
+
 -- 
-2.25.1.696.g5e7596f4ac-goog
-
+Kees Cook
