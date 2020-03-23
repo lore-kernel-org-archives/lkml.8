@@ -2,111 +2,131 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D00E3C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE46AC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3D262073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9614F2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 22:20:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Ase+58t8"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="s0aD2iU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgCWWOS (ORCPT
+        id S1727005AbgCWWUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:14:18 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:59884 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727063AbgCWWOR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 18:14:17 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02NM8eDQ015399
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 15:14:17 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=erPXsWmd23fd3W9Xuv20sBNJ3NxEkbQhYsmOpbVq2AI=;
- b=Ase+58t8NRI2h/zfLau/NM4sVfVwV1hDnIRfl6k7hlOH5NZuhtjQudVOJDWzjb5ECvVS
- iUlPQnTbnOWrAAgxx4xoTWqnLc+iTEscNnLyAQJUDuHzp4lzyryyL7rhkGmIt1ffhLvz
- k6iewYo3GuMCj6jvz1azNim6a67PYY4xfcA= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2yx2udyknd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 15:14:17 -0700
-Received: from intmgw003.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Mon, 23 Mar 2020 15:14:15 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 274BD3BEB983D; Mon, 23 Mar 2020 15:14:12 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Aslan Barkirov <aslan@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        <linux-mm@kvack.org>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>, Rik van Riel <riel@surriel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH] mm: hugetlb: fix per-node size calculation for hugetlb_cma
-Date:   Mon, 23 Mar 2020 15:14:11 -0700
-Message-ID: <20200323221411.2152675-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Mon, 23 Mar 2020 18:20:23 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:36797 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725897AbgCWWUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 18:20:23 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 15cbe099;
+        Mon, 23 Mar 2020 22:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=PbPvni7Sltr0h22AlXOhuRrhfNc=; b=s0aD2i
+        U5ofzLQJr4YECUyNMfLSjtqQRyjbV9+bXmhW9fatlhO9WHSiEh3OIaHvTdzTdDhI
+        /03IoRQe2iO1B5KpvlQbDoD2rKkX/gJbz3I9Tqp01ORyHErrVX19NGSbTbL/LWeG
+        jvSxxJ1zuEso00rYpNPwCqKvIFshqXAjU+fQK3cRjq1K/IuKGxjZ8isq9MlpXEUA
+        ItKOY4vOQH909nvKaaAvitAFzNPlSghCa4jOJAn28XQ9TBipRvoQDto7JEJU5dFQ
+        f+OLE4VzagoubjBVvu/SNdNR6UKp/EvEeTmi1lUVpUwD0HkpjgKphvUxnOHs/9Qo
+        N8IWimxU7GnzLmEg==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 34232a36 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Mon, 23 Mar 2020 22:13:18 +0000 (UTC)
+Received: by mail-io1-f52.google.com with SMTP id k9so5425031iov.7;
+        Mon, 23 Mar 2020 15:20:21 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3/DBfdaeFBmcTTWexrOYgOPX4L1lKSvT+hY0kZDeALWpsZZaRK
+        3xZ3qkNI6TIW/m9A+PNYPS6wJ/1FCFnDr4kizf8=
+X-Google-Smtp-Source: ADFU+vvRm5gGEehyNNeHhDfxRATjvFXIdpkqP6nuyOPQJHJSeNSq5KBtMdSbsJFvPoMMLVjsD2hE1KtBv2mMqZv2yck=
+X-Received: by 2002:a05:6638:52a:: with SMTP id j10mr1438090jar.36.1585002020839;
+ Mon, 23 Mar 2020 15:20:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-23_09:2020-03-23,2020-03-23 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- lowpriorityscore=0 bulkscore=0 clxscore=1015 phishscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 mlxlogscore=999 mlxscore=0
- spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003230110
-X-FB-Internal: deliver
+References: <20200323215732.13339-1-masahiroy@kernel.org>
+In-Reply-To: <20200323215732.13339-1-masahiroy@kernel.org>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Mon, 23 Mar 2020 16:20:10 -0600
+X-Gmail-Original-Message-ID: <CAHmME9qYLYHsfV8S3WVV8x52tvqJNSarfgrXVm0oBsHD1GinCw@mail.gmail.com>
+Message-ID: <CAHmME9qYLYHsfV8S3WVV8x52tvqJNSarfgrXVm0oBsHD1GinCw@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: allow to pass optional flag into as-instr macro
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Aslan found a bug in the per-node hugetlb_cma area size calculation:
-the total remaining size should cap the per-node area size instead
-of be the minimal possible allocation.
+On Mon, Mar 23, 2020 at 3:58 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> Commit 42d519e3d0c0 ("kbuild: Add support for 'as-instr' to be used in
+> Kconfig files") introduced the Kconfig variant of as-instr.
+>
+> It is currently used in arch/arm64/Kconfig.
+>
+> arm and arm64 are simple cases because they are separated by directory,
+> and GCC also provides a single architecture.
+>
+> Such architectures as x86, powerpc, sparc, etc. support both 32 and
+> 64 bit kernel in the unified arch directory, and GCC can be biarch.
+> On such architectures, Kbuild passes -m32 / -m64 flag (or a proper
+> target triple for Clang) to select the target machine bit.
+>
+> This commit adds the second parameter to as-instr so you can optionally
+> pass a compiler flag to evaluate the instruction with.
+>
+> One example usage of this is for the conversion of the following code
+> in arch/x86/Makefile:
+>
+>   adx_instr := $(call as-instr,adox %r10$(comma)%r10,-DCONFIG_AS_ADX=1)
+>
+> This instruction code should be evaluated by the 64-bit assembler
+> (r10 is a 64-bit register).
+>
+> If you use compiler that defaults to 32-bit for building the 64-bit
+> kernel, -m64 should be passed to invoke the 64-bit assembler.
+>
+>   config AS_ADX
+>           def_bool $(as-instr,adox %r10$(comma)%r10,$(m64-flags))
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+>  scripts/Kconfig.include | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+> index 496d11c92c97..9b8c98168ba9 100644
+> --- a/scripts/Kconfig.include
+> +++ b/scripts/Kconfig.include
+> @@ -31,9 +31,10 @@ cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -S -x c /dev/null -o /de
+>  # Return y if the linker supports <flag>, n otherwise
+>  ld-option = $(success,$(LD) -v $(1))
+>
+> -# $(as-instr,<instr>)
+> +# $(as-instr,<instr>,[<flag>])
+>  # Return y if the assembler supports <instr>, n otherwise
+> -as-instr = $(success,printf "%b\n" "$(1)" | $(CC) $(CLANG_FLAGS) -c -x assembler -o /dev/null -)
+> +# You can pass optional <flag> to evaluate <instr> with
+> +as-instr = $(success,printf "%b\n" "$(1)" | $(CC) $(CLANG_FLAGS) $(2) -c -x assembler -o /dev/null -)
+>
+>  # check if $(CC) and $(LD) exist
+>  $(error-if,$(failure,command -v $(CC)),compiler '$(CC)' not found)
+> --
+> 2.17.1
 
-Without the fix:
-[    0.004136] hugetlb_cma: reserve 2048 MiB, up to 1024 MiB per node
-[    0.004138] cma: Reserved 2048 MiB at 0x0000000180000000
-[    0.004139] hugetlb_cma: reserved 2048 MiB on node 0
+This looks fine to me, and might be useful down the line in the
+future. But for the ADX situation, I wound up just going with the
+bicompatible register:
 
-With the fix:
-[    0.006780] hugetlb_cma: reserve 2048 MiB, up to 1024 MiB per node
-[    0.006786] cma: Reserved 1024 MiB at 0x00000001c0000000
-[    0.006787] hugetlb_cma: reserved 1024 MiB on node 0
-[    0.006788] cma: Reserved 1024 MiB at 0x00000003c0000000
-[    0.006789] hugetlb_cma: reserved 1024 MiB on node 1
+https://git.zx2c4.com/linux-dev/commit/?h=jd/kconfig-assembler-support&id=c81d9c743d058ef9013fbf8661d071ac9d574472
 
-Reported-by: Aslan Barkirov <aslan@fb.com>
-Signed-off-by: Roman Gushchin <guro@fb.com>
----
- mm/hugetlb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
++# binutils >= 2.23
++config AS_ADX
++ def_bool $(as-instr,adox %eax$(comma)%eax)
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 456f4c010fea..44b47c2b6fab 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -5590,7 +5590,7 @@ void __init hugetlb_cma_reserve(int order)
- 		min_pfn = min_low_pfn;
- 		max_pfn = max_low_pfn;
- #endif
--		size = max(per_node, hugetlb_cma_size - reserved);
-+		size = min(per_node, hugetlb_cma_size - reserved);
- 		size = round_up(size, PAGE_SIZE << order);
- 
- 		if (size > ((max_pfn - min_pfn) << PAGE_SHIFT) / 2) {
--- 
-2.25.1
+This seems to work. But it also doesn't matter much, as it gets
+removed anyway during the binutils 2.23 bump:
 
+https://git.zx2c4.com/linux-dev/commit/?h=jd/kconfig-assembler-support&id=c95d6f2ce88722eeb86d54f206bd7599bdc51e1d
