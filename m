@@ -2,105 +2,130 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8283C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71865C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A793206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5228B20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 12:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgCWMlZ (ORCPT
+        id S1728184AbgCWMo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:41:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:48488 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728105AbgCWMlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 08:41:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA7261FB;
-        Mon, 23 Mar 2020 05:41:24 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94B8A3F52E;
-        Mon, 23 Mar 2020 05:41:23 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, x86@kernel.org
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        kbuild test robot <lkp@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Subject: [PATCH] um: Fix header inclusion
-Date:   Mon, 23 Mar 2020 12:41:09 +0000
-Message-Id: <20200323124109.7104-1-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.25.2
+        Mon, 23 Mar 2020 08:44:28 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46499 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727130AbgCWMo2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 08:44:28 -0400
+Received: by mail-oi1-f194.google.com with SMTP id q204so6733915oia.13;
+        Mon, 23 Mar 2020 05:44:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=39N5FxH28hMQJbJlqOIGr8VU2Gg2+3CuREbRUZnH+ok=;
+        b=m1FgJxLWWN2EOWXIjWYHv21VSTuZuRZIsJ0btyw73undTEgfQHEyHS2joSH/ZIQVm0
+         loi3xgRZor14rMw3eRf7Qpin/Olcz5o1aTrjchkU7ZnynGr9VSFsA1eXch6IO1jE1JZD
+         i+qeUpG9Cfg89XvbAzLXIyFwU1YpqxzA0BucKQV+65kViUgEyrffCVokKxARYM5v8lh7
+         51QUN6vDAg4AUKgFUWIcM+susR8R5r9Y4wHgkSuCRorzwvSKGYLrlriJ/2GY82HstUqQ
+         O3zdAwGUXKQ+5gsEf0Bd+YquCcJW8MAxRmoO3KVPcdywWaKxPBktl3TiGzAG6rkEWxwE
+         RD6Q==
+X-Gm-Message-State: ANhLgQ2wNns5mp/MYDmFxJUdhrjFwHMDoHCiV4nloA60PSQFvoQ50H8y
+        GLm1qMWb5KIBuIOM1BJ/RafYTqkAhiwx8Aboyi4=
+X-Google-Smtp-Source: ADFU+vv/gsSxc+6YiCICJ4vvrkojNPp7uG8N2PL7YzjEMfp/VUvd0LWmMqP8ql9ldsSOCyQzxfjtiiDTGQruzLfVTyY=
+X-Received: by 2002:aca:4e57:: with SMTP id c84mr16133180oib.148.1584967467089;
+ Mon, 23 Mar 2020 05:44:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200315140525.21780-1-zhengdejin5@gmail.com> <20200315140525.21780-2-zhengdejin5@gmail.com>
+In-Reply-To: <20200315140525.21780-2-zhengdejin5@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 23 Mar 2020 13:44:15 +0100
+Message-ID: <CAMuHMdW_1SP-1Z-y7ejUWM1MhTb1_AOiocvq4JwoOcjerUJwEw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] drivers: provide devm_platform_get_and_ioremap_resource()
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Winkler, Tomas" <tomas.winkler@intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-User Mode is a flavor of x86 that from the vDSO prospective always falls
-back on system calls. This implies that it does not require any of the
-unified vDSO definitions and their inclusion causes side effects like
-the one reported below:
+Hi Dejin,
 
-In file included from include/vdso/processor.h:10:0,
-                    from include/vdso/datapage.h:17,
-                    from arch/x86/include/asm/vgtod.h:7,
-                    from arch/x86/um/../kernel/sys_ia32.c:49:
->> arch/x86/include/asm/vdso/processor.h:11:29: error: redefinition of 'rep_nop'
-    static __always_inline void rep_nop(void)
-                                ^~~~~~~
-   In file included from include/linux/rcupdate.h:30:0,
-                    from include/linux/rculist.h:11,
-                    from include/linux/pid.h:5,
-                    from include/linux/sched.h:14,
-                    from arch/x86/um/../kernel/sys_ia32.c:25:
-   arch/x86/um/asm/processor.h:24:20: note: previous definition of 'rep_nop' was here
-    static inline void rep_nop(void)
+On Sun, Mar 15, 2020 at 3:05 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
+> Since commit "drivers: provide devm_platform_ioremap_resource()",
+> it was wrap platform_get_resource() and devm_ioremap_resource() as
+> single helper devm_platform_ioremap_resource(). but now, many drivers
+> still used platform_get_resource() and devm_ioremap_resource()
+> together in the kernel tree. The reason can not be replaced is they
+> still need use the resource variables obtained by platform_get_resource().
+> so provide this helper.
+>
+> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Suggested-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 
-Make sure that the unnecessary headers are not included when um is built
-to address the problem.
+Thanks for your patch!
 
-Fixes: abc22418db02 ("x86/vdso: Enable x86 to use common headers")
-Reported-by: kbuild test robot <lkp@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
----
-Rebased on tip/master
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -62,6 +62,28 @@ struct resource *platform_get_resource(struct platform_device *dev,
+>  EXPORT_SYMBOL_GPL(platform_get_resource);
+>
+>  #ifdef CONFIG_HAS_IOMEM
+> +/**
+> + * devm_platform_get_and_ioremap_resource - call devm_ioremap_resource() for a
+> + *                                         platform device and get resource
+> + *
+> + * @pdev: platform device to use both for memory resource lookup as well as
+> + *        resource management
+> + * @index: resource index
+> + * @res: get the resource
 
- arch/x86/include/asm/vgtod.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+Optional output parameter to store a pointer to the obtained resource.
 
-diff --git a/arch/x86/include/asm/vgtod.h b/arch/x86/include/asm/vgtod.h
-index fc8e4cd342cc..7aa38b2ad8a9 100644
---- a/arch/x86/include/asm/vgtod.h
-+++ b/arch/x86/include/asm/vgtod.h
-@@ -2,6 +2,11 @@
- #ifndef _ASM_X86_VGTOD_H
- #define _ASM_X86_VGTOD_H
- 
-+/*
-+ * This check is required to prevent ARCH=um to include
-+ * unwanted headers.
-+ */
-+#ifdef CONFIG_GENERIC_GETTIMEOFDAY
- #include <linux/compiler.h>
- #include <asm/clocksource.h>
- #include <vdso/datapage.h>
-@@ -14,5 +19,6 @@ typedef u64 gtod_long_t;
- #else
- typedef unsigned long gtod_long_t;
- #endif
-+#endif /* CONFIG_GENERIC_GETTIMEOFDAY */
- 
- #endif /* _ASM_X86_VGTOD_H */
+With the above changed:
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> + */
+> +void __iomem *
+> +devm_platform_get_and_ioremap_resource(struct platform_device *pdev,
+> +                               unsigned int index, struct resource **res)
+> +{
+> +       struct resource *r;
+> +
+> +       r = platform_get_resource(pdev, IORESOURCE_MEM, index);
+> +       if (res)
+> +               *res = r;
+> +       return devm_ioremap_resource(&pdev->dev, r);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_platform_get_and_ioremap_resource);
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.25.2
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
