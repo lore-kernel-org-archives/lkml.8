@@ -2,123 +2,200 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF51C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E47CC4332B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0DEC20781
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF6420787
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 11:06:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Mn7R6b0l"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X0+1VVVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgCWLGI (ORCPT
+        id S1728108AbgCWLGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 07:06:08 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37414 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727987AbgCWLGI (ORCPT
+        Mon, 23 Mar 2020 07:06:48 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:32809 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbgCWLGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 07:06:08 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NB349S019401;
-        Mon, 23 Mar 2020 11:05:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=w5K+Q/84iqNbz33/6C2NZu0Q3vAYsOs50DjnxAcgG1Y=;
- b=Mn7R6b0l8wez1yAcZLSfpc2wrIhMuzIwnTi0DtAnf8n+KJJWKQeqrHu46og+68aFWP5o
- UlNfC2u8vRgCUcQw+sT5NelWNsoTB2CtwLH/MVe1bQdl0y32RZY72hNojPZEPiYBrrc8
- S3dxgQ50L9JIoialZaoweLgtoj/hidwCVju76UtCSHbvBwYILrom3gW9x0IAjqwGKhOS
- 2cMWUfxtvB9b5Dq7Iv2zuxqOxLj/Cqi1oM4mR+hSuH1E2GlY8o97hOltmHXLS+GxIvlN
- S1TSKze+GqbnJSzp7SDqIeegRc6yWOkw2+PIeEaCTE5uZNmUKaWfkqd509W0XibbdIdx Jg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2ywabqwx7c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Mar 2020 11:05:48 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NAvRWn067564;
-        Mon, 23 Mar 2020 11:03:47 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2ywwuht83f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Mar 2020 11:03:47 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02NB3igg014374;
-        Mon, 23 Mar 2020 11:03:45 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 23 Mar 2020 04:03:44 -0700
-Date:   Mon, 23 Mar 2020 14:03:34 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, kan.liang@linux.intel.com,
-        zhe.he@windriver.com, dzickus@redhat.com, jstancek@redhat.com,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] perf cpumap: Use scnprintf instead of snprintf
-Message-ID: <20200323110334.GC26299@kadam>
-References: <20200322172523.2677-1-christophe.jaillet@wanadoo.fr>
+        Mon, 23 Mar 2020 07:06:48 -0400
+Received: by mail-wr1-f66.google.com with SMTP id a25so16508697wrd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 04:06:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Er8BkFvrkbutAIsxZ2qgsGDlEnEu7wRCnc9YCCFbbUc=;
+        b=X0+1VVVMtV2hIegOag7zAPIk8/+C8rPhAgxFufcXS7+NMtf/lxcFpKfW7BZKk++De9
+         gHWudTy6UFihNkvnw7wDLwuAxko0QUCwWDcoCdPbxpwMjgGCd2E764AYEIKIe5Do97s8
+         9MiN2jX8BhoIqbBraxVaXoVZVYf+ejVbhv4hKeqhu7n5H7VKkIDmupwW+Q2QYAdlm1fz
+         /tdGSA496wBJab+1T0+zYqtfMtbMyfcUyJmlG8gwNOCCJP/Aznhm81Avmn1YygDVjx7W
+         hapU3tjsHKxRYQ6MV71L71Nd0OcFciVTLiOn+i2iIeM+KWbLjWExEx2JY2xjPoLvHDlg
+         GEUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Er8BkFvrkbutAIsxZ2qgsGDlEnEu7wRCnc9YCCFbbUc=;
+        b=eckj3EyNsHPNW1U+7tgyw93HSRcqxrJWoCpXc6Ppmi9ocf1i4aD+5sgWqWh+Fe/O0k
+         nGSMJlhZilaGVgo6mgqFnGNg88yUjRta1k12DHEY06B3Ik2eE8TTQfkOV9ajOoeUR3fd
+         RXI1akz/KDQvk0QJbUKFmCbuKc54czF5Q2eOjijBf4hIWKnGHraXWtwkglmDCBcxBPX1
+         5rCYVFwyMSrcnePu0IHqKbdarC3vBaNVk2jaXJYjd59oIG00T1i3EsvZErU/Pv9PJZxx
+         B1lod8QddNPp10zRdZTGopNN60IvGQmEWs0WgGBV3fZkQ48rKu7XMsGQ3MlS7RY0a10D
+         QElQ==
+X-Gm-Message-State: ANhLgQ2jZd+1ROjGrCeLeTD5PD4VDgjSj54V37h1GCBLXFKFsUa3kfU+
+        mdVtX8pmHQyuVs/75KzCGqRhQqy9ZF8=
+X-Google-Smtp-Source: ADFU+vuyYane3dXBPxqNCHWzuraJqqQhIXW6GbtYUlNjab8YXXbUDUWBPwjYHZXpgEgCDDNc4sg6vQ==
+X-Received: by 2002:adf:e650:: with SMTP id b16mr12659383wrn.328.1584961606042;
+        Mon, 23 Mar 2020 04:06:46 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id h26sm19401729wmb.19.2020.03.23.04.06.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Mar 2020 04:06:45 -0700 (PDT)
+Subject: Re: [PATCH 1/5] soundwire: bus_type: add master_device/driver support
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20200320162947.17663-1-pierre-louis.bossart@linux.intel.com>
+ <20200320162947.17663-2-pierre-louis.bossart@linux.intel.com>
+ <5d78f0f8-7418-e50e-6f0b-dd6988224744@linaro.org>
+ <626a074b-06a9-01a0-334f-3aaed1f7ed76@linux.intel.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <286e7ae2-6677-1d92-5ae2-9250d3ff7a9d@linaro.org>
+Date:   Mon, 23 Mar 2020 11:06:43 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200322172523.2677-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9568 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
- mlxlogscore=999 malwarescore=0 mlxscore=0 bulkscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003230065
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9568 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
- clxscore=1011 adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003230065
+In-Reply-To: <626a074b-06a9-01a0-334f-3aaed1f7ed76@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 06:25:23PM +0100, Christophe JAILLET wrote:
-> 'scnprintf' returns the number of characters written in the output buffer
-> excluding the trailing '\0', instead of the number of characters which
-> would be generated for the given input.
+
+
+On 20/03/2020 18:17, Pierre-Louis Bossart wrote:
+> Thanks for the quick review Srinivas,
 > 
-> Both function return a number of characters, excluding the trailing '\0'.
-> So comparaison to check if it overflows, should be done against max_size-1.
-> Comparaison against max_size can never match.
+>> This patch in general is missing device tree support for both matching 
+>> and uevent so this will not clearly work for Qualcomm controller 
+>> unless we do via platform bus, which does not sound right!
 > 
-> Fixes: 7780c25bae59f ("perf tools: Allow ability to map cpus to nodes easily")
-> Fixes: a24020e6b7cf6 ("perf tools: Change cpu_map__fprintf output")
-> Fixes: 92a7e1278005b ("perf cpumap: Add cpu__max_present_cpu()")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  tools/perf/util/cpumap.c | 39 ++++++++++++++++++++-------------------
->  1 file changed, 20 insertions(+), 19 deletions(-)
+> see other email, the platform bus is handled by a platform 
+> device/driver. There was no intention to change that, it's by design 
+> rather than an omission/error.
+
+I understand this partly now!
+
+This can be probably made better/clear by:
+renaming sdw_master_device_add to sdw_master_alloc and do a 
+device_initialize() as part of this function in subsequent call to 
+sdw_add_bus_master() we can do a device_add(). Doing this way will avoid 
+a bit of unnecessary call to device_unregister by the controller driver, 
+tbh which is confusing.
+
+If the intended call sequence for controller is this (by keeping the 
+parent bus type intact):
+
+sdw_master_alloc/sdw_master_device_add()
+sdw_add_bus_master()
+
+Then we should also remove sdw_unregister_master_driver() and 
+module_sdw_master_driver() all together. Having them makes the reader 
+think that they can use module_sdw_master_driver directly without any 
+parent bus like platform bus in this case.
+
+
+>>> +
+>>> +/**
+>>> + * sdw_master_device_startup() - startup hardware
+>>> + * @md: Linux Soundwire master device
+>>> + *
+>>> + * This use of this function is optional. It is only needed if the
+>>> + * hardware cannot be started during a driver probe, e.g. due to power
+>>> + * rail dependencies. The implementation is platform-specific but the
+>>> + * bus will typically go through a hardware-reset sequence and devices
+>>> + * will be enumerated once they report as ATTACHED.
+>>> + */
+>>> +int sdw_master_device_startup(struct sdw_master_device *md)
+>>> +{
+>>> +    struct sdw_master_driver *mdrv;
+>>> +    struct device *dev;
+>>> +    int ret = 0;
+>>> +
+>>> +    if (IS_ERR_OR_NULL(md))
+>>> +        return -EINVAL;
+>>> +
+>>> +    dev = &md->dev;
+>>> +    mdrv = drv_to_sdw_master_driver(dev->driver);
+>>> +
+>>> +    if (mdrv && mdrv->startup)
+>>> +        ret = mdrv->startup(md);
+>>> +
+>>> +    return ret;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(sdw_master_device_startup);
+>>
+>> Who would call this function? and How would it get hold of master 
+>> device instance ?
 > 
-> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> index 983b7388f22b..b87e7ef4d130 100644
-> --- a/tools/perf/util/cpumap.c
-> +++ b/tools/perf/util/cpumap.c
-> @@ -316,8 +316,8 @@ static void set_max_cpu_num(void)
->  		goto out;
->  
->  	/* get the highest possible cpu number for a sparse allocation */
-> -	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
-> -	if (ret == PATH_MAX) {
-> +	ret = scnprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
-> +	if (ret == PATH_MAX-1) {
+> sdw_master_device_add() returns a struct_master_device *md, so the 
+> parent has a handle to that device. See the device creation here:
+> 
+> https://github.com/thesofproject/linux/blob/9c7487b33072040ab755d32ca173b75151c0160c/drivers/soundwire/intel_init.c#L238 
+> 
+> 
+> This startup() would be called by the parent when all 
+> requirements/dependencies are met. Put differently, it allows the probe 
+> to run much earlier and check for platform firmware information (which 
+> links are enabled, what devices are exposed by platform firmware), while 
+> the startup is really when the bus clk/data lines will start toggling.
 
-This should be a static analysis warning.
+Why would this even need to be in the SoundWire core layer, if parent 
+can call its local startup function whenever its necessary?
+Unless we have some kinda state-machine in the core which can really 
+deal with this, i see no point in this callback.
 
-But isn't this stuff userspace?  I can't figure out how to compile it on
-Debian so I'm not sure.  There is no scnprintf() in user space.
 
-regards,
-dan carpenter
+--srini
 
+> 
+> https://github.com/thesofproject/linux/blob/9c7487b33072040ab755d32ca173b75151c0160c/drivers/soundwire/intel_init.c#L341 
+> 
+> 
+> and the call from the SOF layer is here:
+> 
+> https://github.com/thesofproject/linux/blob/9c7487b33072040ab755d32ca173b75151c0160c/sound/soc/sof/intel/hda-loader.c#L418 
+> 
+> 
+> Again, if everything is ready at probe time there's no need to delay the 
+> actual bus startup. This is not needed for Qualcomm platforms where the 
+> Master device is part of a codec. It's actually irrelevant since there 
+> is no driver, so the startup callback does not even exist :-)
+> 
+>> How would soundwire core also ensure that we do not actively use this 
+>> master if it is not ready. Similar comment for shutdown callback.
+> 
+> That's a fair point, we could add a state variable and a check that the 
+> probe happened before.
+> 
+> In practice the two cases of device creation and startup are different 
+> phases so it'd more of a paranoia check.
+> 
+> Thanks,
+> -Pierre
