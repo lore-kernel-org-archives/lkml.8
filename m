@@ -6,56 +6,56 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD82C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA938C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C037920735
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 992782076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 16:51:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ZcZyAY3W"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="I8nEQQSW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbgCWQuF (ORCPT
+        id S1727624AbgCWQvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:50:05 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:40234 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbgCWQuE (ORCPT
+        Mon, 23 Mar 2020 12:51:14 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46010 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbgCWQvO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:50:04 -0400
-Received: by mail-qk1-f193.google.com with SMTP id l25so11104613qki.7
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 09:50:03 -0700 (PDT)
+        Mon, 23 Mar 2020 12:51:14 -0400
+Received: by mail-qt1-f196.google.com with SMTP id t17so2119853qtn.12
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 09:51:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=DAmo83OU6Z9FY3EAp1eIchXxAfwetYnQdz8RvRwBuLE=;
-        b=ZcZyAY3Wd1okpJtclZ7/IBkX8wfbqKUNN5lO1oFhQNxyLZ1FZsPVoKOeBj/ZuiMW80
-         4jLbw4Rh6Xn56iu+4PnTK7aYWQJhH9qrOEN7YukpCw7h9Xzm7X78NSxn2wc+gybfdhrd
-         MpbcwW4y9psWgwKT2m9gUau5GEfxyzMbv2/H94x8pttsANppUemk62gfr/LEPNvWZ0uC
-         66DRMIIGGYQNJWeM31j9rwS5A6NxmIjoBGTv4i1PfbEbV3lLWFhHgI9ZgwVJvaHE4VUT
-         ltDS7BPoEw1CtiidbjM0Emm1Bg2qJioiKVsI74SOl37DJxnwyDyaHNFWFHW3WIcZ1Fzn
-         UvFQ==
+        bh=LWBMOpdQ6RM6tzOn/8vWjeIgj8g8a5I1STuJsGCjRo8=;
+        b=I8nEQQSWkjtHSqP1oR4eghgEG3cRUnPlE+gN/nLMpRir0NoJuL2+OW3Ih9ju54o1mp
+         AHaALAKLIoIOXw3pyp+wb+fJADkm3tYqh79N43FfTLB1ikS2bppY8ZfEK12nDPlFafTR
+         afvhXue9Jb+JdKlFwqQUl7+WlJ4l6hBwCpYmW2Y9CVnf27BQDsCNeFCqRTsDzKw+Um4T
+         Kow9JvP65D9EhMJ0W7QNwbOxXYn/7byquVJrjEazzOPYurkG1c7A0JhF+VGWJzaw64hJ
+         Okj2CwJ0nbbDIQ4KtMeCRus9UkOVuaENlWnzezFt2qWFp1nNrsSfj+rMW0+cHuC5+4qQ
+         dDqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=DAmo83OU6Z9FY3EAp1eIchXxAfwetYnQdz8RvRwBuLE=;
-        b=iJD9gSEz0xXhIIYlPcz27/ECUy5g0GHh98XprDmQUjq9A8xkZzt0uNNGtnPjXepMO+
-         Es14f2uot5tjKCGQRMDZrbEnoul6aXo/G9R5fqeo/Wwy06C7Ol4c21YFtLwmV4/r43Jp
-         4xyQWxYWMuADCEjLfRKeZHr6LxTZgmppkY2Fqe8nx/KYS7FZAevzU4P7x9YGWaJ4MuUr
-         PyYMt0UxNHyRMJkpQHSrO8TffuO5jyeZAnNS6i9ymEuB7AHmqe7EYzW2sj9YKWsNb9Ka
-         WBaNGSqpVe0/3Z82GSRvEd0RRHF6+c/rh2wLV5EetpmqcdXk8Nz55sAnrhg/Mx+RbXXs
-         Ix3Q==
-X-Gm-Message-State: ANhLgQ1VDdxVQhQuPChvgPipKL3vqRrIE0vSiUyoUa6OnKbJf1tayDAG
-        ZJBv9HIB6N3XR8ieql1suXeQQg==
-X-Google-Smtp-Source: ADFU+vunnDaxvXSc+qWcDivkYalaGTqTcWCY6d7czPBN8l0n8CQRm4WMoMRQwRLqQtEBHK26LLPJWA==
-X-Received: by 2002:a37:a297:: with SMTP id l145mr20930518qke.322.1584982203273;
-        Mon, 23 Mar 2020 09:50:03 -0700 (PDT)
+        bh=LWBMOpdQ6RM6tzOn/8vWjeIgj8g8a5I1STuJsGCjRo8=;
+        b=ioyvttyH1/mbUh4Xp/WW84mQYGQrgVbUZJI76NdaV+9EC9D7zL9rqmvYwsHYcL1qk3
+         bMwK7AFQ3mlhT+ffiWM43CyA/NqAwrRgGukR3TcIs23XxSA+T5ES2qL0x9YV4hQNQIEO
+         cbknzvX20ucN3H9D2oMBQ0mHF9DIQTZLvvp7piAIT3KfkKoRpPAAMT/EUASTpYRF86F8
+         uragmhc9OXYfh8ihB9oVi5BE65dJzC826jnNaFaBkwTgglcGquKo+InXELAbEIt+BfhQ
+         YVExMfIGrQEo2xaKD4oFBAayK39tsE5ia4oBueCNqKnC5JA4bX8bx5Ksu9mvCcRfFP7e
+         qDcA==
+X-Gm-Message-State: ANhLgQ1lEHdySY5JNesmnK7cuWy/Oj0adztecsj6NgK17QUAjC7b93DF
+        uz6/FnkFFZeLIILZQ8RJFgdcU3T+xOo=
+X-Google-Smtp-Source: ADFU+vsVno42d9S3diBfWFL38XIfIgaPdPcxiMkRilrh1GpMhoHWHq7xqGvY4ajHi7WGL965oPHLWA==
+X-Received: by 2002:ac8:6043:: with SMTP id k3mr22532957qtm.336.1584982273059;
+        Mon, 23 Mar 2020 09:51:13 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::1:a9a9])
-        by smtp.gmail.com with ESMTPSA id p17sm3561970qkk.18.2020.03.23.09.50.02
+        by smtp.gmail.com with ESMTPSA id l45sm12547211qtb.8.2020.03.23.09.51.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 09:50:02 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 12:50:01 -0400
+        Mon, 23 Mar 2020 09:51:12 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 12:51:11 -0400
 From:   Johannes Weiner <hannes@cmpxchg.org>
 To:     js1304@gmail.com
 Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
@@ -65,28 +65,30 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
         Vlastimil Babka <vbabka@suse.cz>,
         Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v4 4/8] mm/swapcache: support to handle the exceptional
- entries in swapcache
-Message-ID: <20200323165001.GB204561@cmpxchg.org>
+Subject: Re: [PATCH v4 5/8] mm/workingset: handle the page without memcg
+Message-ID: <20200323165111.GC204561@cmpxchg.org>
 References: <1584942732-2184-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1584942732-2184-5-git-send-email-iamjoonsoo.kim@lge.com>
+ <1584942732-2184-6-git-send-email-iamjoonsoo.kim@lge.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1584942732-2184-5-git-send-email-iamjoonsoo.kim@lge.com>
+In-Reply-To: <1584942732-2184-6-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 02:52:08PM +0900, js1304@gmail.com wrote:
+On Mon, Mar 23, 2020 at 02:52:09PM +0900, js1304@gmail.com wrote:
 > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 > 
-> Swapcache doesn't handle the exceptional entries since there is no case
-> using it. In the following patch, workingset detection for anonymous
-> page will be implemented and it stores the shadow entries as exceptional
-> entries into the swapcache. So, we need to handle the exceptional entries
-> and this patch implements it.
+> When implementing workingset detection for anonymous page, I found
+> some swapcache pages with NULL memcg. They are brought in by swap
+> readahead and nobody has touched it.
+> 
+> The idea behind the workingset code is to tell on page fault time
+> whether pages have been previously used or not. Since this page
+> hasn't been used, don't store a shadow entry for it; when it later
+> faults back in, we treat it as the new page that it is.
 > 
 > Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
