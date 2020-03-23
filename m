@@ -2,113 +2,175 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81517C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9672C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55403206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:38:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xs5Sy3Lz"
+	by mail.kernel.org (Postfix) with ESMTP id B0A4B206F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 09:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbgCWJiI (ORCPT
+        id S1727753AbgCWJkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 05:38:08 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34364 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727695AbgCWJiH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:38:07 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02N9D4M0106062;
-        Mon, 23 Mar 2020 09:37:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=MzRxKaGV9xInLffLGfmDzLkmkfS8IEjkXPJtcxjqfcg=;
- b=xs5Sy3Lz+y8kPa8bBsz23uICZF+ZMg9meeI0piXrawPX5eLyZyM6y9gqwCx3KPc0Ql32
- +0cD4F0lKBsz6b0OPl25SZYFFaU3vwBxu33DrPwr8+SQq6WORZ6T1ICU8j2O72uSmiT4
- +y5/pfslipBaPBwA726gltb1PMg1JJ9vBkohyyx8TAWbHOG2pk/GjJv+ZE6d2JJ+h77m
- f1XttVM7/eBukRM789i9BsaXx4foRBOGk3u1Acu2h2il0UIjyl8hxafPLZQIoPJUJlVD
- sWN0vV2+YF/gbkHWGsGA7L0Uc15VmnZVmhDuKoaJ5UJMEKb5CVHawW4H6ShDe3OuI2qS Nw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2ywabqwjmp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Mar 2020 09:37:57 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02N9bubv039599;
-        Mon, 23 Mar 2020 09:37:56 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2ywvqqpepm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Mar 2020 09:37:56 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02N9beZF029581;
-        Mon, 23 Mar 2020 09:37:40 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 23 Mar 2020 02:37:40 -0700
-Date:   Mon, 23 Mar 2020 12:37:33 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jean Delvare <jdelvare@suse.de>
-Cc:     Daniel Kurtz <djkurtz@chromium.org>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com>
-Subject: Re: [PATCH] i2c: i801: Fix memory corruption in i801_isr_byte_done()
-Message-ID: <20200323093733.GA26299@kadam>
-References: <0000000000009586b2059c13c7e1@google.com>
- <20200114073406.qaq3hbrhtx76fkes@kili.mountain>
- <20200322231106.3d431ced@endymion>
+        Mon, 23 Mar 2020 05:40:02 -0400
+Received: from mga17.intel.com ([192.55.52.151]:19187 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727695AbgCWJkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 05:40:02 -0400
+IronPort-SDR: +hM3gcXNSyXgze6q/R6QleYizux/LUhR2Ue6t+Ek2GU9xnQatJAhLBEzKf1g4doKyUvx+HPUxo
+ NpcKR79v5HwA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 02:40:00 -0700
+IronPort-SDR: xmxN2ajOd6VbnVo/Cz+E6OoGYmuawIf2FUgK9W4Xw8QEmo2ktljX1GcdgLY9Wu7YMbhaUyUOt4
+ GFTccGzzXfww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,295,1580803200"; 
+   d="scan'208";a="239876643"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga008.jf.intel.com with ESMTP; 23 Mar 2020 02:39:57 -0700
+Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
+To:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Evan Green <evgreen@chromium.org>,
+        "Ghorai, Sukumar" <sukumar.ghorai@intel.com>,
+        "Amara, Madhusudanarao" <madhusudanarao.amara@intel.com>,
+        "Nandamuri, Srikanth" <srikanth.nandamuri@intel.com>
+References: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com>
+ <87d0974akk.fsf@nanos.tec.linutronix.de>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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 fiD/
+Message-ID: <b9fbd55a-7f97-088d-2cc2-4e4ea86d9440@linux.intel.com>
+Date:   Mon, 23 Mar 2020 11:42:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200322231106.3d431ced@endymion>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9568 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003230056
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9568 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
- clxscore=1011 adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003230055
+In-Reply-To: <87d0974akk.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 11:11:06PM +0100, Jean Delvare wrote:
-> Definitely not correct. The first byte of the block data array MUST be
-> the size of the block read. Even if the code above does not do the
-> right thing, removing the line will not help.
+On 20.3.2020 11.52, Thomas Gleixner wrote:
+> Mathias,
+> 
+> Mathias Nyman <mathias.nyman@linux.intel.com> writes:
+>> I can reproduce the lost MSI interrupt issue on 5.6-rc6 which includes
+>> the "Plug non-maskable MSI affinity race" patch.
+>>
+>> I can see this on a couple platforms, I'm running a script that first generates
+>> a lot of usb traffic, and then in a busyloop sets irq affinity and turns off
+>> and on cpus:
+>>
+>> for i in 1 3 5 7; do
+>> 	echo "1" > /sys/devices/system/cpu/cpu$i/online
+>> done
+>> echo "A" > "/proc/irq/*/smp_affinity"
+>> echo "A" > "/proc/irq/*/smp_affinity"
+>> echo "F" > "/proc/irq/*/smp_affinity"
+>> for i in 1 3 5 7; do
+>> 	echo "0" > /sys/devices/system/cpu/cpu$i/online
+>> done
+>> trace snippet: 
+>>       <idle>-0     [001] d.h.   129.676900: xhci_irq: xhci irq
+>>       <idle>-0     [001] d.h.   129.677507: xhci_irq: xhci irq
+>>       <idle>-0     [001] d.h.   129.677556: xhci_irq: xhci irq
+>>       <idle>-0     [001] d.h.   129.677647: xhci_irq: xhci irq
+>>       <...>-14     [001] d..1   129.679802: msi_set_affinity: direct update msi 122, vector 33 -> 33, apicid: 2 -> 6
+> 
+> Looks like a regular affinity setting in interrupt context, but I can't
+> make sense of the time stamps
+
+I think so, everything worked normally after this one still.
+
+> 
+>>       <idle>-0     [003] d.h.   129.682639: xhci_irq: xhci irq
+>>       <idle>-0     [003] d.h.   129.702380: xhci_irq: xhci irq
+>>       <idle>-0     [003] d.h.   129.702493: xhci_irq: xhci irq
+>>  migration/3-24    [003] d..1   129.703150: msi_set_affinity: direct update msi 122, vector 33 -> 33, apicid: 6 -> 0
+> 
+> So this is a CPU offline operation and after that irq 122 is silent, right?
+
+Yes, after this irq 122 was silent.
+
+> 
+>>  kworker/0:0-5     [000] d.h.   131.328790: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+>>  kworker/0:0-5     [000] d.h.   133.312704: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+>>  kworker/0:0-5     [000] d.h.   135.360786: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+>>       <idle>-0     [000] d.h.   137.344694: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+>>  kworker/0:0-5     [000] d.h.   139.128679: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+>>  kworker/0:0-5     [000] d.h.   141.312686: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+>>  kworker/0:0-5     [000] d.h.   143.360703: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+>>  kworker/0:0-5     [000] d.h.   145.344791: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+> 
+> That kworker context looks fishy. Can you please enable stacktraces in
+> the tracer so I can see the call chains leading to this? OTOH that's irq
+> 121 not 122. Anyway moar information is always useful.
+> 
+> And please add the patch below.
 > 
 
-Yeah.  I misread the code.
+Full function trace with patch is huge, can be found compressed at
 
-> Is it possible that kasan got this wrong due to the convoluted logic?
-> It's late and I'll check again tomorrow morning but the code looks OK
-> to me.
+https://drive.google.com/drive/folders/19AFZe32DYk4Kzxi8VYv-OWmNOCyIY6M5?usp=sharing
 
-KASan doesn't work like that.  It works at runtime and doesn't care
-about the logic.
+xhci_traces.tgz contains:
+trace_full: full function trace. 
+trace: timestamp  ~48.29 to ~48.93 of trace above, section with last xhci irq
+trace_prink_only: only trace_printk() of "trace" above
 
-https://syzkaller.appspot.com/bug?id=426fc8b1c1b63fb0af524d839dfcf452f2d858e2
+This time xhci interrupts stopped after
+migration/3-24    [003] d..1    48.530271: msi_set_affinity: twostep update msi, irq 122, vector 33 -> 34, apicid: 6 -> 4
 
-At the bottom of the report it shows that we're in a field of f9
-poisoned data so it's not priv->len which is wrong.  (My patch was way
-off).
-
-mm/kasan/kasan.h:#define KASAN_VMALLOC_INVALID   0xF9  /* unallocated space in vmapped page */
-
-The logic looks okay to me too.  So possibly this was a race condition
-or even memory corruption in an unrelated part of the kernel.
-
-regards,
-dan carpenter
+Thanks
+-Mathias
