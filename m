@@ -2,110 +2,89 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CA9C54FCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CDDC54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF0F20769
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B76D2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:02:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jgXvOZpY"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="VDtaFZaU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbgCWG7w (ORCPT
+        id S1727379AbgCWHC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 02:59:52 -0400
-Received: from ozlabs.org ([203.11.71.1]:38041 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727130AbgCWG7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 02:59:52 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48m4xw6NqGz9sQt;
-        Mon, 23 Mar 2020 17:59:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584946789;
-        bh=4zVZ8n18b5z/arjANnQYCVNjH7d5lumRkPAkbt+RQzk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jgXvOZpYOkQ8iDTqdDNXWuGK+LzfxJqTI0F4GsHlQzmogZTFaPyHPl++GsMM41aYh
-         /PrHdlKU+3EXqqb94cVPvNVcfDKDf1F3Zm3byNPKbpos44pzLNq7SQW3i11ihDT2CM
-         DgZTfKIySKuAYvhh+zM7BraFubvx15mHVc6PQOBqyNSkRVy33PjV4e6saUXIaAkBS+
-         56a22mg0wp/MbTs1ONl7pdauEjZhEJjwlew6UkgT5QnZb+xk3N8vp0z7UZMp2VfU7D
-         qSB8hTTk0zUCaFbG1d4wqZkj9KuydzpmBS2kifZFgGFLmt+lwA6BxzTKeoAwC+Ws24
-         iBiILoZAa7N5Q==
-Date:   Mon, 23 Mar 2020 17:59:46 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Mubin Sayyed <mubin.usman.sayyed@xilinx.com>
-Subject: linux-next: build failure after merge of the irqchip tree
-Message-ID: <20200323175946.7ad497ea@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ohxYhixbqsgEzYBk7ocR=+3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Mon, 23 Mar 2020 03:02:56 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55221 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727164AbgCWHCz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 03:02:55 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c81so2928892wmd.4
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 00:02:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=5jTrjO4QSy5fUBmSLfWHrfzpqSWpoJNJJJo1AqTJhfE=;
+        b=VDtaFZaUmPZr8jbxDzrfRDjnl5Dg2m1FlJrzku7TJJmh8Farbm29/l5MlqLy7GiEhW
+         86f3P+aU8L6NeTKE7s15nCKzF3cBavJZfXPVg0falO+Z61B6UwrjNLhCI7Vo1ifnWIOQ
+         lQ3wXJH5Y7x7gaLAAInH+p/RAPt+szD5urRJ4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5jTrjO4QSy5fUBmSLfWHrfzpqSWpoJNJJJo1AqTJhfE=;
+        b=rqf6lc+6BBVFRoOFznR/8tigp31MvTZ1UETFju1/oTMJCkSPA9ljs361LQKTmj/A/e
+         jMErgPhY+n0pFfiYDcnJrs995/hujFqqBoYQAlCuV0/kgzzjZ8MuY1jUKeiDRcnK9Hyh
+         rercwzGKEgW+jlGy0zFVczi1xSvP2e9v4gwo4f8GG7uKfft1m/JMCmsems+l1qFRF8U6
+         k6xu3u/SY54oPbIHX2jIELTFZwmbFWSf9nNYfIulaHiKCcjW7Ej5vJIAwHa7mOP8AhbU
+         zzLavm6ppfOE+eHlDvpNxpyvNwbDCZSuTwHDBe/4N5fxQsuwsDL3eH5teXrJX+lEgfGN
+         Njnw==
+X-Gm-Message-State: ANhLgQ1CK6BRJILGFHM5GY7mOb1qgSWb/MzbeRqPsMbDCfN80klbxRqj
+        3MTaTKTYjA1CcuDn0njqRhmnbQ==
+X-Google-Smtp-Source: ADFU+vt8wlEJzuyTBKieIQvIghcKvOFk9qC+BSzFe8laRmww4Kq84qj6x71Ht8C6r0LiJct+CW+zkA==
+X-Received: by 2002:a1c:80d3:: with SMTP id b202mr25954016wmd.16.1584946973457;
+        Mon, 23 Mar 2020 00:02:53 -0700 (PDT)
+Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id t2sm8198735wml.30.2020.03.23.00.02.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 00:02:52 -0700 (PDT)
+From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+To:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Subject: [PATCH v2 1/1] firmware: tee_bnxt: remove unused variable assignment
+Date:   Mon, 23 Mar 2020 12:32:42 +0530
+Message-Id: <20200323070242.16873-1-rayagonda.kokatanur@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ohxYhixbqsgEzYBk7ocR=+3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Remove unused variable assignment.
 
-Hi all,
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+---
+ drivers/firmware/broadcom/tee_bnxt_fw.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-After merging the irqchip tree, today's linux-next build (powerpc
-ppc44x_defconfig) failed like this:
+diff --git a/drivers/firmware/broadcom/tee_bnxt_fw.c b/drivers/firmware/broadcom/tee_bnxt_fw.c
+index ed10da5313e8..6fd62657e35f 100644
+--- a/drivers/firmware/broadcom/tee_bnxt_fw.c
++++ b/drivers/firmware/broadcom/tee_bnxt_fw.c
+@@ -143,8 +143,6 @@ int tee_bnxt_copy_coredump(void *buf, u32 offset, u32 size)
+ 	prepare_args(TA_CMD_BNXT_COPY_COREDUMP, &arg, param);
+ 
+ 	while (rbytes)  {
+-		nbytes = rbytes;
+-
+ 		nbytes = min_t(u32, rbytes, param[0].u.memref.size);
+ 
+ 		/* Fill additional invoke cmd params */
+-- 
+2.17.1
 
-drivers/irqchip/irq-xilinx-intc.c: In function 'xil_intc_handle_irq':
-drivers/irqchip/irq-xilinx-intc.c:176:10: error: implicit declaration of fu=
-nction 'handle_domain_irq'; did you mean 'handle_bad_irq'? [-Werror=3Dimpli=
-cit-function-declaration]
-  176 |    ret =3D handle_domain_irq(irqc->root_domain, hwirq, regs);
-      |          ^~~~~~~~~~~~~~~~~
-      |          handle_bad_irq
-drivers/irqchip/irq-xilinx-intc.c: In function 'xilinx_intc_of_init':
-drivers/irqchip/irq-xilinx-intc.c:253:3: error: implicit declaration of fun=
-ction 'set_handle_irq'; did you mean 'generic_handle_irq'? [-Werror=3Dimpli=
-cit-function-declaration]
-  253 |   set_handle_irq(xil_intc_handle_irq);
-      |   ^~~~~~~~~~~~~~
-      |   generic_handle_irq
-
-Caused by commit
-
-  a0789993bf82 ("irqchip/xilinx: Enable generic irq multi handler")
-
-I have reverted that commit (and commit
-
-  9c2d4f525c00 ("irqchip/xilinx: Do not call irq_set_default_host()")
-
-that conflicted with the other revert).
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ohxYhixbqsgEzYBk7ocR=+3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl54XmIACgkQAVBC80lX
-0Gwhgwf+Ov/dsYwLKygiz6exKxfyD1f2MpdvOBDZBjxZh+t608n60XxvsLBC21jY
-rdXY0uLYrEBZcNYQKMGGrecgvkgiOULJ6DPMDqL9a/dpL982k75HV9xw4B6oKN8O
-Dw2wLH+wYNYB2X797QF4PJ+X2zBM0i4+3pme5dchWPndLlf5Y8Ie0tvRydZhPwhB
-9J5XVr1mCAEhae2bW3nA/VMeB5ncCad+IqNJzuh4tZQUv6uLKBsMS3cOBXk3GF7s
-3s9U/r4wrBhO/OLGeNgQWDeRd+wYGyQPjWJXD7yyPd4QHJeDHZhhqpfFWIKz4+Un
-4veXEZQuPbZPKM1QlkEhtd4x1DXALQ==
-=kq9P
------END PGP SIGNATURE-----
-
---Sig_/ohxYhixbqsgEzYBk7ocR=+3--
