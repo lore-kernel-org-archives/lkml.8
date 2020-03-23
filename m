@@ -2,122 +2,101 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB17DC4332E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7ABC10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C77172070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1061A2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 19:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbgCWTyl (ORCPT
+        id S1727102AbgCWTyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:54:41 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42697 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbgCWTyh (ORCPT
+        Mon, 23 Mar 2020 15:54:33 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38244 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbgCWTy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:54:37 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGT9Y-00065X-Mb; Mon, 23 Mar 2020 20:54:28 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2D20A1C0475;
-        Mon, 23 Mar 2020 20:54:28 +0100 (CET)
-Date:   Mon, 23 Mar 2020 19:54:27 -0000
-From:   "tip-bot2 for Vincenzo Frascino" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] um: Fix header inclusion
-Cc:     kbuild test robot <lkp@intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200323124109.7104-1-vincenzo.frascino@arm.com>
-References: <20200323124109.7104-1-vincenzo.frascino@arm.com>
+        Mon, 23 Mar 2020 15:54:28 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id B612080307CD;
+        Mon, 23 Mar 2020 19:54:25 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id wx22W-XGo87e; Mon, 23 Mar 2020 22:54:25 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 2/6] dt-bindings: gpio: Add DW GPIO debounce clock property
+Date:   Mon, 23 Mar 2020 22:53:57 +0300
+Message-ID: <20200323195401.30338-3-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200323195401.30338-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
+ <20200323195401.30338-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Message-ID: <158499326782.28353.14321453432536168841.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Commit-ID:     1c1a18b00d7e25d1bed3507880de2da07be704a2
-Gitweb:        https://git.kernel.org/tip/1c1a18b00d7e25d1bed3507880de2da07be704a2
-Author:        Vincenzo Frascino <vincenzo.frascino@arm.com>
-AuthorDate:    Mon, 23 Mar 2020 12:41:09 
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 23 Mar 2020 18:45:14 +01:00
+Port A of the DW GPIO controller may optionally have a debounce
+logic enabled if it was synthesized with that functionality enabled.
+In this case a dedicated reference clock should be declared in the
+node with corresponding "db" name presented in the clock-names
+property.
 
-um: Fix header inclusion
-
-User Mode Linux is a flavor of x86 that from the vDSO prospective always
-falls back on system calls. This implies that it does not require any
-of the unified vDSO definitions and their inclusion causes side effects
-like this:
-
-  In file included from include/vdso/processor.h:10:0,
-                      from include/vdso/datapage.h:17,
-                      from arch/x86/include/asm/vgtod.h:7,
-                      from arch/x86/um/../kernel/sys_ia32.c:49:
-  >> arch/x86/include/asm/vdso/processor.h:11:29: error: redefinition of 'rep_nop'
-      static __always_inline void rep_nop(void)
-                                  ^~~~~~~
-     In file included from include/linux/rcupdate.h:30:0,
-                      from include/linux/rculist.h:11,
-                      from include/linux/pid.h:5,
-                      from include/linux/sched.h:14,
-                      from arch/x86/um/../kernel/sys_ia32.c:25:
-     arch/x86/um/asm/processor.h:24:20: note: previous definition of 'rep_nop' was here
-      static inline void rep_nop(void)
-
-Make sure that the unnecessary headers are not included when um is built
-to address the problem.
-
-Fixes: abc22418db02 ("x86/vdso: Enable x86 to use common headers")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200323124109.7104-1-vincenzo.frascino@arm.com
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Acked-by: Rob Herring <robh@kernel.org>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/vgtod.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/include/asm/vgtod.h b/arch/x86/include/asm/vgtod.h
-index fc8e4cd..7aa38b2 100644
---- a/arch/x86/include/asm/vgtod.h
-+++ b/arch/x86/include/asm/vgtod.h
-@@ -2,6 +2,11 @@
- #ifndef _ASM_X86_VGTOD_H
- #define _ASM_X86_VGTOD_H
+diff --git a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+index f84f92c4dd53..58a8df367623 100644
+--- a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+@@ -31,12 +31,16 @@ properties:
+     maxItems: 1
  
-+/*
-+ * This check is required to prevent ARCH=um to include
-+ * unwanted headers.
-+ */
-+#ifdef CONFIG_GENERIC_GETTIMEOFDAY
- #include <linux/compiler.h>
- #include <asm/clocksource.h>
- #include <vdso/datapage.h>
-@@ -14,5 +19,6 @@ typedef u64 gtod_long_t;
- #else
- typedef unsigned long gtod_long_t;
- #endif
-+#endif /* CONFIG_GENERIC_GETTIMEOFDAY */
+   clocks:
++    minItems: 1
+     items:
+       - description: APB interface clock source
++      - description: DW GPIO debounce reference clock source
  
- #endif /* _ASM_X86_VGTOD_H */
+   clock-names:
++    minItems: 1
+     items:
+       - const: bus
++      - const: db
+ 
+   resets:
+     maxItems: 1
+-- 
+2.25.1
+
