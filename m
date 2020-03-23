@@ -2,155 +2,124 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A7DC4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557B0C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108B7206F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA8F20735
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 14:27:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iLKAdACT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgCWO0j (ORCPT
+        id S1727011AbgCWO1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:26:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:50176 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbgCWO0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 10:26:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B28771FB;
-        Mon, 23 Mar 2020 07:26:37 -0700 (PDT)
-Received: from [192.168.1.19] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A7CEF3F52E;
-        Mon, 23 Mar 2020 07:26:36 -0700 (PDT)
-Subject: Re: [PATCH v2 3/9] sched: Remove checks against SD_LOAD_BALANCE
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        peterz@infradead.org, vincent.guittot@linaro.org
-References: <20200311181601.18314-1-valentin.schneider@arm.com>
- <20200311181601.18314-4-valentin.schneider@arm.com>
- <c74a32d9-e40c-b976-be19-9ceea91d6fa7@arm.com> <jhjv9n0o8hf.mognet@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <5decd96b-6fe0-3c35-4609-59378a0c8621@arm.com>
-Date:   Mon, 23 Mar 2020 15:26:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <jhjv9n0o8hf.mognet@arm.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 23 Mar 2020 10:27:11 -0400
+Received: from mail-vi1eur05on2088.outbound.protection.outlook.com ([40.107.21.88]:56448
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725710AbgCWO1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 10:27:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ak3QL1mWpvTrOJjMUFhb+oq9yXiuXXpYV6vRaOVVRi6Mo4iH2/IyZCVjVElMXLzhiTrlwUYA+7SmuX+kVCPik1datZrkkqssT9t/ASWsVCKTFs/tSoD20fS5q7OeWxQ8E/GZvVagjHs78vDRQjztdhXPhj9YWvjTJGMYcb6D+VRnc7/UYlMWSjAvkRkDSlK4n+Tidvex2HIECa6Xy4wnSXUmDzNlHuvV9PRfXcQqlLoZwwOnlBOMOsKiXO/RUqv503eplmb+wN5S+7zlhGDEbdosqUyv4g9RX5sRZLvuFrt+eVBcRkFjwJ2nObb5kcPsiDdnnTG/pOSGW7kVe4xvEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EkmnU8GffRjmH68GP4oWaUsiK16+2vCNv89n62n4mBM=;
+ b=GFCnfTDxf+IJstNcFBlDM4hAKZwi86dsKBIwObWEvbyZiqsJS/JxX1tTG3ym6LjIhDY8lH8nlXGtzdyynUBaZQVQsYgtpHkMYrCGNiBRUHZKP3fk30JLEBxCKCgEVx9JplK4iuOEU8ezRMy6Wl2dJhw/4Glue/bOcB/227nHH+hPPBmvxiSvjOIjLwZK2Wep2qRXdYQjsxVp5gj3A+AKtAtem6NYIVHQiRYkMHS5DIQstta110w0Dxtt8ubyYc5nn8lBZKWd9sVqHW/IaEPUvqVqW16l6vavOkYmqdCQ+jjldCOgMe4JQM/TKSAa0yQiQywn47UC1qwQ03+OimpMyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EkmnU8GffRjmH68GP4oWaUsiK16+2vCNv89n62n4mBM=;
+ b=iLKAdACTQ070FHDukf27vDPDHvUk/f9lpBfx9C/+UNtqSsnuBKUROlNLno+j48cUa4XR69oTQELJjN8zX6hBHfZKLTG1eeT1wEV3IA8DCwFVq6XklkkqSkyIlaHFZykNMGhLvd84sY3zU5XyaEvPkKHpWWQ0W5ok2qHoSmSytEQ=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3913.eurprd04.prod.outlook.com (52.134.65.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.18; Mon, 23 Mar 2020 14:27:06 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
+ 14:27:06 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V3 2/3] thermal: imx8mm: Add i.MX8MP support
+Thread-Topic: [PATCH V3 2/3] thermal: imx8mm: Add i.MX8MP support
+Thread-Index: AQHWAQ+PMwlXAHkCzkSegBP0Of4mRKhWN38AgAAEZRA=
+Date:   Mon, 23 Mar 2020 14:27:05 +0000
+Message-ID: <DB3PR0402MB3916CA154E7D1FDED469B8DEF5F00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1584966504-21719-1-git-send-email-Anson.Huang@nxp.com>
+ <1584966504-21719-2-git-send-email-Anson.Huang@nxp.com>
+ <644b108e-596c-64d6-9693-80ac7f706dc7@linaro.org>
+In-Reply-To: <644b108e-596c-64d6-9693-80ac7f706dc7@linaro.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [183.192.13.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 19c2e8f3-428f-479c-5cd5-08d7cf364348
+x-ms-traffictypediagnostic: DB3PR0402MB3913:|DB3PR0402MB3913:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3913155857D432E8890EE023F5F00@DB3PR0402MB3913.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0351D213B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(366004)(136003)(346002)(396003)(199004)(7696005)(186003)(8936002)(26005)(81156014)(52536014)(76116006)(86362001)(478600001)(8676002)(66476007)(66556008)(64756008)(81166006)(66446008)(5660300002)(7416002)(33656002)(66946007)(316002)(55016002)(71200400001)(2906002)(44832011)(6506007)(53546011)(4326008)(4744005)(9686003)(110136005)(32563001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3913;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YO9LEJCvdpwAh/Icu50w2mD/wP4ATbDZWV8xlRpRH7NDdaBk5BPlJoZFROo9tlqL77Ps9hVSCXCulHsMAbd/3cXYtO5g2HLll3qqhe4iows2VZI6aNZZ/Sr8oeTp2czWHkmFY5i91DmF7y1TfpR3c9gMixuLgig0VWghzEvT3Ip1nilFu5VMEuoW5j19EmQJwJC0xHWqV4px9KC6Ad4rx1T8nkHaAyaqEok/shO4WGfOWIMM7E6/i0ZZRHfXPu/J2zB1SdMCVB/Xg+AYSrrep4zeBf53JZPLQ0jS8CbTgsuSgUvubUiHp+U21awgeMUys9MQVGVMmWJQ9LlkQFjTmrGV9dW8pObjhulE58r7xtRoefJIZI1PGe4fD9MEbQKWdr5ejKa360OuAZ8CHibg+uP2pz2WkDWnTY6slvKg37ELETyLmUik9YiEuyD5Cs/3UjWGFdE4AsSR6oHRye4T+2NH7s7ltsAvQHWJF+kRksiG9HYq+YTums/YruNxuOwwH2pZljqfw0YSOBFCu1znZg==
+x-ms-exchange-antispam-messagedata: Qzl17yqdBCN1x+21ylCnUGBI9lZ7DD314RptBkguiYB/OegTiFCGkv9ELh/AFzzN5ub8sRt4B+ZnRvlu49hGCSa0pMtv2Yf+BgArGuvQMBVY0R+yZkl1YNIikk5m8k97nlHADE5pkizPoXAUaiKoag==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19c2e8f3-428f-479c-5cd5-08d7cf364348
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2020 14:27:05.9164
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: H4BI4CfvMlcMIPDJxDA4tG3HagDUkdmlSYeqVM3BGEXrV9owp1ZWETXuFJrPyXBPBrlF2rFQosvFRmCFoz4PaA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3913
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.03.20 13:05, Valentin Schneider wrote:
-> 
-> On Thu, Mar 19 2020, Dietmar Eggemann wrote:
->> On 11.03.20 19:15, Valentin Schneider wrote:
-
-[...]
-
-> Your comments make me realize that changelog isn't great, what about the
-> following?
-> 
-> ---
-> 
-> The SD_LOAD_BALANCE flag is set unconditionally for all domains in
-> sd_init(). By making the sched_domain->flags syctl interface read-only, we
-> have removed the last piece of code that could clear that flag - as such,
-> it will now be always present. Rather than to keep carrying it along, we
-> can work towards getting rid of it entirely.
-> 
-> cpusets don't need it because they can make CPUs be attached to the NULL
-> domain (e.g. cpuset with sched_load_balance=0), or to a partitionned
-
-s/partitionned/partitioned
-
-> root_domain, i.e. a sched_domain hierarchy that doesn't span the entire
-> system (e.g. root cpuset with sched_load_balance=0 and sibling cpusets with
-> sched_load_balance=1).
-> 
-> isolcpus apply the same "trick": isolated CPUs are explicitly taken out of
-> the sched_domain rebuild (using housekeeping_cpumask()), so they get the
-> NULL domain treatment as well.
-> 
-> Remove the checks against SD_LOAD_BALANCE.
-
-Sounds better to me:
-
-Essentially, I was referring to examples like:
-
-Hikey960 - 2x4
-
-(A) exclusive cpusets:
-
-root@h960:/sys/fs/cgroup/cpuset# mkdir cs1
-root@h960:/sys/fs/cgroup/cpuset# echo 1 > cs1/cpuset.cpu_exclusive
-root@h960:/sys/fs/cgroup/cpuset# echo 0 > cs1/cpuset.mems
-root@h960:/sys/fs/cgroup/cpuset# echo 0-2 > cs1/cpuset.cpus
-root@h960:/sys/fs/cgroup/cpuset# mkdir cs2
-root@h960:/sys/fs/cgroup/cpuset# echo 1 > cs2/cpuset.cpu_exclusive
-root@h960:/sys/fs/cgroup/cpuset# echo 0 > cs2/cpuset.mems
-root@h960:/sys/fs/cgroup/cpuset# echo 3-5 > cs2/cpuset.cpus
-root@h960:/sys/fs/cgroup/cpuset# echo 0 > cpuset.sched_load_balance
-
-root@h960:/proc/sys/kernel# tree -d sched_domain
-
-├── cpu0
-│   └── domain0
-├── cpu1
-│   └── domain0
-├── cpu2
-│   └── domain0
-├── cpu3
-│   └── domain0
-├── cpu4
-│   ├── domain0
-│   └── domain1
-├── cpu5
-│   ├── domain0
-│   └── domain1
-├── cpu6
-└── cpu7
-
-(B) non-exclusive cpuset:
-
-root@h960:/sys/fs/cgroup/cpuset# echo 0 > cpuset.sched_load_balance
-
-[ 8661.240385] CPU1 attaching NULL sched-domain.
-[ 8661.244802] CPU2 attaching NULL sched-domain.
-[ 8661.249255] CPU3 attaching NULL sched-domain.
-[ 8661.253623] CPU4 attaching NULL sched-domain.
-[ 8661.257989] CPU5 attaching NULL sched-domain.
-[ 8661.262363] CPU6 attaching NULL sched-domain.
-[ 8661.266730] CPU7 attaching NULL sched-domain.
-
-root@h960:/sys/fs/cgroup/cpuset# mkdir cs1
-root@h960:/sys/fs/cgroup/cpuset# echo 0-5 > cs1/cpuset.cpus
-
-root@h960:/proc/sys/kernel# tree -d sched_domain
-
-├── cpu0
-│   ├── domain0
-│   └── domain1
-├── cpu1
-│   ├── domain0
-│   └── domain1
-├── cpu2
-│   ├── domain0
-│   └── domain1
-├── cpu3
-│   ├── domain0
-│   └── domain1
-├── cpu4
-│   ├── domain0
-│   └── domain1
-├── cpu5
-│   ├── domain0
-│   └── domain1
-├── cpu6
-└── cpu7
+SGksIERhbmllbA0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjMgMi8zXSB0aGVybWFsOiBpbXg4
+bW06IEFkZCBpLk1YOE1QIHN1cHBvcnQNCj4gDQo+IE9uIDIzLzAzLzIwMjAgMTM6MjgsIEFuc29u
+IEh1YW5nIHdyb3RlOg0KPiA+IGkuTVg4TVAgc2hhcmVzIHNhbWUgVE1VIHdpdGggaS5NWDhNTSwg
+dGhlIG9ubHkgZGlmZmVyZW5jZSBpcyBpLk1YOE1QDQo+ID4gaGFzIHR3byB0aGVybWFsIHNlbnNv
+cnMgd2hpbGUgaS5NWDhNTSBPTkxZIGhhcyBvbmUsIGFkZCBtdWx0aXBsZQ0KPiA+IHNlbnNvcnMg
+c3VwcG9ydCBmb3IgaS5NWDhNTSBUTVUgZHJpdmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
+QW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBz
+aW5jZSBWMjoNCj4gPiAJLSBGaXggYnVpbGQgd2FybmluZyBhYm91dCB0ZXN0X2JpdCBzZWNvbmQg
+YXJndW1lbnQgdHlwZS4NCj4gPiAtLS0NCj4gDQo+IFBsZWFzZSwganVzdCBzZW5kIGEgZml4IG9u
+IHRvcCBvZiB0aGlzIHBhdGNoIGJlY2F1c2UgdGhlIHNlcmllcyBpcyBhbHJlYWR5DQo+IG1lcmdl
+ZC4NCg0KRG9uZS4gU29ycnkgdGhhdCBJIGRpZCBOT1QgcmVjZWl2ZSB0aGUgbWFpbCBvZiBwYXRj
+aCBtZXJnZWQsIGp1c3Qgc2VudCBhIG5ldyBwYXRjaA0Kb24gdG9wIG9mIGl0Lg0KDQpUaGFua3Ms
+DQpBbnNvbg0K
