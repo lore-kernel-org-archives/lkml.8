@@ -2,217 +2,176 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA8EC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2966C10F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E2E20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9799C20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 06:16:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLQa6HsY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbgCWGPA (ORCPT
+        id S1727301AbgCWGQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 02:15:00 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:46873 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726059AbgCWGPA (ORCPT
+        Mon, 23 Mar 2020 02:16:57 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46171 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgCWGQ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 02:15:00 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 23 Mar 2020 11:44:15 +0530
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 23 Mar 2020 11:43:53 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id 0662F4719; Mon, 23 Mar 2020 11:43:51 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, jsanka@codeaurora.org,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Subject: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
-Date:   Mon, 23 Mar 2020 11:43:47 +0530
-Message-Id: <1584944027-1730-1-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Mon, 23 Mar 2020 02:16:57 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y83so1460031lff.13
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Mar 2020 23:16:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=s22y1lcN+QQQu9Cq44npfGXvNt5eRiT3PE1oNla8giQ=;
+        b=gLQa6HsYLUGk1i+0aevIUcbfiuq9eUyzqTf0QXh9nVx/f0OTNTa6RK3JNsmjNEQJ/l
+         jc1h0aaV2OS4B4Myr1FFSN5/tGP4sWUoffQ81ZOba9sSF8fjpbUS8dja9S4xMExPEwvB
+         1+ad9BxSsAzWihxlICNB5NPJfkUXx2lTgWXA9sLZmk2UM/uoATYUWIXJT8Eia1mHt55K
+         4/rC7g1tTSlXL9ZwQEkcFFNmwsGh8PPvavRk7p8vgUppcYoWzKuMP2rWpA2Kn17gjA5T
+         jB1dzp1EDfwzFmpwAA6RIWm2byt2usk/vrNxTbCeTFQNff2Y8ikWdO/hA6fJHCRCT9kx
+         5AeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=s22y1lcN+QQQu9Cq44npfGXvNt5eRiT3PE1oNla8giQ=;
+        b=FZTygXC2XDjMAuL+KxjgD3FD6evwuT7UJH7yuX1jzvZ8e06mvsHG/G+vwD0pM4/rWD
+         L8s0AT5j8h5/9j2ZF+aLkDTXtPGVxPXUBhhGCiFOknkwV9f4/xGZpDAB9y4/vU9SgzL9
+         GFlwoXeg1sjRTXYpx1hvRqAK15+eFK1lWs2x3r9+ORCe2gIRKjMBU1PPKS0ER0KYtmzg
+         xWpzGX0f04zk1sftblltNRwJ4M6tS+ur46KDU/2kZMkt5uAq6SA1c8rlxvn2ozlzntGs
+         21mBtviLSDLeTrKYzJD/s2cIc4DQa2f+tAfK55tyDKR4GufnhsngSuS6xV/y6QkIjeOb
+         A0zg==
+X-Gm-Message-State: ANhLgQ21/kShi5UI+jVX858CAIA4LHPmB6q8npQNWPCRxx14SEIfB5Gf
+        ZYuESr8xwZe0tdfED2og0hYAEzoLTJyxIfiXj7M=
+X-Google-Smtp-Source: ADFU+vvBOiADwm4Qhayd2Fn8+aUtgHrb5ojQ0lWTRj4AtWBt40+AlWxLXqFrSWLhaqSDK4Mj0nNL5M3DV+7VuKKW7Uk=
+X-Received: by 2002:ac2:41d3:: with SMTP id d19mr12456096lfi.57.1584944214073;
+ Sun, 22 Mar 2020 23:16:54 -0700 (PDT)
+MIME-Version: 1.0
+From:   Kyungtae Kim <kt0755@gmail.com>
+Date:   Mon, 23 Mar 2020 02:16:43 -0400
+Message-ID: <CAEAjamtb2Kbn0He5O++=d_HCG1eQvLnGGbcVUOQ76+NfDiNybQ@mail.gmail.com>
+Subject: BUG: KASAN: use-after-free in usb_hcd_unlink_urb+0x5f/0x170 drivers/usb/core/hcd.c
+To:     Greg KH <gregkh@linuxfoundation.org>, laurentiu.tudor@nxp.com,
+        noring@nocrew.org, chunfeng.yun@mediatek.com,
+        felipe.balbi@linux.intel.com, tweek@google.com, tony@atomide.com,
+        rrangel@chromium.org, m.szyprowski@samsung.com
+Cc:     Dave Tian <dave.jing.tian@gmail.com>, linux-usb@vger.kernel.og,
+        syzkaller <syzkaller@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"The PM core always increments the runtime usage counter
-before calling the ->suspend() callback and decrements it
-after calling the ->resume() callback"
+We report a bug (in linux-5.5.11) found by FuzzUSB (a modified version
+of syzkaller)
 
-DPU and DSI are managed as runtime devices. When
-suspend is triggered, PM core adds a refcount on all the
-devices and calls device suspend, since usage count is
-already incremented, runtime suspend was not getting called
-and it kept the clocks on which resulted in target not
-entering into XO shutdown.
+In function usb_hcd_unlink_urb (driver/usb/core/hcd.c:1607), it tries to
+read "urb->use_count". But it seems the instance "urb" was
+already freed (right after urb->dev at line 1597) by the function "urb_destroy"
+in a different thread, which caused memory access violation.
+To solve, it may need to check if urb is valid before urb->use_count,
+to avoid such freed memory access.
 
-Add changes to manage runtime devices during pm sleep.
+kernel config: https://kt0755.github.io/etc/config_v5.5.11
 
-Changes in v1:
- - Remove unnecessary checks in the function
-     _dpu_kms_disable_dpu (Rob Clark).
+==================================================================
+BUG: KASAN: use-after-free in atomic_read
+include/asm-generic/atomic-instrumented.h:26 [inline]
+BUG: KASAN: use-after-free in usb_hcd_unlink_urb+0x5f/0x170
+drivers/usb/core/hcd.c:1607
+Read of size 4 at addr ffff888065379610 by task kworker/u4:1/27
 
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 28 ++++++++++++++++++++++++++++
- drivers/gpu/drm/msm/dsi/dsi.c           |  7 +++++++
- drivers/gpu/drm/msm/msm_drv.c           | 14 ++++++++++++++
- drivers/gpu/drm/msm/msm_kms.h           |  2 ++
- 4 files changed, 51 insertions(+)
+CPU: 1 PID: 27 Comm: kworker/u4:1 Not tainted 5.5.11 #2
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+1.10.2-1ubuntu1 04/01/2014
+Workqueue: scsi_tmf_2 scmd_eh_abort_handler
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xce/0x128 lib/dump_stack.c:118
+ print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
+ __kasan_report+0x153/0x1cb mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:639
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x152/0x1b0 mm/kasan/generic.c:192
+ __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
+ atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+ usb_hcd_unlink_urb+0x5f/0x170 drivers/usb/core/hcd.c:1607
+ usb_unlink_urb+0x72/0xb0 drivers/usb/core/urb.c:657
+ usb_sg_cancel+0x14e/0x290 drivers/usb/core/message.c:602
+ usb_stor_stop_transport+0x5e/0xa0 drivers/usb/storage/transport.c:937
+ command_abort+0x19d/0x200 drivers/usb/storage/scsiglue.c:439
+ scsi_try_to_abort_cmd drivers/scsi/scsi_error.c:927 [inline]
+ scmd_eh_abort_handler+0x18e/0x410 drivers/scsi/scsi_error.c:145
+ process_one_work+0x9dd/0x1710 kernel/workqueue.c:2266
+ worker_thread+0x8b/0xc40 kernel/workqueue.c:2412
+ kthread+0x35f/0x440 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index ce19f1d..c3e8287 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -26,6 +26,7 @@
- #include "dpu_encoder.h"
- #include "dpu_plane.h"
- #include "dpu_crtc.h"
-+#include "dsi.h"
- 
- #define CREATE_TRACE_POINTS
- #include "dpu_trace.h"
-@@ -325,6 +326,24 @@ static void dpu_kms_disable_commit(struct msm_kms *kms)
- 	pm_runtime_put_sync(&dpu_kms->pdev->dev);
- }
- 
-+static void _dpu_kms_disable_dpu(struct msm_kms *kms)
-+{
-+	struct dpu_kms *dpu_kms = to_dpu_kms(kms);
-+	struct drm_device *dev = dpu_kms->dev;
-+	struct msm_drm_private *priv = dev->dev_private;
-+	struct msm_dsi *dsi;
-+	int i;
-+
-+	dpu_kms_disable_commit(kms);
-+
-+	for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
-+		if (!priv->dsi[i])
-+			continue;
-+		dsi = priv->dsi[i];
-+		pm_runtime_put_sync(&dsi->pdev->dev);
-+	}
-+}
-+
- static ktime_t dpu_kms_vsync_time(struct msm_kms *kms, struct drm_crtc *crtc)
- {
- 	struct drm_encoder *encoder;
-@@ -751,6 +770,7 @@ static void dpu_irq_uninstall(struct msm_kms *kms)
- #ifdef CONFIG_DEBUG_FS
- 	.debugfs_init    = dpu_kms_debugfs_init,
- #endif
-+	.disable_dpu = _dpu_kms_disable_dpu,
- };
- 
- static void _dpu_kms_mmu_destroy(struct dpu_kms *dpu_kms)
-@@ -1121,7 +1141,15 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
- 	return rc;
- }
- 
-+
-+static int __maybe_unused dpu_pm_suspend_late(struct device *dev)
-+{
-+	pm_runtime_get_noresume(dev);
-+	return 0;
-+}
-+
- static const struct dev_pm_ops dpu_pm_ops = {
-+	SET_LATE_SYSTEM_SLEEP_PM_OPS(dpu_pm_suspend_late, NULL)
- 	SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, NULL)
- };
- 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
-index 55ea4bc2..3d3740e 100644
---- a/drivers/gpu/drm/msm/dsi/dsi.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi.c
-@@ -154,12 +154,19 @@ static int dsi_dev_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int __maybe_unused dsi_pm_suspend_late(struct device *dev)
-+{
-+	pm_runtime_get_noresume(dev);
-+	return 0;
-+}
-+
- static const struct of_device_id dt_match[] = {
- 	{ .compatible = "qcom,mdss-dsi-ctrl" },
- 	{}
- };
- 
- static const struct dev_pm_ops dsi_pm_ops = {
-+	SET_LATE_SYSTEM_SLEEP_PM_OPS(dsi_pm_suspend_late, NULL)
- 	SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, msm_dsi_runtime_resume, NULL)
- };
- 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 7d985f8..7451ae0 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1040,6 +1040,7 @@ static int msm_pm_suspend(struct device *dev)
- {
- 	struct drm_device *ddev = dev_get_drvdata(dev);
- 	struct msm_drm_private *priv = ddev->dev_private;
-+	struct msm_kms *kms = priv->kms;
- 
- 	if (WARN_ON(priv->pm_state))
- 		drm_atomic_state_put(priv->pm_state);
-@@ -1051,6 +1052,11 @@ static int msm_pm_suspend(struct device *dev)
- 		return ret;
- 	}
- 
-+	if (kms->funcs->disable_dpu)
-+		kms->funcs->disable_dpu(kms);
-+
-+	pm_runtime_put_sync(dev);
-+
- 	return 0;
- }
- 
-@@ -1069,6 +1075,13 @@ static int msm_pm_resume(struct device *dev)
- 
- 	return ret;
- }
-+
-+static int msm_pm_suspend_late(struct device *dev)
-+{
-+	pm_runtime_get_noresume(dev);
-+	return 0;
-+}
-+
- #endif
- 
- #ifdef CONFIG_PM
-@@ -1102,6 +1115,7 @@ static int msm_runtime_resume(struct device *dev)
- #endif
- 
- static const struct dev_pm_ops msm_pm_ops = {
-+	SET_LATE_SYSTEM_SLEEP_PM_OPS(msm_pm_suspend_late, NULL)
- 	SET_SYSTEM_SLEEP_PM_OPS(msm_pm_suspend, msm_pm_resume)
- 	SET_RUNTIME_PM_OPS(msm_runtime_suspend, msm_runtime_resume, NULL)
- };
-diff --git a/drivers/gpu/drm/msm/msm_kms.h b/drivers/gpu/drm/msm/msm_kms.h
-index 1cbef6b..c73a89b 100644
---- a/drivers/gpu/drm/msm/msm_kms.h
-+++ b/drivers/gpu/drm/msm/msm_kms.h
-@@ -126,6 +126,8 @@ struct msm_kms_funcs {
- 	/* debugfs: */
- 	int (*debugfs_init)(struct msm_kms *kms, struct drm_minor *minor);
- #endif
-+	void (*disable_dpu)(struct msm_kms *kms);
-+
- };
- 
- struct msm_kms;
--- 
-1.9.1
+Allocated by task 2532:
+ save_stack+0x21/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc.constprop.3+0xa7/0xd0 mm/kasan/common.c:513
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
+ __kmalloc+0x148/0x380 mm/slub.c:3812
+ kmalloc include/linux/slab.h:561 [inline]
+ usb_alloc_urb+0x42/0x90 drivers/usb/core/urb.c:74
+ usb_sg_init+0x323/0xa00 drivers/usb/core/message.c:406
+ usb_stor_bulk_transfer_sglist+0xbe/0x280 drivers/usb/storage/transport.c:423
+ usb_stor_bulk_srb+0x10d/0x230 drivers/usb/storage/transport.c:465
+ usb_stor_Bulk_transport+0x55f/0x1060 drivers/usb/storage/transport.c:1161
+ usb_stor_invoke_transport+0xef/0x15f0 drivers/usb/storage/transport.c:606
+ usb_stor_transparent_scsi_command+0x1d/0x30 drivers/usb/storage/protocol.c:108
+ usb_stor_control_thread+0x6d8/0xa80 drivers/usb/storage/usb.c:380
+ kthread+0x35f/0x440 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
+Freed by task 2532:
+ save_stack+0x21/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:335 [inline]
+ __kasan_slab_free+0x135/0x190 mm/kasan/common.c:474
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
+ slab_free_hook mm/slub.c:1425 [inline]
+ slab_free_freelist_hook mm/slub.c:1458 [inline]
+ slab_free mm/slub.c:3005 [inline]
+ kfree+0xf7/0x410 mm/slub.c:3966
+ urb_destroy drivers/usb/core/urb.c:26 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ usb_free_urb.part.0+0x95/0x100 drivers/usb/core/urb.c:96
+ usb_free_urb+0x1f/0x30 drivers/usb/core/urb.c:95
+ sg_clean+0x111/0x270 drivers/usb/core/message.c:263
+ usb_sg_wait+0x26d/0x440 drivers/usb/core/message.c:573
+ usb_stor_bulk_transfer_sglist+0x127/0x280 drivers/usb/storage/transport.c:447
+ usb_stor_bulk_srb+0x10d/0x230 drivers/usb/storage/transport.c:465
+ usb_stor_Bulk_transport+0x55f/0x1060 drivers/usb/storage/transport.c:1161
+ usb_stor_invoke_transport+0xef/0x15f0 drivers/usb/storage/transport.c:606
+ usb_stor_transparent_scsi_command+0x1d/0x30 drivers/usb/storage/protocol.c:108
+ usb_stor_control_thread+0x6d8/0xa80 drivers/usb/storage/usb.c:380
+ kthread+0x35f/0x440 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff888065379600
+ which belongs to the cache kmalloc-192 of size 192
+The buggy address is located 16 bytes inside of
+ 192-byte region [ffff888065379600, ffff8880653796c0)
+The buggy address belongs to the page:
+page:ffffea000194de40 refcount:1 mapcount:0 mapping:ffff88806c002a00 index:0x0
+flags: 0x100000000000200(slab)
+raw: 0100000000000200 ffffea0000ee7a00 0000000500000005 ffff88806c002a00
+raw: 0000000000000000 0000000080100010 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888065379500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888065379580: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>ffff888065379600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                         ^
+ ffff888065379680: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff888065379700: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+==================================================================
