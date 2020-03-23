@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18ACC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808F9C4332E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7AFA2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE8620409
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 18:39:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbgCWSiY (ORCPT
+        id S1728047AbgCWSjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:38:24 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:46668 "EHLO
+        Mon, 23 Mar 2020 14:39:16 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:46730 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727367AbgCWSiX (ORCPT
+        with ESMTP id S1727647AbgCWSiY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:38:23 -0400
+        Mon, 23 Mar 2020 14:38:24 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGRxs-001354-Ar; Mon, 23 Mar 2020 18:38:20 +0000
+        id 1jGRxs-00135K-Qt; Mon, 23 Mar 2020 18:38:20 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [RFC][PATCH 03/22] x86: switch sigframe sigset handling to explict __get_user()/__put_user()
-Date:   Mon, 23 Mar 2020 18:38:00 +0000
-Message-Id: <20200323183819.250124-3-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH 05/22] vm86: get rid of get_user_ex() use
+Date:   Mon, 23 Mar 2020 18:38:02 +0000
+Message-Id: <20200323183819.250124-5-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200323183819.250124-1-viro@ZenIV.linux.org.uk>
 References: <20200323183620.GD23230@ZenIV.linux.org.uk>
@@ -42,147 +42,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-... and consolidate the definition of sigframe_ia32->extramask - it's
-always a 1-element array of 32bit unsigned.
+Just do a copyin of what we want into a local variable and
+be done with that.  We are guaranteed to be on shallow stack
+here...
+
+Note that conditional expression for range passed to access_ok()
+in mainline had been pointless all along - the only difference
+between vm86plus_struct and vm86_struct is that the former has
+one extra field in the end and when we get to copyin of that
+field (conditional upon 'plus' argument), we use copy_from_user().
+Moreover, all fields starting with ->int_revectored are copied
+that way, so we only need that check (be it done by access_ok()
+or by user_access_begin()) only on the beginning of the structure -
+the fields that used to be covered by that get_user_try() block.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- arch/x86/ia32/ia32_signal.c     | 16 +++++-----------
- arch/x86/include/asm/sigframe.h |  6 +-----
- arch/x86/kernel/signal.c        | 20 ++++++++------------
- 3 files changed, 14 insertions(+), 28 deletions(-)
+ arch/x86/kernel/vm86_32.c | 54 +++++++++++++++++++++--------------------------
+ 1 file changed, 24 insertions(+), 30 deletions(-)
 
-diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
-index a3aefe9b9401..c72025d615f8 100644
---- a/arch/x86/ia32/ia32_signal.c
-+++ b/arch/x86/ia32/ia32_signal.c
-@@ -126,10 +126,7 @@ COMPAT_SYSCALL_DEFINE0(sigreturn)
- 	if (!access_ok(frame, sizeof(*frame)))
- 		goto badframe;
- 	if (__get_user(set.sig[0], &frame->sc.oldmask)
--	    || (_COMPAT_NSIG_WORDS > 1
--		&& __copy_from_user((((char *) &set.sig) + 4),
--				    &frame->extramask,
--				    sizeof(frame->extramask))))
-+	    || __get_user(((__u32 *)&set)[1], &frame->extramask[0]))
- 		goto badframe;
+diff --git a/arch/x86/kernel/vm86_32.c b/arch/x86/kernel/vm86_32.c
+index 91d55454e702..49b37eb01e99 100644
+--- a/arch/x86/kernel/vm86_32.c
++++ b/arch/x86/kernel/vm86_32.c
+@@ -243,6 +243,7 @@ static long do_sys_vm86(struct vm86plus_struct __user *user_vm86, bool plus)
+ 	struct kernel_vm86_regs vm86regs;
+ 	struct pt_regs *regs = current_pt_regs();
+ 	unsigned long err = 0;
++	struct vm86_struct v;
  
- 	set_current_blocked(&set);
-@@ -153,7 +150,7 @@ COMPAT_SYSCALL_DEFINE0(rt_sigreturn)
+ 	err = security_mmap_addr(0);
+ 	if (err) {
+@@ -278,39 +279,32 @@ static long do_sys_vm86(struct vm86plus_struct __user *user_vm86, bool plus)
+ 	if (vm86->saved_sp0)
+ 		return -EPERM;
  
- 	if (!access_ok(frame, sizeof(*frame)))
- 		goto badframe;
--	if (__copy_from_user(&set, &frame->uc.uc_sigmask, sizeof(set)))
-+	if (__get_user(set.sig[0], (__u64 __user *)&frame->uc.uc_sigmask))
- 		goto badframe;
- 
- 	set_current_blocked(&set);
-@@ -277,11 +274,8 @@ int ia32_setup_frame(int sig, struct ksignal *ksig,
- 	if (ia32_setup_sigcontext(&frame->sc, fpstate, regs, set->sig[0]))
+-	if (!access_ok(user_vm86, plus ?
+-		       sizeof(struct vm86_struct) :
+-		       sizeof(struct vm86plus_struct)))
++	if (copy_from_user(&v, user_vm86,
++			offsetof(struct vm86_struct, int_revectored)))
  		return -EFAULT;
  
--	if (_COMPAT_NSIG_WORDS > 1) {
--		if (__copy_to_user(frame->extramask, &set->sig[1],
--				   sizeof(frame->extramask)))
--			return -EFAULT;
--	}
-+	if (__put_user(set->sig[1], &frame->extramask[0]))
-+		return -EFAULT;
+ 	memset(&vm86regs, 0, sizeof(vm86regs));
+-	get_user_try {
+-		unsigned short seg;
+-		get_user_ex(vm86regs.pt.bx, &user_vm86->regs.ebx);
+-		get_user_ex(vm86regs.pt.cx, &user_vm86->regs.ecx);
+-		get_user_ex(vm86regs.pt.dx, &user_vm86->regs.edx);
+-		get_user_ex(vm86regs.pt.si, &user_vm86->regs.esi);
+-		get_user_ex(vm86regs.pt.di, &user_vm86->regs.edi);
+-		get_user_ex(vm86regs.pt.bp, &user_vm86->regs.ebp);
+-		get_user_ex(vm86regs.pt.ax, &user_vm86->regs.eax);
+-		get_user_ex(vm86regs.pt.ip, &user_vm86->regs.eip);
+-		get_user_ex(seg, &user_vm86->regs.cs);
+-		vm86regs.pt.cs = seg;
+-		get_user_ex(vm86regs.pt.flags, &user_vm86->regs.eflags);
+-		get_user_ex(vm86regs.pt.sp, &user_vm86->regs.esp);
+-		get_user_ex(seg, &user_vm86->regs.ss);
+-		vm86regs.pt.ss = seg;
+-		get_user_ex(vm86regs.es, &user_vm86->regs.es);
+-		get_user_ex(vm86regs.ds, &user_vm86->regs.ds);
+-		get_user_ex(vm86regs.fs, &user_vm86->regs.fs);
+-		get_user_ex(vm86regs.gs, &user_vm86->regs.gs);
+-
+-		get_user_ex(vm86->flags, &user_vm86->flags);
+-		get_user_ex(vm86->screen_bitmap, &user_vm86->screen_bitmap);
+-		get_user_ex(vm86->cpu_type, &user_vm86->cpu_type);
+-	} get_user_catch(err);
+-	if (err)
+-		return err;
++
++	vm86regs.pt.bx = v.regs.ebx;
++	vm86regs.pt.cx = v.regs.ecx;
++	vm86regs.pt.dx = v.regs.edx;
++	vm86regs.pt.si = v.regs.esi;
++	vm86regs.pt.di = v.regs.edi;
++	vm86regs.pt.bp = v.regs.ebp;
++	vm86regs.pt.ax = v.regs.eax;
++	vm86regs.pt.ip = v.regs.eip;
++	vm86regs.pt.cs = v.regs.cs;
++	vm86regs.pt.flags = v.regs.eflags;
++	vm86regs.pt.sp = v.regs.esp;
++	vm86regs.pt.ss = v.regs.ss;
++	vm86regs.es = v.regs.es;
++	vm86regs.ds = v.regs.ds;
++	vm86regs.fs = v.regs.fs;
++	vm86regs.gs = v.regs.gs;
++
++	vm86->flags = v.flags;
++	vm86->screen_bitmap = v.screen_bitmap;
++	vm86->cpu_type = v.cpu_type;
  
- 	if (ksig->ka.sa.sa_flags & SA_RESTORER) {
- 		restorer = ksig->ka.sa.sa_restorer;
-@@ -381,7 +375,7 @@ int ia32_setup_rt_frame(int sig, struct ksignal *ksig,
- 	err |= __copy_siginfo_to_user32(&frame->info, &ksig->info, false);
- 	err |= ia32_setup_sigcontext(&frame->uc.uc_mcontext, fpstate,
- 				     regs, set->sig[0]);
--	err |= __copy_to_user(&frame->uc.uc_sigmask, set, sizeof(*set));
-+	err |= __put_user(*(__u64 *)set, (__u64 __user *)&frame->uc.uc_sigmask);
- 
- 	if (err)
- 		return -EFAULT;
-diff --git a/arch/x86/include/asm/sigframe.h b/arch/x86/include/asm/sigframe.h
-index f176114c04d4..84eab2724875 100644
---- a/arch/x86/include/asm/sigframe.h
-+++ b/arch/x86/include/asm/sigframe.h
-@@ -33,11 +33,7 @@ struct sigframe_ia32 {
- 	 * legacy application accessing/modifying it.
- 	 */
- 	struct _fpstate_32 fpstate_unused;
--#ifdef CONFIG_IA32_EMULATION
--	unsigned int extramask[_COMPAT_NSIG_WORDS-1];
--#else /* !CONFIG_IA32_EMULATION */
--	unsigned long extramask[_NSIG_WORDS-1];
--#endif /* CONFIG_IA32_EMULATION */
-+	unsigned int extramask[1];
- 	char retcode[8];
- 	/* fp state follows here */
- };
-diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
-index 8a29573851a3..53ac66b3fd9b 100644
---- a/arch/x86/kernel/signal.c
-+++ b/arch/x86/kernel/signal.c
-@@ -326,11 +326,8 @@ __setup_frame(int sig, struct ksignal *ksig, sigset_t *set,
- 	if (setup_sigcontext(&frame->sc, fpstate, regs, set->sig[0]))
- 		return -EFAULT;
- 
--	if (_NSIG_WORDS > 1) {
--		if (__copy_to_user(&frame->extramask, &set->sig[1],
--				   sizeof(frame->extramask)))
--			return -EFAULT;
--	}
-+	if (__put_user(set->sig[1], &frame->extramask[0]))
-+		return -EFAULT;
- 
- 	if (current->mm->context.vdso)
- 		restorer = current->mm->context.vdso +
-@@ -489,7 +486,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
- 	} put_user_catch(err);
- 
- 	err |= setup_sigcontext(&frame->uc.uc_mcontext, fp, regs, set->sig[0]);
--	err |= __copy_to_user(&frame->uc.uc_sigmask, set, sizeof(*set));
-+	err |= __put_user(set->sig[0], &frame->uc.uc_sigmask.sig[0]);
- 
- 	if (err)
- 		return -EFAULT;
-@@ -575,7 +572,7 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
- 
- 	err |= setup_sigcontext(&frame->uc.uc_mcontext, fpstate,
- 				regs, set->sig[0]);
--	err |= __copy_to_user(&frame->uc.uc_sigmask, set, sizeof(*set));
-+	err |= __put_user(*(__u64 *)set, (__u64 __user *)&frame->uc.uc_sigmask);
- 
- 	if (err)
- 		return -EFAULT;
-@@ -613,9 +610,8 @@ SYSCALL_DEFINE0(sigreturn)
- 
- 	if (!access_ok(frame, sizeof(*frame)))
- 		goto badframe;
--	if (__get_user(set.sig[0], &frame->sc.oldmask) || (_NSIG_WORDS > 1
--		&& __copy_from_user(&set.sig[1], &frame->extramask,
--				    sizeof(frame->extramask))))
-+	if (__get_user(set.sig[0], &frame->sc.oldmask) ||
-+	    __get_user(set.sig[1], &frame->extramask[0]))
- 		goto badframe;
- 
- 	set_current_blocked(&set);
-@@ -645,7 +641,7 @@ SYSCALL_DEFINE0(rt_sigreturn)
- 	frame = (struct rt_sigframe __user *)(regs->sp - sizeof(long));
- 	if (!access_ok(frame, sizeof(*frame)))
- 		goto badframe;
--	if (__copy_from_user(&set, &frame->uc.uc_sigmask, sizeof(set)))
-+	if (__get_user(*(__u64 *)&set, (__u64 __user *)&frame->uc.uc_sigmask))
- 		goto badframe;
- 	if (__get_user(uc_flags, &frame->uc.uc_flags))
- 		goto badframe;
-@@ -870,7 +866,7 @@ asmlinkage long sys32_x32_rt_sigreturn(void)
- 
- 	if (!access_ok(frame, sizeof(*frame)))
- 		goto badframe;
--	if (__copy_from_user(&set, &frame->uc.uc_sigmask, sizeof(set)))
-+	if (__get_user(set.sig[0], (__u64 __user *)&frame->uc.uc_sigmask))
- 		goto badframe;
- 	if (__get_user(uc_flags, &frame->uc.uc_flags))
- 		goto badframe;
+ 	if (copy_from_user(&vm86->int_revectored,
+ 			   &user_vm86->int_revectored,
 -- 
 2.11.0
 
