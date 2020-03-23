@@ -2,118 +2,178 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2013C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472B8C54FCE
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9294620722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D50F2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 13:17:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Y/EoiO8g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgCWNRZ (ORCPT
+        id S1728516AbgCWNRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 09:17:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:48836 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728393AbgCWNRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 09:17:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D028A1FB;
-        Mon, 23 Mar 2020 06:17:24 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C864F3F52E;
-        Mon, 23 Mar 2020 06:17:23 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 13:17:20 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: Two questions about cache coherency on arm platforms
-Message-ID: <20200323131720.GE2597@C02TD0UTHF1T.local>
-References: <20200323123524.w67fici6oxzdo665@mail.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323123524.w67fici6oxzdo665@mail.google.com>
+        Mon, 23 Mar 2020 09:17:47 -0400
+Received: from mail.efficios.com ([167.114.26.124]:41622 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728354AbgCWNRr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 09:17:47 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 0EAEC1B7AC6;
+        Mon, 23 Mar 2020 09:17:46 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id E6vPFh4NTUkU; Mon, 23 Mar 2020 09:17:45 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 4233D1B7AC2;
+        Mon, 23 Mar 2020 09:17:41 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 4233D1B7AC2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1584969461;
+        bh=EXf/hm5ac4SJ4Hv465ElHbR9dRCaShBTU9s7+Fwxjek=;
+        h=From:To:Date:Message-Id;
+        b=Y/EoiO8g0nb12Pk8n1me2Uf7JWusrycKp3hbImLtxBO2qGOlQPAJTlX9e1Z/cwKxb
+         djbuE/Adk8hP1o3djs7gJhQzLjBVlJylc9F99zaTXIC/s4jXXleaZGcUU/EX2tq2cP
+         xIJiYZD2JKSjlQmj5GGTkv0LKq8tevnV5xynG+BR93nSG8+0+W+9vq5O+tC6WpYfem
+         x3QkkTXLyAXRW8aa5Bo8Gs67pYfnpCjnwBAf/9whJC7sIXDdZ/kek/wnEWu4JBol4p
+         962SB5DbukGpNWvvjnMIbokpYBtNxoaO1ALjt3Zni5ItaRd7duGj2IiH2s0Vj9dPJh
+         +ECIcW7zWDEEA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id BufffxTbxr6K; Mon, 23 Mar 2020 09:17:41 -0400 (EDT)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id 9DF801B7E84;
+        Mon, 23 Mar 2020 09:17:38 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Carlos O'Donell <carlos@redhat.com>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [RFC PATCH glibc 5/8] glibc: sched_getcpu(): use rseq cpu_id TLS on Linux (v7)
+Date:   Mon, 23 Mar 2020 09:16:04 -0400
+Message-Id: <20200323131607.15185-6-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200323131607.15185-1-mathieu.desnoyers@efficios.com>
+References: <20200323131607.15185-1-mathieu.desnoyers@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 08:35:26PM +0800, Changbin Du wrote:
-> Hi, All,
-> I am not very familiar with ARM processors. I have two questions about
-> cache coherency. Could anyone help me?
-> 
-> 1. How is cache coherency maintenanced on ARMv8 big.LITTLE system?
-> As far as I know, big cores and little cores are in seperate clusters on
-> big.LITTLE system.
+When available, use the cpu_id field from __rseq_abi on Linux to
+implement sched_getcpu(). Fall-back on the vgetcpu vDSO if unavailable.
 
-This is often true, but not always the case. For example, with DSU big
-and little cores can be placed within the same cluster.
+Benchmarks:
 
-> And cache coherence betwwen clusters requires the
-> memory regions are marked as 'Outer Shareable' and is very expensive.
+x86-64: Intel E5-2630 v3@2.40GHz, 16-core, hyperthreading
 
-This is not correct.
+glibc sched_getcpu():                     13.7 ns (baseline)
+glibc sched_getcpu() using rseq:           2.5 ns (speedup:  5.5x)
+inline load cpuid from __rseq_abi TLS:     0.8 ns (speedup: 17.1x)
 
-Linux requires that all cores it uses are within the same Inner
-Shareable domain, regardless of whether they are in distinct clusters.
-Linux does not support systems where cores are in distinct Inner
-Shareable domains.
+	* sysdeps/unix/sysv/linux/sched_getcpu.c: use rseq cpu_id TLS on
+	Linux.
 
-This is the intended use of the architecture. Per ARM DDI 0487E.a page
-B2-144:
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+CC: Carlos O'Donell <carlos@redhat.com>
+CC: Florian Weimer <fweimer@redhat.com>
+CC: Joseph Myers <joseph@codesourcery.com>
+CC: Szabolcs Nagy <szabolcs.nagy@arm.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ben Maurer <bmaurer@fb.com>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+CC: Boqun Feng <boqun.feng@gmail.com>
+CC: Will Deacon <will.deacon@arm.com>
+CC: Dave Watson <davejwatson@fb.com>
+CC: Paul Turner <pjt@google.com>
+CC: libc-alpha@sourceware.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-api@vger.kernel.org
+---
+Changes since v1:
+- rseq is only used if both __NR_rseq and RSEQ_SIG are defined.
 
-| This architecture assumes that all PEs that use the same operating
-| system or hypervisor are in the same Inner Shareable shareability
-| shareability
+Changes since v2:
+- remove duplicated __rseq_abi extern declaration.
 
-... where a PE is a "Processing Element", which you can think of as a
-single core.
+Changes since v3:
+- update ChangeLog.
 
-> I have checked the kernel code, and seems it only requires coherence in
-> 'Inner Shareable' domain. So my question is how can linux guarantees
-> cache coherence in 'CPU migration' or 'Global Task Scheduling' models
-> wich both clusters are active at the same time? For example, a thread
-> ran in Cluster A and modified 'Inner Shareable' memory, then it migrates
-> to Cluster B.
+Changes since v4:
+- Use atomic_load_relaxed to load the __rseq_abi.cpu_id field, a
+  consequence of the fact that __rseq_abi is not volatile anymore.
+- Include atomic.h which provides atomic_load_relaxed.
 
-As above, this works because all the relevant cores are within the same
-Inner Shareable domain.
+Changes since v5:
+- Use __ASSUME_RSEQ to detect rseq availability.
 
-> 2. ARM64 cache maintenance code sync_icache_aliases() for non-aliasing icache.
-> In linux kernel on arm64 platform, the flow function sync_icache_aliases()
-> is used to sync i-cache and d-cache. I understand the aliasing case. but
-> for non-aliasing case why it just does "dc cvau" (in __flush_icache_range())
-> whithout really invalidate the icache?
+Changes since v6:
+- Remove use of __ASSUME_RSEQ.
+---
+ sysdeps/unix/sysv/linux/sched_getcpu.c | 27 ++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
-The __flush_icache_range/__flush_cache_user_range assembly function does
-both the D-cache maintenance with DC CVAU, then the I-cache maintenance
-with IC IVAU, so I think you have misread it.
+diff --git a/sysdeps/unix/sysv/linux/sched_getcpu.c b/sysdeps/unix/sysv/linux/sched_getcpu.c
+index c019cfb3cf..2269c4f2bd 100644
+--- a/sysdeps/unix/sysv/linux/sched_getcpu.c
++++ b/sysdeps/unix/sysv/linux/sched_getcpu.c
+@@ -18,10 +18,15 @@
+ #include <errno.h>
+ #include <sched.h>
+ #include <sysdep.h>
++#include <atomic.h>
+ #include <sysdep-vdso.h>
+ 
+-int
+-sched_getcpu (void)
++#ifdef HAVE_GETCPU_VSYSCALL
++# define HAVE_VSYSCALL
++#endif
++
++static int
++vsyscall_sched_getcpu (void)
+ {
+   unsigned int cpu;
+   int r = -1;
+@@ -32,3 +37,21 @@ sched_getcpu (void)
+ #endif
+   return r == -1 ? r : cpu;
+ }
++
++#include <sys/rseq.h>
++
++#ifdef RSEQ_SIG
++int
++sched_getcpu (void)
++{
++  int cpu_id = atomic_load_relaxed (&__rseq_abi.cpu_id);
++
++  return cpu_id >= 0 ? cpu_id : vsyscall_sched_getcpu ();
++}
++#else
++int
++sched_getcpu (void)
++{
++  return vsyscall_sched_getcpu ();
++}
++#endif
+-- 
+2.17.1
 
-Thanks,
-Mark.
-
-> Will i-cache refill from L2 cache?
->
-> void sync_icache_aliases(void *kaddr, unsigned long len)
-> {
-> 	unsigned long addr = (unsigned long)kaddr;
-> 
-> 	if (icache_is_aliasing()) {
-> 		__clean_dcache_area_pou(kaddr, len);
-> 		__flush_icache_all();
-> 	} else {
-> 		/*
-> 		 * Don't issue kick_all_cpus_sync() after I-cache invalidation
-> 		 * for user mappings.
-> 		 */
-> 		__flush_icache_range(addr, addr + len);
-> 	}
-> }
-> 
-> -- 
-> Cheers,
-> Changbin Du
