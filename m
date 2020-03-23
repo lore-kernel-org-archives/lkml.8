@@ -2,93 +2,98 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A217CC10F26
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D7AC10F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6322074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B97220732
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 07:16:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SzOFl+eu"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kEfDlwIZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbgCWHKB (ORCPT
+        id S1727402AbgCWHQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 03:10:01 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:27186 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727164AbgCWHKB (ORCPT
+        Mon, 23 Mar 2020 03:16:44 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:21753 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727380AbgCWHQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 03:10:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584947400;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0KelROyYCjluM3/vlH+wAUHU21yGj/l+XL1RLQ+Rw5s=;
-        b=SzOFl+eucQMQdlqnoqn0gneiQvIw0SL8tiWI9+9vUMDaDGyXHT5vp+qdD3zzKwypyxCc9H
-        eDTkmZyUlb7Sz9MEnqlrVgRCxteVENoA5v+Iy7zFA8Q39afVKnzD8CcMboL3raBk9syt04
-        mzJfbyrTRB3peSwpRVzSG0URY2lAqAQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-309-71Ubue3VNFaQw_p3ZvZ1Mg-1; Mon, 23 Mar 2020 03:09:58 -0400
-X-MC-Unique: 71Ubue3VNFaQw_p3ZvZ1Mg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 23 Mar 2020 03:16:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584947803; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=OBzrnIrYOQqvkeCsNZazNpi4PFkSztP1b56S3A8EX38=; b=kEfDlwIZ6KEzEIix4eeBBdiwdRM9hQ+W1K88BT79d/BInDsas6WnDPpooD5QfsMuP8nnuzpk
+ bHzxfr45wgj+NhbiHCD8XREhByXiHaUArvkPXd6WLg/YY4lt/I0sScBW3YQ/XRXOO6uagIxK
+ jLGDLYmSfqTipgEHiCZnFkm6dlQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e78624a.7fc54291b340-smtp-out-n04;
+ Mon, 23 Mar 2020 07:16:26 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6240AC433D2; Mon, 23 Mar 2020 07:16:25 +0000 (UTC)
+Received: from maggarwa-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2945A800D5B;
-        Mon, 23 Mar 2020 07:09:56 +0000 (UTC)
-Received: from localhost (ovpn-13-26.pek2.redhat.com [10.72.13.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1FF0D94978;
-        Mon, 23 Mar 2020 07:09:54 +0000 (UTC)
-Date:   Mon, 23 Mar 2020 15:09:52 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     js1304@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Ye Xiaolong <xiaolong.ye@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v4 2/2] mm/page_alloc: integrate classzone_idx and
- high_zoneidx
-Message-ID: <20200323070952.GF3039@MiWiFi-R3L-srv>
-References: <1584938972-7430-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1584938972-7430-3-git-send-email-iamjoonsoo.kim@lge.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584938972-7430-3-git-send-email-iamjoonsoo.kim@lge.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        (Authenticated sender: maggarwa)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0B6FCC433CB;
+        Mon, 23 Mar 2020 07:16:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0B6FCC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=maggarwa@codeaurora.org
+From:   Mohit Aggarwal <maggarwa@codeaurora.org>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com
+Cc:     Mohit Aggarwal <maggarwa@codeaurora.org>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] rtc-pm8xxx: Clear Alarm register on resume
+Date:   Mon, 23 Mar 2020 12:46:09 +0530
+Message-Id: <1584947769-12076-1-git-send-email-maggarwa@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/23/20 at 01:49pm, js1304@gmail.com wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> 
-> classzone_idx is just different name for high_zoneidx now.
-> So, integrate them and add some comment to struct alloc_context
-> in order to reduce future confusion about the meaning of this variable.
-> 
-> The accessor, ac_classzone_idx() is also removed since it isn't needed
-> after integration.
-> 
-> In addition to integration, this patch also renames high_zoneidx
-> to highest_zoneidx since it represents more precise meaning.
-> 
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Currently, alarm register is not cleared on resume
+leading to reboot during power off charging mode.
 
-The patch looks good, and did the basic test after applying this patch
-series. FWIW:
+Signed-off-by: Mohit Aggarwal <maggarwa@codeaurora.org>
+---
+ drivers/rtc/rtc-pm8xxx.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Reviewed-by: Baoquan He <bhe@redhat.com>
-
+diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
+index bbe013f..f0d89a4 100644
+--- a/drivers/rtc/rtc-pm8xxx.c
++++ b/drivers/rtc/rtc-pm8xxx.c
+@@ -301,6 +301,7 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
+ 	struct pm8xxx_rtc *rtc_dd = dev_get_drvdata(dev);
+ 	const struct pm8xxx_rtc_regs *regs = rtc_dd->regs;
+ 	unsigned int ctrl_reg;
++	u8 value[NUM_8_BIT_RTC_REGS] = {0};
+ 
+ 	spin_lock_irqsave(&rtc_dd->ctrl_reg_lock, irq_flags);
+ 
+@@ -319,6 +320,16 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
+ 		goto rtc_rw_fail;
+ 	}
+ 
++	/* Clear Alarm register */
++	if (!enable) {
++		     rc = regmap_bulk_write(rtc_dd->regmap, regs->alarm_rw, value,
++					sizeof(value));
++		     if (rc) {
++			     dev_err(dev, "Write to RTC ALARM register failed\n");
++			     goto rtc_rw_fail;
++		     }
++	}
++
+ rtc_rw_fail:
+ 	spin_unlock_irqrestore(&rtc_dd->ctrl_reg_lock, irq_flags);
+ 	return rc;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
