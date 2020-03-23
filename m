@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814D6C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806DDC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5919B20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A2AC2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:15:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dA8QVxYY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uODjUx13"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbgCWROg (ORCPT
+        id S1727689AbgCWRPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:14:36 -0400
+        Mon, 23 Mar 2020 13:15:22 -0400
 Received: from mail26.static.mailgun.info ([104.130.122.26]:31230 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727461AbgCWROf (ORCPT
+        by vger.kernel.org with ESMTP id S1725844AbgCWRPV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:14:35 -0400
+        Mon, 23 Mar 2020 13:15:21 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584983675; h=Date: Message-Id: Cc: To: References:
+ s=smtp; t=1584983721; h=Date: Message-Id: Cc: To: References:
  In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=NeOBqUvjE8rbI90/UsOr8mvzxWqqYBUc/IgxsVpCfr4=;
- b=dA8QVxYYe50n3lci14tI1oO3xsYr8hV5J1FwslLnTovqveVcoX1rS0WV7enORZ6k+ZyFZFSJ
- WA3u5gcxglZHoVxcw2iOhIu9aziDYvDQrsTBq0wWjqwU4pF0upd/SQxu4pXow2C628ekwvz+
- rw+LpSIgkX2tg8A+9WoQIaiNn2k=
+ Content-Type: Sender; bh=iKRuXaRO9km7K3NOhwK0ljMSaH1zVeJ2tYY2M0NlZ8Y=;
+ b=uODjUx13verOdavOXEJ+sR8UFA7hevE/E2Ipj4H87/Y0TPO1zqwa1yJhhvBHZeY+Jm8cIsFK
+ rjXLY19Bgp+Q40YegPjuG2kz5S6gZ5R9i90eT3xfXESNOiAZNqLp3E17jntxne/hS65AaXIh
+ cTkw0p5XBX4eMN3qArGJkHYL/no=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e78ee60.7fdc7018c810-smtp-out-n04;
- Mon, 23 Mar 2020 17:14:08 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e78eea0.7f5eb5f9f688-smtp-out-n01;
+ Mon, 23 Mar 2020 17:15:12 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5E84CC432C2; Mon, 23 Mar 2020 17:14:07 +0000 (UTC)
+        id 538A1C433D2; Mon, 23 Mar 2020 17:15:12 +0000 (UTC)
 Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2E723C433D2;
-        Mon, 23 Mar 2020 17:14:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2E723C433D2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5F2C5C433CB;
+        Mon, 23 Mar 2020 17:15:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5F2C5C433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] zd1211rw: Replace zero-length array with
+Subject: Re: [PATCH][next] cw1200: Replace zero-length array with
  flexible-array member
 From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200305111216.GA24982@embeddedor>
-References: <20200305111216.GA24982@embeddedor>
+In-Reply-To: <20200305111401.GA25126@embeddedor>
+References: <20200305111401.GA25126@embeddedor>
 To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Daniel Drake <dsd@gentoo.org>, Ulrich Kunitz <kune@deine-taler.de>,
+Cc:     Solomon Peachy <pizza@shaftnet.org>,
         "David S. Miller" <davem@davemloft.net>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200323171407.5E84CC432C2@smtp.codeaurora.org>
-Date:   Mon, 23 Mar 2020 17:14:07 +0000 (UTC)
+Message-Id: <20200323171512.538A1C433D2@smtp.codeaurora.org>
+Date:   Mon, 23 Mar 2020 17:15:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -102,9 +102,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Patch applied to wireless-drivers-next.git, thanks.
 
-8622a0e5a499 zd1211rw: Replace zero-length array with flexible-array member
+432eb89c6174 cw1200: Replace zero-length array with flexible-array member
 
 -- 
-https://patchwork.kernel.org/patch/11421571/
+https://patchwork.kernel.org/patch/11421573/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
