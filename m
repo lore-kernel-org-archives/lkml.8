@@ -2,119 +2,338 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A72C4332B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B4DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CD4F206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38021206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 21:12:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="hr7MeltL"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X20DN3Cs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgCWVMK (ORCPT
+        id S1727117AbgCWVMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 17:12:10 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:43439 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727026AbgCWVMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 17:12:09 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id e9d878be
-        for <linux-kernel@vger.kernel.org>;
-        Mon, 23 Mar 2020 21:05:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=FEPb9kRX8V6WY9RqWMzOGd2OZM8=; b=hr7Mel
-        tL5+US9VRxqSQXFA17+epv/BPj4mgzZPKLG6AH0uDZ98veTGzZTcOhlJUxjCTmPq
-        rx2YvZBSNFt7zhIpxbjzVqCcNUCm+mUg1huUvWtEtdFPjCJgkNzzm5Wrz/eFhWoz
-        1aY5kBSO20/4HNMtAx+lYfMaH7YTCrHGTSqQn/EGB2jhdimpR2tZpNyctqOBM5th
-        Ycu0Smj9UfgOzRbd2n0+M0Th+VdJMYqF0fZV2T3XTtaNC+pp/2TkuCFQP+jIhtzG
-        zH/xP47MWy7ejpuZNv/0Uo+rnJBmEsYPbVNaEnQZb45pZNwDX3JgiArt7nRswzkt
-        8u31IQw4g/ahAl6A==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 1b18c583 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO)
-        for <linux-kernel@vger.kernel.org>;
-        Mon, 23 Mar 2020 21:05:04 +0000 (UTC)
-Received: by mail-il1-f180.google.com with SMTP id r5so10051334ilq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 14:12:07 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1Vq97xRAheaBrWYjouRE/oOAk73mdMKEQK36ZbEomz6BtUW5Pa
-        4LRKQxbLlQmeje2i2dOgy4C2hvkxZPbMAQL35Ng=
-X-Google-Smtp-Source: ADFU+vtXSOy47FOYVIpjgGIZNSXirEFFAh/pmLveforkptYs+ujn9CPwZ+BJ54Wvhd37vkIqAAlxKMo7ipwUs9VCZ8w=
-X-Received: by 2002:a92:cd4e:: with SMTP id v14mr24004973ilq.231.1584997926074;
- Mon, 23 Mar 2020 14:12:06 -0700 (PDT)
+        Mon, 23 Mar 2020 17:12:20 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57460 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbgCWVMT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 17:12:19 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NLAYSN049352;
+        Mon, 23 Mar 2020 21:12:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=igwPQQbX0NEf/fhBFkS5HfY3M2r7o46riN7msbYs0ik=;
+ b=X20DN3CsW+ABHo+3iZrEAI/+oHaQ4T3cwRe5bzZ3IAKKObIM9DPTh/55wpaRHDO5btxO
+ QcVALOD34Ety7Enq/QsTB7CtfIUTO6Qm/l3FoUoO7A12dHtddvEV+NKAtxAQpJvGOcj4
+ m3TPun6OrwSyfPj0vmVveQnknEj0Wqv7U1ZAVKmsJPkpGzmmQWBawmhI8bzH5UKhIppi
+ 4d47mkEEVC6eFE+4maM2xwS/vIvr0ZLSz0JxOt6ETKhCfeybPIq8NgFh29WvjfwmD+V+
+ jatZWfJyiBgm8FP15VftV5nMHFV3OoKH0P8A/7KpetTTPcBnI3xtesm5syf0tCo1c3KK gA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2yx8abwycr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Mar 2020 21:12:10 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02NKvkZq029668;
+        Mon, 23 Mar 2020 21:12:10 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2yxw4mw4dc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Mar 2020 21:12:10 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02NLC34s030333;
+        Mon, 23 Mar 2020 21:12:03 GMT
+Received: from localhost (/10.159.241.78)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Mar 2020 14:12:02 -0700
+Date:   Mon, 23 Mar 2020 14:12:01 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Qais Yousef <qais.yousef@arm.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Naohiro Aota <naohiro.aota@wdc.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: lockdep warning in sys_swapon
+Message-ID: <20200323211201.GD29351@magnolia>
+References: <20200323151725.gayvs5g6h5adwqkd@e107158-lin.cambridge.arm.com>
+ <20200323153045.s7ag3lrvfe2cpiiw@e107158-lin.cambridge.arm.com>
+ <20200323140615.75e3c7481f4c6aeb94c95ba9@linux-foundation.org>
 MIME-Version: 1.0
-References: <20200113161310.GA191743@rani.riverdale.lan> <20200113195337.604646-1-nivedita@alum.mit.edu>
- <202001131750.C1B8468@keescook> <20200114165135.GK31032@zn.tnic>
- <20200115002131.GA3258770@rani.riverdale.lan> <20200115122458.GB20975@zn.tnic>
- <20200316160259.GN26126@zn.tnic> <20200323204454.GA2611336@zx2c4.com> <202003231350.7D35351@keescook>
-In-Reply-To: <202003231350.7D35351@keescook>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Mon, 23 Mar 2020 15:11:55 -0600
-X-Gmail-Original-Message-ID: <CAHmME9o3Vef022V6fb1b3JOFOmjKXBBroiYU83kOewKHJ3MyQA@mail.gmail.com>
-Message-ID: <CAHmME9o3Vef022V6fb1b3JOFOmjKXBBroiYU83kOewKHJ3MyQA@mail.gmail.com>
-Subject: Re: [PATCH] Documentation/changes: Raise minimum supported binutils
- version to 2.23
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Mauro Rossi <issor.oruam@gmail.com>,
-        Michael Matz <matz@suse.de>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323140615.75e3c7481f4c6aeb94c95ba9@linux-foundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003230106
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9569 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
+ mlxscore=0 adultscore=0 phishscore=0 impostorscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003230106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 2:51 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Mar 23, 2020 at 02:44:54PM -0600, Jason A. Donenfeld wrote:
-> > On Mon, Mar 16, 2020 at 05:02:59PM +0100, Borislav Petkov wrote:
-> > > Long overdue patch, see below.
-> > >
-> > > Plan is to queue it after 5.7-rc1.
-> > >
-> > > ---
-> > > From: Borislav Petkov <bp@suse.de>
-> > > Date: Mon, 16 Mar 2020 16:28:36 +0100
-> > > Subject: [PATCH] Documentation/changes: Raise minimum supported binutilsa version to 2.23
-> > >
-> > > The currently minimum-supported binutils version 2.21 has the problem of
-> > > promoting symbols which are defined outside of a section into absolute.
-> > > According to Arvind:
-> > >
-> > >   binutils-2.21 and -2.22. An x86-64 defconfig will fail with
-> > >           Invalid absolute R_X86_64_32S relocation: _etext
-> > >   and after fixing that one, with
-> > >           Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
-> > >
-> > > Those two versions of binutils have a bug when it comes to handling
-> > > symbols defined outside of a section and binutils 2.23 has the proper
-> > > fix, see: https://sourceware.org/legacy-ml/binutils/2012-06/msg00155.html
-> > >
-> > > Therefore, up to the fixed version directly, skipping the broken ones.
-> > >
-> > > Currently shipping distros already have the fixed binutils version so
-> > > there should be no breakage resulting from this.
-> > >
-> > > For more details about the whole thing, see the thread in Link.
-> >
-> > That sounds very good to me. Then we'll be able to use ADX instructions
-> > without ifdefs.
-> >
-> > Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
->
-> Can you send these now and we can land in 5.7 with the doc change?
+On Mon, Mar 23, 2020 at 02:06:15PM -0700, Andrew Morton wrote:
+> On Mon, 23 Mar 2020 15:30:45 +0000 Qais Yousef <qais.yousef@arm.com> wrote:
+> 
+> > On 03/23/20 15:17, Qais Yousef wrote:
+> > > Hi
+> > > 
+> > > I hit the following 2 warnings when running with LOCKDEP=y on arm64 platform
+> > > (juno-r2), running on v5.6-rc6
+> > > 
+> > > The 1st one is when I execute `swapon -a`. The 2nd one happens at boot. I have
+> > > /dev/sda2 as my swap in /etc/fstab
+> > > 
+> > > Note that I either hit 1 OR 2, but didn't hit both warnings at the same time,
+> > > yet at least.
+> > > 
+> > > /dev/sda2 is a usb flash drive, in case it matters somehow.
+> > 
+> > By the way, I noticed that in claim_swapfile() if we fail we don't release the
+> > lock. Shouldn't we release the lock here?
+> > 
+> > I tried with that FWIW, but it had no effect on the warnings.
+> > 
+> 
+> I'll be sending the below into Linus this week.
+> 
+> I was hoping to hear from Darrick/Christoph (?) but it looks like the
+> right thing to do.  Are you able to test it?
 
-By the way, while we're in the process of updating dependencies, what
-if we ratched the minimum binutils on x86 up to 2.25 (which is still
-quite old)? In this case, we could get rid of *all* of the CONFIG_AS_*
-ifdefs throughout.
+I had questions[1] about the patch, but nobody ever replied.
 
-Jason
+--D
+
+[1] https://lore.kernel.org/linux-fsdevel/20200212164956.GK6874@magnolia/
+
+> I think I'll add a cc:stable to this one.
+> 
+> 
+> 
+> From: Naohiro Aota <naohiro.aota@wdc.com>
+> Subject: mm/swapfile.c: move inode_lock out of claim_swapfile
+> 
+> claim_swapfile() currently keeps the inode locked when it is successful,
+> or the file is already swapfile (with -EBUSY).  And, on the other error
+> cases, it does not lock the inode.
+> 
+> This inconsistency of the lock state and return value is quite confusing
+> and actually causing a bad unlock balance as below in the "bad_swap"
+> section of __do_sys_swapon().
+> 
+> This commit fixes this issue by moving the inode_lock() and IS_SWAPFILE
+> check out of claim_swapfile().  The inode is unlocked in
+> "bad_swap_unlock_inode" section, so that the inode is ensured to be
+> unlocked at "bad_swap".  Thus, error handling codes after the locking now
+> jumps to "bad_swap_unlock_inode" instead of "bad_swap".
+> 
+>     =====================================
+>     WARNING: bad unlock balance detected!
+>     5.5.0-rc7+ #176 Not tainted
+>     -------------------------------------
+>     swapon/4294 is trying to release lock (&sb->s_type->i_mutex_key) at:
+>     [<ffffffff8173a6eb>] __do_sys_swapon+0x94b/0x3550
+>     but there are no more locks to release!
+> 
+>     other info that might help us debug this:
+>     no locks held by swapon/4294.
+> 
+>     stack backtrace:
+>     CPU: 5 PID: 4294 Comm: swapon Not tainted 5.5.0-rc7-BTRFS-ZNS+ #176
+>     Hardware name: ASUS All Series/H87-PRO, BIOS 2102 07/29/2014
+>     Call Trace:
+>      dump_stack+0xa1/0xea
+>      ? __do_sys_swapon+0x94b/0x3550
+>      print_unlock_imbalance_bug.cold+0x114/0x123
+>      ? __do_sys_swapon+0x94b/0x3550
+>      lock_release+0x562/0xed0
+>      ? kvfree+0x31/0x40
+>      ? lock_downgrade+0x770/0x770
+>      ? kvfree+0x31/0x40
+>      ? rcu_read_lock_sched_held+0xa1/0xd0
+>      ? rcu_read_lock_bh_held+0xb0/0xb0
+>      up_write+0x2d/0x490
+>      ? kfree+0x293/0x2f0
+>      __do_sys_swapon+0x94b/0x3550
+>      ? putname+0xb0/0xf0
+>      ? kmem_cache_free+0x2e7/0x370
+>      ? do_sys_open+0x184/0x3e0
+>      ? generic_max_swapfile_size+0x40/0x40
+>      ? do_syscall_64+0x27/0x4b0
+>      ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>      ? lockdep_hardirqs_on+0x38c/0x590
+>      __x64_sys_swapon+0x54/0x80
+>      do_syscall_64+0xa4/0x4b0
+>      entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>     RIP: 0033:0x7f15da0a0dc7
+> 
+> Link: http://lkml.kernel.org/r/20200206090132.154869-1-naohiro.aota@wdc.com
+> Fixes: 1638045c3677 ("mm: set S_SWAPFILE on blockdev swap devices")
+> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
+> Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Darrick J. Wong <darrick.wong@oracle.com>
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> ---
+> 
+>  mm/swapfile.c |   41 ++++++++++++++++++++---------------------
+>  1 file changed, 20 insertions(+), 21 deletions(-)
+> 
+> --- a/mm/swapfile.c~mm-swap-move-inode_lock-out-of-claim_swapfile
+> +++ a/mm/swapfile.c
+> @@ -2899,10 +2899,6 @@ static int claim_swapfile(struct swap_in
+>  		p->bdev = inode->i_sb->s_bdev;
+>  	}
+>  
+> -	inode_lock(inode);
+> -	if (IS_SWAPFILE(inode))
+> -		return -EBUSY;
+> -
+>  	return 0;
+>  }
+>  
+> @@ -3157,36 +3153,41 @@ SYSCALL_DEFINE2(swapon, const char __use
+>  	mapping = swap_file->f_mapping;
+>  	inode = mapping->host;
+>  
+> -	/* will take i_rwsem; */
+>  	error = claim_swapfile(p, inode);
+>  	if (unlikely(error))
+>  		goto bad_swap;
+>  
+> +	inode_lock(inode);
+> +	if (IS_SWAPFILE(inode)) {
+> +		error = -EBUSY;
+> +		goto bad_swap_unlock_inode;
+> +	}
+> +
+>  	/*
+>  	 * Read the swap header.
+>  	 */
+>  	if (!mapping->a_ops->readpage) {
+>  		error = -EINVAL;
+> -		goto bad_swap;
+> +		goto bad_swap_unlock_inode;
+>  	}
+>  	page = read_mapping_page(mapping, 0, swap_file);
+>  	if (IS_ERR(page)) {
+>  		error = PTR_ERR(page);
+> -		goto bad_swap;
+> +		goto bad_swap_unlock_inode;
+>  	}
+>  	swap_header = kmap(page);
+>  
+>  	maxpages = read_swap_header(p, swap_header, inode);
+>  	if (unlikely(!maxpages)) {
+>  		error = -EINVAL;
+> -		goto bad_swap;
+> +		goto bad_swap_unlock_inode;
+>  	}
+>  
+>  	/* OK, set up the swap map and apply the bad block list */
+>  	swap_map = vzalloc(maxpages);
+>  	if (!swap_map) {
+>  		error = -ENOMEM;
+> -		goto bad_swap;
+> +		goto bad_swap_unlock_inode;
+>  	}
+>  
+>  	if (bdi_cap_stable_pages_required(inode_to_bdi(inode)))
+> @@ -3211,7 +3212,7 @@ SYSCALL_DEFINE2(swapon, const char __use
+>  					GFP_KERNEL);
+>  		if (!cluster_info) {
+>  			error = -ENOMEM;
+> -			goto bad_swap;
+> +			goto bad_swap_unlock_inode;
+>  		}
+>  
+>  		for (ci = 0; ci < nr_cluster; ci++)
+> @@ -3220,7 +3221,7 @@ SYSCALL_DEFINE2(swapon, const char __use
+>  		p->percpu_cluster = alloc_percpu(struct percpu_cluster);
+>  		if (!p->percpu_cluster) {
+>  			error = -ENOMEM;
+> -			goto bad_swap;
+> +			goto bad_swap_unlock_inode;
+>  		}
+>  		for_each_possible_cpu(cpu) {
+>  			struct percpu_cluster *cluster;
+> @@ -3234,13 +3235,13 @@ SYSCALL_DEFINE2(swapon, const char __use
+>  
+>  	error = swap_cgroup_swapon(p->type, maxpages);
+>  	if (error)
+> -		goto bad_swap;
+> +		goto bad_swap_unlock_inode;
+>  
+>  	nr_extents = setup_swap_map_and_extents(p, swap_header, swap_map,
+>  		cluster_info, maxpages, &span);
+>  	if (unlikely(nr_extents < 0)) {
+>  		error = nr_extents;
+> -		goto bad_swap;
+> +		goto bad_swap_unlock_inode;
+>  	}
+>  	/* frontswap enabled? set up bit-per-page map for frontswap */
+>  	if (IS_ENABLED(CONFIG_FRONTSWAP))
+> @@ -3280,7 +3281,7 @@ SYSCALL_DEFINE2(swapon, const char __use
+>  
+>  	error = init_swap_address_space(p->type, maxpages);
+>  	if (error)
+> -		goto bad_swap;
+> +		goto bad_swap_unlock_inode;
+>  
+>  	/*
+>  	 * Flush any pending IO and dirty mappings before we start using this
+> @@ -3290,7 +3291,7 @@ SYSCALL_DEFINE2(swapon, const char __use
+>  	error = inode_drain_writes(inode);
+>  	if (error) {
+>  		inode->i_flags &= ~S_SWAPFILE;
+> -		goto bad_swap;
+> +		goto bad_swap_unlock_inode;
+>  	}
+>  
+>  	mutex_lock(&swapon_mutex);
+> @@ -3315,6 +3316,8 @@ SYSCALL_DEFINE2(swapon, const char __use
+>  
+>  	error = 0;
+>  	goto out;
+> +bad_swap_unlock_inode:
+> +	inode_unlock(inode);
+>  bad_swap:
+>  	free_percpu(p->percpu_cluster);
+>  	p->percpu_cluster = NULL;
+> @@ -3322,6 +3325,7 @@ bad_swap:
+>  		set_blocksize(p->bdev, p->old_block_size);
+>  		blkdev_put(p->bdev, FMODE_READ | FMODE_WRITE | FMODE_EXCL);
+>  	}
+> +	inode = NULL;
+>  	destroy_swap_extents(p);
+>  	swap_cgroup_swapoff(p->type);
+>  	spin_lock(&swap_lock);
+> @@ -3333,13 +3337,8 @@ bad_swap:
+>  	kvfree(frontswap_map);
+>  	if (inced_nr_rotate_swap)
+>  		atomic_dec(&nr_rotate_swap);
+> -	if (swap_file) {
+> -		if (inode) {
+> -			inode_unlock(inode);
+> -			inode = NULL;
+> -		}
+> +	if (swap_file)
+>  		filp_close(swap_file, NULL);
+> -	}
+>  out:
+>  	if (page && !IS_ERR(page)) {
+>  		kunmap(page);
+> _
+> 
