@@ -2,125 +2,125 @@ Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ABFC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6248C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D581420714
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:48:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCrRzrrK"
+	by mail.kernel.org (Postfix) with ESMTP id CA72420714
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 17:50:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgCWRsc (ORCPT
+        id S1727149AbgCWRuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:48:32 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40985 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727639AbgCWRsc (ORCPT
+        Mon, 23 Mar 2020 13:50:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42245 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbgCWRuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:48:32 -0400
-Received: by mail-ot1-f66.google.com with SMTP id w26so8379832otp.8;
-        Mon, 23 Mar 2020 10:48:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i5R4FiCsX5ixM5ijJTFNrw5pLmulYx/iMq1LWD3HrSk=;
-        b=GCrRzrrK04ONsJppmAzrNV59zvFxlUNJdsBjcbSgkmGBeCPdY7pVlK/6Xl6k5zp3Zs
-         V4Qpkt/yXGWc7J+tmX4emjq5a3QZr5mqfrDG1c8BotCr/6kplBc/b0cXkq4zYFbqlH2K
-         erzPbZ6Ivrg3BuxhRXMKkhePGmhMqvxP/NfJbmQ07RNgmNFQgan/lQF2F42LfmqT43tx
-         sDkZbz0kkdf9sDc7x4MWyAnyNcpqn3xwV116/pvgNA1WRx38TZilEf5WNDzWfLkaEfTF
-         QdoKTHFvyshyEbYDrIWKf3fL8gu4j8vAlVDf2au1vJFBU1q+wtMN5sx3DZED5RHP4VC3
-         Izmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i5R4FiCsX5ixM5ijJTFNrw5pLmulYx/iMq1LWD3HrSk=;
-        b=VL4kg1NzcvXV/xz/OtqQ22TGr+JnPWWz8LVi+tFCx/i9PjWriUjLjSpGNW2DlidcUP
-         7dWZlCdueeHgS+PIoMuc0F/fDIexyIYIM3f3h3EBYma2efUz2yqvp/wGvekf9NmygELo
-         9cQdHYYlrep5N+Rm8NxNPlm+qJmCqRIa42n/ZUAsCBXCIYLg4Efj+VoeHx6aAhpFU/s0
-         G4jZMrUk4c0uqPuI9Vhh/+BcBys0KCIBvPfMWBqgWRLEZct0AHudBO/gNJ5WfQQIdsNn
-         aWtr3d9GtT5B6msZyw0R4nX+rjLgTM1yHTBebuHUlPQT3TkJID/66L36QjfW4lQFSHK3
-         srXA==
-X-Gm-Message-State: ANhLgQ3mZ7jLA2L1J/bd6aKIsvD7GXbrf1QTXq4DMyQvRE8FUqXnp/1G
-        ByjZIOgx6Kq3su9Vx9EOujGZQ/Ed1p0NcmoE+NM=
-X-Google-Smtp-Source: ADFU+vtQe3siLMOhX3F9IlIi0BxQ4oBMvx+Zn4y1ftZehgSO9XW/DOqs3ZYXcBXVNsyRyGuoMRfWExrocv87Msob1Zg=
-X-Received: by 2002:a05:6830:1bc9:: with SMTP id v9mr18279116ota.319.1584985711651;
- Mon, 23 Mar 2020 10:48:31 -0700 (PDT)
+        Mon, 23 Mar 2020 13:50:23 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jGRDK-0003k0-8t; Mon, 23 Mar 2020 18:50:14 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C96AD1C0470;
+        Mon, 23 Mar 2020 18:50:13 +0100 (CET)
+Date:   Mon, 23 Mar 2020 17:50:13 -0000
+From:   "tip-bot2 for Sebastian Siewior" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/core] completion: Use
+ lockdep_assert_RT_in_threaded_ctx() in complete_all()
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200323152019.4qjwluldohuh3by5@linutronix.de>
+References: <20200323152019.4qjwluldohuh3by5@linutronix.de>
 MIME-Version: 1.0
-References: <000000000000742e9e05a10170bc@google.com> <87a74arown.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87a74arown.fsf@nanos.tec.linutronix.de>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 23 Mar 2020 10:48:20 -0700
-Message-ID: <CAM_iQpV3S0xv5xzSrA5COYa3uyy_TBGpDA9Wcj9Qt_vn1n3jBQ@mail.gmail.com>
-Subject: Re: WARNING: ODEBUG bug in tcindex_destroy_work (3)
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     syzbot <syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <158498581343.28353.9984368947985225939.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 3:19 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> syzbot <syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com> writes:
-> > syzbot has found a reproducer for the following crash on:
-> >
-> > HEAD commit:    74522e7b net: sched: set the hw_stats_type in pedit loop
-> > git tree:       net-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=14c85173e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=b5acf5ac38a50651
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=46f513c3033d592409d2
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17bfff65e00000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com
-> >
-> > ------------[ cut here ]------------
-> > ODEBUG: free active (active state 0) object type: work_struct hint: tcindex_destroy_rexts_work+0x0/0x20 net/sched/cls_tcindex.c:143
-> ...
-> >  __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
-> >  debug_check_no_obj_freed+0x2e1/0x445 lib/debugobjects.c:998
-> >  kfree+0xf6/0x2b0 mm/slab.c:3756
-> >  tcindex_destroy_work+0x2e/0x70 net/sched/cls_tcindex.c:231
->
-> So this is:
->
->         kfree(p->perfect);
->
-> Looking at the place which queues that work:
->
-> tcindex_destroy()
->
->    if (p->perfect) {
->         if (tcf_exts_get_net(&r->exts))
->             tcf_queue_work(&r-rwork, tcindex_destroy_rexts_work);
->         else
->             __tcindex_destroy_rexts(r)
->    }
->
->    .....
->
->    tcf_queue_work(&p->rwork, tcindex_destroy_work);
->
-> So obviously if tcindex_destroy_work() runs before
-> tcindex_destroy_rexts_work() then the above happens.
+The following commit has been merged into the locking/core branch of tip:
 
-We use an ordered workqueue for tc filters, so these two
-works are executed in the same order as they are queued.
+Commit-ID:     8bf6c677ddb9c922423ea3bf494fe7c508bfbb8c
+Gitweb:        https://git.kernel.org/tip/8bf6c677ddb9c922423ea3bf494fe7c508bfbb8c
+Author:        Sebastian Siewior <bigeasy@linutronix.de>
+AuthorDate:    Mon, 23 Mar 2020 16:20:19 +01:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Mon, 23 Mar 2020 18:40:25 +01:00
 
-Thanks.
+completion: Use lockdep_assert_RT_in_threaded_ctx() in complete_all()
+
+The warning was intended to spot complete_all() users from hardirq
+context on PREEMPT_RT. The warning as-is will also trigger in interrupt
+handlers, which are threaded on PREEMPT_RT, which was not intended.
+
+Use lockdep_assert_RT_in_threaded_ctx() which triggers in non-preemptive
+context on PREEMPT_RT.
+
+Fixes: a5c6234e1028 ("completion: Use simple wait queues")
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200323152019.4qjwluldohuh3by5@linutronix.de
+---
+ include/linux/lockdep.h   | 15 +++++++++++++++
+ kernel/sched/completion.c |  2 +-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 425b4ce..206774a 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -711,6 +711,21 @@ do {									\
+ # define lockdep_assert_in_irq() do { } while (0)
+ #endif
+ 
++#ifdef CONFIG_PROVE_RAW_LOCK_NESTING
++
++# define lockdep_assert_RT_in_threaded_ctx() do {			\
++		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
++			  current->hardirq_context &&			\
++			  !(current->hardirq_threaded || current->irq_config),	\
++			  "Not in threaded context on PREEMPT_RT as expected\n");	\
++} while (0)
++
++#else
++
++# define lockdep_assert_RT_in_threaded_ctx() do { } while (0)
++
++#endif
++
+ #ifdef CONFIG_LOCKDEP
+ void lockdep_rcu_suspicious(const char *file, const int line, const char *s);
+ #else
+diff --git a/kernel/sched/completion.c b/kernel/sched/completion.c
+index f15e961..a778554 100644
+--- a/kernel/sched/completion.c
++++ b/kernel/sched/completion.c
+@@ -58,7 +58,7 @@ void complete_all(struct completion *x)
+ {
+ 	unsigned long flags;
+ 
+-	WARN_ON(irqs_disabled());
++	lockdep_assert_RT_in_threaded_ctx();
+ 
+ 	raw_spin_lock_irqsave(&x->wait.lock, flags);
+ 	x->done = UINT_MAX;
