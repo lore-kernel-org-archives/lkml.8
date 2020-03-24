@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC6FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACF3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615ED20870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2066208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056053;
-	bh=xF5fLA2nCMUE47tbQ+fJTunsXNhyDpCWMZSzHvU219A=;
+	s=default; t=1585056056;
+	bh=+xpPjaMhoBadtcvnqh6t0mLef2amTpzfhjgOuazpDck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BcuLyuhsbqVqFopwC/ZP/95CbtUDmvzsYtxNRosLmqvQsAsaO8Ty7tHkwogjx0i6o
-	 Ppa9xFYmSh6kWEI8RBbtFZVPudCugG0i/WqPKn5XQEODxWiFzXrdBx2i/mYbPm1/ex
-	 4ehRmLBYLeja+/JTqawZzSwZ93bfMk4JnASY7uM4=
+	b=YgyMW/N5eHbVVYe8C6ecE2fA7HHWW6HZ4ZLVESJEFX9dzSZtW3SYn13bJBl4qGlw8
+	 JsUSlu+z1swPKIm4qeZieVDuNy+pUzDiTbcFvn0jM/6Hxf569DZiUpYeGVSLWbhmGJ
+	 nm+omdsdLSdHAsGAwg5i3VC53ads0pyLhIbXGVeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgCXNUw (ORCPT
+        id S1727534AbgCXNUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:20:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42318 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:20:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728219AbgCXNUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:20:50 -0400
+        id S1728969AbgCXNUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:20:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD19620870;
-        Tue, 24 Mar 2020 13:20:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43E2B206F6;
+        Tue, 24 Mar 2020 13:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056049;
-        bh=xF5fLA2nCMUE47tbQ+fJTunsXNhyDpCWMZSzHvU219A=;
+        s=default; t=1585056051;
+        bh=+xpPjaMhoBadtcvnqh6t0mLef2amTpzfhjgOuazpDck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d0XpSQx6TYy9qInRkIoOprZR8isqAZQP8Rp4bibKbkrhT7MbUvzrQRJ6RxaeyaQsO
-         lC9YdBeufL4+s4zvcdq234zbOKJ9UVwO6rriHyb0K4nTLF07lwyWHwupvTEjgMQZcr
-         mk8QBwyinppDOzFOC5ytoRGfzy1ToG6THbFxd5zI=
+        b=2aFpAMBAvmAAlJ3+n0mikARjSp6agHtpdgWVtkB27Qp4mY9nPimayOQq0xfRAZp0C
+         +aS76Wjc4GSCy2npkyaYLmnlhlRMSwA8kPOX9YBC3hrd9GgJmHwjA12Xd2lKOyX1L/
+         DQoYvYzbY7KHHeY73f7awwf61p6H2+vkHcQE7Q/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Baoquan He <bhe@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
         Michal Hocko <mhocko@suse.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Minchan Kim <minchan@kernel.org>,
+        Daniel Colascione <dancol@google.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 087/102] mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case
-Date:   Tue, 24 Mar 2020 14:11:19 +0100
-Message-Id: <20200324130815.363810014@linuxfoundation.org>
+Subject: [PATCH 5.4 088/102] mm: do not allow MADV_PAGEOUT for CoW pages
+Date:   Tue, 24 Mar 2020 14:11:20 +0100
+Message-Id: <20200324130815.458944846@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -66,92 +66,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baoquan He <bhe@redhat.com>
+From: Michal Hocko <mhocko@suse.com>
 
-commit d41e2f3bd54699f85b3d6f45abd09fa24a222cb9 upstream.
+commit 12e967fd8e4e6c3d275b4c69c890adc838891300 upstream.
 
-In section_deactivate(), pfn_to_page() doesn't work any more after
-ms->section_mem_map is resetting to NULL in SPARSEMEM|!VMEMMAP case.  It
-causes a hot remove failure:
+Jann has brought up a very interesting point [1].  While shared pages
+are excluded from MADV_PAGEOUT normally, CoW pages can be easily
+reclaimed that way.  This can lead to all sorts of hard to debug
+problems.  E.g.  performance problems outlined by Daniel [2].
 
-  kernel BUG at mm/page_alloc.c:4806!
-  invalid opcode: 0000 [#1] SMP PTI
-  CPU: 3 PID: 8 Comm: kworker/u16:0 Tainted: G        W         5.5.0-next-20200205+ #340
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
-  Workqueue: kacpi_hotplug acpi_hotplug_work_fn
-  RIP: 0010:free_pages+0x85/0xa0
-  Call Trace:
-   __remove_pages+0x99/0xc0
-   arch_remove_memory+0x23/0x4d
-   try_remove_memory+0xc8/0x130
-   __remove_memory+0xa/0x11
-   acpi_memory_device_remove+0x72/0x100
-   acpi_bus_trim+0x55/0x90
-   acpi_device_hotplug+0x2eb/0x3d0
-   acpi_hotplug_work_fn+0x1a/0x30
-   process_one_work+0x1a7/0x370
-   worker_thread+0x30/0x380
-   kthread+0x112/0x130
-   ret_from_fork+0x35/0x40
+There are runtime environments where there is a substantial memory
+shared among security domains via CoW memory and a easy to reclaim way
+of that memory, which MADV_{COLD,PAGEOUT} offers, can lead to either
+performance degradation in for the parent process which might be more
+privileged or even open side channel attacks.
 
-Let's move the ->section_mem_map resetting after
-depopulate_section_memmap() to fix it.
+The feasibility of the latter is not really clear to me TBH but there is
+no real reason for exposure at this stage.  It seems there is no real
+use case to depend on reclaiming CoW memory via madvise at this stage so
+it is much easier to simply disallow it and this is what this patch
+does.  Put it simply MADV_{PAGEOUT,COLD} can operate only on the
+exclusively owned memory which is a straightforward semantic.
 
-[akpm@linux-foundation.org: remove unneeded initialization, per David]
-Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
-Signed-off-by: Baoquan He <bhe@redhat.com>
+[1] http://lkml.kernel.org/r/CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com
+[2] http://lkml.kernel.org/r/CAKOZueua_v8jHCpmEtTB6f3i9e2YnmX4mqdYVWhV4E=Z-n+zRQ@mail.gmail.com
+
+Fixes: 9c276cc65a58 ("mm: introduce MADV_COLD")
+Reported-by: Jann Horn <jannh@google.com>
+Signed-off-by: Michal Hocko <mhocko@suse.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Wei Yang <richardw.yang@linux.intel.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Daniel Colascione <dancol@google.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: "Joel Fernandes (Google)" <joel@joelfernandes.org>
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200307084229.28251-2-bhe@redhat.com
+Link: http://lkml.kernel.org/r/20200312082248.GS23944@dhcp22.suse.cz
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/sparse.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ mm/madvise.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -742,6 +742,7 @@ static void section_deactivate(unsigned
- 	struct mem_section *ms = __pfn_to_section(pfn);
- 	bool section_is_early = early_section(ms);
- 	struct page *memmap = NULL;
-+	bool empty;
- 	unsigned long *subsection_map = ms->usage
- 		? &ms->usage->subsection_map[0] : NULL;
- 
-@@ -772,7 +773,8 @@ static void section_deactivate(unsigned
- 	 * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
- 	 */
- 	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
--	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION)) {
-+	empty = bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION);
-+	if (empty) {
- 		unsigned long section_nr = pfn_to_section_nr(pfn);
- 
- 		/*
-@@ -787,13 +789,15 @@ static void section_deactivate(unsigned
- 			ms->usage = NULL;
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -335,12 +335,14 @@ static int madvise_cold_or_pageout_pte_r
  		}
- 		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
--		ms->section_mem_map = (unsigned long)NULL;
- 	}
  
- 	if (section_is_early && memmap)
- 		free_map_bootmem(memmap);
- 	else
- 		depopulate_section_memmap(pfn, nr_pages, altmap);
+ 		page = pmd_page(orig_pmd);
 +
-+	if (empty)
-+		ms->section_mem_map = (unsigned long)NULL;
- }
++		/* Do not interfere with other mappings of this page */
++		if (page_mapcount(page) != 1)
++			goto huge_unlock;
++
+ 		if (next - addr != HPAGE_PMD_SIZE) {
+ 			int err;
  
- static struct page * __meminit section_activate(int nid, unsigned long pfn,
+-			if (page_mapcount(page) != 1)
+-				goto huge_unlock;
+-
+ 			get_page(page);
+ 			spin_unlock(ptl);
+ 			lock_page(page);
+@@ -426,6 +428,10 @@ regular_page:
+ 			continue;
+ 		}
+ 
++		/* Do not interfere with other mappings of this page */
++		if (page_mapcount(page) != 1)
++			continue;
++
+ 		VM_BUG_ON_PAGE(PageTransCompound(page), page);
+ 
+ 		if (pte_young(ptent)) {
 
 
