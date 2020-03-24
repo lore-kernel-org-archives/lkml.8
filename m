@@ -4,115 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB063C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE05C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85F920663
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA0C20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:03:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbgCXHDj (ORCPT
+        id S1727432AbgCXHD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 03:03:39 -0400
-Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:44329 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbgCXHDj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 03:03:39 -0400
-Received: from localhost.localdomain ([93.22.39.100])
-        by mwinf5d55 with ME
-        id J73L2200129f5LV0373Llo; Tue, 24 Mar 2020 08:03:35 +0100
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 24 Mar 2020 08:03:35 +0100
-X-ME-IP: 93.22.39.100
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, kan.liang@linux.intel.com,
-        zhe.he@windriver.com, dzickus@redhat.com, jstancek@redhat.com
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH V2] perf cpumap: Fix snprintf overflow check
-Date:   Tue, 24 Mar 2020 08:03:19 +0100
-Message-Id: <20200324070319.10901-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Tue, 24 Mar 2020 03:03:57 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12184 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725951AbgCXHD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 03:03:57 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 47ECCC2AEB2ADCE16AD7;
+        Tue, 24 Mar 2020 15:03:49 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 24 Mar 2020
+ 15:03:42 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>
+CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <peng.ma@nxp.com>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] rtc: fsl-ftm-alarm: remove set but not used variable 'np'
+Date:   Tue, 24 Mar 2020 15:03:36 +0800
+Message-ID: <20200324070336.59972-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'snprintf' returns the number of characters which would be generated for
-the given input.
+drivers/rtc/rtc-fsl-ftm-alarm.c: In function 'ftm_rtc_probe':
+drivers/rtc/rtc-fsl-ftm-alarm.c:246:22: warning: unused variable 'np' [-Wunused-variable]
+  struct device_node *np = pdev->dev.of_node;
+                      ^~
+commit cd49b579e705 ("rtc: fsl-ftm-alarm: enable acpi support")
+left behind this, remove it.
 
-If the returned value is *greater than* or equal to the buffer size, it
-means that the output has been truncated.
-
-Fix the overflow test accordingling.
-
-Fixes: 7780c25bae59f ("perf tools: Allow ability to map cpus to nodes easily")
-Fixes: 92a7e1278005b ("perf cpumap: Add cpu__max_present_cpu()")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
-V2: keep snprintf
-    modifiy the tests for truncated output
-    Update subject and description
----
- tools/perf/util/cpumap.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/rtc/rtc-fsl-ftm-alarm.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 983b7388f22b..dc5c5e6fc502 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -317,7 +317,7 @@ static void set_max_cpu_num(void)
+diff --git a/drivers/rtc/rtc-fsl-ftm-alarm.c b/drivers/rtc/rtc-fsl-ftm-alarm.c
+index c572044ff06e..0f4142b35f38 100644
+--- a/drivers/rtc/rtc-fsl-ftm-alarm.c
++++ b/drivers/rtc/rtc-fsl-ftm-alarm.c
+@@ -243,7 +243,6 @@ static const struct rtc_class_ops ftm_rtc_ops = {
  
- 	/* get the highest possible cpu number for a sparse allocation */
- 	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
--	if (ret == PATH_MAX) {
-+	if (ret >= PATH_MAX) {
- 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
- 		goto out;
- 	}
-@@ -328,7 +328,7 @@ static void set_max_cpu_num(void)
- 
- 	/* get the highest present cpu number for a sparse allocation */
- 	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/present", mnt);
--	if (ret == PATH_MAX) {
-+	if (ret >= PATH_MAX) {
- 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
- 		goto out;
- 	}
-@@ -356,7 +356,7 @@ static void set_max_node_num(void)
- 
- 	/* get the highest possible cpu number for a sparse allocation */
- 	ret = snprintf(path, PATH_MAX, "%s/devices/system/node/possible", mnt);
--	if (ret == PATH_MAX) {
-+	if (ret >= PATH_MAX) {
- 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
- 		goto out;
- 	}
-@@ -441,7 +441,7 @@ int cpu__setup_cpunode_map(void)
- 		return 0;
- 
- 	n = snprintf(path, PATH_MAX, "%s/devices/system/node", mnt);
--	if (n == PATH_MAX) {
-+	if (n >= PATH_MAX) {
- 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
- 		return -1;
- 	}
-@@ -456,7 +456,7 @@ int cpu__setup_cpunode_map(void)
- 			continue;
- 
- 		n = snprintf(buf, PATH_MAX, "%s/%s", path, dent1->d_name);
--		if (n == PATH_MAX) {
-+		if (n >= PATH_MAX) {
- 			pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
- 			continue;
- 		}
+ static int ftm_rtc_probe(struct platform_device *pdev)
+ {
+-	struct device_node *np = pdev->dev.of_node;
+ 	int irq;
+ 	int ret;
+ 	struct ftm_rtc *rtc;
 -- 
-2.20.1
+2.17.1
+
 
