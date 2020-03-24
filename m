@@ -2,90 +2,112 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5F3C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9068C54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E270E20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD7220663
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:57:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585083460;
+	bh=KezL6M2L1DNMh+ej5VT8WGeB3YlW2PtnSk+Nm/zzhyE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aR8mPLiSnVNGUMNMk4o4JZFjFKX6Vg68VD6PXmjb9BqxlR30p5vW/7OJisOZHO1U1
+	 A+gJbSWdwVsDTnedN7FqTyEbhbsifFXyNb9j+a57IYipudJmozyvbn2hGLVXiJZTb2
+	 200BY/k6a1gHT/Dg0NxLsQIkGoCCTrYZBPhfYXgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgCXU5f (ORCPT
+        id S1728138AbgCXU5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 16:57:35 -0400
-Received: from sauhun.de ([88.99.104.3]:54988 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbgCXU5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 16:57:34 -0400
-Received: from localhost (p54B3339A.dip0.t-ipconnect.de [84.179.51.154])
-        by pokefinder.org (Postfix) with ESMTPSA id 4AF8B2C08EF;
-        Tue, 24 Mar 2020 21:57:32 +0100 (CET)
-Date:   Tue, 24 Mar 2020 21:57:31 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     ajayg@nvidia.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:I2C CONTROLLER DRIVER FOR NVIDIA GPU" 
-        <linux-i2c@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] i2c: nvidia-gpu: Handle timeout correctly in
- gpu_i2c_check_status()
-Message-ID: <20200324205731.GA7641@ninjato>
-References: <20200324152812.20231-1-kai.heng.feng@canonical.com>
+        Tue, 24 Mar 2020 16:57:39 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38947 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgCXU5i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 16:57:38 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j15so14468630lfk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 13:57:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AfkpZBONhIm2kahgF1k041JWmTwgX7aXtGtLwbGmno8=;
+        b=ZrWYfmkROhgW5Qe30qGiRWtsa4lPXPRYSJ7cqapGER4PzRqCxwEF+dJguyJZ7FF6Ll
+         u/Zi1t2urAAq25y6dQ5ynQLQXoBhsw2Q+tNanRBglZqULb7gJYp6SanwRrt7FLa3qIeu
+         9Ib7NWaVYv+Fkb7oj9J2ClZWHS6IY4kKUJ5J0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AfkpZBONhIm2kahgF1k041JWmTwgX7aXtGtLwbGmno8=;
+        b=ZmCURyv73CTweP0bB1M/7mWX2nujmX6I18TvS91YnG+bEmIu59svG3dC6mQwQWFG2g
+         q1ZFbW8ovuLfYU+DQgKPjPzIkX9qyqNaxeajKFnJqmbtXAkJUPy+RnqVh6dzpA8HIlLY
+         TdT9QfkQNfq7GfSQNHjxEjob5K3H1WbtAd3g0ZvQfva4GAUcR3sGZfVl27OzJFPGNT42
+         lFfTgDb1VjuGkSduVPo/JXgnR/ujvoigiakldItX8akJRo8sJKt1WW9qVoJ7jrC2l5IZ
+         hV+fa/+hfW6uf9ghDzhbhRZqJDpHb5BuKiKsHdM6GaeKbVEVdxVgJx2X0y04pHRidecV
+         2n4w==
+X-Gm-Message-State: ANhLgQ33Ebgd0UPz2d83ReLmlsqsteXV2vgXyYkzQdjVcrGFfQnTTnU3
+        YkPlDTgbm1bD5JDVmJyjNqMLAEYcayo=
+X-Google-Smtp-Source: ADFU+vuKI2lTlunwmj6jcCOmLpFfBLbJp4l1z65ZMQqnuUx9phz2RL79OSTiKc3AysWWIVmCJ2wYmQ==
+X-Received: by 2002:ac2:4116:: with SMTP id b22mr16708923lfi.172.1585083456749;
+        Tue, 24 Mar 2020 13:57:36 -0700 (PDT)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id l7sm3980311lfp.65.2020.03.24.13.57.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2020 13:57:35 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id j15so14468577lfk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 13:57:35 -0700 (PDT)
+X-Received: by 2002:a19:6712:: with SMTP id b18mr573410lfc.152.1585083455357;
+ Tue, 24 Mar 2020 13:57:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
-Content-Disposition: inline
-In-Reply-To: <20200324152812.20231-1-kai.heng.feng@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200323185057.GE23230@ZenIV.linux.org.uk> <20200323185127.252501-1-viro@ZenIV.linux.org.uk>
+ <20200323185127.252501-5-viro@ZenIV.linux.org.uk> <CAHk-=wgMmmnQTFT7U9+q2BsyV6Ge+LAnnhPmv0SUtFBV1D4tVw@mail.gmail.com>
+ <20200324020846.GG23230@ZenIV.linux.org.uk> <CAHk-=whTwaUZZ5Aj_Viapf2tdvcd65WdM4jjXJ3tdOTDmgkW0g@mail.gmail.com>
+ <20200324204246.GH23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200324204246.GH23230@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 24 Mar 2020 13:57:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whnTRF5yA2MrPGcmMm=hXaGHfC2HEDtNzA=_1=szhJ4-w@mail.gmail.com>
+Message-ID: <CAHk-=whnTRF5yA2MrPGcmMm=hXaGHfC2HEDtNzA=_1=szhJ4-w@mail.gmail.com>
+Subject: Re: [RFC][PATCH 5/7] x86: convert arch_futex_atomic_op_inuser() to user_access_begin/user_access_end()
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 24, 2020 at 1:45 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> OK...  BTW, I'd been trying to recall the reasons for the way
+> __futex_atomic_op2() loop is done; ISTR some discussion along
+> the lines of cacheline ping-pong prevention, but I'd been unable
+> to reconstruct enough details to find it and I'm not sure it
+> hadn't been about some other code ;-/
 
---+QahgC5+KEYLbs62
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No, that doesn't look like any cacheline advantage I can think of -
+quite the reverse.
 
-On Tue, Mar 24, 2020 at 11:28:11PM +0800, Kai-Heng Feng wrote:
-> Nvidia card may come with a "phantom" UCSI device, and its driver gets
-> stuck in probe routine, prevents any system PM operations like suspend.
->=20
-> There's an unaccounted case that the target time can equal to jiffies in
-> gpu_i2c_check_status(), let's solve that by using readl_poll_timeout()
-> instead of jiffies comparison functions.=20
->=20
-> Fixes: c71bcdcb42a7 ("i2c: add i2c bus driver for NVIDIA GPU")
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+I suspect it's just lazy code, with the reload being unnecessary. Or
+it might be written that way because you avoid an extra variable.
 
-Looks good to me, thanks Andy for the suggestion!
+In fact, from a cacheline optimization standpoint, there are
+advantages to not doing the load even on the initial run: if you know
+a certain value is particularly likely, there are advantages to just
+_assuming_ that value, rather than loading it. So no initial load at
+all, and just initialize the first value to the likely case.
 
-Waiting for the Rev-by from Ajay (driver maintainer).
+That can avoid an unnecessary "load for shared ownership" cacheline
+state transition (since the cmpxchg will want to turn it into an
+exclusive modified cacheline anyway).
 
+But I don't think that optimization is likely the case here, and
+you're right, the loop would be better written with the initial load
+outside the loop.
 
---+QahgC5+KEYLbs62
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl56dDcACgkQFA3kzBSg
-Kbb8uBAAr4Rj+iNo4B83HNFlyS8aXWxRCoZFedr5/tcsGUWZpn/P9QnqEUwZytqA
-Duz4QoJc/qKZh1T9xW2f1LLDNC91v5SUVfDaVSDtvgnoq883ZwywMoX5XSwXBxKR
-zY7kRu9VI69omQS9HpeA0mXMMiaTTdj5FTJQWalhX23YwTevJ7uMyzaQzDb6Th55
-pFYL1uAqAT/5s5qhrr18wZAR0IH2MtxVSQRs+Z3a5ZdmOXMNPpqt9Bdol7Xd9o+P
-3W/nsAyybejOEgFU1ylMCmyIioCpEgrebjKc2szjzx8dmA94V1LBYPMhRJPJS5T+
-DksosmGvkmJySlwZdltCbte3Q0Kj57PQVZ5KSCI6JQUnsGPnpC4+JgvixW2c/UWr
-TZIeF22qxBiHf2y3RQFK1QxHr+y03n0jLFSZ/NIWo4iS0YMK11nft0/8SVzlFWep
-fLjwx6DCR9rrhjV703eyaXxJQVsvhbz7QfpO97V6Mr9nQbTDr5qsnXa192HwCDlj
-JxFbpmeFG3tUXTTFLCv0+29/WIa8fQaAJZfBFpw1Ym//p3hhq/mT9jHvFm6uTVV3
-53dUeJ5CqW/NNk/JPucQZA0nOLtrIflV0/E1BEfce2ew8EWF2v8IHv0menDqRV+O
-Ks0yGLDYcgmdAN0FOrZEp14YRTPS00riZLtkYu5oQZzoiIOi9O4=
-=2692
------END PGP SIGNATURE-----
-
---+QahgC5+KEYLbs62--
+           Linus
