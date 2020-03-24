@@ -2,59 +2,56 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62834C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE52C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30DE32098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDC9208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055726;
-	bh=FVqenkDT0r638d4jq3mOb7Gw4db6ULMoBAWQXGAlUwE=;
+	s=default; t=1585055731;
+	bh=Wj+RQiMF4N/W2DnvCyurilLMP/PbjLwa2tX/gYzI2wA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GNEEN2KiPVZu1IWsRu78kFJ0Q4PwHTRvy7OSV5AZSzagJLYC6xTyYPuoCHbYecQke
-	 AlQDgqQWeN69+djMeS8wWgcoQ/SJTIwXszgUMgTb5Eo2VJgVBAgSM2/jtuXjH0/jBr
-	 9RfkGhUy8yU3+ZIUZIUqAACgDO/jijtGcJx8g7Fc=
+	b=J3zGTKIbWt34R2TT09EnUrbf5CxltFuiJsk9e5l2EctPlyG0GJ6C1RiXWsU0eh/6S
+	 cl/y+3WpPVBUp0GxlaKkHmFEKRi7LsFiV2CDETq5f3zJ25hzmU9cDVLa+aeXTDdeOq
+	 3yTqTsaQfadsl/CK/Ng+ayimLbjKLOlqCsEsbTXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbgCXNPY (ORCPT
+        id S1728269AbgCXNP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:15:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34208 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:15:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727741AbgCXNPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:15:21 -0400
+        id S1727846AbgCXNP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:15:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9796D208E0;
-        Tue, 24 Mar 2020 13:15:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94FDC206F6;
+        Tue, 24 Mar 2020 13:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055721;
-        bh=FVqenkDT0r638d4jq3mOb7Gw4db6ULMoBAWQXGAlUwE=;
+        s=default; t=1585055727;
+        bh=Wj+RQiMF4N/W2DnvCyurilLMP/PbjLwa2tX/gYzI2wA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VDkMyWBAboYnnqnQ6QQwSU+AWNTuVARp1f6Z1G64CCSJ7GVRigdLClAUD96AAjx/a
-         o7MwY09Kbqumi3fuzhnv4T08VDj6DFTXdN0oEi/ayohxI5tyISGxEhE5TZcLiyOlQ3
-         /TQg+2mptfrioIGegjPAcNO9sAIxNTTF5KYVCA3Q=
+        b=oKzYr3fRBFd0v61MoRrmR0C7xlusW/agQlKcqVV+RdeeW3qx3OnKnNMX5KsvyIAL3
+         jEwWtY2+nzwgce1FJEPT6fD+dDhpJ2OhvnKVobNgCms0c9ctvs0oYrqt7uidww2q52
+         tCKzoQzUxb4qH7BJs2icNHoWhIf1x1a5HxfAvmi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunguang Xu <brookxu@tencent.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 47/65] memcg: fix NULL pointer dereference in __mem_cgroup_usage_unregister_event
-Date:   Tue, 24 Mar 2020 14:11:08 +0100
-Message-Id: <20200324130802.903212527@linuxfoundation.org>
+        stable@vger.kernel.org, "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
+        Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 010/102] cifs: fix potential mismatch of UNC paths
+Date:   Tue, 24 Mar 2020 14:10:02 +0100
+Message-Id: <20200324130807.607238608@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200324130756.679112147@linuxfoundation.org>
-References: <20200324130756.679112147@linuxfoundation.org>
+In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
+References: <20200324130806.544601211@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,120 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunguang Xu <brookxu@tencent.com>
+From: Paulo Alcantara (SUSE) <pc@cjr.nz>
 
-commit 7d36665a5886c27ca4c4d0afd3ecc50b400f3587 upstream.
+[ Upstream commit 154255233830e1e4dd0d99ac929a5dce588c0b81 ]
 
-An eventfd monitors multiple memory thresholds of the cgroup, closes them,
-the kernel deletes all events related to this eventfd.  Before all events
-are deleted, another eventfd monitors the memory threshold of this cgroup,
-leading to a crash:
+Ensure that full_path is an UNC path that contains '\\' as delimiter,
+which is required by cifs_build_devname().
 
-  BUG: kernel NULL pointer dereference, address: 0000000000000004
-  #PF: supervisor write access in kernel mode
-  #PF: error_code(0x0002) - not-present page
-  PGD 800000033058e067 P4D 800000033058e067 PUD 3355ce067 PMD 0
-  Oops: 0002 [#1] SMP PTI
-  CPU: 2 PID: 14012 Comm: kworker/2:6 Kdump: loaded Not tainted 5.6.0-rc4 #3
-  Hardware name: LENOVO 20AWS01K00/20AWS01K00, BIOS GLET70WW (2.24 ) 05/21/2014
-  Workqueue: events memcg_event_remove
-  RIP: 0010:__mem_cgroup_usage_unregister_event+0xb3/0x190
-  RSP: 0018:ffffb47e01c4fe18 EFLAGS: 00010202
-  RAX: 0000000000000001 RBX: ffff8bb223a8a000 RCX: 0000000000000001
-  RDX: 0000000000000001 RSI: ffff8bb22fb83540 RDI: 0000000000000001
-  RBP: ffffb47e01c4fe48 R08: 0000000000000000 R09: 0000000000000010
-  R10: 000000000000000c R11: 071c71c71c71c71c R12: ffff8bb226aba880
-  R13: ffff8bb223a8a480 R14: 0000000000000000 R15: 0000000000000000
-  FS:  0000000000000000(0000) GS:ffff8bb242680000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000004 CR3: 000000032c29c003 CR4: 00000000001606e0
-  Call Trace:
-    memcg_event_remove+0x32/0x90
-    process_one_work+0x172/0x380
-    worker_thread+0x49/0x3f0
-    kthread+0xf8/0x130
-    ret_from_fork+0x35/0x40
-  CR2: 0000000000000004
+The build_path_from_dentry_optional_prefix() function may return a
+path with '/' as delimiter when using SMB1 UNIX extensions, for
+example.
 
-We can reproduce this problem in the following ways:
-
-1. We create a new cgroup subdirectory and a new eventfd, and then we
-   monitor multiple memory thresholds of the cgroup through this eventfd.
-
-2.  closing this eventfd, and __mem_cgroup_usage_unregister_event ()
-   will be called multiple times to delete all events related to this
-   eventfd.
-
-The first time __mem_cgroup_usage_unregister_event() is called, the
-kernel will clear all items related to this eventfd in thresholds->
-primary.
-
-Since there is currently only one eventfd, thresholds-> primary becomes
-empty, so the kernel will set thresholds-> primary and hresholds-> spare
-to NULL.  If at this time, the user creates a new eventfd and monitor
-the memory threshold of this cgroup, kernel will re-initialize
-thresholds-> primary.
-
-Then when __mem_cgroup_usage_unregister_event () is called for the
-second time, because thresholds-> primary is not empty, the system will
-access thresholds-> spare, but thresholds-> spare is NULL, which will
-trigger a crash.
-
-In general, the longer it takes to delete all events related to this
-eventfd, the easier it is to trigger this problem.
-
-The solution is to check whether the thresholds associated with the
-eventfd has been cleared when deleting the event.  If so, we do nothing.
-
-[akpm@linux-foundation.org: fix comment, per Kirill]
-Fixes: 907860ed381a ("cgroups: make cftype.unregister_event() void-returning")
-Signed-off-by: Chunguang Xu <brookxu@tencent.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/077a6f67-aefa-4591-efec-f2f3af2b0b02@gmail.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memcontrol.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ fs/cifs/cifs_dfs_ref.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -3759,7 +3759,7 @@ static void __mem_cgroup_usage_unregiste
- 	struct mem_cgroup_thresholds *thresholds;
- 	struct mem_cgroup_threshold_ary *new;
- 	unsigned long usage;
--	int i, j, size;
-+	int i, j, size, entries;
+diff --git a/fs/cifs/cifs_dfs_ref.c b/fs/cifs/cifs_dfs_ref.c
+index 606f26d862dc1..cc3ada12848d9 100644
+--- a/fs/cifs/cifs_dfs_ref.c
++++ b/fs/cifs/cifs_dfs_ref.c
+@@ -324,6 +324,8 @@ static struct vfsmount *cifs_dfs_do_automount(struct dentry *mntpt)
+ 	if (full_path == NULL)
+ 		goto cdda_exit;
  
- 	mutex_lock(&memcg->thresholds_lock);
- 
-@@ -3779,14 +3779,20 @@ static void __mem_cgroup_usage_unregiste
- 	__mem_cgroup_threshold(memcg, type == _MEMSWAP);
- 
- 	/* Calculate new number of threshold */
--	size = 0;
-+	size = entries = 0;
- 	for (i = 0; i < thresholds->primary->size; i++) {
- 		if (thresholds->primary->entries[i].eventfd != eventfd)
- 			size++;
-+		else
-+			entries++;
- 	}
- 
- 	new = thresholds->spare;
- 
-+	/* If no items related to eventfd have been cleared, nothing to do */
-+	if (!entries)
-+		goto unlock;
++	convert_delimiter(full_path, '\\');
 +
- 	/* Set thresholds array to NULL if we don't have thresholds */
- 	if (!size) {
- 		kfree(new);
+ 	cifs_dbg(FYI, "%s: full_path: %s\n", __func__, full_path);
+ 
+ 	if (!cifs_sb_master_tlink(cifs_sb)) {
+-- 
+2.20.1
+
 
 
