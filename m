@@ -2,91 +2,160 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84AEC4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430A2C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBD82080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 181082080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:25:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqQjkBxQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WIISnCOc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbgCXKZR (ORCPT
+        id S1727275AbgCXKZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:25:17 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55858 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgCXKZR (ORCPT
+        Tue, 24 Mar 2020 06:25:31 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:53799 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726697AbgCXKZa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:25:17 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v25so715616wmh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 03:25:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LGUT3817m9dwKpwcgiwDpk5iBVynd8BwaSr3esU1DVk=;
-        b=nqQjkBxQq4SmF2eCBrJZzQSJadKYuiApD6sLS+K5WWogPn0aWVPYOliY7P5ZnqmlqP
-         Qs+X1WJJKib2E770uVyb0mp59LdlV9RJ00WoQqkaOwrSDBTSBtmxVQX7Xv6JTBsev/uF
-         WzMexXe2iqzX4VMmwg3KfGSS7nxLYktDIpikFryUTbUFmjp2JBmkTajGCNAaTLiU6nGH
-         06UG8o53k36hd+F4u0dwG/bqIKO6ITxnKPUY1j5+pyH1zuPM4qgw7P5ypTOJ3p/AiUH+
-         cErRkLv0Hmjc3HkymikCdUfKXK6J0t28LUYI2cZLZraXlDCdpwrZIoCPyZhMduk0HS8C
-         ppcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LGUT3817m9dwKpwcgiwDpk5iBVynd8BwaSr3esU1DVk=;
-        b=ruINzDviT6vpmrw4RtxMUPqrXc3g9xiCt2ChMX0h+9c28QOLkUZvdzkvLm7nPMKWsM
-         HZ9dXUp+Hg7/MF01sBH+BVFbJbbfop+3/TGcqDOQn3GyvP1zFSx7cWv2ZCGCW5VX5RcH
-         nLWIUhhGA18VbL3zeAP4uL9MNs8o1crUSFSd6sy56xoy4h9Ow97isiptu5gDeG8XApLW
-         lAbZLxg77+xu6QbtssVyGiyuKrCAMuk7FDYiOIiUnd2w3JfYFunYtbaWbKvXn/omQXG+
-         npbqbGmnP0rO7QwaTQFKq77aJJWsyY+ai0qIP2H0vbc8E/pYXqm42AbQj2DO0ls7zJDr
-         HeUA==
-X-Gm-Message-State: ANhLgQ05yXKx+9mwkvakae61m8GhvMLR7dCJP836/NMfFqrkkYolLVp3
-        yZEBdYjhaTgVIlZNkErDj8I=
-X-Google-Smtp-Source: ADFU+vvyCe3wYKRgESX6ZP/xX3EjW7zkB/m7qMqBuI2AgmS3QY9jKMFz4rSHz8KYcVak7Kmna/2mMQ==
-X-Received: by 2002:a7b:cc96:: with SMTP id p22mr4880707wma.118.1585045515798;
-        Tue, 24 Mar 2020 03:25:15 -0700 (PDT)
-Received: from kbp1-lhp-F74019 ([46.189.28.41])
-        by smtp.gmail.com with ESMTPSA id f9sm28268562wrc.71.2020.03.24.03.25.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 24 Mar 2020 03:25:15 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 12:25:05 +0200
-From:   Yan Yankovskyi <yyankovskyi@gmail.com>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     Jan Beulich <jbeulich@suse.com>, Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Subject: Re: [Xen-devel] [PATCH v4 1/2] xen: Use evtchn_type_t as a type for
- event channels
-Message-ID: <20200324102505.GA4248@kbp1-lhp-F74019>
-References: <20200323152343.GA28422@kbp1-lhp-F74019>
- <06458b85-fb66-faac-e75a-1ccefa848cb0@oracle.com>
+        Tue, 24 Mar 2020 06:25:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585045530;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1uFndSPegRG+EuvCEPo50gmlgFaTjR12UYyGMB2agT0=;
+        b=WIISnCOc+jldKnVzt4gaRb4b7vpBLr9Ahtm3dFw9ZxLfF9KsmiAblX9rZWLkuQr7vMcjjK
+        4x7/DEgHa6Nc+0mnhwDCvDj6wQw5b+uURnnbB7vyuuZl7GjL1y6InNgZ0aGsgN5V9Wm1dI
+        zxcLIMvW8Uby6Ey8C3Ypv8lgI/FOcGM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-383-fs7X8Db2OW-RqLYsS2OVOg-1; Tue, 24 Mar 2020 06:25:26 -0400
+X-MC-Unique: fs7X8Db2OW-RqLYsS2OVOg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B67F1088383;
+        Tue, 24 Mar 2020 10:25:22 +0000 (UTC)
+Received: from krava (unknown [10.40.192.119])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C3E915DA66;
+        Tue, 24 Mar 2020 10:25:05 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 11:24:59 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v5] perf tools: add support for libpfm4
+Message-ID: <20200324102459.GL1534489@krava>
+References: <20200323235846.104937-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <06458b85-fb66-faac-e75a-1ccefa848cb0@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200323235846.104937-1-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 05:55:39PM -0400, Boris Ostrovsky wrote:
-> 
-> On 3/23/20 12:15 PM, Yan Yankovskyi wrote:
-> > Make event channel functions pass event channel port using
-> > evtchn_port_t type. It eliminates signed <-> unsigned conversion.
-> >
-> > Signed-off-by: Yan Yankovskyi <yyankovskyi@gmail.com>
-> 
-> 
-> If the difference is only the whitespace fix
+On Mon, Mar 23, 2020 at 04:58:46PM -0700, Ian Rogers wrote:
 
-There were two more fixes: missing include in gntdev-common.h and
-a variable initialization in bind_virq_to_irq (eliminates warning).
+SNIP
+
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 10107747b361..31ed184566c8 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -37,6 +37,11 @@
+>  #include "util/evsel_config.h"
+>  #include "util/event.h"
+>  
+> +#ifdef HAVE_LIBPFM
+> +#include <perfmon/pfmlib_perf_event.h>
+> +static void print_libpfm_events(bool name_only);
+> +#endif
+> +
+>  #define MAX_NAME_LEN 100
+>  
+>  #ifdef PARSER_DEBUG
+> @@ -2794,6 +2799,10 @@ void print_events(const char *event_glob, bool name_only, bool quiet_flag,
+>  	print_sdt_events(NULL, NULL, name_only);
+>  
+>  	metricgroup__print(true, true, NULL, name_only, details_flag);
+> +
+> +#ifdef HAVE_LIBPFM
+> +	print_libpfm_events(name_only);
+
+
+we should make some effort to fit this into our current list shape,
+currently it looks like:
+
+	$ perf list
+	...
+
+	TopdownL1_SMT:
+	  Backend_Bound_SMT
+	       [This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend>
+	  Bad_Speculation_SMT
+	       [This category represents fraction of slots wasted due to incorrect speculations. SMT version; use when SMT is enabled and measuring per logical CPU]
+	  Frontend_Bound_SMT
+	       [This category represents fraction of slots where the processor's Frontend undersupplies its Backend. SMT version; use when SMT is enabled and measurin>
+	  Retiring_SMT
+	       [This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. SMT version; use when SMT is enabled >
+
+
+	Name  : UNHALTED_CORE_CYCLES
+	PMU   : ix86arch
+	Desc  : count core clock cycles whenever the clock signal on the specific core is running (not halted)
+	Equiv : None
+	Code  : 0x3c
+	Modif : PMU: [e] : edge level (may require counter-mask >= 1) (boolean)
+	Modif : PMU: [i] : invert (boolean)
+	Modif : PMU: [c] : counter-mask in range [0-255] (integer)
+	Modif : PMU: [t] : measure any thread (boolean)
+	Modif : PMU: [intx] : monitor only inside transactional memory region (boolean)
+	Modif : PMU: [intxcp] : do not count occurrences inside aborted transactional memory region (boolean)
+	Modif : perf_event: [u] : monitor at user level (boolean)
+	Modif : perf_event: [k] : monitor at kernel level (boolean)
+	Modif : perf_event: [period] : sampling period (integer)
+	Modif : perf_event: [freq] : sampling frequency (Hz) (integer)
+	Modif : perf_event: [excl] : exclusive access (boolean)
+	Modif : perf_event: [mg] : monitor guest execution (boolean)
+	Modif : perf_event: [mh] : monitor host execution (boolean)
+	Modif : perf_event: [cpu] : CPU to program (integer)
+	Modif : perf_event: [pinned] : pin event to counters (boolean)
+
+it needs some header like 'libpfm events:' and then
+probably just name and doc for basic list and more
+verbose for -v
+
+jirka
+
