@@ -2,101 +2,80 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D0BC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D40AAC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB5D120658
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:20:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="6XdVZySd"
+	by mail.kernel.org (Postfix) with ESMTP id B736020658
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbgCXMUX (ORCPT
+        id S1727417AbgCXMU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:20:23 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:54156 "EHLO vps0.lunn.ch"
+        Tue, 24 Mar 2020 08:20:27 -0400
+Received: from mga01.intel.com ([192.55.52.88]:33838 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727161AbgCXMUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 08:20:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=pXWFCcdJO8akl4rGuYz9ZIQj1bJiMdcrPKoInwmnqv0=; b=6XdVZySdOeqUJwBUZiP1uu6hSJ
-        RNqKrZKoX1H5ErMOy/+4NEuUpXD3WEHZgxinaQR0j0mBwW8WqzyYKSP1FDFYhSmT6ocWBEc7vLvJe
-        XOhUsnq1Qbx92j8YMcbi5OH556mcZ2mwtYRZ2q1LgrFhWh3IN5yY14foEMd/m2J6lDkg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jGiXZ-0001TW-SD; Tue, 24 Mar 2020 13:20:17 +0100
-Date:   Tue, 24 Mar 2020 13:20:17 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH pinctrl REGRESSION] Revert "pinctrl: mvebu: armada-37xx:
- use use platform api"
-Message-ID: <20200324122017.GR3819@lunn.ch>
-References: <20200324004413.14355-1-marek.behun@nic.cz>
+        id S1727161AbgCXMU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 08:20:27 -0400
+IronPort-SDR: 4bj7BVe2fsrnKU2IHOxZNn7RU9Z6+cFxeQFTMYk7h64xVnBdm9GLIYPf/FXfetFdaSUEfY+1dj
+ SHcckQpV9HHQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 05:20:26 -0700
+IronPort-SDR: QrKiMwNd8E1VplOjPkJMHyaiCbhHS8lmlleMbrQ6JC6wLiVwJwanrbvQPrX0bQXEQVnSomXjxT
+ 4tXaI7YD5qBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
+   d="scan'208";a="238218894"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 24 Mar 2020 05:20:25 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 939D214B; Tue, 24 Mar 2020 14:20:24 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 3/3] driver core: Replace open-coded list_last_entry()
+Date:   Tue, 24 Mar 2020 14:20:23 +0200
+Message-Id: <20200324122023.9649-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
+References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200324004413.14355-1-marek.behun@nic.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 01:44:13AM +0100, Marek Behún wrote:
-> This reverts commit 06e26b75f5e613b400116fdb7ff6206a681ab271.
-> 
-> This commit caused a regression on Armada 37xx. The pinctrl driver says
->   armada-37xx-pinctrl d0013800.pinctrl: invalid or no IRQ
->   armada-37xx-pinctrl d0018800.pinctrl: invalid or no IRQ
-> and afterwards other drivers cannot use GPIOs by this driver as IRQs.
-> 
-> Fixes: 06e26b75f5e6 ("pinctrl: mvebu: armada-37xx: use use platform...")
-> Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> Cc: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> index 32f12a388b3c..5f125bd6279d 100644
-> --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> @@ -15,6 +15,7 @@
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_irq.h>
->  #include <linux/pinctrl/pinconf-generic.h>
->  #include <linux/pinctrl/pinconf.h>
->  #include <linux/pinctrl/pinctrl.h>
-> @@ -741,14 +742,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
->  		return ret;
->  	}
->  
-> -	nr_irq_parent = platform_irq_count(pdev);
+There is a place in the code where open-coded version of list entry accessors
+list_last_entry() is used.
 
-Hi Marek
+Replace that with the standard macro.
 
-Could you determine the value of nr_irq_parent(). Is it -EPROBE_DEFER?
-This patch has removed the handling of that.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: no change
+ drivers/base/dd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> -	if (nr_irq_parent < 0) {
-> -		if (nr_irq_parent != -EPROBE_DEFER)
-> -			dev_err(dev, "Couldn't determine irq count: %pe\n",
-> -				ERR_PTR(nr_irq_parent));
-> -		return nr_irq_parent;
-> -	}
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index efd0e4c16ba5..27a4d51b5bba 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -1226,7 +1226,7 @@ void driver_detach(struct device_driver *drv)
+ 			spin_unlock(&drv->p->klist_devices.k_lock);
+ 			break;
+ 		}
+-		dev_prv = list_entry(drv->p->klist_devices.k_list.prev,
++		dev_prv = list_last_entry(&drv->p->klist_devices.k_list,
+ 				     struct device_private,
+ 				     knode_driver.n_node);
+ 		dev = dev_prv->device;
+-- 
+2.25.1
 
-Thanks
-	Andrew
