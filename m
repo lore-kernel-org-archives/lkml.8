@@ -2,171 +2,114 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E26C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD53C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA8E20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:06:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585011996;
-	bh=nkAaU5b3pOynaIIlMjxIm1aRxWKaQfp+QZvKhnVa+sE=;
-	h=Date:From:To:Subject:In-Reply-To:References:List-ID:From;
-	b=gK+nXf8PN6A1X4JPZKAuuDFPBg5eKdch8XydTySmshiX/H2F2TTWVaeNYf1xoS8E0
-	 Wi7Hs4fIoLTz9iPZ+5ofqO8wYoAFwOExBkQZ8fxl6TAN+1jAXxH+7BLVVEtZATW/p8
-	 H/jC4VSckVcC66Tg3LGr/Q8eM+GtFKxE0fFehoHg=
+	by mail.kernel.org (Postfix) with ESMTP id 8DF6B20769
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:07:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fjJP9uG6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbgCXBGf (ORCPT
+        id S1727152AbgCXBH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 21:06:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727036AbgCXBGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 21:06:35 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 23 Mar 2020 21:07:28 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:35810 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727032AbgCXBH2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 21:07:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585012047;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Zdot/UdXY2Q5PE1RqTEozcXrzT2jzktlt007zHYSp+Y=;
+        b=fjJP9uG6EDmA+C257USyz9o78V4yeqLAL84gXKYcXFxZVct221EVod4LxRsN44RHLhKfsb
+        QbfjTZvppGG8npIdALbGqlIymHA6FPvFlKwFI3BIdWJbRg9QeeMM7EEnjTToIK4EyrTyxA
+        sbqPCK623dK+xKAc/PqWRhUTJlpXPOQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-484-QMI76toZOhCaQGSIQMTikQ-1; Mon, 23 Mar 2020 21:07:25 -0400
+X-MC-Unique: QMI76toZOhCaQGSIQMTikQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6257720714;
-        Tue, 24 Mar 2020 01:06:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585011994;
-        bh=nkAaU5b3pOynaIIlMjxIm1aRxWKaQfp+QZvKhnVa+sE=;
-        h=Date:From:To:Subject:In-Reply-To:References:From;
-        b=HWzfjzUBiYLfTCpe6yT40lyJiEH4pT03ogcytuWMa2lWP+TZpLohXGQ4NH7oTZzkk
-         CgEnnqksCVnPMNMInNc+SsAX9uDxHb7kQ2ZkRavRrjxsMp+D4BN+WH2WIGdy5Ipev/
-         NUSke5sMT2a1zQdDITWBqMANk4JvoAUqirOsy0EQ=
-Date:   Mon, 23 Mar 2020 18:06:33 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Roman Gushchin <guro@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        <stable@vger.kernel.org>
-Subject: Re: [PATCH] mm: fork: fix kernel_stack memcg stats for various
- stack implementations
-Message-Id: <20200323180633.5e75654282d076d74766bd88@linux-foundation.org>
-In-Reply-To: <20200323180358.7603217aa9955f298255da4e@linux-foundation.org>
-References: <20200303233550.251375-1-guro@fb.com>
-        <20200321164856.be68344b7fac84b759e23727@linux-foundation.org>
-        <20200324004221.GA36662@carbon.dhcp.thefacebook.com>
-        <20200323180358.7603217aa9955f298255da4e@linux-foundation.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 56CE18017CC;
+        Tue, 24 Mar 2020 01:07:24 +0000 (UTC)
+Received: from localhost (ovpn-12-69.pek2.redhat.com [10.72.12.69])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B2C819496C;
+        Tue, 24 Mar 2020 01:07:23 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 09:07:21 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] mm/sparse.c: allocate memmap preferring the given
+ node
+Message-ID: <20200324010721.GG3039@MiWiFi-R3L-srv>
+References: <20200316102150.16487-1-bhe@redhat.com>
+ <20200316102150.16487-2-bhe@redhat.com>
+ <20200316125625.GH3486@MiWiFi-R3L-srv>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316125625.GH3486@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Mar 2020 18:03:58 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
+Hi Andrew,
 
-> On Mon, 23 Mar 2020 17:42:21 -0700 Roman Gushchin <guro@fb.com> wrote:
+On 03/16/20 at 08:56pm, Baoquan He wrote:
+> When allocating memmap for hot added memory with the classic sparse, the
+> specified 'nid' is ignored in populate_section_memmap().
 > 
-> > How about this one? I've merged them into one and stripped it a little bit.
-> > 
-> > Thanks!
-> > 
+> While in allocating memmap for the classic sparse during boot, the node
+> given by 'nid' is preferred. And VMEMMAP prefers the node of 'nid' in
+> both boot stage and memory hot adding. So seems no reason to not respect
+> the node of 'nid' for the classic sparse when hot adding memory.
 > 
-> Yes, that looks good.  Here's the delta from the previously reviewed
-> version.  I think it's valid to retain those acks and revewed-by's.
+> Use kvmalloc_node instead to use the passed in 'nid'.
+
+Just checked linux-next, seems this one is missed. Michal suggested
+splitting the old v4 into two patches, this patch is to use the passed
+in 'nid' to allocate memmap with !VMEMMAP.
+
+Thanks
+Baoquan
+
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  mm/sparse.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 3fa407d7f70a..31dcdfb55c72 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -719,8 +719,8 @@ static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+>  struct page * __meminit populate_section_memmap(unsigned long pfn,
+>  		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+>  {
+> -	return kvmalloc(array_size(sizeof(struct page),
+> -				   PAGES_PER_SECTION), GFP_KERNEL);
+> +	return kvmalloc_node(array_size(sizeof(struct page),
+> +					PAGES_PER_SECTION), GFP_KERNEL, nid);
+>  }
+>  
+>  static void depopulate_section_memmap(unsigned long pfn, unsigned long nr_pages,
+> -- 
+> 2.17.2
 > 
 > 
-
-And here's the altered "mm: memcg/slab: introduce
-mem_cgroup_from_obj()", which I have renamed to "mm: memcg/slab: use
-mem_cgroup_from_obj()":
-
-The end result is slightly different - mem_cgroup_from_obj() will now
-end up inside #ifdef CONFIG_MEMCG_KMEM.  Should I undo that?
-
-
-From: Roman Gushchin <guro@fb.com>
-Subject: mm: memcg/slab: use mem_cgroup_from_obj()
-
-Sometimes we need to get a memcg pointer from a charged kernel object. 
-The right way to get it depends on whether it's a proper slab object or
-it's backed by raw pages (e.g.  it's a vmalloc alloction).  In the first
-case the kmem_cache->memcg_params.memcg indirection should be used; in
-other cases it's just page->mem_cgroup.
-
-To simplify this task and hide the implementation details let's use the
-mem_cgroup_from_obj() helper, which takes a pointer to any kernel object
-and returns a valid memcg pointer or NULL.
-
-Passing a kernel address rather than a pointer to a page will allow to use
-this helper for per-object (rather than per-page) tracked objects in the
-future.
-
-The caller is still responsible to ensure that the returned memcg isn't
-going away underneath: take the rcu read lock, cgroup mutex etc; depending
-on the context.
-
-mem_cgroup_from_kmem() defined in mm/list_lru.c is now obsolete and can be
-removed.
-
-Link: http://lkml.kernel.org/r/20200117203609.3146239-1-guro@fb.com
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Yafang Shao <laoar.shao@gmail.com>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- mm/list_lru.c   |   12 +-----------
- mm/memcontrol.c |    5 ++---
- 2 files changed, 3 insertions(+), 14 deletions(-)
-
---- a/mm/list_lru.c~mm-memcg-slab-introduce-mem_cgroup_from_obj
-+++ a/mm/list_lru.c
-@@ -57,16 +57,6 @@ list_lru_from_memcg_idx(struct list_lru_
- 	return &nlru->lru;
- }
- 
--static __always_inline struct mem_cgroup *mem_cgroup_from_kmem(void *ptr)
--{
--	struct page *page;
--
--	if (!memcg_kmem_enabled())
--		return NULL;
--	page = virt_to_head_page(ptr);
--	return memcg_from_slab_page(page);
--}
--
- static inline struct list_lru_one *
- list_lru_from_kmem(struct list_lru_node *nlru, void *ptr,
- 		   struct mem_cgroup **memcg_ptr)
-@@ -77,7 +67,7 @@ list_lru_from_kmem(struct list_lru_node
- 	if (!nlru->memcg_lrus)
- 		goto out;
- 
--	memcg = mem_cgroup_from_kmem(ptr);
-+	memcg = mem_cgroup_from_obj(ptr);
- 	if (!memcg)
- 		goto out;
- 
---- a/mm/memcontrol.c~mm-memcg-slab-introduce-mem_cgroup_from_obj
-+++ a/mm/memcontrol.c
-@@ -759,13 +759,12 @@ void __mod_lruvec_state(struct lruvec *l
- 
- void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val)
- {
--	struct page *page = virt_to_head_page(p);
--	pg_data_t *pgdat = page_pgdat(page);
-+	pg_data_t *pgdat = page_pgdat(virt_to_page(p));
- 	struct mem_cgroup *memcg;
- 	struct lruvec *lruvec;
- 
- 	rcu_read_lock();
--	memcg = memcg_from_slab_page(page);
-+	memcg = mem_cgroup_from_obj(p);
- 
- 	/* Untracked pages have no memcg, no lruvec. Update only the node */
- 	if (!memcg || memcg == root_mem_cgroup) {
-_
 
