@@ -2,99 +2,199 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E33DCC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B8EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AED56208DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72EB7208DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:12:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lmBofkxC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SggCZsD1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbgCXQMO (ORCPT
+        id S1728525AbgCXQMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:12:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51026 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728525AbgCXQLi (ORCPT
+        Tue, 24 Mar 2020 12:12:17 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46497 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728868AbgCXQMQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:11:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=6kFko+tI6uqSmZzN+BrRSaiCqmG948MnieaRkmvxg98=; b=lmBofkxCzWiu3BuMbsxoEnRMfP
-        cd3OnN06Ctki0Qme0rOGbVyLVxdE9EP3JlarY89z7bOujPmNV40tZLnEZlVbygmZLqx2Yju7un+eC
-        DZjIa2F+AgIVevlRvWckdis8FK3GPOJ3NigMEeODD37tiKYthOHXBoif0Ld6WY+2AoNQnwIJKnPYm
-        mnR8yD57SCilS9OY5Xg6U82Ei2aiA7PqzxhpC/K8vj0C/ZgHC/JM+i7MzdokgK6yLtLybq0fRpILJ
-        TvZISB7ap+PuAfsZLNnlU3enydXafxqmVi2xBY47qDaNBkmze2mlQ3ZVyzG5Sx2hqVoRFdexxDozg
-        +GaYgSEA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGm9N-0000CM-EG; Tue, 24 Mar 2020 16:11:33 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6E7833075C0;
-        Tue, 24 Mar 2020 17:11:28 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 6278B29A490FA; Tue, 24 Mar 2020 17:11:28 +0100 (CET)
-Message-Id: <20200324160925.168274291@infradead.org>
-User-Agent: quilt/0.65
-Date:   Tue, 24 Mar 2020 16:31:34 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     tglx@linutronix.de, jpoimboe@redhat.com
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, peterz@infradead.org,
-        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-Subject: [PATCH v3 21/26] objtool: Use sec_offset_hash() for insn_hash
-References: <20200324153113.098167666@infradead.org>
+        Tue, 24 Mar 2020 12:12:16 -0400
+Received: by mail-wr1-f66.google.com with SMTP id j17so18799834wru.13
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:12:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=6s+JUpZZOeulwwQp3hTdTer/dFhcYZR33uwW9/Pdmj8=;
+        b=SggCZsD1MrTRy4N8yYgCYH48EYAh1jPTaqstdjfJmC1qrv87NVo4Pg4S2ZxTvxznBP
+         1et1wVMZn2T1Va6fNb9fpoMZOF9c4yGcHHrHTIO9FIakp+uewzN24xryCxMz8BpF0A5k
+         Wxu82j5SMx2RDgnEf0rvZHa9ZB+onHB2wwcGE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=6s+JUpZZOeulwwQp3hTdTer/dFhcYZR33uwW9/Pdmj8=;
+        b=FKFQoK5AstvGEpjWN2Wr/xwhhQP9uXPxEko4K+854XENxCOB5Q4yN39M8r1gJ8n+cl
+         k8RX2V0XBdfksGrMwdZ4HY7fjv+FPUOJu60eh9JkJXeJT1sRlqHNhWz6CsHr9MB5MN1p
+         +Xsz7yhR1pklL2lbL2VrQMrqdIZui2hbbnR+5s9KtiZ81tg//QL3YpWRbjHxo1NUl/R1
+         6Kyy9j/4mbT3XXz8gAElWrH0FV2HBUFom+ahAtPf5usWsd1AKHgIshDKb3S4RnfeU4SB
+         2F6lHQlY4TedWdk7IVfgPbw8VkJ+thpxCzEHEt2fAeQ+cdeaY02WKd/HwLK9a2AGLQnG
+         XyjA==
+X-Gm-Message-State: ANhLgQ2l6s7e8GtfOzf9e3GQk8V3tCjcydL4m2l+ctwtmlnhuF5VToM8
+        EtCkcuMkqA2thu8Cn1+//SAdTQ==
+X-Google-Smtp-Source: ADFU+vuvN4rP+Kw/5KMx38ZbYgcOIc+Am32bNafbVVbJjxFCaDUxwfDZcgFtKLY10ged/UtQTzp9Rw==
+X-Received: by 2002:adf:ead1:: with SMTP id o17mr8491178wrn.14.1585066334052;
+        Tue, 24 Mar 2020 09:12:14 -0700 (PDT)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id i19sm4864977wmb.44.2020.03.24.09.12.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 09:12:13 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Tue, 24 Mar 2020 17:12:11 +0100
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH bpf-next v5 3/7] bpf: lsm: provide attachment points for
+ BPF LSM programs
+Message-ID: <20200324161211.GA11227@chromium.org>
+References: <20200323164415.12943-1-kpsingh@chromium.org>
+ <20200323164415.12943-4-kpsingh@chromium.org>
+ <CAEf4BzbRivYO=gVjuQw8Z8snN+RFwXswvNxs67c=5g6U3o9rmw@mail.gmail.com>
+ <20200324103910.GA7135@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200324103910.GA7135@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for find_insn_containing(), change insn_hash to use
-sec_offset_hash().
+On 24-Mär 11:39, KP Singh wrote:
+> On 23-Mär 12:59, Andrii Nakryiko wrote:
+> > On Mon, Mar 23, 2020 at 9:45 AM KP Singh <kpsingh@chromium.org> wrote:
+> > >
+> > > From: KP Singh <kpsingh@google.com>
+> > >
+> > > When CONFIG_BPF_LSM is enabled, nops functions, bpf_lsm_<hook_name>, are
+> > > generated for each LSM hook. These nops are initialized as LSM hooks in
+> > > a subsequent patch.
+> > >
+> > > Signed-off-by: KP Singh <kpsingh@google.com>
+> > > Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> > > Reviewed-by: Florent Revest <revest@google.com>
+> > > ---
+> > >  include/linux/bpf_lsm.h | 21 +++++++++++++++++++++
+> > >  kernel/bpf/bpf_lsm.c    | 19 +++++++++++++++++++
+> > >  2 files changed, 40 insertions(+)
+> > >  create mode 100644 include/linux/bpf_lsm.h
+> > >
+> > > diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
+> > > new file mode 100644
+> > > index 000000000000..c6423a140220
+> > > --- /dev/null
+> > > +++ b/include/linux/bpf_lsm.h
+> > > @@ -0,0 +1,21 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +
+> > > +/*
+> > > + * Copyright (C) 2020 Google LLC.
+> > > + */
+> > > +
+> > > +#ifndef _LINUX_BPF_LSM_H
+> > > +#define _LINUX_BPF_LSM_H
+> > > +
+> > > +#include <linux/bpf.h>
+> > > +#include <linux/lsm_hooks.h>
+> > > +
+> > > +#ifdef CONFIG_BPF_LSM
+> > > +
+> > > +#define LSM_HOOK(RET, NAME, ...) RET bpf_lsm_##NAME(__VA_ARGS__);
+> > > +#include <linux/lsm_hook_names.h>
+> > > +#undef LSM_HOOK
+> > > +
+> > > +#endif /* CONFIG_BPF_LSM */
+> > > +
+> > > +#endif /* _LINUX_BPF_LSM_H */
+> > > diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
+> > > index 82875039ca90..530d137f7a84 100644
+> > > --- a/kernel/bpf/bpf_lsm.c
+> > > +++ b/kernel/bpf/bpf_lsm.c
+> > > @@ -7,6 +7,25 @@
+> > >  #include <linux/filter.h>
+> > >  #include <linux/bpf.h>
+> > >  #include <linux/btf.h>
+> > > +#include <linux/lsm_hooks.h>
+> > > +#include <linux/bpf_lsm.h>
+> > > +
+> > > +/* For every LSM hook  that allows attachment of BPF programs, declare a NOP
+> > > + * function where a BPF program can be attached as an fexit trampoline.
+> > > + */
+> > > +#define LSM_HOOK(RET, NAME, ...) LSM_HOOK_##RET(NAME, __VA_ARGS__)
+> > > +
+> > > +#define LSM_HOOK_int(NAME, ...)                        \
+> > > +noinline __weak int bpf_lsm_##NAME(__VA_ARGS__)        \
+> > > +{                                              \
+> > > +       return 0;                               \
+> > > +}
+> > > +
+> > > +#define LSM_HOOK_void(NAME, ...) \
+> > > +noinline __weak void bpf_lsm_##NAME(__VA_ARGS__) {}
+> > > +
+> > 
+> > Could unify with:
+> > 
+> > #define LSM_HOOK(RET, NAME, ...) noinline __weak RET bpf_lsm_##NAME(__VA_ARGS__)
+> > {
+> >     return (RET)0;
+> > }
+> > 
+> > then you don't need LSM_HOOK_int and LSM_HOOK_void.
+> 
+> Nice.
+> 
+> But, given that we are adding default values and that
+> they are only needed for int hooks, we will need to keep the macros
+> separate for int and void. Or, Am I missing a trick here?
+> 
+> - KP
 
-This actually reduces runtime; probably because mixing in the section
-index reduces the collisions due to text sections all starting their
-instructions at offset 0.
+Actually, was able to get it work. not setting a default for void
+hooks makes the macros messier. So i just set it void. For example:
 
-Runtime on vmlinux.o from 3.1 to 2.5 seconds.
+  LSM_HOOK(void, void, bprm_committing_creds, struct linux_binprm *bprm)
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- tools/objtool/check.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+This also allows me to use the cleanup you suggested and not having
+to split every usage into int and void.
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -34,9 +34,10 @@ struct instruction *find_insn(struct obj
- {
- 	struct instruction *insn;
- 
--	hash_for_each_possible(file->insn_hash, insn, hash, offset)
-+	hash_for_each_possible(file->insn_hash, insn, hash, sec_offset_hash(sec, offset)) {
- 		if (insn->sec == sec && insn->offset == offset)
- 			return insn;
-+	}
- 
- 	return NULL;
- }
-@@ -276,7 +277,7 @@ static int decode_instructions(struct ob
- 			if (ret)
- 				goto err;
- 
--			hash_add(file->insn_hash, &insn->hash, insn->offset);
-+			hash_add(file->insn_hash, &insn->hash, sec_offset_hash(sec, insn->offset));
- 			list_add_tail(&insn->list, &file->insn_list);
- 			nr_insns++;
- 		}
+- KP
 
-
+> 
+> > 
+> > > +#include <linux/lsm_hook_names.h>
+> > > +#undef LSM_HOOK
+> > >
+> > >  const struct bpf_prog_ops lsm_prog_ops = {
+> > >  };
+> > > --
+> > > 2.20.1
+> > >
