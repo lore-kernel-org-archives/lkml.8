@@ -2,202 +2,102 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46218C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CD1C54FCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1552C20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BFD520722
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:48:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VwjHIuvS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MO77Ne74"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgCXWpv (ORCPT
+        id S1727483AbgCXWsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 18:45:51 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35760 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728428AbgCXWpq (ORCPT
+        Tue, 24 Mar 2020 18:48:55 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41954 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbgCXWsy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 18:45:46 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k21so476409ljh.2;
-        Tue, 24 Mar 2020 15:45:41 -0700 (PDT)
+        Tue, 24 Mar 2020 18:48:54 -0400
+Received: by mail-lf1-f67.google.com with SMTP id z23so193453lfh.8;
+        Tue, 24 Mar 2020 15:48:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=i84KBCBiRxmlk/8j75g9J/I5JK1LbARaY+Cgps9qf80=;
-        b=VwjHIuvS/I5AxBpu1FztDHrHg9fkJAEXuRfoM/Oy6QTXXDmvdnfoI3NqoOZ7h2RHed
-         01fIcG+FDVPVj9Xq5KtsU5kcxBMLLdBdd2Mhv1HwJ2jrBx0dK6LF8kdNXZrYg/lRqcBk
-         YUi6E956iu9768IjC+JYqs7pwm20v+QWpqXHK6QNw+cs2hrdEY+WKAaIA/NTJbLN67+O
-         Gkik/TTmTv3yt+glzltYclwyToVNNuEPXEM2dM9I0f2z3M+bZWDYEJ9QILM0V8mNd2uh
-         Edty1CAPXirbJJeiWj5/XyWdcaEFlMkTG+kenkxSDQhX4fQPirxENiVUxO72UFR8GOZN
-         Ixgw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=06QnBWO8zn+cTFjJT/eh0pa58Q14fQa5v5+3FeRp3t4=;
+        b=MO77Ne74Cfhjpls79rr17wj1ZBVWWXKzEDydAiRzRzdR8rt2wzq9QkOUNRDqH8Nw4a
+         0XOzzDIMqB5y3xp9Pm7C0DNddLYqeBHlfCQJnWP+rw2fK7pTY65Ghozj7XudxNxjqiDV
+         ZZHEt6WFDci88yVuLsuu3IP2hpcqfolekbDfS+eb9EqUTkzdRtcWYn2EDBWBsZ/U03sj
+         OJYvghWrFCghsaY1KskSnUK3ugnFN+anw7uTkNxBPIIDoBIdXqjAgX6KwA+fRPIktoQV
+         BUsENaVv+hTUl0foeDie69LuqXHgClu2egHLGet+bFBpNjfg8h+djRV5J8y9Os1cApLz
+         eB1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=i84KBCBiRxmlk/8j75g9J/I5JK1LbARaY+Cgps9qf80=;
-        b=Xye5pLx1k9cJSgaw0HcW6shKQiHcECh/nd9iMnkm8r4ia/o90YHXckMmLlVznzibxS
-         B+mtAmhgUbR2oSYTNVfTzG1KT5NApHbn3M/OtfnN+4HHmtfttr5o4BdwRcJQxwg7LCvY
-         xSm+Tn8byAR7FN0PAmhK4fcHZnWz/SQif831EeDpB+CDpSJN+EhAGXTDfeEGvOh3E5VP
-         /kVS7OifWrB5bHnFOx2T5le2pAXpsTNs/R/At7ETodyz1ThqgNyiB/I7Urhn8QLSx+hI
-         6zvFPxRieMO9szdBrH2cxpbLQMKePX16FwZYZ6uNvi0HZKUIqoNe7SSi0jIu3MspRlLz
-         uaEQ==
-X-Gm-Message-State: AGi0PuYwjSFyw0lD6/xOTqkKLZMmFkOdkJsxkpPWHyRP75qXpufN7Lv1
-        Niqe6YcC1T4CSzIGPNurLNc=
-X-Google-Smtp-Source: ADFU+vt6q2Lnq5uIXVNJVdYViUW4m/PQ1vqKcJn9ESjQG7CJNmXYKBUYPZH57nnqE3GoQuDqEhi1pQ==
-X-Received: by 2002:a2e:920c:: with SMTP id k12mr8588ljg.209.1585089941006;
-        Tue, 24 Mar 2020 15:45:41 -0700 (PDT)
-Received: from localhost.localdomain (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.gmail.com with ESMTPSA id d4sm10534279lfa.75.2020.03.24.15.45.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 15:45:40 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=06QnBWO8zn+cTFjJT/eh0pa58Q14fQa5v5+3FeRp3t4=;
+        b=MCUeJWJNYq+xATQjT4VSvXmXy9hSocwLWsCtsdsI5JSiLaDO6TauHinsBlwghJ33df
+         7LdSepLi17M9Jxx+I7dgdX+hKLz5+FSTkmhwpjVJ2+B71jVcFDjZieEl1uuWmiEu49tz
+         aXEbGIHt5lhep00oiyQPZ1Vjf26U979bsv5Y5xWAkHvWSKC5SgXSlqMSqnozbV/R6B4w
+         tlL/DiSJoZ/ie7eY+/GaYs/UcuVCI1WMKwPn6ld2Hp2bvLTkfIJjBNJlMWnXIBir/87y
+         ieApfCRT1oA3P/8AQHV6zXmkk4ORjKDHpTdFmoEh1G0egxNybR41OsC329bh4FiYclPN
+         s4IQ==
+X-Gm-Message-State: ANhLgQ3nxSo69woSwN49wT7pxLe+kJV79Nk+OLApn/CWnOK1xggyK40M
+        qt67z7maK06xK7G8tTRmwRHLfnyi
+X-Google-Smtp-Source: ADFU+vuQcigS93PoEpzYdWodOt90VmZiOtPvZwRPlsbXFsu/ZgEPfg+RcDxU2teo88l133Vf2SbZVQ==
+X-Received: by 2002:a05:6512:108a:: with SMTP id j10mr224570lfg.35.1585090132092;
+        Tue, 24 Mar 2020 15:48:52 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id n23sm3143719lji.59.2020.03.24.15.48.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2020 15:48:51 -0700 (PDT)
+Subject: Re: [RFC PATCH v5 9/9] arm64: tegra: Add Tegra VI CSI support in
+ device tree
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+ <1584985955-19101-10-git-send-email-skomatineni@nvidia.com>
+ <672819ea-01d3-2eca-8bb7-84ffd64256d4@gmail.com>
+ <a218142f-295e-6bd5-b1d7-47d9ab8eba3e@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/3] firmware: trusted_foundations: Different way of L2 cache enabling after LP2 suspend
-Date:   Wed, 25 Mar 2020 01:43:34 +0300
-Message-Id: <20200324224335.5825-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200324224335.5825-1-digetx@gmail.com>
-References: <20200324224335.5825-1-digetx@gmail.com>
+Message-ID: <fee09e1e-48a3-e0a0-12dc-9aeeb3438ded@gmail.com>
+Date:   Wed, 25 Mar 2020 01:48:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <a218142f-295e-6bd5-b1d7-47d9ab8eba3e@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ASUS TF300T device may not work properly if firmware is asked to fully
-re-initialize L2 cache after resume from LP2 suspend. The downstream
-kernel of TF300T uses different opcode to enable cache after resuming
-from LP2, this opcode also works fine on Nexus 7 and Ouya devices.
-Supposedly, this may be needed by an older firmware versions.
+25.03.2020 00:04, Sowjanya Komatineni пишет:
+> 
+> On 3/24/20 12:19 PM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 23.03.2020 20:52, Sowjanya Komatineni пишет:
+>> ...
+>>> +                     pd_venc: venc {
+>>> +                             clocks = <&tegra_car TEGRA210_CLK_VI>,
+>>> +                                      <&tegra_car TEGRA210_CLK_CSI>;
+>>> +                             resets = <&mc TEGRA210_MC_RESET_VI>,
+>> The MC resetting should be needed only for a hardware hot-resetting. It
+>> should be wrong to add it to the power domain.
+> TRM recommends to do MC client hot-reset during VE power gate and ungate.
 
-Reported-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Tested-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Tested-by: Jasper Korten <jja2000@gmail.com>
-Tested-by: David Heidelberg <david@ixit.cz>
-Tested-by: Peter Geis <pgwipeout@gmail.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- arch/arm/mach-tegra/pm.c                     |  4 ++++
- drivers/firmware/trusted_foundations.c       | 21 ++++++++++++++++++--
- include/linux/firmware/trusted_foundations.h |  1 +
- 3 files changed, 24 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/mach-tegra/pm.c b/arch/arm/mach-tegra/pm.c
-index d1e1a61b12cf..6452ebf68d40 100644
---- a/arch/arm/mach-tegra/pm.c
-+++ b/arch/arm/mach-tegra/pm.c
-@@ -216,6 +216,8 @@ int tegra_pm_enter_lp2(void)
- 	restore_cpu_complex();
- 	cpu_cluster_pm_exit();
- 
-+	call_firmware_op(prepare_idle, TF_PM_MODE_NONE);
-+
- 	return err;
- }
- 
-@@ -391,6 +393,8 @@ static int tegra_suspend_enter(suspend_state_t state)
- 
- 	local_fiq_enable();
- 
-+	call_firmware_op(prepare_idle, TF_PM_MODE_NONE);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/firmware/trusted_foundations.c b/drivers/firmware/trusted_foundations.c
-index fc544e19b0a1..1389fa9418a7 100644
---- a/drivers/firmware/trusted_foundations.c
-+++ b/drivers/firmware/trusted_foundations.c
-@@ -19,6 +19,7 @@
- 
- #define TF_CACHE_ENABLE		1
- #define TF_CACHE_DISABLE	2
-+#define TF_CACHE_REENABLE	4
- 
- #define TF_SET_CPU_BOOT_ADDR_SMC 0xfffff200
- 
-@@ -29,6 +30,7 @@
- #define TF_CPU_PM_S1		0xffffffe4
- #define TF_CPU_PM_S1_NOFLUSH_L2	0xffffffe7
- 
-+static unsigned long tf_idle_mode = TF_PM_MODE_NONE;
- static unsigned long cpu_boot_addr;
- 
- static void tf_generic_smc(u32 type, u32 arg1, u32 arg2)
-@@ -85,25 +87,40 @@ static int tf_prepare_idle(unsigned long mode)
- 			       cpu_boot_addr);
- 		break;
- 
-+	case TF_PM_MODE_NONE:
-+		break;
-+
- 	default:
- 		return -EINVAL;
- 	}
- 
-+	tf_idle_mode = mode;
-+
- 	return 0;
- }
- 
- #ifdef CONFIG_CACHE_L2X0
- static void tf_cache_write_sec(unsigned long val, unsigned int reg)
- {
--	u32 l2x0_way_mask = 0xff;
-+	u32 enable_op, l2x0_way_mask = 0xff;
- 
- 	switch (reg) {
- 	case L2X0_CTRL:
- 		if (l2x0_saved_regs.aux_ctrl & L310_AUX_CTRL_ASSOCIATIVITY_16)
- 			l2x0_way_mask = 0xffff;
- 
-+		switch (tf_idle_mode) {
-+		case TF_PM_MODE_LP2:
-+			enable_op = TF_CACHE_REENABLE;
-+			break;
-+
-+		default:
-+			enable_op = TF_CACHE_ENABLE;
-+			break;
-+		}
-+
- 		if (val == L2X0_CTRL_EN)
--			tf_generic_smc(TF_CACHE_MAINT, TF_CACHE_ENABLE,
-+			tf_generic_smc(TF_CACHE_MAINT, enable_op,
- 				       l2x0_saved_regs.aux_ctrl);
- 		else
- 			tf_generic_smc(TF_CACHE_MAINT, TF_CACHE_DISABLE,
-diff --git a/include/linux/firmware/trusted_foundations.h b/include/linux/firmware/trusted_foundations.h
-index 2549a2db56aa..be5984bda592 100644
---- a/include/linux/firmware/trusted_foundations.h
-+++ b/include/linux/firmware/trusted_foundations.h
-@@ -32,6 +32,7 @@
- #define TF_PM_MODE_LP1_NO_MC_CLK	2
- #define TF_PM_MODE_LP2			3
- #define TF_PM_MODE_LP2_NOFLUSH_L2	4
-+#define TF_PM_MODE_NONE			5
- 
- struct trusted_foundations_platform_data {
- 	unsigned int version_major;
--- 
-2.25.1
-
+Could you please tell what TRM it is and what's the page#?
